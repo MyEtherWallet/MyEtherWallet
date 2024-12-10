@@ -109,7 +109,7 @@
             v-if="item.subtext"
             :class="noCapitalize ? '' : 'text-capitalize'"
             class="searchText--text"
-            >- {{ item.subtext }}</span
+            >- {{ item.subtext | concatSym }}</span
           ></span
         >
       </div>
@@ -138,7 +138,7 @@
             v-if="data.item.subtext"
             :class="noCapitalize ? '' : 'text-capitalize'"
             class="textSecondary--text"
-            >- {{ data.item.subtext }}</span
+            >- {{ data.item.subtext | concatSym }}</span
           ></span
         >
       </div>
@@ -220,7 +220,13 @@ export default {
     concatStr(val) {
       const newVal = `${val}`;
       // should probably be moved globablly
-      if (newVal.length < 20) return newVal;
+      if (newVal.length < 15) return newVal;
+      return `${newVal.substr(0, 7)}...`;
+    },
+    concatSym(val) {
+      const newVal = `${val}`;
+      // should probably be moved globablly
+      if (newVal.length < 8) return newVal;
       return `${newVal.substr(0, 7)}...`;
     }
   },
