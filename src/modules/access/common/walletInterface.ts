@@ -2,7 +2,6 @@ import {
   getSignTransactionObject,
   calculateChainIdFromV,
   eip1559Params,
-  commonGenerator,
 } from './helpers'
 
 import type {
@@ -27,6 +26,8 @@ import { LegacyTransaction, FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { toChecksumAddress } from '@/utils/addressUtils'
 import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
+import { commonGenerator } from '@/providers/ethereum/utils'
+import { Hardfork } from '@ethereumjs/common'
 
 export default class WalletInterface {
   keystore: {
@@ -147,7 +148,10 @@ export default class WalletInterface {
     if (!this.isPubOnly) {
       return new Promise(resolve => {
         let tx = LegacyTransaction.fromTxData(txParams, {
-          common: commonGenerator(network.value),
+          common: commonGenerator(
+            BigInt(network.value.type.chainID),
+            Hardfork.London,
+          ),
         })
         if (isEIP1559SupportedNetwork.value) {
           // probably assume this in the future?
@@ -158,7 +162,10 @@ export default class WalletInterface {
             { gasPrice: null },
           )
           tx = FeeMarketEIP1559Transaction.fromTxData(_txParams, {
-            common: commonGenerator(network.value),
+            common: commonGenerator(
+              BigInt(network.value.type.chainID),
+              Hardfork.London,
+            ),
           }) as unknown as LegacyTransaction // temp: maybe look into refactoring this
         }
 
