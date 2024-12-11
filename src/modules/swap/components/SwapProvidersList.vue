@@ -35,10 +35,10 @@
                 =====================================================================================
                   Token Image, Rate & Best Rate Chip
                   xs = 10 / total = 10
-                  md = 7 / total = 7
+                  md = 9 / total = 7
                 =====================================================================================
                 -->
-                <v-col cols="10" sm="7">
+                <v-col cols="10" sm="9">
                   <v-container class="pa-2">
                     <v-row
                       class="align-center justify-start pl-5 pr-1 py-3 py-sm-4"
@@ -83,10 +83,10 @@
                 =====================================================================================
                   Provider Image & Checkbox
                   xs = 2 / total = 12
-                  sm = 5 / total = 12
+                  sm = 3 / total = 12
                 =====================================================================================
                 -->
-                <v-col cols="2" sm="5">
+                <v-col cols="2" sm="3">
                   <v-row class="align-center justify-end pr-3">
                     <mew-checkbox :value="active" />
                   </v-row>

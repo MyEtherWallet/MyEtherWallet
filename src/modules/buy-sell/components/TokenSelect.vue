@@ -194,6 +194,7 @@ export default {
           }
         }
       });
+
       this.fetchedNetworks = networkList.map(network => {
         return {
           img: network[0].type?.icon,
