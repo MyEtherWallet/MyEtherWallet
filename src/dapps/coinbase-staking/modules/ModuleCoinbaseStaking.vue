@@ -233,6 +233,7 @@ export default {
       const gasLimit = BigNumber(this.gasLimit).gt('21000')
         ? this.gasLimit
         : MIN_GAS_LIMIT;
+
       const ethFee = fromWei(BigNumber(gasPrice).times(gasLimit).toFixed());
       return formatFloatingPointValue(ethFee).value;
     },
@@ -285,12 +286,25 @@ export default {
   watch: {
     gasPriceType() {
       this.locGasPrice = this.gasPriceByType(this.gasPriceType);
+    },
+    stakeAmount() {
+      this.fetchQuote();
     }
   },
   mounted() {
     this.locGasPrice = this.gasPriceByType(this.gasPriceType);
   },
   methods: {
+    async fetchQuote() {
+      this.loading = true;
+      const { gasLimit } = await fetch(
+        `${API}?address=${this.address}&action=stake&networkId=${
+          this.network.type.chainID
+        }&amount=${toBase(this.stakeAmount, 18)}`
+      ).then(res => res.json());
+      this.gasLimit = gasLimit;
+      this.loading = false;
+    },
     reset() {
       this.setAmount(0);
       this.loading = false;
@@ -318,7 +332,8 @@ export default {
         to: to,
         from: this.address,
         data: data,
-        value: toHex(value)
+        value: toHex(value),
+        gasPrice: toHex(this.locGasPrice)
       };
       this.web3.eth
         .sendTransaction(txObj)

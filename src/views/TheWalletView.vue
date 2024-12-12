@@ -155,7 +155,7 @@ export default {
     },
     network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
-        // this.web3.eth.clearSubscriptions();
+        this.web3.eth.clearSubscriptions();
         this.identifier === WALLET_TYPES.WEB3_WALLET
           ? this.setWeb3Instance(this.selectedEIP6963Provider)
           : this.setWeb3Instance();
@@ -289,6 +289,7 @@ export default {
       this.showPaperWallet = false;
     },
     setup() {
+      clearInterval(this.manualBlockSubscription);
       this.processNetworkTokens();
       this.subscribeToBlockNumber();
     },
@@ -324,7 +325,6 @@ export default {
       this.updateGasPrice();
     },
     subscribeToBlockNumber: debounce(function () {
-      clearInterval(this.manualBlockSubscription);
       this.web3.eth.getBlockNumber().then(bNumber => {
         this.setBlockNumber(bNumber);
         this.web3.eth.getBlock(bNumber).then(block => {

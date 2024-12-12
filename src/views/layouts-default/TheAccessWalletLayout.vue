@@ -120,12 +120,12 @@
                 </div>
                 <div
                   v-if="eip6963Providers.length > 1"
-                  class="d-flex align-center justify-start mini-button-container"
+                  class="d-flex align-center justify-start mini-button-container flex-wrap"
                 >
                   <div
                     v-for="item in eip6963Providers"
                     :key="item.info.uuid"
-                    class="mr-2 px-1 py-2 d-flex align-center cursor--pointer mini-buttons"
+                    class="mt-1 mr-2 px-1 py-2 d-flex align-center cursor--pointer mini-buttons"
                     @click="openWeb3WithProvider(item)"
                   >
                     <img

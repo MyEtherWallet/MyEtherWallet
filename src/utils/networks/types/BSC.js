@@ -22,7 +22,7 @@ export default {
     websocket: null
   },
   gasPriceMultiplier: 1,
-  canBuy: false,
+  canBuy: true,
   coingeckoID: 'binancecoin',
   balanceApi: 'https://tokenbalance.mewapi.io/bsc?address=',
   ensEnkryptType: 'BNB'
