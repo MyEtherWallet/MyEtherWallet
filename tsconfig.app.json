@@ -10,54 +10,55 @@
   "exclude": ["src/**/__tests__/*", "v6/*"],
   "compilerOptions": {
     // Project
-    "composite": true,                                                 // https://www.typescriptlang.org/tsconfig/#composite
-    "incremental": true,                                               // https://www.typescriptlang.org/tsconfig/#incremental
+    "composite": true, // https://www.typescriptlang.org/tsconfig/#composite
+    "incremental": true, // https://www.typescriptlang.org/tsconfig/#incremental
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo", // https://www.typescriptlang.org/tsconfig/#tsBuildInfoFile
 
     // Language & Environment
-    "target": "ESNext",                       // https://www.typescriptlang.org/tsconfig/#target
+    "target": "ESNext", // https://www.typescriptlang.org/tsconfig/#target
     "lib": ["ES2020", "DOM", "DOM.Iterable"], // https://www.typescriptlang.org/tsconfig/#lib
-    "moduleDetection": "force",               // https://www.typescriptlang.org/tsconfig/#moduleDetection
-    "useDefineForClassFields": true,          // https://www.typescriptlang.org/tsconfig/#useDefineForClassFields
+    "moduleDetection": "force", // https://www.typescriptlang.org/tsconfig/#moduleDetection
+    "useDefineForClassFields": true, // https://www.typescriptlang.org/tsconfig/#useDefineForClassFields
 
     // Module
     // Target the latest possible JavaScript because actual target transpilation
     // will be handled by vite / vitest
-    "module": "ESNext",                   // https://www.typescriptlang.org/tsconfig/#module
-    "moduleResolution": "bundler",        // https://www.typescriptlang.org/tsconfig/#moduleResolution
+    "module": "ESNext", // https://www.typescriptlang.org/tsconfig/#module
+    "moduleResolution": "bundler", // https://www.typescriptlang.org/tsconfig/#moduleResolution
     "noUncheckedSideEffectImports": true, // https://www.typescriptlang.org/tsconfig/#noUncheckedSideEffectImports
-    "resolveJsonModule": true,            // https://www.typescriptlang.org/tsconfig/#resolveJsonModule
-    "baseUrl": ".",                       // https://www.typescriptlang.org/tsconfig/#baseUrl
-    "paths": {                            // https://www.typescriptlang.org/tsconfig/#paths
+    "resolveJsonModule": true, // https://www.typescriptlang.org/tsconfig/#resolveJsonModule
+    "baseUrl": ".", // https://www.typescriptlang.org/tsconfig/#baseUrl
+    "paths": {
+      // https://www.typescriptlang.org/tsconfig/#paths
       "@/*": ["./src/*"],
       "@view-default/*": ["./src/views/default/*"],
       "@view-wallet/*": ["./src/views/wallet/*"],
       "@components/*": ["./src/components/*"],
-      "@assets/*": ["./src/assets/*"],
+      "@assets/*": ["./src/assets/*"]
     },
 
     // Emit
     // We're not compiling to JS, we're running TypeScript files directly
-    "noEmit": true,            // https://www.typescriptlang.org/tsconfig/#noEmit
+    "noEmit": true, // https://www.typescriptlang.org/tsconfig/#noEmit
     // Vue-specific JSX options
-    "jsx": "preserve",         // https://www.typescriptlang.org/tsconfig/#jsx
-    "jsxImportSource": "vue",  // https://www.typescriptlang.org/tsconfig/#jsxImportSource
+    "jsx": "preserve", // https://www.typescriptlang.org/tsconfig/#jsx
+    "jsxImportSource": "vue", // https://www.typescriptlang.org/tsconfig/#jsxImportSource
 
     // Type checking
-    "noImplicitThis": true,              // https://www.typescriptlang.org/tsconfig/#noImplicitThis
-    "strict": true,                      // https://www.typescriptlang.org/tsconfig/#strict
-    "alwaysStrict": true,                // https://www.typescriptlang.org/tsconfig/#alwaysStrict
-    "noFallthroughCasesInSwitch": true,  // https://www.typescriptlang.org/tsconfig/#noFallthroughCasesInSwitch
-    "noImplicitOverride": true,          // https://www.typescriptlang.org/tsconfig/#noImplicitOverride
-    "useUnknownInCatchVariables": true,  // https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables
+    "noImplicitThis": true, // https://www.typescriptlang.org/tsconfig/#noImplicitThis
+    "strict": true, // https://www.typescriptlang.org/tsconfig/#strict
+    "alwaysStrict": true, // https://www.typescriptlang.org/tsconfig/#alwaysStrict
+    "noFallthroughCasesInSwitch": true, // https://www.typescriptlang.org/tsconfig/#noFallthroughCasesInSwitch
+    "noImplicitOverride": true, // https://www.typescriptlang.org/tsconfig/#noImplicitOverride
+    "useUnknownInCatchVariables": true, // https://www.typescriptlang.org/tsconfig/#useUnknownInCatchVariables
 
     // Interop constraints
-    "verbatimModuleSyntax": true,             // https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
-    "esModuleInterop": true,                  // https://www.typescriptlang.org/tsconfig/#esModuleInterop
+    "verbatimModuleSyntax": true, // https://www.typescriptlang.org/tsconfig/#verbatimModuleSyntax
+    "esModuleInterop": true, // https://www.typescriptlang.org/tsconfig/#esModuleInterop
     "forceConsistentCasingInFileNames": true, // https://www.typescriptlang.org/tsconfig/#forceConsistentCasingInFileNames
-    "allowSyntheticDefaultImports": true,     // https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports
+    "allowSyntheticDefaultImports": true, // https://www.typescriptlang.org/tsconfig/#allowSyntheticDefaultImports
 
     // Completeness
-    "skipLibCheck": true,  // https://www.typescriptlang.org/tsconfig/#skipLibCheck
+    "skipLibCheck": true // https://www.typescriptlang.org/tsconfig/#skipLibCheck
   }
 }
