@@ -50,7 +50,7 @@
             <div key="app-core-menu" class="py-2">
               <menu-list-item
                 v-for="item in coreMenuList"
-                :key="item"
+                :key="item.title"
                 :list-item="item"
                 :active-item-title="activeItem"
                 @click="clickListItem(item)"
@@ -74,7 +74,7 @@
             <div v-if="showMesSubmenu" key="app-messages-menu">
               <menu-list-item
                 v-for="item in messageMenuList"
-                :key="item"
+                :key="item.title"
                 :list-item="item"
                 :is-submenu="true"
                 :active-item-title="activeItem"
@@ -94,7 +94,7 @@
             <div v-if="showContractSubmenu" key="4" class="app-contract-menu">
               <menu-list-item
                 v-for="item in contractMenuList"
-                :key="item"
+                :key="item.title"
                 :list-item="item"
                 :is-submenu="true"
                 :active-item-title="activeItem"
@@ -110,7 +110,7 @@
             <div key="app-other-menu" class="py-2">
               <menu-list-item
                 v-for="item in toolsMenuList"
-                :key="item"
+                :key="item.title"
                 :list-item="item"
                 :active-item-title="activeItem"
                 @click="clickListItem(item)"

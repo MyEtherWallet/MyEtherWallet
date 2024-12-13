@@ -48,6 +48,7 @@ defineProps({
   listItem: {
     default: () => {},
     type: Object as PropType<AppMenuListItem>,
+    required: true,
   },
   isSubmenu: {
     type: Boolean,
