@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      'flex w-full justify-end h-16 p-3 bg-white my-1',
-      { fixed: isDesktop },
+      'flex-initial w-full justify-end h-16 p-3 bg-white my-1',
+      { fixed: !isDesktop },
     ]"
   >
     <button

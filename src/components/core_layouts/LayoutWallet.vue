@@ -6,13 +6,13 @@
     />
     <div
       :class="[
-        'flex flex-col w-full items-center overflow-y-auto relative',
+        'flex flex-col items-center overflow-y-auto relative',
         { 'ml-[300px]': isDesktop },
       ]"
     >
       <TheWalletHeader @click-menu-btn="setSidebaMenu" />
-      <main :class="['max-w-[1392px] flex']">
-        <div class="pt-16 mt-10 bg-violet">
+      <main :class="['flex-initial']">
+        <div class="pt-16 mt-10 p-2 md:p-6">
           <router-view />
         </div>
       </main>
