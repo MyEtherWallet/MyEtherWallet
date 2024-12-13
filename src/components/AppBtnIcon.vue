@@ -3,7 +3,7 @@
     type="button"
     :aria-label="ariaLabelString"
     :class="[
-      'rounded-full hoverBGGrey !cursor-pointer',
+      'rounded-full hoverNoBG !cursor-pointer',
       height,
       width,
       { 'invert brightness-100': isWhite },
