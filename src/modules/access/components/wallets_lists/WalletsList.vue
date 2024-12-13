@@ -55,6 +55,7 @@ import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
+import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 
 const { connectors } = wagmiConfig
 
@@ -142,7 +143,9 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
         console.log('display_uri', msg)
       }
     })
-    connector?.connect().then(console.log)
+    const wagWallet = new WagmiWallet(connector!, '0x1')
+    console.log(wagWallet)
+    wagWallet.connect().then(console.log)
   }
 }
 

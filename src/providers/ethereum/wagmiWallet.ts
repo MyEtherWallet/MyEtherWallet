@@ -9,25 +9,12 @@ import {
   type PreTransactionResponse,
 } from '../types'
 import {
-  SupportedTXType,
   type PostEthereumTransaction,
   type PreEthereumTransaction,
 } from './types'
-import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
-import { commonGenerator } from './utils'
-import { Hardfork } from '@ethereumjs/common'
-import {
-  hexToBigInt,
-  bytesToHex,
-  hashPersonalMessage,
-  ecsign,
-  toRpcSig,
-  privateToAddress,
-  toChecksumAddress,
-} from '@ethereumjs/util'
-import type { Connector } from '@wagmi/vue'
+import type { Connector } from 'wagmi'
 
-class RainbowWallet implements WalletInterface {
+class WagmiWallet implements WalletInterface {
   chainId: string
   connecter: Connector
   constructor(connector: Connector, chainId: string) {
@@ -60,13 +47,17 @@ class RainbowWallet implements WalletInterface {
   async SignTransaction(
     tx: PostEthereumTransaction,
   ): Promise<PostTransactionResponse> {
-    const client: EthereumProvider = await this.connecter.getProvider()
-    client.request({})
+    console.log(tx)
+    const client: EthereumProvider =
+      (await this.connecter.getProvider()) as EthereumProvider
+    client.request({ method: 'eth_accounts' }).then(console.log)
+    throw new Error('Method not implemented.')
   }
   SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
+    console.log(options)
     throw new Error('Method not implemented.')
   }
   getAddress(): string {
@@ -84,4 +75,4 @@ class RainbowWallet implements WalletInterface {
   }
 }
 
-export default RainbowWallet
+export default WagmiWallet
