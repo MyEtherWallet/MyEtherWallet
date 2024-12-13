@@ -21,14 +21,15 @@
             />
           </div>
           <div>balance: {{ tokenSelected.balance }}</div>
-          <div>{{ amountErrorMessages }}</div>
+          <p class="text-error">{{ amountErrorMessages }}</p>
 
         </div>
       </div>
-      <br />
-      <label for="address-input">Address:</label>
-      <input v-model="toAddress" name="address-input" type="string" required />
-      <br />
+      <div>
+        <label for="address-input">Address:</label>
+        <input v-model="toAddress" name="address-input" type="string" required />
+        <p class="text-error">{{ addressErrorMessages }}</p>
+      </div>
       <div>
         <input
           type="checkbox"
@@ -38,20 +39,20 @@
       </div>
       <div v-show="toggleAdvanced">
         <div>
-          <label for="address-input">Gas Price:</label>
-          <input v-model="gasPrice" name="address-input" type="string" required />
+          <label for="gas-price-input">Gas Price:</label>
+          <input v-model="gasPrice" name="gas-price-input" type="string" required />
         </div>
         <div>
-          <label for="address-input">Gas Limit:</label>
-          <input v-model="gasLimit" name="address-input" type="string" required />
+          <label for="gas-limit-input">Gas Limit:</label>
+          <input v-model="gasLimit" name="gas-limit-input" type="string" required />
         </div>
         <div>
-          <label for="address-input">Nonce:</label>
-          <input v-model="nonce" name="address-input" type="string" required />
+          <label for="nonce-input">Nonce:</label>
+          <input v-model="nonce" name="nonce-input" type="string" required />
         </div>
         <div>
-          <label for="address-input">Data:</label>
-          <input v-model="data" name="address-input" type="string" required />
+          <label for="data-input">Data:</label>
+          <input v-model="data" name="data-input" type="string" required />
         </div>
         <!-- <input
           type="checkbox"
@@ -59,7 +60,7 @@
           v-model="toggleTransactionType">
         <label for="advanced-settings">Transaction type: {{ toggleTransactionType ? 0 : 2  }}</label> -->
       </div>
-      <button type="submit" class="mt-5 bg-primary p-2 rounded-full text-white">
+      <button type="submit" :class="[!validSend ? 'bg-grey-30': 'bg-primary', 'mt-5 p-2 rounded-full text-white']" :disabled="!validSend">
         Send
       </button>
     </form>
@@ -68,9 +69,11 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWalletStore, MAIN_TOKEN_CONTRACT, type Token } from '@/stores/wallet_store'
 import { fromWei, toWei } from 'web3-utils';
 import {Contract} from 'web3-eth-contract';
+import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util';
+
+import { useWalletStore, MAIN_TOKEN_CONTRACT, type Token } from '@/stores/wallet_store'
 import {abi} from './tokenAbi';
 
 const walletStore = useWalletStore()
@@ -109,6 +112,16 @@ const amountErrorMessages = computed(() => {
   if(tokenSelected.value.contract === MAIN_TOKEN_CONTRACT && BigInt(baseBalance) < BigInt(baseAmount)) return 'Insufficient balance for this token' // amount greater than wallet balance
 
   return ''
+})
+
+const addressErrorMessages = computed(() => {
+  if(toAddress.value === '') return 'Address is required'
+  if(!isValidAddress(toAddress.value) || !isValidChecksumAddress(toAddress.value)) return 'Invalid address'
+  return ''
+})
+
+const validSend = computed(() => {
+  return amountErrorMessages.value === '' && addressErrorMessages.value === ''
 })
 
 watch(() => [tokenSelected.value, amount.value, toAddress.value], () => {
