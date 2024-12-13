@@ -183,11 +183,11 @@ const coreMenuList: AppMenuListItem[] = [
  ------------------------------*/
 const showContractSubmenu = ref(false)
 
-const contractTitle: ListItem = {
+const contractTitle: AppMenuListItem = {
   title: 'contract',
   icon: IconSend,
 }
-const contractMenuList: ListItem[] = [
+const contractMenuList: AppMenuListItem[] = [
   {
     title: 'deploy contract',
     // routeName: ROUTES_WALLET.DEPLOY_CONTRACT.NAME,
@@ -208,7 +208,7 @@ const messageTitle = {
   icon: IconSend,
   isActive: false,
 }
-const messageMenuList: ListItem[] = [
+const messageMenuList: AppMenuListItem[] = [
   {
     title: 'sign message',
     // routeName: ROUTES_WALLET.SIGN_MESSAGE.NAME,
@@ -221,7 +221,7 @@ const messageMenuList: ListItem[] = [
 /** ------------------------------
  * Tools MENU
  ------------------------------*/
-const toolsMenuList: ListItem[] = [
+const toolsMenuList: AppMenuListItem[] = [
   {
     title: 'settings',
     icon: IconSend,
@@ -233,67 +233,8 @@ const toolsMenuList: ListItem[] = [
  * Menu Methods
  ------------------------------*/
 const activeItem = ref<string>(coreMenuList[0].title)
-console.log('activeItem', activeItem.value)
 //TODO: Add click handler
 const clickListItem = (item: AppMenuListItem) => {
-  console.log('clickListItem', item)
   activeItem.value = item.title
 }
 </script>
-<!--
-<style lang="scss" scoped>
-a {
-  text-decoration: none;
-  color: var(--v-greenPrimary-base) !important;
-  font-weight: 500;
-}
-
-.mew-connect-text > div {
-  font-size: 12px;
-  line-height: 15px;
-  font-weight: 500;
-  color: var(--v-greenPrimary-base);
-}
-
-.party-popper-container {
-  background-color: var(--v-whiteBg-base);
-  box-shadow:
-    0px 5px 30px rgba(166, 173, 201, 0.22),
-    0px 5px 5px rgba(154, 160, 185, 0.05);
-  border-radius: 100px;
-}
-
-.time-container {
-  background-color: var(--v-blueMedium-base);
-  border-radius: 4px;
-}
-
-.margin-one-off {
-  margin-top: 2px;
-}
-
-.set-fixed-height {
-  height: 52px;
-}
-
-.eth-banner {
-  margin-left: -15px;
-}
-
-.ad-button-template {
-  border-radius: 12px;
-  height: 48px;
-  min-width: 130px;
-  padding: 0 15px;
-
-  img {
-    padding: 7px;
-  }
-}
-
-.img-holder {
-  background-color: white;
-  border: 1px #99a1b3 solid;
-  border-radius: 12px;
-}
-</style> -->
