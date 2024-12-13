@@ -163,7 +163,6 @@ const coreMenuList: AppMenuListItem[] = [
     title: 'send',
     routeName: ROUTES_WALLET.SEND.NAME,
     icon: IconSend,
-    icon: IconSend,
   },
   {
     title: 'deposit',
