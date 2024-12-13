@@ -6,18 +6,23 @@
         <div>
           <label for="asset-input">Token:</label>
           <select name="asset-input" v-model="tokenSelected">
-            <option v-for="(t, idx) in tokenOptions" :value="t" :key="t+idx">{{ t }}</option>
+            <option v-for="(t, idx) in tokens" :value="t" :key="t.symbol+idx">{{ t.symbol }}</option>
           </select>
         </div>
         <div>
-          <label for="amount-input">Amount:</label>
-          <input
-            v-model="amount"
-            name="amount-input"
-            type="number"
-            step="0.000000000000000001"
-            required
-          />
+          <div>
+            <label for="amount-input">Amount:</label>
+            <input
+              v-model="amount"
+              name="amount-input"
+              type="number"
+              step="0.000000000000000001"
+              required
+            />
+          </div>
+          <div>balance: {{ tokenSelected.balance }}</div>
+          <div>{{ amountErrorMessages }}</div>
+
         </div>
       </div>
       <br />
@@ -32,17 +37,9 @@
         <label for="advanced-settings">Advanced settings</label>
       </div>
       <div v-show="toggleAdvanced">
-        <div v-if="toggleTransactionType">
+        <div>
           <label for="address-input">Gas Price:</label>
           <input v-model="gasPrice" name="address-input" type="string" required />
-        </div>
-        <div v-if="!toggleTransactionType">
-          <label for="address-input">Max priority fee per gas:</label>
-          <input v-model="maxPriorityFee" name="address-input" type="string" required />
-        </div>
-        <div v-if="!toggleTransactionType">
-          <label for="address-input">Max fee per gas:</label>
-          <input v-model="maxFeePerGas" name="address-input" type="string" required />
         </div>
         <div>
           <label for="address-input">Gas Limit:</label>
@@ -56,11 +53,11 @@
           <label for="address-input">Data:</label>
           <input v-model="data" name="address-input" type="string" required />
         </div>
-        <input
+        <!-- <input
           type="checkbox"
           name="advanced-settings"
           v-model="toggleTransactionType">
-        <label for="advanced-settings">Transaction type: {{ toggleTransactionType ? 0 : 2  }}</label>
+        <label for="advanced-settings">Transaction type: {{ toggleTransactionType ? 0 : 2  }}</label> -->
       </div>
       <button type="submit" class="mt-5 bg-primary p-2 rounded-full text-white">
         Send
@@ -69,41 +66,60 @@
   </main>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWalletStore } from '@/stores/wallet_store'
-// import { fromWei } from 'web3-utils';
+import { useWalletStore, MAIN_TOKEN_CONTRACT, type Token } from '@/stores/wallet_store'
+import { fromWei, toWei } from 'web3-utils';
+import {Contract} from 'web3-eth-contract';
+import {abi} from './tokenAbi';
 
 const walletStore = useWalletStore()
-const { wallet } = storeToRefs(walletStore)
+const { wallet, tokens, balance } = storeToRefs(walletStore)
 
 const amount = ref('')
 const toAddress = ref('')
-const tokenSelected = ref('ETH') // TODO: Implement token selection
-const tokenOptions = ref(['ETH', 'DAI', 'USDC']) // TODO: update once api is ready
+const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
 const toggleAdvanced = ref(false)
 // advanced settings
 const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
 const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
-const data = ref('')
-const toggleTransactionType = ref(true)
-const maxPriorityFee = ref(0) // TODO: Implement maxPriorityFee once api is ready
-const maxFeePerGas = ref(0) // TODO: Implement maxFeePerGas once api is ready
+const data = ref('0x')
+// const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
+ 
+onMounted(async () => {
+  const mainToken: Token = tokens.value.find((t: Token) => t.contract === MAIN_TOKEN_CONTRACT) as Token;
+  tokenSelected.value = mainToken as Token ?  mainToken : tokens.value[0]
+})
 
+const fees = computed(() => {
+  return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
+})
+const amountErrorMessages = computed(() => {
+  const baseAmount = toWei(amount.value, 'ether')
+  const baseBalance = toWei(balance.value, 'ether')
+  const baseFee = toWei(fees.value, 'ether')
+  const tokenSelectedBalance = tokenSelected.value.balance ? tokenSelected.value.balance : '0'
+  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
 
+  if(amount.value === '') return 'Amount is required' // amount is blank
+  if(BigInt(baseAmount) <= 0) return 'Amount must be greater than 0' // amount less than 0
+  if(BigInt(baseTokenBalance) < BigInt(baseAmount)) return 'Insufficient balance for this token' // amount greater than selected balance
+  if(BigInt(baseFee) > BigInt(baseBalance)) return 'Insufficient balance for fees' // fees greater than wallet balance
+  if(tokenSelected.value.contract === MAIN_TOKEN_CONTRACT && BigInt(baseBalance) < BigInt(baseAmount)) return 'Insufficient balance for this token' // amount greater than wallet balance
 
-// const fees = computed(() => {
-//   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
-// })
-// const amountErrorMessages = computed(() => {
-//   if(amount.value === '') return 'Amount is required'
-//   if(Number(amount.value) <= 0) return 'Amount must be greater than 0'
-//   if(tokenSelected.value.balance < Number(amount.value)) return 'Insufficient balance for this token'
-//   if(Number(amount.value) + Number(fees.value) > tokenSelected.value.balance) return 'Insufficient balance for fees'
+  return ''
+})
 
-//   return ''
-// })
+watch(() => [tokenSelected.value, amount.value, toAddress.value], () => {
+  if(tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT && toAddress.value !== '' && amount.value !== '') {
+    const web3Contract = new Contract(abi, tokenSelected.value.contract);
+    data.value = web3Contract.methods.transfer(toAddress.value, toWei(amount.value, 'ether')).encodeABI(); //
+  } else {
+    data.value = '0x';
+  }
+})
+
 
 const handleSubmit = () => {
   // TODO: Implement send logic once api is provided

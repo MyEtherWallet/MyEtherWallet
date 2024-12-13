@@ -1,10 +1,11 @@
 import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type WalletInterface from '@/modules/access/common/WalletInterface';
+import { fromWei } from 'web3-utils';
 
-const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
+export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
 
-type Token = {
+export type Token = {
   balance: string;
   contract: string;
   decimals: number;
@@ -20,10 +21,12 @@ export const useWalletStore = defineStore('walletStore', () => {
   const balance = ref('0');
 
   const setTokens = (newTokens: Array<Token>) => {
-    tokens.value = newTokens;
+    tokens.value = newTokens.map(token => {
+      return Object.assign({}, token, { balance: fromWei(token.balance, 'ether') });
+    });
     newTokens.forEach((token) => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
-        balance.value = token.balance;
+        balance.value = fromWei(token.balance, 'ether');
       }
     })
   }
@@ -41,6 +44,6 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   return {
-    wallet, setWallet, removeWallet, setTokens, removeTokens
+    wallet, setWallet, removeWallet, setTokens, removeTokens, tokens, balance
   }
 })

@@ -33,12 +33,17 @@ import { onMounted } from 'vue';
 
 const store = useWalletStore();
 const {wallet} = storeToRefs(store);
+const {setTokens} = store;
 
 const address = wallet.value?.getAddressString();
 
-onMounted(async ()=>{
-  const tokens = await fetch(`https://tmp.ethvm.dev/balances/137/${address}?noInjectErrors=true`).then(res => res.json());
-  console.log(tokens);
+onMounted(async () => {
+  try {
+    const res = await fetch(`https://tmp.ethvm.dev/balances/137/${address}?noInjectErrors=true`).then(res => res.json());
+    setTokens(res.result);
+  } catch(e) {
+    console.error(e);
+  }
 })
 
 
