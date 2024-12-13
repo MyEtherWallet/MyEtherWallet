@@ -16,7 +16,7 @@ export type Token = {
 }
 
 export const useWalletStore = defineStore('walletStore', () => {
-  const wallet: Ref<WalletInterface> = ref({} as WalletInterface);
+  const wallet: Ref<WalletInterface> = ref(null as unknown as WalletInterface); // allows for falsey
   const tokens: Ref<Array<Token>> = ref([]);
   const balance = ref('0');
 
