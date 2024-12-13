@@ -5,8 +5,9 @@ const ripple = (event: Event) => {
 
   const rippleEl = document.createElement('span');
   const rect = el.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
+  //TODO add TOUCH EVENT HANDLER
+  const x = (event as MouseEvent).clientX - rect.left;
+  const y = (event as MouseEvent).clientY - rect.top;
 
   const radius = Math.max(el.offsetWidth, el.offsetHeight) / 2;
 
