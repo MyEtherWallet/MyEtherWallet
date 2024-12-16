@@ -26,7 +26,11 @@
                 More features
                 <div class="header__menu-dropdown">
                   <div class="header__menu-dropdown-wrap">
-                    <!-- <a href="#" class="header__menu-dropdown-link">Bridge</a> -->
+                    <a
+                      href="https://www.myetherwallet.com/staking"
+                      class="header__menu-dropdown-link"
+                      >Staking</a
+                    >
                     <a
                       href="https://www.myetherwallet.com/how-it-works#nft"
                       class="header__menu-dropdown-link"
@@ -56,6 +60,12 @@
                       target="_blank"
                       class="header__menu-dropdown-link"
                       >Help Center</a
+                    >
+                    <a
+                      href="https://www.myetherwallet.com/faq"
+                      target="_blank"
+                      class="header__menu-dropdown-link"
+                      >FAQ</a
                     >
                     <a
                       href="mailto:support@myetherwallet.com"

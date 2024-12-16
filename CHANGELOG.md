@@ -1,3 +1,5 @@
+### Release v6.9.17
+
 ### fix
 
 * fix staking fees display [#5050](https://github.com/MyEtherWallet/MyEtherWallet/pull/5050)
