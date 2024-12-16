@@ -1,7 +1,7 @@
 import type {
+  EthereumTransactionWithFeeType,
   NativeEthereumTransaction,
   PostEthereumTransaction,
-  PreEthereumTransaction,
 } from '../ethereum/types'
 
 export type HexPrefixedString = `0x${string}`
@@ -31,13 +31,17 @@ export interface GasFeeType {
   [GasPriceType.FASTEST]: GasFeeInfoType
 }
 
-export type PreTransaction = PreEthereumTransaction
+export type PreTransaction = EthereumTransactionWithFeeType
 
 export type PostTransaction = PostEthereumTransaction
 
-export interface PreTransactionResponse {
+export interface GasFeeResponse {
   id: string
   fee: GasFeeType
+}
+export interface PreTransactionResponse {
+  id: string
+  serialized: HexPrefixedString
 }
 
 export interface PostTransactionResponse {

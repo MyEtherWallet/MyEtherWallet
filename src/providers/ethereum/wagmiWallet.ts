@@ -4,6 +4,7 @@ import {
   WalletType,
   type BalanceResponse,
   type EthereumProvider,
+  type GasFeeResponse,
   type HexPrefixedString,
   type PostTransactionResponse,
   type PreTransactionResponse,
@@ -37,6 +38,10 @@ class WagmiWallet implements WalletInterface {
         console.error(err)
         return false
       })
+  }
+  getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
+    console.log('getGasFee', tx)
+    throw new Error('Method not implemented.')
   }
   getSignableTransaction(
     tx: PreEthereumTransaction,

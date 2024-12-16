@@ -10,14 +10,21 @@ export enum SupportedTXType {
   EIP1559 = '0x2',
 }
 
-export interface PreEthereumTransaction {
+export interface APIRequest {
   id: string
+  network: string
+}
+
+export interface PreEthereumTransaction extends APIRequest {
   to: HexPrefixedString
   from: HexPrefixedString
   value: HexPrefixedString
   data: HexPrefixedString
   chainId: HexPrefixedString
-  type: HexPrefixedString
+}
+
+export interface EthereumTransactionWithFeeType extends PreEthereumTransaction {
+  gasFee: GasPriceType
 }
 
 export interface PostEthereumTransaction extends PreEthereumTransaction {
@@ -27,4 +34,5 @@ export interface PostEthereumTransaction extends PreEthereumTransaction {
   maxPriorityFeePerGas: HexPrefixedString
   maxFeePerGas: HexPrefixedString
   nonce: HexPrefixedString
+  type: HexPrefixedString
 }

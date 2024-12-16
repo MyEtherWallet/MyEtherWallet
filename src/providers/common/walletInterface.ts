@@ -1,5 +1,6 @@
 import type {
   BalanceResponse,
+  GasFeeResponse,
   HexPrefixedString,
   PostTransaction,
   PostTransactionResponse,
@@ -15,6 +16,7 @@ export interface WalletInterface {
   getSignableTransaction: (
     tx: PreTransaction,
   ) => Promise<PreTransactionResponse>
+  getGasFee: (tx: PreTransaction) => Promise<GasFeeResponse>
   SignTransaction: (tx: PostTransaction) => Promise<PostTransactionResponse>
   SignMessage: (options: {
     message: `0x${string}`

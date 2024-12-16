@@ -3,12 +3,14 @@ import {
   ProviderName,
   WalletType,
   type BalanceResponse,
+  type GasFeeResponse,
   type HexPrefixedString,
   type PostTransactionResponse,
   type PreTransactionResponse,
 } from '../types'
 import {
   SupportedTXType,
+  type EthereumTransactionWithFeeType,
   type PostEthereumTransaction,
   type PreEthereumTransaction,
 } from './types'
@@ -32,8 +34,12 @@ class PrivateKeyWallet implements WalletInterface {
     this.privKey = privateKey
     this.chainId = chainId
   }
+  getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
+    console.log('getGasFee', tx)
+    throw new Error('Method not implemented.')
+  }
   getSignableTransaction(
-    tx: PreEthereumTransaction,
+    tx: EthereumTransactionWithFeeType,
   ): Promise<PreTransactionResponse> {
     console.log('getSignableTransaction', tx)
     throw new Error('Method not implemented.')
