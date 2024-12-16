@@ -54,6 +54,7 @@ const ROUTES_WALLET: RouteNameCollection = {
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
+  STAKE: { NAME: 'Stake', PATH: 'stake' },
   STAKED: { NAME: 'Staked', PATH: 'staked' },
   STAKED_STATUS: { NAME: 'StakedStatus', PATH: 'status' },
   STAKED_1: { NAME: 'Staked1', PATH: 'staked-1' },

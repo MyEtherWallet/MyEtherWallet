@@ -120,19 +120,54 @@ min width screen-desktop-min
         @apply hover:opacity-50 transition-opacity duration-300 ease-in-out;
     }
 
-    /* .hoverBGGrey {
-        @apply hover:bg-grey-5 transition-colors duration-300;
-    } */
-
     .hoverOpacityHasBG {
         @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
     }
 
+    .hoverNoBG {
+        @apply hover:bg-grey-5 transition-colors duration-300 ease-in-out;
+    }
+
+    .hoverOnDarkBG {
+        @apply hover:bg-white/5 transition-all duration-300 ease-in
+    }
 }
 
 
 
-/*FADE Transition*/
+/**
+* Shadow mask for and image
+* Used in Products
+*/
+.bottomShadowIMGMask {
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
+    mask-image: linear-gradient(to top, transparent 0%, black 30%);
+}
+
+
+/**
+* Ripple effect
+*/
+span.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.4s ease-out;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/*---------------------------------------*/
+/* Transitions */
+/*---------------------------------------*/
+
+/* FADE transition */
 .fade-enter-active {
     transition: opacity 0.5s ease;
 }
@@ -149,11 +184,25 @@ min width screen-desktop-min
     opacity: 0;
 }
 
-/**
-* Shadow mask for and image
-* Used in Products
-*/
-.bottomShadowIMGMask {
-    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
-    mask-image: linear-gradient(to top, transparent 0%, black 30%);
+
+
+/* FADELIST transition - used in lists */
+
+.fadelist-move,
+.fadelist-enter-active,
+.fadelist-leave-active {
+    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+
+}
+
+.fadelist-enter-from,
+.fadelist-leave-to {
+    opacity: 0;
+    transform: scale(0);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.fadelist-leave-active {
+    position: absolute;
 }
