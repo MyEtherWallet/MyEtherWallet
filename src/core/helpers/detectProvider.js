@@ -68,7 +68,7 @@ export function getInjectedName(ethereum) {
       nameSet.add(name);
     }
     const names = [...nameSet];
-    if (names.length) return names;
+    if (names.length) return names[0];
     return names[0] ?? 'Injected';
   }
 

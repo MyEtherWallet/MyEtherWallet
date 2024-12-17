@@ -90,6 +90,7 @@ export default {
     }
     // epi6963 listener
     window.addEventListener('eip6963:announceProvider', e => {
+      console.log(e, 'here');
       this.storeEIP6963Wallet(e.detail);
     });
     EventBus.$on('swapTxBroadcasted', hash => {
