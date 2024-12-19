@@ -47,11 +47,6 @@ jobs:
           GITHUB_TOKEN: ${{secrets.MEW_BOT_TOKEN}}
         run: |
           pip install --user awscli
-          mkdir -p ~/.ssh
-          openssl aes-256-cbc -K ${{secrets.FILE_DECRYPT_KEY}} -iv ${{secrets.FILE_DECRYPT_IV}} -in ssh-keys.tar.enc -out ssh-keys.tar -d
-          tar xvf ssh-keys.tar
-          chmod 400 ipfs-host.pem
-          HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
           aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/v6/build/$GITHUB_SHA
           aws s3 cp s3://mewbuilds/v6/build/$GITHUB_SHA/service-worker.js s3://mewbuilds/v6/build/$GITHUB_SHA/service-worker.js \
             --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate \
@@ -67,7 +62,6 @@ jobs:
           VIRUS_TOTAL_URL=https://www.virustotal.com/gui/file/$FILE_SHA256
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
             -d "{\"body\": \"Copy of this build can be found at <br/>https://v6.mewbuilds.com/${GITHUB_SHA}/index.html<br/> \
-                            https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
                             "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments"
