@@ -78,7 +78,7 @@ export default {
       const tokenSymbol = this.selectedToken.token;
       this.deleteToken([this.selectedToken]).then(() => {
         this.close();
-        Toast(`${tokenSymbol} Token removed succesfully`, {}, SUCCESS);
+        Toast(`${tokenSymbol} Token removed successfully`, {}, SUCCESS);
       });
     }
   }

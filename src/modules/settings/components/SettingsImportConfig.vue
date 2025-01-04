@@ -47,7 +47,7 @@ export default {
       this.importConfig
         .importStore(this.file)
         .then(() => {
-          Toast('Settings succesfully imported!', {}, SUCCESS);
+          Toast('Settings successfully imported!', {}, SUCCESS);
         })
         .catch(e => {
           Toast(e.messsage, {}, ERROR);

@@ -10,7 +10,7 @@
         <template v-if="isAvailable" #moduleBody>
           <!--
             =====================================================================================
-              From / Amount to Swap / To / Amount to Recieve
+              From / Amount to Swap / To / Amount to Receive
             =====================================================================================
             -->
           <div class="input-swap-container pt-7 pb-3 px-5">

@@ -631,7 +631,7 @@ export default {
       if (this.bitBox2Connected) return 'Enter BitBox02 password';
       if (this.bitBox2Unpaired) return 'Confirm pairing code';
       if (this.bitBox2Initialized)
-        return 'BitBox02 succesfully initialized. Loading wallet';
+        return 'BitBox02 successfully initialized. Loading wallet';
       return this.walletType ? this.wallets[this.walletType].title : '';
     }
   },
