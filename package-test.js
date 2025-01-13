@@ -101,7 +101,8 @@ const EXCEPTIONS = [
   '@shapeshiftoss/hdwallet-keepkey-webusb',
   '@trezor/connect-web',
   '@walletconnect/modal',
-  '@walletconnect/ethereum-provider'
+  '@walletconnect/ethereum-provider',
+  'viem'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
