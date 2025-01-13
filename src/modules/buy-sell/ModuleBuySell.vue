@@ -57,7 +57,10 @@
                   <div class="font-weight-medium textDark--text mr-1">
                     You will get
                   </div>
-                  <mew-tooltip v-if="!loading" style="height: 21px">
+                  <mew-tooltip
+                    v-if="!loading && fetchError === ''"
+                    style="height: 21px"
+                  >
                     <template #contentSlot>
                       <div>
                         Includes 4.75% fee (First transaction is free).
