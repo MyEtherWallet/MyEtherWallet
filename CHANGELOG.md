@@ -1,3 +1,13 @@
+### fix
+
+* fix error when phantom is installed [#5066](https://github.com/MyEtherWallet/MyEtherWallet/pull/5066)
+
+### Release v6.9.17-hotfix.1
+
+### fix
+
+* fix phantom [#5066](https://github.com/MyEtherWallet/MyEtherWallet/pull/5066)
+
 ### Release v6.9.17
 
 ### fix
