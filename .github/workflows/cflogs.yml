@@ -1,0 +1,22 @@
+name: Get Cloudflare Logs
+on: [pull_request]
+jobs:
+  logs-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for CF Pages
+        id: cf-pages
+        uses: WalshyDev/cf-pages-await@v1
+        with:
+          apiToken: ${{ secrets.CF_API_KEY  }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID  }}
+          project: 'mew-web'
+
+      - name: getting logs
+        id: cf-logs
+        run: |
+          curl \
+            -H "Authorization: Bearer ${{ secrets.CF_API_KEY  }}" \
+            -H "Content-Type: application/json" \
+            https://api.cloudflare.com/client/v4/accounts/${{ secrets.CF_ACCOUNT_ID }}/pages/projects/mew-web/deployments/${{ steps.cf-pages.outputs.id }}/history/logs | jq -r '.result.data | map(.line) | join("\n")'
