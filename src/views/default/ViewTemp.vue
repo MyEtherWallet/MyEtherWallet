@@ -1,6 +1,6 @@
 <template>
-  <main>
+  <div>
     <p class="text-9xl my-10">I am a temp Page</p>
-  </main>
+  </div>
 </template>
 <script setup lang="ts"></script>

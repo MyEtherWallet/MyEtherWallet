@@ -12,7 +12,7 @@
       @blur="inFocusInput = false"
       @input="searchWallet"
     />
-    <MewAppBtnIconClose
+    <AppBtnIconClose
       @click="clearInputValue"
       :class="[
         textValue !== '' && inFocusInput ? 'opacity-100' : 'opacity-0',
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import MewAppBtnIconClose from '@/components/MewAppBtnIconClose.vue'
+import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 const textValue = ref('')
 const inFocusInput = ref(false)
 const clearInputValue = () => {
