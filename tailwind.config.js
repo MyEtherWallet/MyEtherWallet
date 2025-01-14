@@ -32,6 +32,7 @@ export default {
     },
     colors: {
       appBackground: '#f5f5f7',
+      'side-menu': '#07385f',
       titleColor: '#222222',
       primary: '#005ae5',
       primaryActive: '#0067e0',
@@ -44,6 +45,7 @@ export default {
       white: '#ffffff',
       info: 'rgba(0, 0, 0, 0.7)',
       'grey-30': 'rgba(0,0,0,0.3)',
+      'grey-10': 'rgba(0,0,0,0.1)',
       'grey-5': 'rgba(0,0,0,0.05)',
       'mew-green-text': '#05C0A5',
       error: 'rgba(228,12,91,1)',

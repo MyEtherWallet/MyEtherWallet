@@ -1,7 +1,7 @@
 import { ROUTES_WALLET } from './routeNames'
 
+const WalletLayoutDefault = () => import('@components/core_layouts/LayoutWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
-const WalletLayoutDefault = () => import('@view-default/ViewWallet.vue')
 const SendView = () => import('@/modules/send/ViewSend.vue')
 
 const WalletRoutes = [
