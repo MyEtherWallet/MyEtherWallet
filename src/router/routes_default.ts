@@ -2,6 +2,7 @@ import { ROUTES_HOME } from './routeNames';
 const LayoutDefault = () => import('@components/core_layouts/LayoutDefault.vue')
 const HomeView = () => import('@view-default/ViewAccessWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
+const NotFoundView = () => import('@view-default/ViewNotFound.vue')
 const KeystoreUpload = () => import('@/modules/access/components/access_keystore/KeystoreUpload.vue')
 const KeystorePassword = () => import('@/modules/access/components/access_keystore/KeystorePassword.vue')
 
@@ -148,6 +149,14 @@ const DefaultRoutes = [{
       path: '/advertise-with-us',
       name: 'advertise-with-us',
       component: TempView,
+      meta: {
+        noAuth: true
+      },
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: NotFoundView,
       meta: {
         noAuth: true
       },
