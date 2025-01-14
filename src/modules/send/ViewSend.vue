@@ -3,13 +3,7 @@
     <h1>Send</h1>
     <form @submit.prevent="handleSubmit">
       <label for="amount-input">Amount:</label>
-      <input
-        v-model="amount"
-        name="amount-input"
-        type="number"
-        step="0.000000000000000001"
-        required
-      />
+      <app-enter-amount v-model="amount" />
       <br />
       <label for="address-input">Address:</label>
       <input v-model="toAddress" name="address-input" type="string" required />
@@ -24,6 +18,7 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/wallet_store'
+import AppEnterAmount from '@/components/AppEnterAmount.vue'
 
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
