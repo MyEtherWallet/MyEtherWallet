@@ -78,8 +78,8 @@
   }
 
   /**
-min width screen-desktop-min
-*/
+    min width screen-desktop-min
+  */
   @media screen(xl) {
     .title1 {
       @apply text-s-80 leading-p-110;
@@ -119,70 +119,12 @@ min width screen-desktop-min
     @apply hover:opacity-50 transition-opacity duration-300 ease-in-out;
   }
 
-  /* .hoverBGGrey {
-        @apply hover:bg-grey-5 transition-colors duration-300;
-    } */
-
   .hoverOpacityHasBG {
     @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
   }
 }
 
 /*FADE Transition*/
-
-/**
-* min screen-tablet-portain
-*/
-@media screen(md) {
-  .title1 {
-    @apply text-s-64 leading-p-120;
-  }
-
-  .title3 {
-    @apply text-s-52 leading-p-110;
-  }
-
-  .text5 {
-    @apply text-2xl leading-p-130;
-  }
-}
-
-/**
-min width screen-desktop-min
-*/
-@media screen(xl) {
-  .title1 {
-    @apply text-s-80 leading-p-110
-  }
-
-  .title2 {
-    @apply text-7xl leading-p-110
-  }
-
-  .title3 {
-    @apply text-s-64
-  }
-
-  .title4 {
-    @apply text-5xl leading-p-110
-  }
-
-  .title5 {
-    @apply text-s-32 leading-p-110
-  }
-
-  .text5 {
-    @apply text-s-32 leading-p-130
-  }
-
-  .text6 {
-    @apply text-2xl leading-p-140
-  }
-
-  .text7 {
-    @apply text-xl leading-p-150
-  }
-}
 
 /** Hover Transition */
 .hoverOpacity {
@@ -251,16 +193,6 @@ span.ripple {
 .fade-leave-to {
   opacity: 0;
 }
-
-/**
-* Shadow mask for and image
-* Used in Products
-*/
-.bottomShadowIMGMask {
-  -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
-  mask-image: linear-gradient(to top, transparent 0%, black 30%);
-}
-
 
 /* FADELIST transition - used in lists */
 
