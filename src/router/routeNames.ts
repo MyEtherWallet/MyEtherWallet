@@ -37,8 +37,6 @@ const ROUTES_HOME: RouteNameCollection = {
 const ROUTES_WALLET: RouteNameCollection = {
   WALLET: { NAME: 'Wallet', PATH: '/wallet' },
   DASHBOARD: { NAME: 'WalletDashboard', PATH: 'dashboard' },
-  SEND: { NAME: 'WalletSend', PATH: 'send' },
-
   //A-Z
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
@@ -48,10 +46,7 @@ const ROUTES_WALLET: RouteNameCollection = {
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
-  NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
-  SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
-  SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
   STAKE: { NAME: 'Stake', PATH: 'stake' },
@@ -65,7 +60,20 @@ const ROUTES_WALLET: RouteNameCollection = {
   SWAP: { NAME: 'Swap', PATH: 'swap' },
   BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
-  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
+  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' },
+  //TO BE DELETED
+  NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' }
+
 };
 
-export { ROUTES_HOME, ROUTES_WALLET };
+
+const ROUTES_SEND: RouteNameCollection = {
+  SEND: { NAME: 'WalletSend', PATH: 'send' },
+  SEND_NFT: { NAME: 'WalletSendNFT', PATH: 'nft', },
+
+  //TO BE IMPLEMENTED OR DELETED
+  SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
+}
+
+export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND };

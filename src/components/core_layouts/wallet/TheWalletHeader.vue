@@ -1,14 +1,11 @@
 <template>
-  <div
-    :class="[
-      'flex-initial w-full justify-end h-16 p-3 bg-white my-1',
-      { fixed: !isDesktop },
-    ]"
+  <div v-if="!isDesktop"
+    class="flex-initial w-full justify-end h-16 px-6 xs:px-10 bg-white fixed top-0 -mx-5 xs:-mx-10"
   >
     <button
       type="button"
       @click="btnClick"
-      class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+      class="inline-flex items-center mt-3 p-2  ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
     >
       <span class="sr-only">Open sidebar</span>
       <svg

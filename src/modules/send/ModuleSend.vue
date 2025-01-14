@@ -1,6 +1,5 @@
 <template>
-  <main>
-    <h1>Send</h1>
+  <div>
     <form @submit.prevent="handleSubmit">
       <label for="amount-input">Amount:</label>
       <input
@@ -18,13 +17,12 @@
         Send
       </button>
     </form>
-  </main>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/wallet_store'
-
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
 
