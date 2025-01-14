@@ -2,7 +2,7 @@ export type RouteNameCollection = {
   [key: string]: RouteName
 }
 export type RouteName = {
-  NAME: string,
+  NAME: string
   PATH: string
 }
 
@@ -11,7 +11,10 @@ const ROUTES_HOME: RouteNameCollection = {
   //Default
   ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
   ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'access/keystore' },
-  ACCESS_KEYSTORE_PASSWORD: { NAME: 'AccessKeystorePassword', PATH: 'access/keystore/password' },
+  ACCESS_KEYSTORE_PASSWORD: {
+    NAME: 'AccessKeystorePassword',
+    PATH: 'access/keystore/password',
+  },
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'access/mnemonic' },
   ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'access/private-key' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create/' },
@@ -31,8 +34,8 @@ const ROUTES_HOME: RouteNameCollection = {
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
   TOOLS_KEYSTORE: { NAME: 'ToolsKeystore', PATH: 'tools-keystore' },
   TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
-  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' }
-};
+  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' },
+}
 //In Wallet
 const ROUTES_WALLET: RouteNameCollection = {
   WALLET: { NAME: 'Wallet', PATH: '/wallet' },
@@ -64,7 +67,7 @@ const ROUTES_WALLET: RouteNameCollection = {
   SWAP: { NAME: 'Swap', PATH: 'swap' },
   BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
-  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
-};
+  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' },
+}
 
-export { ROUTES_HOME, ROUTES_WALLET };
+export { ROUTES_HOME, ROUTES_WALLET }

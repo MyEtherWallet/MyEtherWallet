@@ -1,49 +1,47 @@
 /* DM Sans - 100 - latin */
 @font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 100;
-    src: url('@assets/fonts/DMSans/DMSans-100.woff2');
-
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 100;
+  src: url('@assets/fonts/DMSans/DMSans-100.woff2');
 }
 
 /* DM Sans - 300 - latin */
 @font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 300;
-    src: url('@assets/fonts/DMSans/DMSans-300.woff2');
-
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('@assets/fonts/DMSans/DMSans-300.woff2');
 }
 
 /* DM Sans - regular - latin */
 @font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 400;
-    src: url('@assets/fonts/DMSans/DMSans-400.woff2');
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('@assets/fonts/DMSans/DMSans-400.woff2');
 }
 
 /* DM Sans - 500 - latin */
 @font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 500;
-    src: url('@assets/fonts/DMSans/DMSans-500.woff2');
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('@assets/fonts/DMSans/DMSans-500.woff2');
 }
 
 /* DM Sans - 600 - latin */
 @font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 600;
-    src: url('@assets/fonts/DMSans/DMSans-600.woff2');
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('@assets/fonts/DMSans/DMSans-600.woff2');
 }
 
 /* DM Sans - 700 - latin */
 @font-face {
-    font-family: 'DM Sans';
-    font-style: normal;
-    font-weight: 700;
-    src: url('@assets/fonts/DMSans/DMSans-700.woff2');
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('@assets/fonts/DMSans/DMSans-700.woff2');
 }

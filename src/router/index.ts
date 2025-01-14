@@ -9,22 +9,21 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { top: 0, left: 0, behavior: 'smooth' };
+      return { top: 0, left: 0, behavior: 'smooth' }
     }
-
-  }
+  },
 })
 
 // reroute when address is undefined
 router.beforeEach((to, from, next) => {
-  const store = useWalletStore();
+  const store = useWalletStore()
   if (to.meta && to.meta.noAuth) {
-    next();
+    next()
   } else {
     if (store.wallet) {
-      next();
+      next()
     } else {
-      next('/');
+      next('/')
     }
   }
 })

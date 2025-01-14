@@ -2,7 +2,7 @@ import '@assets/main.css'
 import i18n from './i18n/index'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import '@assets/fonts/DMSans/DMSans.css';
+import '@assets/fonts/DMSans/DMSans.css'
 import {
   init as sentryInit,
   browserTracingIntegration,

@@ -5,7 +5,7 @@ export interface MessagesSchema {
 }
 
 interface ModuleImportInterface {
-  default: object;
+  default: object
 }
 /**
  * List of supported languages.
@@ -23,12 +23,11 @@ const getLocales = (locales: Record<string, ModuleImportInterface>) => {
     messages[lang] = Object.keys(locales)
       .filter(path => path.includes(`/${lang}.json`))
       .reduce((localisedStrings, path) => {
-        return Object.assign(localisedStrings, locales[path].default);
-      }, {});
-    return messages;
-  }, {} as MessagesSchema);
+        return Object.assign(localisedStrings, locales[path].default)
+      }, {})
+    return messages
+  }, {} as MessagesSchema)
 }
 
 const messages = getLocales(locales as Record<string, ModuleImportInterface>)
-export default messages;
-
+export default messages
