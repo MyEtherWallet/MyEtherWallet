@@ -1,7 +1,7 @@
 name: Get Cloudflare Logs
 on: [pull_request]
 jobs:
-  build:
+  logs-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
