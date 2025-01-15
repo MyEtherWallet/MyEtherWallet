@@ -1,6 +1,6 @@
 {
-    "access_wallet": {
-        "title": "Access MEW Portfolio",
-        "search_wallet": "Search for your wallet"
-    }
+  "access_wallet": {
+    "title": "Access MEW Portfolio",
+    "search_wallet": "Search for your wallet"
+  }
 }

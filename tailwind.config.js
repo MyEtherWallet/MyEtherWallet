@@ -48,7 +48,7 @@ export default {
       'grey-10': 'rgba(0,0,0,0.1)',
       'grey-5': 'rgba(0,0,0,0.05)',
       'light-grey': 'rgba(249, 250, 251, 1)',
-      mewGreenText: 'rgba(12,88,118,1)',
+      'mew-green-text': '#05C0A5',
       error: 'rgba(228,12,91,1)',
       'error-10': 'rgba(228,12,91,0.1)',
       'error-7': 'rgba(228,12,91,0.07)',
