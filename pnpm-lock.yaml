@@ -72,6 +72,9 @@ importers:
         specifier: ^2.0.6
         version: 2.0.6
     devDependencies:
+      '@heroicons/vue':
+        specifier: ^2.2.0
+        version: 2.2.0(vue@3.5.13(typescript@5.6.3))
       '@nightwatch/vue':
         specifier: ^3.1.2
         version: 3.1.2(@types/node@22.10.1)(bufferutil@4.0.8)(less@4.2.1)(terser@5.36.0)(utf-8-validate@5.0.10)(vue@3.5.13(typescript@5.6.3))
@@ -933,6 +936,11 @@ packages:
   '@ethereumjs/wallet@2.0.4':
     resolution: {integrity: sha512-XPX9sUhIXdPjA5FpOmPD0weCAz+9OvCA10OdntJGOXVHtQQZRbncPokxkotDFWopExU/Vj+qZZSHqu+jWK5nkw==}
     engines: {node: '>=18'}
+
+  '@heroicons/vue@2.2.0':
+    resolution: {integrity: sha512-G3dbSxoeEKqbi/DFalhRxJU4mTXJn7GwZ7ae8NuEQzd1bqdd0jAbdaBZlHPcvPD2xI1iGzNVB4k20Un2AguYPw==}
+    peerDependencies:
+      vue: '>= 3'
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -6637,6 +6645,10 @@ snapshots:
       ethereum-cryptography: 2.2.1
       js-md5: 0.8.3
       uuid: 9.0.1
+
+  '@heroicons/vue@2.2.0(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      vue: 3.5.13(typescript@5.6.3)
 
   '@humanfs/core@0.19.1': {}
 
