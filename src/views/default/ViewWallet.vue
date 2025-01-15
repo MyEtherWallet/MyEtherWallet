@@ -38,11 +38,13 @@ const { setTokens } = store
 const address = wallet.value?.getAddressString()
 
 onMounted(async () => {
+  console.log(setTokens, store)
   try {
     const res = await fetch(
       `https://tmp.ethvm.dev/balances/137/${address}?noInjectErrors=true`,
-    ).then(res => res.json())
-    setTokens(res.result)
+    )
+    const tokens = await res.json()
+    setTokens(tokens.result)
   } catch (e) {
     console.error(e)
   }
