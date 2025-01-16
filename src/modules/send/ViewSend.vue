@@ -1,6 +1,5 @@
 <template>
   <main>
-    <h1>Send</h1>
     <form @submit.prevent="handleSubmit">
       <div class="flex">
         <div>
@@ -11,8 +10,6 @@
               v-model:amount-error="amountError"
             />
           </div>
-          <!-- <div>balance: {{ tokenSelected.balance }}</div>
-          <p class="text-error">{{ amountErrorMessages }}</p> -->
         </div>
       </div>
       <div>
