@@ -38,7 +38,7 @@
               class="font-weight-bold textDark--text"
               style="font-size: 0.95rem"
             >
-              <b>NEW: Stake any amount of ETH powered by Coinbase</b>
+              <b>Stake any amount of ETH powered by Coinbase</b>
             </span>
             <span
               :class="[
@@ -94,7 +94,7 @@
                   height="40"
                   width="40"
                 />
-                <span :style="ad.titleColor"> {{ ad.buttonTitle }} </span>
+                <span :style="ad.titleColor">{{ ad.buttonTitle }}</span>
               </div>
             </template>
             <a
