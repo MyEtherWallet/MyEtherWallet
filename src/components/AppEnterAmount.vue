@@ -25,7 +25,7 @@
         {{ balanceOrError }}
       </div>
       <div class="text-lg text-mew-purple">
-        Balance: {{ $filters.truncate(selectedToken.balance, 5) }}
+        Balance: {{ truncate(selectedToken.balance, 5) }}
       </div>
     </div>
   </div>
@@ -37,6 +37,7 @@ import { defineProps, defineEmits, watch, ref, computed } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import { toWei } from 'web3-utils'
+import { truncate } from '@/utils/filters'
 
 import AppTokenSelect from './AppTokenSelect.vue'
 

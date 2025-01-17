@@ -17,7 +17,6 @@ import { Provider } from './providers'
 import type { PopupState } from './stores/popup'
 import { Analytics } from './analytics/amplitude'
 import rippleDirective from '@/directives/ripple';
-import * as filters from '@/utils/filters';
 
 const app = createApp(App)
 
@@ -123,7 +122,5 @@ app.directive('ripple', rippleDirective);
  * ```
  */
 app.provide(Provider.ANALYTICS, new Analytics({ amplitude }))
-
-app.config.globalProperties.$filters = filters;
 
 app.mount('#app')

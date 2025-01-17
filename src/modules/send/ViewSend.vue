@@ -74,6 +74,10 @@
         Send
       </button>
     </form>
+    <app-need-help
+      title="Need help?"
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+    />
   </main>
 </template>
 <script setup lang="ts">
@@ -84,6 +88,7 @@ import { Contract } from 'web3-eth-contract'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
 
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
 
 import {
   useWalletStore,

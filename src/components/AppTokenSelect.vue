@@ -48,18 +48,13 @@
               <div>
                 <h2>{{ token.name }}</h2>
                 <p class="text-grey-30">
-                  {{ token.balance }} {{ $filters.truncate(token.symbol, 7) }}
+                  {{ token.balance }} {{ truncate(token.symbol, 7) }}
                 </p>
               </div>
             </div>
             <div v-if="token.price !== 0">
               $
-              {{
-                $filters.truncate(
-                  convertToValue(token.price, token.balance),
-                  12,
-                )
-              }}
+              {{ truncate(convertToValue(token.price, token.balance), 12) }}
             </div>
           </div>
         </div>
@@ -77,9 +72,11 @@ import {
 import { ref, computed } from 'vue'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { FwbModal } from 'flowbite-vue'
+import BigNumber from 'bignumber.js'
 
 import eth from '@/assets/icons/tokens/eth.svg'
-import BigNumber from 'bignumber.js'
+
+import { truncate } from '@/utils/filters'
 
 const emit = defineEmits(['update:selectedToken'])
 
