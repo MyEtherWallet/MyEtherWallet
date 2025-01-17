@@ -11,7 +11,7 @@
       max-width="300"
       type="avatar"
     ></v-skeleton-loader>
-    <div v-if="!loading" class="d-flex align-center">
+    <div v-if="!loading" class="d-flex align-center position--relative">
       <v-btn icon @click="openNotifications">
         <img
           src="@/assets/images/icons/icon-notifications.svg"
@@ -339,6 +339,7 @@ export default {
 }
 
 .notification-count {
+  position: absolute;
   top: 0;
   border-radius: 100%;
   margin-bottom: 20px;
