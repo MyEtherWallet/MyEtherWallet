@@ -9,17 +9,16 @@ export type RouteName = {
 const ROUTES_HOME: RouteNameCollection = {
   HOME: { NAME: 'Home', PATH: '' },
   //Default
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
-  ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'access/keystore' },
-  ACCESS_KEYSTORE_PASSWORD: { NAME: 'AccessKeystorePassword', PATH: 'access/keystore/password' },
-  ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'access/mnemonic' },
-  ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'access/private-key' },
+  ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'keystore' },
+  ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
+  ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create/' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
 
   //TOBE DELETED ON V7
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
@@ -66,7 +65,6 @@ const ROUTES_WALLET: RouteNameCollection = {
 
 };
 
-
 const ROUTES_SEND: RouteNameCollection = {
   SEND: { NAME: 'WalletSend', PATH: 'send' },
   SEND_NFT: { NAME: 'WalletSendNFT', PATH: 'nft', },
@@ -76,4 +74,14 @@ const ROUTES_SEND: RouteNameCollection = {
   SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
 }
 
-export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND };
+enum ACCESS_ALIAS {
+  access = '/access',
+  walletAccess = '/access/wallet',
+}
+
+enum KEYSTORE_ALIAS {
+  upload = '/keystore/upload',
+}
+
+export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS };
+
