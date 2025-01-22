@@ -1,10 +1,11 @@
 <template>
   <button
     :class="[
-      'rounded-full py-3 md:py-4 px-7 md:px-8 bg-transparent transition-[background] duration-300 ',
-      isOutline
-        ? 'border border-2 border-primary text-primary'
-        : 'bg-primary text-white',
+      'rounded-full py-3 md:py-4 px-7 md:px-8 bg-primary text-white !focus:bg-error !focus:text-primary transition-[background] duration-300 !focus:bg-primary/25',
+      {
+        'border border-2 border-primary !text-primary  bg-transparent':
+          isOutline,
+      },
       disabled
         ? isOutline
           ? '!border-grey-30 !text-grey-50'
@@ -12,11 +13,12 @@
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
-      ,
     ]"
-    :disabled="disabled"
+    :disabled="disabled || isLoading"
+    :aria-busy="isLoading"
     @click="onClick"
     v-ripple
+    :aria-disabled="disabled"
   >
     <svg
       v-if="isLoading"

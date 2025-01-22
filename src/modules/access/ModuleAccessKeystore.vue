@@ -9,7 +9,7 @@
       <div v-if="activeStep === 0">
         <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-space-between">
           <div>
-            <AppStepDescription
+            <app-step-description
               :description="stepDescription[0]"
               :activeStep="activeStep"
             />
@@ -20,9 +20,9 @@
               width="300"
               height="285"
             />
-            <AppBaseButton @click="clickUpload" class="mt-5 xs:mt-8">
+            <app-base-button @click="clickUpload" class="mt-5 xs:mt-8">
               Select Keystore
-            </AppBaseButton>
+            </app-base-button>
             <input
               ref="jsonInput"
               type="file"
@@ -41,30 +41,30 @@
         </div>
       </div>
       <div v-if="activeStep === 1">
-        <AppStepDescription
+        <app-step-description
           :description="stepDescription[1]"
           :activeStep="activeStep"
         />
-        <AppInput
+        <app-input
           v-model="password"
           placeholder="Enter Password"
           type="password"
           :error-message="errorPassword"
           is-required
-          class="mt-5"
+          class="mt-7"
         />
         <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
-          <AppBaseButton @click="backStep" is-outline class="!min-w-[120px]">
+          <app-base-button @click="backStep" is-outline class="!min-w-[120px]">
             Back
-          </AppBaseButton>
-          <AppBaseButton
+          </app-base-button>
+          <app-base-button
             @click="enterPassword"
             class="!min-w-[120px]"
             :disabled="submitIsDisabled"
             :is-loading="isUnlockingKeystore"
           >
             Submit
-          </AppBaseButton>
+          </app-base-button>
         </div>
       </div>
     </app-stepper>

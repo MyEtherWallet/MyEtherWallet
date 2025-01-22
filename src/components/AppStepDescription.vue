@@ -18,7 +18,7 @@ defineProps({
   },
   description: {
     type: Object as PropType<StepDescription>,
-    default: undefined,
+    required: true,
   },
 })
 </script>

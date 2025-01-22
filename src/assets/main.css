@@ -207,6 +207,6 @@ span.ripple {
     position: absolute;
 }
 
-/**
-* ANIMATION
-*/
+:focus-visible {
+    outline-offset: 5px;
+}

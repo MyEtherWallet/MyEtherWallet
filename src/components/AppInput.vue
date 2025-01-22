@@ -6,13 +6,12 @@
       v-model="model"
       :class="[
         {
-          '!border-error border-2 focus:ring-error': hasError,
+          '!border-error border-2': hasError,
         },
         {
-          '!border-primary !border-2 focus:ring-primary':
-            inFocusInput && !hasError,
+          '!border-primary !border-2': inFocusInput && !hasError,
         },
-        'grow focus:ring-none bg-white border border-1 border-grey-30  text-sm text-normal rounded-[20px] h-[58px] w-full pl-7 pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-all',
+        'grow focus:outline-none focus:ring-none bg-white border border-1 border-grey-30  text-sm text-normal rounded-[20px] h-[58px] w-full pl-7 pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-colors',
       ]"
       :required="isRequired"
       :aria-label="placeholder"
@@ -22,8 +21,8 @@
     />
     <span
       :class="[
-        'pointer-events-none absolute top-[16px] left-5 top-auto bottom-auto  transition-all pl-2 aria-hidden ',
-        inFocusInput ? 'text-primary' : 'text-info',
+        'pointer-events-none absolute top-[17px] left-5 bottom-auto transition-all pl-2 aria-hidden',
+        inFocusInput ? (hasError ? 'text-error' : 'text-primary') : 'text-info',
         { 'text-[10px] translate-y-[-70%]': inFocusInput || model !== '' },
       ]"
     >
