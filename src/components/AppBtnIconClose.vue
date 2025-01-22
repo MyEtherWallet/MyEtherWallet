@@ -1,11 +1,11 @@
 <template>
-  <AppBtnIcon
+  <app-btn-icon
     @click="closeClick"
     :is-white="props.isWhite"
-    :aria-label-string="ariaLabelString ?? $t('common.close')"
+    :label="label ?? $t('common.close')"
   >
     <XMarkIcon />
-  </AppBtnIcon>
+  </app-btn-icon>
 </template>
 
 <script setup lang="ts">
@@ -17,7 +17,7 @@ const props = defineProps({
     default: false,
     type: Boolean,
   },
-  ariaLabelString: {
+  label: {
     type: String,
   },
 })

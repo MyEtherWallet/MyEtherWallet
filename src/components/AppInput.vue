@@ -30,20 +30,20 @@
       {{ placeholder }}
     </span>
     <div class="absolute top-3 right-3 flex align-center">
-      <AppBtnIconClose
+      <app-btn-icon-close
         @click="clearInputValue"
         :class="[
           model !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
       />
-      <AppBtnIcon
+      <app-btn-icon
         v-if="type === 'password'"
         @click="togglePasswordVisibility"
-        :aria-label="!showPassword ? 'Show Password' : 'Hide Password'"
+        :label="!showPassword ? 'Show Password' : 'Hide Password'"
       >
         <component :is="!showPassword ? EyeSlashIcon : EyeIcon" />
-      </AppBtnIcon>
+      </app-btn-icon>
     </div>
     <p
       v-if="errorMessage"

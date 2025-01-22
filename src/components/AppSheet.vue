@@ -9,6 +9,7 @@
       <h1 v-if="title !== ''" :class="['pt-3 pb-1 title5 ', titleClass]">
         {{ title }}
       </h1>
+      <slot name="description" />
     </div>
     <slot />
   </div>
@@ -17,10 +18,6 @@
 <script setup lang="ts">
 defineProps({
   title: {
-    default: '',
-    type: String,
-  },
-  description: {
     default: '',
     type: String,
   },
