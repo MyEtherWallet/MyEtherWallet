@@ -1,20 +1,24 @@
 <template>
   <AppBtnIcon
-    :icon="ICONClose"
     @click="closeClick"
     :is-white="props.isWhite"
-    :aria-label-string="$t('common.close')"
-  />
+    :aria-label-string="ariaLabelString ?? $t('common.close')"
+  >
+    <XMarkIcon />
+  </AppBtnIcon>
 </template>
 
 <script setup lang="ts">
 import AppBtnIcon from './AppBtnIcon.vue'
-import ICONClose from '@/assets/icons/close.svg'
+import { XMarkIcon } from '@heroicons/vue/20/solid'
 
 const props = defineProps({
   isWhite: {
     default: false,
     type: Boolean,
+  },
+  ariaLabelString: {
+    type: String,
   },
 })
 const emit = defineEmits<{

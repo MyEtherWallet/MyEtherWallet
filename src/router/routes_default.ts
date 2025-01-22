@@ -1,9 +1,8 @@
-import { ROUTES_HOME } from './routeNames';
+import { ROUTES_HOME, ACCESS_ALIAS, KEYSTORE_ALIAS } from './routeNames';
 const LayoutDefault = () => import('@components/core_layouts/LayoutDefault.vue')
-const HomeView = () => import('@view-default/ViewAccessWallet.vue')
+const ViewHome = () => import('@view-default/ViewAccessWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
-const KeystoreUpload = () => import('@/modules/access/components/access_keystore/KeystoreUpload.vue')
-const KeystorePassword = () => import('@/modules/access/components/access_keystore/KeystorePassword.vue')
+const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
 
 const DefaultRoutes = [{
   path: '/',
@@ -13,8 +12,8 @@ const DefaultRoutes = [{
     {
       path: ROUTES_HOME.HOME.PATH,
       name: ROUTES_HOME.HOME.NAME,
-      component: HomeView,
-      alias: '/access',
+      component: ViewHome,
+      alias: [ACCESS_ALIAS.access, ACCESS_ALIAS.walletAccess],
       meta: {
         noAuth: true
       },
@@ -22,20 +21,13 @@ const DefaultRoutes = [{
     {
       path: ROUTES_HOME.ACCESS_KEYSTORE.PATH,
       name: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
-      component: KeystoreUpload,
-      alias: '/access/keystore/upload',
+      component: ViewAccessKeystore,
+      alias: KEYSTORE_ALIAS.upload,
       meta: {
         noAuth: true
-      },
+      }
     },
-    {
-      path: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.PATH,
-      name: ROUTES_HOME.ACCESS_KEYSTORE_PASSWORD.NAME,
-      component: KeystorePassword,
-      meta: {
-        noAuth: true
-      },
-    },
+
     /** Temporary Paths to be removed on v7 release
      *  Right Now components library thinks these exist in the project
      */

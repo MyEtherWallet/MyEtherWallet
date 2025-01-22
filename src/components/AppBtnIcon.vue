@@ -3,54 +3,24 @@
     type="button"
     :aria-label="ariaLabelString"
     :class="[
-      'rounded-full hoverNoBG !cursor-pointer',
-      height,
-      width,
+      'rounded-full hoverNoBG !cursor-pointer p-1 h-[32px] w-[32px]',
       { 'invert brightness-100': isWhite },
     ]"
     @click="btnClick"
   >
-    <img
-      :src="icon"
-      contain
-      alt=""
-      class="m-auto"
-      :width="iconWidth"
-      :height="iconHeight"
-      loading="lazy"
-    />
+    <div>
+      <slot />
+    </div>
   </button>
 </template>
 
 <script setup lang="ts">
-import ICONClose from '@/assets/icons/close.svg'
-
 defineProps({
-  icon: {
-    default: ICONClose,
-    type: String,
-  },
-  height: {
-    default: 'h-[32px]',
-    type: String,
-  },
-  width: {
-    default: 'w-[32px]',
-    type: String,
-  },
   isWhite: {
     default: false,
     type: Boolean,
   },
   ariaLabelString: {
-    type: String,
-  },
-  iconWidth: {
-    default: '32px',
-    type: String,
-  },
-  iconHeight: {
-    default: '32px',
     type: String,
   },
 })
