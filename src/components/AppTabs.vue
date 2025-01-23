@@ -2,7 +2,7 @@
   <div>
     <div
       role="tablist"
-      aria-label="Send Tabs"
+      :aria-label="label"
       class="flex justify-start bg-grey-light rounded-full p-2 gap-1 max-w-fit"
       v-bind="$attrs"
       @keydown="handleKeyDown"
@@ -86,6 +86,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  label: {
+    type: String,
+    required: true,
+  },
 })
 
 /**
@@ -153,6 +157,15 @@ onBeforeMount(() => {
     )
     if (index !== -1) {
       model.value = index
+    } else {
+      // Fallback to first tab or handle error state
+      try {
+        model.value = 0
+        router.push({ name: props.tabs[0].routeName })
+      } catch (err) {
+        //TODO: add sentry logging
+        console.error('Failed to navigate to fallback tab:', err)
+      }
     }
   }
 })

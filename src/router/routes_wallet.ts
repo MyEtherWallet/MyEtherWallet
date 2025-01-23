@@ -1,13 +1,14 @@
 import { ROUTES_WALLET, ROUTES_SEND } from './routeNames';
 
-const LayoutWallet = () => import('@components/core_layouts/LayoutWallet.vue')
+const WalletLayoutDefault = () => import('@components/core_layouts/LayoutWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
 const SendView = () => import('@/views/wallet/send/ViewSend.vue')
 const ModuleSend = () => import('@/modules/send/ModuleSend.vue')
 const ModuleSendNft = () => import('@/modules/nft/ModuleSendNft.vue')
+
 const WalletRoutes = [{
   path: ROUTES_WALLET.WALLET.PATH,
-  component: LayoutWallet,
+  component: WalletLayoutDefault,
   children: [
     {
       path: '',
@@ -35,4 +36,3 @@ const WalletRoutes = [{
 }]
 
 export default WalletRoutes
-

@@ -5,6 +5,7 @@
       :tabs="tabs"
       :panel="panels"
       :useRouteLink="true"
+      label="Send Tabs"
     />
   </div>
 </template>

@@ -51,8 +51,8 @@ export default {
       'grey-30': 'rgba(0,0,0,0.3)',
       'grey-10': 'rgba(0,0,0,0.1)',
       'grey-5': 'rgba(0,0,0,0.05)',
+      'mew-green-text': '#05C0A5',
       'grey-8': 'rgba(0,0,0,0.08)',
-      mewGreenText: 'rgba(12,88,118,1)',
       error: 'rgba(228,12,91,1)',
       'error-10': 'rgba(228,12,91,0.1)',
       'error-7': 'rgba(228,12,91,0.07)',
@@ -63,7 +63,6 @@ export default {
       purple: 'rgba(104, 76, 255, 1)',
       'purple-10': 'rgba(104,76,255,0.1)',
       'purple-7': 'rgba(104,76,255,0.07)',
-      'ring-color': 'rgba(228,12,91,1)'
     },
     extend: {
       fontSize: {
@@ -94,8 +93,6 @@ export default {
       borderRadius: {
         '4xl': '32px',
       },
-      ringColor: '#3b82f6', // Change default ring color to blue
-
     },
   },
   plugins: [],
