@@ -7,7 +7,7 @@
     <div
       class="rounded-full border-x border-y border-grey-30 mr-1 h-5 w-5 overflow-hidden"
     >
-      <img class="w-5 h-5" :src="selectedToken.logo_url" alt="token icon" />
+      <img class="w-5 h-5" :src="imageReplacer(selectedToken.logo_url)" alt="token icon" />
     </div>
     {{ selectedToken.symbol }}
     <chevron-down-icon class="ml-1 w-4 h-4 stroke-4" />
@@ -69,7 +69,7 @@ import {
   useWalletStore,
   type Token,
 } from '@/stores/wallet_store'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { FwbModal } from 'flowbite-vue'
 import BigNumber from 'bignumber.js'
@@ -90,6 +90,7 @@ defineProps({
   },
 })
 
+
 const showAllTokens = ref(false)
 const searchInput = ref('')
 
@@ -98,6 +99,11 @@ const defaultImg = computed(() => {
     (token: Token) => token.contract === MAIN_TOKEN_CONTRACT,
   )
   return img ? img.logo_url : eth
+})
+
+
+onMounted(() => {
+  if(tokens.length > 0) setSelectedToken(tokens[0])
 })
 
 const searchResults = computed(() => {
@@ -130,7 +136,7 @@ const setSelectedToken = (token: Token) => {
 }
 
 const imageReplacer = (logo: string) => {
-  if (logo === 'https://img.mewapi.io/?image=null') {
+  if (logo === 'https://img.mewapi.io/?image=null' || !!logo) {
     return defaultImg.value
   }
   return logo

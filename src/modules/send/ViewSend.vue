@@ -82,7 +82,7 @@
   </main>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, computed, type Ref, watch } from 'vue'
+import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
@@ -101,7 +101,6 @@ import { abi } from './tokenAbi'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
-const { setTokens } = walletStore
 
 const amount = ref('0')
 const toAddress = ref('')
@@ -114,16 +113,6 @@ const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
-
-// TODO: Implement this on a wallet context instead of before loading send page since this is shared across
-// different parts of the wallet
-onBeforeMount(async () => {
-  const fetchTokens = await fetch(
-    `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddressString()}`,
-  )
-  const tokens = await fetchTokens.json()
-  setTokens(tokens.result)
-})
 
 onMounted(async () => {
   const mainToken: Token = tokens.value.find(
