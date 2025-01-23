@@ -10,14 +10,14 @@
       <img class="w-5 h-5" :src="selectedToken.logo_url" alt="token icon" />
     </div>
     {{ selectedToken.symbol }}
-    <ChevronDownIcon class="ml-1 w-4 h-4 stroke-4" />
+    <chevron-down-icon class="ml-1 w-4 h-4 stroke-4" />
   </button>
   <fwb-modal v-if="showAllTokens" @close="closeModal" size="xl">
     <template #header>
       <div class="w-full">
         <div class="items-center text-lg">Select token to send</div>
         <div class="flex items-center mt-2 w-full">
-          <MagnifyingGlassIcon class="w-6 h-6 mx-3" />
+          <magnifying-glass-icon class="w-6 h-6 mx-3" />
           <input
             class="w-full h-10 rounded-md px-2 border-none"
             style="outline: none !important"

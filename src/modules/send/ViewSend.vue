@@ -22,6 +22,7 @@
         />
         <p class="text-error">{{ addressErrorMessages }}</p>
       </div>
+      <app-select-tx-fee />
       <div>
         <input
           type="checkbox"
@@ -89,6 +90,7 @@ import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
 
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
 import {
   useWalletStore,

@@ -88,6 +88,9 @@ export default {
         height: 'height',
         bg: 'background',
       },
+      borderWidth: {
+        1: '1px',
+      },
       borderRadius: {
         '4xl': '32px',
       },
