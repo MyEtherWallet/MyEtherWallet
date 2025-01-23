@@ -62,7 +62,6 @@ export default {
       purple: 'rgba(104, 76, 255, 1)',
       'purple-10': 'rgba(104,76,255,0.1)',
       'purple-7': 'rgba(104,76,255,0.07)',
-      'ring-color': 'rgba(228,12,91,1)',
     },
     extend: {
       fontSize: {
@@ -93,7 +92,6 @@ export default {
       borderRadius: {
         '4xl': '32px',
       },
-      ringColor: '#3b82f6', // Change default ring color to blue
     },
   },
   plugins: [],
