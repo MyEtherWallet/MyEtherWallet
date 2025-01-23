@@ -46,6 +46,7 @@ export default {
       black: '#000000',
       white: '#ffffff',
       info: 'rgba(0, 0, 0, 0.7)',
+      'grey-light': 'rgba(232, 232, 237, 1)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
       'grey-10': 'rgba(0,0,0,0.1)',

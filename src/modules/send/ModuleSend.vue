@@ -1,6 +1,5 @@
 <template>
-  <main>
-    <h1>Send</h1>
+  <div>
     <form @submit.prevent="handleSubmit">
       <div class="flex">
         <div>
@@ -88,7 +87,7 @@
         Send
       </button>
     </form>
-  </main>
+  </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
