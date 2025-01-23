@@ -4,8 +4,8 @@
       src="@/assets/images/backgrounds/bg-404.svg"
       alt="404"
       class="h-96 mx-auto mt-10"
-      height="847px"
-      width="1666px"
+      height="847"
+      width="1666"
     />
     <h1 class="text-7xl my-10 text-center">Oops! Page not found.</h1>
     <h2 class="text-2xl mt-5 text-center text-mew-green-text">
