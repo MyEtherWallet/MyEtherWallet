@@ -5,7 +5,6 @@
       :tabs="tabs"
       :panel="panels"
       :useRouteLink="true"
-      class="max-w-[400px]"
     />
   </div>
 </template>

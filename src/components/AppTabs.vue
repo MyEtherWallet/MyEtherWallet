@@ -3,7 +3,7 @@
     <div
       role="tablist"
       aria-label="Send Tabs"
-      class="flex justify-start bg-grey-light rounded-full p-2 gap-1"
+      class="flex justify-start bg-grey-light rounded-full p-2 gap-1 max-w-fit"
       v-bind="$attrs"
       @keydown="handleKeyDown"
     >
