@@ -73,7 +73,7 @@ const props = defineProps({
     default: () => [],
   },
   /**
-   * @panel - An array of tab panel objects, used to define accesibiblity attributes.
+   * @panel - An array of tab panel objects, used to define accessibility attributes.
    */
   panel: {
     type: Array as PropType<Tab_Panel[]>,
@@ -144,7 +144,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 }
 
 /**
- * Ensure corrent active tab is set if usign routerlink
+ * Ensure corret active tab is set if using routerlink
  */
 onBeforeMount(() => {
   if (props.useRouteLink) {
