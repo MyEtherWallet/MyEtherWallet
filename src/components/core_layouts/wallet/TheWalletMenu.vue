@@ -127,7 +127,7 @@
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import IMGMewLogo from '@/assets/images/mew/logo-white.svg'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_WALLET, ROUTES_SEND } from '@/router/routeNames'
 import type { AppMenuListItem } from '@/types/components/menuListItem'
 import IconSend from '@assets/icons/core_menu/send.svg'
 import { ref } from 'vue'
@@ -161,7 +161,7 @@ const coreMenuList: AppMenuListItem[] = [
   },
   {
     title: 'send',
-    routeName: ROUTES_WALLET.SEND.NAME,
+    routeName: ROUTES_SEND.SEND.NAME,
     icon: IconSend,
   },
   {

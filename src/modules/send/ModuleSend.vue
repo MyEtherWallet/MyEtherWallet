@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <div>
     <form @submit.prevent="handleSubmit">
       <div class="flex">
         <div>
@@ -79,7 +79,7 @@
       title="Need help?"
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
     />
-  </main>
+  </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
