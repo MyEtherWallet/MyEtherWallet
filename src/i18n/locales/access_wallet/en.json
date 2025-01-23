@@ -1,9 +1,9 @@
 {
-    "access_wallet": {
-        "title": "Access MEW Portfolio",
-        "search_wallet": "Search for your wallet"
-    },
-    "access_wallet_keystore": {
-        "title": "Access Wallet with Keystore File"
-    }
+  "access_wallet": {
+    "title": "Access MEW Portfolio",
+    "search_wallet": "Search for your wallet"
+  },
+  "access_wallet_keystore": {
+    "title": "Access Wallet with Keystore File"
+  }
 }

@@ -9,128 +9,138 @@
  * VARIABLES
  */
 :root {
-    font-family: "DM Sans";
-    --borderRadius: 5px;
-    min-width: 320px;
-    zoom: 1;
-    background-color: #f5f5f7;
+  font-family: 'DM Sans';
+  --borderRadius: 5px;
+  min-width: 320px;
+  zoom: 1;
+  background-color: #f5f5f7;
 }
 
 /**
 * GLOBAL Text
  */
 @layer utilities {
-    .title1 {
-        @apply text-3xl font-bold text-titleColor text-center leading-p-110 -tracking-[0.03em];
-    }
+  .title1 {
+    @apply text-3xl font-bold text-titleColor text-center leading-p-110 -tracking-[0.03em];
+  }
 
-    .title2 {
-        @apply text-s-52 font-bold leading-p-110 text-black -tracking-[0.03em];
+  .title2 {
+    @apply text-s-52 font-bold leading-p-110 text-black -tracking-[0.03em];
+  }
+
+  .title3 {
+    @apply text-s-40 font-bold leading-p-110 text-black -tracking-[0.03em];
+    font-feature-settings: 'ss15' on;
+  }
+
+  .title4 {
+    @apply text-4xl font-bold leading-p-110 -tracking-[0.05em];
+  }
+
+  .title5 {
+    @apply text-s-28 font-semibold leading-p-110 text-black -tracking-[0.02em];
+    font-feature-settings: 'ss15' on;
+  }
+
+  .text5 {
+    @apply text-xl leading-p-130 -tracking-[0.03em];
+  }
+
+  .text6 {
+    @apply text-xl font-medium leading-p-140 text-black -tracking-[0.02em];
+    font-feature-settings: 'ss15' on;
+  }
+
+  .text7 {
+    @apply text-base font-medium leading-p-150 -tracking-[0.02em];
+    font-feature-settings: 'ss15' on;
+  }
+
+  .text8 {
+    @apply text-s-17 font-normal leading-p-150;
+  }
+
+  /**
+* min screen-tablet-portain
+*/
+  @media screen(md) {
+    .title1 {
+      @apply text-s-64 leading-p-120;
     }
 
     .title3 {
-        @apply text-s-40 font-bold leading-p-110 text-black -tracking-[0.03em];
-        font-feature-settings: "ss15" on;
-    }
-
-    .title4 {
-        @apply text-4xl font-bold leading-p-110 -tracking-[0.05em];
-    }
-
-    .title5 {
-        @apply text-s-28 font-semibold leading-p-110 text-black -tracking-[0.02em];
-        font-feature-settings: "ss15" on;
+      @apply text-s-52 leading-p-110;
     }
 
     .text5 {
-        @apply text-xl leading-p-130 -tracking-[0.03em];
+      @apply text-2xl leading-p-130;
+    }
+  }
+
+  /**
+    min width screen-desktop-min
+  */
+  @media screen(xl) {
+    .title1 {
+      @apply text-s-80 leading-p-110;
+    }
+
+    .title2 {
+      @apply text-7xl leading-p-110;
+    }
+
+    .title3 {
+      @apply text-s-64;
+    }
+
+    .title4 {
+      @apply text-5xl leading-p-110;
+    }
+
+    .title5 {
+      @apply text-s-32 leading-p-110;
+    }
+
+    .text5 {
+      @apply text-s-32 leading-p-130;
     }
 
     .text6 {
-        @apply text-xl font-medium leading-p-140 text-black -tracking-[0.02em];
-        font-feature-settings: "ss15" on;
+      @apply text-2xl leading-p-140;
     }
 
     .text7 {
-        @apply text-base font-medium leading-p-150 -tracking-[0.02em];
-        font-feature-settings: "ss15" on;
+      @apply text-xl leading-p-150;
     }
+  }
 
-    .text8 {
-        @apply text-s-17 font-normal leading-p-150;
-    }
+  /** Hover Transition */
+  .hoverOpacity {
+    @apply hover:opacity-50 transition-opacity duration-300 ease-in-out;
+  }
 
+  .hoverOpacityHasBG {
+    @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
+  }
+}
 
-    /**
-* min screen-tablet-portain
-*/
-    @media screen(md) {
-        .title1 {
-            @apply text-s-64 leading-p-120;
-        }
+/*FADE Transition*/
 
-        .title3 {
-            @apply text-s-52 leading-p-110;
-        }
+/** Hover Transition */
+.hoverOpacity {
+  @apply hover:opacity-50 transition-opacity duration-300 ease-in-out;
+}
 
-        .text5 {
-            @apply text-2xl leading-p-130;
-        }
-    }
+.hoverOpacityHasBG {
+  @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
+}
 
-    /**
-min width screen-desktop-min
-*/
-    @media screen(xl) {
-        .title1 {
-            @apply text-s-80 leading-p-110
-        }
+.hoverNoBG {
+  @apply hover:bg-grey-5 transition-colors duration-300 ease-in-out;
+}
 
-        .title2 {
-            @apply text-7xl leading-p-110
-        }
-
-        .title3 {
-            @apply text-s-64
-        }
-
-        .title4 {
-            @apply text-5xl leading-p-110
-        }
-
-        .title5 {
-            @apply text-s-32 leading-p-110
-        }
-
-        .text5 {
-            @apply text-s-32 leading-p-130
-        }
-
-        .text6 {
-            @apply text-2xl leading-p-140
-        }
-
-        .text7 {
-            @apply text-xl leading-p-150
-        }
-    }
-
-    /** Hover Transition */
-    .hoverOpacity {
-        @apply hover:opacity-50 transition-opacity duration-300 ease-in-out;
-    }
-
-    .hoverOpacityHasBG {
-        @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
-    }
-
-    .hoverNoBG {
-        @apply hover:bg-grey-5 transition-colors duration-300 ease-in-out;
-    }
-
-    .hoverOnDarkBG {
-        @apply hover:bg-white/5 transition-all duration-300 ease-in
-    }
+.hoverOnDarkBG {
+  @apply hover:bg-white/5 transition-all duration-300 ease-in
 }
 
 
@@ -140,8 +150,8 @@ min width screen-desktop-min
 * Used in Products
 */
 .bottomShadowIMGMask {
-    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
-    mask-image: linear-gradient(to top, transparent 0%, black 30%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
+  mask-image: linear-gradient(to top, transparent 0%, black 30%);
 }
 
 
@@ -149,18 +159,18 @@ min width screen-desktop-min
 * Ripple effect
 */
 span.ripple {
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0);
-    animation: ripple 0.4s ease-out;
-    background-color: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.4s ease-out;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 @keyframes ripple {
-    to {
-        transform: scale(1);
-        opacity: 0;
-    }
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
 }
 
 /*---------------------------------------*/
@@ -169,44 +179,42 @@ span.ripple {
 
 /* FADE transition */
 .fade-enter-active {
-    transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
 }
 
 .fade-leave-active {
-    opacity: 0
+  opacity: 0;
 }
 
 .fade-enter-from {
-    opacity: 0;
+  opacity: 0;
 }
 
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
-
-
 
 /* FADELIST transition - used in lists */
 
 .fadelist-move,
 .fadelist-enter-active,
 .fadelist-leave-active {
-    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 
 }
 
 .fadelist-enter-from,
 .fadelist-leave-to {
-    opacity: 0;
-    transform: scale(0);
+  opacity: 0;
+  transform: scale(0);
 }
 
 /* 3. ensure leaving items are taken out of layout flow so that moving
       animations can be calculated correctly. */
 .fadelist-leave-active {
-    position: absolute;
+  position: absolute;
 }
 
 :focus-visible {
-    outline-offset: 5px;
+  outline-offset: 5px;
 }

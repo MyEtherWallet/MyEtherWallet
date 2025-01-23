@@ -17,7 +17,6 @@
 //   return newObj;
 // };
 
-
 // const accessWalletProps = route => {
 //   if (Object.keys(route.query).length > 0) {
 //     const { type } = stripQuery(route.query);
@@ -67,7 +66,6 @@
 //     }
 //   }
 // };
-
 
 // export {
 //   createWalletProps,

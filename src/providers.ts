@@ -1,4 +1,4 @@
 export const Provider = {
-  ANALYTICS: 'ANALYTICS'
+  ANALYTICS: 'ANALYTICS',
 } as const
-export type Provider = typeof Provider[keyof typeof Provider]
+export type Provider = (typeof Provider)[keyof typeof Provider]
