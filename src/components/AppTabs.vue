@@ -110,6 +110,20 @@ const currActivePanel = computed(() => {
 
 const router = useRouter()
 
+const navigateToTab = async (index: number) => {
+  try {
+    if (props.useRouteLink) {
+      await nextTick()
+      await router.push({ name: props.tabs[index].routeName })
+    }
+    await nextTick()
+    document.getElementById(props.tabs[index].id)?.focus()
+  } catch (err) {
+    //Todo: add sentry logging
+    console.error('Failed to navigate to tab:', err)
+  }
+}
+
 /**
  * Handles keyboard navigation for tab switching.
  *
@@ -129,21 +143,11 @@ const handleKeyDown = (event: KeyboardEvent) => {
       return
     }
     model.value -= 1
-    if (props.useRouteLink) {
-      nextTick(() => {
-        router.push({ name: props.tabs[model.value].routeName })
-        document.getElementById(props.tabs[model.value].id)?.focus()
-      })
-    }
+    navigateToTab(model.value)
   } else if (event.key === 'ArrowRight') {
     if (model.value === props.tabs.length - 1) return
     model.value += 1
-    if (props.useRouteLink) {
-      nextTick(() => {
-        router.push({ name: props.tabs[model.value].routeName })
-        document.getElementById(props.tabs[model.value].id)?.focus()
-      })
-    }
+    navigateToTab(model.value)
   }
 }
 
@@ -158,14 +162,8 @@ onBeforeMount(() => {
     if (index !== -1) {
       model.value = index
     } else {
-      // Fallback to first tab or handle error state
-      try {
-        model.value = 0
-        router.push({ name: props.tabs[0].routeName })
-      } catch (err) {
-        //TODO: add sentry logging
-        console.error('Failed to navigate to fallback tab:', err)
-      }
+      model.value = 0
+      navigateToTab(0)
     }
   }
 })
