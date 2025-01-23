@@ -6,6 +6,7 @@
       class="h-96 mx-auto mt-10"
       height="847"
       width="1666"
+      aria-label=""
     />
     <h1 class="text-7xl my-10 text-center">Oops! Page not found.</h1>
     <h2 class="text-2xl mt-5 text-center text-mew-green-text">
