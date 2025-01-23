@@ -118,10 +118,11 @@ import {
 import { FwbModal } from 'flowbite-vue'
 import { ref } from 'vue'
 
+// const currentSelected = ref('low')
+
 const openModal = ref(false)
 
 const openFeeModal = () => {
-  console.log('AAAAAAA')
   openModal.value = true
 }
 
