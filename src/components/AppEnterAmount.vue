@@ -25,7 +25,7 @@
         {{ balanceOrError }}
       </div>
       <div class="text-lg text-mew-purple">
-        Balance: {{ $filters.truncate(selectedToken.balance, 5) }}
+        Balance: {{ $filters.truncate(balance ?? '0.00', 5) }}
       </div>
     </div>
   </div>
@@ -65,7 +65,13 @@ const amount = ref(props.modelValue)
 const error = ref(props.amountError)
 const tokenSelected = ref(Object.assign({}, props.selectedToken))
 
+const balance = computed(() => {
+  if (!props.selectedToken) return '0.00'
+  return props.selectedToken.balance
+})
+
 const balanceOrError = computed(() => {
+  if (!props.selectedToken) return 'Loading...'
   return error.value
     ? error.value
     : `$ ${BigNumber(
@@ -77,9 +83,10 @@ watch(
   () => [amount.value],
   useDebounceFn(() => {
     const baseAmount = toWei(amount.value, 'ether')
-    const tokenSelectedBalance = props.selectedToken.balance
-      ? props.selectedToken.balance
-      : '0'
+    const tokenSelectedBalance =
+      props.selectedToken && props.selectedToken.balance
+        ? props.selectedToken.balance
+        : '0'
     const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
 
     emit('update:modelValue', amount.value)

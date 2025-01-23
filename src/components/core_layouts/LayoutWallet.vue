@@ -21,10 +21,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TheWalletMenu from './wallet/TheWalletMenu.vue'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { storeToRefs } from 'pinia'
+import { useWalletStore } from '@/stores/wallet_store'
+
+const walletStore = useWalletStore()
+const { wallet } = storeToRefs(walletStore)
+const { setTokens } = walletStore
+
+onMounted(async () => {
+  const fetchTokens = await fetch(
+    `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddressString()}`,
+  )
+  const tokens = await fetchTokens.json()
+  setTokens(tokens.result)
+})
 
 /** ------------------------------
  * SideBar Menu

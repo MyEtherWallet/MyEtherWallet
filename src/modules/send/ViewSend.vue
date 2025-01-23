@@ -94,8 +94,8 @@ import { abi } from './tokenAbi'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
-const { setTokens } = walletStore
 
+const tokensLoaded = ref(false)
 const amount = ref('0')
 const toAddress = ref('')
 const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
@@ -111,11 +111,7 @@ const data = ref('0x')
 // TODO: Implement this on a wallet context instead of before loading send page since this is shared across
 // different parts of the wallet
 onBeforeMount(async () => {
-  const fetchTokens = await fetch(
-    `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddressString()}`,
-  )
-  const tokens = await fetchTokens.json()
-  setTokens(tokens.result)
+  tokensLoaded.value = true
 })
 
 onMounted(async () => {
@@ -170,6 +166,7 @@ const validSend = computed(() => {
 watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
   () => {
+    if (!tokensLoaded.value) return
     if (
       tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT &&
       toAddress.value !== '' &&
