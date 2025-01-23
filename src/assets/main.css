@@ -168,7 +168,7 @@ span.ripple {
   border-radius: 50%;
   transform: scale(0);
   animation: ripple 0.4s ease-out;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 @keyframes ripple {
@@ -218,4 +218,8 @@ span.ripple {
       animations can be calculated correctly. */
 .fadelist-leave-active {
   position: absolute;
+}
+
+:focus-visible {
+  outline-offset: 5px;
 }
