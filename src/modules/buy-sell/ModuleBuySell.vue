@@ -235,12 +235,15 @@ export default {
       }`;
     },
     networkFeeText() {
+      const firstWithFee = this.buyQuote.filter(
+        quote => quote.fiat_fees !== '0.00'
+      );
       return `${
         this.network.type.name
       } network fee (for transfers to your wallet) ~${BigNumber(
-        this.buyQuote[0]?.fiat_fees || 0
+        firstWithFee[0]?.fiat_fees || 0
       )
-        .div(this.buyQuote[0]?.crypto_price || 0)
+        .div(firstWithFee[0]?.crypto_price || 0)
         .toString()} ${this.network.type.name}`;
     },
     cryptoToFiat() {
