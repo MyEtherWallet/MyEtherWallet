@@ -1,3 +1,14 @@
+### feat
+
+* rootstock collective dapp [#5071](https://github.com/MyEtherWallet/MyEtherWallet/pull/5071)
+
+### fix
+
+* remove cross chain balances [#5072](https://github.com/MyEtherWallet/MyEtherWallet/pull/5072)
+* tokens table swap button [#5073](https://github.com/MyEtherWallet/MyEtherWallet/pull/5073)
+* fix bnb nan for some values without quotes [#5074](https://github.com/MyEtherWallet/MyEtherWallet/pull/5074)
+* remove text [#5081](https://github.com/MyEtherWallet/MyEtherWallet/pull/5081)
+
 ### fix
 
 * fix error when phantom is installed [#5066](https://github.com/MyEtherWallet/MyEtherWallet/pull/5066)
