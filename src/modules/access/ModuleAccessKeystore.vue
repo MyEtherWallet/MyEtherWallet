@@ -75,7 +75,7 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ROUTES_WALLET } from '@/router/routeNames'
-import { useWalletStore } from '@/stores/wallet_store'
+import { useWalletStore } from '@/stores/walletStore'
 import {
   unlockKeystore,
   type V3Keystore,

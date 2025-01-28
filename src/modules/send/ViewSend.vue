@@ -33,12 +33,6 @@ const toAddress = ref('')
 
 const handleSubmit = () => {
   // TODO: Implement send logic once api is provided
-  console.log(
-    'Send',
-    amount.value,
-    toAddress.value,
-    /**  @ts-expect-error not sure how to handle yet  */
-    wallet.value.getAddressString(),
-  )
+  console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
 }
 </script>

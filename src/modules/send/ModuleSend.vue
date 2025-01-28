@@ -100,7 +100,7 @@ import {
   useWalletStore,
   MAIN_TOKEN_CONTRACT,
   type Token,
-} from '@/stores/wallet_store'
+} from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 
 const walletStore = useWalletStore()
@@ -185,11 +185,6 @@ watch(
 
 const handleSubmit = () => {
   // TODO: Implement send logic once api is provided
-  console.log(
-    'Send',
-    amount.value,
-    toAddress.value,
-    wallet.value.getAddressString(),
-  )
+  console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
 }
 </script>
