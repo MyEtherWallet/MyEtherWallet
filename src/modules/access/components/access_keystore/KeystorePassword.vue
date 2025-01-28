@@ -29,8 +29,8 @@ import {
   unlockKeystore,
   type V3Keystore,
 } from '@/modules/access/common/helpers'
-import WalletInterface from '@/modules/access/common/walletInterface'
 import { ROUTES_WALLET } from '@/router/routeNames'
+import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
 
 const accessWalletStore = useAccessWalletKeystore()
 const walletStore = useWalletStore()
@@ -48,12 +48,7 @@ const enterPassword = async () => {
   )
   if (res) {
     // temp: move hardcodes
-    const wallet = new WalletInterface(
-      Buffer.from(res.getPrivateKey()),
-      false,
-      'keystore',
-      { file: keystore.value!, name: res.getV3Filename() },
-    )
+    const wallet = new PrivateKeyWallet(Buffer.from(res.getPrivateKey()), '0x1')
     resetKeystore()
     setWallet(wallet)
     router.push({ path: ROUTES_WALLET.WALLET.PATH })
