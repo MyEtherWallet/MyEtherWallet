@@ -127,6 +127,7 @@
   .hoverOpacityHasBG {
     @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
   }
+
 }
 
 /*FADE Transition*/
@@ -222,4 +223,10 @@ span.ripple {
 
 :focus-visible {
   outline-offset: 5px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

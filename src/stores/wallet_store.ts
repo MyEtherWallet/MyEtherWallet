@@ -19,6 +19,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface> = ref(null as unknown as WalletInterface) // allows for falsey
   const tokens: Ref<Array<Token>> = ref([])
   const balance = ref('0')
+  const isLoadingBalances = ref(true)
 
   const setTokens = (newTokens: Array<Token>) => {
     const locToken = newTokens.map(token => {
@@ -53,6 +54,10 @@ export const useWalletStore = defineStore('walletStore', () => {
     wallet.value = {} as WalletInterface
   }
 
+  const setIsLoadingBalances = (isLoading: boolean) => {
+    isLoadingBalances.value = isLoading
+  }
+
   return {
     wallet,
     setWallet,
@@ -61,5 +66,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     removeTokens,
     tokens,
     balance,
+    isLoadingBalances,
+    setIsLoadingBalances,
   }
 })

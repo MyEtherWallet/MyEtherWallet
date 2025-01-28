@@ -1,18 +1,16 @@
 <template>
-  <div>
+  <div class="mt-5">
     <form @submit.prevent="handleSubmit">
-      <div class="flex">
-        <div>
-          <div>
-            <app-enter-amount
-              v-model="amount"
-              v-model:selected-token="tokenSelected"
-              v-model:amount-error="amountError"
-            />
-          </div>
-        </div>
+      <div class="w-full">
+        <p class="font-bold ml-2 mb-1 text-base">Amount</p>
+        <app-enter-amount
+          v-model:amount="amount"
+          v-model:selected-token="tokenSelected"
+          v-model:error="amountError"
+          :validate-input="checkAmountForError"
+        />
       </div>
-      <div>
+      <div class="mt-6">
         <label for="address-input">Address:</label>
         <input
           v-model="toAddress"
@@ -87,7 +85,6 @@ import { storeToRefs } from 'pinia'
 import { toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
-
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
@@ -101,8 +98,7 @@ import { abi } from './tokenAbi'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
-
-const amount = ref('0')
+const amount = ref<number | string>('')
 const toAddress = ref('')
 const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
 const amountError = ref('')
@@ -121,32 +117,26 @@ onMounted(async () => {
   tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
 })
 
+const checkAmountForError = () => {
+  const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
+  const tokenSelectedBalance = tokenSelected.value.balance
+    ? tokenSelected.value.balance
+    : '0'
+  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
+
+  // model.value = amount.value
+  if (amount.value === undefined || amount.value === '')
+    amountError.value = 'Amount is required' // amount is blank
+  else if (BigInt(baseAmount) < 0)
+    amountError.value = 'Amount must be greater than 0' // amount less than 0
+  else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
+    amountError.value = 'Insufficient balance' // amount greater than selected balance
+  else amountError.value = ''
+}
+
 // TODO: Reimplement fee calculation
 // const fees = computed(() => {
 //   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
-// })
-// const amountErrorMessages = computed(() => {
-//   const baseAmount = toWei(amount.value, 'ether')
-//   const baseBalance = toWei(balance.value, 'ether')
-//   const baseFee = toWei(fees.value, 'ether')
-//   const tokenSelectedBalance = tokenSelected.value.balance
-//     ? tokenSelected.value.balance
-//     : '0'
-//   const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
-
-//   if (amount.value === '') return 'Amount is required' // amount is blank
-//   if (BigInt(baseAmount) <= 0) return 'Amount must be greater than 0' // amount less than 0
-//   if (BigInt(baseTokenBalance) < BigInt(baseAmount))
-//     return 'Insufficient balance for selected token' // amount greater than selected balance
-//   if (BigInt(baseFee) > BigInt(baseBalance))
-//     return 'Insufficient balance for fees' // fees greater than wallet balance
-//   // if (
-//   //   tokenSelected.value.contract === MAIN_TOKEN_CONTRACT &&
-//   //   BigInt(baseBalance) < BigInt(baseAmount)
-//   // )
-//   //   return 'Insufficient balance for selected token' // amount greater than wallet balance
-
-//   return ''
 // })
 
 const addressErrorMessages = computed(() => {
@@ -167,6 +157,8 @@ watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
   () => {
     if (
+      tokenSelected.value &&
+      tokenSelected.value.contract &&
       tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT &&
       toAddress.value !== '' &&
       amount.value !== ''

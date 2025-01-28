@@ -33,7 +33,7 @@
     "@rainbow-me/rainbowkit": "^2.2.0",
     "@sentry/vue": "^8.42.0",
     "@tanstack/vue-query": "^5.62.1",
-    "@vueuse/core": "^12.0.0",
+    "@vueuse/core": "^12.5.0",
     "@wagmi/vue": "^0.0.68",
     "bignumber.js": "^9.1.2",
     "commitlint": "^19.6.0",
