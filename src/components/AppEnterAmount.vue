@@ -1,52 +1,50 @@
 <template>
-  <div>
-    <div
-      ref="target"
-      class="w-full rounded-[20px] box-border border border-1 border-grey-30 bg-white p-[17px] transition-colors"
-      :class="{
-        'border-primary border-2 !p-4': inFocusInput && !error,
-        '!border-error border-2 !p-4': !!error,
-      }"
-      @click="inFocusInput = true"
-    >
-      <div class="flex justify-between items-center w-full">
-        <input
-          class="py-2 w-64 text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
-          :class="{ 'text-error': !!error }"
-          name="amount-input"
-          type="number"
-          placeholder="0.0"
-          required
-          v-model.number="amount"
-        />
-        <!-- <div>
+  <div
+    ref="target"
+    class="w-full rounded-[20px] box-border border border-1 border-grey-30 bg-white p-[17px] transition-colors"
+    :class="{
+      'border-primary border-2 !p-4': inFocusInput && !error,
+      '!border-error border-2 !p-4': !!error,
+    }"
+    @click="setInFocusInput"
+  >
+    <div class="flex justify-between items-center w-full">
+      <input
+        class="py-2 w-64 text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
+        :class="{ 'text-error': !!error }"
+        name="amount-input"
+        type="number"
+        placeholder="0.0"
+        required
+        v-model.number="amount"
+      />
+      <!-- <div>
         <app-token-select v-model:selected-token="tokenSelected" />
       </div> -->
-      </div>
-      <div :class="{ 'animate-pulse': isLoading }">
-        <transition name="fade" mode="out-in">
+    </div>
+    <div :class="{ 'animate-pulse': isLoading }">
+      <transition name="fade" mode="out-in">
+        <div
+          v-if="isLoading"
+          class="h-5 mt-2 flex bg-grey-10 rounded-full"
+        ></div>
+        <div v-else class="flex justify-between pt-2">
           <div
-            v-if="isLoading"
-            class="h-5 mt-2 flex bg-grey-10 rounded-full"
-          ></div>
-          <div v-else class="flex justify-between pt-2">
-            <div
-              class="text-sm"
-              :class="{ 'text-error': !!error, 'text-info': !error }"
-            >
-              {{ balanceFiatOrError }}
-            </div>
-            <div
-              :class="[
-                'text-sm text-info transition-colors',
-                { 'text-primary': inFocusInput },
-              ]"
-            >
-              Balance: {{ balance }}
-            </div>
+            class="text-sm"
+            :class="{ 'text-error': !!error, 'text-info': !error }"
+          >
+            {{ balanceFiatOrError }}
           </div>
-        </transition>
-      </div>
+          <div
+            :class="[
+              'text-sm text-info transition-colors',
+              { 'text-primary': inFocusInput },
+            ]"
+          >
+            Balance: {{ balance }}
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -117,8 +115,15 @@ watch(
  -------------------------*/
 const target = ref<HTMLElement | null>(null)
 const inFocusInput = ref(false)
+const targetValue = ref<HTMLElement | null>(null)
 
-onClickOutside(target, () => {
+const setInFocusInput = () => {
+  inFocusInput.value = true
+  targetValue.value = target.value
+}
+
+onClickOutside(targetValue, () => {
+  targetValue.value = null
   inFocusInput.value = false
   props.validateInput()
 })
