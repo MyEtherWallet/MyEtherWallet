@@ -30,7 +30,7 @@ import TheWalletMenu from './wallet/TheWalletMenu.vue'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
-import { useWalletStore } from '@/stores/wallet_store'
+import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 
 const store = useWalletStore()
@@ -39,7 +39,7 @@ const { setTokens } = store
 
 onMounted(async () => {
   const fetchTokens = await fetch(
-    `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddressString()}?noInjectErrors=false`,
+    `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddress()}?noInjectErrors=false`,
   )
   const tokens = await fetchTokens.json()
   setTokens(tokens.result.result)

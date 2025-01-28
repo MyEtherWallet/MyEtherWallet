@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Token } from '@/stores/wallet_store'
+import { type Token } from '@/stores/walletStore'
 import { defineProps, defineEmits, watch, ref, computed } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
