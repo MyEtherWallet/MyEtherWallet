@@ -20,6 +20,18 @@
     <div class="mb-5 max-w-[600px]">
       <SearchInput @search="searchWallet" />
     </div>
+    <fwb-modal size="sm" v-if="openWalletConnectModal" @close="closeModal">
+      <template #header>
+        <div class="w-full">
+          <div class="items-center text-xl">Scan with WalletConnect</div>
+        </div>
+      </template>
+      <template #body>
+        <div>
+          <img :src="qrcode" alt="Wagmi QR Code" />
+        </div>
+      </template>
+    </fwb-modal>
     <!-- Wallets-->
     <div
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
@@ -45,18 +57,24 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
+import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
+import WagmiWallet from '@/providers/ethereum/wagmiWallet'
+import { useQRCode } from '@vueuse/integrations/useQRCode'
+import { FwbModal } from 'flowbite-vue'
+
 import AsyncImg from './AsyncImg.vue'
 import SearchInput from './SearchInput.vue'
 import { ROUTES_HOME } from '@/router/routeNames'
 import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
 import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
 import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
-import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
-import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
-import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
-import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 
+const wagmiWalletData = ref('')
+const openWalletConnectModal = ref(false)
+const qrcode = useQRCode(wagmiWalletData, { width: 304 })
 const { connectors } = wagmiConfig
 
 const DEFAULT_IDS = ['enkrypt', 'mew']
@@ -140,13 +158,22 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
     )
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        console.log('display_uri', msg)
+        wagmiWalletData.value = msg.data // possibly a temp fix
+        openWalletConnectModal.value = true
       }
     })
     const wagWallet = new WagmiWallet(connector!, '0x1')
-    console.log(wagWallet)
-    wagWallet.connect().then(console.log)
+    wagWallet.connect().then(res => {
+      if (res) {
+        wagmiWalletData.value = ''
+        openWalletConnectModal.value = false
+      }
+    })
   }
+}
+
+const closeModal = () => {
+  openWalletConnectModal.value = false
 }
 
 /** -------------------
