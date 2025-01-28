@@ -21,16 +21,24 @@ export const useWalletStore = defineStore('walletStore', () => {
   const balance = ref('0')
 
   const setTokens = (newTokens: Array<Token>) => {
-    tokens.value = newTokens.map(token => {
+    const locToken = newTokens.map(token => {
       return Object.assign({}, token, {
         balance: fromWei(token.balance, 'ether'),
       })
     })
-    newTokens.forEach(token => {
+    const newTokenCopy: Array<Token> = [];
+    locToken.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
-        balance.value = fromWei(token.balance, 'ether')
+        newTokenCopy.unshift(token)
+      } else {
+        newTokenCopy.push(token)
+      }
+      if (token.contract === MAIN_TOKEN_CONTRACT) {
+        balance.value = token.balance
       }
     })
+
+    tokens.value = newTokenCopy;
   }
 
   const removeTokens = () => {

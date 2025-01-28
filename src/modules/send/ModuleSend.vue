@@ -3,26 +3,13 @@
     <form @submit.prevent="handleSubmit">
       <div class="flex">
         <div>
-          <label for="asset-input">Token:</label>
-          <select name="asset-input" v-model="tokenSelected">
-            <option v-for="(t, idx) in tokens" :value="t" :key="t.symbol + idx">
-              {{ t.symbol }}
-            </option>
-          </select>
-        </div>
-        <div>
           <div>
-            <label for="amount-input">Amount:</label>
-            <input
+            <app-enter-amount
               v-model="amount"
-              name="amount-input"
-              type="number"
-              step="0.000000000000000001"
-              required
+              v-model:selected-token="tokenSelected"
+              v-model:amount-error="amountError"
             />
           </div>
-          <div>balance: {{ tokenSelected.balance }}</div>
-          <p class="text-error">{{ amountErrorMessages }}</p>
         </div>
       </div>
       <div>
@@ -35,6 +22,7 @@
         />
         <p class="text-error">{{ addressErrorMessages }}</p>
       </div>
+      <app-select-tx-fee />
       <div>
         <input
           type="checkbox"
@@ -87,14 +75,22 @@
         Send
       </button>
     </form>
+    <app-need-help
+      title="Need help?"
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { fromWei, toWei } from 'web3-utils'
+import { toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
+
+import AppEnterAmount from '@/components/AppEnterAmount.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
 import {
   useWalletStore,
@@ -104,11 +100,12 @@ import {
 import { abi } from './tokenAbi'
 
 const walletStore = useWalletStore()
-const { wallet, tokens, balance } = storeToRefs(walletStore)
+const { wallet, tokens } = storeToRefs(walletStore)
 
-const amount = ref('')
+const amount = ref('0')
 const toAddress = ref('')
 const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
+const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
 const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
@@ -124,32 +121,33 @@ onMounted(async () => {
   tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
 })
 
-const fees = computed(() => {
-  return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
-})
-const amountErrorMessages = computed(() => {
-  const baseAmount = toWei(amount.value, 'ether')
-  const baseBalance = toWei(balance.value, 'ether')
-  const baseFee = toWei(fees.value, 'ether')
-  const tokenSelectedBalance = tokenSelected.value.balance
-    ? tokenSelected.value.balance
-    : '0'
-  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
+// TODO: Reimplement fee calculation
+// const fees = computed(() => {
+//   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
+// })
+// const amountErrorMessages = computed(() => {
+//   const baseAmount = toWei(amount.value, 'ether')
+//   const baseBalance = toWei(balance.value, 'ether')
+//   const baseFee = toWei(fees.value, 'ether')
+//   const tokenSelectedBalance = tokenSelected.value.balance
+//     ? tokenSelected.value.balance
+//     : '0'
+//   const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
 
-  if (amount.value === '') return 'Amount is required' // amount is blank
-  if (BigInt(baseAmount) <= 0) return 'Amount must be greater than 0' // amount less than 0
-  if (BigInt(baseTokenBalance) < BigInt(baseAmount))
-    return 'Insufficient balance for this token' // amount greater than selected balance
-  if (BigInt(baseFee) > BigInt(baseBalance))
-    return 'Insufficient balance for fees' // fees greater than wallet balance
-  if (
-    tokenSelected.value.contract === MAIN_TOKEN_CONTRACT &&
-    BigInt(baseBalance) < BigInt(baseAmount)
-  )
-    return 'Insufficient balance for this token' // amount greater than wallet balance
+//   if (amount.value === '') return 'Amount is required' // amount is blank
+//   if (BigInt(baseAmount) <= 0) return 'Amount must be greater than 0' // amount less than 0
+//   if (BigInt(baseTokenBalance) < BigInt(baseAmount))
+//     return 'Insufficient balance for selected token' // amount greater than selected balance
+//   if (BigInt(baseFee) > BigInt(baseBalance))
+//     return 'Insufficient balance for fees' // fees greater than wallet balance
+//   // if (
+//   //   tokenSelected.value.contract === MAIN_TOKEN_CONTRACT &&
+//   //   BigInt(baseBalance) < BigInt(baseAmount)
+//   // )
+//   //   return 'Insufficient balance for selected token' // amount greater than wallet balance
 
-  return ''
-})
+//   return ''
+// })
 
 const addressErrorMessages = computed(() => {
   if (toAddress.value === '') return 'Address is required'
@@ -162,7 +160,7 @@ const addressErrorMessages = computed(() => {
 })
 
 const validSend = computed(() => {
-  return amountErrorMessages.value === '' && addressErrorMessages.value === ''
+  return amountError.value === '' && amountError.value === ''
 })
 
 watch(
