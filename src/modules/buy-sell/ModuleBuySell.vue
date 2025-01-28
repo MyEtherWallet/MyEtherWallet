@@ -57,7 +57,10 @@
                   <div class="font-weight-medium textDark--text mr-1">
                     You will get
                   </div>
-                  <mew-tooltip v-if="!loading" style="height: 21px">
+                  <mew-tooltip
+                    v-if="!loading && fetchError === ''"
+                    style="height: 21px"
+                  >
                     <template #contentSlot>
                       <div>
                         Includes 4.75% fee (First transaction is free).
@@ -232,12 +235,15 @@ export default {
       }`;
     },
     networkFeeText() {
+      const firstWithFee = this.buyQuote.filter(
+        quote => quote.fiat_fees !== '0.00'
+      );
       return `${
         this.network.type.name
       } network fee (for transfers to your wallet) ~${BigNumber(
-        this.buyQuote[0]?.fiat_fees || 0
+        firstWithFee[0]?.fiat_fees || 0
       )
-        .div(this.buyQuote[0]?.crypto_price || 0)
+        .div(firstWithFee[0]?.crypto_price || 0)
         .toString()} ${this.network.type.name}`;
     },
     cryptoToFiat() {

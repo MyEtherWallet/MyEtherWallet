@@ -190,7 +190,7 @@ export default {
   },
   computed: {
     isMobile() {
-      return this.$vuetify.breakpoint.mdAndDown;
+      return this.$vuetify.breakpoint.width < 1300;
     },
     pageLength() {
       return Math.ceil(this.tableData.length / this.itemsPerPage);
