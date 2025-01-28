@@ -13,7 +13,7 @@ const isAddress = (address: string): boolean => {
   const { network } = storeToRefs(store)
   const { chainID } = network.value.type
 
-  // temp: change to global definition instead of hardcoding
+  // TODO: change to global definition instead of hardcoding
   if (chainID === 30) {
     // check if it has the basic requirements of an address
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
@@ -46,7 +46,7 @@ const toChecksumAddress = (address: string): string => {
    * because of the chainID parameter being added to the checksum function
    *
    */
-  // temp: change to global definition instead of hardcoding
+  // TODO: change to global definition instead of hardcoding
   if (chainID === 30) {
     return toChecksumAddr(address, chainID)
   }

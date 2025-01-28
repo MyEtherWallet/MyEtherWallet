@@ -5,7 +5,7 @@ const i18n = createI18n({
   locale: 'en',
   fallbackLocale: 'en',
   legacy: false,
-  messages: messages as MessagesSchema
+  messages: messages as MessagesSchema,
 })
 
 export default i18n

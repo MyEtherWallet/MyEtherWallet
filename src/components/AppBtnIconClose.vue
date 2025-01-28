@@ -1,20 +1,24 @@
 <template>
-  <MewAppBtnIcon
-    :icon="ICONClose"
+  <app-btn-icon
     @click="closeClick"
     :is-white="props.isWhite"
-    :aria-label-string="$t('common.close')"
-  />
+    :label="label ?? $t('common.close')"
+  >
+    <XMarkIcon />
+  </app-btn-icon>
 </template>
 
 <script setup lang="ts">
-import MewAppBtnIcon from './MewAppBtnIcon.vue'
-import ICONClose from '@/assets/icons/close.svg'
+import AppBtnIcon from './AppBtnIcon.vue'
+import { XMarkIcon } from '@heroicons/vue/20/solid'
 
 const props = defineProps({
   isWhite: {
     default: false,
     type: Boolean,
+  },
+  label: {
+    type: String,
   },
 })
 const emit = defineEmits<{

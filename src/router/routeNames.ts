@@ -2,24 +2,23 @@ export type RouteNameCollection = {
   [key: string]: RouteName
 }
 export type RouteName = {
-  NAME: string,
+  NAME: string
   PATH: string
 }
 
 const ROUTES_HOME: RouteNameCollection = {
   HOME: { NAME: 'Home', PATH: '' },
   //Default
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
-  ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'access/keystore' },
-  ACCESS_KEYSTORE_PASSWORD: { NAME: 'AccessKeystorePassword', PATH: 'access/keystore/password' },
-  ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'access/mnemonic' },
-  ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'access/private-key' },
+  ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'keystore' },
+  ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
+  ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create/' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
 
   //TOBE DELETED ON V7
+  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
   HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
@@ -31,14 +30,12 @@ const ROUTES_HOME: RouteNameCollection = {
   TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
   TOOLS_KEYSTORE: { NAME: 'ToolsKeystore', PATH: 'tools-keystore' },
   TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
-  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' }
-};
+  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' },
+}
 //In Wallet
 const ROUTES_WALLET: RouteNameCollection = {
   WALLET: { NAME: 'Wallet', PATH: '/wallet' },
   DASHBOARD: { NAME: 'WalletDashboard', PATH: 'dashboard' },
-  SEND: { NAME: 'WalletSend', PATH: 'send' },
-
   //A-Z
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
@@ -48,12 +45,10 @@ const ROUTES_WALLET: RouteNameCollection = {
   ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
   NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
-  NFT_MANAGER_SEND: { NAME: 'NftManagerSend', PATH: 'send-your-nft' },
   PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
-  SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
-  SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
   SETTINGS: { NAME: 'Settings', PATH: 'settings' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
+  STAKE: { NAME: 'Stake', PATH: 'stake' },
   STAKED: { NAME: 'Staked', PATH: 'staked' },
   STAKED_STATUS: { NAME: 'StakedStatus', PATH: 'status' },
   STAKED_1: { NAME: 'Staked1', PATH: 'staked-1' },
@@ -64,7 +59,26 @@ const ROUTES_WALLET: RouteNameCollection = {
   SWAP: { NAME: 'Swap', PATH: 'swap' },
   BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
   UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
-  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' }
-};
+  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' },
+}
 
-export { ROUTES_HOME, ROUTES_WALLET };
+const ROUTES_SEND: RouteNameCollection = {
+  SEND: { NAME: 'WalletSend', PATH: 'send' },
+  SEND_NFT: { NAME: 'WalletSendNFT', PATH: 'nft', },
+
+  //TO BE IMPLEMENTED OR DELETEDaa
+  SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
+  SEND_TX_OFFLINE: { NAME: 'SendTXOffline', PATH: 'send-tx-offline' },
+}
+
+enum ACCESS_ALIAS {
+  access = '/access',
+  walletAccess = '/access/wallet',
+}
+
+enum KEYSTORE_ALIAS {
+  upload = '/keystore/upload',
+}
+
+export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS };
+
