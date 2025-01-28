@@ -95,7 +95,6 @@
     "hmac-drbg": "1.0.1",
     "keccak256": "1.0.6",
     "lodash": "4.17.21",
-    "long": "5.2.4",
     "lottie-web": "5.12.2",
     "minimalistic-crypto-utils": "1.0.1",
     "moment": "2.30.1",
