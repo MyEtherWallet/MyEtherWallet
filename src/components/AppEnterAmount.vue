@@ -6,11 +6,12 @@
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,
     }"
+    v-ripple
     @click="setInFocusInput"
   >
     <div class="flex justify-between items-center w-full">
       <input
-        class="py-2 w-64 text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
+        class="py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
         :class="{ 'text-error': !!error }"
         name="amount-input"
         type="number"
@@ -18,9 +19,7 @@
         required
         v-model.number="amount"
       />
-      <!-- <div>
-        <app-token-select v-model:selected-token="tokenSelected" />
-      </div> -->
+      <app-token-select v-model:selected-token="selectedToken" />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
@@ -53,7 +52,7 @@
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
-// import AppTokenSelect from './AppTokenSelect.vue'
+import AppTokenSelect from './AppTokenSelect.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useWalletStore, type Token } from '@/stores/wallet_store'
