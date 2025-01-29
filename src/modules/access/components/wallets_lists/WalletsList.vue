@@ -67,15 +67,20 @@ import { FwbModal } from 'flowbite-vue'
 
 import AsyncImg from './AsyncImg.vue'
 import SearchInput from './SearchInput.vue'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_HOME, ROUTES_WALLET } from '@/router/routeNames'
 import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
 import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
 import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
+import { useWalletStore } from '@/stores/walletStore'
 
-const wagmiWalletData = ref('')
+const wagmiWalletData = ref<string>('')
 const openWalletConnectModal = ref(false)
 const qrcode = useQRCode(wagmiWalletData, { width: 304 })
 const { connectors } = wagmiConfig
+
+const walletStore = useWalletStore()
+
+const { setWallet } = walletStore
 
 const DEFAULT_IDS = ['enkrypt', 'mew']
 const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
@@ -158,7 +163,7 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
     )
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data // possibly a temp fix
+        wagmiWalletData.value = msg.data as string // possibly a temp fix
         openWalletConnectModal.value = true
       }
     })
@@ -167,6 +172,8 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
       if (res) {
         wagmiWalletData.value = ''
         openWalletConnectModal.value = false
+        setWallet(wagWallet)
+        router.push({ path: ROUTES_WALLET.WALLET.PATH })
       }
     })
   }
