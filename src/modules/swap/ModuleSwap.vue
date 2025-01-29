@@ -616,7 +616,13 @@ export default {
       filteredTrendingTokens = this.removeBalanceFromToken(
         filteredTrendingTokens
       );
-      const nonChainTokens = this.removeBalanceFromToken(validToTokens);
+      const nonChainTokens = this.removeBalanceFromToken(validToTokens).reduce(
+        (arr, item) => {
+          if (!item.isEth) arr.push(item);
+          return arr;
+        },
+        []
+      );
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -634,6 +640,7 @@ export default {
           ...filteredTrendingTokens
         ]);
       }
+
       if (nonChainTokens.length > 0) {
         returnableTokens = returnableTokens.concat([
           {
