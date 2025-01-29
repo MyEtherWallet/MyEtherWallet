@@ -50,7 +50,9 @@
               <div class="mew-heading-3 textDark--text ml-4">
                 {{ token.symbol }}
               </div>
-              <div class="textDark--text ml-1">- {{ token.name }}</div>
+              <div class="textDark--text ml-1">
+                - {{ token.name | concatName }}
+              </div>
               <div class="textDark--text ml-auto">{{ token.pricef }}</div>
             </v-btn>
           </div>
@@ -75,6 +77,17 @@ import { isEmpty } from 'lodash';
 
 export default {
   name: 'BuySellTokenSelect',
+  filters: {
+    concatName(val) {
+      // should probably be moved globablly
+      if (val.length > 15)
+        return `${val.substring(0, 8)}...${val.substring(
+          val.length - 4,
+          val.length
+        )}`;
+      return val;
+    }
+  },
   mixins: [handlerAnalytics],
   props: {
     networks: {
