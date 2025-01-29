@@ -60,18 +60,25 @@
 /**
  * @description AppDialog component, used to display a dialog with a title and content. Can also take incustom title and content slots.
  *
- * @example 1
+ * @example 1 Simple Dialog
  * <app-dialog v-model:is-open="openDialog" title="Dialog Title">
  *  <template #content>
  *   <div>Dialog Content</div>
  * </template>
  * </app-dialog>
  *
- * @example 2
+ * @example 2 Dialog with custom title and content slots
  * <app-dialog v-model:is-open="openDialog" >
  *  <template #title>
  *    <h1>Dialog Title</h1>
  *  </template>
+ *  <template #content>
+ *   <div>Dialog Content</div>
+ * </template>
+ * </app-dialog>
+ *
+ * @example 3 Dialog with custom width
+ * <app-dialog v-model:is-open="openDialog" title="Dialog Title" class="sm:max-w-[800px] sm:mx-auto">
  *  <template #content>
  *   <div>Dialog Content</div>
  * </template>
