@@ -66,9 +66,11 @@
                         Includes 4.75% fee (First transaction is free).
                         <br />
                         <br />
-                        {{ networkFeeText }}
-                        <br />
-                        <br />
+                        <div v-if="networkFeeText !== ''">
+                          {{ networkFeeText }}
+                          <br />
+                          <br />
+                        </div>
                         {{ dailyLimit }}
                         <br />
                         {{ monthlyLimit }}
@@ -238,6 +240,7 @@ export default {
       const firstWithFee = this.buyQuote.filter(
         quote => quote.fiat_fees !== '0.00'
       );
+      if (firstWithFee.length === 0) return '';
       return `${
         this.network.type.name
       } network fee (for transfers to your wallet) ~${BigNumber(
