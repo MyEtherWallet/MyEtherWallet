@@ -57,6 +57,26 @@
   </div>
 </template>
 <script setup lang="ts">
+/**
+ * @description AppDialog component, used to display a dialog with a title and content. Can also take incustom title and content slots.
+ *
+ * @example 1
+ * <app-dialog v-model:is-open="openDialog" title="Dialog Title">
+ *  <template #content>
+ *   <div>Dialog Content</div>
+ * </template>
+ * </app-dialog>
+ *
+ * @example 2
+ * <app-dialog v-model:is-open="openDialog" >
+ *  <template #title>
+ *    <h1>Dialog Title</h1>
+ *  </template>
+ *  <template #content>
+ *   <div>Dialog Content</div>
+ * </template>
+ * </app-dialog>
+ */
 import AppBtnIconClose from './AppBtnIconClose.vue'
 
 defineProps({
@@ -70,11 +90,18 @@ defineProps({
   },
 })
 
+/**
+ * @isOpen - v-model controls the state of the dialog.
+ */
 const isOpen = defineModel('isOpen', {
   type: Boolean,
   required: true,
 })
 
+/**
+ * @setIsOpen - function to set the dialog state
+ * @param _value - boolean value to set the dialog state
+ */
 const setIsOpen = (_value: boolean = false) => {
   isOpen.value = _value
 }
