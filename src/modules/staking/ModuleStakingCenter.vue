@@ -52,7 +52,10 @@
             <v-col
               cols="3"
               sm="2"
-              :class="$vuetify.breakpoint.smAndUp ? '' : 'align-content-center'"
+              :class="[
+                $vuetify.breakpoint.smAndUp ? '' : 'align-content-center',
+                'mr-2'
+              ]"
             >
               <img
                 :src="dapp.icon"
@@ -63,7 +66,7 @@
                 ]"
               />
             </v-col>
-            <v-col cols="9" sm="10">
+            <v-col cols="9" sm="9">
               <div class="mew-body font-weight-bold">
                 {{ dapp.title }}
                 <v-icon
