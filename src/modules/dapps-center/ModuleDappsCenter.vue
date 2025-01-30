@@ -20,7 +20,7 @@
               <mew-button
                 color-theme="buttonGrayLight"
                 btn-style="light"
-                style="height: 173px"
+                style="height: 185px"
                 class="d-flex align-start pt-7"
                 has-full-width
                 @click.native="routeTo(dappName(dapp))"

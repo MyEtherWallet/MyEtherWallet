@@ -613,21 +613,16 @@ export default {
         return token.contract !== this.fromTokenType?.contract;
       });
       filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
-      const nonChainTokens = validToTokens.reduce((arr, item) => {
-        if (
-          item.hasOwnProperty('isEth') &&
-          !item.isEth &&
-          item.name &&
-          item.symbol &&
-          item.subtext &&
-          item.symbol !== this.network.type.currencyName
-        ) {
-          delete item['tokenBalance'];
-          delete item['totalBalance'];
-          arr.push(item);
-        }
-        return arr;
-      }, []);
+      filteredTrendingTokens = this.removeBalanceFromToken(
+        filteredTrendingTokens
+      );
+      const nonChainTokens = this.removeBalanceFromToken(validToTokens).reduce(
+        (arr, item) => {
+          if (!item.isEth) arr.push(item);
+          return arr;
+        },
+        []
+      );
       let returnableTokens = [
         {
           text: 'Select Token',
@@ -645,6 +640,7 @@ export default {
           ...filteredTrendingTokens
         ]);
       }
+
       if (nonChainTokens.length > 0) {
         returnableTokens = returnableTokens.concat([
           {
@@ -688,22 +684,8 @@ export default {
       });
       validFromTokens = this.formatTokenPrice(validFromTokens);
       const tradebleWalletTokens = this.formatTokensForSelect(this.tokensList);
-      const nonChainTokens = this.formatTokensForSelect(
-        validFromTokens.reduce((arr, item) => {
-          if (
-            item.hasOwnProperty('isEth') &&
-            !item.isEth &&
-            item.name &&
-            item.symbol &&
-            item.subtext &&
-            item.symbol !== this.network.type.currencyName
-          ) {
-            delete item['tokenBalance'];
-            delete item['totalBalance'];
-            arr.push(item);
-          }
-          return arr;
-        }, [])
+      const nonChainTokens = this.removeBalanceFromToken(
+        this.formatTokensForSelect(validFromTokens)
       );
       const returnableTokens = [
         {
@@ -997,6 +979,26 @@ export default {
   methods: {
     ...mapActions('notifications', ['addNotification']),
     ...mapActions('swap', ['setSwapTokens', 'setLocalContract']),
+    removeBalanceFromToken(tokenArr) {
+      return tokenArr
+        .map(item => {
+          const newItem = Object.assign({}, item);
+          if (
+            newItem.symbol !== this.network.type.currencyName &&
+            newItem.tokenBalance === '0.00'
+          ) {
+            delete newItem['tokenBalance'];
+            delete newItem['totalBalance'];
+            if (newItem.price === '$0.00') {
+              delete newItem['price'];
+              delete newItem['pricef'];
+            }
+            return newItem;
+          }
+          return item;
+        })
+        .filter(item => !!item);
+    },
     resetSwapState() {
       this.mainTokenDetails = this.contractToToken(MAIN_TOKEN_ADDRESS);
       localContractToToken = new Map();
