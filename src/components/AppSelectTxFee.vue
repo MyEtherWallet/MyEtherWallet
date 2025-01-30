@@ -3,36 +3,35 @@
     class="rounded-lg border-1 bg-white border-grey-30 border-solid px-4 py-2 flex justify-between items-center my-4"
   >
     <div>
-      Fee: <span> 0.80 USD </span>
-      <span class="text-grey-30 pl-2"> 0.000247 ETH </span>
+      Fee: <span> {{ selectedFeeFiat }} </span>
+      <span class="text-grey-30 pl-2"> {{ selectedFeeNative }} </span>
     </div>
     <div class="flex items-center cursor-pointer" @click="openFeeModal">
       <clock-icon class="w-4 h-4" />
-      <span class="mx-2"> 2 mins </span>
+      <span class="mx-2"> {{ gasForTime }} </span>
       <chevron-down-icon class="w-4 h-4" />
     </div>
   </div>
 
-  <fwb-modal size="xl" v-if="openModal" @close="closeFeeModal">
-    <template #header>
-      <div class="w-full">
-        <div class="items-center text-xl">Choose transaction fee</div>
-      </div>
-    </template>
-    <template #body>
+  <app-dialog
+    title="Choose transaction fee"
+    v-model:is-open="openModal"
+    class="sm:max-w-[800px] sm:mx-auto"
+  >
+    <template #content>
       <div>
         <!-- current selected fee -->
         <div class="flex justify-between items-center mb-4 py-4 px-2">
           <div class="flex flex-col">
             <div>
-              <span class="text-[21px]"> $0.80 </span>
-              <span class="text-grey-30 pl-1"> 0.000247 ETH </span>
+              <span class="text-[21px]"> {{ selectedFiatCurrencyF }} </span>
+              <span class="text-grey-30 pl-1"> {{ selectedFeeNative }} </span>
             </div>
             <div class="text-grey-30">This fee is charged by the network.</div>
           </div>
           <div class="flex items-center">
             <clock-icon class="w-4 h-4" />
-            <span class="ml-2">2 mins</span>
+            <span class="ml-2">{{ gasForTime }}</span>
           </div>
         </div>
         <!-- fee options -->
@@ -51,7 +50,15 @@
               >
             </div>
           </div>
-          <div class="text-[16px] text-grey-30">-$0.2214</div>
+          <div
+            v-if="!isEconomy"
+            :class="{
+              'text-mew-green-text': getDiff(GasPriceType.ECONOMY).isPositive,
+            }"
+            class="text-[16px] text-grey-30"
+          >
+            ${{ getDiff(GasPriceType.ECONOMY).value }}
+          </div>
         </div>
         <!-- Recommended -->
         <div
@@ -68,7 +75,15 @@
               >
             </div>
           </div>
-          <!-- <div class="text-[16px] text-grey-30">-$0.2214</div> -->
+          <div
+            v-if="!isRegular"
+            :class="{
+              'text-mew-green-text': getDiff(GasPriceType.REGULAR).isPositive,
+            }"
+            class="text-[16px] text-grey-30"
+          >
+            ${{ getDiff(GasPriceType.REGULAR).value }}
+          </div>
         </div>
         <!-- Higher priority -->
         <div
@@ -86,7 +101,15 @@
               >
             </div>
           </div>
-          <div class="text-[16px] text-grey-30">+$0.1298</div>
+          <div
+            v-if="!isFast"
+            :class="{
+              'text-mew-green-text': getDiff(GasPriceType.FAST).isPositive,
+            }"
+            class="text-[16px] text-grey-30"
+          >
+            ${{ getDiff(GasPriceType.FAST).value }}
+          </div>
         </div>
         <div
           :class="{ '!bg-grey-5': isFastest }"
@@ -105,11 +128,19 @@
               >
             </div>
           </div>
-          <div class="text-[16px] text-grey-30">+$0.2905</div>
+          <div
+            v-if="!isFastest"
+            :class="{
+              'text-mew-green-text': getDiff(GasPriceType.FASTEST).isPositive,
+            }"
+            class="text-[16px] text-grey-30"
+          >
+            ${{ getDiff(GasPriceType.FASTEST).value }}
+          </div>
         </div>
       </div>
     </template>
-  </fwb-modal>
+  </app-dialog>
 </template>
 
 <script setup lang="ts">
@@ -123,18 +154,18 @@ import {
   CurrencyDollarIcon,
   CheckIcon,
 } from '@heroicons/vue/24/outline'
-import { FwbModal } from 'flowbite-vue'
-import { ref, computed } from 'vue'
+import { ref, computed, defineModel } from 'vue'
 import { GasPriceType } from '@/providers/types'
 
-const emit = defineEmits(['update:modelValue'])
+import AppDialog from '@/components/AppDialog.vue'
+import { fromWei } from 'web3-utils'
+import BigNumber from 'bignumber.js'
+
+const model = defineModel({
+  required: true,
+})
 
 const props = defineProps({
-  currentSelected: {
-    type: String,
-    default: GasPriceType.ECONOMY,
-    required: true,
-  },
   fees: {
     type: Object,
     required: true,
@@ -143,10 +174,63 @@ const props = defineProps({
 
 const openModal = ref(false)
 
-const isEconomy = computed(() => props.currentSelected === GasPriceType.ECONOMY)
-const isRegular = computed(() => props.currentSelected === GasPriceType.REGULAR)
-const isFast = computed(() => props.currentSelected === GasPriceType.FAST)
-const isFastest = computed(() => props.currentSelected === GasPriceType.FASTEST)
+const isEconomy = computed(() => model.value === GasPriceType.ECONOMY)
+const isRegular = computed(() => model.value === GasPriceType.REGULAR)
+const isFast = computed(() => model.value === GasPriceType.FAST)
+const isFastest = computed(() => model.value === GasPriceType.FASTEST)
+const gasForTime = computed(() => {
+  switch (model.value) {
+    case GasPriceType.ECONOMY:
+      return '5 mins'
+    case GasPriceType.REGULAR:
+      return '2 mins'
+    case GasPriceType.FAST:
+      return '1 mins'
+    case GasPriceType.FASTEST:
+      return '30 secs'
+    default:
+      return '2 mins'
+  }
+})
+
+const hasFee = computed(() => {
+  return props.fees && Object.keys(props.fees).length > 0
+})
+
+const selectedFeeNative = computed(() => {
+  if (hasFee.value) {
+    return `${fromWei(props.fees[model.value as keyof typeof props.fees].nativeValue, 'ether')} ${props.fees[model.value as keyof typeof props.fees].nativeSymbol}`
+  }
+
+  return ''
+})
+
+const selectedFeeFiat = computed(() => {
+  if (hasFee.value) {
+    return `${props.fees[model.value as keyof typeof props.fees].fiatValue} ${props.fees[model.value as keyof typeof props.fees].fiatSymbol}`
+  }
+
+  return 'Loading...'
+})
+
+const selectedFiatCurrencyF = computed(() => {
+  if (hasFee.value) {
+    return `$${props.fees[model.value as keyof typeof props.fees].fiatValue}`
+  }
+
+  return 'Loading...'
+})
+
+const getDiff = (fee: string) => {
+  const selectedFeeValue = props.fees[fee as keyof typeof props.fees].fiatValue
+  const diffValue = BigNumber(selectedFeeValue).minus(
+    props.fees[model.value as keyof typeof props.fees].fiatValue,
+  )
+  return {
+    value: diffValue.toString(),
+    isPositive: diffValue.isPositive(),
+  }
+}
 
 const openFeeModal = () => {
   openModal.value = true
@@ -157,6 +241,7 @@ const closeFeeModal = () => {
 }
 
 const setFee = (fee: string) => {
-  emit('update:modelValue', fee)
+  model.value = fee
+  closeFeeModal()
 }
 </script>

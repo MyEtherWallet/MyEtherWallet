@@ -20,7 +20,7 @@
         />
         <p class="text-error">{{ addressErrorMessages }}</p>
       </div>
-      <app-select-tx-fee />
+      <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
       <div>
         <input
           type="checkbox"
@@ -95,6 +95,7 @@ import {
   type Token,
 } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
+import { GasPriceType, type GasFeeResponse } from '@/providers/types'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -108,7 +109,8 @@ const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
 const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
-const gasFees = ref({})
+const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
+const selectedFee = ref(GasPriceType.ECONOMY)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
 onMounted(async () => {
