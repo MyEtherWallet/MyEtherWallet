@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
-import type WalletInterface from '@/modules/access/common/WalletInterface'
+import type { WalletInterface } from '@/providers/common/walletInterface'
 import { fromWei } from 'web3-utils'
 
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'

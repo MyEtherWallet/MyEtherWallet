@@ -49,13 +49,13 @@
 </template>
 
 <script setup lang="ts">
+import { useWalletStore, type Token } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { useWalletStore, type Token } from '@/stores/wallet_store'
 import {
   formatFloatingPointValue,
   formatFiatValue,

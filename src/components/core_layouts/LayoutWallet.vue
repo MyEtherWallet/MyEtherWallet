@@ -27,15 +27,16 @@ import { ref, computed } from 'vue'
 import TheWalletMenu from './wallet/TheWalletMenu.vue'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { useWalletStore } from '@/stores/wallet_store'
+import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useFetch, useTimeoutFn } from '@vueuse/core'
+
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 
 const urlTokenBalances = computed(() => {
-  return `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddressString()}/?noInjectErrors=false`
+  return `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddress()}/?noInjectErrors=false`
 })
 
 const { execute } = useFetch(urlTokenBalances.value, {

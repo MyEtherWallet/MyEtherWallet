@@ -56,6 +56,7 @@
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
                 <img
+                  v-if="token.logo_url"
                   class="mr-4 w-7 h-7 rounded-full overflow-hidden"
                   :src="imageReplacer(token.logo_url)"
                   alt="token icon"
@@ -98,7 +99,7 @@ import {
   MAIN_TOKEN_CONTRACT,
   useWalletStore,
   type Token,
-} from '@/stores/wallet_store'
+} from '@/stores/walletStore'
 import { ref, computed, onMounted } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'

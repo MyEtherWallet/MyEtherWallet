@@ -1,7 +1,6 @@
 import { Wallet, thirdparty } from '@ethereumjs/wallet'
 import { bigIntToHex, hexToBigInt } from '@ethereumjs/util'
 import { bytesToHex, toBigInt, toWei } from 'web3-utils'
-import { Hardfork, Common } from '@ethereumjs/common'
 
 import type {
   EthSaleKeystore,
@@ -24,13 +23,6 @@ const GAS_PRICE_TYPES = {
   ECONOMY: 'economy',
   REGULAR: 'regular',
   FAST: 'fast',
-}
-
-const commonGenerator = (network: { type: { chainID: number } }) => {
-  return Common.custom({
-    chainId: network.type.chainID,
-    defaultHardfork: Hardfork.London,
-  })
 }
 
 const padLeftEven = (hex: string) => {
@@ -218,7 +210,6 @@ export {
   getSignTransactionObject,
   eip1559Params,
   calculateChainIdFromV,
-  commonGenerator,
   sanitizeHex,
   getPriorityFeeBasedOnType,
   getBaseFeeBasedOnType,
