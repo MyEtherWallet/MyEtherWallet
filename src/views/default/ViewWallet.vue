@@ -26,26 +26,4 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { ROUTES_WALLET } from '@/router/routeNames'
-import { storeToRefs } from 'pinia'
-
-import { useWalletStore } from '@/stores/walletStore'
-import { onMounted } from 'vue'
-
-const store = useWalletStore()
-const { wallet } = storeToRefs(store)
-const { setTokens } = store
-
-const address = wallet.value?.getAddress()
-
-onMounted(async () => {
-  try {
-    const res = await fetch(
-      `https://tmp.ethvm.dev/balances/137/${address}?noInjectErrors=true`,
-    )
-    const tokens = await res.json()
-    setTokens(tokens.result)
-  } catch (e) {
-    console.error(e)
-  }
-})
 </script>
