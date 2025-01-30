@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'bg-grey-light rounded-full p-2 flex items-center hoverOpacityHasBG min-w-[100px] max-w-fit min-h-11',
+      'bg-surface rounded-full p-2 flex items-center hoverOpacityHasBG min-w-[100px] max-w-fit min-h-11',
       { 'bg-grey-10 animate-pulse': isLoading },
     ]"
     type="button"
@@ -29,20 +29,19 @@
   </button>
   <app-dialog
     v-model:is-open="showAllTokens"
-    title="Select token to send"
+    title="Select token"
     class="sm:max-w-[800px] sm:mx-auto"
   >
     <template #content>
-      <div>
-        <magnifying-glass-icon class="w-6 h-6 mx-3" />
+      <div class="h-[550px]">
+        <div
+          class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+        >
+          <app-search-input v-model="searchInput" class="grow" />
+          <!--TODO: implement sort by-->
+          <div class="text-sm pr-4">Sort by: token Name</div>
+        </div>
 
-        <input
-          class="w-full h-10 rounded-md px-2 border-none"
-          style="outline: none !important"
-          type="text"
-          placeholder="Search assets"
-          v-model="searchInput"
-        />
         <div class="flex flex-col">
           <div
             v-for="token in searchResults"
@@ -85,12 +84,13 @@ import {
   type Token,
 } from '@/stores/wallet_store'
 import { ref, computed, onMounted } from 'vue'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
+import AppSearchInput from './AppSearchInput.vue'
 
 const emit = defineEmits(['update:selectedToken'])
 
