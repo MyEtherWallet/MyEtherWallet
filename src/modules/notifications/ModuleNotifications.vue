@@ -340,10 +340,9 @@ export default {
 
 .notification-count {
   position: absolute;
-  top: 0;
+  top: -5px;
+  right: -5px;
   border-radius: 100%;
-  margin-bottom: 20px;
-  margin-left: -10px;
   width: 18px;
   height: 18px;
   font-size: 12px;
