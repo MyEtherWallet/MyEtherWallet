@@ -1,8 +1,8 @@
 <template>
   <button
     :class="[
-      'bg-surface rounded-full p-2 flex items-center hoverOpacityHasBG min-w-[100px] max-w-fit min-h-11',
-      { 'bg-grey-10 animate-pulse': isLoading },
+      'bg-surface rounded-full p-2 flex flex-nowrap items-center hoverOpacityHasBG  min-h-11 ',
+      { 'bg-grey-10 animate-pulse min-w-[120px]': isLoading },
     ]"
     type="button"
     @click="showAllTokens = true"
@@ -21,11 +21,12 @@
         alt="token icon"
       />
     </div>
-    <p v-if="!isLoading" class="font-medium">
-      {{ truncate(selectedToken.symbol, 5) }}
+    <p v-if="!isLoading" class="font-medium text-nowrap">
+      {{ truncate(selectedToken.symbol, 7) }}
     </p>
-
-    <chevron-down-icon v-if="!isLoading" class="ml-1 min-w-4 h-4 stroke-4" />
+    <div class="ml-1 min-w-4 h-4">
+      <chevron-down-icon v-if="!isLoading" class="stroke-4" />
+    </div>
   </button>
   <app-dialog
     v-model:is-open="showAllTokens"
