@@ -12,6 +12,7 @@ export enum SupportedTXType {
 
 export interface APIRequest {
   id: string
+  chainId: HexPrefixedString
 }
 
 export interface PreEthereumTransaction {
@@ -25,7 +26,7 @@ export interface EthereumTransactionWithFeeType extends PreEthereumTransaction {
   gasFee: GasPriceType
 }
 
-export interface PostEthereumTransaction extends PreEthereumTransaction {
+export interface PostEthereumTransaction extends PreEthereumTransaction, APIRequest {
   gasPriceType: GasPriceType
   gasPrice?: HexPrefixedString
   gasLimit: HexPrefixedString
