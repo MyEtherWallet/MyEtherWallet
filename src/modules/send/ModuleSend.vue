@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { toWei } from 'web3-utils'
+import { toHex, toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
 
@@ -112,6 +112,7 @@ const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
 const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
+const gasFees = ref({})
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
 onMounted(async () => {
@@ -119,6 +120,12 @@ onMounted(async () => {
     (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as Token
   tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
+  gasFees.value = await wallet.value.getGasFee({
+    to: '0x000000000000000000000000000000000000',
+    from: wallet.value.getAddress(),
+    value: toHex(toWei(amount.value, 'ether')),
+    data: data.value,
+  })
 })
 
 // TODO: Reimplement fee calculation

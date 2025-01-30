@@ -35,8 +35,37 @@ class PrivateKeyWallet implements WalletInterface {
     this.chainId = chainId
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    console.log('getGasFee', tx)
-    throw new Error('Method not implemented.')
+    // test data
+    console.log(tx)
+    return Promise.resolve({
+      "id": "f4e2aa40-d990-4475-ad25-9e5fee49fa87",
+      "fee": {
+        "ECONOMY": {
+          "nativeValue": '0x33383530303030303030',
+          "fiatValue": '.25',
+          "nativeSymbol": 'MATIC',
+          "fiatSymbol": 'USD'
+        },
+        "REGULAR": {
+          "nativeValue": '0x34303030303030303030',
+          "fiatValue": '.27',
+          "nativeSymbol": 'MATIC',
+          "fiatSymbol": 'USD'
+        },
+        "FAST": {
+          "nativeValue": '0x35303030303030303030',
+          "fiatValue": '.30',
+          "nativeSymbol": 'MATIC',
+          "fiatSymbol": 'USD'
+        },
+        "FASTEST": {
+          "nativeValue": '0x36303030303030303030',
+          "fiatValue": '.35',
+          "nativeSymbol": 'MATIC',
+          "fiatSymbol": 'USD'
+        }
+      }
+    })
   }
   getSignableTransaction(
     tx: EthereumTransactionWithFeeType,

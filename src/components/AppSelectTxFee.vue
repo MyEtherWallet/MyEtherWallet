@@ -38,7 +38,9 @@
         <!-- fee options -->
         <!-- Economy -->
         <div
+          :class="{ '!bg-grey-5': isEconomy }"
           class="flex justify-between items-center my-2 bg-white rounded-lg hover:bg-grey-5 cursor-pointer py-4 px-2"
+          @click="setFee(GasPriceType.ECONOMY)"
         >
           <div class="flex items-center">
             <currency-dollar-icon class="w-6 h-6 mr-3" />
@@ -53,7 +55,9 @@
         </div>
         <!-- Recommended -->
         <div
+          :class="{ '!bg-grey-5': isRegular }"
           class="flex justify-between items-center my-2 bg-white rounded-lg hover:bg-grey-5 cursor-pointer py-4 px-2"
+          @click="setFee(GasPriceType.REGULAR)"
         >
           <div class="flex items-center">
             <check-icon class="w-6 h-6 mr-3" />
@@ -68,7 +72,9 @@
         </div>
         <!-- Higher priority -->
         <div
+          :class="{ '!bg-grey-5': isFast }"
           class="flex justify-between items-center my-2 bg-white rounded-lg hover:bg-grey-5 cursor-pointer py-4 px-2"
+          @click="setFee(GasPriceType.FAST)"
         >
           <div class="flex items-center">
             <arrow-up-icon class="w-6 h-6 mr-3" />
@@ -83,7 +89,9 @@
           <div class="text-[16px] text-grey-30">+$0.1298</div>
         </div>
         <div
+          :class="{ '!bg-grey-5': isFastest }"
           class="flex justify-between items-center my-2 bg-white rounded-lg hover:bg-grey-5 cursor-pointer py-4"
+          @click="setFee(GasPriceType.FASTEST)"
         >
           <div class="flex items-center">
             <div class="flex">
@@ -116,11 +124,29 @@ import {
   CheckIcon,
 } from '@heroicons/vue/24/outline'
 import { FwbModal } from 'flowbite-vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { GasPriceType } from '@/providers/types'
 
-// const currentSelected = ref('low')
+const emit = defineEmits(['update:modelValue'])
+
+const props = defineProps({
+  currentSelected: {
+    type: String,
+    default: GasPriceType.ECONOMY,
+    required: true,
+  },
+  fees: {
+    type: Object,
+    required: true,
+  },
+})
 
 const openModal = ref(false)
+
+const isEconomy = computed(() => props.currentSelected === GasPriceType.ECONOMY)
+const isRegular = computed(() => props.currentSelected === GasPriceType.REGULAR)
+const isFast = computed(() => props.currentSelected === GasPriceType.FAST)
+const isFastest = computed(() => props.currentSelected === GasPriceType.FASTEST)
 
 const openFeeModal = () => {
   openModal.value = true
@@ -128,5 +154,9 @@ const openFeeModal = () => {
 
 const closeFeeModal = () => {
   openModal.value = false
+}
+
+const setFee = (fee: string) => {
+  emit('update:modelValue', fee)
 }
 </script>
