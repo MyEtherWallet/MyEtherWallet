@@ -158,7 +158,7 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
     )
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data // possibly a temp fix
+        wagmiWalletData.value = msg.data as string // possibly a temp fix
         openWalletConnectModal.value = true
       }
     })

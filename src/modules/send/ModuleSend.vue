@@ -95,7 +95,11 @@ import {
   type Token,
 } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
-import { GasPriceType, type GasFeeResponse } from '@/providers/types'
+import {
+  GasPriceType,
+  type GasFeeResponse,
+  type HexPrefixedString,
+} from '@/providers/types'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -118,11 +122,12 @@ onMounted(async () => {
     (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as Token
   tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
+  //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
   gasFees.value = await wallet.value.getGasFee({
     to: '0x000000000000000000000000000000000000',
-    from: wallet.value.getAddress(),
-    value: toHex(toWei(amount.value, 'ether')),
-    data: data.value,
+    from: wallet.value.getAddress() as HexPrefixedString,
+    value: toHex(toWei(amount.value, 'ether')) as HexPrefixedString,
+    data: data.value as HexPrefixedString,
   })
 })
 

@@ -12,15 +12,13 @@ export enum SupportedTXType {
 
 export interface APIRequest {
   id: string
-  network: string
 }
 
-export interface PreEthereumTransaction extends APIRequest {
+export interface PreEthereumTransaction {
   to: HexPrefixedString
   from: HexPrefixedString
   value: HexPrefixedString
   data: HexPrefixedString
-  chainId: HexPrefixedString
 }
 
 export interface EthereumTransactionWithFeeType extends PreEthereumTransaction {

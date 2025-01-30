@@ -18,6 +18,7 @@
         placeholder="0.0"
         required
         v-model.number="amount"
+        @focus="setInFocusInput"
       />
       <app-token-select v-model:selected-token="selectedToken" />
     </div>

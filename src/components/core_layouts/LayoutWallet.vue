@@ -36,7 +36,7 @@ const { wallet } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 
 const urlTokenBalances = computed(() => {
-  return `https://tmp.ethvm.dev/balances/137/${wallet.value.getAddress()}/?noInjectErrors=false`
+  return `https://tmp.ethvm.dev/balances/POLYGON/${wallet.value.getAddress()}/?noInjectErrors=false`
 })
 
 const { execute } = useFetch(urlTokenBalances.value, {

@@ -9,6 +9,7 @@ import type {
   ProviderName,
   WalletType,
 } from '../types'
+import { type PreEthereumTransaction } from '@/providers/ethereum/types'
 
 export interface WalletInterface {
   connect: () => Promise<boolean>
@@ -16,7 +17,7 @@ export interface WalletInterface {
   getSignableTransaction: (
     tx: PreTransaction,
   ) => Promise<PreTransactionResponse>
-  getGasFee: (tx: PreTransaction) => Promise<GasFeeResponse>
+  getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
   SignTransaction: (tx: PostTransaction) => Promise<PostTransactionResponse>
   SignMessage: (options: {
     message: `0x${string}`
