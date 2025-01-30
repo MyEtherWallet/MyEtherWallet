@@ -42,7 +42,7 @@
           <div class="text-sm pr-4">Sort by: token Name</div>
         </div>
 
-        <div class="flex flex-col">
+        <div v-if="searchResults.length" class="flex flex-col">
           <div
             v-for="token in searchResults"
             :key="token.contract"
@@ -70,6 +70,13 @@
                 {{ truncate(convertToValue(token.price, token.balance), 12) }}
               </div>
             </div>
+          </div>
+        </div>
+        <div v-else>
+          <div class="flex justify-center items-center h-[400px] text-grey-30">
+            <p v-if="searchInput !== ''">No tokens match your search</p>
+            <!-- TODO: verify other states when it can happen-->
+            <p v-else>No tokens available</p>
           </div>
         </div>
       </div>

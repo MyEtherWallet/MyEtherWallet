@@ -36,7 +36,7 @@
           :class="$attrs.class"
         >
           <div
-            class="z-10 pb-2 sm:pb-8 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
+            class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
           >
             <slot name="title">
               <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8">
