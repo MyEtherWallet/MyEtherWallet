@@ -48,7 +48,7 @@
               class="mt-4 sm:mt-8"
             />
           </div>
-          <div class="pt-2 pb-8 px-6 sm:px-8">
+          <div class="pt-2 px-6 sm:px-8">
             <slot name="content" />
           </div>
         </div>

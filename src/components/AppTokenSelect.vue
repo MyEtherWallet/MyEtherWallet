@@ -30,47 +30,55 @@
   <app-dialog
     v-model:is-open="showAllTokens"
     title="Select token"
-    class="sm:max-w-[800px] sm:mx-auto"
+    class="sm:max-w-[500px] sm:mx-auto"
   >
     <template #content>
-      <div class="h-[550px]">
-        <div
-          class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
-        >
-          <app-search-input v-model="searchInput" class="grow" />
-          <!--TODO: implement sort by-->
-          <div class="text-sm pr-4">Sort by: token Name</div>
+      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+        <div class="sticky top-0 bg-white z-10 rounded-b-4xl">
+          <div
+            class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+          >
+            <app-search-input v-model="searchInput" class="grow" />
+            <!--TODO: implement sort by-->
+            <div class="text-sm pr-4">Sort by: token Name</div>
+          </div>
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col">
-          <div
+          <button
             v-for="token in searchResults"
             :key="token.contract"
-            class="flex items-center justify-between px-2 py-4 cursor-pointer"
+            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-full"
             @click="setSelectedToken(token)"
+            v-ripple
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <div class="mr-4 h-7 w-7 rounded-full overflow-hidden">
-                  <img
-                    class="w-7 h-7"
-                    :src="imageReplacer(token.logo_url)"
-                    alt="token icon"
-                  />
-                </div>
-                <div>
+                <img
+                  class="mr-4 w-7 h-7 rounded-full overflow-hidden"
+                  :src="imageReplacer(token.logo_url)"
+                  alt="token icon"
+                />
+                <div class="text-left">
                   <h2>{{ token.name }}</h2>
-                  <p class="text-grey-30">
-                    {{ token.balance }} {{ truncate(token.symbol, 7) }}
+                  <p class="text-info text-sm">
+                    {{ getBalance(token.balance) }}
+                    <span class="uppercase text-xs">
+                      {{ truncate(token.symbol, 7) }}</span
+                    >
                   </p>
                 </div>
               </div>
               <div v-if="token.price !== 0">
-                $
-                {{ truncate(convertToValue(token.price, token.balance), 12) }}
+                <p class="text-medium">
+                  $ {{ convertToValue(token.price, token.balance) }}
+                </p>
+                <p class="text-info text-xs">
+                  @ ${{ formatFiatValue(token.price).value }}
+                </p>
               </div>
             </div>
-          </div>
+          </button>
         </div>
         <div v-else>
           <div class="flex justify-center items-center h-[400px] text-grey-30">
@@ -98,7 +106,10 @@ import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
-
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
@@ -159,6 +170,13 @@ const imageReplacer = (logo: string) => {
 }
 
 const convertToValue = (price: number, balance: string) => {
-  return BigNumber(BigNumber(price).times(BigNumber(balance))).toString()
+  const _value = BigNumber(
+    BigNumber(price).times(BigNumber(balance)),
+  ).toString()
+  return formatFiatValue(_value).value
+}
+
+const getBalance = (_value: string) => {
+  return formatFloatingPointValue(_value).value
 }
 </script>

@@ -2,8 +2,8 @@
   <div class="relative">
     <magnifying-glass-icon
       :class="[
-        'absolute top-2 left-3 w-6 h-6 mx-3 cursor-pointer',
-        { 'text-primary': inFocusInput },
+        'absolute top-2 left-0 w-6 h-6 mx-3 cursor-pointer',
+        inFocusInput ? 'text-primary' : 'text-info',
       ]"
       @click="searchInput?.focus()"
     />
@@ -12,9 +12,7 @@
       ref="searchInput"
       type="text"
       v-model="model"
-      :class="[
-        'grow focus:outline-none focus:ring-0 bg-white  border-none text-sm text-normal rounded-full h-10 w-full pl-[60px] py-1  text-[17px] transition-colors',
-      ]"
+      class="grow focus:outline-none focus:ring-0 bg-white border-none text-sm text-normal rounded-full h-10 w-full pl-[46px] py-1 text-[17px] transition-colors"
       :aria-label="placeholder"
       :placeholder="placeholder"
       @focus="inFocusInput = true"

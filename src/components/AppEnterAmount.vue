@@ -56,6 +56,10 @@ import AppTokenSelect from './AppTokenSelect.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useWalletStore, type Token } from '@/stores/wallet_store'
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
@@ -86,18 +90,17 @@ const error = defineModel('error', {
 })
 
 const balanceFiatOrError = computed(() => {
-  return error.value
-    ? error.value
-    : `$ ${BigNumber(
-        BigNumber(selectedToken.value.price).times(
-          BigNumber(amount.value || 0),
-        ),
-      ).toString()}`
+  const _balance = BigNumber(
+    BigNumber(selectedToken.value.price || 0).times(
+      BigNumber(amount.value || 0),
+    ),
+  )
+  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
   return selectedToken.value.balance
-    ? BigNumber(selectedToken.value.balance).toFormat(5, BigNumber.ROUND_DOWN)
+    ? formatFloatingPointValue(selectedToken.value.balance).value
     : '0'
 })
 
