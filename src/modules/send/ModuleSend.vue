@@ -110,7 +110,7 @@ const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
-const selectedFee = ref(GasPriceType.ECONOMY)
+const selectedFee = ref(GasPriceType.REGULAR)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
 onMounted(async () => {
