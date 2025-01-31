@@ -11,7 +11,7 @@
         {
           '!border-primary !border-2': inFocusInput && !hasError,
         },
-        'grow focus:outline-none focus:ring-none bg-white border border-1 border-grey-30  text-sm text-normal rounded-[20px] h-[58px] w-full pl-7 pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-colors',
+        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-30  text-sm text-normal rounded-[20px] h-[58px] w-full pl-7 pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-colors',
       ]"
       :required="isRequired"
       :aria-label="placeholder"
@@ -87,7 +87,7 @@ const props = defineProps({
   type: {
     type: String as PropType<InputTypeHTMLAttribute>,
     required: true,
-    default: '',
+    default: 'text',
   },
   isRequired: {
     type: Boolean,

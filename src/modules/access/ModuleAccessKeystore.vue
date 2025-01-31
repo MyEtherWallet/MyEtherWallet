@@ -75,14 +75,14 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ROUTES_WALLET } from '@/router/routeNames'
-import { useWalletStore } from '@/stores/wallet_store'
+import { useWalletStore } from '@/stores/walletStore'
 import {
   unlockKeystore,
   type V3Keystore,
   type EthSaleKeystore,
   type MEWKeystore,
 } from '@/modules/access/common/helpers'
-import WalletInterface from '@/modules/access/common/WalletInterface'
+import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -164,12 +164,10 @@ const enterPassword = async () => {
       password.value,
     )
     if (res) {
-      // temp: move hardcodes
-      const wallet = new WalletInterface(
+      // TODO: move hardcodes
+      const wallet = new PrivateKeyWallet(
         Buffer.from(res.getPrivateKey()),
-        false,
-        'keystore',
-        { file: keystore.value!, name: res.getV3Filename() },
+        '0x1',
       )
       resetKeystore()
       setWallet(wallet)

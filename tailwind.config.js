@@ -5,6 +5,8 @@ export default {
     './index.html',
     './node_modules/@myetherwallet/vue-common-components/dist/*.js',
     './node_modules/@myetherwallet/vue-common-components/dist/*.cjs',
+    './node_modules/flowbite-vue/**/*.{js,jsx,ts,tsx,vue}',
+    './node_modules/flowbite/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     screens: {
@@ -45,7 +47,8 @@ export default {
       enkryptBg: 'rgba(186,74,255,0.1)',
       black: '#000000',
       white: '#ffffff',
-      info: 'rgba(0, 0, 0, 0.7)',
+      surface: 'rgba(232, 232, 237, 1)',
+      info: 'rgba(0, 0, 0, 0.6)',
       'grey-light': 'rgba(232, 232, 237, 1)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
@@ -60,7 +63,7 @@ export default {
       'blue-10': 'rgba(22,129,255,0.1)',
       'blue-7': 'rgba(22,129,255,0.07)',
       'blue-950': 'rgb(23 37 84)',
-      purple: 'rgba(104, 76, 255, 1)',
+      'mew-purple': 'rgba(104, 76, 255, 1)',
       'purple-10': 'rgba(104,76,255,0.1)',
       'purple-7': 'rgba(104,76,255,0.07)',
     },
@@ -90,10 +93,14 @@ export default {
         height: 'height',
         bg: 'background',
       },
+      borderWidth: {
+        1: '1px',
+      },
       borderRadius: {
         '4xl': '32px',
       },
     },
   },
-  plugins: [],
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  plugins: [require('flowbite/plugin')],
 }

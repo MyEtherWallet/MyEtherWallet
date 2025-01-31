@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <app-sheet sheetClass="max-w-[800px] mx-auto ">
     <app-tabs
       v-model:activeTabIndex="activePanel"
       :tabs="tabs"
@@ -7,12 +7,13 @@
       :useRouteLink="true"
       label="Send Tabs"
     />
-  </div>
+  </app-sheet>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ROUTES_SEND } from '@/router/routeNames'
 import AppTabs from '@/components/AppTabs.vue'
+import AppSheet from '@/components/AppSheet.vue'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
 
 /** ----------------

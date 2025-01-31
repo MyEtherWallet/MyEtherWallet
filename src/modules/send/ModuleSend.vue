@@ -1,31 +1,16 @@
 <template>
-  <div>
+  <div class="mt-5">
     <form @submit.prevent="handleSubmit">
-      <div class="flex">
-        <div>
-          <label for="asset-input">Token:</label>
-          <select name="asset-input" v-model="tokenSelected">
-            <option v-for="(t, idx) in tokens" :value="t" :key="t.symbol + idx">
-              {{ t.symbol }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <div>
-            <label for="amount-input">Amount:</label>
-            <input
-              v-model="amount"
-              name="amount-input"
-              type="number"
-              step="0.000000000000000001"
-              required
-            />
-          </div>
-          <div>balance: {{ tokenSelected.balance }}</div>
-          <p class="text-error">{{ amountErrorMessages }}</p>
-        </div>
+      <div class="w-full">
+        <p class="font-bold ml-2 mb-1 text-base">Amount</p>
+        <app-enter-amount
+          v-model:amount="amount"
+          v-model:selected-token="tokenSelected"
+          v-model:error="amountError"
+          :validate-input="checkAmountForError"
+        />
       </div>
-      <div>
+      <div class="mt-6">
         <label for="address-input">Address:</label>
         <input
           v-model="toAddress"
@@ -35,6 +20,7 @@
         />
         <p class="text-error">{{ addressErrorMessages }}</p>
       </div>
+      <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
       <div>
         <input
           type="checkbox"
@@ -87,34 +73,48 @@
         Send
       </button>
     </form>
+    <app-need-help
+      title="Need help?"
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { fromWei, toWei } from 'web3-utils'
+import { toHex, toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
+import AppEnterAmount from '@/components/AppEnterAmount.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
 import {
   useWalletStore,
   MAIN_TOKEN_CONTRACT,
   type Token,
-} from '@/stores/wallet_store'
+} from '@/stores/walletStore'
 import { abi } from './tokenAbi'
+import {
+  GasPriceType,
+  type GasFeeResponse,
+  type HexPrefixedString,
+} from '@/providers/types'
 
 const walletStore = useWalletStore()
-const { wallet, tokens, balance } = storeToRefs(walletStore)
-
-const amount = ref('')
+const { wallet, tokens } = storeToRefs(walletStore)
+const amount = ref<number | string>('')
 const toAddress = ref('')
 const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
+const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
 const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
 const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
+const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
+const selectedFee = ref(GasPriceType.REGULAR)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
 onMounted(async () => {
@@ -122,34 +122,36 @@ onMounted(async () => {
     (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as Token
   tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
+  //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
+  gasFees.value = await wallet.value.getGasFee({
+    to: '0x000000000000000000000000000000000000',
+    from: wallet.value.getAddress() as HexPrefixedString,
+    value: toHex(toWei(amount.value, 'ether')) as HexPrefixedString,
+    data: data.value as HexPrefixedString,
+  })
 })
 
-const fees = computed(() => {
-  return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
-})
-const amountErrorMessages = computed(() => {
-  const baseAmount = toWei(amount.value, 'ether')
-  const baseBalance = toWei(balance.value, 'ether')
-  const baseFee = toWei(fees.value, 'ether')
+const checkAmountForError = () => {
+  const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
   const tokenSelectedBalance = tokenSelected.value.balance
     ? tokenSelected.value.balance
     : '0'
   const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
 
-  if (amount.value === '') return 'Amount is required' // amount is blank
-  if (BigInt(baseAmount) <= 0) return 'Amount must be greater than 0' // amount less than 0
-  if (BigInt(baseTokenBalance) < BigInt(baseAmount))
-    return 'Insufficient balance for this token' // amount greater than selected balance
-  if (BigInt(baseFee) > BigInt(baseBalance))
-    return 'Insufficient balance for fees' // fees greater than wallet balance
-  if (
-    tokenSelected.value.contract === MAIN_TOKEN_CONTRACT &&
-    BigInt(baseBalance) < BigInt(baseAmount)
-  )
-    return 'Insufficient balance for this token' // amount greater than wallet balance
+  // model.value = amount.value
+  if (amount.value === undefined || amount.value === '')
+    amountError.value = 'Amount is required' // amount is blank
+  else if (BigInt(baseAmount) < 0)
+    amountError.value = 'Amount must be greater than 0' // amount less than 0
+  else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
+    amountError.value = 'Insufficient balance' // amount greater than selected balance
+  else amountError.value = ''
+}
 
-  return ''
-})
+// TODO: Reimplement fee calculation
+// const fees = computed(() => {
+//   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
+// })
 
 const addressErrorMessages = computed(() => {
   if (toAddress.value === '') return 'Address is required'
@@ -162,13 +164,15 @@ const addressErrorMessages = computed(() => {
 })
 
 const validSend = computed(() => {
-  return amountErrorMessages.value === '' && addressErrorMessages.value === ''
+  return amountError.value === '' && amountError.value === ''
 })
 
 watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
   () => {
     if (
+      tokenSelected.value &&
+      tokenSelected.value.contract &&
       tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT &&
       toAddress.value !== '' &&
       amount.value !== ''
@@ -185,11 +189,6 @@ watch(
 
 const handleSubmit = () => {
   // TODO: Implement send logic once api is provided
-  console.log(
-    'Send',
-    amount.value,
-    toAddress.value,
-    wallet.value.getAddressString(),
-  )
+  console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
 }
 </script>

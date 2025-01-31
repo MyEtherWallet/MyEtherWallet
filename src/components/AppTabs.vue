@@ -3,7 +3,7 @@
     <div
       role="tablist"
       :aria-label="label"
-      class="flex justify-start bg-grey-light rounded-full p-2 gap-1 max-w-fit"
+      class="flex justify-start bg-surface rounded-full p-2 gap-1 max-w-fit"
       v-bind="$attrs"
       @keydown="handleKeyDown"
     >
