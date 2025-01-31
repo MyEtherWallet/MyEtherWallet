@@ -10,16 +10,7 @@
           :validate-input="checkAmountForError"
         />
       </div>
-      <div class="mt-6">
-        <label for="address-input">Address:</label>
-        <input
-          v-model="toAddress"
-          name="address-input"
-          type="string"
-          required
-        />
-        <p class="text-error">{{ addressErrorMessages }}</p>
-      </div>
+      <app-address-book v-model:to-address="toAddress" />
       <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
       <div>
         <input
@@ -84,10 +75,10 @@ import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { toHex, toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
-import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import AppAddressBook from '@/components/AppAddressBook.vue'
 
 import {
   useWalletStore,
@@ -152,16 +143,6 @@ const checkAmountForError = () => {
 // const fees = computed(() => {
 //   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
 // })
-
-const addressErrorMessages = computed(() => {
-  if (toAddress.value === '') return 'Address is required'
-  if (
-    !isValidAddress(toAddress.value) ||
-    !isValidChecksumAddress(toAddress.value)
-  )
-    return 'Invalid address'
-  return ''
-})
 
 const validSend = computed(() => {
   return amountError.value === '' && amountError.value === ''
