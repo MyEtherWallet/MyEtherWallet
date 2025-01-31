@@ -91,6 +91,7 @@ import {
   type GasFeeResponse,
   type HexPrefixedString,
 } from '@/providers/types'
+import { hexToBigInt } from '@ethereumjs/util'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -101,7 +102,7 @@ const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
 const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
-const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
+const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
@@ -147,6 +148,15 @@ const checkAmountForError = () => {
 const validSend = computed(() => {
   return amountError.value === '' && amountError.value === ''
 })
+
+watch(
+  () => [selectedFee.value],
+  () => {
+    gasPrice.value = hexToBigInt(
+      gasFees.value.fee[selectedFee.value].nativeValue,
+    ).toString()
+  },
+)
 
 watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
