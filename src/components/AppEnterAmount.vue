@@ -6,7 +6,6 @@
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,
     }"
-    v-ripple
     @click="setInFocusInput"
   >
     <div class="flex justify-between items-center w-full">

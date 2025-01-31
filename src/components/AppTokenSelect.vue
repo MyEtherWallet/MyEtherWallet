@@ -51,7 +51,6 @@
             :key="token.contract"
             class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-full"
             @click="setSelectedToken(token)"
-            v-ripple
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
