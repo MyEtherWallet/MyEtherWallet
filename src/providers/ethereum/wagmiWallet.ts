@@ -17,22 +17,29 @@ import type { Connector } from 'wagmi'
 
 class WagmiWallet implements WalletInterface {
   chainId: string
-  connecter: Connector
+  connector: Connector
+  address: string | null
+
   constructor(connector: Connector, chainId: string) {
     this.chainId = chainId
-    this.connecter = connector
+    this.connector = connector
+    this.address = null
   }
   disconnect(): Promise<boolean> {
-    return this.connecter
+    return this.connector
       .disconnect()
       .then(() => true)
       .catch(() => false)
   }
   connect(): Promise<boolean> {
-    return this.connecter
+    return this.connector
       .connect()
       .then(res => {
-        return res.accounts.length > 0
+        if (res.accounts.length > 0) {
+          this.address = res.accounts[0]
+          return true
+        }
+        return false
       })
       .catch(err => {
         console.error(err)
@@ -54,7 +61,7 @@ class WagmiWallet implements WalletInterface {
   ): Promise<PostTransactionResponse> {
     console.log(tx)
     const client: EthereumProvider =
-      (await this.connecter.getProvider()) as EthereumProvider
+      (await this.connector.getProvider()) as EthereumProvider
     client.request({ method: 'eth_accounts' }).then(console.log)
     throw new Error('Method not implemented.')
   }
@@ -66,7 +73,10 @@ class WagmiWallet implements WalletInterface {
     throw new Error('Method not implemented.')
   }
   getAddress(): string {
-    throw new Error('Method not implemented.')
+    if (!this.address) {
+      throw new Error('Wallet not connected')
+    }
+    return this.address
   }
 
   getWalletType(): WalletType {
