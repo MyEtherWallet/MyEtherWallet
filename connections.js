@@ -60,7 +60,7 @@ module.exports = [
   'wss://api.avax.network:443/ext/bc/C/ws',
   'wss://rpc.gnosischain.com:443/wss',
   'wss://public-en-cypress.klaytn.net:443/ws',
-  'wss://wsapi.fantom.network:443/',
+  'wss://fantom.callstaticrpc.com:443/',
   'wss://ws.arthera.net:443/',
   'wss://ws-test.arthera.net:443/',
   'wss://devnet.coti.io:443/ws',
