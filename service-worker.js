@@ -15,10 +15,10 @@ importScripts("/workbox-v4.3.1/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "/workbox-v4.3.1"});
 
 importScripts(
-  "/precache-manifest.1a86c3713a123b9246a152e3d6559391.js"
+  "/precache-manifest.53e915635f8ce0fb9e54720e2c9216a1.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "myetherwallet-6.9.18"});
+workbox.core.setCacheNameDetails({prefix: "myetherwallet-6.9.18-hotfix.1"});
 
 workbox.core.skipWaiting();
 
