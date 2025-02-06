@@ -1,4 +1,4 @@
-### Release v6.9.19-hotfix.1
+### Release v6.9.18-hotfix.1
 
 ### fix
 
