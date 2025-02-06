@@ -1,3 +1,9 @@
+### Release v6.9.18-hotfix.1
+
+### fix
+
+* ftm node [#5091](https://github.com/MyEtherWallet/MyEtherWallet/pull/5091)
+
 ### Release v6.9.18
 
 ### fix
