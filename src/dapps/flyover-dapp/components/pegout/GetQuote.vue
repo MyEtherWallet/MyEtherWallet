@@ -12,6 +12,7 @@
     <mew-input
       :value="btcAddress"
       :has-clear-btn="false"
+      :rules="validateBtcAddress"
       :label="$t('flyover.pegout.quote.btcAddress')"
       :placeholder="$t('flyover.pegout.quote.btcAddress')"
       class="mr-3 flex-grow-1"
@@ -21,6 +22,7 @@
     <mew-input
       v-model="btcRefund"
       :has-clear-btn="false"
+      :rules="validateBtcAddress"
       :label="$t('flyover.pegout.quote.btcRefund')"
       :placeholder="$t('flyover.pegout.quote.btcRefund')"
       class="mr-3 flex-grow-1"
@@ -29,6 +31,7 @@
     <mew-input
       :value="rskAddress"
       :has-clear-btn="false"
+      :rules="validateRskAddress"
       :label="$t('flyover.pegout.quote.rskAddress')"
       :placeholder="$t('flyover.pegout.quote.rskAddress')"
       class="mr-3 flex-grow-1"
@@ -41,6 +44,7 @@
         :has-clear-btn="false"
         :label="$t('flyover.pegout.quote.amountBTC')"
         :placeholder="$t('flyover.pegout.quote.amountBTC')"
+        :rules="validateAmount"
         class="mr-3 flex-grow-1"
       />
       <div class="notes">{{ amountNote }}</div>
@@ -53,7 +57,7 @@
       <v-col class="pl-0" cols="4">
         <mew-button
           :loading="loading"
-          :disabled="loading"
+          :disabled="loading || disabled"
           :has-full-width="true"
           btn-size="xlarge"
           :title="$t('flyover.pegout.quote.quoteBtn')"
@@ -69,6 +73,11 @@ import { getQuote } from '../../handlers/pegout';
 import { getProviders, getDetails } from '../../handlers/helpers/provider';
 import { mapState } from 'vuex';
 import { fromBase, toBase } from '@/core/helpers/unit';
+import {
+  isAmountValid,
+  isRootstockAddress,
+  isLegacyBtcAddress
+} from '../../handlers/helpers/validations';
 
 export default {
   name: 'GetQuote',
@@ -83,19 +92,43 @@ export default {
       provider: null,
       providers: [],
       amountNote: '',
-      siteKey: ''
+      siteKey: '',
+      min: 0,
+      max: 0
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance'])
+    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
+    disabled() {
+      return (
+        !isAmountValid(this.amount, this.min, this.max) ||
+        !isRootstockAddress(this.rskAddress) ||
+        !isLegacyBtcAddress(this.btcAddress)
+      );
+    },
+    validateAmount() {
+      const valid = isAmountValid(this.amount, this.min, this.max);
+
+      return [valid || `Required amount: ${this.amountNote}`];
+    },
+    validateRskAddress() {
+      const valid = isRootstockAddress(this.rskAddress);
+
+      return [valid || `Invalid rbtc address`];
+    },
+    validateBtcAddress() {
+      const valid = isLegacyBtcAddress(this.btcAddress);
+
+      return [valid || `Invalid btc legacy address`];
+    }
   },
   mounted() {
     getDetails()
       .then(data => {
         this.siteKey = data.siteKey;
-        const max = fromBase(parseFloat(data.pegout.maxTransactionValue), 18);
-        const min = fromBase(parseFloat(data.pegout.minTransactionValue), 18);
-        this.amountNote = `min: ${min}, max: ${max} btc`;
+        this.max = fromBase(parseFloat(data.pegout.maxTransactionValue), 18);
+        this.min = fromBase(parseFloat(data.pegout.minTransactionValue), 18);
+        this.amountNote = `min: ${this.min}, max: ${this.max} btc`;
       })
       .catch(() => {
         this.msg = 'No liquidity providers available!';
