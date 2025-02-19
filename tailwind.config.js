@@ -5,8 +5,6 @@ export default {
     './index.html',
     './node_modules/@myetherwallet/vue-common-components/dist/*.js',
     './node_modules/@myetherwallet/vue-common-components/dist/*.cjs',
-    './node_modules/flowbite-vue/**/*.{js,jsx,ts,tsx,vue}',
-    './node_modules/flowbite/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     screens: {
@@ -101,6 +99,4 @@ export default {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require('flowbite/plugin')],
 }

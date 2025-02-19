@@ -39,7 +39,7 @@
             class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
           >
             <slot name="title">
-              <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8">
+              <h1 v-if="title" :class="[titleSize, 'pr-2 pt-4 sm:pt-8']">
                 {{ title }}
               </h1>
             </slot>
@@ -93,6 +93,10 @@ defineProps({
    */
   title: {
     default: '',
+    type: String,
+  },
+  titleSize: {
+    default: 'title4',
     type: String,
   },
 })

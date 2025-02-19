@@ -20,18 +20,18 @@
     <div class="mb-5 max-w-[600px]">
       <SearchInput @search="searchWallet" />
     </div>
-    <fwb-modal size="sm" v-if="openWalletConnectModal" @close="closeModal">
-      <template #header>
-        <div class="w-full">
-          <div class="items-center text-xl">Scan with WalletConnect</div>
-        </div>
-      </template>
-      <template #body>
+    <app-dialog
+      title="Scan with WalletConnect"
+      v-model:is-open="openWalletConnectModal"
+      :title-size="'title5'"
+      class="sm:max-w-[350px] sm:mx-auto"
+    >
+      <template #content>
         <div>
           <img :src="qrcode" alt="Wagmi QR Code" />
         </div>
       </template>
-    </fwb-modal>
+    </app-dialog>
     <!-- Wallets-->
     <div
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
@@ -63,8 +63,8 @@ import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
-import { FwbModal } from 'flowbite-vue'
 
+import AppDialog from '@/components/AppDialog.vue'
 import AsyncImg from './AsyncImg.vue'
 import SearchInput from './SearchInput.vue'
 import { ROUTES_HOME } from '@/router/routeNames'
@@ -170,10 +170,6 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
       }
     })
   }
-}
-
-const closeModal = () => {
-  openWalletConnectModal.value = false
 }
 
 /** -------------------

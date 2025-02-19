@@ -39,8 +39,6 @@
     "bignumber.js": "^9.1.2",
     "bip39": "^3.1.0",
     "commitlint": "^19.6.0",
-    "flowbite": "^2.5.2",
-    "flowbite-vue": "^0.1.6",
     "hdkey": "^2.1.0",
     "pinia": "^2.3.0",
     "qrcode": "^1",
