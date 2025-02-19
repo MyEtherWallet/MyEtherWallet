@@ -12,6 +12,7 @@ const ROOTSTOCK_COLLECTIVE_ROUTE = {
 const rootstockCollectiveRouterGuard = (to, from, next) => {
   // Validate route parameters
   if (!to?.name || !from?.name) {
+    // eslint-disable-next-line no-console
     console.warn('Invalid route parameters in rootstockCollectiveRouterGuard');
   }
   next();
