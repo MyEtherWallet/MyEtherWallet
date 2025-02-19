@@ -3,8 +3,16 @@
     class="mt-6 px-4 py-4 rounded-[20px] box-border border border-1 flex items-center"
   >
     <div
-      class="favicon-container border rounded-full bg-grey-30 w-[32px] h-[32px]"
+      v-if="!toAddress"
+      class="blockies-container rounded-full bg-grey-30 !w-[36px] h-[32px]"
     ></div>
+    <img
+      v-else
+      :src="addressBlockie"
+      class="rounded-full w-[32px] h-[32px]"
+      height="30"
+      width="30"
+    />
     <div class="relative ml-2 pt-2 w-full flex items-center">
       <label for="address-input" class="absolute top-[-6px] text-sm/[16px]"
         >To</label
@@ -29,10 +37,16 @@
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { defineModel, computed } from 'vue'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
+import createIcon from '@/providers/ethereum/blockies'
 
 const toAddress = defineModel('toAddress', {
   type: String,
   required: true,
+})
+
+const addressBlockie = computed(() => {
+  if (!toAddress.value) return ''
+  return createIcon(toAddress.value)
 })
 
 const addressErrorMessages = computed(() => {
