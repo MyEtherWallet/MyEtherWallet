@@ -50,7 +50,7 @@
             v-if="wallet.notRecommended"
             class="absolute top-0 right-0 bg-yellow-warning text-black text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg"
           >
-            Not Recomended
+            Not Recommended
           </div>
         </div>
         <AsyncImg
