@@ -39,6 +39,10 @@
             height="285"
           />
         </div>
+
+        <div v-if="fileError.value" class="text-error mt-4">
+          {{ fileError.description }}
+        </div>
       </div>
       <div v-if="activeStep === 1">
         <app-step-description
@@ -52,6 +56,7 @@
           :error-message="errorPassword"
           is-required
           class="mt-7"
+          @keyup.enter="enterPassword"
         />
         <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
           <app-base-button @click="backStep" is-outline class="!min-w-[120px]">
@@ -73,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
@@ -115,7 +120,10 @@ const stepDescription: StepDescription[] = [
 
 const jsonInput = ref<HTMLInputElement | null>(null)
 const keystore = ref<EthSaleKeystore | V3Keystore | MEWKeystore | null>()
-const fileError = ref(false)
+const fileError = reactive({
+  value: false,
+  description: '',
+})
 const clickUpload = () => {
   if (!jsonInput.value) return
   jsonInput.value.value = ''
@@ -129,15 +137,27 @@ const uploadKeystoreFile = async (evt: Event) => {
   if (input.files && input.files.length > 0) {
     const file = input.files[0]
     const reader = new FileReader()
+    reader.onerror = () => {
+      fileError.description = 'Error reading file. Please try again.'
+      fileError.value = true
+    }
+
     reader.onload = async () => {
-      keystore.value = JSON.parse(reader.result as string)
+      try {
+        keystore.value = JSON.parse(reader.result as string)
+        activeStep.value = 1
+        if (jsonInput.value) jsonInput.value.value = '' // clear file input
+      } catch {
+        fileError.description = 'Invalid keystore file. Please try again.'
+        fileError.value = true
+      }
     }
     reader.readAsBinaryString(file)
   }
-  if (jsonInput.value) {
-    jsonInput.value.value = '' // clear file input
-  }
-  activeStep.value = 1
+  // if (jsonInput.value) {
+  //   jsonInput.value.value = '' // clear file input
+  // }
+  // activeStep.value = 1
 }
 const resetKeystore = () => {
   keystore.value = null
@@ -178,9 +198,7 @@ const enterPassword = async () => {
       isUnlockingKeystore.value = false
       router.push({ path: ROUTES_WALLET.WALLET.PATH })
     }
-  } catch (error) {
-    //TODO any other error handling
-    console.error('Keystore unlock failed:', error)
+  } catch {
     errorPassword.value = 'Invalid password'
     isUnlockingKeystore.value = false
   }
