@@ -6,6 +6,7 @@
         <h1 class="title4 pr-2 pt-4 sm:pt-8 mx-auto">
           Connect to MEW portfolio
         </h1>
+        <!-- TODO: add link-->
         <div class="mt-4 text-info text7 hoverOpacity">
           Don't Have a wallet?
           <span class="underline"
