@@ -34,8 +34,9 @@
         role="gridcell"
       >
         <AsyncImg
-          :asyncImg="wallet.iconUrl"
           :alt="wallet.name"
+          :is-loaded="!isLoadingIcons"
+          :cached-img="cachedIcons.get(wallet.id)"
           class="rounded-lg"
           aria-hidden="true"
         />
@@ -47,23 +48,24 @@
       v-model:is-open="openWalletConnectModal"
       :qrcode-data="wagmiWalletData"
       :wallet-name="clickedWallet.name"
-      :wallet-icon="clickedWallet.iconUrl"
+      :wallet-icon="cachedIcons.get(clickedWallet.id)"
     />
   </div>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AsyncImg from './AsyncImg.vue'
 import SearchInput from './SearchInput.vue'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_HOME, ROUTES_WALLET } from '@/router/routeNames'
 import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
 import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
 import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
+import { useWalletStore } from '@/stores/walletStore'
 
 interface WalletType {
   id: string
@@ -108,6 +110,7 @@ const newWalletList = computed(() => {
 /** -------------------
  *  Core Wallets
  * -------------------*/
+
 interface CoreWallet {
   id: string
   name: string
@@ -138,6 +141,18 @@ const softwareWallets: CoreWallet[] = [
 
 const displayWallets = [...softwareWallets, ...newWalletList.value]
 
+/**-------------------
+ * Cached Wallet Icons
+ -------------------*/
+const cachedIcons = ref(new Map<string, string>())
+const isLoadingIcons = ref(true)
+
+/** -------------------
+ * Wallet Store
+ -------------------*/
+const walletStore = useWalletStore()
+const { setWallet } = walletStore
+
 /** -------------------
  *  Click Wallet
  * -------------------*/
@@ -160,9 +175,14 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
     const wagWallet = new WagmiWallet(connector!, '0x1')
     wagWallet.connect().then(res => {
       if (res) {
-        wagmiWalletData.value = ''
-        openWalletConnectModal.value = false
-        router.push({ name: ROUTES_HOME.DASHBOARD.NAME })
+        try {
+          wagmiWalletData.value = ''
+          openWalletConnectModal.value = false
+          setWallet(wagWallet)
+          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+        } catch (error) {
+          console.error('WalletConnect connect failed:', error)
+        }
       }
     })
   }
@@ -191,4 +211,16 @@ const clickFilter = (_value: Filter) => {
 const searchWallet = (payload: string) => {
   console.log('searchWallet', payload)
 }
+
+onMounted(async () => {
+  for (const wallet of displayWallets) {
+    if (typeof wallet.iconUrl === 'string') {
+      cachedIcons.value.set(wallet.id, wallet.iconUrl)
+    } else {
+      const url = await wallet.iconUrl()
+      cachedIcons.value.set(wallet.id, url)
+    }
+  }
+  isLoadingIcons.value = false
+})
 </script>

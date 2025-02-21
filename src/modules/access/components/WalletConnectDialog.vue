@@ -82,7 +82,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 const props = defineProps<{
   qrcodeData: string
   walletName: string
-  walletIcon: () => string | Promise<string>
+  walletIcon?: string
 }>()
 
 const { isMobile } = useAppBreakpoints()
@@ -134,7 +134,7 @@ const qrCodeStyling = new QRCodeStyling(options.value)
  * 1. Sets the loading state for the QR code.
  * 2. Adjusts the QR code dimensions based on whether the device is mobile or not.
  * 3. Sets the QR code data from the component props.
- * 4. Fetches the wallet icon URL and sets it in the QR code options.
+ * 4. Sets wallet icon URL if provided.
  * 5. Updates the QR code styling with the new options.
  * 6. Appends the QR code to the DOM if the QR code element is available.
  *
@@ -155,8 +155,9 @@ watchEffect(async () => {
       options.value.height = 280
     }
     options.value.data = props.qrcodeData
-    const iconUrl = await props.walletIcon()
-    options.value.image = iconUrl
+    if (props.walletIcon) {
+      options.value.image = props.walletIcon
+    }
 
     qrCodeStyling.update(options.value)
     isLoadingQRCode.value = false
