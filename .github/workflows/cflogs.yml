@@ -1,6 +1,6 @@
 name: Get Cloudflare Logs
 on:
-  pull_request:
+  push:
     branches:
       - feat/v7
       - devop/v7-*
