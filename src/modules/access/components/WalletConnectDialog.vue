@@ -1,0 +1,170 @@
+<template>
+  <app-dialog v-model:is-open="isOpen" class="sm:max-w-[560px]">
+    <!-- Title -->
+    <template #title>
+      <div>
+        <h1 class="title4 pr-2 pt-4 sm:pt-8 mx-auto">
+          Connect to MEW portfolio
+        </h1>
+        <div class="mt-4 text-info text7 hoverOpacity">
+          Don't Have a wallet?
+          <span class="underline"
+            >Get a wallet <span class="text-sm"> →</span></span
+          >
+        </div>
+      </div>
+    </template>
+    <!-- Content -->
+    <template #content>
+      <div
+        class="bg-mewBg rounded-xl px-8 pt-6 pb-4 text-center text-sm sm:text-base"
+      >
+        <p class="mb-2">Scan QR code with {{ walletName }} to connect.</p>
+        <div class="flex items-center justify-center">
+          <!-- QR Code -->
+          <div v-show="!isLoadingQRCode" ref="qrCode"></div>
+          <!-- Loading QR Placeholder -->
+          <div
+            v-show="isLoadingQRCode"
+            class="h-[200px] w-[200px] sm:h-[280px] sm:w-[280px] flex items-center justify-center bg-grey-5 rounded-xl mt-5"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-6 h-6 text-primary animate-spin fill-white mx-auto"
+              viewBox="0 0 100 101"
+              width="24"
+              height="24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center mt-2 mb-4 sm:mb-6 text-sm sm:text-base"
+        >
+          <p>OR copy link</p>
+          <AppCopyButton :copy-value="qrcodeData" />
+        </div>
+        <a
+          class="text-info text-center text-xs mx-auto block"
+          href="https://walletconnect.network/"
+          target="_blank"
+        >
+          Powered By WalletConnect
+        </a>
+      </div>
+      <!--TODO: ensure correct link is provided-->
+      <app-need-help
+        title="How to connect your wallet"
+        help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
+        class="mt-5 sm:mt-10 mb-8 text-center"
+      />
+    </template>
+  </app-dialog>
+</template>
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppDialog from '@/components/AppDialog.vue'
+import QRCodeStyling, { type DrawType, type DotType } from 'qr-code-styling'
+import AppCopyButton from '@/components/AppBtnCopy.vue'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+
+const props = defineProps<{
+  qrcodeData: string
+  walletName: string
+  walletIcon: () => string | Promise<string>
+}>()
+
+const { isMobile } = useAppBreakpoints()
+
+/** -------------------
+ * Dialog Controls
+ -------------------*/
+const isOpen = defineModel('isOpen', {
+  type: Boolean,
+  required: true,
+})
+
+const isLoadingQRCode = ref(true)
+
+/** -------------------
+ * QR Code Controls
+ -------------------*/
+const options = ref({
+  width: 280,
+  height: 280,
+  type: 'svg' as DrawType,
+  data: props.qrcodeData,
+  image: '',
+  margin: 0,
+  dotsOptions: {
+    color: '#000',
+    type: 'extra-rounded' as DotType,
+  },
+  cornersDotOptions: {
+    color: 'rgb(0,90,229,1',
+    type: 'extra-rounded' as DotType,
+  },
+  backgroundOptions: {
+    color: 'transparent',
+  },
+  imageOptions: {
+    crossOrigin: 'anonymous',
+    margin: 10,
+  },
+})
+
+const qrCode = ref<HTMLDivElement | null>(null)
+const qrCodeStyling = new QRCodeStyling(options.value)
+
+/**
+ * Watches for changes and updates the QR code styling accordingly.
+ *
+ * This effect performs the following actions:
+ * 1. Sets the loading state for the QR code.
+ * 2. Adjusts the QR code dimensions based on whether the device is mobile or not.
+ * 3. Sets the QR code data from the component props.
+ * 4. Fetches the wallet icon URL and sets it in the QR code options.
+ * 5. Updates the QR code styling with the new options.
+ * 6. Appends the QR code to the DOM if the QR code element is available.
+ *
+ * If an error occurs during the process, it logs the error to the console.
+ *
+ * @async
+ * @function watchEffect
+ * @returns {Promise<void>}
+ */
+watchEffect(async () => {
+  try {
+    isLoadingQRCode.value = true
+    if (isMobile.value) {
+      options.value.width = 200
+      options.value.height = 200
+    } else {
+      options.value.width = 280
+      options.value.height = 280
+    }
+    options.value.data = props.qrcodeData
+    const iconUrl = await props.walletIcon()
+    options.value.image = iconUrl
+
+    qrCodeStyling.update(options.value)
+    isLoadingQRCode.value = false
+    if (qrCode.value) {
+      qrCodeStyling.append(qrCode.value)
+    }
+  } catch (error) {
+    console.error('Failed to append QR Code:', error)
+  }
+})
+</script>
