@@ -2,6 +2,7 @@
   "common": {
     "network": "network",
     "close": "close",
-    "clear_icon": "clear input"
+    "clear_icon": "clear input",
+    "copy": "copy"
   }
 }
