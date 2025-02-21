@@ -59,6 +59,7 @@
           class="text-info text-center text-xs mx-auto block"
           href="https://walletconnect.network/"
           target="_blank"
+          rel="noreferrer"
         >
           Powered By WalletConnect
         </a>
