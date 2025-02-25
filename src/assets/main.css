@@ -93,10 +93,6 @@
       @apply text-s-64;
     }
 
-    .title4 {
-      @apply text-5xl leading-p-110;
-    }
-
     .title5 {
       @apply text-s-32 leading-p-110;
     }
@@ -114,14 +110,6 @@
     }
   }
 
-  /** Hover Transition */
-  .hoverOpacity {
-    @apply hover:opacity-50 transition-opacity duration-300 ease-in-out;
-  }
-
-  .hoverOpacityHasBG {
-    @apply hover:opacity-75 transition-opacity duration-300 ease-in-out;
-  }
 
 }
 
