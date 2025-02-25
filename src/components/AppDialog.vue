@@ -45,7 +45,7 @@
             </slot>
             <app-btn-icon-close
               @click="setIsOpen(false)"
-              class="mt-4 sm:mt-8"
+              class="mt-4 sm:mt-8 min-w-[32px]"
             />
           </div>
           <div class="pt-2 px-6 sm:px-8">

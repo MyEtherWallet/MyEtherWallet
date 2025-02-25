@@ -1,23 +1,27 @@
 <template>
-  <img
-    :src="asset"
-    :alt="props.alt"
-    :height="props.height"
-    :width="props.width"
-    @error="handleImageError"
-    :class="{ 'opacity-0': !isLoaded }"
-    class="transition-opacity duration-300"
-  />
+  <div>
+    <img
+      v-if="props.isLoaded"
+      :src="asset"
+      :alt="props.alt"
+      :height="props.height"
+      :width="props.width"
+      @error="handleImageError"
+      class="rounded-xl w-[80px] h-[80px]"
+    />
+    <div
+      v-else
+      class="rounded-xl w-[80px] h-[80px] flex items-center justify-center bg-grey-5 rounded-xl"
+    ></div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { PropType } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
-  asyncImg: {
-    type: [String, Function] as PropType<string | (() => Promise<string>)>,
-    required: true,
+  cachedImg: {
+    type: String,
   },
   height: {
     type: Number,
@@ -28,34 +32,21 @@ const props = defineProps({
     default: 80,
   },
   alt: String,
+  isLoaded: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const resolvedImg = ref('')
-const isLoaded = ref(false)
-
-if (typeof props.asyncImg === 'function') {
-  props
-    .asyncImg()
-    .then((url: string) => {
-      isLoaded.value = true
-      resolvedImg.value = url
-    })
-    .catch((error: unknown) => {
-      console.error('Failed to load image:', error)
-      isLoaded.value = false
-      resolvedImg.value = '' // Will fallback to placeholder
-    })
-}
-
 const asset = computed(() => {
-  if (isLoaded.value) {
-    return resolvedImg.value
+  if (props.isLoaded && props.cachedImg) {
+    return props.cachedImg
   }
   //TODO: Add a placeholder image
   return ''
 })
 
 const handleImageError = () => {
-  isLoaded.value = false
+  console.error('Error loading image: ', props.cachedImg)
 }
 </script>
