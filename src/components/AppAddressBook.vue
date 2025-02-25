@@ -30,7 +30,7 @@
       <chevron-down-icon class="w-4 h-4" />
     </app-btn-icon>
   </div>
-  <p class="text-error">{{ addressErrorMessages }}</p>
+  <p class="text-error pt-2 pl-3">{{ addressErrorMessages }}</p>
 </template>
 
 <script lang="ts" setup>
