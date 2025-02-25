@@ -1,8 +1,14 @@
 name: Get Cloudflare Logs
-on: [pull_request]
+on:
+  push:
+    branches:
+      - feat/v7
+      - devop/v7-*
+      - feat/v7-*
 jobs:
   logs-build:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - name: Wait for CF Pages

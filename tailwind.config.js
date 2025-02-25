@@ -5,8 +5,6 @@ export default {
     './index.html',
     './node_modules/@myetherwallet/vue-common-components/dist/*.js',
     './node_modules/@myetherwallet/vue-common-components/dist/*.cjs',
-    './node_modules/flowbite-vue/**/*.{js,jsx,ts,tsx,vue}',
-    './node_modules/flowbite/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     screens: {
@@ -48,7 +46,7 @@ export default {
       black: '#000000',
       white: '#ffffff',
       surface: 'rgba(232, 232, 237, 1)',
-      info: 'rgba(0, 0, 0, 0.6)',
+      info: 'rgba(0, 0, 0, 0.7)',
       'grey-light': 'rgba(232, 232, 237, 1)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
@@ -101,6 +99,5 @@ export default {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require('flowbite/plugin')],
+   
 }

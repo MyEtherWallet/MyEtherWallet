@@ -20,18 +20,6 @@
     <div class="mb-5 max-w-[600px]">
       <SearchInput @search="searchWallet" />
     </div>
-    <fwb-modal size="sm" v-if="openWalletConnectModal" @close="closeModal">
-      <template #header>
-        <div class="w-full">
-          <div class="items-center text-xl">Scan with WalletConnect</div>
-        </div>
-      </template>
-      <template #body>
-        <div>
-          <img :src="qrcode" alt="Wagmi QR Code" />
-        </div>
-      </template>
-    </fwb-modal>
     <!-- Wallets-->
     <div
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
@@ -46,37 +34,48 @@
         role="gridcell"
       >
         <AsyncImg
-          :asyncImg="wallet.iconUrl"
           :alt="wallet.name"
+          :is-loaded="!isLoadingIcons"
+          :cached-img="cachedIcons.get(wallet.id)"
           class="rounded-lg"
           aria-hidden="true"
         />
         <p class="text-info pt-2">{{ wallet.name }}</p>
       </div>
     </div>
+    <WalletConnectDialog
+      v-if="clickedWallet"
+      v-model:is-open="openWalletConnectModal"
+      :qrcode-data="wagmiWalletData"
+      :wallet-name="clickedWallet.name"
+      :wallet-icon="cachedIcons.get(clickedWallet.id)"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
-import { useQRCode } from '@vueuse/integrations/useQRCode'
-import { FwbModal } from 'flowbite-vue'
-
+import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AsyncImg from './AsyncImg.vue'
 import SearchInput from './SearchInput.vue'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_HOME, ROUTES_WALLET } from '@/router/routeNames'
 import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
 import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
 import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
+import { useWalletStore } from '@/stores/walletStore'
+
+interface WalletType {
+  id: string
+  name: string
+  iconUrl: string | (() => Promise<string>)
+}
 
 const wagmiWalletData = ref('')
 const openWalletConnectModal = ref(false)
-const qrcode = useQRCode(wagmiWalletData, { width: 304 })
 const { connectors } = wagmiConfig
-
 const DEFAULT_IDS = ['enkrypt', 'mew']
 const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
 
@@ -85,11 +84,8 @@ const allRainbowWallets = Object.values(rainndowWallets)
 const initializedWallets = allRainbowWallets.map(wallet =>
   wallet({ projectId, appName: 'MEW' }),
 )
-interface WalletType {
-  id: string
-  name: string
-  iconUrl: string | (() => Promise<string>)
-}
+
+const clickedWallet = ref<WalletType | undefined>()
 
 const newWalletList = computed(() => {
   const newConArr: WalletType[] = []
@@ -114,6 +110,7 @@ const newWalletList = computed(() => {
 /** -------------------
  *  Core Wallets
  * -------------------*/
+
 interface CoreWallet {
   id: string
   name: string
@@ -144,6 +141,18 @@ const softwareWallets: CoreWallet[] = [
 
 const displayWallets = [...softwareWallets, ...newWalletList.value]
 
+/**-------------------
+ * Cached Wallet Icons
+ -------------------*/
+const cachedIcons = ref(new Map<string, string>())
+const isLoadingIcons = ref(true)
+
+/** -------------------
+ * Wallet Store
+ -------------------*/
+const walletStore = useWalletStore()
+const { setWallet } = walletStore
+
 /** -------------------
  *  Click Wallet
  * -------------------*/
@@ -152,6 +161,7 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
   if ('routeName' in wallet && wallet.routeName) {
     router.push({ name: wallet.routeName })
   } else {
+    clickedWallet.value = wallet
     const connector = connectors.find(
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
@@ -165,15 +175,17 @@ const clickWallet = (wallet: WalletType | CoreWallet) => {
     const wagWallet = new WagmiWallet(connector!, '0x1')
     wagWallet.connect().then(res => {
       if (res) {
-        wagmiWalletData.value = ''
-        openWalletConnectModal.value = false
+        try {
+          wagmiWalletData.value = ''
+          openWalletConnectModal.value = false
+          setWallet(wagWallet)
+          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+        } catch (error) {
+          console.error('WalletConnect connect failed:', error)
+        }
       }
     })
   }
-}
-
-const closeModal = () => {
-  openWalletConnectModal.value = false
 }
 
 /** -------------------
@@ -199,4 +211,16 @@ const clickFilter = (_value: Filter) => {
 const searchWallet = (payload: string) => {
   console.log('searchWallet', payload)
 }
+
+onMounted(async () => {
+  for (const wallet of displayWallets) {
+    if (typeof wallet.iconUrl === 'string') {
+      cachedIcons.value.set(wallet.id, wallet.iconUrl)
+    } else {
+      const url = await wallet.iconUrl()
+      cachedIcons.value.set(wallet.id, url)
+    }
+  }
+  isLoadingIcons.value = false
+})
 </script>
