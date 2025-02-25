@@ -41,6 +41,7 @@
     "commitlint": "^19.6.0",
     "hdkey": "^2.1.0",
     "pinia": "^2.3.0",
+    "qr-code-styling": "^1.9.1",
     "qrcode": "^1",
     "viem": "~2.21.54",
     "vite-plugin-node-polyfills": "^0.22.0",
