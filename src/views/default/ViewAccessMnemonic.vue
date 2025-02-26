@@ -13,10 +13,11 @@
           >or select another access method
         </router-link>
       </div>
+      <module-access-mnemonic />
       <app-need-help
         title="How to connect your wallet with recovery phrase"
         help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-        class="md:mt-[80px] mb-4 text-center"
+        class="md:mt-[80px] mt-6 mb-4 text-center"
       />
     </app-sheet>
   </main>
@@ -24,5 +25,6 @@
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import ModuleAccessMnemonic from '@/modules/access/ModuleAccessMnemonic.vue'
 import { ROUTES_HOME } from '@/router/routeNames'
 </script>
