@@ -79,6 +79,7 @@ interface WalletType {
   id: string
   name: string
   iconUrl: string | (() => Promise<string>)
+  notRecommended?: boolean
 }
 
 const wagmiWalletData = ref('')
