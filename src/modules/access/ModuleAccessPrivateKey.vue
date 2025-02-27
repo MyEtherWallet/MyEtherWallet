@@ -80,6 +80,7 @@ const unlock = () => {
       '0x1',
     )
     setWallet(wallet)
+    privateKeyInput.value = ''
     router.push({ path: ROUTES_WALLET.WALLET.PATH })
   } catch (error) {
     // TODO: handle error when toast is implemented
