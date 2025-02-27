@@ -144,7 +144,9 @@ const uploadKeystoreFile = async (evt: Event) => {
 
     reader.onload = async () => {
       try {
-        keystore.value = JSON.parse(reader.result as string)
+        keystore.value = keystore.value = JSON.parse(
+          Buffer.from(reader.result as ArrayBuffer).toString('utf8'),
+        )
         activeStep.value = 1
         if (jsonInput.value) jsonInput.value.value = '' // clear file input
       } catch {
@@ -152,7 +154,7 @@ const uploadKeystoreFile = async (evt: Event) => {
         fileError.value = true
       }
     }
-    reader.readAsBinaryString(file)
+    reader.readAsArrayBuffer(file)
   }
   // if (jsonInput.value) {
   //   jsonInput.value.value = '' // clear file input
