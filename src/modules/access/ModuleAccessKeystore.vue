@@ -190,6 +190,7 @@ const enterPassword = async () => {
       password.value,
     )
     if (res) {
+      console.log(Buffer.from(res.getPrivateKey()), res.getPrivateKey())
       // TODO: move hardcodes
       const wallet = new PrivateKeyWallet(
         Buffer.from(res.getPrivateKey()),
