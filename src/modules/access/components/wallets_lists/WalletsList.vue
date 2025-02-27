@@ -28,11 +28,19 @@
       <div
         v-for="wallet in displayWallets"
         :key="wallet.id"
-        class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer"
+        class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer relative"
         @click="clickWallet(wallet)"
         @keyup.enter="clickWallet(wallet)"
         role="gridcell"
       >
+        <div>
+          <div
+            v-if="wallet.notRecommended"
+            class="absolute top-0 right-0 bg-yellow-warning text-black text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg"
+          >
+            Not Recommended
+          </div>
+        </div>
         <AsyncImg
           :alt="wallet.name"
           :is-loaded="!isLoadingIcons"
@@ -71,6 +79,7 @@ interface WalletType {
   id: string
   name: string
   iconUrl: string | (() => Promise<string>)
+  notRecommended?: boolean
 }
 
 const wagmiWalletData = ref('')
@@ -116,6 +125,7 @@ interface CoreWallet {
   name: string
   iconUrl: string
   routeName?: string
+  notRecommended?: boolean
 }
 
 const softwareWallets: CoreWallet[] = [
@@ -124,18 +134,21 @@ const softwareWallets: CoreWallet[] = [
     name: 'Keystore',
     iconUrl: IconKeystore,
     routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
+    notRecommended: true,
   },
   {
     id: 'mnemonic',
     name: 'Mnemonic phrase',
     iconUrl: IconMnemonic,
     routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
+    notRecommended: true,
   },
   {
     id: 'privatekey',
     name: 'Private Key',
     iconUrl: IconPrivateKey,
     routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
+    notRecommended: true,
   },
 ]
 
