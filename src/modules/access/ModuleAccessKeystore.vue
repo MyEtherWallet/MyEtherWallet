@@ -68,6 +68,7 @@
         </div>
       </div>
     </app-stepper>
+    <app-not-recommended />
   </div>
 </template>
 
@@ -89,6 +90,9 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
 import { watchDebounced } from '@vueuse/core'
+
+import AppNotRecommended from '@/components/AppNotRecommended.vue'
+
 /**------------------------
  * Steps
  -------------------------*/

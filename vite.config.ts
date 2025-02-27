@@ -4,9 +4,13 @@ import vue from '@vitejs/plugin-vue'
 import nightwatchPlugin from 'vite-plugin-nightwatch'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    port: 8080
+  },
   plugins: [
     vue(),
     nightwatchPlugin(),
@@ -24,6 +28,7 @@ export default defineConfig({
       ],
       protocolImports: true,
     }),
+    basicSsl()
   ],
   build: {
     rollupOptions: {
