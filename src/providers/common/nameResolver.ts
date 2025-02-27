@@ -1,4 +1,6 @@
-import { HexPrefixedString } from './../types/index';
+import {
+  type HexPrefixedString,
+} from '@/providers/types'
 import { isAddress, toChecksumAddress } from '@/utils/addressUtils'
 import NameResolver, { type CoinType } from '@enkryptcom/name-resolution'
 import { createWeb3Name } from '@web3-name-sdk/core'
