@@ -18,46 +18,131 @@
         >To</label
       >
       <input
-        class="address-input text-md/[24px] w-full !bg-white outline-none"
-        v-model="toAddress"
+        class="address-input text-md/[24px] w-full !bg-white pl-1 outline-none"
+        @input="debouncedToAddress"
         name="address-input"
         type="string"
         placeholder="Address"
         required
       />
     </div>
-    <app-btn-icon class="ml-2 cursor-pointer" isWhite @click="() => {}">
+    <app-btn-icon
+      v-if="addressBookLength > 0"
+      class="ml-2 cursor-pointer"
+      isWhite
+      @click="openAddressBook"
+    >
       <chevron-down-icon class="w-4 h-4" />
     </app-btn-icon>
   </div>
-  <p class="text-error pt-2 pl-3">{{ addressErrorMessages }}</p>
+  <p
+    :class="{
+      'text-error': addressErrorMessages,
+      'text-info': resolvedAddress,
+    }"
+    class="text-error pt-2 pl-3"
+  >
+    {{ addressErrorMessages || resolvedAddress }}
+  </p>
+
+  <app-dialog
+    v-model:is-open="isAddressBookOpen"
+    title="Receive to account"
+    class="sm:max-w-[650px] sm:mx-auto"
+  >
+    <template #content>
+      <div class="flex flex-col">
+        <div class="mt-4">
+          <div class="mt-4">
+            <div
+              v-for="address in currentAddressBook"
+              :key="address"
+              class="flex items-center justify-between py-2 px-4 rounded-lg cursor-pointer"
+              @click="() => emit('update:modelValue', address)"
+            >
+              <div class="flex items-center">
+                <img
+                  :src="createIcon(address)"
+                  class="rounded-full w-[32px] h-[32px]"
+                  height="30"
+                  width="30"
+                />
+                <div class="ml-2">
+                  <p>No name</p>
+                  <p class="text-grey-30">{{ address }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </app-dialog>
 </template>
 
 <script lang="ts" setup>
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import { defineModel, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
 import createIcon from '@/providers/ethereum/blockies'
+import { useDebounceFn } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
 
-const toAddress = defineModel('toAddress', {
-  type: String,
-  required: true,
+import ENSNameResolver from '@/providers/common/nameResolver'
+import { useAddressBookStore } from '@/stores/addressBook'
+import AppDialog from './AppDialog.vue'
+
+const emit = defineEmits(['update:modelValue'])
+
+const store = useAddressBookStore()
+const { addressBookLength, currentAddressBook } = storeToRefs(store)
+
+const toAddress = ref('')
+const resolvedAddress = ref('')
+const isAddressBookOpen = ref(false)
+
+const resolver = computed(() => {
+  return new ENSNameResolver('0x1')
 })
 
 const addressBlockie = computed(() => {
-  if (!toAddress.value) return ''
-  return createIcon(toAddress.value)
+  const addressToCheck = resolvedAddress.value || toAddress.value
+  if (!addressToCheck) return ''
+  return createIcon(addressToCheck)
 })
 
 const addressErrorMessages = computed(() => {
-  if (toAddress.value === '') return 'Address is required'
+  const addressToCheck = resolvedAddress.value || toAddress.value
+  if (addressToCheck === '') return 'Address is required'
   if (
-    !isValidAddress(toAddress.value) ||
-    !isValidChecksumAddress(toAddress.value)
+    (!isValidAddress(addressToCheck) &&
+      resolver.value.isValidName(addressToCheck)) ||
+    !isValidChecksumAddress(addressToCheck)
   )
     return 'Invalid address'
   return ''
 })
+
+const debouncedToAddress = useDebounceFn(async e => {
+  if (e.target.value) {
+    toAddress.value = e.target.value
+    const locResolvedAddr = await resolver.value.resolveName(toAddress.value)
+    if (locResolvedAddr) {
+      resolvedAddress.value = locResolvedAddr
+      emit('update:modelValue', locResolvedAddr)
+    } else {
+      emit('update:modelValue', toAddress.value)
+    }
+  } else {
+    resolvedAddress.value = ''
+    toAddress.value = ''
+    emit('update:modelValue', '')
+  }
+}, 500)
+
+const openAddressBook = () => {
+  isAddressBookOpen.value = !isAddressBookOpen.value
+}
 </script>
 
 <style scoped>
@@ -66,6 +151,6 @@ const addressErrorMessages = computed(() => {
 .address-input:-webkit-autofill:hover,
 .address-input:-webkit-autofill:focus,
 .address-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-box-shadow: 0 0 0 30px rgb(255, 255, 255) inset !important;
 }
 </style>

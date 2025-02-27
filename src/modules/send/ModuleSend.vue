@@ -10,7 +10,7 @@
           :validate-input="checkAmountForError"
         />
       </div>
-      <app-address-book v-model:to-address="toAddress" />
+      <app-address-book v-model="toAddress" />
       <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
       <div>
         <input
@@ -47,11 +47,6 @@
           <label for="data-input">Data:</label>
           <input v-model="data" name="data-input" type="string" required />
         </div>
-        <!-- <input
-          type="checkbox"
-          name="advanced-settings"
-          v-model="toggleTransactionType">
-        <label for="advanced-settings">Transaction type: {{ toggleTransactionType ? 0 : 2  }}</label> -->
       </div>
       <button
         type="submit"
@@ -65,7 +60,7 @@
       </button>
     </form>
     <app-need-help
-      title="Need help?"
+      title="Read more"
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
     />
   </div>
@@ -92,6 +87,11 @@ import {
   type HexPrefixedString,
 } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
+
+import { useAddressBookStore } from '@/stores/addressBook'
+
+const addressBookStore = useAddressBookStore()
+const { addAddress } = addressBookStore
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -181,5 +181,6 @@ watch(
 const handleSubmit = () => {
   // TODO: Implement send logic once api is provided
   console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
+  addAddress(toAddress.value)
 }
 </script>
