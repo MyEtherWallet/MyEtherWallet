@@ -126,9 +126,11 @@ const uploadKeystoreFile = async (evt: Event) => {
     const file = input.files[0]
     const reader = new FileReader()
     reader.onload = async () => {
-      keystore.value = JSON.parse(reader.result as string)
+      keystore.value = JSON.parse(
+        Buffer.from(reader.result as ArrayBuffer).toString('utf8'),
+      )
     }
-    reader.readAsBinaryString(file)
+    reader.readAsArrayBuffer(file)
   }
   if (jsonInput.value) {
     jsonInput.value.value = '' // clear file input
