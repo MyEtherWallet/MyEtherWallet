@@ -2,8 +2,6 @@
 <template>
   <Transition
     name="expand-transition"
-    enter-active-class="expand-enter-active"
-    enter-leave-class="expand-leave-active"
     @enter="onEnter"
     @after-enter="resetStyles"
     @leave="onLeave"
