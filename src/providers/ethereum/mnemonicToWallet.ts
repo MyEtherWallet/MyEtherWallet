@@ -11,7 +11,7 @@ class MnemonicToWallet {
     mnemonic: string
     basePath: string
     chainId: string
-    extraWord: string
+    extraWord?: string
   }) {
     this.mnemonic = options.mnemonic
     this.basePath = options.basePath
