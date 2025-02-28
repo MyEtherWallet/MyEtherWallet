@@ -17,7 +17,7 @@
       <app-need-help
         title="How to connect your wallet with recovery phrase"
         help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-        class="md:mt-[80px] mt-6 mb-4 text-center"
+        class="md:mt-[80px] mt-10 mb-4 text-center"
       />
     </app-sheet>
   </main>

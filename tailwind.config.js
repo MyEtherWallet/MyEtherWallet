@@ -97,6 +97,9 @@ export default {
       borderRadius: {
         '4xl': '32px',
       },
+      boxShadow: {
+        'token': '0px 3px 5px rgba(0, 0, 0, 0.16)',
+      }
     },
   },
 }
