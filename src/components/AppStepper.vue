@@ -29,9 +29,8 @@
               },
             ]"
           >
-            <!-- TODO: Add proper icon-->
-            <span v-if="index < activeStep" class="text-primary text-xs">
-              x
+            <span v-if="index < activeStep" class="text-primary">
+              <check-icon class="w-3 h-3" />
             </span>
             <span v-else class="text-white text-xs">{{ index + 1 }}</span>
             <span
@@ -58,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import { CheckIcon } from '@heroicons/vue/24/outline'
 const props = defineProps({
   steps: {
     type: Array as () => string[],

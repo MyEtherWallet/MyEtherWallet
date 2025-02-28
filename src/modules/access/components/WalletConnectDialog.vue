@@ -8,7 +8,7 @@
         </h1>
         <!-- TODO: add link-->
         <div class="mt-4 text-info text7 hoverOpacity">
-          Don't Have a wallet?
+          Don't have a wallet?
           <span class="underline"
             >Get a wallet <span class="text-sm"> →</span></span
           >

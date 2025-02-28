@@ -1,17 +1,18 @@
 <template>
-  <button
-    type="button"
+  <component
+    :is="href ? 'a' : 'button'"
+    :href="href"
+    target="_blank"
     :aria-label="label"
     :class="[
-      'rounded-full hoverNoBG !cursor-pointer p-1 h-[32px] w-[32px]',
+      'rounded-full !cursor-pointer p-1 h-[32px] w-[32px] flex items-center justify-center',
       { 'invert brightness-100': isWhite },
+      disabled ? 'text-grey-30' : 'hoverNoBG',
     ]"
     @click="btnClick"
   >
-    <div>
-      <slot />
-    </div>
-  </button>
+    <slot />
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -29,6 +30,13 @@ defineProps({
   label: {
     type: String,
     required: true,
+  },
+  href: {
+    type: String,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

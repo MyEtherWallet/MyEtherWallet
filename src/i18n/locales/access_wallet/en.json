@@ -6,6 +6,9 @@
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"
   },
+  "access_wallet_recovery_phrase": {
+    "title": "Access Wallet with Recovery Phrase"
+  },
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"
   }
