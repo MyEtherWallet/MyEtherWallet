@@ -1,5 +1,5 @@
 import { Wallet, thirdparty } from '@ethereumjs/wallet'
-import { bigIntToHex, hexToBigInt } from '@ethereumjs/util'
+import { bigIntToHex, hexToBigInt, isHexString } from '@ethereumjs/util'
 import { bytesToHex, toBigInt, toWei } from 'web3-utils'
 
 import type {
@@ -199,6 +199,12 @@ const unlockKeystore = async (
   })
   return getWalletFromPrivKeyFile(newFile, pw)
 }
+
+const isPrivateKey = (key: string) => {
+  const priv = key ? key.replace('0x', '') : '';
+  return key !== '' && isHexString('0x' + priv, 32);
+}
+
 export type { EthSaleKeystore, V3Keystore, MEWKeystore }
 export {
   unlockKeystore,
@@ -213,4 +219,5 @@ export {
   sanitizeHex,
   getPriorityFeeBasedOnType,
   getBaseFeeBasedOnType,
+  isPrivateKey
 }
