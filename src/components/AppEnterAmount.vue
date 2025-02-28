@@ -10,7 +10,7 @@
   >
     <div class="flex justify-between items-center w-full">
       <input
-        class="py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
+        class="pl-2 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
         :class="{ 'text-error': !!error }"
         name="amount-input"
         type="number"

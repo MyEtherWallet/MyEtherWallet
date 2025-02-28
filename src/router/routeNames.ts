@@ -17,7 +17,7 @@ const ROUTES_HOME: RouteNameCollection = {
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
   TOOLS: { NAME: 'Tools', PATH: 'tools' },
 
-  //TOBE DELETED ON V7
+  // TODO: DELETED ON V7
   ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
   ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
   BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
