@@ -20,7 +20,7 @@
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
       @input="onInput"
-      auotcomplete="off"
+      autocomplete="off"
     />
     <div class="flex gap-4">
       <p
