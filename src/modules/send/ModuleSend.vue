@@ -10,16 +10,7 @@
           :validate-input="checkAmountForError"
         />
       </div>
-      <div class="mt-6">
-        <label for="address-input">Address:</label>
-        <input
-          v-model="toAddress"
-          name="address-input"
-          type="string"
-          required
-        />
-        <p class="text-error">{{ addressErrorMessages }}</p>
-      </div>
+      <app-address-book v-model="toAddress" />
       <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
       <div>
         <input
@@ -56,11 +47,6 @@
           <label for="data-input">Data:</label>
           <input v-model="data" name="data-input" type="string" required />
         </div>
-        <!-- <input
-          type="checkbox"
-          name="advanced-settings"
-          v-model="toggleTransactionType">
-        <label for="advanced-settings">Transaction type: {{ toggleTransactionType ? 0 : 2  }}</label> -->
       </div>
       <button
         type="submit"
@@ -74,7 +60,7 @@
       </button>
     </form>
     <app-need-help
-      title="Need help?"
+      title="Read more"
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
     />
   </div>
@@ -84,10 +70,10 @@ import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { toHex, toWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
-import { isValidAddress, isValidChecksumAddress } from '@ethereumjs/util'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import AppAddressBook from '@/components/AppAddressBook.vue'
 
 import {
   useWalletStore,
@@ -100,6 +86,12 @@ import {
   type GasFeeResponse,
   type HexPrefixedString,
 } from '@/providers/types'
+import { hexToBigInt } from '@ethereumjs/util'
+
+import { useAddressBookStore } from '@/stores/addressBook'
+
+const addressBookStore = useAddressBookStore()
+const { addAddress } = addressBookStore
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -110,7 +102,7 @@ const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
 const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
-const gasPrice = ref(30000000000) // TODO: Implement gas price once api is ready
+const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
@@ -153,19 +145,19 @@ const checkAmountForError = () => {
 //   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
 // })
 
-const addressErrorMessages = computed(() => {
-  if (toAddress.value === '') return 'Address is required'
-  if (
-    !isValidAddress(toAddress.value) ||
-    !isValidChecksumAddress(toAddress.value)
-  )
-    return 'Invalid address'
-  return ''
+const validSend = computed(() => {
+  return amountError.value === '' && toAddress.value === ''
 })
 
-const validSend = computed(() => {
-  return amountError.value === '' && amountError.value === ''
-})
+watch(
+  () => [selectedFee.value, gasFees.value?.fee],
+  () => {
+    if (!gasFees.value?.fee || !gasFees.value.fee[selectedFee.value]) return
+    gasPrice.value = hexToBigInt(
+      gasFees.value.fee[selectedFee.value].nativeValue,
+    ).toString()
+  },
+)
 
 watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
@@ -190,5 +182,6 @@ watch(
 const handleSubmit = () => {
   // TODO: Implement send logic once api is provided
   console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
+  addAddress(toAddress.value)
 }
 </script>
