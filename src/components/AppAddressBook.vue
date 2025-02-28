@@ -22,7 +22,7 @@
         @input="debouncedToAddress"
         v-model="toAddress"
         name="address-input"
-        type="string"
+        type="text"
         placeholder="Address"
         required
       />

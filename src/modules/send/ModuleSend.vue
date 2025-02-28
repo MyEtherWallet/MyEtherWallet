@@ -146,12 +146,13 @@ const checkAmountForError = () => {
 // })
 
 const validSend = computed(() => {
-  return amountError.value === '' && amountError.value === ''
+  return amountError.value === '' && toAddress.value === ''
 })
 
 watch(
-  () => [selectedFee.value],
+  () => [selectedFee.value, gasFees.value?.fee],
   () => {
+    if (!gasFees.value?.fee || !gasFees.value.fee[selectedFee.value]) return
     gasPrice.value = hexToBigInt(
       gasFees.value.fee[selectedFee.value].nativeValue,
     ).toString()
