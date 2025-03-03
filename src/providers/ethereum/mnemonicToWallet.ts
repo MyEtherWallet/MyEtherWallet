@@ -21,7 +21,7 @@ class MnemonicToWallet {
   async getWallet(index: number): Promise<PrivateKeyWallet> {
     const seed = await mnemonicToSeed(this.mnemonic, this.extraWord)
     const hdkey = HDkey.fromMasterSeed(seed)
-    const derived = hdkey.derive(`${this.basePath}${index}`)
+    const derived = hdkey.derive(`${this.basePath}/${index}`)
     return new PrivateKeyWallet(derived.privateKey!, this.chainId)
   }
 }
