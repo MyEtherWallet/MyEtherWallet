@@ -4,7 +4,7 @@
     :is-white="props.isWhite"
     :label="label ?? $t('common.copy')"
   >
-    <ClipboardDocumentIcon />
+    <ClipboardDocumentIcon class="w-5 h-5" />
   </app-btn-icon>
 </template>
 <script setup lang="ts">
