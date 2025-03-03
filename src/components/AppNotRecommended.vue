@@ -1,6 +1,6 @@
 <template>
   <div
-    class="py-[20px] px-[40px] flex justify-center gap-4 mt-8 bg-yellow-warning rounded-lg"
+    class="py-[20px] px-[40px] flex justify-center gap-4 mt-8 bg-warning-10 rounded-lg"
   >
     <!-- icon container -->
     <div class="mr-4 text-orange">

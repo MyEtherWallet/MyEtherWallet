@@ -1,11 +1,44 @@
 <template>
   <div>
     <router-view />
+    <the-toast />
   </div>
 </template>
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import TheToast from './components/TheToast.vue'
+import { useToastStore } from './stores/toastStore'
+import { onMounted } from 'vue'
+import { ToastType } from './types/notification'
+
+const notificationsStore = useToastStore()
+
+onMounted(() => {
+  notificationsStore.addToastMessage({
+    type: ToastType.Success,
+    text: 'Message sent successfully.',
+  })
+
+  notificationsStore.addToastMessage({
+    type: ToastType.Error,
+    text: 'I am and error.',
+  })
+
+  notificationsStore.addToastMessage({
+    type: ToastType.Warning,
+    text: 'I am a warning',
+  })
+
+  notificationsStore.addToastMessage({
+    type: ToastType.Info,
+    text: 'I am very long info sentence that should be wrapped.',
+    link: {
+      title: 'Learn more',
+      url: 'https://example.com',
+    },
+  })
+})
 </script>
 
 <style scoped>
