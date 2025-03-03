@@ -1,4 +1,4 @@
-import klaytn from '@/assets/images/networks/klaytn.png';
+import kaia from '@/assets/images/networks/kaia.png';
 export default {
   name: 'KAIA',
   name_long: 'Kaia',
@@ -13,7 +13,7 @@ export default {
   contracts: import('@/_generated/contracts/contract-abi-klay.json').then(
     module => module.default
   ),
-  icon: klaytn,
+  icon: kaia,
   currencyName: 'KAIA',
   isTestNetwork: false,
   isEthVMSupported: {
