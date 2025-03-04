@@ -4,7 +4,7 @@
     :class="[
       borderColor,
       isXS ? 'w-[95%] mx-auto' : 'w-[400px]',
-      'min-h-[60px] rounded-2xl shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] mt-4',
+      'bg-gradient-to-r from-[7px] to-white to-0% min-h-[60px] rounded-2xl shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] mt-4',
     ]"
   >
     <div class="flex w-full items-start py-3 px-2">
@@ -33,7 +33,7 @@ import {
   CheckCircleIcon,
 } from '@heroicons/vue/24/solid'
 import AppBtnIconClose from '@components/AppBtnIconClose.vue'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
 const props = defineProps<{
@@ -56,13 +56,13 @@ const toastStore = useToastStore()
 const borderColor = computed(() => {
   switch (props.toast.type) {
     case ToastType.Success:
-      return 'bg-[linear-gradient(90deg,rgb(5,192,165)_8px,white_0%)]'
+      return 'from-success'
     case ToastType.Error:
-      return 'bg-[linear-gradient(90deg,rgba(228,12,91,1)_8px,white_0%)]'
+      return 'from-error'
     case ToastType.Warning:
-      return 'bg-[linear-gradient(90deg,rgb(255,165,0)_8px,white_0%)]'
+      return 'from-warning'
     default:
-      return 'bg-[linear-gradient(90deg,rgb(0,90,229,1)_8px,white_0%)]'
+      return 'from-primary'
   }
 })
 
@@ -102,12 +102,20 @@ const iconColor = computed(() => {
  * Once toast is mounted, remove the toast message after the duration.
  * The default duration is 6 seconds.
  */
+const timeout = ref<NodeJS.Timeout | null>(null)
+
 onMounted(() => {
   if (!props.toast.isInfinite) {
-    const timeout = props.toast.duration || 6000
-    setTimeout(() => {
+    const time = props.toast.duration || 6000
+    timeout.value = setTimeout(() => {
       toastStore.removeToastMessage(props.index)
-    }, timeout)
+    }, time)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (timeout.value) {
+    clearTimeout(timeout.value)
   }
 })
 </script>

@@ -64,9 +64,9 @@ export default {
       'mew-purple': 'rgba(104, 76, 255, 1)',
       'purple-10': 'rgba(104,76,255,0.1)',
       'purple-7': 'rgba(104,76,255,0.07)',
-      warning: 'rgb(255, 165, 0)',
-      'warning-10': 'rgb(255, 165, 0.10)',
-      success: 'rgb(5, 192, 165)',
+      warning: 'rgb(255,165,0, 1)',
+      'warning-10': 'rgb(255,165,0,0.1)',
+      success: 'rgb(5,192,165,1)',
     },
     extend: {
       fontSize: {

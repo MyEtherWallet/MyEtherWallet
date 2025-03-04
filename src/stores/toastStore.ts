@@ -44,7 +44,7 @@ import type { Toast } from '@/types/notification/index'
  */
 
 export const useToastStore = defineStore('toastStore', () => {
-  const messages = ref([] as Toast[])
+  const messages = ref<Toast[]>([])
   const addToastMessage = (message: Toast) => {
     messages.value.push(message)
   }

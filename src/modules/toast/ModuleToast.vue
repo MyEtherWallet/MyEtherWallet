@@ -4,7 +4,7 @@
       <transition-group name="fadelist">
         <toast-layout
           v-for="(i, index) in showToastMessages"
-          :key="i.text"
+          :key="`${i.text}-${index}`"
           :toast="i"
           :index="index"
         />
