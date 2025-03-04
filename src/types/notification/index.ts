@@ -11,8 +11,9 @@ export interface ToastLink {
 }
 
 export interface Toast {
-  type: ToastType;
+  type?: ToastType;
   text: string;
   link?: ToastLink;
-
+  duration?: number;
+  isInfinite?: boolean;
 }

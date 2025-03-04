@@ -3,7 +3,7 @@
     class="py-[20px] px-[40px] flex justify-center gap-4 mt-8 bg-warning-10 rounded-lg"
   >
     <!-- icon container -->
-    <div class="mr-4 text-orange">
+    <div class="mr-4 text-warning">
       <exclamation-triangle-icon class="w-6 h-6" />
     </div>
     <!-- text container -->
