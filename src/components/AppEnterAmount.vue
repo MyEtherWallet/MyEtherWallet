@@ -15,6 +15,7 @@
         name="amount-input"
         type="number"
         placeholder="0.0"
+        step="0.000000000000000001"
         required
         v-model.number="amount"
         @focus="setInFocusInput"

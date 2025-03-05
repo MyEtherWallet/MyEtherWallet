@@ -64,11 +64,24 @@
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
     />
   </div>
+
+  <!-- TODO: replace network with actual selected network info -->
+  <evm-transaction-confirmation
+    :fromAddress="wallet.getAddress()"
+    :toAddress="toAddress"
+    :networkFeeUSD="networkFeeUSD"
+    :networkFeeETH="networkFeeETH"
+    :network="{ name_long: 'Ethereum', icon: 'ethereum', name: 'ETH' }"
+    :to-token="tokenSelected"
+    :to-amount="amount.toString()"
+    :to-amount-fiat="amountToFiat"
+    v-model="openTxModal"
+  />
 </template>
 <script setup lang="ts">
-import { onMounted, ref, computed, type Ref, watch } from 'vue'
+import { onBeforeMount, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { toHex, toWei } from 'web3-utils'
+import { toHex, toWei, fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
@@ -89,6 +102,8 @@ import {
 import { hexToBigInt } from '@ethereumjs/util'
 
 import { useAddressBookStore } from '@/stores/addressBook'
+import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
+import BigNumber from 'bignumber.js'
 
 const addressBookStore = useAddressBookStore()
 const { addAddress } = addressBookStore
@@ -109,7 +124,9 @@ const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
 const selectedFee = ref(GasPriceType.REGULAR)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
-onMounted(async () => {
+const openTxModal = ref(false)
+
+onBeforeMount(async () => {
   const mainToken: Token = tokens.value.find(
     (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as Token
@@ -145,8 +162,30 @@ const checkAmountForError = () => {
 //   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
 // })
 
+// Gas Fee for display
+const hasGasFees = computed(() => {
+  return Object.keys(gasFees.value).length > 0
+})
+const networkFeeUSD = computed(() => {
+  if (!hasGasFees.value) return '0'
+  return gasFees.value?.fee[selectedFee.value]?.fiatValue || '0'
+})
+const networkFeeETH = computed(() => {
+  if (!hasGasFees.value) return '0'
+  return (
+    fromWei(gasFees.value?.fee[selectedFee.value]?.nativeValue, 'ether') || '0'
+  )
+})
+
 const validSend = computed(() => {
-  return amountError.value === '' && toAddress.value === ''
+  return amountError.value === '' && toAddress.value !== ''
+})
+
+const amountToFiat = computed(() => {
+  if (!tokenSelected.value.price) return '0'
+  return BigNumber(tokenSelected.value.price)
+    .times(BigNumber(amount.value))
+    .toString()
 })
 
 watch(
@@ -183,5 +222,7 @@ const handleSubmit = () => {
   // TODO: Implement send logic once api is provided
   console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
   addAddress(toAddress.value)
+  openTxModal.value = true
+  console.log('AAAAAAAA', openTxModal.value)
 }
 </script>
