@@ -63,11 +63,8 @@
             >
           </p>
         </div>
-        <div class="flex align-center justify-center py-4">
-          <button
-            class="px-16 py-2 text-grey-50 bg-grey-light rounded-lg"
-            @click="goBack"
-          >
+        <div class="flex align-center justify-center pb-4 pt-10">
+          <button class="px-16 py-2 bg-grey-light rounded-lg" @click="goBack">
             Back
           </button>
           <button
@@ -91,7 +88,6 @@ import createIcon from '@/providers/ethereum/blockies'
 
 interface NetworkType {
   name_long: string
-  icon: string
   name: string
 }
 

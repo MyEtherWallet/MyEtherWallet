@@ -71,7 +71,7 @@
     :toAddress="toAddress"
     :networkFeeUSD="networkFeeUSD"
     :networkFeeETH="networkFeeETH"
-    :network="{ name_long: 'Ethereum', icon: 'ethereum', name: 'ETH' }"
+    :network="{ name_long: 'Polygon', name: 'POL' }"
     :to-token="tokenSelected"
     :to-amount="amount.toString()"
     :to-amount-fiat="amountToFiat"
