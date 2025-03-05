@@ -14,7 +14,7 @@ import arb from './arb-mew-ws';
 import sepolia from './sepolia-mew-ws';
 import fantom from './fantom-ws';
 import gnosis from './gnosis-ws';
-import klaytn from './klaytn-ws';
+import kaia from './kaia-ws';
 import opmew from './op-mew-ws';
 import arthera from './arthera-ws';
 import artheratest from './arthera-test-ws';
@@ -42,7 +42,7 @@ export {
   sepolia,
   fantom,
   gnosis,
-  klaytn,
+  kaia,
   opmew,
   arthera,
   artheratest,
