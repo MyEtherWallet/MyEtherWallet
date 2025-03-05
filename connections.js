@@ -59,7 +59,7 @@ module.exports = [
   'wss://mainnet.aurora.dev:443',
   'wss://api.avax.network:443/ext/bc/C/ws',
   'wss://rpc.gnosischain.com:443/wss',
-  'wss://public-en-cypress.klaytn.net:443/ws',
+  'wss://public-en.node.kaia.io:443/ws',
   'wss://fantom-rpc.publicnode.com:443/',
   'wss://ws.arthera.net:443/',
   'wss://ws-test.arthera.net:443/',
