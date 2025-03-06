@@ -200,6 +200,12 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
+    .rule('trezor-web')
+    .test(/node_modules\/@trezor\/.*\.js$/)
+    .use('babel')
+    .loader('babel-loader')
+    .end();
+  config.module
     .rule('resolve-alias')
     .test(/node_modules\/@ledgerhq\/.*\.js$/)
     .resolve.alias.set('@ledgerhq/devices', '@ledgerhq/devices/lib-es')
