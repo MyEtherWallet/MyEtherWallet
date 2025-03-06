@@ -59,7 +59,7 @@
           <p>
             Network fee: ${{ networkFeeUSD }}
             <span class="text-grey-50 pl-3">
-              ({{ networkFeeETH }} {{ network.name }})</span
+              ({{ networkFeeCrypto }} {{ network.name }})</span
             >
           </p>
         </div>
@@ -101,13 +101,13 @@ interface NetworkType {
 interface EvmTxType {
   toAddress: string
   networkFeeUSD: string
-  networkFeeETH: string
+  networkFeeCrypto: string
   fromAddress: string
   network: NetworkType
   toToken: Token
   toAmount: string
   toAmountFiat: string
-  rawTx: PostEthereumTransaction
+  rawTx: PostEthereumTransaction // rawTx may be different
 }
 
 const props = defineProps<EvmTxType>()
