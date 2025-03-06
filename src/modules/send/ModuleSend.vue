@@ -75,6 +75,7 @@
     :to-token="tokenSelected"
     :to-amount="amount.toString()"
     :to-amount-fiat="amountToFiat"
+    :raw-tx="rawTx"
     v-model="openTxModal"
   />
 </template>
@@ -104,6 +105,7 @@ import { hexToBigInt } from '@ethereumjs/util'
 import { useAddressBookStore } from '@/stores/addressBook'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
+import { type PostEthereumTransaction } from '@/providers/ethereum/types'
 
 const addressBookStore = useAddressBookStore()
 const { addAddress } = addressBookStore
@@ -186,6 +188,25 @@ const amountToFiat = computed(() => {
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
     .toString()
+})
+
+const rawTx = computed<PostEthereumTransaction>(() => {
+  return {
+    to: toAddress.value as HexPrefixedString,
+    from: wallet.value?.getAddress() as HexPrefixedString,
+    value: toHex(toWei(amount.value, 'ether')) as HexPrefixedString,
+    data: data.value as HexPrefixedString,
+    gasPrice: toHex(gasPrice.value) as HexPrefixedString,
+    gasPriceType: selectedFee.value,
+    gasLimit: toHex(gasLimit.value) as HexPrefixedString,
+    nonce: toHex(nonce.value) as HexPrefixedString,
+    // TODO: Add appropriate values
+    type: '0x2',
+    maxPriorityFeePerGas: '0x0',
+    maxFeePerGas: '0x0',
+    id: '1',
+    chainId: `0x1`,
+  }
 })
 
 watch(

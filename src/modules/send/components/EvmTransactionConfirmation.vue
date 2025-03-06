@@ -64,15 +64,19 @@
           </p>
         </div>
         <div class="flex align-center justify-center pb-4 pt-10">
-          <button class="px-16 py-2 bg-grey-light rounded-lg" @click="goBack">
+          <app-base-button
+            class="px-16 py-2 bg-grey-light rounded-lg"
+            @click="goBack"
+          >
             Back
-          </button>
-          <button
+          </app-base-button>
+          <app-base-button
             class="px-16 ml-2 py-2 text-white bg-primary rounded-lg"
+            :is-loading="signing"
             @click="confirmTransaction"
           >
             Confirm and send
-          </button>
+          </app-base-button>
         </div>
       </div>
     </template>
@@ -81,9 +85,12 @@
 
 <script setup lang="ts">
 import { ref, defineProps, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 
-import { type Token } from '@/stores/walletStore'
+import { type Token, useWalletStore } from '@/stores/walletStore'
+import { type PostEthereumTransaction } from '@/providers/ethereum/types'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import createIcon from '@/providers/ethereum/blockies'
 
 interface NetworkType {
@@ -100,9 +107,10 @@ interface EvmTxType {
   toToken: Token
   toAmount: string
   toAmountFiat: string
+  rawTx: PostEthereumTransaction
 }
 
-defineProps<EvmTxType>()
+const props = defineProps<EvmTxType>()
 const model = defineModel()
 
 // Modal settings
@@ -123,12 +131,23 @@ watch(
 )
 
 // modal actions
+const signing = ref(false)
+const store = useWalletStore()
+const { wallet } = storeToRefs(store)
+
 const goBack = () => {
   openModal.value = false
+  model.value = false
 }
 
-const confirmTransaction = () => {
+const confirmTransaction = async () => {
+  signing.value = true
+  // sign transaction
+  const signedTx = await wallet.value.SignTransaction(props.rawTx)
+  // TODO: send the transaction
+  console.log(signedTx)
+  signing.value = false
   openModal.value = false
-  // send transaction
+  model.value = false
 }
 </script>

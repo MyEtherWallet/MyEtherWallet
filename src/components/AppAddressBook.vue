@@ -183,10 +183,8 @@ const addressErrorMessages = computed(() => {
 })
 
 const debouncedToAddress = useDebounceFn(async e => {
-  console.log(e)
   if (e.target.value) {
     toAddress.value = e.target.value
-    console.log(toAddress.value)
     try {
       const locResolvedAddr = await resolver.value.resolveName(toAddress.value)
       resolvedAddress.value = locResolvedAddr
