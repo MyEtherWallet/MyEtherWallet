@@ -1,5 +1,5 @@
 <template>
-  <app-sheet sheetClass="max-w-[800px] mx-auto ">
+  <app-sheet sheetClass="max-w-[478px] mx-auto !px-4">
     <app-tabs
       v-model:activeTabIndex="activePanel"
       :tabs="tabs"

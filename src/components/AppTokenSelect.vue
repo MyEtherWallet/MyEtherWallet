@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'bg-surface rounded-full p-2 flex flex-nowrap items-center hoverOpacityHasBG  min-h-11 ',
+      'bg-white rounded-full px-1 flex flex-nowrap items-center hoverNoBG  min-h-9 shadow-button border-grey-10 border',
       { 'bg-grey-10 animate-pulse min-w-[120px]': isLoading },
     ]"
     type="button"
@@ -11,10 +11,10 @@
   >
     <div
       v-if="!isLoading"
-      class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-30 mr-2 overflow-hidden"
+      class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
     >
       <img
-        class="w-[27px] h-[27px] rounded-full"
+        class="w-7 h-7 rounded-full"
         :src="imageReplacer(selectedToken.logo_url)"
         width="28"
         height="28"
@@ -25,7 +25,7 @@
       {{ truncate(selectedToken.symbol, 7) }}
     </p>
     <div class="ml-1 min-w-4 h-4">
-      <chevron-down-icon v-if="!isLoading" class="stroke-4" />
+      <chevron-down-icon v-if="!isLoading" class="text-info" />
     </div>
   </button>
   <app-dialog
@@ -34,7 +34,7 @@
     class="sm:max-w-[500px] sm:mx-auto"
   >
     <template #content>
-      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll px-7">
         <div class="sticky top-0 bg-white z-10 rounded-b-4xl">
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"

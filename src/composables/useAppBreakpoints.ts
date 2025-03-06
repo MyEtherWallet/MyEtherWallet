@@ -14,6 +14,7 @@ export const useAppBreakpoints = () => {
     '2xl': 1440,
     '3xl': 1601,
   });
+  const isXS = computed<boolean>(() => breakpoints.smaller('xs').value);
   const isMobile = computed<boolean>(() => breakpoints.smaller('sm').value);
   const isTablet = computed<boolean>(() => breakpoints.greaterOrEqual('sm').value && breakpoints.smaller('lg').value);
   const isDesktop = computed<boolean>(() => breakpoints.greaterOrEqual('lg').value);
@@ -22,6 +23,7 @@ export const useAppBreakpoints = () => {
     breakpoints,
     isMobile,
     isTablet,
-    isDesktop
+    isDesktop,
+    isXS
   };
 };

@@ -36,7 +36,7 @@
         <div>
           <div
             v-if="wallet.notRecommended"
-            class="absolute top-0 right-0 bg-yellow-warning text-black text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg"
+            class="absolute top-0 right-0 bg-warning-10 text-black text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg"
           >
             Not Recommended
           </div>
