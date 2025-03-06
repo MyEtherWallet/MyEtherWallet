@@ -2,7 +2,7 @@
   <div class="mt-5">
     <form @submit.prevent="handleSubmit">
       <div class="w-full">
-        <p class="font-bold ml-2 mb-1 text-base">Amount</p>
+        <!-- <p class="font-bold ml-2 mb-1 text-base">Amount</p> -->
         <app-enter-amount
           v-model:amount="amount"
           v-model:selected-token="tokenSelected"
@@ -11,7 +11,11 @@
         />
       </div>
       <app-address-book v-model="toAddress" />
-      <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
+      <app-select-tx-fee
+        v-model="selectedFee"
+        :fees="gasFees.fee"
+        :isLoading="isLoadingFees"
+      />
       <div>
         <input
           type="checkbox"
@@ -108,19 +112,21 @@ const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
 const selectedFee = ref(GasPriceType.REGULAR)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
-
+const isLoadingFees = ref(true)
 onMounted(async () => {
   const mainToken: Token = tokens.value.find(
     (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as Token
   tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
   //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
+  isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
     to: '0x000000000000000000000000000000000000',
     from: wallet.value.getAddress() as HexPrefixedString,
     value: toHex(toWei(amount.value, 'ether')) as HexPrefixedString,
     data: data.value as HexPrefixedString,
   })
+  isLoadingFees.value = false
 })
 
 const checkAmountForError = () => {
