@@ -42,25 +42,25 @@ class PrivateKeyWallet implements WalletInterface {
       "fee": {
         "ECONOMY": {
           "nativeValue": '0xB2D05E00',
-          "fiatValue": '.25',
+          "fiatValue": '0.25',
           "nativeSymbol": 'MATIC',
           "fiatSymbol": 'USD'
         },
         "REGULAR": {
           "nativeValue": '0xEE6B2800',
-          "fiatValue": '.27',
+          "fiatValue": '0.27',
           "nativeSymbol": 'MATIC',
           "fiatSymbol": 'USD'
         },
         "FAST": {
           "nativeValue": '0x12A05F200',
-          "fiatValue": '.30',
+          "fiatValue": '0.30',
           "nativeSymbol": 'MATIC',
           "fiatSymbol": 'USD'
         },
         "FASTEST": {
           "nativeValue": '0x165A0BC00',
-          "fiatValue": '.35',
+          "fiatValue": '0.35',
           "nativeSymbol": 'MATIC',
           "fiatSymbol": 'USD'
         }
