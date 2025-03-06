@@ -13,9 +13,8 @@
         {
           '!border-primary !border-2': inFocusInput && !hasError,
         },
-        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-30  text-sm rounded-[20px] h-[160px] w-full px-7 pt-[24px] pb-[10px] text-xl transition-colors',
+        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm rounded-input h-[160px] w-full px-7 pt-[24px] pb-[10px] text-xl transition-colors',
       ]"
-      :required="isRequired"
       :aria-label="placeholder"
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"

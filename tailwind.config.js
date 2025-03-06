@@ -48,6 +48,7 @@ export default {
       surface: 'rgba(232, 232, 237, 1)',
       info: 'rgba(0, 0, 0, 0.7)',
       'grey-light': 'rgba(232, 232, 237, 1)',
+      'grey-outline': 'rgba(188,200,204,1)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
       'grey-10': 'rgba(0,0,0,0.1)',
@@ -64,8 +65,9 @@ export default {
       'mew-purple': 'rgba(104, 76, 255, 1)',
       'purple-10': 'rgba(104,76,255,0.1)',
       'purple-7': 'rgba(104,76,255,0.07)',
-      'yellow-warning': '#fff2dc',
-      orange: '#FFA500',
+      warning: 'rgb(255,165,0, 1)',
+      'warning-10': 'rgb(255,165,0,0.1)',
+      success: 'rgb(5,192,165,1)',
     },
     extend: {
       fontSize: {
@@ -98,10 +100,12 @@ export default {
       },
       borderRadius: {
         '4xl': '32px',
+        'input': '16px',
       },
       boxShadow: {
         'token': '0px 3px 5px rgba(0, 0, 0, 0.16)',
-      }
+        'button': '0px 1px 4px 0px rgba(0, 0, 0, 0.12)'
+      },
     },
   },
 }

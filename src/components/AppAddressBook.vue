@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-6 px-4 py-4 rounded-[20px] box-border border border-1 flex items-center"
+    class="mt-6 px-4 py-4 rounded-input box-border border-1 border-grey-outline flex items-center"
   >
     <div
       v-if="!toAddress"
@@ -24,7 +24,6 @@
         name="address-input"
         type="text"
         placeholder="Address"
-        required
       />
     </div>
     <app-btn-icon
@@ -80,7 +79,7 @@
           </app-btn-icon>
         </div>
       </div>
-      <div class="flex flex-col border-t-[2px] border-grey-30 px-4 pt-2">
+      <div class="flex flex-col border-t-[2px] border-grey-outline px-4 pt-2">
         <div class="mt-2">
           <!-- TODO: get network info -->
           <h3 class="font-bold">

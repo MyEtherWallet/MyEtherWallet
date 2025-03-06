@@ -8,8 +8,8 @@
       },
       disabled
         ? isOutline
-          ? '!border-grey-30 !text-grey-50'
-          : '!bg-grey-30 '
+          ? '!border-grey-outline !text-grey-50'
+          : '!bg-grey-outline'
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',

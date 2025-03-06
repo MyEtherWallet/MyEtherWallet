@@ -195,7 +195,7 @@ span.ripple {
 .fadelist-enter-from,
 .fadelist-leave-to {
   opacity: 0;
-  transform: scale(0);
+  transform: scaleY(0.01);
 }
 
 /* 3. ensure leaving items are taken out of layout flow so that moving
