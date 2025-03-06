@@ -185,11 +185,11 @@ const addressErrorMessages = computed(() => {
 const debouncedToAddress = useDebounceFn(async e => {
   if (e.target.value) {
     toAddress.value = e.target.value
-    const locResolvedAddr = await resolver.value.resolveName(toAddress.value)
-    if (locResolvedAddr) {
+    try {
+      const locResolvedAddr = await resolver.value.resolveName(toAddress.value)
       resolvedAddress.value = locResolvedAddr
       emit('update:modelValue', locResolvedAddr)
-    } else {
+    } catch {
       emit('update:modelValue', toAddress.value)
     }
   } else {
