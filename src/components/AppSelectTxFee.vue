@@ -49,7 +49,7 @@
         <!-- fee options -->
         <div class="grid grid-cols-1 sm:p-3 gap-2 xs:gap-3">
           <button
-            v-for="fee in dispalyFees"
+            v-for="fee in displayFees"
             :key="fee.id"
             :class="[
               model === fee.id
@@ -173,7 +173,7 @@ interface DisplayFee {
   nativeValue: string
 }
 
-const dispalyFees: DisplayFee[] = [
+const displayFees: DisplayFee[] = [
   {
     id: GasPriceType.ECONOMY,
     title: 'Economy',
@@ -214,10 +214,10 @@ watch(
       const keys = Object.keys(props.fees) as GasPriceType[]
       keys.forEach(key => {
         const fee = props.fees[key]
-        const index = dispalyFees.findIndex(f => f.id === key)
-        dispalyFees[index].fiatValue =
+        const index = displayFees.findIndex(f => f.id === key)
+        displayFees[index].fiatValue =
           `$${formatFiatValue(fee.fiatValue).value} ${fee.fiatSymbol}`
-        dispalyFees[index].nativeValue =
+        displayFees[index].nativeValue =
           `${fromWei(fee.nativeValue, 'ether')} ${fee.nativeSymbol}`
       })
       feesReady.value = true
