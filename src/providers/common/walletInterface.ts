@@ -1,6 +1,5 @@
 import type {
   BalanceResponse,
-  NonceResponse,
   GasFeeResponse,
   HexPrefixedString,
   PostTransaction,
@@ -28,5 +27,4 @@ export interface WalletInterface {
   getWalletType: () => WalletType
   getProvider: () => ProviderName
   getBalance: () => Promise<BalanceResponse>
-  getNonce: () => Promise<NonceResponse>
 }

@@ -61,9 +61,6 @@ export interface BalanceResponse {
   nativeSymbol: string
   fiatSymbol: string
 }
-export interface NonceResponse {
-  nonce: HexPrefixedString
-}
 
 interface ProviderError {
   message: string
