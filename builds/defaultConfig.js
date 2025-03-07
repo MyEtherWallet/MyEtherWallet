@@ -37,6 +37,7 @@ const webpackConfig = {
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
+    new webpack.NormalModuleReplacementPlugin(/^\@sinclair\/typebox$/, '@sinclair/typebox/build/cjs'),
     // new BundleAnalyzerPlugin(),
     new ImageminPlugin({
       disable: process.env.NODE_ENV !== 'production',
@@ -188,14 +189,8 @@ const transpilers = config => {
     .loader('babel-loader')
     .end();
   config.module
-    .rule('@sinclair')
+    .rule('sinclair')
     .test(/node_modules\/@sinclair\/.*\.js$/)
-    .use('babel')
-    .loader('babel-loader')
-    .end();
-  config.module
-    .rule('@sinclair-mjs')
-    .test(/node_modules\/@sinclair\/.*\.mjs$/)
     .use('babel')
     .loader('babel-loader')
     .end();

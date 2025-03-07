@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.19",
+  "version": "6.9.18-hotfix.1",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -65,7 +65,7 @@
     "@sentry/vue": "7.109.0",
     "@shapeshiftoss/hdwallet-core": "1.54.1",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.54.1",
-    "@trezor/connect-web": "9.5.0",
+    "@trezor/connect-web": "9.5.1",
     "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.16.2",
     "@walletconnect/modal": "2.6.2",
