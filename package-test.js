@@ -99,7 +99,6 @@ const EXCEPTIONS = [
   '@ensdomains/ens-contracts',
   '@shapeshiftoss/hdwallet-core',
   '@shapeshiftoss/hdwallet-keepkey-webusb',
-  '@trezor/connect-web',
   '@walletconnect/modal',
   '@walletconnect/ethereum-provider',
   'viem'
