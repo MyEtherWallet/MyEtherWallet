@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "6.9.18-hotfix.1",
+  "version": "6.9.19",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build": "npm run update && vue-cli-service build",
@@ -41,7 +41,7 @@
     "@aave/math-utils": "1.7.0",
     "@aave/protocol-js": "4.3.0",
     "@actions/github": "6.0.0",
-    "@amplitude/analytics-browser": "2.11.11",
+    "@amplitude/analytics-browser": "2.11.13",
     "@coolwallet/bsc": "1.1.9",
     "@coolwallet/core": "1.1.31",
     "@coolwallet/eth": "1.1.26",
@@ -65,7 +65,7 @@
     "@sentry/vue": "7.109.0",
     "@shapeshiftoss/hdwallet-core": "1.54.1",
     "@shapeshiftoss/hdwallet-keepkey-webusb": "1.54.1",
-    "@trezor/connect-web": "9.4.0",
+    "@trezor/connect-web": "9.5.1",
     "@unstoppabledomains/resolution": "9.0.0",
     "@walletconnect/ethereum-provider": "2.16.2",
     "@walletconnect/modal": "2.6.2",

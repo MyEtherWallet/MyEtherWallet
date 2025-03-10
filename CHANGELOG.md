@@ -1,3 +1,9 @@
+### Release v6.9.19
+
+### feat
+
+- rebrand klaytn [#5112](https://github.com/MyEtherWallet/MyEtherWallet/pull/5112)
+
 ### Release v6.9.18-hotfix.1
 
 ### fix
