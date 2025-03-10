@@ -3,7 +3,7 @@ import BSC from './BSC.js';
 import SEPOLIA from './SEPOLIA';
 import GO from './GO.js';
 import MINTME from './MINTME';
-import KLAY from './KLAY';
+import KAIA from './KAIA.js';
 import AA from './AA';
 import AAT from './AAT';
 import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET.js';
@@ -43,7 +43,7 @@ export {
   SEPOLIA,
   FTM,
   GNO,
-  KLAY,
+  KAIA,
   OP,
   AA,
   AAT,
