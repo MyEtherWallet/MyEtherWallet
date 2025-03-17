@@ -9,12 +9,5 @@ const ROOTSTOCK_COLLECTIVE_ROUTE = {
   }
 };
 
-const rootstockCollectiveRouterGuard = (to, from, next) => {
-  // Validate route parameters
-  if (!to?.name || !from?.name) {
-    console.warn('Invalid route parameters in rootstockCollectiveRouterGuard');
-  }
-  next();
-};
 
-export { ROOTSTOCK_COLLECTIVE_ROUTE, rootstockCollectiveRouterGuard };
+export { ROOTSTOCK_COLLECTIVE_ROUTE };

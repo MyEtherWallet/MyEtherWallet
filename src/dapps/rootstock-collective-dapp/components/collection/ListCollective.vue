@@ -1,7 +1,16 @@
 <template>
   <div>
+    <div>
+      <h2 class="mew-heading-3 textPrimaryModule--text text-uppercase ml-5">
+        Balances
+      </h2>
+      <p class="titlePrimary--text d-flex align-center mew-heading-2 ml-5">
+        {{ totalUsdValue }}
+      </p>
+    </div>
     <div class="mb-2">
       <staking-modal
+        v-if="!loading && stRifContract"
         :open-staking-modal="openStakingModal"
         :rif-contract="rifContract"
         :st-rif-contract="stRifContract"
@@ -11,124 +20,188 @@
       ></staking-modal>
 
       <unstaking-modal
+        v-if="!loading && stRifContract"
         :open-un-staking-modal="openUnstakingModal"
         :st-rif-contract="stRifContract"
         :reset-un-stake-modal="resetUnStakeModal"
         :strif-balance="stRifBalance"
         @onUnStakeDone="onUnStakeDone"
       ></unstaking-modal>
-      <table class="dao-table">
-        <thead class="table-header">
-          <tr>
-            <th>Token</th>
-            <th scope="col">Symbol</th>
-            <th scope="col">Price</th>
-            <th scope="col">Balance</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Rootstock Infrastructure Framework</td>
-            <td>RIF</td>
-            <td>${{ rifPriceUSD ? Number(rifPriceUSD).toFixed(2) : 0 }}</td>
-            <td class="center-align">
-              <img
-                width="16"
-                height="16"
-                src="@/assets/images/currencies/icon-rif-black.svg"
-                alt="Crypto"
-              />
-              &nbsp;
-              {{ rifBalance }} RIF
-              <span v-if="rifPriceUSD">
-                (${{
-                  ((rifPriceUSD || 0) * Number(rifBalance)).toFixed(2)
-                }})</span
+      <v-slide-y-transition hide-on-leave group>
+        <!-- Not enough RIF -->
+        <mew-alert
+          v-if="!loading && Number(rifBalance) == 0 && !loading"
+          key="alert-rif"
+          class="my-5"
+          title="Not enough RIF"
+          description=" You need RIF to start staking."
+          theme="warning"
+          has-white-background
+          hide-close-icon
+          :link-object="linkNoRif"
+        />
+        <!-- Not enough RBTC -->
+        <mew-alert
+          v-if="Number(balanceInWei) == 0 && !loadingWalletInfo"
+          key="alert-rbtc"
+          class="my-5"
+          title="Not enough RBTC"
+          description="You need RBTC to pay for gas fees in order to stake and unstake. "
+          theme="warning"
+          has-white-background
+          hide-close-icon
+          :link-object="linkNoRbtc"
+        />
+        <!-- Transaction Hash -->
+        <mew-alert
+          v-if="tx || msg"
+          key="alert-tx"
+          class="my-5"
+          :title="`Transaction Hash: ${tx}`"
+          :description="msg"
+          theme="info"
+          has-white-background
+        />
+        <table
+          v-if="!loading && !loadingWalletInfo"
+          key="table"
+          class="dao-table mt-4 mew-sheet"
+        >
+          <thead class="table-header">
+            <tr>
+              <th
+                class="px-4 overline textPrimaryModule--text font-weight-medium"
               >
-            </td>
-            <td>
-              <mew-button
-                btn-size="small"
-                color-theme="#ff9900"
-                title="Stake"
-                @click.native="onStake"
+                Token <span v-if="$vuetify.breakpoint.smAndDown"> Balance</span>
+              </th>
+              <th
+                v-if="$vuetify.breakpoint.mdAndUp"
+                scope="col"
+                class="px-4 overline textPrimaryModule--text font-weight-medium"
               >
-              </mew-button>
-            </td>
-          </tr>
-          <tr>
-            <td>Staked Rootstock Infrastructure Framework</td>
-            <td>stRIF</td>
-            <td>${{ rifPriceUSD ? Number(rifPriceUSD).toFixed(2) : 0 }}</td>
-            <td class="center-align">
-              <img
-                width="16"
-                height="16"
-                src="@/assets/images/currencies/icon-rif-black.svg"
-                alt="Crypto"
-              />
-              &nbsp;
-              {{ stRifBalance }} stRIF
-              <span v-if="rifPriceUSD">
-                (${{ ((rifPriceUSD || 0) * Number(stRifBalance)).toFixed(2) }})
-              </span>
-            </td>
-            <td>
-              <mew-button
-                btn-size="small"
-                color-theme="#ff9900"
-                title="Unstake"
-                @click.native="onUnStake"
-              ></mew-button>
-            </td>
-          </tr>
-          <tr>
-            <td>Rootstock Bitcoin</td>
-            <td>RBTC</td>
-            <td>${{ rbtcPriceUSD ? Number(rbtcPriceUSD).toFixed(2) : 0 }}</td>
-            <td class="center-align">
-              <img
-                width="20"
-                height="20"
-                src="@/assets/images/currencies/icon-rbtc-orange.svg"
-                alt="Crypto"
-              />
-              &nbsp;
-              {{ rbtcBalance }} RBTC
-              <span v-if="rbtcPriceUSD">
-                (${{ ((rbtcPriceUSD || 0) * Number(rbtcBalance)).toFixed(2) }})
-              </span>
-            </td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-      <br />
-      <div v-if="Number(rifBalance) == 0 && !loading" class="mt-2">
-        Not enough RIF balance for staking.<a
-          href="https://rif.technology/rif-token/"
-          target="_blank"
-          class="theme-color"
-        >
-          &nbsp;See how to get RIF</a
-        >
-      </div>
-      <div v-if="Number(rbtcBalance) == 0 && !loading" class="mt-2">
-        Not enough RBTC balance for gas fees.<a
-          href="https://rootstock.io/rbtc/#get-rbtc"
-          target="_blank"
-          class="theme-color"
-        >
-          &nbsp;See how to get RBTC</a
-        >
-      </div>
-      <div v-if="tx || msg" class="text-center text-primary mt-2 mb-2">
-        <div class="theme-color">{{ msg }}</div>
-        <a :href="tx" target="_blank" class="theme-color"
-          >Transaction Hash: {{ tx }}</a
-        >
-      </div>
+                Price
+              </th>
+              <th
+                v-if="$vuetify.breakpoint.mdAndUp"
+                scope="col"
+                class="px-4 overline textPrimaryModule--text font-weight-medium"
+              >
+                Balance
+              </th>
+              <th
+                scope="col"
+                class="px-4 overline textPrimaryModule--text font-weight-medium"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- RIF -->
+            <tr v-for="token in tableData" :key="token.contract">
+              <!--Token-->
+              <td>
+                <div class="d-flex align-center">
+                  <mew-token-container
+                    :img="token.icon"
+                    :name="token.name"
+                    size="42px"
+                    class="mr-4"
+                  />
+                  <div v-if="$vuetify.breakpoint.mdAndUp">
+                    <p class="mew-heading-4 font-weight-medium">
+                      {{ token.name }}
+                    </p>
+                    <p class="textSecondary--text mew-label">
+                      {{ token.symbol }}
+                    </p>
+                  </div>
+                  <div v-else>
+                    <p class="font-weight-medium">
+                      {{ token.balance }} {{ token.symbol }}
+                    </p>
+                    <p class="textSecondary--text mew-label">
+                      {{ token.usdBalance }}
+                      <span v-if="token.price" class="ml-1"
+                        >(@{{ token.formattedPrice }})</span
+                      >
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <!-- Price-->
+              <td v-if="$vuetify.breakpoint.mdAndUp">
+                <div>
+                  <div class="mew-label">
+                    <p>{{ token.formattedPrice }}</p>
+
+                    <div class="d-flex align-center">
+                      <div
+                        :class="[
+                          token.status == '+'
+                            ? 'greenPrimary--text'
+                            : 'redPrimary--text',
+                          'mew-label'
+                        ]"
+                      >
+                        {{ token.change ? `${token.change}%` : '' }}
+                      </div>
+                      <v-icon
+                        v-if="token.status == '+'"
+                        small
+                        color="greenPrimary"
+                      >
+                        mdi-arrow-up-thick
+                      </v-icon>
+                      <v-icon
+                        v-else-if="token.change !== '' && token.status === '-'"
+                        small
+                        color="redPrimary"
+                      >
+                        mdi-arrow-down-thick
+                      </v-icon>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <!--Balance-->
+              <td v-if="$vuetify.breakpoint.mdAndUp">
+                <p class="font-weight-medium">
+                  {{ token.balance }} {{ token.symbol }}
+                </p>
+
+                <p v-if="token.price" class="textSecondary--text mew-label">
+                  {{ token.usdBalance }}
+                </p>
+              </td>
+              <!--Actions-->
+              <td class="center-align">
+                <mew-button
+                  v-if="token.contract === rifContractAddress"
+                  title="Stake"
+                  btn-size="small"
+                  @click.native="onStake"
+                >
+                </mew-button>
+                <mew-button
+                  v-if="token.contract === stRifContractAddress"
+                  title="Unstake"
+                  btn-style="outline"
+                  btn-size="small"
+                  @click.native="onUnStake"
+                ></mew-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <v-skeleton-loader
+          v-else
+          key="skeleton-loader"
+          class="mx-auto"
+          type="table"
+        />
+      </v-slide-y-transition>
     </div>
   </div>
 </template>
@@ -137,13 +210,18 @@
 import { mapState, mapGetters } from 'vuex';
 import { ethers } from 'ethers';
 import { rifABI } from '../../handlers/helpers/abi/rifAbi';
-import { getTokenPrice } from '../../handlers/helpers/utils';
 import { stRifABI } from '../../handlers/helpers/abi/stRifAbi';
 import {
   getContractAddress,
   ContractType
 } from '../../handlers/helpers/contracts';
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
+import {
+  formatFiatValue,
+  formatFloatingPointValue
+} from '@/core/helpers/numberFormatHelper';
+import BigNumber from 'bignumber.js';
+import { MAIN_TOKEN_ADDRESS } from '@/core/helpers/common';
 
 export default {
   name: 'ListCollective',
@@ -154,28 +232,163 @@ export default {
   data() {
     return {
       loading: true,
-      rifBalance: '',
-      stRifBalance: '',
+      rifBalance: '0',
+      stRifBalance: '0',
       openStakingModal: false,
       openUnstakingModal: false,
       stRifContract: null,
       rifContract: null,
-      rbtcPriceUSD: '',
-      rifPriceUSD: '',
-      rbtcBalance: '',
+      rifContractAddress: '',
+      stRifContractAddress: '',
       tx: '',
-      msg: ''
+      msg: '',
+      linkNoRbtc: {
+        text: 'See how to get RBTC',
+        url: 'https://rootstock.io/rbtc/#get-rbtc'
+      },
+      linkNoRif: {
+        text: 'See how to get RIF',
+        url: 'https://rif.technology/rif-token/'
+      }
     };
   },
   computed: {
-    ...mapState('wallet', ['balance', 'address', 'web3', 'instance']),
-    ...mapGetters('global', ['network'])
+    ...mapState('wallet', [
+      'balance',
+      'address',
+      'web3',
+      'instance',
+      'loadingWalletInfo'
+    ]),
+    ...mapGetters('global', ['network']),
+    ...mapGetters('external', ['contractToToken']),
+    ...mapGetters('wallet', ['balanceInETH', 'balanceInWei']),
+
+    /** RIF */
+    rifContractMarketData() {
+      if (this.loadingWalletInfo) {
+        return null;
+      }
+      return this.getContractInfo(ContractType.RIF);
+    },
+    rifUsdBalanceBn() {
+      if (this.loadingWalletInfo || this.loading) {
+        return 0;
+      }
+      const balance = new BigNumber(this.rifBalance || 0);
+      const price = new BigNumber(this.rifContractMarketData.price || 0);
+      return price.multipliedBy(balance).value;
+    },
+    /** STRIF */
+    stRifUsdBalanceBn() {
+      if (this.loadingWalletInfo || this.loading) {
+        return 0;
+      }
+      const balance = new BigNumber(this.stRifBalance || 0);
+      const price = new BigNumber(this.rifContractMarketData.price || 0);
+      return price.multipliedBy(balance).value;
+    },
+    /** RBTC */
+    rbtcContractMarketData() {
+      if (this.loadingWalletInfo) {
+        return null;
+      }
+      return this.getContractInfo(ContractType.RBTC, true);
+    },
+    rbtcUsdBalanceBn() {
+      if (this.loadingWalletInfo || this.loading) {
+        return 0;
+      }
+      const balance = new BigNumber(this.balanceInETH || 0);
+      const price = new BigNumber(this.rbtcContractMarketData.price || 0);
+      return price.multipliedBy(balance).value;
+    },
+    totalUsdValue() {
+      const totalValue = BigNumber(this.rbtcUsdBalanceBn)
+        .plus(this.rifUsdBalanceBn)
+        .plus(this.stRifUsdBalanceBn);
+      return formatFiatValue(totalValue).value;
+    },
+    /**
+     * table data for the UI
+     * @returns {object} - {name, balance, usdBalance, contract, icon, change, status, price, symbol, formattedPrice}
+     */
+    tableData() {
+      if (
+        this.loading ||
+        this.loadingWalletInfo ||
+        this.rifContractMarketData === null
+      ) {
+        return [];
+      }
+      const rifBalanceBN = new BigNumber(this.rifBalance || 0);
+      const stRifBalanceBN = new BigNumber(this.stRifBalance || 0);
+      return [
+        {
+          name: 'Rootstock Infrastructure Framework',
+          balance: formatFloatingPointValue(rifBalanceBN).value,
+          usdBalance: formatFiatValue(this.rifUsdBalanceBn).value,
+          contract: this.rifContractAddress,
+          symbol: 'RIF',
+          ...this.rifContractMarketData
+        },
+        {
+          name: 'Staked Rootstock Infrastructure Framework',
+          balance: formatFloatingPointValue(stRifBalanceBN).value,
+          usdBalance: formatFiatValue(this.stRifUsdBalanceBn).value,
+          contract: this.stRifContractAddress,
+          symbol: 'sRIF',
+          ...this.rifContractMarketData
+        },
+        {
+          name: 'Rootstock Bitcoin',
+          balance: formatFloatingPointValue(this.balanceInETH).value,
+          usdBalance: formatFiatValue(this.rbtcUsdBalanceBn).value,
+          contract: MAIN_TOKEN_ADDRESS,
+          symbol: 'RBTC',
+          ...this.rbtcContractMarketData
+        }
+      ];
+    }
   },
   mounted() {
     this.msg = '';
     this.init();
   },
   methods: {
+    /** Returns Market Data for the ui
+     * @param {string} contract
+     * @param {boolean} isMain - if the contract is the main token
+     * @returns {object} - {icon, change, status, price, symbol, formattedPrice}
+     */
+    getContractInfo(contract, isMain = false) {
+      let address = '';
+      if (isMain) {
+        address = MAIN_TOKEN_ADDRESS;
+      } else {
+        address = getContractAddress(contract, this.network.type.chainID);
+      }
+      const data = this.contractToToken(address);
+      const change =
+        data.price_change_percentage_24hf &&
+        data.price_change_percentage_24hf !== '0'
+          ? data.price_change_percentage_24hf.replaceAll('%', '')
+          : '';
+      const status =
+        data.price_change_percentage_24h > 0
+          ? '+'
+          : data.price_change_percentage_24h === 0
+          ? ''
+          : '-';
+      const _price = formatFiatValue(BigNumber(data.price || 0)).value;
+      return {
+        icon: data.img,
+        change: change,
+        status: status,
+        price: data.price,
+        formattedPrice: _price
+      };
+    },
     resetStakeModal() {
       this.openStakingModal = false;
     },
@@ -185,7 +398,6 @@ export default {
     async onStakeDone(tx) {
       try {
         const receipt = await tx.wait();
-
         if (receipt.status === 1) {
           this.openStakingModal = false;
           const explorer = this.network.type.blockExplorerTX;
@@ -227,83 +439,76 @@ export default {
       this.openUnstakingModal = true;
     },
     async init() {
-      const ethersProvider = new ethers.providers.Web3Provider(
-        this.web3.currentProvider
-      );
-      const ethersSigner = ethersProvider.getSigner();
+      try {
+        const ethersProvider = new ethers.providers.Web3Provider(
+          this.web3.currentProvider
+        );
+        const ethersSigner = ethersProvider.getSigner();
 
-      // Create an instance of the RIF token contract
-      const rifAddress = getContractAddress(
-        ContractType.RIF,
-        this.network.type.chainID
-      );
-      const strifAddress = getContractAddress(
-        ContractType.STRIF,
-        this.network.type.chainID
-      );
-      const tokenContract = new ethers.Contract(
-        rifAddress,
-        rifABI,
-        ethersSigner
-      );
+        // Create an instance of the token contracts
+        this.rifContractAddress = getContractAddress(
+          ContractType.RIF,
+          this.network.type.chainID
+        );
+        this.stRifContractAddress = getContractAddress(
+          ContractType.STRIF,
+          this.network.type.chainID
+        );
+        const tokenContract = new ethers.Contract(
+          this.rifContractAddress,
+          rifABI,
+          ethersSigner
+        );
 
-      this.rifContract = tokenContract;
+        this.rifContract = tokenContract;
 
-      const stRifContract = new ethers.Contract(
-        strifAddress,
-        stRifABI,
-        ethersSigner
-      );
+        const stRifContract = new ethers.Contract(
+          this.stRifContractAddress,
+          stRifABI,
+          ethersSigner
+        );
 
-      this.stRifContract = stRifContract;
+        this.stRifContract = stRifContract;
+        /** Get Balances */
+        /** NOTE: WHY ARE DECIMALS  HARDCODED?*/
 
-      const [rbtcPriceResponse, rifPriceResponse] = await Promise.all([
-        getTokenPrice('rootstock'),
-        getTokenPrice('rif-token')
-      ]);
-
-      if (rbtcPriceResponse) {
-        this.rbtcPriceUSD = rbtcPriceResponse?.rootstock?.usd;
+        const balance = await tokenContract.balanceOf(this.address);
+        const formattedBalance = ethers.utils.formatUnits(balance, 18);
+        const stRifBalance = await stRifContract.balanceOf(this.address);
+        const formattedSTRIFBalance = ethers.utils.formatUnits(
+          stRifBalance,
+          18
+        );
+        this.rifBalance = formattedBalance;
+        this.stRifBalance = formattedSTRIFBalance;
+        this.loading = false;
+      } catch (e) {
+        console.error(e);
       }
-
-      if (rifPriceResponse) {
-        this.rifPriceUSD = rifPriceResponse['rif-token']?.usd;
-      }
-
-      const wallet = ethersProvider.getSigner();
-
-      this.rbtcBalance = ethers.utils.formatUnits(
-        await wallet.getBalance(),
-        18
-      );
-
-      this.rbtcBalance = parseFloat(this.rbtcBalance).toFixed(6);
-
-      const balance = await tokenContract.balanceOf(this.address);
-      const formattedBalance = ethers.utils.formatUnits(balance, 18);
-
-      const stRifBalance = await stRifContract.balanceOf(this.address);
-      const formattedSTRIFBalance = ethers.utils.formatUnits(stRifBalance, 18);
-
-      this.rifBalance = formattedBalance;
-      this.stRifBalance = formattedSTRIFBalance;
-      this.loading = false;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+p {
+  margin: 0;
+}
 .theme-color {
   color: #ff9900;
 }
 .dao-table {
-  width: 100%;
+  width: 100% !important;
   text-align: left;
   .table-header {
     text-align: left;
+    height: 58px;
     th {
-      padding: 0px;
+      border-bottom: 1px solid var(--v-greyMedium-base);
     }
+  }
+
+  td {
+    padding: 16px;
   }
 
   .center-align {

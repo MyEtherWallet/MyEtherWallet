@@ -18,10 +18,10 @@
       <template #tabContent1>
         <v-sheet
           max-width="1000px"
+          min-height="500px"
           color="transparent"
-          class="px-3 py-2 py-md-2 mx-auto"
+          class="px-3 pb-13 pt-10 px-md-15 pb-md-15 pt-md-8 mx-auto"
         >
-          <h2 class="text-uppercase font-weight-bold mt-2 mb-2">Balances</h2>
           <list-collective></list-collective>
         </v-sheet>
       </template>
@@ -33,13 +33,11 @@
     -->
       <template #tabContent2>
         <v-sheet
-          max-width="950px"
+          max-width="1000px"
+          min-height="1000px"
           color="transparent"
-          class="px-3 py-2 py-md-2 mx-auto"
+          class="px-3 pb-13 pt-10 px-md-15 pb-md-15 pt-md-8 mx-auto"
         >
-          <h2 class="text-center text-uppercase font-weight-bold mt-2">
-            Latest Proposals
-          </h2>
           <list-proposal> </list-proposal>
         </v-sheet>
       </template>
