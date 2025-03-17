@@ -9,5 +9,4 @@ const ROOTSTOCK_COLLECTIVE_ROUTE = {
   }
 };
 
-
 export { ROOTSTOCK_COLLECTIVE_ROUTE };
