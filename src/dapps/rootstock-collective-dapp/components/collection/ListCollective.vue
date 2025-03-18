@@ -483,6 +483,7 @@ export default {
         this.stRifBalance = formattedSTRIFBalance;
         this.loading = false;
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
     }
