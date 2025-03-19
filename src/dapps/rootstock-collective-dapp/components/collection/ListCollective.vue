@@ -277,7 +277,7 @@ export default {
       }
       const balance = new BigNumber(this.rifBalance || 0);
       const price = new BigNumber(this.rifContractMarketData.price || 0);
-      return price.multipliedBy(balance).value;
+      return price.multipliedBy(balance);
     },
     /** STRIF */
     stRifUsdBalanceBn() {
@@ -286,7 +286,7 @@ export default {
       }
       const balance = new BigNumber(this.stRifBalance || 0);
       const price = new BigNumber(this.rifContractMarketData.price || 0);
-      return price.multipliedBy(balance).value;
+      return price.multipliedBy(balance);
     },
     /** RBTC */
     rbtcContractMarketData() {
@@ -301,7 +301,7 @@ export default {
       }
       const balance = new BigNumber(this.balanceInETH || 0);
       const price = new BigNumber(this.rbtcContractMarketData.price || 0);
-      return price.multipliedBy(balance).value;
+      return price.multipliedBy(balance);
     },
     totalUsdValue() {
       const totalValue = BigNumber(this.rbtcUsdBalanceBn)
