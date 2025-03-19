@@ -30,7 +30,7 @@
                   :class="
                     dapp.style === 'outline' ? 'white--text' : 'textDark--text'
                   "
-                  style="width: 100%"
+                  style="width: 100%; text-wrap: initial"
                 >
                   <img
                     :src="
