@@ -2,7 +2,7 @@
 
 ### fix
 
-* fix web3 requesting window [#5121](https://github.com/MyEtherWallet/MyEtherWallet/pull/5121)
+* fix provider request [#5121](https://github.com/MyEtherWallet/MyEtherWallet/pull/5121)
 
 ### Release v6.9.19
 
