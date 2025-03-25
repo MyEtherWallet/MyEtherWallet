@@ -1,3 +1,9 @@
+### Release v6.9.19-hotfix.1
+
+### fix
+
+* fix web3 requesting window [#5121](https://github.com/MyEtherWallet/MyEtherWallet/pull/5121)
+
 ### Release v6.9.19
 
 ### feat
