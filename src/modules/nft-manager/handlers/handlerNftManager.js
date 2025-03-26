@@ -18,16 +18,37 @@ export default class NFT {
    */
   async getNfts() {
     try {
-      let { result } = await fetch(
-        `${chains[this.network.type.chainID]}${this.address}`
+      const { data } = await fetch(
+        `${chains[this.network.type.chainID]}${
+          this.address
+        }/balances_nft/?with-uncached=true`
       ).then(response => response.json());
-      let nftResults = result.nfts;
-      while (result.next) {
-        const res = await fetch(result.next).then(response => response.json());
-        result = res.result;
-        nftResults = nftResults.concat(result.nfts);
-      }
-      return nftResults;
+      const items = data && data.items ? data.items : [];
+      const nfts = [];
+      items.forEach(collection => {
+        const objTemplate = {};
+        objTemplate.contract_address = collection.contract_address;
+        collection.nft_data.forEach(token => {
+          const obj = { ...objTemplate };
+          obj.token_id = token.token_id;
+          obj.name = token.name;
+          obj.image_url = token.external_data.image;
+          obj.contract = {
+            type: 'ERC721',
+            name: collection.contract_name
+          };
+          obj.collection = {
+            name: collection.collection_name
+          };
+          obj.queried_wallet_balances = [
+            {
+              quantity: token.token_balance
+            }
+          ];
+          nfts.push(obj);
+        });
+      });
+      return nfts;
     } catch (e) {
       throw new Error(e);
     }

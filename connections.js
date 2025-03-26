@@ -102,6 +102,9 @@ module.exports = [
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
   'https://api.studio.thegraph.com:443/query/49574/',
   'https://assets.coingecko.com',
+  'https://rootstock-testnet.blockscout.com', // For Rootstock collective dapp
+  'https://rootstock.blockscout.com', // For Rootstock collective dapp
+  'https://api.coingecko.com', // For Rootstock collective dapp
   'https://api.stakewise.io:443', // stakewise
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
@@ -113,6 +116,6 @@ module.exports = [
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
   'https://explorer-api.walletconnect.com:443', // web3modal
-  'https://rpc.ankr.com:443',
+  'https://spaceapi.prd.space.id:443',
   'https://cloudflare-eth.com:443'
 ];
