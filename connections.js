@@ -90,6 +90,9 @@ module.exports = [
   'https://public-node.rsk.co', // Rootstock
   'https://eiqxqk2yzamq64zayk7zjsz6rq0hywyn.lambda-url.us-east-1.on.aws/', // Flyover
   'https://lps.flyover.rif.technology', // Flyover
+  'https://rootstock-testnet.blockscout.com', // For Rootstock collective dapp
+  'https://rootstock.blockscout.com', // For Rootstock collective dapp
+  'https://api.coingecko.com', // For Rootstock collective dapp
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
@@ -102,9 +105,6 @@ module.exports = [
   'https://s3.us-west-2.amazonaws.com:443/mew-ipfs-bucket', // ENS
   'https://api.studio.thegraph.com:443/query/49574/',
   'https://assets.coingecko.com',
-  'https://rootstock-testnet.blockscout.com', // For Rootstock collective dapp
-  'https://rootstock.blockscout.com', // For Rootstock collective dapp
-  'https://api.coingecko.com', // For Rootstock collective dapp
   'https://api.stakewise.io:443', // stakewise
   'https://api.stakewise.io:443/pool-stats', // stakewise pool
   'https://api.thegraph.com:443/subgraphs/name/kleros/curate', // Kleros Subtags
