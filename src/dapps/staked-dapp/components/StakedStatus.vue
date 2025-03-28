@@ -699,12 +699,10 @@ export default {
       if (earning.lte(0)) {
         return BigNumber(0);
       }
-      const actualAmountStaked =
-        amountStaked === '0' ? Math.floor(earning.toString()) : amountStaked;
       const now = moment.utc();
       const activated = moment.utc(activationTime);
       const daysActive = now.diff(activated, 'days');
-      const percentIncrease = BigNumber(earning).div(actualAmountStaked);
+      const percentIncrease = BigNumber(earning).div(amountStaked);
       const percentIncreasePerDay =
         BigNumber(percentIncrease).dividedBy(daysActive);
       const apr = percentIncreasePerDay.times(365).times(100);

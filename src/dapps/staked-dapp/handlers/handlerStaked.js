@@ -173,6 +173,7 @@ export default class Staked {
         // no withdrawal credentials found
         this.myValidators = data.map(item => {
           const newRaw = item.raw.map(item => {
+            item['amount'] = item.amount === '0' ? '32' : item.amount;
             item['can_exit'] =
               item.withdrawal_credentials_are_eth1Address &&
               item.withdrawal_credentials.includes(
