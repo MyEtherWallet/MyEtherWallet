@@ -173,7 +173,12 @@ export default class Staked {
         // no withdrawal credentials found
         this.myValidators = data.map(item => {
           const newRaw = item.raw.map(item => {
-            item['can_exit'] = false;
+            item['amount'] = item.amount === '0' ? '32' : item.amount;
+            item['can_exit'] =
+              item.withdrawal_credentials_are_eth1Address &&
+              item.withdrawal_credentials.includes(
+                this.address.replace('0x', '').toLowerCase()
+              );
             return item;
           });
           item.raw = newRaw;

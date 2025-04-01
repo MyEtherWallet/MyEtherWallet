@@ -61,7 +61,7 @@ export default {
         this.networkValuesData = new Map();
         if (data && data.getCoinGeckoTokenMarketDataByIds) {
           data.getCoinGeckoTokenMarketDataByIds.forEach(token => {
-            this.networkValuesData.set(token.id, token);
+            this.networkValuesData.set(token?.id, token);
           });
           this.setCoinGeckoNetworkIds(this.networkValuesData);
         }
