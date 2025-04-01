@@ -290,6 +290,12 @@ export default {
      */
     supportedNetwork() {
       return this.supportedNetworks.includes(this.network.type.name);
+    },
+    /**
+     * List of supported networks
+     */
+    supportedNetworks() {
+      return [ETH.name, POL.name, BSC.name];
     }
   },
   watch: {
