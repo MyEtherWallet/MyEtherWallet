@@ -52,12 +52,12 @@
     <!-- timer -->
     <div class="timer-container">
       <v-progress-linear
-        v-if="tickerActive"
+        v-if="tickerActive && !isDone"
         indeterminate
         color="greenPrimary"
       />
 
-      <div class="ticket-subtitle greenPrimary--text">
+      <div v-if="!isDone" class="ticket-subtitle greenPrimary--text">
         {{
           $t('flyover.pegin.deposit.deadline', {
             ticker: ticker
@@ -65,7 +65,10 @@
         }}
       </div>
 
-      <div v-if="!tickerActive" class="ticket-subtitle redPrimary--text">
+      <div
+        v-if="!tickerActive && !isDone"
+        class="ticket-subtitle redPrimary--text"
+      >
         {{ $t('flyover.pegin.deposit.expired') }}
       </div>
     </div>
@@ -154,6 +157,8 @@ export default {
   methods: {
     done() {
       this.isDone = true;
+      this.tickerActive = false;
+      clearInterval(this.timer);
     }
   }
 };
