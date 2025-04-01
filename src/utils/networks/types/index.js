@@ -13,6 +13,7 @@ import XLAYERTESTNET from './XLAYER-TESTNET.js';
 
 import ETH from './ETH.js';
 import ETC from './ETC.js';
+import BASE from './BASE.js';
 import XDC from './XDC';
 import MOONBEAM from './MOONBEAM';
 import MOONRIVER from './MOONRIVER';
@@ -31,6 +32,7 @@ export {
   COTI,
   ETC,
   BSC,
+  BASE,
   POL,
   GO,
   MINTME,

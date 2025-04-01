@@ -204,13 +204,13 @@ export default {
     parseProviderLogo(provider) {
       const dark = this.$vuetify.theme.dark;
       const providerLogos = {
-        SIMPLEX: require('@/assets/images/providers/icon-simplex.svg'),
+        SIMPLEX: require('@/assets/images/providers/icon-simplex-logo.png'),
         MOONPAY: require('@/assets/images/providers/icon-moonpay.svg'),
         TOPPER: require('@/assets/images/providers/icon-topper.svg'),
         COINBASE: require('@/assets/images/providers/icon-coinbase-light.webp')
       };
       const providerLogosDarkMode = {
-        SIMPLEX: require('@/assets/images/providers/icon-simplex-light.svg'),
+        SIMPLEX: require('@/assets/images/providers/icon-simplex-light.png'),
         MOONPAY: require('@/assets/images/providers/icon-moonpay-white.svg'),
         TOPPER: require('@/assets/images/providers/icon-topper-dark.svg'),
         COINBASE: require('@/assets/images/providers/icon-coinbase.webp')

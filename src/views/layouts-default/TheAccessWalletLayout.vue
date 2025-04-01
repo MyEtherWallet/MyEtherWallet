@@ -447,8 +447,7 @@ export default {
           this.openWeb3Wallet(item);
           return;
         }
-      }
-      if (
+      } else if (
         window.ethereum &&
         window.ethereum.isMetaMask &&
         window.ethereum.isEnkrypt

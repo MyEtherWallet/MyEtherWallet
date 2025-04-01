@@ -296,7 +296,8 @@ export default {
     async checkNetwork() {
       const matched = await matchNetwork(
         this.network.type.chainID,
-        this.identifier
+        this.identifier,
+        this.selectedEIP6963Provider
       );
       this.setValidNetwork(matched);
     },

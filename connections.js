@@ -86,10 +86,15 @@ module.exports = [
   'https://registry.walletconnect.com:433/api/v2/wallets',
   'wss://*.bridge.walletconnect.org:443',
   'https://buy-staging.moonpay.com:443',
+  'https://eth.blockrazor.xyz:443',
+  'https://rpc.ankr.com:443',
   // Dapps
   'https://public-node.rsk.co', // Rootstock
   'https://eiqxqk2yzamq64zayk7zjsz6rq0hywyn.lambda-url.us-east-1.on.aws/', // Flyover
   'https://lps.flyover.rif.technology', // Flyover
+  'https://rootstock-testnet.blockscout.com', // For Rootstock collective dapp
+  'https://rootstock.blockscout.com', // For Rootstock collective dapp
+  'https://api.coingecko.com', // For Rootstock collective dapp
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
@@ -113,6 +118,6 @@ module.exports = [
   'https://metadata.unstoppabledomains.com:443', // Unstoppable domains
   'wss://relay.walletconnect.com:443', // walletconnect2
   'https://explorer-api.walletconnect.com:443', // web3modal
-  'https://rpc.ankr.com:443',
+  'https://spaceapi.prd.space.id:443',
   'https://cloudflare-eth.com:443'
 ];
