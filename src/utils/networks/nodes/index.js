@@ -23,9 +23,11 @@ import amoyws from './amoy-mew-ws';
 import cotiws from './coti-ws';
 import xlayer from './xlayer-okx-ws';
 import xlayertestws from './xlayer-okx-testnet-ws';
+import base from './base-mew-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
+  base,
   ethmewws,
   cotiws,
   holeskymewws,
