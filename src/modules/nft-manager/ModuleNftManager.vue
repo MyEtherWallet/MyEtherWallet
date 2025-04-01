@@ -152,10 +152,9 @@ import {
 import getService from '@/core/helpers/getService';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
-import { POL } from '@/utils/networks/types';
+import { ETH, BSC, POL } from '@/utils/networks/types';
 import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import NFT from './handlers/handlerNftManager';
-import { chains } from './handlers/config/configNft';
 import handleError from '@/modules/confirmation/handlers/errorHandler.js';
 
 const MIN_GAS_LIMIT = 21000;
@@ -290,7 +289,7 @@ export default {
      * Check if network is supported
      */
     supportedNetwork() {
-      return chains[this.network.type.chainID];
+      return this.supportedNetworks.includes(this.network.type.name);
     }
   },
   watch: {
