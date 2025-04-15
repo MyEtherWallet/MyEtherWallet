@@ -334,7 +334,6 @@ export default {
         try {
           const gasTypeFee = this.gasPriceByType(this.gasPriceType);
           this.localGasPrice = gasTypeFee;
-          console.log(this.selectedNft);
           const gasFees = await this.nft.getGasFees(newVal, this.selectedNft);
           const gasFeesToBN = toBNSafe(gasFees).mul(toBNSafe(gasTypeFee));
           this.gasFees = gasFeesToBN.toString();

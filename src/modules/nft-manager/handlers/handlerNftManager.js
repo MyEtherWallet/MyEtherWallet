@@ -19,8 +19,8 @@ export default class NFT {
   async getNfts(cached = false) {
     const endpoint = `${
       chains[this.network.type.chainID]
-    }${this.address.toLowerCase()}/balances_nft/${
-      cached ? '?with-uncached=true' : ''
+    }${this.address.toLowerCase()}/balances_nft/?no-spam=true${
+      cached ? '&with-uncached=true' : ''
     }`;
     try {
       const { data } = await fetch(endpoint).then(response => response.json());
