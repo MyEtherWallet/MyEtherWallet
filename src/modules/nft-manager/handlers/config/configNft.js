@@ -6,12 +6,21 @@ const configs = {
   api: 'https://mainnet.mewwallet.dev'
 };
 
-const API = 'https://partners.mewapi.io/nfts';
+const API = 'https://partners.mewapi.io/nftsv2/';
 
 export const chains = {
-  1: `${API}/owners?chains=ethereum&queried_wallet_balances=1&wallet_addresses=`,
-  137: `${API}/owners?chains=polygon&queried_wallet_balances=1&wallet_addresses=`,
-  56: `${API}/owners?chains=bsc&queried_wallet_balances=1&wallet_addresses=`
+  1: `${API}eth-mainnet/address/`,
+  137: `${API}matic-mainnet/address/`,
+  56: `${API}bsc-mainnet/address/`,
+  42161: `${API}arb-mainnet/address/`,
+  1313161554: `${API}aurora-mainnet/address/`,
+  43114: `${API}avalanche-mainnet/address/`,
+  250: `${API}ftm-mainnet/address/`,
+  100: `${API}gnosis-mainnet/address/`,
+  1284: `${API}moonbeam-mainnet/address/`,
+  1285: `${API}moonbeam-moonriver/address/`,
+  10: `${API}op-mainnet/address/`,
+  196: `${API}x1-mainnet/address/`
 };
 
 export default configs;

@@ -16,18 +16,49 @@ export default class NFT {
    * retrieves all NFTs for account
    * returns {Object}
    */
-  async getNfts() {
+  async getNfts(cached = false) {
+    const endpoint = `${
+      chains[this.network.type.chainID]
+    }${this.address.toLowerCase()}/balances_nft/?no-spam=true${
+      cached ? '&with-uncached=true' : ''
+    }`;
     try {
-      let { result } = await fetch(
-        `${chains[this.network.type.chainID]}${this.address}`
-      ).then(response => response.json());
-      let nftResults = result.nfts;
-      while (result.next) {
-        const res = await fetch(result.next).then(response => response.json());
-        result = res.result;
-        nftResults = nftResults.concat(result.nfts);
-      }
-      return nftResults;
+      const { data } = await fetch(endpoint).then(response => response.json());
+      const items = data && data.items ? data.items : [];
+      const nfts = [];
+      items.forEach(collection => {
+        const objTemplate = {};
+        const has165 = collection.supports_erc.some(
+          nftType => nftType === 'erc165'
+        );
+        const has721 = collection.supports_erc.some(
+          nftType => nftType === 'erc721'
+        );
+        objTemplate.contract_address = collection.contract_address;
+        collection.nft_data.forEach(token => {
+          const obj = { ...objTemplate };
+          obj.token_id = token.token_id;
+          obj.name = token.name ? token.name : token.token_id;
+          obj.image_url = token.external_data ? token.external_data.image : '';
+          obj.contract = {
+            type: has165 ? 'ERC1155' : has721 ? 'ERC721' : 'ERC1155',
+            name: collection.contract_name
+          };
+          obj.collection = {
+            name:
+              collection.collection_name ||
+              collection.contract_name ||
+              collection.contract_address
+          };
+          obj.queried_wallet_balances = [
+            {
+              quantity: BigNumber(token.token_balance).toNumber()
+            }
+          ];
+          nfts.push(obj);
+        });
+      });
+      return nfts;
     } catch (e) {
       throw new Error(e);
     }
