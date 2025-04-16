@@ -49,7 +49,7 @@ const networkTokenUSDMarket = function (
 ) {
   const cgid = rootGetters['global/network'].type.coingeckoID;
   if (cgid) {
-    const token = state.coinGeckoTokens.get(cgid);
+    const token = state.coinGeckoNetworkCurrencies.get(cgid);
     if (token)
       return {
         value: token.current_price,
