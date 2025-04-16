@@ -128,6 +128,8 @@ export default {
       this.stakeAmount = v;
     },
     modalClose() {
+      this.setStakeAmount('');
+      this.errorMsg = '';
       this.resetUnStakeModal();
     },
     async unstakeSTRIF() {
