@@ -28,20 +28,29 @@ export default class NFT {
       const nfts = [];
       items.forEach(collection => {
         const objTemplate = {};
-        const has165 = collection.supports_erc.some(
-          nftType => nftType === 'erc165'
+        const has1155 = collection.supports_erc.includes('erc1155');
+        const has721 = collection.supports_erc.includes('erc721');
+        if (!has1155 && !has721) return;
+        const firstNftWithInfo = collection.nft_data.find(
+          nft =>
+            !!nft.external_data &&
+            !!nft.external_data.description &&
+            !!nft.external_data.image
         );
-        const has721 = collection.supports_erc.some(
-          nftType => nftType === 'erc721'
-        );
+        if (!firstNftWithInfo) return;
         objTemplate.contract_address = collection.contract_address;
         collection.nft_data.forEach(token => {
           const obj = { ...objTemplate };
           obj.token_id = token.token_id;
-          obj.name = token.name ? token.name : token.token_id;
-          obj.image_url = token.external_data ? token.external_data.image : '';
+          obj.name = token.name || token.token_id;
+          obj.image_url =
+            token.external_data?.image_512 ||
+            token.external_data?.image_256 ||
+            token.external_data?.image_1024 ||
+            token.external_data?.image ||
+            '';
           obj.contract = {
-            type: has165 ? 'ERC1155' : has721 ? 'ERC721' : 'ERC1155',
+            type: has1155 ? 'ERC1155' : 'ERC721',
             name: collection.contract_name
           };
           obj.collection = {
@@ -52,7 +61,7 @@ export default class NFT {
           };
           obj.queried_wallet_balances = [
             {
-              quantity: BigNumber(token.token_balance).toNumber()
+              quantity: BigNumber(token.token_balance || 1).toNumber()
             }
           ];
           nfts.push(obj);

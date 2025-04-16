@@ -26,8 +26,8 @@ export default {
       // fetch rif token for rsk network
       if (this.network.type.name === nodes.ROOTSTOCK.name) {
         arrayOfIds.push('rif-token');
-        return arrayOfIds;
       }
+      return arrayOfIds;
     }
   },
   apollo: {

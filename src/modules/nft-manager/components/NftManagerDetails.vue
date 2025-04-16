@@ -29,7 +29,7 @@
     <div v-if="!loading" class="d-flex align-center full-width">
       <img width="100" :src="token.image" alt="nft token" @error="onImgErr" />
       <div
-        class="d-flex align-center flex-column flex-md-row flex-lg-column flex-xl-row justify-space-between pa-3 full-width"
+        class="d-flex align-center flex-column flex-md-row flex-xl-row justify-space-between pa-3 full-width"
       >
         <div class="nft-name pr-2">
           <span v-if="token" class="pb-1 pb-md-0 pb-lg-2 pb-xl-0"
