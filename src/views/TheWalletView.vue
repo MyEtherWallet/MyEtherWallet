@@ -156,9 +156,6 @@ export default {
     network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
-        this.identifier === WALLET_TYPES.WEB3_WALLET
-          ? this.setWeb3Instance(this.selectedEIP6963Provider)
-          : this.setWeb3Instance();
         this.setup();
         if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
           this.setTokensAndBalance();

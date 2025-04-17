@@ -378,7 +378,7 @@ export default {
     },
     async getNfts() {
       const nfts = await this.nft.getNfts(true);
-      if (nfts.length === 0) {
+      if (!nfts) {
         const uncachedNfts = await this.nft.getNfts();
         this.nftApiResponse = uncachedNfts;
       } else {

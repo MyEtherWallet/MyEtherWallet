@@ -179,7 +179,10 @@ export default {
           item =>
             item.name === types.ETH.name ||
             item.name === types.BSC.name ||
-            item.name === types.POL.name
+            item.name === types.POL.name ||
+            item.name === types.BASE.name ||
+            item.name === types.ARB.name ||
+            item.name === types.OP.name
         );
       } else if (this.isSwap) {
         allNetworks = allNetworks.filter(

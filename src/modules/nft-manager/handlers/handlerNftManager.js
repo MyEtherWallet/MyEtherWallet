@@ -26,7 +26,12 @@ export default class NFT {
       cached ? '&with-uncached=true' : ''
     }`;
     try {
-      const { data } = await fetch(endpoint).then(response => response.json());
+      const { data, error } = await fetch(endpoint).then(response =>
+        response.json()
+      );
+      if (error) {
+        return null;
+      }
       const items = data && data.items ? data.items : [];
       const nfts = [];
       items.forEach(async collection => {
