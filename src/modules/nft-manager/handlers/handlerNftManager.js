@@ -1,8 +1,11 @@
 import utils from 'web3-utils';
 import configs, { chains } from './config/configNft';
 import ABI from './abi/abiNft';
+import ERC165ABI from './abi/abiERC165';
 import ERC1155ABI from './abi/abiERC1155';
 import BigNumber from 'bignumber.js';
+
+const ERC1155InterfaceId = '0xd9b67a26';
 
 export default class NFT {
   constructor({ network, address, web3 }) {
@@ -26,7 +29,7 @@ export default class NFT {
       const { data } = await fetch(endpoint).then(response => response.json());
       const items = data && data.items ? data.items : [];
       const nfts = [];
-      items.forEach(collection => {
+      items.forEach(async collection => {
         const objTemplate = {};
         const has1155 = collection.supports_erc.includes('erc1155');
         const has721 = collection.supports_erc.includes('erc721');
@@ -39,6 +42,13 @@ export default class NFT {
         );
         if (!firstNftWithInfo) return;
         objTemplate.contract_address = collection.contract_address;
+        const contractInstance = new this.web3.eth.Contract(
+          ERC165ABI,
+          collection.contract_address
+        );
+        const supports1155 = await contractInstance.methods
+          .supportsInterface(ERC1155InterfaceId)
+          .call();
         collection.nft_data.forEach(token => {
           const obj = { ...objTemplate };
           obj.token_id = token.token_id;
@@ -50,7 +60,7 @@ export default class NFT {
             token.external_data?.image ||
             '';
           obj.contract = {
-            type: has1155 ? 'ERC1155' : 'ERC721',
+            type: supports1155 ? 'ERC1155' : 'ERC721',
             name: collection.contract_name
           };
           obj.collection = {
