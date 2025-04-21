@@ -27,6 +27,8 @@ release
 chrome-extension
 .env
 .history
+.env-v7
+
 
 # Generated files
 src/_generated

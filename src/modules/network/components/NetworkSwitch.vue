@@ -132,8 +132,14 @@ export default {
     ...mapState('global', ['validNetwork']),
     ...mapState('external', ['selectedEIP6963Provider']),
     ...mapState('wallet', ['identifier', 'instance', 'isOfflineApp']),
+    isSwap() {
+      return this.$route.name === 'Swap';
+    },
+    isNFTManager() {
+      return this.$route.name === 'NFTManager';
+    },
     shouldFilter() {
-      return this.$route.name === 'Swap' || this.$route.name === 'NFTManager';
+      return this.isSwap || this.isNFTManager;
     },
     /**
      * Property returns sorted network names alphabetically in this order: ETH, main and then test networks
@@ -168,7 +174,17 @@ export default {
       this.typeNames.forEach(item => {
         allNetworks.push(types[item]);
       });
-      if (this.shouldFilter || this.identifier === WALLET_TYPES.MEW_WALLET) {
+      if (this.identifier === WALLET_TYPES.MEW_WALLET) {
+        allNetworks = allNetworks.filter(
+          item =>
+            item.name === types.ETH.name ||
+            item.name === types.BSC.name ||
+            item.name === types.POL.name ||
+            item.name === types.BASE.name ||
+            item.name === types.ARB.name ||
+            item.name === types.OP.name
+        );
+      } else if (this.isSwap) {
         allNetworks = allNetworks.filter(
           item =>
             item.name === types.ETH.name ||
@@ -184,6 +200,20 @@ export default {
             item.name === types.FTM.name ||
             item.name === types.OP.name ||
             item.name === types.COTI.name
+        );
+      } else if (this.isNFTManager) {
+        allNetworks = allNetworks.filter(
+          item =>
+            item.name === types.ETH.name ||
+            item.name === types.BSC.name ||
+            item.name === types.POL.name ||
+            item.name === types.XLAYER.name ||
+            item.name === types.MOONBEAM.name ||
+            item.name === types.MOONRIVER.name ||
+            item.name === types.AURORA.name ||
+            item.name === types.ARB.name ||
+            item.name === types.FTM.name ||
+            item.name === types.OP.name
         );
       }
       if (this.searchInput && this.searchInput !== '') {

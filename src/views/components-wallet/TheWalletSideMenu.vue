@@ -305,7 +305,9 @@ import {
   ARB,
   FTM,
   OP,
-  COTI
+  COTI,
+  GNO,
+  XLAYER
 } from '@/utils/networks/types';
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
@@ -355,7 +357,19 @@ export default {
           COTI
         ],
         [ROUTES_WALLET.STAKE.NAME]: [ETH, HOLESKY],
-        [ROUTES_WALLET.NFT_MANAGER.NAME]: [ETH, BSC, POL]
+        [ROUTES_WALLET.NFT_MANAGER.NAME]: [
+          ETH,
+          BSC,
+          POL,
+          ARB,
+          AURORA,
+          FTM,
+          GNO,
+          MOONRIVER,
+          MOONBEAM,
+          OP,
+          XLAYER
+        ]
       },
       footer: {
         text: 'Need help?',
