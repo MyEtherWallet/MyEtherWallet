@@ -1,8 +1,21 @@
+### devop
+
+* devop: add rootstock collective dApp [#5046](https://github.com/MyEtherWallet/MyEtherWallet/pull/5046)
+
+### feat
+
+* add rootstock staking [#5119](https://github.com/MyEtherWallet/MyEtherWallet/pull/5119)
+* goldrush nft switch [#5132](https://github.com/MyEtherWallet/MyEtherWallet/pull/5132)
+
+### fix
+
+* fix currency issue on confirmation page [#5131](https://github.com/MyEtherWallet/MyEtherWallet/pull/5131)
+
 ### Release v6.9.20
 
 ### fix
 
-- fix provider request [#5121](https://github.com/MyEtherWallet/MyEtherWallet/pull/5121)
+* fix provider request [#5121](https://github.com/MyEtherWallet/MyEtherWallet/pull/5121)
 
 ### Release v6.9.19
 
