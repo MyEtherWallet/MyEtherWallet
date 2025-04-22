@@ -107,10 +107,11 @@ export default {
       return this.feeFormatted;
     },
     totalFeeUSD() {
+      const rawTotalFee = BigNumber(this.value).plus(this.txFee);
       const ethFeeToUsd = BigNumber(this.txFee).times(this.value);
       if (this.currency.symbol === this.network.type.currencyName) {
         return this.getFiatValue(
-          BigNumber(this.totalFee).times(this.fiatValue).toFixed(2)
+          BigNumber(rawTotalFee).times(this.fiatValue).toFixed(2)
         );
       }
       const tokenPrice = BigNumber(this.currency.priceRaw).times(this.value);

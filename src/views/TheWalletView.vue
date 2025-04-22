@@ -59,7 +59,7 @@
 <script>
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { toBN } from 'web3-utils';
-import { debounce, isEqual } from 'lodash';
+import { debounce } from 'lodash';
 import moment from 'moment';
 
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
@@ -156,14 +156,7 @@ export default {
     network(newVal, oldVal) {
       if (this.online && !this.isOfflineApp) {
         this.web3.eth.clearSubscriptions();
-        this.identifier === WALLET_TYPES.WEB3_WALLET
-          ? this.setWeb3Instance(this.selectedEIP6963Provider)
-          : this.setWeb3Instance();
         this.setup();
-        if (this.identifier !== WALLET_TYPES.WEB3_WALLET) {
-          this.setTokensAndBalance();
-        }
-
         if (
           (this.identifier === WALLET_TYPES.WALLET_CONNECT ||
             this.identifier === WALLET_TYPES.MEW_WALLET) &&
@@ -197,11 +190,6 @@ export default {
             }
           );
         }
-      }
-    },
-    coinGeckoTokens(newVal, oldVal) {
-      if (!isEqual(newVal, oldVal)) {
-        this.setTokensAndBalance();
       }
     }
   },
@@ -410,7 +398,6 @@ export default {
                 walletType: this.identifier
               });
               await this.setWeb3Instance(this.selectedEIP6963Provider);
-              this.setTokensAndBalance();
               this.setValidNetwork(true);
               this.$emit('newNetwork');
               Toast(

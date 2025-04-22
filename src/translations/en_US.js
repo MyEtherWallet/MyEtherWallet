@@ -29,6 +29,7 @@ import sendTx from './send-tx/en_US';
 import ens from './dapps-ens/en_US';
 import rns from './dapps-rns/en_US';
 import flyover from './dapps-flyover/en_US';
+import rootstockCollective from './dapps-rootstock-collective/en_US';
 import unstoppable from './dapps-unstoppable/en_US';
 import subDomain from './dapps-sub-domain/en_US';
 import scheduleTx from './dapps-schedule-tx/en_US';
@@ -71,6 +72,7 @@ const en_US = {
   ens: ens,
   rns: rns,
   flyover: flyover,
+  rootstockCollective: rootstockCollective,
   unstoppable: unstoppable,
   subDomain: subDomain,
   scheduleTx: scheduleTx,

@@ -1,7 +1,7 @@
 /**
  * The Wallet View Apollo Mixin
  */
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import * as nodes from '@/utils/networks/types/index.js';
 import {
   getLatestPrices,
@@ -16,6 +16,19 @@ export default {
       tokensData: {},
       networkValuesData: {}
     };
+  },
+  computed: {
+    ...mapGetters('global', ['network']),
+    ids() {
+      const arrayOfIds = Object.keys(nodes)
+        .map(item => nodes[item].coingeckoID)
+        .filter(item => !!item);
+      // fetch rif token for rsk network
+      if (this.network.type.name === nodes.ROOTSTOCK.name) {
+        arrayOfIds.push('rif-token');
+      }
+      return arrayOfIds;
+    }
   },
   apollo: {
     /**
@@ -40,10 +53,8 @@ export default {
     },
     getCoinGeckoTokenMarketDataByIds: {
       query: getCoinGeckoTokenMarketDataByIds,
-      variables: {
-        ids: Object.keys(nodes)
-          .map(item => nodes[item].coingeckoID)
-          .filter(item => !!item)
+      variables() {
+        return { ids: this.ids };
       },
       pollInterval: 600000,
       result({ data }) {

@@ -1,8 +1,11 @@
 import utils from 'web3-utils';
 import configs, { chains } from './config/configNft';
 import ABI from './abi/abiNft';
+import ERC165ABI from './abi/abiERC165';
 import ERC1155ABI from './abi/abiERC1155';
 import BigNumber from 'bignumber.js';
+
+const ERC1155InterfaceId = '0xd9b67a26';
 
 export default class NFT {
   constructor({ network, address, web3 }) {
@@ -16,18 +19,70 @@ export default class NFT {
    * retrieves all NFTs for account
    * returns {Object}
    */
-  async getNfts() {
+  async getNfts(cached = false) {
+    const endpoint = `${
+      chains[this.network.type.chainID]
+    }${this.address.toLowerCase()}/balances_nft/?no-spam=true${
+      cached ? '&with-uncached=true' : ''
+    }`;
     try {
-      let { result } = await fetch(
-        `${chains[this.network.type.chainID]}${this.address}`
-      ).then(response => response.json());
-      let nftResults = result.nfts;
-      while (result.next) {
-        const res = await fetch(result.next).then(response => response.json());
-        result = res.result;
-        nftResults = nftResults.concat(result.nfts);
+      const { data, error } = await fetch(endpoint).then(response =>
+        response.json()
+      );
+      if (error) {
+        return null;
       }
-      return nftResults;
+      const items = data && data.items ? data.items : [];
+      const nfts = [];
+      items.forEach(async collection => {
+        const objTemplate = {};
+        const has1155 = collection.supports_erc.includes('erc1155');
+        const has721 = collection.supports_erc.includes('erc721');
+        if (!has1155 && !has721) return;
+        const firstNftWithInfo = collection.nft_data.find(
+          nft =>
+            !!nft.external_data &&
+            !!nft.external_data.description &&
+            !!nft.external_data.image
+        );
+        if (!firstNftWithInfo) return;
+        objTemplate.contract_address = collection.contract_address;
+        const contractInstance = new this.web3.eth.Contract(
+          ERC165ABI,
+          collection.contract_address
+        );
+        const supports1155 = await contractInstance.methods
+          .supportsInterface(ERC1155InterfaceId)
+          .call();
+        collection.nft_data.forEach(token => {
+          const obj = { ...objTemplate };
+          obj.token_id = token.token_id;
+          obj.name = token.name || token.token_id;
+          obj.image_url =
+            token.external_data?.image_512 ||
+            token.external_data?.image_256 ||
+            token.external_data?.image_1024 ||
+            token.external_data?.image ||
+            '';
+          obj.contract = {
+            type: supports1155 ? 'ERC1155' : 'ERC721',
+            name: collection.contract_name
+          };
+          obj.collection = {
+            name:
+              collection.collection_name ||
+              collection.contract_name ||
+              collection.contract_address
+          };
+          obj.queried_wallet_balances = [
+            {
+              quantity: BigNumber(token.token_balance || 1).toNumber()
+            }
+          ];
+          nfts.push(obj);
+        });
+      });
+      return nfts;
     } catch (e) {
       throw new Error(e);
     }
