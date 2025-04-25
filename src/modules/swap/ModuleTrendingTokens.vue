@@ -32,7 +32,7 @@
                   <mew-token-container
                     :img="data.img"
                     size="medium"
-                    name="data.symbol"
+                    :name="data.symbol"
                   />
                   <div class="text-uppercase text-h6 ml-3 textDark--text">
                     {{ data.symbol }}
@@ -95,7 +95,7 @@
                   <mew-token-container
                     :img="data.img"
                     size="medium"
-                    name="data.symbol"
+                    :name="data.symbol"
                   />
                   <div class="text-uppercase text-h6 ml-3 textDark--text">
                     {{ data.symbol }}
@@ -288,7 +288,7 @@
                     <mew-token-container
                       :img="data.img"
                       size="medium"
-                      name="data.symbol"
+                      :name="data.symbol"
                       style="min-width: 32px"
                     />
                     <div style="max-width: 210px">
@@ -643,7 +643,6 @@ export default {
                 this.openBuySell('ModuleTrendingTokens');
               })
               .catch(e => {
-                console.log('error', e);
                 Toast(e, {}, ERROR);
               });
           } else {

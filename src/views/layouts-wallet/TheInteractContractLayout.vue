@@ -1,7 +1,7 @@
 <template>
   <the-wrapper-wallet
     :total-left-col-items="1"
-    :total-right-col-items="isEthNetworks ? 2 : 1"
+    :total-right-col-items="isEthNetwork ? 2 : 1"
   >
     <template #leftColItem1>
       <module-contract-interact />
