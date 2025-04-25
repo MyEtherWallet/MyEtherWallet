@@ -24,6 +24,7 @@ class TrendingTokens {
       this.isLoadingList = false;
     } catch (error) {
       this.hasError = true;
+      // eslint-disable-next-line no-console
       console.error('Error fetching top token info:', error);
       this.isLoadingList = false;
     }
