@@ -643,7 +643,6 @@ export default {
                 this.openBuySell('ModuleTrendingTokens');
               })
               .catch(e => {
-                console.log('error', e);
                 Toast(e, {}, ERROR);
               });
           } else {
