@@ -9,7 +9,7 @@
           v-if="show"
           depressed
           color="buttonGrayLight"
-          class="title-button"
+          class="title-button bs-button"
           width="100%"
           height="70px"
           @click.native="openNetworkOverlay"
@@ -115,7 +115,7 @@ export default {
     padding: 8px 16px;
     width: 294px;
     height: 68px;
-    border-radius: 8px;
+    border-radius: 10px;
 
     &:hover {
       .custom-token-container {

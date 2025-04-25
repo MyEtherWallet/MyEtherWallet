@@ -13,9 +13,12 @@
       />
     </template>
     <template #rightColItem1>
-      <module-tokens-value :draggable="hasHistory" />
+      <module-trending-tokens draggable />
     </template>
-    <template v-if="hasHistory && hasSwap" #rightColItem2>
+    <template #rightColItem2>
+      <module-tokens-value draggable />
+    </template>
+    <template v-if="hasHistory && hasSwap" #rightColItem3>
       <module-transfer-history draggable :is-swap="true" />
     </template>
   </the-wrapper-wallet>
@@ -37,7 +40,8 @@ export default {
     ModuleSwap: () => import('@/modules/swap/ModuleSwap'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
     ModuleTransferHistory: () =>
-      import('@/modules/transfer-history/ModuleTransferHistory')
+      import('@/modules/transfer-history/ModuleTransferHistory'),
+    ModuleTrendingTokens: () => import('@/modules/swap/ModuleTrendingTokens')
   },
   mixins: [handlerAnalytics],
   props: {
@@ -61,7 +65,7 @@ export default {
       return this.swapNotifications && this.swapNotifications.length > 0;
     },
     totalRightColumns() {
-      return this.hasHistory && this.hasSwap ? 2 : 1;
+      return this.hasHistory && this.hasSwap ? 3 : 2;
     }
   },
   mounted() {

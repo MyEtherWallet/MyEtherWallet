@@ -8,9 +8,12 @@
       <module-send />
     </template>
     <template #rightColItem1>
-      <module-tokens-value :draggable="hasHistory" />
+      <module-trending-tokens draggable />
     </template>
-    <template v-if="hasHistory" #rightColItem2>
+    <template #rightColItem2>
+      <module-tokens-value draggable />
+    </template>
+    <template v-if="hasHistory" #rightColItem3>
       <module-transfer-history draggable />
     </template>
   </the-wrapper-wallet>
@@ -26,7 +29,8 @@ export default {
       import('@/views/components-wallet/TheWrapperWallet'),
     ModuleTokensValue: () => import('@/modules/balance/ModuleTokensValue'),
     ModuleTransferHistory: () =>
-      import('@/modules/transfer-history/ModuleTransferHistory')
+      import('@/modules/transfer-history/ModuleTransferHistory'),
+    ModuleTrendingTokens: () => import('@/modules/swap/ModuleTrendingTokens')
   },
   computed: {
     ...mapGetters('notifications', ['txNotifications']),
@@ -34,7 +38,7 @@ export default {
       return this.txNotifications && this.txNotifications.length > 0;
     },
     totalRightColItems() {
-      return this.hasHistory ? 2 : 1;
+      return this.hasHistory ? 3 : 2;
     }
   }
 };

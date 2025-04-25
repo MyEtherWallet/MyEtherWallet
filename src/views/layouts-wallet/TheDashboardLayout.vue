@@ -1,6 +1,6 @@
 <template>
   <the-wrapper-wallet
-    :total-left-col-items="showBanner || hasStaked ? 3 : 2"
+    :total-left-col-items="showBanner || hasStaked ? 4 : 3"
     :has-draggable="false"
     :total-right-col-items="2"
   >
@@ -10,6 +10,11 @@
       </div>
     </template>
     <template #leftColItem2>
+      <div>
+        <module-trending-tokens is-dashboard />
+      </div>
+    </template>
+    <template #leftColItem3>
       <div>
         <dashboard-banner :show-banner="showBanner" />
         <staking-summary-card
@@ -57,7 +62,8 @@ export default {
       import('@/views/components-wallet/TheWrapperWallet'),
     DashboardBanner: () => import('@/views/components-wallet/DashboardBanner'),
     StakingSummaryCard: () =>
-      import('@/views/components-wallet/StakingSummaryCard')
+      import('@/views/components-wallet/StakingSummaryCard'),
+    ModuleTrendingTokens: () => import('@/modules/swap/ModuleTrendingTokens')
   },
   data() {
     return {
@@ -97,7 +103,7 @@ export default {
       );
     },
     hasBanner() {
-      return `leftColItem${this.showBanner || this.hasStaked ? 3 : 2}`;
+      return `leftColItem${this.showBanner || this.hasStaked ? 4 : 3}`;
     },
     name() {
       return !this.isEthNetwork ? 'rightColItem1' : 'rightColItem2';
