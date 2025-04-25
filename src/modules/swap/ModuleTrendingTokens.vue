@@ -367,6 +367,7 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import handlerTrendingTokens from '@/modules/swap/handlers/handlerTrendingTokens';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { TRENDING_TOKENS } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const CCSWAPLINKS = {
@@ -503,9 +504,11 @@ export default {
             ...item,
             isSwap: true,
             img: token?.img,
+            priceRaw: token?.price,
             price: formatFiatValue(token?.price).value,
             priceChange: token?.price_change_percentage_24hf,
-            priceChangeIsNegative: token?.price_change_percentage_24h < 0
+            priceChangeIsNegative: token?.price_change_percentage_24h < 0,
+            priceChangeRaw: token?.price_change_percentage_24h
           };
         });
       }
@@ -609,6 +612,10 @@ export default {
     },
     popupOpen() {
       this.showPopup = true;
+      this.trackTrendingTokens(TRENDING_TOKENS.CLICK_MORE, {
+        routeName: `${this.$route.name}`,
+        url: `${this.$route.fullPath}`
+      });
     },
     popupClose() {
       this.showPopup = false;
@@ -621,6 +628,14 @@ export default {
       return undefined;
     },
     goToToken(data, closePopup = false) {
+      this.trackTrendingTokens(TRENDING_TOKENS.CLICK_TOKEN, {
+        token: `${data.symbol}`,
+        isSwap: `${data.isSwap}`,
+        price: `${data.priceRaw}`,
+        priceChange: `${data.priceChangeRaw}`,
+        routeName: `${this.$route.name}`,
+        url: `${this.$route.fullPath}`
+      });
       if (data.isSwap) {
         this.goToSwap(data);
       } else {
@@ -659,9 +674,6 @@ export default {
         toToken: data.contract,
         amount: '0'
       };
-      // this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
-      //   TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
-      // });
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {

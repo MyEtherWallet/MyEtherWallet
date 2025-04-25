@@ -7,6 +7,7 @@ import ACCESS_WALLET from './accessWallet';
 import BUY_SELL from './buySell';
 import STAKING from './staking';
 import CONTRACT from './contract';
+import TRENDING_TOKENS from './trendingTokens';
 
 const COMMON = {
   PAGE_SHOWN: 'PageShown',
@@ -24,5 +25,6 @@ export {
   ACCESS_WALLET,
   BUY_SELL,
   CONTRACT,
-  STAKING
+  STAKING,
+  TRENDING_TOKENS
 };
