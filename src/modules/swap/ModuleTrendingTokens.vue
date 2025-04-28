@@ -18,14 +18,15 @@
             cols="12"
             class="py-0"
           >
-            <mew-button
-              btn-style="transparent"
-              class="px-3"
-              color-theme="basic"
-              btn-size="xlarge"
-              has-full-width
-              :btn-link="getLink(data)"
-              @click.native="goToToken(data)"
+            <v-btn
+              x-large
+              depressed
+              class="bs-button pa-3 border-radius--10px mt-2"
+              color="buttonGrayLight"
+              :target="!data.isSwap ? '_blank' : ''"
+              width="100%"
+              :href="getLink(data)"
+              @click="goToToken(data)"
             >
               <v-row class="justify-space-between align-center pa-3">
                 <div class="d-flex align-center justify-start">
@@ -62,7 +63,7 @@
                   </span>
                 </div>
               </v-row>
-            </mew-button>
+            </v-btn>
           </v-col>
         </v-row>
         <v-row v-else class="pa-3">
@@ -168,10 +169,10 @@
       </div>
       <div
         v-if="!isDashboard && isEthNetwork && !error"
-        class="d-flex justify-center align-center pb-3 mt-n4"
+        class="d-flex justify-end align-center pb-3 pr-3 mt-n4"
       >
         <mew-button
-          btn-style="outline"
+          btn-style="transparent"
           button-size="small"
           title="More tokens"
           @click.native="popupOpen"
@@ -262,7 +263,7 @@
           >
         </v-row>
       </template>
-      <div v-if="showPopup">
+      <div v-if="showPopup" class="search-not-found">
         <v-row class="justify-start wrap px-1 py-3 pa-sm-3 ma-0">
           <v-col
             v-for="(data, key) in allTokens"
@@ -379,6 +380,12 @@ const CCSWAPLINKS = {
   },
   dogecoin: {
     link: 'https://ccswap.myetherwallet.com/?network=DOGE&crypto=Doge'
+  },
+  binancecoin: {
+    link: 'https://ccswap.myetherwallet.com/?network=BNB&crypto=BNB'
+  },
+  'polygon-ecosystem-token': {
+    link: 'https://ccswap.myetherwallet.com/?network=MATIC&crypto=POL'
   }
 };
 
@@ -568,12 +575,34 @@ export default {
           return b[this.activeSort.value] - a[this.activeSort.value];
         });
       if (this.searchInput) {
-        return _all.filter(item => {
+        const searched = _all.filter(item => {
           return (
             item.name.toLowerCase().includes(this.searchInput.toLowerCase()) ||
             item.symbol.toLowerCase().includes(this.searchInput.toLowerCase())
           );
         });
+        const beginsWithName = [];
+        const beginsWithSymbol = [];
+        const other = [];
+        searched.forEach(item => {
+          if (
+            item.name
+              .toLowerCase()
+              .startsWith(
+                this.searchInput.toLowerCase() ||
+                  ` ${this.searchInput.toLowerCase()}`
+              )
+          ) {
+            beginsWithName.push(item);
+          } else if (
+            item.symbol.toLowerCase().startsWith(this.searchInput.toLowerCase())
+          ) {
+            beginsWithSymbol.push(item);
+          } else {
+            other.push(item);
+          }
+        });
+        return [...beginsWithName, ...beginsWithSymbol, ...other];
       }
       return _all;
     },
@@ -628,13 +657,16 @@ export default {
       return undefined;
     },
     goToToken(data, closePopup = false) {
+      const inPopup = closePopup;
       this.trackTrendingTokens(TRENDING_TOKENS.CLICK_TOKEN, {
         token: `${data.symbol}`,
         isSwap: `${data.isSwap}`,
         price: `${data.priceRaw}`,
         priceChange: `${data.priceChangeRaw}`,
         routeName: `${this.$route.name}`,
-        url: `${this.$route.fullPath}`
+        url: `${this.$route.fullPath},`,
+        inPopup: inPopup,
+        rank: `${data.rank}`
       });
       if (data.isSwap) {
         this.goToSwap(data);
@@ -700,6 +732,11 @@ export default {
      */
     setActiveSort(val) {
       this.activeSort = val;
+      this.trackTrendingTokens(TRENDING_TOKENS.CLICK_SORT, {
+        text: `${val.text}`,
+        routeName: `${this.$route.name}`,
+        url: `${this.$route.fullPath},`
+      });
     }
   }
 };
