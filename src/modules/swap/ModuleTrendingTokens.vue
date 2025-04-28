@@ -764,9 +764,10 @@ export default {
   padding: 2px 4px;
   border-radius: 0px 0px 0px 10px;
   border-radius: 8px;
-  left: -4px;
+  left: -5px;
   text-transform: uppercase;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
+  letter-spacing: 1px;
 }
 </style>
