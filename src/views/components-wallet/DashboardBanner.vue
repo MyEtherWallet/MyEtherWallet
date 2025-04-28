@@ -75,9 +75,6 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    console.log('asdfa', this.isStakingBannerOpen);
-  },
   computed: {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
