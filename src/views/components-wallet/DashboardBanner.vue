@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!showIsAdBanner">
-      <div v-if="locShowBanner && showBanner" class="banner-container">
+      <div v-if="isStakingBannerOpen && showBanner" class="banner-container">
         <div class="close-icon pa-2 pa-sm-2" @click="trackClosing">
           <v-icon
             :size="$vuetify.breakpoint.smAndDown ? '16' : '24'"
@@ -58,11 +58,11 @@
 import moment from 'moment';
 import 'moment-timezone';
 import { mapState } from 'vuex';
-// import store from 'store';
 
 import { ROUTES_WALLET } from '@/core/configs/configRoutes';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import { STAKING } from '@/modules/analytics-opt-in/handlers/configs/events.js';
+import { mapActions, mapGetters } from 'vuex/dist/vuex.common.js';
 
 export default {
   mixins: [handlerAnalytics],
@@ -73,13 +73,15 @@ export default {
     }
   },
   data() {
-    return {
-      locShowBanner: true
-    };
+    return {};
+  },
+  mounted() {
+    console.log('asdfa', this.isStakingBannerOpen);
   },
   computed: {
     ...mapState('wallet', ['identifier', 'isHardware']),
     ...mapState('external', ['selectedEIP6963Info']),
+    ...mapGetters('stakingBanner', ['isStakingBannerOpen']),
     showIsAdBanner() {
       const testTime = new Date();
       const startDate = new Date('2024-10-03');
@@ -128,6 +130,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('stakingBanner', ['closeStakingBanner']),
     trackAdClick() {
       this.$amplitude.track('BrowserAdTracking', {
         adName: this.adBanner
@@ -138,7 +141,7 @@ export default {
       this.trackStaking(STAKING.DASHBOARD);
     },
     trackClosing() {
-      this.locShowBanner = false;
+      this.closeStakingBanner();
       this.trackStaking(STAKING.DASHBOARD_CLOSED);
     }
   }
