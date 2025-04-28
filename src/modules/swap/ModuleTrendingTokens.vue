@@ -278,8 +278,10 @@
               btn-size="xlarge"
               has-full-width
               :btn-link="getLink(data)"
+              style="position: relative"
               @click.native="goToToken(data, true)"
             >
+              <div v-if="!data.isSwap" class="buy-tag">buy</div>
               <v-row class="justify-space-between align-center pa-3 text-left">
                 <v-col cols="6" class="px-2">
                   <div
@@ -288,9 +290,9 @@
                   >
                     <mew-token-container
                       :img="data.img"
-                      size="medium"
+                      size="medium-large"
                       :name="data.symbol"
-                      style="min-width: 32px"
+                      style="min-width: 40px"
                     />
                     <div style="max-width: 210px">
                       <div class="text-h6 ml-3 textDark--text truncate">
@@ -753,5 +755,18 @@ export default {
 
 .search-not-found {
   min-height: calc(90vh - 192px);
+}
+.buy-tag {
+  position: absolute;
+  top: 10px;
+  background-color: var(--v-bluePrimary-base);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 0px 0px 0px 10px;
+  border-radius: 8px;
+  left: -4px;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 800;
 }
 </style>
