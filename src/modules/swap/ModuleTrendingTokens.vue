@@ -625,6 +625,7 @@ export default {
   methods: {
     ...mapActions('trendingTokens', ['setTrendingTokensState']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
     ...mapActions('wallet', ['setWeb3Instance']),
     async setTrendingHandler() {
       this.error = false;
@@ -682,9 +683,11 @@ export default {
             })
               .then(() => {
                 if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-                  this.setWeb3Instance(this.selectedEIP6963Provider);
+                  this.setWeb3Instance(this.selectedEIP6963Provider).then(
+                    this.setTokenAndEthBalance
+                  );
                 } else {
-                  this.setWeb3Instance();
+                  this.setWeb3Instance().then(this.setTokenAndEthBalance);
                 }
                 Toast(`Switched network to: Ethereum`, {}, SUCCESS);
               })
