@@ -1,6 +1,8 @@
 {
   "access_wallet": {
     "title": "Access MEW Portfolio",
+    "description": "Check balances, swap and buy crypto, and tokens, grow and track your portfolio.",
+    "need_help": "Need help accessing your wallet?",
     "search_wallet": "Search for your wallet"
   },
   "access_wallet_keystore": {

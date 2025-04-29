@@ -41,9 +41,9 @@ const urlTokenBalances = computed(() => {
 
 const { execute } = useFetch(urlTokenBalances.value, {
   afterFetch(ctx) {
-    setTokens(ctx.data.result.result)
+    setTokens(ctx.data.result)
     setIsLoadingBalances(false)
-    return ctx.data.result.result
+    return ctx.data.result
   },
   onFetchError: e => {
     console.error(e)

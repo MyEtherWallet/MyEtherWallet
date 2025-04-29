@@ -64,7 +64,7 @@
       </button>
     </form>
     <app-need-help
-      title="Read more"
+      title="Need help sending?"
       help-link="https://help.myetherwallet.com/en/article/what-is-gas"
     />
   </div>
