@@ -18,14 +18,15 @@
             cols="12"
             class="py-0"
           >
-            <mew-button
-              btn-style="transparent"
-              class="px-3"
-              color-theme="basic"
-              btn-size="xlarge"
-              has-full-width
-              :btn-link="getLink(data)"
-              @click.native="goToToken(data)"
+            <v-btn
+              x-large
+              depressed
+              class="bs-button pa-3 border-radius--10px mt-2"
+              color="buttonGrayLight"
+              :target="!data.isSwap ? '_blank' : ''"
+              width="100%"
+              :href="getLink(data)"
+              @click="goToToken(data)"
             >
               <v-row class="justify-space-between align-center pa-3">
                 <div class="d-flex align-center justify-start">
@@ -62,7 +63,7 @@
                   </span>
                 </div>
               </v-row>
-            </mew-button>
+            </v-btn>
           </v-col>
         </v-row>
         <v-row v-else class="pa-3">
@@ -168,10 +169,10 @@
       </div>
       <div
         v-if="!isDashboard && isEthNetwork && !error"
-        class="d-flex justify-center align-center pb-3 mt-n4"
+        class="d-flex justify-end align-center pb-3 pr-3 mt-n4"
       >
         <mew-button
-          btn-style="outline"
+          btn-style="transparent"
           button-size="small"
           title="More tokens"
           @click.native="popupOpen"
@@ -262,7 +263,7 @@
           >
         </v-row>
       </template>
-      <div v-if="showPopup">
+      <div v-if="showPopup" class="search-not-found">
         <v-row class="justify-start wrap px-1 py-3 pa-sm-3 ma-0">
           <v-col
             v-for="(data, key) in allTokens"
@@ -277,8 +278,10 @@
               btn-size="xlarge"
               has-full-width
               :btn-link="getLink(data)"
+              style="position: relative"
               @click.native="goToToken(data, true)"
             >
+              <div v-if="!data.isSwap" class="buy-tag">buy</div>
               <v-row class="justify-space-between align-center pa-3 text-left">
                 <v-col cols="6" class="px-2">
                   <div
@@ -287,9 +290,9 @@
                   >
                     <mew-token-container
                       :img="data.img"
-                      size="medium"
+                      size="medium-large"
                       :name="data.symbol"
-                      style="min-width: 32px"
+                      style="min-width: 40px"
                     />
                     <div style="max-width: 210px">
                       <div class="text-h6 ml-3 textDark--text truncate">
@@ -367,6 +370,7 @@ import { Toast, ERROR, SUCCESS } from '@/modules/toast/handler/handlerToast';
 import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalytics.mixin';
 import handlerTrendingTokens from '@/modules/swap/handlers/handlerTrendingTokens';
 import buyMore from '@/core/mixins/buyMore.mixin.js';
+import { TRENDING_TOKENS } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import WALLET_TYPES from '@/modules/access-wallet/common/walletTypes';
 
 const CCSWAPLINKS = {
@@ -378,6 +382,12 @@ const CCSWAPLINKS = {
   },
   dogecoin: {
     link: 'https://ccswap.myetherwallet.com/?network=DOGE&crypto=Doge'
+  },
+  binancecoin: {
+    link: 'https://ccswap.myetherwallet.com/?network=BNB&crypto=BNB'
+  },
+  'polygon-ecosystem-token': {
+    link: 'https://ccswap.myetherwallet.com/?network=MATIC&crypto=POL'
   }
 };
 
@@ -503,9 +513,11 @@ export default {
             ...item,
             isSwap: true,
             img: token?.img,
+            priceRaw: token?.price,
             price: formatFiatValue(token?.price).value,
             priceChange: token?.price_change_percentage_24hf,
-            priceChangeIsNegative: token?.price_change_percentage_24h < 0
+            priceChangeIsNegative: token?.price_change_percentage_24h < 0,
+            priceChangeRaw: token?.price_change_percentage_24h
           };
         });
       }
@@ -565,12 +577,34 @@ export default {
           return b[this.activeSort.value] - a[this.activeSort.value];
         });
       if (this.searchInput) {
-        return _all.filter(item => {
+        const searched = _all.filter(item => {
           return (
             item.name.toLowerCase().includes(this.searchInput.toLowerCase()) ||
             item.symbol.toLowerCase().includes(this.searchInput.toLowerCase())
           );
         });
+        const beginsWithName = [];
+        const beginsWithSymbol = [];
+        const other = [];
+        searched.forEach(item => {
+          if (
+            item.name
+              .toLowerCase()
+              .startsWith(
+                this.searchInput.toLowerCase() ||
+                  ` ${this.searchInput.toLowerCase()}`
+              )
+          ) {
+            beginsWithName.push(item);
+          } else if (
+            item.symbol.toLowerCase().startsWith(this.searchInput.toLowerCase())
+          ) {
+            beginsWithSymbol.push(item);
+          } else {
+            other.push(item);
+          }
+        });
+        return [...beginsWithName, ...beginsWithSymbol, ...other];
       }
       return _all;
     },
@@ -591,6 +625,7 @@ export default {
   methods: {
     ...mapActions('trendingTokens', ['setTrendingTokensState']),
     ...mapActions('global', ['setNetwork']),
+    ...mapActions('external', ['setTokenAndEthBalance']),
     ...mapActions('wallet', ['setWeb3Instance']),
     async setTrendingHandler() {
       this.error = false;
@@ -609,6 +644,10 @@ export default {
     },
     popupOpen() {
       this.showPopup = true;
+      this.trackTrendingTokens(TRENDING_TOKENS.CLICK_MORE, {
+        routeName: `${this.$route.name}`,
+        url: `${this.$route.fullPath}`
+      });
     },
     popupClose() {
       this.showPopup = false;
@@ -621,6 +660,17 @@ export default {
       return undefined;
     },
     goToToken(data, closePopup = false) {
+      const inPopup = closePopup;
+      this.trackTrendingTokens(TRENDING_TOKENS.CLICK_TOKEN, {
+        token: `${data.symbol}`,
+        isSwap: `${data.isSwap}`,
+        price: `${data.priceRaw}`,
+        priceChange: `${data.priceChangeRaw}`,
+        routeName: `${this.$route.name}`,
+        url: `${this.$route.fullPath},`,
+        inPopup: inPopup,
+        rank: `${data.rank}`
+      });
       if (data.isSwap) {
         this.goToSwap(data);
       } else {
@@ -633,9 +683,11 @@ export default {
             })
               .then(() => {
                 if (this.identifier === WALLET_TYPES.WEB3_WALLET) {
-                  this.setWeb3Instance(this.selectedEIP6963Provider);
+                  this.setWeb3Instance(this.selectedEIP6963Provider).then(
+                    this.setTokenAndEthBalance
+                  );
                 } else {
-                  this.setWeb3Instance();
+                  this.setWeb3Instance().then(this.setTokenAndEthBalance);
                 }
                 Toast(`Switched network to: Ethereum`, {}, SUCCESS);
               })
@@ -659,9 +711,6 @@ export default {
         toToken: data.contract,
         amount: '0'
       };
-      // this.trackDashboardAmplitude(DASHBOARD.SWAP_PAIRS, {
-      //   TokenPair: `${data.fromT.symbol} to ${data.toT.symbol}`
-      // });
       this.navigateToSwap(obj);
     },
     navigateToSwap(query) {
@@ -688,6 +737,11 @@ export default {
      */
     setActiveSort(val) {
       this.activeSort = val;
+      this.trackTrendingTokens(TRENDING_TOKENS.CLICK_SORT, {
+        text: `${val.text}`,
+        routeName: `${this.$route.name}`,
+        url: `${this.$route.fullPath},`
+      });
     }
   }
 };
@@ -704,5 +758,19 @@ export default {
 
 .search-not-found {
   min-height: calc(90vh - 192px);
+}
+.buy-tag {
+  position: absolute;
+  top: 10px;
+  background-color: var(--v-bluePrimary-base);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 0px 0px 0px 10px;
+  border-radius: 8px;
+  left: -5px;
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 </style>

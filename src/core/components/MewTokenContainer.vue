@@ -58,7 +58,7 @@ export default {
       default: false
     },
     /**
-     * Accepts small, medium or large sizes.
+     * Accepts small, medium, medium-large or large sizes.
      */
     size: {
       type: String,
@@ -92,6 +92,7 @@ export default {
       sizeOptions: {
         small: 'small',
         medium: 'medium',
+        mediumLarge: 'medium-large',
         large: 'large'
       }
     };
@@ -106,7 +107,10 @@ export default {
         return 'mew-label';
       }
 
-      if (this.size.toLowerCase() === this.sizeOptions.medium) {
+      if (
+        this.size.toLowerCase() === this.sizeOptions.medium ||
+        this.size.toLowerCase() === this.sizeOptions.mediumLarge
+      ) {
         return 'mew-body';
       }
 
@@ -130,6 +134,9 @@ export default {
 
       if (this.size.toLowerCase() === this.sizeOptions.medium) {
         return '32px';
+      }
+      if (this.size.toLowerCase() === this.sizeOptions.mediumLarge) {
+        return '40px';
       }
 
       if (this.size.toLowerCase() === this.sizeOptions.large) {

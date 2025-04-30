@@ -2,5 +2,7 @@ export const defaultTrendingList = [
   'bitcoin',
   'ethereum',
   'solana',
-  'dogecoin'
+  'dogecoin',
+  'polygon-ecosystem-token',
+  'binancecoin'
 ];

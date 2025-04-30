@@ -311,6 +311,26 @@ export default {
           network: this.network.type.name
         });
       }
+    },
+    /**
+     * TRENDING TOKENS
+     */
+    trackTrendingTokens(action, data = {}) {
+      if (this.consentToTrack) {
+        if (!isEmpty(data)) {
+          const newObj = Object.assign({}, data, {
+            network: this.network.type.name
+          });
+          this.$amplitude.track(
+            `${categories.trendingTokens}-${action}`,
+            newObj
+          );
+          return;
+        }
+        this.$amplitude.track(`${categories.trendingTokens}-${action}`, {
+          network: this.network.type.name
+        });
+      }
     }
   }
 };

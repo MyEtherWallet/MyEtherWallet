@@ -15,6 +15,7 @@ const SET_STATE = function (state, data) {
       );
       //Set Ethereum Tokens
       if (
+        !defaultTrendingList.includes(id) &&
         tokenIdToChain &&
         tokenIdToChain.platforms &&
         tokenIdToChain.platforms['ethereum']

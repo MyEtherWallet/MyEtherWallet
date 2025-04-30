@@ -170,7 +170,18 @@
           v-if="data.item.name"
           class="d-flex align-center justify-space-between full-width"
         >
-          <div v-if="!loading" class="d-flex align-center">
+          <div
+            v-if="!loading"
+            class="d-flex align-center"
+            style="position: relative"
+          >
+            <div
+              v-if="showBridgeTag && data.item.isEth === false"
+              class="bridge-tag"
+            >
+              Bridge
+            </div>
+
             <mew-token-container
               v-if="!normalDropdown"
               class="mr-1"
@@ -323,6 +334,10 @@ export default {
      * Remove Capitalize style from all forms
      */
     noCapitalize: {
+      type: Boolean,
+      default: false
+    },
+    showBridgeTag: {
       type: Boolean,
       default: false
     }
@@ -523,5 +538,19 @@ export default {
 .v-subheader.theme--dark {
   background-color: var(--v-inputPrimary-base) !important;
   border: 0 !important;
+}
+.bridge-tag {
+  position: absolute;
+  top: 0px;
+  left: -16px;
+  background-color: var(--v-bluePrimary-base);
+  color: white;
+  padding-left: 3px;
+  padding-right: 8px;
+  text-transform: uppercase;
+  font-size: 8px;
+  font-weight: 700;
+  border-bottom-right-radius: 12px;
+  letter-spacing: 1px;
 }
 </style>
