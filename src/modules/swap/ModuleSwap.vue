@@ -81,6 +81,7 @@
                   :items="actualToTokens"
                   :is-custom="true"
                   :loading="isLoading"
+                  :show-bridge-tag="true"
                   label="To"
                   class="ToTokenSelect"
                   @input="setToToken"

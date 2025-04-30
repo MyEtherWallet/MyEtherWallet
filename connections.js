@@ -120,5 +120,8 @@ module.exports = [
   'wss://relay.walletconnect.com:443', // walletconnect2
   'https://explorer-api.walletconnect.com:443', // web3modal
   'https://spaceapi.prd.space.id:443',
-  'https://cloudflare-eth.com:443'
+  'https://cloudflare-eth.com:443',
+  //TRENDING TOKENS
+  'https://raw.githubusercontent.com:443/enkryptcom/dynamic-data/main/swaplists/top-tokens.json',
+  'https://api.coingecko.com:443'
 ];
