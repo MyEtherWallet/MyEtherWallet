@@ -1,3 +1,13 @@
+### Release v6.9.21
+
+### feat
+
+* added trending tokens [#5135](https://github.com/MyEtherWallet/MyEtherWallet/pull/5135)
+
+### fix
+
+* fix staking banner timing [#5136](https://github.com/MyEtherWallet/MyEtherWallet/pull/5136)
+
 ### devop
 
 * devop: add rootstock collective dApp [#5046](https://github.com/MyEtherWallet/MyEtherWallet/pull/5046)
