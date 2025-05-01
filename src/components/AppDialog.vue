@@ -31,7 +31,7 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-4xl sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+          class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
           @click.stop
           :class="$attrs.class"
         >

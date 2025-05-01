@@ -94,11 +94,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-  MAIN_TOKEN_CONTRACT,
-  useWalletStore,
-  type Token,
-} from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
@@ -119,7 +116,7 @@ const { isLoadingBalances: isLoading } = storeToRefs(store)
 
 defineProps({
   selectedToken: {
-    type: Object as () => Token,
+    type: Object as () => TokenBalance,
     required: true,
   },
 })
@@ -129,7 +126,7 @@ const searchInput = ref('')
 
 const defaultImg = computed(() => {
   const img = tokens.find(
-    (token: Token) => token.contract === MAIN_TOKEN_CONTRACT,
+    (token: TokenBalance) => token.contract === MAIN_TOKEN_CONTRACT,
   )
   return img ? img.logo_url : eth
 })

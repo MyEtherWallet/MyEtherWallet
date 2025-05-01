@@ -1,7 +1,7 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-input box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
+    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
     :class="{
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,
@@ -47,7 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import { useWalletStore, type Token } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
+import { useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
@@ -77,7 +78,7 @@ const amount = defineModel('amount', {
 })
 
 const selectedToken = defineModel('selectedToken', {
-  type: Object as () => Token,
+  type: Object as () => TokenBalance,
   required: true,
 })
 

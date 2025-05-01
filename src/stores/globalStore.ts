@@ -7,13 +7,23 @@ import {
 import { toBigInt } from 'web3-utils'
 
 export const useGlobalStore = defineStore('global', () => {
+  /** --------------------
+ * NETWORK
+ --------------------*/
+  const network = ref({ type: { chainID: 1 } }) // temp network
+  const selectedNetwork = ref('ETHEREUM') // temp selected network
+  const isEIP1559SupportedNetwork = ref(true) // change to computed in the future
+  const setSelectedNetwork = (network: string) => {
+    selectedNetwork.value = network
+  }
+  /**--------------------
+   * GAS
+   --------------------*/
   const eip1559 = ref({
     baseFeePerGas: '0',
     maxFeePerGas: '0',
   })
   const gasPriceType = ref('regular')
-  const network = ref({ type: { chainID: 1 } }) // temp network
-  const isEIP1559SupportedNetwork = ref(true) // change to computed in the future
   const gasFeeMarketInfo = () => {
     const priorityFeePerGas = getPriorityFeeBasedOnType(
       toBigInt(eip1559.value.baseFeePerGas),
@@ -42,5 +52,7 @@ export const useGlobalStore = defineStore('global', () => {
     gasFeeMarketInfo,
     eip1559,
     gasPriceType,
+    selectedNetwork,
+    setSelectedNetwork,
   }
 })

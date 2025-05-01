@@ -101,12 +101,14 @@ export default {
         1: '1px',
       },
       borderRadius: {
-        '4xl': '32px',
-        input: '16px',
+        20: '20px',
+        32: '32px',
+        16: '16px',
       },
       boxShadow: {
         token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
         button: '0px 1px 4px 0px rgba(0, 0, 0, 0.12)',
+        'button-group': '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
       },
     },
   },

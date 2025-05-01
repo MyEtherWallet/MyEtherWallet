@@ -78,12 +78,8 @@ import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
-
-import {
-  useWalletStore,
-  MAIN_TOKEN_CONTRACT,
-  type Token,
-} from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
+import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import {
   GasPriceType,
@@ -101,7 +97,7 @@ const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
 const amount = ref<number | string>('')
 const toAddress = ref('')
-const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
+const tokenSelected: Ref<TokenBalance> = ref({} as TokenBalance) // TODO: Implement token selection
 const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
@@ -114,10 +110,12 @@ const selectedFee = ref(GasPriceType.REGULAR)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 const isLoadingFees = ref(true)
 onMounted(async () => {
-  const mainToken: Token = tokens.value.find(
-    (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
-  ) as Token
-  tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
+  const mainToken: TokenBalance = tokens.value.find(
+    (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
+  ) as TokenBalance
+  tokenSelected.value = (mainToken as TokenBalance)
+    ? mainToken
+    : tokens.value[0]
   //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
   isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
