@@ -68,8 +68,8 @@
             </div>
             <hr class="h-px bg-grey-outline border-0 w-full" />
           </div>
-          <!-- Seacrh  Result-->
-          <div v-if="searchResults.length" class="flex flex-col px-2">
+          <!-- Seacrh Result-->
+          <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
             <button
               v-for="chain in searchResults"
               :key="chain.name"

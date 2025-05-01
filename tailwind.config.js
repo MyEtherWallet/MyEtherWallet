@@ -81,6 +81,7 @@ export default {
         's-32': '32px',
         's-28': '28px',
         's-17': '17px',
+        's-15': '15px',
       },
       lineHeight: {
         'p-100': '100%',
