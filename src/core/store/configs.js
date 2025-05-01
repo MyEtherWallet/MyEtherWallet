@@ -7,6 +7,7 @@ export default {
     custom: 'custom-store',
     addressBook: 'address-book',
     article: 'article-store',
+    stakingBanner: 'staking-banner-store',
     ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },
   VERSION: {
@@ -16,6 +17,7 @@ export default {
     custom: '1.0.4',
     addressBook: '1.0.0',
     article: '1.0.0',
+    stakingBanner: '1.0.0',
     ...dappStoreConfigs.VERSION
   }
 };

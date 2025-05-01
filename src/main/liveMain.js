@@ -111,6 +111,7 @@ new Vue({
     this.$store.commit('addressBook/INIT_STORE');
     this.$store.commit('article/INIT_STORE');
     this.$store.commit('popups/INIT_STORE');
+    this.$store.commit('stakingBanner/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
 
     this.$amplitude.setOptOut(!this.$store.state.popups.consentToTrack);

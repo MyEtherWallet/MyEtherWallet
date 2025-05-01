@@ -43,6 +43,7 @@
           {{ title }}
         </div>
       </v-card-title>
+      <slot name="popupHeaderContent" />
       <!--
       =====================================================================================
         Dialog Body

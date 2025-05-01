@@ -1,6 +1,6 @@
 <template>
   <white-sheet :sideinfo="!mobile">
-    <div class="px-5 px-lg-7 py-5">
+    <div class="px-5 px-lg-7 pt-5">
       <div class="d-flex align-center justify-space-between">
         <span class="mew-heading-2">{{ $t('common.swap') }}</span>
         <mew-button
@@ -11,12 +11,15 @@
         />
       </div>
     </div>
-    <div v-if="!loading && !error && hasSwapRates" class="pa-3">
-      <div v-for="(data, key) in swapRates" :key="key">
-        <v-sheet
+    <div v-if="!loading && !error && hasSwapRates" class="px-3 py-1">
+      <div v-for="(data, key) in swapRates" :key="key" class="mb-4">
+        <v-btn
           v-if="data.rate"
           color="buttonGrayLight"
-          class="d-flex align-center justify-space-between border-radius--5px mt-1 py-3 px-4 cursor"
+          block
+          x-large
+          depressed
+          class="d-flex align-center justify-space-between border-radius--10px mt-2 py-3 px-4 cursor bs-button"
           @click="goToSwap(data)"
         >
           <div class="text-uppercase">
@@ -43,7 +46,7 @@
               "
             ></mew-token-container>
           </div>
-        </v-sheet>
+        </v-btn>
       </div>
     </div>
     <div

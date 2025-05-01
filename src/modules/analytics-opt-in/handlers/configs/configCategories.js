@@ -23,5 +23,6 @@ export default {
   advertisement: 'MEWAd',
   nftModule: 'NftModule',
   staking: 'Staking',
-  contract: 'Contract'
+  contract: 'Contract',
+  trendingTokens: 'TrendingTokens'
 };

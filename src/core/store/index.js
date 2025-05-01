@@ -11,6 +11,8 @@ import addressBook from './addressBook';
 import article from './article';
 import Configs from './configs';
 import LocalStore from 'store';
+import trendingTokens from './trendingTokens';
+import stakingBanner from './stakingBanner';
 import { dappStore } from '@/dapps/dappsStore';
 
 Vue.use(Vuex);
@@ -26,6 +28,8 @@ const store = new Vuex.Store({
     custom: custom,
     addressBook: addressBook,
     article: article,
+    trendingTokens: trendingTokens,
+    stakingBanner: stakingBanner,
     ...dappStore
   }
 });

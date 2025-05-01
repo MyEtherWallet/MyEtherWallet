@@ -90,6 +90,9 @@
         </template>
       </the-wrapper-dapp>
     </template>
+    <template #rightColItem1>
+      <module-trending-tokens />
+    </template>
   </the-wrapper-wallet>
 </template>
 
@@ -104,7 +107,9 @@ import isNew from '@/core/helpers/isNew.js';
 export default {
   components: {
     TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
-    TheWrapperWallet: () => import('@/views/components-wallet/TheWrapperWallet')
+    TheWrapperWallet: () =>
+      import('@/views/components-wallet/TheWrapperWallet'),
+    ModuleTrendingTokens: () => import('@/modules/swap/ModuleTrendingTokens')
   },
   mixins: [handlerAnalytics],
   data() {
