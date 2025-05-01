@@ -75,7 +75,7 @@
                   $ {{ convertToValue(token.price, token.balance) }}
                 </p>
                 <p class="text-info text-xs">
-                  @ ${{ formatFiatValue(token.price).value }}
+                  @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>
             </div>
@@ -155,21 +155,21 @@ const searchResults = computed(() => {
   return resultArray
 })
 
-const setSelectedToken = (token: Token) => {
+const setSelectedToken = (token: TokenBalance) => {
   emit('update:selectedToken', token)
   showAllTokens.value = false
 }
 
-const imageReplacer = (logo: string) => {
+const imageReplacer = (logo: string | undefined) => {
   if (logo === 'https://img.mewapi.io/?image=null' || !!logo) {
     return defaultImg.value
   }
   return logo
 }
 
-const convertToValue = (price: number, balance: string) => {
+const convertToValue = (price: number | undefined, balance: string) => {
   const _value = BigNumber(
-    BigNumber(price).times(BigNumber(balance)),
+    BigNumber(price || 0).times(BigNumber(balance)),
   ).toString()
   return formatFiatValue(_value).value
 }
