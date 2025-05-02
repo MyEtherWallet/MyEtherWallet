@@ -32,10 +32,6 @@
       </nav>
     </div>
 
-    <!-- Search -->
-    <div class="mb-5 max-w-[600px]">
-      <SearchInput @search="searchWallet" />
-    </div>
     <!-- Wallets-->
     <div
       v-if="displayWallets.length > 0"
@@ -236,10 +232,6 @@ const activeFilter = ref<Filter>(filterOptions[0])
 const clickFilter = (_value: Filter) => {
   console.log('clickFilter', _value)
   activeFilter.value = _value
-}
-
-const searchWallet = (payload: string) => {
-  console.log('searchWallet', payload)
 }
 
 onMounted(async () => {
