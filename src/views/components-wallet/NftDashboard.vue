@@ -206,7 +206,7 @@ export default {
           this.trackNftModule('MintSuccess', {
             item: id
           });
-          Toast('Succesfully minted NFT!', {}, SUCCESS);
+          Toast('Successfully minted NFT!', {}, SUCCESS);
           this.loaders[id] = false;
         })
         .catch(err => {
