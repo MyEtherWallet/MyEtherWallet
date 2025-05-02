@@ -22,41 +22,22 @@
     </div>
     <!-- Wallets-->
     <div
-      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-      role="grid"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-col-6 2xl:grid-cols-7 gap-4 md:gap-6"
     >
-      <div
+      <btn-wallet
         v-for="wallet in displayWallets"
         :key="wallet.id"
-        class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer relative"
-        @click="clickWallet(wallet)"
-        @keyup.enter="clickWallet(wallet)"
-        role="gridcell"
-      >
-        <div>
-          <div
-            v-if="wallet.notRecommended"
-            class="absolute top-0 right-0 bg-warning-10 text-black text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg"
-          >
-            Not Recommended
-          </div>
-        </div>
-        <AsyncImg
-          :alt="wallet.name"
-          :is-loaded="!isLoadingIcons"
-          :cached-img="cachedIcons.get(wallet.id)"
-          class="rounded-lg"
-          aria-hidden="true"
-        />
-        <p class="text-info pt-2">{{ wallet.name }}</p>
-      </div>
+        :wallet="wallet"
+        :cached-icons="cachedIcons"
+        @clickWallet="clickWallet"
+      ></btn-wallet>
     </div>
     <WalletConnectDialog
       v-if="clickedWallet"
       v-model:is-open="openWalletConnectModal"
       :qrcode-data="wagmiWalletData"
       :wallet-name="clickedWallet.name"
-      :wallet-icon="cachedIcons.get(clickedWallet.id)"
+      :wallet-icon="undefined"
     />
   </div>
 </template>
@@ -67,92 +48,80 @@ import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
-import AsyncImg from './AsyncImg.vue'
 import SearchInput from './SearchInput.vue'
-import { ROUTES_HOME, ROUTES_WALLET } from '@/router/routeNames'
-import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
-import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
-import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
+import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import Configs from '@/configs'
-interface WalletType {
-  id: string
-  name: string
-  iconUrl: string | (() => Promise<string>)
-  notRecommended?: boolean
-}
+import BtnWallet from './BtnWallet.vue'
+import {
+  type WalletConfig,
+  type defaultWalletId,
+  walletConfigs,
+} from '@/modules/access/common/walletConfigs'
 
 const wagmiWalletData = ref('')
 const openWalletConnectModal = ref(false)
 const { connectors } = wagmiConfig
+
 const DEFAULT_IDS = ['enkrypt', 'mew']
 const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 
+/** -------------------
+ * Wallets
+ * -------------------*/
 const allRainbowWallets = Object.values(rainndowWallets)
 
 const initializedWallets = allRainbowWallets.map(wallet =>
   wallet({ projectId, appName: 'MEW' }),
 )
 
-const clickedWallet = ref<WalletType | undefined>()
+const clickedWallet = ref<WalletConfig | undefined>()
 
-const newWalletList = computed(() => {
-  const newConArr: WalletType[] = []
+const newWalletList = computed<WalletConfig[]>(() => {
+  const newConArr: WalletConfig[] = []
   initializedWallets.forEach(wallet => {
-    if (DEFAULT_IDS.includes(wallet.id)) {
-      newConArr.unshift({
-        id: wallet.id,
-        name: wallet.name,
-        iconUrl: wallet.iconUrl,
-      })
-    } else {
+    if (!DEFAULT_IDS.includes(wallet.id)) {
+      const _type = wallet.extension
+        ? 'web3'
+        : wallet.mobile
+          ? 'mobile'
+          : undefined
       newConArr.push({
+        ...wallet,
         id: wallet.id,
         name: wallet.name,
-        iconUrl: wallet.iconUrl,
+        icon: wallet.iconUrl,
+        type: _type,
       })
     }
   })
   return newConArr
 })
 
-/** -------------------
- *  Core Wallets
- * -------------------*/
+const defaultWallets = computed<WalletConfig[]>(() => {
+  const defaultWallets: WalletConfig[] = []
+  const keys = Object.keys(walletConfigs) as Array<defaultWalletId>
+  keys.forEach(key => {
+    const wallet = walletConfigs[key]
+    if (wallet.isWC) {
+      const wcWallet = initializedWallets.find(w => w.id === wallet.id)
+      defaultWallets.push({
+        ...wcWallet,
+        ...wallet,
+      })
+    } else {
+      defaultWallets.push(wallet)
+    }
+  })
 
-interface CoreWallet {
-  id: string
-  name: string
-  iconUrl: string
-  routeName?: string
-  notRecommended?: boolean
-}
-
-const softwareWallets: CoreWallet[] = [
-  {
-    id: 'keystore',
-    name: 'Keystore',
-    iconUrl: IconKeystore,
-    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
-    notRecommended: true,
-  },
-  {
-    id: 'mnemonic',
-    name: 'Mnemonic phrase',
-    iconUrl: IconMnemonic,
-    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
-    notRecommended: true,
-  },
-  {
-    id: 'privatekey',
-    name: 'Private Key',
-    iconUrl: IconPrivateKey,
-    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
-    notRecommended: true,
-  },
-]
-
-const displayWallets = [...softwareWallets, ...newWalletList.value]
+  return defaultWallets
+})
+const displayWallets = computed(() => {
+  const wallets: WalletConfig[] = []
+  wallets.push(...defaultWallets.value)
+  wallets.push(...newWalletList.value)
+  return wallets
+})
 
 /**-------------------
  * Cached Wallet Icons
@@ -170,11 +139,12 @@ const { setWallet } = walletStore
  *  Click Wallet
  * -------------------*/
 const router = useRouter()
-const clickWallet = (wallet: WalletType | CoreWallet) => {
+const clickWallet = (wallet: WalletConfig) => {
   if ('routeName' in wallet && wallet.routeName) {
     router.push({ name: wallet.routeName })
   } else {
     clickedWallet.value = wallet
+
     const connector = connectors.find(
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
@@ -226,14 +196,16 @@ const searchWallet = (payload: string) => {
 }
 
 onMounted(async () => {
-  for (const wallet of displayWallets) {
-    if (typeof wallet.iconUrl === 'string') {
-      cachedIcons.value.set(wallet.id, wallet.iconUrl)
-    } else {
-      const url = await wallet.iconUrl()
-      cachedIcons.value.set(wallet.id, url)
+  initializedWallets.forEach(async wallet => {
+    if (!DEFAULT_IDS.includes(wallet.id)) {
+      if (typeof wallet.iconUrl === 'string') {
+        cachedIcons.value.set(wallet.id, wallet.iconUrl)
+      } else {
+        const url = await wallet.iconUrl()
+        cachedIcons.value.set(wallet.id, url)
+      }
     }
-  }
+  })
   isLoadingIcons.value = false
 })
 </script>

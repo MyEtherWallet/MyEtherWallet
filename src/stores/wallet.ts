@@ -17,7 +17,7 @@ const WalletType = {
   COOL_WALLET_S: 'coolWalletS',
   COOL_WALLET_PRO: 'coolWalletPro',
   WALLET_LINK: 'walletLink',
-  MEW_WALLET: 'mewWallet',
+  MEW_WALLET: 'mew',
 } as const
 type WalletType = (typeof WalletType)[keyof typeof WalletType]
 

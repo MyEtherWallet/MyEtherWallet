@@ -1,17 +1,17 @@
 <template>
   <div>
     <img
-      v-if="props.isLoaded"
+      v-if="asset"
       :src="asset"
       :alt="props.alt"
       :height="props.height"
       :width="props.width"
       @error="handleImageError"
-      class="rounded-xl w-[80px] h-[80px]"
+      class="w-[64px] h-[64px] md:w-[80px] md:h-[80px] flex-none rounded-lg mx-auto"
     />
     <div
       v-else
-      class="rounded-xl w-[80px] h-[80px] flex items-center justify-center bg-grey-5 rounded-xl"
+      class="w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-lg flex items-center justify-center bg-grey-5 rounded-xl"
     ></div>
   </div>
 </template>
@@ -20,7 +20,7 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  cachedImg: {
+  img: {
     type: String,
   },
   height: {
@@ -39,14 +39,14 @@ const props = defineProps({
 })
 
 const asset = computed(() => {
-  if (props.isLoaded && props.cachedImg) {
-    return props.cachedImg
+  if (props.isLoaded) {
+    return props.img
   }
   //TODO: Add a placeholder image
-  return ''
+  return undefined
 })
 
 const handleImageError = () => {
-  console.error('Error loading image: ', props.cachedImg)
+  console.error('Error loading image: ', props.img)
 }
 </script>

@@ -5,10 +5,18 @@ import TrezorLogo from '@/assets/images/access/trezor.webp'
 import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
-export type WalletType = 'web3' | 'mobile' | 'hardware' | 'software'
+import { ROUTES_HOME } from '@/router/routeNames'
+
+export type WalletConfigType =
+  | 'web3'
+  | 'mobile'
+  | 'hardware'
+  | 'software'
+  | 'desktop'
+
 export type defaultWalletId =
   | 'enkrypt'
-  | 'mewMobile'
+  | 'mew' // 'mew mobile app it is matched to rainbow wallet id
   | 'ledger'
   | 'trezor'
   | 'privateKey'
@@ -18,28 +26,14 @@ export type defaultWalletId =
 export type WalletConfig = {
   id: string
   name: string
-  icon: string
-  type: WalletType
+  icon: string | (() => Promise<string>)
+  type: WalletConfigType | undefined
   isDefault?: boolean
+  isWC?: boolean
   isOfficial?: boolean
+  routeName?: string
 }
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
-  enkrypt: {
-    id: 'enkrypt',
-    name: 'Enkrypt',
-    icon: EnkryptLogo,
-    type: 'web3',
-    isDefault: true,
-    isOfficial: true,
-  },
-  mewMobile: {
-    id: 'mewMobile',
-    name: 'MEW Mobile',
-    icon: MewLogo,
-    type: 'mobile',
-    isDefault: true,
-    isOfficial: true,
-  },
   ledger: {
     id: 'ledger',
     name: 'Ledger',
@@ -52,22 +46,43 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: TrezorLogo,
     type: 'hardware',
   },
-  privateKey: {
-    id: 'privateKey',
-    name: 'Private Key',
-    icon: PrivateKeyLogo,
-    type: 'software',
-  },
   keystore: {
     id: 'keystore',
     name: 'Keystore',
     icon: KeystoreLogo,
     type: 'software',
+    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
   },
   mnemonic: {
     id: 'mnemonic',
-    name: 'Mnemonic',
+    name: 'Recovery (mnemonic) Phrase',
     icon: MnemonicLogo,
     type: 'software',
+    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
+  },
+  privateKey: {
+    id: 'privateKey',
+    name: 'Private Key',
+    icon: PrivateKeyLogo,
+    type: 'software',
+    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
+  },
+  mew: {
+    id: 'mew',
+    name: 'MEW Mobile',
+    icon: MewLogo,
+    type: 'mobile',
+    isDefault: true,
+    isOfficial: true,
+    isWC: true,
+  },
+  enkrypt: {
+    id: 'enkrypt',
+    name: 'Enkrypt',
+    icon: EnkryptLogo,
+    type: 'web3',
+    isDefault: true,
+    isOfficial: true,
+    isWC: true,
   },
 }
