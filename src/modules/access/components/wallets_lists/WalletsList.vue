@@ -74,7 +74,7 @@ import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg
 import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
 import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
 import { useWalletStore } from '@/stores/walletStore'
-
+import Configs from '@/configs'
 interface WalletType {
   id: string
   name: string
@@ -86,7 +86,7 @@ const wagmiWalletData = ref('')
 const openWalletConnectModal = ref(false)
 const { connectors } = wagmiConfig
 const DEFAULT_IDS = ['enkrypt', 'mew']
-const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
+const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 
 const allRainbowWallets = Object.values(rainndowWallets)
 

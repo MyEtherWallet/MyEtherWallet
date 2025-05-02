@@ -75,7 +75,7 @@
                   $ {{ convertToValue(token.price, token.balance) }}
                 </p>
                 <p class="text-info text-xs">
-                  @ ${{ formatFiatValue(token.price).value }}
+                  @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>
             </div>
@@ -94,11 +94,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-  MAIN_TOKEN_CONTRACT,
-  useWalletStore,
-  type Token,
-} from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
@@ -119,7 +116,7 @@ const { isLoadingBalances: isLoading } = storeToRefs(store)
 
 defineProps({
   selectedToken: {
-    type: Object as () => Token,
+    type: Object as () => TokenBalance,
     required: true,
   },
 })
@@ -129,7 +126,7 @@ const searchInput = ref('')
 
 const defaultImg = computed(() => {
   const img = tokens.find(
-    (token: Token) => token.contract === MAIN_TOKEN_CONTRACT,
+    (token: TokenBalance) => token.contract === MAIN_TOKEN_CONTRACT,
   )
   return img ? img.logo_url : eth
 })
@@ -158,21 +155,21 @@ const searchResults = computed(() => {
   return resultArray
 })
 
-const setSelectedToken = (token: Token) => {
+const setSelectedToken = (token: TokenBalance) => {
   emit('update:selectedToken', token)
   showAllTokens.value = false
 }
 
-const imageReplacer = (logo: string) => {
+const imageReplacer = (logo: string | undefined) => {
   if (logo === 'https://img.mewapi.io/?image=null' || !!logo) {
     return defaultImg.value
   }
   return logo
 }
 
-const convertToValue = (price: number, balance: string) => {
+const convertToValue = (price: number | undefined, balance: string) => {
   const _value = BigNumber(
-    BigNumber(price).times(BigNumber(balance)),
+    BigNumber(price || 0).times(BigNumber(balance)),
   ).toString()
   return formatFiatValue(_value).value
 }

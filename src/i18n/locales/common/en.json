@@ -3,6 +3,13 @@
     "network": "network",
     "close": "close",
     "clear_icon": "clear input",
-    "copy": "copy"
+    "copy": "copy",
+    "select_network": "Select network",
+    "more": "more",
+    "dont_have_wallet": "Don't have a wallet?",
+    "create_wallet": "Create wallet",
+    "not_found":  {
+      "chains": "No chains found"
+    }
   }
 }

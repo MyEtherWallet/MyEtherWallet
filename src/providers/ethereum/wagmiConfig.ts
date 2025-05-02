@@ -2,8 +2,9 @@ import { mainnet } from 'wagmi/chains'
 import { createConfig, http } from 'wagmi'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
+import Configs from '@/configs'
 
-const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
+const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 const allRainbowWallets = Object.values(rainndowWallets)
 const connectorsLocal = connectorsForWallets(
   [
