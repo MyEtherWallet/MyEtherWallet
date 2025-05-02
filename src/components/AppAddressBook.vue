@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-6 px-4 py-4 rounded-input box-border border-1 border-grey-outline flex items-center"
+    class="mt-6 px-4 py-4 rounded-16 box-border border-1 border-grey-outline flex items-center"
   >
     <div
       v-if="!toAddress"

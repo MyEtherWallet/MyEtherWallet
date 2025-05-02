@@ -11,7 +11,7 @@
         {
           '!border-primary !border-2': inFocusInput && !hasError,
         },
-        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm text-normal rounded-input h-[58px] w-full pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-colors',
+        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm text-normal rounded-16 h-[58px] w-full pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-colors',
       ]"
       :aria-label="placeholder"
       @focus="setInFocusInput()"

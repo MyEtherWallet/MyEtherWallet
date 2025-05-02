@@ -3,17 +3,19 @@
     <a
       :href="helpLink"
       target="_blank"
-      class="block text-info text-base font-medium leading-p-150 -tracking-[0.02em] hoverOpacity"
+      class="block text-info text-s-17 leading-p-150 hoverOpacity"
     >
-      <span :class="{ underline: !title }"> Need Help? </span>
-      <span v-if="title" class="underline">
-        {{ title }} <span class="text-sm">→ </span></span
-      >
+      <QuestionMarkCircleIcon
+        class="w-6 h-6 display inline block mr-1 text-t-default"
+      />
+      <span class="underline"> {{ title }} </span>
     </a>
   </div>
 </template>
 
 <script setup lang="ts">
+import { QuestionMarkCircleIcon } from '@heroicons/vue/24/solid'
+
 //TODO: add Amplitude event with link + route location
 
 /**
@@ -37,6 +39,7 @@ defineProps({
    */
   title: {
     type: String,
+    required: true,
   },
   /**
    * @helpLink: url to the help page

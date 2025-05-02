@@ -2,32 +2,24 @@ import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { fromWei } from 'web3-utils'
-
+import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-
-export type Token = {
-  balance: string
-  contract: string
-  decimals: number
-  logo_url: string
-  name: string
-  symbol: string
-  price: number
-}
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface> = ref(null as unknown as WalletInterface) // allows for falsey
-  const tokens: Ref<Array<Token>> = ref([])
+  const tokens: Ref<Array<TokenBalance>> = ref([])
   const balance = ref('0')
   const isLoadingBalances = ref(true)
 
-  const setTokens = (newTokens: Array<Token>) => {
-    const locToken = newTokens.map(token => {
+  const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
+    const locToken: TokenBalance[] = newTokens.map(token => {
       return Object.assign({}, token, {
+        name: token.name ?? 'Unknown',
+        symbol: token.symbol ?? 'Unknown',
         balance: fromWei(token.balance, 'ether'),
       })
     })
-    const newTokenCopy: Array<Token> = [];
+    const newTokenCopy: Array<TokenBalance> = []
     locToken.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
         newTokenCopy.unshift(token)
@@ -39,7 +31,7 @@ export const useWalletStore = defineStore('walletStore', () => {
       }
     })
 
-    tokens.value = newTokenCopy;
+    tokens.value = newTokenCopy
   }
 
   const removeTokens = () => {

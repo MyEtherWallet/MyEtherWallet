@@ -14,7 +14,7 @@
         :to="{ name: tab.routeName }"
         :class="[
           {
-            'bg-white shadow-[0px_1.5px_6px_0px_rgba(0,0,0,0.1)] hover:bg-white':
+            'bg-white shadow-button-group hover:bg-white':
               activeTabIndex === index,
           },
           'min-h-12 text-xl p-2 rounded-full bg-transparent text-xl font-medium hoverNoBG min-w-[110px]',
