@@ -69,7 +69,6 @@ export const useFetchMewApi = <T>(
     baseUrl: Configs.MEW_API_URL,
     options: {
       afterFetch(ctx) {
-        console.log('ctx', ctx)
         data.value = ctx.data as T
         isLoading.value = false
         if (_poll > 0 && !isActivePolling.value) {

@@ -4,7 +4,12 @@
     "description": "Check balances, swap and buy crypto, and tokens, grow and track your portfolio.",
     "need_help": "Need help accessing your wallet?",
     "search_wallet": "Search for your wallet",
-    "select_wallet": "Select your wallet"
+    "select_wallet": "Select your wallet",
+    "all_wallets": {
+      "title": "All Wallets",
+      "description": "Ledger, private key, keystore, mobile wallets, we have it all"
+    },
+    "not_found": "Wallet not found:"
   },
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"

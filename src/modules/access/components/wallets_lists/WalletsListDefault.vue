@@ -4,7 +4,7 @@
       {{ $t('access_wallet.select_wallet') }}
     </h2>
     <div
-      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-col-6 2xl:grid-cols-7 gap-4 md:gap-6"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
     >
       <btn-wallet
         v-for="wallet in defaultWallets"

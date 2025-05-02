@@ -1,28 +1,45 @@
 <template>
   <div>
-    <h1 class="title5 mb-5">All Wallet Options</h1>
-    <!-- Filter -->
-    <nav
-      class="flex gap-4 mb-5 flex-wrap"
-      role="navigation"
-      aria-label="Wallet filters"
-    >
-      <button
-        v-for="filter in filterOptions"
-        :key="filter.value"
-        @click="clickFilter(filter)"
-        class="bg-primary text-white text-center rounded-full py-1 px-4 min-w-[100px]"
+    <h3 class="text-s-17 font-bold leading-p-150 mb-4 sm:ml-4">
+      {{ $t('access_wallet.all_wallets.title') }}
+      <span v-if="!isMobile" class="font-normal">
+        • {{ $t('access_wallet.all_wallets.description') }}</span
       >
-        {{ filter.name }}
-      </button>
-    </nav>
+    </h3>
+    <div class="flex mb-4 sm:mb-6 sm:justify-between items-center">
+      <!-- Search and Sort -->
+      <div
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 max-w-[479px]"
+      >
+        <app-search-input v-model="searchInput" class="grow" />
+        <!--TODO: implement sort by-->
+        <div class="text-sm pr-4">Sort by: token Name</div>
+      </div>
+      <!-- Filter -->
+      <nav
+        class="flex gap-4 flex-wrap"
+        role="navigation"
+        aria-label="Wallet filters"
+      >
+        <button
+          v-for="filter in filterOptions"
+          :key="filter.value"
+          @click="clickFilter(filter)"
+          class="bg-primary text-white text-center rounded-full py-1 px-4 min-w-[100px]"
+        >
+          {{ filter.name }}
+        </button>
+      </nav>
+    </div>
+
     <!-- Search -->
     <div class="mb-5 max-w-[600px]">
       <SearchInput @search="searchWallet" />
     </div>
     <!-- Wallets-->
     <div
-      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-col-6 2xl:grid-cols-7 gap-4 md:gap-6"
+      v-if="displayWallets.length > 0"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
     >
       <btn-wallet
         v-for="wallet in displayWallets"
@@ -32,6 +49,13 @@
         @clickWallet="clickWallet"
       ></btn-wallet>
     </div>
+    <div
+      v-else
+      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-info"
+    >
+      {{ $t('access_wallet.not_found') }} {{ searchInput }}
+    </div>
+
     <WalletConnectDialog
       v-if="clickedWallet"
       v-model:is-open="openWalletConnectModal"
@@ -48,7 +72,7 @@ import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
-import SearchInput from './SearchInput.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import Configs from '@/configs'
@@ -58,7 +82,9 @@ import {
   type defaultWalletId,
   walletConfigs,
 } from '@/modules/access/common/walletConfigs'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
+const { isMobile } = useAppBreakpoints()
 const wagmiWalletData = ref('')
 const openWalletConnectModal = ref(false)
 const { connectors } = wagmiConfig
@@ -120,6 +146,20 @@ const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
   wallets.push(...defaultWallets.value)
   wallets.push(...newWalletList.value)
+  if (searchInput.value) {
+    const search = searchInput.value.toLowerCase()
+    const beginsWith = wallets.filter(wallet => {
+      return wallet.name.toLowerCase().startsWith(search)
+    })
+    const other = wallets.filter(wallet => {
+      return (
+        wallet.name.toLowerCase().includes(search) &&
+        !wallet.name.toLowerCase().startsWith(search)
+      )
+    })
+
+    return [...beginsWith, ...other]
+  }
   return wallets
 })
 
@@ -172,8 +212,15 @@ const clickWallet = (wallet: WalletConfig) => {
 }
 
 /** -------------------
- *  Filter
+ *  Filter & Search & Sort
  * -------------------*/
+const searchInput = ref('')
+// const sortOptions = [
+//   { name: 'Token Name', value: 'tokenName' },
+//   { name: 'Wallet Name', value: 'walletName' },
+//]
+// const sortIsAscending = ref(true)
+
 interface Filter {
   name: string
   value: string
