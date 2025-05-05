@@ -1,20 +1,31 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import {
   getPriorityFeeBasedOnType,
   getBaseFeeBasedOnType,
 } from '@/modules/access/common/helpers'
 import { toBigInt } from 'web3-utils'
+import { useLocalStorage } from '@vueuse/core'
+
+interface SelectedNetwork {
+  selectedNetwork: string;
+}
+
 
 export const useGlobalStore = defineStore('global', () => {
   /** --------------------
  * NETWORK
  --------------------*/
-  const network = ref({ type: { chainID: 1 } }) // temp network
-  const selectedNetwork = ref('ETHEREUM') // temp selected network
+  const storage = useLocalStorage<SelectedNetwork>('selectedNetwork', {
+    selectedNetwork: 'ETHEREUM', // default network
+  }, { mergeDefaults: true })
+
+  const selectedNetwork = computed(() => {
+    return storage.value.selectedNetwork
+  })
   const isEIP1559SupportedNetwork = ref(true) // change to computed in the future
   const setSelectedNetwork = (network: string) => {
-    selectedNetwork.value = network
+    storage.value.selectedNetwork = network
   }
   /**--------------------
    * GAS
@@ -47,7 +58,6 @@ export const useGlobalStore = defineStore('global', () => {
     }
   }
   return {
-    network,
     isEIP1559SupportedNetwork,
     gasFeeMarketInfo,
     eip1559,

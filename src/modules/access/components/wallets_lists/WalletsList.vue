@@ -110,11 +110,14 @@ const newWalletList = computed<WalletConfig[]>(() => {
   const newConArr: WalletConfig[] = []
   initializedWallets.forEach(wallet => {
     if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
-      const _type = wallet.extension
-        ? 'web3'
-        : wallet.mobile
-          ? 'mobile'
-          : undefined
+      // TODO: handle desktop type
+      const _type =
+        wallet.extension ||
+        (wallet.hasOwnProperty('installed') && !wallet.extension)
+          ? 'web3'
+          : wallet.mobile
+            ? 'mobile'
+            : undefined
       newConArr.push({
         ...wallet,
         id: wallet.id,
@@ -132,7 +135,6 @@ const newWalletList = computed<WalletConfig[]>(() => {
       })
     }
   })
-
   return newConArr
 })
 
@@ -143,10 +145,7 @@ const defaultWallets = computed<WalletConfig[]>(() => {
     const wallet = walletConfigs[key]
     if (wallet.isWC) {
       const wcWallet = initializedWallets.find(w => w.id === wallet.id)
-      defaultWallets.push({
-        ...wcWallet,
-        ...wallet,
-      })
+      defaultWallets.push(Object.assign({}, wallet, wcWallet))
     } else {
       defaultWallets.push(wallet)
     }
