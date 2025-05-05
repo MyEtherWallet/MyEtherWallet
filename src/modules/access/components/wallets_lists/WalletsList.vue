@@ -98,16 +98,20 @@ const initializedWallets = allRainbowWallets.map(wallet =>
 )
 
 const clickedWallet = ref<WalletConfig | undefined>()
+console.log(initializedWallets, 'aaa')
 
 const newWalletList = computed<WalletConfig[]>(() => {
   const newConArr: WalletConfig[] = []
   initializedWallets.forEach(wallet => {
     if (!DEFAULT_IDS.includes(wallet.id)) {
-      const _type = wallet.extension
-        ? 'web3'
-        : wallet.mobile
-          ? 'mobile'
-          : undefined
+      // TODO: handle desktop type
+      const _type =
+        wallet.extension ||
+        (wallet.hasOwnProperty('installed') && !wallet.extension)
+          ? 'web3'
+          : wallet.mobile
+            ? 'mobile'
+            : undefined
       newConArr.push({
         ...wallet,
         id: wallet.id,
@@ -127,10 +131,7 @@ const defaultWallets = computed<WalletConfig[]>(() => {
     const wallet = walletConfigs[key]
     if (wallet.isWC) {
       const wcWallet = initializedWallets.find(w => w.id === wallet.id)
-      defaultWallets.push({
-        ...wcWallet,
-        ...wallet,
-      })
+      defaultWallets.push(Object.assign({}, wallet, wcWallet))
     } else {
       defaultWallets.push(wallet)
     }
@@ -156,6 +157,7 @@ const displayWallets = computed(() => {
 
     return [...beginsWith, ...other]
   }
+  console.log('all wallets', wallets)
   return wallets
 })
 
@@ -185,7 +187,9 @@ const clickWallet = (wallet: WalletConfig) => {
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
+    console.log(connector)
     connector?.emitter.on('message', msg => {
+      console.log(msg)
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
         openWalletConnectModal.value = true
