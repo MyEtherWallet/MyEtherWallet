@@ -9,7 +9,12 @@
       "title": "All Wallets",
       "description": "Ledger, private key, keystore, mobile wallets, we have it all"
     },
-    "not_found": "Wallet not found:"
+    "not_found": "Wallet not found:",
+    "sort": {
+      "popular": "Popular",
+      "name_a_z": "Name A-Z",
+      "name_z_a": "Name Z-A"
+    }
   },
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"
@@ -20,4 +25,5 @@
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"
   }
+ 
 }

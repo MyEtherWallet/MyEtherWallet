@@ -9,11 +9,14 @@
     <div class="flex mb-4 sm:mb-6 sm:justify-between items-center">
       <!-- Search and Sort -->
       <div
-        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 max-w-[479px]"
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 max-w-[510px]"
       >
-        <app-search-input v-model="searchInput" class="grow" />
-        <!--TODO: implement sort by-->
-        <div class="text-sm pr-4">Sort by: token Name</div>
+        <app-search-input v-model="searchInput" class="grow sm:max-w-[315px]" />
+        <app-select
+          v-model:selected="activeSort"
+          :options="sortOptions"
+          :placeholder="`${$t('common.sort_by')}:`"
+        />
       </div>
       <!-- Filter -->
       <nav
@@ -69,6 +72,8 @@ import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSelect from '@/components/AppSelect.vue'
+import { type AppSelectOption } from '@/types/components/appSelect'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import Configs from '@/configs'
@@ -79,7 +84,9 @@ import {
   walletConfigs,
 } from '@/modules/access/common/walletConfigs'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { isMobile } = useAppBreakpoints()
 const wagmiWalletData = ref('')
 const openWalletConnectModal = ref(false)
@@ -102,7 +109,7 @@ const clickedWallet = ref<WalletConfig | undefined>()
 const newWalletList = computed<WalletConfig[]>(() => {
   const newConArr: WalletConfig[] = []
   initializedWallets.forEach(wallet => {
-    if (!DEFAULT_IDS.includes(wallet.id)) {
+    if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
       const _type = wallet.extension
         ? 'web3'
         : wallet.mobile
@@ -115,8 +122,17 @@ const newWalletList = computed<WalletConfig[]>(() => {
         icon: wallet.iconUrl,
         type: _type,
       })
+    } else if (wallet.id === 'ledger') {
+      newConArr.push({
+        ...wallet,
+        id: 'ledger-mobile',
+        name: 'Ledger Mobile',
+        icon: wallet.iconUrl,
+        type: 'mobile',
+      })
     }
   })
+
   return newConArr
 })
 
@@ -155,6 +171,12 @@ const displayWallets = computed(() => {
     })
 
     return [...beginsWith, ...other]
+  }
+  if (activeSort.value.value === SortBy.A_Z) {
+    wallets.sort((a, b) => a.name.localeCompare(b.name))
+  }
+  if (activeSort.value.value === SortBy.Z_A) {
+    wallets.sort((a, b) => b.name.localeCompare(a.name))
   }
   return wallets
 })
@@ -211,11 +233,18 @@ const clickWallet = (wallet: WalletConfig) => {
  *  Filter & Search & Sort
  * -------------------*/
 const searchInput = ref('')
-// const sortOptions = [
-//   { name: 'Token Name', value: 'tokenName' },
-//   { name: 'Wallet Name', value: 'walletName' },
-//]
-// const sortIsAscending = ref(true)
+
+enum SortBy {
+  POPULAR = 'popular',
+  A_Z = 'a-z',
+  Z_A = 'z-a',
+}
+const sortOptions: AppSelectOption[] = [
+  { label: t('access_wallet.sort.popular'), value: SortBy.POPULAR },
+  { label: t('access_wallet.sort.name_a_z'), value: SortBy.A_Z },
+  { label: t('access_wallet.sort.name_z_a'), value: SortBy.Z_A },
+]
+const activeSort = ref<AppSelectOption>(sortOptions[0])
 
 interface Filter {
   name: string
