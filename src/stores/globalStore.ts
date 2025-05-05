@@ -19,7 +19,7 @@ export const useGlobalStore = defineStore('global', () => {
   const storage = useLocalStorage<SelectedNetwork>('selectedNetwork', {
     selectedNetwork: 'ETHEREUM', // default network
   }, { mergeDefaults: true })
-  const network = ref({ type: { chainID: 1 } }) // temp network
+
   const selectedNetwork = computed(() => {
     return storage.value.selectedNetwork
   })
@@ -58,7 +58,6 @@ export const useGlobalStore = defineStore('global', () => {
     }
   }
   return {
-    network,
     isEIP1559SupportedNetwork,
     gasFeeMarketInfo,
     eip1559,
