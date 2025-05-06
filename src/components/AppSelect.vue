@@ -1,5 +1,5 @@
 <template>
-  <div class="relative text-s-17 font-medium">
+  <div class="relative text-s-17 leading-p-130 font-medium">
     <label for="select" class="sr-only">
       {{ props.placeholder }}
     </label>

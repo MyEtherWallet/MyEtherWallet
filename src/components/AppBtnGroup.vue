@@ -1,6 +1,9 @@
 <template>
   <div
-    class="flex justify-start bg-surface rounded-2xl md:rounded-32 p-2 gap-1 max-w-fit"
+    :class="[
+      isTall ? 'p-2' : 'p-1',
+      'flex justify-start bg-surface rounded-2xl md:rounded-32 gap-1 max-w-fit',
+    ]"
   >
     <div v-if="isLoaded">
       <div class="flex flex-row gap-1 flex-wrap">
@@ -9,10 +12,12 @@
           :key="index"
           :class="[
             {
-              'bg-white shadow-button-group hover:bg-white':
-                selected && selected === btn,
+              'bg-white shadow-button-group hover:bg-white': areEqual(
+                selected,
+                btn,
+              ),
             },
-            'min-h-12 text-s-17 p-2 rounded-full bg-transparent font-medium hoverNoBG min-w-[110px]',
+            'text-s-17 px-2 leading-p-140 min-h-10 rounded-full bg-transparent font-medium hoverNoBG min-w-[110px]',
           ]"
           @click="setSelected(btn)"
         >
@@ -53,19 +58,38 @@
 import { type PropType } from 'vue'
 
 const props = defineProps({
+  /**
+   * @btnList - An array of tab objects.
+   */
   btnList: {
     type: Array as PropType<T[]>,
     default: () => [],
   },
+  /**
+   * @isLoaded - A boolean to indicate if buttons need to be in the loading state.
+   */
   isLoaded: {
     type: Boolean,
     default: true,
   },
+  /**
+   * @totalPlaceholders - Total number of placeholders to show while state isLoaded = false. Default is 4.
+   */
   totalPlaceholders: {
     type: Number,
     default: 4,
   },
+  /**
+   * @useEmitOnly - A boolean to indicate if the selected value should be set only through emit. Default is false. Used in AppSelectChain.
+   */
   useEmitOnly: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * @isTall - A boolean to indicate if the button group should be tall. Default is false. Adds extra padding.
+   */
+  isTall: {
     type: Boolean,
     default: false,
   },
@@ -74,6 +98,10 @@ const emit = defineEmits<{
   (e: 'onUpdate:selected', btn: T): void
 }>()
 
+/**
+ * @selected - The v-model for the selected button.
+ * use <v-model:selected> to bind the selected button to a parent component.
+ */
 const selected = defineModel<T | undefined | null>('selected')
 
 const setSelected = (btn: T) => {
@@ -82,5 +110,15 @@ const setSelected = (btn: T) => {
   }
 
   emit('onUpdate:selected', btn)
+}
+
+/**
+ * @description Compares two objects and returns true if they are equal, false otherwise. Used in the button class to determine if the button is selected.
+ * @param obj1 T | undefined | null
+ * @param obj2 T
+ * @returns boolean
+ */
+const areEqual = (obj1: T | undefined | null, obj2: T): boolean => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2)
 }
 </script>

@@ -19,22 +19,17 @@
         />
       </div>
       <!-- Filter -->
-      <nav
-        class="flex gap-4 flex-wrap"
-        role="navigation"
-        aria-label="Wallet filters"
+      <AppBtnGroup
+        v-if="!isMobile"
+        v-model:selected="activeFilter"
+        :btn-list="filterOptions"
+        :is-loaded="true"
       >
-        <button
-          v-for="filter in filterOptions"
-          :key="filter.value"
-          @click="clickFilter(filter)"
-          class="bg-primary text-white text-center rounded-full py-1 px-4 min-w-[100px]"
-        >
-          {{ filter.name }}
-        </button>
-      </nav>
+        <template #btn-content="{ data }">
+          {{ data.name }}
+        </template>
+      </AppBtnGroup>
     </div>
-
     <!-- Wallets-->
     <div
       v-if="displayWallets.length > 0"
@@ -78,6 +73,7 @@ import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import Configs from '@/configs'
 import BtnWallet from './BtnWallet.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
 import {
   type WalletConfig,
   type defaultWalletId,
@@ -177,6 +173,15 @@ const displayWallets = computed(() => {
   if (activeSort.value.value === SortBy.Z_A) {
     wallets.sort((a, b) => b.name.localeCompare(a.name))
   }
+  if (activeFilter.value.value === 'hardware') {
+    return wallets.filter(a => a.type === 'hardware')
+  }
+  if (activeFilter.value.value === 'mobile') {
+    return wallets.filter(a => a.type === 'mobile')
+  }
+  if (activeFilter.value.value === 'software') {
+    return wallets.filter(a => a.type === 'software')
+  }
   return wallets
 })
 
@@ -253,14 +258,15 @@ const filterOptions: Filter[] = [
   { name: 'All', value: 'all' },
   { name: 'Hardware', value: 'hardware' },
   { name: 'Mobile', value: 'mobile' },
+  { name: 'Software', value: 'software' },
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])
 
-const clickFilter = (_value: Filter) => {
-  console.log('clickFilter', _value)
-  activeFilter.value = _value
-}
+// const clickFilter = (_value: Filter) => {
+//   console.log('clickFilter', _value)
+//   activeFilter.value = _value
+// }
 
 onMounted(async () => {
   initializedWallets.forEach(async wallet => {

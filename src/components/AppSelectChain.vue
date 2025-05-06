@@ -5,6 +5,7 @@
       :btn-list="shownChains"
       :use-emit-only="true"
       :is-loaded="isLoadedChains"
+      is-tall
       @onUpdate:selected="setSelectedChain"
     >
       <template #btn-content="{ data }">
@@ -21,7 +22,7 @@
       </template>
       <template #custom>
         <button
-          class="min-h-12 text-s-17 px-4 py-3 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
+          class="min-h-12 text-s-17 px-4 py-2 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
           @click="setOpenDialog(true)"
         >
           <div class="flex items-center capitalize">
