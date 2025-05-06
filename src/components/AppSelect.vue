@@ -88,7 +88,7 @@ const targetValue = ref<HTMLElement | null>(null)
 /**
  * @model The v-model for the input field.
  */
-const selected = defineModel<AppSelectOption>('selected')
+const selected = defineModel<AppSelectOption>('selected', { required: true })
 /**
  * controls the open state of the select dropdown
  */

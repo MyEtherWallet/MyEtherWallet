@@ -14,7 +14,8 @@
       "popular": "Popular",
       "name_a_z": "Name A-Z",
       "name_z_a": "Name Z-A"
-    }
+    },
+    "sort_and_filter": "Sort & Filter"
   },
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"

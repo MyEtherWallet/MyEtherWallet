@@ -7,7 +7,7 @@
     <div
       :class="[
         'flex flex-col justify-center overflow-y-auto relative px-5 xs:px-10',
-        { 'ml-[300px]': isDesktop },
+        { 'ml-[300px]': isDesktopAndUp },
       ]"
     >
       <TheWalletHeader @click-menu-btn="setSidebaMenu" />
@@ -51,14 +51,14 @@ onFetchResponse(() => {
 /** ------------------------------
  * SideBar Menu
  * ------------------------------*/
-const { isDesktop } = useAppBreakpoints()
+const { isDesktopAndUp } = useAppBreakpoints()
 const sidebarIsOpen = ref(false)
 
 const getSideBarIsOpen = computed<boolean>(() => {
-  return isDesktop.value || sidebarIsOpen.value
+  return isDesktopAndUp.value || sidebarIsOpen.value
 })
 const setSidebaMenu = () => {
-  if (isDesktop.value) return
+  if (isDesktopAndUp.value) return
   sidebarIsOpen.value = !sidebarIsOpen.value
 }
 </script>

@@ -11,6 +11,8 @@
     "not_found":  {
       "chains": "No chains found"
     },
-    "sort_by": "Sort by"
+    "sort_by": "Sort by",
+    "filter": "Filter",
+    "reset": "reset"
   }
 }

@@ -11,7 +11,7 @@
     >
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 bg-black/40 z-[99] h-screen w-screen overscroll-none overflow-hidden"
+        class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
         @click="setIsOpen(false)"
         aria-hidden
       />
