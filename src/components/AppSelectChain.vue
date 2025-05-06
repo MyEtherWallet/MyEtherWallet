@@ -1,34 +1,25 @@
 <template>
-  <div
-    aria-label="Select Chain"
-    class="flex justify-start bg-surface rounded-2xl md:rounded-32 p-2 gap-1 max-w-fit"
-  >
-    <!-- Deafult chains and Selected -->
-    <div v-if="isLoadedChains">
-      <div class="flex flex-row gap-1 flex-wrap">
-        <button
-          v-for="chain in shownChains"
-          :key="chain.name"
-          :class="[
-            {
-              'bg-white shadow-button-group hover:bg-white':
-                selectedChain && selectedChain.name === chain.name,
-            },
-            'min-h-12 text-s-17 p-2 rounded-full bg-transparent font-medium hoverNoBG min-w-[110px]',
-          ]"
-          @click="setSelectedChain(chain)"
-        >
-          <div class="flex items-center">
-            <img
-              :src="chain.icon"
-              alt=""
-              class="w-8 h-8 mr-3 rounded-full object-contain"
-              height="32px"
-              width="32px"
-            />
-            <span class="mr-2"> {{ chain.nameLong }}</span>
-          </div>
-        </button>
+  <div>
+    <app-btn-group
+      v-model:selected="selectedChain"
+      :btn-list="shownChains"
+      :use-emit-only="true"
+      :is-loaded="isLoadedChains"
+      @onUpdate:selected="setSelectedChain"
+    >
+      <template #btn-content="{ data }">
+        <div class="flex items-center">
+          <img
+            :src="data.icon"
+            alt=""
+            class="w-8 h-8 mr-3 rounded-full object-contain"
+            height="32px"
+            width="32px"
+          />
+          <span class="mr-2"> {{ data.nameLong }}</span>
+        </div>
+      </template>
+      <template #custom>
         <button
           class="min-h-12 text-s-17 px-4 py-3 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
           @click="setOpenDialog(true)"
@@ -38,16 +29,9 @@
             <chevron-down-icon class="text-info w-4 h-4 ml-1" />
           </div>
         </button>
-      </div>
-    </div>
-    <!-- Loading -->
-    <div v-else class="flex flex-row gap-1">
-      <div
-        v-for="n in 4"
-        :key="n"
-        class="animate-pulse bg-white rounded-full p-2 gap-1 flex items-center min-w-[110px] min-h-12"
-      ></div>
-    </div>
+      </template>
+    </app-btn-group>
+
     <!-- Dialog with chains list -->
     <app-dialog
       v-if="isLoadedChains"
@@ -109,6 +93,7 @@ import { type Chain } from '@/mew_api/types'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
+import AppBtnGroup from './AppBtnGroup.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
