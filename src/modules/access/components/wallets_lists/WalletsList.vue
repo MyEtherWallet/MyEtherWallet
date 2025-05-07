@@ -12,7 +12,7 @@
         class="md-header:hidden"
         @click="openFilterSortModal = true"
       >
-        <Bars3Icon />
+        <Bars3Icon class="h-6 w-6" />
       </app-btn-icon>
     </div>
     <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4">

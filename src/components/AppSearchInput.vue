@@ -27,7 +27,7 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <x-circle-icon class="opacity-50"
+        <x-circle-icon class="text-grey-50 w-6 h-6"
       /></app-btn-icon>
     </div>
   </div>
