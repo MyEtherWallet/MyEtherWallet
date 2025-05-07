@@ -8,18 +8,22 @@
         v-if="wallet.isOfficial"
         :src="OfficialBadge"
         alt="Official MyEtherWallet"
-        width="20px"
-        height="68px"
+        height="20px"
+        width="68px"
         class="w-[68px] h-5"
       />
-      <img
-        v-if="getBadge(wallet)"
-        :src="getBadge(wallet)"
-        alt=""
-        width="20px"
-        height="20px"
-        class="w-5 h-5 ml-auto"
-      />
+      <div class="ml-auto flex item-center justify-items-end">
+        <div v-for="(type, index) in wallet.type" :key="index">
+          <img
+            v-if="getBadge(type)"
+            :src="getBadge(type)"
+            alt=""
+            width="20px"
+            height="20px"
+            class="w-5 h-5"
+          />
+        </div>
+      </div>
     </div>
     <div
       class="mx-auto ounded-lg mx-auto w-[64px] h-[64px] md:w-[80px] md:h-[80px] md:my-5"
@@ -41,9 +45,12 @@
 import AsyncImg from './AsyncImg.vue'
 import MobileBadge from '@/assets/images/access/wallet_types/mobileWallet.webp'
 import HardwareBadge from '@/assets/images/access/wallet_types/hardwareWallet.webp'
-import WebBadge from '@/assets/images/access/wallet_types/web3Wallet.webp'
+import ExtensionBadge from '@/assets/images/access/wallet_types/web3Wallet.webp'
 import OfficialBadge from '@/assets/images/common/official_badge.webp'
-import { type WalletConfig } from '@/modules/access/common/walletConfigs'
+import {
+  type WalletConfig,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
 import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
@@ -58,13 +65,15 @@ const clickDefaultWallet = (wallet: WalletConfig) => {
   emit('clickWallet', wallet)
 }
 
-const getBadge = (wallet: WalletConfig) => {
-  if (wallet.type === 'mobile') {
+const getBadge = (type: WalletConfigType) => {
+  if (type === WalletConfigType.MOBILE) {
     return MobileBadge
-  } else if (wallet.type === 'hardware') {
+  }
+  if (type === WalletConfigType.HARDWARE) {
     return HardwareBadge
-  } else if (wallet.type === 'web3') {
-    return WebBadge
+  }
+  if (type === WalletConfigType.EXTENSION) {
+    return ExtensionBadge
   }
   return undefined
 }

@@ -26,7 +26,6 @@
 </template>
 <script setup lang="ts">
 import WalletConnectDialog from '../WalletConnectDialog.vue'
-
 import DontHaveWallet from './DontHaveWallet.vue'
 import {
   type WalletConfig,

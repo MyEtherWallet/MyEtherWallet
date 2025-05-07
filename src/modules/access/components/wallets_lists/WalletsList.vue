@@ -97,6 +97,7 @@ import {
   walletConfigs,
   SortBy,
   type Filter,
+  WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
@@ -125,19 +126,26 @@ const newWalletList = computed<WalletConfig[]>(() => {
   initializedWallets.forEach(wallet => {
     if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
       // TODO: handle desktop type
-      const _type =
+      const _types: WalletConfigType[] = []
+      if (
         wallet.extension ||
         (wallet.hasOwnProperty('installed') && !wallet.extension)
-          ? 'web3'
-          : wallet.mobile
-            ? 'mobile'
-            : undefined
+      ) {
+        _types.push(WalletConfigType.EXTENSION)
+      }
+      if (wallet.mobile || wallet.qrCode) {
+        _types.push(WalletConfigType.MOBILE)
+      }
+      if (wallet.desktop) {
+        _types.push(WalletConfigType.DESKTOP)
+      }
+
       newConArr.push({
         ...wallet,
         id: wallet.id,
         name: wallet.name,
         icon: wallet.iconUrl,
-        type: _type,
+        type: _types,
       })
     } else if (wallet.id === 'ledger') {
       newConArr.push({
@@ -145,7 +153,7 @@ const newWalletList = computed<WalletConfig[]>(() => {
         id: 'ledger-mobile',
         name: 'Ledger Mobile',
         icon: wallet.iconUrl,
-        type: 'mobile',
+        type: [WalletConfigType.MOBILE],
       })
     }
   })
@@ -191,14 +199,26 @@ const displayWallets = computed(() => {
   if (activeSort.value.value === SortBy.Z_A) {
     wallets.sort((a, b) => b.name.localeCompare(a.name))
   }
-  if (activeFilter.value.value === 'hardware') {
-    return wallets.filter(a => a.type === 'hardware')
+  if (activeFilter.value.value === WalletConfigType.HARDWARE) {
+    return wallets.filter(a =>
+      a.type.some(type => type === WalletConfigType.HARDWARE),
+    )
   }
-  if (activeFilter.value.value === 'mobile') {
-    return wallets.filter(a => a.type === 'mobile')
+
+  if (activeFilter.value.value === WalletConfigType.MOBILE) {
+    return wallets.filter(a =>
+      a.type.some(type => type === WalletConfigType.MOBILE),
+    )
   }
-  if (activeFilter.value.value === 'software') {
-    return wallets.filter(a => a.type === 'software')
+  if (activeFilter.value.value === WalletConfigType.SOFTWARE) {
+    return wallets.filter(a =>
+      a.type.some(
+        type =>
+          type === WalletConfigType.SOFTWARE ||
+          type === WalletConfigType.EXTENSION ||
+          type === WalletConfigType.DESKTOP,
+      ),
+    )
   }
   return wallets
 })
@@ -224,9 +244,9 @@ const activeSort = ref<AppSelectOption>(sortOptions[0])
 
 const filterOptions: Filter[] = [
   { name: 'All', value: 'all' },
-  { name: 'Hardware', value: 'hardware' },
-  { name: 'Mobile', value: 'mobile' },
-  { name: 'Software', value: 'software' },
+  { name: 'Hardware', value: WalletConfigType.HARDWARE },
+  { name: 'Mobile', value: WalletConfigType.MOBILE },
+  { name: 'Software', value: WalletConfigType.SOFTWARE },
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])
