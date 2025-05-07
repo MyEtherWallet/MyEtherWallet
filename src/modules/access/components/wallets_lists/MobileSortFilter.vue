@@ -1,7 +1,10 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    class="sm:max-w-[460px] !min-h-[400px] bg-[rgba(255, 255, 255, 0.7)]"
+    :class="[
+      { hidden: !isOpen },
+      'sm:max-w-[460px] !min-h-[400px] bg-[rgba(255, 255, 255, 0.7)]',
+    ]"
     :title="$t('access_wallet.sort_and_filter')"
   >
     <!-- Content -->
