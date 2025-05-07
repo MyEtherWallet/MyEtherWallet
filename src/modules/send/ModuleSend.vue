@@ -13,7 +13,7 @@
       <app-address-book v-model="toAddress" />
       <app-select-tx-fee
         v-model="selectedFee"
-        :fees="gasFees.fee"
+        :fees="gasFees.fees"
         :isLoading="isLoadingFees"
       />
       <div>
@@ -138,11 +138,12 @@ onMounted(async () => {
   //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
   isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
-    to: '0x000000000000000000000000000000000000',
-    from: wallet.value.getAddress() as HexPrefixedString,
-    value: toHex(toWei(amount.value, 'ether')) as HexPrefixedString,
+    to: '0x0000000000000000000000000000000000000000',
+    address: wallet.value.getAddress() as HexPrefixedString,
+    value: '0x0' as HexPrefixedString,
     data: data.value as HexPrefixedString,
   })
+  console.log(gasFees.value)
   isLoadingFees.value = false
 })
 
@@ -174,12 +175,12 @@ const hasGasFees = computed(() => {
 })
 const networkFeeUSD = computed(() => {
   if (!hasGasFees.value) return '0'
-  return gasFees.value?.fee[selectedFee.value]?.fiatValue || '0'
+  return gasFees.value?.fees[selectedFee.value]?.fiatValue || '0'
 })
 const networkFeeETH = computed(() => {
   if (!hasGasFees.value) return '0'
   return (
-    fromWei(gasFees.value?.fee[selectedFee.value]?.nativeValue, 'ether') || '0'
+    fromWei(gasFees.value?.fees[selectedFee.value]?.nativeValue, 'ether') || '0'
   )
 })
 
@@ -214,11 +215,11 @@ const rawTx = computed<PostEthereumTransaction>(() => {
 })
 
 watch(
-  () => [selectedFee.value, gasFees.value?.fee],
+  () => [selectedFee.value, gasFees.value?.fees],
   () => {
-    if (!gasFees.value?.fee || !gasFees.value.fee[selectedFee.value]) return
+    if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) return
     gasPrice.value = hexToBigInt(
-      gasFees.value.fee[selectedFee.value].nativeValue,
+      gasFees.value.fees[selectedFee.value].nativeValue,
     ).toString()
   },
 )

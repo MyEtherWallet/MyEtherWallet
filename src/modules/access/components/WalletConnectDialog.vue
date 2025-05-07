@@ -4,13 +4,14 @@
     <template #title>
       <div>
         <h1 class="title4 pr-2 pt-4 sm:pt-8 mx-auto">
-          Connect to MEW portfolio
+          {{ $t('wc_dialog.title') }}
         </h1>
         <!-- TODO: add link-->
         <div class="mt-4 text-info text7 hoverOpacity">
-          Don't have a wallet?
-          <span class="underline"
-            >Get a wallet <span class="text-sm"> →</span></span
+          {{ $t('wc_dialog.no_wallet') }}
+          <span class="underline">
+            {{ $t('wc_dialog.get_wallet') }}
+            <span class="text-sm"> →</span></span
           >
         </div>
       </div>
@@ -20,7 +21,9 @@
       <div
         class="bg-mewBg rounded-xl px-8 pt-6 pb-4 text-center text-sm sm:text-base"
       >
-        <p class="mb-2">Scan QR code with {{ walletName }} to connect.</p>
+        <p class="mb-2">
+          {{ $t('wc_dialog.scan_qr_code', { walletName: walletName }) }}
+        </p>
         <div class="flex items-center justify-center">
           <!-- QR Code -->
           <div v-show="!isLoadingQRCode" ref="qrCode"></div>
@@ -52,7 +55,7 @@
         <div
           class="flex items-center justify-center mt-2 mb-4 sm:mb-6 text-sm sm:text-base"
         >
-          <p>OR copy link</p>
+          <p>{{ $t('wc_dialog.or_copy_link') }}</p>
           <AppCopyButton :copy-value="qrcodeData" />
         </div>
         <a
@@ -61,12 +64,12 @@
           target="_blank"
           rel="noreferrer"
         >
-          Powered By WalletConnect
+          {{ $t('common.powered_by') }} WalletConnect
         </a>
       </div>
       <!--TODO: ensure correct link is provided-->
       <app-need-help
-        title="How to connect your wallet"
+        :title="$t('wc_dialog.need_help')"
         help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
         class="mt-5 sm:mt-10 mb-8 text-center"
       />

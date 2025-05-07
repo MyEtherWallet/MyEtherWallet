@@ -12,6 +12,7 @@ const isDevMode = import.meta.env.DEV
 export const useFetchMewApi = <T>(
   _url: Ref<string> | string,
   _method: FetchMethod = 'GET',
+  _body: object | null = null,
   _immediate: boolean = true,
   _poll: number = 0,
 ): {
@@ -56,6 +57,17 @@ export const useFetchMewApi = <T>(
     delay.value,
     { immediate: false },
   )
+
+  const fetchOptions: RequestInit = {
+    mode: 'cors' as RequestMode,
+    method: _method,
+    body: _body ? JSON.stringify(_body) : null,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  }
+
   /**
    * @description
    * 1. Handles errors and retries the request if the orignal request fails.
@@ -64,12 +76,10 @@ export const useFetchMewApi = <T>(
    * 4. The delay is increased by 1 second for each retry.
    * 5. The delay is reset to 1 second after a successful request.
    */
-
   const useMEWFetch = createFetch({
     baseUrl: Configs.MEW_API_URL,
     options: {
       afterFetch(ctx) {
-        console.log('ctx', ctx)
         data.value = ctx.data as T
         isLoading.value = false
         if (_poll > 0 && !isActivePolling.value) {
@@ -96,10 +106,7 @@ export const useFetchMewApi = <T>(
         return e
       },
     },
-    fetchOptions: {
-      mode: 'cors',
-      method: _method,
-    },
+    fetchOptions,
   })
 
   const { execute, onFetchResponse } = useMEWFetch(_url, {

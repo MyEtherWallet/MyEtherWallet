@@ -35,8 +35,7 @@
       </div>
     </div>
 
-    <WalletsDefaultList class="mt-10" />
-    <div class="flex flex-col items-center my-10"></div>
+    <WalletsDefaultList class="mt-10 mb-12 sm:mb-[64px]" />
     <WalletsList />
   </main>
 </template>

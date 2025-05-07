@@ -5,10 +5,19 @@ import TrezorLogo from '@/assets/images/access/trezor.webp'
 import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
-export type WalletType = 'web3' | 'mobile' | 'hardware' | 'software'
+import { ROUTES_HOME } from '@/router/routeNames'
+
+export enum WalletConfigType {
+  MOBILE = 'mobile',
+  HARDWARE = 'hardware',
+  SOFTWARE = 'software',
+  DESKTOP = 'desktop',
+  EXTENSION = 'extension',
+}
+
 export type defaultWalletId =
   | 'enkrypt'
-  | 'mewMobile'
+  | 'mew' // 'mew mobile app it is matched to rainbow wallet id
   | 'ledger'
   | 'trezor'
   | 'privateKey'
@@ -18,56 +27,74 @@ export type defaultWalletId =
 export type WalletConfig = {
   id: string
   name: string
-  icon: string
-  type: WalletType
+  icon: string | (() => Promise<string>)
+  type: WalletConfigType[]
   isDefault?: boolean
+  isWC?: boolean
   isOfficial?: boolean
+  routeName?: string
 }
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
-  enkrypt: {
-    id: 'enkrypt',
-    name: 'Enkrypt',
-    icon: EnkryptLogo,
-    type: 'web3',
-    isDefault: true,
-    isOfficial: true,
-  },
-  mewMobile: {
-    id: 'mewMobile',
-    name: 'MEW Mobile',
-    icon: MewLogo,
-    type: 'mobile',
-    isDefault: true,
-    isOfficial: true,
-  },
   ledger: {
     id: 'ledger',
     name: 'Ledger',
     icon: LedgerLogo,
-    type: 'hardware',
+    type: [WalletConfigType.HARDWARE],
   },
   trezor: {
     id: 'trezor',
     name: 'Trezor',
     icon: TrezorLogo,
-    type: 'hardware',
-  },
-  privateKey: {
-    id: 'privateKey',
-    name: 'Private Key',
-    icon: PrivateKeyLogo,
-    type: 'software',
+    type: [WalletConfigType.HARDWARE],
   },
   keystore: {
     id: 'keystore',
     name: 'Keystore',
     icon: KeystoreLogo,
-    type: 'software',
+    type: [WalletConfigType.SOFTWARE],
+    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
   },
   mnemonic: {
     id: 'mnemonic',
-    name: 'Mnemonic',
+    name: 'Recovery (mnemonic) Phrase',
     icon: MnemonicLogo,
-    type: 'software',
+    type: [WalletConfigType.SOFTWARE],
+    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
   },
+  privateKey: {
+    id: 'privateKey',
+    name: 'Private Key',
+    icon: PrivateKeyLogo,
+    type: [WalletConfigType.SOFTWARE],
+    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
+  },
+  mew: {
+    id: 'mew',
+    name: 'MEW Mobile',
+    icon: MewLogo,
+    type: [WalletConfigType.MOBILE],
+    isDefault: true,
+    isOfficial: true,
+    isWC: true,
+  },
+  enkrypt: {
+    id: 'enkrypt',
+    name: 'Enkrypt',
+    icon: EnkryptLogo,
+    type: [WalletConfigType.EXTENSION],
+    isDefault: true,
+    isOfficial: true,
+    isWC: true,
+  },
+}
+
+export enum SortBy {
+  POPULAR = 'popular',
+  A_Z = 'a-z',
+  Z_A = 'z-a',
+}
+
+export interface Filter {
+  name: string
+  value: WalletConfigType | 'all'
 }

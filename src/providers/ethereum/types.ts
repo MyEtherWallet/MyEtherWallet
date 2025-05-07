@@ -17,7 +17,7 @@ export interface APIRequest {
 
 export interface PreEthereumTransaction {
   to: HexPrefixedString
-  from: HexPrefixedString
+  address: HexPrefixedString
   value: HexPrefixedString
   data: HexPrefixedString
 }

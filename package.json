@@ -26,6 +26,7 @@
     "@amplitude/analytics-browser": "^2.11.9",
     "@commitlint/config-conventional": "^19.6.0",
     "@enkryptcom/name-resolution": "^0.0.8",
+    "@enkryptcom/swap": "^0.0.3",
     "@ethereumjs/common": "^4.4.0",
     "@ethereumjs/tx": "^5.4.0",
     "@ethereumjs/util": "^9.1.0",

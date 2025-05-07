@@ -30,7 +30,7 @@
       v-if="addressBookLength > 0"
       class="ml-2 cursor-pointer"
       label="open address book"
-      @click="openAddressBook"
+      @click.prevent="openAddressBook"
     >
       <chevron-down-icon class="w-4 h-4" />
     </app-btn-icon>

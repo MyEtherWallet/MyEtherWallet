@@ -42,5 +42,5 @@ defineProps({
     default: false,
   },
 })
-const model = defineModel<boolean>()
+const model = defineModel<boolean>({ required: true })
 </script>

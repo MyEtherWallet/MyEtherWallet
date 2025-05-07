@@ -10,6 +10,10 @@
     "create_wallet": "Create wallet",
     "not_found":  {
       "chains": "No chains found"
-    }
+    },
+    "sort_by": "Sort by",
+    "filter": "Filter",
+    "reset": "reset",
+    "powered_by": "Powered by"
   }
 }

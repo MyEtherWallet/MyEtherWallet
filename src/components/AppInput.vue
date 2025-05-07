@@ -29,19 +29,25 @@
       {{ placeholder }}
     </span>
     <div class="absolute top-3 right-3 flex align-center">
-      <app-btn-icon-close
+      <app-btn-icon
         @click="clearInputValue"
+        :label="$t('common.clear_icon')"
         :class="[
           model !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
-      />
+      >
+        <x-circle-icon class="opacity-50"
+      /></app-btn-icon>
       <app-btn-icon
         v-if="type === 'password'"
         @click="togglePasswordVisibility"
         :label="!showPassword ? 'Show Password' : 'Hide Password'"
       >
-        <component :is="!showPassword ? EyeSlashIcon : EyeIcon" />
+        <component
+          :is="!showPassword ? EyeSlashIcon : EyeIcon"
+          class="opacity-50"
+        />
       </app-btn-icon>
     </div>
     <p
@@ -69,8 +75,7 @@ import {
   watch,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
+import { EyeIcon, EyeSlashIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 
 const props = defineProps({

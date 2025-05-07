@@ -19,18 +19,27 @@ export const useAppBreakpoints = () => {
     () =>
       breakpoints.greaterOrEqual('sm').value && breakpoints.smaller('lg').value,
   )
-  const isDesktop = computed<boolean>(
+  const isMDAndUp = computed<boolean>(
+    () =>
+      breakpoints.greaterOrEqual('md').value && breakpoints.smaller('lg').value,
+  )
+  const isHeaderMaxAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('md-header').value,
+  )
+  const isDesktopAndUp = computed<boolean>(
     () => breakpoints.greaterOrEqual('lg').value,
   )
-  const isDesktopMax = computed<boolean>(
+  const isDesktopMaxAndUp = computed<boolean>(
     () => breakpoints.greaterOrEqual('lg-max').value,
   )
   return {
     breakpoints,
     isMobile,
     isTablet,
-    isDesktop,
     isXS,
-    isDesktopMax,
+    isDesktopAndUp,
+    isMDAndUp,
+    isDesktopMaxAndUp,
+    isHeaderMaxAndUp,
   }
 }

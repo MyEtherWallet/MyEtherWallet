@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col justify-center items-center gap-3 rounded-20 border-1 border-[rgba(218,218,218,1)] p-2 min-h-[154px]"
+    class="flex flex-col justify-center items-center gap-3 rounded-20 bg-surface p-2 min-h-[154px]"
   >
     <p class="">{{ $t('common.dont_have_wallet') }}</p>
     <app-base-button

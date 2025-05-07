@@ -27,6 +27,8 @@ import {
   toChecksumAddress,
 } from '@ethereumjs/util'
 
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+
 class PrivateKeyWallet implements WalletInterface {
   privKey: Uint8Array
   chainId: string
@@ -36,35 +38,13 @@ class PrivateKeyWallet implements WalletInterface {
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
     // test data
-    console.log(tx)
-    return Promise.resolve({
-      "id": "f4e2aa40-d990-4475-ad25-9e5fee49fa87",
-      "fee": {
-        "ECONOMY": {
-          "nativeValue": '0xB2D05E00',
-          "fiatValue": '0.25',
-          "nativeSymbol": 'MATIC',
-          "fiatSymbol": 'USD'
-        },
-        "REGULAR": {
-          "nativeValue": '0xEE6B2800',
-          "fiatValue": '0.27',
-          "nativeSymbol": 'MATIC',
-          "fiatSymbol": 'USD'
-        },
-        "FAST": {
-          "nativeValue": '0x12A05F200',
-          "fiatValue": '0.30',
-          "nativeSymbol": 'MATIC',
-          "fiatSymbol": 'USD'
-        },
-        "FASTEST": {
-          "nativeValue": '0x165A0BC00',
-          "fiatValue": '0.35',
-          "nativeSymbol": 'MATIC',
-          "fiatSymbol": 'USD'
-        }
-      }
+    console.log(this.chainId)
+    const { data, onFetchResponse } = useFetchMewApi(`/evm/${this.chainId}/transactions/quote`, 'POST', tx)
+    return new Promise((resolve) => {
+      onFetchResponse(() => {
+        console.log('onFetchResponse', data.value)
+        resolve(data.value as GasFeeResponse)
+      })
     })
   }
   getSignableTransaction(
