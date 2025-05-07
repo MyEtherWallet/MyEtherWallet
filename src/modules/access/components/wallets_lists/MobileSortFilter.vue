@@ -40,7 +40,6 @@
                 : '',
               'border border-1 border-grey-outline items-center px-2 py-1 hoverNoBG rounded-32 min-w-[80px] text-s-17 font-medium',
             ]"
-            role="option"
             :id="option.value"
             @click="setActiveSort(option)"
           >
@@ -95,6 +94,7 @@ const activeSort = defineModel<AppSelectOption>('activeSort', {
 const reset = () => {
   if (!props.filterOptions.length || !props.sortOptions.length) return
   activeFilter.value = props.filterOptions[0]
+  activeSort.value = props.sortOptions[0]
 }
 /** -------------------
  * Dialog Controls

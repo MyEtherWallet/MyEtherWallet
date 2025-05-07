@@ -26,7 +26,7 @@
       </div>
     </div>
     <div
-      class="mx-auto ounded-lg mx-auto w-[64px] h-[64px] md:w-[80px] md:h-[80px] md:my-5"
+      class="mx-auto mx-auto w-[64px] h-[64px] md:w-[80px] md:h-[80px] md:my-5"
     >
       <AsyncImg
         :img="img"

@@ -13,6 +13,7 @@
     },
     "sort_by": "Sort by",
     "filter": "Filter",
-    "reset": "reset"
+    "reset": "reset",
+    "powered_by": "Powered by"
   }
 }
