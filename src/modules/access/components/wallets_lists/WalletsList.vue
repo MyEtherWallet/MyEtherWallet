@@ -125,7 +125,6 @@ const newWalletList = computed<WalletConfig[]>(() => {
   const newConArr: WalletConfig[] = []
   initializedWallets.forEach(wallet => {
     if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
-      // TODO: handle desktop type
       const _types: WalletConfigType[] = []
       if (
         wallet.extension ||
