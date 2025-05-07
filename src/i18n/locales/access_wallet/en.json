@@ -5,6 +5,7 @@
     "need_help": "Need help accessing your wallet?",
     "search_wallet": "Search for your wallet",
     "select_wallet": "Select your wallet",
+    "recent": "Recent",
     "all_wallets": {
       "title": "All Wallets",
       "description": "Ledger, private key, keystore, mobile wallets, we have it all"
@@ -40,5 +41,4 @@
     "or_copy_link": "OR copy link",
     "need_help": "How to connect your wallet"
   }
-
 }

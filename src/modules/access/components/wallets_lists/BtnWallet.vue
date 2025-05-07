@@ -12,6 +12,9 @@
         width="68px"
         class="w-[68px] h-5"
       />
+      <h4 v-if="isRecent" class="text-s-15 font-medium leading-p-150">
+        {{ $t('access_wallet.recent') }}
+      </h4>
       <div class="flex grow item-center justify-end">
         <div v-for="(type, index) in wallet.type" :key="index">
           <img
@@ -55,6 +58,7 @@ import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
   wallet: WalletConfig
+  isRecent?: boolean
 }>()
 
 const emit = defineEmits<{
