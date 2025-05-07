@@ -242,10 +242,16 @@ const sortOptions: AppSelectOption[] = [
 const activeSort = ref<AppSelectOption>(sortOptions[0])
 
 const filterOptions: Filter[] = [
-  { name: 'All', value: 'all' },
-  { name: 'Hardware', value: WalletConfigType.HARDWARE },
-  { name: 'Mobile', value: WalletConfigType.MOBILE },
-  { name: 'Software', value: WalletConfigType.SOFTWARE },
+  { name: t('access_wallet.filter.all'), value: 'all' },
+  {
+    name: t('access_wallet.filter.hardware'),
+    value: WalletConfigType.HARDWARE,
+  },
+  { name: t('access_wallet.filter.mobile'), value: WalletConfigType.MOBILE },
+  {
+    name: t('access_wallet.filter.software'),
+    value: WalletConfigType.SOFTWARE,
+  },
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])

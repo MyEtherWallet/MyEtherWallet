@@ -15,7 +15,13 @@
       "name_a_z": "Name A-Z",
       "name_z_a": "Name Z-A"
     },
-    "sort_and_filter": "Sort & Filter"
+    "sort_and_filter": "Sort & Filter",
+    "filter": {
+      "all": "All",
+      "hardware": "Hardware",
+      "mobile": "Mobile",
+      "software": "Software"
+    }
   },
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"
