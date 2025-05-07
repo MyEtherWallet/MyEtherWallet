@@ -15,15 +15,28 @@
 
       <dont-have-wallet />
     </div>
+    <wallet-connect-dialog
+      v-if="clickedWallet"
+      v-model:is-open="openWalletConnectModal"
+      :qrcode-data="wagmiWalletData"
+      :wallet-name="clickedWallet.name"
+      :wallet-icon="clickedWallet.icon as string"
+    />
   </div>
 </template>
 <script setup lang="ts">
+import WalletConnectDialog from '../WalletConnectDialog.vue'
+
 import DontHaveWallet from './DontHaveWallet.vue'
 import {
   type WalletConfig,
   walletConfigs,
 } from '@/modules/access/common/walletConfigs'
 import BtnWallet from './BtnWallet.vue'
+import { useWagmiConnect } from '@/composables/useWagmiConnect'
+
+const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
+  useWagmiConnect()
 
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 
@@ -36,6 +49,6 @@ const defaultWallets = keys
   })
 
 const clickDefaultWallet = (wallet: WalletConfig) => {
-  console.log('clickDefaultWallet', wallet.id)
+  connect(wallet)
 }
 </script>

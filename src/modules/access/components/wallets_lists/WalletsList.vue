@@ -67,7 +67,7 @@
       v-model:is-open="openWalletConnectModal"
       :qrcode-data="wagmiWalletData"
       :wallet-name="clickedWallet.name"
-      :wallet-icon="undefined"
+      :wallet-icon="clickedWallet.icon as string"
     />
     <mobile-sort-filter
       v-if="!isHeaderMaxAndUp"
@@ -80,18 +80,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { computed, ref, watch } from 'vue'
-import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
-import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import { ROUTES_WALLET } from '@/router/routeNames'
-import { useWalletStore } from '@/stores/walletStore'
 import Configs from '@/configs'
 import BtnWallet from './BtnWallet.vue'
 import AppBtnGroup from '@components/AppBtnGroup.vue'
@@ -106,12 +101,12 @@ import {
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
+import { useWagmiConnect } from '@/composables/useWagmiConnect'
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
-const wagmiWalletData = ref('')
-const openWalletConnectModal = ref(false)
-const { connectors } = wagmiConfig
+const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
+  useWagmiConnect()
 
 const DEFAULT_IDS = ['enkrypt', 'mew']
 const projectId = Configs.WALLET_CONNECT_PROJECT_ID
@@ -124,8 +119,6 @@ const allRainbowWallets = Object.values(rainndowWallets)
 const initializedWallets = allRainbowWallets.map(wallet =>
   wallet({ projectId, appName: 'MEW' }),
 )
-
-const clickedWallet = ref<WalletConfig | undefined>()
 
 const newWalletList = computed<WalletConfig[]>(() => {
   const newConArr: WalletConfig[] = []
@@ -211,45 +204,10 @@ const displayWallets = computed(() => {
 })
 
 /** -------------------
- * Wallet Store
- -------------------*/
-const walletStore = useWalletStore()
-const { setWallet } = walletStore
-
-/** -------------------
  *  Click Wallet
  * -------------------*/
-const router = useRouter()
 const clickWallet = (wallet: WalletConfig) => {
-  if ('routeName' in wallet && wallet.routeName) {
-    router.push({ name: wallet.routeName })
-  } else {
-    clickedWallet.value = wallet
-
-    const connector = connectors.find(
-      c =>
-        c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
-    )
-    connector?.emitter.on('message', msg => {
-      if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data as string // possibly a temp fix
-        openWalletConnectModal.value = true
-      }
-    })
-    const wagWallet = new WagmiWallet(connector!, '0x1')
-    wagWallet.connect().then(res => {
-      if (res) {
-        try {
-          wagmiWalletData.value = ''
-          openWalletConnectModal.value = false
-          setWallet(wagWallet)
-          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
-        } catch (error) {
-          console.error('WalletConnect connect failed:', error)
-        }
-      }
-    })
-  }
+  connect(wallet)
 }
 
 /** -------------------

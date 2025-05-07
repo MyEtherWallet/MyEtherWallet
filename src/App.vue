@@ -18,7 +18,6 @@ const { setChainData } = store
 const { data, onFetchResponse } = useFetchMewApi<ChainsRaw>('/chains')
 onFetchResponse(() => {
   setChainData(data.value?.result || [])
-  console.log('Chains data:', data.value?.result)
   return data.value?.result
 })
 </script>
