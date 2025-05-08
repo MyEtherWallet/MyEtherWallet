@@ -12,9 +12,12 @@
         width="68px"
         class="w-[68px] h-5"
       />
-      <h4 v-if="isRecent" class="text-s-15 font-medium leading-p-150">
+      <h5
+        v-if="isRecent"
+        class="text-s-11 font-bold pl-[5px] leading-p-100 tracking-sp-00"
+      >
         {{ $t('access_wallet.recent') }}
-      </h4>
+      </h5>
       <div class="flex grow item-center justify-end">
         <div v-for="(type, index) in wallet.type" :key="index">
           <img
