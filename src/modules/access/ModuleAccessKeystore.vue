@@ -82,6 +82,7 @@ import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import {
   unlockKeystore,
   type V3Keystore,
@@ -95,6 +96,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
 import { watchDebounced } from '@vueuse/core'
+import { walletConfigs } from '@/modules/access/common/walletConfigs'
 
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 
@@ -169,6 +171,8 @@ const resetKeystore = () => {
  * Keystore Password
  -------------------------*/
 const walletStore = useWalletStore()
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
 const router = useRouter()
 const { setWallet } = walletStore
 
@@ -198,6 +202,7 @@ const enterPassword = async () => {
       )
       resetKeystore()
       setWallet(wallet)
+      addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
       router.push({ path: ROUTES_WALLET.WALLET.PATH })
     }
