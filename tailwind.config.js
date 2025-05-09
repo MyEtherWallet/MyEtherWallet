@@ -83,6 +83,7 @@ export default {
         's-17': '17px',
         's-15': '15px',
         's-12': '12px',
+        's-11': '11px',
       },
       lineHeight: {
         'p-100': '100%',
@@ -94,6 +95,7 @@ export default {
       },
       letterSpacing: {
         'sp-06': '0.6px',
+        'sp-00': '0px',
       },
       transitionProperty: {
         height: 'height',

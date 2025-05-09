@@ -95,6 +95,10 @@ import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import DerivationPath from './components/DerivationPath.vue'
+
+import { walletConfigs } from '@/modules/access/common/walletConfigs'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+
 /**------------------------
  * Steps
  -------------------------*/
@@ -215,6 +219,8 @@ const setPage = (isNext: boolean) => {
  * Access Wallet
  ------------------------*/
 
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
@@ -226,6 +232,7 @@ const access = async () => {
   await wallet.value?.getWallet(selectedIndex.value).then(wallet => {
     if (wallet) {
       setWallet(wallet)
+      addWallet(walletConfigs.mnemonic)
     }
   })
 

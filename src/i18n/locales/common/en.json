@@ -17,6 +17,9 @@
     "powered_by": "Powered by",
     "add": "Add",
     "cancel": "Cancel",
-    "go_back": "Go back"
+    "go_back": "Go back",
+    "error": {
+          "user_canceled_request": "User canceled the request"
+    }
   }
 }
