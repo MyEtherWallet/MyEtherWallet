@@ -83,6 +83,9 @@ import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 
+import { walletConfigs } from '@/modules/access/common/walletConfigs'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+
 /**------------------------
  * Steps
  -------------------------*/
@@ -200,6 +203,8 @@ const setPage = (isNext: boolean) => {
  * Access Wallet
  ------------------------*/
 
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
@@ -211,6 +216,7 @@ const access = async () => {
   await wallet.value?.getWallet(selectedIndex.value).then(wallet => {
     if (wallet) {
       setWallet(wallet)
+      addWallet(walletConfigs.mnemonic)
     }
   })
 

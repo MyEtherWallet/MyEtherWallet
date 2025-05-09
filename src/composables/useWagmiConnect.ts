@@ -5,6 +5,7 @@ import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import { ToastType } from '@/types/notification/index'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { type WalletConfig } from '@/modules/access/common/walletConfigs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
@@ -16,6 +17,8 @@ export const useWagmiConnect = () => {
 
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
+  const recentWalletsStore = useRecentWalletsStore()
+  const { addWallet } = recentWalletsStore
   const { setWallet } = walletStore
   const router = useRouter()
   const toastStore = useToastStore()
@@ -53,6 +56,7 @@ export const useWagmiConnect = () => {
               wagmiWalletData.value = ''
               openWalletConnectModal.value = false
               setWallet(wagWallet)
+              addWallet(wallet)
               router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
             } catch (error) {
               console.error('WalletConnect connect failed:', error)
