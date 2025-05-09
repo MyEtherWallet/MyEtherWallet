@@ -11,11 +11,14 @@ import { type WalletConfig, WalletConfigType } from '@/modules/access/common/wal
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+
 export const useWagmiConnect = () => {
   const wagmiWalletData = ref('')
   const clickedWallet = ref<WalletConfig | undefined>()
   const openWalletConnectModal = ref(false)
-
+  const toastStore = useToastStore()
   const providerStore = useProviderStore()
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
@@ -55,7 +58,17 @@ export const useWagmiConnect = () => {
       const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION);
       if (isWeb3 && !providerInjected) {
         // TODO: add web3 wallet handler
+        console.log(wallet)
         console.error('Web3 wallet not found in providers:', wallet.name)
+        toastStore.addToastMessage({
+          text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
+          link: {
+            title: 'Click here to install',
+            url: wallet.downloadUrls?.browserExtension || wallet.downloadUrls?.qrCode || wallet.downloadUrls?.chrome || wallet.downloadUrls?.firefox || '',
+          },
+          type: ToastType.Error,
+          isInfinite: true,
+        })
         return;
       }
       const wagWallet = new WagmiWallet(connector!, '0x1')
