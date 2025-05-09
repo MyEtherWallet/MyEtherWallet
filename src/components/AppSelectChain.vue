@@ -1,6 +1,7 @@
 <template>
   <div>
     <app-btn-group
+      v-if="isBtnGroup"
       v-model:selected="selectedChain"
       :btn-list="shownChains"
       :use-emit-only="true"
@@ -32,6 +33,31 @@
         </button>
       </template>
     </app-btn-group>
+    <button
+      v-else
+      class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
+      @click="setOpenDialog(true)"
+    >
+      <div v-if="selectedChain" class="flex items-center">
+        <img
+          v-if="selectedChain.icon"
+          :src="selectedChain.icon"
+          alt=""
+          class="w-8 h-8 mr-2 rounded-full object-contain"
+          height="32px"
+          width="32px"
+        />
+        <div class="mr-2 ml-1">
+          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+            {{ $t('common.network') }}
+          </p>
+          <p class="text-ellipsis truncate font-medium text-sm">
+            {{ selectedChain.nameLong }}
+          </p>
+        </div>
+        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+      </div>
+    </button>
 
     <!-- Dialog with chains list -->
     <app-dialog
@@ -58,7 +84,7 @@
             <button
               v-for="chain in searchResults"
               :key="chain.name"
-              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl"
+              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
               @click="setSelectedChain(chain)"
             >
               <div class="flex justify-between items-center w-full">
@@ -97,6 +123,12 @@ import AppSearchInput from './AppSearchInput.vue'
 import AppBtnGroup from './AppBtnGroup.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
+defineProps({
+  isBtnGroup: {
+    type: Boolean,
+    default: false,
+  },
+})
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
 const selectedChain = ref<Chain | null>(null)
 const defaultChains = ref<Chain[]>([])

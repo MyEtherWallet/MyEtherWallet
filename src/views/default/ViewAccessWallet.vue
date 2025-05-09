@@ -31,7 +31,7 @@
         <h2 class="text5 font-semibold mb-4 md:ml-4">
           {{ $t('common.select_network') }}
         </h2>
-        <app-select-chain />
+        <app-select-chain is-btn-group />
       </div>
     </div>
 

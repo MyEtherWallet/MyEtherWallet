@@ -1,7 +1,8 @@
 <template>
   <button
     :class="[
-      ' rounded-full py-1  px-3  text-black transition-[background] duration-300 hoverNoBG',
+      isLarge ? 'py-3 px-5' : 'py-1  px-3',
+      ' rounded-full  text-black transition-[background] duration-300 hoverNoBG',
       { '!text-info': disabled },
     ]"
     :disabled="disabled"
@@ -24,6 +25,10 @@
  */
 const props = defineProps({
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  isLarge: {
     type: Boolean,
     default: false,
   },
