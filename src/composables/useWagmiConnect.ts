@@ -55,7 +55,7 @@ export const useWagmiConnect = () => {
       const providerInjected = Eip6963Providers.value.find(
         p => p.info.name === wallet.name,
       )
-      const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION);
+      const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
       if (isWeb3) {
         if (!providerInjected) {
           toastStore.addToastMessage({
