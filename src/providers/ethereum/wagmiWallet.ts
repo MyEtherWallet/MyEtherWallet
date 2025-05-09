@@ -35,8 +35,7 @@ class WagmiWallet implements WalletInterface {
         return res.accounts.length > 0
       })
       .catch(err => {
-        console.error(err)
-        return false
+        throw new Error(err)
       })
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {

@@ -14,6 +14,9 @@
     "sort_by": "Sort by",
     "filter": "Filter",
     "reset": "reset",
-    "powered_by": "Powered by"
+    "powered_by": "Powered by",
+    "error": {
+          "user_canceled_request": "User canceled the request"
+    }
   }
 }
