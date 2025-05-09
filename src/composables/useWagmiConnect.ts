@@ -58,7 +58,6 @@ export const useWagmiConnect = () => {
       const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION);
       if (isWeb3) {
         if (!providerInjected) {
-          // TODO: add web3 wallet handler
           toastStore.addToastMessage({
             text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
             link: {
@@ -68,7 +67,7 @@ export const useWagmiConnect = () => {
             type: ToastType.Error,
             isInfinite: true,
           })
-          return;
+          return
         }
       }
       const wagWallet = new WagmiWallet(connector!, '0x1')
