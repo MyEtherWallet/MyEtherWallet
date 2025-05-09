@@ -6,6 +6,7 @@
     "search_wallet": "Search for your wallet",
     "select_wallet": "Select your wallet",
     "recent": "Recent",
+    "detected": "Detected",
     "all_wallets": {
       "title": "All Wallets",
       "description": "Ledger, private key, keystore, mobile wallets, we have it all"

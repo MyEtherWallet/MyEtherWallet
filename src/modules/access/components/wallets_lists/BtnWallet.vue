@@ -19,6 +19,12 @@
       >
         {{ $t('access_wallet.recent') }}
       </h5>
+      <h5
+        v-if="isDetected"
+        class="text-s-11 font-bold pl-[5px] leading-p-100 tracking-sp-00"
+      >
+        {{ $t('access_wallet.detected') }}
+      </h5>
       <div class="flex grow item-center justify-end">
         <div v-for="(type, index) in wallet.type" :key="index">
           <img
@@ -66,6 +72,7 @@ import { onMounted, ref } from 'vue'
 const props = defineProps<{
   wallet: WalletConfig
   isRecent?: boolean
+  isDetected?: boolean
 }>()
 
 const emit = defineEmits<{

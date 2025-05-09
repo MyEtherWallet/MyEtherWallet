@@ -2,19 +2,27 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
-import { ToastType } from '@/types/notification/index'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { type WalletConfig } from '@/modules/access/common/walletConfigs'
+import { type WalletConfig, WalletConfigType } from '@/modules/access/common/walletConfigs'
+
+import { useProviderStore } from '@/stores/providerStore'
+import { storeToRefs } from 'pinia'
+
 import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+
 import { useI18n } from 'vue-i18n'
+
 export const useWagmiConnect = () => {
   const { t } = useI18n()
   const wagmiWalletData = ref('')
   const clickedWallet = ref<WalletConfig | undefined>()
   const openWalletConnectModal = ref(false)
 
+  const providerStore = useProviderStore()
+  const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
   const recentWalletsStore = useRecentWalletsStore()
@@ -47,6 +55,24 @@ export const useWagmiConnect = () => {
           )
         }
       })
+      const providerInjected = Eip6963Providers.value.find(
+        p => p.info.name === wallet.name,
+      )
+      const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
+      if (isWeb3) {
+        if (!providerInjected) {
+          toastStore.addToastMessage({
+            text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
+            link: {
+              title: 'Click here to install',
+              url: wallet.downloadUrls?.browserExtension || wallet.downloadUrls?.qrCode || wallet.downloadUrls?.chrome || wallet.downloadUrls?.firefox || '',
+            },
+            type: ToastType.Error,
+            isInfinite: true,
+          })
+          return
+        }
+      }
       const wagWallet = new WagmiWallet(connector!, '0x1')
       wagWallet
         .connect()
