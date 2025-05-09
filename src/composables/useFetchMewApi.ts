@@ -84,13 +84,13 @@ export const useFetchMewApi = <T>(
         if (isActivePolling.value) {
           pausePoll()
         }
-        if (retryIsPending) {
+        if (retryIsPending.value) {
           stopRetry()
         }
         if (retryCount.value < 3) {
           startRetry()
         } else {
-          console.error('Failed to fetch token balances after retrying 3 times')
+          console.error('Failed to fetch after retrying 3 times')
         }
         return e
       },
