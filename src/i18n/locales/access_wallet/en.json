@@ -1,7 +1,28 @@
 {
   "access_wallet": {
     "title": "Access MEW Portfolio",
-    "search_wallet": "Search for your wallet"
+    "description": "Check balances, swap and buy crypto, and tokens, grow and track your portfolio.",
+    "need_help": "Need help accessing your wallet?",
+    "search_wallet": "Search for your wallet",
+    "select_wallet": "Select your wallet",
+    "recent": "Recent",
+    "all_wallets": {
+      "title": "All Wallets",
+      "description": "Ledger, private key, keystore, mobile wallets, we have it all"
+    },
+    "not_found": "Wallet not found:",
+    "sort": {
+      "popular": "Popular",
+      "name_a_z": "Name A-Z",
+      "name_z_a": "Name Z-A"
+    },
+    "sort_and_filter": "Sort & Filter",
+    "filter": {
+      "all": "All",
+      "hardware": "Hardware",
+      "mobile": "Mobile",
+      "software": "Software"
+    }
   },
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"
@@ -11,5 +32,14 @@
   },
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"
-  }
+  },
+  "wc_dialog": {
+    "title": "Connect to MEW portfolio",
+    "no_wallet": "Don't have a wallet?",
+    "get_wallet": "Get a wallet",
+    "scan_qr_code": "Scan QR code with { walletName } to connect.",
+    "or_copy_link": "OR copy link",
+    "need_help": "How to connect your wallet"
+  },
+  "error_connecting": "Failed to connect. Check your wallet for errors"
 }

@@ -1,0 +1,1022 @@
+# openapi.yaml
+openapi: 3.1.0
+info:
+  title: Mew API
+  version: 1.0.0
+paths:
+  /get:
+    get:
+      operationId: GetRoot
+      responses:
+        200:
+          $ref: '#/components/responses/GetRootSuccess'
+
+  /health:
+    get:
+      operationId: GetHealth
+      responses:
+        200:
+          $ref: '#/components/responses/GetHealthSuccess'
+
+  /version:
+    get:
+      operationId: GetVersion
+      responses:
+        200:
+          $ref: '#/components/responses/GetVersionSuccess'
+
+  /schema:
+    get:
+      operationId: GetSchema
+      responses:
+        200:
+          $ref: '#/components/responses/GetSchemaJSONSuccess'
+
+  /schema.json:
+    get:
+      operationId: GetSchemaJSON
+      responses:
+        200:
+          $ref: '#/components/responses/GetSchemaJSONSuccess'
+
+  /schema.yml:
+    get:
+      operationId: GetSchemaYML
+      responses:
+        200:
+          $ref: '#/components/responses/GetSchemaYAMLSuccess'
+
+  /schema.yaml:
+    get:
+      operationId: GetSchemaYAML
+      responses:
+        200:
+          $ref: '#/components/responses/GetSchemaYAMLSuccess'
+
+  /pubkey:
+    get:
+      operationId: GetPubkey
+      responses:
+        200:
+          $ref: '#/components/responses/GetPubkeySuccess'
+
+  /chains:
+    get:
+      operationId: GetChainMetadataList
+      responses:
+        200:
+          $ref: '#/components/responses/GetChainMetadaListSuccess'
+
+  /chains/{chainName}:
+    get:
+      operationId: GetChainMetadata
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      responses:
+        200:
+          $ref: '#/components/responses/GetChainMetadataSuccess'
+
+  # Balances
+
+  /balances/{chainName}/{address}:
+    get:
+      operationId: GetBalancesByChainNameAndAddress
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+        - $ref: '#/components/parameters/Address'
+      responses:
+        200:
+          $ref: '#/components/responses/GetBalancesByChainNameAndAddressSuccess'
+
+  # Bitcoin balances
+
+  /bitcoin/{chainName}/balances/{address}:
+    get:
+      operationId: GetBitcoinBalanceByChainNameAndAddress
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+        - $ref: '#/components/parameters/Address'
+      responses:
+        200:
+          $ref: '#/components/responses/GetBitcoinBalanceByChainNameAndAddressSuccess'
+
+  # Bitcoin Transaction fees
+
+  # TODO:
+  /bitcoin/{chainName}/transactions/fees:
+    get:
+      operationId: GetBitcoinTransactionFees
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      responses:
+        200:
+          $ref: '#/components/responses/GetBitcoinTransactionFeesSuccess'
+
+  # Bitcoin transaction routes
+
+  /bitcoin/{chainName}/transactions/quote:
+    post:
+      operationId: GetBitcoinTransactionQuote
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      requestBody:
+        $ref: '#/components/requestBodies/GetBitcoinTransactionQuote'
+      responses:
+        200:
+          $ref: '#/components/responses/GetBitcoinTransactionQuoteSuccess'
+
+  /bitcoin/{chainName}/transactions/construct:
+    post:
+      operationId: ConstructBitcoinTransaction
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      requestBody:
+        $ref: '#/components/requestBodies/ConstructBitcoinTransaction'
+      responses:
+        200:
+          $ref: '#/components/responses/ConstructBitcoinTransactionSuccess'
+
+  /bitcoin/{chainName}/transactions/broadcast:
+    post:
+      operationId: BroadcastBitcoinTransaction
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      requestBody:
+        $ref: '#/components/requestBodies/BroadcastBitcoinTransaction'
+      responses:
+        200:
+          $ref: '#/components/responses/BroadcastBitcoinTransactionSuccess'
+
+  # Deprecated
+
+  /bitcoin/transactions/quote:
+    post:
+      operationId: BitcoinPostTransactionQuote
+      requestBody:
+        $ref: '#/components/requestBodies/BitcoinPostTransactionQuoteRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/BitcoinPostTransactionQuoteSuccess'
+
+  /bitcoin/transactions/broadcast:
+    post:
+      operationId: BitcoinPostTransactionBroadcast
+      requestBody:
+        $ref: '#/components/requestBodies/BitcoinPostTransactionBroadcastRequestBody'
+      responses:
+        200:
+          $ref: '#/components/responses/BitcoinPostTransactionBroadcastSuccess'
+
+  # EVM transaction routes
+
+  /evm/{chainId}/transactions/quote:
+    post:
+      operationId: GetEvmTransactionQuote
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+      requestBody:
+        $ref: '#/components/requestBodies/GetEvmTransactionQuote'
+      responses:
+        200:
+          $ref: '#/components/responses/GetEvmTransactionQuoteSuccess'
+
+  /evm/{chainId}/transactions/construct:
+    post:
+      operationId: ConstructEvmTransaction
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+      requestBody:
+        $ref: '#/components/requestBodies/ConstructEvmTransaction'
+      responses:
+        200:
+          $ref: '#/components/responses/ConstructEvmTransactionSuccess'
+
+  /evm/{chainId}/transactions/broadcast:
+    post:
+      operationId: BroadcastEvmTransaction
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+      requestBody:
+        $ref: '#/components/requestBodies/BroadcastEvmTransaction'
+      responses:
+        200:
+          $ref: '#/components/responses/BroadcastEvmTransactionSuccess'
+
+components:
+  parameters:
+    ChainId:
+      name: chainId
+      in: path
+      schema:
+        $ref: '#/components/schemas/BigIntInput'
+    ChainName:
+      name: chainName
+      in: path
+      schema:
+      type: string
+    EvmAddress:
+      in: path
+      name: address
+      schema:
+        $ref: '#/components/schemas/EvmAddressInput'
+    Address:
+      in: path
+      name: address
+      schema:
+        $ref: '#/components/schemas/AnyAddressInput'
+
+  requestBodies:
+    GetEvmTransactionQuote:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetEvmTransactionQuoteRequest'
+
+    ConstructEvmTransaction:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConstructEvmTransactionRequest'
+
+    BroadcastEvmTransaction:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BroadcastEvmTransactionRequest'
+
+    GetBitcoinTransactionQuote:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBitcoinTransactionQuoteRequest'
+
+    ConstructBitcoinTransaction:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConstructBitcoinTransactionRequest'
+
+    BroadcastBitcoinTransaction:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BroadcastBitcoinTransactionRequest'
+
+    BitcoinPostTransactionQuoteRequestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BitcoinPostTransactionQuoteRequest'
+
+    BitcoinPostTransactionBroadcastRequestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BitcoinPostTransactionBroadcastRequest'
+
+  responses:
+    GetRootSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetRootResponse'
+
+    GetHealthSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetHealthResponse'
+
+    GetVersionSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetVersionResponse'
+
+    GetSchemaYAMLSuccess:
+      content:
+        application/yaml:
+          schema:
+            $ref: '#/components/schemas/GetSchemaYAMLResponse'
+
+    GetSchemaJSONSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetSchemaJSONResponse'
+
+    GetPubkeySuccess:
+      content:
+        text/plain:
+          schema:
+            $ref: '#/components/schemas/GetPubkeyResponse'
+
+    GetChainMetadaListSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetChainMetadataListResponse'
+
+    GetChainMetadataSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetChainMetadataResponse'
+
+    GetBalancesByChainNameAndAddressSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBalancesByChainNameAndAddressResponse'
+
+    GetBitcoinBalanceByChainNameAndAddressSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBitcoinBalanceByChainNameAndAddressResponse'
+
+    GetBitcoinTransactionFeesSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBitcoinTransactionFeesResponse'
+
+    GetBitcoinTransactionQuoteSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBitcoinTransactionQuoteResponse'
+
+    ConstructBitcoinTransactionSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+        X-MEW-API-Timestamp:
+          schema:
+            $ref: '#/components/schemas/ISO8601'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConstructBitcoinTransactionResponse"
+
+    BroadcastBitcoinTransactionSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BroadcastBitcoinTransactionResponse"
+
+    GetEvmTransactionQuoteSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetEvmTransactionQuoteResponse'
+
+    ConstructEvmTransactionSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+        X-MEW-API-Timestamp:
+          schema:
+            $ref: '#/components/schemas/ISO8601'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ConstructEvmTransactionResponse"
+
+    BroadcastEvmTransactionSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BroadcastEvmTransactionResponse"
+
+    BitcoinPostTransactionQuoteSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BitcoinPostTransactionQuoteResponse"
+
+    BitcoinPostTransactionBroadcastSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BitcoinPostTransactionBroadcastResponse"
+
+  schemas:
+    # Input primitives
+    BigIntInput:
+      type: string
+      # Patterns:
+        # - 0x[0-9a-fA-F]+
+        # - [0-9]+
+    EvmAddressInput:
+      type: string
+      pattern: '^((0|\\)[xX])[0-9a-fA-F]{40}$'
+    BitcoinAddressInput:
+      type: string
+      # Any alphanumeric string that's not too small or too big
+      pattern: '^[0-9a-zA-Z]{10,100}$'
+    AnyAddressInput:
+      type: string
+    BitcoinSatoshiValue:
+      type: number
+    BitcoinTransactionSpeed:
+      type: string
+      enum: ['MANUAL', 'FAST', 'ECONOMY', 'MINIMUM']
+    BitcoinBroadcastType:
+      type: string
+      enum: ['MEMPOOL', 'RPC']
+    ByteStringInput:
+      type: string
+      pattern: '^((0|\\)[xX])([0-9a-fA-F]{2})*$'
+    StringDecimalUintInput:
+      type: string
+      pattern: '^[0-9]+$'
+    StringDecimalUint64Input:
+      type: string
+      pattern: '^[0-9]{1,20}$' # Requires additional validation that it's actually within uint64
+    HexUintInput:
+      type: string
+      pattern: '^((0|\\)[xX])[0-9a-fA-F]+$'
+    HexUint16Input:
+      type: string
+      pattern: '^((0|\\)[xX])[0-9a-fA-F]{1,4}$'
+    HexUint32Input:
+      type: string
+      pattern: '^((0|\\)[xX])[0-9a-fA-F]{1,8}$'
+    HexUint64Input:
+      type: string
+      pattern: '^((0|\\)[xX])[0-9a-fA-F]{1,16}$'
+    HexUint256Input:
+      type: string
+      pattern: '^((0|\\)[xX])[0-9a-fA-F]{1,64}$'
+    UUIDInput:
+      type: string
+      pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+
+    # Output primitives
+    EvmAddress:
+      type: string
+      pattern: '^0x[0-9a-f]{40}$'
+    BitcoinAddress:
+      type: string
+      pattern: '^[0-9a-zA-Z]+$'
+    ByteString:
+      type: string
+      pattern: '^0x([0-9a-f]{2})*$'
+    HexUint:
+      type: string
+      pattern: '^0x[0-9a-f]+$'
+    HexUint16:
+      type: string
+      pattern: '^0x[0-9a-f]{1,4}$'
+    HexUint32:
+      type: string
+      pattern: '^0x[0-9a-f]{1,8}$'
+    HexUint64:
+      type: string
+      pattern: '^0x[0-9a-f]{1,16}$'
+    HexUint256:
+      type: string
+      pattern: '^0x[0-9a-f]{1,64}$'
+    Hex:
+      type: string
+      pattern: '^0x[0-9a-fA-F]*$'
+    UUID:
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    ISO8601:
+      type: string
+
+    # Composite types
+    BitcoinOutput:
+      type: object
+      required:
+        - address
+        - value
+      properties:
+        address:
+          $ref: '#/components/schemas/BitcoinAddress'
+        value:
+          $ref: '#/components/schemas/BitcoinSatoshiValue'
+
+    BitcoinTransactionQuote:
+      type: object
+      required:
+        - speed
+        - feeRate
+        - raw
+        - psbt
+      properties:
+        speed:
+          $ref: '#/components/schemas/BitcoinTransactionSpeed'
+        feeRate:
+          $ref: '#/components/schemas/BitcoinSatoshiValue'
+        raw:
+          type: object
+          required:
+            - fee
+            - leftover
+            - txHex
+          properties:
+            fee:
+              $ref: '#/components/schemas/BitcoinSatoshiValue'
+            leftover:
+              $ref: '#/components/schemas/BitcoinSatoshiValue'
+            txHex:
+              type: string
+        psbt:
+          type: object
+          required:
+            - fee
+            - leftover
+            - psbtBase64
+          properties:
+            fee:
+              $ref: '#/components/schemas/BitcoinSatoshiValue'
+            leftover:
+              $ref: '#/components/schemas/BitcoinSatoshiValue'
+            psbtBase64:
+              type: string
+
+    ChainMetadata:
+      type: object
+      required:
+        - name
+        - nameLong
+        - type
+        - blockExplorerTX
+        - blockExplorerAddr
+        - isTestNetwork
+        - currencyName
+        - currencyNameLong
+        - icon
+      properties:
+        name:
+          type: string
+        nameLong:
+          type: string
+        type:
+          type: string
+        blockExplorerTX:
+          type: string
+        blockExplorerAddr:
+          type: string
+        chainID:
+          type: string
+        isTestNetwork:
+          type: boolean
+        currencyName:
+          type: string
+        currencyNameLong:
+          type: string
+        icon:
+          type: string
+
+    AccessTuple:
+      type: object
+      required:
+        - address
+        - storageKeys
+      properties:
+        address:
+          $ref: '#/components/schemas/EvmAddress'
+        storageKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvmAddress'
+
+    AccessList:
+      type: array
+      items:
+        $ref: '#/components/schemas/AccessTuple'
+
+    GetRootResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+    GetHealthResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+    GetVersionResponse:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: string
+
+    GetSchemaYAMLResponse:
+      type: string
+
+    GetSchemaJSONResponse:
+      type: object
+      additionalProperties: true
+
+    GetPubkeyResponse:
+      type: string
+
+    # ================
+    # Supported chains
+    # ================
+
+    GetChainMetadataListResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChainMetadata'
+
+    GetChainMetadataResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          $ref: '#/components/schemas/ChainMetadata'
+
+    # ========
+    # Gas fees
+    # ========
+
+    FeePriority:
+      type: string
+      enum:
+        - ECONOMY
+        - REGULAR
+        - FAST
+        - FASTEST
+
+    # =================================================
+    # Bitcoin transaction fees
+    # =================================================
+
+    BitcoinAmount:
+      type: object
+      required:
+        - nativeValue
+        - nativeSymbol
+      properties:
+        nativeValue:
+          type: string
+        fiatValue:
+          type: string
+        nativeSymbol:
+          type: string
+        fiatSymbol:
+          type: string
+
+    BitcoinTransactionFees:
+      type: object
+      required:
+        - ECONOMY
+        - REGULAR
+        - FAST
+        - FASTEST
+      properties:
+        ECONOMY:
+          $ref: '#/components/schemas/BitcoinAmount'
+        REGULAR:
+          $ref: '#/components/schemas/BitcoinAmount'
+        FAST:
+          $ref: '#/components/schemas/BitcoinAmount'
+        FASTEST:
+          $ref: '#/components/schemas/BitcoinAmount'
+
+    GetBitcoinTransactionFeesResponse:
+      type: object
+      required:
+        - provider
+        - ECONOMY
+        - REGULAR
+        - FAST
+        - FASTEST
+      properties:
+        provider:
+          type: string
+        ECONOMY:
+          $ref: '#/components/schemas/BitcoinAmount'
+        REGULAR:
+          $ref: '#/components/schemas/BitcoinAmount'
+        FAST:
+          $ref: '#/components/schemas/BitcoinAmount'
+        FASTEST:
+          $ref: '#/components/schemas/BitcoinAmount'
+
+    # ===============================================
+    # EVM (Ethereum Virtual Machine) Transaction Fees
+    # ===============================================
+
+    EvmGasFeeInfo:
+      type: object
+      required:
+        - nativeValue
+        - nativeSymbol
+      properties:
+        nativeValue:
+          $ref: '#/components/schemas/HexUint'
+        fiatValue:
+          $ref: '#/components/schemas/HexUint'
+        nativeSymbol:
+          type: string
+        fiatSymbol:
+          type: string
+
+    EvmGasFees:
+      type: object
+      required:
+        - ECONOMY
+        - REGULAR
+        - FAST
+        - FASTEST
+      properties:
+        ECONOMY:
+          $ref: '#/components/schemas/EvmGasFeeInfo'
+        REGULAR:
+          $ref: '#/components/schemas/EvmGasFeeInfo'
+        FAST:
+          $ref: '#/components/schemas/EvmGasFeeInfo'
+        FASTEST:
+          $ref: '#/components/schemas/EvmGasFeeInfo'
+
+    # ========
+    # Balances
+    # ========
+
+    GetBalancesByChainNameAndAddressResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: array
+          items:
+            type: object
+            required:
+              - contract
+              - balance
+            properties:
+              balance:
+                type: string
+              contract:
+                type: string
+              decimals:
+                type: number
+              logo_url:
+                type: string
+              name:
+                type: string
+              price:
+                type: number
+              symbol:
+                type: string
+
+    GetBitcoinBalanceByChainNameAndAddressResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: object
+          required:
+            - nativeValue
+            - nativeSymbol
+          properties:
+            nativeValue:
+              type: string
+            fiatValue:
+              type: string
+            nativeSymbol:
+              type: string
+            fiatSymbol:
+              type: string
+            logoUrl:
+              type: string
+
+    # ===========================================
+    # EVM (Ethereum Virtual Machine) Transactions
+    # ===========================================
+
+    GetEvmTransactionQuoteRequest:
+      type: object
+      required:
+        - address
+        - to
+        - value
+        - data
+      properties:
+        address:
+          $ref: '#/components/schemas/EvmAddressInput'
+        to:
+          oneOf:
+            - $ref: '#/components/schemas/EvmAddressInput'
+            - type: 'null'
+        value:
+          $ref: '#/components/schemas/HexUintInput'
+        data:
+          $ref: '#/components/schemas/ByteStringInput'
+        accessList:
+          $ref: '#/components/schemas/AccessList'
+
+    GetEvmTransactionQuoteResponse:
+      type: object
+      required:
+        - transactionId
+        - fees
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/UUID'
+        fees:
+          $ref: '#/components/schemas/EvmGasFees'
+
+    ConstructEvmTransactionRequest:
+      type: object
+      required:
+        - transactionId
+        - priority
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/UUIDInput'
+        priority:
+          $ref: '#/components/schemas/FeePriority'
+
+    ConstructEvmTransactionResponse:
+      type: object
+      required:
+        - serialized
+      properties:
+        serialized:
+          $ref: '#/components/schemas/ByteString'
+
+    BroadcastEvmTransactionRequest:
+      type: object
+      required:
+        - signedTransaction
+      properties:
+        signedTransaction:
+          $ref: '#/components/schemas/ByteStringInput'
+
+    BroadcastEvmTransactionResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+
+    # ====================
+    # Bitcoin Transactions
+    # ====================
+
+    GetBitcoinTransactionQuoteRequest:
+      type: object
+      required:
+        - changeAddress
+        - fromAddresses
+        - outputs
+      properties:
+        changeAddress:
+          $ref: '#/components/schemas/BitcoinAddressInput'
+        fromAddresses:
+          minItems: 1
+          maxItems: 255
+          type: array
+          items:
+            $ref: '#/components/schemas/BitcoinAddressInput'
+        outputs:
+          type: array
+          minItems: 1
+          maxItems: 255
+          items:
+            type: object
+            required:
+              - address
+              - amount
+            properties:
+              address:
+                $ref: '#/components/schemas/BitcoinAddressInput'
+              amount:
+                oneOf:
+                  - type: number
+                  - $ref: '#/components/schemas/StringDecimalUint64Input'
+                  - $ref: '#/components/schemas/HexUint64Input'
+
+    GetBitcoinTransactionQuoteResponse:
+      type: object
+      required:
+        - transactionId
+        - fees
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/UUID'
+        fees:
+          $ref: '#/components/schemas/BitcoinTransactionFees'
+
+    ConstructBitcoinTransactionRequest:
+      type: object
+      required:
+        - transactionId
+        - priority
+      properties:
+        transactionId:
+          $ref: '#/components/schemas/UUIDInput'
+        priority:
+          $ref: '#/components/schemas/FeePriority'
+
+    ConstructBitcoinTransactionResponse:
+      type: object
+      required:
+        - serialized
+      properties:
+        serialized:
+          $ref: '#/components/schemas/ByteString'
+
+    BroadcastBitcoinTransactionRequest:
+      type: object
+      required:
+        - signedTransaction
+      properties:
+        signedTransaction:
+          type: string
+
+    BroadcastBitcoinTransactionResponse:
+      type: object
+      required:
+        - txid
+      properties:
+        txid:
+          type: string
+
+    # ====================================
+    # Bitcoin / (wip / deprecated)
+    # ====================================
+
+    BitcoinPostTransactionQuoteRequest:
+      type: object
+      required:
+        - fromAddresses
+        - outputs
+      properties:
+        fromAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/BitcoinAddress'
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/BitcoinOutput'
+        changeAddress:
+          $ref: '#/components/schemas/BitcoinAddress'
+        feeRate:
+          $ref: '#/components/schemas/BitcoinSatoshiValue'
+
+    BitcoinPostTransactionQuoteResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/BitcoinTransactionQuote'
+
+    BitcoinPostTransactionBroadcastRequest:
+      type: object
+      required: [rawTxHex]
+      properties:
+        rawTxHex:
+          type: string
+        broadcastType:
+          $ref: '#/components/schemas/BitcoinBroadcastType'
+
+    BitcoinPostTransactionBroadcastResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string

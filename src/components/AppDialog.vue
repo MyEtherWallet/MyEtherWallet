@@ -11,7 +11,7 @@
     >
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 bg-black/40 z-[99] h-screen w-screen overscroll-none overflow-hidden"
+        class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
         @click="setIsOpen(false)"
         aria-hidden
       />
@@ -31,9 +31,9 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-4xl sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+          class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
           @click.stop
-          :class="$attrs.class"
+          v-bind="$attrs"
         >
           <div
             class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
@@ -85,7 +85,9 @@
  * </app-dialog>
  */
 import AppBtnIconClose from './AppBtnIconClose.vue'
-
+defineOptions({
+  inheritAttrs: false,
+})
 defineProps({
   /**
    * @title The title of the dialog, not required

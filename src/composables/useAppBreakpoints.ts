@@ -1,7 +1,6 @@
 import { useBreakpoints } from '@vueuse/core'
 import { computed } from 'vue'
 export const useAppBreakpoints = () => {
-
   /** MUST MATCH TAILWIND CONFIGS */
   const breakpoints = useBreakpoints({
     xs: 576,
@@ -13,17 +12,34 @@ export const useAppBreakpoints = () => {
     xl: 1280,
     '2xl': 1440,
     '3xl': 1601,
-  });
-  const isXS = computed<boolean>(() => breakpoints.smaller('xs').value);
-  const isMobile = computed<boolean>(() => breakpoints.smaller('sm').value);
-  const isTablet = computed<boolean>(() => breakpoints.greaterOrEqual('sm').value && breakpoints.smaller('lg').value);
-  const isDesktop = computed<boolean>(() => breakpoints.greaterOrEqual('lg').value);
-
+  })
+  const isXS = computed<boolean>(() => breakpoints.smaller('xs').value)
+  const isMobile = computed<boolean>(() => breakpoints.smaller('sm').value)
+  const isTablet = computed<boolean>(
+    () =>
+      breakpoints.greaterOrEqual('sm').value && breakpoints.smaller('lg').value,
+  )
+  const isMDAndUp = computed<boolean>(
+    () =>
+      breakpoints.greaterOrEqual('md').value && breakpoints.smaller('lg').value,
+  )
+  const isHeaderMaxAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('md-header').value,
+  )
+  const isDesktopAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('lg').value,
+  )
+  const isDesktopMaxAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('lg-max').value,
+  )
   return {
     breakpoints,
     isMobile,
     isTablet,
-    isDesktop,
-    isXS
-  };
-};
+    isXS,
+    isDesktopAndUp,
+    isMDAndUp,
+    isDesktopMaxAndUp,
+    isHeaderMaxAndUp,
+  }
+}

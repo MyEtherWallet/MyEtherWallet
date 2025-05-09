@@ -1,239 +1,265 @@
 <template>
   <div>
-    <h1 class="title5 mb-5">All Wallet Options</h1>
-    <!-- Filter -->
-    <nav
-      class="flex gap-4 mb-5 flex-wrap"
-      role="navigation"
-      aria-label="Wallet filters"
-    >
-      <button
-        v-for="filter in filterOptions"
-        :key="filter.value"
-        @click="clickFilter(filter)"
-        class="bg-primary text-white text-center rounded-full py-1 px-4 min-w-[100px]"
+    <div class="flex justify-between items-center gap-4 mb-4">
+      <h3 class="text-s-17 font-bold leading-p-150 sm:ml-4">
+        {{ $t('access_wallet.all_wallets.title') }}
+        <span class="hidden sm:inline-block font-normal">
+          • {{ $t('access_wallet.all_wallets.description') }}</span
+        >
+      </h3>
+      <app-btn-icon
+        :label="$t('access_wallet.sort_and_filter')"
+        class="md-header:hidden"
+        @click="openFilterSortModal = true"
       >
-        {{ filter.name }}
-      </button>
-    </nav>
-    <!-- Search -->
-    <div class="mb-5 max-w-[600px]">
-      <SearchInput @search="searchWallet" />
+        <Bars3Icon class="h-6 w-6" />
+      </app-btn-icon>
+    </div>
+    <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4">
+      <!-- Search and Sort -->
+      <div
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 md-header:max-w-[510px]"
+      >
+        <app-search-input
+          v-model="searchInput"
+          class="grow md-header:max-w-[315px]"
+        />
+        <app-select
+          v-if="isHeaderMaxAndUp"
+          v-model:selected="activeSort"
+          :options="sortOptions"
+          :placeholder="$t('common.sort_by')"
+        />
+      </div>
+      <!-- Filter -->
+      <app-btn-group
+        v-if="isHeaderMaxAndUp"
+        v-model:selected="activeFilter"
+        :btn-list="filterOptions"
+        :is-loaded="true"
+      >
+        <template #btn-content="{ data }">
+          {{ data.name }}
+        </template>
+      </app-btn-group>
     </div>
     <!-- Wallets-->
     <div
-      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-      role="grid"
+      v-if="displayWallets.length > 0"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
     >
-      <div
+      <btn-wallet
         v-for="wallet in displayWallets"
         :key="wallet.id"
-        class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer relative"
-        @click="clickWallet(wallet)"
-        @keyup.enter="clickWallet(wallet)"
-        role="gridcell"
-      >
-        <div>
-          <div
-            v-if="wallet.notRecommended"
-            class="absolute top-0 right-0 bg-warning-10 text-black text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg"
-          >
-            Not Recommended
-          </div>
-        </div>
-        <AsyncImg
-          :alt="wallet.name"
-          :is-loaded="!isLoadingIcons"
-          :cached-img="cachedIcons.get(wallet.id)"
-          class="rounded-lg"
-          aria-hidden="true"
-        />
-        <p class="text-info pt-2">{{ wallet.name }}</p>
-      </div>
+        :wallet="wallet"
+        @clickWallet="clickWallet"
+      ></btn-wallet>
     </div>
-    <WalletConnectDialog
+    <div
+      v-else
+      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-info"
+    >
+      {{ $t('access_wallet.not_found') }} {{ searchInput }}
+    </div>
+
+    <wallet-connect-dialog
       v-if="clickedWallet"
       v-model:is-open="openWalletConnectModal"
       :qrcode-data="wagmiWalletData"
       :wallet-name="clickedWallet.name"
-      :wallet-icon="cachedIcons.get(clickedWallet.id)"
+      :wallet-icon="clickedWallet.icon as string"
+    />
+    <mobile-sort-filter
+      v-if="!isHeaderMaxAndUp"
+      :filter-options="filterOptions"
+      :sort-options="sortOptions"
+      v-model:active-filter="activeFilter"
+      v-model:active-sort="activeSort"
+      v-model:is-open="openFilterSortModal"
     />
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
-import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
+import { computed, ref, watch } from 'vue'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
-import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
-import AsyncImg from './AsyncImg.vue'
-import SearchInput from './SearchInput.vue'
-import { ROUTES_HOME, ROUTES_WALLET } from '@/router/routeNames'
-import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
-import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
-import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
-import { useWalletStore } from '@/stores/walletStore'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSelect from '@/components/AppSelect.vue'
+import MobileSortFilter from './MobileSortFilter.vue'
+import { type AppSelectOption } from '@/types/components/appSelect'
+import Configs from '@/configs'
+import BtnWallet from './BtnWallet.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import {
+  type WalletConfig,
+  type defaultWalletId,
+  walletConfigs,
+  SortBy,
+  type Filter,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useI18n } from 'vue-i18n'
+import { Bars3Icon } from '@heroicons/vue/24/solid'
+import { useWagmiConnect } from '@/composables/useWagmiConnect'
 
-interface WalletType {
-  id: string
-  name: string
-  iconUrl: string | (() => Promise<string>)
-  notRecommended?: boolean
-}
+const { t } = useI18n()
+const { isHeaderMaxAndUp } = useAppBreakpoints()
+const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
+  useWagmiConnect()
 
-const wagmiWalletData = ref('')
-const openWalletConnectModal = ref(false)
-const { connectors } = wagmiConfig
 const DEFAULT_IDS = ['enkrypt', 'mew']
-const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
+const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 
+/** -------------------
+ * Wallets
+ * -------------------*/
 const allRainbowWallets = Object.values(rainndowWallets)
 
 const initializedWallets = allRainbowWallets.map(wallet =>
   wallet({ projectId, appName: 'MEW' }),
 )
 
-const clickedWallet = ref<WalletType | undefined>()
-
-const newWalletList = computed(() => {
-  const newConArr: WalletType[] = []
+const newWalletList = computed<WalletConfig[]>(() => {
+  const newConArr: WalletConfig[] = []
   initializedWallets.forEach(wallet => {
-    if (DEFAULT_IDS.includes(wallet.id)) {
-      newConArr.unshift({
-        id: wallet.id,
-        name: wallet.name,
-        iconUrl: wallet.iconUrl,
-      })
-    } else {
+    if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
+      const _types: WalletConfigType[] = []
+      if (
+        wallet.extension ||
+        (wallet.hasOwnProperty('installed') && !wallet.extension)
+      ) {
+        _types.push(WalletConfigType.EXTENSION)
+      }
+      if (wallet.mobile || wallet.qrCode) {
+        _types.push(WalletConfigType.MOBILE)
+      }
+      if (wallet.desktop) {
+        _types.push(WalletConfigType.DESKTOP)
+      }
+
       newConArr.push({
+        ...wallet,
         id: wallet.id,
         name: wallet.name,
-        iconUrl: wallet.iconUrl,
+        icon: wallet.iconUrl,
+        type: _types,
+      })
+    } else if (wallet.id === 'ledger') {
+      newConArr.push({
+        ...wallet,
+        id: 'ledger-mobile',
+        name: 'Ledger Mobile',
+        icon: wallet.iconUrl,
+        type: [WalletConfigType.MOBILE],
       })
     }
   })
   return newConArr
 })
 
-/** -------------------
- *  Core Wallets
- * -------------------*/
+const defaultWallets = computed<WalletConfig[]>(() => {
+  const defaultWallets: WalletConfig[] = []
+  const keys = Object.keys(walletConfigs) as Array<defaultWalletId>
+  keys.forEach(key => {
+    const wallet = walletConfigs[key]
+    if (wallet.isWC) {
+      const wcWallet = initializedWallets.find(w => w.id === wallet.id)
+      defaultWallets.push(Object.assign({}, wallet, wcWallet))
+    } else {
+      defaultWallets.push(wallet)
+    }
+  })
 
-interface CoreWallet {
-  id: string
-  name: string
-  iconUrl: string
-  routeName?: string
-  notRecommended?: boolean
-}
+  return defaultWallets
+})
+const displayWallets = computed(() => {
+  const wallets: WalletConfig[] = []
+  wallets.push(...defaultWallets.value)
+  wallets.push(...newWalletList.value)
+  if (searchInput.value) {
+    const search = searchInput.value.toLowerCase()
+    const beginsWith = wallets.filter(wallet => {
+      return wallet.name.toLowerCase().startsWith(search)
+    })
+    const other = wallets.filter(wallet => {
+      return (
+        wallet.name.toLowerCase().includes(search) &&
+        !wallet.name.toLowerCase().startsWith(search)
+      )
+    })
 
-const softwareWallets: CoreWallet[] = [
-  {
-    id: 'keystore',
-    name: 'Keystore',
-    iconUrl: IconKeystore,
-    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
-    notRecommended: true,
-  },
-  {
-    id: 'mnemonic',
-    name: 'Mnemonic phrase',
-    iconUrl: IconMnemonic,
-    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
-    notRecommended: true,
-  },
-  {
-    id: 'privatekey',
-    name: 'Private Key',
-    iconUrl: IconPrivateKey,
-    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
-    notRecommended: true,
-  },
-]
+    return [...beginsWith, ...other]
+  }
+  if (activeSort.value.value === SortBy.A_Z) {
+    wallets.sort((a, b) => a.name.localeCompare(b.name))
+  }
+  if (activeSort.value.value === SortBy.Z_A) {
+    wallets.sort((a, b) => b.name.localeCompare(a.name))
+  }
+  if (activeFilter.value.value === WalletConfigType.HARDWARE) {
+    return wallets.filter(a =>
+      a.type.some(type => type === WalletConfigType.HARDWARE),
+    )
+  }
 
-const displayWallets = [...softwareWallets, ...newWalletList.value]
-
-/**-------------------
- * Cached Wallet Icons
- -------------------*/
-const cachedIcons = ref(new Map<string, string>())
-const isLoadingIcons = ref(true)
-
-/** -------------------
- * Wallet Store
- -------------------*/
-const walletStore = useWalletStore()
-const { setWallet } = walletStore
+  if (activeFilter.value.value === WalletConfigType.MOBILE) {
+    return wallets.filter(a =>
+      a.type.some(type => type === WalletConfigType.MOBILE),
+    )
+  }
+  if (activeFilter.value.value === WalletConfigType.SOFTWARE) {
+    return wallets.filter(a =>
+      a.type.some(
+        type =>
+          type === WalletConfigType.SOFTWARE ||
+          type === WalletConfigType.EXTENSION ||
+          type === WalletConfigType.DESKTOP,
+      ),
+    )
+  }
+  return wallets
+})
 
 /** -------------------
  *  Click Wallet
  * -------------------*/
-const router = useRouter()
-const clickWallet = (wallet: WalletType | CoreWallet) => {
-  if ('routeName' in wallet && wallet.routeName) {
-    router.push({ name: wallet.routeName })
-  } else {
-    clickedWallet.value = wallet
-    const connector = connectors.find(
-      c =>
-        c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
-    )
-    connector?.emitter.on('message', msg => {
-      if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data as string // possibly a temp fix
-        openWalletConnectModal.value = true
-      }
-    })
-    const wagWallet = new WagmiWallet(connector!, '0x1')
-    wagWallet.connect().then(res => {
-      if (res) {
-        try {
-          wagmiWalletData.value = ''
-          openWalletConnectModal.value = false
-          setWallet(wagWallet)
-          router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
-        } catch (error) {
-          console.error('WalletConnect connect failed:', error)
-        }
-      }
-    })
-  }
+const clickWallet = (wallet: WalletConfig) => {
+  connect(wallet)
 }
 
 /** -------------------
- *  Filter
+ *  Filter & Search & Sort
  * -------------------*/
-interface Filter {
-  name: string
-  value: string
-}
+const searchInput = ref('')
+
+const sortOptions: AppSelectOption[] = [
+  { label: t('access_wallet.sort.popular'), value: SortBy.POPULAR },
+  { label: t('access_wallet.sort.name_a_z'), value: SortBy.A_Z },
+  { label: t('access_wallet.sort.name_z_a'), value: SortBy.Z_A },
+]
+const activeSort = ref<AppSelectOption>(sortOptions[0])
+
 const filterOptions: Filter[] = [
-  { name: 'All', value: 'all' },
-  { name: 'Hardware', value: 'hardware' },
-  { name: 'Mobile', value: 'mobile' },
+  { name: t('access_wallet.filter.all'), value: 'all' },
+  {
+    name: t('access_wallet.filter.hardware'),
+    value: WalletConfigType.HARDWARE,
+  },
+  { name: t('access_wallet.filter.mobile'), value: WalletConfigType.MOBILE },
+  {
+    name: t('access_wallet.filter.software'),
+    value: WalletConfigType.SOFTWARE,
+  },
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])
+const openFilterSortModal = ref(false)
 
-const clickFilter = (_value: Filter) => {
-  console.log('clickFilter', _value)
-  activeFilter.value = _value
-}
-
-const searchWallet = (payload: string) => {
-  console.log('searchWallet', payload)
-}
-
-onMounted(async () => {
-  for (const wallet of displayWallets) {
-    if (typeof wallet.iconUrl === 'string') {
-      cachedIcons.value.set(wallet.id, wallet.iconUrl)
-    } else {
-      const url = await wallet.iconUrl()
-      cachedIcons.value.set(wallet.id, url)
-    }
+watch(isHeaderMaxAndUp, val => {
+  if (val && openFilterSortModal.value) {
+    openFilterSortModal.value = false
   }
-  isLoadingIcons.value = false
 })
 </script>

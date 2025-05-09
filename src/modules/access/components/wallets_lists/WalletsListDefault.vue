@@ -1,62 +1,66 @@
 <template>
   <div>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div
-        v-for="wallet in wallets"
+    <h2 class="text5 font-semibold mb-4 md:ml-4">
+      {{ $t('access_wallet.select_wallet') }}
+    </h2>
+    <div
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
+    >
+      <!-- RECENTLY USED WALLETS -->
+      <btn-wallet
+        v-for="wallet in recentWallets"
         :key="wallet.id"
-        class="flex flex-col gap-2 items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer"
-        @click="clickDefaultWallet(wallet)"
-      >
-        <AsyncImg
-          :asyncImg="wallet.iconUrl"
-          :alt="wallet.name"
-          class="rounded-lg"
-        />
-        <p>{{ wallet.name }}</p>
-        <p class="text-center mb-5">{{ wallet.desc }}</p>
-        <div class="p-2 bg-primary text-white rounded-lg mt-auto">
-          {{ wallet.bttnText }}
-        </div>
-      </div>
+        :wallet="wallet"
+        is-recent
+        @clickWallet="clickDefaultWallet"
+      ></btn-wallet>
+
+      <btn-wallet
+        v-for="wallet in defaultWallets"
+        :key="wallet.id"
+        :wallet="wallet"
+        @clickWallet="clickDefaultWallet"
+      ></btn-wallet>
+
+      <dont-have-wallet />
     </div>
+    <wallet-connect-dialog
+      v-if="clickedWallet"
+      v-model:is-open="openWalletConnectModal"
+      :qrcode-data="wagmiWalletData"
+      :wallet-name="clickedWallet.name"
+      :wallet-icon="clickedWallet.icon as string"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import AsyncImg from './AsyncImg.vue'
-import ImgMewWallet from '@assets/images/mewwallet/icon-mew-wallet.png'
-import ImgEnkrypt from '@assets/images/enkrypt/icon-enkrypt.svg'
-interface Wallet {
-  id: string
-  name: string
-  iconUrl: string
-  desc: string
-  bttnText: string
-}
-const wallets: Wallet[] = [
-  {
-    id: 'mobile',
-    name: 'MEW Mobile App',
-    desc: 'Connect to your portfolio using the MEW mobile app.',
-    iconUrl: ImgMewWallet,
-    bttnText: 'Connect',
-  },
-  {
-    id: 'enkrypt',
-    name: 'Enkrypt',
-    desc: 'Connect to your portfolio using our Enkrypt wallet.',
-    iconUrl: ImgEnkrypt,
-    bttnText: 'Connect',
-  },
-  {
-    id: 'watch',
-    name: 'Watch Only',
-    desc: '',
-    iconUrl: ImgEnkrypt,
-    bttnText: 'View',
-  },
-]
+import { storeToRefs } from 'pinia'
+import WalletConnectDialog from '../WalletConnectDialog.vue'
+import DontHaveWallet from './DontHaveWallet.vue'
+import {
+  type WalletConfig,
+  walletConfigs,
+} from '@/modules/access/common/walletConfigs'
+import BtnWallet from './BtnWallet.vue'
+import { useWagmiConnect } from '@/composables/useWagmiConnect'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 
-const clickDefaultWallet = (wallet: Wallet) => {
-  console.log('clickDefaultWallet', wallet.id)
+const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
+  useWagmiConnect()
+
+const recentWalletsStore = useRecentWalletsStore()
+const { recentWallets } = storeToRefs(recentWalletsStore)
+
+const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
+const defaultWallets = keys
+  .filter(key => {
+    return walletConfigs[key].isDefault === true
+  })
+  .map(key => {
+    return walletConfigs[key]
+  })
+
+const clickDefaultWallet = (wallet: WalletConfig) => {
+  connect(wallet)
 }
 </script>

@@ -19,22 +19,24 @@
       @blur="inFocusInput = false"
     />
     <div class="absolute top-1 right-3 flex align-center">
-      <app-btn-icon-close
+      <app-btn-icon
         @click="clearInputValue"
         :class="[
           model !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
-        label="Clear search input"
-      />
+        :label="$t('common.clear_icon')"
+      >
+        <x-circle-icon class="text-grey-50 w-6 h-6"
+      /></app-btn-icon>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/vue/24/solid'
 import { defineProps } from 'vue'
 
 /**

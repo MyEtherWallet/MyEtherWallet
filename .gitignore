@@ -57,6 +57,8 @@ tests_output/
 release
 chrome-extension
 .env
+.env-v6
+.env-v7
 .history
 
 

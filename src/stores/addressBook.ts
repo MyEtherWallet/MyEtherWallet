@@ -1,15 +1,18 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
+import { useGlobalStore } from './globalStore'
 
 interface AddressBook {
   [key: string]: string[];
 }
 
 export const useAddressBookStore = defineStore('addressBookStore', () => {
-  // TODO: setup network
-  const currentNetwork = 'ETH'
-  const addressBook = useLocalStorage<AddressBook>('addressBook', { ETH: [] }, { mergeDefaults: true })
+  const globalStore = useGlobalStore()
+  const currentNetwork = globalStore.selectedNetwork;
+  const storeObject: Record<string, string[]> = {};
+  storeObject[currentNetwork] = []
+  const addressBook = useLocalStorage<AddressBook>('addressBook', storeObject, { mergeDefaults: true })
   const addressBookLength = computed(() => addressBook.value[currentNetwork]?.length || 0)
   const currentAddressBook = computed(() => addressBook.value[currentNetwork])
 

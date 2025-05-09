@@ -46,7 +46,7 @@ export default {
       black: '#000000',
       white: '#ffffff',
       surface: 'rgba(232, 232, 237, 1)',
-      info: 'rgba(0, 0, 0, 0.7)',
+      info: 'rgba(0, 0, 0, 0.65)',
       'grey-light': 'rgba(232, 232, 237, 1)',
       'grey-outline': 'rgba(188,200,204,1)',
       'grey-50': 'rgba(0,0,0,0.5)',
@@ -68,6 +68,8 @@ export default {
       warning: 'rgb(255,165,0, 1)',
       'warning-10': 'rgb(255,165,0,0.1)',
       success: 'rgb(5,192,165,1)',
+      //Text:
+      't-default': 'rgba(0, 0, 0, 1)',
     },
     extend: {
       fontSize: {
@@ -79,6 +81,8 @@ export default {
         's-32': '32px',
         's-28': '28px',
         's-17': '17px',
+        's-15': '15px',
+        's-11': '11px',
       },
       lineHeight: {
         'p-100': '100%',
@@ -90,6 +94,7 @@ export default {
       },
       letterSpacing: {
         'sp-06': '0.6px',
+        'sp-00': '0px',
       },
       transitionProperty: {
         height: 'height',
@@ -99,12 +104,14 @@ export default {
         1: '1px',
       },
       borderRadius: {
-        '4xl': '32px',
-        'input': '16px',
+        20: '20px',
+        32: '32px',
+        16: '16px',
       },
       boxShadow: {
-        'token': '0px 3px 5px rgba(0, 0, 0, 0.16)',
-        'button': '0px 1px 4px 0px rgba(0, 0, 0, 0.12)'
+        token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
+        button: '0px 1px 4px 0px rgba(0, 0, 0, 0.12)',
+        'button-group': '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
       },
     },
   },

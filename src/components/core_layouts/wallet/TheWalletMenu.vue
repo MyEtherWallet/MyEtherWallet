@@ -8,7 +8,7 @@
       appear
     >
       <div
-        v-if="sidebarIsOpen && !isDesktop"
+        v-if="sidebarIsOpen && !isDesktopAndUp"
         class="cursor-pointer fixed inset-0 bg-black/30 z-[39] h-screen w-screen overscroll-none overflow-hidden"
         @click="emit('clickClose')"
         aria-hidden
@@ -140,7 +140,7 @@ defineProps({
   },
 })
 
-const { isDesktop } = useAppBreakpoints()
+const { isDesktopAndUp } = useAppBreakpoints()
 const emit = defineEmits<{
   (e: 'clickClose'): void
 }>()

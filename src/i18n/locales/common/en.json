@@ -3,6 +3,20 @@
     "network": "network",
     "close": "close",
     "clear_icon": "clear input",
-    "copy": "copy"
+    "copy": "copy",
+    "select_network": "Select network",
+    "more": "more",
+    "dont_have_wallet": "Don't have a wallet?",
+    "create_wallet": "Create wallet",
+    "not_found":  {
+      "chains": "No chains found"
+    },
+    "sort_by": "Sort by",
+    "filter": "Filter",
+    "reset": "reset",
+    "powered_by": "Powered by",
+    "error": {
+          "user_canceled_request": "User canceled the request"
+    }
   }
 }
