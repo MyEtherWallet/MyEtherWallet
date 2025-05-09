@@ -28,7 +28,23 @@
     "title": "Access Wallet with Keystore File"
   },
   "access_wallet_recovery_phrase": {
-    "title": "Access Wallet with Recovery Phrase"
+    "title": "Access Wallet with Recovery Phrase",
+    "enter_phrase": "Enter your phrase",
+    "invalid_phrase": "Invalid phrase",
+    "do_you_have_an_extra_word": "Do you have an extra word?",
+    "enter_extra_word": "Enter Extra Word",
+    "step2_title": "",
+    "step": {
+      "step1": {
+        "short": "Enter phrase",
+        "title": "Enter your recovery phrase",
+        "description": "Also called mnemonic phrase, you can use 12, 15, 18, 21 or 24 words phrase to access your wallet. Just enter as many words as you have in your phrase."
+      },
+      "step2": {
+        "short": "address & network",
+        "title": "Select address and network"
+      }
+    }
   },
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"

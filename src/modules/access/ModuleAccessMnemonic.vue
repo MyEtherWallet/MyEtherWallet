@@ -14,25 +14,35 @@
         />
         <app-text-field
           v-model="mnemonic"
-          placeholder="Enter your recovery phrase"
+          :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
           class="mt-4 text-center"
           is-required
-          :error-message="hasMnemonicError ? 'invalid phrase' : ''"
+          :error-message="
+            hasMnemonicError
+              ? $t('access_wallet_recovery_phrase.invalid_phrase')
+              : ''
+          "
         />
-
         <div class="flex items-center justify-between gap-4 my-7 w-full">
-          <p class="font-medium">Do you have an extra word?</p>
+          <p class="font-medium">
+            {{ $t('access_wallet_recovery_phrase.do_you_have_an_extra_word') }}
+          </p>
           <app-toggle v-model="hasExtraWord" :label="extraWordToggleString" />
         </div>
         <!-- Extra Word -->
         <expand-transition>
           <div v-if="hasExtraWord">
-            <app-input v-model="extraWord" placeholder="Enter Extra Word" />
+            <app-input
+              v-model="extraWord"
+              :placeholder="
+                $t('access_wallet_recovery_phrase.enter_extra_word')
+              "
+            />
           </div>
         </expand-transition>
         <div class="flex items-center justify-center">
           <app-base-button @click="unlockWallet" :disabled="!isValid">
-            Next
+            {{ $t('common.next') }}
           </app-base-button>
         </div>
       </div>
@@ -63,10 +73,10 @@
             class="mt-10"
             :is-loading="isUnlockingWallet"
           >
-            Access my wallet
+            {{ $t('common.access_wallet') }}
           </app-base-button>
           <app-btn-text @click="backStep" is-large class="mt-2 text-primary">
-            Back
+            {{ $t('common.back') }}
           </app-btn-text>
         </div>
       </div>
@@ -95,23 +105,26 @@ import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import DerivationPath from './components/DerivationPath.vue'
-
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 /**------------------------
  * Steps
  -------------------------*/
 const activeStep = ref(0)
-const steps = ['Enter Phrase', 'Address & Network']
+const steps = [
+  t('access_wallet_recovery_phrase.step.step1.short'),
+  t('access_wallet_recovery_phrase.step.step2.short'),
+]
 const stepDescription: StepDescription[] = [
   {
-    title: 'Enter your recovery phrase',
-    description:
-      'Also called mnemonic phrase, you can use 12, 15, 18, 21 or 24 words phrase to access your wallet. Just enter as many words as you have in your phrase.',
+    title: t('access_wallet_recovery_phrase.step.step1.title'),
+    description: t('access_wallet_recovery_phrase.step.step1.description'),
   },
   {
-    title: 'Select address and network',
+    title: t('access_wallet_recovery_phrase.step.step2.title'),
   },
 ]
 
@@ -129,7 +142,7 @@ const backStep = () => {
 
 const hasExtraWord = ref(false)
 const extraWordToggleString = computed(() =>
-  hasExtraWord.value ? 'Yes' : 'No',
+  hasExtraWord.value ? t('common.yes') : t('common.no'),
 )
 const extraWord = ref('')
 
