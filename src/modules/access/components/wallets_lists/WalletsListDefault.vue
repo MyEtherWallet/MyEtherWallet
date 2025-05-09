@@ -21,6 +21,13 @@
         :wallet="wallet"
         @clickWallet="clickDefaultWallet"
       ></btn-wallet>
+      <btn-wallet
+        v-for="wallet in detectedWalletsToConfigs"
+        :key="wallet.id"
+        :wallet="wallet"
+        is-detected
+        @clickWallet="clickDefaultWallet"
+      ></btn-wallet>
 
       <dont-have-wallet />
     </div>
@@ -58,14 +65,19 @@ const { providers } = storeToRefs(providerStore)
 
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 
-const detectedWalletsToConfigs: WalletConfig[] = []
-newWalletList.value.forEach(wallet => {
-  providers.value.forEach(_provider => {
-    if (wallet.name === _provider.info.name) {
-      detectedWalletsToConfigs.push(wallet)
+const detectedWalletsToConfigs: WalletConfig[] = newWalletList.value.filter(
+  wallet => {
+    const inProviders = providers.value.find(
+      _provider => _provider.info.name === wallet.name,
+    )
+    const inRecent = recentWallets.value.find(
+      recent => recent.name === wallet.name,
+    )
+    if (inProviders && !inRecent) {
+      return wallet
     }
-  })
-})
+  },
+)
 
 const defaultWallets = keys
   .filter(key => {
@@ -74,7 +86,6 @@ const defaultWallets = keys
   .map(key => {
     return walletConfigs[key]
   })
-  .concat(...detectedWalletsToConfigs)
 
 const clickDefaultWallet = (wallet: WalletConfig) => {
   connect(wallet)
