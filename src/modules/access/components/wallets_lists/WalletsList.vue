@@ -81,20 +81,16 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import * as rainbowkitWallets from '@rainbow-me/rainbowkit/wallets'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import Configs from '@/configs'
 import BtnWallet from './BtnWallet.vue'
 import AppBtnGroup from '@components/AppBtnGroup.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   type WalletConfig,
-  type defaultWalletId,
-  walletConfigs,
   SortBy,
   type Filter,
   WalletConfigType,
@@ -103,77 +99,15 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useWagmiConnect } from '@/composables/useWagmiConnect'
+import { useWalletList } from '@/composables/useWalletList'
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
   useWagmiConnect()
 
-const DEFAULT_IDS = ['enkrypt', 'mew']
-const projectId = Configs.WALLET_CONNECT_PROJECT_ID
+const { defaultWallets, newWalletList } = useWalletList()
 
-/** -------------------
- * Wallets
- * -------------------*/
-const allRainbowWallets = Object.values(rainbowkitWallets)
-
-const initializedWallets = allRainbowWallets.map(wallet =>
-  wallet({ projectId, appName: 'MEW' }),
-)
-
-const newWalletList = computed<WalletConfig[]>(() => {
-  const newConArr: WalletConfig[] = []
-  initializedWallets.forEach(wallet => {
-    if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
-      const _types: WalletConfigType[] = []
-      if (
-        wallet.extension ||
-        (wallet.hasOwnProperty('installed') && !wallet.extension)
-      ) {
-        _types.push(WalletConfigType.EXTENSION)
-      }
-      if (wallet.mobile || wallet.qrCode) {
-        _types.push(WalletConfigType.MOBILE)
-      }
-      if (wallet.desktop) {
-        _types.push(WalletConfigType.DESKTOP)
-      }
-
-      newConArr.push({
-        ...wallet,
-        id: wallet.id,
-        name: wallet.name,
-        icon: wallet.iconUrl,
-        type: _types,
-      })
-    } else if (wallet.id === 'ledger') {
-      newConArr.push({
-        ...wallet,
-        id: 'ledger-mobile',
-        name: 'Ledger Mobile',
-        icon: wallet.iconUrl,
-        type: [WalletConfigType.MOBILE],
-      })
-    }
-  })
-  return newConArr
-})
-
-const defaultWallets = computed<WalletConfig[]>(() => {
-  const defaultWallets: WalletConfig[] = []
-  const keys = Object.keys(walletConfigs) as Array<defaultWalletId>
-  keys.forEach(key => {
-    const wallet = walletConfigs[key]
-    if (wallet.isWC) {
-      const wcWallet = initializedWallets.find(w => w.id === wallet.id)
-      defaultWallets.push(Object.assign({}, wallet, wcWallet))
-    } else {
-      defaultWallets.push(wallet)
-    }
-  })
-
-  return defaultWallets
-})
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
   wallets.push(...defaultWallets.value)

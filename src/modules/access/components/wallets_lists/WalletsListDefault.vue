@@ -34,76 +34,31 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
 import DontHaveWallet from './DontHaveWallet.vue'
 import {
   type WalletConfig,
   walletConfigs,
-  WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 import BtnWallet from './BtnWallet.vue'
 import { useWagmiConnect } from '@/composables/useWagmiConnect'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
-import * as raindbowkitWallet from '@rainbow-me/rainbowkit/wallets'
-import Configs from '@/configs'
-const projectId = Configs.WALLET_CONNECT_PROJECT_ID
+import { useWalletList } from '@/composables/useWalletList'
 
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
   useWagmiConnect()
 
+const { newWalletList } = useWalletList()
 const recentWalletsStore = useRecentWalletsStore()
 const providerStore = useProviderStore()
 const { recentWallets } = storeToRefs(recentWalletsStore)
 const { providers } = storeToRefs(providerStore)
 
-const DEFAULT_IDS = ['enkrypt', 'mew']
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
-const allWallets = Object.values(raindbowkitWallet)
-const initializedWallets = allWallets.map(wallet =>
-  wallet({ projectId, appName: 'MEW' }),
-)
 
-const newWalletList = computed<WalletConfig[]>(() => {
-  const newConArr: WalletConfig[] = []
-  initializedWallets.forEach(wallet => {
-    if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {
-      const _types: WalletConfigType[] = []
-      if (
-        wallet.extension ||
-        (wallet.hasOwnProperty('installed') && !wallet.extension)
-      ) {
-        _types.push(WalletConfigType.EXTENSION)
-      }
-      if (wallet.mobile || wallet.qrCode) {
-        _types.push(WalletConfigType.MOBILE)
-      }
-      if (wallet.desktop) {
-        _types.push(WalletConfigType.DESKTOP)
-      }
-
-      newConArr.push({
-        ...wallet,
-        id: wallet.id,
-        name: wallet.name,
-        icon: wallet.iconUrl,
-        type: _types,
-      })
-    } else if (wallet.id === 'ledger') {
-      newConArr.push({
-        ...wallet,
-        id: 'ledger-mobile',
-        name: 'Ledger Mobile',
-        icon: wallet.iconUrl,
-        type: [WalletConfigType.MOBILE],
-      })
-    }
-  })
-  return newConArr
-})
-const detectedWalletsToConfigs = []
+const detectedWalletsToConfigs: WalletConfig[] = []
 newWalletList.value.forEach(wallet => {
   providers.value.forEach(_provider => {
     if (wallet.name === _provider.info.name) {
