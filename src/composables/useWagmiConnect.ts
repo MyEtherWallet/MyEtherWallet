@@ -6,13 +6,18 @@ import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { type WalletConfig } from '@/modules/access/common/walletConfigs'
+import { type WalletConfig, WalletConfigType } from '@/modules/access/common/walletConfigs'
+
+import { useProviderStore } from '@/stores/providerStore'
+import { storeToRefs } from 'pinia'
 
 export const useWagmiConnect = () => {
   const wagmiWalletData = ref('')
   const clickedWallet = ref<WalletConfig | undefined>()
   const openWalletConnectModal = ref(false)
 
+  const providerStore = useProviderStore()
+  const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
   const recentWalletsStore = useRecentWalletsStore()
@@ -44,6 +49,15 @@ export const useWagmiConnect = () => {
           )
         }
       })
+      const providerInjected = Eip6963Providers.value.find(
+        p => p.info.name === wallet.name,
+      )
+      const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION);
+      if (isWeb3 && !providerInjected) {
+        // TODO: add web3 wallet handler
+        console.error('Web3 wallet not found in providers:', wallet.name)
+        return;
+      }
       const wagWallet = new WagmiWallet(connector!, '0x1')
       wagWallet.connect().then(res => {
         if (res) {

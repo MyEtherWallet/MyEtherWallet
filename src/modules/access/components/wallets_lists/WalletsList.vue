@@ -81,7 +81,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
+import * as rainbowkitWallets from '@rainbow-me/rainbowkit/wallets'
 import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
@@ -115,7 +115,7 @@ const projectId = Configs.WALLET_CONNECT_PROJECT_ID
 /** -------------------
  * Wallets
  * -------------------*/
-const allRainbowWallets = Object.values(rainndowWallets)
+const allRainbowWallets = Object.values(rainbowkitWallets)
 
 const initializedWallets = allRainbowWallets.map(wallet =>
   wallet({ projectId, appName: 'MEW' }),
