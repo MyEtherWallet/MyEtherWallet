@@ -12,7 +12,7 @@
         class="md-header:hidden"
         @click="openFilterSortModal = true"
       >
-        <Bars3Icon />
+        <Bars3Icon class="h-6 w-6" />
       </app-btn-icon>
     </div>
     <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4">
@@ -242,10 +242,16 @@ const sortOptions: AppSelectOption[] = [
 const activeSort = ref<AppSelectOption>(sortOptions[0])
 
 const filterOptions: Filter[] = [
-  { name: 'All', value: 'all' },
-  { name: 'Hardware', value: WalletConfigType.HARDWARE },
-  { name: 'Mobile', value: WalletConfigType.MOBILE },
-  { name: 'Software', value: WalletConfigType.SOFTWARE },
+  { name: t('access_wallet.filter.all'), value: 'all' },
+  {
+    name: t('access_wallet.filter.hardware'),
+    value: WalletConfigType.HARDWARE,
+  },
+  { name: t('access_wallet.filter.mobile'), value: WalletConfigType.MOBILE },
+  {
+    name: t('access_wallet.filter.software'),
+    value: WalletConfigType.SOFTWARE,
+  },
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])

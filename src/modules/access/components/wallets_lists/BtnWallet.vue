@@ -1,9 +1,10 @@
 <template>
   <button
     class="flex flex-col gap-2 justify-stretch bg-white p-2 rounded-20 hoverNoBG cursor-pointer shadow-button"
+    aria-labelledby="wallet-name"
     @click="clickDefaultWallet(wallet)"
   >
-    <div class="flex-1 flex items-center justify-stretch gap-2">
+    <div class="w-full flex items-center justify-stretch gap-2 h-5">
       <img
         v-if="wallet.isOfficial"
         :src="OfficialBadge"
@@ -12,15 +13,21 @@
         width="68px"
         class="w-[68px] h-5"
       />
-      <div class="ml-auto flex item-center justify-items-end">
+      <h5
+        v-if="isRecent"
+        class="text-s-11 font-bold pl-[5px] leading-p-100 tracking-sp-00"
+      >
+        {{ $t('access_wallet.recent') }}
+      </h5>
+      <div class="flex grow item-center justify-end">
         <div v-for="(type, index) in wallet.type" :key="index">
           <img
             v-if="getBadge(type)"
             :src="getBadge(type)"
             alt=""
-            width="20px"
-            height="20px"
-            class="w-5 h-5"
+            width="20"
+            height="20"
+            class="w-5 h-5 justify-self-end"
           />
         </div>
       </div>
@@ -36,7 +43,10 @@
       />
     </div>
 
-    <p class="mb-4 text-s-15 font-medium leading-p-150">
+    <p
+      id="wallet-name"
+      class="mb-4 text-s-15 font-medium leading-p-150 text-center mx-auto"
+    >
       {{ wallet.name }}
     </p>
   </button>
@@ -55,6 +65,7 @@ import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
   wallet: WalletConfig
+  isRecent?: boolean
 }>()
 
 const emit = defineEmits<{

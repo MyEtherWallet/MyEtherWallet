@@ -5,7 +5,7 @@
     target="_blank"
     :aria-label="label"
     :class="[
-      'rounded-full !cursor-pointer p-1 h-[32px] w-[32px] flex items-center justify-center',
+      'rounded-full !cursor-pointer p-1 h-[32px] w-[32px] flex items-center justify-center ',
       { 'invert brightness-100': isWhite },
       disabled ? 'text-grey-30' : 'hoverNoBG',
     ]"

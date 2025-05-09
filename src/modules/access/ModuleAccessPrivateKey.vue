@@ -39,6 +39,8 @@ import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { hexToBytes } from 'viem'
+import { walletConfigs } from '@/modules/access/common/walletConfigs'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 
 const privateKeyInput = ref('')
 
@@ -47,6 +49,9 @@ const router = useRouter()
 const { setWallet } = walletStore
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
 
 const submitIsDisabled = computed<boolean>(() => {
   return privateKeyInput.value === '' || !isValidPrivateKey.value
@@ -85,6 +90,7 @@ const unlock = () => {
       selectedChain?.value.chainID || '1',
     )
     setWallet(wallet)
+    addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
     router.push({ path: ROUTES_WALLET.WALLET.PATH })
   } catch (error) {

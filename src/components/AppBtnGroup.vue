@@ -10,6 +10,8 @@
         <button
           v-for="(btn, index) in btnList"
           :key="index"
+          role="tab"
+          :aria-selected="areEqual(selected, btn)"
           :class="[
             {
               'bg-white shadow-button-group hover:bg-white': areEqual(

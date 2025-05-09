@@ -101,7 +101,7 @@ const openSelect = ref(false)
 const showSelected = computed(() => {
   return props.placeholder
     ? `${props.placeholder} ${selected.value?.label}`
-    : selected.value?.label
+    : selected.value.label
 })
 
 /**

@@ -5,6 +5,7 @@
     "need_help": "Need help accessing your wallet?",
     "search_wallet": "Search for your wallet",
     "select_wallet": "Select your wallet",
+    "recent": "Recent",
     "all_wallets": {
       "title": "All Wallets",
       "description": "Ledger, private key, keystore, mobile wallets, we have it all"
@@ -15,7 +16,13 @@
       "name_a_z": "Name A-Z",
       "name_z_a": "Name Z-A"
     },
-    "sort_and_filter": "Sort & Filter"
+    "sort_and_filter": "Sort & Filter",
+    "filter": {
+      "all": "All",
+      "hardware": "Hardware",
+      "mobile": "Mobile",
+      "software": "Software"
+    }
   },
   "access_wallet_keystore": {
     "title": "Access Wallet with Keystore File"
@@ -33,6 +40,6 @@
     "scan_qr_code": "Scan QR code with { walletName } to connect.",
     "or_copy_link": "OR copy link",
     "need_help": "How to connect your wallet"
-  }
-
+  },
+  "error_connecting": "Failed to connect. Check your wallet for errors"
 }
