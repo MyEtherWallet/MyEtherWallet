@@ -14,6 +14,9 @@
     "sort_by": "Sort by",
     "filter": "Filter",
     "reset": "reset",
-    "powered_by": "Powered by"
+    "powered_by": "Powered by",
+    "add": "Add",
+    "cancel": "Cancel",
+    "go_back": "Go back"
   }
 }

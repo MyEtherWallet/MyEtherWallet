@@ -15,6 +15,18 @@ export enum WalletConfigType {
   EXTENSION = 'extension',
 }
 
+export const WALLET_TYPES = {
+  LEDGER: 'ledger',
+  TREZOR: 'trezor',
+  WALLET_CONNECT: 'walletConnect',
+  KEYSTORE: 'keystore',
+  MNEMONIC: 'mnemonic',
+  WEB3_WALLET: 'web3Wallet',
+  PRIV_KEY: 'privKey',
+  WALLET_LINK: 'walletLink',
+  MEW_WALLET: 'mewWallet',
+}
+
 export type defaultWalletId =
   | 'enkrypt'
   | 'mew' // 'mew mobile app it is matched to rainbow wallet id

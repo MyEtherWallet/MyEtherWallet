@@ -36,11 +36,18 @@
           </app-base-button>
         </div>
       </div>
+      <!-- Select Network, Address, DP -->
       <div v-if="activeStep === 1">
         <app-step-description
           :description="stepDescription[1]"
           :activeStep="activeStep"
         />
+        <div
+          class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
+        >
+          <app-select-chain />
+          <derivation-path />
+        </div>
         <select-address-list
           v-model="selectedIndex"
           :walletList="walletList"
@@ -49,7 +56,7 @@
           @nextpage="setPage(true)"
           @prevpage="setPage(false)"
         />
-        <div class="flex items-center justify-center">
+        <div class="flex items-center flex-col justify-center">
           <app-base-button
             @click="access"
             :disabled="!isValid"
@@ -58,6 +65,9 @@
           >
             Access my wallet
           </app-base-button>
+          <app-btn-text @click="backStep" is-large class="mt-2 text-primary">
+            Back
+          </app-btn-text>
         </div>
       </div>
     </app-stepper>
@@ -69,6 +79,7 @@ import { computed, ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppTextField from '@/components/AppTextField.vue'
 import AppToggle from '@/components/AppToggle.vue'
@@ -82,7 +93,8 @@ import { ROUTES_WALLET } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
-
+import AppSelectChain from '@/components/AppSelectChain.vue'
+import DerivationPath from './components/DerivationPath.vue'
 /**------------------------
  * Steps
  -------------------------*/
@@ -96,12 +108,15 @@ const stepDescription: StepDescription[] = [
   },
   {
     title: 'Select address and network',
-    description: 'Enter your password to unlock your wallet.',
   },
 ]
 
 const backStep = () => {
   activeStep.value = 0
+  wallet.value = null
+  mnemonic.value = ''
+  extraWord.value = ''
+  hasExtraWord.value = false
 }
 
 /**------------------------
