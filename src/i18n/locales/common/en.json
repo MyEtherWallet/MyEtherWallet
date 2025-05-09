@@ -25,6 +25,8 @@
           "user_canceled_request": "User canceled the request"
     },
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "clear": "clear",
+    "required": "required"
   }
 }

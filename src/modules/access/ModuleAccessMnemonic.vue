@@ -62,7 +62,7 @@
           v-model="selectedIndex"
           :walletList="walletList"
           :isLoading="isLoadingWalletList"
-          class="mt-10"
+          class="mt-5"
           @nextpage="setPage(true)"
           @prevpage="setPage(false)"
         />
