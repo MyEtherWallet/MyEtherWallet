@@ -8,7 +8,7 @@
     >
       <!-- RECENTLY USED WALLETS -->
       <btn-wallet
-        v-for="wallet in recentWallets"
+        v-for="wallet in recentWallets.reverse()"
         :key="wallet.id"
         :wallet="wallet"
         is-recent
@@ -21,6 +21,13 @@
         :wallet="wallet"
         @clickWallet="clickDefaultWallet"
       ></btn-wallet>
+      <btn-wallet
+        v-for="wallet in detectedWalletsToConfigs"
+        :key="wallet.id"
+        :wallet="wallet"
+        is-detected
+        @clickWallet="clickDefaultWallet"
+      ></btn-wallet>
 
       <dont-have-wallet />
     </div>
@@ -29,7 +36,7 @@
       v-model:is-open="openWalletConnectModal"
       :qrcode-data="wagmiWalletData"
       :wallet-name="clickedWallet.name"
-      :wallet-icon="clickedWallet.icon as string"
+      :wallet-icon="clickedWallet.icon"
     />
   </div>
 </template>
@@ -44,14 +51,34 @@ import {
 import BtnWallet from './BtnWallet.vue'
 import { useWagmiConnect } from '@/composables/useWagmiConnect'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useProviderStore } from '@/stores/providerStore'
+import { useWalletList } from '@/composables/useWalletList'
 
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
   useWagmiConnect()
 
+const { newWalletList } = useWalletList()
 const recentWalletsStore = useRecentWalletsStore()
+const providerStore = useProviderStore()
 const { recentWallets } = storeToRefs(recentWalletsStore)
+const { providers } = storeToRefs(providerStore)
 
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
+
+const detectedWalletsToConfigs: WalletConfig[] = newWalletList.value.filter(
+  wallet => {
+    const inProviders = providers.value.find(
+      _provider => _provider.info.name === wallet.name,
+    )
+    const inRecent = recentWallets.value.find(
+      recent => recent.name === wallet.name,
+    )
+    if (inProviders && !inRecent) {
+      return wallet
+    }
+  },
+)
+
 const defaultWallets = keys
   .filter(key => {
     return walletConfigs[key].isDefault === true

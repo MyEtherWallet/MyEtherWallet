@@ -83,6 +83,7 @@ export default {
         's-17': '17px',
         's-15': '15px',
         's-11': '11px',
+        's-12': '12px',
       },
       lineHeight: {
         'p-100': '100%',
