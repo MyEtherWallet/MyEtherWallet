@@ -14,16 +14,12 @@
         class="w-[68px] h-5"
       />
       <h5
-        v-if="isRecent"
-        class="text-s-11 font-bold pl-[5px] leading-p-100 tracking-sp-00"
+        v-if="isDetected || isRecent"
+        class="text-s-12 font-bold pl-[5px] leading-p-100 tracking-sp-00"
       >
-        {{ $t('access_wallet.recent') }}
-      </h5>
-      <h5
-        v-if="isDetected"
-        class="text-s-11 font-bold pl-[5px] leading-p-100 tracking-sp-00"
-      >
-        {{ $t('access_wallet.detected') }}
+        {{
+          isRecent ? $t('access_wallet.recent') : $t('access_wallet.detected')
+        }}
       </h5>
       <div class="flex grow item-center justify-end">
         <div v-for="(type, index) in wallet.type" :key="index">
