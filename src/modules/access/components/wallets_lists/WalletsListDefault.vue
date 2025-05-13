@@ -8,7 +8,7 @@
     >
       <!-- RECENTLY USED WALLETS -->
       <btn-wallet
-        v-for="wallet in recentWallets"
+        v-for="wallet in recentWallets.reverse()"
         :key="wallet.id"
         :wallet="wallet"
         is-recent
