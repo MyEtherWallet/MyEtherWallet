@@ -8,7 +8,7 @@
     >
       <!-- RECENTLY USED WALLETS -->
       <btn-wallet
-        v-for="wallet in recentWallets.reverse()"
+        v-for="wallet in reversedRecentWallets"
         :key="wallet.id"
         :wallet="wallet"
         is-recent
@@ -62,6 +62,8 @@ const recentWalletsStore = useRecentWalletsStore()
 const providerStore = useProviderStore()
 const { recentWallets } = storeToRefs(recentWalletsStore)
 const { providers } = storeToRefs(providerStore)
+
+const reversedRecentWallets = recentWallets.value.slice().reverse()
 
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 

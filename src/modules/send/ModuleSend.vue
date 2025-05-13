@@ -71,7 +71,7 @@
 
   <!-- TODO: replace network with actual selected network info -->
   <evm-transaction-confirmation
-    :fromAddress="wallet.getAddress()"
+    :fromAddress="address"
     :toAddress="toAddress"
     :networkFeeUSD="networkFeeUSD"
     :networkFeeETH="networkFeeETH"
@@ -130,11 +130,13 @@ const openTxModal = ref(false)
 const isLoadingFees = ref(true)
 
 const signedTx = ref<HexPrefixedString | string>('')
+const address = ref('')
 
 onMounted(async () => {
   const mainToken: TokenBalance = tokens.value.find(
     (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as TokenBalance
+  address.value = await wallet.value.getAddress()
   tokenSelected.value = (mainToken as TokenBalance)
     ? mainToken
     : tokens.value[0]
@@ -142,7 +144,7 @@ onMounted(async () => {
   isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
     to: '0x0000000000000000000000000000000000000000',
-    address: wallet.value.getAddress() as HexPrefixedString,
+    address: address.value as HexPrefixedString,
     value: '0x0' as HexPrefixedString,
     data: data.value as HexPrefixedString,
   })
@@ -239,7 +241,7 @@ watch(
     gasFees.value = await wallet.value.getGasFee({
       to: toAddress.value as HexPrefixedString,
       address:
-        (wallet.value.getAddress() as HexPrefixedString) ||
+        (address.value as HexPrefixedString) ||
         '0x0000000000000000000000000000000000000000',
       value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
       data: data.value as HexPrefixedString,
