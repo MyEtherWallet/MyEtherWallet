@@ -1,8 +1,9 @@
 import type { WalletInterface } from '../common/walletInterface'
+import { useChainsStore } from '@/stores/chainsStore'
+import { storeToRefs } from 'pinia'
+import { type TokenBalancesRaw } from '@/mew_api/types'
 import {
-  ProviderName,
   WalletType,
-  type BalanceResponse,
   type GasFeeResponse,
   type HexPrefixedString,
 } from '../types'
@@ -12,6 +13,8 @@ import {
   type PostSignedTransaction,
   type PreEthereumTransaction,
 } from './types'
+import { type EVMTxResponse } from '@/mew_api/types'
+
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
@@ -89,17 +92,44 @@ class PrivateKeyWallet implements WalletInterface {
     const sig = ecsign(msgHash, this.privKey)
     return Promise.resolve(toRpcSig(sig.v, sig.r, sig.s) as HexPrefixedString)
   }
-  getAddress(): string {
-    return toChecksumAddress(bytesToHex(privateToAddress(this.privKey)))
+  getAddress(): Promise<string> {
+    return Promise.resolve(toChecksumAddress(bytesToHex(privateToAddress(this.privKey))))
   }
   getWalletType(): WalletType {
     return WalletType.PRIVATE_KEY
   }
-  getProvider(): ProviderName {
-    return ProviderName.Ethereum
+  getProvider(): string {
+    const chainStore = useChainsStore()
+    const { selectedChain } = storeToRefs(chainStore)
+    return selectedChain.value?.name || 'ETHEREUM'
   }
-  getBalance(): Promise<BalanceResponse> {
-    throw new Error('Method not implemented.')
+  async getBalance(): Promise<TokenBalancesRaw[]> {
+    const address = await this.getAddress()
+    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
+    const { data, onFetchResponse } = useFetchMewApi<TokenBalancesRaw[]>(
+      balanceEndpoint,
+    )
+    return new Promise((resolve) => {
+      onFetchResponse(() => {
+        resolve(data.value?.result || [])
+      })
+    })
+  }
+  broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
+    const url = `/evm/${this.chainId}/transactions/broadcast/?noInjectErrors=false`
+    const { onFetchResponse } = useFetchMewApi<EVMTxResponse>(
+      url,
+      'POST',
+      {
+        signedTransaction: signedTx,
+      },
+    )
+
+    return new Promise((resolve) => {
+      onFetchResponse(() => {
+        resolve(data.value?.result || '')
+      })
+    })
   }
   connect(): Promise<boolean> {
     return Promise.resolve(true)

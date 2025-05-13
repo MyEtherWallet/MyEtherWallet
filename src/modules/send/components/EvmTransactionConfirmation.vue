@@ -86,20 +86,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'
-import { useChainsStore } from '@/stores/chainsStore'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import createIcon from '@/providers/ethereum/blockies'
-
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
 
-import { type EVMTxResponse } from '@/mew_api/types'
 import { type HexPrefixedString } from '@/providers/types'
 
 interface EvmTxType {
@@ -137,32 +134,20 @@ watch(
 // modal actions
 const signing = ref(false)
 
-const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const walletStore = useWalletStore()
+const { wallet } = storeToRefs(walletStore)
 
 const goBack = () => {
   openModal.value = false
   model.value = false
 }
-
-const broadcastUrl = computed(() => {
-  return `/evm/${selectedChain.value?.chainID}/transactions/broadcast/?noInjectErrors=false`
-})
-
 // Toast
 const toastStore = useToastStore()
 
 const confirmTransaction = async () => {
   signing.value = true
-  const { onFetchResponse } = useFetchMewApi<EVMTxResponse>(
-    broadcastUrl.value,
-    'POST',
-    {
-      signedTransaction: props.signedTx,
-    },
-  )
 
-  onFetchResponse(() => {
+  wallet.value.broadcastTransaction(props.signedTx).then(() => {
     toastStore.addToastMessage({
       type: ToastType.Success,
       text: 'Transaction sent successfully',

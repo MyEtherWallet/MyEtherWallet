@@ -29,23 +29,15 @@ import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { type TokenBalancesRaw } from '@/mew_api/types'
 
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 
-const urlTokenBalances = computed(() => {
-  return `/balances/POLYGON/${wallet.value.getAddress()}/?noInjectErrors=false`
-})
-const { data, onFetchResponse } = useFetchMewApi<TokenBalancesRaw>(
-  urlTokenBalances.value,
-)
-onFetchResponse(() => {
-  setTokens(data.value?.result || [])
+wallet.value?.getBalance().then((balances: TokenBalancesRaw[]) => {
+  setTokens(balances as TokenBalancesRaw[])
   setIsLoadingBalances(false)
-  return data.value?.result
 })
 
 /** ------------------------------

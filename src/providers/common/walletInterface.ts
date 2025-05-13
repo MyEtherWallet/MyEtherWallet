@@ -1,8 +1,7 @@
+import { type TokenBalancesRaw } from '@/mew_api/types'
 import type {
-  BalanceResponse,
   GasFeeResponse,
   HexPrefixedString,
-  ProviderName,
   WalletType,
 } from '../types'
 import {
@@ -24,8 +23,9 @@ export interface WalletInterface {
     message: `0x${string}`
     options: unknown
   }) => Promise<HexPrefixedString>
-  getAddress: () => string
+  getAddress: () => Promise<string>
   getWalletType: () => WalletType
-  getProvider: () => ProviderName
-  getBalance: () => Promise<BalanceResponse>
+  getProvider: () => string
+  getBalance: () => Promise<TokenBalancesRaw[]>
+  broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
 }

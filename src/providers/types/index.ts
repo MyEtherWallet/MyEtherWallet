@@ -53,6 +53,7 @@ export interface PostTransactionResponse {
 export enum WalletType {
   PRIVATE_KEY = 'PRIVATE_KEY',
   MNEMONIC = 'MNEMONIC',
+  WAGMI = 'WAGMI',
 }
 
 export interface BalanceResponse {
