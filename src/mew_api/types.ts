@@ -16,3 +16,8 @@ export interface TokenBalance extends TokenBalanceRaw {
  --------------------------*/
 export type ChainsRaw = components['schemas']['GetChainMetadataListResponse']
 export type Chain = components['schemas']['ChainMetadata']
+
+/** --------------------------
+ * POST Tx
+  --------------------------*/
+export type EVMTxResponse = components['schemas']['BroadcastEvmTransactionResponse']

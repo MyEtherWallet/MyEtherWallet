@@ -36,7 +36,7 @@ export type PreTransaction = EthereumTransactionWithFeeType
 export type PostTransaction = PostEthereumTransaction
 
 export interface GasFeeResponse {
-  id: string
+  transactionId: string
   fees: GasFeeType
 }
 export interface PreTransactionResponse {

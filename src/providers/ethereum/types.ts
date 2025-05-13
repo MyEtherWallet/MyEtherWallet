@@ -18,12 +18,22 @@ export interface APIRequest {
 export interface PreEthereumTransaction {
   to: HexPrefixedString
   address: HexPrefixedString
+  from?: HexPrefixedString
   value: HexPrefixedString
   data: HexPrefixedString
 }
 
-export interface EthereumTransactionWithFeeType extends PreEthereumTransaction {
-  gasFee: GasPriceType
+export interface EthereumSignableTransactionParams {
+  priority: GasPriceType
+  transactionId: string
+}
+
+export interface EthereumSignableTransactionResult {
+  serialized: HexPrefixedString
+}
+
+export interface PostSignedTransaction {
+  signed: HexPrefixedString
 }
 
 export interface PostEthereumTransaction extends PreEthereumTransaction, APIRequest {

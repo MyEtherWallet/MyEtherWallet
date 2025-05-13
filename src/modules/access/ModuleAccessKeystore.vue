@@ -99,7 +99,6 @@ import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
-import { watchDebounced } from '@vueuse/core'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 
 import AppNotRecommended from '@/components/AppNotRecommended.vue'

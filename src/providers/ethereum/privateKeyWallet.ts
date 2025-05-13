@@ -5,26 +5,24 @@ import {
   type BalanceResponse,
   type GasFeeResponse,
   type HexPrefixedString,
-  type PostTransactionResponse,
-  type PreTransactionResponse,
 } from '../types'
 import {
-  SupportedTXType,
-  type EthereumTransactionWithFeeType,
-  type PostEthereumTransaction,
+  type EthereumSignableTransactionParams,
+  type EthereumSignableTransactionResult,
+  type PostSignedTransaction,
   type PreEthereumTransaction,
 } from './types'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
 import {
-  hexToBigInt,
   bytesToHex,
   hashPersonalMessage,
   ecsign,
   toRpcSig,
   privateToAddress,
   toChecksumAddress,
+  hexToBytes
 } from '@ethereumjs/util'
 
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -37,52 +35,54 @@ class PrivateKeyWallet implements WalletInterface {
     this.chainId = chainId
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    // test data
-    console.log(this.chainId)
     const { data, onFetchResponse } = useFetchMewApi(`/evm/${this.chainId}/transactions/quote`, 'POST', tx)
     return new Promise((resolve) => {
       onFetchResponse(() => {
-        console.log('onFetchResponse', data.value)
         resolve(data.value as GasFeeResponse)
       })
     })
   }
   getSignableTransaction(
-    tx: EthereumTransactionWithFeeType,
-  ): Promise<PreTransactionResponse> {
-    console.log('getSignableTransaction', tx)
-    throw new Error('Method not implemented.')
+    feeObj: EthereumSignableTransactionParams,
+  ): Promise<EthereumSignableTransactionResult> {
+    const { data, onFetchResponse } = useFetchMewApi(`/evm/${this.chainId}/transactions/construct`, 'POST', feeObj)
+    return new Promise((resolve) => {
+      onFetchResponse(() => {
+        resolve(data.value as EthereumSignableTransactionResult)
+      })
+    })
   }
+
+  /**
+   * 
+   * @param serializedTx 
+   * currently making library figure out tx type
+   * TODO: switch to using the type from the API
+   */
   SignTransaction(
-    tx: PostEthereumTransaction,
-  ): Promise<PostTransactionResponse> {
-    if (tx.type === SupportedTXType.LEGACY) {
-      const common = commonGenerator(hexToBigInt(tx.chainId), Hardfork.Berlin)
-      const legacyTx = new LegacyTransaction(tx, {
-        common,
-      })
-      legacyTx.sign(this.privKey)
+    serializedTx: HexPrefixedString,
+  ): Promise<PostSignedTransaction> {
+    console.log('Signing transaction', serializedTx)
+
+    try {
+      const common = commonGenerator(BigInt(this.chainId), Hardfork.London)
+      console.log('common 1559', common, this.chainId)
+      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(hexToBytes(serializedTx), { common })
+      tx.sign(this.privKey)
       return Promise.resolve({
-        signed: bytesToHex(legacyTx.serialize()),
-        id: tx.id,
-        transaction: legacyTx,
+        signed: bytesToHex(tx.serialize())
       })
-    } else if (tx.type === SupportedTXType.EIP1559) {
-      const common = commonGenerator(hexToBigInt(tx.chainId), Hardfork.London)
-      const modifiedTx: Omit<typeof tx, 'gasPrice'> = {
-        ...tx,
-      }
-      const feeMarketTx = new FeeMarketEIP1559Transaction(modifiedTx, {
-        common,
-      })
-      feeMarketTx.sign(this.privKey)
+      // on fail, assume legacy tx
+    } catch {
+      const common = commonGenerator(BigInt(this.chainId), Hardfork.Berlin)
+      console.log('common legacy', common, this.chainId)
+      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), { common })
+      tx.sign(this.privKey)
       return Promise.resolve({
-        signed: bytesToHex(feeMarketTx.serialize()),
-        id: tx.id,
-        transaction: feeMarketTx,
+        signed: bytesToHex(tx.serialize())
       })
     }
-    throw new Error('Unsupported transaction type')
+
   }
   SignMessage(options: {
     message: `0x${string}`
