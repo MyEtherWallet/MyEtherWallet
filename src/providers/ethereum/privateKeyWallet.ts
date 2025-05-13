@@ -62,24 +62,21 @@ class PrivateKeyWallet implements WalletInterface {
   SignTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {
-    console.log('Signing transaction', serializedTx)
 
     try {
       const common = commonGenerator(BigInt(this.chainId), Hardfork.London)
-      console.log('common 1559', common, this.chainId)
       const tx = FeeMarketEIP1559Transaction.fromSerializedTx(hexToBytes(serializedTx), { common })
-      tx.sign(this.privKey)
+      const signedTx = tx.sign(this.privKey);
       return Promise.resolve({
-        signed: bytesToHex(tx.serialize())
+        signed: bytesToHex(signedTx.serialize())
       })
       // on fail, assume legacy tx
     } catch {
       const common = commonGenerator(BigInt(this.chainId), Hardfork.Berlin)
-      console.log('common legacy', common, this.chainId)
       const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), { common })
-      tx.sign(this.privKey)
+      const signedTx = tx.sign(this.privKey)
       return Promise.resolve({
-        signed: bytesToHex(tx.serialize())
+        signed: bytesToHex(signedTx.serialize())
       })
     }
 
