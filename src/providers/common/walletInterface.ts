@@ -12,7 +12,7 @@ import {
 } from '@/providers/ethereum/types'
 
 export interface WalletInterface {
-  connect: () => Promise<boolean>
+  connect?: () => Promise<boolean>
   disconnect: () => Promise<boolean>
   getSignableTransaction: (
     tx: EthereumSignableTransactionParams,

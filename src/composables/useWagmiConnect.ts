@@ -76,7 +76,7 @@ export const useWagmiConnect = () => {
           return
         }
       }
-      const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID)
+      const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID || '1')
       wagWallet
         .connect()
         .then(res => {

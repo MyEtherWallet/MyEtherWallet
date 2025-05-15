@@ -15,30 +15,15 @@ import {
 } from './types'
 import { type EVMTxResponse } from '@/mew_api/types'
 
-import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
-import { commonGenerator } from './utils'
-import { Hardfork } from '@ethereumjs/common'
-import {
-  bytesToHex,
-  hashPersonalMessage,
-  ecsign,
-  toRpcSig,
-  privateToAddress,
-  toChecksumAddress,
-  hexToBytes
-} from '@ethereumjs/util'
-
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 
 class BaseEvmWallet implements WalletInterface {
-  privKey: Uint8Array
   chainId: string
-  constructor(privateKey: Uint8Array, chainId: string) {
-    this.privKey = privateKey
+  constructor(chainId: string) {
     this.chainId = chainId
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/transactions/quote`, 'POST', tx)
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quote`, 'POST', tx)
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as GasFeeResponse)
@@ -48,7 +33,7 @@ class BaseEvmWallet implements WalletInterface {
   getSignableTransaction(
     feeObj: EthereumSignableTransactionParams,
   ): Promise<EthereumSignableTransactionResult> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/transactions/construct`, 'POST', feeObj)
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/construct`, 'POST', feeObj)
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as EthereumSignableTransactionResult)
@@ -62,41 +47,26 @@ class BaseEvmWallet implements WalletInterface {
    * currently making library figure out tx type
    * TODO: switch to using the type from the API
    */
-  SignTransaction(
-    serializedTx: HexPrefixedString,
-  ): Promise<PostSignedTransaction> {
-
-    try {
-      const common = commonGenerator(BigInt(this.chainId), Hardfork.London)
-      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(hexToBytes(serializedTx), { common })
-      const signedTx = tx.sign(this.privKey);
-      return Promise.resolve({
-        signed: bytesToHex(signedTx.serialize())
-      })
-      // on fail, assume legacy tx
-    } catch {
-      const common = commonGenerator(BigInt(this.chainId), Hardfork.Berlin)
-      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), { common })
-      const signedTx = tx.sign(this.privKey)
-      return Promise.resolve({
-        signed: bytesToHex(signedTx.serialize())
-      })
-    }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  SignTransaction(serializedTx: HexPrefixedString): Promise<PostSignedTransaction> {
+    throw new Error('Method not implemented: SignTransaction')
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  SendTransaction(serializedTx: HexPrefixedString): Promise<HexPrefixedString> {
+    throw new Error('Method not implemented: SignTransaction')
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
-    const msgHash = hashPersonalMessage(Buffer.from(options.message, 'utf8'))
-    const sig = ecsign(msgHash, this.privKey)
-    return Promise.resolve(toRpcSig(sig.v, sig.r, sig.s) as HexPrefixedString)
+    throw new Error('Method not implemented: SignMessage')
   }
   getAddress(): Promise<string> {
-    return Promise.resolve(toChecksumAddress(bytesToHex(privateToAddress(this.privKey))))
+    throw new Error('Method not implemented: getAddress')
   }
   getWalletType(): WalletType {
-    return WalletType.PRIVATE_KEY
+    throw new Error('Method not implemented: getWalletType')
   }
   getProvider(): string {
     const chainStore = useChainsStore()
@@ -116,8 +86,8 @@ class BaseEvmWallet implements WalletInterface {
     })
   }
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/${this.chainId}/transactions/broadcast/?noInjectErrors=false`
-    const { onFetchResponse } = useFetchMewApi<EVMTxResponse>(
+    const url = `/v1/evm/${this.chainId}/broadcast/?noInjectErrors=false`
+    const { data, onFetchResponse } = useFetchMewApi<EVMTxResponse>(
       url,
       'POST',
       {
@@ -127,7 +97,7 @@ class BaseEvmWallet implements WalletInterface {
 
     return new Promise((resolve) => {
       onFetchResponse(() => {
-        resolve(data.value?.result || '')
+        resolve(data.value?.txHash || '')
       })
     })
   }
@@ -135,7 +105,7 @@ class BaseEvmWallet implements WalletInterface {
     return Promise.resolve(true)
   }
   disconnect(): Promise<boolean> {
-    return Promise.resolve(true)
+    throw new Error('Method not implemented: getWalletType')
   }
 }
 

@@ -1,20 +1,3 @@
-import type { WalletInterface } from '../common/walletInterface'
-import { useChainsStore } from '@/stores/chainsStore'
-import { storeToRefs } from 'pinia'
-import { type TokenBalancesRaw } from '@/mew_api/types'
-import {
-  WalletType,
-  type GasFeeResponse,
-  type HexPrefixedString,
-} from '../types'
-import {
-  type EthereumSignableTransactionParams,
-  type EthereumSignableTransactionResult,
-  type PostSignedTransaction,
-  type PreEthereumTransaction,
-} from './types'
-import { type EVMTxResponse } from '@/mew_api/types'
-
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
@@ -27,42 +10,34 @@ import {
   toChecksumAddress,
   hexToBytes
 } from '@ethereumjs/util'
+import BaseEvmWallet from './BaseEVMWallet'
+import {
+  type PostSignedTransaction,
+} from './types'
+import {
+  WalletType,
+  type HexPrefixedString,
+} from '../types'
 
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useWalletStore } from '@/stores/walletStore'
+import { useRouter } from 'vue-router'
+import { ROUTES_HOME } from '@/router/routeNames'
 
-class PrivateKeyWallet implements WalletInterface {
-  privKey: Uint8Array
-  chainId: string
+class PrivateKeyWallet extends BaseEvmWallet {
+  private privKey: Uint8Array;
+
   constructor(privateKey: Uint8Array, chainId: string) {
+    super(chainId)
     this.privKey = privateKey
-    this.chainId = chainId
-  }
-  getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/transactions/quote`, 'POST', tx)
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value as GasFeeResponse)
-      })
-    })
-  }
-  getSignableTransaction(
-    feeObj: EthereumSignableTransactionParams,
-  ): Promise<EthereumSignableTransactionResult> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/transactions/construct`, 'POST', feeObj)
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value as EthereumSignableTransactionResult)
-      })
-    })
   }
 
   /**
-   * 
-   * @param serializedTx 
-   * currently making library figure out tx type
-   * TODO: switch to using the type from the API
-   */
-  SignTransaction(
+     * 
+     * @param serializedTx 
+     * currently making library figure out tx type
+     * TODO: switch to using the type from the API
+     */
+  override SignTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {
 
@@ -82,9 +57,12 @@ class PrivateKeyWallet implements WalletInterface {
         signed: bytesToHex(signedTx.serialize())
       })
     }
-
   }
-  SignMessage(options: {
+
+  override getWalletType(): WalletType {
+    return WalletType.PRIVATE_KEY
+  }
+  override SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
@@ -92,49 +70,14 @@ class PrivateKeyWallet implements WalletInterface {
     const sig = ecsign(msgHash, this.privKey)
     return Promise.resolve(toRpcSig(sig.v, sig.r, sig.s) as HexPrefixedString)
   }
-  getAddress(): Promise<string> {
+  override getAddress(): Promise<string> {
     return Promise.resolve(toChecksumAddress(bytesToHex(privateToAddress(this.privKey))))
   }
-  getWalletType(): WalletType {
-    return WalletType.PRIVATE_KEY
-  }
-  getProvider(): string {
-    const chainStore = useChainsStore()
-    const { selectedChain } = storeToRefs(chainStore)
-    return selectedChain.value?.name || 'ETHEREUM'
-  }
-  async getBalance(): Promise<TokenBalancesRaw[]> {
-    const address = await this.getAddress()
-    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
-    const { data, onFetchResponse } = useFetchMewApi<TokenBalancesRaw[]>(
-      balanceEndpoint,
-    )
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value?.result || [])
-      })
-    })
-  }
-  broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/${this.chainId}/transactions/broadcast/?noInjectErrors=false`
-    const { onFetchResponse } = useFetchMewApi<EVMTxResponse>(
-      url,
-      'POST',
-      {
-        signedTransaction: signedTx,
-      },
-    )
-
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value?.result || '')
-      })
-    })
-  }
-  connect(): Promise<boolean> {
-    return Promise.resolve(true)
-  }
-  disconnect(): Promise<boolean> {
+  override disconnect(): Promise<boolean> {
+    const walletStore = useWalletStore()
+    const router = useRouter()
+    walletStore.removeWallet()
+    router.push({ name: ROUTES_HOME.HOME.NAME })
     return Promise.resolve(true)
   }
 }
