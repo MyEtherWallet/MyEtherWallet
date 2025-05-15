@@ -10,7 +10,7 @@ import {
   toChecksumAddress,
   hexToBytes
 } from '@ethereumjs/util'
-import BaseEvmWallet from './BaseEVMWallet'
+import BaseEvmWallet from './baseEvmWallet'
 import {
   type PostSignedTransaction,
 } from './types'

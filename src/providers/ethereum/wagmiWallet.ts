@@ -8,7 +8,7 @@ import {
   hexToBytes
 } from '@ethereumjs/util'
 import type { Connector } from '@wagmi/core'
-import BaseEvmWallet from './BaseEVMWallet'
+import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
 import { sendTransaction } from '@wagmi/core'
 import { wagmiConfig } from './wagmiConfig'
