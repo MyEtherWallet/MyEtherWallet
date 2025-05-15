@@ -1,3 +1,4 @@
+import type { Config } from '@wagmi/core'
 import { mainnet } from '@wagmi/core/chains'
 import { createConfig, http } from '@wagmi/core'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
@@ -19,7 +20,7 @@ const connectorsLocal = connectorsForWallets(
   },
 )
 
-export const wagmiConfig = createConfig({
+export const wagmiConfig: Config = createConfig({
   chains: [mainnet],
   transports: {
     [mainnet.id]: http(),

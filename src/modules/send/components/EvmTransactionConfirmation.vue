@@ -61,7 +61,7 @@
           <p>
             Network fee: ${{ networkFeeUSD }}
             <span class="text-grey-50 pl-3">
-              ({{ networkFeeCrypto }} {{ network.name }})</span
+              ({{ networkFeeCrypto }} {{ network?.name }})</span
             >
           </p>
         </div>
@@ -106,11 +106,11 @@ interface EvmTxType {
   networkFeeUSD: string
   networkFeeCrypto: string
   fromAddress: string
-  network: Chain
+  network: Chain | null
   toToken: TokenBalanceRaw
   toAmount: string
   toAmountFiat: string
-  signedTx: HexPrefixedString // rawTx may be different
+  signedTx: HexPrefixedString | string // rawTx may be different
 }
 
 const props = defineProps<EvmTxType>()
@@ -153,11 +153,11 @@ const confirmTransaction = async () => {
   signing.value = true
   const txPromise =
     wallet.value?.getWalletType() === WalletType.WAGMI
-      ? wallet.value.SendTransaction(props.signedTx)
-      : wallet.value.broadcastTransaction(props.signedTx)
+      ? wallet.value?.SendTransaction?.(props.signedTx as HexPrefixedString)
+      : wallet.value.broadcastTransaction(props.signedTx as HexPrefixedString)
   // TODO: handle hash for user
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  txPromise.then(hash => {
+  txPromise?.then(hash => {
     toastStore.addToastMessage({
       type: ToastType.Success,
       text: 'Transaction sent successfully',

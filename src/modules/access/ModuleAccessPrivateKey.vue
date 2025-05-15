@@ -87,7 +87,7 @@ const unlock = () => {
   try {
     const wallet = new PrivateKeyWallet(
       Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
-      selectedChain?.value.chainID || '1',
+      selectedChain?.value?.chainID || '1',
     )
     setWallet(wallet)
     addWallet(walletConfigs.privateKey)

@@ -179,10 +179,10 @@ const loadList = async (page: number = 0) => {
   walletList.value = []
   const startIndex = page * 5
   for (let i = startIndex; i < startIndex + 5; i++) {
-    await wallet.value?.getWallet(i).then(wallet => {
+    await wallet.value?.getWallet(i).then(async wallet => {
       if (wallet) {
         walletList.value.push({
-          address: wallet.getAddress(),
+          address: await wallet.getAddress(),
           index: i,
         })
       }

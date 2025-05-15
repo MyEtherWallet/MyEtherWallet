@@ -89,7 +89,7 @@ export const useFetchMewApi = <T>(
       afterFetch(ctx) {
         data.value = ctx.data as T
         isLoading.value = false
-        if (_opts._poll > 0 && !isActivePolling.value) {
+        if ((_opts._poll ?? 0) > 0 && !isActivePolling.value) {
           resumePoll()
         }
         delay.value = 1000
@@ -126,7 +126,7 @@ export const useFetchMewApi = <T>(
     isActive: isActivePolling,
     resume: resumePoll,
     pause: pausePoll,
-  } = useTimeoutPoll(execute, _opts._poll, {
+  } = useTimeoutPoll(execute, _opts._poll ?? 0, {
     immediate: false,
   })
 

@@ -13,13 +13,13 @@ import {
 
 export interface WalletInterface {
   connect?: () => Promise<boolean>
-  disconnect: () => Promise<boolean>
+  SignTransaction?: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
+  SendTransaction?: (serializedTx: HexPrefixedString) => Promise<HexPrefixedString> // Transaction hash
+  disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: EthereumSignableTransactionParams,
   ) => Promise<EthereumSignableTransactionResult>
   getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
-  SignTransaction?: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
-  SendTransaction?: (serializedTx: HexPrefixedString) => Promise<HexPrefixedString> // Transaction hash
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown
@@ -27,6 +27,6 @@ export interface WalletInterface {
   getAddress: () => Promise<string>
   getWalletType: () => WalletType
   getProvider: () => string
-  getBalance: () => Promise<TokenBalancesRaw[]>
+  getBalance: () => Promise<TokenBalancesRaw>
   broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
 }

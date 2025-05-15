@@ -35,8 +35,8 @@ const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 
-wallet.value?.getBalance().then((balances: TokenBalancesRaw[]) => {
-  setTokens(balances as TokenBalancesRaw[])
+wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
+  setTokens(balances.result)
   setIsLoadingBalances(false)
 })
 

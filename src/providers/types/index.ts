@@ -1,5 +1,4 @@
 import type {
-  EthereumTransactionWithFeeType,
   NativeEthereumTransaction,
   PostEthereumTransaction,
 } from '../ethereum/types'
@@ -30,8 +29,6 @@ export interface GasFeeType {
   [GasPriceType.FAST]: GasFeeInfoType
   [GasPriceType.FASTEST]: GasFeeInfoType
 }
-
-export type PreTransaction = EthereumTransactionWithFeeType
 
 export type PostTransaction = PostEthereumTransaction
 

@@ -73,15 +73,15 @@ class BaseEvmWallet implements WalletInterface {
     const { selectedChain } = storeToRefs(chainStore)
     return selectedChain.value?.name || 'ETHEREUM'
   }
-  async getBalance(): Promise<TokenBalancesRaw[]> {
+  async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
     const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
-    const { data, onFetchResponse } = useFetchMewApi<TokenBalancesRaw[]>(
+    const { data, onFetchResponse } = useFetchMewApi<TokenBalancesRaw>(
       balanceEndpoint,
     )
     return new Promise((resolve) => {
       onFetchResponse(() => {
-        resolve(data.value?.result || [])
+        resolve({ result: data.value?.result ?? [] })
       })
     })
   }

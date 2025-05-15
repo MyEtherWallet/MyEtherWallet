@@ -75,7 +75,7 @@
     :toAddress="toAddress"
     :networkFeeUSD="networkFeeUSD"
     :networkFeeCrypto="networkFeeCrypto"
-    :network="selectedChain || {}"
+    :network="selectedChain || null"
     :to-token="tokenSelected"
     :to-amount="amount.toString()"
     :to-amount-fiat="amountToFiat"
@@ -260,6 +260,10 @@ const handleSubmit = async () => {
   }
 
   // sign transaction
+  if (!wallet.value?.SignTransaction) {
+    console.error('SignTransaction not implemented')
+    return
+  }
   const signResponse = await wallet.value?.SignTransaction(
     signableTx.serialized,
   )
