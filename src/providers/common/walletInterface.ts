@@ -2,23 +2,24 @@ import type {
   BalanceResponse,
   GasFeeResponse,
   HexPrefixedString,
-  PostTransaction,
-  PostTransactionResponse,
-  PreTransaction,
-  PreTransactionResponse,
   ProviderName,
   WalletType,
 } from '../types'
-import { type PreEthereumTransaction } from '@/providers/ethereum/types'
+import {
+  type PreEthereumTransaction,
+  type EthereumSignableTransactionParams,
+  type EthereumSignableTransactionResult,
+  type PostSignedTransaction
+} from '@/providers/ethereum/types'
 
 export interface WalletInterface {
   connect: () => Promise<boolean>
   disconnect: () => Promise<boolean>
   getSignableTransaction: (
-    tx: PreTransaction,
-  ) => Promise<PreTransactionResponse>
+    tx: EthereumSignableTransactionParams,
+  ) => Promise<EthereumSignableTransactionResult>
   getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
-  SignTransaction: (tx: PostTransaction) => Promise<PostTransactionResponse>
+  SignTransaction: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown

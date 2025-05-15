@@ -36,6 +36,18 @@ export type defaultWalletId =
   | 'keystore'
   | 'mnemonic'
 
+type downloadUrls = {
+  android?: string
+  ios?: string
+  mobile?: string
+  qrCode?: string
+  chrome?: string
+  edge?: string
+  firefox?: string
+  opera?: string
+  browserExtension?: string
+}
+
 export type WalletConfig = {
   id: string
   name: string
@@ -45,6 +57,7 @@ export type WalletConfig = {
   isWC?: boolean
   isOfficial?: boolean
   routeName?: string
+  downloadUrls?: downloadUrls
 }
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
   ledger: {
@@ -97,6 +110,9 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     isDefault: true,
     isOfficial: true,
     isWC: true,
+    downloadUrls: {
+      browserExtension: 'https://enkrypt.com',
+    }
   },
 }
 

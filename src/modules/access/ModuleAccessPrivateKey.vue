@@ -26,8 +26,11 @@ import { isValidPrivate } from '@ethereumjs/util'
 
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
 import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -44,6 +47,8 @@ const privateKeyInput = ref('')
 const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
@@ -82,7 +87,7 @@ const unlock = () => {
   try {
     const wallet = new PrivateKeyWallet(
       Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
-      '0x1',
+      selectedChain?.value.chainID || '1',
     )
     setWallet(wallet)
     addWallet(walletConfigs.privateKey)
