@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -136,6 +136,8 @@ import {
   ethereum as ethereumPath,
 } from '../common/configs/configPaths'
 import { useI18n } from 'vue-i18n'
+import { useDerivationStore } from '@/stores/derivationStore'
+import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
 defineProps({
@@ -144,6 +146,10 @@ defineProps({
     default: false,
   },
 })
+
+const derivationStore = useDerivationStore()
+const { selectedDerivation } = storeToRefs(derivationStore)
+const { setSelectedDerivation: setToStore } = derivationStore
 
 const paths = ref(PATHS[WALLET_TYPES.MNEMONIC])
 const defaultEthereumPath = ethereumPath
@@ -155,7 +161,25 @@ const selectedPath = defineModel<DerivationPath>('selectedPath', {
 
 const setSelectedPath = (path: DerivationPath) => {
   selectedPath.value = path
+  setToStore(path)
+  setOpenDialog(false)
 }
+
+onMounted(() => {
+  if (selectedDerivation.value) {
+    selectedPath.value = selectedDerivation.value
+  }
+})
+
+watch(
+  selectedPath,
+  newValue => {
+    if (newValue) {
+      setToStore(newValue)
+    }
+  },
+  { immediate: true },
+)
 
 /** -------------------------------
  * Dialog
