@@ -74,7 +74,7 @@
     :fromAddress="address"
     :toAddress="toAddress"
     :networkFeeUSD="networkFeeUSD"
-    :networkFeeETH="networkFeeETH"
+    :networkFeeCrypto="networkFeeCrypto"
     :network="selectedChain || {}"
     :to-token="tokenSelected"
     :to-amount="amount.toString()"
@@ -106,6 +106,7 @@ import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
+import { WalletType } from '@/providers/types'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -177,7 +178,7 @@ const networkFeeUSD = computed(() => {
   if (!hasGasFees.value) return '0'
   return gasFees.value?.fees[selectedFee.value]?.fiatValue || '0'
 })
-const networkFeeETH = computed(() => {
+const networkFeeCrypto = computed(() => {
   if (!hasGasFees.value) return '0'
   return (
     fromWei(gasFees.value?.fees[selectedFee.value]?.nativeValue, 'ether') || '0'
@@ -194,21 +195,6 @@ const amountToFiat = computed(() => {
     .times(BigNumber(amount.value))
     .toString()
 })
-
-// const rawTx = computed<PostEthereumTransaction>(() => {
-//   return {
-//     to: toAddress.value as HexPrefixedString,
-//     from: wallet.value?.getAddress() as HexPrefixedString,
-//     value: toHex(toBigInt(amount.value.toString() as HexPrefixedString)),
-//     data: data.value as HexPrefixedString,
-//     gasPrice: toHex(toBigInt(gasPrice.value)),
-//     gasPriceType: selectedFee.value,
-//     gasLimit: toHex(toBigInt(gasLimit.value.toString())),
-//     type: '0x0',
-//     id: gasFees.value?.transactionId,
-//     chainId: toHex(toBigInt(selectedChain.value?.chainID)),
-//   }
-// })
 
 watch(
   () => [selectedFee.value, gasFees.value?.fees],
@@ -264,8 +250,14 @@ const handleSubmit = async () => {
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
     priority: selectedFee.value,
-    transactionId: gasFees.value?.transactionId,
+    quoteId: gasFees.value?.quoteId,
   })
+
+  if (wallet.value?.getWalletType() === WalletType.WAGMI) {
+    openTxModal.value = true
+    signedTx.value = signableTx.serialized
+    return
+  }
 
   // sign transaction
   const signResponse = await wallet.value?.SignTransaction(

@@ -1,5 +1,5 @@
-import { mainnet } from 'wagmi/chains'
-import { createConfig, http } from 'wagmi'
+import { mainnet } from '@wagmi/core/chains'
+import { createConfig, http } from '@wagmi/core'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import Configs from '@/configs'

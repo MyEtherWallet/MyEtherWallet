@@ -99,6 +99,7 @@ import { ToastType } from '@/types/notification/index'
 import { useChainsStore } from '@/stores/chainsStore'
 
 import { type HexPrefixedString } from '@/providers/types'
+import { WalletType } from '@/providers/types'
 
 interface EvmTxType {
   toAddress: string
@@ -150,8 +151,13 @@ const toastStore = useToastStore()
 
 const confirmTransaction = async () => {
   signing.value = true
-
-  wallet.value.broadcastTransaction(props.signedTx).then(() => {
+  const txPromise =
+    wallet.value?.getWalletType() === WalletType.WAGMI
+      ? wallet.value.SendTransaction(props.signedTx)
+      : wallet.value.broadcastTransaction(props.signedTx)
+  // TODO: handle hash for user
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  txPromise.then(hash => {
     toastStore.addToastMessage({
       type: ToastType.Success,
       text: 'Transaction sent successfully',

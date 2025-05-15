@@ -38,7 +38,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
-import { hexToBytes } from 'viem'
+import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 

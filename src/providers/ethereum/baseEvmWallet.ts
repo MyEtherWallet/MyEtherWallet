@@ -23,7 +23,7 @@ class BaseEvmWallet implements WalletInterface {
     this.chainId = chainId
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quote`, 'POST', tx)
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes`, 'POST', tx)
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as GasFeeResponse)
@@ -33,7 +33,7 @@ class BaseEvmWallet implements WalletInterface {
   getSignableTransaction(
     feeObj: EthereumSignableTransactionParams,
   ): Promise<EthereumSignableTransactionResult> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/construct`, 'POST', feeObj)
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`, 'GET')
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as EthereumSignableTransactionResult)
@@ -93,6 +93,10 @@ class BaseEvmWallet implements WalletInterface {
       {
         signedTransaction: signedTx,
       },
+      {
+        _noRetry: true,
+      }
+
     )
 
     return new Promise((resolve) => {
