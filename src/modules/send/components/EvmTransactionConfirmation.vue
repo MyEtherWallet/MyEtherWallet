@@ -96,6 +96,7 @@ import createIcon from '@/providers/ethereum/blockies'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
+import { useChainsStore } from '@/stores/chainsStore'
 
 import { type HexPrefixedString } from '@/providers/types'
 
@@ -113,6 +114,9 @@ interface EvmTxType {
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 // Modal settings
 const openModal = ref(false)

@@ -18,7 +18,8 @@ export interface WalletInterface {
     tx: EthereumSignableTransactionParams,
   ) => Promise<EthereumSignableTransactionResult>
   getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
-  SignTransaction: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
+  SignTransaction?: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
+  SendTransaction?: (serializedTx: HexPrefixedString) => Promise<HexPrefixedString> // Transaction hash
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown

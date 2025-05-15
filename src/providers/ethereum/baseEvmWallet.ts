@@ -30,7 +30,7 @@ import {
 
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 
-class PrivateKeyWallet implements WalletInterface {
+class BaseEvmWallet implements WalletInterface {
   privKey: Uint8Array
   chainId: string
   constructor(privateKey: Uint8Array, chainId: string) {
@@ -139,4 +139,4 @@ class PrivateKeyWallet implements WalletInterface {
   }
 }
 
-export default PrivateKeyWallet
+export default BaseEvmWallet

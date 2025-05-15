@@ -42,7 +42,7 @@ class WagmiWallet implements WalletInterface {
       })
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    const { data, onFetchResponse } = useFetchMewApi(`/evm/${this.chainId}/transactions/quote`, 'POST', tx)
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/transactions/quote`, 'POST', tx)
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as GasFeeResponse)
