@@ -35,7 +35,11 @@ class WagmiWallet extends BaseEvmWallet {
     return this.connector
       .connect()
       .then(res => {
-        return res.accounts.length > 0
+        if (res.accounts.length > 0) {
+          this.address = res.accounts[0]
+          return true
+        }
+        return false
       })
       .catch(err => {
         throw new Error(err)
