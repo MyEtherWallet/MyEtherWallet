@@ -33,7 +33,7 @@
     "@ethereumjs/wallet": "^2.0.4",
     "@heroicons/vue": "^2.2.0",
     "@myetherwallet/vue-common-components": "^1.3.0",
-    "@rainbow-me/rainbowkit": "^2.2.0",
+    "@rainbow-me/rainbowkit": "^2.2.5",
     "@sentry/vue": "^8.42.0",
     "@tanstack/vue-query": "^5.62.2",
     "@vueuse/core": "^12.5.0",
