@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -108,6 +108,9 @@ import DerivationPath from './components/DerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useI18n } from 'vue-i18n'
+import { useDerivationStore } from '@/stores/derivationStore'
+import { storeToRefs } from 'pinia'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const { t } = useI18n()
 /**------------------------
@@ -181,12 +184,16 @@ watchDebounced(
 )
 
 const wallet = ref<MnemonicToWallet | null>(null)
+const derivationStore = useDerivationStore()
+const chainsStore = useChainsStore()
+const { selectedDerivation } = storeToRefs(derivationStore)
+const { selectedChain } = storeToRefs(chainsStore)
 const unlockWallet = () => {
-  if (activeStep.value === 0 && isValid.value) {
+  if (isValid.value) {
     const options = {
       mnemonic: formattedMnemonic.value,
-      basePath: defaultPath,
-      chainId: '0x1',
+      basePath: selectedDerivation.value?.path || defaultPath,
+      chainId: selectedChain.value?.chainID ?? '1',
       extraWord: extraWord.value,
     }
     wallet.value = new MnemonicToWallet(options)
@@ -194,6 +201,16 @@ const unlockWallet = () => {
     activeStep.value = 1
   }
 }
+
+watch(
+  () => selectedDerivation.value.path,
+  newValue => {
+    if (newValue) {
+      unlockWallet()
+    }
+  },
+  { immediate: true },
+)
 
 /**------------------------
  *  Wallet List
