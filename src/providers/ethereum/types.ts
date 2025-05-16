@@ -25,7 +25,7 @@ export interface PreEthereumTransaction {
 
 export interface EthereumSignableTransactionParams {
   priority: GasPriceType
-  transactionId: string
+  quoteId: string
 }
 
 export interface EthereumSignableTransactionResult {

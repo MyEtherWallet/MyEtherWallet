@@ -13,8 +13,15 @@ export const useFetchMewApi = <T>(
   _url: Ref<string> | string,
   _method: FetchMethod = 'GET',
   _body: object | null = null,
-  _immediate: boolean = true,
-  _poll: number = 0,
+  _opts: {
+    _immediate?: boolean,
+    _poll?: number,
+    _noRetry?: boolean,
+  } = {
+      _immediate: true,
+      _poll: 0,
+      _noRetry: false,
+    }
 ): {
   data: Ref<T | null>
   isLoading: Ref<boolean>
@@ -82,7 +89,7 @@ export const useFetchMewApi = <T>(
       afterFetch(ctx) {
         data.value = ctx.data as T
         isLoading.value = false
-        if (_poll > 0 && !isActivePolling.value) {
+        if ((_opts._poll ?? 0) > 0 && !isActivePolling.value) {
           resumePoll()
         }
         delay.value = 1000
@@ -92,6 +99,7 @@ export const useFetchMewApi = <T>(
         if (isDevMode) {
           console.error(e)
         }
+        if (_opts._noRetry) return e
         if (isActivePolling.value) {
           pausePoll()
         }
@@ -110,7 +118,7 @@ export const useFetchMewApi = <T>(
   })
 
   const { execute, onFetchResponse } = useMEWFetch(_url, {
-    immediate: _immediate,
+    immediate: _opts._immediate,
     refetch: true, //  Will trigger another request on url change
   }).json()
 
@@ -118,7 +126,7 @@ export const useFetchMewApi = <T>(
     isActive: isActivePolling,
     resume: resumePoll,
     pause: pausePoll,
-  } = useTimeoutPoll(execute, _poll, {
+  } = useTimeoutPoll(execute, _opts._poll ?? 0, {
     immediate: false,
   })
 
