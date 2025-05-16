@@ -1,8 +1,7 @@
+import { type TokenBalancesRaw } from '@/mew_api/types'
 import type {
-  BalanceResponse,
   GasFeeResponse,
   HexPrefixedString,
-  ProviderName,
   WalletType,
 } from '../types'
 import {
@@ -13,19 +12,21 @@ import {
 } from '@/providers/ethereum/types'
 
 export interface WalletInterface {
-  connect: () => Promise<boolean>
-  disconnect: () => Promise<boolean>
+  connect?: () => Promise<boolean>
+  SignTransaction?: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
+  SendTransaction?: (serializedTx: HexPrefixedString) => Promise<HexPrefixedString> // Transaction hash
+  disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: EthereumSignableTransactionParams,
   ) => Promise<EthereumSignableTransactionResult>
   getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
-  SignTransaction: (serializedTx: HexPrefixedString) => Promise<PostSignedTransaction>
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown
   }) => Promise<HexPrefixedString>
-  getAddress: () => string
+  getAddress: () => Promise<string>
   getWalletType: () => WalletType
-  getProvider: () => ProviderName
-  getBalance: () => Promise<BalanceResponse>
+  getProvider: () => string
+  getBalance: () => Promise<TokenBalancesRaw>
+  broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
 }

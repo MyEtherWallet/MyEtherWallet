@@ -71,11 +71,11 @@
 
   <!-- TODO: replace network with actual selected network info -->
   <evm-transaction-confirmation
-    :fromAddress="wallet.getAddress()"
+    :fromAddress="address"
     :toAddress="toAddress"
     :networkFeeUSD="networkFeeUSD"
-    :networkFeeETH="networkFeeETH"
-    :network="selectedChain || {}"
+    :networkFeeCrypto="networkFeeCrypto"
+    :network="selectedChain || null"
     :to-token="tokenSelected"
     :to-amount="amount.toString()"
     :to-amount-fiat="amountToFiat"
@@ -106,6 +106,7 @@ import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
+import { WalletType } from '@/providers/types'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -130,11 +131,13 @@ const openTxModal = ref(false)
 const isLoadingFees = ref(true)
 
 const signedTx = ref<HexPrefixedString | string>('')
+const address = ref('')
 
 onMounted(async () => {
   const mainToken: TokenBalance = tokens.value.find(
     (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as TokenBalance
+  address.value = await wallet.value.getAddress()
   tokenSelected.value = (mainToken as TokenBalance)
     ? mainToken
     : tokens.value[0]
@@ -142,7 +145,7 @@ onMounted(async () => {
   isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
     to: '0x0000000000000000000000000000000000000000',
-    address: wallet.value.getAddress() as HexPrefixedString,
+    address: address.value as HexPrefixedString,
     value: '0x0' as HexPrefixedString,
     data: data.value as HexPrefixedString,
   })
@@ -175,7 +178,7 @@ const networkFeeUSD = computed(() => {
   if (!hasGasFees.value) return '0'
   return gasFees.value?.fees[selectedFee.value]?.fiatValue || '0'
 })
-const networkFeeETH = computed(() => {
+const networkFeeCrypto = computed(() => {
   if (!hasGasFees.value) return '0'
   return (
     fromWei(gasFees.value?.fees[selectedFee.value]?.nativeValue, 'ether') || '0'
@@ -192,21 +195,6 @@ const amountToFiat = computed(() => {
     .times(BigNumber(amount.value))
     .toString()
 })
-
-// const rawTx = computed<PostEthereumTransaction>(() => {
-//   return {
-//     to: toAddress.value as HexPrefixedString,
-//     from: wallet.value?.getAddress() as HexPrefixedString,
-//     value: toHex(toBigInt(amount.value.toString() as HexPrefixedString)),
-//     data: data.value as HexPrefixedString,
-//     gasPrice: toHex(toBigInt(gasPrice.value)),
-//     gasPriceType: selectedFee.value,
-//     gasLimit: toHex(toBigInt(gasLimit.value.toString())),
-//     type: '0x0',
-//     id: gasFees.value?.transactionId,
-//     chainId: toHex(toBigInt(selectedChain.value?.chainID)),
-//   }
-// })
 
 watch(
   () => [selectedFee.value, gasFees.value?.fees],
@@ -239,7 +227,7 @@ watch(
     gasFees.value = await wallet.value.getGasFee({
       to: toAddress.value as HexPrefixedString,
       address:
-        (wallet.value.getAddress() as HexPrefixedString) ||
+        (address.value as HexPrefixedString) ||
         '0x0000000000000000000000000000000000000000',
       value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
       data: data.value as HexPrefixedString,
@@ -262,10 +250,20 @@ const handleSubmit = async () => {
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
     priority: selectedFee.value,
-    transactionId: gasFees.value?.transactionId,
+    quoteId: gasFees.value?.quoteId,
   })
 
+  if (wallet.value?.getWalletType() === WalletType.WAGMI) {
+    openTxModal.value = true
+    signedTx.value = signableTx.serialized
+    return
+  }
+
   // sign transaction
+  if (!wallet.value?.SignTransaction) {
+    console.error('SignTransaction not implemented')
+    return
+  }
   const signResponse = await wallet.value?.SignTransaction(
     signableTx.serialized,
   )

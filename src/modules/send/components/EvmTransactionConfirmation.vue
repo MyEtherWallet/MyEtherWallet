@@ -61,7 +61,7 @@
           <p>
             Network fee: ${{ networkFeeUSD }}
             <span class="text-grey-50 pl-3">
-              ({{ networkFeeCrypto }} {{ network.name }})</span
+              ({{ networkFeeCrypto }} {{ network?.name }})</span
             >
           </p>
         </div>
@@ -86,36 +86,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, defineProps, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'
-import { useChainsStore } from '@/stores/chainsStore'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import createIcon from '@/providers/ethereum/blockies'
-
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
+import { useChainsStore } from '@/stores/chainsStore'
 
-import { type EVMTxResponse } from '@/mew_api/types'
 import { type HexPrefixedString } from '@/providers/types'
+import { WalletType } from '@/providers/types'
 
 interface EvmTxType {
   toAddress: string
   networkFeeUSD: string
   networkFeeCrypto: string
   fromAddress: string
-  network: Chain
+  network: Chain | null
   toToken: TokenBalanceRaw
   toAmount: string
   toAmountFiat: string
-  signedTx: HexPrefixedString // rawTx may be different
+  signedTx: HexPrefixedString | string // rawTx may be different
 }
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 // Modal settings
 const openModal = ref(false)
@@ -137,32 +139,25 @@ watch(
 // modal actions
 const signing = ref(false)
 
-const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const walletStore = useWalletStore()
+const { wallet } = storeToRefs(walletStore)
 
 const goBack = () => {
   openModal.value = false
   model.value = false
 }
-
-const broadcastUrl = computed(() => {
-  return `/evm/${selectedChain.value?.chainID}/transactions/broadcast/?noInjectErrors=false`
-})
-
 // Toast
 const toastStore = useToastStore()
 
 const confirmTransaction = async () => {
   signing.value = true
-  const { onFetchResponse } = useFetchMewApi<EVMTxResponse>(
-    broadcastUrl.value,
-    'POST',
-    {
-      signedTransaction: props.signedTx,
-    },
-  )
-
-  onFetchResponse(() => {
+  const txPromise =
+    wallet.value?.getWalletType() === WalletType.WAGMI
+      ? wallet.value?.SendTransaction?.(props.signedTx as HexPrefixedString)
+      : wallet.value.broadcastTransaction(props.signedTx as HexPrefixedString)
+  // TODO: handle hash for user
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  txPromise?.then(hash => {
     toastStore.addToastMessage({
       type: ToastType.Success,
       text: 'Transaction sent successfully',

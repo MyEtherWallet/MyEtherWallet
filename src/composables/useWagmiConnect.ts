@@ -10,6 +10,7 @@ import { type WalletConfig, WalletConfigType } from '@/modules/access/common/wal
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 
+import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 
@@ -30,6 +31,8 @@ export const useWagmiConnect = () => {
   const { setWallet } = walletStore
   const router = useRouter()
   const toastStore = useToastStore()
+  const chainsStore = useChainsStore()
+  const { selectedChain } = storeToRefs(chainsStore)
 
   const connect = async (wallet: WalletConfig) => {
     if ('routeName' in wallet && wallet.routeName) {
@@ -73,7 +76,7 @@ export const useWagmiConnect = () => {
           return
         }
       }
-      const wagWallet = new WagmiWallet(connector!, '0x1')
+      const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID || '1')
       wagWallet
         .connect()
         .then(res => {
