@@ -1,35 +1,38 @@
-import type { WalletInterface } from '../common/walletInterface'
+import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
+import { commonGenerator } from './utils'
 import {
-  ProviderName,
   WalletType,
-  type BalanceResponse,
-  type EthereumProvider,
-  type GasFeeResponse,
   type HexPrefixedString,
-  type PostTransactionResponse,
-  type PreTransactionResponse,
 } from '../types'
 import {
-  type PostEthereumTransaction,
-  type PreEthereumTransaction,
-} from './types'
-import type { Connector } from 'wagmi'
+  hexToBytes
+} from '@ethereumjs/util'
+import type { Connector } from '@wagmi/core'
+import BaseEvmWallet from './baseEvmWallet'
+import { Hardfork } from '@ethereumjs/common'
+import { sendTransaction } from '@wagmi/core'
+import { wagmiConfig } from './wagmiConfig'
+import { fromHex } from 'viem'
+import { type SendTransactionParameters } from '@wagmi/core'
 
-class WagmiWallet implements WalletInterface {
-  chainId: string
-  connecter: Connector
+class WagmiWallet extends BaseEvmWallet {
+  connector: Connector
   constructor(connector: Connector, chainId: string) {
-    this.chainId = chainId
-    this.connecter = connector
+    super(chainId)
+
+    this.connector = connector
   }
-  disconnect(): Promise<boolean> {
-    return this.connecter
+  override disconnect(): Promise<boolean> {
+    return this.connector
       .disconnect()
-      .then(() => true)
+      .then(() => {
+        super.disconnect()
+        return true
+      })
       .catch(() => false)
   }
-  connect(): Promise<boolean> {
-    return this.connecter
+  override connect(): Promise<boolean> {
+    return this.connector
       .connect()
       .then(res => {
         return res.accounts.length > 0
@@ -38,45 +41,56 @@ class WagmiWallet implements WalletInterface {
         throw new Error(err)
       })
   }
-  getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    console.log('getGasFee', tx)
-    throw new Error('Method not implemented.')
+
+  override async SendTransaction(serializedTx: HexPrefixedString): Promise<HexPrefixedString> {
+    const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
+      hexToBytes(serializedTx),
+      { common: commonGenerator(BigInt(this.chainId), Hardfork.London) })
+    const txObj = tx.toJSON();
+    const parseTx = {
+      ...txObj,
+      accessList: txObj.accessList?.map(item => ({
+        address: item.address as `0x${string}`,
+        storageKeys: item.storageKeys as readonly `0x${string}`[],
+      })) ?? undefined,
+      maxFeePerGas: fromHex(txObj.maxFeePerGas ?? '0x0', 'bigint'),
+      maxPriorityFeePerGas: fromHex(txObj.maxPriorityFeePerGas ?? '0x0', 'bigint'),
+      nonce: fromHex(txObj.nonce ?? '0x0', 'number'),
+      chainId: fromHex(txObj.chainId ?? '0x0', 'number'),
+      value: fromHex(txObj.value ?? '0x0', 'bigint'),
+      type: "eip1559" as const,
+    }
+    const from = await this.getAddress()
+    const params = {
+      connector: this.connector,
+      account: from,
+      ...parseTx,
+
+    } as SendTransactionParameters
+    return sendTransaction(
+      wagmiConfig, params as SendTransactionParameters<typeof wagmiConfig>).then((res) => {
+        console.log('got response', res)
+        return res
+      })
+
   }
-  getSignableTransaction(
-    tx: PreEthereumTransaction,
-  ): Promise<PreTransactionResponse> {
-    console.log('getSignableTransaction', tx)
-    throw new Error('Method not implemented.')
-  }
-  async SignTransaction(
-    tx: PostEthereumTransaction,
-  ): Promise<PostTransactionResponse> {
-    console.log(tx)
-    const client: EthereumProvider =
-      (await this.connecter.getProvider()) as EthereumProvider
-    client.request({ method: 'eth_accounts' }).then(console.log)
-    throw new Error('Method not implemented.')
-  }
-  SignMessage(options: {
+
+  override SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
     console.log(options)
     throw new Error('Method not implemented.')
   }
-  getAddress(): string {
-    throw new Error('Method not implemented.')
+  override async getAddress(): Promise<HexPrefixedString> {
+    const addressArray = await this.connector?.getAccounts()
+    return addressArray[0]
   }
 
-  getWalletType(): WalletType {
-    return WalletType.PRIVATE_KEY
+  override getWalletType(): WalletType {
+    return WalletType.WAGMI
   }
-  getProvider(): ProviderName {
-    return ProviderName.Ethereum
-  }
-  getBalance(): Promise<BalanceResponse> {
-    throw new Error('Method not implemented.')
-  }
+
 }
 
 export default WagmiWallet

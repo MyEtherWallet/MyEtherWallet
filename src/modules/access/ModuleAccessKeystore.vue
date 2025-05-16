@@ -80,8 +80,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { watchDebounced } from '@vueuse/core'
+
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import {
   unlockKeystore,
@@ -95,10 +99,13 @@ import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
-import { watchDebounced } from '@vueuse/core'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
+
+// useChainStore
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 /**------------------------
  * Steps
@@ -194,11 +201,9 @@ const enterPassword = async () => {
       password.value,
     )
     if (res) {
-      console.log(Buffer.from(res.getPrivateKey()), res.getPrivateKey())
-      // TODO: move hardcodes
       const wallet = new PrivateKeyWallet(
         Buffer.from(res.getPrivateKey()),
-        '0x1',
+        selectedChain.value?.chainID || '1',
       )
       resetKeystore()
       setWallet(wallet)

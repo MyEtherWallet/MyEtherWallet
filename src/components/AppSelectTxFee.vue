@@ -1,7 +1,7 @@
 <template>
   <button
     class="hoverNoBG rounded-16 border-1 bg-white border-grey-outline border-solid px-4 py-3 flex justify-between items-center my-4 text-sm w-full"
-    @click="openFeeModal"
+    @click.prevent="openFeeModal"
     :disabled="!hasFees"
   >
     <div class="flex items-center">

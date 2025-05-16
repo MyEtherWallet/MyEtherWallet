@@ -20,7 +20,7 @@
     <div
       v-if="isOpen"
       class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 z-[100] overscroll-none !overflow-y-scroll"
-      @click="setIsOpen(false)"
+      @click="!persistent ? setIsOpen(false) : () => {}"
     >
       <transition
         enter-active-class="transform ease-out duration-500 transition opacity-0 delay-100"
@@ -44,6 +44,7 @@
               </h1>
             </slot>
             <app-btn-icon-close
+              v-if="!persistent"
               @click="setIsOpen(false)"
               class="mt-4 sm:mt-8 min-w-[32px]"
             />
@@ -103,6 +104,14 @@ defineProps({
    */
   hasContentGutter: {
     default: true,
+    type: Boolean,
+  },
+  /**
+   * @persistent - boolean to remove the close button and title from the dialog.
+   * @type: boolean
+   */
+  persistent: {
+    default: false,
     type: Boolean,
   },
 })

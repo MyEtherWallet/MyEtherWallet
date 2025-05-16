@@ -14,10 +14,12 @@
         class="w-[68px] h-5"
       />
       <h5
-        v-if="isRecent"
-        class="text-s-11 font-bold pl-[5px] leading-p-100 tracking-sp-00"
+        v-if="isDetected || isRecent"
+        class="text-s-12 font-bold pl-[5px] leading-p-100 tracking-sp-00"
       >
-        {{ $t('access_wallet.recent') }}
+        {{
+          isRecent ? $t('access_wallet.recent') : $t('access_wallet.detected')
+        }}
       </h5>
       <div class="flex grow item-center justify-end">
         <div v-for="(type, index) in wallet.type" :key="index">
@@ -66,6 +68,7 @@ import { onMounted, ref } from 'vue'
 const props = defineProps<{
   wallet: WalletConfig
   isRecent?: boolean
+  isDetected?: boolean
 }>()
 
 const emit = defineEmits<{
