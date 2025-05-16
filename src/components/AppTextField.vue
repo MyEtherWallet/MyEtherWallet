@@ -32,13 +32,13 @@
         v-else-if="hasRequiredError"
         class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
-        required
+        {{ $t('common.required') }}
       </p>
       <button
         @click="clearInputValue"
         class="rounded-full px-3 text-sm text-primary hoverOpacity ml-auto h-6"
       >
-        clear
+        {{ $t('common.clear') }}
       </button>
     </div>
   </div>

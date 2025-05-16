@@ -82,6 +82,7 @@ export default {
         's-28': '28px',
         's-17': '17px',
         's-15': '15px',
+        's-12': '12px',
         's-11': '11px',
         's-12': '12px',
       },
@@ -113,6 +114,8 @@ export default {
         token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
         button: '0px 1px 4px 0px rgba(0, 0, 0, 0.12)',
         'button-group': '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
+        'button-elevated':
+          '0px 1px 4px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.25)',
       },
     },
   },
