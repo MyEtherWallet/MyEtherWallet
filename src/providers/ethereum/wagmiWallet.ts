@@ -68,8 +68,7 @@ class WagmiWallet extends BaseEvmWallet {
 
     } as SendTransactionParameters
     return sendTransaction(
-      wagmiConfig, params as SendTransactionParameters<typeof wagmiConfig>).then((res) => {
-        console.log('got response', res)
+      wagmiConfig, params as SendTransactionParameters<typeof wagmiConfig>).then((res: HexPrefixedString) => {
         return res
       })
 
