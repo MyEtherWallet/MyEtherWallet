@@ -1,5 +1,4 @@
 import type {
-  EthereumTransactionWithFeeType,
   NativeEthereumTransaction,
   PostEthereumTransaction,
 } from '../ethereum/types'
@@ -31,13 +30,11 @@ export interface GasFeeType {
   [GasPriceType.FASTEST]: GasFeeInfoType
 }
 
-export type PreTransaction = EthereumTransactionWithFeeType
-
 export type PostTransaction = PostEthereumTransaction
 
 export interface GasFeeResponse {
-  id: string
-  fee: GasFeeType
+  quoteId: string
+  fees: GasFeeType
 }
 export interface PreTransactionResponse {
   id: string
@@ -53,6 +50,7 @@ export interface PostTransactionResponse {
 export enum WalletType {
   PRIVATE_KEY = 'PRIVATE_KEY',
   MNEMONIC = 'MNEMONIC',
+  WAGMI = 'WAGMI',
 }
 
 export interface BalanceResponse {

@@ -12,22 +12,31 @@ export enum SupportedTXType {
 
 export interface APIRequest {
   id: string
-  network: string
-}
-
-export interface PreEthereumTransaction extends APIRequest {
-  to: HexPrefixedString
-  from: HexPrefixedString
-  value: HexPrefixedString
-  data: HexPrefixedString
   chainId: HexPrefixedString
 }
 
-export interface EthereumTransactionWithFeeType extends PreEthereumTransaction {
-  gasFee: GasPriceType
+export interface PreEthereumTransaction {
+  to: HexPrefixedString
+  address: HexPrefixedString
+  from?: HexPrefixedString
+  value: HexPrefixedString
+  data: HexPrefixedString
 }
 
-export interface PostEthereumTransaction extends PreEthereumTransaction {
+export interface EthereumSignableTransactionParams {
+  priority: GasPriceType
+  quoteId: string
+}
+
+export interface EthereumSignableTransactionResult {
+  serialized: HexPrefixedString
+}
+
+export interface PostSignedTransaction {
+  signed: HexPrefixedString
+}
+
+export interface PostEthereumTransaction extends PreEthereumTransaction, APIRequest {
   gasPriceType: GasPriceType
   gasPrice?: HexPrefixedString
   gasLimit: HexPrefixedString

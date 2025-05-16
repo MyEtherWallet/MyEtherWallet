@@ -3,8 +3,9 @@ const LayoutDefault = () => import('@components/core_layouts/LayoutDefault.vue')
 const ViewHome = () => import('@view-default/ViewAccessWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
 const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
+const ViewAccessPrivateKey = () => import('@view-default/ViewAccessPrivateKey.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
-
+const ViewAccessMnemonic = () => import('@view-default/ViewAccessMnemonic.vue')
 const DefaultRoutes = [{
   path: '/',
   component: LayoutDefault,
@@ -28,7 +29,23 @@ const DefaultRoutes = [{
         noAuth: true
       }
     },
-
+    {
+      path: ROUTES_HOME.ACCESS_MNEMONIC.PATH,
+      name: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
+      component: ViewAccessMnemonic,
+      alias: KEYSTORE_ALIAS.upload,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.ACCESS_PRIVATE_KEY.PATH,
+      name: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
+      component: ViewAccessPrivateKey,
+      meta: {
+        noAuth: true
+      }
+    },
     /** Temporary Paths to be removed on v7 release
      *  Right Now components library thinks these exist in the project
      */

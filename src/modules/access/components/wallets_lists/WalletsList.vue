@@ -1,209 +1,199 @@
 <template>
   <div>
-    <h1 class="title5 mb-5">All Wallet Options</h1>
-    <!-- Filter -->
-    <nav
-      class="flex gap-4 mb-5 flex-wrap"
-      role="navigation"
-      aria-label="Wallet filters"
-    >
-      <button
-        v-for="filter in filterOptions"
-        :key="filter.value"
-        @click="clickFilter(filter)"
-        class="bg-primary text-white text-center rounded-full py-1 px-4 min-w-[100px]"
+    <div class="flex justify-between items-center gap-4 mb-4">
+      <h3 class="text-s-17 font-bold leading-p-150 sm:ml-4">
+        {{ $t('access_wallet.all_wallets.title') }}
+        <span class="hidden sm:inline-block font-normal">
+          • {{ $t('access_wallet.all_wallets.description') }}</span
+        >
+      </h3>
+      <app-btn-icon
+        :label="$t('access_wallet.sort_and_filter')"
+        class="md-header:hidden"
+        @click="openFilterSortModal = true"
       >
-        {{ filter.name }}
-      </button>
-    </nav>
-    <!-- Search -->
-    <div class="mb-5 max-w-[600px]">
-      <SearchInput @search="searchWallet" />
+        <Bars3Icon class="h-6 w-6" />
+      </app-btn-icon>
     </div>
-    <fwb-modal size="sm" v-if="openWalletConnectModal" @close="closeModal">
-      <template #header>
-        <div class="w-full">
-          <div class="items-center text-xl">Scan with WalletConnect</div>
-        </div>
-      </template>
-      <template #body>
-        <div>
-          <img :src="qrcode" alt="Wagmi QR Code" />
-        </div>
-      </template>
-    </fwb-modal>
+    <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4">
+      <!-- Search and Sort -->
+      <div
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 md-header:max-w-[510px]"
+      >
+        <app-search-input
+          v-model="searchInput"
+          class="grow md-header:max-w-[315px]"
+        />
+        <app-select
+          v-if="isHeaderMaxAndUp"
+          v-model:selected="activeSort"
+          :options="sortOptions"
+          :placeholder="$t('common.sort_by')"
+        />
+      </div>
+      <!-- Filter -->
+      <app-btn-group
+        v-if="isHeaderMaxAndUp"
+        v-model:selected="activeFilter"
+        :btn-list="filterOptions"
+        :is-loaded="true"
+      >
+        <template #btn-content="{ data }">
+          {{ data.name }}
+        </template>
+      </app-btn-group>
+    </div>
     <!-- Wallets-->
     <div
-      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-      role="grid"
+      v-if="displayWallets.length > 0"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
     >
-      <div
+      <btn-wallet
         v-for="wallet in displayWallets"
         :key="wallet.id"
-        class="flex flex-col items-center bg-white p-4 rounded-lg hoverOpacityHasBG cursor-pointer"
-        @click="clickWallet(wallet)"
-        @keyup.enter="clickWallet(wallet)"
-        role="gridcell"
-      >
-        <AsyncImg
-          :asyncImg="wallet.iconUrl"
-          :alt="wallet.name"
-          class="rounded-lg"
-          aria-hidden="true"
-        />
-        <p class="text-info pt-2">{{ wallet.name }}</p>
-      </div>
+        :wallet="wallet"
+        @clickWallet="clickWallet"
+      ></btn-wallet>
     </div>
+    <div
+      v-else
+      class="text-center text-s-17 leading-p-150 pt-8 sm:pt-16 min-h-[210px] text-info"
+    >
+      {{ $t('access_wallet.not_found') }} {{ searchInput }}
+    </div>
+
+    <wallet-connect-dialog
+      v-if="clickedWallet"
+      v-model:is-open="openWalletConnectModal"
+      :qrcode-data="wagmiWalletData"
+      :wallet-name="clickedWallet.name"
+      :wallet-icon="clickedWallet.icon as string"
+    />
+    <mobile-sort-filter
+      v-if="!isHeaderMaxAndUp"
+      :filter-options="filterOptions"
+      :sort-options="sortOptions"
+      v-model:active-filter="activeFilter"
+      v-model:active-sort="activeSort"
+      v-model:is-open="openFilterSortModal"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
-import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
-import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
-import WagmiWallet from '@/providers/ethereum/wagmiWallet'
-import { useQRCode } from '@vueuse/integrations/useQRCode'
-import { FwbModal } from 'flowbite-vue'
+import { computed, ref, watch } from 'vue'
+import WalletConnectDialog from '../WalletConnectDialog.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSelect from '@/components/AppSelect.vue'
+import MobileSortFilter from './MobileSortFilter.vue'
+import { type AppSelectOption } from '@/types/components/appSelect'
+import BtnWallet from './BtnWallet.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import {
+  type WalletConfig,
+  SortBy,
+  type Filter,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useI18n } from 'vue-i18n'
+import { Bars3Icon } from '@heroicons/vue/24/solid'
+import { useWagmiConnect } from '@/composables/useWagmiConnect'
+import { useWalletList } from '@/composables/useWalletList'
 
-import AsyncImg from './AsyncImg.vue'
-import SearchInput from './SearchInput.vue'
-import { ROUTES_HOME, ROUTES_WALLET } from '@/router/routeNames'
-import IconKeystore from '@/assets/icons/software_wallets/icon-keystore-file.svg'
-import IconMnemonic from '@/assets/icons/software_wallets/icon-mnemonic.svg'
-import IconPrivateKey from '@/assets/icons/software_wallets/icon-private-key-grey.png'
-import { useWalletStore } from '@/stores/walletStore'
+const { t } = useI18n()
+const { isHeaderMaxAndUp } = useAppBreakpoints()
+const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
+  useWagmiConnect()
 
-const wagmiWalletData = ref<string>('')
-const openWalletConnectModal = ref(false)
-const qrcode = useQRCode(wagmiWalletData, { width: 304 })
-const { connectors } = wagmiConfig
+const { defaultWallets, newWalletList } = useWalletList()
 
-const walletStore = useWalletStore()
+const displayWallets = computed(() => {
+  const wallets: WalletConfig[] = []
+  wallets.push(...defaultWallets.value)
+  wallets.push(...newWalletList.value)
+  if (searchInput.value) {
+    const search = searchInput.value.toLowerCase()
+    const beginsWith = wallets.filter(wallet => {
+      return wallet.name.toLowerCase().startsWith(search)
+    })
+    const other = wallets.filter(wallet => {
+      return (
+        wallet.name.toLowerCase().includes(search) &&
+        !wallet.name.toLowerCase().startsWith(search)
+      )
+    })
 
-const { setWallet } = walletStore
+    return [...beginsWith, ...other]
+  }
+  if (activeSort.value.value === SortBy.A_Z) {
+    wallets.sort((a, b) => a.name.localeCompare(b.name))
+  }
+  if (activeSort.value.value === SortBy.Z_A) {
+    wallets.sort((a, b) => b.name.localeCompare(a.name))
+  }
+  if (activeFilter.value.value === WalletConfigType.HARDWARE) {
+    return wallets.filter(a =>
+      a.type.some(type => type === WalletConfigType.HARDWARE),
+    )
+  }
 
-const DEFAULT_IDS = ['enkrypt', 'mew']
-const projectId = import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID
-
-const allRainbowWallets = Object.values(rainndowWallets)
-
-const initializedWallets = allRainbowWallets.map(wallet =>
-  wallet({ projectId, appName: 'MEW' }),
-)
-interface WalletType {
-  id: string
-  name: string
-  iconUrl: string | (() => Promise<string>)
-}
-
-const newWalletList = computed(() => {
-  const newConArr: WalletType[] = []
-  initializedWallets.forEach(wallet => {
-    if (DEFAULT_IDS.includes(wallet.id)) {
-      newConArr.unshift({
-        id: wallet.id,
-        name: wallet.name,
-        iconUrl: wallet.iconUrl,
-      })
-    } else {
-      newConArr.push({
-        id: wallet.id,
-        name: wallet.name,
-        iconUrl: wallet.iconUrl,
-      })
-    }
-  })
-  return newConArr
+  if (activeFilter.value.value === WalletConfigType.MOBILE) {
+    return wallets.filter(a =>
+      a.type.some(type => type === WalletConfigType.MOBILE),
+    )
+  }
+  if (activeFilter.value.value === WalletConfigType.SOFTWARE) {
+    return wallets.filter(a =>
+      a.type.some(
+        type =>
+          type === WalletConfigType.SOFTWARE ||
+          type === WalletConfigType.EXTENSION ||
+          type === WalletConfigType.DESKTOP,
+      ),
+    )
+  }
+  return wallets
 })
-
-/** -------------------
- *  Core Wallets
- * -------------------*/
-interface CoreWallet {
-  id: string
-  name: string
-  iconUrl: string
-  routeName?: string
-}
-
-const softwareWallets: CoreWallet[] = [
-  {
-    id: 'keystore',
-    name: 'Keystore',
-    iconUrl: IconKeystore,
-    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
-  },
-  {
-    id: 'mnemonic',
-    name: 'Mnemonic phrase',
-    iconUrl: IconMnemonic,
-    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
-  },
-  {
-    id: 'privatekey',
-    name: 'Private Key',
-    iconUrl: IconPrivateKey,
-    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
-  },
-]
-
-const displayWallets = [...softwareWallets, ...newWalletList.value]
 
 /** -------------------
  *  Click Wallet
  * -------------------*/
-const router = useRouter()
-const clickWallet = (wallet: WalletType | CoreWallet) => {
-  if ('routeName' in wallet && wallet.routeName) {
-    router.push({ name: wallet.routeName })
-  } else {
-    const connector = connectors.find(
-      c =>
-        c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
-    )
-    connector?.emitter.on('message', msg => {
-      if (msg.type === 'display_uri') {
-        wagmiWalletData.value = msg.data as string // possibly a temp fix
-        openWalletConnectModal.value = true
-      }
-    })
-    const wagWallet = new WagmiWallet(connector!, '0x1')
-    wagWallet.connect().then(res => {
-      if (res) {
-        wagmiWalletData.value = ''
-        openWalletConnectModal.value = false
-        setWallet(wagWallet)
-        router.push({ path: ROUTES_WALLET.WALLET.PATH })
-      }
-    })
-  }
-}
-
-const closeModal = () => {
-  openWalletConnectModal.value = false
+const clickWallet = (wallet: WalletConfig) => {
+  connect(wallet)
 }
 
 /** -------------------
- *  Filter
+ *  Filter & Search & Sort
  * -------------------*/
-interface Filter {
-  name: string
-  value: string
-}
+const searchInput = ref('')
+
+const sortOptions: AppSelectOption[] = [
+  { label: t('access_wallet.sort.popular'), value: SortBy.POPULAR },
+  { label: t('access_wallet.sort.name_a_z'), value: SortBy.A_Z },
+  { label: t('access_wallet.sort.name_z_a'), value: SortBy.Z_A },
+]
+const activeSort = ref<AppSelectOption>(sortOptions[0])
+
 const filterOptions: Filter[] = [
-  { name: 'All', value: 'all' },
-  { name: 'Hardware', value: 'hardware' },
-  { name: 'Mobile', value: 'mobile' },
+  { name: t('access_wallet.filter.all'), value: 'all' },
+  {
+    name: t('access_wallet.filter.hardware'),
+    value: WalletConfigType.HARDWARE,
+  },
+  { name: t('access_wallet.filter.mobile'), value: WalletConfigType.MOBILE },
+  {
+    name: t('access_wallet.filter.software'),
+    value: WalletConfigType.SOFTWARE,
+  },
 ]
 
 const activeFilter = ref<Filter>(filterOptions[0])
+const openFilterSortModal = ref(false)
 
-const clickFilter = (_value: Filter) => {
-  console.log('clickFilter', _value)
-  activeFilter.value = _value
-}
-
-const searchWallet = (payload: string) => {
-  console.log('searchWallet', payload)
-}
+watch(isHeaderMaxAndUp, val => {
+  if (val && openFilterSortModal.value) {
+    openFilterSortModal.value = false
+  }
+})
 </script>

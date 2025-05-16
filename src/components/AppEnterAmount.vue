@@ -1,104 +1,158 @@
 <template>
   <div
-    class="w-[32rem] h-32 rounded-md border-2 bg-white px-4 py-2"
-    :class="{ 'border-error': !!error, 'border-mew-purple': !error }"
+    ref="target"
+    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
+    :class="{
+      'border-primary border-2 !p-4': inFocusInput && !error,
+      '!border-error border-2 !p-4': !!error,
+    }"
+    @click="setInFocusInput"
   >
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center w-full">
       <input
-        class="h-16 w-64 text-4xl font-bold outline-none"
-        :class="{ 'text-error': !!error, 'text-mew-purple': !error }"
+        class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
+        :class="{ 'text-error': !!error }"
         name="amount-input"
-        type="string"
+        type="text"
+        autoComplete="off"
         placeholder="0.0"
-        required
-        v-model="amount"
+        v-model.number="amount"
+        @focus="setInFocusInput"
+        @keypress="checkIfNumber"
       />
-      <div>
-        <app-token-select v-model:selected-token="tokenSelected" />
-      </div>
+      <app-token-select v-model:selected-token="selectedToken" />
     </div>
-    <div class="flex justify-between">
-      <div
-        class="text-lg"
-        :class="{ 'text-error': !!error, 'text-grey-30': !error }"
-      >
-        {{ balanceOrError }}
-      </div>
-      <div class="text-lg text-mew-purple">
-        Balance: {{ truncate(selectedToken.balance, 5) }}
-      </div>
+    <div :class="{ 'animate-pulse': isLoading }">
+      <transition name="fade" mode="out-in">
+        <div v-if="isLoading" class="h-5 flex bg-grey-10 rounded-full"></div>
+        <div v-else class="flex justify-between">
+          <div
+            class="text-sm"
+            :class="{ 'text-error': !!error, 'text-info': !error }"
+          >
+            {{ balanceFiatOrError }}
+          </div>
+          <div
+            :class="[
+              'text-sm text-info transition-colors',
+              { 'text-primary': inFocusInput },
+            ]"
+          >
+            Balance: {{ balance }}
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { type Token } from '@/stores/walletStore'
-import { defineProps, defineEmits, watch, ref, computed } from 'vue'
+import { type TokenBalance } from '@/mew_api/types'
+import { useWalletStore } from '@/stores/walletStore'
+import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
-import { toWei } from 'web3-utils'
-import { truncate } from '@/utils/filters'
-
 import AppTokenSelect from './AppTokenSelect.vue'
+import { onClickOutside } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
+
+const walletStore = useWalletStore()
+const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
 
 const props = defineProps({
-  modelValue: {
-    type: String,
-    required: true,
-  },
-  selectedToken: {
-    type: Object as () => Token,
-    required: true,
-  },
-  amountError: {
-    type: String,
+  validateInput: {
+    type: Function as PropType<() => void>,
+    default: () => {},
     required: true,
   },
 })
 
-const emit = defineEmits([
-  'update:modelValue',
-  'update:selectedToken',
-  'update:amountError',
-])
+//String will be returned when input is cleared --> ''
+const amount = defineModel('amount', {
+  type: [String, Number] as PropType<string | number>,
+  required: true,
+})
 
-const amount = ref(props.modelValue)
-const error = ref(props.amountError)
-const tokenSelected = ref(Object.assign({}, props.selectedToken))
+const selectedToken = defineModel('selectedToken', {
+  type: Object as () => TokenBalance,
+  required: true,
+})
 
-const balanceOrError = computed(() => {
-  return error.value
-    ? error.value
-    : `$ ${BigNumber(
-        BigNumber(props.selectedToken.price).times(BigNumber(amount.value)),
-      ).toString()}`
+const error = defineModel('error', {
+  type: String,
+  required: true,
+  default: '',
+})
+
+const balanceFiatOrError = computed(() => {
+  const _balance = BigNumber(
+    BigNumber(selectedToken.value.price || 0).times(
+      BigNumber(amount.value || 0),
+    ),
+  )
+  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
+})
+
+const balance = computed(() => {
+  return selectedToken.value.balance
+    ? formatFloatingPointValue(selectedToken.value.balance).value
+    : '0'
 })
 
 watch(
-  () => [amount.value],
+  () => amount.value,
   useDebounceFn(() => {
-    const baseAmount = toWei(amount.value, 'ether')
-    const tokenSelectedBalance = props.selectedToken.balance
-      ? props.selectedToken.balance
-      : '0'
-    const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
-
-    emit('update:modelValue', amount.value)
-
-    if (amount.value === '')
-      error.value = 'Amount is required' // amount is blank
-    else if (BigInt(baseAmount) < 0)
-      error.value = 'Amount must be greater than 0' // amount less than 0
-    else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
-      error.value = 'Insufficient balance for selected token' // amount greater than selected balance
-    else error.value = ''
+    if (isLoading.value) return
+    props.validateInput()
   }, 500),
 )
 
+/**------------------------
+ * Focus State
+ -------------------------*/
+const target = ref<HTMLElement | null>(null)
+const inFocusInput = ref(false)
+const targetValue = ref<HTMLElement | null>(null)
+
+const setInFocusInput = () => {
+  inFocusInput.value = true
+  targetValue.value = target.value
+}
+
+onClickOutside(targetValue, () => {
+  targetValue.value = null
+  inFocusInput.value = false
+  props.validateInput()
+})
+
+//check if isloading changed and check input if in focus
 watch(
-  () => [tokenSelected.value],
+  () => isLoading.value,
   () => {
-    emit('update:selectedToken', tokenSelected.value)
+    if (!isLoading.value && inFocusInput.value) {
+      props.validateInput()
+    }
   },
 )
+
+const checkIfNumber = (e: KeyboardEvent) => {
+  const key = e.key
+  // Numeric
+  if (key >= '0' && key <= '9') {
+    return
+  }
+  // Only allow a single period
+  if (key === '.') {
+    const input = amount.value.toString()
+    if (!input.includes('.')) {
+      return
+    }
+  }
+  // Alphabetical (/non-numeric) or multiple periods. Don't propagate change
+  e.preventDefault()
+}
 </script>

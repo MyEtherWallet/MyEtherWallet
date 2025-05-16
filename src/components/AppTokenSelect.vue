@@ -1,95 +1,122 @@
 <template>
   <button
-    class="bg-light-grey text-black rounded-full px-1 py-1 flex items-center"
+    :class="[
+      'bg-white rounded-full px-1 flex flex-nowrap items-center hoverNoBG  min-h-9 shadow-button border-grey-10 border',
+      { 'bg-grey-10 animate-pulse min-w-[120px]': isLoading },
+    ]"
     type="button"
     @click="showAllTokens = true"
+    aria-label="Select token"
+    :disabled="isLoading"
   >
     <div
-      class="rounded-full border-x border-y border-grey-30 mr-1 h-5 w-5 overflow-hidden"
+      v-if="!isLoading"
+      class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
     >
       <img
-        class="w-5 h-5"
+        class="w-7 h-7 rounded-full"
         :src="imageReplacer(selectedToken.logo_url)"
+        width="28"
+        height="28"
         alt="token icon"
       />
     </div>
-    {{ selectedToken.symbol }}
-    <chevron-down-icon class="ml-1 w-4 h-4 stroke-4" />
+    <p v-if="!isLoading" class="font-medium text-nowrap">
+      {{ truncate(selectedToken.symbol, 7) }}
+    </p>
+    <div class="ml-1 min-w-4 h-4">
+      <chevron-down-icon v-if="!isLoading" class="text-info" />
+    </div>
   </button>
-  <fwb-modal v-if="showAllTokens" @close="closeModal" size="xl">
-    <template #header>
-      <div class="w-full">
-        <div class="items-center text-lg">Select token to send</div>
-        <div class="flex items-center mt-2 w-full">
-          <magnifying-glass-icon class="w-6 h-6 mx-3" />
-          <input
-            class="w-full h-10 rounded-md px-2 border-none"
-            style="outline: none !important"
-            type="text"
-            placeholder="Search assets"
-            v-model="searchInput"
-          />
+  <app-dialog
+    v-model:is-open="showAllTokens"
+    title="Select token"
+    class="sm:max-w-[500px] sm:mx-auto"
+  >
+    <template #content>
+      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll px-7">
+        <div class="sticky top-0 bg-white z-10 rounded-b-4xl">
+          <div
+            class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+          >
+            <app-search-input v-model="searchInput" class="grow" />
+            <!--TODO: implement sort by-->
+            <div class="text-sm pr-4">Sort by: token Name</div>
+          </div>
         </div>
-      </div>
-    </template>
-    <template #body>
-      <div class="flex flex-col">
-        <div
-          v-for="token in searchResults"
-          :key="token.contract"
-          class="flex items-center justify-between px-2 py-4 cursor-pointer"
-          @click="setSelectedToken(token)"
-        >
-          <div class="flex justify-between items-center w-full">
-            <div class="flex items-center">
-              <div class="mr-4 h-7 w-7 rounded-full overflow-hidden">
+
+        <div v-if="searchResults.length" class="flex flex-col">
+          <button
+            v-for="token in searchResults"
+            :key="token.contract"
+            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-full"
+            @click="setSelectedToken(token)"
+          >
+            <div class="flex justify-between items-center w-full">
+              <div class="flex items-center">
                 <img
-                  class="w-7 h-7"
+                  v-if="token.logo_url"
+                  class="mr-4 w-7 h-7 rounded-full overflow-hidden"
                   :src="imageReplacer(token.logo_url)"
                   alt="token icon"
                 />
+                <div class="text-left">
+                  <h2>{{ token.name }}</h2>
+                  <p class="text-info text-sm">
+                    {{ getBalance(token.balance) }}
+                    <span class="uppercase text-xs">
+                      {{ truncate(token.symbol, 7) }}</span
+                    >
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2>{{ token.name }}</h2>
-                <p class="text-grey-30">
-                  {{ token.balance }} {{ truncate(token.symbol, 7) }}
+              <div v-if="token.price !== 0">
+                <p class="text-medium">
+                  $ {{ convertToValue(token.price, token.balance) }}
+                </p>
+                <p class="text-info text-xs">
+                  @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>
             </div>
-            <div v-if="token.price !== 0">
-              $
-              {{ truncate(convertToValue(token.price, token.balance), 12) }}
-            </div>
+          </button>
+        </div>
+        <div v-else>
+          <div class="flex justify-center items-center h-[400px] text-grey-30">
+            <p v-if="searchInput !== ''">No tokens match your search</p>
+            <!-- TODO: verify other states when it can happen-->
+            <p v-else>No tokens available</p>
           </div>
         </div>
       </div>
     </template>
-  </fwb-modal>
+  </app-dialog>
 </template>
 
 <script setup lang="ts">
-import {
-  MAIN_TOKEN_CONTRACT,
-  useWalletStore,
-  type Token,
-} from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
-import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
-import { FwbModal } from 'flowbite-vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
-
+import { storeToRefs } from 'pinia'
 import eth from '@/assets/icons/tokens/eth.svg'
-
 import { truncate } from '@/utils/filters'
-
+import AppDialog from '@/components/AppDialog.vue'
+import AppSearchInput from './AppSearchInput.vue'
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
 const { tokens } = store
+const { isLoadingBalances: isLoading } = storeToRefs(store)
 
 defineProps({
   selectedToken: {
-    type: Object as () => Token,
+    type: Object as () => TokenBalance,
     required: true,
   },
 })
@@ -99,7 +126,7 @@ const searchInput = ref('')
 
 const defaultImg = computed(() => {
   const img = tokens.find(
-    (token: Token) => token.contract === MAIN_TOKEN_CONTRACT,
+    (token: TokenBalance) => token.contract === MAIN_TOKEN_CONTRACT,
   )
   return img ? img.logo_url : eth
 })
@@ -128,23 +155,26 @@ const searchResults = computed(() => {
   return resultArray
 })
 
-const closeModal = () => {
-  showAllTokens.value = false
-}
-
-const setSelectedToken = (token: Token) => {
+const setSelectedToken = (token: TokenBalance) => {
   emit('update:selectedToken', token)
   showAllTokens.value = false
 }
 
-const imageReplacer = (logo: string) => {
+const imageReplacer = (logo: string | undefined) => {
   if (logo === 'https://img.mewapi.io/?image=null' || !!logo) {
     return defaultImg.value
   }
   return logo
 }
 
-const convertToValue = (price: number, balance: string) => {
-  return BigNumber(BigNumber(price).times(BigNumber(balance))).toString()
+const convertToValue = (price: number | undefined, balance: string) => {
+  const _value = BigNumber(
+    BigNumber(price || 0).times(BigNumber(balance)),
+  ).toString()
+  return formatFiatValue(_value).value
+}
+
+const getBalance = (_value: string) => {
+  return formatFloatingPointValue(_value).value
 }
 </script>
