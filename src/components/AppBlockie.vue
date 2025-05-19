@@ -2,7 +2,11 @@
   <div>
     <div
       v-show="address"
-      :class="['relative w-8 h-8 rounded-full ', { 'shadow-token': !isFlat }]"
+      :class="[
+        'relative rounded-full',
+        widthAndHeight,
+        { 'shadow-token': !isFlat },
+      ]"
     >
       <img
         v-if="blockieImg"
@@ -29,7 +33,7 @@
 
 <script setup lang="ts">
 import Blockies from '@/utils/blockies'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 const props = defineProps({
   /**
    * @address - valid address
@@ -70,6 +74,10 @@ const createBlockie = () => {
     scale: props.scale,
   }).toDataURL()
 }
+
+const widthAndHeight = computed(() => {
+  return `w-${props.size} h-${props.size}`
+})
 
 onMounted(() => {
   createBlockie()

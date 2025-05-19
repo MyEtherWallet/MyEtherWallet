@@ -187,10 +187,14 @@ span.ripple {
 /* FADELIST transition - used in lists */
 
 .fadelist-move,
-.fadelist-enter-active,
-.fadelist-leave-active {
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+.fadelist-enter-active {
+  transition: opacity 0.5s ease, transform 0.4s cubic-bezier(0.55, 0, 0.1, 1);
+  transform-origin: center top;
+}
 
+.fadelist-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1),
+    transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 .fadelist-enter-from,

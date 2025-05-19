@@ -1,29 +1,9 @@
 <template>
-  <!-- TODO: consider using Teleport to Body to ensure background does not scroll-->
-  <div>
-    <!-- The backdrop, rendered as an absolute sibling to the panel container -->
-    <transition
-      enter-active-class="transform ease-out duration-500 transition opacity-0 delay-100"
-      enter-to-class="opacity-100"
-      leave-active-class="opacity-0"
-      leave-to-class="opacity-0"
-      appear
-    >
-      <div
-        v-if="isOpen"
-        class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
-        @click="setIsOpen(false)"
-        aria-hidden
-      />
-    </transition>
-    <!-- Dialog Container -->
-    <div
-      v-if="isOpen"
-      class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 z-[100] overscroll-none !overflow-y-scroll"
-      @click="setIsOpen(false)"
-    >
+  <teleport to="#app">
+    <div>
+      <!-- The backdrop, rendered as an absolute sibling to the panel container -->
       <transition
-        enter-active-class="transform ease-out duration-500 transition opacity-0 delay-100"
+        enter-active-class="transform ease-out duration-400 transition opacity-0 delay-100"
         enter-to-class="opacity-100"
         leave-active-class="opacity-0"
         leave-to-class="opacity-0"
@@ -31,30 +11,51 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
-          @click.stop
-          v-bind="$attrs"
+          class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          @click="setIsOpen(false)"
+          aria-hidden
+        />
+      </transition>
+      <!-- Dialog Container -->
+      <div
+        v-if="isOpen"
+        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 z-[100] overscroll-none !overflow-y-scroll"
+        @click="setIsOpen(false)"
+      >
+        <transition
+          enter-active-class="transform ease-out duration-400 transition opacity-0 delay-100"
+          enter-to-class="opacity-100"
+          leave-active-class="opacity-0"
+          leave-to-class="opacity-0"
+          appear
         >
           <div
-            class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
+            v-if="isOpen"
+            class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+            @click.stop
+            v-bind="$attrs"
           >
-            <slot name="title">
-              <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8">
-                {{ title }}
-              </h1>
-            </slot>
-            <app-btn-icon-close
-              @click="setIsOpen(false)"
-              class="mt-4 sm:mt-8 min-w-[32px]"
-            />
+            <div
+              class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
+            >
+              <slot name="title">
+                <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8">
+                  {{ title }}
+                </h1>
+              </slot>
+              <app-btn-icon-close
+                @click="setIsOpen(false)"
+                class="mt-4 sm:mt-8 min-w-[32px]"
+              />
+            </div>
+            <div :class="{ hasContentGutter: 'pt-2 px-6 sm:px-8' }">
+              <slot name="content" />
+            </div>
           </div>
-          <div :class="{ hasContentGutter: 'pt-2 px-6 sm:px-8' }">
-            <slot name="content" />
-          </div>
-        </div>
-      </transition>
+        </transition>
+      </div>
     </div>
-  </div>
+  </teleport>
 </template>
 <script setup lang="ts">
 /**

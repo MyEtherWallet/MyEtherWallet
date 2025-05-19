@@ -1,39 +1,174 @@
 <template>
   <div
-    v-if="!isDesktopAndUp"
-    class="flex-initial w-full justify-end h-16 px-6 xs:px-10 bg-white fixed top-0 -mx-5 xs:-mx-10"
+    class="flex items-center w-full h-16 fixed top-0 z-10 px-5 md-header:px-10 bg-white bg-opacity-70 shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);] backdrop-blur-xl"
   >
-    <button
-      type="button"
-      @click="btnClick"
-      class="inline-flex items-center mt-3 p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+    <div
+      class="flex w-full max-w-[1392px] justify-between items-center mx-auto gap-3"
     >
-      <span class="sr-only">Open sidebar</span>
-      <svg
-        class="w-6 h-6"
-        aria-hidden="true"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          clip-rule="evenodd"
-          fill-rule="evenodd"
-          d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-        ></path>
-      </svg>
-    </button>
+      <!-- LOGO -->
+      <div class="flex items-center">
+        <img
+          :src="IMGMewLogo"
+          contain
+          :alt="$t('home')"
+          class="cursor-pointer mr-5"
+          width="113px"
+          height="auto"
+          loading="lazy"
+        />
+        <div v-if="isDesktopAndUp">
+          <router-link
+            v-for="(item, index) in displayLinks"
+            :key="index"
+            class="font-medium text-base xl:text-lg hoverNoBG px-3 py-1 rounded-full"
+            :to="{ name: item.routeName }"
+          >
+            {{ item.title }}
+          </router-link>
+        </div>
+
+        <app-select
+          v-if="isDesktopAndUp"
+          v-model:selected="selectedOption"
+          :options="displayTools"
+          :placeholder="$t('tools')"
+          use-vue-router
+        >
+          <template #select-button="{ toggleSelect }">
+            <button
+              class="rounded-full hoverNoBG px-3 py-1 font-medium text-base xl:text-lg flex items-center"
+              @click="toggleSelect"
+              @hover="toggleSelect"
+            >
+              {{ $t('tools') }}
+              <chevron-down-icon class="w-4 h-4 ml-2" />
+            </button>
+          </template>
+        </app-select>
+      </div>
+      <div class="flex items-center justify-end gap-2 ml-auto">
+        <app-select-chain
+          v-if="!isMobile"
+          :has-label="false"
+          class="max-w-[178px]"
+        />
+        <the-address-menu v-if="!isMobile" />
+        <app-btn-icon
+          v-if="isDesktopAndUp"
+          :label="$t('menu.open-notifications')"
+          @click="btnClick"
+        >
+          <bell-icon class="w-6 h-6 opacity-80" />
+        </app-btn-icon>
+        <app-btn-icon
+          v-if="isDesktopAndUp"
+          :label="$t('menu.open-settings')"
+          @click="btnClick"
+        >
+          <cog-icon class="w-6 h-6 opacity-80" />
+        </app-btn-icon>
+      </div>
+      <the-wallet-menu
+        v-if="!isDesktopAndUp"
+        :core-menu-list="coreMenuList"
+        :tools-menu-list="toolsMenuList"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import IMGMewLogo from '@/assets/images/mew/logo.svg'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppSelectChain from '@/components/AppSelectChain.vue'
+import AppSelect from '@/components/AppSelect.vue'
+import TheWalletMenu from './TheWalletMenu.vue'
+import TheAddressMenu from './TheAddressMenu.vue'
+import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-const { isDesktopAndUp } = useAppBreakpoints()
-const emit = defineEmits<{
-  clickMenuBtn: [payload: MouseEvent]
-}>()
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { ROUTES_WALLET, ROUTES_SEND } from '@/router/routeNames'
+import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
+import { type AppSelectOption } from '@/types/components/appSelect'
+import { useBreakpoints } from '@vueuse/core'
+
+const { t } = useI18n()
+
+const coreMenuList: AppMenuListItem[] = [
+  {
+    title: t('portfolio'),
+    routeName: ROUTES_WALLET.DASHBOARD.NAME,
+    iconID: ICON_IDS.PORTFOLIO,
+  },
+  {
+    title: t('swap'),
+    routeName: ROUTES_WALLET.SWAP.NAME,
+    iconID: ICON_IDS.SWAP,
+  },
+  {
+    title: t('buy'),
+    routeName: ROUTES_WALLET.BUY.NAME,
+    iconID: ICON_IDS.BUY,
+  },
+  {
+    title: t('stake'),
+    routeName: ROUTES_WALLET.STAKE.NAME,
+    iconID: ICON_IDS.STAKE,
+  },
+  {
+    title: t('send'),
+    routeName: ROUTES_SEND.SEND.NAME,
+    iconID: ICON_IDS.SEND,
+  },
+]
+
+const toolsMenuList: AppMenuListItem[] = [
+  {
+    title: t('verify-message'),
+    routeName: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
+  },
+  {
+    title: t('sign-message'),
+    routeName: ROUTES_WALLET.SIGN_MESSAGE.NAME,
+  },
+  {
+    title: t('deploy-contract'),
+    routeName: ROUTES_WALLET.DEPLOY_CONTRACT.NAME,
+  },
+  {
+    title: t('interact-contract'),
+    routeName: ROUTES_WALLET.INTERACT_WITH_CONTRACT.NAME,
+  },
+]
+
+const breakpoints = useBreakpoints({
+  hideSend: 1100,
+})
+
+const hideSend = computed<boolean>(() => breakpoints.smaller('hideSend').value)
+const displayLinks = computed(() => {
+  return hideSend.value ? coreMenuList.slice(0, 4) : coreMenuList
+})
+const displayTools = computed<AppSelectOption[]>(() => {
+  const tools = [...toolsMenuList]
+  if (hideSend.value) {
+    tools.unshift(coreMenuList[4])
+  }
+  return tools.map(item => ({
+    label: item.title,
+    value: item.routeName as string,
+  }))
+})
+
+const { isDesktopAndUp, isMobile } = useAppBreakpoints()
 
 const btnClick = (payload: MouseEvent) => {
-  emit('clickMenuBtn', payload)
+  console.log('btnClick', payload)
 }
+
+const selectedOption = ref<AppSelectOption>({
+  label: toolsMenuList[0].title,
+  value: toolsMenuList[0].routeName,
+})
 </script>

@@ -37,6 +37,7 @@ const ROUTES_WALLET: RouteNameCollection = {
   WALLET: { NAME: 'Wallet', PATH: '/wallet' },
   DASHBOARD: { NAME: 'WalletDashboard', PATH: 'dashboard' },
   //A-Z
+  BUY: { NAME: 'Buy', PATH: 'buy' },
   DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
   ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
@@ -64,7 +65,7 @@ const ROUTES_WALLET: RouteNameCollection = {
 
 const ROUTES_SEND: RouteNameCollection = {
   SEND: { NAME: 'WalletSend', PATH: 'send' },
-  SEND_NFT: { NAME: 'WalletSendNFT', PATH: 'nft', },
+  SEND_NFT: { NAME: 'WalletSendNFT', PATH: 'nft' },
 
   //TO BE IMPLEMENTED OR DELETEDaa
   SEND_TX: { NAME: 'SendTX', PATH: 'send-tx' },
@@ -80,5 +81,4 @@ enum KEYSTORE_ALIAS {
   upload = '/keystore/upload',
 }
 
-export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS };
-
+export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS }

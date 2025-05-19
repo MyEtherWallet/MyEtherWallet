@@ -3,7 +3,7 @@
     <label for="select" class="sr-only">
       {{ props.placeholder }}
     </label>
-    <slot name="select-button">
+    <slot name="select-button" :toggleSelect="toggleSelect">
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
           <span>{{ showSelected }}</span>
@@ -29,7 +29,7 @@
         <div
           class="px-3 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
         >
-          <div class="grid grid-cols-1">
+          <div v-if="!useVueRouter" class="grid grid-cols-1">
             <button
               v-for="option in options"
               :key="option.value"
@@ -40,6 +40,19 @@
             >
               {{ option.label }}
             </button>
+          </div>
+          <div v-else class="grid grid-cols-1">
+            <router-link
+              v-for="option in options"
+              :key="option.value"
+              class="flex items-center py-3 px-2 hoverNoBG rounded-lg"
+              role="option"
+              :id="option.value"
+              :to="{ name: option.value }"
+              @click="selectOption(option)"
+            >
+              {{ option.label }}
+            </router-link>
           </div>
         </div>
       </div>
@@ -55,7 +68,18 @@
  * <app-select
  *   v-model:selected="selectedOption"
  *   :options="options"
- *   placeholder="Select an option"
+ *   placeholder="Select an option"/>
+ *
+ * @example with slot
+ * <app-select
+ *   v-model:selected="selectedOption"
+ *   :options="options"
+ *   placeholder="Select an option">
+ *   <template #select-button>
+ *    <button class="rounded-full hoverNoBG p-2" @click="selectedOption.value = true">
+ *   </template>
+ * </app-select>
+ *
  */
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { defineProps, ref } from 'vue'
@@ -76,6 +100,10 @@ const props = defineProps({
   options: {
     type: Array as () => AppSelectOption[],
     required: true,
+  },
+  useVueRouter: {
+    type: Boolean,
+    default: false,
   },
 })
 

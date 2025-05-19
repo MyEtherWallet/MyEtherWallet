@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { ref, type Ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { fromWei } from 'web3-utils'
@@ -10,6 +10,13 @@ export const useWalletStore = defineStore('walletStore', () => {
   const tokens: Ref<Array<TokenBalance>> = ref([])
   const balance = ref('0')
   const isLoadingBalances = ref(true)
+
+  const getAddress = computed(() => {
+    if (wallet.value) {
+      return wallet.value.getAddress()
+    }
+    return null
+  })
 
   const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
     const locToken: TokenBalance[] = newTokens.map(token => {
@@ -60,5 +67,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     balance,
     isLoadingBalances,
     setIsLoadingBalances,
+    getAddress,
   }
 })

@@ -43,19 +43,27 @@
           v-if="selectedChain.icon"
           :src="selectedChain.icon"
           alt=""
-          class="w-8 h-8 mr-2 rounded-full object-contain"
-          height="32px"
-          width="32px"
+          :class="[
+            hasLabel ? 'w-8 h-8 mr-2' : 'w-6 h-6 mr-1',
+            'rounded-full object-contain flex-none',
+          ]"
+          height="32"
+          width="32"
         />
-        <div class="mr-2 ml-1">
-          <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+        <div class="ml-1 pr-1 min-w-[30px]">
+          <p
+            v-if="hasLabel"
+            class="text-info text-left text-s-12 leading-[16px] capitalize"
+          >
             {{ $t('common.network') }}
           </p>
-          <p class="text-ellipsis truncate font-medium text-sm">
+          <p
+            class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
+          >
             {{ selectedChain.nameLong }}
           </p>
         </div>
-        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+        <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
       </div>
     </button>
 
@@ -127,6 +135,10 @@ defineProps({
   isBtnGroup: {
     type: Boolean,
     default: false,
+  },
+  hasLabel: {
+    type: Boolean,
+    default: true,
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
