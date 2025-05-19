@@ -30,7 +30,7 @@
       v-if="addressBookLength > 0"
       class="ml-2 cursor-pointer"
       label="open address book"
-      @click="openAddressBook"
+      @click.prevent="openAddressBook"
     >
       <chevron-down-icon class="w-4 h-4" />
     </app-btn-icon>
@@ -49,7 +49,6 @@
     v-model:is-open="isAddressBookOpen"
     title="Receive to account"
     class="sm:max-w-[500px] sm:mx-auto"
-    :hasContentGutter="false"
   >
     <template #content>
       <div
@@ -148,6 +147,7 @@ import ENSNameResolver from '@/providers/common/nameResolver'
 import { useAddressBookStore } from '@/stores/addressBook'
 import AppDialog from './AppDialog.vue'
 import AppBtnIcon from './AppBtnIcon.vue'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -160,7 +160,9 @@ const addressSearch = ref('')
 const isAddressBookOpen = ref(false)
 
 const resolver = computed(() => {
-  return new ENSNameResolver('0x1')
+  const chainsStore = useChainsStore()
+  const { selectedChain } = storeToRefs(chainsStore)
+  return new ENSNameResolver(selectedChain.value?.chainID || '1')
 })
 
 const addressBlockie = computed(() => {

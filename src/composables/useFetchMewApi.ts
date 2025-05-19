@@ -12,8 +12,16 @@ const isDevMode = import.meta.env.DEV
 export const useFetchMewApi = <T>(
   _url: Ref<string> | string,
   _method: FetchMethod = 'GET',
-  _immediate: boolean = true,
-  _poll: number = 0,
+  _body: object | null = null,
+  _opts: {
+    _immediate?: boolean,
+    _poll?: number,
+    _noRetry?: boolean,
+  } = {
+      _immediate: true,
+      _poll: 0,
+      _noRetry: false,
+    }
 ): {
   data: Ref<T | null>
   isLoading: Ref<boolean>
@@ -56,6 +64,17 @@ export const useFetchMewApi = <T>(
     delay.value,
     { immediate: false },
   )
+
+  const fetchOptions: RequestInit = {
+    mode: 'cors' as RequestMode,
+    method: _method,
+    body: _body ? JSON.stringify(_body) : null,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  }
+
   /**
    * @description
    * 1. Handles errors and retries the request if the orignal request fails.
@@ -64,14 +83,13 @@ export const useFetchMewApi = <T>(
    * 4. The delay is increased by 1 second for each retry.
    * 5. The delay is reset to 1 second after a successful request.
    */
-
   const useMEWFetch = createFetch({
     baseUrl: Configs.MEW_API_URL,
     options: {
       afterFetch(ctx) {
         data.value = ctx.data as T
         isLoading.value = false
-        if (_poll > 0 && !isActivePolling.value) {
+        if ((_opts._poll ?? 0) > 0 && !isActivePolling.value) {
           resumePoll()
         }
         delay.value = 1000
@@ -81,6 +99,7 @@ export const useFetchMewApi = <T>(
         if (isDevMode) {
           console.error(e)
         }
+        if (_opts._noRetry) return e
         if (isActivePolling.value) {
           pausePoll()
         }
@@ -95,14 +114,11 @@ export const useFetchMewApi = <T>(
         return e
       },
     },
-    fetchOptions: {
-      mode: 'cors',
-      method: _method,
-    },
+    fetchOptions,
   })
 
   const { execute, onFetchResponse } = useMEWFetch(_url, {
-    immediate: _immediate,
+    immediate: _opts._immediate,
     refetch: true, //  Will trigger another request on url change
   }).json()
 
@@ -110,7 +126,7 @@ export const useFetchMewApi = <T>(
     isActive: isActivePolling,
     resume: resumePoll,
     pause: pausePoll,
-  } = useTimeoutPoll(execute, _poll, {
+  } = useTimeoutPoll(execute, _opts._poll ?? 0, {
     immediate: false,
   })
 

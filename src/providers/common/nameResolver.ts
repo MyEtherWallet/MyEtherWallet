@@ -1,28 +1,24 @@
-import {
-  type HexPrefixedString,
-} from '@/providers/types'
 import { isAddress, toChecksumAddress } from '@/utils/addressUtils'
 import NameResolver, { type CoinType } from '@enkryptcom/name-resolution'
 import { createWeb3Name } from '@web3-name-sdk/core'
-import { fromHex } from 'viem'
 
 import { normalize } from 'viem/ens'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const enkryptType: { [key: string]: string } = {
-  '0x1': 'ETH',
-  '0x89': 'MATIC',
+  '1': 'ETH',
+  '137': 'MATIC',
 }
 
-const ROOTSTOCK_CHAIN = '0x1E';
-const ROOTSTOCK_TEST_CHAIN = '0x1F';
+const ROOTSTOCK_CHAIN = '30';
+const ROOTSTOCK_TEST_CHAIN = '31';
 
 export default class ENSNameResolver {
-  networkId: HexPrefixedString;
+  networkId: string;
   web3Name: ReturnType<typeof createWeb3Name>;
   resolver: NameResolver;
 
-  constructor(networkId: HexPrefixedString) {
+  constructor(networkId: string) {
     this.networkId = networkId
     this.web3Name = createWeb3Name()
     this.resolver = new NameResolver({
@@ -67,7 +63,7 @@ export default class ENSNameResolver {
       if (!resolvedName) {
         resolvedName = await this.web3Name.getDomainName({
           address: address,
-          queryChainIdList: [fromHex(this.networkId, 'number')]
+          queryChainIdList: [Number(this.networkId)]
         })
       }
 

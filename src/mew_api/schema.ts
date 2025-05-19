@@ -180,14 +180,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/{chainName}/balances/{address}": {
+    "/v1/btc/{chainName}/balances": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["GetBitcoinBalanceByChainNameAndAddress"];
+        get: operations["GetBtcBalanceByChainNameAndAddresses"];
         put?: never;
         post?: never;
         delete?: never;
@@ -196,14 +196,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/{chainName}/transactions/fees": {
+    "/v1/btc/{chainName}/balances/{address}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["GetBitcoinTransactionFees"];
+        get: operations["GetBtcBalanceByChainNameAndAddress"];
         put?: never;
         post?: never;
         delete?: never;
@@ -212,7 +212,55 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/{chainName}/transactions/quote": {
+    "/v1/btc/{chainName}/fees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionFees"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/transactions/{transactionId}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/transactions/{transactionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/quotes": {
         parameters: {
             query?: never;
             header?: never;
@@ -221,14 +269,30 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["GetBitcoinTransactionQuote"];
+        post: operations["GetBtcTransactionQuote"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/{chainName}/transactions/construct": {
+    "/v1/btc/{chainName}/quotes/{quoteId}/unsigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConstructBtcTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/broadcasts": {
         parameters: {
             query?: never;
             header?: never;
@@ -237,62 +301,46 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["ConstructBitcoinTransaction"];
+        post: operations["BroadcastBtcTransaction"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/{chainName}/transactions/broadcast": {
+    "/v1/evm/{chainId}/transactions/{txHash}/status": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["GetEvmTransactionStatus"];
         put?: never;
-        post: operations["BroadcastBitcoinTransaction"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/transactions/quote": {
+    "/v1/evm/{chainId}/transactions/{txHash}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["GetEvmTransaction"];
         put?: never;
-        post: operations["BitcoinPostTransactionQuote"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/bitcoin/transactions/broadcast": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["BitcoinPostTransactionBroadcast"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/evm/{chainId}/transactions/quote": {
+    "/v1/evm/{chainId}/quotes": {
         parameters: {
             query?: never;
             header?: never;
@@ -308,23 +356,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/evm/{chainId}/transactions/construct": {
+    "/v1/evm/{chainId}/quotes/{quoteId}/unsigned": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["ConstructEvmTransaction"];
         put?: never;
-        post: operations["ConstructEvmTransaction"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/evm/{chainId}/transactions/broadcast": {
+    "/v1/evm/{chainId}/broadcasts": {
         parameters: {
             query?: never;
             header?: never;
@@ -346,13 +394,15 @@ export interface components {
     schemas: {
         BigIntInput: string;
         EvmAddressInput: string;
-        BitcoinAddressInput: string;
+        EvmHashInput: string;
+        BtcAddressInput: string;
+        BtcTransactionIdInput: string;
         AnyAddressInput: string;
-        BitcoinSatoshiValue: number;
+        BtcSatoshiValue: number;
         /** @enum {string} */
-        BitcoinTransactionSpeed: "MANUAL" | "FAST" | "ECONOMY" | "MINIMUM";
+        BtcTransactionSpeed: "MANUAL" | "FAST" | "ECONOMY" | "MINIMUM";
         /** @enum {string} */
-        BitcoinBroadcastType: "MEMPOOL" | "RPC";
+        BtcBroadcastType: "MEMPOOL" | "RPC";
         ByteStringInput: string;
         StringDecimalUintInput: string;
         StringDecimalUint64Input: string;
@@ -363,7 +413,8 @@ export interface components {
         HexUint256Input: string;
         UUIDInput: string;
         EvmAddress: string;
-        BitcoinAddress: string;
+        EvmHash: string;
+        BtcAddress: string;
         ByteString: string;
         HexUint: string;
         HexUint16: string;
@@ -373,21 +424,21 @@ export interface components {
         Hex: string;
         UUID: string;
         ISO8601: string;
-        BitcoinOutput: {
-            address: components["schemas"]["BitcoinAddress"];
-            value: components["schemas"]["BitcoinSatoshiValue"];
+        BtcOutput: {
+            address: components["schemas"]["BtcAddress"];
+            value: components["schemas"]["BtcSatoshiValue"];
         };
-        BitcoinTransactionQuote: {
-            speed: components["schemas"]["BitcoinTransactionSpeed"];
-            feeRate: components["schemas"]["BitcoinSatoshiValue"];
+        BtcTransactionQuote: {
+            speed: components["schemas"]["BtcTransactionSpeed"];
+            feeRate: components["schemas"]["BtcSatoshiValue"];
             raw: {
-                fee: components["schemas"]["BitcoinSatoshiValue"];
-                leftover: components["schemas"]["BitcoinSatoshiValue"];
+                fee: components["schemas"]["BtcSatoshiValue"];
+                leftover: components["schemas"]["BtcSatoshiValue"];
                 txHex: string;
             };
             psbt: {
-                fee: components["schemas"]["BitcoinSatoshiValue"];
-                leftover: components["schemas"]["BitcoinSatoshiValue"];
+                fee: components["schemas"]["BtcSatoshiValue"];
+                leftover: components["schemas"]["BtcSatoshiValue"];
                 psbtBase64: string;
             };
         };
@@ -429,30 +480,43 @@ export interface components {
             result: components["schemas"]["ChainMetadata"];
         };
         /** @enum {string} */
+        EvmTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
+        /** @enum {string} */
+        BtcTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
+        /** @enum {string} */
         FeePriority: "ECONOMY" | "REGULAR" | "FAST" | "FASTEST";
-        BitcoinAmount: {
-            nativeValue: string;
-            fiatValue?: string;
+        BtcTransactionFeeQuote: {
             nativeSymbol: string;
+            nativeFeeRate?: string;
+            nativeFeeTotal?: string;
             fiatSymbol?: string;
+            fiatFeeRate?: string;
+            fiatFeeTotal?: string;
         };
-        BitcoinTransactionFees: {
-            ECONOMY: components["schemas"]["BitcoinAmount"];
-            REGULAR: components["schemas"]["BitcoinAmount"];
-            FAST: components["schemas"]["BitcoinAmount"];
-            FASTEST: components["schemas"]["BitcoinAmount"];
+        BtcTransactionFeeEstimate: {
+            nativeSymbol: string;
+            nativeFeeRate?: string;
+            fiatSymbol?: string;
+            fiatFeeRate?: string;
         };
-        GetBitcoinTransactionFeesResponse: {
+        BtcTransactionQuotes: {
+            feeProvider: string;
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
+        GetBtcTransactionFeesResponse: {
             provider: string;
-            ECONOMY: components["schemas"]["BitcoinAmount"];
-            REGULAR: components["schemas"]["BitcoinAmount"];
-            FAST: components["schemas"]["BitcoinAmount"];
-            FASTEST: components["schemas"]["BitcoinAmount"];
+            ECONOMY: components["schemas"]["BtcTransactionFeeEstimate"];
+            REGULAR: components["schemas"]["BtcTransactionFeeEstimate"];
+            FAST: components["schemas"]["BtcTransactionFeeEstimate"];
+            FASTEST: components["schemas"]["BtcTransactionFeeEstimate"];
         };
         EvmGasFeeInfo: {
             nativeValue: components["schemas"]["HexUint"];
             fiatValue?: components["schemas"]["HexUint"];
-            nativeSymbol: string;
+            nativeSymbol?: string;
             fiatSymbol?: string;
         };
         EvmGasFees: {
@@ -472,15 +536,18 @@ export interface components {
                 symbol?: string;
             }[];
         };
-        GetBitcoinBalanceByChainNameAndAddressResponse: {
-            result: {
-                nativeValue: string;
-                fiatValue?: string;
-                nativeSymbol: string;
-                fiatSymbol?: string;
-                logoUrl?: string;
-            };
+        BtcBalance: {
+            nativeValue: string;
+            fiatValue?: string;
+            nativeSymbol: string;
+            fiatSymbol?: string;
         };
+        BtcAddressWithBalance: {
+            address: components["schemas"]["BtcAddress"];
+            balance: components["schemas"]["BtcBalance"];
+        };
+        GetBtcBalanceByChainNameAndAddressesResponse: components["schemas"]["BtcAddressWithBalance"][];
+        GetBtcBalanceByChainNameAndAddressResponse: components["schemas"]["BtcAddressWithBalance"];
         GetEvmTransactionQuoteRequest: {
             address: components["schemas"]["EvmAddressInput"];
             to: components["schemas"]["EvmAddressInput"] | null;
@@ -488,13 +555,15 @@ export interface components {
             data: components["schemas"]["ByteStringInput"];
             accessList?: components["schemas"]["AccessList"];
         };
-        GetEvmTransactionQuoteResponse: {
-            transactionId: components["schemas"]["UUID"];
-            fees: components["schemas"]["EvmGasFees"];
+        GetEvmTransactionStatusResponse: {
+            status: components["schemas"]["EvmTransactionStatus"];
         };
-        ConstructEvmTransactionRequest: {
-            transactionId: components["schemas"]["UUIDInput"];
-            priority: components["schemas"]["FeePriority"];
+        GetEvmTransactionResponse: {
+            TODO?: string;
+        };
+        GetEvmTransactionQuoteResponse: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["EvmGasFees"];
         };
         ConstructEvmTransactionResponse: {
             serialized: components["schemas"]["ByteString"];
@@ -503,46 +572,44 @@ export interface components {
             signedTransaction: components["schemas"]["ByteStringInput"];
         };
         BroadcastEvmTransactionResponse: {
-            message: string;
+            txHash: string;
         };
-        GetBitcoinTransactionQuoteRequest: {
-            changeAddress: components["schemas"]["BitcoinAddressInput"];
-            fromAddresses: components["schemas"]["BitcoinAddressInput"][];
+        GetBtcTransactionStatusResponse: {
+            status: components["schemas"]["BtcTransactionStatus"];
+        };
+        BtcOutput2: {
+            scriptPubkey: string;
+            value: string;
+        };
+        GetBtcTransactionResponse: {
+            txid: string;
+            fee: string;
+            outputs: components["schemas"]["BtcOutput2"][];
+            block?: {
+                height?: string;
+                position?: string;
+            };
+        };
+        GetBtcTransactionQuoteRequest: {
+            changeAddress: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
             outputs: {
-                address: components["schemas"]["BitcoinAddressInput"];
+                address: components["schemas"]["BtcAddressInput"];
                 amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
             }[];
         };
-        GetBitcoinTransactionQuoteResponse: {
-            transactionId: components["schemas"]["UUID"];
-            fees: components["schemas"]["BitcoinTransactionFees"];
+        GetBtcTransactionQuoteResponse: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["BtcTransactionQuotes"];
         };
-        ConstructBitcoinTransactionRequest: {
-            transactionId: components["schemas"]["UUIDInput"];
-            priority: components["schemas"]["FeePriority"];
-        };
-        ConstructBitcoinTransactionResponse: {
+        ConstructBtcTransactionResponse: {
             serialized: components["schemas"]["ByteString"];
         };
-        BroadcastBitcoinTransactionRequest: {
+        BroadcastBtcTransactionRequest: {
             signedTransaction: string;
         };
-        BroadcastBitcoinTransactionResponse: {
+        BroadcastBtcTransactionResponse: {
             txid: string;
-        };
-        BitcoinPostTransactionQuoteRequest: {
-            fromAddresses: components["schemas"]["BitcoinAddress"][];
-            outputs: components["schemas"]["BitcoinOutput"][];
-            changeAddress?: components["schemas"]["BitcoinAddress"];
-            feeRate?: components["schemas"]["BitcoinSatoshiValue"];
-        };
-        BitcoinPostTransactionQuoteResponse: components["schemas"]["BitcoinTransactionQuote"][];
-        BitcoinPostTransactionBroadcastRequest: {
-            rawTxHex: string;
-            broadcastType?: components["schemas"]["BitcoinBroadcastType"];
-        };
-        BitcoinPostTransactionBroadcastResponse: {
-            message: string;
         };
     };
     responses: {
@@ -618,47 +685,87 @@ export interface components {
                 "application/json": components["schemas"]["GetBalancesByChainNameAndAddressResponse"];
             };
         };
-        GetBitcoinBalanceByChainNameAndAddressSuccess: {
+        GetBtcTransactionStatusSuccess: {
             headers: {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["GetBitcoinBalanceByChainNameAndAddressResponse"];
+                "application/json": components["schemas"]["GetBtcTransactionStatusResponse"];
             };
         };
-        GetBitcoinTransactionFeesSuccess: {
+        GetBtcTransactionSuccess: {
             headers: {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["GetBitcoinTransactionFeesResponse"];
+                "application/json": components["schemas"]["GetBtcTransactionResponse"];
             };
         };
-        GetBitcoinTransactionQuoteSuccess: {
+        GetBtcBalanceByChainNameAndAddressesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddressesResponse"];
+            };
+        };
+        GetBtcBalanceByChainNameAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddressResponse"];
+            };
+        };
+        GetBtcTransactionFeesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionFeesResponse"];
+            };
+        };
+        GetBtcTransactionQuoteSuccess: {
             headers: {
                 "X-MEW-API-Signature"?: string;
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["GetBitcoinTransactionQuoteResponse"];
+                "application/json": components["schemas"]["GetBtcTransactionQuoteResponse"];
             };
         };
-        ConstructBitcoinTransactionSuccess: {
+        ConstructBtcTransactionSuccess: {
             headers: {
                 "X-MEW-API-Signature"?: string;
                 "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["ConstructBitcoinTransactionResponse"];
+                "application/json": components["schemas"]["ConstructBtcTransactionResponse"];
             };
         };
-        BroadcastBitcoinTransactionSuccess: {
+        BroadcastBtcTransactionSuccess: {
             headers: {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["BroadcastBitcoinTransactionResponse"];
+                "application/json": components["schemas"]["BroadcastBtcTransactionResponse"];
+            };
+        };
+        GetEvmTransactionStatusSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionStatusResponse"];
+            };
+        };
+        GetEvmTransactionSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionResponse"];
             };
         };
         GetEvmTransactionQuoteSuccess: {
@@ -688,26 +795,16 @@ export interface components {
                 "application/json": components["schemas"]["BroadcastEvmTransactionResponse"];
             };
         };
-        BitcoinPostTransactionQuoteSuccess: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["BitcoinPostTransactionQuoteResponse"];
-            };
-        };
-        BitcoinPostTransactionBroadcastSuccess: {
-            headers: {
-                [name: string]: unknown;
-            };
-            content: {
-                "application/json": components["schemas"]["BitcoinPostTransactionBroadcastResponse"];
-            };
-        };
     };
     parameters: {
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
+        EvmHash: components["schemas"]["EvmHashInput"];
+        QuoteId: components["schemas"]["UUID"];
+        PriorityId: components["schemas"]["FeePriority"];
+        BtcAddress: components["schemas"]["BtcAddressInput"];
+        BtcAddresses: string;
+        BtcTransactionId: components["schemas"]["BtcTransactionIdInput"];
         EvmAddress: components["schemas"]["EvmAddressInput"];
         Address: components["schemas"]["AnyAddressInput"];
     };
@@ -717,39 +814,19 @@ export interface components {
                 "application/json": components["schemas"]["GetEvmTransactionQuoteRequest"];
             };
         };
-        ConstructEvmTransaction: {
-            content: {
-                "application/json": components["schemas"]["ConstructEvmTransactionRequest"];
-            };
-        };
         BroadcastEvmTransaction: {
             content: {
                 "application/json": components["schemas"]["BroadcastEvmTransactionRequest"];
             };
         };
-        GetBitcoinTransactionQuote: {
+        GetBtcTransactionQuote: {
             content: {
-                "application/json": components["schemas"]["GetBitcoinTransactionQuoteRequest"];
+                "application/json": components["schemas"]["GetBtcTransactionQuoteRequest"];
             };
         };
-        ConstructBitcoinTransaction: {
+        BroadcastBtcTransaction: {
             content: {
-                "application/json": components["schemas"]["ConstructBitcoinTransactionRequest"];
-            };
-        };
-        BroadcastBitcoinTransaction: {
-            content: {
-                "application/json": components["schemas"]["BroadcastBitcoinTransactionRequest"];
-            };
-        };
-        BitcoinPostTransactionQuoteRequestBody: {
-            content: {
-                "application/json": components["schemas"]["BitcoinPostTransactionQuoteRequest"];
-            };
-        };
-        BitcoinPostTransactionBroadcastRequestBody: {
-            content: {
-                "application/json": components["schemas"]["BitcoinPostTransactionBroadcastRequest"];
+                "application/json": components["schemas"]["BroadcastBtcTransactionRequest"];
             };
         };
     };
@@ -895,24 +972,11 @@ export interface operations {
             200: components["responses"]["GetBalancesByChainNameAndAddressSuccess"];
         };
     };
-    GetBitcoinBalanceByChainNameAndAddress: {
+    GetBtcBalanceByChainNameAndAddresses: {
         parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                chainName: components["parameters"]["ChainName"];
-                address: components["parameters"]["Address"];
+            query?: {
+                addresses?: components["parameters"]["BtcAddresses"];
             };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["GetBitcoinBalanceByChainNameAndAddressSuccess"];
-        };
-    };
-    GetBitcoinTransactionFees: {
-        parameters: {
-            query?: never;
             header?: never;
             path: {
                 chainName: components["parameters"]["ChainName"];
@@ -921,10 +985,25 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            200: components["responses"]["GetBitcoinTransactionFeesSuccess"];
+            200: components["responses"]["GetBtcBalanceByChainNameAndAddressesSuccess"];
         };
     };
-    GetBitcoinTransactionQuote: {
+    GetBtcBalanceByChainNameAndAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                btcAddress: components["parameters"]["BtcAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcBalanceByChainNameAndAddressSuccess"];
+        };
+    };
+    GetBtcTransactionFees: {
         parameters: {
             query?: never;
             header?: never;
@@ -933,12 +1012,42 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: components["requestBodies"]["GetBitcoinTransactionQuote"];
+        requestBody?: never;
         responses: {
-            200: components["responses"]["GetBitcoinTransactionQuoteSuccess"];
+            200: components["responses"]["GetBtcTransactionFeesSuccess"];
         };
     };
-    ConstructBitcoinTransaction: {
+    GetBtcTransactionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                txid: components["parameters"]["BtcTransactionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcTransactionStatusSuccess"];
+        };
+    };
+    GetBtcTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                txid: components["parameters"]["BtcTransactionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcTransactionSuccess"];
+        };
+    };
+    GetBtcTransactionQuote: {
         parameters: {
             query?: never;
             header?: never;
@@ -947,12 +1056,29 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: components["requestBodies"]["ConstructBitcoinTransaction"];
+        requestBody: components["requestBodies"]["GetBtcTransactionQuote"];
         responses: {
-            200: components["responses"]["ConstructBitcoinTransactionSuccess"];
+            201: components["responses"]["GetBtcTransactionQuoteSuccess"];
         };
     };
-    BroadcastBitcoinTransaction: {
+    ConstructBtcTransaction: {
+        parameters: {
+            query?: {
+                priority?: components["parameters"]["PriorityId"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                quoteId: components["parameters"]["QuoteId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["ConstructBtcTransactionSuccess"];
+        };
+    };
+    BroadcastBtcTransaction: {
         parameters: {
             query?: never;
             header?: never;
@@ -961,33 +1087,39 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: components["requestBodies"]["BroadcastBitcoinTransaction"];
+        requestBody: components["requestBodies"]["BroadcastBtcTransaction"];
         responses: {
-            200: components["responses"]["BroadcastBitcoinTransactionSuccess"];
+            201: components["responses"]["BroadcastBtcTransactionSuccess"];
         };
     };
-    BitcoinPostTransactionQuote: {
+    GetEvmTransactionStatus: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                txHash: components["parameters"]["EvmHash"];
+            };
             cookie?: never;
         };
-        requestBody: components["requestBodies"]["BitcoinPostTransactionQuoteRequestBody"];
+        requestBody?: never;
         responses: {
-            200: components["responses"]["BitcoinPostTransactionQuoteSuccess"];
+            200: components["responses"]["GetEvmTransactionStatusSuccess"];
         };
     };
-    BitcoinPostTransactionBroadcast: {
+    GetEvmTransaction: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                txHash: components["parameters"]["EvmHash"];
+            };
             cookie?: never;
         };
-        requestBody: components["requestBodies"]["BitcoinPostTransactionBroadcastRequestBody"];
+        requestBody?: never;
         responses: {
-            200: components["responses"]["BitcoinPostTransactionBroadcastSuccess"];
+            200: components["responses"]["GetEvmTransactionSuccess"];
         };
     };
     GetEvmTransactionQuote: {
@@ -1001,19 +1133,22 @@ export interface operations {
         };
         requestBody: components["requestBodies"]["GetEvmTransactionQuote"];
         responses: {
-            200: components["responses"]["GetEvmTransactionQuoteSuccess"];
+            201: components["responses"]["GetEvmTransactionQuoteSuccess"];
         };
     };
     ConstructEvmTransaction: {
         parameters: {
-            query?: never;
+            query?: {
+                priority?: components["parameters"]["PriorityId"];
+            };
             header?: never;
             path: {
                 chainId: components["parameters"]["ChainId"];
+                quoteId: components["parameters"]["QuoteId"];
             };
             cookie?: never;
         };
-        requestBody: components["requestBodies"]["ConstructEvmTransaction"];
+        requestBody?: never;
         responses: {
             200: components["responses"]["ConstructEvmTransactionSuccess"];
         };
@@ -1029,7 +1164,7 @@ export interface operations {
         };
         requestBody: components["requestBodies"]["BroadcastEvmTransaction"];
         responses: {
-            200: components["responses"]["BroadcastEvmTransactionSuccess"];
+            201: components["responses"]["BroadcastEvmTransactionSuccess"];
         };
     };
 }
