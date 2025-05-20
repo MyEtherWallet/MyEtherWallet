@@ -1,6 +1,6 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import { wagmiConfig } from '@/providers/ethereum/wagmiConfig'
+import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
@@ -23,6 +23,9 @@ export const useWagmiConnect = () => {
   const openWalletConnectModal = ref(false)
 
   const providerStore = useProviderStore()
+  const chainsStore = useChainsStore()
+  const { selectedChain, chains } = storeToRefs(chainsStore)
+  const wagmiConfig = generateConfig(chains.value);
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
@@ -31,8 +34,7 @@ export const useWagmiConnect = () => {
   const { setWallet } = walletStore
   const router = useRouter()
   const toastStore = useToastStore()
-  const chainsStore = useChainsStore()
-  const { selectedChain } = storeToRefs(chainsStore)
+
 
   const connect = async (wallet: WalletConfig) => {
     if ('routeName' in wallet && wallet.routeName) {
@@ -76,7 +78,7 @@ export const useWagmiConnect = () => {
           return
         }
       }
-      const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID || '1')
+      const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID || '1', wagmiConfig)
       wagWallet
         .connect()
         .then(res => {
@@ -95,6 +97,7 @@ export const useWagmiConnect = () => {
         .catch(err => {
           let error = t('error_connecting')
           let _type = ToastType.Warning
+          openWalletConnectModal.value = false
           if (
             err.message &&
             err.message.toLowerCase().includes('user rejected')
