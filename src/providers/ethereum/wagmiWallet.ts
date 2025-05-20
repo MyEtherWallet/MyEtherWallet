@@ -67,7 +67,6 @@ class WagmiWallet extends BaseEvmWallet {
       value: fromHex(txObj.value ?? '0x0', 'bigint'),
       type: "eip1559" as const,
     }
-    console.log('parseTx', parseTx)
     const from = await this.getAddress()
     const params = {
       connector: this.connector,
