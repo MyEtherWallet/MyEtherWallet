@@ -1,26 +1,34 @@
 <template>
   <div>
     <button
+      v-if="isWalletConnected"
       class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
       @click="setOpenDialog(true)"
     >
-      <div v-if="getAddress" class="flex items-center">
+      <div v-if="isWalletConnected && walletAddress" class="flex items-center">
         <app-blockie
-          :address="getAddress"
+          :address="walletAddress"
           :size="6"
           is-flat
           class="mr-1 rounded-full"
         />
         <div class="mr-2 ml-1 font-medium text-sm">
-          {{ truncateAddress(getAddress, 7) }}
+          {{ truncateAddress(walletAddress, 7) }}
         </div>
         <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
       </div>
     </button>
+    <button
+      v-else
+      class="hoverBGWhite py-2 px-3 rounded-full w-full bg-white text-black font-medium"
+      @click="setOpenDialog(true)"
+    >
+      Connect Wallet
+    </button>
 
     <!-- Dialog with chains list -->
     <app-dialog
-      v-if="getAddress !== null"
+      v-if="isWalletConnected && walletAddress"
       v-model:is-open="openDialog"
       title="Address Menu"
       class="xs:max-w-[428px] sm:mx-auto"
@@ -44,7 +52,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { truncateAddress } from '@/utils/filters'
 
 const store = useWalletStore()
-const { getAddress } = storeToRefs(store)
+const { isWalletConnected, walletAddress } = storeToRefs(store)
 
 defineProps({
   isBtnGroup: {

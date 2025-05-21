@@ -53,6 +53,7 @@ export default {
       'grey-30': 'rgba(0,0,0,0.3)',
       'grey-10': 'rgba(0,0,0,0.1)',
       'grey-5': 'rgba(0,0,0,0.05)',
+      'grey-5-hex': '#0000000d',
       'mew-green-text': '#05C0A5',
       'grey-8': 'rgba(0,0,0,0.08)',
       error: 'rgba(228,12,91,1)',

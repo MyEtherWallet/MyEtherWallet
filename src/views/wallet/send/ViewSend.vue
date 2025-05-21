@@ -1,6 +1,7 @@
 <template>
   <app-sheet sheetClass="max-w-[478px] mx-auto !px-4">
     <app-tabs
+      v-if="isWalletConnected"
       v-model:activeTabIndex="activePanel"
       :tabs="tabs"
       :panel="panels"
@@ -15,6 +16,11 @@ import { ROUTES_SEND } from '@/router/routeNames'
 import AppTabs from '@/components/AppTabs.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWalletConnected } = storeToRefs(walletStore)
 
 /** ----------------
  * TABS

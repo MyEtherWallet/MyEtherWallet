@@ -57,7 +57,7 @@ import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type PropType, computed } from 'vue'
 import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
-import IconSwap from '@assets/icons/core_menu/icon-swap.vue'
+import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
 import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
 import {

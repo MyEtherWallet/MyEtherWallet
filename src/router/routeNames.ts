@@ -6,65 +6,33 @@ export type RouteName = {
   PATH: string
 }
 
-const ROUTES_HOME: RouteNameCollection = {
-  HOME: { NAME: 'Home', PATH: '' },
-  //Default
+const ROUTES_ACCESS: RouteNameCollection = {
+  ACCESS: { NAME: 'Access', PATH: '/access' },
   ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'keystore' },
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
   ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
-  CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create/' },
-  CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
-  PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
-  TOOLS: { NAME: 'Tools', PATH: 'tools' },
-
-  // TODO: DELETED ON V7
-  ACCESS_WALLET: { NAME: 'AccessWallet', PATH: '/wallet/access' },
-  ABOUT_PAGE: { NAME: 'AboutPage', PATH: 'about' },
-  BUY_HARDWARE_WALLET: { NAME: 'BuyHardwareWallet', PATH: 'buy-hardware' },
-  HOW_IT_WORKS: { NAME: 'HowItWorks', PATH: 'how-it-works' },
-  JOBS: { NAME: 'Careers', PATH: 'careers' },
-  PRESS_KIT: { NAME: 'PressKit', PATH: 'presskit' },
-  PRIVACY_POLICY: { NAME: 'PrivacyPolicy', PATH: 'privacy-policy' },
-  SECURITY_POLICY: { NAME: 'SecurityPolicy', PATH: 'security-policy' },
-  TEAM_PAGE: { NAME: 'TeamPage', PATH: 'team' },
-  TERMS_OF_SERVICE: { NAME: 'TermsOfService', PATH: 'terms-of-service' },
-  TOOLS_KEYSTORE: { NAME: 'ToolsKeystore', PATH: 'tools-keystore' },
-  TOOLS_KEYSTORE_1: { NAME: 'ToolsKeystore1', PATH: 'tools-keystore-1' },
-  TOOLS_KEYSTORE_2: { NAME: 'ToolsKeystore2', PATH: 'tools-keystore-2' },
 }
-//In Wallet
-const ROUTES_WALLET: RouteNameCollection = {
-  WALLET: { NAME: 'Wallet', PATH: '/wallet' },
-  DASHBOARD: { NAME: 'WalletDashboard', PATH: 'dashboard' },
+
+const ROUTES_CREATE_WALLET: RouteNameCollection = {
+  CREATE_WALLET: { NAME: 'CreateWallet', PATH: '/create' },
+}
+
+const ROUTES_MAIN: RouteNameCollection = {
+  HOME: { NAME: 'Home', PATH: '/' },
   //A-Z
-  BUY: { NAME: 'Buy', PATH: 'buy' },
-  DAPPS: { NAME: 'Dapps', PATH: 'dapps' },
-  DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: 'deploy' },
-  ENS_MANAGER: { NAME: 'ENSManager', PATH: 'ens-manager' },
-  ENS_1: { NAME: 'ENS1', PATH: 'ens-1' },
-  ENS_2: { NAME: 'ENS2', PATH: 'ens-2' },
-  ENS_3: { NAME: 'ENS3', PATH: 'ens-3' },
-  INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: 'interact' },
-  NFT_MANAGER: { NAME: 'NFTManager', PATH: 'nft' },
-  PRINT: { NAME: 'PrintPaperWallet', PATH: 'print-wallet' },
-  SETTINGS: { NAME: 'Settings', PATH: 'settings' },
+  BUY: { NAME: 'Buy', PATH: '/buy-and-sell' },
+  DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: '/deploy' },
+  INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: '/interact' },
+  PRINT: { NAME: 'PrintPaperWallet', PATH: '/print-wallet' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
-  STAKE: { NAME: 'Stake', PATH: 'stake' },
-  STAKED: { NAME: 'Staked', PATH: 'staked' },
-  STAKED_STATUS: { NAME: 'StakedStatus', PATH: 'status' },
-  STAKED_1: { NAME: 'Staked1', PATH: 'staked-1' },
-  STAKED_2: { NAME: 'Staked2', PATH: 'staked-2' },
-  STAKED_3: { NAME: 'Staked3', PATH: 'staked-3' },
-  STAKED_4: { NAME: 'Staked4', PATH: 'staked-4' },
-  STAKEWISE: { NAME: 'Stakewise', PATH: 'stakewise' },
-  SWAP: { NAME: 'Swap', PATH: 'swap' },
-  BRIDGE: { NAME: 'Bridge', PATH: 'bridge' },
-  UNSTOPPABLE: { NAME: 'Unstoppable', PATH: 'unstoppable' },
-  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: 'verify' },
+  SETTINGS: { NAME: 'Settings', PATH: '/settings' },
+  EARN: { NAME: 'Earn', PATH: '/earn' },
+  SWAP: { NAME: 'Swap', PATH: '/swap' },
+  VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: '/verify' },
 }
 
 const ROUTES_SEND: RouteNameCollection = {
-  SEND: { NAME: 'WalletSend', PATH: 'send' },
+  SEND: { NAME: 'WalletSend', PATH: '/send' },
   SEND_NFT: { NAME: 'WalletSendNFT', PATH: 'nft' },
 
   //TO BE IMPLEMENTED OR DELETEDaa
@@ -73,7 +41,6 @@ const ROUTES_SEND: RouteNameCollection = {
 }
 
 enum ACCESS_ALIAS {
-  access = '/access',
   walletAccess = '/access/wallet',
 }
 
@@ -81,4 +48,11 @@ enum KEYSTORE_ALIAS {
   upload = '/keystore/upload',
 }
 
-export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS }
+export {
+  ROUTES_MAIN,
+  ROUTES_CREATE_WALLET,
+  ROUTES_SEND,
+  ROUTES_ACCESS,
+  ACCESS_ALIAS,
+  KEYSTORE_ALIAS,
+}

@@ -133,6 +133,10 @@
   @apply hover:bg-white/5 transition-all duration-300 ease-in
 }
 
+.hoverBGWhite {
+  @apply hover:bg-grey-light transition-all duration-300 ease-in;
+}
+
 
 
 /**
