@@ -186,7 +186,9 @@ const networkFeeCrypto = computed(() => {
 })
 
 const validSend = computed(() => {
-  return amountError.value === '' && toAddress.value !== ''
+  return (
+    amountError.value === '' && toAddress.value !== '' && !isLoadingFees.value
+  )
 })
 
 const amountToFiat = computed(() => {
@@ -224,6 +226,8 @@ watch(
       data.value = '0x'
     }
     if (!toAddress.value) return
+    isLoadingFees.value = true
+    gasFees.value = {} as GasFeeResponse
     gasFees.value = await wallet.value.getGasFee({
       to: toAddress.value as HexPrefixedString,
       address:
@@ -232,6 +236,7 @@ watch(
       value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
       data: data.value as HexPrefixedString,
     })
+    isLoadingFees.value = false
   },
 )
 
