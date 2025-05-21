@@ -15,6 +15,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 
 import { useI18n } from 'vue-i18n'
+import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 
 export const useWagmiConnect = () => {
   const { t } = useI18n()
@@ -49,6 +50,7 @@ export const useWagmiConnect = () => {
           c.id === wallet.id ||
           (c.rkDetails as { id: string })?.id === wallet.id,
       )
+      console.log('connector', connector)
       connector?.emitter.on('message', msg => {
         if (msg.type === 'display_uri') {
           wagmiWalletData.value = msg.data as string // possibly a temp fix
@@ -63,6 +65,7 @@ export const useWagmiConnect = () => {
       const providerInjected = Eip6963Providers.value.find(
         p => p.info.name === wallet.name,
       )
+      console.log('providerInjected', providerInjected)
       const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
       if (isWeb3) {
         if (!providerInjected) {
@@ -75,6 +78,41 @@ export const useWagmiConnect = () => {
             type: ToastType.Error,
             isInfinite: true,
           })
+          return
+        } else {
+          const web3Wallet = new Web3InjectedWallet(providerInjected, selectedChain.value?.chainID || '1')
+
+          web3Wallet
+            .connect()
+            .then(res => {
+              if (res) {
+                try {
+                  wagmiWalletData.value = ''
+                  openWalletConnectModal.value = false
+                  setWallet(web3Wallet)
+                  addWallet(wallet)
+                  router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+                } catch (error) {
+                  console.error('Web3 connect failed:', error)
+                }
+              }
+            })
+            .catch(err => {
+              let error = t('error_connecting')
+              let _type = ToastType.Warning
+              openWalletConnectModal.value = false
+              if (
+                err.message &&
+                err.message.toLowerCase().includes('user rejected')
+              ) {
+                error = t('common.error.user_canceled_request')
+                _type = ToastType.Info
+              }
+              toastStore.addToastMessage({
+                text: error,
+                type: _type,
+              })
+            })
           return
         }
       }

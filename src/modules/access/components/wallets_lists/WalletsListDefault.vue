@@ -90,6 +90,7 @@ const defaultWallets = keys
   })
 
 const clickDefaultWallet = (wallet: WalletConfig) => {
+  console.log(wallet)
   connect(wallet)
 }
 </script>
