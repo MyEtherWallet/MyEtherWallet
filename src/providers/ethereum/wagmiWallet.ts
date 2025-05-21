@@ -81,11 +81,11 @@ class WagmiWallet extends BaseEvmWallet {
 
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
-    console.log(options)
     throw new Error('Method not implemented.')
   }
   override async getAddress(): Promise<HexPrefixedString> {
