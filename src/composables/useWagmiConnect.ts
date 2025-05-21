@@ -50,22 +50,15 @@ export const useWagmiConnect = () => {
           c.id === wallet.id ||
           (c.rkDetails as { id: string })?.id === wallet.id,
       )
-      console.log('connector', connector)
       connector?.emitter.on('message', msg => {
         if (msg.type === 'display_uri') {
           wagmiWalletData.value = msg.data as string // possibly a temp fix
           openWalletConnectModal.value = true
-          console.log(
-            'WalletConnect URI:',
-            openWalletConnectModal.value,
-            wagmiWalletData.value,
-          )
         }
       })
       const providerInjected = Eip6963Providers.value.find(
         p => p.info.name === wallet.name,
       )
-      console.log('providerInjected', providerInjected)
       const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
       if (isWeb3) {
         if (!providerInjected) {
@@ -127,8 +120,11 @@ export const useWagmiConnect = () => {
               setWallet(wagWallet)
               addWallet(wallet)
               router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
-            } catch (error) {
-              console.error('WalletConnect connect failed:', error)
+            } catch (error: unknown) {
+              toastStore.addToastMessage({
+                text: error instanceof Error ? error.message : String(error),
+                type: ToastType.Error,
+              })
             }
           }
         })
