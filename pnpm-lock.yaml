@@ -20,6 +20,9 @@ importers:
       '@enkryptcom/swap':
         specifier: ^0.0.3
         version: 0.0.3(@polkadot/util@10.4.2)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@enkryptcom/types':
+        specifier: ^0.0.5
+        version: 0.0.5
       '@ethereumjs/common':
         specifier: ^4.4.0
         version: 4.4.0
@@ -634,6 +637,10 @@ packages:
 
   '@enkryptcom/types@0.0.4':
     resolution: {integrity: sha512-m1vvcW/ZI9qPEa2L3nwaZHnS694BUZnKI/c0Q7MOl3rDbH453HNlFis2CFlucGHITwwpCHCt/NABaeLZJyM2Lg==}
+    engines: {node: '>=14.15.0'}
+
+  '@enkryptcom/types@0.0.5':
+    resolution: {integrity: sha512-GzSq2pu7LO1iuAcKFUORd+SyGm3907/ZHupAn/49sRbLXfJZ3HzTY65jeHG/EWPL4lyv2xyuhy7JEpo+x0tIUQ==}
     engines: {node: '>=14.15.0'}
 
   '@enkryptcom/utils@0.0.3':
@@ -9698,6 +9705,8 @@ snapshots:
   '@enkryptcom/types@0.0.1': {}
 
   '@enkryptcom/types@0.0.4': {}
+
+  '@enkryptcom/types@0.0.5': {}
 
   '@enkryptcom/utils@0.0.3(@polkadot/util@10.4.2)':
     dependencies:

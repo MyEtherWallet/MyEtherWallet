@@ -51,6 +51,7 @@ export enum WalletType {
   PRIVATE_KEY = 'PRIVATE_KEY',
   MNEMONIC = 'MNEMONIC',
   WAGMI = 'WAGMI',
+  TREZOR = 'TREZOR',
 }
 
 export interface BalanceResponse {
