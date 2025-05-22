@@ -49,5 +49,6 @@
     "open-notifications": "Open Notifications",
     "open-menu": "Open Menu"
   },
-  "home": "Home"
+  "home": "Home",
+  "connect_wallet": "Connect wallet"
 }

@@ -5,7 +5,7 @@
       @click="sidebarIsOpen = !sidebarIsOpen"
       :label="$t('menu.open-menu')"
     >
-      <Bars2Icon class="w-6 h-6" />
+      <Bars3Icon class="w-8 h-8" />
     </app-btn-icon>
     <!-- Background -->
     <transition
@@ -25,38 +25,43 @@
     <!-- Side Menu -->
     <teleport to="#app">
       <transition
-        enter-from-class="opacity-0 translate-x-full"
+        enter-from-class="opacity-0 -translate-x-full"
         enter-active-class="transform ease-out duration-300 transition "
         enter-to-class="translate-x-0"
         leave-from-class="transform ease-out duration-300 translate-x-0"
-        leave-active-class="transition translate-x-full"
+        leave-active-class="transition -translate-x-full"
         appear
       >
         <aside
           v-if="sidebarIsOpen"
           id="default-sidebar"
-          class="fixed top-0 right-0 z-40 w-[300px] h-screen bg-white"
+          class="fixed top-0 left-0 z-40 w-[300px] h-screen bg-white"
           aria-label="Sidebar"
         >
           <div class="h-full px-3 py-4 overflow-y-auto bg-white">
             <div class="flex items-center justify-between mb-4">
               <img
-                :src="IMGMewLogo"
-                contain
-                alt="home"
-                class="cursor-pointer"
-                width="113px"
-                height="auto"
-                loading="lazy"
+                src="@/assets/images/mew/logo-header.webp"
+                :alt="t('home')"
+                width="280"
+                height="96"
+                class="w-[94px] h-[32px] flex-none object-contain"
               />
               <AppBtnIconClose @click="sidebarIsOpen = false" />
             </div>
-            <app-select-chain v-if="isMobile" :has-label="false" class="mb-2" />
-            <the-address-menu v-if="isMobile" class="mb-2" />
+            <app-select-chain
+              v-if="isMobile && isWalletConnected"
+              :has-label="false"
+              class="mb-2"
+            />
+            <the-address-menu
+              v-if="isMobile && isWalletConnected"
+              class="mb-2"
+            />
             <div class="relative">
               <transition-group name="fadelist">
                 <!-- CORE MENU -->
-                <div key="app-core-menu" class="pt-3">
+                <div key="app-core-menu" class="pt-0">
                   <menu-list-item
                     v-for="item in coreMenuList"
                     :key="item.title"
@@ -83,7 +88,7 @@
                 </div>
                 <!--  DIVIDER -->
                 <hr
-                  class="h-px bg-grey-outline border-0 w-full my-4"
+                  class="h-px bg-grey-outline border-0 w-full my-3"
                   key="app-menu-divider-2"
                 />
                 <!--  OTHER MENU (Settings, etc) -->
@@ -93,6 +98,23 @@
                   :list-item="item"
                   @click="clickListItem(item)"
                 />
+                <div
+                  v-if="!isWalletConnected"
+                  class="flex flex-col gap-3 pt-5 px-5 mt-1"
+                >
+                  <router-link
+                    :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+                    class="px-4 bg-black text-white h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
+                  >
+                    {{ $t('connect_wallet') }}
+                  </router-link>
+                  <router-link
+                    :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+                    class="px-4 py-2 border-1 border-black text-black h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
+                  >
+                    {{ $t('common.create_wallet') }}
+                  </router-link>
+                </div>
               </transition-group>
             </div>
           </div>
@@ -104,18 +126,22 @@
 
 <script setup lang="ts">
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import IMGMewLogo from '@/assets/images/mew/logo.svg'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
-import { Bars2Icon } from '@heroicons/vue/24/solid'
+import { Bars3Icon } from '@heroicons/vue/24/solid'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import TheAddressMenu from './TheAddressMenu.vue'
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import MenuListItem from './MenuListItem.vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+import { ROUTES_ACCESS } from '@/router/routeNames'
 
 const { t } = useI18n()
+const store = useWalletStore()
+const { isWalletConnected } = storeToRefs(store)
 
 const { isMobile } = useAppBreakpoints()
 
@@ -133,20 +159,24 @@ defineProps({
 const sidebarIsOpen = ref(false)
 const showToolsSubmenu = ref(false)
 
-const toolsMenuItem: AppMenuListItem = {
-  title: t('tools'),
-  iconID: ICON_IDS.TOOLS,
-}
-const otherMenuList: AppMenuListItem[] = [
-  {
-    title: t('settings'),
-    iconID: ICON_IDS.SETTINGS,
-  },
-  {
-    title: t('notifications'),
-    iconID: ICON_IDS.NOTIFICATIONS,
-  },
-]
+const toolsMenuItem = computed<AppMenuListItem>(() => {
+  return {
+    title: t('tools'),
+    iconID: ICON_IDS.TOOLS,
+  }
+})
+const otherMenuList = computed<AppMenuListItem[]>(() => {
+  return [
+    {
+      title: t('settings'),
+      iconID: ICON_IDS.SETTINGS,
+    },
+    {
+      title: t('notifications'),
+      iconID: ICON_IDS.NOTIFICATIONS,
+    },
+  ]
+})
 
 /** ------------------------------
  * Menu Methods

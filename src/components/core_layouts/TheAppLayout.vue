@@ -1,16 +1,14 @@
 <template>
-    <div ref="appBodyRef" class="min-h-screen w-full static">
-      <the-wallet-header />
-
+  <div ref="appBodyRef" class="min-h-screen w-full static">
+    <the-wallet-header />
     <div
       :class="[
-        'flex flex-col justify-center overflow-y-auto relative px-5 xs:px-10',
+        backgroundClass,
+        'flex flex-col justify-center overflow-y-auto relative px-5 xs:px-10 ',
       ]"
     >
-      <main
-        :class="['flex-initial w-full max-w-[496px] xs:max-w-[932px] mx-auto']"
-      >
-        <div class="mt-[84px] xs:mt-[104px] min-h-[500px]">
+      <main :class="['flex-initial w-full max-w-[1312px] mx-auto']">
+        <div class="min-h-[500px]">
           <router-view />
         </div>
       </main>
@@ -23,32 +21,20 @@
       :user-consent="popupStore.consent"
       :curr-project="CURR_PROJECT"
       @update:consent="handleSetConsent"
-    >
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useWalletStore } from '@/stores/walletStore'
-import { storeToRefs } from 'pinia'
-import { type TokenBalancesRaw } from '@/mew_api/types'
-import {  MewFooter } from '@myetherwallet/vue-common-components'
-import { RouterLink } from 'vue-router'
+import { MewFooter } from '@myetherwallet/vue-common-components'
+import { RouterLink, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { inject } from 'vue'
+import { inject, computed } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
-
-
-const store = useWalletStore()
-const { wallet } = storeToRefs(store)
-const { setTokens, setIsLoadingBalances } = store
-
-wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-  setTokens(balances.result)
-  setIsLoadingBalances(false)
-})
+import { ROUTES_ACCESS } from '@/router/routeNames'
 
 const popupStore = usePopupStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
@@ -64,6 +50,24 @@ const packageVersion = 'v7'
 const handleSetConsent = (consent: boolean) => {
   popupStore.setTrackingConsent(consent)
 }
+
+const route = useRoute()
+
+const backgroundClass = computed(() => {
+  if (route.name === ROUTES_ACCESS.ACCESS.NAME) {
+    return ''
+  } else {
+    return 'blue-gradient'
+  }
+})
 </script>
 
-<style scoped></style>
+<style scoped>
+.blue-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(44, 91, 255, 0.24) 0%,
+    rgba(0, 152, 166, 0) 100%
+  );
+}
+</style>

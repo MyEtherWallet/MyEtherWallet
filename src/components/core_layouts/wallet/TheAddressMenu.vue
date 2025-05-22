@@ -2,7 +2,7 @@
   <div>
     <button
       v-if="isWalletConnected"
-      class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
+      class="hoverNoBG py-2 px-3 rounded-full w-full shadow-button shadow-button-elevated"
       @click="setOpenDialog(true)"
     >
       <div v-if="isWalletConnected && walletAddress" class="flex items-center">
@@ -13,19 +13,18 @@
           class="mr-1 rounded-full"
         />
         <div class="mr-2 ml-1 font-medium text-sm">
-          {{ truncateAddress(walletAddress, 7) }}
+          {{ truncateAddress(walletAddress, 6) }}
         </div>
         <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
       </div>
     </button>
-    <button
+    <router-link
       v-else
-      class="hoverBGWhite py-2 px-3 rounded-full w-full bg-white text-black font-medium"
-      @click="setOpenDialog(true)"
+      :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+      class="px-4 py-2 bg-black text-white h-10 rounded-full hoverOpacity"
     >
-      Connect Wallet
-    </button>
-
+      {{ $t('connect_wallet') }}
+    </router-link>
     <!-- Dialog with chains list -->
     <app-dialog
       v-if="isWalletConnected && walletAddress"
@@ -50,7 +49,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { truncateAddress } from '@/utils/filters'
-
+import { ROUTES_ACCESS } from '@/router/routeNames'
 const store = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(store)
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative text-s-17 leading-p-130 font-medium">
+  <div ref="target" class="relative text-s-17 leading-p-130 font-medium">
     <label for="select" class="sr-only">
       {{ props.placeholder }}
     </label>
@@ -20,7 +20,6 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <div
-        ref="target"
         role="listbox"
         aria-label="Select an option"
         v-show="openSelect"
@@ -84,8 +83,8 @@
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { defineProps, ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import { computed } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { computed, watch, onBeforeUnmount } from 'vue'
+import { onClickOutside, useElementHover } from '@vueuse/core'
 
 const props = defineProps({
   /**
@@ -101,7 +100,17 @@ const props = defineProps({
     type: Array as () => AppSelectOption[],
     required: true,
   },
+  /**
+   * @useVueRouter If true, the options will be rendered as router-links.
+   */
   useVueRouter: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * @hasOnHover If true, the dropdown will be opened on hover.
+   */
+  hasOnHover: {
     type: Boolean,
     default: false,
   },
@@ -140,9 +149,14 @@ const toggleSelect = () => {
   openSelect.value = !openSelect.value
   if (openSelect.value) {
     targetValue.value = target.value
+  } else {
+    targetValue.value = null
   }
 }
 
+/*
+ * Closes the dropdown when clicking outside of it.
+ */
 onClickOutside(targetValue, () => {
   targetValue.value = null
   openSelect.value = false
@@ -156,4 +170,28 @@ const selectOption = (option: AppSelectOption) => {
   selected.value = option
   toggleSelect()
 }
+
+/** ------------------------------
+ * Hover
+ ------------------------------*/
+const isHovered = useElementHover(target)
+const timeout = ref<NodeJS.Timeout | null>(null)
+
+watch(isHovered, isHovering => {
+  if (props.hasOnHover) {
+    if (isHovering) {
+      openSelect.value = true
+    } else {
+      timeout.value = setTimeout(() => {
+        openSelect.value = false
+      }, 600)
+    }
+  }
+})
+
+onBeforeUnmount(() => {
+  if (timeout.value) {
+    clearTimeout(timeout.value)
+  }
+})
 </script>

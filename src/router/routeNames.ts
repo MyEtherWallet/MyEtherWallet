@@ -24,7 +24,7 @@ const ROUTES_MAIN: RouteNameCollection = {
   DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: '/deploy' },
   INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: '/interact' },
   PRINT: { NAME: 'PrintPaperWallet', PATH: '/print-wallet' },
-  SIGN_MESSAGE: { NAME: 'SignMessage', PATH: 'sign' },
+  SIGN_MESSAGE: { NAME: 'SignMessage', PATH: '/sign' },
   SETTINGS: { NAME: 'Settings', PATH: '/settings' },
   EARN: { NAME: 'Earn', PATH: '/earn' },
   SWAP: { NAME: 'Swap', PATH: '/swap' },
