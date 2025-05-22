@@ -68,12 +68,6 @@
       </div>
       <!-- RIGHT SIDE -->
       <div class="flex items-center justify-end gap-2 ml-auto">
-        <!-- App Select Chain -->
-        <app-select-chain
-          v-if="isWalletConnected && !isMobile && !isAccessPage"
-          :has-label="false"
-          class="max-w-[178px]"
-        />
         <!-- Create wallet button -->
         <router-link
           v-if="!isWalletConnected && isAccessPage"
@@ -97,6 +91,7 @@
         >
           {{ $t('connect_wallet') }}
         </router-link>
+        <the-current-network v-if="isWalletConnected && !isAccessPage" />
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected && !isAccessPage" />
         <!-- Notifications Button -->
@@ -122,10 +117,10 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSelectChain from '@/components/AppSelectChain.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import TheWalletMenu from './TheWalletMenu.vue'
 import TheAddressMenu from './TheAddressMenu.vue'
+import TheCurrentNetwork from './TheCurrentNetwork.vue'
 import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed } from 'vue'

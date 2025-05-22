@@ -26,25 +26,33 @@
         class="absolute -left-4 origin-top-right focus:outline-none"
       >
         <div
-          class="px-3 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
+          class="px-2 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
         >
           <div v-if="!useVueRouter" class="grid grid-cols-1">
             <button
               v-for="option in options"
               :key="option.value"
-              class="flex items-center py-3 px-2 hoverNoBG rounded-lg"
+              :class="[
+                { 'bg-grey-5': option.value === selected.value },
+                'flex items-center p-3 hoverNoBG rounded-lg',
+              ]"
               role="option"
               :id="option.value"
               @click="selectOption(option)"
             >
               {{ option.label }}
+              <check-icon
+                v-if="option.value === selected.value"
+                class="ml-auto w-5 h-5 text-primary"
+              />
             </button>
           </div>
           <div v-else class="grid grid-cols-1">
             <router-link
               v-for="option in options"
               :key="option.value"
-              class="flex items-center py-3 px-2 hoverNoBG rounded-lg"
+              class="flex items-center p-3 hoverNoBG rounded-lg"
+              active-class="bg-grey-5"
               role="option"
               :id="option.value"
               :to="{ name: option.value }"
@@ -80,7 +88,7 @@
  * </app-select>
  *
  */
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { defineProps, ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { computed, watch, onBeforeUnmount } from 'vue'

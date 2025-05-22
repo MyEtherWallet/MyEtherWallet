@@ -1,72 +1,71 @@
 <template>
   <div>
-    <app-btn-group
-      v-if="isBtnGroup"
-      v-model:selected="selectedChain"
-      :btn-list="shownChains"
-      :use-emit-only="true"
-      :is-loaded="isLoadedChains"
-      is-tall
-      @onUpdate:selected="setSelectedChain"
+    <slot
+      name="network-button"
+      :openNetworkDialog="setOpenDialog"
+      :selectedChain="selectedChain"
     >
-      <template #btn-content="{ data }">
-        <div class="flex items-center">
-          <img
-            :src="data.icon"
-            alt=""
-            class="w-8 h-8 mr-3 rounded-full object-contain"
-            height="32px"
-            width="32px"
-          />
-          <span class="mr-2"> {{ data.nameLong }}</span>
-        </div>
-      </template>
-      <template #custom>
-        <button
-          class="min-h-12 text-s-17 px-4 py-2 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
-          @click="setOpenDialog(true)"
-        >
-          <div class="flex items-center capitalize">
-            <span>{{ $t('common.more') }}</span>
-            <chevron-down-icon class="text-info w-4 h-4 ml-1" />
+      <app-btn-group
+        v-if="isBtnGroup"
+        v-model:selected="selectedChain"
+        :btn-list="shownChains"
+        :use-emit-only="true"
+        :is-loaded="isLoadedChains"
+        is-tall
+        @onUpdate:selected="setSelectedChain"
+      >
+        <template #btn-content="{ data }">
+          <div class="flex items-center">
+            <img
+              :src="data.icon"
+              alt=""
+              class="w-8 h-8 mr-3 rounded-full object-contain"
+              height="32px"
+              width="32px"
+            />
+            <span class="mr-2"> {{ data.nameLong }}</span>
           </div>
-        </button>
-      </template>
-    </app-btn-group>
-    <button
-      v-else
-      class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
-      @click="setOpenDialog(true)"
-    >
-      <div v-if="selectedChain" class="flex items-center">
-        <img
-          v-if="selectedChain.icon"
-          :src="selectedChain.icon"
-          alt=""
-          :class="[
-            hasLabel ? 'w-8 h-8 mr-2' : 'w-6 h-6 mr-1',
-            'rounded-full object-contain flex-none',
-          ]"
-          height="32"
-          width="32"
-        />
-        <div class="ml-1 pr-1 min-w-[30px]">
-          <p
-            v-if="hasLabel"
-            class="text-info text-left text-s-12 leading-[16px] capitalize"
+        </template>
+        <template #custom>
+          <button
+            class="min-h-12 text-s-17 px-4 py-2 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
+            @click="setOpenDialog(true)"
           >
-            {{ $t('common.network') }}
-          </p>
-          <p
-            class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
-          >
-            {{ selectedChain.nameLong }}
-          </p>
+            <div class="flex items-center capitalize">
+              <span>{{ $t('common.more') }}</span>
+              <chevron-down-icon class="text-info w-4 h-4 ml-1" />
+            </div>
+          </button>
+        </template>
+      </app-btn-group>
+      <button
+        v-else
+        class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
+        @click="setOpenDialog(true)"
+      >
+        <div v-if="selectedChain" class="flex items-center">
+          <img
+            v-if="selectedChain.icon"
+            :src="selectedChain.icon"
+            alt=""
+            class="w-8 h-8 mr-2 rounded-full object-contain flex-none"
+            height="32"
+            width="32"
+          />
+          <div class="ml-1 pr-1 min-w-[30px]">
+            <p class="text-info text-left text-s-12 leading-[16px] capitalize">
+              {{ $t('common.network') }}
+            </p>
+            <p
+              class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
+            >
+              {{ selectedChain.nameLong }}
+            </p>
+          </div>
+          <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
         </div>
-        <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
-      </div>
-    </button>
-
+      </button>
+    </slot>
     <!-- Dialog with chains list -->
     <app-dialog
       v-if="isLoadedChains"
@@ -93,6 +92,7 @@
               v-for="chain in searchResults"
               :key="chain.name"
               class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
+              :class="{ 'bg-grey-5': chain.name === selectedChain?.name }"
               @click="setSelectedChain(chain)"
             >
               <div class="flex justify-between items-center w-full">
@@ -105,10 +105,14 @@
                   />
                   <span>{{ chain.nameLong }}</span>
                 </div>
+                <check-icon
+                  v-if="chain.name === selectedChain?.name"
+                  class="w-6 h-6 text-primary"
+                />
               </div>
             </button>
           </div>
-          <!-- Seacrh not found-->
+          <!-- Search not found-->
           <div v-else>
             <div class="flex justify-center mt-10 h-[400px] text-info">
               <p>{{ $t('common.not_found.chains') }}</p>
@@ -125,7 +129,7 @@ import { ref, watch, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
 import AppBtnGroup from './AppBtnGroup.vue'
@@ -135,10 +139,6 @@ defineProps({
   isBtnGroup: {
     type: Boolean,
     default: false,
-  },
-  hasLabel: {
-    type: Boolean,
-    default: true,
   },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
@@ -225,8 +225,20 @@ const setOpenDialog = (value: boolean) => {
  -------------------------------*/
 const searchInput = ref('')
 const searchResults = computed(() => {
-  return chains.value.filter(chain => {
+  if (!searchInput.value || searchInput.value === '') {
+    if (!selectedChain.value) {
+      return chains.value
+    }
+    const unique = new Set([selectedChain.value, ...chains.value])
+    return [...unique]
+  }
+  const beginsWith = chains.value.filter(chain => {
+    return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
+  })
+  const other = chains.value.filter(chain => {
     return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
   })
+  const unique = new Set([...beginsWith, ...other])
+  return [...unique]
 })
 </script>

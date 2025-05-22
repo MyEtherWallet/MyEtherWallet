@@ -184,5 +184,6 @@ const otherMenuList = computed<AppMenuListItem[]>(() => {
 //TODO: Add click handler
 const clickListItem = (item: AppMenuListItem) => {
   console.log('clickListItem', item)
+  sidebarIsOpen.value = false
 }
 </script>

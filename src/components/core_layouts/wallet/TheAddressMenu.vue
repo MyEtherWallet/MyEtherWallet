@@ -2,7 +2,7 @@
   <div>
     <button
       v-if="isWalletConnected"
-      class="hoverNoBG py-2 px-3 rounded-full w-full shadow-button shadow-button-elevated"
+      class="hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full w-full shadow-button shadow-button-elevated"
       @click="setOpenDialog(true)"
     >
       <div v-if="isWalletConnected && walletAddress" class="flex items-center">
@@ -12,10 +12,10 @@
           is-flat
           class="mr-1 rounded-full"
         />
-        <div class="mr-2 ml-1 font-medium text-sm">
+        <div v-if="!isXS" class="mr-2 ml-1 font-medium text-sm">
           {{ truncateAddress(walletAddress, 6) }}
         </div>
-        <chevron-down-icon class="w-4 h-4 ml-auto mr-1" />
+        <chevron-down-icon class="w-3 h-3 xs:w-4 xs:h-4 ml-auto xs:mr-1" />
       </div>
     </button>
     <router-link
@@ -50,6 +50,10 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { truncateAddress } from '@/utils/filters'
 import { ROUTES_ACCESS } from '@/router/routeNames'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+
+const { isXS } = useAppBreakpoints()
+
 const store = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(store)
 
