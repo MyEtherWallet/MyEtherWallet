@@ -7,7 +7,7 @@ const ModuleSendNft = () => import('@/modules/nft/ModuleSendNft.vue')
 
 const DefaultRoutes = [
   {
-    path: '',
+    path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
     component: TempView,
     meta: {

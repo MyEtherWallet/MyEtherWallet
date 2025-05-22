@@ -1,11 +1,11 @@
 <template>
   <div>
     <button
-      v-if="isWalletConnected"
+      v-if="isWalletConnected && walletAddress"
       class="hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full w-full shadow-button shadow-button-elevated"
       @click="setOpenDialog(true)"
     >
-      <div v-if="isWalletConnected && walletAddress" class="flex items-center">
+      <div class="flex items-center">
         <app-blockie
           :address="walletAddress"
           :size="6"
