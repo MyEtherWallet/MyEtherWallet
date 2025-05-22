@@ -7,20 +7,23 @@ import {
 import {
   hexToBytes
 } from '@ethereumjs/util'
-import type { Connector } from '@wagmi/core'
+import type { Config, Connector } from '@wagmi/core'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
 import { sendTransaction } from '@wagmi/core'
-import { wagmiConfig } from './wagmiConfig'
 import { fromHex } from 'viem'
 import { type SendTransactionParameters } from '@wagmi/core'
 
 class WagmiWallet extends BaseEvmWallet {
   connector: Connector
-  constructor(connector: Connector, chainId: string) {
+  address: HexPrefixedString
+  config: Config
+  constructor(connector: Connector, chainId: string, config: Config) {
     super(chainId)
 
     this.connector = connector
+    this.config = config
+    this.address = '0x'
   }
   override disconnect(): Promise<boolean> {
     return this.connector
@@ -64,6 +67,7 @@ class WagmiWallet extends BaseEvmWallet {
       value: fromHex(txObj.value ?? '0x0', 'bigint'),
       type: "eip1559" as const,
     }
+    console.log('parseTx', parseTx)
     const from = await this.getAddress()
     const params = {
       connector: this.connector,
@@ -72,7 +76,7 @@ class WagmiWallet extends BaseEvmWallet {
 
     } as SendTransactionParameters
     return sendTransaction(
-      wagmiConfig, params as SendTransactionParameters<typeof wagmiConfig>).then((res: HexPrefixedString) => {
+      this.config, params as SendTransactionParameters<typeof this.config>).then((res: HexPrefixedString) => {
         return res
       })
 
