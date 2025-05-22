@@ -67,7 +67,6 @@ class WagmiWallet extends BaseEvmWallet {
       value: fromHex(txObj.value ?? '0x0', 'bigint'),
       type: "eip1559" as const,
     }
-    console.log('parseTx', parseTx)
     const from = await this.getAddress()
     const params = {
       connector: this.connector,
@@ -82,11 +81,11 @@ class WagmiWallet extends BaseEvmWallet {
 
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
-    console.log(options)
     throw new Error('Method not implemented.')
   }
   override async getAddress(): Promise<HexPrefixedString> {

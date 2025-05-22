@@ -36,7 +36,7 @@
       v-model:is-open="openWalletConnectModal"
       :qrcode-data="wagmiWalletData"
       :wallet-name="clickedWallet.name"
-      :wallet-icon="clickedWallet.icon as string"
+      :wallet-icon="clickedWallet.icon"
     />
   </div>
 </template>
