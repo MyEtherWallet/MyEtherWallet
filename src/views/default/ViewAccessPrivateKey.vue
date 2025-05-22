@@ -8,7 +8,7 @@
       <!-- TODO add proper link arrow icon?-->
       <div class="flex justify-center">
         <router-link
-          :to="{ name: ROUTES_HOME.HOME.NAME }"
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
           class="text-center underline text-sm mb-8 mx-auto"
           >or select another access method
         </router-link>
@@ -19,6 +19,6 @@
 </template>
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_ACCESS } from '@/router/routeNames'
 import ModuleAccessPrivateKey from '@/modules/access/ModuleAccessPrivateKey.vue'
 </script>

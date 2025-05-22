@@ -2,10 +2,13 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { type WalletConfig, WalletConfigType } from '@/modules/access/common/walletConfigs'
+import {
+  type WalletConfig,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
 
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
@@ -25,7 +28,7 @@ export const useWagmiConnect = () => {
   const providerStore = useProviderStore()
   const chainsStore = useChainsStore()
   const { selectedChain, chains } = storeToRefs(chainsStore)
-  const wagmiConfig = generateConfig(chains.value);
+  const wagmiConfig = generateConfig(chains.value)
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
@@ -34,7 +37,6 @@ export const useWagmiConnect = () => {
   const { setWallet } = walletStore
   const router = useRouter()
   const toastStore = useToastStore()
-
 
   const connect = async (wallet: WalletConfig) => {
     if ('routeName' in wallet && wallet.routeName) {
@@ -70,7 +72,12 @@ export const useWagmiConnect = () => {
             text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
             link: {
               title: 'Click here to install',
-              url: wallet.downloadUrls?.browserExtension || wallet.downloadUrls?.qrCode || wallet.downloadUrls?.chrome || wallet.downloadUrls?.firefox || '',
+              url:
+                wallet.downloadUrls?.browserExtension ||
+                wallet.downloadUrls?.qrCode ||
+                wallet.downloadUrls?.chrome ||
+                wallet.downloadUrls?.firefox ||
+                '',
             },
             type: ToastType.Error,
             isInfinite: true,
@@ -78,7 +85,11 @@ export const useWagmiConnect = () => {
           return
         }
       }
-      const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID || '1', wagmiConfig)
+      const wagWallet = new WagmiWallet(
+        connector!,
+        selectedChain.value?.chainID || '1',
+        wagmiConfig,
+      )
       wagWallet
         .connect()
         .then(res => {
@@ -88,7 +99,7 @@ export const useWagmiConnect = () => {
               openWalletConnectModal.value = false
               setWallet(wagWallet)
               addWallet(wallet)
-              router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+              router.push({ name: ROUTES_MAIN.HOME.NAME })
             } catch (error) {
               console.error('WalletConnect connect failed:', error)
             }

@@ -1,23 +1,46 @@
 <template>
   <div>
-    <router-view />
+    <the-app-layout />
     <module-toast />
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import TheAppLayout from '@components/core_layouts/TheAppLayout.vue'
 import ModuleToast from './modules/toast/ModuleToast.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { type ChainsRaw } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useProviderStore } from '@/stores/providerStore'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+import { type TokenBalancesRaw } from '@/mew_api/types'
+
+const store = useWalletStore()
+const { wallet, walletAddress } = storeToRefs(store)
+const { setTokens, setIsLoadingBalances } = store
+
+watch(
+  () => walletAddress.value,
+  newWallet => {
+    if (newWallet) {
+      wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
+        setTokens(balances.result)
+        setIsLoadingBalances(false)
+      })
+    } else {
+      setTokens([])
+      setIsLoadingBalances(false)
+    }
+  },
+  { immediate: true },
+)
 
 const providerStore = useProviderStore()
 const { addProvider } = providerStore
-const store = useChainsStore()
-const { setChainData } = store
+const chainStore = useChainsStore()
+const { setChainData } = chainStore
 
 const { data, onFetchResponse } = useFetchMewApi<ChainsRaw>('/chains')
 onFetchResponse(() => {

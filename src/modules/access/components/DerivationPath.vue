@@ -29,7 +29,7 @@
       class="xs:max-w-[428px] sm:mx-auto"
     >
       <template #title>
-        <div class="flex items-center pr-2 pt-4 sm:pt-8">
+        <div class="flex items-center pr-2 pt-4 sm:pt-6 xl:pt-8">
           <app-btn-icon
             v-if="showAddPath"
             :label="$t('common.go_back')"
@@ -50,14 +50,14 @@
             <div v-if="!showAddPath">
               <!-- Seacrh -->
               <div class="sticky top-0 bg-white z-10">
-                <div class="px-5 mb-1 flex items-center gap-2">
+                <div class="px-3 mb-1 flex items-center gap-2">
                   <app-search-input
                     v-model="searchInput"
                     class="grow"
                     :placeholder="$t('derivation_path.search')"
                   />
                   <app-base-button
-                    class="!px-4 !py-2 !rounded-full !text-s-12"
+                    class="!px-4 !py-2 !rounded-full !text-s-12 mr-2"
                     @click="setShowAddPath(true)"
                     >{{ $t('common.add') }}</app-base-button
                   >

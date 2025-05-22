@@ -99,7 +99,7 @@ import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
@@ -267,6 +267,6 @@ const access = async () => {
   })
 
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_WALLET.WALLET.PATH })
+  router.push({ path: ROUTES_MAIN.HOME.PATH })
 }
 </script>

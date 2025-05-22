@@ -3,10 +3,11 @@
     v-model:is-open="isOpen"
     class="sm:max-w-[460px] !min-h-[400px] bg-[rgba(255, 255, 255, 0.7)]"
     :title="$t('access_wallet.sort_and_filter')"
+    has-content-gutter
   >
     <!-- Content -->
     <template #content>
-      <div class="mt-5 px-5 mb-10">
+      <div class="mt-5 mb-10">
         <!-- Filter -->
         <p class="text7 ml-3 mb-2 !font-bold">{{ $t('common.filter') }}:</p>
         <div class="flex flex-wrap gap-x-2 gap-y-3">

@@ -1,240 +1,189 @@
 <template>
-  <div>
+  <div class="relative">
+    <!-- OPEN Mobile Menu-->
+    <app-btn-icon
+      @click="sidebarIsOpen = !sidebarIsOpen"
+      :label="$t('menu.open-menu')"
+    >
+      <Bars3Icon class="w-8 h-8" />
+    </app-btn-icon>
+    <!-- Background -->
     <transition
-      enter-active-class="transform ease-out duration-500 transition opacity-0 "
+      enter-active-class="transform ease-out duration-300 transition opacity-0 "
       enter-to-class="opacity-100"
       leave-active-class="opacity-0"
       leave-to-class="opacity-0"
       appear
     >
       <div
-        v-if="sidebarIsOpen && !isDesktopAndUp"
+        v-if="sidebarIsOpen"
         class="cursor-pointer fixed inset-0 bg-black/30 z-[39] h-screen w-screen overscroll-none overflow-hidden"
-        @click="emit('clickClose')"
+        @click="sidebarIsOpen = false"
         aria-hidden
       />
     </transition>
-    <aside
-      id="default-sidebar"
-      :class="[
-        'fixed top-0 left-0 z-40 w-[300px] h-screen transition-transform duration-500 -translate-x-full bg-side-menu]',
-        { 'translate-x-0': sidebarIsOpen },
-      ]"
-      aria-label="Sidebar"
-    >
-      <div class="h-full px-3 py-4 overflow-y-auto bg-side-menu">
-        <div class="flex items-center justify-between mb-4">
-          <img
-            :src="IMGMewLogo"
-            contain
-            alt="home"
-            class="cursor-pointer"
-            width="113px"
-            height="auto"
-            loading="lazy"
-          />
-          <AppBtnIconClose
-            @click="emit('clickClose')"
-            class="lg:hidden"
-            is-white
-          />
-        </div>
-        <!-- TODO -->
-        <p class="py-2">ACTIVE NETWORK</p>
-        <div>
-          <p class="py-2">CARD</p>
-        </div>
-        <div class="relative">
-          <transition-group name="fadelist">
-            <!-- CORE MENU -->
-            <div key="app-core-menu" class="py-2">
-              <menu-list-item
-                v-for="item in coreMenuList"
-                :key="item.title"
-                :list-item="item"
-                :active-item-title="activeItem"
-                @click="clickListItem(item)"
+    <!-- Side Menu -->
+    <teleport to="#app">
+      <transition
+        enter-from-class="opacity-0 -translate-x-full"
+        enter-active-class="transform ease-out duration-300 transition "
+        enter-to-class="translate-x-0"
+        leave-from-class="transform ease-out duration-300 translate-x-0"
+        leave-active-class="transition -translate-x-full"
+        appear
+      >
+        <aside
+          v-if="sidebarIsOpen"
+          id="default-sidebar"
+          class="fixed top-0 left-0 z-40 w-[300px] h-screen bg-white"
+          aria-label="Sidebar"
+        >
+          <div class="h-full px-3 py-4 overflow-y-auto bg-white">
+            <div class="flex items-center justify-between mb-4">
+              <img
+                src="@/assets/images/mew/logo-header.webp"
+                :alt="t('home')"
+                width="280"
+                height="96"
+                class="w-[94px] h-[32px] flex-none object-contain"
               />
+              <AppBtnIconClose @click="sidebarIsOpen = false" />
             </div>
-            <!-- DIVIDER -->
-            <div
-              key="app-menu-divider-1"
-              class="border-b border-white/30"
-            ></div>
-            <!-- MESSAGES MENU -->
-            <div key="app-messages-dropdown" class="py-2">
-              <menu-list-item
-                :list-item="messageTitle"
-                :is-drop-down="true"
-                :is-drop-down-open="showMesSubmenu"
-                :active-item-title="activeItem"
-                @click="showMesSubmenu = !showMesSubmenu"
-              />
+            <app-select-chain
+              v-if="isMobile && isWalletConnected"
+              :has-label="false"
+              class="mb-2"
+            />
+            <the-address-menu
+              v-if="isMobile && isWalletConnected"
+              class="mb-2"
+            />
+            <div class="relative">
+              <transition-group name="fadelist">
+                <!-- CORE MENU -->
+                <div key="app-core-menu" class="pt-0">
+                  <menu-list-item
+                    v-for="item in coreMenuList"
+                    :key="item.title"
+                    :list-item="item"
+                    @click="clickListItem(item)"
+                  />
+                </div>
+                <!-- TOOLS MENU -->
+                <menu-list-item
+                  :list-item="toolsMenuItem"
+                  :is-drop-down-open="showToolsSubmenu"
+                  is-drop-down
+                  key="app-tools-menu"
+                  @click="showToolsSubmenu = !showToolsSubmenu"
+                />
+                <div v-if="showToolsSubmenu" key="app-tools-submenu">
+                  <menu-list-item
+                    v-for="item in toolsMenuList"
+                    :key="item.title"
+                    :list-item="item"
+                    is-submenu
+                    @click="clickListItem(item)"
+                  />
+                </div>
+                <!--  DIVIDER -->
+                <hr
+                  class="h-px bg-grey-outline border-0 w-full my-3"
+                  key="app-menu-divider-2"
+                />
+                <!--  OTHER MENU (Settings, etc) -->
+                <menu-list-item
+                  v-for="item in otherMenuList"
+                  :key="item.title"
+                  :list-item="item"
+                  @click="clickListItem(item)"
+                />
+                <div
+                  v-if="!isWalletConnected"
+                  class="flex flex-col gap-3 pt-5 px-5 mt-1"
+                >
+                  <router-link
+                    :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+                    class="px-4 bg-black text-white h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
+                  >
+                    {{ $t('connect_wallet') }}
+                  </router-link>
+                  <router-link
+                    :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+                    class="px-4 py-2 border-1 border-black text-black h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
+                  >
+                    {{ $t('common.create_wallet') }}
+                  </router-link>
+                </div>
+              </transition-group>
             </div>
-            <div v-if="showMesSubmenu" key="app-messages-menu">
-              <menu-list-item
-                v-for="item in messageMenuList"
-                :key="item.title"
-                :list-item="item"
-                :is-submenu="true"
-                :active-item-title="activeItem"
-                @click="clickListItem(item)"
-              />
-            </div>
-            <!-- CONTRACT MENU  -->
-            <div key="app-contract-dropdown" class="py-2">
-              <menu-list-item
-                :list-item="contractTitle"
-                :is-drop-down="true"
-                :is-drop-down-open="showContractSubmenu"
-                :active-item-title="activeItem"
-                @click="showContractSubmenu = !showContractSubmenu"
-              />
-            </div>
-            <div v-if="showContractSubmenu" key="4" class="app-contract-menu">
-              <menu-list-item
-                v-for="item in contractMenuList"
-                :key="item.title"
-                :list-item="item"
-                :is-submenu="true"
-                :active-item-title="activeItem"
-                @click="clickListItem(item)"
-              />
-            </div>
-            <!--  DIVIDER -->
-            <div
-              key="app-menu-divider-2"
-              class="border-b border-white/30"
-            ></div>
-            <!--  OTHER MENU (Settings, etc) -->
-            <div key="app-other-menu" class="py-2">
-              <menu-list-item
-                v-for="item in toolsMenuList"
-                :key="item.title"
-                :list-item="item"
-                :active-item-title="activeItem"
-                @click="clickListItem(item)"
-              />
-            </div>
-          </transition-group>
-        </div>
-      </div>
-    </aside>
+          </div>
+        </aside>
+      </transition>
+    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import IMGMewLogo from '@/assets/images/mew/logo-white.svg'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
-import { ROUTES_WALLET, ROUTES_SEND } from '@/router/routeNames'
-import type { AppMenuListItem } from '@/types/components/menuListItem'
-import IconSend from '@assets/icons/core_menu/send.svg'
-import { ref } from 'vue'
+import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
+import { Bars3Icon } from '@heroicons/vue/24/solid'
+import AppSelectChain from '@/components/AppSelectChain.vue'
+import TheAddressMenu from './TheAddressMenu.vue'
+import { useI18n } from 'vue-i18n'
+import { ref, computed } from 'vue'
 import MenuListItem from './MenuListItem.vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+import { ROUTES_ACCESS } from '@/router/routeNames'
+
+const { t } = useI18n()
+const store = useWalletStore()
+const { isWalletConnected } = storeToRefs(store)
+
+const { isMobile } = useAppBreakpoints()
 
 defineProps({
-  sidebarIsOpen: {
-    default: false,
-    type: Boolean,
+  coreMenuList: {
+    type: Array as () => AppMenuListItem[],
+    required: true,
+  },
+  toolsMenuList: {
+    type: Array as () => AppMenuListItem[],
+    required: true,
   },
 })
 
-const { isDesktopAndUp } = useAppBreakpoints()
-const emit = defineEmits<{
-  (e: 'clickClose'): void
-}>()
+const sidebarIsOpen = ref(false)
+const showToolsSubmenu = ref(false)
 
-/** ------------------------------
- * Core Menu
- ------------------------------*/
-const coreMenuList: AppMenuListItem[] = [
-  {
-    title: 'portfolio',
-    routeName: ROUTES_WALLET.DASHBOARD.NAME,
-    icon: IconSend,
-  },
-  {
-    title: 'swap',
-    // routeName: ROUTES_WALLET.SWAP.NAME,
-    icon: IconSend,
-  },
-  {
-    title: 'send',
-    routeName: ROUTES_SEND.SEND.NAME,
-    icon: IconSend,
-  },
-  {
-    title: 'deposit',
-    icon: IconSend,
-  },
-  {
-    title: 'buy/sell',
-    icon: IconSend,
-  },
-  {
-    title: 'stake',
-    // routeName: ROUTES_WALLET.STAKE.NAME,
-    icon: IconSend,
-  },
-]
-/** ------------------------------
- * Contract MENU
- ------------------------------*/
-const showContractSubmenu = ref(false)
-
-const contractTitle: AppMenuListItem = {
-  title: 'contract',
-  icon: IconSend,
-}
-const contractMenuList: AppMenuListItem[] = [
-  {
-    title: 'deploy contract',
-    // routeName: ROUTES_WALLET.DEPLOY_CONTRACT.NAME,
-  },
-  {
-    title: 'interact with contract',
-    // routeName: ROUTES_WALLET.INTERACT_CONTRACT.NAME,
-  },
-]
-
-/** ------------------------------
- * Messages
- ------------------------------*/
-const showMesSubmenu = ref(false)
-
-const messageTitle = {
-  title: 'message',
-  icon: IconSend,
-  isActive: false,
-}
-const messageMenuList: AppMenuListItem[] = [
-  {
-    title: 'sign message',
-    // routeName: ROUTES_WALLET.SIGN_MESSAGE.NAME,
-  },
-  {
-    title: 'verify message',
-    // routeName: ROUTES_WALLET.VERIFY_MESSAGE.NAME,
-  },
-]
-/** ------------------------------
- * Tools MENU
- ------------------------------*/
-const toolsMenuList: AppMenuListItem[] = [
-  {
-    title: 'settings',
-    icon: IconSend,
-    // routeName: ROUTES_WALLET.SETTINGS.NAME,
-  },
-]
+const toolsMenuItem = computed<AppMenuListItem>(() => {
+  return {
+    title: t('tools'),
+    iconID: ICON_IDS.TOOLS,
+  }
+})
+const otherMenuList = computed<AppMenuListItem[]>(() => {
+  return [
+    {
+      title: t('settings'),
+      iconID: ICON_IDS.SETTINGS,
+    },
+    {
+      title: t('notifications'),
+      iconID: ICON_IDS.NOTIFICATIONS,
+    },
+  ]
+})
 
 /** ------------------------------
  * Menu Methods
  ------------------------------*/
-const activeItem = ref<string>(coreMenuList[0].title)
 //TODO: Add click handler
 const clickListItem = (item: AppMenuListItem) => {
-  activeItem.value = item.title
+  console.log('clickListItem', item)
+  sidebarIsOpen.value = false
 }
 </script>

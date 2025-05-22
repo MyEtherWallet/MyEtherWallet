@@ -1,9 +1,9 @@
 <template>
-  <div class="relative text-s-17 leading-p-130 font-medium">
+  <div ref="target" class="relative text-s-17 leading-p-130 font-medium">
     <label for="select" class="sr-only">
       {{ props.placeholder }}
     </label>
-    <slot name="select-button">
+    <slot name="select-button" :toggleSelect="toggleSelect">
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
           <span>{{ showSelected }}</span>
@@ -20,26 +20,46 @@
       leave-to-class="transform scale-95 opacity-0"
     >
       <div
-        ref="target"
         role="listbox"
         aria-label="Select an option"
         v-show="openSelect"
         class="absolute -left-4 origin-top-right focus:outline-none"
       >
         <div
-          class="px-3 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
+          class="px-2 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
         >
-          <div class="grid grid-cols-1">
+          <div v-if="!useVueRouter" class="grid grid-cols-1">
             <button
               v-for="option in options"
               :key="option.value"
-              class="flex items-center py-3 px-2 hoverNoBG rounded-lg"
+              :class="[
+                { 'bg-grey-5': option.value === selected.value },
+                'flex items-center p-3 hoverNoBG rounded-lg',
+              ]"
               role="option"
               :id="option.value"
               @click="selectOption(option)"
             >
               {{ option.label }}
+              <check-icon
+                v-if="option.value === selected.value"
+                class="ml-auto w-5 h-5 text-primary"
+              />
             </button>
+          </div>
+          <div v-else class="grid grid-cols-1">
+            <router-link
+              v-for="option in options"
+              :key="option.value"
+              class="flex items-center p-3 hoverNoBG rounded-lg"
+              active-class="bg-grey-5"
+              role="option"
+              :id="option.value"
+              :to="{ name: option.value }"
+              @click="selectOption(option)"
+            >
+              {{ option.label }}
+            </router-link>
           </div>
         </div>
       </div>
@@ -55,13 +75,24 @@
  * <app-select
  *   v-model:selected="selectedOption"
  *   :options="options"
- *   placeholder="Select an option"
+ *   placeholder="Select an option"/>
+ *
+ * @example with slot
+ * <app-select
+ *   v-model:selected="selectedOption"
+ *   :options="options"
+ *   placeholder="Select an option">
+ *   <template #select-button>
+ *    <button class="rounded-full hoverNoBG p-2" @click="selectedOption.value = true">
+ *   </template>
+ * </app-select>
+ *
  */
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { defineProps, ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import { computed } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { computed, watch, onBeforeUnmount } from 'vue'
+import { onClickOutside, useElementHover } from '@vueuse/core'
 
 const props = defineProps({
   /**
@@ -76,6 +107,20 @@ const props = defineProps({
   options: {
     type: Array as () => AppSelectOption[],
     required: true,
+  },
+  /**
+   * @useVueRouter If true, the options will be rendered as router-links.
+   */
+  useVueRouter: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * @hasOnHover If true, the dropdown will be opened on hover.
+   */
+  hasOnHover: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -112,9 +157,14 @@ const toggleSelect = () => {
   openSelect.value = !openSelect.value
   if (openSelect.value) {
     targetValue.value = target.value
+  } else {
+    targetValue.value = null
   }
 }
 
+/*
+ * Closes the dropdown when clicking outside of it.
+ */
 onClickOutside(targetValue, () => {
   targetValue.value = null
   openSelect.value = false
@@ -128,4 +178,28 @@ const selectOption = (option: AppSelectOption) => {
   selected.value = option
   toggleSelect()
 }
+
+/** ------------------------------
+ * Hover
+ ------------------------------*/
+const isHovered = useElementHover(target)
+const timeout = ref<NodeJS.Timeout | null>(null)
+
+watch(isHovered, isHovering => {
+  if (props.hasOnHover) {
+    if (isHovering) {
+      openSelect.value = true
+    } else {
+      timeout.value = setTimeout(() => {
+        openSelect.value = false
+      }, 600)
+    }
+  }
+})
+
+onBeforeUnmount(() => {
+  if (timeout.value) {
+    clearTimeout(timeout.value)
+  }
+})
 </script>

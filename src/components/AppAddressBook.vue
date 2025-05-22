@@ -49,7 +49,6 @@
     v-model:is-open="isAddressBookOpen"
     title="Receive to account"
     class="sm:max-w-[500px] sm:mx-auto"
-    :hasContentGutter="false"
   >
     <template #content>
       <div

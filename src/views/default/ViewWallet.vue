@@ -3,12 +3,7 @@
     <!-- sidemenu -->
     <div class="bg-blue-950 text-white h-screen flex flex-col w-64">
       <router-link
-        :to="{ name: ROUTES_WALLET.DASHBOARD.NAME }"
-        aria-label="Navigate to Dashboard"
-        >Dashboard</router-link
-      >
-      <router-link
-        :to="{ name: ROUTES_WALLET.SEND.NAME }"
+        :to="{ name: ROUTES_SEND.SEND.NAME }"
         aria-label="Navigate to Send"
         >Send</router-link
       >
@@ -25,5 +20,5 @@
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_SEND } from '@/router/routeNames'
 </script>

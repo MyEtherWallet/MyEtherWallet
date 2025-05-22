@@ -28,7 +28,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
@@ -92,7 +92,7 @@ const unlock = () => {
     setWallet(wallet)
     addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
-    router.push({ path: ROUTES_WALLET.WALLET.PATH })
+    router.push({ path: ROUTES_MAIN.HOME.PATH })
   } catch (error) {
     // TODO: handle error when toast is implemented
     console.error(error)

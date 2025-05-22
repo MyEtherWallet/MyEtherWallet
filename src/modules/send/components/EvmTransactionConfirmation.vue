@@ -150,6 +150,10 @@ const goBack = () => {
 const toastStore = useToastStore()
 
 const confirmTransaction = async () => {
+  //TO: show message that wallet is not connected
+  if (!wallet.value) {
+    return
+  }
   signing.value = true
   const txPromise =
     wallet.value?.getWalletType() === WalletType.WAGMI

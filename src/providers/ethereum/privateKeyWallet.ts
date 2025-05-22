@@ -8,23 +8,18 @@ import {
   toRpcSig,
   privateToAddress,
   toChecksumAddress,
-  hexToBytes
+  hexToBytes,
 } from '@ethereumjs/util'
 import BaseEvmWallet from './baseEvmWallet'
-import {
-  type PostSignedTransaction,
-} from './types'
-import {
-  WalletType,
-  type HexPrefixedString,
-} from '../types'
+import { type PostSignedTransaction } from './types'
+import { WalletType, type HexPrefixedString } from '../types'
 
 import { useWalletStore } from '@/stores/walletStore'
 import { useRouter } from 'vue-router'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 
 class PrivateKeyWallet extends BaseEvmWallet {
-  private privKey: Uint8Array;
+  private privKey: Uint8Array
 
   constructor(privateKey: Uint8Array, chainId: string) {
     super(chainId)
@@ -32,29 +27,33 @@ class PrivateKeyWallet extends BaseEvmWallet {
   }
 
   /**
-     * 
-     * @param serializedTx 
-     * currently making library figure out tx type
-     * TODO: switch to using the type from the API
-     */
+   *
+   * @param serializedTx
+   * currently making library figure out tx type
+   * TODO: switch to using the type from the API
+   */
   override SignTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {
-
     try {
       const common = commonGenerator(BigInt(this.chainId), Hardfork.London)
-      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(hexToBytes(serializedTx), { common })
-      const signedTx = tx.sign(this.privKey);
+      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
+        hexToBytes(serializedTx),
+        { common },
+      )
+      const signedTx = tx.sign(this.privKey)
       return Promise.resolve({
-        signed: bytesToHex(signedTx.serialize())
+        signed: bytesToHex(signedTx.serialize()),
       })
       // on fail, assume legacy tx
     } catch {
       const common = commonGenerator(BigInt(this.chainId), Hardfork.Berlin)
-      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), { common })
+      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
+        common,
+      })
       const signedTx = tx.sign(this.privKey)
       return Promise.resolve({
-        signed: bytesToHex(signedTx.serialize())
+        signed: bytesToHex(signedTx.serialize()),
       })
     }
   }
@@ -71,13 +70,15 @@ class PrivateKeyWallet extends BaseEvmWallet {
     return Promise.resolve(toRpcSig(sig.v, sig.r, sig.s) as HexPrefixedString)
   }
   override getAddress(): Promise<string> {
-    return Promise.resolve(toChecksumAddress(bytesToHex(privateToAddress(this.privKey))))
+    return Promise.resolve(
+      toChecksumAddress(bytesToHex(privateToAddress(this.privKey))),
+    )
   }
   override disconnect(): Promise<boolean> {
     const walletStore = useWalletStore()
     const router = useRouter()
     walletStore.removeWallet()
-    router.push({ name: ROUTES_HOME.HOME.NAME })
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
     return Promise.resolve(true)
   }
 }
