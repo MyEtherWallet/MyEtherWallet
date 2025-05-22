@@ -16,6 +16,7 @@ import { ToastType } from '@/types/notification'
 
 import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
+import { TrezorWallet } from '@/providers/ethereum/trezorWallet'
 
 export const useWagmiConnect = () => {
   const { t } = useI18n()
@@ -45,6 +46,25 @@ export const useWagmiConnect = () => {
         typeof wallet.icon === 'string' ? wallet.icon : await wallet.icon()
       wallet.icon = _icon
       clickedWallet.value = wallet
+      if (wallet.id === 'trezor') {
+        const trezorWallet = new TrezorWallet(selectedChain.value?.chainID || '1');
+        trezorWallet.connect().then(res => {
+          if (res) {
+            try {
+              wagmiWalletData.value = ''
+              openWalletConnectModal.value = false
+              setWallet(trezorWallet)
+              addWallet(wallet)
+              router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+            } catch (error) {
+              toastStore.addToastMessage({
+                text: error instanceof Error ? error.message : String(error),
+                type: ToastType.Error,
+              })
+            }
+          }
+        })
+      }
       const connector = connectors.find(
         c =>
           c.id === wallet.id ||

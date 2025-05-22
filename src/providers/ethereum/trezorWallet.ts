@@ -16,12 +16,20 @@ export class TrezorWallet extends BaseEvmWallet {
     super(chainId)
     this.networkName = chainToEnum[chainId] || NetworkNames.Ethereum
     this.trezorEthereum = new TrezorEthereum(this.networkName)
-    this.trezorEthereum.init()
   }
 
   override async getAddress(): Promise<string> {
     const { address } = await this.trezorEthereum.getAddress()
     return address
+  }
+
+  override connect(): Promise<boolean> {
+    return this.trezorEthereum
+      .init()
+      .then(() => {
+        return true
+      })
+      .catch(() => false)
   }
 
   override getWalletType(): WalletType {

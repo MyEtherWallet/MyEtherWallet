@@ -49,7 +49,7 @@ import {
   walletConfigs,
 } from '@/modules/access/common/walletConfigs'
 import BtnWallet from './BtnWallet.vue'
-import { useWagmiConnect } from '@/composables/useWagmiConnect'
+import { useWagmiConnect } from '@/composables/useConnectWallet'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { useWalletList } from '@/composables/useWalletList'

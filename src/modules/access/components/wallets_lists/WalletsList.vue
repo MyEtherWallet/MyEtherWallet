@@ -98,7 +98,7 @@ import {
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
-import { useWagmiConnect } from '@/composables/useWagmiConnect'
+import { useWagmiConnect } from '@/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 
 const { t } = useI18n()
