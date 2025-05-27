@@ -160,6 +160,7 @@ const selectedPath = defineModel<DerivationPath>('selectedPath', {
 })
 
 const setSelectedPath = (path: DerivationPath) => {
+  console.log('asdfa')
   selectedPath.value = path
   setToStore(path)
   setOpenDialog(false)

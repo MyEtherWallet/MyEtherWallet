@@ -57,15 +57,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
-import { validateMnemonic } from 'bip39'
-import { watchDebounced } from '@vueuse/core'
 import { useWalletStore } from '@/stores/walletStore'
 import { ROUTES_WALLET } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
@@ -79,9 +77,19 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
-import HWwallet, { bip44Paths } from '@enkryptcom/hw-wallets'
+import HWwallet from '@enkryptcom/hw-wallets'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
+
+// store instantiation needs to be at the top level
+// to avoid late initialization issues
+const derivationStore = useDerivationStore()
+const chainsStore = useChainsStore()
+const { selectedDerivation } = storeToRefs(derivationStore)
+const { selectedChain } = storeToRefs(chainsStore)
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
+const walletStore = useWalletStore()
 
 const { t } = useI18n()
 /**------------------------
@@ -109,14 +117,11 @@ const backStep = () => {
 
 const wallet = ref<MnemonicToWallet | null>(null)
 const connectingWallet = ref(false)
-const derivationStore = useDerivationStore()
-const chainsStore = useChainsStore()
-const { selectedDerivation } = storeToRefs(derivationStore)
-const { selectedChain } = storeToRefs(chainsStore)
+
 const unlockWallet = () => {
-  const hwWallet = new HWwallet()
+  const walletHandler = new HWwallet()
   connectingWallet.value = true
-  hwWallet
+  walletHandler
     .isConnected({
       wallet: HWwalletType.trezor,
       networkName: chainToEnum[selectedChain.value?.chainID || '1'],
@@ -128,12 +133,12 @@ const unlockWallet = () => {
 
 watch(
   () => selectedDerivation.value.path,
-  newValue => {
+  (newValue, oldValue) => {
+    console.log(newValue, oldValue)
     if (newValue) {
       unlockWallet()
     }
   },
-  { immediate: true },
 )
 
 /**------------------------
@@ -149,14 +154,19 @@ const loadList = async (page: number = 0) => {
   walletList.value = []
   const startIndex = page * 5
   for (let i = startIndex; i < startIndex + 5; i++) {
-    await wallet.value?.getWallet(i).then(async wallet => {
-      if (wallet) {
-        walletList.value.push({
-          address: await wallet.getAddress(),
-          index: i,
-        })
-      }
-    })
+    // const address = await walletHandler.value?.getAddress({
+    //   confirmAddress: false,
+    //   networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+    //   pathType:
+    // })
+    // await wallet.value?.getWallet(i).then(async wallet => {
+    //   if (wallet) {
+    //     walletList.value.push({
+    //       address: await wallet.getAddress(),
+    //       index: i,
+    //     })
+    //   }
+    // })
   }
   //TODO: Load balance
   selectedIndex.value = walletList.value[0].index
@@ -173,9 +183,6 @@ const setPage = (isNext: boolean) => {
  * Access Wallet
  ------------------------*/
 
-const recentWalletsStore = useRecentWalletsStore()
-const { addWallet } = recentWalletsStore
-const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
