@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_CREATE_WALLET } from '@/router/routeNames'
 
-const CREATE_WALLET_PATH_NAME = ROUTES_HOME.CREATE_WALLET.NAME
+const CREATE_WALLET_PATH_NAME = ROUTES_CREATE_WALLET.CREATE_WALLET.NAME
 </script>

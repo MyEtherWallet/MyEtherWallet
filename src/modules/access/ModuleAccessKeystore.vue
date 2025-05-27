@@ -83,7 +83,7 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { watchDebounced } from '@vueuse/core'
 
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
@@ -209,7 +209,7 @@ const enterPassword = async () => {
       setWallet(wallet)
       addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
-      router.push({ path: ROUTES_WALLET.WALLET.PATH })
+      router.push({ path: ROUTES_MAIN.HOME.PATH })
     }
   } catch {
     errorPassword.value = 'Invalid password'
