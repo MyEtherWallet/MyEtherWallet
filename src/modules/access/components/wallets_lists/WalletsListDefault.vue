@@ -49,13 +49,13 @@ import {
   walletConfigs,
 } from '@/modules/access/common/walletConfigs'
 import BtnWallet from './BtnWallet.vue'
-import { useWagmiConnect } from '@/composables/useConnectWallet'
+import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { useWalletList } from '@/composables/useWalletList'
 
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
-  useWagmiConnect()
+  useConnectWallet()
 
 const { newWalletList } = useWalletList()
 const recentWalletsStore = useRecentWalletsStore()

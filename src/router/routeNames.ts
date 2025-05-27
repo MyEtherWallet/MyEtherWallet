@@ -12,6 +12,7 @@ const ROUTES_HOME: RouteNameCollection = {
   ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'keystore' },
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
   ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
+  ACCESS_TREZOR: { NAME: 'AccessTrezor', PATH: 'trezor' },
   CREATE_WALLET: { NAME: 'CreateWallet', PATH: 'create/' },
   CONVERT_UNITS: { NAME: 'ConvertUnits', PATH: 'convert-units' },
   PAGE_NOT_FOUND: { NAME: 'PageNotFound', PATH: '*' },
@@ -80,5 +81,13 @@ enum KEYSTORE_ALIAS {
   upload = '/keystore/upload',
 }
 
-export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS };
+enum MNEMONIC_ALIAS {
+  access = '/mnemonic',
+}
+
+enum TREZOR_ALIAS {
+  access = '/trezor',
+}
+
+export { ROUTES_HOME, ROUTES_WALLET, ROUTES_SEND, ACCESS_ALIAS, KEYSTORE_ALIAS, MNEMONIC_ALIAS, TREZOR_ALIAS };
 

@@ -1,4 +1,4 @@
-import { ROUTES_HOME, ACCESS_ALIAS, KEYSTORE_ALIAS } from './routeNames';
+import { ROUTES_HOME, ACCESS_ALIAS, KEYSTORE_ALIAS, MNEMONIC_ALIAS, TREZOR_ALIAS } from './routeNames';
 const LayoutDefault = () => import('@components/core_layouts/LayoutDefault.vue')
 const ViewHome = () => import('@view-default/ViewAccessWallet.vue')
 const TempView = () => import('@view-default/ViewTemp.vue')
@@ -6,6 +6,7 @@ const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
 const ViewAccessPrivateKey = () => import('@view-default/ViewAccessPrivateKey.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
 const ViewAccessMnemonic = () => import('@view-default/ViewAccessMnemonic.vue')
+const ViewAccessTrezor = () => import('@view-default/ViewAccessTrezor.vue')
 const DefaultRoutes = [{
   path: '/',
   component: LayoutDefault,
@@ -33,7 +34,16 @@ const DefaultRoutes = [{
       path: ROUTES_HOME.ACCESS_MNEMONIC.PATH,
       name: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
       component: ViewAccessMnemonic,
-      alias: KEYSTORE_ALIAS.upload,
+      alias: MNEMONIC_ALIAS.access,
+      meta: {
+        noAuth: true
+      }
+    },
+    {
+      path: ROUTES_HOME.ACCESS_TREZOR.PATH,
+      name: ROUTES_HOME.ACCESS_TREZOR.NAME,
+      component: ViewAccessTrezor,
+      alias: TREZOR_ALIAS.access,
       meta: {
         noAuth: true
       }
