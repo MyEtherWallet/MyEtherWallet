@@ -28,5 +28,27 @@
     "no": "No",
     "clear": "clear",
     "required": "required"
-  }
+  },
+  "portfolio": "Portfolio",
+  "swap": "Swap",
+  "send": "Send",
+  "stake": "Stake",
+  "earn": "Earn",
+  "buy": "Buy",
+  "buy-sell": "Buy & Sell",
+  "tools": "Tools",
+  "verify-message": "Verify Message",
+  "sign-message": "Sign Message",
+  "deploy-contract": "Deploy Contract",
+  "interact-contract": "Interact with Contract",
+  "settings": "Settings",
+  "notifications": "Notifications",
+  "help-center": "Help Center",
+  "menu": {
+    "open-settings": "Open Settings",
+    "open-notifications": "Open Notifications",
+    "open-menu": "Open Menu"
+  },
+  "home": "Home",
+  "connect_wallet": "Connect wallet"
 }

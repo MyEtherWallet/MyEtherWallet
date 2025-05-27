@@ -134,6 +134,7 @@ const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
 
 onMounted(async () => {
+  if (!wallet.value) return
   const mainToken: TokenBalance = tokens.value.find(
     (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as TokenBalance
@@ -226,17 +227,14 @@ watch(
       data.value = '0x'
     }
     if (!toAddress.value) return
-    isLoadingFees.value = true
-    gasFees.value = {} as GasFeeResponse
-    gasFees.value = await wallet.value.getGasFee({
+    gasFees.value = (await wallet.value?.getGasFee({
       to: toAddress.value as HexPrefixedString,
       address:
         (address.value as HexPrefixedString) ||
         '0x0000000000000000000000000000000000000000',
       value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
       data: data.value as HexPrefixedString,
-    })
-    isLoadingFees.value = false
+    })) as GasFeeResponse
   },
 )
 
@@ -252,6 +250,7 @@ watch(
 )
 
 const handleSubmit = async () => {
+  if (!wallet.value) return
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
     priority: selectedFee.value,

@@ -2,7 +2,7 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { type WalletConfig, WalletConfigType } from '@/modules/access/common/walletConfigs'
@@ -42,7 +42,7 @@ export const useConnectWallet = () => {
     openWalletConnectModal.value = false
     setWallet(wallet)
     addWallet(config)
-    router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+    router.push({ name: ROUTES_MAIN.DASHBOARD.NAME })
   }
 
   const _connectTrezor = (wallet: WalletConfig) => {

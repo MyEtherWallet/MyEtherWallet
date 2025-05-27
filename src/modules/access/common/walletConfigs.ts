@@ -5,7 +5,7 @@ import TrezorLogo from '@/assets/images/access/trezor.webp'
 import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_ACCESS } from '@/router/routeNames'
 
 export enum WalletConfigType {
   MOBILE = 'mobile',
@@ -71,28 +71,28 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Trezor',
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
-    routeName: ROUTES_HOME.ACCESS_TREZOR.NAME,
+    routeName: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
   },
   keystore: {
     id: 'keystore',
     name: 'Keystore',
     icon: KeystoreLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_HOME.ACCESS_KEYSTORE.NAME,
+    routeName: ROUTES_ACCESS.ACCESS_KEYSTORE.NAME,
   },
   mnemonic: {
     id: 'mnemonic',
     name: 'Recovery (mnemonic) Phrase',
     icon: MnemonicLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_HOME.ACCESS_MNEMONIC.NAME,
+    routeName: ROUTES_ACCESS.ACCESS_MNEMONIC.NAME,
   },
   privateKey: {
     id: 'privateKey',
     name: 'Private Key',
     icon: PrivateKeyLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_HOME.ACCESS_PRIVATE_KEY.NAME,
+    routeName: ROUTES_ACCESS.ACCESS_PRIVATE_KEY.NAME,
   },
   mew: {
     id: 'mew',
@@ -113,7 +113,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     isWC: true,
     downloadUrls: {
       browserExtension: 'https://enkrypt.com',
-    }
+    },
   },
 }
 
