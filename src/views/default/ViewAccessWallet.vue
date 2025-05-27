@@ -1,7 +1,7 @@
 <template>
   <main>
     <div
-      class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-space-between mb-8 lg-max:mb-10 md:mt-6 lg-max:mt-12"
+      class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-space-between mb-8 lg-max:mb-10"
     >
       <div class="flex flex-col sm:flex-row sm:items-center justify-start">
         <img
@@ -12,8 +12,8 @@
           class="w-[80px] h-[80px] md:w-[109px] md:h-[109px] flex-none"
         />
 
-        <div class="flex-initial mt-3 sm:mt-0 sm:ml-4">
-          <h1 class="title1">{{ $t('access_wallet.title') }}</h1>
+        <div class="flex-initial sm:mt-0 sm:ml-4">
+          <h1 class="title3">Connect to Mew Portfolio</h1>
           <p class="text7 !font-normal">
             {{ $t('access_wallet.description') }}
           </p>

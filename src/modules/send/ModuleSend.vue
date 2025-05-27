@@ -1,67 +1,31 @@
 <template>
-  <div class="mt-5">
+  <div class="flex flex-col items-center justify-center gap-5">
     <form @submit.prevent="handleSubmit">
-      <div class="w-full">
-        <!-- <p class="font-bold ml-2 mb-1 text-base">Amount</p> -->
-        <app-enter-amount
-          v-model:amount="amount"
-          v-model:selected-token="tokenSelected"
-          v-model:error="amountError"
-          :validate-input="checkAmountForError"
-        />
-      </div>
-      <app-address-book v-model="toAddress" />
-      <app-select-tx-fee
-        v-model="selectedFee"
-        :fees="gasFees.fees"
-        :isLoading="isLoadingFees"
-      />
-      <div>
-        <input
-          type="checkbox"
-          name="advanced-settings"
-          v-model="toggleAdvanced"
-        />
-        <label for="advanced-settings">Advanced settings</label>
-      </div>
-      <div v-show="toggleAdvanced">
-        <div>
-          <label for="gas-price-input">Gas Price:</label>
-          <input
-            v-model="gasPrice"
-            name="gas-price-input"
-            type="string"
-            required
+      <app-sheet sheetClass="max-w-[478px] mx-auto !px-4 mt-4">
+        <div class="w-full">
+          <!-- <p class="font-bold ml-2 mb-1 text-base">Amount</p> -->
+          <app-enter-amount
+            v-model:amount="amount"
+            v-model:selected-token="tokenSelected"
+            v-model:error="amountError"
+            :validate-input="checkAmountForError"
           />
         </div>
-        <div>
-          <label for="gas-limit-input">Gas Limit:</label>
-          <input
-            v-model="gasLimit"
-            name="gas-limit-input"
-            type="string"
-            required
-          />
-        </div>
-        <div>
-          <label for="nonce-input">Nonce:</label>
-          <input v-model="nonce" name="nonce-input" type="string" required />
-        </div>
-        <div>
-          <label for="data-input">Data:</label>
-          <input v-model="data" name="data-input" type="string" required />
-        </div>
-      </div>
-      <button
+        <app-address-book v-model="toAddress" />
+        <app-select-tx-fee
+          v-model="selectedFee"
+          :fees="gasFees.fees"
+          :isLoading="isLoadingFees"
+        />
+      </app-sheet>
+      <app-base-button
         type="submit"
-        :class="[
-          !validSend ? 'bg-grey-30' : 'bg-primary',
-          'mt-5 p-2 rounded-full text-white',
-        ]"
         :disabled="!validSend"
+        @click="toggleAdvanced = !toggleAdvanced"
+        class="w-full mt-4"
       >
-        Send
-      </button>
+        Send</app-base-button
+      >
     </form>
     <app-need-help
       title="Need help sending?"
@@ -88,7 +52,8 @@ import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { toWei, fromWei, toBigInt, toHex } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
-
+import AppSheet from '@/components/AppSheet.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
@@ -119,9 +84,9 @@ const tokenSelected: Ref<TokenBalance> = ref({} as TokenBalance) // TODO: Implem
 const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
-const gasLimit = ref('21000') // TODO: Implement gas limit once api is ready
+//const gasLimit = ref('21000') // TODO: Implement gas limit once api is ready
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
-const nonce = ref(0) // TODO: Implement nonce once api is ready
+//const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
 const selectedFee = ref(GasPriceType.REGULAR)

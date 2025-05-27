@@ -4,11 +4,11 @@
     <div
       :class="[
         backgroundClass,
-        'flex flex-col justify-center overflow-y-auto relative px-5 xs:px-10 ',
+        'flex flex-col justify-center overflow-y-auto relative px-5 md-header:px-10',
       ]"
     >
-      <main :class="['flex-initial w-full max-w-[1312px] mx-auto']">
-        <div class="min-h-[500px]">
+      <main :class="['flex-initial w-full max-w-[1440px] mx-auto']">
+        <div class="min-h-[500px] pt-6 xs:pt-10 lg:pt-12 pb-6 xs:pb-10">
           <router-view />
         </div>
       </main>

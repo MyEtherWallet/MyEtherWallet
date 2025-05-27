@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <the-app-layout />
     <module-toast />
   </div>

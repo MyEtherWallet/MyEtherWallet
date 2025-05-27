@@ -3,7 +3,7 @@
     <div
       role="tablist"
       :aria-label="label"
-      class="flex justify-start bg-surface rounded-full p-2 gap-1 max-w-fit"
+      class="flex justify-start bg-surface rounded-full p-1 xs:p-2 gap-1 max-w-fit"
       v-bind="$attrs"
       @keydown="handleKeyDown"
     >
@@ -14,10 +14,10 @@
         :to="{ name: tab.routeName }"
         :class="[
           {
-            'bg-white shadow-button-group hover:bg-white':
+            'bg-white shadow-container hover:bg-white':
               activeTabIndex === index,
           },
-          'min-h-12 text-xl p-2 rounded-full bg-transparent text-xl font-medium hoverNoBG min-w-[110px]',
+          'xs:min-h-12 p-1 xs:p-2 rounded-full bg-transparent text-s-17 xs:text-s-20 font-medium hoverNoBG min-w-[100px]',
         ]"
         role="tab"
         :aria-selected="
@@ -89,6 +89,10 @@ const props = defineProps({
   label: {
     type: String,
     required: true,
+  },
+  useSheet: {
+    type: Boolean,
+    default: false,
   },
 })
 
