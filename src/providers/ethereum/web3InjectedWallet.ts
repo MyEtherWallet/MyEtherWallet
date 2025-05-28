@@ -94,7 +94,7 @@ class Web3InjectedWallet extends BaseEvmWallet {
   }
 
   override getWalletType(): WalletType {
-    return WalletType.WAGMI
+    return WalletType.INJECTED
   }
 
 }
