@@ -5,6 +5,7 @@ import nightwatchPlugin from 'vite-plugin-nightwatch'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import basicSsl from '@vitejs/plugin-basic-ssl'
+import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,6 +14,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    viteCommonjs(),
     nightwatchPlugin(),
     vueDevTools(),
     nodePolyfills({
@@ -28,7 +30,7 @@ export default defineConfig({
       ],
       protocolImports: true,
     }),
-    basicSsl()
+    basicSsl(),
   ],
   build: {
     rollupOptions: {
@@ -39,9 +41,17 @@ export default defineConfig({
         warn(warning)
       },
     },
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
   },
   optimizeDeps: {
     include: ['vue', '@vueuse/core', 'crypto'],
+    esbuildOptions: {
+      plugins: [
+        esbuildCommonjs(['@enkryptcom/hw-wallets', '@trezor/connect', '@trezor/connect-web']),
+      ],
+    },
   },
   resolve: {
     alias: {

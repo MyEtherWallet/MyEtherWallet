@@ -18,6 +18,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 
 import { useI18n } from 'vue-i18n'
+import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 
 export const useWagmiConnect = () => {
   const { t } = useI18n()
@@ -55,11 +56,6 @@ export const useWagmiConnect = () => {
         if (msg.type === 'display_uri') {
           wagmiWalletData.value = msg.data as string // possibly a temp fix
           openWalletConnectModal.value = true
-          console.log(
-            'WalletConnect URI:',
-            openWalletConnectModal.value,
-            wagmiWalletData.value,
-          )
         }
       })
       const providerInjected = Eip6963Providers.value.find(
@@ -83,6 +79,41 @@ export const useWagmiConnect = () => {
             isInfinite: true,
           })
           return
+        } else {
+          const web3Wallet = new Web3InjectedWallet(providerInjected, selectedChain.value?.chainID || '1')
+
+          web3Wallet
+            .connect()
+            .then(res => {
+              if (res) {
+                try {
+                  wagmiWalletData.value = ''
+                  openWalletConnectModal.value = false
+                  setWallet(web3Wallet)
+                  addWallet(wallet)
+                  router.push({ name: ROUTES_MAIN.HOME.NAME })
+                } catch (error) {
+                  console.error('Web3 connect failed:', error)
+                }
+              }
+            })
+            .catch(err => {
+              let error = t('error_connecting')
+              let _type = ToastType.Warning
+              openWalletConnectModal.value = false
+              if (
+                err.message &&
+                err.message.toLowerCase().includes('user rejected')
+              ) {
+                error = t('common.error.user_canceled_request')
+                _type = ToastType.Info
+              }
+              toastStore.addToastMessage({
+                text: error,
+                type: _type,
+              })
+            })
+          return
         }
       }
       const wagWallet = new WagmiWallet(
@@ -100,8 +131,11 @@ export const useWagmiConnect = () => {
               setWallet(wagWallet)
               addWallet(wallet)
               router.push({ name: ROUTES_MAIN.HOME.NAME })
-            } catch (error) {
-              console.error('WalletConnect connect failed:', error)
+            } catch (error: unknown) {
+              toastStore.addToastMessage({
+                text: error instanceof Error ? error.message : String(error),
+                type: ToastType.Error,
+              })
             }
           }
         })

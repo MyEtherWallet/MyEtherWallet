@@ -98,7 +98,7 @@ import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'
-import { useWalletStore } from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
@@ -111,6 +111,8 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import type { HexPrefixedString } from '@/providers/types'
+import { fromWei } from 'web3-utils'
 
 const { t } = useI18n()
 /**------------------------
@@ -227,9 +229,17 @@ const loadList = async (page: number = 0) => {
   for (let i = startIndex; i < startIndex + 5; i++) {
     await wallet.value?.getWallet(i).then(async wallet => {
       if (wallet) {
+        const fetchBalance = await wallet.getBalance()
+        const mainToken = fetchBalance.result.find(
+          token => token.contract === MAIN_TOKEN_CONTRACT,
+        )
         walletList.value.push({
           address: await wallet.getAddress(),
           index: i,
+          balance: fromWei(
+            (mainToken?.balance || '0x0') as HexPrefixedString,
+            'ether',
+          ).toString(),
         })
       }
     })
