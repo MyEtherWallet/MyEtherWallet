@@ -100,17 +100,27 @@ import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
+import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
+import { useChainsStore } from '@/stores/chainsStore'
+import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
   useConnectWallet()
-
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 const { defaultWallets, newWalletList } = useWalletList()
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  wallets.push(...defaultWallets.value)
+  const convertedNetworkName =
+    chainToEnum[selectedChain.value?.chainID as string]
+  const supportedDefaultWallets = defaultWallets.value.filter(wallet => {
+    return wallet.canSupport && !!wallet.canSupport(convertedNetworkName)
+  })
+
+  wallets.push(...supportedDefaultWallets)
   wallets.push(...newWalletList.value)
   if (searchInput.value) {
     const search = searchInput.value.toLowerCase()

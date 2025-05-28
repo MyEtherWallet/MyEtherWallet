@@ -6,6 +6,8 @@ import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
 import { ROUTES_ACCESS } from '@/router/routeNames'
+import HWWallet from '@enkryptcom/hw-wallets'
+import { NetworkNames } from '@enkryptcom/types'
 
 export enum WalletConfigType {
   MOBILE = 'mobile',
@@ -58,13 +60,23 @@ export type WalletConfig = {
   isOfficial?: boolean
   routeName?: string
   downloadUrls?: downloadUrls
+  canSupport?: (networkName?: string) => boolean
 }
+
+const canSupport = (networkName?: string): boolean => {
+  if (!networkName) return false;
+  const hwWallet = new HWWallet()
+  return hwWallet.isNetworkSupported((networkName || NetworkNames.Ethereum) as NetworkNames)
+}
+
+
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
   ledger: {
     id: 'ledger',
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
+    canSupport: canSupport
   },
   trezor: {
     id: 'trezor',
@@ -72,6 +84,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
     routeName: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
+    canSupport: canSupport
   },
   keystore: {
     id: 'keystore',
@@ -79,6 +92,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: KeystoreLogo,
     type: [WalletConfigType.SOFTWARE],
     routeName: ROUTES_ACCESS.ACCESS_KEYSTORE.NAME,
+    canSupport: () => true
   },
   mnemonic: {
     id: 'mnemonic',
@@ -86,6 +100,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: MnemonicLogo,
     type: [WalletConfigType.SOFTWARE],
     routeName: ROUTES_ACCESS.ACCESS_MNEMONIC.NAME,
+    canSupport: () => true
   },
   privateKey: {
     id: 'privateKey',
@@ -93,12 +108,14 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: PrivateKeyLogo,
     type: [WalletConfigType.SOFTWARE],
     routeName: ROUTES_ACCESS.ACCESS_PRIVATE_KEY.NAME,
+    canSupport: () => true
   },
   mew: {
     id: 'mew',
     name: 'MEW Mobile',
     icon: MewLogo,
     type: [WalletConfigType.MOBILE],
+    canSupport: () => true,
     isDefault: true,
     isOfficial: true,
     isWC: true,
@@ -108,6 +125,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Enkrypt',
     icon: EnkryptLogo,
     type: [WalletConfigType.EXTENSION],
+    canSupport: () => true,
     isDefault: true,
     isOfficial: true,
     isWC: true,
