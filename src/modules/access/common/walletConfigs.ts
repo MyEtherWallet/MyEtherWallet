@@ -71,6 +71,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Trezor',
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
+    routeName: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
   },
   keystore: {
     id: 'keystore',

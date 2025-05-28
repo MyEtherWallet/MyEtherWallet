@@ -98,13 +98,13 @@ import {
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
-import { useWagmiConnect } from '@/composables/useWagmiConnect'
+import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
-  useWagmiConnect()
+  useConnectWallet()
 
 const { defaultWallets, newWalletList } = useWalletList()
 

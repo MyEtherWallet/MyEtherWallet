@@ -52,6 +52,7 @@ export enum WalletType {
   MNEMONIC = 'MNEMONIC',
   WAGMI = 'WAGMI',
   INJECTED = 'INJECTED',
+  TREZOR = 'TREZOR',
 }
 
 export interface BalanceResponse {
