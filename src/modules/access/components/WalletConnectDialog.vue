@@ -1,5 +1,9 @@
 <template>
-  <app-dialog v-model:is-open="isOpen" class="sm:max-w-[560px]">
+  <app-dialog
+    v-model:is-open="isOpen"
+    class="sm:max-w-[560px]"
+    has-content-gutter
+  >
     <!-- Title -->
     <template #title>
       <div>

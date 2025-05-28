@@ -134,6 +134,7 @@ const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
 
 onMounted(async () => {
+  if (!wallet.value) return
   const mainToken: TokenBalance = tokens.value.find(
     (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
   ) as TokenBalance
@@ -252,6 +253,7 @@ watch(
 )
 
 const handleSubmit = async () => {
+  if (!wallet.value) return
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
     priority: selectedFee.value,
