@@ -40,7 +40,7 @@
             <!--TODO: add balance-->
             <p class="text-xs text-info">
               {{ walletList[i - 1].balance }}
-              {{ selectedChain.currencyName || 'Eth' }}
+              {{ selectedChain?.currencyName || 'Eth' }}
             </p>
           </div>
           <div

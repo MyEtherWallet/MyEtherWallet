@@ -41,7 +41,7 @@
         <div class="flex items-center flex-col justify-center">
           <app-base-button
             @click="access"
-            :disabled="!isValid"
+            :disabled="true"
             class="mt-10"
             :is-loading="isUnlockingWallet"
           >
