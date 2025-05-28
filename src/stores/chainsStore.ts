@@ -1,7 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import type { Chain } from '@/mew_api/types'
-import Configs from '@/configs'
 
 import { useGlobalStore } from './globalStore'
 
@@ -15,12 +14,7 @@ export const useChainsStore = defineStore('chainsStore', () => {
   })
 
   const setChainData = (_chains: Chain[]) => {
-    chains.value = _chains.map(chain => {
-      return {
-        ...chain,
-        icon: `${Configs.MEW_API_URL}${chain.icon}`,
-      }
-    })
+    chains.value = _chains
     if (_chains.length > 0) {
       isLoaded.value = true
     }

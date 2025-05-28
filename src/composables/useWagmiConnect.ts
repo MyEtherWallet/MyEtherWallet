@@ -91,7 +91,7 @@ export const useWagmiConnect = () => {
                   openWalletConnectModal.value = false
                   setWallet(web3Wallet)
                   addWallet(wallet)
-                  router.push({ name: ROUTES_WALLET.DASHBOARD.NAME })
+                  router.push({ name: ROUTES_MAIN.HOME.NAME })
                 } catch (error) {
                   console.error('Web3 connect failed:', error)
                 }
