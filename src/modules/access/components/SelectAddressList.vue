@@ -38,7 +38,10 @@
               </app-btn-icon>
             </div>
             <!--TODO: add balance-->
-            <p class="text-xs text-info">0 Eth</p>
+            <p class="text-xs text-info">
+              {{ walletList[i - 1].balance }}
+              {{ selectedChain.currencyName || 'Eth' }}
+            </p>
           </div>
           <div
             :class="[
@@ -90,6 +93,8 @@ import { ChevronLeftIcon } from '@heroicons/vue/24/solid'
 import { ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { truncateAddress } from '@/utils/filters'
 import { type SelectAddress } from '../types/selectAddress'
+import { useChainsStore } from '@/stores/chainsStore'
+import { storeToRefs } from 'pinia'
 /**
  * Select Address List Component
  * Used In Access Mnemonic and Hardware Wallet
@@ -116,6 +121,11 @@ const props = defineProps({
     default: true,
   },
 })
+
+// currency name
+
+const chainStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainStore)
 
 const model = defineModel<number>()
 
