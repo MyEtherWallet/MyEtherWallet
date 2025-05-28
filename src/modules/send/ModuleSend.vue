@@ -229,14 +229,14 @@ watch(
     if (!toAddress.value) return
     isLoadingFees.value = true
     gasFees.value = {} as GasFeeResponse
-    gasFees.value = await wallet.value.getGasFee({
+    gasFees.value = (await wallet.value?.getGasFee({
       to: toAddress.value as HexPrefixedString,
       address:
         (address.value as HexPrefixedString) ||
         '0x0000000000000000000000000000000000000000',
       value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
       data: data.value as HexPrefixedString,
-    })
+    })) as GasFeeResponse
     isLoadingFees.value = false
   },
 )
