@@ -110,6 +110,7 @@ export default {
         20: '20px',
         32: '32px',
         16: '16px',
+        12: '12px',
       },
       boxShadow: {
         token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
