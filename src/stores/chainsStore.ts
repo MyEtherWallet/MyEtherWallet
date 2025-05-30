@@ -1,7 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import type { Chain } from '@/mew_api/types'
-
 import { useGlobalStore } from './globalStore'
 
 export const useChainsStore = defineStore('chainsStore', () => {

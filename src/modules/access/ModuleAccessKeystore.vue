@@ -100,7 +100,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
-
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 
 // useChainStore
@@ -193,6 +193,9 @@ watchDebounced(password, () => {
 const submitIsDisabled = computed<boolean>(() => {
   return password.value === '' || errorPassword.value !== ''
 })
+
+const accessRedirectStore = useAccessRedirectStore()
+
 const enterPassword = async () => {
   try {
     isUnlockingKeystore.value = true
@@ -209,7 +212,9 @@ const enterPassword = async () => {
       setWallet(wallet)
       addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
-      router.push({ path: ROUTES_MAIN.HOME.PATH })
+      router.push({
+        name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+      })
     }
   } catch {
     errorPassword.value = 'Invalid password'

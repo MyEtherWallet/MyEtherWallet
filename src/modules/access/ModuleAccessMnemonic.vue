@@ -111,6 +111,7 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 
 const { t } = useI18n()
 /**------------------------
@@ -255,6 +256,7 @@ const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
+const accessRedirectStore = useAccessRedirectStore()
 
 const access = async () => {
   isUnlockingWallet.value = true
@@ -267,6 +269,8 @@ const access = async () => {
   })
 
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_MAIN.HOME.PATH })
+  router.push({
+    name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+  })
 }
 </script>

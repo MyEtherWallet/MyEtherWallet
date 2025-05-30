@@ -9,15 +9,13 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
-
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
-
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-
 import { useI18n } from 'vue-i18n'
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 
 export const useWagmiConnect = () => {
   const { t } = useI18n()
@@ -85,6 +83,7 @@ export const useWagmiConnect = () => {
           return
         }
       }
+      const accessRedirectStore = useAccessRedirectStore()
       const wagWallet = new WagmiWallet(
         connector!,
         selectedChain.value?.chainID || '1',
@@ -99,7 +98,11 @@ export const useWagmiConnect = () => {
               openWalletConnectModal.value = false
               setWallet(wagWallet)
               addWallet(wallet)
-              router.push({ name: ROUTES_MAIN.HOME.NAME })
+              router.push({
+                name:
+                  accessRedirectStore.lastVisitedRouteName ||
+                  ROUTES_MAIN.HOME.NAME,
+              })
             } catch (error) {
               console.error('WalletConnect connect failed:', error)
             }

@@ -34,7 +34,6 @@
         <app-select-chain is-btn-group />
       </div>
     </div>
-
     <WalletsDefaultList class="mt-10 mb-12 sm:mb-[64px]" />
     <WalletsList />
   </main>
