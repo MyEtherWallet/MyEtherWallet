@@ -193,7 +193,7 @@ const validSend = computed(() => {
 })
 
 const amountToFiat = computed(() => {
-  if (!tokenSelected.value.price) return '0'
+  if (!tokenSelected.value?.price) return '0'
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
     .toString()

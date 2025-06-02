@@ -28,7 +28,7 @@
           class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
         >
           <app-select-chain />
-          <derivation-path />
+          <trezor-derivation :paths="paths" />
         </div>
         <select-address-list
           v-model="selectedIndex"
@@ -41,7 +41,7 @@
         <div class="flex items-center flex-col justify-center">
           <app-base-button
             @click="access"
-            :disabled="true"
+            :disabled="walletList.length === 0 || isLoadingWalletList"
             class="mt-10"
             :is-loading="isUnlockingWallet"
           >
@@ -65,14 +65,15 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 import AppSelectChain from '@/components/AppSelectChain.vue'
-import DerivationPath from './components/DerivationPath.vue'
+import TrezorDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
@@ -80,18 +81,30 @@ import { useChainsStore } from '@/stores/chainsStore'
 import HWwallet from '@enkryptcom/hw-wallets'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
+import type { PathType } from '@/stores/derivationStore'
+import type { Chain } from '@/mew_api/types'
+import EvmTrezorWallet from '@/providers/ethereum/evmTrezorWallet'
+import type { HexPrefixedString } from '@/providers/types'
+import { fromWei } from 'web3-utils'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
 const derivationStore = useDerivationStore()
 const chainsStore = useChainsStore()
-const { selectedDerivation } = storeToRefs(derivationStore)
+const { trezorSelectedDerivation } = storeToRefs(derivationStore)
 const { selectedChain } = storeToRefs(chainsStore)
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
+const { setSelectedTrezorDerivation } = derivationStore
 
 const { t } = useI18n()
+
+/**------------------------
+ * Derivation Path
+ -------------------------*/
+const paths = ref<PathType[]>([])
+
 /**------------------------
  * Steps
  -------------------------*/
@@ -118,23 +131,50 @@ const backStep = () => {
 const wallet = ref<MnemonicToWallet | null>(null)
 const connectingWallet = ref(false)
 
-const unlockWallet = () => {
+// TODO: Handle non EVM networks
+const unlockWallet = async () => {
   const walletHandler = new HWwallet()
   connectingWallet.value = true
-  walletHandler
-    .isConnected({
-      wallet: HWwalletType.trezor,
-      networkName: chainToEnum[selectedChain.value?.chainID || '1'],
-    })
-    .then(() => {
-      activeStep.value = 1
-    })
+  await walletHandler.isConnected({
+    wallet: HWwalletType.trezor,
+    networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+  })
+  await walletHandler.close()
+  connectingWallet.value = false
+  activeStep.value = 1
+  paths.value = await walletHandler.getSupportedPaths({
+    wallet: HWwalletType.trezor,
+    networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+  })
+  // if path is empty, set a path
+  // if currently selected path is not in the list, set the first one
+  if (
+    trezorSelectedDerivation.value.path === '' ||
+    !paths.value.some(
+      // This handles Ledger case where user may have selected a different app or an app only supports certain paths
+      (path: PathType) => path.path === trezorSelectedDerivation.value.path,
+    )
+  ) {
+    setSelectedTrezorDerivation(paths.value[0])
+  }
+  loadList()
 }
 
 watch(
-  () => selectedDerivation.value.path,
-  (newValue, oldValue) => {
-    console.log(newValue, oldValue)
+  () => selectedChain.value,
+  (newValue: Chain) => {
+    if (newValue) {
+      paths.value = []
+      unlockWallet()
+    }
+  },
+)
+
+watch(
+  () => trezorSelectedDerivation.value.path,
+  (newValue: PathType, oldValue: PathType) => {
+    // if old value was empty, it means this is the first time the path is set
+    if (oldValue.label === '') return
     if (newValue) {
       unlockWallet()
     }
@@ -150,25 +190,47 @@ const selectedIndex = ref(0)
 const page = ref(0)
 
 const loadList = async (page: number = 0) => {
+  const walletHandler = new HWwallet()
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
+  const chainId = selectedChain.value?.chainID || '1'
+  const networkName = chainToEnum[chainId]
+  console.log(trezorSelectedDerivation.value)
   for (let i = startIndex; i < startIndex + 5; i++) {
-    // const address = await walletHandler.value?.getAddress({
-    //   confirmAddress: false,
-    //   networkName: chainToEnum[selectedChain.value?.chainID || '1'],
-    //   pathType:
-    // })
-    // await wallet.value?.getWallet(i).then(async wallet => {
-    //   if (wallet) {
-    //     walletList.value.push({
-    //       address: await wallet.getAddress(),
-    //       index: i,
-    //     })
-    //   }
-    // })
+    const addressResponse = await walletHandler.getAddress({
+      confirmAddress: false,
+      networkName: networkName,
+      pathType: trezorSelectedDerivation.value,
+      pathIndex: i.toString(),
+      wallet: HWwalletType.trezor,
+    })
+    console.log('Trezor Address:', addressResponse)
+
+    const trezorWallet = new EvmTrezorWallet(
+      chainId,
+      addressResponse.address as HexPrefixedString,
+      networkName,
+      i.toString(),
+      trezorSelectedDerivation.value,
+      HWwalletType.trezor,
+    )
+
+    const fetchBalance = await trezorWallet.getBalance()
+    const mainToken = fetchBalance.result.find(
+      token => token.contract === MAIN_TOKEN_CONTRACT,
+    )
+    walletList.value.push({
+      address: addressResponse.address,
+      index: i,
+      balance: fromWei(
+        (mainToken?.balance || '0x0') as HexPrefixedString,
+        'ether',
+      ).toString(),
+      walletInstance: trezorWallet,
+    })
   }
-  //TODO: Load balance
+
   selectedIndex.value = walletList.value[0].index
   isLoadingWalletList.value = false
 }
@@ -188,16 +250,13 @@ const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 
 const access = async () => {
+  const wallet = walletList.value[selectedIndex.value]?.walletInstance
   isUnlockingWallet.value = true
 
-  await wallet.value?.getWallet(selectedIndex.value).then(wallet => {
-    if (wallet) {
-      setWallet(wallet)
-      addWallet(walletConfigs.mnemonic)
-    }
-  })
+  setWallet(wallet)
+  addWallet(walletConfigs.trezor)
 
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_ACCESS.WALLET.PATH })
+  router.push({ path: ROUTES_MAIN.HOME.PATH })
 }
 </script>

@@ -10,10 +10,19 @@ import { ToastType } from '@/types/notification/index'
 import { ethereum } from '@/modules/access/common/configs/configPaths';
 import { checkCustomPath } from '@/utils/customPathHelpers';
 
+
+// TODO: export type from enkrypt package
+export interface PathType {
+  path: string
+  label: string
+  basePath?: string
+}
 interface DerivationStore {
   selectedDerivation: DerivationPath
   customDerivations: DerivationPath[]
+  trezorSelectedDerivation?: PathType
 }
+
 
 export const useDerivationStore = defineStore('derivationStore', () => {
   const storeObject = {
@@ -21,7 +30,8 @@ export const useDerivationStore = defineStore('derivationStore', () => {
       label: ethereum.label,
       path: ethereum.path
     },
-    customDerivations: []
+    customDerivations: [],
+    trezorSelectedDerivation: { path: '', label: '', basePath: '' }
   }
   const store = useLocalStorage<DerivationStore>('derivationStore', storeObject, { mergeDefaults: true })
 
@@ -29,8 +39,16 @@ export const useDerivationStore = defineStore('derivationStore', () => {
     store.value.selectedDerivation = derivationPath
   }
 
+  const setSelectedTrezorDerivation = (derivationPath: PathType) => {
+    store.value.trezorSelectedDerivation = derivationPath
+  }
+
   const selectedDerivation = computed(() => {
     return store.value.selectedDerivation
+  })
+
+  const trezorSelectedDerivation = computed(() => {
+    return store.value.trezorSelectedDerivation
   })
 
   const addCustomDerivation = (derivationPath: DerivationPath) => {
@@ -66,6 +84,8 @@ export const useDerivationStore = defineStore('derivationStore', () => {
   return {
     selectedDerivation,
     setSelectedDerivation,
-    addCustomDerivation
+    addCustomDerivation,
+    setSelectedTrezorDerivation,
+    trezorSelectedDerivation
   }
 })
