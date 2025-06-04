@@ -90,6 +90,8 @@ import EvmTrezorWallet from '@/providers/ethereum/evmTrezorWallet'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import type { WalletInterface } from '@/providers/common/walletInterface'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -194,6 +196,7 @@ const walletList = ref<SelectAddress[]>([])
 const isLoadingWalletList = ref(true)
 const selectedIndex = ref(0)
 const page = ref(0)
+const toastStore = useToastStore()
 
 const loadList = async (page: number = 0) => {
   isLoadingWalletList.value = true
@@ -203,37 +206,44 @@ const loadList = async (page: number = 0) => {
   const networkName = chainToEnum[chainId]
 
   for (let i = startIndex; i < startIndex + 5; i++) {
-    const addressResponse = await hwWalletInstance.getAddress({
-      confirmAddress: false,
-      networkName: networkName,
-      pathType: trezorSelectedDerivation.value as PathType,
-      pathIndex: i.toString(),
-      wallet: HWwalletType.trezor,
-    })
+    try {
+      const addressResponse = await hwWalletInstance.getAddress({
+        confirmAddress: false,
+        networkName: networkName,
+        pathType: trezorSelectedDerivation.value as PathType,
+        pathIndex: i.toString(),
+        wallet: HWwalletType.trezor,
+      })
 
-    const trezorWallet = new EvmTrezorWallet(
-      chainId,
-      addressResponse.address as HexPrefixedString,
-      networkName,
-      i.toString(),
-      trezorSelectedDerivation.value as PathType,
-      HWwalletType.trezor,
-      hwWalletInstance,
-    )
+      const trezorWallet = new EvmTrezorWallet(
+        chainId,
+        addressResponse.address as HexPrefixedString,
+        networkName,
+        i.toString(),
+        trezorSelectedDerivation.value as PathType,
+        HWwalletType.trezor,
+        hwWalletInstance,
+      )
 
-    const fetchBalance = await trezorWallet.getBalance()
-    const mainToken = fetchBalance.result.find(
-      token => token.contract === MAIN_TOKEN_CONTRACT,
-    )
-    walletList.value.push({
-      address: addressResponse.address,
-      index: i,
-      balance: fromWei(
-        (mainToken?.balance || '0x0') as HexPrefixedString,
-        'ether',
-      ).toString(),
-      walletInstance: trezorWallet,
-    })
+      const fetchBalance = await trezorWallet.getBalance()
+      const mainToken = fetchBalance.result.find(
+        token => token.contract === MAIN_TOKEN_CONTRACT,
+      )
+      walletList.value.push({
+        address: addressResponse.address,
+        index: i,
+        balance: fromWei(
+          (mainToken?.balance || '0x0') as HexPrefixedString,
+          'ether',
+        ).toString(),
+        walletInstance: trezorWallet,
+      })
+    } catch (e) {
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: e instanceof Error ? e.message : String(e),
+      })
+    }
   }
 
   selectedIndex.value = walletList.value[0].index
