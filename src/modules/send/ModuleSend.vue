@@ -265,7 +265,10 @@ const handleSubmit = async () => {
     quoteId: gasFees.value?.quoteId,
   })
 
-  if (wallet.value?.getWalletType() === WalletType.WAGMI) {
+  if (
+    wallet.value?.getWalletType() === WalletType.WAGMI ||
+    wallet.value?.getWalletType() === WalletType.INJECTED
+  ) {
     openTxModal.value = true
     signedTx.value = signableTx.serialized
     return
