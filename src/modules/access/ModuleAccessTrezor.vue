@@ -89,6 +89,7 @@ import type { Chain } from '@/mew_api/types'
 import EvmTrezorWallet from '@/providers/ethereum/evmTrezorWallet'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
+import type { WalletInterface } from '@/providers/common/walletInterface'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -147,17 +148,17 @@ const unlockWallet = async () => {
   })
   connectingWallet.value = false
   activeStep.value = 1
-  paths.value = await hwWalletInstance.getSupportedPaths({
+  paths.value = (await hwWalletInstance.getSupportedPaths({
     wallet: HWwalletType.trezor,
     networkName: chainToEnum[selectedChain.value?.chainID || '1'],
-  })
+  })) as PathType[]
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
   if (
-    trezorSelectedDerivation.value.path === '' ||
+    trezorSelectedDerivation.value?.path === '' ||
     !paths.value.some(
       // This handles Ledger case where user may have selected a different app or an app only supports certain paths
-      (path: PathType) => path.path === trezorSelectedDerivation.value.path,
+      (path: PathType) => path.path === trezorSelectedDerivation.value?.path,
     )
   ) {
     setSelectedTrezorDerivation(paths.value[0])
@@ -166,8 +167,8 @@ const unlockWallet = async () => {
 }
 
 watch(
-  () => selectedChain.value,
-  (newValue: Chain) => {
+  () => selectedChain.value as Chain | undefined,
+  (newValue: Chain | undefined) => {
     if (newValue) {
       paths.value = []
       unlockWallet()
@@ -176,10 +177,10 @@ watch(
 )
 
 watch(
-  () => trezorSelectedDerivation.value.path,
-  (newValue: PathType, oldValue: PathType) => {
-    // if old value was empty, it means this is the first time the path is set
-    if (oldValue.label === '') return
+  () => trezorSelectedDerivation.value,
+  (newValue: PathType | undefined, oldValue: PathType | undefined) => {
+    // if old value was empty or undefined, it means this is the first time the path is set
+    if (!oldValue || oldValue.label === '') return
     if (newValue) {
       unlockWallet()
     }
@@ -205,7 +206,7 @@ const loadList = async (page: number = 0) => {
     const addressResponse = await hwWalletInstance.getAddress({
       confirmAddress: false,
       networkName: networkName,
-      pathType: trezorSelectedDerivation.value,
+      pathType: trezorSelectedDerivation.value as PathType,
       pathIndex: i.toString(),
       wallet: HWwalletType.trezor,
     })
@@ -215,7 +216,7 @@ const loadList = async (page: number = 0) => {
       addressResponse.address as HexPrefixedString,
       networkName,
       i.toString(),
-      trezorSelectedDerivation.value,
+      trezorSelectedDerivation.value as PathType,
       HWwalletType.trezor,
       hwWalletInstance,
     )
@@ -257,7 +258,7 @@ const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
   isUnlockingWallet.value = true
 
-  setWallet(markRaw(wallet))
+  setWallet(markRaw(wallet as EvmTrezorWallet) as WalletInterface)
   addWallet(walletConfigs.trezor)
 
   isUnlockingWallet.value = false
