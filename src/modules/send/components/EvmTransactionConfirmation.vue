@@ -151,7 +151,6 @@ const toastStore = useToastStore()
 
 const confirmTransaction = async () => {
   //TO: show message that wallet is not connected
-  console.log(wallet.value?.getWalletType() === WalletType.WAGMI)
   if (!wallet.value) {
     return
   }
