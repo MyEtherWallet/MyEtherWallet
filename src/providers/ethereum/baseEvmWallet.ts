@@ -86,7 +86,8 @@ class BaseEvmWallet implements WalletInterface {
     })
   }
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/${this.chainId}/broadcast/?noInjectErrors=false`
+    console.log('called')
+    const url = `/v1/evm/${this.chainId}/broadcasts/?noInjectErrors=false`
     const { data, onFetchResponse } = useFetchMewApi<EVMTxResponse>(
       url,
       'POST',
@@ -96,11 +97,11 @@ class BaseEvmWallet implements WalletInterface {
       {
         _noRetry: true,
       }
-
     )
-
+    console.log('even gets here?')
     return new Promise((resolve) => {
       onFetchResponse(() => {
+        console.log('gets here?', data.value)
         resolve(data.value?.txHash || '')
       })
     })

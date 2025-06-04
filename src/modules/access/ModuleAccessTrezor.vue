@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, markRaw } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -100,6 +100,9 @@ const { setSelectedTrezorDerivation } = derivationStore
 
 const { t } = useI18n()
 
+// Wallet instance
+const hwWalletInstance = new HWwallet()
+
 /**------------------------
  * Derivation Path
  -------------------------*/
@@ -133,16 +136,15 @@ const connectingWallet = ref(false)
 
 // TODO: Handle non EVM networks
 const unlockWallet = async () => {
-  const walletHandler = new HWwallet()
+  // const walletHandler = new HWwallet()
   connectingWallet.value = true
-  await walletHandler.isConnected({
+  await hwWalletInstance.isConnected({
     wallet: HWwalletType.trezor,
     networkName: chainToEnum[selectedChain.value?.chainID || '1'],
   })
-  await walletHandler.close()
   connectingWallet.value = false
   activeStep.value = 1
-  paths.value = await walletHandler.getSupportedPaths({
+  paths.value = await hwWalletInstance.getSupportedPaths({
     wallet: HWwalletType.trezor,
     networkName: chainToEnum[selectedChain.value?.chainID || '1'],
   })
@@ -190,22 +192,20 @@ const selectedIndex = ref(0)
 const page = ref(0)
 
 const loadList = async (page: number = 0) => {
-  const walletHandler = new HWwallet()
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
   const chainId = selectedChain.value?.chainID || '1'
   const networkName = chainToEnum[chainId]
-  console.log(trezorSelectedDerivation.value)
+
   for (let i = startIndex; i < startIndex + 5; i++) {
-    const addressResponse = await walletHandler.getAddress({
+    const addressResponse = await hwWalletInstance.getAddress({
       confirmAddress: false,
       networkName: networkName,
       pathType: trezorSelectedDerivation.value,
       pathIndex: i.toString(),
       wallet: HWwalletType.trezor,
     })
-    console.log('Trezor Address:', addressResponse)
 
     const trezorWallet = new EvmTrezorWallet(
       chainId,
@@ -214,6 +214,7 @@ const loadList = async (page: number = 0) => {
       i.toString(),
       trezorSelectedDerivation.value,
       HWwalletType.trezor,
+      hwWalletInstance,
     )
 
     const fetchBalance = await trezorWallet.getBalance()
@@ -253,7 +254,7 @@ const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
   isUnlockingWallet.value = true
 
-  setWallet(wallet)
+  setWallet(markRaw(wallet))
   addWallet(walletConfigs.trezor)
 
   isUnlockingWallet.value = false

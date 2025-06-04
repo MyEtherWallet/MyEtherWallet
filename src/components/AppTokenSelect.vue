@@ -113,14 +113,12 @@ const emit = defineEmits(['update:selectedToken'])
 const store = useWalletStore()
 const { tokens } = store
 const { isLoadingBalances: isLoading } = storeToRefs(store)
-const props = defineProps({
+defineProps({
   selectedToken: {
     type: Object as () => TokenBalance,
     required: true,
   },
 })
-
-console.log(props.selectedToken)
 
 const showAllTokens = ref(false)
 const searchInput = ref('')

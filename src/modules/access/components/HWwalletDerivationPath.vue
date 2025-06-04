@@ -107,12 +107,13 @@ const props = defineProps({
   },
   paths: {
     type: Array as () => PathType[],
+    required: true,
   },
 })
 
 const derivationStore = useDerivationStore()
 const { trezorSelectedDerivation } = storeToRefs(derivationStore)
-const { setSelectedDerivation: setToStore } = derivationStore
+const { setSelectedTrezorDerivation: setToStore } = derivationStore
 
 const defaultEthereumPath = ethereumPath
 
@@ -135,8 +136,8 @@ onMounted(() => {
 })
 
 watch(
-  selectedPath,
-  (newValue: PathType) => {
+  () => selectedPath.value,
+  (newValue: PathType | undefined) => {
     if (newValue) {
       setToStore(newValue)
     }
