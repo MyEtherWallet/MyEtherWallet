@@ -1,7 +1,9 @@
+import { bytesToHex } from 'web3-utils';
 import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
 import {
+  fromRpcSig,
   hexToBytes,
 } from '@ethereumjs/util'
 import { type PostSignedTransaction } from './types'
@@ -46,8 +48,7 @@ class EvmTrezorWallet extends BaseEvmWallet {
         hexToBytes(serializedTx),
         { common },
       )
-
-      const signedTx = await this.hwWalletInstance.signTransaction(
+      const walletSig = await this.hwWalletInstance.signTransaction(
         {
           transaction: tx,
           networkName: this.networkName as NetworkNames,
@@ -58,9 +59,16 @@ class EvmTrezorWallet extends BaseEvmWallet {
           },
           wallet: this.walletType,
         }
+      ) as HexPrefixedString
+      const rpcSig = fromRpcSig(walletSig)
+      const signedTx = tx.addSignature(
+        BigInt(rpcSig.v),
+        rpcSig.r,
+        rpcSig.s,
+        true,
       )
       return Promise.resolve({
-        signed: signedTx as HexPrefixedString,
+        signed: bytesToHex(signedTx.serialize()) as HexPrefixedString,
       })
     } catch (e) {
       return Promise.reject(e)
@@ -70,8 +78,6 @@ class EvmTrezorWallet extends BaseEvmWallet {
   override getWalletType(): WalletType {
     return WalletType.TREZOR
   }
-
-
 
   override getAddress(): Promise<HexPrefixedString> {
     return Promise.resolve(this.address)

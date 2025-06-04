@@ -30,14 +30,6 @@
     >
       <template #title>
         <div class="flex items-center pr-2 pt-4 sm:pt-6 xl:pt-8">
-          <app-btn-icon
-            v-if="showAddPath"
-            :label="$t('common.go_back')"
-            class="-ml-3 mr-3"
-            @click="setShowAddPath(false)"
-          >
-            <ArrowLeftIcon class="w-5 h-5" />
-          </app-btn-icon>
           <h1 class="text5 font-bold">
             {{ $t('derivation_path.select_path') }}
           </h1>
@@ -87,18 +79,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-import {
-  type DerivationPath,
-  ethereum as ethereumPath,
-} from '../common/configs/configPaths'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import type { PathType } from '@/stores/derivationStore'
+import { HWwalletType } from '@enkryptcom/types'
 
 const props = defineProps({
   isBtnGroup: {
@@ -109,29 +96,27 @@ const props = defineProps({
     type: Array as () => PathType[],
     required: true,
   },
+  walletType: {
+    type: String as () => HWwalletType,
+    default: HWwalletType.trezor,
+  },
 })
 
 const derivationStore = useDerivationStore()
 const { trezorSelectedDerivation } = storeToRefs(derivationStore)
-const { setSelectedTrezorDerivation: setToStore } = derivationStore
+const { setSelectedTrezorDerivation } = derivationStore
 
-const defaultEthereumPath = ethereumPath
+const selectedPath = defineModel<PathType>('selectedPath', {})
 
-const selectedPath = defineModel<DerivationPath>('selectedPath', {
-  // type: Object as () => DerivationPath,
-  // required: true,
-})
-
-const setSelectedPath = (path: DerivationPath) => {
-  console.log('asdfa')
+const setSelectedPath = (path: PathType) => {
   selectedPath.value = path
-  setToStore(path)
+  setSelectedTrezorDerivation(path)
   setOpenDialog(false)
 }
 
 onMounted(() => {
-  if (trezorSelectedDerivation.value) {
-    selectedPath.value = trezorSelectedDerivation.value
+  if (trezorSelectedDerivation.value?.path) {
+    selectedPath.value = trezorSelectedDerivation.value as PathType
   }
 })
 
@@ -139,7 +124,7 @@ watch(
   () => selectedPath.value,
   (newValue: PathType | undefined) => {
     if (newValue) {
-      setToStore(newValue)
+      setSelectedTrezorDerivation(newValue)
     }
   },
   { immediate: true },
@@ -177,19 +162,4 @@ const searchResults = computed(() => {
   const unique = new Set([...beginsWithLabel, ...beginsWithPath, ...other])
   return [...unique]
 })
-
-onMounted(() => {
-  //TODO: set default path per chain .IE bitcoin has its own path
-  if (!selectedPath.value) {
-    selectedPath.value = defaultEthereumPath
-  }
-})
-
-/** -------------------------------
- * Add A Path
- -------------------------------*/
-const showAddPath = ref(false)
-const setShowAddPath = (value: boolean) => {
-  showAddPath.value = value
-}
 </script>

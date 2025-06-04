@@ -28,7 +28,10 @@
           class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
         >
           <app-select-chain />
-          <trezor-derivation :paths="paths" />
+          <hardware-wallet-derivation
+            :paths="paths"
+            :wallet-type="HWwalletType.trezor"
+          />
         </div>
         <select-address-list
           v-model="selectedIndex"
@@ -70,7 +73,7 @@ import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 import AppSelectChain from '@/components/AppSelectChain.vue'
-import TrezorDerivation from './components/HWwalletDerivationPath.vue'
+import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
