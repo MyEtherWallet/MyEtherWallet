@@ -15,7 +15,7 @@ import { checkCustomPath } from '@/utils/customPathHelpers';
 export interface PathType {
   path: string
   label: string
-  basePath?: string
+  basePath: string
 }
 interface DerivationStore {
   selectedDerivation: DerivationPath

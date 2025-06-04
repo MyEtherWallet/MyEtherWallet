@@ -35,7 +35,7 @@
         </div>
         <select-address-list
           v-model="selectedIndex"
-          :walletList="walletList"
+          :walletList="walletList as SelectAddress[]"
           :isLoading="isLoadingWalletList"
           class="mt-5"
           @nextpage="setPage(true)"
