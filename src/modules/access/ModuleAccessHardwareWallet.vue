@@ -13,7 +13,11 @@
           :activeStep="activeStep"
         />
         <div class="flex items-center justify-center mt-[40px]">
-          <app-base-button @click="unlockWallet">
+          <app-base-button
+            @click="unlockWallet"
+            :is-loading="connectingWallet"
+            :disabled="connectingWallet"
+          >
             {{ connectButtonText }}
           </app-base-button>
         </div>
@@ -70,7 +74,7 @@ import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
 import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -91,7 +95,7 @@ import { fromWei } from 'web3-utils'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import { useRoute } from 'vue-router'
+import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -228,11 +232,16 @@ const connectingWallet = ref(false)
 // TODO: Handle non EVM networks
 const unlockWallet = async () => {
   connectingWallet.value = true
-  await hwWalletInstance.isConnected({
-    wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: chainToEnum[selectedChain.value?.chainID || '1'],
-  })
-  await hwWalletInstance.close()
+  await hwWalletInstance
+    .isConnected({
+      wallet: selectedHwWalletType.value as HWwalletType,
+      networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+    })
+    .then(() => {
+      setTimeout(async () => {
+        hwWalletInstance.close()
+      }, 1000)
+    })
   connectingWallet.value = false
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
@@ -327,7 +336,6 @@ const loadList = async (page: number = 0) => {
         walletInstance: hardwareWalletInstance,
       })
     } catch (e) {
-      console.log(e)
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: e instanceof Error ? e.message : String(e),
@@ -335,7 +343,7 @@ const loadList = async (page: number = 0) => {
     }
   }
 
-  selectedIndex.value = walletList.value[0].index
+  selectedIndex.value = walletList.value[0]?.index
   isLoadingWalletList.value = false
 }
 
@@ -352,13 +360,23 @@ const setPage = (isNext: boolean) => {
 const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
+const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
+  switch (route.name) {
+    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+      return walletConfigs.trezor
+    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+      return walletConfigs.ledger
+    default:
+      return null
+  }
+})
 
 const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
   isUnlockingWallet.value = true
 
   setWallet(markRaw(wallet as EvmHardwareWallet) as WalletInterface)
-  addWallet(walletConfigs.trezor)
+  addWallet(walletConfig.value as WalletConfig)
 
   isUnlockingWallet.value = false
   router.push({ path: ROUTES_MAIN.HOME.PATH })
