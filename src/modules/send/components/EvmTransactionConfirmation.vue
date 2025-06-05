@@ -156,12 +156,13 @@ const confirmTransaction = async () => {
   }
   signing.value = true
   const txPromise =
-    wallet.value?.getWalletType() === WalletType.WAGMI
+    wallet.value?.getWalletType() === WalletType.WAGMI ||
+    wallet.value?.getWalletType() === WalletType.INJECTED
       ? wallet.value?.SendTransaction?.(props.signedTx as HexPrefixedString)
       : wallet.value.broadcastTransaction(props.signedTx as HexPrefixedString)
   // TODO: handle hash for user
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  txPromise?.then(hash => {
+  await txPromise?.then(hash => {
     toastStore.addToastMessage({
       type: ToastType.Success,
       text: 'Transaction sent successfully',

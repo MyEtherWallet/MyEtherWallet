@@ -1,7 +1,7 @@
 <template>
   <main class="flex justify-center w-full">
     <app-sheet
-      :title="$t('access_wallet_recovery_phrase.title')"
+      :title="$t('access_wallet_trezor.title')"
       :sheet-class="'max-w-[624px]'"
       :title-class="'text-center'"
     >

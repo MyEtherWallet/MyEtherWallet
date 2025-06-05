@@ -41,24 +41,7 @@ export const useConnectWallet = () => {
     openWalletConnectModal.value = false
     setWallet(wallet)
     addWallet(config)
-    router.push({ name: ROUTES_MAIN.DASHBOARD.NAME })
-  }
-
-  const _connectTrezor = (wallet: WalletConfig) => {
-    console.log(wallet, 'Temp func')
-    // const trezorWallet = new TrezorWallet(selectedChain.value?.chainID || '1');
-    // trezorWallet.connect().then(res => {
-    //   if (res) {
-    //     try {
-    //       _storeWallet(trezorWallet, wallet)
-    //     } catch (error) {
-    //       toastStore.addToastMessage({
-    //         text: error instanceof Error ? error.message : String(error),
-    //         type: ToastType.Error,
-    //       })
-    //     }
-    //   }
-    // })
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
@@ -167,11 +150,6 @@ export const useConnectWallet = () => {
         typeof wallet.icon === 'string' ? wallet.icon : await wallet.icon()
       wallet.icon = _icon
       clickedWallet.value = wallet
-      if (wallet.id === 'trezor') {
-        _connectTrezor(wallet)
-        return;
-      }
-
 
       const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
       if (isWeb3) {

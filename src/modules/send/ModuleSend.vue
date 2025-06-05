@@ -107,6 +107,8 @@ import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
@@ -193,7 +195,7 @@ const validSend = computed(() => {
 })
 
 const amountToFiat = computed(() => {
-  if (!tokenSelected.value.price) return '0'
+  if (!tokenSelected.value?.price) return '0'
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
     .toString()
@@ -243,7 +245,7 @@ watch(
 
 watch(
   () => openTxModal.value,
-  value => {
+  (value: boolean) => {
     if (!value) {
       amount.value = '0'
       toAddress.value = ''
@@ -251,6 +253,9 @@ watch(
     }
   },
 )
+
+// toast store
+const toastStore = useToastStore()
 
 const handleSubmit = async () => {
   if (!wallet.value) return
@@ -260,7 +265,10 @@ const handleSubmit = async () => {
     quoteId: gasFees.value?.quoteId,
   })
 
-  if (wallet.value?.getWalletType() === WalletType.WAGMI) {
+  if (
+    wallet.value?.getWalletType() === WalletType.WAGMI ||
+    wallet.value?.getWalletType() === WalletType.INJECTED
+  ) {
     openTxModal.value = true
     signedTx.value = signableTx.serialized
     return
@@ -271,11 +279,18 @@ const handleSubmit = async () => {
     console.error('SignTransaction not implemented')
     return
   }
-  const signResponse = await wallet.value?.SignTransaction(
-    signableTx.serialized,
-  )
+  try {
+    const signResponse = await wallet.value?.SignTransaction(
+      signableTx.serialized,
+    )
 
-  signedTx.value = signResponse.signed
-  openTxModal.value = true
+    signedTx.value = signResponse.signed
+    openTxModal.value = true
+  } catch (e) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e instanceof Error ? e.message : 'Failed to sign transaction',
+    })
+  }
 }
 </script>

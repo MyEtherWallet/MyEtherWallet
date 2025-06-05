@@ -25,7 +25,7 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
     "@commitlint/config-conventional": "^19.6.0",
-    "@enkryptcom/hw-wallets": "^0.0.9",
+    "@enkryptcom/hw-wallets": "^0.0.12",
     "@enkryptcom/name-resolution": "^0.0.8",
     "@enkryptcom/swap": "^0.0.3",
     "@enkryptcom/types": "^0.0.5",
@@ -39,8 +39,6 @@
     "@rainbow-me/rainbowkit": "^2.2.5",
     "@sentry/vue": "^8.42.0",
     "@tanstack/vue-query": "^5.62.2",
-    "@trezor/connect": "^9.5.5",
-    "@trezor/connect-web": "^9.5.5",
     "@vueuse/core": "^12.5.0",
     "@vueuse/integrations": "^12.5.0",
     "@wagmi/connectors": "^5.8.2",

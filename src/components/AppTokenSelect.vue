@@ -113,7 +113,6 @@ const emit = defineEmits(['update:selectedToken'])
 const store = useWalletStore()
 const { tokens } = store
 const { isLoadingBalances: isLoading } = storeToRefs(store)
-
 defineProps({
   selectedToken: {
     type: Object as () => TokenBalance,
