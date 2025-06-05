@@ -153,20 +153,19 @@ const txData = computed(() => {
     isWalletConnected.value && walletAddress.value && walletAddress.value !== ''
       ? (walletAddress.value as HexPrefixedString)
       : DEFAULT_ADR
-
-  //TO DO: BITCOIN HANDLER
   return {
     to: props.txToAdr ? props.txToAdr : DEFAULT_ADR,
     address: _address,
     value: props.txValue ? props.txValue : DEFAULT_VALUE,
     data: props.txData ? props.txData : DEFAULT_DATA,
   }
+  //TO DO: BITCOIN HANDLER
 })
 
 const fetchURL = computed(() => {
   //EVM CHAINS ONLY
   if (isLoadedChainsData.value && selectedChain.value) {
-    return `/v1/evm/${selectedChain.value.chainID}/quotes/?noInjectErrors=false`
+    return `/v1/evm/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
   }
   //TO DO: BITCOIN HANDLER
   return ''
@@ -222,7 +221,7 @@ const globalStore = useGlobalStore()
 const { gasPriceType } = storeToRefs(globalStore)
 
 const setFee = (fee: FeePriority) => {
-  gasPriceType.valuw = fee
+  gasPriceType.value = fee
   closeFeeModal()
   //TODO: add amplitude
 }
@@ -244,6 +243,7 @@ const selectedFeeFiat = computed(() => {
   return ''
 })
 
+//TODO: import proper type form the api
 const formatFee = (fee: GasFeeType) => {
   const converted = fromWei(fee.nativeValue, 'ether')
   return `${formatFloatingPointValue(converted).value} ${data.value.fees[gasPriceType.value].nativeSymbol}`
