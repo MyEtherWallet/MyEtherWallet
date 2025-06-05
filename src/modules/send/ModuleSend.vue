@@ -1,9 +1,11 @@
 <template>
-  <div class="flex flex-col items-center justify-center gap-5">
-    <form @submit.prevent="handleSubmit">
-      <app-sheet sheetClass="max-w-[478px] mx-auto !px-4 mt-4">
-        <div class="w-full">
-          <!-- <p class="font-bold ml-2 mb-1 text-base">Amount</p> -->
+  <div>
+    <form
+      @submit.prevent="handleSubmit"
+      class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
+    >
+      <app-sheet sheetClass="w-full !px-4 mt-4">
+        <div>
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelected"
@@ -12,13 +14,10 @@
           />
         </div>
         <app-address-book v-model="toAddress" />
-        <app-select-tx-fee
-          v-model="selectedFee"
-          :fees="gasFees.fees"
-          :isLoading="isLoadingFees"
-        />
+        <app-select-tx-fee />
       </app-sheet>
       <app-base-button
+        v-if="isWalletConnected"
         type="submit"
         :disabled="!validSend"
         @click="toggleAdvanced = !toggleAdvanced"
@@ -27,10 +26,6 @@
         Send</app-base-button
       >
     </form>
-    <app-need-help
-      title="Need help sending?"
-      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-    />
   </div>
 
   <!-- TODO: replace network with actual selected network info -->
@@ -55,7 +50,6 @@ import { Contract } from 'web3-eth-contract'
 import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
 import { type TokenBalance } from '@/mew_api/types'
