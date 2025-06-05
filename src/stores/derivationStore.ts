@@ -21,8 +21,8 @@ interface DerivationStore {
   selectedDerivation: DerivationPath
   customDerivations: DerivationPath[]
   trezorSelectedDerivation?: PathType
+  ledgerSelectedDerivation?: PathType
 }
-
 
 export const useDerivationStore = defineStore('derivationStore', () => {
   const storeObject = {
@@ -31,7 +31,8 @@ export const useDerivationStore = defineStore('derivationStore', () => {
       path: ethereum.path
     },
     customDerivations: [],
-    trezorSelectedDerivation: { path: '', label: '', basePath: '' }
+    trezorSelectedDerivation: { path: '', label: '', basePath: '' },
+    ledgerSelectedDerivation: { path: '', label: '', basePath: '' }
   }
   const store = useLocalStorage<DerivationStore>('derivationStore', storeObject, { mergeDefaults: true })
 
@@ -43,12 +44,20 @@ export const useDerivationStore = defineStore('derivationStore', () => {
     store.value.trezorSelectedDerivation = derivationPath
   }
 
+  const setSelectedLedgerDerivation = (derivationPath: PathType) => {
+    store.value.ledgerSelectedDerivation = derivationPath
+  }
+
   const selectedDerivation = computed(() => {
     return store.value.selectedDerivation
   })
 
   const trezorSelectedDerivation = computed(() => {
     return store.value.trezorSelectedDerivation
+  })
+
+  const ledgerSelectedDerivation = computed(() => {
+    return store.value.ledgerSelectedDerivation
   })
 
   const addCustomDerivation = (derivationPath: DerivationPath) => {
@@ -83,9 +92,11 @@ export const useDerivationStore = defineStore('derivationStore', () => {
   }
   return {
     selectedDerivation,
+    ledgerSelectedDerivation,
+    trezorSelectedDerivation,
     setSelectedDerivation,
     addCustomDerivation,
     setSelectedTrezorDerivation,
-    trezorSelectedDerivation
+    setSelectedLedgerDerivation,
   }
 })
