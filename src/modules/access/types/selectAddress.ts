@@ -1,4 +1,4 @@
-import type EvmTrezorWallet from "@/providers/ethereum/evmTrezorWallet"
+import type EvmTrezorWallet from "@/providers/ethereum/evmHardwareWallet"
 
 export interface SelectAddress {
   address: string

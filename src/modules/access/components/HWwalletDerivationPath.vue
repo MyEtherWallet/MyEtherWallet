@@ -97,7 +97,7 @@ const props = defineProps({
     required: true,
   },
   walletType: {
-    type: String as () => HWwalletType,
+    type: String as () => HWwalletType | null,
     default: HWwalletType.trezor,
   },
 })

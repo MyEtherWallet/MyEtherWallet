@@ -12,7 +12,8 @@ import BaseEvmWallet from './baseEvmWallet'
 import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
-import type { HWwalletType, NetworkNames } from '@enkryptcom/types'
+import type { NetworkNames } from '@enkryptcom/types'
+import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 
 class EvmTrezorWallet extends BaseEvmWallet {
@@ -76,7 +77,14 @@ class EvmTrezorWallet extends BaseEvmWallet {
   }
 
   override getWalletType(): WalletType {
-    return WalletType.TREZOR
+    switch (this.walletType) {
+      case HWwalletType.trezor:
+        return WalletType.TREZOR
+      case HWwalletType.ledger:
+        return WalletType.LEDGER
+      default:
+        return WalletType.TREZOR
+    }
   }
 
   override getAddress(): Promise<HexPrefixedString> {

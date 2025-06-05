@@ -1,27 +1,27 @@
 <template>
   <div>
     <app-stepper
-      :steps="steps"
-      :description="stepDescription"
+      :steps="walletSteps"
+      :description="walletStepsDescription"
       :active-step="activeStep"
       @update:active-step="backStep"
     >
       <!-- Enter Mnemonic -->
       <div v-if="activeStep === 0">
         <app-step-description
-          :description="stepDescription[0]"
+          :description="walletStepsDescription[0]"
           :activeStep="activeStep"
         />
         <div class="flex items-center justify-center mt-[40px]">
           <app-base-button @click="unlockWallet">
-            {{ $t('access_wallet_trezor.connect') }}
+            {{ connectButtonText }}
           </app-base-button>
         </div>
       </div>
       <!-- Select Network, Address, DP -->
       <div v-if="activeStep === 1">
         <app-step-description
-          :description="stepDescription[1]"
+          :description="walletStepsDescription[1]"
           :activeStep="activeStep"
         />
         <div
@@ -30,7 +30,7 @@
           <app-select-chain />
           <hardware-wallet-derivation
             :paths="paths"
-            :wallet-type="HWwalletType.trezor"
+            :wallet-type="selectedHwWalletType"
           />
         </div>
         <select-address-list
@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, markRaw } from 'vue'
+import { ref, watch, markRaw, computed, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -68,8 +68,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN } from '@/router/routeNames'
-import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
+import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 import AppSelectChain from '@/components/AppSelectChain.vue'
@@ -86,18 +85,20 @@ import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
 import type { PathType } from '@/stores/derivationStore'
 import type { Chain } from '@/mew_api/types'
-import EvmTrezorWallet from '@/providers/ethereum/evmTrezorWallet'
+import EvmHardwareWallet from '@/providers/ethereum/evmHardwareWallet'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import { useRoute } from 'vue-router'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
 const derivationStore = useDerivationStore()
 const chainsStore = useChainsStore()
-const { trezorSelectedDerivation } = storeToRefs(derivationStore)
+const { trezorSelectedDerivation, ledgerSelectedDerivation } =
+  storeToRefs(derivationStore)
 const { selectedChain } = storeToRefs(chainsStore)
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
@@ -105,6 +106,8 @@ const walletStore = useWalletStore()
 const { setSelectedTrezorDerivation } = derivationStore
 
 const { t } = useI18n()
+// used to define which hardware wallet is being accessed
+const route = useRoute()
 
 // Wallet instance
 const hwWalletInstance = new HWwallet()
@@ -118,60 +121,144 @@ const paths = ref<PathType[]>([])
  * Steps
  -------------------------*/
 const activeStep = ref(0)
-const steps = [
-  t('access_wallet_trezor.step.step1.short'),
-  t('access_wallet_trezor.step.step2.short'),
-]
-const stepDescription: StepDescription[] = [
-  {
-    title: t('access_wallet_trezor.step.step1.title'),
-    description: t('access_wallet_trezor.step.step1.description'),
-  },
-  {
-    title: t('access_wallet_trezor.step.step2.title'),
-  },
-]
+
+/**
+ * Wallet identifier
+ *
+ * route based selection since the enkrypt hw-wallets library
+ * allows for uniformity in accessing different hardware wallets
+ */
+const selectedHwWalletType = computed(() => {
+  switch (route.name) {
+    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+      return HWwalletType.trezor
+    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+      return HWwalletType.ledger
+    default:
+      return null
+  }
+})
+
+const connectButtonText = computed(() => {
+  switch (route.name) {
+    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+      return t('access_wallet_trezor.connect')
+    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+      return t('access_wallet_ledger.connect')
+    default:
+      return ''
+  }
+})
+
+const walletStepsDescription: Ref<StepDescription[]> = computed(() => {
+  switch (route.name) {
+    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+      return [
+        {
+          title: t('access_wallet_trezor.step.step1.title'),
+          description: t('access_wallet_trezor.step.step1.description'),
+        },
+        {
+          title: t('access_wallet_trezor.step.step2.title'),
+        },
+      ]
+    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+      return [
+        {
+          title: t('access_wallet_ledger.step.step1.title'),
+          description: t('access_wallet_ledger.step.step1.description'),
+        },
+        {
+          title: t('access_wallet_ledger.step.step2.title'),
+        },
+      ]
+    default:
+      return []
+  }
+})
+
+const walletSteps = computed(() => {
+  switch (route.name) {
+    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+      return [
+        t('access_wallet_trezor.step.step1.short'),
+        t('access_wallet_trezor.step.step2.short'),
+      ]
+    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+      return [
+        t('access_wallet_ledger.step.step1.short'),
+        t('access_wallet_ledger.step.step2.short'),
+      ]
+    default:
+      return []
+  }
+})
+
+import type { ComputedRef } from 'vue'
+
+const selectedDerivation: ComputedRef<PathType | undefined> = computed(() => {
+  switch (route.name) {
+    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+      return trezorSelectedDerivation.value
+    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+      return ledgerSelectedDerivation.value
+    default:
+      return {
+        basePath: '',
+        path: '',
+        label: '',
+      }
+  }
+})
+
+const setSelectedDerivation = (path: PathType) => {
+  if (route.name === ROUTES_ACCESS.ACCESS_TREZOR.NAME) {
+    setSelectedTrezorDerivation(path)
+  } else if (route.name === ROUTES_ACCESS.ACCESS_LEDGER.NAME) {
+    derivationStore.setSelectedLedgerDerivation(path)
+  }
+}
 
 const backStep = () => {
   activeStep.value = 0
-  wallet.value = null
 }
 
-const wallet = ref<MnemonicToWallet | null>(null)
 const connectingWallet = ref(false)
 
 // TODO: Handle non EVM networks
 const unlockWallet = async () => {
-  // const walletHandler = new HWwallet()
   connectingWallet.value = true
   await hwWalletInstance.isConnected({
-    wallet: HWwalletType.trezor,
+    wallet: selectedHwWalletType.value as HWwalletType,
     networkName: chainToEnum[selectedChain.value?.chainID || '1'],
   })
+  await hwWalletInstance.close()
   connectingWallet.value = false
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
-    wallet: HWwalletType.trezor,
+    wallet: selectedHwWalletType.value as HWwalletType,
     networkName: chainToEnum[selectedChain.value?.chainID || '1'],
   })) as PathType[]
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
   if (
-    trezorSelectedDerivation.value?.path === '' ||
+    selectedDerivation.value?.path === '' ||
     !paths.value.some(
       // This handles Ledger case where user may have selected a different app or an app only supports certain paths
-      (path: PathType) => path.path === trezorSelectedDerivation.value?.path,
+      (path: PathType) => path.path === selectedDerivation.value?.path,
     )
   ) {
-    setSelectedTrezorDerivation(paths.value[0])
+    setSelectedDerivation(paths.value[0])
   }
   loadList()
 }
 
 watch(
   () => selectedChain.value as Chain | undefined,
-  (newValue: Chain | undefined) => {
+  (newValue: Chain | undefined, oldValue: Chain | undefined) => {
+    if (!oldValue) return
     if (newValue) {
+      console.log('a')
       paths.value = []
       unlockWallet()
     }
@@ -179,11 +266,12 @@ watch(
 )
 
 watch(
-  () => trezorSelectedDerivation.value,
+  () => selectedDerivation.value,
   (newValue: PathType | undefined, oldValue: PathType | undefined) => {
     // if old value was empty or undefined, it means this is the first time the path is set
     if (!oldValue || oldValue.label === '') return
     if (newValue) {
+      console.log('b')
       unlockWallet()
     }
   },
@@ -210,22 +298,22 @@ const loadList = async (page: number = 0) => {
       const addressResponse = await hwWalletInstance.getAddress({
         confirmAddress: false,
         networkName: networkName,
-        pathType: trezorSelectedDerivation.value as PathType,
+        pathType: selectedDerivation.value as PathType,
         pathIndex: i.toString(),
-        wallet: HWwalletType.trezor,
+        wallet: selectedHwWalletType.value as HWwalletType,
       })
 
-      const trezorWallet = new EvmTrezorWallet(
+      const hardwareWalletInstance = new EvmHardwareWallet(
         chainId,
         addressResponse.address as HexPrefixedString,
         networkName,
         i.toString(),
-        trezorSelectedDerivation.value as PathType,
-        HWwalletType.trezor,
+        selectedDerivation.value as PathType,
+        selectedHwWalletType.value as HWwalletType,
         hwWalletInstance,
       )
 
-      const fetchBalance = await trezorWallet.getBalance()
+      const fetchBalance = await hardwareWalletInstance.getBalance()
       const mainToken = fetchBalance.result.find(
         token => token.contract === MAIN_TOKEN_CONTRACT,
       )
@@ -236,9 +324,10 @@ const loadList = async (page: number = 0) => {
           (mainToken?.balance || '0x0') as HexPrefixedString,
           'ether',
         ).toString(),
-        walletInstance: trezorWallet,
+        walletInstance: hardwareWalletInstance,
       })
     } catch (e) {
+      console.log(e)
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: e instanceof Error ? e.message : String(e),
@@ -268,7 +357,7 @@ const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
   isUnlockingWallet.value = true
 
-  setWallet(markRaw(wallet as EvmTrezorWallet) as WalletInterface)
+  setWallet(markRaw(wallet as EvmHardwareWallet) as WalletInterface)
   addWallet(walletConfigs.trezor)
 
   isUnlockingWallet.value = false

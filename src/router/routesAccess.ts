@@ -4,7 +4,7 @@ const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
 const ViewAccessPrivateKey = () =>
   import('@view-default/ViewAccessPrivateKey.vue')
 const ViewAccessMnemonic = () => import('@view-default/ViewAccessMnemonic.vue')
-const ViewAccessTrezor = () => import('@view-default/ViewAccessTrezor.vue')
+const ViewAccessHardware = () => import('@view-default/ViewAccessHardware.vue')
 
 const RoutesAccess = [
   {
@@ -47,7 +47,15 @@ const RoutesAccess = [
       {
         path: ROUTES_ACCESS.ACCESS_TREZOR.PATH,
         name: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
-        component: ViewAccessTrezor,
+        component: ViewAccessHardware,
+        meta: {
+          noAuth: true,
+        },
+      },
+      {
+        path: ROUTES_ACCESS.ACCESS_LEDGER.PATH,
+        name: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
+        component: ViewAccessHardware,
         meta: {
           noAuth: true,
         },
