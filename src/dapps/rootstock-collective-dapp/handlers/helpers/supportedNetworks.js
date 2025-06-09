@@ -1,5 +1,5 @@
-import { ROOTSTOCK, ROOTSTOCKTESTNET } from '@/utils/networks/types';
+import { ROOTSTOCK } from '@/utils/networks/types';
 
-const SUPPORTED_NETWORKS = [ROOTSTOCK, ROOTSTOCKTESTNET];
+const SUPPORTED_NETWORKS = [ROOTSTOCK];
 
 export { SUPPORTED_NETWORKS };

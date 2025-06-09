@@ -36,13 +36,26 @@ export const RewardDistributorAbi = [
   },
   {
     type: 'function',
-    name: 'foundationTreasury',
+    name: 'defaultRewardCoinbaseAmount',
     inputs: [],
     outputs: [
       {
         name: '',
-        type: 'address',
-        internalType: 'address'
+        type: 'uint256',
+        internalType: 'uint256'
+      }
+    ],
+    stateMutability: 'view'
+  },
+  {
+    type: 'function',
+    name: 'defaultRewardTokenAmount',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256'
       }
     ],
     stateMutability: 'view'
@@ -101,25 +114,6 @@ export const RewardDistributorAbi = [
   },
   {
     type: 'function',
-    name: 'rewardCoinbaseAmountPerCycle',
-    inputs: [
-      {
-        name: 'cycleTimestampStart',
-        type: 'uint256',
-        internalType: 'uint256'
-      }
-    ],
-    outputs: [
-      {
-        name: 'amount',
-        type: 'uint256',
-        internalType: 'uint256'
-      }
-    ],
-    stateMutability: 'view'
-  },
-  {
-    type: 'function',
     name: 'rewardToken',
     inputs: [],
     outputs: [
@@ -127,25 +121,6 @@ export const RewardDistributorAbi = [
         name: '',
         type: 'address',
         internalType: 'contract IERC20'
-      }
-    ],
-    stateMutability: 'view'
-  },
-  {
-    type: 'function',
-    name: 'rewardTokenAmountPerCycle',
-    inputs: [
-      {
-        name: 'cycleTimestampStart',
-        type: 'uint256',
-        internalType: 'uint256'
-      }
-    ],
-    outputs: [
-      {
-        name: 'amount',
-        type: 'uint256',
-        internalType: 'uint256'
       }
     ],
     stateMutability: 'view'
@@ -179,6 +154,38 @@ export const RewardDistributorAbi = [
       },
       {
         name: 'amountCoinbase_',
+        type: 'uint256',
+        internalType: 'uint256'
+      }
+    ],
+    outputs: [],
+    stateMutability: 'payable'
+  },
+  {
+    type: 'function',
+    name: 'sendRewardsAndStartDistributionWithDefaultAmount',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'payable'
+  },
+  {
+    type: 'function',
+    name: 'sendRewardsWithDefaultAmount',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'payable'
+  },
+  {
+    type: 'function',
+    name: 'setDefaultRewardAmount',
+    inputs: [
+      {
+        name: 'tokenAmount_',
+        type: 'uint256',
+        internalType: 'uint256'
+      },
+      {
+        name: 'coinbaseAmount_',
         type: 'uint256',
         internalType: 'uint256'
       }
