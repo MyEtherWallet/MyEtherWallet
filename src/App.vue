@@ -24,6 +24,7 @@ const { setTokens, setIsLoadingBalances } = store
 watch(
   () => walletAddress.value,
   newWallet => {
+    setIsLoadingBalances(true)
     if (newWallet) {
       wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
         setTokens(balances.result)

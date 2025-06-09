@@ -4,12 +4,14 @@
       <div
         class="bg-primary rounded-16 h-[165px] relative grid grid-rows-3 px-5 py-4 content-between text-white"
       >
+        <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between">
           <div class="pl-2">
             <button
               class="p-1 text-s-12 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
               @click="setOpenDialog(true)"
             >
+              <!-- TODO: add ens resolution-->
               <p>my wallet</p>
               <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
             </button>
@@ -27,14 +29,22 @@
             <ArrowTopRightOnSquareIcon class="w-4 h-4" />
           </a>
         </div>
-
-        <div>
-          <p class="font-bold text-s-32 leading-p-140">
+        <!-- Portfolio value-->
+        <div class="flex flex-col justify-center h-[44px]">
+          <p
+            v-if="!isLoadingBalances"
+            class="font-bold text-s-32 leading-p-130"
+          >
             {{ formattedTotalFiatPortflioValue }}
           </p>
+          <div
+            v-else
+            class="h-8 w-32 bg-white/15 rounded-12 animate-pulse"
+          ></div>
         </div>
+        <!-- Token balances and Actios-->
         <div class="self-end pl-3 flex items-center justify-between">
-          <div>
+          <div v-if="!isLoadingBalances">
             <p class="text-s-14 leading-p-140">
               {{ formattedBalance }} {{ mainTokenBalance?.symbol || '' }}
             </p>
@@ -42,6 +52,10 @@
               and {{ tokens.length }} Tokens
             </p>
           </div>
+          <div
+            v-else
+            class="h-[38px] w-24 bg-white/15 rounded-12 animate-pulse"
+          ></div>
           <div class="flex gap-2">
             <button
               class="rounded-[10px] !cursor-pointer p-1 h-8 w-8 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
@@ -57,12 +71,12 @@
           </div>
         </div>
         <!-- <img
-        :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
-        alt="MEW Card"
-        width="670"
-        height="424"
-        class="rounded-16 drop-shadow absolute z-1"
-      /> -->
+          :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
+          alt="MEW Card"
+          width="670"
+          height="424"
+          class="rounded-16 drop-shadow absolute z-1"
+        /> -->
       </div>
     </div>
     <the-address-menu-dialog v-model:open-dialog="openDialog" />
@@ -93,6 +107,7 @@ const {
   formattedBalance,
   formattedTotalFiatPortflioValue,
   mainTokenBalance,
+  isLoadingBalances,
 } = storeToRefs(walletStore)
 
 /**
