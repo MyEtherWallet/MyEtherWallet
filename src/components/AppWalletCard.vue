@@ -17,8 +17,10 @@
               {{ truncateAddress(walletAddress, 6) }}
             </p>
           </div>
+          <!-- TODO: add proper link per chain-->
           <a
-            href="https://www.myetherwallet.com/wallet"
+            :href="`https://www.ethvm.com/address/${walletAddress}`"
+            aria-label="View in block explorer"
             target="_blank"
             class="rounded-[8px] !cursor-pointer p-1 flex items-center justify-center backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
           >
@@ -48,6 +50,7 @@
             </button>
             <button
               class="rounded-[10px] !cursor-pointer p-1 h-8 w-8 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+              @click="copyClick"
             >
               <ClipboardDocumentIcon class="w-6 h-6" />
             </button>
@@ -77,7 +80,11 @@ import {
   QrCodeIcon,
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/vue/24/outline'
+import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
+const toastStore = useToastStore()
 const walletStore = useWalletStore()
 const {
   tokens,
@@ -88,13 +95,33 @@ const {
   mainTokenBalance,
 } = storeToRefs(walletStore)
 
+/**
+ * Copies the copyValue to the clipboard.
+ */
+const copy = () => {
+  return new Promise((resolve, reject) => {
+    navigator.clipboard
+      .writeText(walletAddress.value || '')
+      .then(resolve)
+      .catch(reject)
+  })
+}
+/**
+ * emits the close event when the close button is clicked.
+ */
+const copyClick = () => {
+  copy()
+  toastStore.addToastMessage({
+    text: `${t('common.copied_to_clipboard')}: ${walletAddress.value}`,
+  })
+}
+
 /** -------------------------------
  * Dialog
  -------------------------------*/
 const openDialog = ref(false)
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
-  console.log('openDialog', openDialog.value)
 }
 </script>
 <style scoped>

@@ -68,7 +68,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
 
 const walletStore = useWalletStore()
-const { wallet, tokens } = storeToRefs(walletStore)
+const { wallet, tokens, isWalletConnected } = storeToRefs(walletStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)

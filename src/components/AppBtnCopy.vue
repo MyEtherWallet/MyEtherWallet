@@ -10,6 +10,11 @@
 <script setup lang="ts">
 import AppBtnIcon from './AppBtnIcon.vue'
 import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline'
+import { useToastStore } from '@/stores/toastStore'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+const toastStore = useToastStore()
 /**
  * @description A button that copies the copyValue to the clipboard.
  * @emits copy - When the copy button is clicked.
@@ -61,7 +66,9 @@ const copy = () => {
  */
 const copyClick = (payload: MouseEvent) => {
   copy()
-  //TODO: add show toast event
+  toastStore.addToastMessage({
+    text: `${t('common.copied_to_clipboard')}: ${props.copyValue}`,
+  })
   emit('copy', payload)
 }
 </script>
