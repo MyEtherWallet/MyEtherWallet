@@ -1,21 +1,26 @@
 <template>
-  <div class="flex flex-col items-center gap-4">
-    <app-tabs
-      v-model:activeTabIndex="activePanel"
-      :tabs="tabs"
-      :panel="panels"
-      :useRouteLink="true"
-      label="Send Tabs"
-      class="w-full max-w-[478px] mx-auto"
-    ></app-tabs>
-    <app-base-button v-if="!isWalletConnected" class="w-full max-w-[478px]">
-      Connect Wallet</app-base-button
-    >
-    <app-need-help
-      title="Need help sending?"
-      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-      class="mt-4"
-    />
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div>
+      <side-balanace />
+    </div>
+    <div class="flex flex-col items-center gap-4">
+      <app-tabs
+        v-model:activeTabIndex="activePanel"
+        :tabs="tabs"
+        :panel="panels"
+        :useRouteLink="true"
+        label="Send Tabs"
+        class="w-full max-w-[478px] mx-auto"
+      ></app-tabs>
+      <app-base-button v-if="!isWalletConnected" class="w-full max-w-[478px]">
+        Connect Wallet</app-base-button
+      >
+      <app-need-help
+        title="Need help sending?"
+        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+        class="mt-4"
+      />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -24,7 +29,7 @@ import { ROUTES_SEND } from '@/router/routeNames'
 import AppTabs from '@/components/AppTabs.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-
+import SideBalanace from '@/modules/side_balance/SideBalance.vue'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'

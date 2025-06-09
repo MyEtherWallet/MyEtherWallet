@@ -11,7 +11,7 @@ import { ref } from 'vue'
 export const useAccessRedirectStore = defineStore(
   'accessRedirectStore ',
   () => {
-    const lastVisitedRouteName = ref(ROUTES_MAIN.HOME.PATH)
+    const lastVisitedRouteName = ref(ROUTES_MAIN.HOME.NAME)
     return { lastVisitedRouteName }
   },
 )
