@@ -41,6 +41,22 @@
           <list-proposal> </list-proposal>
         </v-sheet>
       </template>
+
+      <!--
+    =====================================================================================
+     Rewards
+    =====================================================================================
+    -->
+      <template #tabContent3>
+        <v-sheet
+          max-width="1000px"
+          min-height="1000px"
+          color="transparent"
+          class="px-3 pb-13 pt-10 px-md-15 pb-md-15 pt-md-8 mx-auto"
+        >
+          <list-rewards> </list-rewards>
+        </v-sheet>
+      </template>
     </the-wrapper-dapp>
   </div>
 </template>
@@ -54,7 +70,8 @@ export default {
   components: {
     TheWrapperDapp: () => import('@/dapps/TheWrapperDapp.vue'),
     ListCollective: () => import('./components/collection/ListCollective'),
-    ListProposal: () => import('./components/proposal/ListProposal')
+    ListProposal: () => import('./components/proposal/ListProposal'),
+    ListRewards: () => import('./components/rewards/ListRewards')
   },
   mixins: [handlerAnalytics],
   data() {
@@ -79,6 +96,14 @@ export default {
             path: ROOTSTOCK_COLLECTIVE_ROUTE.PROPOSALS.PATH
           },
           id: 1
+        },
+        {
+          name: this.$t('rootstockCollective.rewards.title'),
+          route: {
+            name: ROOTSTOCK_COLLECTIVE_ROUTE.REWARDS.NAME,
+            path: ROOTSTOCK_COLLECTIVE_ROUTE.REWARDS.PATH
+          },
+          id: 2
         }
       ]
     };
@@ -99,6 +124,8 @@ export default {
       const currentRoute = this.$route.name;
       if (currentRoute === ROOTSTOCK_COLLECTIVE_ROUTE.PROPOSALS.NAME) {
         this.activeTab = this.tabs[1].id;
+      } else if (currentRoute === ROOTSTOCK_COLLECTIVE_ROUTE.REWARDS.NAME) {
+        this.activeTab = this.tabs[2].id;
       } else {
         this.activeTab = this.tabs[0].id;
       }

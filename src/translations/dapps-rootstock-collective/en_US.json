@@ -1,6 +1,6 @@
 {
   "title": "Rootstock Collective",
-  "dapp-desc": "Stake and vote",
+  "dapp-desc": "Stake, vote and earn",
   "collective": {
     "title": "My Collective",
     "stakeInputLabel": "Amount to stake",
@@ -26,5 +26,8 @@
     "votingPower": "Voting power",
     "voteType": "Vote Type",
     "voteProposal": "Vote on proposal"
+  },
+  "rewards": {
+    "title": "Rewards"
   }
 }
