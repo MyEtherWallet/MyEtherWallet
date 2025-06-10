@@ -28,3 +28,6 @@ export type EVMTxResponse =
  * --------------------------*/
 
 export type FeePriority = components['schemas']['FeePriority']
+export type GetEVMGasFeesResponse =
+  components['schemas']['GetEvmTransactionEstimateResponse']
+export type EVMGasFeeInfo = components['schemas']['EvmGasFeeInfo']

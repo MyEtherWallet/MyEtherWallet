@@ -103,8 +103,8 @@
 <script setup lang="ts">
 import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
-import { ref, computed, watch } from 'vue'
-import { GasPriceType, type GasFeeType } from '@/providers/types'
+import { ref, computed, watch, onMounted } from 'vue'
+import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
 import type { HexPrefixedString } from '@/providers/types'
@@ -117,7 +117,11 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { FeePriority } from '@/mew_api/types'
+import type {
+  FeePriority,
+  GetEVMGasFeesResponse,
+  EVMGasFeeInfo,
+} from '@/mew_api/types'
 
 /** ----------------
  * DEFAULTS
@@ -145,7 +149,7 @@ const props = defineProps<Props>()
 const chainStore = useChainsStore()
 const { isLoaded: isLoadedChainsData, selectedChain } = storeToRefs(chainStore)
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 
 const txData = computed(() => {
   //EVM CHAINS ONLY
@@ -163,40 +167,49 @@ const txData = computed(() => {
 })
 
 const fetchURL = computed(() => {
-  //EVM CHAINS ONLY
   if (isLoadedChainsData.value && selectedChain.value) {
+    //EVM CHAINS ONLY
     return `/v1/evm/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
+    //TO DO: BITCOIN HANDLER
   }
-  //TO DO: BITCOIN HANDLER
   return ''
 })
 const feesReady = ref(false)
 
-const { data, onFetchResponse, execute } = useFetchMewApi(
-  fetchURL,
-  'POST',
-  txData.value,
-  {
-    immidiate: false,
-  },
-)
-onFetchResponse(() => {
-  const keys = Object.keys(data.value.fees) as GasPriceType[]
-  keys.forEach(key => {
-    const fee = data.value.fees[key]
-    const index = displayFees.findIndex(f => f.id === key)
-    displayFees[index].fiatValue =
-      `$${formatFiatValue(fee.fiatValue).value} ${fee.fiatSymbol}`
-    displayFees[index].nativeValue = formatFee(fee)
+const { data, onFetchResponse, execute } =
+  useFetchMewApi<GetEVMGasFeesResponse>(fetchURL, 'POST', txData.value, {
+    immediate: false,
   })
-  feesReady.value = true
+onFetchResponse(() => {
+  if (data.value && data.value.fees) {
+    const keys = Object.keys(data.value.fees) as GasPriceType[]
+
+    for (const key of keys) {
+      const fee = data.value.fees[key] as EVMGasFeeInfo
+      const index = displayFees.findIndex(f => f.id === key)
+      displayFees[index].fiatValue =
+        `$${formatFiatValue(fee.fiatValue || 0).value} ${fee.fiatSymbol}`
+      displayFees[index].nativeValue = formatFee(fee)
+    }
+
+    feesReady.value = true
+  }
+})
+
+onMounted(() => {
+  if (fetchURL.value !== '') {
+    feesReady.value = false
+    console.log('Fetching fees on Mounted', fetchURL.value)
+    execute()
+  }
 })
 
 watch(
-  () => isLoadedChainsData.value,
+  () => fetchURL.value,
   () => {
-    if (isLoadedChainsData.value && selectedChain.value) {
+    if (fetchURL.value !== '') {
       feesReady.value = false
+      console.log('Fetching fees on watch', fetchURL.value)
       execute()
     }
   },
@@ -227,16 +240,16 @@ const setFee = (fee: FeePriority) => {
 }
 
 const selectedFeeNative = computed(() => {
-  if (hasFees.value) {
+  if (hasFees.value && data.value) {
     return formatFee(data.value.fees[gasPriceType.value])
   }
   return ''
 })
 
 const selectedFeeFiat = computed(() => {
-  if (hasFees.value) {
+  if (hasFees.value && data.value) {
     const fiatValue = formatFiatValue(
-      data.value.fees[gasPriceType.value].fiatValue,
+      data.value.fees[gasPriceType.value].fiatValue || 0,
     ).value
     return `${data.value.fees[gasPriceType.value].fiatSymbol} ${fiatValue} `
   }
@@ -244,9 +257,9 @@ const selectedFeeFiat = computed(() => {
 })
 
 //TODO: import proper type form the api
-const formatFee = (fee: GasFeeType) => {
+const formatFee = (fee: EVMGasFeeInfo) => {
   const converted = fromWei(fee.nativeValue, 'ether')
-  return `${formatFloatingPointValue(converted).value} ${data.value.fees[gasPriceType.value].nativeSymbol}`
+  return `${formatFloatingPointValue(converted).value} ${fee.nativeSymbol}`
 }
 
 /** ----------------
@@ -292,9 +305,11 @@ const displayFees: DisplayFee[] = [
   },
 ]
 
-const hasFees = computed(() => {
+const hasFees = computed<boolean>(() => {
   return (
-    feesReady.value && data.value && Object.keys(data.value.fees).length > 0
+    feesReady.value &&
+    data.value !== null &&
+    Object.keys(data.value.fees).length > 0
   )
 })
 </script>

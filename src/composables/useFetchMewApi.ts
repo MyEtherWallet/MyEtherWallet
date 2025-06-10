@@ -1,4 +1,4 @@
-import { ref, type Ref, unref } from 'vue'
+import { ref, type Ref, unref, computed } from 'vue'
 import {
   createFetch,
   useTimeoutFn,
@@ -9,19 +9,17 @@ import Configs from '@/configs'
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 const isDevMode = import.meta.env.DEV
 
+interface FetchOptions {
+  immediate?: boolean
+  poll?: number
+  noRetry?: boolean
+}
+
 export const useFetchMewApi = <T>(
   _url: Ref<string> | string,
   _method: FetchMethod = 'GET',
   _body: object | null = null,
-  _opts: {
-    _immediate?: boolean,
-    _poll?: number,
-    _noRetry?: boolean,
-  } = {
-      _immediate: true,
-      _poll: 0,
-      _noRetry: false,
-    }
+  _opts: FetchOptions | undefined,
 ): {
   data: Ref<T | null>
   isLoading: Ref<boolean>
@@ -40,6 +38,14 @@ export const useFetchMewApi = <T>(
   const retryCount = ref(0)
   const isLoading = ref(false)
   const data: Ref<T | null> = ref(null)
+
+  const options = computed<FetchOptions>(() => {
+    return {
+      immediate: _opts?.immediate, // default to true if not provided
+      poll: _opts?.poll || 0, // default to 0 if not provided
+      noRetry: _opts?.noRetry || false, // default to false if not provided
+    }
+  })
 
   /**
    * @description
@@ -86,10 +92,22 @@ export const useFetchMewApi = <T>(
   const useMEWFetch = createFetch({
     baseUrl: Configs.MEW_API_URL,
     options: {
+      beforeFetch: ctx => {
+        if (isDevMode) {
+          console.log('BEFORE FETCH', _opts, options.value, ctx)
+        }
+        if (unref(_url) === '' || _opts?.immediate === false) {
+          console.log('URL is not defined, skipping fetch')
+          ctx.cancel()
+        }
+        return ctx
+      },
       afterFetch(ctx) {
+        console.log('After fetch called for URL: ', unref(_url))
+        console.log(ctx)
         data.value = ctx.data as T
         isLoading.value = false
-        if ((_opts._poll ?? 0) > 0 && !isActivePolling.value) {
+        if ((options.value.poll ?? 0) > 0 && !isActivePolling.value) {
           resumePoll()
         }
         delay.value = 1000
@@ -99,7 +117,7 @@ export const useFetchMewApi = <T>(
         if (isDevMode) {
           console.error(e)
         }
-        if (_opts._noRetry) return e
+        if (options.value.noRetry) return e
         if (isActivePolling.value) {
           pausePoll()
         }
@@ -117,16 +135,25 @@ export const useFetchMewApi = <T>(
     fetchOptions,
   })
 
-  const { execute, onFetchResponse } = useMEWFetch(_url, {
-    immediate: _opts._immediate,
-    refetch: true, //  Will trigger another request on url change
-  }).json()
+  const a = computed(() => {
+    if (options.value.immediate === false) {
+      return {
+        immediate: options.value.immediate,
+        refetch: true, //  Will trigger another request on url change
+      }
+    }
+    return {
+      refetch: true, //  Will trigger another request on url change
+    }
+  })
+
+  const { execute, onFetchResponse } = useMEWFetch(_url, a.value).json()
 
   const {
     isActive: isActivePolling,
     resume: resumePoll,
     pause: pausePoll,
-  } = useTimeoutPoll(execute, _opts._poll ?? 0, {
+  } = useTimeoutPoll(execute, options.value.poll ?? 0, {
     immediate: false,
   })
 
