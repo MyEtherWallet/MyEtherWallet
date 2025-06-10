@@ -17,11 +17,7 @@ export const useFetchMewApi = <T>(
     _immediate?: boolean,
     _poll?: number,
     _noRetry?: boolean,
-  } = {
-      _immediate: true,
-      _poll: 0,
-      _noRetry: false,
-    }
+  }
 ): {
   data: Ref<T | null>
   isLoading: Ref<boolean>
@@ -37,7 +33,7 @@ export const useFetchMewApi = <T>(
   useMEWFetch: ReturnType<typeof createFetch>
   onFetchResponse: EventHookOn<Response>
 } => {
-  const fillOptions = Object.assign({}, {
+  const fillOptions = Object.assign({
     _immediate: true,
     _poll: 0,
     _noRetry: false,
