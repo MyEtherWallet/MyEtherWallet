@@ -101,7 +101,6 @@ export const useFetchMewApi = <T>(
         return ctx.data
       },
       onFetchError: e => {
-        console.log(e)
         if (isDevMode) {
           console.error(e)
         }
@@ -127,7 +126,6 @@ export const useFetchMewApi = <T>(
     immediate: fillOptions._immediate,
     refetch: true, //  Will trigger another request on url change
   }).json()
-
   const {
     isActive: isActivePolling,
     resume: resumePoll,

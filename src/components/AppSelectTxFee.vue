@@ -103,7 +103,7 @@
 <script setup lang="ts">
 import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { GasPriceType, type GasFeeType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
@@ -172,10 +172,13 @@ const fetchURL = computed(() => {
 })
 const feesReady = ref(false)
 
-const { data, onFetchResponse, execute } = useFetchMewApi(
+const { data, onFetchResponse } = useFetchMewApi(
   fetchURL,
   'POST',
   txData.value,
+  {
+    _immediate: false,
+  },
 )
 onFetchResponse(() => {
   const keys = Object.keys(data.value.fees) as GasPriceType[]
@@ -189,15 +192,22 @@ onFetchResponse(() => {
   feesReady.value = true
 })
 
-watch(
-  () => isLoadedChainsData.value,
-  () => {
-    if (isLoadedChainsData.value && selectedChain.value) {
-      feesReady.value = false
-      execute()
-    }
-  },
-)
+// onMounted(() => {
+//   if (fetchURL.value !== '') {
+//     feesReady.value = false
+//     execute()
+//   }
+// })
+
+// watch(
+//   () => fetchURL.value,
+//   newVal => {
+//     if (newVal !== '') {
+//       feesReady.value = false
+//       execute()
+//     }
+//   },
+// )
 
 /** ----------------
  * Modal
