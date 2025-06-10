@@ -116,7 +116,7 @@ const { t } = useI18n()
 const route = useRoute()
 
 // Wallet instance
-const hwWalletInstance = new HWwallet()
+let hwWalletInstance = new HWwallet()
 
 /**------------------------
  * Derivation Path
@@ -238,11 +238,10 @@ const unlockWallet = async () => {
       networkName: chainToEnum[selectedChain.value?.chainID || '1'],
     })
     .then(() => {
-      setTimeout(() => {
-        hwWalletInstance.close()
-      }, 1000)
+      hwWalletInstance.close()
+      hwWalletInstance = new HWwallet()
+      return new Promise(r => setTimeout(r, 1000))
     })
-  connectingWallet.value = false
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
