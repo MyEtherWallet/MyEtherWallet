@@ -205,7 +205,7 @@ const unlockWallet = () => {
 }
 
 watch(
-  () => selectedChain.value.chainID,
+  () => selectedChain.value?.chainID,
   newValue => {
     if (newValue) {
       loadList()
