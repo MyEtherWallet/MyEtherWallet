@@ -113,6 +113,7 @@ const {
   formattedTotalFiatPortflioValue,
   mainTokenBalance,
   isLoadingBalances,
+  walletCardWasAnimated,
 } = storeToRefs(walletStore)
 
 /**
@@ -148,6 +149,7 @@ const setOpenDialog = (value: boolean) => {
  * Animates wallet card
  */
 const animateMewCard = (event: Event) => {
+  if (walletCardWasAnimated.value) return
   const el = event.currentTarget as HTMLElement
   el.style.opacity = '0'
   animate(el, {
@@ -156,6 +158,7 @@ const animateMewCard = (event: Event) => {
     duration: 500,
     easing: 'easeInOutQuad',
   })
+  walletCardWasAnimated.value = true
 }
 </script>
 <style scoped>

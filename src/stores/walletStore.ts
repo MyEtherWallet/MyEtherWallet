@@ -14,6 +14,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const balance = ref('0')
   const mainTokenBalance = ref<TokenBalance | null>(null) // main token balance, used for sending transactions
   const isLoadingBalances = ref(true)
+  const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
 
   /** -------------------------------
   * The Wallet
@@ -141,6 +142,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     balance,
     mainTokenBalance,
     isLoadingBalances,
+    walletCardWasAnimated,
     setIsLoadingBalances,
     setAddress,
     // BigNumber total values
