@@ -68,7 +68,8 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
 
 const walletStore = useWalletStore()
-const { wallet, tokens, isWalletConnected } = storeToRefs(walletStore)
+const { wallet, tokens, isWalletConnected, isLoadingBalances } =
+  storeToRefs(walletStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -150,7 +151,7 @@ const validSend = computed(() => {
 })
 
 const amountToFiat = computed(() => {
-  if (!tokenSelected.value.price) return '0'
+  if (isLoadingBalances.value || !tokenSelected.value.price) return '0'
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
     .toString()

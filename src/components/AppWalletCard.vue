@@ -2,10 +2,19 @@
   <div>
     <div v-if="isWalletConnected && walletAddress" class="">
       <div
-        class="bg-primary rounded-16 h-[165px] relative grid grid-rows-3 px-5 py-4 content-between text-white"
+        class="relative bg-grey-50 rounded-16 h-[165px] grid grid-rows-3 px-5 py-4 content-between text-white"
       >
+        <img
+          ref="mewCard"
+          :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
+          alt="MEW Card"
+          width="670"
+          height="424"
+          class="rounded-16 drop-shadow absolute z-0"
+          @load="animateMewCard"
+        />
         <!-- wallet address, wallet menu, link to explorer-->
-        <div class="flex items-start justify-between">
+        <div class="flex items-start justify-between z-1 relative">
           <div class="pl-2">
             <button
               class="p-1 text-s-12 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
@@ -30,7 +39,7 @@
           </a>
         </div>
         <!-- Portfolio value-->
-        <div class="flex flex-col justify-center h-[44px]">
+        <div class="flex flex-col justify-center h-[44px] z-1 relative">
           <p
             v-if="!isLoadingBalances"
             class="font-bold text-s-32 leading-p-130"
@@ -42,8 +51,10 @@
             class="h-8 w-32 bg-white/15 rounded-12 animate-pulse"
           ></div>
         </div>
-        <!-- Token balances and Actios-->
-        <div class="self-end pl-3 flex items-center justify-between">
+        <!-- Token balances and Actions-->
+        <div
+          class="self-end pl-3 flex items-center justify-between z-1 relative"
+        >
           <div v-if="!isLoadingBalances">
             <p class="text-s-14 leading-p-140">
               {{ formattedBalance }} {{ mainTokenBalance?.symbol || '' }}
@@ -70,13 +81,6 @@
             </button>
           </div>
         </div>
-        <!-- <img
-          :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
-          alt="MEW Card"
-          width="670"
-          height="424"
-          class="rounded-16 drop-shadow absolute z-1"
-        /> -->
       </div>
     </div>
     <the-address-menu-dialog v-model:open-dialog="openDialog" />
@@ -94,6 +98,7 @@ import {
   QrCodeIcon,
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/vue/24/outline'
+import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 
@@ -137,6 +142,20 @@ const copyClick = () => {
 const openDialog = ref(false)
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
+}
+
+/**
+ * Animates wallet card
+ */
+const animateMewCard = (event: Event) => {
+  const el = event.currentTarget as HTMLElement
+  el.style.opacity = '0'
+  animate(el, {
+    opacity: 1,
+    delay: 1100,
+    duration: 500,
+    easing: 'easeInOutQuad',
+  })
 }
 </script>
 <style scoped>
