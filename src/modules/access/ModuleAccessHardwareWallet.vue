@@ -256,10 +256,8 @@ const unlockWallet = async () => {
       (path: PathType) => path.path === selectedDerivation.value?.path,
     )
   ) {
-    console.log('does this?')
     setSelectedDerivation(paths.value[0])
   }
-  console.log(selectedDerivation.value)
   loadList()
 }
 
@@ -319,7 +317,6 @@ const loadList = async (page: number = 0) => {
       })
     }
   }
-  await hwWalletInstance.close()
 
   selectedIndex.value = walletList.value[0]?.index
   isLoadingWalletList.value = false
@@ -343,8 +340,10 @@ watch(
     // if old value was empty or undefined, it means this is the first time the path is set
     if (!oldValue || oldValue === '') return
     if (newValue) {
-      console.log('b')
-      unlockWallet()
+      isLoadingWalletList.value = true
+      hwWalletInstance = new HWwallet()
+      const waiter = new Promise(r => setTimeout(r, 1000))
+      waiter.then(() => loadList())
     }
   },
 )
