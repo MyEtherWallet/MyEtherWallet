@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import type { HexPrefixedString } from '@/providers/types'
 
 interface ProviderInfo {
   uuid: string
@@ -8,9 +9,16 @@ interface ProviderInfo {
   rdns: string
 }
 
+type requestParams = {
+  method: string
+  params?: unknown[]
+}
+
 export interface Provider {
   info: ProviderInfo
-  provider: object
+  provider: {
+    request: (params: requestParams) => Promise<HexPrefixedString | HexPrefixedString[]>
+  }
 }
 
 export const useProviderStore = defineStore('providerStore', () => {

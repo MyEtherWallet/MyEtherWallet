@@ -145,7 +145,7 @@ const props = defineProps<Props>()
 const chainStore = useChainsStore()
 const { isLoaded: isLoadedChainsData, selectedChain } = storeToRefs(chainStore)
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 
 const txData = computed(() => {
   //EVM CHAINS ONLY
@@ -176,9 +176,6 @@ const { data, onFetchResponse, execute } = useFetchMewApi(
   fetchURL,
   'POST',
   txData.value,
-  {
-    immidiate: false,
-  },
 )
 onFetchResponse(() => {
   const keys = Object.keys(data.value.fees) as GasPriceType[]

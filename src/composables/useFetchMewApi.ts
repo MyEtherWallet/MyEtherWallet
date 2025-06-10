@@ -37,6 +37,11 @@ export const useFetchMewApi = <T>(
   useMEWFetch: ReturnType<typeof createFetch>
   onFetchResponse: EventHookOn<Response>
 } => {
+  const fillOptions = Object.assign({}, {
+    _immediate: true,
+    _poll: 0,
+    _noRetry: false,
+  }, _opts)
   const retryCount = ref(0)
   const isLoading = ref(false)
   const data: Ref<T | null> = ref(null)
@@ -89,17 +94,18 @@ export const useFetchMewApi = <T>(
       afterFetch(ctx) {
         data.value = ctx.data as T
         isLoading.value = false
-        if ((_opts._poll ?? 0) > 0 && !isActivePolling.value) {
+        if ((fillOptions._poll ?? 0) > 0 && !isActivePolling.value) {
           resumePoll()
         }
         delay.value = 1000
         return ctx.data
       },
       onFetchError: e => {
+        console.log(e)
         if (isDevMode) {
           console.error(e)
         }
-        if (_opts._noRetry) return e
+        if (fillOptions._noRetry) return e
         if (isActivePolling.value) {
           pausePoll()
         }
@@ -118,7 +124,7 @@ export const useFetchMewApi = <T>(
   })
 
   const { execute, onFetchResponse } = useMEWFetch(_url, {
-    immediate: _opts._immediate,
+    immediate: fillOptions._immediate,
     refetch: true, //  Will trigger another request on url change
   }).json()
 
@@ -126,7 +132,7 @@ export const useFetchMewApi = <T>(
     isActive: isActivePolling,
     resume: resumePoll,
     pause: pausePoll,
-  } = useTimeoutPoll(execute, _opts._poll ?? 0, {
+  } = useTimeoutPoll(execute, fillOptions._poll ?? 0, {
     immediate: false,
   })
 

@@ -166,7 +166,6 @@ const emit = defineEmits(['update:selectedToken'])
 const store = useWalletStore()
 const { tokens } = store
 const { isLoadingBalances: isLoading } = storeToRefs(store)
-
 defineProps({
   selectedToken: {
     type: Object as () => TokenBalance,
@@ -293,8 +292,8 @@ const setSelectedToken = (token: TokenBalance) => {
 
 const imageReplacer = (token: TokenBalance) => {
   if (
-    !token.logo_url ||
-    token.logo_url === 'https://img.mewapi.io/?image=null'
+    !token?.logo_url ||
+    token?.logo_url === 'https://img.mewapi.io/?image=null'
   ) {
     return defaultImg.value
   }

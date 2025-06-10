@@ -33,7 +33,7 @@ class BaseEvmWallet implements WalletInterface {
   getSignableTransaction(
     feeObj: EthereumSignableTransactionParams,
   ): Promise<EthereumSignableTransactionResult> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`, 'GET')
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`)
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as EthereumSignableTransactionResult)
@@ -86,7 +86,7 @@ class BaseEvmWallet implements WalletInterface {
     })
   }
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/${this.chainId}/broadcast/?noInjectErrors=false`
+    const url = `/v1/evm/${this.chainId}/broadcasts/?noInjectErrors=false`
     const { data, onFetchResponse } = useFetchMewApi<EVMTxResponse>(
       url,
       'POST',
@@ -96,9 +96,7 @@ class BaseEvmWallet implements WalletInterface {
       {
         _noRetry: true,
       }
-
     )
-
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value?.txHash || '')
