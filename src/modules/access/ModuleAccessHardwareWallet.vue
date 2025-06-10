@@ -327,7 +327,6 @@ watch(
   (newValue: Chain | undefined, oldValue: Chain | undefined) => {
     if (!oldValue) return
     if (newValue) {
-      console.log('a')
       paths.value = []
       unlockWallet()
     }
