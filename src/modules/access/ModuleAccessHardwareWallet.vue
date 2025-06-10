@@ -64,7 +64,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, markRaw, computed, Ref } from 'vue'
+import { ref, watch, markRaw, computed } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -107,7 +108,8 @@ const { selectedChain } = storeToRefs(chainsStore)
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
-const { setSelectedTrezorDerivation } = derivationStore
+const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
+  derivationStore
 
 const { t } = useI18n()
 // used to define which hardware wallet is being accessed
@@ -198,8 +200,6 @@ const walletSteps = computed(() => {
   }
 })
 
-import type { ComputedRef } from 'vue'
-
 const selectedDerivation: ComputedRef<PathType | undefined> = computed(() => {
   switch (route.name) {
     case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
@@ -219,7 +219,7 @@ const setSelectedDerivation = (path: PathType) => {
   if (route.name === ROUTES_ACCESS.ACCESS_TREZOR.NAME) {
     setSelectedTrezorDerivation(path)
   } else if (route.name === ROUTES_ACCESS.ACCESS_LEDGER.NAME) {
-    derivationStore.setSelectedLedgerDerivation(path)
+    setSelectedLedgerDerivation(path)
   }
 }
 
@@ -238,7 +238,7 @@ const unlockWallet = async () => {
       networkName: chainToEnum[selectedChain.value?.chainID || '1'],
     })
     .then(() => {
-      setTimeout(async () => {
+      setTimeout(() => {
         hwWalletInstance.close()
       }, 1000)
     })
@@ -257,34 +257,12 @@ const unlockWallet = async () => {
       (path: PathType) => path.path === selectedDerivation.value?.path,
     )
   ) {
+    console.log('does this?')
     setSelectedDerivation(paths.value[0])
   }
+  console.log(selectedDerivation.value)
   loadList()
 }
-
-watch(
-  () => selectedChain.value as Chain | undefined,
-  (newValue: Chain | undefined, oldValue: Chain | undefined) => {
-    if (!oldValue) return
-    if (newValue) {
-      console.log('a')
-      paths.value = []
-      unlockWallet()
-    }
-  },
-)
-
-watch(
-  () => selectedDerivation.value,
-  (newValue: PathType | undefined, oldValue: PathType | undefined) => {
-    // if old value was empty or undefined, it means this is the first time the path is set
-    if (!oldValue || oldValue.label === '') return
-    if (newValue) {
-      console.log('b')
-      unlockWallet()
-    }
-  },
-)
 
 /**------------------------
  *  Wallet List
@@ -342,10 +320,35 @@ const loadList = async (page: number = 0) => {
       })
     }
   }
+  await hwWalletInstance.close()
 
   selectedIndex.value = walletList.value[0]?.index
   isLoadingWalletList.value = false
 }
+
+watch(
+  () => selectedChain.value as Chain | undefined,
+  (newValue: Chain | undefined, oldValue: Chain | undefined) => {
+    if (!oldValue) return
+    if (newValue) {
+      console.log('a')
+      paths.value = []
+      unlockWallet()
+    }
+  },
+)
+
+watch(
+  () => selectedDerivation.value?.path,
+  (newValue: string | undefined, oldValue: string | undefined) => {
+    // if old value was empty or undefined, it means this is the first time the path is set
+    if (!oldValue || oldValue === '') return
+    if (newValue) {
+      console.log('b')
+      unlockWallet()
+    }
+  },
+)
 
 const setPage = (isNext: boolean) => {
   if (!isNext && page.value === 0) return

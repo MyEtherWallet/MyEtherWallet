@@ -67,7 +67,7 @@
       "step1": {
         "short": "Connect Ledger",
         "title": "Connect your Ledger",
-        "description": "Connect your Ledger to your computer. Follow the instructions in the Ledger connection tab."
+        "description": "Connect your Ledger to your computer. Follow the instructions on your Ledger device."
       },
       "step2": {
         "short": "address & network",

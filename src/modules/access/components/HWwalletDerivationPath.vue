@@ -103,20 +103,34 @@ const props = defineProps({
 })
 
 const derivationStore = useDerivationStore()
-const { trezorSelectedDerivation } = storeToRefs(derivationStore)
-const { setSelectedTrezorDerivation } = derivationStore
+const { trezorSelectedDerivation, ledgerSelectedDerivation } =
+  storeToRefs(derivationStore)
+const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
+  derivationStore
 
 const selectedPath = defineModel<PathType>('selectedPath', {})
 
 const setSelectedPath = (path: PathType) => {
   selectedPath.value = path
-  setSelectedTrezorDerivation(path)
+  storeHardwarePath(path)
   setOpenDialog(false)
 }
 
+const storeHardwarePath = (path: PathType) => {
+  if (props.walletType === HWwalletType.ledger) {
+    setSelectedLedgerDerivation(path)
+  } else if (props.walletType === HWwalletType.trezor) {
+    setSelectedTrezorDerivation(path)
+  }
+}
+
 onMounted(() => {
-  if (trezorSelectedDerivation.value?.path) {
+  if (props.walletType === HWwalletType.ledger) {
+    selectedPath.value = ledgerSelectedDerivation.value as PathType
+  } else if (props.walletType === HWwalletType.trezor) {
     selectedPath.value = trezorSelectedDerivation.value as PathType
+  } else {
+    selectedPath.value = props.paths[0]
   }
 })
 
@@ -124,7 +138,7 @@ watch(
   () => selectedPath.value,
   (newValue: PathType | undefined) => {
     if (newValue) {
-      setSelectedTrezorDerivation(newValue)
+      storeHardwarePath(newValue)
     }
   },
   { immediate: true },
