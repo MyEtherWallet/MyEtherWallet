@@ -329,7 +329,10 @@ watch(
     if (!oldValue) return
     if (newValue) {
       paths.value = []
-      unlockWallet()
+      isLoadingWalletList.value = true
+      hwWalletInstance = new HWwallet()
+      const waiter = new Promise(r => setTimeout(r, 1000))
+      waiter.then(() => loadList())
     }
   },
 )

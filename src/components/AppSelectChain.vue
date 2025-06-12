@@ -234,7 +234,7 @@ const searchResults = computed(() => {
     : chains.value.filter(chain => {
         if (chain.type === storeSelectedChain.value?.type) return chain
       })
-  console.log('searchResults', chainsToSearch)
+
   if (!searchInput.value || searchInput.value === '') {
     if (!selectedChain.value) {
       return chainsToSearch
