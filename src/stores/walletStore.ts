@@ -62,7 +62,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         newTokenCopy.push({
           ...token,
           name: token.name ?? 'Unknown',
-          symbol: token.symbol ?? 'Unknown',
+          symbol: token.symbol ?? 'UNK',
           balance: fromWei(token.balance, 'ether'),
         })
       }

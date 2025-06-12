@@ -12,10 +12,20 @@ export const useAppTabs = (
   const route = useRoute()
   const currentRouteName = computed(() => route.name)
 
+  /**
+   * Computed property to get the currently active panel based on the active tab index.
+   */
   const currActivePanel = computed(() => {
     return panels[activeTabIndex.value]
   })
 
+  /**
+   *
+   * @param index - The index of the tab to navigate to.
+   * Navigates to the specified tab's route if `useRouteLink` is true,
+   * and focuses on the corresponding tab element.
+   * If an error occurs during navigation, it logs the error to the console.
+   */
   const navigateToTab = async (index: number) => {
     try {
       if (useRouteLink) {
