@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -108,7 +108,7 @@ const { trezorSelectedDerivation, ledgerSelectedDerivation } =
 const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
   derivationStore
 
-const selectedPath = defineModel<PathType>('selectedPath', {})
+const selectedPath = ref<PathType>({} as PathType)
 
 const setSelectedPath = (path: PathType) => {
   selectedPath.value = path
@@ -124,15 +124,24 @@ const storeHardwarePath = (path: PathType) => {
   }
 }
 
-onMounted(() => {
-  if (props.walletType === HWwalletType.ledger) {
-    selectedPath.value = ledgerSelectedDerivation.value as PathType
-  } else if (props.walletType === HWwalletType.trezor) {
-    selectedPath.value = trezorSelectedDerivation.value as PathType
-  } else {
-    selectedPath.value = props.paths[0]
-  }
-})
+watch(
+  () => props.paths,
+  newValue => {
+    if (
+      props.walletType === HWwalletType.ledger &&
+      ledgerSelectedDerivation.value?.label
+    ) {
+      selectedPath.value = ledgerSelectedDerivation.value as PathType
+    } else if (
+      props.walletType === HWwalletType.trezor &&
+      trezorSelectedDerivation.value?.label
+    ) {
+      selectedPath.value = trezorSelectedDerivation.value as PathType
+    } else {
+      selectedPath.value = newValue[0]
+    }
+  },
+)
 
 watch(
   () => selectedPath.value,
@@ -141,7 +150,6 @@ watch(
       storeHardwarePath(newValue)
     }
   },
-  { immediate: true },
 )
 
 /** -------------------------------
