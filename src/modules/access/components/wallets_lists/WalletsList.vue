@@ -114,8 +114,7 @@ const { defaultWallets, newWalletList } = useWalletList()
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  const convertedNetworkName =
-    chainToEnum[selectedChain.value?.chainID as string]
+  const convertedNetworkName = chainToEnum[selectedChain.value?.name as string]
   const supportedDefaultWallets = defaultWallets.value.filter(wallet => {
     return wallet.canSupport && !!wallet.canSupport(convertedNetworkName)
   })

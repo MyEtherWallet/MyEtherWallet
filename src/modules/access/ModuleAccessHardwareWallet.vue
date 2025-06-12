@@ -232,10 +232,11 @@ const connectingWallet = ref(false)
 // TODO: Handle non EVM networks
 const unlockWallet = async () => {
   connectingWallet.value = true
+  const networkName = chainToEnum[selectedChain.value?.name]
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
-      networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+      networkName: networkName,
     })
     .then(() => {
       hwWalletInstance.close()
@@ -245,7 +246,7 @@ const unlockWallet = async () => {
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+    networkName: networkName,
   })) as PathType[]
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
