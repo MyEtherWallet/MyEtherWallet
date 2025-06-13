@@ -97,6 +97,7 @@ import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
+import { NetworkNames } from '@enkryptcom/types'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -232,7 +233,9 @@ const connectingWallet = ref(false)
 // TODO: Handle non EVM networks
 const unlockWallet = async () => {
   connectingWallet.value = true
-  const networkName = chainToEnum[selectedChain.value?.name]
+  const networkName = chainToEnum[
+    selectedChain.value?.name as string
+  ] as NetworkNames
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
