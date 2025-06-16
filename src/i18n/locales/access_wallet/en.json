@@ -34,7 +34,6 @@
     "invalid_phrase": "Invalid phrase",
     "do_you_have_an_extra_word": "Do you have an extra word?",
     "enter_extra_word": "Enter Extra Word",
-    "step2_title": "",
     "step": {
       "step1": {
         "short": "Enter phrase",
@@ -46,6 +45,21 @@
         "title": "Select address and network"
       }
     }
+  },
+  "access_wallet_trezor": {
+    "title": "Access Wallet with Trezor",
+    "step": {
+      "step1": {
+        "short": "Connect Trezor",
+        "title": "Connect your Trezor",
+        "description": "Connect your Trezor to your computer. Follow the instructions in the Trezor connection tab."
+      },
+      "step2": {
+        "short": "address & network",
+        "title": "Select address and network"
+      }
+    },
+    "connect": "Connect your Trezor"
   },
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"

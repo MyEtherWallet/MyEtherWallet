@@ -66,6 +66,8 @@ import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 
 const walletStore = useWalletStore()
 const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
@@ -144,7 +146,9 @@ const networkFeeCrypto = computed(() => {
 })
 
 const validSend = computed(() => {
-  return amountError.value === '' && toAddress.value !== ''
+  return (
+    amountError.value === '' && toAddress.value !== '' && !isLoadingFees.value
+  )
 })
 
 const amountToFiat = computed(() => {
@@ -182,6 +186,8 @@ watch(
       data.value = '0x'
     }
     if (!toAddress.value) return
+    isLoadingFees.value = true
+    gasFees.value = {} as GasFeeResponse
     gasFees.value = (await wallet.value?.getGasFee({
       to: toAddress.value as HexPrefixedString,
       address:
@@ -190,12 +196,13 @@ watch(
       value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
       data: data.value as HexPrefixedString,
     })) as GasFeeResponse
+    isLoadingFees.value = false
   },
 )
 
 watch(
   () => openTxModal.value,
-  value => {
+  (value: boolean) => {
     if (!value) {
       amount.value = '0'
       toAddress.value = ''
@@ -203,6 +210,9 @@ watch(
     }
   },
 )
+
+// toast store
+const toastStore = useToastStore()
 
 const handleSubmit = async () => {
   if (!wallet.value) return
@@ -212,7 +222,10 @@ const handleSubmit = async () => {
     quoteId: gasFees.value?.quoteId,
   })
 
-  if (wallet.value?.getWalletType() === WalletType.WAGMI) {
+  if (
+    wallet.value?.getWalletType() === WalletType.WAGMI ||
+    wallet.value?.getWalletType() === WalletType.INJECTED
+  ) {
     openTxModal.value = true
     signedTx.value = signableTx.serialized
     return
@@ -223,11 +236,18 @@ const handleSubmit = async () => {
     console.error('SignTransaction not implemented')
     return
   }
-  const signResponse = await wallet.value?.SignTransaction(
-    signableTx.serialized,
-  )
+  try {
+    const signResponse = await wallet.value?.SignTransaction(
+      signableTx.serialized,
+    )
 
-  signedTx.value = signResponse.signed
-  openTxModal.value = true
+    signedTx.value = signResponse.signed
+    openTxModal.value = true
+  } catch (e) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e instanceof Error ? e.message : 'Failed to sign transaction',
+    })
+  }
 }
 </script>

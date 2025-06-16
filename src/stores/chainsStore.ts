@@ -9,7 +9,9 @@ export const useChainsStore = defineStore('chainsStore', () => {
   const chains = ref<Chain[]>([])
   const isLoaded = ref(false)
   const selectedChain = computed(() => {
-    return chains.value.find(chain => chain.name === selectedNetwork.value)
+    return chains.value.find(
+      (chain: Chain) => chain.name === selectedNetwork.value,
+    )
   })
 
   const setChainData = (_chains: Chain[]) => {
