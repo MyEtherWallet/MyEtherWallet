@@ -152,7 +152,7 @@ const imageReplacer = (token: TokenBalance) => {
   return token.logo_url
 }
 
-const formatUsdBalance = (_value: number) => {
+const formatUsdBalance = (_value: string) => {
   return formatFiatValue(_value).value
 }
 

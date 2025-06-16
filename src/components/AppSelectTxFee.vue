@@ -104,7 +104,7 @@
 import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { ref, computed, watch } from 'vue'
-import { GasPriceType, type GasFeeType } from '@/providers/types'
+import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
 import type { HexPrefixedString } from '@/providers/types'
@@ -117,7 +117,11 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import type { FeePriority } from '@/mew_api/types'
+import type {
+  FeePriority,
+  EstimatesResponse,
+  GasFeeInfo,
+} from '@/mew_api/types'
 
 /** ----------------
  * DEFAULTS
@@ -172,7 +176,7 @@ const fetchURL = computed(() => {
 })
 const feesReady = ref(false)
 
-const { data, onFetchResponse, execute } = useFetchMewApi(
+const { data, onFetchResponse, execute } = useFetchMewApi<EstimatesResponse>(
   fetchURL,
   'POST',
   txData.value,
@@ -181,15 +185,20 @@ const { data, onFetchResponse, execute } = useFetchMewApi(
   },
 )
 onFetchResponse(() => {
-  const keys = Object.keys(data.value.fees) as GasPriceType[]
-  keys.forEach(key => {
-    const fee = data.value.fees[key]
-    const index = displayFees.findIndex(f => f.id === key)
-    displayFees[index].fiatValue =
-      `$${formatFiatValue(fee.fiatValue).value} ${fee.fiatSymbol}`
-    displayFees[index].nativeValue = formatFee(fee)
-  })
-  feesReady.value = true
+  if (data.value) {
+    const fees = data.value.fees
+    const keys = Object.keys(fees) as GasPriceType[]
+    keys.forEach(key => {
+      const fee = fees[key]
+      const index = displayFees.findIndex(f => f.id === key)
+      displayFees[index].fiatValue =
+        `$${formatFiatValue(fee.fiatValue || 0).value} ${fee.fiatSymbol}`
+      displayFees[index].nativeValue = formatFee(fee)
+    })
+    feesReady.value = true
+  } else {
+    throw new Error('No gas fees received in response:' + fetchURL.value)
+  }
 })
 
 watch(
@@ -227,16 +236,16 @@ const setFee = (fee: FeePriority) => {
 }
 
 const selectedFeeNative = computed(() => {
-  if (hasFees.value) {
+  if (hasFees.value && data.value) {
     return formatFee(data.value.fees[gasPriceType.value])
   }
   return ''
 })
 
 const selectedFeeFiat = computed(() => {
-  if (hasFees.value) {
+  if (hasFees.value && data.value) {
     const fiatValue = formatFiatValue(
-      data.value.fees[gasPriceType.value].fiatValue,
+      data.value.fees[gasPriceType.value].fiatValue || 0,
     ).value
     return `${data.value.fees[gasPriceType.value].fiatSymbol} ${fiatValue} `
   }
@@ -244,9 +253,9 @@ const selectedFeeFiat = computed(() => {
 })
 
 //TODO: import proper type form the api
-const formatFee = (fee: GasFeeType) => {
+const formatFee = (fee: GasFeeInfo) => {
   const converted = fromWei(fee.nativeValue, 'ether')
-  return `${formatFloatingPointValue(converted).value} ${data.value.fees[gasPriceType.value].nativeSymbol}`
+  return `${formatFloatingPointValue(converted).value} ${fee.nativeSymbol}`
 }
 
 /** ----------------
