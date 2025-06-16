@@ -96,7 +96,12 @@ import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 
 const store = useWalletStore()
-const { isLoadingBalances: isLoading, tokens } = storeToRefs(store)
+const {
+  isLoadingBalances: isLoading,
+  tokens,
+  safeMainTokenBalance,
+  formattedBalanceFiat,
+} = storeToRefs(store)
 
 const defaultImg = computed(() => {
   const img = tokens.value.find(
@@ -106,20 +111,31 @@ const defaultImg = computed(() => {
 })
 
 interface TokenBalanceWithUsd extends TokenBalance {
-  usd_balance: number
+  usd_balance: string
+  price: number
 }
 const displayTokens = computed<TokenBalanceWithUsd[]>(() => {
   const items = tokens.value.map(token => {
+    //TODO add proper formatting
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(BigNumber(token.balance)),
-    ).toNumber()
+    ).toFixed()
     return {
       ...token,
       usd_balance: usdBalance, // Add usd_balance to each token
       price: token.price || 0, // Ensure price is defined
     }
   })
-  return sortObjectArrayNumber(items, 'usd_balance', 'desc')
+  const sorted = sortObjectArrayNumber(items, 'usd_balance', 'desc')
+  if (safeMainTokenBalance.value) {
+    const mainToken: TokenBalanceWithUsd = {
+      ...safeMainTokenBalance.value,
+      usd_balance: formattedBalanceFiat.value,
+      price: safeMainTokenBalance.value.price || 0, // Ensure price is defined
+    }
+    sorted.unshift(mainToken)
+  }
+  return sorted
 })
 
 const viewTokensPage = (token: TokenBalance) => {

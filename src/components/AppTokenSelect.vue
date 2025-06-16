@@ -1,31 +1,37 @@
 <template>
   <button
     :class="[
-      'bg-white rounded-full px-1 flex flex-nowrap items-center hoverNoBG  min-h-9 shadow-button border-grey-10 border',
-      { 'bg-grey-10 animate-pulse min-w-[120px]': isLoading },
+      isLoading || !selectedToken
+        ? 'bg-grey-10 animate-pulse min-w-[120px]'
+        : 'bg-white hoverNoBG shadow-button border-grey-10 border',
+      'rounded-full px-1 min-h-9 transition-colors',
     ]"
     type="button"
     @click="showAllTokens = true"
     aria-label="Select token"
-    :disabled="isLoading"
+    :disabled="isLoading || !selectedToken"
   >
     <div
-      v-if="!isLoading"
-      class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
+      v-if="!isLoading && selectedToken"
+      class="flex flex-nowrap items-center"
     >
-      <img
-        class="w-7 h-7 rounded-full"
-        :src="imageReplacer(selectedToken)"
-        width="28"
-        height="28"
-        alt="token icon"
-      />
-    </div>
-    <p v-if="!isLoading" class="font-medium text-nowrap">
-      {{ truncate(selectedToken.symbol, 7) }}
-    </p>
-    <div class="ml-1 min-w-4 h-4">
-      <chevron-down-icon v-if="!isLoading" class="text-info" />
+      <div
+        class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
+      >
+        <img
+          class="w-7 h-7 rounded-full"
+          :src="imageReplacer(selectedToken)"
+          width="28"
+          height="28"
+          alt="token icon"
+        />
+      </div>
+      <p v-if="!isLoading" class="font-medium text-nowrap">
+        {{ truncate(selectedToken.symbol, 7) }}
+      </p>
+      <div class="ml-1 min-w-4 h-4">
+        <chevron-down-icon v-if="!isLoading" class="text-info" />
+      </div>
     </div>
   </button>
   <app-dialog
@@ -160,17 +166,22 @@ import {
 } from '@/utils/numberFormatHelper'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
-
+import { useChainsStore } from '@/stores/chainsStore'
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
-const { tokens } = store
-const { isLoadingBalances: isLoading } = storeToRefs(store)
+const { isLoadingBalances, tokens } = storeToRefs(store)
+
+const chainsStore = useChainsStore()
+const { isLoaded } = storeToRefs(chainsStore)
+
+const isLoading = computed(() => {
+  return isLoadingBalances.value || !isLoaded.value
+})
 
 defineProps({
   selectedToken: {
     type: Object as () => TokenBalance,
-    required: true,
   },
 })
 
@@ -178,14 +189,14 @@ const showAllTokens = ref(false)
 const searchInput = ref('')
 
 const defaultImg = computed(() => {
-  const img = tokens.find(
+  const img = tokens.value.find(
     (token: TokenBalance) => token.contract === MAIN_TOKEN_CONTRACT,
   )
   return img ? img.logo_url : eth
 })
 
 onMounted(() => {
-  if (tokens.length > 0) setSelectedToken(tokens[0])
+  if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
 })
 
 /** -------------------
@@ -250,7 +261,7 @@ interface TokenBalanceWithUsd extends TokenBalance {
   usd_balance: number
 }
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
-  const items = tokens.map(token => {
+  const items = tokens.value.map(token => {
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(BigNumber(token.balance)),
     ).toNumber()

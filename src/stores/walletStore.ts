@@ -6,13 +6,16 @@ import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useChainsStore } from './chainsStore'
+import { storeToRefs } from 'pinia'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
   const tokens: Ref<Array<TokenBalance>> = ref([])
   const balance = ref('0')
-  const mainTokenBalance = ref<TokenBalance | null>(null) // main token balance, used for sending transactions
+  const balanceWei = ref('0')
+  const mainTokenBalance = ref<TokenBalance | null>(null)
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
 
@@ -47,17 +50,40 @@ export const useWalletStore = defineStore('walletStore', () => {
   const setIsLoadingBalances = (isLoading: boolean) => {
     isLoadingBalances.value = isLoading
   }
+  const chainStore = useChainsStore()
+  const { selectedChain } = storeToRefs(chainStore)
+
+  const safeMainTokenBalance = computed<TokenBalance | null>(() => {
+    if (!mainTokenBalance.value && selectedChain.value) {
+      return {
+        contract: MAIN_TOKEN_CONTRACT,
+        decimals: 18, // Default for Ether
+        logo_url: selectedChain.value.icon,
+        name: selectedChain.value.currencyNameLong,
+        symbol: selectedChain.value.currencyName,
+        price: 0, // Price will be set later
+        balance: balance.value,
+      }
+    }
+    if (mainTokenBalance.value) {
+      return mainTokenBalance.value
+    }
+    return null
+  })
   const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
     const newTokenCopy: Array<TokenBalance> = []
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
         mainTokenBalance.value = {
           ...token,
-          name: token.name ?? 'Ether',
-          symbol: token.symbol ?? 'ETH',
+          name:
+            token.name ?? (selectedChain.value?.currencyNameLong || 'Ether'),
+          symbol:
+            token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
           balance: fromWei(token.balance, 'ether'),
         }
         balance.value = fromWei(token.balance, 'ether')
+        balanceWei.value = fromWei(token.balance, 'wei')
       } else {
         newTokenCopy.push({
           ...token,
@@ -104,7 +130,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   /**
    * @totalFiatBalanceBN - the total balance of the wallet in fiat, including the main token and all other tokens. Value in BigNumber.
    */
-  const totalFiatPotfolioValueBN = computed<BigNumber>(() => {
+  const totalFiatPortfolioValueBN = computed<BigNumber>(() => {
     return totalTokensBalanceFiatBN.value.plus(balanceFiatBN.value)
   })
 
@@ -117,7 +143,7 @@ export const useWalletStore = defineStore('walletStore', () => {
    * @formattedTotalFiatPortflioValue - the total portfolio value in fiat, formatted .
    */
   const formattedTotalFiatPortflioValue = computed<string>(() => {
-    return `$${totalFiatPotfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   /**
@@ -141,6 +167,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     tokens,
     balance,
     mainTokenBalance,
+    safeMainTokenBalance,
     isLoadingBalances,
     walletCardWasAnimated,
     setIsLoadingBalances,
@@ -149,7 +176,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     isWalletConnected,
     totalTokensBalanceFiatBN,
     balanceFiatBN,
-    totalFiatPotfolioValueBN,
+    totalFiatPortfolioValueBN,
     // Formatted values
     formattedTotalFiatPortflioValue,
     formattedBalance,

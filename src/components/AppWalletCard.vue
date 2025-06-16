@@ -57,7 +57,7 @@
         >
           <div v-if="!isLoadingBalances">
             <p class="text-s-14 leading-p-140">
-              {{ formattedBalance }} {{ mainTokenBalance?.symbol || '' }}
+              {{ formattedBalance }} {{ safeMainTokenBalance?.symbol || '' }}
             </p>
             <p class="text-s-12 leading-p-150">
               and {{ tokens.length }} Tokens
@@ -111,7 +111,7 @@ const {
   isWalletConnected,
   formattedBalance,
   formattedTotalFiatPortflioValue,
-  mainTokenBalance,
+  safeMainTokenBalance,
   isLoadingBalances,
   walletCardWasAnimated,
 } = storeToRefs(walletStore)

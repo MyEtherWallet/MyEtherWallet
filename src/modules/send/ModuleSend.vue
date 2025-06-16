@@ -35,7 +35,7 @@
     :networkFeeUSD="networkFeeUSD"
     :networkFeeCrypto="networkFeeCrypto"
     :network="selectedChain || null"
-    :to-token="tokenSelected"
+    :to-token="tokenSelected as TokenBalance"
     :to-amount="amount.toString()"
     :to-amount-fiat="amountToFiat"
     :signed-tx="signedTx"
@@ -68,14 +68,14 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
 
 const walletStore = useWalletStore()
-const { wallet, tokens, isWalletConnected, isLoadingBalances } =
+const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
   storeToRefs(walletStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const toAddress = ref('')
-const tokenSelected: Ref<TokenBalance> = ref({} as TokenBalance) // TODO: Implement token selection
+const tokenSelected: Ref<TokenBalance | undefined> = ref() // TODO: Implement token selection
 const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
@@ -94,14 +94,11 @@ const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
 
 onMounted(async () => {
+  //NOTE: The send module should not be loaded before the chains data has been retrieved.
+  //AS of Right now, skeleton loader is shown while the chains data is being fetched.
+  tokenSelected.value = safeMainTokenBalance.value || undefined
   if (!wallet.value) return
-  const mainToken: TokenBalance = tokens.value.find(
-    (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
-  ) as TokenBalance
   address.value = await wallet.value.getAddress()
-  tokenSelected.value = (mainToken as TokenBalance)
-    ? mainToken
-    : tokens.value[0]
   //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
   isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
@@ -116,7 +113,7 @@ onMounted(async () => {
 
 const checkAmountForError = () => {
   const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
-  const tokenSelectedBalance = tokenSelected.value.balance
+  const tokenSelectedBalance = tokenSelected.value?.balance
     ? tokenSelected.value.balance
     : '0'
   const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
@@ -151,7 +148,7 @@ const validSend = computed(() => {
 })
 
 const amountToFiat = computed(() => {
-  if (isLoadingBalances.value || !tokenSelected.value.price) return '0'
+  if (isLoadingBalances.value || !tokenSelected.value?.price) return '0'
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
     .toString()

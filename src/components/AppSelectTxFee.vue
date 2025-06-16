@@ -117,7 +117,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { FeePriority } from '@/mew_api/types'
+import type { FeePriority } from '@/mew_api/types'
 
 /** ----------------
  * DEFAULTS
@@ -145,7 +145,7 @@ const props = defineProps<Props>()
 const chainStore = useChainsStore()
 const { isLoaded: isLoadedChainsData, selectedChain } = storeToRefs(chainStore)
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 
 const txData = computed(() => {
   //EVM CHAINS ONLY
@@ -177,7 +177,7 @@ const { data, onFetchResponse, execute } = useFetchMewApi(
   'POST',
   txData.value,
   {
-    immidiate: false,
+    _immediate: false,
   },
 )
 onFetchResponse(() => {
