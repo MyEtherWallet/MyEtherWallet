@@ -1,4 +1,4 @@
-import { ROUTES_ACCESS, KEYSTORE_ALIAS } from './routeNames'
+import { ROUTES_ACCESS, KEYSTORE_ALIAS, LEDGER_ALIAS, TREZOR_ALIAS } from './routeNames'
 const ViewAccessWallet = () => import('@view-default/ViewAccessWallet.vue')
 const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
 const ViewAccessPrivateKey = () =>
@@ -48,6 +48,7 @@ const RoutesAccess = [
         path: ROUTES_ACCESS.ACCESS_TREZOR.PATH,
         name: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
         component: ViewAccessHardware,
+        alias: TREZOR_ALIAS.access,
         meta: {
           noAuth: true,
         },
@@ -56,6 +57,7 @@ const RoutesAccess = [
         path: ROUTES_ACCESS.ACCESS_LEDGER.PATH,
         name: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
         component: ViewAccessHardware,
+        alias: LEDGER_ALIAS.access,
         meta: {
           noAuth: true,
         },
