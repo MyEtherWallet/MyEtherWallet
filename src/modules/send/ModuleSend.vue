@@ -2,7 +2,6 @@
   <div class="mt-5">
     <form @submit.prevent="handleSubmit">
       <div class="w-full">
-        <!-- <p class="font-bold ml-2 mb-1 text-base">Amount</p> -->
         <app-enter-amount
           v-model:amount="amount"
           v-model:selected-token="tokenSelected"

@@ -234,7 +234,7 @@ const searchResults = computed(() => {
     : chains.value.filter(chain => {
         if (chain.type === storeSelectedChain.value?.type) return chain
       })
-  console.log('searchResults', chainsToSearch)
+
   if (!searchInput.value || searchInput.value === '') {
     if (!selectedChain.value) {
       return chainsToSearch
@@ -243,10 +243,14 @@ const searchResults = computed(() => {
     return [...unique]
   }
   const beginsWith = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
+    return chain.nameLong
+      .toLowerCase()
+      .startsWith(searchInput.value.toLowerCase())
   })
   const other = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
+    return chain.nameLong
+      .toLowerCase()
+      .includes(searchInput.value.toLowerCase())
   })
   const unique = new Set([...beginsWith, ...other])
   return [...unique]

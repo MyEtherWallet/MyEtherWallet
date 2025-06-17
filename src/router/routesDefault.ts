@@ -1,6 +1,8 @@
+
 import { ROUTES_MAIN, ROUTES_SEND } from './routeNames'
 const TempView = () => import('@view-default/ViewTemp.vue')
 const SendView = () => import('@/views/wallet/send/ViewSend.vue')
+const SwapView = () => import('@/views/wallet/swap/ViewSwap.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
 const ModuleSend = () => import('@/modules/send/ModuleSend.vue')
 const ModuleSendNft = () => import('@/modules/nft/ModuleSendNft.vue')
@@ -36,7 +38,7 @@ const DefaultRoutes = [
   {
     path: ROUTES_MAIN.SWAP.PATH,
     name: ROUTES_MAIN.SWAP.NAME,
-    component: TempView,
+    component: SwapView,
     meta: {
       noAuth: true,
     },
