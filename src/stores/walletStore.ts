@@ -29,6 +29,7 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const removeWallet = () => {
     wallet.value = {} as WalletInterface
+    walletAddress.value = null
   }
 
   const isWalletConnected = computed(() => {
@@ -98,6 +99,9 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const removeTokens = () => {
     tokens.value = []
+    mainTokenBalance.value = null
+    balance.value = '0'
+    balanceWei.value = '0'
   }
 
   /**

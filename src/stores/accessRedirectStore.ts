@@ -8,10 +8,7 @@ import { ref } from 'vue'
  * after they complete an access action (like accessing a wallet).
  * It initializes with the home route as the default last visited route.
  */
-export const useAccessRedirectStore = defineStore(
-  'accessRedirectStore ',
-  () => {
-    const lastVisitedRouteName = ref(ROUTES_MAIN.HOME.NAME)
-    return { lastVisitedRouteName }
-  },
-)
+export const useAccessRedirectStore = defineStore('accessRedirectStore', () => {
+  const lastVisitedRouteName = ref(ROUTES_MAIN.HOME.NAME)
+  return { lastVisitedRouteName }
+})

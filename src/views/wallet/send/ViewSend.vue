@@ -5,7 +5,7 @@
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
     >
       <div>
-        <side-balanace />
+        <side-balance />
       </div>
       <div class="flex flex-col items-center gap-4">
         <app-tabs
@@ -45,7 +45,7 @@ import { ROUTES_SEND } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import SideBalanace from '@/modules/side_balance/SideBalance.vue'
+import SideBalance from '@/modules/side_balance/SideBalance.vue'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
