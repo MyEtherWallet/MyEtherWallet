@@ -3,51 +3,25 @@ import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { fromWei } from 'web3-utils'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
+import BigNumber from 'bignumber.js'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useChainsStore } from './chainsStore'
+import { storeToRefs } from 'pinia'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
   const tokens: Ref<Array<TokenBalance>> = ref([])
   const balance = ref('0')
+  const balanceWei = ref('0')
+  const mainTokenBalance = ref<TokenBalance | null>(null)
   const isLoadingBalances = ref(true)
+  const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
 
-  const isWalletConnected = computed(() => {
-    return wallet.value !== null && walletAddress.value !== null
-  })
-  const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
-    const locToken: TokenBalance[] = newTokens.map(token => {
-      return Object.assign({}, token, {
-        name: token.name ?? 'Unknown',
-        symbol: token.symbol ?? 'Unknown',
-        balance: fromWei(token.balance, 'ether'),
-      })
-    })
-    const newTokenCopy: Array<TokenBalance> = []
-    locToken.forEach(token => {
-      if (token.contract === MAIN_TOKEN_CONTRACT) {
-        newTokenCopy.unshift(token)
-      } else {
-        newTokenCopy.push(token)
-      }
-      if (token.contract === MAIN_TOKEN_CONTRACT) {
-        balance.value = token.balance
-      }
-    })
-
-    tokens.value = newTokenCopy
-  }
-
-  const removeTokens = () => {
-    tokens.value = []
-  }
-
-  const setAddress = async () => {
-    if (wallet.value) {
-      walletAddress.value = await wallet.value.getAddress()
-    }
-  }
-
+  /** -------------------------------
+  * The Wallet
+  -------------------------------*/
   const setWallet = (newWallet: WalletInterface) => {
     wallet.value = newWallet
     setAddress()
@@ -55,11 +29,137 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const removeWallet = () => {
     wallet.value = {} as WalletInterface
+    walletAddress.value = null
   }
 
+  const isWalletConnected = computed(() => {
+    return wallet.value !== null && walletAddress.value !== null
+  })
+
+  /** -------------------------------
+  * Address
+  -------------------------------*/
+  const setAddress = async () => {
+    if (wallet.value) {
+      walletAddress.value = await wallet.value.getAddress()
+    }
+  }
+
+  /** -------------------------------
+  * TOKENS
+  -------------------------------*/
   const setIsLoadingBalances = (isLoading: boolean) => {
     isLoadingBalances.value = isLoading
   }
+  const chainStore = useChainsStore()
+  const { selectedChain } = storeToRefs(chainStore)
+
+  const safeMainTokenBalance = computed<TokenBalance | null>(() => {
+    if (!mainTokenBalance.value && selectedChain.value) {
+      return {
+        contract: MAIN_TOKEN_CONTRACT,
+        decimals: 18, // Default for Ether
+        logo_url: selectedChain.value.icon,
+        name: selectedChain.value.currencyNameLong,
+        symbol: selectedChain.value.currencyName,
+        price: 0, // Price will be set later
+        balance: balance.value,
+      }
+    }
+    if (mainTokenBalance.value) {
+      return mainTokenBalance.value
+    }
+    return null
+  })
+  const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
+    const newTokenCopy: Array<TokenBalance> = []
+    newTokens.forEach(token => {
+      if (token.contract === MAIN_TOKEN_CONTRACT) {
+        mainTokenBalance.value = {
+          ...token,
+          name:
+            token.name ?? (selectedChain.value?.currencyNameLong || 'Ether'),
+          symbol:
+            token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
+          balance: fromWei(token.balance, 'ether'),
+        }
+        balance.value = fromWei(token.balance, 'ether')
+        balanceWei.value = fromWei(token.balance, 'wei')
+      } else {
+        newTokenCopy.push({
+          ...token,
+          name: token.name ?? 'Unknown',
+          symbol: token.symbol ?? 'UNK',
+          balance: fromWei(token.balance, 'ether'),
+        })
+      }
+    })
+    tokens.value = newTokenCopy
+  }
+
+  const removeTokens = () => {
+    tokens.value = []
+    mainTokenBalance.value = null
+    balance.value = '0'
+    balanceWei.value = '0'
+  }
+
+  /**
+   * @totalTokensBalanceFiatBN the total balance of all tokens in fiat in BigNumber.
+   */
+  const totalTokensBalanceFiatBN = computed<BigNumber>(() => {
+    if (isWalletConnected.value === false || tokens.value.length === 0) {
+      return BigNumber(0)
+    }
+    return tokens.value.reduce((total, token) => {
+      const tokenBalance = new BigNumber(token.balance || 0)
+      const tokenFiatValue = new BigNumber(token.price || 0)
+      const tokenValue = tokenBalance.multipliedBy(tokenFiatValue)
+      return total.plus(tokenValue)
+    }, new BigNumber(0))
+  })
+
+  /**
+   * @alanceFiatBN the balance of the main token in fiat in BigNumber.
+   */
+  const balanceFiatBN = computed<BigNumber>(() => {
+    if (isWalletConnected.value === false) {
+      return BigNumber(0)
+    }
+    const balanceBN = new BigNumber(balance.value)
+    const price = new BigNumber(mainTokenBalance.value?.price || 0)
+    return balanceBN.multipliedBy(price)
+  })
+
+  /**
+   * @totalFiatBalanceBN - the total balance of the wallet in fiat, including the main token and all other tokens. Value in BigNumber.
+   */
+  const totalFiatPortfolioValueBN = computed<BigNumber>(() => {
+    return totalTokensBalanceFiatBN.value.plus(balanceFiatBN.value)
+  })
+
+  /** -------------------------------
+  * Formatted Values
+  -------------------------------*/
+  //TODO: add proper formatting for fiat values
+
+  /**
+   * @formattedTotalFiatPortflioValue - the total portfolio value in fiat, formatted .
+   */
+  const formattedTotalFiatPortflioValue = computed<string>(() => {
+    return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+  })
+
+  /**
+   * @formattedBalance - the balance of the main token in fiat, formatted.
+   */
+  const formattedBalance = computed<string>(() => {
+    return formatFloatingPointValue(balance.value).value
+  })
+
+  const formattedBalanceFiat = computed<string>(() => {
+    return `$${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+  })
 
   return {
     wallet,
@@ -70,9 +170,20 @@ export const useWalletStore = defineStore('walletStore', () => {
     removeTokens,
     tokens,
     balance,
+    mainTokenBalance,
+    safeMainTokenBalance,
     isLoadingBalances,
+    walletCardWasAnimated,
     setIsLoadingBalances,
     setAddress,
+    // BigNumber total values
     isWalletConnected,
+    totalTokensBalanceFiatBN,
+    balanceFiatBN,
+    totalFiatPortfolioValueBN,
+    // Formatted values
+    formattedTotalFiatPortflioValue,
+    formattedBalance,
+    formattedBalanceFiat,
   }
 })

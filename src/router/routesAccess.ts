@@ -1,4 +1,5 @@
 import { ROUTES_ACCESS, KEYSTORE_ALIAS } from './routeNames'
+import { beforeAccessEnter } from './helpers/helpersAccess'
 const ViewAccessWallet = () => import('@view-default/ViewAccessWallet.vue')
 const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
 const ViewAccessPrivateKey = () =>
@@ -10,6 +11,7 @@ const RoutesAccess = [
   {
     path: ROUTES_ACCESS.ACCESS.PATH,
     props: true,
+    beforeEnter: beforeAccessEnter,
     children: [
       {
         path: '',

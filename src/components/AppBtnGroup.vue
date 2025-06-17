@@ -14,7 +14,7 @@
           :aria-selected="areEqual(selected, btn)"
           :class="[
             {
-              'bg-white shadow-button-group hover:bg-white': areEqual(
+              'bg-white shadow-container hover:bg-white': areEqual(
                 selected,
                 btn,
               ),
