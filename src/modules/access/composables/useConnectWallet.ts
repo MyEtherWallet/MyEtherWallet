@@ -5,11 +5,15 @@ import WagmiWallet from '@/providers/ethereum/wagmiWallet'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { type WalletConfig, WalletConfigType } from '@/modules/access/common/walletConfigs'
+import {
+  type WalletConfig,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
 
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -26,7 +30,7 @@ export const useConnectWallet = () => {
   const providerStore = useProviderStore()
   const chainsStore = useChainsStore()
   const { selectedChain, chains } = storeToRefs(chainsStore)
-  const wagmiConfig = generateConfig(chains.value);
+  const wagmiConfig = generateConfig(chains.value)
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
@@ -36,12 +40,18 @@ export const useConnectWallet = () => {
   const router = useRouter()
   const toastStore = useToastStore()
 
-  const _storeWallet = (wallet: WagmiWallet | Web3InjectedWallet, config: WalletConfig) => {
+  const _storeWallet = (
+    wallet: WagmiWallet | Web3InjectedWallet,
+    config: WalletConfig,
+  ) => {
     wagmiWalletData.value = ''
     openWalletConnectModal.value = false
+    const accessRedirectStore = useAccessRedirectStore()
     setWallet(wallet)
     addWallet(config)
-    router.push({ name: ROUTES_MAIN.HOME.NAME })
+    router.push({
+      name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+    })
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
@@ -54,13 +64,21 @@ export const useConnectWallet = () => {
         text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
         link: {
           title: 'Click here to install',
-          url: wallet.downloadUrls?.browserExtension || wallet.downloadUrls?.qrCode || wallet.downloadUrls?.chrome || wallet.downloadUrls?.firefox || '',
+          url:
+            wallet.downloadUrls?.browserExtension ||
+            wallet.downloadUrls?.qrCode ||
+            wallet.downloadUrls?.chrome ||
+            wallet.downloadUrls?.firefox ||
+            '',
         },
         type: ToastType.Error,
         isInfinite: true,
       })
     } else {
-      const web3Wallet = new Web3InjectedWallet(providerInjected, selectedChain.value?.chainID || '1')
+      const web3Wallet = new Web3InjectedWallet(
+        providerInjected,
+        selectedChain.value?.chainID || '1',
+      )
 
       web3Wallet
         .connect()
@@ -98,8 +116,7 @@ export const useConnectWallet = () => {
   const _connectWagmi = (wallet: WalletConfig) => {
     const connector = connectors.find(
       c =>
-        c.id === wallet.id ||
-        (c.rkDetails as { id: string })?.id === wallet.id,
+        c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
@@ -107,7 +124,11 @@ export const useConnectWallet = () => {
         openWalletConnectModal.value = true
       }
     })
-    const wagWallet = new WagmiWallet(connector!, selectedChain.value?.chainID || '1', wagmiConfig)
+    const wagWallet = new WagmiWallet(
+      connector!,
+      selectedChain.value?.chainID || '1',
+      wagmiConfig,
+    )
     wagWallet
       .connect()
       .then(res => {
@@ -138,9 +159,7 @@ export const useConnectWallet = () => {
           type: _type,
         })
       })
-
   }
-
 
   const connect = async (wallet: WalletConfig) => {
     if ('routeName' in wallet && wallet.routeName) {
@@ -154,7 +173,7 @@ export const useConnectWallet = () => {
       const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
       if (isWeb3) {
         _connectWeb3(wallet)
-        return;
+        return
       }
 
       _connectWagmi(wallet)

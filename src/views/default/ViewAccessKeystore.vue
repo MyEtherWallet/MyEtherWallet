@@ -2,7 +2,7 @@
   <main class="flex justify-center w-full">
     <app-sheet
       :title="$t('access_wallet_keystore.title')"
-      :sheet-class="'max-w-[624px]'"
+      :sheet-class="'max-w-[624px] min-h-[500px]'"
       :title-class="'text-center'"
     >
       <!-- TODO add proper link arrow icon?-->
