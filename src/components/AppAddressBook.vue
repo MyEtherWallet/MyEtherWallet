@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-6 px-4 py-4 rounded-[20px] box-border border border-1 flex items-center"
+    class="mt-6 px-4 py-4 rounded-16 box-border border-1 border-grey-outline flex items-center"
   >
     <div
       v-if="!toAddress"
@@ -24,14 +24,13 @@
         name="address-input"
         type="text"
         placeholder="Address"
-        required
       />
     </div>
     <app-btn-icon
       v-if="addressBookLength > 0"
       class="ml-2 cursor-pointer"
       label="open address book"
-      @click="openAddressBook"
+      @click.prevent="openAddressBook"
     >
       <chevron-down-icon class="w-4 h-4" />
     </app-btn-icon>
@@ -50,7 +49,6 @@
     v-model:is-open="isAddressBookOpen"
     title="Receive to account"
     class="sm:max-w-[500px] sm:mx-auto"
-    :hasContentGutter="false"
   >
     <template #content>
       <div
@@ -80,7 +78,7 @@
           </app-btn-icon>
         </div>
       </div>
-      <div class="flex flex-col border-t-[2px] border-grey-30 px-4 pt-2">
+      <div class="flex flex-col border-t-[2px] border-grey-outline px-4 pt-2">
         <div class="mt-2">
           <!-- TODO: get network info -->
           <h3 class="font-bold">
@@ -149,6 +147,7 @@ import ENSNameResolver from '@/providers/common/nameResolver'
 import { useAddressBookStore } from '@/stores/addressBook'
 import AppDialog from './AppDialog.vue'
 import AppBtnIcon from './AppBtnIcon.vue'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -161,7 +160,9 @@ const addressSearch = ref('')
 const isAddressBookOpen = ref(false)
 
 const resolver = computed(() => {
-  return new ENSNameResolver('0x1')
+  const chainsStore = useChainsStore()
+  const { selectedChain } = storeToRefs(chainsStore)
+  return new ENSNameResolver(selectedChain.value?.chainID || '1')
 })
 
 const addressBlockie = computed(() => {
@@ -185,11 +186,11 @@ const addressErrorMessages = computed(() => {
 const debouncedToAddress = useDebounceFn(async e => {
   if (e.target.value) {
     toAddress.value = e.target.value
-    const locResolvedAddr = await resolver.value.resolveName(toAddress.value)
-    if (locResolvedAddr) {
+    try {
+      const locResolvedAddr = await resolver.value.resolveName(toAddress.value)
       resolvedAddress.value = locResolvedAddr
       emit('update:modelValue', locResolvedAddr)
-    } else {
+    } catch {
       emit('update:modelValue', toAddress.value)
     }
   } else {

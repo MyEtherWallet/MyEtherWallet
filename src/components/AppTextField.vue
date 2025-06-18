@@ -13,9 +13,8 @@
         {
           '!border-primary !border-2': inFocusInput && !hasError,
         },
-        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-30  text-sm rounded-[20px] h-[160px] w-full px-7 pt-[24px] pb-[10px] text-xl transition-colors',
+        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm rounded-16 h-[160px] w-full px-7 pt-[24px] pb-[10px] text-xl transition-colors',
       ]"
-      :required="isRequired"
       :aria-label="placeholder"
       @focus="setInFocusInput()"
       @blur="startOutOfFocusTimeout()"
@@ -33,13 +32,13 @@
         v-else-if="hasRequiredError"
         class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
-        required
+        {{ $t('common.required') }}
       </p>
       <button
         @click="clearInputValue"
         class="rounded-full px-3 text-sm text-primary hoverOpacity ml-auto h-6"
       >
-        clear
+        {{ $t('common.clear') }}
       </button>
     </div>
   </div>

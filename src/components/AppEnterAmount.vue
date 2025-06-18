@@ -1,7 +1,7 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-[20px] box-border border border-1 border-grey-30 bg-white p-[17px] transition-colors"
+    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
     :class="{
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,
@@ -10,24 +10,22 @@
   >
     <div class="flex justify-between items-center w-full">
       <input
-        class="pl-2 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
+        class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
         :class="{ 'text-error': !!error }"
         name="amount-input"
-        type="number"
+        type="text"
+        autoComplete="off"
         placeholder="0.0"
-        required
         v-model.number="amount"
         @focus="setInFocusInput"
+        @keypress="checkIfNumber"
       />
       <app-token-select v-model:selected-token="selectedToken" />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
-        <div
-          v-if="isLoading"
-          class="h-5 mt-2 flex bg-grey-10 rounded-full"
-        ></div>
-        <div v-else class="flex justify-between pt-2">
+        <div v-if="isLoading" class="h-5 flex bg-grey-10 rounded-full"></div>
+        <div v-else class="flex justify-between">
           <div
             class="text-sm"
             :class="{ 'text-error': !!error, 'text-info': !error }"
@@ -49,7 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import { useWalletStore, type Token } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
+import { useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
@@ -79,7 +78,7 @@ const amount = defineModel('amount', {
 })
 
 const selectedToken = defineModel('selectedToken', {
-  type: Object as () => Token,
+  type: Object as () => TokenBalance,
   required: true,
 })
 
@@ -139,4 +138,21 @@ watch(
     }
   },
 )
+
+const checkIfNumber = (e: KeyboardEvent) => {
+  const key = e.key
+  // Numeric
+  if (key >= '0' && key <= '9') {
+    return
+  }
+  // Only allow a single period
+  if (key === '.') {
+    const input = amount.value.toString()
+    if (!input.includes('.')) {
+      return
+    }
+  }
+  // Alphabetical (/non-numeric) or multiple periods. Don't propagate change
+  e.preventDefault()
+}
 </script>

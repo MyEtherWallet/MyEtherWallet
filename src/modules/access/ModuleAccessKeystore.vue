@@ -80,8 +80,13 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { storeToRefs } from 'pinia'
+import { watchDebounced } from '@vueuse/core'
+
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import {
   unlockKeystore,
   type V3Keystore,
@@ -94,9 +99,13 @@ import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
-import { watchDebounced } from '@vueuse/core'
-
+import { walletConfigs } from '@/modules/access/common/walletConfigs'
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
+
+// useChainStore
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 /**------------------------
  * Steps
@@ -169,6 +178,8 @@ const resetKeystore = () => {
  * Keystore Password
  -------------------------*/
 const walletStore = useWalletStore()
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
 const router = useRouter()
 const { setWallet } = walletStore
 
@@ -182,6 +193,9 @@ watchDebounced(password, () => {
 const submitIsDisabled = computed<boolean>(() => {
   return password.value === '' || errorPassword.value !== ''
 })
+
+const accessRedirectStore = useAccessRedirectStore()
+
 const enterPassword = async () => {
   try {
     isUnlockingKeystore.value = true
@@ -190,16 +204,17 @@ const enterPassword = async () => {
       password.value,
     )
     if (res) {
-      console.log(Buffer.from(res.getPrivateKey()), res.getPrivateKey())
-      // TODO: move hardcodes
       const wallet = new PrivateKeyWallet(
         Buffer.from(res.getPrivateKey()),
-        '0x1',
+        selectedChain.value?.chainID || '1',
       )
       resetKeystore()
       setWallet(wallet)
+      addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
-      router.push({ path: ROUTES_WALLET.WALLET.PATH })
+      router.push({
+        name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+      })
     }
   } catch {
     errorPassword.value = 'Invalid password'

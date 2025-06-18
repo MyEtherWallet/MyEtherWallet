@@ -2,37 +2,50 @@
   <component
     :key="listItem.title"
     :class="[
-      'text-small rounded-full py-2 px-4 flex w-full items-center text-white opacity-70 hover:opacity-100',
-      listItem.title === activeItemTitle
-        ? 'bg-white/15 !opacity-100 '
-        : 'hoverOnDarkBG',
+      'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
+      { 'bg-grey-5': isCurrentRoute },
       { 'pl-12': isSubmenu },
     ]"
-    :is="listItem.routeName ? 'router-link' : 'div'"
+    :is="listItem.routeName ? 'router-link' : 'button'"
     :to="{ name: listItem.routeName }"
     v-ripple
   >
-    <img
-      v-if="listItem.icon"
-      :src="listItem.icon"
-      contain
-      alt=""
-      width="24px"
-      height="24px"
-      loading="lazy"
-      :class="['mr-2']"
-    />
+    <div v-if="hasIcon" :class="['mr-3', { 'opacity-80': !isCurrentRoute }]">
+      <icon-buy v-if="listItem.iconID === ICON_IDS.BUY" class="w-5 h-5" />
+      <icon-send
+        v-else-if="listItem.iconID === ICON_IDS.SEND"
+        class="w-5 h-5"
+      />
+      <icon-swap
+        v-else-if="listItem.iconID === ICON_IDS.SWAP"
+        class="w-5 h-5"
+      />
+      <icon-stake
+        v-else-if="listItem.iconID === ICON_IDS.STAKE"
+        class="w-5 h-5"
+      />
+      <icon-portfolio
+        v-else-if="listItem.iconID === ICON_IDS.PORTFOLIO"
+        class="w-5 h-5"
+      />
+      <bell-icon
+        v-else-if="listItem.iconID === ICON_IDS.NOTIFICATIONS"
+        class="w-5 h-5"
+      />
+      <cog-icon
+        v-else-if="listItem.iconID === ICON_IDS.SETTINGS"
+        class="w-5 h-5"
+      />
+      <wrench-screwdriver-icon
+        v-else-if="listItem.iconID === ICON_IDS.TOOLS"
+        class="w-4 h-4"
+      />
+    </div>
     <p class="capitalize">{{ listItem.title }}</p>
-    <img
+    <chevron-down-icon
       v-if="isDropDown"
-      :src="IconChevron"
-      contain
-      alt=""
-      width="11px"
-      height="11px"
-      loading="lazy"
       :class="[
-        'ml-auto invert transition-transform',
+        'ml-auto w-4 h-4 transition-transform',
         { 'rotate-180': isDropDownOpen },
       ]"
     />
@@ -40,11 +53,22 @@
 </template>
 
 <script setup lang="ts">
-import type { AppMenuListItem } from '@/types/components/menuListItem'
-import type { PropType } from 'vue'
+import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
+import { type PropType, computed } from 'vue'
+import IconSend from '@/assets/icons/core_menu/icon-send.vue'
+import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
+import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
+import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
+import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
+import {
+  BellIcon,
+  CogIcon,
+  ChevronDownIcon,
+  WrenchScrewdriverIcon,
+} from '@heroicons/vue/24/solid'
+import { useRouter } from 'vue-router'
 
-import IconChevron from '@assets/icons/chevron-down.svg'
-defineProps({
+const props = defineProps({
   listItem: {
     default: () => {},
     type: Object as PropType<AppMenuListItem>,
@@ -59,9 +83,14 @@ defineProps({
   isDropDownOpen: {
     type: Boolean,
   },
-  activeItemTitle: {
-    type: String,
-    required: true,
-  },
+})
+
+const hasIcon = computed(() => {
+  return props.listItem.iconID !== undefined
+})
+const router = useRouter()
+
+const isCurrentRoute = computed(() => {
+  return router.currentRoute.value.name === props.listItem.routeName
 })
 </script>

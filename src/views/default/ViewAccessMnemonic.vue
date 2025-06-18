@@ -2,13 +2,13 @@
   <main class="flex justify-center w-full">
     <app-sheet
       :title="$t('access_wallet_recovery_phrase.title')"
-      :sheet-class="'max-w-[624px]'"
+      :sheet-class="'max-w-[624px] min-h-[500px]'"
       :title-class="'text-center'"
     >
       <!-- TODO add proper link arrow icon?-->
       <div class="flex justify-center">
         <router-link
-          :to="{ name: ROUTES_HOME.HOME.NAME }"
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
           class="text-center underline text-base mb-8 mx-auto"
           >or select another access method
         </router-link>
@@ -26,5 +26,5 @@
 import AppSheet from '@/components/AppSheet.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import ModuleAccessMnemonic from '@/modules/access/ModuleAccessMnemonic.vue'
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_ACCESS } from '@/router/routeNames'
 </script>

@@ -45,7 +45,7 @@
         </div>
         <hr
           v-if="index !== steps.length - 1"
-          class="h-px bg-grey-30 border-0 w-full"
+          class="h-px bg-grey-outline border-0 w-full"
         />
       </div>
     </div>

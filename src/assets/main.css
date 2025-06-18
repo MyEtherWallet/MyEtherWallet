@@ -14,6 +14,7 @@
   min-width: 320px;
   zoom: 1;
   background-color: #f5f5f7;
+  color: rgba(0, 0, 0, 1);
 }
 
 /**
@@ -21,15 +22,15 @@
  */
 @layer utilities {
   .title1 {
-    @apply text-3xl font-bold text-titleColor text-center leading-p-110 -tracking-[0.03em];
+    @apply text-s-40 font-bold leading-p-110 -tracking-[0.03em];
   }
 
   .title2 {
-    @apply text-s-52 font-bold leading-p-110 text-black -tracking-[0.03em];
+    @apply text-s-52 font-bold leading-p-110 -tracking-[0.03em];
   }
 
   .title3 {
-    @apply text-s-40 font-bold leading-p-110 text-black -tracking-[0.03em];
+    @apply text-s-40 font-bold leading-p-110 -tracking-[0.03em];
     font-feature-settings: 'ss15' on;
   }
 
@@ -38,7 +39,7 @@
   }
 
   .title5 {
-    @apply text-s-28 font-semibold leading-p-110 text-black -tracking-[0.02em];
+    @apply text-s-28 font-semibold leading-p-110 -tracking-[0.02em];
     font-feature-settings: 'ss15' on;
   }
 
@@ -47,7 +48,7 @@
   }
 
   .text6 {
-    @apply text-xl font-medium leading-p-140 text-black -tracking-[0.02em];
+    @apply text-xl font-medium leading-p-140 -tracking-[0.02em];
     font-feature-settings: 'ss15' on;
   }
 
@@ -132,6 +133,10 @@
   @apply hover:bg-white/5 transition-all duration-300 ease-in
 }
 
+.hoverBGWhite {
+  @apply hover:bg-grey-light transition-all duration-300 ease-in;
+}
+
 
 
 /**
@@ -186,10 +191,14 @@ span.ripple {
 /* FADELIST transition - used in lists */
 
 .fadelist-move,
-.fadelist-enter-active,
-.fadelist-leave-active {
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+.fadelist-enter-active {
+  transition: opacity 0.5s ease, transform 0.4s cubic-bezier(0.55, 0, 0.1, 1);
+  transform-origin: center top;
+}
 
+.fadelist-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1),
+    transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 .fadelist-enter-from,

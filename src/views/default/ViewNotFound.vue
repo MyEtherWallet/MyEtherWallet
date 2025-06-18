@@ -13,7 +13,7 @@
       We can't seem to find the page you are looking for.
     </h2>
     <router-link
-      :to="{ name: ROUTES_HOME.HOME.NAME }"
+      :to="{ name: ROUTES_MAIN.HOME.NAME }"
       class="bg-mew-green-text rounded-md w-40 mx-auto text-white py-5 block text-center mt-5"
     >
       Go back to home
@@ -21,5 +21,5 @@
   </main>
 </template>
 <script setup lang="ts">
-import { ROUTES_HOME } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 </script>

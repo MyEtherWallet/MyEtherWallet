@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useWalletStore } from '@/stores/walletStore'
 import DefaultRoutes from './routesDefault'
-import WalletRoutes from './routesWallet'
+import RoutesAccess from './routesAccess'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...DefaultRoutes, ...WalletRoutes],
+  routes: [...DefaultRoutes, ...RoutesAccess],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition

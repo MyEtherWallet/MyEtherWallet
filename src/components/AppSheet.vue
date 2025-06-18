@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'p-6 sm:px-10 lg:px-14 min-h-[500px] bg-white rounded-4xl w-full',
+      'relative p-6 sm:px-10 lg:px-14  bg-white rounded-32 w-full shadow-container',
       sheetClass,
     ]"
   >

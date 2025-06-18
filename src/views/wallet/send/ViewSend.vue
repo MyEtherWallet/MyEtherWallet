@@ -1,20 +1,36 @@
 <template>
-  <app-sheet sheetClass="max-w-[800px] mx-auto ">
+  <div class="flex flex-col items-center gap-4">
     <app-tabs
       v-model:activeTabIndex="activePanel"
       :tabs="tabs"
       :panel="panels"
       :useRouteLink="true"
       label="Send Tabs"
+      class="w-full max-w-[478px] mx-auto"
+    ></app-tabs>
+    <app-base-button v-if="!isWalletConnected" class="w-full max-w-[478px]">
+      Connect Wallet</app-base-button
+    >
+    <app-need-help
+      title="Need help sending?"
+      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+      class="mt-4"
     />
-  </app-sheet>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ROUTES_SEND } from '@/router/routeNames'
 import AppTabs from '@/components/AppTabs.vue'
-import AppSheet from '@/components/AppSheet.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
+
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWalletConnected } = storeToRefs(walletStore)
 
 /** ----------------
  * TABS

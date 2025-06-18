@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'bg-surface rounded-full p-2 flex flex-nowrap items-center hoverOpacityHasBG  min-h-11 ',
+      'bg-white rounded-full px-1 flex flex-nowrap items-center hoverNoBG  min-h-9 shadow-button border-grey-10 border',
       { 'bg-grey-10 animate-pulse min-w-[120px]': isLoading },
     ]"
     type="button"
@@ -11,11 +11,11 @@
   >
     <div
       v-if="!isLoading"
-      class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-30 mr-2 overflow-hidden"
+      class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
     >
       <img
-        class="w-[27px] h-[27px] rounded-full"
-        :src="imageReplacer(selectedToken.logo_url)"
+        class="w-7 h-7 rounded-full"
+        :src="imageReplacer(selectedToken)"
         width="28"
         height="28"
         alt="token icon"
@@ -25,7 +25,7 @@
       {{ truncate(selectedToken.symbol, 7) }}
     </p>
     <div class="ml-1 min-w-4 h-4">
-      <chevron-down-icon v-if="!isLoading" class="stroke-4" />
+      <chevron-down-icon v-if="!isLoading" class="text-info" />
     </div>
   </button>
   <app-dialog
@@ -34,14 +34,59 @@
     class="sm:max-w-[500px] sm:mx-auto"
   >
     <template #content>
-      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
-        <div class="sticky top-0 bg-white z-10 rounded-b-4xl">
+      <div class="h-[80vh] xs:h-[500px] !overflow-y-scroll px-3 sm:px-7">
+        <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2 xs:pt-0">
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
           >
             <app-search-input v-model="searchInput" class="grow" />
-            <!--TODO: implement sort by-->
-            <div class="text-sm pr-4">Sort by: token Name</div>
+            <!--SORT-->
+            <app-pop-up-menu placeholder="sort">
+              <template #menu-button="{ toggleMenu }">
+                <button
+                  class="flex items-center px-2 py-2 text-s-15 font-medium hoverNoBG rounded-full"
+                  @click="toggleMenu"
+                >
+                  <span class="mr-2 ml-1">{{ activeSortValue }}</span>
+                  <ArrowUpIcon
+                    v-if="activeSortDirection === SortDirection.DESC"
+                    class="w-4 h-4"
+                  />
+                  <ArrowDownIcon v-else class="w-4 h-4" />
+                </button>
+              </template>
+              <template #menu-content="{ toggleMenu }">
+                <div class="py-4 flex flex-col">
+                  <div class="flex items-center justify-between mb-1 mx-3">
+                    <p class="text-s-17 font-medium ml-3">Sort by</p>
+                    <app-btn-icon-close @click="toggleMenu" />
+                  </div>
+                  <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
+                  <button
+                    v-for="option in sortOptions"
+                    :key="option.value"
+                    :class="[
+                      option.value === activeSortValue ? 'bg-grey-5' : '',
+                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium',
+                    ]"
+                    :id="option.value"
+                    @click="setActiveSort(option.value)"
+                  >
+                    <p>{{ option.label }}</p>
+                    <div
+                      v-if="activeSortValue === option.value"
+                      class="ml-auto"
+                    >
+                      <ArrowUpIcon
+                        v-if="activeSortDirection === SortDirection.DESC"
+                        class="w-5 h-5 text-primary"
+                      />
+                      <ArrowDownIcon v-else class="w-5 h-5 text-primary" />
+                    </div>
+                  </button>
+                </div>
+              </template>
+            </app-pop-up-menu>
           </div>
         </div>
 
@@ -49,15 +94,14 @@
           <button
             v-for="token in searchResults"
             :key="token.contract"
-            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-full"
+            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-16"
             @click="setSelectedToken(token)"
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
                 <img
-                  v-if="token.logo_url"
                   class="mr-4 w-7 h-7 rounded-full overflow-hidden"
-                  :src="imageReplacer(token.logo_url)"
+                  :src="imageReplacer(token)"
                   alt="token icon"
                 />
                 <div class="text-left">
@@ -72,10 +116,10 @@
               </div>
               <div v-if="token.price !== 0">
                 <p class="text-medium">
-                  $ {{ convertToValue(token.price, token.balance) }}
+                  $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
                 <p class="text-info text-xs">
-                  @ ${{ formatFiatValue(token.price).value }}
+                  @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>
             </div>
@@ -94,32 +138,37 @@
 </template>
 
 <script setup lang="ts">
-import {
-  MAIN_TOKEN_CONTRACT,
-  useWalletStore,
-  type Token,
-} from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import {
+  ChevronDownIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
+import AppPopUpMenu from './AppPopUpMenu.vue'
+import AppBtnIconClose from './AppBtnIconClose.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
+import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
+import { searchArrayByKeysStr } from '@/utils/searchArray'
+
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
 const { tokens } = store
 const { isLoadingBalances: isLoading } = storeToRefs(store)
-
 defineProps({
   selectedToken: {
-    type: Object as () => Token,
+    type: Object as () => TokenBalance,
     required: true,
   },
 })
@@ -129,7 +178,7 @@ const searchInput = ref('')
 
 const defaultImg = computed(() => {
   const img = tokens.find(
-    (token: Token) => token.contract === MAIN_TOKEN_CONTRACT,
+    (token: TokenBalance) => token.contract === MAIN_TOKEN_CONTRACT,
   )
   return img ? img.logo_url : eth
 })
@@ -138,42 +187,120 @@ onMounted(() => {
   if (tokens.length > 0) setSelectedToken(tokens[0])
 })
 
-const searchResults = computed(() => {
-  const resultArray = []
+/** -------------------
+ *   Search & Sort
+ * -------------------*/
+enum SortValueString {
+  NAME = 'Name',
+  SYMBOL = 'Symbol',
+  PRICE = 'Price',
+  USD = 'USD Balance',
+  BALANCE = 'Balance',
+}
 
-  for (const token of tokens) {
-    if (
-      token.symbol.toLowerCase() === searchInput.value.toLowerCase() ||
-      token.name.toLowerCase() === searchInput.value.toLowerCase()
-    ) {
-      resultArray.unshift(token)
-    } else if (
-      token.symbol.toLowerCase().includes(searchInput.value.toLowerCase()) ||
-      token.name.toLowerCase().includes(searchInput.value.toLowerCase())
-    ) {
-      resultArray.push(token)
-    }
-  }
-
-  return resultArray
+const sortOptions = computed(() => {
+  return [
+    {
+      value: SortValueString.NAME,
+      label: 'Name',
+    },
+    {
+      value: SortValueString.SYMBOL,
+      label: 'Symbol',
+    },
+    {
+      value: SortValueString.PRICE,
+      label: 'Price',
+    },
+    {
+      value: SortValueString.USD,
+      label: 'USD Balance',
+    },
+    {
+      value: SortValueString.BALANCE,
+      label: 'Balance',
+    },
+  ]
 })
 
-const setSelectedToken = (token: Token) => {
+enum SortDirection {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+const activeSortValue = ref<SortValueString>(SortValueString.NAME)
+const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
+
+const setActiveSort = (value: SortValueString) => {
+  if (value === activeSortValue.value) {
+    // Toggle direction if the same sort value is clicked
+    activeSortDirection.value =
+      activeSortDirection.value === SortDirection.ASC
+        ? SortDirection.DESC
+        : SortDirection.ASC
+  } else {
+    // Set new sort value and default to ascending direction
+    activeSortValue.value = value
+    activeSortDirection.value = SortDirection.ASC
+  }
+}
+
+interface TokenBalanceWithUsd extends TokenBalance {
+  usd_balance: number
+}
+const searchResults = computed<TokenBalanceWithUsd[]>(() => {
+  const items = tokens.map(token => {
+    const usdBalance = BigNumber(
+      BigNumber(token.price || 0).times(BigNumber(token.balance)),
+    ).toNumber()
+    return {
+      ...token,
+      usd_balance: usdBalance, // Add usd_balance to each token
+      price: token.price || 0, // Ensure price is defined
+    }
+  })
+
+  if (!searchInput.value) {
+    if (activeSortValue.value === SortValueString.NAME) {
+      return sortObjectArrayString(items, 'name', activeSortDirection.value)
+    }
+    if (activeSortValue.value === SortValueString.SYMBOL) {
+      return sortObjectArrayString(items, 'symbol', activeSortDirection.value)
+    }
+    if (activeSortValue.value === SortValueString.PRICE) {
+      return sortObjectArrayNumber(items, 'price', activeSortDirection.value)
+    }
+    if (activeSortValue.value === SortValueString.USD) {
+      return sortObjectArrayNumber(
+        items,
+        'usd_balance',
+        activeSortDirection.value,
+      )
+    }
+    if (activeSortValue.value === SortValueString.BALANCE) {
+      return sortObjectArrayNumber(items, 'balance', activeSortDirection.value)
+    }
+    return items
+  }
+  return searchArrayByKeysStr(items, ['name', 'symbol'], searchInput.value)
+})
+
+const setSelectedToken = (token: TokenBalance) => {
   emit('update:selectedToken', token)
   showAllTokens.value = false
 }
 
-const imageReplacer = (logo: string) => {
-  if (logo === 'https://img.mewapi.io/?image=null' || !!logo) {
+const imageReplacer = (token: TokenBalance) => {
+  if (
+    !token?.logo_url ||
+    token?.logo_url === 'https://img.mewapi.io/?image=null'
+  ) {
     return defaultImg.value
   }
-  return logo
+  return token.logo_url
 }
 
-const convertToValue = (price: number, balance: string) => {
-  const _value = BigNumber(
-    BigNumber(price).times(BigNumber(balance)),
-  ).toString()
+const formatUsdBalance = (_value: number) => {
   return formatFiatValue(_value).value
 }
 

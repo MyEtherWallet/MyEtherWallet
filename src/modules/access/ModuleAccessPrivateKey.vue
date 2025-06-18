@@ -26,22 +26,32 @@ import { isValidPrivate } from '@ethereumjs/util'
 
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ROUTES_WALLET } from '@/router/routeNames'
+import { storeToRefs } from 'pinia'
+
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
 import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
-import { hexToBytes } from 'viem'
+import { hexToBytes } from '@ethereumjs/util'
+import { walletConfigs } from '@/modules/access/common/walletConfigs'
+import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 
 const privateKeyInput = ref('')
-
+const accessRedirectStore = useAccessRedirectStore()
 const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+const recentWalletsStore = useRecentWalletsStore()
+const { addWallet } = recentWalletsStore
 
 const submitIsDisabled = computed<boolean>(() => {
   return privateKeyInput.value === '' || !isValidPrivateKey.value
@@ -77,11 +87,14 @@ const unlock = () => {
   try {
     const wallet = new PrivateKeyWallet(
       Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
-      '0x1',
+      selectedChain?.value?.chainID || '1',
     )
     setWallet(wallet)
+    addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
-    router.push({ path: ROUTES_WALLET.WALLET.PATH })
+    router.push({
+      name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+    })
   } catch (error) {
     // TODO: handle error when toast is implemented
     console.error(error)

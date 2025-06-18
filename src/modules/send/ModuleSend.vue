@@ -1,85 +1,59 @@
 <template>
-  <div class="mt-5">
-    <form @submit.prevent="handleSubmit">
-      <div class="w-full">
-        <p class="font-bold ml-2 mb-1 text-base">Amount</p>
-        <app-enter-amount
-          v-model:amount="amount"
-          v-model:selected-token="tokenSelected"
-          v-model:error="amountError"
-          :validate-input="checkAmountForError"
-        />
-      </div>
-      <app-address-book v-model="toAddress" />
-      <app-select-tx-fee v-model="selectedFee" :fees="gasFees.fee" />
-      <div>
-        <input
-          type="checkbox"
-          name="advanced-settings"
-          v-model="toggleAdvanced"
-        />
-        <label for="advanced-settings">Advanced settings</label>
-      </div>
-      <div v-show="toggleAdvanced">
+  <div>
+    <form
+      @submit.prevent="handleSubmit"
+      class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
+    >
+      <app-sheet sheetClass="w-full !px-4 mt-4">
         <div>
-          <label for="gas-price-input">Gas Price:</label>
-          <input
-            v-model="gasPrice"
-            name="gas-price-input"
-            type="string"
-            required
+          <app-enter-amount
+            v-model:amount="amount"
+            v-model:selected-token="tokenSelected"
+            v-model:error="amountError"
+            :validate-input="checkAmountForError"
           />
         </div>
-        <div>
-          <label for="gas-limit-input">Gas Limit:</label>
-          <input
-            v-model="gasLimit"
-            name="gas-limit-input"
-            type="string"
-            required
-          />
-        </div>
-        <div>
-          <label for="nonce-input">Nonce:</label>
-          <input v-model="nonce" name="nonce-input" type="string" required />
-        </div>
-        <div>
-          <label for="data-input">Data:</label>
-          <input v-model="data" name="data-input" type="string" required />
-        </div>
-      </div>
-      <button
+        <app-address-book v-model="toAddress" />
+        <app-select-tx-fee />
+      </app-sheet>
+      <app-base-button
+        v-if="isWalletConnected"
         type="submit"
-        :class="[
-          !validSend ? 'bg-grey-30' : 'bg-primary',
-          'mt-5 p-2 rounded-full text-white',
-        ]"
         :disabled="!validSend"
+        @click="toggleAdvanced = !toggleAdvanced"
+        class="w-full mt-4"
       >
-        Send
-      </button>
+        Send</app-base-button
+      >
     </form>
-    <app-need-help
-      title="Read more"
-      help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-    />
   </div>
+
+  <!-- TODO: replace network with actual selected network info -->
+  <evm-transaction-confirmation
+    :fromAddress="address"
+    :toAddress="toAddress"
+    :networkFeeUSD="networkFeeUSD"
+    :networkFeeCrypto="networkFeeCrypto"
+    :network="selectedChain || null"
+    :to-token="tokenSelected"
+    :to-amount="amount.toString()"
+    :to-amount-fiat="amountToFiat"
+    :signed-tx="signedTx"
+    v-model="openTxModal"
+  />
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { toHex, toWei } from 'web3-utils'
+import { toWei, fromWei, toBigInt, toHex } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
+import AppSheet from '@/components/AppSheet.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
-
-import {
-  useWalletStore,
-  MAIN_TOKEN_CONTRACT,
-  type Token,
-} from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
+import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import {
   GasPriceType,
@@ -88,39 +62,57 @@ import {
 } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
 
-import { useAddressBookStore } from '@/stores/addressBook'
-
-const addressBookStore = useAddressBookStore()
-const { addAddress } = addressBookStore
+import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
+import BigNumber from 'bignumber.js'
+import { useChainsStore } from '@/stores/chainsStore'
+import { WalletType } from '@/providers/types'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 
 const walletStore = useWalletStore()
 const { wallet, tokens } = storeToRefs(walletStore)
-const amount = ref<number | string>('')
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+const amount = ref<number | string>('0')
 const toAddress = ref('')
-const tokenSelected: Ref<Token> = ref({} as Token) // TODO: Implement token selection
+const tokenSelected: Ref<TokenBalance> = ref({} as TokenBalance) // TODO: Implement token selection
 const amountError = ref('')
 const toggleAdvanced = ref(false)
 // advanced settings
-const gasLimit = ref(21000) // TODO: Implement gas limit once api is ready
+//const gasLimit = ref('21000') // TODO: Implement gas limit once api is ready
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
-const nonce = ref(0) // TODO: Implement nonce once api is ready
+//const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
 const selectedFee = ref(GasPriceType.REGULAR)
 // const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
+const openTxModal = ref(false)
+const isLoadingFees = ref(true)
+
+const signedTx = ref<HexPrefixedString | string>('')
+const address = ref('')
+
 onMounted(async () => {
-  const mainToken: Token = tokens.value.find(
-    (t: Token) => t.contract === MAIN_TOKEN_CONTRACT,
-  ) as Token
-  tokenSelected.value = (mainToken as Token) ? mainToken : tokens.value[0]
+  if (!wallet.value) return
+  const mainToken: TokenBalance = tokens.value.find(
+    (t: TokenBalance) => t.contract === MAIN_TOKEN_CONTRACT,
+  ) as TokenBalance
+  address.value = await wallet.value.getAddress()
+  tokenSelected.value = (mainToken as TokenBalance)
+    ? mainToken
+    : tokens.value[0]
   //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
+  isLoadingFees.value = true
   gasFees.value = await wallet.value.getGasFee({
-    to: '0x000000000000000000000000000000000000',
-    from: wallet.value.getAddress() as HexPrefixedString,
-    value: toHex(toWei(amount.value, 'ether')) as HexPrefixedString,
+    to: '0x0000000000000000000000000000000000000000',
+    address: address.value as HexPrefixedString,
+    value: '0x0' as HexPrefixedString,
     data: data.value as HexPrefixedString,
   })
+
+  isLoadingFees.value = false
 })
 
 const checkAmountForError = () => {
@@ -140,28 +132,47 @@ const checkAmountForError = () => {
   else amountError.value = ''
 }
 
-// TODO: Reimplement fee calculation
-// const fees = computed(() => {
-//   return fromWei((gasLimit.value * gasPrice.value).toString(), 'ether')
-// })
+// Gas Fee for display
+const hasGasFees = computed(() => {
+  return Object.keys(gasFees.value).length > 0
+})
+const networkFeeUSD = computed(() => {
+  if (!hasGasFees.value) return '0'
+  return gasFees.value?.fees[selectedFee.value]?.fiatValue || '0'
+})
+const networkFeeCrypto = computed(() => {
+  if (!hasGasFees.value) return '0'
+  return (
+    fromWei(gasFees.value?.fees[selectedFee.value]?.nativeValue, 'ether') || '0'
+  )
+})
 
 const validSend = computed(() => {
-  return amountError.value === '' && toAddress.value === ''
+  return (
+    amountError.value === '' && toAddress.value !== '' && !isLoadingFees.value
+  )
+})
+
+const amountToFiat = computed(() => {
+  if (!tokenSelected.value?.price) return '0'
+  return BigNumber(tokenSelected.value.price)
+    .times(BigNumber(amount.value))
+    .toString()
 })
 
 watch(
-  () => [selectedFee.value, gasFees.value?.fee],
+  () => [selectedFee.value, gasFees.value?.fees],
   () => {
-    if (!gasFees.value?.fee || !gasFees.value.fee[selectedFee.value]) return
+    if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) return
     gasPrice.value = hexToBigInt(
-      gasFees.value.fee[selectedFee.value].nativeValue,
+      gasFees.value.fees[selectedFee.value].nativeValue,
     ).toString()
   },
 )
 
 watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
-  () => {
+  async () => {
     if (
       tokenSelected.value &&
       tokenSelected.value.contract &&
@@ -176,12 +187,69 @@ watch(
     } else {
       data.value = '0x'
     }
+    if (!toAddress.value) return
+    isLoadingFees.value = true
+    gasFees.value = {} as GasFeeResponse
+    gasFees.value = (await wallet.value?.getGasFee({
+      to: toAddress.value as HexPrefixedString,
+      address:
+        (address.value as HexPrefixedString) ||
+        '0x0000000000000000000000000000000000000000',
+      value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
+      data: data.value as HexPrefixedString,
+    })) as GasFeeResponse
+    isLoadingFees.value = false
   },
 )
 
-const handleSubmit = () => {
-  // TODO: Implement send logic once api is provided
-  console.log('Send', amount.value, toAddress.value, wallet.value.getAddress())
-  addAddress(toAddress.value)
+watch(
+  () => openTxModal.value,
+  (value: boolean) => {
+    if (!value) {
+      amount.value = '0'
+      toAddress.value = ''
+      signedTx.value = ''
+    }
+  },
+)
+
+// toast store
+const toastStore = useToastStore()
+
+const handleSubmit = async () => {
+  if (!wallet.value) return
+  // generate signable transaction
+  const signableTx = await wallet.value?.getSignableTransaction({
+    priority: selectedFee.value,
+    quoteId: gasFees.value?.quoteId,
+  })
+
+  if (
+    wallet.value?.getWalletType() === WalletType.WAGMI ||
+    wallet.value?.getWalletType() === WalletType.INJECTED
+  ) {
+    openTxModal.value = true
+    signedTx.value = signableTx.serialized
+    return
+  }
+
+  // sign transaction
+  if (!wallet.value?.SignTransaction) {
+    console.error('SignTransaction not implemented')
+    return
+  }
+  try {
+    const signResponse = await wallet.value?.SignTransaction(
+      signableTx.serialized,
+    )
+
+    signedTx.value = signResponse.signed
+    openTxModal.value = true
+  } catch (e) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e instanceof Error ? e.message : 'Failed to sign transaction',
+    })
+  }
 }
 </script>
