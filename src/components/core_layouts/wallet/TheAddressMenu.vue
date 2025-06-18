@@ -25,19 +25,8 @@
     >
       {{ $t('connect_wallet') }}
     </router-link>
-    <!-- Dialog with chains list -->
-    <app-dialog
-      v-if="isWalletConnected && walletAddress"
-      v-model:is-open="openDialog"
-      title="Address Menu"
-      class="xs:max-w-[428px] sm:mx-auto"
-    >
-      <template #content>
-        <div class="p-5">
-          <p class="text-center">Temp Menu</p>
-        </div>
-      </template>
-    </app-dialog>
+
+    <the-address-menu-dialog v-model:open-dialog="openDialog" />
   </div>
 </template>
 
@@ -45,13 +34,12 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { truncateAddress } from '@/utils/filters'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-
+import TheAddressMenuDialog from '@/components/core_layouts/wallet/TheAddressMenuDialog.vue'
 const { isXS } = useAppBreakpoints()
 
 const store = useWalletStore()

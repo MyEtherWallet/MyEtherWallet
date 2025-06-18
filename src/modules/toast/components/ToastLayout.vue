@@ -10,7 +10,9 @@
     <div class="flex w-full items-start py-3 px-2">
       <component :is="icon" :class="[iconColor, 'w-7 h-7 mt-1 ml-2 mr-1']" />
       <div class="flex-1 px-2 pt-[5px]">
-        <p :class="{ 'mb-2': toast.link }">{{ toast.text }}</p>
+        <p :class="[{ 'mb-2': toast.link }, 'text-balance break-all']">
+          {{ toast.text }}
+        </p>
         <a
           v-if="toast.link"
           :href="toast.link.url"

@@ -77,10 +77,7 @@ const amount = defineModel('amount', {
   required: true,
 })
 
-const selectedToken = defineModel('selectedToken', {
-  type: Object as () => TokenBalance,
-  required: true,
-})
+const selectedToken = defineModel<TokenBalance>('selectedToken')
 
 const error = defineModel('error', {
   type: String,
@@ -90,7 +87,7 @@ const error = defineModel('error', {
 
 const balanceFiatOrError = computed(() => {
   const _balance = BigNumber(
-    BigNumber(selectedToken.value.price || 0).times(
+    BigNumber(selectedToken.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
@@ -98,7 +95,7 @@ const balanceFiatOrError = computed(() => {
 })
 
 const balance = computed(() => {
-  return selectedToken.value.balance
+  return selectedToken.value?.balance
     ? formatFloatingPointValue(selectedToken.value.balance).value
     : '0'
 })

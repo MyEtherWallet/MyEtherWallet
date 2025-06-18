@@ -20,4 +20,14 @@ export type Chain = components['schemas']['ChainMetadata']
 /** --------------------------
  * POST Tx
   --------------------------*/
-export type EVMTxResponse = components['schemas']['BroadcastEvmTransactionResponse']
+export type EVMTxResponse =
+  components['schemas']['BroadcastEvmTransactionResponse']
+
+/** --------------------------
+ * GET Gas Fees
+ * --------------------------*/
+
+export type FeePriority = components['schemas']['FeePriority']
+export type EstimatesResponse =
+  components['schemas']['GetEvmTransactionEstimateResponse']
+export type GasFeeInfo = components['schemas']['EvmGasFeeInfo']
