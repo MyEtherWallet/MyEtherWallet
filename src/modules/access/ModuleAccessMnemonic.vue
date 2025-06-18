@@ -158,7 +158,7 @@ const extraWord = ref('')
 const defaultPath = "m/44'/60'/0'/0"
 
 /**------------------------
- * Mnemonic
+ * Mnemonic phrase
  -------------------------*/
 
 const mnemonic = ref('')
