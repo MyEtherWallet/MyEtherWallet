@@ -52,7 +52,7 @@
             v-for="fee in displayFees"
             :key="fee.id"
             :class="[
-              model === fee.id
+              gasPriceType === fee.id
                 ? 'border-primary outline outline-primary bg-grey-5'
                 : ' border-grey-outline',
               'border-1 w-full  rounded-2xl hoverNoBG p-2 xs:p-4 min-h-[90px] ',
@@ -60,7 +60,9 @@
             @click="setFee(fee.id)"
           >
             <div class="flex items-center">
-              <div :class="[{ ' text-primary': model === fee.id }, 'mr-4']">
+              <div
+                :class="[{ ' text-primary': gasPriceType === fee.id }, 'mr-4']"
+              >
                 <currency-dollar-icon
                   v-if="fee.id === GasPriceType.ECONOMY"
                   class="w-5 h-5"
@@ -101,24 +103,113 @@
 <script setup lang="ts">
 import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
-import { ref, computed, defineModel, watch } from 'vue'
-import { GasPriceType, type GasFeeType } from '@/providers/types'
+import { ref, computed, watch } from 'vue'
+import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
-
+import type { HexPrefixedString } from '@/providers/types'
 import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+import type {
+  FeePriority,
+  EstimatesResponse,
+  GasFeeInfo,
+} from '@/mew_api/types'
+
+/** ----------------
+ * DEFAULTS
+ ------------------*/
+const DEFAULT_ADR =
+  '0x0000000000000000000000000000000000000000' as HexPrefixedString
+const DEFAULT_DATA = '0x' as HexPrefixedString
+const DEFAULT_VALUE = '0x0' as HexPrefixedString
 
 /** ----------------
  * Props
  ------------------*/
 interface Props {
-  fees: GasFeeType
-  isLoading: boolean
+  txData?: HexPrefixedString
+  txValue?: HexPrefixedString
+  txToAdr?: HexPrefixedString
 }
+
 const props = defineProps<Props>()
+
+/** ----------------
+ * Fetch Fees
+ ------------------*/
+
+const chainStore = useChainsStore()
+const { isLoaded: isLoadedChainsData, selectedChain } = storeToRefs(chainStore)
+const walletStore = useWalletStore()
+const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
+
+const txData = computed(() => {
+  //EVM CHAINS ONLY
+  const _address =
+    isWalletConnected.value && walletAddress.value && walletAddress.value !== ''
+      ? (walletAddress.value as HexPrefixedString)
+      : DEFAULT_ADR
+  return {
+    to: props.txToAdr ? props.txToAdr : DEFAULT_ADR,
+    address: _address,
+    value: props.txValue ? props.txValue : DEFAULT_VALUE,
+    data: props.txData ? props.txData : DEFAULT_DATA,
+  }
+  //TO DO: BITCOIN HANDLER
+})
+
+const fetchURL = computed(() => {
+  //EVM CHAINS ONLY
+  if (isLoadedChainsData.value && selectedChain.value) {
+    return `/v1/evm/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
+  }
+  //TO DO: BITCOIN HANDLER
+  return ''
+})
+const feesReady = ref(false)
+
+const { data, onFetchResponse, execute } = useFetchMewApi<EstimatesResponse>(
+  fetchURL,
+  'POST',
+  txData.value,
+  {
+    _immediate: false,
+  },
+)
+onFetchResponse(() => {
+  if (data.value) {
+    const fees = data.value.fees
+    const keys = Object.keys(fees) as GasPriceType[]
+    keys.forEach(key => {
+      const fee = fees[key]
+      const index = displayFees.findIndex(f => f.id === key)
+      displayFees[index].fiatValue =
+        `$${formatFiatValue(fee.fiatValue || 0).value} ${fee.fiatSymbol}`
+      displayFees[index].nativeValue = formatFee(fee)
+    })
+    feesReady.value = true
+  } else {
+    throw new Error('No gas fees received in response:' + fetchURL.value)
+  }
+})
+
+watch(
+  () => isLoadedChainsData.value,
+  () => {
+    if (isLoadedChainsData.value && selectedChain.value) {
+      feesReady.value = false
+      execute()
+    }
+  },
+)
 
 /** ----------------
  * Modal
@@ -135,38 +226,44 @@ const closeFeeModal = () => {
 /** ----------------
  * Current Selected Fee
  ------------------*/
-const model = defineModel<GasPriceType>({
-  required: true,
-})
+const globalStore = useGlobalStore()
+const { gasPriceType } = storeToRefs(globalStore)
 
-const setFee = (fee: GasPriceType) => {
-  model.value = fee
+const setFee = (fee: FeePriority) => {
+  gasPriceType.value = fee
   closeFeeModal()
   //TODO: add amplitude
 }
 
 const selectedFeeNative = computed(() => {
-  if (hasFees.value) {
-    const converted = fromWei(props.fees[model.value].nativeValue, 'ether')
-    return `${formatFloatingPointValue(converted).value} ${props.fees[model.value].nativeSymbol}`
+  if (hasFees.value && data.value) {
+    return formatFee(data.value.fees[gasPriceType.value])
   }
   return ''
 })
 
 const selectedFeeFiat = computed(() => {
-  if (hasFees.value) {
-    const fiatValue = formatFiatValue(props.fees[model.value].fiatValue).value
-    return `$${fiatValue} ${props.fees[model.value].fiatSymbol}`
+  if (hasFees.value && data.value) {
+    const fiatValue = formatFiatValue(
+      data.value.fees[gasPriceType.value].fiatValue || 0,
+    ).value
+    return `${data.value.fees[gasPriceType.value].fiatSymbol} ${fiatValue} `
   }
   return ''
 })
+
+//TODO: import proper type form the api
+const formatFee = (fee: GasFeeInfo) => {
+  const converted = fromWei(fee.nativeValue, 'ether')
+  return `${formatFloatingPointValue(converted).value} ${fee.nativeSymbol}`
+}
 
 /** ----------------
  * Fee Options
  ------------------*/
 
 interface DisplayFee {
-  id: GasPriceType
+  id: FeePriority
   title: string
   description: string
   fiatValue: string
@@ -204,30 +301,9 @@ const displayFees: DisplayFee[] = [
   },
 ]
 
-const feesReady = ref(false)
-
-watch(
-  () => props.isLoading,
-  () => {
-    if (!props.isLoading) {
-      feesReady.value = false
-      const keys = Object.keys(props.fees) as GasPriceType[]
-      keys.forEach(key => {
-        const fee = props.fees[key]
-        const index = displayFees.findIndex(f => f.id === key)
-        displayFees[index].fiatValue =
-          `$${formatFiatValue(fee.fiatValue).value} ${fee.fiatSymbol}`
-        displayFees[index].nativeValue =
-          `${fromWei(fee.nativeValue, 'ether')} ${fee.nativeSymbol}`
-      })
-      feesReady.value = true
-    } else {
-      feesReady.value = false
-    }
-  },
-)
-
 const hasFees = computed(() => {
-  return feesReady.value && props.fees && Object.keys(props.fees).length > 0
+  return (
+    feesReady.value && data.value && Object.keys(data.value.fees).length > 0
+  )
 })
 </script>

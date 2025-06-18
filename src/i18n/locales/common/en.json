@@ -27,7 +27,9 @@
     "yes": "Yes",
     "no": "No",
     "clear": "clear",
-    "required": "required"
+    "required": "required",
+    "copied_to_clipboard": "Copied to clipboard",
+    "copy_failed": "Copy failed"
   },
   "portfolio": "Portfolio",
   "swap": "Swap",

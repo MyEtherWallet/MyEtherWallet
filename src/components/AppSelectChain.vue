@@ -91,7 +91,7 @@
             <button
               v-for="chain in searchResults"
               :key="chain.name"
-              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
+              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-12 box-border"
               :class="{ 'bg-grey-5': chain.name === selectedChain?.name }"
               @click="setSelectedChain(chain)"
             >

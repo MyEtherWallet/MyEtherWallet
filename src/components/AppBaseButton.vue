@@ -1,11 +1,14 @@
 <template>
   <button
     :class="[
-      'rounded-full py-3 md:py-4 px-7 md:px-8 bg-primary text-white !focus:bg-error !focus:text-primary transition-[background] duration-300 !focus:bg-primary/25',
+      'rounded-full  bg-primary text-white !focus:bg-error !focus:text-primary transition-[background] duration-300 !focus:bg-primary/25',
       {
         'border border-2 border-primary !text-primary  bg-transparent':
           isOutline,
       },
+      { 'py-1 px-3 text-s-15': size === BtnSize.SMALL },
+      { 'py-2 px-5': size === BtnSize.MEDIUM },
+      { 'py-3 md:py-4 px-6 md:px-7': size === BtnSize.LARGE },
       disabled
         ? isOutline
           ? '!border-grey-outline !text-grey-50'
@@ -44,6 +47,13 @@
   </button>
 </template>
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
+enum BtnSize {
+  SMALL = 'small',
+  MEDIUM = 'medium',
+  LARGE = 'large',
+}
 const props = defineProps({
   disabled: {
     type: Boolean,
@@ -56,6 +66,10 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false,
+  },
+  size: {
+    type: String as PropType<'small' | 'medium' | 'large'>,
+    default: 'large',
   },
 })
 const emit = defineEmits(['click'])

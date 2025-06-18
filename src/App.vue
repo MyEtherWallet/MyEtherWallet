@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative">
     <the-app-layout />
     <module-toast />
   </div>
@@ -24,6 +24,7 @@ const { setTokens, setIsLoadingBalances } = store
 watch(
   () => walletAddress.value,
   newWallet => {
+    setIsLoadingBalances(true)
     if (newWallet) {
       wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
         setTokens(balances.result)

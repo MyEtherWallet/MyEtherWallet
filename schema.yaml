@@ -96,6 +96,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ChainName'
         - $ref: '#/components/parameters/BtcAddresses'
+        - $ref: '#/components/parameters/AumAddressType'
+        - $ref: '#/components/parameters/AumAddressPlatform'
       responses:
         200:
           $ref: '#/components/responses/GetBtcBalanceByChainNameAndAddressesSuccess'
@@ -106,6 +108,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ChainName'
         - $ref: '#/components/parameters/BtcAddress'
+        - $ref: '#/components/parameters/AumAddressType'
+        - $ref: '#/components/parameters/AumAddressPlatform'
       responses:
         200:
           $ref: '#/components/responses/GetBtcBalanceByChainNameAndAddressSuccess'
@@ -143,6 +147,17 @@ paths:
         200:
           $ref: '#/components/responses/GetBtcTransactionSuccess'
 
+  /v1/btc/{chainName}/estimates:
+    post:
+      operationId: GetBtcTransactionEstimate
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      requestBody:
+        $ref: '#/components/requestBodies/GetBtcTransactionEstimate'
+      responses:
+        201:
+          $ref: '#/components/responses/GetBtcTransactionEstimateSuccess'
+
   /v1/btc/{chainName}/quotes:
     post:
       operationId: GetBtcTransactionQuote
@@ -156,16 +171,16 @@ paths:
 
   /v1/btc/{chainName}/quotes/{quoteId}/unsigned:
     get:
-      operationId: ConstructBtcTransaction
+      operationId: GetUnsignedBtcTransaction
       parameters:
         - $ref: '#/components/parameters/ChainName'
         - $ref: '#/components/parameters/QuoteId'
         - $ref: '#/components/parameters/PriorityId'
       # requestBody:
-      #   $ref: '#/components/requestBodies/ConstructBtcTransaction'
+      #   $ref: '#/components/requestBodies/GetUnsignedBtcTransaction'
       responses:
         200:
-          $ref: '#/components/responses/ConstructBtcTransactionSuccess'
+          $ref: '#/components/responses/GetUnsignedBtcTransactionSuccess'
 
   /v1/btc/{chainName}/broadcasts:
     post:
@@ -200,6 +215,17 @@ paths:
         200:
           $ref: '#/components/responses/GetEvmTransactionSuccess'
 
+  /v1/evm/{chainId}/estimates:
+    post:
+      operationId: GetEvmTransactionEstimate
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+      requestBody:
+        $ref: '#/components/requestBodies/GetEvmTransactionEstimate'
+      responses:
+        201:
+          $ref: '#/components/responses/GetEvmTransactionEstimateSuccess'
+
   /v1/evm/{chainId}/quotes:
     post:
       operationId: GetEvmTransactionQuote
@@ -213,16 +239,16 @@ paths:
 
   /v1/evm/{chainId}/quotes/{quoteId}/unsigned:
     get:
-      operationId: ConstructEvmTransaction
+      operationId: GetUnsignedEvmTransaction
       parameters:
         - $ref: '#/components/parameters/ChainId'
         - $ref: '#/components/parameters/QuoteId'
         - $ref: '#/components/parameters/PriorityId'
       # requestBody:
-      #   $ref: '#/components/requestBodies/ConstructEvmTransaction'
+      #   $ref: '#/components/requestBodies/GetUnsignedEvmTransaction'
       responses:
         200:
-          $ref: '#/components/responses/ConstructEvmTransactionSuccess'
+          $ref: '#/components/responses/GetUnsignedEvmTransactionSuccess'
 
   /v1/evm/{chainId}/broadcasts:
     post:
@@ -246,7 +272,17 @@ components:
       name: chainName
       in: path
       schema:
-      type: string
+        type: string
+    AumAddressType:
+      name: type
+      in: query
+      schema:
+        type: string
+    AumAddressPlatform:
+      name: platform
+      in: query
+      schema:
+        type: string
     EvmHash:
       in: path
       name: txHash
@@ -289,6 +325,13 @@ components:
         $ref: '#/components/schemas/AnyAddressInput'
 
   requestBodies:
+    GetEvmTransactionEstimate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetEvmTransactionEstimateRequest'
+
     GetEvmTransactionQuote:
       required: true
       content:
@@ -296,12 +339,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetEvmTransactionQuoteRequest'
 
-    # ConstructEvmTransaction:
+    # GetUnsignedEvmTransaction:
     #   required: true
     #   content:
     #     application/json:
     #       schema:
-    #         $ref: '#/components/schemas/ConstructEvmTransactionRequest'
+    #         $ref: '#/components/schemas/GetUnsignedEvmTransactionRequest'
 
     BroadcastEvmTransaction:
       required: true
@@ -310,6 +353,13 @@ components:
           schema:
             $ref: '#/components/schemas/BroadcastEvmTransactionRequest'
 
+    GetBtcTransactionEstimate:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionEstimateRequest'
+
     GetBtcTransactionQuote:
       required: true
       content:
@@ -317,12 +367,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionQuoteRequest'
 
-    # ConstructBtcTransaction:
+    # GetUnsignedBtcTransaction:
     #   required: true
     #   content:
     #     application/json:
     #       schema:
-    #         $ref: '#/components/schemas/ConstructBtcTransactionRequest'
+    #         $ref: '#/components/schemas/GetUnsignedBtcTransactionRequest'
 
     BroadcastBtcTransaction:
       required: true
@@ -416,6 +466,16 @@ components:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionFeesResponse'
 
+    GetBtcTransactionEstimateSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionEstimateResponse'
+
     GetBtcTransactionQuoteSuccess:
       headers:
         X-MEW-API-Signature:
@@ -426,7 +486,7 @@ components:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionQuoteResponse'
 
-    ConstructBtcTransactionSuccess:
+    GetUnsignedBtcTransactionSuccess:
       headers:
         X-MEW-API-Signature:
           schema:
@@ -437,13 +497,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ConstructBtcTransactionResponse'
+            $ref: "#/components/schemas/GetUnsignedBtcTransactionResponse"
 
     BroadcastBtcTransactionSuccess:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BroadcastBtcTransactionResponse'
+            $ref: "#/components/schemas/BroadcastBtcTransactionResponse"
 
     GetEvmTransactionStatusSuccess:
       content:
@@ -457,6 +517,16 @@ components:
           schema:
             $ref: '#/components/schemas/GetEvmTransactionResponse'
 
+    GetEvmTransactionEstimateSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetEvmTransactionEstimateResponse'
+
     GetEvmTransactionQuoteSuccess:
       headers:
         X-MEW-API-Signature:
@@ -467,7 +537,7 @@ components:
           schema:
             $ref: '#/components/schemas/GetEvmTransactionQuoteResponse'
 
-    ConstructEvmTransactionSuccess:
+    GetUnsignedEvmTransactionSuccess:
       headers:
         X-MEW-API-Signature:
           schema:
@@ -478,21 +548,21 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ConstructEvmTransactionResponse'
+            $ref: "#/components/schemas/GetUnsignedEvmTransactionResponse"
 
     BroadcastEvmTransactionSuccess:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BroadcastEvmTransactionResponse'
+            $ref: "#/components/schemas/BroadcastEvmTransactionResponse"
 
   schemas:
     # Input primitives
     BigIntInput:
       type: string
       # Patterns:
-      # - 0x[0-9a-fA-F]+
-      # - [0-9]+
+        # - 0x[0-9a-fA-F]+
+        # - [0-9]+
     EvmAddressInput:
       type: string
       pattern: '^((0|\\)[xX])?[0-9a-fA-F]{40}$'
@@ -582,16 +652,19 @@ components:
       type: string
 
     # Composite types
-    BtcOutput:
+    BtcOutputInput:
       type: object
       required:
         - address
-        - value
+        - amount
       properties:
         address:
-          $ref: '#/components/schemas/BtcAddress'
-        value:
-          $ref: '#/components/schemas/BtcSatoshiValue'
+          $ref: '#/components/schemas/BtcAddressInput'
+        amount:
+          oneOf:
+            - type: number
+            - $ref: '#/components/schemas/StringDecimalUint64Input'
+            - $ref: '#/components/schemas/HexUint64Input'
 
     BtcTransactionQuote:
       type: object
@@ -814,14 +887,14 @@ components:
     BtcTransactionQuotes:
       type: object
       required:
-        - feeProvider
+        # - feeProvider
         - ECONOMY
         - REGULAR
         - FAST
         - FASTEST
       properties:
-        feeProvider:
-          type: string
+        # feeProvider:
+        #   type: string
         ECONOMY:
           $ref: '#/components/schemas/BtcTransactionFeeQuote'
         REGULAR:
@@ -834,12 +907,13 @@ components:
     GetBtcTransactionFeesResponse:
       type: object
       required:
-        - provider
+        # - provider
         - ECONOMY
         - REGULAR
         - FAST
         - FASTEST
       properties:
+        # TODO: Remove this (provider)
         provider:
           type: string
         ECONOMY:
@@ -958,6 +1032,27 @@ components:
     # EVM (Ethereum Virtual Machine) Transactions
     # ===========================================
 
+    GetEvmTransactionEstimateRequest:
+      type: object
+      required:
+        - address
+        - to
+        - value
+        - data
+      properties:
+        address:
+          $ref: '#/components/schemas/EvmAddressInput'
+        to:
+          oneOf:
+            - $ref: '#/components/schemas/EvmAddressInput'
+            - type: 'null'
+        value:
+          $ref: '#/components/schemas/HexUintInput'
+        data:
+          $ref: '#/components/schemas/ByteStringInput'
+        accessList:
+          $ref: '#/components/schemas/AccessList'
+
     GetEvmTransactionQuoteRequest:
       type: object
       required:
@@ -993,10 +1088,17 @@ components:
 
     GetEvmTransactionResponse:
       type: object
-      # required:
       properties:
         TODO:
           type: string
+
+    GetEvmTransactionEstimateResponse:
+      type: object
+      required:
+        - fees
+      properties:
+        fees:
+          $ref: '#/components/schemas/EvmGasFees'
 
     GetEvmTransactionQuoteResponse:
       type: object
@@ -1010,7 +1112,7 @@ components:
         fees:
           $ref: '#/components/schemas/EvmGasFees'
 
-    # ConstructEvmTransactionRequest:
+    # GetUnsignedEvmTransactionRequest:
     #   type: object
     #   required:
     #     - transactionId
@@ -1021,7 +1123,7 @@ components:
     #     priority:
     #       $ref: '#/components/schemas/FeePriority'
 
-    ConstructEvmTransactionResponse:
+    GetUnsignedEvmTransactionResponse:
       type: object
       required:
         - serialized
@@ -1091,14 +1193,18 @@ components:
             position:
               type: string
 
-    GetBtcTransactionQuoteRequest:
+    GetBtcTransactionEstimateRequest:
       type: object
       required:
-        - changeAddress
         - fromAddresses
-        - outputs
       properties:
+        doNotFilterOutOrdinals:
+          type: boolean
+        allowSendingDust:
+          type: boolean
         changeAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        consolidationAddress:
           $ref: '#/components/schemas/BtcAddressInput'
         fromAddresses:
           minItems: 1
@@ -1108,51 +1214,74 @@ components:
             $ref: '#/components/schemas/BtcAddressInput'
         outputs:
           type: array
-          minItems: 1
+          minItems: 0
           maxItems: 255
           items:
-            type: object
-            required:
-              - address
-              - amount
-            properties:
-              address:
-                $ref: '#/components/schemas/BtcAddressInput'
-              amount:
-                oneOf:
-                  - type: number
-                  - $ref: '#/components/schemas/StringDecimalUint64Input'
-                  - $ref: '#/components/schemas/HexUint64Input'
+            $ref: '#/components/schemas/BtcOutputInput'
+
+    GetBtcTransactionQuoteRequest:
+      type: object
+      required:
+        - fromAddresses
+      properties:
+        doNotFilterOutOrdinals:
+          type: boolean
+        allowSendingDust:
+          type: boolean
+        changeAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        consolidationAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        fromAddresses:
+          minItems: 1
+          maxItems: 255
+          type: array
+          items:
+            $ref: '#/components/schemas/BtcAddressInput'
+        outputs:
+          type: array
+          minItems: 0
+          maxItems: 255
+          items:
+            $ref: '#/components/schemas/BtcOutputInput'
+
+    GetBtcTransactionEstimateResponse:
+      type: object
+      required:
+        - fees
+        - ordinalsFilteredOut
+      properties:
+        quoteId:
+          $ref: '#/components/schemas/UUID'
+        fees:
+          $ref: '#/components/schemas/BtcTransactionQuotes'
+        ordinalsFilteredOut:
+          type: boolean
 
     GetBtcTransactionQuoteResponse:
       type: object
       required:
         - quoteId
         - fees
+        - ordinalsFilteredOut
       properties:
         quoteId:
           $ref: '#/components/schemas/UUID'
         fees:
           $ref: '#/components/schemas/BtcTransactionQuotes'
+        ordinalsFilteredOut:
+          type: boolean
 
-    # ConstructBtcTransactionRequest:
-    #   type: object
-    #   required:
-    #     - quoteId
-    #     - priority
-    #   properties:
-    #     quoteId:
-    #       $ref: '#/components/schemas/UUIDInput'
-    #     priority:
-    #       $ref: '#/components/schemas/FeePriority'
-
-    ConstructBtcTransactionResponse:
+    GetUnsignedBtcTransactionResponse:
       type: object
       required:
         - serialized
+        - ordinalsFilteredOut
       properties:
         serialized:
           $ref: '#/components/schemas/ByteString'
+        ordinalsFilteredOut:
+          type: boolean
 
     BroadcastBtcTransactionRequest:
       type: object
@@ -1169,3 +1298,4 @@ components:
       properties:
         txid:
           type: string
+
