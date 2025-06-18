@@ -182,7 +182,7 @@
 <script lang="ts" setup>
 import { UsersIcon } from '@heroicons/vue/24/solid'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { isValidAddress } from '@ethereumjs/util'
 import { toChecksumAddress, isAddress } from '@/utils/addressUtils'
 import createIcon from '@/providers/ethereum/blockies'
@@ -202,7 +202,17 @@ defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const model = defineModel<string>({
+  required: false,
+})
+
+onMounted(() => {
+  // Set initial value from model if available
+  if (model.value) {
+    toAddress.value = model.value
+    debouncedToAddress({ target: { value: model.value } })
+  }
+})
 
 const store = useAddressBookStore()
 const { currentAddressBook } = storeToRefs(store)
@@ -235,26 +245,26 @@ const debouncedToAddress = useDebounceFn(
           toAddress.value,
         )
         resolvedAddress.value = locResolvedAddr
-        emit('update:modelValue', locResolvedAddr)
+        model.value = locResolvedAddr
       } catch {
         if (!isValidAddress(toAddress.value)) {
           resolvedAddress.value = ''
-          emit('update:modelValue', toAddress.value)
+          model.value = toAddress.value
         } else {
           const locResolvedAddr = toChecksumAddress(toAddress.value)
           resolvedAddress.value = locResolvedAddr
-          emit('update:modelValue', locResolvedAddr)
+          model.value = locResolvedAddr
         }
       }
     } else {
       resolvedAddress.value = ''
       toAddress.value = ''
-      emit('update:modelValue', '')
+      model.value = ''
     }
     validateAddressInput()
   },
   350,
-  { maxWait: 1200 },
+  { maxWait: 2000 },
 )
 
 const searchedAddressBook = computed(() => {
@@ -277,7 +287,7 @@ const cleatAdrInput = () => {
   nextTick(() => {
     toAddress.value = ''
     resolvedAddress.value = ''
-    emit('update:modelValue', '')
+    model.value = ''
     validateAddressInput()
   })
 }
@@ -287,7 +297,7 @@ const setAddress = (address: string) => {
   resolvedAddress.value = ''
   isAddressBookOpen.value = false
   clearSearch()
-  emit('update:modelValue', address)
+  model.value = address
 }
 
 /**------------------------
@@ -309,7 +319,6 @@ const hasError = computed(() => {
 const validateAddressInput = () => {
   addressErrorMessages.value = ''
   const addressToCheck = resolvedAddress.value || toAddress.value
-  console.log('Validating address input:', isAddress(addressToCheck))
   if (addressToCheck === '') {
     addressErrorMessages.value = 'address is required'
     return false
