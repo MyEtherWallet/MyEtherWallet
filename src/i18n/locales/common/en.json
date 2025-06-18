@@ -28,7 +28,12 @@
     "no": "No",
     "clear": "clear",
     "required": "required",
-     "copied_to_clipboard": "Copied to clipboard"
+    "copied_to_clipboard": "Copied to clipboard",
+    "from": "From",
+    "to": "To",
+    "amount": "Amount",
+    "network_fee": "Network fee"
+
   },
   "portfolio": "Portfolio",
   "swap": "Swap",

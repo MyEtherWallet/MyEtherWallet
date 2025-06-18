@@ -18,7 +18,7 @@ export const sortObjectArrayNumber = <T>(
       return 0 // If either value is not a number, do not change their order
     }
 
-    if (order === 'asc') {
+    if (order === 'desc') {
       return valueA - valueB
     } else {
       return valueB - valueA

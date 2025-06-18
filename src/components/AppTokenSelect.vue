@@ -170,13 +170,22 @@ import { useChainsStore } from '@/stores/chainsStore'
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
-const { isLoadingBalances, tokens } = storeToRefs(store)
+const {
+  isLoadingBalances,
+  tokens: erc20Tokens,
+  safeMainTokenBalance,
+} = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 
 const isLoading = computed(() => {
   return isLoadingBalances.value || !isLoaded.value
+})
+
+const tokens = computed(() => {
+  if (!isLoaded.value && safeMainTokenBalance.value === null) return []
+  return [safeMainTokenBalance.value, ...erc20Tokens.value]
 })
 
 defineProps({

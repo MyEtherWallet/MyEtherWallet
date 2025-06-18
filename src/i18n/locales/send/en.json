@@ -1,0 +1,21 @@
+{
+  "send": {
+    "send-tokens": "Send Tokens"
+  },
+  "verify-tx": {
+      "title": "Verify Transaction",
+      "description": "Double check the information before confirming the transaction.",
+      "unkown-network":"Unkown network",
+      "confirm": "Confirm and send"
+    }
+    
+}
+
+
+           
+         
+
+           
+      
+            
+        
