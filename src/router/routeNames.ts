@@ -12,6 +12,7 @@ const ROUTES_ACCESS: RouteNameCollection = {
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
   ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
   ACCESS_TREZOR: { NAME: 'AccessTrezor', PATH: 'trezor' },
+  ACCESS_LEDGER: { NAME: 'AccessLedger', PATH: 'ledger' },
 }
 
 const ROUTES_CREATE_WALLET: RouteNameCollection = {

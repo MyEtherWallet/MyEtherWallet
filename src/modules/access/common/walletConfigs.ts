@@ -76,6 +76,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
+    routeName: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
     canSupport: canSupport
   },
   trezor: {

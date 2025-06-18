@@ -23,7 +23,7 @@ class BaseEvmWallet implements WalletInterface {
     this.chainId = chainId
   }
   getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes`, 'POST', tx)
+    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes?noInjectErrors=fals`, 'POST', tx)
     return new Promise((resolve) => {
       onFetchResponse(() => {
         resolve(data.value as GasFeeResponse)
