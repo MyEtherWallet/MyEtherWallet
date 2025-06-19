@@ -32,8 +32,10 @@
     "from": "From",
     "to": "To",
     "amount": "Amount",
-    "network_fee": "Network fee"
-
+    "network_fee": "Network fee",
+    "more_details": "More details",
+    "nonce": "Nonce",
+    "data": "Data"
   },
   "portfolio": "Portfolio",
   "swap": "Swap",

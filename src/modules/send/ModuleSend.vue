@@ -30,12 +30,13 @@
 
   <!-- TODO: replace network with actual selected network info -->
   <evm-transaction-confirmation
+    v-if="isWalletConnected && tokenSelected"
     :fromAddress="address"
     :toAddress="toAddress"
     :networkFeeUSD="networkFeeUSD"
     :networkFeeCrypto="networkFeeCrypto"
     :network="selectedChain || null"
-    :to-token="tokenSelected as TokenBalance"
+    :to-token="tokenSelected"
     :to-amount="amount.toString()"
     :to-amount-fiat="amountToFiat"
     :signed-tx="signedTx"

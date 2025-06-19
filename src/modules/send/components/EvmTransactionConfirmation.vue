@@ -106,6 +106,46 @@
               <p class="text-s-14 text-info">${{ networkFeeUSD }}</p>
             </div>
           </div>
+          <button
+            class="rounded-full hoverNoBG py-2 px-3 flex items-center justify-center max-w-fit mr-auto -mt-2"
+            @click="showMoreDetails = !showMoreDetails"
+          >
+            {{ $t('common.more_details') }}
+            <chevron-down-icon
+              :class="[
+                'transition-transform w-4 h-4 ml-2',
+                { 'rotate-180': showMoreDetails },
+              ]"
+            />
+          </button>
+          <expand-transition>
+            <div v-if="showMoreDetails">
+              <div
+                class="my-2 flex flex-col gap-2 border-1 border-grey-outline py-3 rounded-16"
+              >
+                <!-- Nonce-->
+                <div class="px-4 flex items-start justify-between">
+                  <p
+                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                  >
+                    {{ $t('common.nonce') }}
+                  </p>
+                  <!-- TODO: add proper tx none-->
+                  <p class="text-right basis-9/12">12</p>
+                </div>
+                <!-- Data -->
+                <div class="px-4 flex items-start justify-between">
+                  <p
+                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                  >
+                    {{ $t('common.data') }}
+                  </p>
+                  <!-- TODO: add proper tx data-->
+                  <p class="text-right basis-9/12">0x</p>
+                </div>
+              </div>
+            </div>
+          </expand-transition>
           <div
             class="flex align-center justify-center mt-2 mb-8 gap-3 xs:mx-10"
           >
@@ -145,6 +185,8 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 
 interface EvmTxType {
   toAddress: string
@@ -155,7 +197,7 @@ interface EvmTxType {
   toToken: TokenBalanceRaw
   toAmount: string
   toAmountFiat: string
-  signedTx: HexPrefixedString | string // rawTx may be different
+  signedTx: HexPrefixedString | string // rawTx may be different,
 }
 
 const props = defineProps<EvmTxType>()
@@ -223,4 +265,10 @@ const confirmTransaction = async () => {
 const formatFee = computed(() => {
   return formatFloatingPointValue(props.networkFeeCrypto).value
 })
+
+/** ------------------------------
+ * More details
+ ------------------------------*/
+
+const showMoreDetails = ref(false)
 </script>
