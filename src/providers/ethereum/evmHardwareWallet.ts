@@ -16,7 +16,7 @@ import type { NetworkNames } from '@enkryptcom/types'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 
-class EvmTrezorWallet extends BaseEvmWallet {
+export default class EvmHardwareWallet extends BaseEvmWallet {
   private address: HexPrefixedString
   private networkName: string
   private index: string
@@ -83,7 +83,7 @@ class EvmTrezorWallet extends BaseEvmWallet {
       case HWwalletType.ledger:
         return WalletType.LEDGER
       default:
-        return WalletType.TREZOR
+        throw new Error(`Unsupported hardware wallet type: ${this.walletType}`);
     }
   }
 
@@ -91,5 +91,3 @@ class EvmTrezorWallet extends BaseEvmWallet {
     return Promise.resolve(this.address)
   }
 }
-
-export default EvmTrezorWallet

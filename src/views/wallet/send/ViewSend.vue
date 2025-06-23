@@ -2,7 +2,10 @@
   <div class="min-h-[600px]">
     <div
       v-if="isLoadedChainsData"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      :class="[
+        { 'md:grid-cols-2 lg:grid-cols-3 gap-6': isWalletConnected },
+        'grid grid-cols-1',
+      ]"
     >
       <div>
         <side-balance />
@@ -16,9 +19,14 @@
           label="Send Tabs"
           class="w-full max-w-[478px] mx-auto"
         ></app-tabs>
-        <app-base-button v-if="!isWalletConnected" class="w-full max-w-[478px]">
-          Connect Wallet</app-base-button
+        <router-link
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          class="w-full max-w-[478px]"
         >
+          <app-base-button v-if="!isWalletConnected" class="w-full">
+            Connect Wallet</app-base-button
+          >
+        </router-link>
         <app-need-help
           title="Need help sending?"
           help-link="https://help.myetherwallet.com/en/article/what-is-gas"
@@ -41,7 +49,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ROUTES_SEND } from '@/router/routeNames'
+import { ROUTES_SEND, ROUTES_ACCESS } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'

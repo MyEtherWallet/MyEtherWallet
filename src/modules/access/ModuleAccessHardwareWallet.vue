@@ -97,6 +97,7 @@ import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
+import { NetworkNames } from '@enkryptcom/types'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -232,10 +233,13 @@ const connectingWallet = ref(false)
 // TODO: Handle non EVM networks
 const unlockWallet = async () => {
   connectingWallet.value = true
+  const networkName = chainToEnum[
+    selectedChain.value?.name as string
+  ] as NetworkNames
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
-      networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+      networkName: networkName,
     })
     .then(() => {
       hwWalletInstance.close()
@@ -245,7 +249,7 @@ const unlockWallet = async () => {
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: chainToEnum[selectedChain.value?.chainID || '1'],
+    networkName: networkName,
   })) as PathType[]
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
@@ -328,7 +332,10 @@ watch(
     if (!oldValue) return
     if (newValue) {
       paths.value = []
-      unlockWallet()
+      isLoadingWalletList.value = true
+      hwWalletInstance = new HWwallet()
+      const waiter = new Promise(r => setTimeout(r, 1000))
+      waiter.then(() => loadList())
     }
   },
 )

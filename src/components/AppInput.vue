@@ -37,7 +37,7 @@
           'transition-opacity opacity-0',
         ]"
       >
-        <x-circle-icon class="opacity-50"
+        <x-circle-icon class="text-primary"
       /></app-btn-icon>
       <app-btn-icon
         v-if="type === 'password'"
@@ -46,22 +46,24 @@
       >
         <component
           :is="!showPassword ? EyeSlashIcon : EyeIcon"
-          class="opacity-50"
+          class="text-primary"
         />
       </app-btn-icon>
     </div>
-    <p
-      v-if="errorMessage"
-      class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
-    >
-      {{ errorMessage }}
-    </p>
-    <p
-      v-else-if="hasRequiredError"
-      class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
-    >
-      required
-    </p>
+    <transition name="fade" mode="out-in">
+      <p
+        v-if="errorMessage"
+        class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
+      >
+        {{ errorMessage }}
+      </p>
+      <p
+        v-else-if="hasRequiredError"
+        class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
+      >
+        required
+      </p>
+    </transition>
   </div>
 </template>
 
@@ -75,8 +77,9 @@ import {
   watch,
 } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { EyeIcon, EyeSlashIcon, XCircleIcon } from '@heroicons/vue/24/solid'
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { XCircleIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
   placeholder: {

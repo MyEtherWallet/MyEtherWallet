@@ -1,6 +1,6 @@
 <template>
   <button
-    class="hoverNoBG rounded-16 border-1 bg-white border-grey-outline border-solid px-4 py-3 flex justify-between items-center my-4 text-sm w-full"
+    class="hoverNoBG rounded-16 border-1 bg-white border-grey-outline border-solid px-4 py-3 flex justify-between items-center text-sm w-full"
     @click.prevent="openFeeModal"
     :disabled="!hasFees"
   >
@@ -103,7 +103,7 @@
 <script setup lang="ts">
 import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
 import AppDialog from '@/components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
@@ -210,6 +210,13 @@ watch(
     }
   },
 )
+
+onMounted(() => {
+  if (isLoadedChainsData.value && selectedChain.value) {
+    feesReady.value = false
+    execute()
+  }
+})
 
 /** ----------------
  * Modal
