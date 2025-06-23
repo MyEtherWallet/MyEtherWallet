@@ -60,6 +60,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 
+const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
 
@@ -85,9 +86,15 @@ const error = defineModel('error', {
   default: '',
 })
 
+const tokenBalanceRaw = computed(() => {
+  return walletStore.getTokenBalance(
+    selectedToken.value?.contract || MAIN_TOKEN_CONTRACT,
+  )
+})
+
 const balanceFiatOrError = computed(() => {
   const _balance = BigNumber(
-    BigNumber(selectedToken.value?.price || 0).times(
+    BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
@@ -95,9 +102,7 @@ const balanceFiatOrError = computed(() => {
 })
 
 const balance = computed(() => {
-  return selectedToken.value?.balance
-    ? formatFloatingPointValue(selectedToken.value.balance).value
-    : '0'
+  return formatFloatingPointValue(tokenBalanceRaw.value?.balance || 0).value
 })
 
 watch(
