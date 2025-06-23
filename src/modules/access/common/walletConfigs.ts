@@ -66,7 +66,7 @@ export type WalletConfig = {
 const canSupport = (networkName?: string): boolean => {
   if (!networkName) return false;
   const hwWallet = new HWWallet()
-  return hwWallet.isNetworkSupported((networkName || NetworkNames.Ethereum) as NetworkNames)
+  return hwWallet.isNetworkSupported((networkName) as NetworkNames)
 }
 
 

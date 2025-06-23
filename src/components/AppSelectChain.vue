@@ -232,9 +232,9 @@ const searchResults = computed(() => {
   const chainsToSearch = prop.isBtnGroup
     ? chains.value
     : chains.value.filter(chain => {
-        if (chain.type === storeSelectedChain.value?.type) return chain
+        return chain.type === storeSelectedChain.value?.type
       })
-  console.log('searchResults', chainsToSearch)
+
   if (!searchInput.value || searchInput.value === '') {
     if (!selectedChain.value) {
       return chainsToSearch
