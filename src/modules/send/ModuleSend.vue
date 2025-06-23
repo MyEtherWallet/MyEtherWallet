@@ -5,7 +5,7 @@
       class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
     >
       <app-sheet sheetClass="w-full !px-4 mt-4">
-        <div>
+        <div class="mb-5">
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelected"
