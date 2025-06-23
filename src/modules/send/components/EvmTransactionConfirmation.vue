@@ -107,6 +107,7 @@
             </div>
           </div>
           <button
+            v-if="getDetails()"
             class="rounded-full hoverNoBG py-2 px-3 flex items-center justify-center max-w-fit mr-auto -mt-2"
             @click="showMoreDetails = !showMoreDetails"
           >
@@ -119,7 +120,7 @@
             />
           </button>
           <expand-transition>
-            <div v-if="showMoreDetails">
+            <div v-if="showMoreDetails && txDataFormatted !== null">
               <div
                 class="my-2 flex flex-col gap-2 border-1 border-grey-outline py-3 rounded-16"
               >
@@ -130,8 +131,63 @@
                   >
                     {{ $t('common.nonce') }}
                   </p>
-                  <!-- TODO: add proper tx none-->
-                  <p class="text-right basis-9/12">12</p>
+                  <p class="text-right basis-9/12">
+                    {{ txDataFormatted.nonce }}
+                  </p>
+                </div>
+                <!-- Gas Limit -->
+                <div class="px-4 flex items-start justify-between">
+                  <p
+                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                  >
+                    Gas Limit
+                  </p>
+                  <p class="text-right basis-9/12">
+                    {{ txDataFormatted.gasLimit }}
+                  </p>
+                </div>
+                <!-- Max fee per gas -->
+                <div
+                  v-if="txDataFormatted.maxFeePerGas"
+                  class="px-4 flex items-start justify-between"
+                >
+                  <p
+                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                  >
+                    Max Fee per Gas
+                  </p>
+                  <p class="text-right basis-9/12">
+                    {{ txDataFormatted.maxFeePerGas }} Gwei
+                  </p>
+                </div>
+                <!-- Max fee per gas -->
+                <div
+                  v-if="txDataFormatted.maxPriorityFeePerGas"
+                  class="px-4 flex items-start justify-between"
+                >
+                  <p
+                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                  >
+                    Max Priority Fee per Gas
+                  </p>
+                  <p class="text-right basis-9/12">
+                    {{ txDataFormatted.maxPriorityFeePerGas }} Gwei
+                  </p>
+                </div>
+                <!-- Gas Price -->
+
+                <div
+                  v-if="txDataFormatted.gasPrice"
+                  class="px-4 flex items-start justify-between"
+                >
+                  <p
+                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                  >
+                    Gas Price
+                  </p>
+                  <p class="text-right basis-9/12">
+                    {{ txDataFormatted.gasPrice }} Gwei
+                  </p>
                 </div>
                 <!-- Data -->
                 <div class="px-4 flex items-start justify-between">
@@ -140,8 +196,9 @@
                   >
                     {{ $t('common.data') }}
                   </p>
-                  <!-- TODO: add proper tx data-->
-                  <p class="text-right basis-9/12">0x</p>
+                  <p class="text-right basis-9/12">
+                    {{ txDataFormatted.data }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -182,11 +239,19 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
 import { useChainsStore } from '@/stores/chainsStore'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import {
+  formatFloatingPointValue,
+  formatIntegerToString,
+} from '@/utils/numberFormatHelper'
 import { type HexPrefixedString } from '@/providers/types'
 import { WalletType } from '@/providers/types'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
+import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
+import { commonGenerator } from '@/providers/ethereum/utils'
+import { Hardfork } from '@ethereumjs/common'
+import { hexToBytes } from '@ethereumjs/util'
+import { fromWei } from 'web3-utils'
 
 interface EvmTxType {
   toAddress: string
@@ -271,4 +336,71 @@ const formatFee = computed(() => {
  ------------------------------*/
 
 const showMoreDetails = ref(false)
+
+/**
+ * Get transaction details from the signed transaction.
+ * It tries to parse the transaction as an EIP-1559 transaction first,
+ * and if it fails, it assumes it's a legacy transaction.
+ * @returns {FeeMarketEIP1559Transaction | LegacyTransaction | null} The transaction details or null if the chain is not selected.
+ */
+const getDetails = () => {
+  if (selectedChain.value && selectedChain.value.chainID) {
+    //evm Only
+    const chainId = selectedChain.value.chainID
+    const serializedTx = props.signedTx
+    try {
+      const common = commonGenerator(BigInt(chainId), Hardfork.London)
+      const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
+        hexToBytes(serializedTx),
+        { common },
+      )
+      console.log('EIP-1559 Transaction:', tx)
+      return tx
+
+      // on fail, assume legacy tx
+    } catch {
+      const common = commonGenerator(BigInt(chainId), Hardfork.Berlin)
+      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
+        common,
+      })
+      console.log('Legacy Transaction:', tx)
+      return tx
+    }
+  }
+  return null
+}
+
+/**
+ * Formats the transaction data for display.
+ * It extracts the data, nonce, gas limit, and gas price or max fee per gas
+ * from the transaction details and formats them for display.
+ * @returns {object | null} An object containing the formatted transaction data or null if details are not available.
+ */
+const txDataFormatted = computed(() => {
+  const details = getDetails()
+  if (!details) return null
+  if (details.type === 2) {
+    const _details = details as FeeMarketEIP1559Transaction
+    return {
+      data: `0x${Buffer.from(_details.data).toString('hex')}`,
+      nonce: _details.nonce.toString(),
+      gasLimit: formatIntegerToString(_details.gasLimit.toString()),
+      maxFeePerGas: formatFloatingPointValue(
+        fromWei(_details.maxFeePerGas, 'gwei'),
+      ).value,
+      maxPriorityFeePerGas: formatFloatingPointValue(
+        fromWei(_details.maxPriorityFeePerGas, 'gwei'),
+      ).value,
+    }
+  }
+  const _details = details as LegacyTransaction
+  return {
+    data: `0x${Buffer.from(_details.data).toString('hex')}`,
+    nonce: _details.nonce.toString(),
+    gasLimit: formatIntegerToString(_details.gasLimit.toString()),
+    gasPrice: formatFloatingPointValue(
+      fromWei(_details.gasPrice.toString(), 'gwei'),
+    ).value,
+  }
+})
 </script>

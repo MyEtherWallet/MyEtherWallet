@@ -13,7 +13,7 @@
             :validate-input="checkAmountForError"
           />
         </div>
-        <app-address-book v-model="toAddress" />
+        <app-address-book v-model="toAddress" class="mb-1" />
         <app-select-tx-fee />
       </app-sheet>
       <app-base-button
