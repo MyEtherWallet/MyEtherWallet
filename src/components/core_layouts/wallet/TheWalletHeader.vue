@@ -60,7 +60,7 @@
               class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center"
               @click="toggleSelect"
             >
-              {{ hideSend ? 'More' : $t('tools') }}
+              {{ hideSend ? $t('common.more') : $t('tools') }}
               <chevron-down-icon class="w-4 h-4 ml-2" />
             </button>
           </template>
@@ -177,7 +177,7 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.STAKE,
     },
     {
-      title: t('send'),
+      title: t('common.send'),
       routeName: ROUTES_SEND.SEND.NAME,
       iconID: ICON_IDS.SEND,
     },

@@ -1,14 +1,28 @@
 {
   "send": {
-    "send-tokens": "Send Tokens"
+    "send-tokens": "Send Tokens",
+    "send-nfts": "Send NFTs",
+    "need-help": "Need help sending?",
+    "toast": {
+      "failed_to_sign": "Failed to sign transaction"
+   } 
   },
   "verify-tx": {
       "title": "Verify Transaction",
       "description": "Double check the information before confirming the transaction.",
       "unkown-network":"Unkown network",
       "confirm": "Confirm and send"
+    },
+
+  "error": {
+    "amount": {
+      "required": "amount is required",
+      "less_than_zero": "amount must be greater than 0"
+    },
+    "balance": {
+      "insufficient": "insufficient balance"
     }
-    
+  }
 }
 
 

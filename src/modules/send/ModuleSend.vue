@@ -17,12 +17,11 @@
       </app-sheet>
       <app-base-button
         v-if="isWalletConnected"
-        type="submit"
         :disabled="!validSend"
         @click="handleSubmit"
         class="w-full mt-4"
       >
-        Send</app-base-button
+        {{ $t('common.send') }}</app-base-button
       >
     </div>
   </div>
@@ -67,7 +66,9 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
   storeToRefs(walletStore)
@@ -116,11 +117,11 @@ const checkAmountForError = () => {
 
   // model.value = amount.value
   if (amount.value === undefined || amount.value === '')
-    amountError.value = 'Amount is required' // amount is blank
+    amountError.value = t('error.amount.required') // amount is undefined or blank
   else if (BigInt(baseAmount) < 0)
-    amountError.value = 'Amount must be greater than 0' // amount less than 0
+    amountError.value = t('error.amount.less_than_zero') // amount less than 0
   else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
-    amountError.value = 'Insufficient balance' // amount greater than selected balance
+    amountError.value = t('error.balance.insufficient') // amount greater than selected balance
   else amountError.value = ''
 }
 
@@ -240,7 +241,7 @@ const handleSubmit = async () => {
   } catch (e) {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: e instanceof Error ? e.message : 'Failed to sign transaction',
+      text: e instanceof Error ? e.message : t('send.toast.failed_to_sign'),
     })
   }
 }

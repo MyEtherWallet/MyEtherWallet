@@ -23,12 +23,12 @@
           :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
           class="w-full max-w-[478px]"
         >
-          <app-base-button v-if="!isWalletConnected" class="w-full">
-            Connect Wallet</app-base-button
+          <app-base-button v-if="!isWalletConnected" class="w-full capitalize">
+            {{ $t('common.connect_wallet') }}</app-base-button
           >
         </router-link>
         <app-need-help
-          title="Need help sending?"
+          :title="$t('send.need-help')"
           help-link="https://help.myetherwallet.com/en/article/what-is-gas"
           class="mt-4"
         />
@@ -58,7 +58,9 @@ import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const chainStore = useChainsStore()
@@ -79,13 +81,13 @@ enum PANEL_ID {
 
 const tabs: Tab[] = [
   {
-    name: 'Send Tokens',
+    name: t('send.send-tokens'),
     routeName: ROUTES_SEND.SEND.NAME,
     controlsPanel: PANEL_ID.SEND,
     id: TAB_ID.SEND,
   },
   {
-    name: 'Send NFT',
+    name: t('send.send-nfts'),
     routeName: ROUTES_SEND.SEND_NFT.NAME,
     controlsPanel: PANEL_ID.SEND_NFT,
     id: TAB_ID.SEND_NFT,

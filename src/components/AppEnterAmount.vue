@@ -38,7 +38,7 @@
               { 'text-primary': inFocusInput },
             ]"
           >
-            Balance: {{ balance }}
+            {{ $t('common.balance') }}: {{ balance }}
           </div>
         </div>
       </transition>
@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { type TokenBalance } from '@/mew_api/types'
-import { useWalletStore } from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
@@ -60,7 +60,6 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 
-const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
 
