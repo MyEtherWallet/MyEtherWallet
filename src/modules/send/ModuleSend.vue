@@ -1,7 +1,6 @@
 <template>
   <div>
-    <form
-      @submit.prevent="handleSubmit"
+    <div
       class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
     >
       <app-sheet sheetClass="w-full !px-4 mt-4">
@@ -20,12 +19,12 @@
         v-if="isWalletConnected"
         type="submit"
         :disabled="!validSend"
-        @click="toggleAdvanced = !toggleAdvanced"
+        @click="handleSubmit"
         class="w-full mt-4"
       >
         Send</app-base-button
       >
-    </form>
+    </div>
   </div>
 
   <!-- TODO: replace network with actual selected network info -->
@@ -62,7 +61,6 @@ import {
   type HexPrefixedString,
 } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
-
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -78,17 +76,12 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const toAddress = ref('')
-const tokenSelected: Ref<TokenBalance | undefined> = ref() // TODO: Implement token selection
+const tokenSelected: Ref<TokenBalance | undefined> = ref()
 const amountError = ref('')
-const toggleAdvanced = ref(false)
-// advanced settings
-//const gasLimit = ref('21000') // TODO: Implement gas limit once api is ready
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
-//const nonce = ref(0) // TODO: Implement nonce once api is ready
 const data = ref('0x')
 const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
 const selectedFee = ref(GasPriceType.REGULAR)
-// const toggleTransactionType = ref(true) // TODO: idea, allow different transaction types
 
 const openTxModal = ref(false)
 const isLoadingFees = ref(true)
