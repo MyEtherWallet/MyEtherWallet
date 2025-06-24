@@ -13,19 +13,32 @@
     <div class="pt-2"></div>
     <app-swap-input />
     <div class="pt-4"></div>
-    <app-base-button class="w-full" v-if="isWalletConnected">
+    <app-base-button
+      class="w-full"
+      v-if="isWalletConnected"
+      @click="swapButton"
+    >
       Swap</app-base-button
     >
   </div>
+  <best-offer-modal v-model:best-offer-open="bestSwapLoading" />
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppSwapInput from '@/components/AppSwapInput.vue'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid' // Importing the arrowsUpDown icon from Heroicons
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import BestOfferModal from './components/BestOfferModal.vue'
 import { useWalletStore } from '@/stores/walletStore'
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
+
+const bestSwapLoading = ref(false)
+
+const swapButton = () => {
+  bestSwapLoading.value = true
+}
 </script>
