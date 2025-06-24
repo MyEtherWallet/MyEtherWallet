@@ -5,6 +5,7 @@ const SendView = () => import('@/views/wallet/send/ViewSend.vue')
 const SwapView = () => import('@/views/wallet/swap/ViewSwap.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
 const ModuleSend = () => import('@/modules/send/ModuleSend.vue')
+const ModuleSwap = () => import('@/modules/swap/ModuleSwap.vue')
 const ModuleSendNft = () => import('@/modules/nft/ModuleSendNft.vue')
 
 const DefaultRoutes = [
@@ -37,8 +38,14 @@ const DefaultRoutes = [
   },
   {
     path: ROUTES_MAIN.SWAP.PATH,
-    name: ROUTES_MAIN.SWAP.NAME,
     component: SwapView,
+    children: [
+      {
+        path: '',
+        name: ROUTES_MAIN.SWAP.NAME,
+        component: ModuleSwap,
+      }
+    ],
     meta: {
       noAuth: true,
     },
