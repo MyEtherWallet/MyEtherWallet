@@ -47,6 +47,6 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
   return createConfig({
     chains: chains as [wChain, ...wChain[]],
     transports: transports,
-    connectors: connectorsLocal
+    connectors: connectorsLocal,
   })
 }

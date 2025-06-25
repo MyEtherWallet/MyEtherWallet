@@ -48,6 +48,7 @@ export default {
       surface: 'rgba(232, 232, 237, 1)',
       info: 'rgba(0, 0, 0, 0.65)',
       'grey-light': 'rgba(232, 232, 237, 1)',
+      'grey-light-2': 'rgba(248, 250, 252, 1)',
       'grey-outline': 'rgba(188,200,204,1)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
