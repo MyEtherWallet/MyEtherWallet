@@ -22,7 +22,11 @@
     >
   </div>
   <best-offer-modal v-model:best-offer-open="bestSwapLoadingModal" />
-  <swap-offer-modal v-model:swap-offer-open="bestOfferSelectionModal" />
+  <swap-offer-modal
+    v-model:swap-offer-open="bestOfferSelectionModal"
+    @update:proceedWithSwap="swapInitiatedModal = true"
+  />
+  <swap-initiated-modal v-model:swap-initiated-open="swapInitiatedModal" />
 </template>
 
 <script setup lang="ts">
@@ -33,6 +37,7 @@ import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid' // Importing the arro
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
+import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import { useWalletStore } from '@/stores/walletStore'
 
 const walletStore = useWalletStore()
@@ -40,10 +45,11 @@ const { isWalletConnected } = storeToRefs(walletStore)
 
 const bestSwapLoadingModal = ref(false)
 const bestOfferSelectionModal = ref(false)
-// const swapInitiatedModal = ref(false)
+const swapInitiatedModal = ref(false)
 
 const swapButton = () => {
   // bestSwapLoadingModal.value = true
-  bestOfferSelectionModal.value = true
+  // bestOfferSelectionModal.value = true
+  swapInitiatedModal.value = true
 }
 </script>
