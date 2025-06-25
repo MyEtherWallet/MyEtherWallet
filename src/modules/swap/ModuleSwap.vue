@@ -21,7 +21,7 @@
       Swap</app-base-button
     >
   </div>
-  <best-offer-modal v-model:best-offer-open="bestSwapLoading" />
+  <best-offer-modal v-model:best-offer-open="bestSwapLoadingModal" />
 </template>
 
 <script setup lang="ts">
@@ -36,9 +36,11 @@ import { useWalletStore } from '@/stores/walletStore'
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
-const bestSwapLoading = ref(false)
+const bestSwapLoadingModal = ref(false)
+// const bestOfferSelectionModal = ref(false)
+// const swapInitiatedModal = ref(false)
 
 const swapButton = () => {
-  bestSwapLoading.value = true
+  // bestSwapLoadingModal.value = true
 }
 </script>
