@@ -55,8 +55,9 @@ export const useConnectWallet = () => {
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
+    console.log(wallet)
     const providerInjected = Eip6963Providers.value.find(
-      p => p.info.name === wallet.name,
+      p => p.info.name.toLowerCase() === wallet.name.toLowerCase() || p.info.name.toLowerCase() === wallet.id.toLowerCase(),
     )
 
     if (!providerInjected) {
