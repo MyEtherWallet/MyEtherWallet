@@ -19,7 +19,7 @@
             >
               <img :src="ethSvg" alt="ETH" class="inline-block w-full" />
             </div>
-            <span class="font-bold"> 0.567 ETH</span> you will get:
+            <span class="font-bold"> *fAmount* fSym*</span> you will get:
           </div>
           <div class="flex bg-grey-light-2 rounded-lg p-4 mb-2">
             <div class="relative">
@@ -35,7 +35,7 @@
               </div>
             </div>
             <div>
-              <div class="font-bold text-s-24 ml-5">0.56695 ETH</div>
+              <div class="font-bold text-s-24 ml-5">*ToAmount* *ToSymbol*</div>
               <div class="text-s-12 text-grey-30 ml-5">≈ $41,011.8</div>
             </div>
           </div>
@@ -44,31 +44,29 @@
               <div class="px-4 pt-4 pb-2">
                 <div class="cursor-pointer">
                   <p class="text-grey-50 text-s-14">Offer 1</p>
-                  <p class="font-bold text-s-14">~0.56695 ETH</p>
+                  <p class="font-bold text-s-14">~*fAmount* *fSym*</p>
                 </div>
                 <div class="pt-4" />
                 <div class="cursor-pointer">
                   <p class="text-grey-50 text-s-14">Offer 2</p>
-                  <p class="font-bold text-s-14">~0.56695 ETH</p>
+                  <p class="font-bold text-s-14">~*fAmount* *fSym*</p>
                 </div>
                 <div class="pt-4" />
                 <div class="cursor-pointer">
                   <p class="text-grey-50 text-s-14">Offer 3</p>
-                  <p class="font-bold text-s-14">~0.56695 ETH</p>
+                  <p class="font-bold text-s-14">~*fAmount* *fSym*</p>
                 </div>
               </div>
             </template>
           </app-pop-up-menu>
           <div class="pt-3">
-            <div class="text-s-14 text-grey-50">Rate: 1 ETH ≈ 12.07 COMP</div>
+            <div class="text-s-14 text-grey-50">Rate: 1 ETH ≈ 12.07 *tSym*</div>
             <div class="text-s-14 text-grey-50">Price impact: -0.07%</div>
             <div class="text-s-14 text-grey-50">Max. slippage: 1.3%</div>
             <div class="text-s-14 text-grey-50">
-              Minimum received: 128.345 COMP
+              Minimum received: 128.345 *tSym*
             </div>
-            <div class="text-s-14 text-grey-50">
-              Offer includes 2.5% Enkrypt fee
-            </div>
+            <div class="text-s-14 text-grey-50">Offer includes 2.5% fee</div>
           </div>
         </div>
         <app-select-tx-fee />
