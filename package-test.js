@@ -102,7 +102,15 @@ const EXCEPTIONS = [
   '@walletconnect/modal',
   '@walletconnect/ethereum-provider',
   'viem',
-  'animejs'
+  'animejs',
+  '@actions/github',
+  '@coolwallet/bsc',
+  '@coolwallet/core',
+  '@coolwallet/eth',
+  'lottie-web',
+  'moment-timezone',
+  'babel-jest',
+  'protobufjs'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
