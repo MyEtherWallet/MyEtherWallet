@@ -94,5 +94,11 @@
       "title": "Highest Priority",
       "description": "Will go through, fast, in 99.99% of the cases"
     }
+  },
+  "gas": {
+    "limit": "Gas Limit",
+    "price": "Gas Price",
+    "max_fee": "Max Fee Per Gas",
+    "max_priority": "Max Priority Fee Per Gas"
   }
 }

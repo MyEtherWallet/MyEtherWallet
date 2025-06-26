@@ -27,7 +27,7 @@
                 {{ $t('common.network') }}
               </p>
               <p class="text-s-17">
-                {{ selectedChain?.nameLong || $t('verify-tx.unkown-network') }}
+                {{ selectedChain?.nameLong || $t('verify-tx.unknown-network') }}
               </p>
             </div>
           </div>
@@ -62,7 +62,7 @@
             <div class="flex items-center">
               <img
                 alt=""
-                :src="toToken.logo_url"
+                :src="toToken.logo_url || selectedChain?.icon"
                 class="w-9 h-9 mr-3 overflow-hidden shadow-token rounded-full bg-white p-[1px]"
               />
               <div>
@@ -140,7 +140,7 @@
                   <p
                     class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
                   >
-                    Gas Limit
+                    {{ $t('gas.limit') }}
                   </p>
                   <p class="text-right basis-9/12">
                     {{ txDataFormatted.gasLimit }}
@@ -154,7 +154,7 @@
                   <p
                     class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
                   >
-                    Max Fee per Gas
+                    {{ $t('gas.max_fee') }}
                   </p>
                   <p class="text-right basis-9/12">
                     {{ txDataFormatted.maxFeePerGas }} Gwei
@@ -166,11 +166,11 @@
                   class="px-4 flex items-start justify-between"
                 >
                   <p
-                    class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
+                    class="basis-4/12 text-s-11 font-bold uppercase leading-[24px] text-info"
                   >
-                    Max Priority Fee per Gas
+                    {{ $t('gas.max_priority') }}
                   </p>
-                  <p class="text-right basis-9/12">
+                  <p class="text-right basis-8/12">
                     {{ txDataFormatted.maxPriorityFeePerGas }} Gwei
                   </p>
                 </div>
@@ -183,7 +183,7 @@
                   <p
                     class="basis-3/12 text-s-11 font-bold uppercase leading-[24px] text-info"
                   >
-                    Gas Price
+                    {{ $t('gas.price') }}
                   </p>
                   <p class="text-right basis-9/12">
                     {{ txDataFormatted.gasPrice }} Gwei
@@ -250,8 +250,9 @@ import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from '@/providers/ethereum/utils'
 import { Hardfork } from '@ethereumjs/common'
-import { hexToBytes } from '@ethereumjs/util'
+import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
+import { useI18n } from 'vue-i18n'
 
 interface EvmTxType {
   toAddress: string
@@ -300,6 +301,7 @@ const goBack = () => {
 }
 // Toast
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 const confirmTransaction = async () => {
   //TO: show message that wallet is not connected
@@ -317,7 +319,7 @@ const confirmTransaction = async () => {
   await txPromise?.then(hash => {
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: 'Transaction sent successfully',
+      text: t('send.toast.tx-send-success'),
       duration: 10000,
     })
   })
@@ -354,7 +356,6 @@ const getDetails = () => {
         hexToBytes(serializedTx),
         { common },
       )
-      console.log('EIP-1559 Transaction:', tx)
       return tx
 
       // on fail, assume legacy tx
@@ -363,7 +364,6 @@ const getDetails = () => {
       const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
         common,
       })
-      console.log('Legacy Transaction:', tx)
       return tx
     }
   }
@@ -382,7 +382,7 @@ const txDataFormatted = computed(() => {
   if (details.type === 2) {
     const _details = details as FeeMarketEIP1559Transaction
     return {
-      data: `0x${Buffer.from(_details.data).toString('hex')}`,
+      data: bytesToHex(_details.data),
       nonce: _details.nonce.toString(),
       gasLimit: formatIntegerToString(_details.gasLimit.toString()),
       maxFeePerGas: formatFloatingPointValue(

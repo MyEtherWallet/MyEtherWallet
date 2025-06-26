@@ -4,13 +4,14 @@
     "send-nfts": "Send NFTs",
     "need-help": "Need help sending?",
     "toast": {
-      "failed_to_sign": "Failed to sign transaction"
+      "failed_to_sign": "Failed to sign transaction",
+      "tx-send-success": "Transaction sent successfully"
    } 
   },
   "verify-tx": {
       "title": "Verify Transaction",
       "description": "Double check the information before confirming the transaction.",
-      "unkown-network":"Unkown network",
+      "unknown-network":"Unknown network",
       "confirm": "Confirm and send"
     },
 
