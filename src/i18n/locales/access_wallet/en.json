@@ -61,6 +61,21 @@
     },
     "connect": "Connect your Trezor"
   },
+  "access_wallet_ledger": {
+    "title": "Access Wallet with Ledger",
+    "step": {
+      "step1": {
+        "short": "Connect Ledger",
+        "title": "Connect your Ledger",
+        "description": "Connect your Ledger to your computer. Follow the instructions on your Ledger device."
+      },
+      "step2": {
+        "short": "address & network",
+        "title": "Select address and network"
+      }
+    },
+    "connect": "Connect your Ledger"
+  },
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"
   },

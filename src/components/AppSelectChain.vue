@@ -135,7 +135,7 @@ import AppSearchInput from './AppSearchInput.vue'
 import AppBtnGroup from './AppBtnGroup.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
-defineProps({
+const prop = defineProps({
   isBtnGroup: {
     type: Boolean,
     default: false,
@@ -149,7 +149,11 @@ const globalStore = useGlobalStore()
 const { selectedNetwork: selectedChainStore } = storeToRefs(globalStore)
 const { setSelectedNetwork: setSelectedChainStore } = globalStore
 const chainsStore = useChainsStore()
-const { chains, isLoaded: isLoadedChains } = storeToRefs(chainsStore)
+const {
+  chains,
+  isLoaded: isLoadedChains,
+  selectedChain: storeSelectedChain,
+} = storeToRefs(chainsStore)
 const lastSelectedChain = ref<Chain | null>(null)
 
 const selectedIsDefault = computed(() => {
@@ -225,17 +229,23 @@ const setOpenDialog = (value: boolean) => {
  -------------------------------*/
 const searchInput = ref('')
 const searchResults = computed(() => {
+  const chainsToSearch = prop.isBtnGroup
+    ? chains.value
+    : chains.value.filter(chain => {
+        return chain.type === storeSelectedChain.value?.type
+      })
+
   if (!searchInput.value || searchInput.value === '') {
     if (!selectedChain.value) {
-      return chains.value
+      return chainsToSearch
     }
-    const unique = new Set([selectedChain.value, ...chains.value])
+    const unique = new Set([selectedChain.value, ...chainsToSearch])
     return [...unique]
   }
-  const beginsWith = chains.value.filter(chain => {
+  const beginsWith = chainsToSearch.filter(chain => {
     return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
   })
-  const other = chains.value.filter(chain => {
+  const other = chainsToSearch.filter(chain => {
     return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
   })
   const unique = new Set([...beginsWith, ...other])

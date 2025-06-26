@@ -1,7 +1,7 @@
 <template>
   <main>
     <div
-      class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-space-between mb-8 lg-max:mb-10"
+      class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between mb-8 lg-max:mb-10"
     >
       <div class="flex flex-col sm:flex-row sm:items-center justify-start">
         <img

@@ -12,6 +12,7 @@ import AppBtnIcon from './AppBtnIcon.vue'
 import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
+import { ToastType } from '@/types/notification'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
@@ -64,11 +65,18 @@ const copy = () => {
  * emits the close event when the close button is clicked.
  * @param payload The mouse event payload.
  */
-const copyClick = (payload: MouseEvent) => {
-  copy()
-  toastStore.addToastMessage({
-    text: `${t('common.copied_to_clipboard')}: ${props.copyValue}`,
-  })
-  emit('copy', payload)
+const copyClick = async (payload: MouseEvent) => {
+  try {
+    await copy()
+    toastStore.addToastMessage({
+      text: `${t('common.copied_to_clipboard')}: ${props.copyValue}`,
+    })
+    emit('copy', payload)
+  } catch {
+    toastStore.addToastMessage({
+      text: t('common.copy_failed'),
+      type: ToastType.Error,
+    })
+  }
 }
 </script>

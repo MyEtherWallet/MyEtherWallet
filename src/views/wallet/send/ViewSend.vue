@@ -11,7 +11,7 @@
         v-if="isWalletConnected"
         class="order-2 col-span-10 md:col-span-4 md:order-1 xl-min:col-span-3"
       >
-        <side-balanace class="mx-auto max-w-[478px]" />
+        <side-balance class="mx-auto max-w-[478px]" />
       </div>
       <div
         class="order-1 col-span-10 md:col-span-6 md:order-2 xl-min:col-span-4 justify-self-center flex flex-col items-center gap-4"
@@ -62,7 +62,7 @@ import { ROUTES_SEND, ROUTES_ACCESS } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import SideBalanace from '@/modules/side_balance/SideBalance.vue'
+import SideBalance from '@/modules/side_balance/SideBalance.vue'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'

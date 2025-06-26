@@ -45,7 +45,8 @@
     "symbol": "symbol",
     "price": "price",
     "usd_balance": "USD Balance",
-    "fee": "Fee"
+    "fee": "Fee",
+    "copy_failed": "Copy failed"
   },
   "portfolio": "Portfolio",
   "swap": "Swap",

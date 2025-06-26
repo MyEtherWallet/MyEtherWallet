@@ -11,7 +11,7 @@
         :is="useRouteLink ? 'router-link' : 'button'"
         v-for="(tab, index) in tabs"
         :key="tab.id"
-        :to="{ name: tab.routeName }"
+        :to="useRouteLink ? { name: tab.routeName } : undefined"
         :class="[
           {
             ' border-b-2  border-b-primary text-primary ':

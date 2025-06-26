@@ -15,7 +15,8 @@ export const searchArrayByKeysStr = <T>(
   searchTerm: string,
 ): T[] => {
   const searchLC = searchTerm.toLowerCase()
-  const unique = new Set<T>()
+  const uniqueBegins = new Set<T>()
+  const uniqueContains = new Set<T>()
   const keyArray = Array.isArray(keys) ? keys : [keys] // Handle single key or array of keys
   // create array of keys to search with lowerecase
   const arrayLC: Array<Record<string, string>> = array.map(item => {
@@ -33,20 +34,14 @@ export const searchArrayByKeysStr = <T>(
     keyArray.forEach(key => {
       if (item[key as string]) {
         if (item[key as string].startsWith(searchLC)) {
-          unique.add(array[index])
+          uniqueBegins.add(array[index])
+        } else if (item[key as string].includes(searchLC)) {
+          uniqueContains.add(array[index])
         }
       }
     })
   })
-  //Contains search
-  arrayLC.forEach((item, index) => {
-    keyArray.forEach(key => {
-      if (item[key as string]) {
-        if (item[key as string].includes(searchLC)) {
-          unique.add(array[index])
-        }
-      }
-    })
-  })
+  const unique = new Set<T>([...uniqueBegins, ...uniqueContains])
+  // Convert Set to Array and return
   return [...unique]
 }

@@ -7,7 +7,7 @@
       @update:active-step="backStep"
     >
       <div v-if="activeStep === 0">
-        <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-space-between">
+        <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-between">
           <div>
             <app-step-description
               :description="stepDescription[0]"

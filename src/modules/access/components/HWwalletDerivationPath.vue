@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -97,37 +97,59 @@ const props = defineProps({
     required: true,
   },
   walletType: {
-    type: String as () => HWwalletType,
+    type: String as () => HWwalletType | null,
     default: HWwalletType.trezor,
   },
 })
 
 const derivationStore = useDerivationStore()
-const { trezorSelectedDerivation } = storeToRefs(derivationStore)
-const { setSelectedTrezorDerivation } = derivationStore
+const { trezorSelectedDerivation, ledgerSelectedDerivation } =
+  storeToRefs(derivationStore)
+const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
+  derivationStore
 
-const selectedPath = defineModel<PathType>('selectedPath', {})
+const selectedPath = ref<PathType>({} as PathType)
 
 const setSelectedPath = (path: PathType) => {
   selectedPath.value = path
-  setSelectedTrezorDerivation(path)
+  storeHardwarePath(path)
   setOpenDialog(false)
 }
 
-onMounted(() => {
-  if (trezorSelectedDerivation.value?.path) {
-    selectedPath.value = trezorSelectedDerivation.value as PathType
+const storeHardwarePath = (path: PathType) => {
+  if (props.walletType === HWwalletType.ledger) {
+    setSelectedLedgerDerivation(path)
+  } else if (props.walletType === HWwalletType.trezor) {
+    setSelectedTrezorDerivation(path)
   }
-})
+}
+
+watch(
+  () => props.paths,
+  newValue => {
+    if (
+      props.walletType === HWwalletType.ledger &&
+      ledgerSelectedDerivation.value?.label
+    ) {
+      selectedPath.value = ledgerSelectedDerivation.value as PathType
+    } else if (
+      props.walletType === HWwalletType.trezor &&
+      trezorSelectedDerivation.value?.label
+    ) {
+      selectedPath.value = trezorSelectedDerivation.value as PathType
+    } else {
+      selectedPath.value = newValue[0]
+    }
+  },
+)
 
 watch(
   () => selectedPath.value,
   (newValue: PathType | undefined) => {
     if (newValue) {
-      setSelectedTrezorDerivation(newValue)
+      storeHardwarePath(newValue)
     }
   },
-  { immediate: true },
 )
 
 /** -------------------------------

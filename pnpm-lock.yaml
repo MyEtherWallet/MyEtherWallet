@@ -15,14 +15,14 @@ importers:
         specifier: ^19.6.0
         version: 19.8.1
       '@enkryptcom/hw-wallets':
-        specifier: ^0.0.12
-        version: 0.0.12(@babel/core@7.27.3)(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(tslib@2.8.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.0)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+        specifier: ^0.0.13
+        version: 0.0.13(@babel/core@7.27.3)(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(tslib@2.8.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.2)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       '@enkryptcom/name-resolution':
         specifier: ^0.0.8
         version: 0.0.8(@siddomains/sid-contracts@0.1.31(@nomiclabs/hardhat-web3@2.0.1(hardhat@2.24.1(bufferutil@4.0.9)(ts-node@10.9.2(@types/node@22.15.24)(typescript@5.6.3))(typescript@5.6.3)(utf-8-validate@5.0.10))(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(bufferutil@4.0.9)(ethers@5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(hardhat@2.24.1(bufferutil@4.0.9)(ts-node@10.9.2(@types/node@22.15.24)(typescript@5.6.3))(typescript@5.6.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(web3-core-helpers@1.10.4)(web3-core-promievent@1.10.4)(web3-eth-abi@4.4.1(typescript@5.6.3)(zod@3.25.36))(web3-utils@4.3.3))(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@enkryptcom/swap':
         specifier: ^0.0.3
-        version: 0.0.3(@polkadot/util@12.6.2)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+        version: 0.0.3(@polkadot/util@13.5.1)(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@enkryptcom/types':
         specifier: ^0.0.5
         version: 0.0.5
@@ -650,8 +650,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-block-scoping@7.27.3':
-    resolution: {integrity: sha512-+F8CnfhuLhwUACIJMLWnjz6zvzYM2r0yeIHKlbgfw7ml8rOMJsXNXV/hyRcb3nb493gRs4WvYpQAndWj/qQmkQ==}
+  '@babel/plugin-transform-block-scoping@7.27.5':
+    resolution: {integrity: sha512-JF6uE2s67f0y2RZcm2kpAUEbD50vH62TyWVebxwHAlbSdM49VqPz8t4a1uIjp4NIOIZ4xzLfjY5emt/RCyC7TQ==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -890,8 +890,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-regenerator@7.27.1':
-    resolution: {integrity: sha512-B19lbbL7PMrKr52BNPjCqg1IyNUIjTcxKj8uX9zHO+PmWN93s19NDr/f69mIkEp2x9nmDJ08a7lgHaTTzvW7mw==}
+  '@babel/plugin-transform-regenerator@7.27.5':
+    resolution: {integrity: sha512-uhB8yHerfe3MWnuLAhEbeQ4afVoqv8BQsPqrTv7e/jZ9y00kJL6l9a/f4OWaKxotmjzewfEyXE1vgDJenkQ2/Q==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -908,8 +908,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-transform-runtime@7.27.3':
-    resolution: {integrity: sha512-bA9ZL5PW90YwNgGfjg6U+7Qh/k3zCEQJ06BFgAGRp/yMjw9hP9UGbGPtx3KSOkHGljEPCCxaE+PH4fUR2h1sDw==}
+  '@babel/plugin-transform-runtime@7.27.4':
+    resolution: {integrity: sha512-D68nR5zxU64EUzV8i7T3R5XP0Xhrou/amNnddsRQssx6GrTLdZl1rLxyjtVZBd+v/NVX4AbTPOB5aU8thAZV1A==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -985,8 +985,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0 || ^8.0.0-0 <8.0.0
 
-  '@babel/runtime-corejs3@7.27.3':
-    resolution: {integrity: sha512-ZYcgrwb+dkWNcDlsTe4fH1CMdqMDSJ5lWFd1by8Si2pI54XcQjte/+ViIPqAk7EAWisaUxvQ89grv+bNX2x8zg==}
+  '@babel/runtime-corejs3@7.27.6':
+    resolution: {integrity: sha512-vDVrlmRAY8z9Ul/HxT+8ceAru95LQgkSKiXkSYZvqtbkPSfhZJgpRp45Cldbh1GJ1kxzQkI70AqyrTI58KpaWQ==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.27.3':
@@ -1456,8 +1456,8 @@ packages:
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0':
     resolution: {integrity: sha512-Bz1zLGEqBQ0BVkqt1OgMxdBOE3BdUWUd7Ly9Ecr/aUwkA8AV1w1XzBMe4xblmJHnB1XXNlPH4SraXCvO+q0Mig==}
 
-  '@enkryptcom/hw-wallets@0.0.12':
-    resolution: {integrity: sha512-onzKr8/15CSsW9IfjogaKUk1Q2HmmwtC1qk642+m2iI4kDdBb17wsuvs7N1/J4VWfzO79i22+h2Ol2A9Mz+H5Q==}
+  '@enkryptcom/hw-wallets@0.0.13':
+    resolution: {integrity: sha512-7+G/6AjNmJ8dTDroff3+Kh6tIgJ6MnnvMp1l1GAsZVP6qZV8io326Q+VJuPw9h4vB3J2dzNR41nSTldU3QzkaQ==}
     engines: {node: '>=14.15.0'}
 
   '@enkryptcom/name-resolution@0.0.8':
@@ -2002,6 +2002,9 @@ packages:
     resolution: {integrity: sha512-0J+zgWxHN+xXONWIyPWKFMgVuJoZuGiIFu8yxk7RJjxkzpGmyja5wRFqZIVtjDVOQpV+Rw0iOAjYPE2eQyjr0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@ethereumjs/common@10.0.0':
+    resolution: {integrity: sha512-qb0M1DGdXzMAf3O6Zg5Wr5UDjoxBmplLPbQyC6DQ0LfgVDBRdqn0Pk+/hHm4q0McE22Of0MxbV4hhiDTkSgKag==}
+
   '@ethereumjs/common@2.5.0':
     resolution: {integrity: sha512-DEHjW6e38o+JmB/NO3GZBpW4lpaiBpkFgXF6jLcJ6gETBYpEyaA5nTimsWBUJR3Vmtm/didUEbNjajskugZORg==}
 
@@ -2014,6 +2017,11 @@ packages:
   '@ethereumjs/common@4.4.0':
     resolution: {integrity: sha512-Fy5hMqF6GsE6DpYTyqdDIJPJgUtDn4dL120zKw+Pswuo+iLyBsEYuSyzMw6NVzD2vDzcBG9fE4+qX4X2bPc97w==}
 
+  '@ethereumjs/rlp@10.0.0':
+    resolution: {integrity: sha512-h2SK6RxFBfN5ZGykbw8LTNNLckSXZeuUZ6xqnmtF22CzZbHflFMcIOyfVGdvyCVQqIoSbGMHtvyxMCWnOyB9RA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   '@ethereumjs/rlp@4.0.1':
     resolution: {integrity: sha512-tqsQiBQDQdmPWE1xkkBq4rlSW5QZpLOUJ5RJh2/9fug+q9tnUhuZoVLk7s0scUIKTOzEtR72DFBXI4WiZcMpvw==}
     engines: {node: '>=14'}
@@ -2023,6 +2031,10 @@ packages:
     resolution: {integrity: sha512-DziebCdg4JpGlEqEdGgXmjqcFoJi+JGulUXwEjsZGAscAQ7MyD/7LE/GVCP29vEQxKc7AAwjT3A2ywHp2xfoCA==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@ethereumjs/tx@10.0.0':
+    resolution: {integrity: sha512-DApm04kp2nbvaOuHy2Rkcz1ZeJkTVgW6oCuNnQf9bRtGc+LsvLrdULE3LoGtBItEoNEcgXLJqrV0foooWFX6jw==}
+    engines: {node: '>=18'}
 
   '@ethereumjs/tx@3.3.2':
     resolution: {integrity: sha512-6AaJhwg4ucmwTvw/1qLaZUX5miWrwZ4nLOUsKyb/HtzS3BMw/CasKhdi1ims9mBKeK9sOJCH4qGKOBGyJCeeog==}
@@ -2036,6 +2048,10 @@ packages:
 
   '@ethereumjs/tx@5.4.0':
     resolution: {integrity: sha512-SCHnK7m/AouZ7nyoR0MEXw1OO/tQojSbp88t8oxhwes5iZkZCtfFdUrJaiIb72qIpH2FVw6s1k1uP7LXuH7PsA==}
+    engines: {node: '>=18'}
+
+  '@ethereumjs/util@10.0.0':
+    resolution: {integrity: sha512-lO23alM4uQsv8dp6/yEm4Xw4328+wIRjSeuBO1mRTToUWRcByEMTk87yzBpXgpixpgHrl+9LTn9KB2vvKKtOQQ==}
     engines: {node: '>=18'}
 
   '@ethereumjs/util@8.0.5':
@@ -2355,8 +2371,8 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@hashgraph/cryptography@1.7.4':
-    resolution: {integrity: sha512-aYPfukqLCOoEzmilTrOSDWoJjZnzfcc84tKqrBqFbiduZLIoT+TY4Y3AA1Vdsun9dlWmRnOx8L4qIzPVlKPQhw==}
+  '@hashgraph/cryptography@1.8.0':
+    resolution: {integrity: sha512-tkBbGd8zU2dNCwlxCX47cS+VhRosh8mEbFfjvjzjcuW2KxdVsdV6GshyVtXeFxHMijo5kAcxd2CoubhCreNdaQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo-crypto: '*'
@@ -2585,8 +2601,8 @@ packages:
   '@keplr-wallet/crypto@0.9.10':
     resolution: {integrity: sha512-zjoUUL5Ky72eJBm7bd9kPNBTgQL/cFO6pbvPgVa32S8UZ6GlwsPSyiHuvq0k8z0t9X9GwdpuH0nrnlL4viU4fw==}
 
-  '@keplr-wallet/proto-types@0.12.237':
-    resolution: {integrity: sha512-5uvCm9Nt7Y10VINqaOQiVwM625+dPv3uzBB2llasuaBjvZpNRXfNCT8lqqwok0WXY0M5fVsF+CH0Cxlrw+NLrA==}
+  '@keplr-wallet/proto-types@0.12.239':
+    resolution: {integrity: sha512-I+cVtYprfUMx5H3IJONpmLAM335Y6X39Krlt8Yj2FQBuz6Ckww5Wtqdl4VHMM6/QmtxPeXQCSlVWp2JmhnWIwQ==}
 
   '@keplr-wallet/types@0.11.64':
     resolution: {integrity: sha512-GgzeLDHHfZFyne3O7UIfFHj/uYqVbxAZI31RbBwt460OBbvwQzjrlZwvJW3vieWRAgxKSITjzEDBl2WneFTQdQ==}
@@ -2615,11 +2631,11 @@ packages:
   '@ledgerhq/coin-elrond@0.3.6':
     resolution: {integrity: sha512-NWW7geD1tvE38y+6n8/w2ULQXWPB7H3L1/YUeloI9R2kky0RD5YXUvYqgkPa3KOiRv/6EmlIpkUjXz66v/ew2w==}
 
-  '@ledgerhq/coin-evm@2.22.1':
-    resolution: {integrity: sha512-Oq//5HM2jJoX7vbVioYt64G7XTSdPdTjyFJbU9CjeEOLLMYoLsGsLiSuI32rLuLA9GiJ0JR87g44DyqTQWNn8A==}
+  '@ledgerhq/coin-evm@2.22.2':
+    resolution: {integrity: sha512-50xRvQejfhwb+AC+ZlvON8GWckTBu/YY+u7nS3M/hPSOstM0H8aDi+1QGbZlMielEQDnxpPvq03AI6RJD1XFxA==}
 
-  '@ledgerhq/coin-filecoin@1.9.7':
-    resolution: {integrity: sha512-9JOiVqISfglmsIvb6tSqOAmBGQo6ORuFQfwlUwZSg3LXHU6ezom7/3NRv6gvJDvAlV7euudvKGfQam+OcVIXXw==}
+  '@ledgerhq/coin-filecoin@1.9.8':
+    resolution: {integrity: sha512-japtsgfXz70sARvm+KuX9ZY0kwXhlf9kl2cLelaDEdKIYAGBSnAzG8R2ORh/nbhaErarPH4aW3nREmq7FFIs/A==}
 
   '@ledgerhq/coin-framework@0.25.0':
     resolution: {integrity: sha512-9kVcW74/7/a2Sv/lbOoIbPlyVTItpt8cbaMjx2yURp4v79wUHHISuU1itqqkjNNHhU/sGZLFgMNBlEmbCTWk8A==}
@@ -2636,17 +2652,17 @@ packages:
   '@ledgerhq/coin-framework@2.6.0':
     resolution: {integrity: sha512-+DqOJ2Px/Y8Xn64U/7BFx3aplFAGpO1SCcjXhPtQzy1Y/RPrHylL2a80swXEcrG3nVfSyfDGoElqAW3EWqUCfA==}
 
-  '@ledgerhq/coin-framework@5.1.0':
-    resolution: {integrity: sha512-DRlN2193Ownmhc3/1GRCkbdqJh5zaX7qyNsLziyHG24C5nxDNf/gXtdPpQtE8fUqvvLpwlYdM3bsSieRy11tmA==}
+  '@ledgerhq/coin-framework@5.2.0':
+    resolution: {integrity: sha512-fBixhh0vXxBCuA+GAlDtXyguBznPM5Yd346tzdzxRxx8XOEvwUq5lY/cIq24+ws/RePaNBKH0nWbzOTcfzlV8g==}
 
-  '@ledgerhq/coin-hedera@1.6.7':
-    resolution: {integrity: sha512-SrH6bGSxOvUQMA8h1OE3LGVDhe+nhZ5twAZuc1NGracWdsGL3fI0zeNDz2d55HWKD18gvXLb2Y2ELOGRrIhxfg==}
+  '@ledgerhq/coin-hedera@1.7.0':
+    resolution: {integrity: sha512-S/1syFYQ9HowTelXZpUcwDeopwvNll7cQj723mxPJYjlgDXTqzz59urd4aGoANs8eE3Ir+8m5qEZSnvC+q382Q==}
 
   '@ledgerhq/coin-icon@0.6.6':
     resolution: {integrity: sha512-LP6QTfaihgCmDZX5fjyFtLe77NuCAaNvDxH/dVEFhpW0D2MM0i7D48r7M52VqmLh1GHMqj0Qg9j80JCDboL69g==}
 
-  '@ledgerhq/coin-internet_computer@1.7.7':
-    resolution: {integrity: sha512-JyzLQY81PuzoT+7kx2MgrZ75DEBBNvoz0NZIEO+PqzpVh+BXbrb3XmGfAHrJCbJHxrkD+p9Ybv/xCAbPrSrGKQ==}
+  '@ledgerhq/coin-internet_computer@1.7.8':
+    resolution: {integrity: sha512-8a9Tn7Qq+vUXyMoHDSj4RuDJHP3iNARty263cLOB+ONjUVFReGJUNE2SSeDC+qrPVAr2LI5NuctCqQf0YIvF3Q==}
 
   '@ledgerhq/coin-near@0.7.3':
     resolution: {integrity: sha512-icyhvKroTQrhMtuCui9PKX4epDPigX3J6zGC0ar80lYS3kzMYLbNeX6OmkOdc0ztlCe3CjLchme0xq7gszoZ3w==}
@@ -2672,8 +2688,8 @@ packages:
   '@ledgerhq/coin-tron@0.2.5':
     resolution: {integrity: sha512-8iAysx0bNb9dmEXmGYSCsF7cKPpPPYOen1GVKSNVL9P8TkCSkP2h+N50g1XgybMRBASipCCDVAAutmGtd3AZZA==}
 
-  '@ledgerhq/coin-vechain@2.7.7':
-    resolution: {integrity: sha512-li8i2+pJr21Zm2ApjqEYGwRL7+bpOLziliH+k1TeOz+CyVn0x02qQqSNb8ReTTZ9fuJdQzVpe3LQUXrVE1RPGg==}
+  '@ledgerhq/coin-vechain@2.7.8':
+    resolution: {integrity: sha512-CJxwoMuBxeqPvy2FFsgfpbsqnceG1kUvlm92d1Y1mO4T40Qqnf6IFQpFqCvwRQY0yd8Sv1yBocjGlg2jONQBrA==}
 
   '@ledgerhq/coin-xrp@0.9.2':
     resolution: {integrity: sha512-SsvcfUrJ8/DlYugQsWJhWN8kktCSlhvcdGUxgnz9qEQyEz8gt89c4R/oz1CeEOXNzVbaBAtHJEHt0pbRqx0zqg==}
@@ -2710,8 +2726,8 @@ packages:
   '@ledgerhq/cryptoassets@13.18.0':
     resolution: {integrity: sha512-HNPLkKBYgfTlrW2xAyr6o2gzBfoHSi6btKEdmZtW9vmZOyB483q/dzEDbrW9JxRq+zIi7LTZPXplhXjaf2twRA==}
 
-  '@ledgerhq/device-core@0.4.25':
-    resolution: {integrity: sha512-fsvBdO8+ydhbp2tvIp7UlBUlE+N7rG2L3x/OGQWgQyDc3/diVSbPdB85fIvtdhWVfQ9ogZ01f3lOS/68kQdYnw==}
+  '@ledgerhq/device-core@0.4.26':
+    resolution: {integrity: sha512-TvT2ECjtv+I+hTZkJHGtueVicVOtSOpm+BFkaJ5ftBBPl/1/6/KjBPkSoOrog24ld26Bvs7t5M3ltpfXnmC31g==}
 
   '@ledgerhq/devices@5.51.1':
     resolution: {integrity: sha512-4w+P0VkbjzEXC7kv8T1GJ/9AVaP9I6uasMZ/JcdwZBS3qwvKo5A5z9uGhP5c7TvItzcmPb44b5Mw2kT+WjUuAA==}
@@ -2722,11 +2738,11 @@ packages:
   '@ledgerhq/devices@8.4.4':
     resolution: {integrity: sha512-sz/ryhe/R687RHtevIE9RlKaV8kkKykUV4k29e7GAVwzHX1gqG+O75cu1NCJUHLbp3eABV5FdvZejqRUlLis9A==}
 
-  '@ledgerhq/devices@8.4.5':
-    resolution: {integrity: sha512-wzfX7JRfTPXJl+4BUXxwUFUGghtqQA6V1I6xNxGfXKHjd51rjijL+9xcfZ1oj66dNNm9wiCBBZhMXXusYDUjWg==}
+  '@ledgerhq/devices@8.4.6':
+    resolution: {integrity: sha512-EMWhCOC+Ww14i2Dl8Txc0AAw8oToCxt1hOKmE7+yE38SkzfRWS0Je3P+o9/EgkaopI8Y0N8lWOJzy1CiulP3Lg==}
 
-  '@ledgerhq/domain-service@1.2.30':
-    resolution: {integrity: sha512-DRwJigyuMUCmH7mseP/AM9Ymgguob60Fs22VQ70LDLBRi5cpjoifG62G2NEPanDA5tJ1ol5cd1O+4EtYX0PT/g==}
+  '@ledgerhq/domain-service@1.2.31':
+    resolution: {integrity: sha512-8fZKyWHuo0aCKsY+GyXHDRunjrVX62j1+Qzcb/5hxulA0xXJLcquQUlWXkl/AOY1mPnN7p16ZtBA+bpUAdckJQ==}
 
   '@ledgerhq/errors@5.50.0':
     resolution: {integrity: sha512-gu6aJ/BHuRlpU7kgVpy2vcYk6atjB4iauP2ymF7Gk0ez0Y/6VSMVSJvubeEQN+IV60+OBK0JgeIZG7OiHaw8ow==}
@@ -2740,56 +2756,56 @@ packages:
   '@ledgerhq/evm-tools@1.6.3':
     resolution: {integrity: sha512-jREXUrj1eR9BkL7NBJ+Bnhst3hrvcv/TwWMRsY0Mn3Ovzg0jKZuMmq7ccOZjVN+SbgCbnonFBbnOWK1/LTWjKg==}
 
-  '@ledgerhq/hw-app-algorand@6.31.1':
-    resolution: {integrity: sha512-gPQVP/443ILoPllNyUwkoFkoyKZKHet4Y4RhUI+nJBJF2gmo4IHWEBk37EIgREL26B8xrpaldrZr9pfmE6Fpaw==}
+  '@ledgerhq/hw-app-algorand@6.31.2':
+    resolution: {integrity: sha512-s6jA1yXR4Kgzu/VOnKI3k2eKfh23OFUG/ldC10/iZWB9dS6cyGL3iPLAotZao/t6Ng2yTS0fIzgkd404o6gILw==}
 
-  '@ledgerhq/hw-app-aptos@6.34.1':
-    resolution: {integrity: sha512-W1BqD0zjHPG5pYM/K79XJzGBqEa0iYnkXuVVsiVbiotuMVFvGgoVune1SWa/kYcjTaSVRU0mRWhGNBQFMUKENw==}
+  '@ledgerhq/hw-app-aptos@6.34.2':
+    resolution: {integrity: sha512-tZN4KiAks2mBbzE43xsReNPvytTBuT1dTseA2qAXZrEF8J988S7HygTb6p4ctCRXC+W5J0KFZkE/97nlf7NFKw==}
 
-  '@ledgerhq/hw-app-btc@10.9.1':
-    resolution: {integrity: sha512-LJLjSxTTQM3kDI/VrQGRWReoDcv/Gb+JUXwJVIY4lE72gzHvfT+waPvaAbTQ9oDA1mmzu4FTwMyFbgauS7fl4Q==}
+  '@ledgerhq/hw-app-btc@10.9.2':
+    resolution: {integrity: sha512-O8HG72lx8HBjDLilMwLICNs743FUYLB1zz7Z2t5uUaZiml7BnQqOmsiPbjeK7X2EaWRATXcLYmAq4/Dz0AH5cg==}
 
-  '@ledgerhq/hw-app-cosmos@6.32.1':
-    resolution: {integrity: sha512-YWg1aZUX4uo/adDGoZ9fEEm+NB3Af5fZscA2DFlbtHAKlzoVWUk6nckD1cKNS0CmLB121hpg1zm8ume3V2K8mA==}
+  '@ledgerhq/hw-app-cosmos@6.32.2':
+    resolution: {integrity: sha512-5s6exvrDYoKgnQMKWVQNIyloJ14/OGy1a05oz3b6ooV2qH0NnVX2yw536lRqC/CmzIalGcrq7d5qWBxuuSYXQQ==}
 
   '@ledgerhq/hw-app-elrond@6.21.1':
     resolution: {integrity: sha512-ux1b6wRuVpyEsCEmHwwIn2K1vWQW5pyq/BrS02uDh/8sbBmTW25Uq9+c6alnjaSQNAt+hjrKYpC48Pep+1XMMQ==}
 
-  '@ledgerhq/hw-app-eth@6.45.5':
-    resolution: {integrity: sha512-KN0ZDLuG/PqFuusyynuFvO02keciwuJcFJRTnwCc0IYBRfuOGXkNOYHjecQ6XrLcuwQjDYrA2zCEEuM7FJcmMQ==}
+  '@ledgerhq/hw-app-eth@6.45.6':
+    resolution: {integrity: sha512-ksKRLngoz71EdLJNxrUk6saSG50yXZUGhIZTdHDd0ZFKcsZYGVaXf4rP7TbcATJeaTlaCTK8lW9aIHrBnbRvnw==}
 
   '@ledgerhq/hw-app-exchange@0.7.0':
     resolution: {integrity: sha512-AbbeL5DZ1Vmm8DvYJt8w/2uR93NVqXb1awA1Mpxb0L7BA7Uu0yPzhdcWqgwXm7kWDtXH6cnWHIif8pQB7HmMew==}
 
-  '@ledgerhq/hw-app-hedera@1.2.1':
-    resolution: {integrity: sha512-Q2W/bfG0eIhnbBzS3BTcT2h/RqkPR61j2+gUCyjMS3d+sJU/zMGxqsDIy1mtL0WRwnpNDEMR9aQJJ2KEoW6sEA==}
+  '@ledgerhq/hw-app-hedera@1.2.2':
+    resolution: {integrity: sha512-1JOJrhy0AMWNUfBJwhhd+FmG9DSid3fhFwj109CJ0DXcuJS0WRrY1DvHfhq43rMBSww9GOUh0VT2By2ijd14jg==}
 
-  '@ledgerhq/hw-app-icon@1.3.1':
-    resolution: {integrity: sha512-qWRy+g05blvG2sZW85TGfrzTQljPXoB5n4tlWB8n/69g+Vk+UHGi02rgFpSeVnrO7XC1ZJiRclFtX1DnkaVSrg==}
+  '@ledgerhq/hw-app-icon@1.3.2':
+    resolution: {integrity: sha512-sTkq4pJB/KYtISLSvKsWUeS3SyApq+LWo6ruHG9xxLP8fjnFsBdVYaFj7Vhml0urkLRpznPT3pBy7IT6y8LFxQ==}
 
-  '@ledgerhq/hw-app-near@6.31.1':
-    resolution: {integrity: sha512-HPK6GCmJ14RrfpYr8K0twZTa/bIgCiP14x5F3nbys2vxs79QF1cLkltNB9SnmiW7tOQirL8PPo77nSUjgkBVjQ==}
+  '@ledgerhq/hw-app-near@6.31.2':
+    resolution: {integrity: sha512-NvEEYaobs8Qtm7QldarNR+/zyYwY6ijKXBXjlWIGP/JZTuFua0MrOJ04ujCiXlMyeJDSrisD5nRBKjPnrw5JBw==}
 
-  '@ledgerhq/hw-app-polkadot@6.34.1':
-    resolution: {integrity: sha512-nm+4W+ewldfQDEtHAp1eEyX9EBbjLq6aUvUSfA8tQBPwaNUmyqRcgtnq8ClBZKtTb3WfjHrZ48GBLKV7fP8VYg==}
+  '@ledgerhq/hw-app-polkadot@6.34.2':
+    resolution: {integrity: sha512-39i7pW6v6q60Cs6lNeASiyJ7e9dFU+X+6yEwfv1GDEW8DgGRhrJa/ycurp0+SjXBbRrSzdWqIFWxvS6KKw+qvQ==}
 
-  '@ledgerhq/hw-app-solana@7.4.1':
-    resolution: {integrity: sha512-XOALs8TJ7eqKrJCNCMFv7zu8EBV89QZjFvESJyr9aP9NPB4ogTdWo4AVwsu2Z7SoKW5CAfJhCDzn5d9L1ilsOg==}
+  '@ledgerhq/hw-app-solana@7.4.2':
+    resolution: {integrity: sha512-HhShkaxm0osj9Exvs1o+Km18EtNOfm+IiYr7OhJV2/b2jiWecuaYm3dc+QSCdkyjHxMLyQFpOWIaser7S0EeUg==}
 
-  '@ledgerhq/hw-app-str@7.2.1':
-    resolution: {integrity: sha512-dEO6udtZzP39J5D2p62Up/P7KcFfKcYDTSKbm8luBFrpeMDUAw5I5JR6/DKwanjNMMygYnZtO0Pf7HHwPkf0wg==}
+  '@ledgerhq/hw-app-str@7.2.2':
+    resolution: {integrity: sha512-pajh14IVd4veAMBY9weQ604Vxg9qG50FQ8oFFnQCoqziqOSF7s1mMeXyXQN9+VcgMrLTid55YAiduyk4tq+w2Q==}
 
-  '@ledgerhq/hw-app-tezos@6.31.1':
-    resolution: {integrity: sha512-0EWIHTX+4CdDPsYPNypEKhVpJnl8LTw/HddbMJ06CSqJKsdi6W0OZM6wtn6Ltp8Hy2a0gaupySBkAfC2s+/p7w==}
+  '@ledgerhq/hw-app-tezos@6.31.2':
+    resolution: {integrity: sha512-9e7yZfPyNS81DoOU2bf5G+sWpfmulAw4tmVwNXiJhDmZvocsszuNudupTpacGbTuwwuYSyuCH+9cDizaaqUaAQ==}
 
-  '@ledgerhq/hw-app-trx@6.31.1':
-    resolution: {integrity: sha512-N4JleDP9a38LslSpfASWb1QyYmVBRMHw1fEVjKoB3wo19FXs/LnwzuLtifYeu7T5WCex0D1F+bbrMgOUhLWb7g==}
+  '@ledgerhq/hw-app-trx@6.31.2':
+    resolution: {integrity: sha512-ffE+cyR+Pnw/yEIID8VBPk4iiRRBdpy2m6aXnHzZn/miYSQigrbXKK7xn3t4mjMQwqqeKjsE8XRlab2UXx1MJA==}
 
   '@ledgerhq/hw-app-vet@0.2.16':
     resolution: {integrity: sha512-oo7ddHGAy+MTclM3/C6rxVU+b556RyINXCq2nLG6TQGXKZwDgkBObzxGdQ/uy038NZmlM8dlO1F63BV7TW4gaw==}
 
-  '@ledgerhq/hw-app-xrp@6.31.1':
-    resolution: {integrity: sha512-INfiEmQlbm49FoP/TTXMgvnSpjyss3NiDR4Adm4hh74MW4m6KypdAsLzmcdlRKia4EVTYm5sm+OsBgTWg28k5Q==}
+  '@ledgerhq/hw-app-xrp@6.31.2':
+    resolution: {integrity: sha512-Ax6ygMQIwF7iZedznxDrQrwvNkAalwvGlYgFAs0a8Ur/isch1u/mqyaJTXheV84BdFybTnIEh/GIrnVas/jlSw==}
 
   '@ledgerhq/hw-bolos@6.32.0':
     resolution: {integrity: sha512-0pwZUwXi9WcgJUSgwri6sqqjcASSxaQ82QirNZRmaN0ITRvPhEXqa9jP3H8tr8zNkUK7O//x00WIdS5iJkwHIA==}
@@ -2800,8 +2816,8 @@ packages:
   '@ledgerhq/hw-transport-mocker@6.29.4':
     resolution: {integrity: sha512-CLDIpQ/eqU8qrCYGY9MyHa+oMgqs6PuNkWtqbcaS4AzNx8L/9bv7y8CZwCjxX6oB/2ZEq42RlL6oZ6Ou3oHnoQ==}
 
-  '@ledgerhq/hw-transport-mocker@6.29.5':
-    resolution: {integrity: sha512-klzzO9sVnOtU6Y345TfTxPFV8zSPJ8wFHLRl+pRBPIg+agudzZTn3REyLUuyqzZmRSiimBp5YsOgl5lN4nEffA==}
+  '@ledgerhq/hw-transport-mocker@6.29.6':
+    resolution: {integrity: sha512-uU3gjnp8nsTFA8oCwOaX8V6NQNISlOPmJz5pBzPd21K6fuMNEWB84TOg3/kSd2cmOyRa+SSysm4aFgkSFhLh7g==}
 
   '@ledgerhq/hw-transport-node-speculos-http@6.29.4':
     resolution: {integrity: sha512-UTIqSxf1jH2aVGsg6VnQXDj9fpzn/q/cf9eNwg87QSTNvJ8wbomNBy+x+fgjXt4pZpv9lbFzIyGhE6qsh9QvMQ==}
@@ -2813,8 +2829,8 @@ packages:
     resolution: {integrity: sha512-T/+mGHIiUK/ZQATad6DMDmobCMZ1mVST952009jKzhaE1Et2Uy2secU+QhRkx3BfEAkvwa0zSRSYCL9d20Iqjg==}
     deprecated: '@ledgerhq/hw-transport-u2f is deprecated. Please use @ledgerhq/hw-transport-webusb or @ledgerhq/hw-transport-webhid. https://github.com/LedgerHQ/ledgerjs/blob/master/docs/migrate_webusb.md'
 
-  '@ledgerhq/hw-transport-webusb@6.29.5':
-    resolution: {integrity: sha512-yIX38VVXEYnwGD3ZkXBALNODjZljCy4mckdIHs1qzkesbAM9zA8l4cTaidq1wa4r+sNWBR27yCBDbF7q+3qlzA==}
+  '@ledgerhq/hw-transport-webusb@6.29.6':
+    resolution: {integrity: sha512-40g7pyjvWMGrP4PuqKulvP7qn7rQLTZ/0BJxv7G5boUP4f8a2sJ8aLKmkle1gZrmEzuiulfxuxyZgUsDDTOGQw==}
 
   '@ledgerhq/hw-transport@5.51.1':
     resolution: {integrity: sha512-6wDYdbWrw9VwHIcoDnqWBaDFyviyjZWv6H9vz9Vyhe4Qd7TIFmbTl/eWs6hZvtZBza9K8y7zD8ChHwRI4s9tSw==}
@@ -2837,8 +2853,8 @@ packages:
   '@ledgerhq/hw-transport@6.31.4':
     resolution: {integrity: sha512-6c1ir/cXWJm5dCWdq55NPgCJ3UuKuuxRvf//Xs36Bq9BwkV2YaRQhZITAkads83l07NAdR16hkTWqqpwFMaI6A==}
 
-  '@ledgerhq/hw-transport@6.31.5':
-    resolution: {integrity: sha512-P7nyHU2EnotdWfN9XUKvCw4sllbERNmzb7ruyljqyiBuUfdDvzLJVFgVhu6j+8Y9cGxPysf3i3QtImFsZwKkdQ==}
+  '@ledgerhq/hw-transport@6.31.6':
+    resolution: {integrity: sha512-wXycgy21wdwdr9s2fz7K96aDqnsPXPT15E6GlNrYJ0C36tAQcHOtI+XWZ1A8J4cMlRRh6siGWsEymziOdFBPCQ==}
 
   '@ledgerhq/ledger-cal-service@0.2.0':
     resolution: {integrity: sha512-Khyz1dXiRegRyv1DEPLDa2cuhN3VhkF3MzyIj2YjDx4jg3sQmlpB5YEqBnw4xZoabRpF3HeIjeZN7r04n8njjg==}
@@ -2879,16 +2895,16 @@ packages:
   '@ledgerhq/live-config@3.1.0':
     resolution: {integrity: sha512-a1UduyKTKV595/3q3RvpbMzjbvYb/mhKIvMXfhBOK4zwlLSSFfAzYZZOhFyCoThUXy85s28dyZrBz8Vd3OVdfg==}
 
-  '@ledgerhq/live-countervalues-react@0.2.36':
-    resolution: {integrity: sha512-3CehNLPpPHF7zy3nFHn5spCYrDJe35tZRPcxtOWuU6ma7MUkWD/uVs59flyTH0XpYI5+GYt5D8ANkbmWywjRgw==}
+  '@ledgerhq/live-countervalues-react@0.2.37':
+    resolution: {integrity: sha512-fJ2rzac85+mTVz2OTRC/P1MoEy7qVdQ54Jr16FDSZjLuVGlnXOUB2WTSp6gAJ49y9EgPejVeKyiBqnCnYNRz9A==}
     peerDependencies:
       react: '>=16'
 
   '@ledgerhq/live-countervalues@0.2.20':
     resolution: {integrity: sha512-k/1axkkDOWYDb7Fhxzg9wll6DZ8rqKgWIzGkAOGnJVj18hzDPOFxcTE9PHOoQIvbzj2UZtHzYN7PebiZJ8kuQA==}
 
-  '@ledgerhq/live-countervalues@0.5.7':
-    resolution: {integrity: sha512-DH/R9ywEVWfKpxmQNpGtSI8+N3dVbRPLFEEHAAmDSydIFuMLZHA+jME7lsadRCRQzy/rz0dczHwmdwzOvjaXtA==}
+  '@ledgerhq/live-countervalues@0.5.8':
+    resolution: {integrity: sha512-NAGI+0/xk+g74wuzdFVq9c0lNYHvOGdmjwHvyb/6WM/4kGiF7lbUTRGRSzQ71Nnr1C09Xve7yqwYuaJEhwTGNQ==}
 
   '@ledgerhq/live-env@2.5.0':
     resolution: {integrity: sha512-iE/xSWL6Mc/cSGex6UKNnNd/nWuhj3/3gFZmfIXm5APDZ2+FJ3DOQEcMt+XryNuoKUd+ky03/DyQbexfMkissg==}
@@ -2913,14 +2929,17 @@ packages:
   '@ledgerhq/live-network@2.0.5':
     resolution: {integrity: sha512-PTTtsJ3KexMvAk2izo/3XfhiitjDS8KXP8CdRYdEOco21BtjGtbczJp8OHCOAPzvCbzlmJ4T8dkRouXYSiAo/Q==}
 
-  '@ledgerhq/live-network@2.0.8':
-    resolution: {integrity: sha512-ALk8PDcP/hE3l1DRfReDpSll8N84C2MK3Qn+kijVL6AFePyALA1zZZ1eBo82s5ds67SOJzGOV3A+Qz2HqeCCng==}
+  '@ledgerhq/live-network@2.0.9':
+    resolution: {integrity: sha512-9+g6rLJl+Fxmkplw9zpMkJBV+FjRszn9GxFn0B7Upg28QYvSVOS3Z1gvUnU41vBXqQXFElvPbGtyDPAVD9bsAQ==}
 
   '@ledgerhq/live-nft@0.5.9':
     resolution: {integrity: sha512-cpVciKMp5E1noa1vm9c3Dv0Gsv64KI99QdncHWjGlRejAL6XouSU5G4VT0J7+nyTaNgfgg3Ik7aBSDc319Ip7A==}
 
   '@ledgerhq/live-promise@0.1.0':
     resolution: {integrity: sha512-RWGq/pSVWzKRATPPYv4KxQITF6CSocANZLo1U33hEP1cFhWO5qIdrOhG00oqBkeWQtGEGdI85VOj1iMEeNjCMQ==}
+
+  '@ledgerhq/live-promise@0.1.1':
+    resolution: {integrity: sha512-oFo6KUZIdFEndp2uokSU9XE9UCT/7NLOOKa1nQUfHhAfyKxRWqBlZOGRuivM/BIwKm0IUFa3+HE7uxK497kYPg==}
 
   '@ledgerhq/live-wallet@0.9.7':
     resolution: {integrity: sha512-IPoNH7wQNPJZ/HGIfPAnhunj9YpsPcsLFOhBKYSVPnWyiUrUd1wVNCh261XKE/c0XwLYt+TSDaNy4KfrIv6LiA==}
@@ -2930,6 +2949,9 @@ packages:
 
   '@ledgerhq/logs@6.12.0':
     resolution: {integrity: sha512-ExDoj1QV5eC6TEbMdLUMMk9cfvNKhhv5gXol4SmULRVCx/3iyCPhJ74nsb3S0Vb+/f+XujBEj3vQn5+cwS0fNA==}
+
+  '@ledgerhq/logs@6.13.0':
+    resolution: {integrity: sha512-4+qRW2Pc8V+btL0QEmdB2X+uyx0kOWMWE1/LWsq5sZy3Q5tpi4eItJS6mB0XL3wGW59RQ+8bchNQQ1OW/va8Og==}
 
   '@ledgerhq/speculos-transport@0.1.10':
     resolution: {integrity: sha512-SyuH6cunHbOuVRtvA1n1r4xmcs/4JVAXbgRO4arGaOFiiNpEK4lRITCHONZluh5qTIb1n4MC/AwLpoxHvBxeew==}
@@ -2958,8 +2980,8 @@ packages:
   '@ledgerhq/types-live@6.62.0':
     resolution: {integrity: sha512-+pE3SL3iV73kgasQW6GUWU1yNGPdLmmYE4uPb11rhlB3naSXnRIDtk8W+0NX8CO2cPK1YcXwE60lEJN10NrNoQ==}
 
-  '@ledgerhq/types-live@6.71.0':
-    resolution: {integrity: sha512-URWtJAORgHBWwII0ktvE3nfSKCp/AI6vULzPNds1sDYGEesEufYD3Gavi2e/2ncZwef7lLu9XDhRzflY/xMvlA==}
+  '@ledgerhq/types-live@6.72.0':
+    resolution: {integrity: sha512-LPoMUgGnpJ5m+GZ78RXXogsB/OGVdrDmOMnGPUY9//Ia847EtwltA3u2tuE/FKCj0NFwEMuBrFX3RDKuccFzMg==}
 
   '@ledgerhq/wallet-api-acre-module@0.1.0':
     resolution: {integrity: sha512-zRfTDetX4Tbwust4mq0NeIp6lIanzfWmBclyWmLpxd9j0WMgxZmz2aXAR95tPVe8fWSDJwR2nqOqhSu2etVxIQ==}
@@ -3289,6 +3311,10 @@ packages:
     resolution: {integrity: sha512-vnI7V6lFNe0tLAuJMu+2sX+FcL14TaCWy1qiczg1VwRmPrpQCdq5ESXQMqUc2tluRNf6irBXrWbl1mGN8uaU/g==}
     engines: {node: ^14.21.3 || >=16}
 
+  '@noble/curves@1.9.0':
+    resolution: {integrity: sha512-7YDlXiNMdO1YZeH6t/kvopHHbIZzlxrCV9WLqCY6QhcXOoXiNCMDqJIglZ9Yjx5+w7Dz30TITFrlTjnRg7sKEg==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@noble/curves@1.9.1':
     resolution: {integrity: sha512-k11yZxZg+t+gWvBbIswW0yoJlu8cHOC7dhunwOzoWH/mXGBiYyR4YY6hAEK/3EUs4UpB8la1RfdRpeGsFHkWsA==}
     engines: {node: ^14.21.3 || >=16}
@@ -3342,9 +3368,6 @@ packages:
 
   '@noble/secp256k1@1.7.1':
     resolution: {integrity: sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==}
-
-  '@noble/secp256k1@1.7.2':
-    resolution: {integrity: sha512-/qzwYl5eFLH8OWIecQWM31qld2g1NfjgylK+TNhqtaUKP37Nm+Y+z30Fjhw0Ct8p9yCQEm2N3W/AckdIb3SMcQ==}
 
   '@node-ipc/js-queue@2.0.3':
     resolution: {integrity: sha512-fL1wpr8hhD5gT2dA1qifeVaoDFlQR5es8tFuKqjHX+kdOtdNHnxkVZbtIrR2rxnMFvehkjaZRNV2H/gPXlb0hw==}
@@ -3579,24 +3602,24 @@ packages:
     resolution: {integrity: sha512-3zBsuSKjZlMEeDVqPTkLnFvjPdyGcW3UBihzCgpTmXhLSuwTbsscMwKtKwIPkOHHQPYJYyZXTMkurMXCJOz2kA==}
     engines: {node: '>=18'}
 
-  '@polkadot/types-augment@16.1.1':
-    resolution: {integrity: sha512-Ozh7nEyAnyHK9x1CnRYlG/rnarvuauAIbvUljtA7f/3RI570kRTpeOR83QkDWdaLywno96A4zdFXBfI0nmq1Yw==}
+  '@polkadot/types-augment@16.2.1':
+    resolution: {integrity: sha512-64JkpUnyytQdVW2RJRJ2uxVqL/uGlUQjPIEUqLVKK26TXthAt75MeEMnuKhk4WamHSvnEMv2prBStHhhNlP0Pg==}
     engines: {node: '>=18'}
 
   '@polkadot/types-codec@11.2.1':
     resolution: {integrity: sha512-9VRRf1g/nahAC3/VSiCSUIRL7uuup04JEZLIAG2LaDgmCBOSV9dt1Yj9114bRUrHHkeUSBmiq64+YX1hZMpQzQ==}
     engines: {node: '>=18'}
 
-  '@polkadot/types-codec@16.1.1':
-    resolution: {integrity: sha512-REcSkOfxFGPJWEbuCIr5EA0argnZwYVYkE14f97XVM9rV36/FEyu1al47fSjp8iHA3e8Fsd+V+WTZRwlUa51qA==}
+  '@polkadot/types-codec@16.2.1':
+    resolution: {integrity: sha512-PLpC65yWUn/j4tjOB5yvMtkudbi/QbdRbY6tbo3frhg6eviNMPt/w57FWYvZXzX5cRFYveJbsZCfGLPrmzu2yQ==}
     engines: {node: '>=18'}
 
   '@polkadot/types-create@11.2.1':
     resolution: {integrity: sha512-Y0Zri7x6/rHURVNLMi6i1+rmJDLCn8OQl8BIvRmsIBkCYh2oCzy0g9aqVoCdm+QnoUU5ZNtu+U/gj1kL5ODivQ==}
     engines: {node: '>=18'}
 
-  '@polkadot/types-create@16.1.1':
-    resolution: {integrity: sha512-dpd5HKRfNQlDYMtMdofrhr99O7q8EWkqZyTadFuTYyd7LECb9FUD8nO6RbcmpXYA9F3r5g/EwvsmZFZaQW9LqA==}
+  '@polkadot/types-create@16.2.1':
+    resolution: {integrity: sha512-nKW7XBHaRAMl6pd+6stnEHuk5d3bMujDS+CJtHYuHyYfdCN0idkeMiz9sHUbdbZU/2CVk/jYSELCzqFLb0d3aw==}
     engines: {node: '>=18'}
 
   '@polkadot/types-known@11.2.1':
@@ -3611,8 +3634,8 @@ packages:
     resolution: {integrity: sha512-NVPhO/eFPkL8arWk4xVbsJzRdGfue3gJK+A2iYzOfCr9rDHEj99B+E2Z0Or6zDN6n+thgQYwsr19rKgXvAc18Q==}
     engines: {node: '>=18'}
 
-  '@polkadot/types@16.1.1':
-    resolution: {integrity: sha512-edEKvnCrWoPjW2sRUdER4gm8zm+gilVhZXqAtYH0gHJkBzbhCXZ5M27E62ztR1at9XyHDsTUeuq51ELHOUbbFQ==}
+  '@polkadot/types@16.2.1':
+    resolution: {integrity: sha512-5VUG4WgUz5RUtluYfPHKzA8Qnq9JFRzNVEkHVgCl3i9+fUzw1Ih9hScmPI593OUXhepWBATfgMMFpcHtKhOFnQ==}
     engines: {node: '>=18'}
 
   '@polkadot/util-crypto@10.4.2':
@@ -3837,18 +3860,18 @@ packages:
       viem: 2.x
       wagmi: ^2.9.0
 
-  '@react-native/assets-registry@0.79.2':
-    resolution: {integrity: sha512-5h2Z7/+/HL/0h88s0JHOdRCW4CXMCJoROxqzHqxdrjGL6EBD1DdaB4ZqkCOEVSW4Vjhir5Qb97C8i/MPWEYPtg==}
+  '@react-native/assets-registry@0.79.3':
+    resolution: {integrity: sha512-Vy8DQXCJ21YSAiHxrNBz35VqVlZPpRYm50xRTWRf660JwHuJkFQG8cUkrLzm7AUriqUXxwpkQHcY+b0ibw9ejQ==}
     engines: {node: '>=18'}
 
-  '@react-native/codegen@0.79.2':
-    resolution: {integrity: sha512-8JTlGLuLi1p8Jx2N/enwwEd7/2CfrqJpv90Cp77QLRX3VHF2hdyavRIxAmXMwN95k+Me7CUuPtqn2X3IBXOWYg==}
+  '@react-native/codegen@0.79.3':
+    resolution: {integrity: sha512-CZejXqKch/a5/s/MO5T8mkAgvzCXgsTkQtpCF15kWR9HN8T+16k0CsN7TXAxXycltoxiE3XRglOrZNEa/TiZUQ==}
     engines: {node: '>=18'}
     peerDependencies:
       '@babel/core': '*'
 
-  '@react-native/community-cli-plugin@0.79.2':
-    resolution: {integrity: sha512-E+YEY2dL+68HyR2iahsZdyBKBUi9QyPyaN9vsnda1jNgCjNpSPk2yAF5cXsho+zKK5ZQna3JSeE1Kbi2IfGJbw==}
+  '@react-native/community-cli-plugin@0.79.3':
+    resolution: {integrity: sha512-N/+p4HQqN4yK6IRzn7OgMvUIcrmEWkecglk1q5nj+AzNpfIOzB+mqR20SYmnPfeXF+mZzYCzRANb3KiM+WsSDA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@react-native-community/cli': '*'
@@ -3856,30 +3879,30 @@ packages:
       '@react-native-community/cli':
         optional: true
 
-  '@react-native/debugger-frontend@0.79.2':
-    resolution: {integrity: sha512-cGmC7X6kju76DopSBNc+PRAEetbd7TWF9J9o84hOp/xL3ahxR2kuxJy0oJX8Eg8oehhGGEXTuMKHzNa3rDBeSg==}
+  '@react-native/debugger-frontend@0.79.3':
+    resolution: {integrity: sha512-ImNDuEeKH6lEsLXms3ZsgIrNF94jymfuhPcVY5L0trzaYNo9ZFE9Ni2/18E1IbfXxdeIHrCSBJlWD6CTm7wu5A==}
     engines: {node: '>=18'}
 
-  '@react-native/dev-middleware@0.79.2':
-    resolution: {integrity: sha512-9q4CpkklsAs1L0Bw8XYCoqqyBSrfRALGEw4/r0EkR38Y/6fVfNfdsjSns0pTLO6h0VpxswK34L/hm4uK3MoLHw==}
+  '@react-native/dev-middleware@0.79.3':
+    resolution: {integrity: sha512-x88+RGOyG71+idQefnQg7wLhzjn/Scs+re1O5vqCkTVzRAc/f7SdHMlbmECUxJPd08FqMcOJr7/X3nsJBrNuuw==}
     engines: {node: '>=18'}
 
-  '@react-native/gradle-plugin@0.79.2':
-    resolution: {integrity: sha512-6MJFemrwR0bOT0QM+2BxX9k3/pvZQNmJ3Js5pF/6owsA0cUDiCO57otiEU8Fz+UywWEzn1FoQfOfQ8vt2GYmoA==}
+  '@react-native/gradle-plugin@0.79.3':
+    resolution: {integrity: sha512-imfpZLhNBc9UFSzb/MOy2tNcIBHqVmexh/qdzw83F75BmUtLb/Gs1L2V5gw+WI1r7RqDILbWk7gXB8zUllwd+g==}
     engines: {node: '>=18'}
 
-  '@react-native/js-polyfills@0.79.2':
-    resolution: {integrity: sha512-IaY87Ckd4GTPMkO1/Fe8fC1IgIx3vc3q9Tyt/6qS3Mtk9nC0x9q4kSR5t+HHq0/MuvGtu8HpdxXGy5wLaM+zUw==}
+  '@react-native/js-polyfills@0.79.3':
+    resolution: {integrity: sha512-PEBtg6Kox6KahjCAch0UrqCAmHiNLEbp2SblUEoFAQnov4DSxBN9safh+QSVaCiMAwLjvNfXrJyygZz60Dqz3Q==}
     engines: {node: '>=18'}
 
   '@react-native/normalize-color@2.1.0':
     resolution: {integrity: sha512-Z1jQI2NpdFJCVgpY+8Dq/Bt3d+YUi1928Q+/CZm/oh66fzM0RUl54vvuXlPJKybH4pdCZey1eDTPaLHkMPNgWA==}
 
-  '@react-native/normalize-colors@0.79.2':
-    resolution: {integrity: sha512-+b+GNrupWrWw1okHnEENz63j7NSMqhKeFMOyzYLBwKcprG8fqJQhDIGXfizKdxeIa5NnGSAevKL1Ev1zJ56X8w==}
+  '@react-native/normalize-colors@0.79.3':
+    resolution: {integrity: sha512-T75NIQPRFCj6DFMxtcVMJTZR+3vHXaUMSd15t+CkJpc5LnyX91GVaPxpRSAdjFh7m3Yppl5MpdjV/fntImheYQ==}
 
-  '@react-native/virtualized-lists@0.79.2':
-    resolution: {integrity: sha512-9G6ROJeP+rdw9Bvr5ruOlag11ET7j1z/En1riFFNo6W3xZvJY+alCuH1ttm12y9+zBm4n8jwCk4lGhjYaV4dKw==}
+  '@react-native/virtualized-lists@0.79.3':
+    resolution: {integrity: sha512-/0rRozkn+iIHya2vnnvprDgT7QkfI54FLrACAN3BLP7MRlfOIGOrZsXpRLndnLBVnjNzkcre84i1RecjoXnwIA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': ^19.0.0
@@ -4249,8 +4272,8 @@ packages:
     peerDependencies:
       '@solana/kit': ^2.1.0
 
-  '@solana-program/token-2022@0.4.1':
-    resolution: {integrity: sha512-zIjdwUwirmvvF1nb95I/88+76d9HPCmAIcjjM4NpznDFjZpPItpfKIbTyp/uxeVOzi7d5LmvuvXRr373gpdGCg==}
+  '@solana-program/token-2022@0.4.2':
+    resolution: {integrity: sha512-zIpR5t4s9qEU3hZKupzIBxJ6nUV5/UVyIT400tu9vT1HMs5JHxaTTsb5GUhYjiiTvNwU0MQavbwc4Dl29L0Xvw==}
     peerDependencies:
       '@solana/kit': ^2.1.0
       '@solana/sysvars': ^2.1.0
@@ -4608,8 +4631,16 @@ packages:
   '@stellar/stellar-base@11.0.1':
     resolution: {integrity: sha512-VQh+1KEtFjegD6spx08+lENt8tQOkQQQZoLtqExjpRXyWlqDhEe+bXMlBTYKDc5MIynHyD42RPEib27UG17trA==}
 
+  '@stellar/stellar-base@13.1.0':
+    resolution: {integrity: sha512-90EArG+eCCEzDGj3OJNoCtwpWDwxjv+rs/RNPhvg4bulpjN/CSRj+Ys/SalRcfM4/WRC5/qAfjzmJBAuquWhkA==}
+    engines: {node: '>=18.0.0'}
+
   '@stellar/stellar-sdk@11.3.0':
     resolution: {integrity: sha512-i+heopibJNRA7iM8rEPz0AXphBPYvy2HDo8rxbDwWpozwCfw8kglP9cLkkhgJe8YicgLrdExz/iQZaLpqLC+6w==}
+
+  '@stellar/stellar-sdk@13.3.0':
+    resolution: {integrity: sha512-8+GHcZLp+mdin8gSjcgfb/Lb6sSMYRX6Nf/0LcSJxvjLQR0XHpjGzOiRbYb2jSXo51EnA6kAV5j+4Pzh5OUKUg==}
+    engines: {node: '>=18.0.0'}
 
   '@stricahq/bip32ed25519@1.1.1':
     resolution: {integrity: sha512-BwaaH2ZhppJyB+lfd4R16NLJ0we5L2rfT+U+LcXL7h1LP1Kbf6ilxlyhCbUuc9i9U4VFb5hcOfcOZhx6mtoSOg==}
@@ -4783,18 +4814,18 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/blockchain-link-types@1.3.5':
-    resolution: {integrity: sha512-85ZwXrAgBd9cHWkCo8hHCaqrrdTfEhAcP+QVPlcYbxdDKMNTGpIK9pRb7+om0k00pJTAN3JAsbG+W620k7gx3w==}
+  '@trezor/blockchain-link-types@1.4.0':
+    resolution: {integrity: sha512-XyAdWdKYBu8o8ZFa9ATt7dyMcnCdVaJdOKervaVQ+1PDH3p7Rw4ImlYKfd4Hqd1B2bI23KBWlULqosjlVLCxVA==}
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/blockchain-link-utils@1.3.5':
-    resolution: {integrity: sha512-dOLt7t27tyhk6JDKL6zVdTWnuAPMeIOUcOLUJcbnaHEvp96CZEGssKPK71vBsEn8lKu5rBSQeA20lC9g92y3TQ==}
+  '@trezor/blockchain-link-utils@1.4.0':
+    resolution: {integrity: sha512-QlKMqjdpetubIW1ztotwVhdhGdWrC5zipsn8x+u5T7cvBuECSMvsaND9McmbnF+P0Z/eQXIB07CiyWHMWtC+iA==}
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/blockchain-link@2.4.5':
-    resolution: {integrity: sha512-k24tPIZpDkSaUiP12bLG/P9HrAR0Dy1XgBGZzcQvBAeKAE2mjI/0R0VmiEwa9VdGGdl1AZidvNVVevGrwXdLzw==}
+  '@trezor/blockchain-link@2.5.0':
+    resolution: {integrity: sha512-Yd7ckh+38I2fviORk/K6i5iZRw4ruV4x+9UtKHCL30C99T1aCkf2DcAseBZ+dARSSYqOmDIF3BhQYZDYoxkVBA==}
     peerDependencies:
       tslib: ^2.6.2
 
@@ -4803,23 +4834,23 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/connect-common@0.3.5':
-    resolution: {integrity: sha512-hq9CnDcVHt78rxM2RQDt9z7rQ1v1ZdvU4avwVIU/Ze90FgA9BWZNxpuDqvk0aXVaV0XVQFhikBLpLDQMDTFrlg==}
+  '@trezor/connect-common@0.4.0':
+    resolution: {integrity: sha512-juD1yt1K11npQ6zl25girLAPF2qwjxtGntF0SeaGElBQf1p5Qio/00VsTDC1KURiMJgPvAOi23tHQpBL7sWerQ==}
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/connect-web@9.5.5':
-    resolution: {integrity: sha512-E7q2S0hTebWwYUgpU1DqZ5Wr/6f+bT7NS9/Po1YTpZG5pQ2lu4GxT+MRydbMsRBu/r+g9RYI9rPvy0G7ArqGQQ==}
+  '@trezor/connect-web@9.6.0':
+    resolution: {integrity: sha512-9n1Pzuqgg0vKWJh5AGwYLdRaSHG4qWewrWEk1rGHeNcAslX9l/tU7rPgS7IAVvblaopgHl0gmrZhiE8CPlqA+Q==}
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/connect-webextension@9.5.5':
-    resolution: {integrity: sha512-2JFXbvuUoWsqXTAnDK56bqFXvcelb4+EtpeTkwwR1comkvzWYrVAPy74ke20zmrbnlGQB8VRHzdIDoAdwec2Pg==}
+  '@trezor/connect-webextension@9.6.0':
+    resolution: {integrity: sha512-qbEev4h354STpqZAmBMzxGhmMVBwuRQXiWy5fNMa3EqaM3jbCY1sOsrKv6zVrupoi8TtrwLov7pRi/SJuYIL7w==}
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/connect@9.5.5':
-    resolution: {integrity: sha512-gvAVAfFS4UVvSYUaIw3HtbkWMiTvbORlcN4mKiEvNcQ9TVSZdCnuRiFlHEbxIDjN+SA60ubXgK6A02Vt6F26fw==}
+  '@trezor/connect@9.6.0':
+    resolution: {integrity: sha512-a0J5LQFLI/n1jhAfV08Jh60gLZvfDDrL92QjipLc5uoX/N8SSpXFGtTAlEPFvBa7RFBltZMvINxlPCw/IpEM3Q==}
     peerDependencies:
       tslib: ^2.6.2
 
@@ -4828,8 +4859,8 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/device-utils@1.0.3':
-    resolution: {integrity: sha512-HcfiAxVypjJUEzE/QAIdDf0ZRZmY5Mb7ZY9xIy4P0NWuyZFspgyuBolk8vvKCQrR+XR2E7DNYKmAhkl2cJw+2w==}
+  '@trezor/device-utils@1.1.0':
+    resolution: {integrity: sha512-kHvoBZ+ui9z81yjOkegi32HDQ7j2cLH9XZgu54LanUKnINETKu/KzmOaKKcuywD9Rz+IQsBCok/4f22v6TkZFg==}
 
   '@trezor/env-utils@1.3.4':
     resolution: {integrity: sha512-L+cytJM0z9j8yI1Lh6AFtmfUdFOPxhcmDvzC5UgyeUsdkgrrnXFDSyaXc8a+ItukoX/CTfZBsmWRYu5BLUuLJQ==}
@@ -4846,8 +4877,23 @@ packages:
       react-native:
         optional: true
 
-  '@trezor/protobuf@1.3.5':
-    resolution: {integrity: sha512-6o67avkSvlApF18Vohizdt3HKbbj+wfcyx433Yam99yHnusNM1yAbyCPyJiRtfuoLM98+IkFm/RduxGul3PXjw==}
+  '@trezor/env-utils@1.4.0':
+    resolution: {integrity: sha512-iTNwvDEGJtSq39cgdX3N8pC25n44hu4GFCPmoJl0XFR7FT7jA873TM2con+RqSKGbm7rZKlM3xDHfi1TDTLDdA==}
+    peerDependencies:
+      expo-constants: '*'
+      expo-localization: '*'
+      react-native: '*'
+      tslib: ^2.6.2
+    peerDependenciesMeta:
+      expo-constants:
+        optional: true
+      expo-localization:
+        optional: true
+      react-native:
+        optional: true
+
+  '@trezor/protobuf@1.4.0':
+    resolution: {integrity: sha512-Z5Ql58JvELRw7Sk0QZVe1h5HCYElBcBU6VeClYC1JJjQtcAvnkq2jiCaGGmbaCOrefVK0iM+2LNqnVHDFxVSyA==}
     peerDependencies:
       tslib: ^2.6.2
 
@@ -4861,8 +4907,8 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/transport@1.4.5':
-    resolution: {integrity: sha512-g2qTZhstvgGgvE37lafZNw87jzc76RJzDMPW0KHlainzjBUJdWW0MX/lGOZtbqc8+Q1w8lt957J05HI4ttWmdw==}
+  '@trezor/transport@1.5.0':
+    resolution: {integrity: sha512-hhby0dXPqnZWee4lv2c0yZ4gOWGmi3UuA+4sRTOSqb4aAjwO/T9aI9Q+uvZDWeTWxRgxoUIBHrXNa+BsRBp+9Q==}
     peerDependencies:
       tslib: ^2.6.2
 
@@ -4874,13 +4920,18 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/utxo-lib@2.3.5':
-    resolution: {integrity: sha512-WEXVHM0r5exyTpkGD/n1ReFPh5FjA8xb9/SCd7BZnVwiwn6EdbYzF/YrVMS1xsHA4MljOaMrKbfOkT/Fldivmw==}
+  '@trezor/utils@9.4.0':
+    resolution: {integrity: sha512-T02SclrAhn+i0cMIafYXUwhjuKKvnlLZ8teFWxPYareFnYwK04sTYLMfciMtZRQDcZaH6klh/nIeg+OZDhmuEg==}
     peerDependencies:
       tslib: ^2.6.2
 
-  '@trezor/websocket-client@1.1.5':
-    resolution: {integrity: sha512-sKOq3ZxGvd7/Il+8F/PkFATHQ3e3ufEoDg/RrPrn2TXvYhSLa6Ak+QLzqLk19KXMt5RrEHQIheLyaWP/4CUO4w==}
+  '@trezor/utxo-lib@2.4.0':
+    resolution: {integrity: sha512-UGJ2XU5b0EFkKamVXTlDR5Dd8CSybX+uXr5hkGBFcPNNg+bAWdnPWIPtZEyaK0dackJoPICzcxi+Im6LZZDjFQ==}
+    peerDependencies:
+      tslib: ^2.6.2
+
+  '@trezor/websocket-client@1.2.0':
+    resolution: {integrity: sha512-cq23lURfCrrT1vX8M3tBiCLW1/+zEfPCHgacZfl1Z3Y69yO2LePuZu5GUoa+Cl9SvLJvV/kAV4GFSl+91R81rQ==}
     peerDependencies:
       tslib: ^2.6.2
 
@@ -4969,8 +5020,8 @@ packages:
   '@types/bn.js@5.1.6':
     resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
 
-  '@types/body-parser@1.19.5':
-    resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
+  '@types/body-parser@1.19.6':
+    resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
   '@types/bonjour@3.5.13':
     resolution: {integrity: sha512-z9fJ5Im06zvUL548KvYNecEVlA7cVDkGUi6kZusb04mpyEFKCIZJvloCcmpmLaIahDpOQGHaHmG6imtPMmPXGQ==}
@@ -5023,8 +5074,8 @@ packages:
   '@types/express-serve-static-core@5.0.6':
     resolution: {integrity: sha512-3xhRnjJPkULekpSzgtoNYYcTWgEZkp4myc+Saevii5JPnHNvHMRlBSHDbs7Bh1iPPoVTERHEZXyhyLbMEsExsA==}
 
-  '@types/express@4.17.22':
-    resolution: {integrity: sha512-eZUmSnhRX9YRSkplpz0N+k6NljUUn5l3EWZIKZvYzhvMphEuNiyyy1viH/ejgt66JWgALwC/gtSUAeQKtSwW/w==}
+  '@types/express@4.17.23':
+    resolution: {integrity: sha512-Crp6WY9aTYP3qPi2wGDo9iUe/rceX01UMhnF1jmwDcKCFM6cx7YhGP/Mpr3y9AASpfHixIG0E6azCcL5OcDHsQ==}
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -5038,8 +5089,8 @@ packages:
   '@types/http-cache-semantics@4.0.4':
     resolution: {integrity: sha512-1m0bIFVc7eJWyve9S0RnuRgcQqF/Xd5QsUZAZeQFr1Q3/p9JWoQQEqmVy+DPTNpGXwhgIetAoYF8JSc33q29QA==}
 
-  '@types/http-errors@2.0.4':
-    resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
+  '@types/http-errors@2.0.5':
+    resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
   '@types/http-proxy@1.17.16':
     resolution: {integrity: sha512-sdWoUajOB1cd0A8cRRQ1cfyWNbmFKLAqBB89Y8x5iYyG/mkJHc0YUH8pdWBy2omi9qtCpiIgGjuwO0dQST2l5w==}
@@ -5110,8 +5161,8 @@ packages:
   '@types/node@13.13.52':
     resolution: {integrity: sha512-s3nugnZumCC//n4moGGe6tkNMyYEdaDBitVjwPxXmR5lnMG5dHePinH2EdxkG3Rh1ghFHHixAG4NJhpJW1rthQ==}
 
-  '@types/node@18.19.105':
-    resolution: {integrity: sha512-a+DrwD2VyzqQR2W0EVF8EaCh6Em4ilQAYLEPZnMNkQHXR7ziWW7RUhZMWZAgRpkDDAdUIcJOXSPJT/zBEwz3sA==}
+  '@types/node@18.19.111':
+    resolution: {integrity: sha512-90sGdgA+QLJr1F9X79tQuEut0gEYIfkX9pydI4XGRgvFo9g2JWswefI+WUSUHPYVBHYSEfTEqBxA5hQvAZB3Mw==}
 
   '@types/node@22.15.24':
     resolution: {integrity: sha512-w9CZGm9RDjzTh/D+hFwlBJ3ziUaVw7oufKA3vOFSOZlzmW9AkZnfjPb+DLnrV6qtgL/LNmP0/2zBNCFHL3F0ng==}
@@ -5155,14 +5206,14 @@ packages:
   '@types/selenium-webdriver@4.1.28':
     resolution: {integrity: sha512-Au7CXegiS7oapbB16zxPToY4Cjzi9UQQMf3W2ZZM8PigMLTGR3iUAHjPUTddyE5g1SBjT/qpmvlsAQLBfNAdKg==}
 
-  '@types/send@0.17.4':
-    resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
+  '@types/send@0.17.5':
+    resolution: {integrity: sha512-z6F2D3cOStZvuk2SaP6YrwkNO65iTZcwA2ZkSABegdkAh/lf+Aa/YQndZVfmEXT5vgAp6zv06VQ3ejSVjAny4w==}
 
   '@types/serve-index@1.9.4':
     resolution: {integrity: sha512-qLpGZ/c2fhSs5gnYsQxtDEq3Oy8SXPClIXkW5ghvAvsNuVSA8k+gCONcUCS/UjLEYvYps+e8uBtfgXgvhwfNug==}
 
-  '@types/serve-static@1.15.7':
-    resolution: {integrity: sha512-W8Ym+h8nhuRwaKPaDw34QUkwsGi6Rc4yYqvKFo5rm2FUEhCFbzVWrxXUxuKK8TASjWsysJY0nsmNCGhCOIsrOw==}
+  '@types/serve-static@1.15.8':
+    resolution: {integrity: sha512-roei0UY3LhpOJvjbIP6ZZFngyLKl5dskOtDhxY5THRSpO+ZI+nzJ+m5yUMzGrp89YRa7lvknKkMYjqQFGwA7Sg==}
 
   '@types/sha.js@2.4.4':
     resolution: {integrity: sha512-Qukd+D6S2Hm0wLVt2Vh+/eWBIoUt+wF8jWjBsG4F8EFQRwKtYvtXCPcNl2OEUQ1R+eTr3xuSaBYUyM3WD1x/Qw==}
@@ -6883,10 +6934,6 @@ packages:
   ci-info@3.3.0:
     resolution: {integrity: sha512-riT/3vI5YpVH6/qomlDnJow6TBee2PBKSEpx3O32EGPYbWGIRsIlGRms3Sm74wYE1JMo8RnO04Hb12+v1J5ICw==}
 
-  ci-info@3.9.0:
-    resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
-    engines: {node: '>=8'}
-
   cids@0.7.5:
     resolution: {integrity: sha512-zT7mPeghoWAu+ppn8+BS1tQ5qGmbMfB4AregnQjA/qHY3GC1m1ptI9GkWNlgeu38r7CuRdXB47uY2XgAYt6QVA==}
     engines: {node: '>=4.0.0', npm: '>=3.0.0'}
@@ -7338,14 +7385,14 @@ packages:
     peerDependencies:
       webpack: ^5.1.0
 
-  core-js-compat@3.42.0:
-    resolution: {integrity: sha512-bQasjMfyDGyaeWKBIu33lHh9qlSR0MFE/Nmc6nMjf/iU9b3rSMdAYz1Baxrv4lPdGUsTqZudHA4jIGSJy0SWZQ==}
+  core-js-compat@3.43.0:
+    resolution: {integrity: sha512-2GML2ZsCc5LR7hZYz4AXmjQw8zuy2T//2QntwdnpuYI7jteT6GVYJL7F6C2C57R7gSYrcqVW3lAALefdbhBLDA==}
 
-  core-js-pure@3.42.0:
-    resolution: {integrity: sha512-007bM04u91fF4kMgwom2I5cQxAFIy8jVulgr9eozILl/SZE53QOqnW/+vviC+wQWLv+AunBG+8Q0TLoeSsSxRQ==}
+  core-js-pure@3.43.0:
+    resolution: {integrity: sha512-i/AgxU2+A+BbJdMxh3v7/vxi2SbFqxiFmg6VsDwYB4jkucrd1BZNA9a9gphC0fYMG5IBSgQcbQnk865VCLe7xA==}
 
-  core-js@3.42.0:
-    resolution: {integrity: sha512-Sz4PP4ZA+Rq4II21qkNqOEDTDrCvcANId3xpIgB34NDkWc3UduWj2dqEtN9yZIq8Dk3HyPI33x9sqqU5C8sr0g==}
+  core-js@3.43.0:
+    resolution: {integrity: sha512-N6wEbTTZSYOY2rYAn85CuvWWkCK6QweMn7/4Nr3w+gDBeBhk/x4EJeY6FPo4QzDoJZxVTv8U7CMvgWk6pOHHqA==}
 
   core-util-is@1.0.2:
     resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==}
@@ -8588,6 +8635,10 @@ packages:
   ethereum-cryptography@2.2.1:
     resolution: {integrity: sha512-r/W8lkHSiTLxUxW8Rf3u4HGB0xQweG2RyETjywylKZSzLWoWAijRz8WCuOtJ6wah+avllXBqZuk29HCCvhEIRg==}
 
+  ethereum-cryptography@3.2.0:
+    resolution: {integrity: sha512-Urr5YVsalH+Jo0sYkTkv1MyI9bLYZwW8BENZCeE1QYaTHETEYx0Nv/SVsWkSqpYrzweg6d8KMY1wTjH/1m/BIg==}
+    engines: {node: ^14.21.3 || >=16, npm: '>=9'}
+
   ethereum-ens@0.8.0:
     resolution: {integrity: sha512-a8cBTF4AWw1Q1Y37V1LSCS9pRY4Mh3f8vCg5cbXCCEJ3eno1hbI/+Ccv9SZLISYpqQhaglP3Bxb/34lS4Qf7Bg==}
 
@@ -8631,9 +8682,6 @@ packages:
 
   eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
-
-  eventemitter3@4.0.7:
-    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
 
   eventemitter3@5.0.1:
     resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
@@ -8824,6 +8872,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  feaxios@0.0.23:
+    resolution: {integrity: sha512-eghR0A21fvbkcQBgZuMfQhrXxJzC0GNUGC9fXhBge33D+mFDTwl0aJ35zoQQn575BhyjQitRc5N4f+L4cP708g==}
 
   fecha@4.2.3:
     resolution: {integrity: sha512-OP2IUU6HeYKJi3i0z4A19kHMQoLVs4Hc+DPqqxI2h/DPZHTm/vjsfC6P0b4jCMy14XizLBqvndQ+UilD7707Jw==}
@@ -9487,8 +9538,8 @@ packages:
     resolution: {integrity: sha512-eKCa6bwnJhvxj14kZk5NCPc6Hb6BdsU9DZcOnmQKSnO1VKrfV0zCvtttPZUsBvjmNDn8rpcJfpwSYnHBjc95MQ==}
     engines: {node: '>=18.18.0'}
 
-  humanize-duration@3.32.2:
-    resolution: {integrity: sha512-jcTwWYeCJf4dN5GJnjBmHd42bNyK94lY49QTkrsAQrMTUoIYLevvDpmQtg5uv8ZrdIRIbzdasmSNZ278HHUPEg==}
+  humanize-duration@3.33.0:
+    resolution: {integrity: sha512-vYJX7BSzn7EQ4SaP2lPYVy+icHDppB6k7myNeI3wrSRfwMS5+BHyGgzpHR0ptqJ2AQ6UuIKrclSg5ve6Ci4IAQ==}
 
   humanize-ms@1.2.1:
     resolution: {integrity: sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ==}
@@ -9830,6 +9881,10 @@ packages:
   is-regex@1.2.1:
     resolution: {integrity: sha512-MjYsKHO5O7mCsmRGxWcLWheFqN9DJ/2TmngvjKXihe6efViPqc274+Fx/4fYj/r03+ESvBdTXK0V6tA3rgez1g==}
     engines: {node: '>= 0.4'}
+
+  is-retry-allowed@3.0.0:
+    resolution: {integrity: sha512-9xH0xvoggby+u0uGF7cZXdrutWiBiaFG8ZT4YFPXL8NzkyAwX3AKGLeFQLvzDpM430+nDFBZ1LHkie/8ocL06A==}
+    engines: {node: '>=12'}
 
   is-root@2.1.0:
     resolution: {integrity: sha512-AGOriNp96vNBd3HtU+RzFEc75FfR5ymiYv8E553I71SCeXBiMsVDUtdio1OEFvrPyLIQ9tVR5RxXIFe5PUFjMg==}
@@ -10810,10 +10865,6 @@ packages:
     resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
     engines: {node: '>= 0.6'}
 
-  mime-db@1.54.0:
-    resolution: {integrity: sha512-aU5EJuIN2WDemCcAp2vFBfp/m4EAhWJnUNSSw0ixs7/kXbd6Pg64EmwJkNdFhB8aWt1sH2CTXrLxo/iAGV3oPQ==}
-    engines: {node: '>= 0.6'}
-
   mime-types@2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
@@ -11039,8 +11090,8 @@ packages:
     resolution: {integrity: sha512-NDd7FeS3QamVtbgfvu5h7fd1IlbaC4EQ0/pgU4zqE2vdHCmBGsUa0TiM8/TdSeG6BMPC92OOCf8F1ocE/Wkrrg==}
     deprecated: This module has been superseded by the multiformats module
 
-  multiformats@13.3.6:
-    resolution: {integrity: sha512-yakbt9cPYj8d3vi/8o/XWm61MrOILo7fsTL0qxNx6zS0Nso6K5JqqS2WV7vK/KSuDBvrW3KfCwAdAgarAgOmww==}
+  multiformats@13.3.7:
+    resolution: {integrity: sha512-meL9DERHj+fFVWoOX9fXqfcYcSpUfSYJPcFvDPKrxitICbwAoWR+Ut4j5NO9zAT917HUHLQmqzQbAsGNHlDcxQ==}
 
   multiformats@9.9.0:
     resolution: {integrity: sha512-HoMUjhH9T8DDBNT+6xzkrd9ga/XiBI4xLr58LJACwK6G3HTOPeMz4nB4KJs33L2BelrIJa7P0VuNaVF3hMYfjg==}
@@ -12350,8 +12401,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native@0.79.2:
-    resolution: {integrity: sha512-AnGzb56JvU5YCL7cAwg10+ewDquzvmgrMddiBM0GAWLwQM/6DJfGd2ZKrMuKKehHerpDDZgG+EY64gk3x3dEkw==}
+  react-native@0.79.3:
+    resolution: {integrity: sha512-EzH1+9gzdyEo9zdP6u7Sh3Jtf5EOMwzy+TK65JysdlgAzfEVfq4mNeXcAZ6SmD+CW6M7ARJbvXLyTD0l2S5rpg==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -12643,8 +12694,8 @@ packages:
     resolution: {integrity: sha512-g7+gs3T+NfoeW6vIq5dcN0CkIT4t/zwRzFxz8X2RzfbrWRnewPUKqQbmBgs05tXLX5NuWPaneiaAVpFpYBcdfw==}
     engines: {node: '>= 10'}
 
-  ripple-binary-codec@2.3.0:
-    resolution: {integrity: sha512-CPMzkknXlgO9Ow5Qa5iqQm0vOIlJyN8M1bc8etyhLw2Xfrer6bPzLA8/apuKlGQ+XdznYSKPBz5LAhwYjaDAcA==}
+  ripple-binary-codec@2.4.0:
+    resolution: {integrity: sha512-KXBw0dfGOettYrQFFIFIVFCUmjDn4jPNG6WHt4bDsjHbPzyEkZvMF6AmaTPtlrE81GT91jU2YyDKtDAhV9he7g==}
     engines: {node: '>= 18'}
 
   ripple-keypairs@2.0.0:
@@ -13483,8 +13534,8 @@ packages:
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
 
-  thor-devkit@2.1.0:
-    resolution: {integrity: sha512-69vLZm1aw+wyQsBj3IYbjKCmYYim27tiP9a/WXMwQVi268YZKVjW1OSEXnY6rv1NZPIS/mtRWAiBBPlYQTaFRg==}
+  thor-devkit@2.1.1:
+    resolution: {integrity: sha512-hkXCS3sUy0v6WvUBEARRRIUpVUD+0pNvYOyY05iEoyEbpTOTI1J5+h/0ixdOxM0W5lOKa55PfCtGLVOK0JaZpA==}
 
   thread-loader@3.0.4:
     resolution: {integrity: sha512-ByaL2TPb+m6yArpqQUZvP+5S1mZtXsEP7nWKKlAUTm7fCml8kB5s1uI3+eHRP2bk5mVYfRSBI7FFf+tWEyLZwA==}
@@ -14776,8 +14827,8 @@ packages:
     resolution: {integrity: sha512-+4zXKdx7UnO+1jaN4l2lHVD+mFvnlZQP/6ljaJVb4SZiwIKeUnrT5l0gkT8z+n4hKpC+jpOv6O9R+gLtag7pSA==}
     engines: {node: '>=10.0.0'}
 
-  webpack-sources@3.3.0:
-    resolution: {integrity: sha512-77R0RDmJfj9dyv5p3bM5pOHa+X8/ZkO9c7kpDstigkC4nIDobadsfSGCwB4bKhMVxqAok8tajaoR8rirM7+VFQ==}
+  webpack-sources@3.3.2:
+    resolution: {integrity: sha512-ykKKus8lqlgXX/1WjudpIEjqsafjOTcOJqxnAbMLAu/KCsDCJ6GBtvscewvTkrn24HsnvFwrSCbenFrhtcCsAA==}
     engines: {node: '>=10.13.0'}
 
   webpack-virtual-modules@0.4.6:
@@ -15069,8 +15120,8 @@ packages:
     resolution: {integrity: sha512-58Im/U0mlVBLM38NdZjHyhuMtCqa61469k2YP/AaPbvCoV9aQGUpbJBj1QRm2ytRiVQBD/fsw7L2bJGDVQswBA==}
     engines: {node: '>=0.4.0'}
 
-  xrpl@4.2.5:
-    resolution: {integrity: sha512-QIpsqvhaRiVvlq7px7lC+lhrxESDMN1vd8mW0SfTgY5WgzP9RLiDoVywOOvSZqDDjPs0EGfhxzYjREW1gGu0Ng==}
+  xrpl@4.3.0:
+    resolution: {integrity: sha512-MW/VyWyTGNmfmt5EaPexKb7ojcnobdzaqtm5UC9NErtlq7IgayqAZpMI26ptOzQolGndK7vOk8U0iOBpMSykJQ==}
     engines: {node: '>=18.0.0'}
 
   xstate@4.38.3:
@@ -15750,7 +15801,7 @@ snapshots:
       '@babel/core': 7.27.3
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-block-scoping@7.27.3(@babel/core@7.27.3)':
+  '@babel/plugin-transform-block-scoping@7.27.5(@babel/core@7.27.3)':
     dependencies:
       '@babel/core': 7.27.3
       '@babel/helper-plugin-utils': 7.27.1
@@ -16011,7 +16062,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/plugin-transform-regenerator@7.27.1(@babel/core@7.27.3)':
+  '@babel/plugin-transform-regenerator@7.27.5(@babel/core@7.27.3)':
     dependencies:
       '@babel/core': 7.27.3
       '@babel/helper-plugin-utils': 7.27.1
@@ -16027,7 +16078,7 @@ snapshots:
       '@babel/core': 7.27.3
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-runtime@7.27.3(@babel/core@7.27.3)':
+  '@babel/plugin-transform-runtime@7.27.4(@babel/core@7.27.3)':
     dependencies:
       '@babel/core': 7.27.3
       '@babel/helper-module-imports': 7.27.1
@@ -16121,7 +16172,7 @@ snapshots:
       '@babel/plugin-transform-async-generator-functions': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-async-to-generator': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-block-scoped-functions': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-transform-block-scoping': 7.27.3(@babel/core@7.27.3)
+      '@babel/plugin-transform-block-scoping': 7.27.5(@babel/core@7.27.3)
       '@babel/plugin-transform-class-properties': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-class-static-block': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-classes': 7.27.1(@babel/core@7.27.3)
@@ -16155,7 +16206,7 @@ snapshots:
       '@babel/plugin-transform-private-methods': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-private-property-in-object': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-property-literals': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-transform-regenerator': 7.27.1(@babel/core@7.27.3)
+      '@babel/plugin-transform-regenerator': 7.27.5(@babel/core@7.27.3)
       '@babel/plugin-transform-regexp-modifiers': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-reserved-words': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-shorthand-properties': 7.27.1(@babel/core@7.27.3)
@@ -16171,7 +16222,7 @@ snapshots:
       babel-plugin-polyfill-corejs2: 0.4.13(@babel/core@7.27.3)
       babel-plugin-polyfill-corejs3: 0.11.1(@babel/core@7.27.3)
       babel-plugin-polyfill-regenerator: 0.6.4(@babel/core@7.27.3)
-      core-js-compat: 3.42.0
+      core-js-compat: 3.43.0
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
@@ -16183,9 +16234,9 @@ snapshots:
       '@babel/types': 7.27.3
       esutils: 2.0.3
 
-  '@babel/runtime-corejs3@7.27.3':
+  '@babel/runtime-corejs3@7.27.6':
     dependencies:
-      core-js-pure: 3.42.0
+      core-js-pure: 3.43.0
 
   '@babel/runtime@7.27.3': {}
 
@@ -16291,7 +16342,7 @@ snapshots:
 
   '@cardano-foundation/ledgerjs-hw-app-cardano@7.1.4':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       base-x: 3.0.11
       bech32: 1.1.4
       int64-buffer: 1.1.0
@@ -16355,13 +16406,13 @@ snapshots:
       '@ethersproject/abi': 5.8.0
       '@ethersproject/rlp': 5.8.0
       '@ledgerhq/cryptoassets-evm-signatures': 13.5.7(debug@4.4.1)
-      '@ledgerhq/domain-service': 1.2.30(debug@4.4.1)
+      '@ledgerhq/domain-service': 1.2.31(debug@4.4.1)
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/evm-tools': 1.6.3(debug@4.4.1)
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/hw-transport-mocker': 6.29.5
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/hw-transport-mocker': 6.29.6
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       axios: 1.7.7(debug@4.4.1)
       bignumber.js: 9.3.0
       semver: 7.7.2
@@ -16379,7 +16430,7 @@ snapshots:
       '@noble/curves': 1.3.0
       '@noble/hashes': 1.3.3
       '@types/bn.js': 5.1.6
-      '@types/node': 18.19.105
+      '@types/node': 18.19.111
       bignumber.js: 9.3.0
       fp-ts: 2.1.1
       io-ts: 2.0.1(fp-ts@2.1.1)
@@ -16395,7 +16446,7 @@ snapshots:
       '@noble/curves': 1.3.0
       '@noble/hashes': 1.3.3
       '@types/bn.js': 5.1.6
-      '@types/node': 18.19.105
+      '@types/node': 18.19.111
       bignumber.js: 9.3.0
       fp-ts: 2.16.9
       io-ts: 2.0.1(fp-ts@2.16.9)
@@ -16433,7 +16484,7 @@ snapshots:
       '@celo/wallet-remote': 6.0.4(bufferutil@4.0.9)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       '@ethereumjs/util': 8.0.5
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       debug: 4.4.1(supports-color@10.0.0)
       semver: 7.7.2
     transitivePeerDependencies:
@@ -17188,24 +17239,24 @@ snapshots:
 
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0': {}
 
-  '@enkryptcom/hw-wallets@0.0.12(@babel/core@7.27.3)(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(tslib@2.8.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.0)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@enkryptcom/hw-wallets@0.0.13(@babel/core@7.27.3)(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(tslib@2.8.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.2)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
       '@enkryptcom/types': 0.0.5
       '@enkryptcom/utils': 0.0.5(@polkadot/util@13.5.1)
       '@ethereumjs/rlp': 5.0.2
       '@ethereumjs/tx': 5.4.0
       '@ethereumjs/util': 9.1.0
-      '@ledgerhq/hw-app-btc': 10.9.1
-      '@ledgerhq/hw-app-eth': 6.45.5
-      '@ledgerhq/hw-app-solana': 7.4.1
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/hw-transport-webusb': 6.29.5
-      '@ledgerhq/live-common': 34.20.0(@babel/core@7.27.3)(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.0)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@polkadot/types': 16.1.1
+      '@ledgerhq/hw-app-btc': 10.9.2
+      '@ledgerhq/hw-app-eth': 6.45.6
+      '@ledgerhq/hw-app-solana': 7.4.2
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/hw-transport-webusb': 6.29.6
+      '@ledgerhq/live-common': 34.20.0(@babel/core@7.27.3)(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.2)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@polkadot/types': 16.2.1
       '@polkadot/util': 13.5.1
-      '@trezor/connect': 9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/connect-web': 9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/connect-webextension': 9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/connect': 9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/connect-web': 9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/connect-webextension': 9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       '@zondax/ledger-substrate': 1.1.2
       bitcoinjs-lib: 6.1.7
       bs58: 6.0.0
@@ -17326,10 +17377,10 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@enkryptcom/swap@0.0.3(@polkadot/util@12.6.2)(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@enkryptcom/swap@0.0.3(@polkadot/util@13.5.1)(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@enkryptcom/types': 0.0.4
-      '@enkryptcom/utils': 0.0.3(@polkadot/util@12.6.2)
+      '@enkryptcom/utils': 0.0.3(@polkadot/util@13.5.1)
       bignumber.js: 9.3.0
       eventemitter3: 5.0.1
       isomorphic-ws: 5.0.0(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
@@ -17354,11 +17405,11 @@ snapshots:
 
   '@enkryptcom/types@0.0.5': {}
 
-  '@enkryptcom/utils@0.0.3(@polkadot/util@12.6.2)':
+  '@enkryptcom/utils@0.0.3(@polkadot/util@13.5.1)':
     dependencies:
       '@enkryptcom/types': 0.0.1
       '@ethereumjs/util': 8.1.0
-      '@polkadot/util-crypto': 10.4.2(@polkadot/util@12.6.2)
+      '@polkadot/util-crypto': 10.4.2(@polkadot/util@13.5.1)
       bip39: 3.1.0
       chai: 4.5.0
       ethereum-cryptography: 1.2.0
@@ -17722,6 +17773,11 @@ snapshots:
       '@eslint/core': 0.14.0
       levn: 0.4.1
 
+  '@ethereumjs/common@10.0.0':
+    dependencies:
+      '@ethereumjs/util': 10.0.0
+      eventemitter3: 5.0.1
+
   '@ethereumjs/common@2.5.0':
     dependencies:
       crc-32: 1.2.2
@@ -17741,9 +17797,18 @@ snapshots:
     dependencies:
       '@ethereumjs/util': 9.1.0
 
+  '@ethereumjs/rlp@10.0.0': {}
+
   '@ethereumjs/rlp@4.0.1': {}
 
   '@ethereumjs/rlp@5.0.2': {}
+
+  '@ethereumjs/tx@10.0.0':
+    dependencies:
+      '@ethereumjs/common': 10.0.0
+      '@ethereumjs/rlp': 10.0.0
+      '@ethereumjs/util': 10.0.0
+      ethereum-cryptography: 3.2.0
 
   '@ethereumjs/tx@3.3.2':
     dependencies:
@@ -17768,6 +17833,11 @@ snapshots:
       '@ethereumjs/rlp': 5.0.2
       '@ethereumjs/util': 9.1.0
       ethereum-cryptography: 2.2.1
+
+  '@ethereumjs/util@10.0.0':
+    dependencies:
+      '@ethereumjs/rlp': 10.0.0
+      ethereum-cryptography: 3.2.0
 
   '@ethereumjs/util@8.0.5':
     dependencies:
@@ -18342,7 +18412,7 @@ snapshots:
       bplist-parser: 0.3.2
       cacache: 15.3.0
       chalk: 4.1.2
-      ci-info: 3.9.0
+      ci-info: 3.3.0
       env-editor: 0.4.2
       form-data: 3.0.3
       freeport-async: 2.0.0
@@ -18495,7 +18565,7 @@ snapshots:
 
   '@expo/osascript@2.0.33':
     dependencies:
-      '@expo/spawn-async': 1.7.2
+      '@expo/spawn-async': 1.5.0
       exec-async: 2.2.0
 
   '@expo/osascript@2.2.4':
@@ -18506,7 +18576,7 @@ snapshots:
   '@expo/package-manager@0.0.60':
     dependencies:
       '@expo/json-file': 8.3.3
-      '@expo/spawn-async': 1.7.2
+      '@expo/spawn-async': 1.5.0
       ansi-regex: 5.0.1
       chalk: 4.1.2
       find-up: 5.0.0
@@ -18609,7 +18679,7 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@hashgraph/cryptography@1.7.4(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))':
+  '@hashgraph/cryptography@1.8.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))':
     dependencies:
       '@noble/curves': 1.9.1
       asn1js: 3.0.6
@@ -18619,7 +18689,7 @@ snapshots:
       crypto-js: 4.2.0
       forge-light: 1.1.4
       js-base64: 3.7.7
-      react-native-get-random-values: 1.11.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
+      react-native-get-random-values: 1.11.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
       spark-md5: 3.0.2
       tweetnacl: 1.0.3
       utf8: 3.0.0
@@ -18631,10 +18701,10 @@ snapshots:
       long: 4.0.0
       protobufjs: 6.11.4
 
-  '@hashgraph/sdk@2.14.2(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))':
+  '@hashgraph/sdk@2.14.2(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))':
     dependencies:
       '@grpc/grpc-js': 1.13.4
-      '@hashgraph/cryptography': 1.7.4(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
+      '@hashgraph/cryptography': 1.8.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
       '@hashgraph/proto': 2.4.1
       bignumber.js: 9.3.0
       crypto-js: 4.2.0
@@ -18846,7 +18916,7 @@ snapshots:
   '@ipld/dag-cbor@9.2.4':
     dependencies:
       cborg: 4.2.11
-      multiformats: 13.3.6
+      multiformats: 13.3.7
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -18994,7 +19064,7 @@ snapshots:
       elliptic: 6.6.1
       sha.js: 2.4.11
 
-  '@keplr-wallet/proto-types@0.12.237':
+  '@keplr-wallet/proto-types@0.12.239':
     dependencies:
       long: 4.0.0
       protobufjs: 6.11.4
@@ -19031,10 +19101,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/live-promise': 0.1.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       algo-msgpack-with-bigint: 2.1.1
       algosdk: 1.13.1
       bignumber.js: 9.3.0
@@ -19051,14 +19121,14 @@ snapshots:
     dependencies:
       '@apollo/client': 3.13.8(graphql@16.11.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@aptos-labs/ts-sdk': 1.39.0(axios@1.7.7)(got@12.1.0)
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       '@noble/hashes': 1.7.0
       bignumber.js: 9.3.0
       expect: 27.5.1
@@ -19083,10 +19153,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bchaddrjs: 0.5.2
       bech32: 1.1.4
       bignumber.js: 9.3.0
@@ -19116,10 +19186,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@stricahq/bip32ed25519': 1.1.1
       '@stricahq/typhonjs': 2.0.0
       bech32: 1.1.4
@@ -19137,17 +19207,17 @@ snapshots:
       '@cosmjs/crypto': 0.31.3
       '@cosmjs/stargate': 0.26.8(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@keplr-wallet/cosmos': 0.9.16
-      '@keplr-wallet/proto-types': 0.12.237
+      '@keplr-wallet/proto-types': 0.12.239
       '@ledgerhq/coin-framework': 1.0.0
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-config': 3.1.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       axios: 1.7.7(debug@4.4.1)
       bech32: 1.1.4
       bignumber.js: 9.3.0
@@ -19172,11 +19242,11 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bech32: 1.1.4
       bignumber.js: 9.3.0
       expect: 27.5.1
@@ -19186,19 +19256,19 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/coin-evm@2.22.1(bufferutil@4.0.9)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)':
+  '@ledgerhq/coin-evm@2.22.2(bufferutil@4.0.9)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)':
     dependencies:
       '@ethersproject/shims': 5.8.0
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/devices': 8.4.5
-      '@ledgerhq/domain-service': 1.2.30(debug@4.4.1)
+      '@ledgerhq/devices': 8.4.6
+      '@ledgerhq/domain-service': 1.2.31(debug@4.4.1)
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/evm-tools': 1.6.3(debug@4.4.1)
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       axios: 1.7.7(debug@4.4.1)
       bignumber.js: 9.3.0
       eip55: 2.1.1
@@ -19207,7 +19277,7 @@ snapshots:
       imurmurhash: 0.1.4
       invariant: 2.2.4
       lodash: 4.17.21
-      react-native-get-random-values: 1.11.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
+      react-native-get-random-values: 1.11.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
       rxjs: 7.8.2
     transitivePeerDependencies:
       - bufferutil
@@ -19215,17 +19285,17 @@ snapshots:
       - react-native
       - utf-8-validate
 
-  '@ledgerhq/coin-filecoin@1.9.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@ledgerhq/coin-filecoin@1.9.8(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@zondax/cbor': 8.1.0-zondax-no-bigint
       bignumber.js: 9.3.0
       ethers: 5.7.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -19244,10 +19314,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19265,10 +19335,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19286,10 +19356,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-cryptoassets': 7.19.0
+      '@ledgerhq/types-live': 6.61.0
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19307,10 +19377,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-cryptoassets': 7.20.0
+      '@ledgerhq/types-live': 6.62.0
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19328,10 +19398,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19343,16 +19413,16 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/coin-framework@5.1.0':
+  '@ledgerhq/coin-framework@5.2.0':
     dependencies:
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19364,17 +19434,17 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/coin-hedera@1.6.7(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))':
+  '@ledgerhq/coin-hedera@1.7.0(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))':
     dependencies:
-      '@hashgraph/sdk': 2.14.2(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
-      '@ledgerhq/coin-framework': 5.1.0
+      '@hashgraph/sdk': 2.14.2(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/live-countervalues': 0.5.7
+      '@ledgerhq/live-countervalues': 0.5.8
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       expect: 27.5.1
       invariant: 2.2.4
@@ -19394,11 +19464,11 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       expect: 27.5.1
       icon-sdk-js: 1.5.2
@@ -19409,19 +19479,19 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/coin-internet_computer@1.7.7(@types/node@22.15.24)(typescript@5.6.3)':
+  '@ledgerhq/coin-internet_computer@1.7.8(@types/node@22.15.24)(typescript@5.6.3)':
     dependencies:
       '@dfinity/agent': 0.21.4(@dfinity/candid@0.21.4(@dfinity/principal@0.15.7(@types/node@22.15.24)(typescript@5.6.3)))(@dfinity/principal@0.15.7(@types/node@22.15.24)(typescript@5.6.3))
       '@dfinity/candid': 0.21.4(@dfinity/principal@0.15.7(@types/node@22.15.24)(typescript@5.6.3))
       '@dfinity/principal': 0.15.7(@types/node@22.15.24)(typescript@5.6.3)
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       big-integer: 1.6.52
       bignumber.js: 9.3.0
       expect: 27.5.1
@@ -19442,10 +19512,10 @@ snapshots:
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       expect: 27.5.1
       invariant: 2.2.4
@@ -19463,10 +19533,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@polkadot/api': 11.2.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@polkadot/api-augment': 11.2.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@polkadot/api-derive': 11.2.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -19492,10 +19562,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@solana/spl-token': 0.4.9(@solana/web3.js@1.95.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(utf-8-validate@5.0.10)
       '@solana/web3.js': 1.95.4(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       bignumber.js: 9.3.0
@@ -19521,10 +19591,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@stacks/network': 6.10.0
       '@stacks/transactions': 6.11.0
       '@zondax/ledger-stacks': 1.0.4
@@ -19548,10 +19618,10 @@ snapshots:
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@stellar/stellar-sdk': 11.3.0
       bignumber.js: 9.3.0
       expect: 27.5.1
@@ -19566,10 +19636,10 @@ snapshots:
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@taquito/ledger-signer': 20.1.2
       '@taquito/rpc': 20.1.2
       '@taquito/taquito': 20.1.2
@@ -19591,10 +19661,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       '@ton/core': 0.56.3(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
       '@ton/ton': 13.11.2(@ton/core@0.56.3(@ton/crypto@3.3.0))(@ton/crypto@3.3.0)
@@ -19617,10 +19687,10 @@ snapshots:
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       bs58check: 2.1.2
       expect: 27.5.1
@@ -19633,20 +19703,20 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@ledgerhq/coin-vechain@2.7.7':
+  '@ledgerhq/coin-vechain@2.7.8':
     dependencies:
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
+      '@ledgerhq/live-network': 2.0.9
       bignumber.js: 9.3.0
       eip55: 2.1.1
       invariant: 2.2.4
       lodash: 4.17.21
       rxjs: 7.8.2
-      thor-devkit: 2.1.0
+      thor-devkit: 2.1.1
     transitivePeerDependencies:
       - debug
 
@@ -19656,8 +19726,8 @@ snapshots:
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       invariant: 2.2.4
       ripple-address-codec: 5.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -19672,10 +19742,10 @@ snapshots:
     dependencies:
       commander: 2.20.3
 
-  '@ledgerhq/crypto-icons-ui@1.14.0(react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)':
+  '@ledgerhq/crypto-icons-ui@1.14.0(react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)':
     dependencies:
       react: 18.3.1
-      react-native-svg: 15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
+      react-native-svg: 15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
       styled-components: 6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-system: 5.1.5
 
@@ -19722,14 +19792,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/device-core@0.4.25':
+  '@ledgerhq/device-core@0.4.26':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       semver: 7.7.2
       sha.js: 2.4.11
     transitivePeerDependencies:
@@ -19745,29 +19815,29 @@ snapshots:
   '@ledgerhq/devices@6.27.1':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       rxjs: 6.6.7
       semver: 7.7.2
 
   '@ledgerhq/devices@8.4.4':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
       semver: 7.7.2
 
-  '@ledgerhq/devices@8.4.5':
+  '@ledgerhq/devices@8.4.6':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
       semver: 7.7.2
 
-  '@ledgerhq/domain-service@1.2.30(debug@4.4.1)':
+  '@ledgerhq/domain-service@1.2.31(debug@4.4.1)':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       axios: 1.7.7(debug@4.4.1)
       eip55: 2.1.1
       react: 18.3.1
@@ -19792,26 +19862,26 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/hw-app-algorand@6.31.1':
+  '@ledgerhq/hw-app-algorand@6.31.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
       hi-base32: 0.5.1
       js-sha512: 0.8.0
       tweetnacl: 1.0.3
 
-  '@ledgerhq/hw-app-aptos@6.34.1':
+  '@ledgerhq/hw-app-aptos@6.34.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@noble/hashes': 1.6.1
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-app-btc@10.9.1':
+  '@ledgerhq/hw-app-btc@10.9.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
       bip32-path: 0.4.2
       bitcoinjs-lib: 5.2.0
       bs58: 4.0.1
@@ -19823,15 +19893,15 @@ snapshots:
       tiny-secp256k1: 1.1.6
       varuint-bitcoin: 1.1.2
 
-  '@ledgerhq/hw-app-cosmos@6.32.1':
+  '@ledgerhq/hw-app-cosmos@6.32.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
 
   '@ledgerhq/hw-app-elrond@6.21.1':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@multiversx/sdk-core': 13.17.2(bignumber.js@9.3.0)(protobufjs@7.5.3)
       bignumber.js: 9.3.0
       bip32-path: 0.4.2
@@ -19839,19 +19909,19 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/hw-app-eth@6.45.5':
+  '@ledgerhq/hw-app-eth@6.45.6':
     dependencies:
       '@ethersproject/abi': 5.8.0
       '@ethersproject/rlp': 5.8.0
       '@ethersproject/transactions': 5.8.0
       '@ledgerhq/cryptoassets-evm-signatures': 13.5.7(debug@4.4.1)
-      '@ledgerhq/domain-service': 1.2.30(debug@4.4.1)
+      '@ledgerhq/domain-service': 1.2.31(debug@4.4.1)
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/evm-tools': 1.6.3(debug@4.4.1)
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/hw-transport-mocker': 6.29.5
-      '@ledgerhq/logs': 6.12.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/hw-transport-mocker': 6.29.6
+      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/types-live': 6.72.0
       axios: 1.7.7(debug@4.4.1)
       bignumber.js: 9.3.0
       jest-sonar: 0.2.16
@@ -19862,77 +19932,77 @@ snapshots:
   '@ledgerhq/hw-app-exchange@0.7.0':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bignumber.js: 9.3.0
       invariant: 2.2.4
       protobufjs: 7.2.5
       protobufjs-cli: 1.1.2(protobufjs@7.2.5)
 
-  '@ledgerhq/hw-app-hedera@1.2.1':
+  '@ledgerhq/hw-app-hedera@1.2.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-app-icon@1.3.1':
+  '@ledgerhq/hw-app-icon@1.3.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-app-near@6.31.1':
+  '@ledgerhq/hw-app-near@6.31.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       near-api-js: 3.0.4
     transitivePeerDependencies:
       - encoding
 
-  '@ledgerhq/hw-app-polkadot@6.34.1':
+  '@ledgerhq/hw-app-polkadot@6.34.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@zondax/ledger-substrate': 0.44.7
       bip32-path: 0.4.2
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/hw-app-solana@7.4.1':
+  '@ledgerhq/hw-app-solana@7.4.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-app-str@7.2.1':
+  '@ledgerhq/hw-app-str@7.2.2':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-app-tezos@6.31.1':
+  '@ledgerhq/hw-app-tezos@6.31.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       blake2b: 2.1.4
       bs58check: 2.1.2
       invariant: 2.2.4
 
-  '@ledgerhq/hw-app-trx@6.31.1':
+  '@ledgerhq/hw-app-trx@6.31.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
 
   '@ledgerhq/hw-app-vet@0.2.16':
     dependencies:
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/hw-transport-mocker': 6.29.5
-      '@ledgerhq/logs': 6.12.0
-      thor-devkit: 2.1.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/hw-transport-mocker': 6.29.6
+      '@ledgerhq/logs': 6.13.0
+      thor-devkit: 2.1.1
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/hw-app-xrp@6.31.1':
+  '@ledgerhq/hw-app-xrp@6.31.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
 
   '@ledgerhq/hw-bolos@6.32.0':
@@ -19951,21 +20021,21 @@ snapshots:
 
   '@ledgerhq/hw-transport-mocker@6.29.4':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
 
-  '@ledgerhq/hw-transport-mocker@6.29.5':
+  '@ledgerhq/hw-transport-mocker@6.29.6':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
 
   '@ledgerhq/hw-transport-node-speculos-http@6.29.4':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
       axios: 1.7.7(debug@4.4.1)
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -19974,8 +20044,8 @@ snapshots:
   '@ledgerhq/hw-transport-node-speculos@6.29.4':
     dependencies:
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
 
   '@ledgerhq/hw-transport-u2f@5.36.0-deprecated':
@@ -19985,12 +20055,12 @@ snapshots:
       '@ledgerhq/logs': 5.50.0
       u2f-api: 0.2.7
 
-  '@ledgerhq/hw-transport-webusb@6.29.5':
+  '@ledgerhq/hw-transport-webusb@6.29.6':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/logs': 6.13.0
 
   '@ledgerhq/hw-transport@5.51.1':
     dependencies:
@@ -20006,43 +20076,43 @@ snapshots:
 
   '@ledgerhq/hw-transport@6.28.1':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.30.6':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.31.0':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.31.3':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.31.4':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 
-  '@ledgerhq/hw-transport@6.31.5':
+  '@ledgerhq/hw-transport@6.31.6':
     dependencies:
-      '@ledgerhq/devices': 8.4.5
+      '@ledgerhq/devices': 8.4.6
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 
   '@ledgerhq/ledger-cal-service@0.2.0':
@@ -20084,7 +20154,7 @@ snapshots:
       bignumber.js: 9.3.0
       json-rpc-2.0: 1.7.0
 
-  '@ledgerhq/live-common@34.20.0(@babel/core@7.27.3)(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.0)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@ledgerhq/live-common@34.20.0(@babel/core@7.27.3)(@tanstack/react-query@5.79.0(react@18.3.1))(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(expo@45.0.8(@babel/core@7.27.3))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10))(webpack-sources@3.3.2)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
       '@blooo/hw-app-acre': 1.1.1
       '@cardano-foundation/ledgerjs-hw-app-cardano': 7.1.4
@@ -20102,12 +20172,12 @@ snapshots:
       '@ledgerhq/coin-cardano': 0.4.5
       '@ledgerhq/coin-cosmos': 0.7.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ledgerhq/coin-elrond': 0.3.6
-      '@ledgerhq/coin-evm': 2.22.1(bufferutil@4.0.9)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
-      '@ledgerhq/coin-filecoin': 1.9.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@ledgerhq/coin-evm': 2.22.2(bufferutil@4.0.9)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
+      '@ledgerhq/coin-filecoin': 1.9.8(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ledgerhq/coin-framework': 0.25.0
-      '@ledgerhq/coin-hedera': 1.6.7(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
+      '@ledgerhq/coin-hedera': 1.7.0(expo@45.0.8(@babel/core@7.27.3))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))
       '@ledgerhq/coin-icon': 0.6.6
-      '@ledgerhq/coin-internet_computer': 1.7.7(@types/node@22.15.24)(typescript@5.6.3)
+      '@ledgerhq/coin-internet_computer': 1.7.8(@types/node@22.15.24)(typescript@5.6.3)
       '@ledgerhq/coin-near': 0.7.3
       '@ledgerhq/coin-polkadot': 1.7.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@ledgerhq/coin-solana': 0.12.1(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(utf-8-validate@5.0.10)
@@ -20116,46 +20186,46 @@ snapshots:
       '@ledgerhq/coin-tezos': 0.9.2
       '@ledgerhq/coin-ton': 0.5.7(@types/node@22.15.24)(typescript@5.6.3)
       '@ledgerhq/coin-tron': 0.2.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ledgerhq/coin-vechain': 2.7.7
+      '@ledgerhq/coin-vechain': 2.7.8
       '@ledgerhq/coin-xrp': 0.9.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@ledgerhq/crypto-icons-ui': 1.14.0(react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)
+      '@ledgerhq/crypto-icons-ui': 1.14.0(react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react@18.3.1)(styled-components@6.1.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/device-core': 0.4.25
+      '@ledgerhq/device-core': 0.4.26
       '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.21.0
-      '@ledgerhq/hw-app-algorand': 6.31.1
-      '@ledgerhq/hw-app-aptos': 6.34.1
-      '@ledgerhq/hw-app-btc': 10.9.1
-      '@ledgerhq/hw-app-cosmos': 6.32.1
+      '@ledgerhq/hw-app-algorand': 6.31.2
+      '@ledgerhq/hw-app-aptos': 6.34.2
+      '@ledgerhq/hw-app-btc': 10.9.2
+      '@ledgerhq/hw-app-cosmos': 6.32.2
       '@ledgerhq/hw-app-elrond': 6.21.1
-      '@ledgerhq/hw-app-eth': 6.45.5
+      '@ledgerhq/hw-app-eth': 6.45.6
       '@ledgerhq/hw-app-exchange': 0.7.0
-      '@ledgerhq/hw-app-hedera': 1.2.1
-      '@ledgerhq/hw-app-icon': 1.3.1
-      '@ledgerhq/hw-app-near': 6.31.1
-      '@ledgerhq/hw-app-polkadot': 6.34.1
-      '@ledgerhq/hw-app-solana': 7.4.1
-      '@ledgerhq/hw-app-str': 7.2.1
-      '@ledgerhq/hw-app-tezos': 6.31.1
-      '@ledgerhq/hw-app-trx': 6.31.1
+      '@ledgerhq/hw-app-hedera': 1.2.2
+      '@ledgerhq/hw-app-icon': 1.3.2
+      '@ledgerhq/hw-app-near': 6.31.2
+      '@ledgerhq/hw-app-polkadot': 6.34.2
+      '@ledgerhq/hw-app-solana': 7.4.2
+      '@ledgerhq/hw-app-str': 7.2.2
+      '@ledgerhq/hw-app-tezos': 6.31.2
+      '@ledgerhq/hw-app-trx': 6.31.2
       '@ledgerhq/hw-app-vet': 0.2.16
-      '@ledgerhq/hw-app-xrp': 6.31.1
+      '@ledgerhq/hw-app-xrp': 6.31.2
       '@ledgerhq/hw-bolos': 6.32.0
-      '@ledgerhq/hw-transport': 6.31.5
-      '@ledgerhq/hw-transport-mocker': 6.29.5
+      '@ledgerhq/hw-transport': 6.31.6
+      '@ledgerhq/hw-transport-mocker': 6.29.6
       '@ledgerhq/ledger-cal-service': 0.2.0
       '@ledgerhq/ledger-trust-service': 0.2.0
       '@ledgerhq/live-app-sdk': 0.8.2
       '@ledgerhq/live-config': 3.1.0
       '@ledgerhq/live-countervalues': 0.2.20
-      '@ledgerhq/live-countervalues-react': 0.2.36(react@18.3.1)
+      '@ledgerhq/live-countervalues-react': 0.2.37(react@18.3.1)
       '@ledgerhq/live-env': 2.9.0
       '@ledgerhq/live-hooks': 0.1.0(react@18.3.1)
-      '@ledgerhq/live-network': 2.0.8
+      '@ledgerhq/live-network': 2.0.9
       '@ledgerhq/live-nft': 0.5.9
-      '@ledgerhq/live-promise': 0.1.0
+      '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/live-wallet': 0.9.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/speculos-transport': 0.1.11
       '@ledgerhq/wallet-api-acre-module': 0.1.0(@ton/crypto@3.3.0)
       '@ledgerhq/wallet-api-client': 1.9.0(@ton/crypto@3.3.0)
@@ -20174,7 +20244,7 @@ snapshots:
       '@types/redux-actions': 2.6.5
       '@xstate/react': 1.6.3(react@18.3.1)(xstate@4.38.3)
       '@zondax/ledger-casper': 2.6.3
-      '@zondax/ledger-cosmos-js': 3.0.3(@babel/core@7.27.3)(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.0)
+      '@zondax/ledger-cosmos-js': 3.0.3(@babel/core@7.27.3)(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.2)
       '@zondax/ledger-filecoin': 0.11.2
       '@zondax/ledger-icp': 0.7.0
       '@zondax/ledger-stacks': 1.0.4
@@ -20218,8 +20288,8 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-native: 0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
-      react-native-svg: 15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
+      react-native: 0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
+      react-native-svg: 15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
     transitivePeerDependencies:
       - '@babel/core'
       - '@parcel/css'
@@ -20315,15 +20385,15 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  '@ledgerhq/live-countervalues-react@0.2.36(react@18.3.1)':
+  '@ledgerhq/live-countervalues-react@0.2.37(react@18.3.1)':
     dependencies:
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
-      '@ledgerhq/live-countervalues': 0.5.7
+      '@ledgerhq/live-countervalues': 0.5.8
       '@ledgerhq/live-hooks': 0.1.0(react@18.3.1)
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
       bignumber.js: 9.3.0
       react: 18.3.1
     transitivePeerDependencies:
@@ -20342,16 +20412,16 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/live-countervalues@0.5.7':
+  '@ledgerhq/live-countervalues@0.5.8':
     dependencies:
-      '@ledgerhq/coin-framework': 5.1.0
+      '@ledgerhq/coin-framework': 5.2.0
       '@ledgerhq/cryptoassets': 13.18.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-network': 2.0.8
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-network': 2.0.9
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-cryptoassets': 7.23.0
-      '@ledgerhq/types-live': 6.71.0
+      '@ledgerhq/types-live': 6.72.0
     transitivePeerDependencies:
       - debug
 
@@ -20383,8 +20453,8 @@ snapshots:
     dependencies:
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       axios: 1.7.7(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
@@ -20394,19 +20464,19 @@ snapshots:
     dependencies:
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       axios: 1.7.7(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/live-network@2.0.8':
+  '@ledgerhq/live-network@2.0.9':
     dependencies:
       '@ledgerhq/errors': 6.21.0
       '@ledgerhq/live-env': 2.9.0
-      '@ledgerhq/live-promise': 0.1.0
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/live-promise': 0.1.1
+      '@ledgerhq/logs': 6.13.0
       axios: 1.7.7(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
@@ -20426,7 +20496,11 @@ snapshots:
 
   '@ledgerhq/live-promise@0.1.0':
     dependencies:
-      '@ledgerhq/logs': 6.12.0
+      '@ledgerhq/logs': 6.13.0
+
+  '@ledgerhq/live-promise@0.1.1':
+    dependencies:
+      '@ledgerhq/logs': 6.13.0
 
   '@ledgerhq/live-wallet@0.9.7(bufferutil@4.0.9)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
@@ -20457,6 +20531,8 @@ snapshots:
   '@ledgerhq/logs@5.50.0': {}
 
   '@ledgerhq/logs@6.12.0': {}
+
+  '@ledgerhq/logs@6.13.0': {}
 
   '@ledgerhq/speculos-transport@0.1.10':
     dependencies:
@@ -20503,7 +20579,7 @@ snapshots:
       bignumber.js: 9.3.0
       rxjs: 7.8.2
 
-  '@ledgerhq/types-live@6.71.0':
+  '@ledgerhq/types-live@6.72.0':
     dependencies:
       bignumber.js: 9.3.0
       rxjs: 7.8.2
@@ -20518,7 +20594,7 @@ snapshots:
 
   '@ledgerhq/wallet-api-client@1.9.0(@ton/crypto@3.3.0)':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@ledgerhq/wallet-api-core': 1.21.0(@ton/crypto@3.3.0)
       bignumber.js: 9.3.0
     transitivePeerDependencies:
@@ -20531,7 +20607,7 @@ snapshots:
       '@stacks/transactions': 6.17.0
       '@ton/core': 0.60.1(@ton/crypto@3.3.0)
       bignumber.js: 9.3.0
-      thor-devkit: 2.1.0
+      thor-devkit: 2.1.1
       uuid: 9.0.1
       zod: 3.25.36
     transitivePeerDependencies:
@@ -21053,6 +21129,10 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.7.2
 
+  '@noble/curves@1.9.0':
+    dependencies:
+      '@noble/hashes': 1.8.0
+
   '@noble/curves@1.9.1':
     dependencies:
       '@noble/hashes': 1.8.0
@@ -21084,8 +21164,6 @@ snapshots:
   '@noble/hashes@1.8.0': {}
 
   '@noble/secp256k1@1.7.1': {}
-
-  '@noble/secp256k1@1.7.2': {}
 
   '@node-ipc/js-queue@2.0.3':
     dependencies:
@@ -21460,10 +21538,10 @@ snapshots:
       '@polkadot/util': 12.6.2
       tslib: 2.8.1
 
-  '@polkadot/types-augment@16.1.1':
+  '@polkadot/types-augment@16.2.1':
     dependencies:
-      '@polkadot/types': 16.1.1
-      '@polkadot/types-codec': 16.1.1
+      '@polkadot/types': 16.2.1
+      '@polkadot/types-codec': 16.2.1
       '@polkadot/util': 13.5.1
       tslib: 2.8.1
 
@@ -21473,7 +21551,7 @@ snapshots:
       '@polkadot/x-bigint': 12.6.2
       tslib: 2.8.1
 
-  '@polkadot/types-codec@16.1.1':
+  '@polkadot/types-codec@16.2.1':
     dependencies:
       '@polkadot/util': 13.5.1
       '@polkadot/x-bigint': 13.5.1
@@ -21485,9 +21563,9 @@ snapshots:
       '@polkadot/util': 12.6.2
       tslib: 2.8.1
 
-  '@polkadot/types-create@16.1.1':
+  '@polkadot/types-create@16.2.1':
     dependencies:
-      '@polkadot/types-codec': 16.1.1
+      '@polkadot/types-codec': 16.2.1
       '@polkadot/util': 13.5.1
       tslib: 2.8.1
 
@@ -21516,25 +21594,25 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@polkadot/types@16.1.1':
+  '@polkadot/types@16.2.1':
     dependencies:
       '@polkadot/keyring': 13.5.1(@polkadot/util-crypto@13.5.1(@polkadot/util@13.5.1))(@polkadot/util@13.5.1)
-      '@polkadot/types-augment': 16.1.1
-      '@polkadot/types-codec': 16.1.1
-      '@polkadot/types-create': 16.1.1
+      '@polkadot/types-augment': 16.2.1
+      '@polkadot/types-codec': 16.2.1
+      '@polkadot/types-create': 16.2.1
       '@polkadot/util': 13.5.1
       '@polkadot/util-crypto': 13.5.1(@polkadot/util@13.5.1)
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@polkadot/util-crypto@10.4.2(@polkadot/util@12.6.2)':
+  '@polkadot/util-crypto@10.4.2(@polkadot/util@13.5.1)':
     dependencies:
       '@babel/runtime': 7.27.3
       '@noble/hashes': 1.2.0
       '@noble/secp256k1': 1.7.1
       '@polkadot/networks': 10.4.2
-      '@polkadot/util': 12.6.2
-      '@polkadot/wasm-crypto': 6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)
+      '@polkadot/util': 13.5.1
+      '@polkadot/wasm-crypto': 6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)
       '@polkadot/x-bigint': 10.4.2
       '@polkadot/x-randomvalues': 10.4.2
       '@scure/base': 1.1.1
@@ -21547,10 +21625,10 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@polkadot/networks': 12.6.2
       '@polkadot/util': 12.6.2
-      '@polkadot/wasm-crypto': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-crypto': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@12.6.2)
       '@polkadot/x-bigint': 12.6.2
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       '@scure/base': 1.2.5
       tslib: 2.8.1
 
@@ -21560,10 +21638,10 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@polkadot/networks': 12.6.2
       '@polkadot/util': 13.5.1
-      '@polkadot/wasm-crypto': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-crypto': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
       '@polkadot/x-bigint': 12.6.2
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       '@scure/base': 1.2.5
       tslib: 2.8.1
 
@@ -21610,24 +21688,24 @@ snapshots:
       bn.js: 5.2.2
       tslib: 2.8.1
 
-  '@polkadot/wasm-bridge@6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)':
+  '@polkadot/wasm-bridge@6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@polkadot/util': 12.6.2
+      '@polkadot/util': 13.5.1
       '@polkadot/x-randomvalues': 10.4.2
 
-  '@polkadot/wasm-bridge@7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))':
+  '@polkadot/wasm-bridge@7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
     dependencies:
       '@polkadot/util': 12.6.2
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@12.6.2)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-bridge@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))':
+  '@polkadot/wasm-bridge@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
     dependencies:
       '@polkadot/util': 13.5.1
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
   '@polkadot/wasm-bridge@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@13.5.1(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
@@ -21637,10 +21715,10 @@ snapshots:
       '@polkadot/x-randomvalues': 13.5.1(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-asmjs@6.4.1(@polkadot/util@12.6.2)':
+  '@polkadot/wasm-crypto-asmjs@6.4.1(@polkadot/util@13.5.1)':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@polkadot/util': 12.6.2
+      '@polkadot/util': 13.5.1
 
   '@polkadot/wasm-crypto-asmjs@7.4.1(@polkadot/util@12.6.2)':
     dependencies:
@@ -21652,33 +21730,33 @@ snapshots:
       '@polkadot/util': 13.5.1
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-init@6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)':
+  '@polkadot/wasm-crypto-init@6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@polkadot/util': 12.6.2
-      '@polkadot/wasm-bridge': 6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)
-      '@polkadot/wasm-crypto-asmjs': 6.4.1(@polkadot/util@12.6.2)
-      '@polkadot/wasm-crypto-wasm': 6.4.1(@polkadot/util@12.6.2)
+      '@polkadot/util': 13.5.1
+      '@polkadot/wasm-bridge': 6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)
+      '@polkadot/wasm-crypto-asmjs': 6.4.1(@polkadot/util@13.5.1)
+      '@polkadot/wasm-crypto-wasm': 6.4.1(@polkadot/util@13.5.1)
       '@polkadot/x-randomvalues': 10.4.2
 
-  '@polkadot/wasm-crypto-init@7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))':
+  '@polkadot/wasm-crypto-init@7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
     dependencies:
       '@polkadot/util': 12.6.2
-      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-crypto-asmjs': 7.4.1(@polkadot/util@12.6.2)
       '@polkadot/wasm-crypto-wasm': 7.4.1(@polkadot/util@12.6.2)
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@12.6.2)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-init@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))':
+  '@polkadot/wasm-crypto-init@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
     dependencies:
       '@polkadot/util': 13.5.1
-      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-crypto-asmjs': 7.4.1(@polkadot/util@13.5.1)
       '@polkadot/wasm-crypto-wasm': 7.4.1(@polkadot/util@13.5.1)
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
   '@polkadot/wasm-crypto-init@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@13.5.1(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
@@ -21691,11 +21769,11 @@ snapshots:
       '@polkadot/x-randomvalues': 13.5.1(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-wasm@6.4.1(@polkadot/util@12.6.2)':
+  '@polkadot/wasm-crypto-wasm@6.4.1(@polkadot/util@13.5.1)':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@polkadot/util': 12.6.2
-      '@polkadot/wasm-util': 6.4.1(@polkadot/util@12.6.2)
+      '@polkadot/util': 13.5.1
+      '@polkadot/wasm-util': 6.4.1(@polkadot/util@13.5.1)
 
   '@polkadot/wasm-crypto-wasm@7.4.1(@polkadot/util@12.6.2)':
     dependencies:
@@ -21709,37 +21787,37 @@ snapshots:
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto@6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)':
+  '@polkadot/wasm-crypto@6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@polkadot/util': 12.6.2
-      '@polkadot/wasm-bridge': 6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)
-      '@polkadot/wasm-crypto-asmjs': 6.4.1(@polkadot/util@12.6.2)
-      '@polkadot/wasm-crypto-init': 6.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@10.4.2)
-      '@polkadot/wasm-crypto-wasm': 6.4.1(@polkadot/util@12.6.2)
-      '@polkadot/wasm-util': 6.4.1(@polkadot/util@12.6.2)
+      '@polkadot/util': 13.5.1
+      '@polkadot/wasm-bridge': 6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)
+      '@polkadot/wasm-crypto-asmjs': 6.4.1(@polkadot/util@13.5.1)
+      '@polkadot/wasm-crypto-init': 6.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@10.4.2)
+      '@polkadot/wasm-crypto-wasm': 6.4.1(@polkadot/util@13.5.1)
+      '@polkadot/wasm-util': 6.4.1(@polkadot/util@13.5.1)
       '@polkadot/x-randomvalues': 10.4.2
 
-  '@polkadot/wasm-crypto@7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))':
+  '@polkadot/wasm-crypto@7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
     dependencies:
       '@polkadot/util': 12.6.2
-      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-crypto-asmjs': 7.4.1(@polkadot/util@12.6.2)
-      '@polkadot/wasm-crypto-init': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-crypto-init': 7.4.1(@polkadot/util@12.6.2)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-crypto-wasm': 7.4.1(@polkadot/util@12.6.2)
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@12.6.2)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))':
+  '@polkadot/wasm-crypto@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
     dependencies:
       '@polkadot/util': 13.5.1
-      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-bridge': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-crypto-asmjs': 7.4.1(@polkadot/util@13.5.1)
-      '@polkadot/wasm-crypto-init': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)))
+      '@polkadot/wasm-crypto-init': 7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))
       '@polkadot/wasm-crypto-wasm': 7.4.1(@polkadot/util@13.5.1)
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
   '@polkadot/wasm-crypto@7.4.1(@polkadot/util@13.5.1)(@polkadot/x-randomvalues@13.5.1(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1)))':
@@ -21753,10 +21831,10 @@ snapshots:
       '@polkadot/x-randomvalues': 13.5.1(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-util@6.4.1(@polkadot/util@12.6.2)':
+  '@polkadot/wasm-util@6.4.1(@polkadot/util@13.5.1)':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@polkadot/util': 12.6.2
+      '@polkadot/util': 13.5.1
 
   '@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2)':
     dependencies:
@@ -21806,14 +21884,14 @@ snapshots:
       '@babel/runtime': 7.27.3
       '@polkadot/x-global': 10.4.2
 
-  '@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))':
+  '@polkadot/x-randomvalues@12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))':
     dependencies:
       '@polkadot/util': 12.6.2
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
       '@polkadot/x-global': 12.6.2
       tslib: 2.8.1
 
-  '@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@12.6.2))':
+  '@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.1)(@polkadot/wasm-util@7.4.1(@polkadot/util@13.5.1))':
     dependencies:
       '@polkadot/util': 13.5.1
       '@polkadot/wasm-util': 7.4.1(@polkadot/util@13.5.1)
@@ -21907,9 +21985,9 @@ snapshots:
       - '@types/react'
       - babel-plugin-macros
 
-  '@react-native/assets-registry@0.79.2': {}
+  '@react-native/assets-registry@0.79.3': {}
 
-  '@react-native/codegen@0.79.2(@babel/core@7.27.3)':
+  '@react-native/codegen@0.79.3(@babel/core@7.27.3)':
     dependencies:
       '@babel/core': 7.27.3
       glob: 7.2.3
@@ -21918,9 +21996,9 @@ snapshots:
       nullthrows: 1.1.1
       yargs: 17.7.2
 
-  '@react-native/community-cli-plugin@0.79.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@react-native/community-cli-plugin@0.79.3(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
-      '@react-native/dev-middleware': 0.79.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@react-native/dev-middleware': 0.79.3(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       chalk: 4.1.2
       debug: 2.6.9
       invariant: 2.2.4
@@ -21933,12 +22011,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@react-native/debugger-frontend@0.79.2': {}
+  '@react-native/debugger-frontend@0.79.3': {}
 
-  '@react-native/dev-middleware@0.79.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@react-native/dev-middleware@0.79.3(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@isaacs/ttlcache': 1.4.1
-      '@react-native/debugger-frontend': 0.79.2
+      '@react-native/debugger-frontend': 0.79.3
       chrome-launcher: 0.15.2
       chromium-edge-launcher: 0.2.0
       connect: 3.7.0
@@ -21953,20 +22031,20 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@react-native/gradle-plugin@0.79.2': {}
+  '@react-native/gradle-plugin@0.79.3': {}
 
-  '@react-native/js-polyfills@0.79.2': {}
+  '@react-native/js-polyfills@0.79.3': {}
 
   '@react-native/normalize-color@2.1.0': {}
 
-  '@react-native/normalize-colors@0.79.2': {}
+  '@react-native/normalize-colors@0.79.3': {}
 
-  '@react-native/virtualized-lists@0.79.2(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)':
+  '@react-native/virtualized-lists@0.79.3(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)':
     dependencies:
       invariant: 2.2.4
       nullthrows: 1.1.1
       react: 18.3.1
-      react-native: 0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
+      react-native: 0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
 
   '@redocly/ajv@8.11.2':
     dependencies:
@@ -22621,7 +22699,7 @@ snapshots:
     dependencies:
       '@solana/kit': 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
 
-  '@solana-program/token-2022@0.4.1(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))':
+  '@solana-program/token-2022@0.4.2(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))':
     dependencies:
       '@solana/kit': 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       '@solana/sysvars': 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)
@@ -23176,13 +23254,13 @@ snapshots:
   '@stacks/common@4.3.5':
     dependencies:
       '@types/bn.js': 5.1.6
-      '@types/node': 18.19.105
+      '@types/node': 18.19.111
       buffer: 6.0.3
 
   '@stacks/common@6.16.0':
     dependencies:
       '@types/bn.js': 5.1.6
-      '@types/node': 18.19.105
+      '@types/node': 18.19.111
 
   '@stacks/network@4.3.5':
     dependencies:
@@ -23208,10 +23286,10 @@ snapshots:
   '@stacks/transactions@4.3.8':
     dependencies:
       '@noble/hashes': 1.8.0
-      '@noble/secp256k1': 1.7.2
+      '@noble/secp256k1': 1.7.1
       '@stacks/common': 4.3.5
       '@stacks/network': 4.3.5
-      '@types/node': 18.19.105
+      '@types/node': 18.19.111
       '@types/sha.js': 2.4.4
       c32check: 1.1.3
       lodash.clonedeep: 4.5.0
@@ -23226,7 +23304,7 @@ snapshots:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 6.16.0
-      '@stacks/network': 6.17.0
+      '@stacks/network': 6.10.0
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
@@ -23256,12 +23334,36 @@ snapshots:
     optionalDependencies:
       sodium-native: 4.3.3
 
+  '@stellar/stellar-base@13.1.0':
+    dependencies:
+      '@stellar/js-xdr': 3.1.2
+      base32.js: 0.1.0
+      bignumber.js: 9.3.0
+      buffer: 6.0.3
+      sha.js: 2.4.11
+      tweetnacl: 1.0.3
+    optionalDependencies:
+      sodium-native: 4.3.3
+
   '@stellar/stellar-sdk@11.3.0':
     dependencies:
       '@stellar/stellar-base': 11.0.1
       axios: 1.9.0
       bignumber.js: 9.3.0
       eventsource: 2.0.2
+      randombytes: 2.1.0
+      toml: 3.0.0
+      urijs: 1.19.11
+    transitivePeerDependencies:
+      - debug
+
+  '@stellar/stellar-sdk@13.3.0':
+    dependencies:
+      '@stellar/stellar-base': 13.1.0
+      axios: 1.9.0
+      bignumber.js: 9.3.0
+      eventsource: 2.0.2
+      feaxios: 0.0.23
       randombytes: 2.1.0
       toml: 3.0.0
       urijs: 1.19.11
@@ -23419,7 +23521,7 @@ snapshots:
 
   '@taquito/ledger-signer@20.1.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@stablelib/blake2b': 1.0.1
       '@taquito/core': 20.1.2
       '@taquito/taquito': 20.1.2
@@ -23488,7 +23590,7 @@ snapshots:
 
   '@ton-community/ton-ledger@7.2.0(@ton/core@0.56.3(@ton/crypto@3.3.0))':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@ton/core': 0.56.3(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
       teslabot: 1.5.0
@@ -23527,9 +23629,9 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@trezor/analytics@1.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
+  '@trezor/analytics@1.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
     dependencies:
-      '@trezor/env-utils': 1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/env-utils': 1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
       '@trezor/utils': 9.3.5(tslib@2.8.1)
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -23538,46 +23640,51 @@ snapshots:
       - expo-localization
       - react-native
 
-  '@trezor/blockchain-link-types@1.3.5(tslib@2.8.1)':
+  '@trezor/blockchain-link-types@1.4.0(tslib@2.8.1)':
     dependencies:
-      '@trezor/utxo-lib': 2.3.5(tslib@2.8.1)
+      '@trezor/utxo-lib': 2.4.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@trezor/blockchain-link-utils@1.3.5(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(utf-8-validate@5.0.10)':
+  '@trezor/blockchain-link-utils@1.4.0(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(utf-8-validate@5.0.10)':
     dependencies:
       '@mobily/ts-belt': 3.13.1
-      '@trezor/env-utils': 1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
+      '@stellar/stellar-sdk': 13.3.0
+      '@trezor/env-utils': 1.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
       tslib: 2.8.1
-      xrpl: 4.2.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      xrpl: 4.3.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
+      - debug
       - encoding
       - expo-constants
       - expo-localization
       - react-native
       - utf-8-validate
 
-  '@trezor/blockchain-link@2.4.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@trezor/blockchain-link@2.5.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
       '@solana-program/stake': 0.2.1(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))
       '@solana-program/token': 0.5.1(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))
-      '@solana-program/token-2022': 0.4.1(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))
+      '@solana-program/token-2022': 0.4.2(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))
       '@solana/kit': 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/blockchain-link-types': 1.3.5(tslib@2.8.1)
-      '@trezor/blockchain-link-utils': 1.3.5(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(utf-8-validate@5.0.10)
-      '@trezor/env-utils': 1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
-      '@trezor/utxo-lib': 2.3.5(tslib@2.8.1)
-      '@trezor/websocket-client': 1.1.5(bufferutil@4.0.9)(tslib@2.8.1)(utf-8-validate@5.0.10)
+      '@solana/rpc-types': 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)
+      '@stellar/stellar-sdk': 13.3.0
+      '@trezor/blockchain-link-types': 1.4.0(tslib@2.8.1)
+      '@trezor/blockchain-link-utils': 1.4.0(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(utf-8-validate@5.0.10)
+      '@trezor/env-utils': 1.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
+      '@trezor/utxo-lib': 2.4.0(tslib@2.8.1)
+      '@trezor/websocket-client': 1.2.0(bufferutil@4.0.9)(tslib@2.8.1)(utf-8-validate@5.0.10)
       '@types/web': 0.0.197
       events: 3.3.0
       socks-proxy-agent: 8.0.5
       tslib: 2.8.1
-      xrpl: 4.2.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      xrpl: 4.3.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - '@solana/sysvars'
       - bufferutil
+      - debug
       - encoding
       - expo-constants
       - expo-localization
@@ -23588,9 +23695,9 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@trezor/connect-analytics@1.3.3(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
+  '@trezor/connect-analytics@1.3.3(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
     dependencies:
-      '@trezor/analytics': 1.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/analytics': 1.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
       tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
@@ -23598,10 +23705,10 @@ snapshots:
       - expo-localization
       - react-native
 
-  '@trezor/connect-common@0.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
+  '@trezor/connect-common@0.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
     dependencies:
-      '@trezor/env-utils': 1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
+      '@trezor/env-utils': 1.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
       tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
@@ -23609,15 +23716,16 @@ snapshots:
       - expo-localization
       - react-native
 
-  '@trezor/connect-web@9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@trezor/connect-web@9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
-      '@trezor/connect': 9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/connect-common': 0.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
+      '@trezor/connect': 9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/connect-common': 0.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@solana/sysvars'
       - bufferutil
+      - debug
       - encoding
       - expo-constants
       - expo-localization
@@ -23628,14 +23736,15 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@trezor/connect-webextension@9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@trezor/connect-webextension@9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
-      '@trezor/connect': 9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/connect-web': 9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/connect': 9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/connect-web': 9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@solana/sysvars'
       - bufferutil
+      - debug
       - encoding
       - expo-constants
       - expo-localization
@@ -23646,10 +23755,10 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@trezor/connect@9.5.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
+  '@trezor/connect@9.6.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
     dependencies:
-      '@ethereumjs/common': 4.4.0
-      '@ethereumjs/tx': 5.4.0
+      '@ethereumjs/common': 10.0.0
+      '@ethereumjs/tx': 10.0.0
       '@fivebinaries/coin-selection': 3.0.0
       '@mobily/ts-belt': 3.13.1
       '@noble/hashes': 1.8.0
@@ -23657,22 +23766,22 @@ snapshots:
       '@solana-program/compute-budget': 0.7.0(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))
       '@solana-program/system': 0.7.0(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))
       '@solana-program/token': 0.5.1(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))
-      '@solana-program/token-2022': 0.4.1(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))
+      '@solana-program/token-2022': 0.4.2(@solana/kit@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))
       '@solana/kit': 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/blockchain-link': 2.4.5(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
-      '@trezor/blockchain-link-types': 1.3.5(tslib@2.8.1)
-      '@trezor/blockchain-link-utils': 1.3.5(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(utf-8-validate@5.0.10)
-      '@trezor/connect-analytics': 1.3.3(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
-      '@trezor/connect-common': 0.3.5(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/blockchain-link': 2.5.0(@solana/sysvars@2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.6.3))(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.6.3)(utf-8-validate@5.0.10)(ws@8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@trezor/blockchain-link-types': 1.4.0(tslib@2.8.1)
+      '@trezor/blockchain-link-utils': 1.4.0(bufferutil@4.0.9)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(utf-8-validate@5.0.10)
+      '@trezor/connect-analytics': 1.3.3(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
+      '@trezor/connect-common': 0.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)
       '@trezor/crypto-utils': 1.1.3(tslib@2.8.1)
-      '@trezor/device-utils': 1.0.3
-      '@trezor/protobuf': 1.3.5(tslib@2.8.1)
+      '@trezor/device-utils': 1.1.0
+      '@trezor/protobuf': 1.4.0(tslib@2.8.1)
       '@trezor/protocol': 1.2.6(tslib@2.8.1)
       '@trezor/schema-utils': 1.3.3(tslib@2.8.1)
-      '@trezor/transport': 1.4.5(tslib@2.8.1)
+      '@trezor/transport': 1.5.0(tslib@2.8.1)
       '@trezor/type-utils': 1.1.6
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
-      '@trezor/utxo-lib': 2.3.5(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
+      '@trezor/utxo-lib': 2.4.0(tslib@2.8.1)
       blakejs: 1.2.1
       bs58: 6.0.0
       bs58check: 4.0.0
@@ -23681,6 +23790,7 @@ snapshots:
     transitivePeerDependencies:
       - '@solana/sysvars'
       - bufferutil
+      - debug
       - encoding
       - expo-constants
       - expo-localization
@@ -23695,19 +23805,29 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@trezor/device-utils@1.0.3': {}
+  '@trezor/device-utils@1.1.0': {}
 
-  '@trezor/env-utils@1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
+  '@trezor/env-utils@1.3.4(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
     dependencies:
       tslib: 2.8.1
       ua-parser-js: 2.0.3
     optionalDependencies:
       expo-constants: 13.1.1(expo@45.0.8(@babel/core@7.27.3))
-      react-native: 0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
+      react-native: 0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - encoding
 
-  '@trezor/protobuf@1.3.5(tslib@2.8.1)':
+  '@trezor/env-utils@1.4.0(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.27.3)))(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
+    dependencies:
+      tslib: 2.8.1
+      ua-parser-js: 2.0.3
+    optionalDependencies:
+      expo-constants: 13.1.1(expo@45.0.8(@babel/core@7.27.3))
+      react-native: 0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - encoding
+
+  '@trezor/protobuf@1.4.0(tslib@2.8.1)':
     dependencies:
       '@trezor/schema-utils': 1.3.3(tslib@2.8.1)
       long: 5.2.5
@@ -23724,11 +23844,11 @@ snapshots:
       ts-mixer: 6.0.4
       tslib: 2.8.1
 
-  '@trezor/transport@1.4.5(tslib@2.8.1)':
+  '@trezor/transport@1.5.0(tslib@2.8.1)':
     dependencies:
-      '@trezor/protobuf': 1.3.5(tslib@2.8.1)
+      '@trezor/protobuf': 1.4.0(tslib@2.8.1)
       '@trezor/protocol': 1.2.6(tslib@2.8.1)
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
       cross-fetch: 4.1.0
       tslib: 2.8.1
       usb: 2.15.0
@@ -23742,9 +23862,14 @@ snapshots:
       bignumber.js: 9.3.0
       tslib: 2.8.1
 
-  '@trezor/utxo-lib@2.3.5(tslib@2.8.1)':
+  '@trezor/utils@9.4.0(tslib@2.8.1)':
     dependencies:
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
+      bignumber.js: 9.3.0
+      tslib: 2.8.1
+
+  '@trezor/utxo-lib@2.4.0(tslib@2.8.1)':
+    dependencies:
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
       bchaddrjs: 0.5.2
       bech32: 2.0.0
       bip66: 2.0.0
@@ -23763,9 +23888,9 @@ snapshots:
       varuint-bitcoin: 2.0.0
       wif: 5.0.0
 
-  '@trezor/websocket-client@1.1.5(bufferutil@4.0.9)(tslib@2.8.1)(utf-8-validate@5.0.10)':
+  '@trezor/websocket-client@1.2.0(bufferutil@4.0.9)(tslib@2.8.1)(utf-8-validate@5.0.10)':
     dependencies:
-      '@trezor/utils': 9.3.5(tslib@2.8.1)
+      '@trezor/utils': 9.4.0(tslib@2.8.1)
       tslib: 2.8.1
       ws: 8.18.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -23883,7 +24008,7 @@ snapshots:
     dependencies:
       '@types/node': 22.15.24
 
-  '@types/body-parser@1.19.5':
+  '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
       '@types/node': 22.15.24
@@ -23951,21 +24076,21 @@ snapshots:
       '@types/node': 22.15.24
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
-      '@types/send': 0.17.4
+      '@types/send': 0.17.5
 
   '@types/express-serve-static-core@5.0.6':
     dependencies:
       '@types/node': 22.15.24
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
-      '@types/send': 0.17.4
+      '@types/send': 0.17.5
 
-  '@types/express@4.17.22':
+  '@types/express@4.17.23':
     dependencies:
-      '@types/body-parser': 1.19.5
+      '@types/body-parser': 1.19.6
       '@types/express-serve-static-core': 4.19.6
       '@types/qs': 6.14.0
-      '@types/serve-static': 1.15.7
+      '@types/serve-static': 1.15.8
 
   '@types/graceful-fs@4.1.9':
     dependencies:
@@ -23979,7 +24104,7 @@ snapshots:
 
   '@types/http-cache-semantics@4.0.4': {}
 
-  '@types/http-errors@2.0.4': {}
+  '@types/http-errors@2.0.5': {}
 
   '@types/http-proxy@1.17.16':
     dependencies:
@@ -24052,7 +24177,7 @@ snapshots:
 
   '@types/node@13.13.52': {}
 
-  '@types/node@18.19.105':
+  '@types/node@18.19.111':
     dependencies:
       undici-types: 5.26.5
 
@@ -24097,20 +24222,20 @@ snapshots:
       '@types/node': 22.15.24
       '@types/ws': 8.18.1
 
-  '@types/send@0.17.4':
+  '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
       '@types/node': 22.15.24
 
   '@types/serve-index@1.9.4':
     dependencies:
-      '@types/express': 4.17.22
+      '@types/express': 4.17.23
 
-  '@types/serve-static@1.15.7':
+  '@types/serve-static@1.15.8':
     dependencies:
-      '@types/http-errors': 2.0.4
+      '@types/http-errors': 2.0.5
       '@types/node': 22.15.24
-      '@types/send': 0.17.4
+      '@types/send': 0.17.5
 
   '@types/sha.js@2.4.4':
     dependencies:
@@ -24440,18 +24565,18 @@ snapshots:
 
   '@vue/cli-overlay@5.0.8': {}
 
-  '@vue/cli-plugin-router@5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.0))':
+  '@vue/cli-plugin-router@5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.2))':
     dependencies:
-      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.0)
+      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.2)
       '@vue/cli-shared-utils': 5.0.8
     transitivePeerDependencies:
       - encoding
 
-  '@vue/cli-plugin-typescript@5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.0))(eslint@9.27.0(jiti@2.4.2))(typescript@5.6.3)(vue-template-compiler@2.7.16)(vue@2.7.16)':
+  '@vue/cli-plugin-typescript@5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.2))(eslint@9.27.0(jiti@2.4.2))(typescript@5.6.3)(vue-template-compiler@2.7.16)(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.27.3
       '@types/webpack-env': 1.18.8
-      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.0)
+      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.2)
       '@vue/cli-shared-utils': 5.0.8
       babel-loader: 8.4.1(@babel/core@7.27.3)(webpack@5.99.9)
       fork-ts-checker-webpack-plugin: 6.5.3(eslint@9.27.0(jiti@2.4.2))(typescript@5.6.3)(vue-template-compiler@2.7.16)(webpack@5.99.9)
@@ -24472,19 +24597,19 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@vue/cli-plugin-vuex@5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.0))':
+  '@vue/cli-plugin-vuex@5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.2))':
     dependencies:
-      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.0)
+      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.2)
 
-  '@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.0)':
+  '@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.2)':
     dependencies:
       '@babel/helper-compilation-targets': 7.27.2
       '@soda/friendly-errors-webpack-plugin': 1.8.1(webpack@5.99.9)
       '@soda/get-current-script': 1.0.2
       '@types/minimist': 1.2.5
       '@vue/cli-overlay': 5.0.8
-      '@vue/cli-plugin-router': 5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.0))
-      '@vue/cli-plugin-vuex': 5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.0))
+      '@vue/cli-plugin-router': 5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.2))
+      '@vue/cli-plugin-vuex': 5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.2))
       '@vue/cli-shared-utils': 5.0.8
       '@vue/component-compiler-utils': 3.3.0(ejs@3.1.10)(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
       '@vue/vue-loader-v15': vue-loader@15.11.1(@vue/compiler-sfc@3.5.16)(css-loader@6.11.0(webpack@5.99.9))(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(vue-template-compiler@2.7.16)(webpack@5.99.9)
@@ -24535,7 +24660,7 @@ snapshots:
       whatwg-fetch: 3.6.20
     optionalDependencies:
       vue-template-compiler: 2.7.16
-      webpack-sources: 3.3.0
+      webpack-sources: 3.3.2
     transitivePeerDependencies:
       - '@parcel/css'
       - '@rspack/core'
@@ -25617,15 +25742,15 @@ snapshots:
     dependencies:
       '@zondax/ledger-js': 0.10.0
 
-  '@zondax/ledger-cosmos-js@3.0.3(@babel/core@7.27.3)(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.0)':
+  '@zondax/ledger-cosmos-js@3.0.3(@babel/core@7.27.3)(@types/node@22.15.24)(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(eslint@9.27.0(jiti@2.4.2))(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.2)':
     dependencies:
       '@babel/core': 7.27.3
       '@babel/runtime': 7.27.3
       '@ledgerhq/hw-transport': 6.27.1
       '@ledgerhq/hw-transport-u2f': 5.36.0-deprecated
       '@types/node': 22.15.24
-      '@vue/cli-plugin-typescript': 5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.0))(eslint@9.27.0(jiti@2.4.2))(typescript@5.6.3)(vue-template-compiler@2.7.16)(vue@2.7.16)
-      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.0)
+      '@vue/cli-plugin-typescript': 5.0.8(@vue/cli-service@5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.2))(eslint@9.27.0(jiti@2.4.2))(typescript@5.6.3)(vue-template-compiler@2.7.16)(vue@2.7.16)
+      '@vue/cli-service': 5.0.8(@vue/compiler-sfc@3.5.16)(bufferutil@4.0.9)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.5.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.16(typescript@5.6.3))(webpack-sources@3.3.2)
       bech32: 1.1.4
       buffer: 6.0.3
       crypto: 1.0.1
@@ -25740,7 +25865,7 @@ snapshots:
   '@zondax/ledger-stacks@1.0.4':
     dependencies:
       '@babel/runtime': 7.27.3
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       '@stacks/transactions': 4.3.8
       varuint-bitcoin: 1.1.2
     transitivePeerDependencies:
@@ -26203,7 +26328,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.27.3
       '@babel/helper-define-polyfill-provider': 0.6.4(@babel/core@7.27.3)
-      core-js-compat: 3.42.0
+      core-js-compat: 3.43.0
     transitivePeerDependencies:
       - supports-color
 
@@ -26435,7 +26560,7 @@ snapshots:
       merkle-lib: 2.0.10
       pushdata-bitcoin: 1.0.1
       randombytes: 2.1.0
-      tiny-secp256k1: 1.1.7
+      tiny-secp256k1: 1.1.6
       typeforce: 1.18.0
       varuint-bitcoin: 1.1.2
       wif: 2.0.6
@@ -26572,11 +26697,11 @@ snapshots:
 
   bplist-parser@0.3.1:
     dependencies:
-      big-integer: 1.6.52
+      big-integer: 1.6.36
 
   bplist-parser@0.3.2:
     dependencies:
-      big-integer: 1.6.52
+      big-integer: 1.6.36
 
   brace-expansion@1.1.11:
     dependencies:
@@ -26759,7 +26884,7 @@ snapshots:
       glob: 7.2.3
       infer-owner: 1.0.4
       lru-cache: 6.0.0
-      minipass: 3.3.6
+      minipass: 3.1.6
       minipass-collect: 1.0.2
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
@@ -26865,14 +26990,14 @@ snapshots:
       '@noble/curves': 1.9.1
       '@noble/ed25519': 1.7.5
       '@noble/hashes': 1.8.0
-      '@noble/secp256k1': 1.7.2
+      '@noble/secp256k1': 1.7.1
       '@open-rpc/client-js': 1.8.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       '@types/ws': 8.18.1
       eventsource: 2.0.2
       glob: 7.2.3
-      humanize-duration: 3.32.2
+      humanize-duration: 3.33.0
       key-encoder: 2.0.3
       lodash: 4.17.21
       node-fetch: 2.6.13
@@ -27061,8 +27186,6 @@ snapshots:
   ci-info@2.0.0: {}
 
   ci-info@3.3.0: {}
-
-  ci-info@3.9.0: {}
 
   cids@0.7.5:
     dependencies:
@@ -27255,7 +27378,7 @@ snapshots:
 
   compressible@2.0.18:
     dependencies:
-      mime-db: 1.54.0
+      mime-db: 1.52.0
 
   compression@1.8.0:
     dependencies:
@@ -27373,13 +27496,13 @@ snapshots:
       serialize-javascript: 6.0.2
       webpack: 5.99.9
 
-  core-js-compat@3.42.0:
+  core-js-compat@3.43.0:
     dependencies:
       browserslist: 4.25.0
 
-  core-js-pure@3.42.0: {}
+  core-js-pure@3.43.0: {}
 
-  core-js@3.42.0: {}
+  core-js@3.43.0: {}
 
   core-util-is@1.0.2: {}
 
@@ -28799,6 +28922,14 @@ snapshots:
       '@scure/bip32': 1.4.0
       '@scure/bip39': 1.3.0
 
+  ethereum-cryptography@3.2.0:
+    dependencies:
+      '@noble/ciphers': 1.3.0
+      '@noble/curves': 1.9.0
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+
   ethereum-ens@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       bluebird: 3.7.2
@@ -28937,8 +29068,6 @@ snapshots:
   eventemitter3@3.1.2: {}
 
   eventemitter3@4.0.4: {}
-
-  eventemitter3@4.0.7: {}
 
   eventemitter3@5.0.1: {}
 
@@ -29231,6 +29360,10 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  feaxios@0.0.23:
+    dependencies:
+      is-retry-allowed: 3.0.0
+
   fecha@4.2.3: {}
 
   fetch-blob@3.2.0:
@@ -29477,7 +29610,7 @@ snapshots:
 
   fs-minipass@2.1.0:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   fs-monkey@1.0.6: {}
 
@@ -30000,7 +30133,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-middleware@2.0.9(@types/express@4.17.22)(debug@4.4.1):
+  http-proxy-middleware@2.0.9(@types/express@4.17.23)(debug@4.4.1):
     dependencies:
       '@types/http-proxy': 1.17.16
       http-proxy: 1.18.1(debug@4.4.1)
@@ -30008,13 +30141,13 @@ snapshots:
       is-plain-obj: 3.0.0
       micromatch: 4.0.8
     optionalDependencies:
-      '@types/express': 4.17.22
+      '@types/express': 4.17.23
     transitivePeerDependencies:
       - debug
 
   http-proxy@1.18.1(debug@4.4.1):
     dependencies:
-      eventemitter3: 4.0.7
+      eventemitter3: 4.0.4
       follow-redirects: 1.15.9(debug@4.4.1)
       requires-port: 1.0.0
     transitivePeerDependencies:
@@ -30058,7 +30191,7 @@ snapshots:
 
   human-signals@8.0.1: {}
 
-  humanize-duration@3.32.2: {}
+  humanize-duration@3.33.0: {}
 
   humanize-ms@1.2.1:
     dependencies:
@@ -30068,12 +30201,12 @@ snapshots:
 
   icon-sdk-js@1.5.2:
     dependencies:
-      '@babel/runtime-corejs3': 7.27.3
+      '@babel/runtime-corejs3': 7.27.6
       bignumber.js: 9.3.0
       bip66: 1.1.5
       buffer: 6.0.3
       bufferutil: 4.0.9
-      core-js: 3.42.0
+      core-js: 3.43.0
       crypto-browserify: 3.12.1
       js-sha3: 0.8.0
       readable-stream: 4.7.0
@@ -30356,6 +30489,8 @@ snapshots:
       gopd: 1.2.0
       has-tostringtag: 1.0.2
       hasown: 2.0.2
+
+  is-retry-allowed@3.0.0: {}
 
   is-root@2.1.0: {}
 
@@ -30643,7 +30778,7 @@ snapshots:
       '@jest/types': 29.6.3
       '@types/node': 22.15.24
       chalk: 4.1.2
-      ci-info: 3.9.0
+      ci-info: 3.3.0
       graceful-fs: 4.2.11
       picomatch: 2.3.1
 
@@ -31016,7 +31151,7 @@ snapshots:
     dependencies:
       '@bitcoinerlab/descriptors': 1.1.1(ledger-bitcoin@0.2.3)
       '@bitcoinerlab/secp256k1': 1.2.0
-      '@ledgerhq/hw-transport': 6.31.5
+      '@ledgerhq/hw-transport': 6.31.6
       bip32-path: 0.4.2
       bitcoinjs-lib: 6.1.7
 
@@ -31419,7 +31554,7 @@ snapshots:
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.27.3)
       '@babel/plugin-transform-arrow-functions': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-async-to-generator': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-transform-block-scoping': 7.27.3(@babel/core@7.27.3)
+      '@babel/plugin-transform-block-scoping': 7.27.5(@babel/core@7.27.3)
       '@babel/plugin-transform-classes': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-computed-properties': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-destructuring': 7.27.3(@babel/core@7.27.3)
@@ -31435,8 +31570,8 @@ snapshots:
       '@babel/plugin-transform-react-jsx': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-transform-regenerator': 7.27.1(@babel/core@7.27.3)
-      '@babel/plugin-transform-runtime': 7.27.3(@babel/core@7.27.3)
+      '@babel/plugin-transform-regenerator': 7.27.5(@babel/core@7.27.3)
+      '@babel/plugin-transform-runtime': 7.27.4(@babel/core@7.27.3)
       '@babel/plugin-transform-shorthand-properties': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-spread': 7.27.1(@babel/core@7.27.3)
       '@babel/plugin-transform-sticky-regex': 7.27.1(@babel/core@7.27.3)
@@ -31585,8 +31720,6 @@ snapshots:
 
   mime-db@1.52.0: {}
 
-  mime-db@1.54.0: {}
-
   mime-types@2.1.35:
     dependencies:
       mime-db: 1.52.0
@@ -31645,15 +31778,15 @@ snapshots:
 
   minipass-collect@1.0.2:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   minipass-flush@1.0.5:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   minipass-pipeline@1.2.4:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   minipass@2.9.0:
     dependencies:
@@ -31678,7 +31811,7 @@ snapshots:
 
   minizlib@2.1.2:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
       yallist: 4.0.0
 
   mipd@0.0.7(typescript@5.6.3):
@@ -31822,7 +31955,7 @@ snapshots:
       buffer: 5.7.1
       varint: 5.0.2
 
-  multiformats@13.3.6: {}
+  multiformats@13.3.7: {}
 
   multiformats@9.9.0: {}
 
@@ -33271,29 +33404,29 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-native-get-random-values@1.11.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)):
+  react-native-get-random-values@1.11.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)):
     dependencies:
       fast-base64-decode: 1.0.0
-      react-native: 0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
+      react-native: 0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
 
-  react-native-svg@15.12.0(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1):
+  react-native-svg@15.12.0(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1):
     dependencies:
       css-select: 5.1.0
       css-tree: 1.1.3
       react: 18.3.1
-      react-native: 0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
+      react-native: 0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
       warn-once: 0.1.1
 
-  react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10):
+  react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10):
     dependencies:
       '@jest/create-cache-key-function': 29.7.0
-      '@react-native/assets-registry': 0.79.2
-      '@react-native/codegen': 0.79.2(@babel/core@7.27.3)
-      '@react-native/community-cli-plugin': 0.79.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@react-native/gradle-plugin': 0.79.2
-      '@react-native/js-polyfills': 0.79.2
-      '@react-native/normalize-colors': 0.79.2
-      '@react-native/virtualized-lists': 0.79.2(react-native@0.79.2(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
+      '@react-native/assets-registry': 0.79.3
+      '@react-native/codegen': 0.79.3(@babel/core@7.27.3)
+      '@react-native/community-cli-plugin': 0.79.3(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@react-native/gradle-plugin': 0.79.3
+      '@react-native/js-polyfills': 0.79.3
+      '@react-native/normalize-colors': 0.79.3
+      '@react-native/virtualized-lists': 0.79.3(react-native@0.79.3(@babel/core@7.27.3)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
       abort-controller: 3.0.0
       anser: 1.4.10
       ansi-regex: 5.0.1
@@ -33638,7 +33771,7 @@ snapshots:
       decimal.js: 10.5.0
       ripple-address-codec: 4.3.1
 
-  ripple-binary-codec@2.3.0(bufferutil@4.0.9)(utf-8-validate@5.0.10):
+  ripple-binary-codec@2.4.0(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       '@xrplf/isomorphic': 1.0.1(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       bignumber.js: 9.3.0
@@ -34716,7 +34849,7 @@ snapshots:
     dependencies:
       any-promise: 1.3.0
 
-  thor-devkit@2.1.0:
+  thor-devkit@2.1.1:
     dependencies:
       '@vechain/ethers': 4.0.27-5
       bignumber.js: 7.2.1
@@ -36367,9 +36500,9 @@ snapshots:
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
-      '@types/express': 4.17.22
+      '@types/express': 4.17.23
       '@types/serve-index': 1.9.4
-      '@types/serve-static': 1.15.7
+      '@types/serve-static': 1.15.8
       '@types/sockjs': 0.3.36
       '@types/ws': 8.18.1
       ansi-html-community: 0.0.8
@@ -36382,7 +36515,7 @@ snapshots:
       express: 4.21.2
       graceful-fs: 4.2.11
       html-entities: 2.6.0
-      http-proxy-middleware: 2.0.9(@types/express@4.17.22)(debug@4.4.1)
+      http-proxy-middleware: 2.0.9(@types/express@4.17.23)(debug@4.4.1)
       ipaddr.js: 2.2.0
       launch-editor: 2.10.0
       open: 8.4.2
@@ -36409,7 +36542,7 @@ snapshots:
       flat: 5.0.2
       wildcard: 2.0.1
 
-  webpack-sources@3.3.0: {}
+  webpack-sources@3.3.2: {}
 
   webpack-virtual-modules@0.4.6: {}
 
@@ -36438,7 +36571,7 @@ snapshots:
       tapable: 2.2.2
       terser-webpack-plugin: 5.3.14(webpack@5.99.9)
       watchpack: 2.4.4
-      webpack-sources: 3.3.0
+      webpack-sources: 3.3.2
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -36725,7 +36858,7 @@ snapshots:
 
   xmlhttprequest@1.8.0: {}
 
-  xrpl@4.2.5(bufferutil@4.0.9)(utf-8-validate@5.0.10):
+  xrpl@4.3.0(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
@@ -36734,7 +36867,7 @@ snapshots:
       bignumber.js: 9.3.0
       eventemitter3: 5.0.1
       ripple-address-codec: 5.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      ripple-binary-codec: 2.3.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ripple-binary-codec: 2.4.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       ripple-keypairs: 2.0.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil

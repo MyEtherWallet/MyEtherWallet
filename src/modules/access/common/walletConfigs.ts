@@ -66,7 +66,7 @@ export type WalletConfig = {
 const canSupport = (networkName?: string): boolean => {
   if (!networkName) return false;
   const hwWallet = new HWWallet()
-  return hwWallet.isNetworkSupported((networkName || NetworkNames.Ethereum) as NetworkNames)
+  return hwWallet.isNetworkSupported((networkName) as NetworkNames)
 }
 
 
@@ -76,6 +76,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
+    routeName: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
     canSupport: canSupport
   },
   trezor: {
