@@ -3,14 +3,19 @@
     <div
       v-if="isLoadedChainsData"
       :class="[
-        { 'md:grid-cols-2 lg:grid-cols-3 gap-6': isWalletConnected },
-        'grid grid-cols-1',
+        isWalletConnected ? 'grid grid-cols-10' : 'grid grid-cols-1 ',
+        'justify-between gap-6',
       ]"
     >
-      <div>
-        <side-balanace />
+      <div
+        v-if="isWalletConnected"
+        class="order-2 col-span-10 md:col-span-4 md:order-1 xl-min:col-span-3"
+      >
+        <side-balanace class="mx-auto max-w-[478px]" />
       </div>
-      <div class="flex flex-col items-center gap-4">
+      <div
+        class="order-1 col-span-10 md:col-span-6 md:order-2 xl-min:col-span-4 justify-self-center flex flex-col items-center gap-4"
+      >
         <app-tabs
           v-model:activeTabIndex="activePanel"
           :tabs="tabs"
@@ -33,6 +38,10 @@
           class="mt-4"
         />
       </div>
+      <div
+        v-if="isWalletConnected"
+        class="order-3 col-span-10 xl-min:col-span-3"
+      ></div>
     </div>
     <div v-else class="grid grid-cols-1 gap-6 justify-items-center">
       <div

@@ -136,20 +136,17 @@ import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const store = useWalletStore()
 const { isWalletConnected } = storeToRefs(store)
-const { isMobile, isXS } = useAppBreakpoints()
+const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
 
 /** ------------------------------
  * Breakpoints determine menu visibility
  ------------------------------*/
 const breakpoints = useBreakpoints({
   hideSend: 1200,
-  showMobileMenu: 1140,
 })
 
 const hideSend = computed<boolean>(() => breakpoints.smaller('hideSend').value)
-const showMobileMenu = computed<boolean>(
-  () => breakpoints.smaller('showMobileMenu').value,
-)
+const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
 /** ------------------------------
  * Menu Items
