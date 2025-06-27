@@ -1,3 +1,9 @@
+### Release v6.9.22-hotfix.1
+
+### feat
+
+* add android privacy policy [#5162](https://github.com/MyEtherWallet/MyEtherWallet/pull/5162)
+
 ### Release v6.9.22
 
 ### feat
