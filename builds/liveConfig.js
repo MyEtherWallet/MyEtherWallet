@@ -19,7 +19,7 @@ const exportObj = {
         /index\.html$/,
         /\.map$/,
         /staking/,
-        /privacy\/-policy\/-android\.html$/
+        /privacy\-policy\-android\.html$/
       ],
       navigateFallbackBlacklist: [/staking/]
     },
