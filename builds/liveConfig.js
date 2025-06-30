@@ -15,7 +15,12 @@ const exportObj = {
       skipWaiting: true,
       clientsClaim: true,
       cleanupOutdatedCaches: true,
-      exclude: [/index\.html$/, /\.map$/, /staking/],
+      exclude: [
+        /index\.html$/,
+        /\.map$/,
+        /staking/,
+        /privacy\-policy\-android\.html$/
+      ],
       navigateFallbackBlacklist: [/staking/]
     },
     iconPaths: {
