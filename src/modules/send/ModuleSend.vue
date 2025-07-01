@@ -3,8 +3,8 @@
     <div
       class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
     >
-      <app-sheet sheetClass="w-full !px-4 mt-4">
-        <div class="mb-5">
+      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-0">
+        <div class="mb-[25px]">
           <app-enter-amount
             v-model:amount="amount"
             v-model:selected-token="tokenSelected"
@@ -12,12 +12,23 @@
             :validate-input="checkAmountForError"
           />
         </div>
-        <app-address-book v-model="toAddress" class="mb-1" />
+        <app-address-book v-model="toAddress" class="mb-[2px]" />
         <app-select-tx-fee />
+        <div class="min-h-[30px] mt-2">
+          <transition name="fade" mode="out-in">
+            <p
+              v-if="gasFeeError !== ''"
+              class="text-error text-[10px] xs:text-s-12 leading-[23px] px-5 text-center"
+            >
+              {{ gasFeeError }}
+            </p>
+          </transition>
+        </div>
       </app-sheet>
       <app-base-button
         v-if="isWalletConnected"
         :disabled="!validSend"
+        :is-loading="isLoadingFees || isLoadingBalances"
         @click="handleSubmit"
         class="w-full mt-4"
       >
@@ -51,14 +62,14 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
-import { type TokenBalance } from '@/mew_api/types'
+import type {
+  TokenBalance,
+  QuotesRequestBody,
+  QuotesResponse,
+} from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
-import {
-  GasPriceType,
-  type GasFeeResponse,
-  type HexPrefixedString,
-} from '@/providers/types'
+import { GasPriceType, type HexPrefixedString } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
@@ -81,7 +92,8 @@ const tokenSelected: Ref<TokenBalance | undefined> = ref()
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const data = ref('0x')
-const gasFees: Ref<GasFeeResponse> = ref({} as GasFeeResponse)
+const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
+const gasFeeError = ref('')
 const selectedFee = ref(GasPriceType.REGULAR)
 
 const openTxModal = ref(false)
@@ -96,16 +108,6 @@ onMounted(async () => {
   tokenSelected.value = safeMainTokenBalance.value || undefined
   if (!wallet.value) return
   address.value = await wallet.value.getAddress()
-  //TODO: DOUBLE CHECK in theory PreTransaction interface might be different for different chains. IE they will  not use  HexPrefixedString
-  isLoadingFees.value = true
-  gasFees.value = await wallet.value.getGasFee({
-    to: '0x0000000000000000000000000000000000000000',
-    address: address.value as HexPrefixedString,
-    value: '0x0' as HexPrefixedString,
-    data: data.value as HexPrefixedString,
-  })
-
-  isLoadingFees.value = false
 })
 
 const checkAmountForError = () => {
@@ -127,7 +129,7 @@ const checkAmountForError = () => {
 
 // Gas Fee for display
 const hasGasFees = computed(() => {
-  return Object.keys(gasFees.value).length > 0
+  return gasFees.value !== undefined && gasFees.value.fees !== undefined
 })
 const networkFeeUSD = computed(() => {
   if (!hasGasFees.value) return '0'
@@ -135,8 +137,9 @@ const networkFeeUSD = computed(() => {
 })
 const networkFeeCrypto = computed(() => {
   if (!hasGasFees.value) return '0'
-  return (
-    fromWei(gasFees.value?.fees[selectedFee.value]?.nativeValue, 'ether') || '0'
+  return fromWei(
+    gasFees.value?.fees[selectedFee.value]?.nativeValue || 0,
+    'ether',
   )
 })
 
@@ -181,17 +184,34 @@ watch(
       data.value = '0x'
     }
     if (!toAddress.value) return
-    isLoadingFees.value = true
-    gasFees.value = {} as GasFeeResponse
-    gasFees.value = (await wallet.value?.getGasFee({
-      to: toAddress.value as HexPrefixedString,
-      address:
-        (address.value as HexPrefixedString) ||
-        '0x0000000000000000000000000000000000000000',
-      value: toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString,
-      data: data.value as HexPrefixedString,
-    })) as GasFeeResponse
-    isLoadingFees.value = false
+
+    try {
+      isLoadingFees.value = true
+      gasFees.value = undefined
+      gasFeeError.value = ''
+      const txData: QuotesRequestBody = {
+        to: toAddress.value as HexPrefixedString,
+        address:
+          (address.value as HexPrefixedString) ||
+          '0x0000000000000000000000000000000000000000',
+        value: toHex(
+          toBigInt(toWei(amount.value, 'ether')),
+        ) as HexPrefixedString,
+        data: data.value as HexPrefixedString,
+      }
+
+      gasFees.value = await wallet.value?.getGasFee(txData)
+      isLoadingFees.value = false
+    } catch (e) {
+      isLoadingFees.value = false
+      //TODO: implement error localization
+      if (e instanceof Error) {
+        if (e.message) gasFeeError.value = e.message
+        else {
+          gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+        }
+      }
+    }
   },
 )
 

@@ -5,7 +5,9 @@
     "need-help": "Need help sending?",
     "toast": {
       "failed_to_sign": "Failed to sign transaction",
-      "tx-send-success": "Transaction sent successfully"
+      "tx-send-success": "Transaction sent successfully",
+      "tx-send-failed": "Transaction failed to send",
+      "failed_to_fetch_gas_fees": "Failed to fetch gas fees"
    } 
   },
   "verify-tx": {

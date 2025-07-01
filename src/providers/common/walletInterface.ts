@@ -1,11 +1,14 @@
-import { type TokenBalancesRaw } from '@/mew_api/types'
-import type { GasFeeResponse, HexPrefixedString, WalletType } from '../types'
+import type { HexPrefixedString, WalletType } from '../types'
 import {
-  type PreEthereumTransaction,
   type EthereumSignableTransactionParams,
   type EthereumSignableTransactionResult,
   type PostSignedTransaction,
 } from '@/providers/ethereum/types'
+import type {
+  QuotesResponse,
+  QuotesRequestBody,
+  TokenBalancesRaw,
+} from '@/mew_api/types'
 
 export interface WalletInterface {
   connect?: () => Promise<boolean>
@@ -19,7 +22,7 @@ export interface WalletInterface {
   getSignableTransaction: (
     tx: EthereumSignableTransactionParams,
   ) => Promise<EthereumSignableTransactionResult>
-  getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
+  getGasFee: (tx: QuotesRequestBody) => Promise<QuotesResponse>
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown

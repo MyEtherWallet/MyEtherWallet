@@ -179,14 +179,16 @@ const fetchURL = computed(() => {
 })
 const feesReady = ref(false)
 
-const { data, onFetchResponse, execute } = useFetchMewApi<EstimatesResponse>(
+const { useMEWFetch } = useFetchMewApi()
+
+const { data, onFetchResponse, execute } = useMEWFetch<EstimatesResponse>(
   fetchURL,
-  'POST',
-  txData.value,
   {
-    _immediate: false,
+    immediate: false,
   },
 )
+  .post(JSON.stringify(txData.value))
+  .json()
 onFetchResponse(() => {
   if (data.value) {
     const fees = data.value.fees

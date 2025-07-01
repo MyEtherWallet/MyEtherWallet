@@ -2,54 +2,56 @@ import type { WalletInterface } from '../common/walletInterface'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type TokenBalancesRaw } from '@/mew_api/types'
-import {
-  WalletType,
-  type GasFeeResponse,
-  type HexPrefixedString,
-} from '../types'
+import { WalletType, type HexPrefixedString } from '../types'
 import {
   type EthereumSignableTransactionParams,
   type EthereumSignableTransactionResult,
   type PostSignedTransaction,
-  type PreEthereumTransaction,
 } from './types'
-import { type EVMTxResponse } from '@/mew_api/types'
-
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import type {
+  EVMTxResponse,
+  QuotesResponse,
+  QuotesRequestBody,
+} from '@/mew_api/types'
+import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 
 class BaseEvmWallet implements WalletInterface {
   chainId: string
   constructor(chainId: string) {
     this.chainId = chainId
   }
-  getGasFee(tx: PreEthereumTransaction): Promise<GasFeeResponse> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes?noInjectErrors=false`, 'POST', tx)
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value as GasFeeResponse)
-      })
-    })
+
+  getGasFee = (tx: QuotesRequestBody): Promise<QuotesResponse> => {
+    return fetchWithRetry<QuotesResponse>(
+      `/v1/evm/${this.chainId}/quotes?noInjectErrors=false`,
+      {
+        method: 'POST',
+        body: JSON.stringify(tx),
+      },
+    )
   }
-  getSignableTransaction(
+
+  getSignableTransaction = async (
     feeObj: EthereumSignableTransactionParams,
-  ): Promise<EthereumSignableTransactionResult> {
-    const { data, onFetchResponse } = useFetchMewApi(`/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`)
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value as EthereumSignableTransactionResult)
-      })
-    })
+  ): Promise<EthereumSignableTransactionResult> => {
+    return fetchWithRetry<EthereumSignableTransactionResult>(
+      `/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+    )
   }
 
   /**
-   * 
-   * @param serializedTx 
+   *
+   * @param serializedTx
    * currently making library figure out tx type
    * TODO: switch to using the type from the API
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  SignTransaction(serializedTx: HexPrefixedString): Promise<PostSignedTransaction> {
-    throw new Error('Method not implemented: SignTransaction')
+
+  SignTransaction(
+    serializedTx: HexPrefixedString,
+  ): Promise<PostSignedTransaction> {
+    throw new Error(
+      `'Method not implemented: SignTransaction', ${serializedTx}`,
+    )
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SendTransaction(serializedTx: HexPrefixedString): Promise<HexPrefixedString> {
@@ -73,36 +75,23 @@ class BaseEvmWallet implements WalletInterface {
     const { selectedChain } = storeToRefs(chainStore)
     return selectedChain.value?.name || 'ETHEREUM'
   }
+
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
     const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
-    const { data, onFetchResponse } = useFetchMewApi<TokenBalancesRaw>(
-      balanceEndpoint,
-    )
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve({ result: data.value?.result ?? [] })
-      })
-    })
+    return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
-  broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
+
+  async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
     const url = `/v1/evm/${this.chainId}/broadcasts/?noInjectErrors=false`
-    const { data, onFetchResponse } = useFetchMewApi<EVMTxResponse>(
-      url,
-      'POST',
-      {
-        signedTransaction: signedTx,
-      },
-      {
-        _noRetry: true,
-      }
-    )
-    return new Promise((resolve) => {
-      onFetchResponse(() => {
-        resolve(data.value?.txHash || '')
-      })
-    })
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({ signedTransaction: signedTx }),
+    }
+    const data = await fetchWithRetry<EVMTxResponse>(url, options)
+    return data.txHash
   }
+
   connect(): Promise<boolean> {
     return Promise.resolve(true)
   }
