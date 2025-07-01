@@ -28,7 +28,7 @@
       <app-base-button
         v-if="isWalletConnected"
         :disabled="!validSend"
-        :is-loading="isLoadingFees || isLoadingBalances"
+        :is-loading="isLoadingFees"
         @click="handleSubmit"
         class="w-full mt-4"
       >
@@ -78,7 +78,7 @@ import { WalletType } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-
+import { isAddress } from '@/utils/addressUtils'
 const { t } = useI18n()
 const walletStore = useWalletStore()
 const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
@@ -97,7 +97,7 @@ const gasFeeError = ref('')
 const selectedFee = ref(GasPriceType.REGULAR)
 
 const openTxModal = ref(false)
-const isLoadingFees = ref(true)
+const isLoadingFees = ref(false)
 
 const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
@@ -145,7 +145,11 @@ const networkFeeCrypto = computed(() => {
 
 const validSend = computed(() => {
   return (
-    amountError.value === '' && toAddress.value !== '' && !isLoadingFees.value
+    amountError.value === '' &&
+    toAddress.value !== '' &&
+    isAddress(toAddress.value) &&
+    !isLoadingFees.value &&
+    gasFeeError.value === ''
   )
 })
 
@@ -183,12 +187,13 @@ watch(
     } else {
       data.value = '0x'
     }
-    if (!toAddress.value) return
+    gasFees.value = undefined
+    gasFeeError.value = ''
+    if (!validSend.value) return
 
     try {
       isLoadingFees.value = true
-      gasFees.value = undefined
-      gasFeeError.value = ''
+
       const txData: QuotesRequestBody = {
         to: toAddress.value as HexPrefixedString,
         address:
