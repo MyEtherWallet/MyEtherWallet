@@ -19,11 +19,6 @@ export interface EthereumSignableTransactionParams {
   priority: GasPriceType
   quoteId: string
 }
-
-export interface EthereumSignableTransactionResult {
-  serialized: HexPrefixedString
-}
-
 export interface PostSignedTransaction {
   signed: HexPrefixedString
 }

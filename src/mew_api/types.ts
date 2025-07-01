@@ -39,3 +39,7 @@ export type QuotesResponse =
   components['schemas']['GetEvmTransactionQuoteResponse']
 export type QuotesRequestBody =
   components['schemas']['GetEvmTransactionQuoteRequest']
+
+// Signable Transactions
+export type EthereumSignableTransactionResponse =
+  components['schemas']['GetUnsignedEvmTransactionResponse']

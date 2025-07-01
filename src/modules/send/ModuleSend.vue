@@ -235,11 +235,11 @@ watch(
 const toastStore = useToastStore()
 
 const handleSubmit = async () => {
-  if (!wallet.value) return
+  if (!wallet.value || !gasFees.value) return
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
     priority: selectedFee.value,
-    quoteId: gasFees.value?.quoteId,
+    quoteId: gasFees.value.quoteId,
   })
 
   if (
@@ -258,7 +258,7 @@ const handleSubmit = async () => {
   }
   try {
     const signResponse = await wallet.value?.SignTransaction(
-      signableTx.serialized,
+      signableTx.serialized as HexPrefixedString,
     )
 
     signedTx.value = signResponse.signed

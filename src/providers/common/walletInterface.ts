@@ -1,13 +1,13 @@
 import type { HexPrefixedString, WalletType } from '../types'
 import {
   type EthereumSignableTransactionParams,
-  type EthereumSignableTransactionResult,
   type PostSignedTransaction,
 } from '@/providers/ethereum/types'
 import type {
   QuotesResponse,
   QuotesRequestBody,
   TokenBalancesRaw,
+  EthereumSignableTransactionResponse,
 } from '@/mew_api/types'
 
 export interface WalletInterface {
@@ -21,7 +21,7 @@ export interface WalletInterface {
   disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: EthereumSignableTransactionParams,
-  ) => Promise<EthereumSignableTransactionResult>
+  ) => Promise<EthereumSignableTransactionResponse>
   getGasFee: (tx: QuotesRequestBody) => Promise<QuotesResponse>
   SignMessage: (options: {
     message: `0x${string}`

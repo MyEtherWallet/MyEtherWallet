@@ -5,13 +5,13 @@ import { type TokenBalancesRaw } from '@/mew_api/types'
 import { WalletType, type HexPrefixedString } from '../types'
 import {
   type EthereumSignableTransactionParams,
-  type EthereumSignableTransactionResult,
   type PostSignedTransaction,
 } from './types'
 import type {
   EVMTxResponse,
   QuotesResponse,
   QuotesRequestBody,
+  EthereumSignableTransactionResponse,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 
@@ -21,6 +21,11 @@ class BaseEvmWallet implements WalletInterface {
     this.chainId = chainId
   }
 
+  /**
+   * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
+   * @param tx  - Transaction details
+   * @returns Promise resolving to QuotesResponse containing gas fee information
+   */
   getGasFee = (tx: QuotesRequestBody): Promise<QuotesResponse> => {
     return fetchWithRetry<QuotesResponse>(
       `/v1/evm/${this.chainId}/quotes?noInjectErrors=false`,
@@ -31,10 +36,15 @@ class BaseEvmWallet implements WalletInterface {
     )
   }
 
+  /**
+   * Get a signable transaction from the MEW API.
+   * @param feeObj - Object containing quoteId and priority for the transaction
+   * @returns Promise resolving to EthereumSignableTransactionResponse containing the unsigned transaction
+   */
   getSignableTransaction = async (
     feeObj: EthereumSignableTransactionParams,
-  ): Promise<EthereumSignableTransactionResult> => {
-    return fetchWithRetry<EthereumSignableTransactionResult>(
+  ): Promise<EthereumSignableTransactionResponse> => {
+    return fetchWithRetry<EthereumSignableTransactionResponse>(
       `/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
   }
