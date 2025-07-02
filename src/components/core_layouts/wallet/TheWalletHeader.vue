@@ -60,7 +60,7 @@
               class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center"
               @click="toggleSelect"
             >
-              {{ hideSend ? 'More' : $t('tools') }}
+              {{ hideSend ? $t('common.more') : $t('tools') }}
               <chevron-down-icon class="w-4 h-4 ml-2" />
             </button>
           </template>
@@ -136,20 +136,17 @@ import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const store = useWalletStore()
 const { isWalletConnected } = storeToRefs(store)
-const { isMobile, isXS } = useAppBreakpoints()
+const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
 
 /** ------------------------------
  * Breakpoints determine menu visibility
  ------------------------------*/
 const breakpoints = useBreakpoints({
   hideSend: 1200,
-  showMobileMenu: 1140,
 })
 
 const hideSend = computed<boolean>(() => breakpoints.smaller('hideSend').value)
-const showMobileMenu = computed<boolean>(
-  () => breakpoints.smaller('showMobileMenu').value,
-)
+const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
 /** ------------------------------
  * Menu Items
@@ -177,7 +174,7 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.STAKE,
     },
     {
-      title: t('send'),
+      title: t('common.send'),
       routeName: ROUTES_SEND.SEND.NAME,
       iconID: ICON_IDS.SEND,
     },

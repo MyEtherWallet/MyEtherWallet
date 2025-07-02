@@ -1,0 +1,38 @@
+{
+  "send": {
+    "send-tokens": "Send Tokens",
+    "send-nfts": "Send NFTs",
+    "need-help": "Need help sending?",
+    "toast": {
+      "failed_to_sign": "Failed to sign transaction",
+      "tx-send-success": "Transaction sent successfully",
+      "tx-send-failed": "Transaction failed to send",
+      "failed_to_fetch_gas_fees": "Failed to fetch gas fees"
+   } 
+  },
+  "verify-tx": {
+      "title": "Verify Transaction",
+      "description": "Double check the information before confirming the transaction.",
+      "unknown-network":"Unknown network",
+      "confirm": "Confirm and send"
+    },
+
+  "error": {
+    "amount": {
+      "required": "amount is required",
+      "less_than_zero": "amount must be greater than 0"
+    },
+    "balance": {
+      "insufficient": "insufficient balance"
+    }
+  }
+}
+
+
+           
+         
+
+           
+      
+            
+        

@@ -5,7 +5,7 @@
     :disabled="!hasFees"
   >
     <div class="flex items-center">
-      <p>Fee:</p>
+      <p>{{ $t('common.fee') }}:</p>
       <div
         :class="[
           { '!bg-grey-10 rounded-2xl animate-pulse min-w-[150px]': !hasFees },
@@ -36,15 +36,14 @@
   </button>
 
   <app-dialog
-    title="Choose transaction fee"
+    :title="$t('select_fee.title')"
     v-model:is-open="openModal"
     class="max-w-[560px] sm:mx-auto"
   >
     <template #content>
-      <div class="mx-6 mb-6">
-        <p class="text-info sm:mx-3 mb-5">
-          This fee is charged by the Ethereum network and fluctuates depending
-          on network traffic. MEW does not profit from this fee.
+      <div class="mx-2 xs:mx-6 mb-6">
+        <p class="text-info mx-4 sm:mx-3 mb-5">
+          {{ $t('select_fee.description') }}
         </p>
         <!-- fee options -->
         <div class="grid grid-cols-1 sm:p-3 gap-2 xs:gap-3">
@@ -61,7 +60,10 @@
           >
             <div class="flex items-center">
               <div
-                :class="[{ ' text-primary': gasPriceType === fee.id }, 'mr-4']"
+                :class="[
+                  { 'text-primary': gasPriceType === fee.id },
+                  ' mr-2 xs:mr-4',
+                ]"
               >
                 <currency-dollar-icon
                   v-if="fee.id === GasPriceType.ECONOMY"
@@ -86,7 +88,7 @@
                   fee.description
                 }}</span>
               </div>
-              <div class="text-right ml-auto min-w-[140px]">
+              <div class="text-right ml-auto min-w-[100px] xs:min-w-[140px]">
                 <p class="font-medium">
                   {{ fee.fiatValue }}
                 </p>
@@ -122,6 +124,7 @@ import type {
   EstimatesResponse,
   GasFeeInfo,
 } from '@/mew_api/types'
+import { useI18n } from 'vue-i18n'
 
 /** ----------------
  * DEFAULTS
@@ -176,24 +179,26 @@ const fetchURL = computed(() => {
 })
 const feesReady = ref(false)
 
-const { data, onFetchResponse, execute } = useFetchMewApi<EstimatesResponse>(
+const { useMEWFetch } = useFetchMewApi()
+
+const { data, onFetchResponse, execute } = useMEWFetch<EstimatesResponse>(
   fetchURL,
-  'POST',
-  txData.value,
   {
-    _immediate: false,
+    immediate: false,
   },
 )
+  .post(JSON.stringify(txData.value))
+  .json()
 onFetchResponse(() => {
   if (data.value) {
     const fees = data.value.fees
     const keys = Object.keys(fees) as GasPriceType[]
     keys.forEach(key => {
       const fee = fees[key]
-      const index = displayFees.findIndex(f => f.id === key)
-      displayFees[index].fiatValue =
+      const index = displayFees.value.findIndex(f => f.id === key)
+      displayFees.value[index].fiatValue =
         `$${formatFiatValue(fee.fiatValue || 0).value} ${fee.fiatSymbol}`
-      displayFees[index].nativeValue = formatFee(fee)
+      displayFees.value[index].nativeValue = formatFee(fee)
     })
     feesReady.value = true
   } else {
@@ -277,36 +282,39 @@ interface DisplayFee {
   nativeValue: string
 }
 
-const displayFees: DisplayFee[] = [
-  {
-    id: GasPriceType.ECONOMY,
-    title: 'Economy',
-    description: 'Will likely go through unless activity increases',
-    fiatValue: '0',
-    nativeValue: '0',
-  },
-  {
-    id: GasPriceType.REGULAR,
-    title: 'Recommended',
-    description: 'Will reliably go through in most scenarios',
-    fiatValue: '0',
-    nativeValue: '0',
-  },
-  {
-    id: GasPriceType.FAST,
-    title: 'Higher Priority',
-    description: 'Will go through even if there is a sudden activity increase',
-    fiatValue: '0',
-    nativeValue: '0',
-  },
-  {
-    id: GasPriceType.FASTEST,
-    title: 'Highest Priority',
-    description: 'Will go through, fast, in 99.99% of the cases',
-    fiatValue: '0',
-    nativeValue: '0',
-  },
-]
+const { t } = useI18n()
+const displayFees = computed<DisplayFee[]>(() => {
+  return [
+    {
+      id: GasPriceType.ECONOMY,
+      title: t('select_fee.economy.title'),
+      description: t('select_fee.economy.description'),
+      fiatValue: '0',
+      nativeValue: '0',
+    },
+    {
+      id: GasPriceType.REGULAR,
+      title: t('select_fee.regular.title'),
+      description: t('select_fee.regular.description'),
+      fiatValue: '0',
+      nativeValue: '0',
+    },
+    {
+      id: GasPriceType.FAST,
+      title: t('select_fee.fast.title'),
+      description: t('select_fee.fast.description'),
+      fiatValue: '0',
+      nativeValue: '0',
+    },
+    {
+      id: GasPriceType.FASTEST,
+      title: t('select_fee.fastest.title'),
+      description: t('select_fee.fastest.description'),
+      fiatValue: '0',
+      nativeValue: '0',
+    },
+  ]
+})
 
 const hasFees = computed(() => {
   return (

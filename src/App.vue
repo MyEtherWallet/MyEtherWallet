@@ -43,10 +43,12 @@ const { addProvider } = providerStore
 const chainStore = useChainsStore()
 const { setChainData } = chainStore
 
-const { data, onFetchResponse } = useFetchMewApi<ChainsRaw>('/chains')
+const { useMEWFetch } = useFetchMewApi()
+const { data, onFetchResponse } = useMEWFetch<ChainsRaw>('/chains').get().json()
+
 onFetchResponse(() => {
-  setChainData(data.value?.result || [])
-  return data.value?.result
+  setChainData(data.value.result || [])
+  return data.value.result
 })
 
 onMounted(() => {

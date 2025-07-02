@@ -138,6 +138,22 @@ export const useWalletStore = defineStore('walletStore', () => {
     return totalTokensBalanceFiatBN.value.plus(balanceFiatBN.value)
   })
 
+  const getTokenBalance = (contract: string): TokenBalance | null => {
+    if (!tokens.value || tokens.value.length === 0) {
+      return null
+    }
+    if (contract.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()) {
+      return safeMainTokenBalance.value
+    }
+    const token = tokens.value.find(
+      t => t.contract.toLowerCase() === contract.toLowerCase(),
+    )
+    if (!token) {
+      return null
+    }
+    return token
+  }
+
   /** -------------------------------
   * Formatted Values
   -------------------------------*/
@@ -176,6 +192,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     walletCardWasAnimated,
     setIsLoadingBalances,
     setAddress,
+    getTokenBalance,
     // BigNumber total values
     isWalletConnected,
     totalTokensBalanceFiatBN,

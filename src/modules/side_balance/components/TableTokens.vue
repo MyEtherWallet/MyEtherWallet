@@ -100,7 +100,7 @@ const {
   isLoadingBalances: isLoading,
   tokens,
   safeMainTokenBalance,
-  formattedBalanceFiat,
+  balanceFiatBN,
 } = storeToRefs(store)
 
 const defaultImg = computed(() => {
@@ -111,7 +111,7 @@ const defaultImg = computed(() => {
 })
 
 interface TokenBalanceWithUsd extends TokenBalance {
-  usd_balance: string
+  usd_balance: number
   price: number
 }
 const displayTokens = computed<TokenBalanceWithUsd[]>(() => {
@@ -119,18 +119,18 @@ const displayTokens = computed<TokenBalanceWithUsd[]>(() => {
     //TODO add proper formatting
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(BigNumber(token.balance)),
-    ).toFixed()
+    ).toNumber() // Format to 2 decimal places
     return {
       ...token,
       usd_balance: usdBalance, // Add usd_balance to each token
       price: token.price || 0, // Ensure price is defined
     }
   })
-  const sorted = sortObjectArrayNumber(items, 'usd_balance', 'desc')
+  const sorted = sortObjectArrayNumber(items, 'usd_balance', 'asc')
   if (safeMainTokenBalance.value) {
     const mainToken: TokenBalanceWithUsd = {
       ...safeMainTokenBalance.value,
-      usd_balance: formattedBalanceFiat.value,
+      usd_balance: balanceFiatBN.value.toNumber(),
       price: safeMainTokenBalance.value.price || 0, // Ensure price is defined
     }
     sorted.unshift(mainToken)
@@ -152,7 +152,7 @@ const imageReplacer = (token: TokenBalance) => {
   return token.logo_url
 }
 
-const formatUsdBalance = (_value: string) => {
+const formatUsdBalance = (_value: number) => {
   return formatFiatValue(_value).value
 }
 
