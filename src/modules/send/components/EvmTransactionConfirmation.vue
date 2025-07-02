@@ -395,7 +395,7 @@ const txDataFormatted = computed(() => {
   }
   const _details = details as LegacyTransaction
   return {
-    data: `0x${Buffer.from(_details.data).toString('hex')}`,
+    data: bytesToHex(_details.data) || '0x',
     nonce: _details.nonce.toString(),
     gasLimit: formatIntegerToString(_details.gasLimit.toString()),
     gasPrice: formatFloatingPointValue(
