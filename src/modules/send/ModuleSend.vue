@@ -35,22 +35,21 @@
         {{ $t('common.send') }}</app-base-button
       >
     </div>
+    <!-- TODO: replace network with actual selected network info -->
+    <evm-transaction-confirmation
+      v-if="isWalletConnected && tokenSelected"
+      :fromAddress="address"
+      :toAddress="toAddress"
+      :networkFeeUSD="networkFeeUSD"
+      :networkFeeCrypto="networkFeeCrypto"
+      :network="selectedChain || null"
+      :to-token="tokenSelected"
+      :to-amount="amount.toString()"
+      :to-amount-fiat="amountToFiat"
+      :signed-tx="signedTx"
+      v-model="openTxModal"
+    />
   </div>
-
-  <!-- TODO: replace network with actual selected network info -->
-  <evm-transaction-confirmation
-    v-if="isWalletConnected && tokenSelected"
-    :fromAddress="address"
-    :toAddress="toAddress"
-    :networkFeeUSD="networkFeeUSD"
-    :networkFeeCrypto="networkFeeCrypto"
-    :network="selectedChain || null"
-    :to-token="tokenSelected"
-    :to-amount="amount.toString()"
-    :to-amount-fiat="amountToFiat"
-    :signed-tx="signedTx"
-    v-model="openTxModal"
-  />
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
