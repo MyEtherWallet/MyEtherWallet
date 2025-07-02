@@ -105,7 +105,7 @@ const balance = computed(() => {
 })
 
 watch(
-  () => amount.value,
+  () => [amount.value, selectedToken.value],
   useDebounceFn(() => {
     if (isLoading.value) return
     props.validateInput()

@@ -107,7 +107,7 @@
             </div>
           </div>
           <button
-            v-if="getDetails()"
+            v-if="txDataFormatted"
             class="rounded-full hoverNoBG py-2 px-3 flex items-center justify-center max-w-fit mr-auto -mt-2"
             @click="showMoreDetails = !showMoreDetails"
           >
