@@ -123,6 +123,8 @@ import type {
   FeePriority,
   EstimatesResponse,
   GasFeeInfo,
+  QuotesResponse,
+  EvmGasFees,
 } from '@/mew_api/types'
 import { useI18n } from 'vue-i18n'
 
@@ -138,9 +140,8 @@ const DEFAULT_VALUE = '0x0' as HexPrefixedString
  * Props
  ------------------*/
 interface Props {
-  txData?: HexPrefixedString
-  txValue?: HexPrefixedString
-  txToAdr?: HexPrefixedString
+  fees?: QuotesResponse
+  isLoadingFees?: boolean
 }
 
 const props = defineProps<Props>()
@@ -161,10 +162,10 @@ const txData = computed(() => {
       ? (walletAddress.value as HexPrefixedString)
       : DEFAULT_ADR
   return {
-    to: props.txToAdr ? props.txToAdr : DEFAULT_ADR,
+    to: DEFAULT_ADR,
     address: _address,
-    value: props.txValue ? props.txValue : DEFAULT_VALUE,
-    data: props.txData ? props.txData : DEFAULT_DATA,
+    value: DEFAULT_VALUE,
+    data: DEFAULT_DATA,
   }
   //TO DO: BITCOIN HANDLER
 })
@@ -178,6 +179,7 @@ const fetchURL = computed(() => {
   return ''
 })
 const feesReady = ref(false)
+const feeEstmates = ref<EvmGasFees | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
@@ -189,17 +191,10 @@ const { data, onFetchResponse, execute } = useMEWFetch<EstimatesResponse>(
 )
   .post(JSON.stringify(txData.value))
   .json()
+
 onFetchResponse(() => {
   if (data.value) {
-    const fees = data.value.fees
-    const keys = Object.keys(fees) as GasPriceType[]
-    keys.forEach(key => {
-      const fee = fees[key]
-      const index = displayFees.value.findIndex(f => f.id === key)
-      displayFees.value[index].fiatValue =
-        `$${formatFiatValue(fee.fiatValue || 0).value} ${fee.fiatSymbol}`
-      displayFees.value[index].nativeValue = formatFee(fee)
-    })
+    feeEstmates.value = data.value.fees
     feesReady.value = true
   } else {
     throw new Error('No gas fees received in response:' + fetchURL.value)
@@ -284,41 +279,46 @@ interface DisplayFee {
 
 const { t } = useI18n()
 const displayFees = computed<DisplayFee[]>(() => {
-  return [
+  const _fees = props.fees ? props.fees.fees : feeEstmates.value
+  const a = [
     {
       id: GasPriceType.ECONOMY,
       title: t('select_fee.economy.title'),
       description: t('select_fee.economy.description'),
-      fiatValue: '0',
-      nativeValue: '0',
+      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.ECONOMY].fiatValue || 0 : 0).value}`,
+      nativeValue: _fees ? formatFee(_fees[GasPriceType.ECONOMY]) : '0',
     },
     {
       id: GasPriceType.REGULAR,
       title: t('select_fee.regular.title'),
       description: t('select_fee.regular.description'),
-      fiatValue: '0',
-      nativeValue: '0',
+      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.REGULAR].fiatValue || 0 : 0).value}`,
+      nativeValue: _fees ? formatFee(_fees[GasPriceType.REGULAR]) : '0',
     },
     {
       id: GasPriceType.FAST,
       title: t('select_fee.fast.title'),
       description: t('select_fee.fast.description'),
-      fiatValue: '0',
-      nativeValue: '0',
+      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.FAST].fiatValue || 0 : 0).value}`,
+      nativeValue: _fees ? formatFee(_fees[GasPriceType.FAST]) : '0',
     },
     {
       id: GasPriceType.FASTEST,
       title: t('select_fee.fastest.title'),
       description: t('select_fee.fastest.description'),
-      fiatValue: '0',
-      nativeValue: '0',
+      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.FASTEST].fiatValue || 0 : 0).value}`,
+      nativeValue: _fees ? formatFee(_fees[GasPriceType.FASTEST]) : '0',
     },
   ]
+  return a
 })
 
 const hasFees = computed(() => {
   return (
-    feesReady.value && data.value && Object.keys(data.value.fees).length > 0
+    feesReady.value &&
+    data.value &&
+    Object.keys(data.value.fees).length > 0 &&
+    !props.isLoadingFees
   )
 })
 </script>

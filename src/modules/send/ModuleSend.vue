@@ -13,7 +13,7 @@
           />
         </div>
         <app-address-book v-model="toAddress" class="mb-[2px]" />
-        <app-select-tx-fee />
+        <app-select-tx-fee :fees="gasFees" :is-loading-fees="isLoadingFees" />
         <div class="min-h-[30px] mt-2">
           <transition name="fade" mode="out-in">
             <p
@@ -78,6 +78,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { isAddress } from '@/utils/addressUtils'
+
 const { t } = useI18n()
 const walletStore = useWalletStore()
 const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
@@ -168,6 +169,11 @@ watch(
     ).toString()
   },
 )
+const amountToHex = computed(() => {
+  return data.value === '0x'
+    ? (toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString)
+    : '0x0'
+})
 
 watch(
   () => [tokenSelected.value, amount.value, toAddress.value],
@@ -198,12 +204,7 @@ watch(
         address:
           (address.value as HexPrefixedString) ||
           '0x0000000000000000000000000000000000000000',
-        value:
-          data.value === '0x'
-            ? (toHex(
-                toBigInt(toWei(amount.value, 'ether')),
-              ) as HexPrefixedString)
-            : '0x0',
+        value: amountToHex.value,
         data: data.value as HexPrefixedString,
       }
 
