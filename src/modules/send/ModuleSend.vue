@@ -198,9 +198,12 @@ watch(
         address:
           (address.value as HexPrefixedString) ||
           '0x0000000000000000000000000000000000000000',
-        value: toHex(
-          toBigInt(toWei(amount.value, 'ether')),
-        ) as HexPrefixedString,
+        value:
+          data.value === '0x'
+            ? (toHex(
+                toBigInt(toWei(amount.value, 'ether')),
+              ) as HexPrefixedString)
+            : '0x0',
         data: data.value as HexPrefixedString,
       }
 
