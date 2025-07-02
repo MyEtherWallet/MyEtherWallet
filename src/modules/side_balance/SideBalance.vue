@@ -1,7 +1,7 @@
 <template>
   <app-sheet
     v-if="isWalletConnected"
-    sheet-class="md:max-w-[360px] !px-0 !pt-4 !pb-0"
+    sheet-class="md:max-w-[360px] !px-0 !pt-4 !pb-0 overflow-hidden"
   >
     <app-wallet-card class="px-4" />
     <app-tabs-simple
