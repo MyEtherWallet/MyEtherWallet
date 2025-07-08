@@ -50,6 +50,7 @@
     "copy_failed": "Copy failed",
     "and": "and"
   },
+  "deposit": "Deposit",
   "portfolio": "Portfolio",
   "swap": "Swap",
   "stake": "Stake",
@@ -64,6 +65,8 @@
   "settings": "Settings",
   "notifications": "Notifications",
   "help-center": "Help Center",
+  "view_paper_wallet": "View Paper Wallet",
+  "switch_connected_address": "Switch Connected Address",
   "menu": {
     "open-settings": "Open Settings",
     "open-notifications": "Open Notifications",
@@ -71,6 +74,10 @@
   },
   "home": "Home",
   "connect_wallet": "Connect wallet",
+  "disconnect_wallet": "Disconnect wallet",
+  "connected_wallet": "Connected Wallet",
+  "view_in_block_explorer": "View in block explorer",
+  "refresh_balance": "Refresh Balance",
   "select_token": {
     "title": "Select Token",
     "search": "Search tokens by name or symbol",
@@ -103,4 +110,6 @@
     "max_fee": "Max Fee Per Gas",
     "max_priority": "Max Priority Fee Per Gas"
   }
+
+  
 }

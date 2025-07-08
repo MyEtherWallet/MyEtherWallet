@@ -2,7 +2,7 @@
   <app-dialog
     v-if="isWalletConnected"
     v-model:is-open="openDialog"
-    title="Connected Wallet"
+    :title="$t('connected_wallet')"
     class="xs:max-w-[428px] sm:mx-auto"
   >
     <template #content>
@@ -23,14 +23,17 @@
             class="!min-w-8 h-8 text-primary"
           >
           </app-btn-copy>
-          <app-btn-icon label="View in block explorer" class="!min-w-8 h-8">
+          <app-btn-icon
+            :label="$t('view_in_block_explorer')"
+            class="!min-w-8 h-8"
+          >
             <ArrowTopRightOnSquareIcon class="w-5 h-5 text-primary" />
           </app-btn-icon>
         </div>
         <div class="mt-4">
           <p class="font-semibold text-s-32 leading-p-130">
             {{ formattedTotalFiatPortflioValue }}
-            <app-btn-icon label="View in block explorer" class="!inline">
+            <app-btn-icon :label="$t('refresh_balance')" class="!inline">
               <ArrowPathIcon class="text-primary" />
             </app-btn-icon>
           </p>
@@ -44,40 +47,40 @@
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center min-h-[72px] hoverNoBG"
           >
             <QrCodeIcon class="w-7 h-7 text-primary mb-1" />
-            <p class="text-s-12">Deposit</p>
+            <p class="text-s-12">{{ $t('deposit') }}</p>
           </button>
           <button
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG"
           >
             <icon-buy class="w-7 h-7 text-primary mb-1" />
-            <p class="text-s-12">Buy & Sell</p>
+            <p class="text-s-12">{{ $t('buy-sell') }}</p>
           </button>
           <button
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
           >
             <icon-send class="w-7 h-7 text-primary mb-1" />
-            <p class="text-s-12">Send</p>
+            <p class="text-s-12">{{ $t('common.send') }}</p>
           </button>
           <button
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
           >
             <icon-swap class="w-7 h-7 text-primary mb-1" />
-            <p class="text-s-12">Swap</p>
+            <p class="text-s-12">{{ $t('swap') }}</p>
           </button>
         </div>
         <button
           class="shadow-button shadow-button-elevated rounded-16 p-3 mt-6 hoverNoBG w-full"
         >
-          <p class="text-s-14">View Paper Wallet</p>
+          <p class="text-s-14">{{ $t('view_paper_wallet') }}</p>
         </button>
         <button
           class="shadow-button shadow-button-elevated rounded-16 p-3 mt-3 hoverNoBG w-full"
         >
-          <p class="text-s-14">Switch Connected Address</p>
+          <p class="text-s-14">{{ $t('switch_connected_address') }}</p>
         </button>
         <div class="flex items-center justify-center mt-6">
           <app-base-button theme="error" is-outline size="medium">
-            Disconnect Wallet</app-base-button
+            {{ $t('disconnect_wallet') }}</app-base-button
           >
         </div>
       </div>
