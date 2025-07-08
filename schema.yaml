@@ -738,6 +738,10 @@ components:
           type: string
         icon:
           type: string
+        rpcUrls:
+          type: array
+          items:
+            type: string
 
     AccessTuple:
       type: object
@@ -1190,8 +1194,8 @@ components:
           properties:
             height:
               type: string
-            position:
-              type: string
+            # position:
+            #   type: string
 
     GetBtcTransactionEstimateRequest:
       type: object
@@ -1298,4 +1302,3 @@ components:
       properties:
         txid:
           type: string
-

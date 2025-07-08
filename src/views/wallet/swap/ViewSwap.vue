@@ -9,12 +9,11 @@
     <router-view />
     <div class="w-full max-w-[478px] mx-auto">
       <router-link
+        v-if="!isWalletConnected"
         :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
         class="w-full max-w-[478px]"
       >
-        <app-base-button v-if="!isWalletConnected" class="w-full">
-          Connect Wallet</app-base-button
-        >
+        <app-base-button class="w-full"> Connect Wallet</app-base-button>
       </router-link>
     </div>
   </div>

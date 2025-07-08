@@ -1,6 +1,7 @@
+import { SupportedNetworkName } from '@enkryptcom/swap';
 import { NetworkNames } from '@enkryptcom/types'
 
-const chainToEnum: Record<string, NetworkNames> = {
+export const chainToEnum: Record<string, NetworkNames> = {
   BITCOIN: NetworkNames.Bitcoin,
   BITCOIN_TEST: NetworkNames.BitcoinTest,
   DOGECOIN: NetworkNames.Dogecoin,
@@ -100,4 +101,29 @@ const chainToEnum: Record<string, NetworkNames> = {
   SOLANA: NetworkNames.Solana
 };
 
-export { chainToEnum }
+export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
+  ETHEREUM: SupportedNetworkName.Ethereum,
+  BSC: SupportedNetworkName.Binance,
+  LITECOIN: SupportedNetworkName.Litecoin,
+  DOGECOIN: SupportedNetworkName.Dogecoin,
+  POLYGON: SupportedNetworkName.Matic,
+  OPTIMISM: SupportedNetworkName.Optimism,
+  POLKADOT: SupportedNetworkName.Polkadot,
+  KUSAMA: SupportedNetworkName.Kusama,
+  BITCOIN: SupportedNetworkName.Bitcoin,
+  ETHEREUM_CLASSIC: SupportedNetworkName.EthereumClassic,
+  MOONBEAM: SupportedNetworkName.Moonbeam,
+  ARBITRUM: SupportedNetworkName.Arbitrum,
+  GNOSIS: SupportedNetworkName.Gnosis,
+  AVALANCHE: SupportedNetworkName.Avalanche,
+  FANTOM: SupportedNetworkName.Fantom,
+  KAIA: SupportedNetworkName.Kaia,
+  AURORA: SupportedNetworkName.Aurora,
+  ZKSYNC: SupportedNetworkName.ZkSync,
+  BASE: SupportedNetworkName.Base,
+  POLYGON_ZKEVM: SupportedNetworkName.MaticZK,
+  BLAST: SupportedNetworkName.Blast,
+  TELOS: SupportedNetworkName.Telos,
+  ROOTSTOCK: SupportedNetworkName.Rootstock,
+  SOLANA: SupportedNetworkName.Solana,
+}

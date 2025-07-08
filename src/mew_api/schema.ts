@@ -485,6 +485,7 @@ export interface components {
             currencyName: string;
             currencyNameLong: string;
             icon: string;
+            rpcUrls?: string[];
         };
         AccessTuple: {
             address: components["schemas"]["EvmAddress"];
@@ -628,7 +629,6 @@ export interface components {
             outputs: components["schemas"]["BtcOutput2"][];
             block?: {
                 height?: string;
-                position?: string;
             };
         };
         GetBtcTransactionEstimateRequest: {
