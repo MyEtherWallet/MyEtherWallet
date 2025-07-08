@@ -1,11 +1,7 @@
 <template>
   <button
     :class="[
-      'rounded-full  bg-primary text-white !focus:bg-error !focus:text-primary transition-[background] duration-300 !focus:bg-primary/25',
-      {
-        'border border-2 border-primary !text-primary  bg-transparent':
-          isOutline,
-      },
+      defaultClass,
       { 'py-1 px-3 text-s-15': size === BtnSize.SMALL },
       { 'py-2 px-5': size === BtnSize.MEDIUM },
       { 'py-3 md:py-4 px-6 md:px-7': size === BtnSize.LARGE },
@@ -47,13 +43,14 @@
   </button>
 </template>
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import { type PropType, computed } from 'vue'
 
 enum BtnSize {
   SMALL = 'small',
   MEDIUM = 'medium',
   LARGE = 'large',
 }
+
 const props = defineProps({
   disabled: {
     type: Boolean,
@@ -71,6 +68,14 @@ const props = defineProps({
     type: String as PropType<'small' | 'medium' | 'large'>,
     default: 'large',
   },
+  /**
+   * Theme of the button, can be 'primary' or 'error'
+   * NOTE: this colors should be defined in the tailwind config
+   */
+  theme: {
+    type: String as PropType<'primary' | 'error'>,
+    default: 'primary',
+  },
 })
 const emit = defineEmits(['click'])
 const onClick = () => {
@@ -78,4 +83,11 @@ const onClick = () => {
     emit('click')
   }
 }
+
+const defaultClass = computed<string>(() => {
+  const _default = `rounded-full  bg-${props.theme} text-white !focus:bg-error !focus:text-${props.theme} transition-[background] duration-300 !focus:bg-${props.theme}/25`
+  const _outline = `border border-2 border-${props.theme} !text-${props.theme}  !bg-transparent`
+
+  return props.isOutline ? `${_default} ${_outline}` : _default
+})
 </script>

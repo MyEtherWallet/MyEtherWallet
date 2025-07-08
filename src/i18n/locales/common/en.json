@@ -12,6 +12,7 @@
     "not_found":  {
       "chains": "No chains found"
     },
+    "token_count": "no tokens| 1 token | {count} Tokens",
     "sort": "Sort",
     "sort_by": "Sort by",
     "filter": "Filter",
@@ -46,7 +47,8 @@
     "price": "price",
     "usd_balance": "USD Balance",
     "fee": "Fee",
-    "copy_failed": "Copy failed"
+    "copy_failed": "Copy failed",
+    "and": "and"
   },
   "portfolio": "Portfolio",
   "swap": "Swap",
