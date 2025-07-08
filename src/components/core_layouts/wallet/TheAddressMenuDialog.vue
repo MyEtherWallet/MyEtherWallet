@@ -6,7 +6,7 @@
     class="xs:max-w-[428px] sm:mx-auto"
   >
     <template #content>
-      <div class="px-6 pt-2s pb-5">
+      <div class="p-5 xs:px-6 pt-2s pb-5">
         <div v-if="walletAddress" class="flex items-center">
           <app-blockie
             :address="walletAddress"
@@ -18,30 +18,48 @@
           >
             {{ walletAddress }}
           </div>
+          <!-- Copy -->
           <app-btn-copy
             :copy-value="walletAddress"
             class="!min-w-8 h-8 text-primary"
           >
           </app-btn-copy>
-          <app-btn-icon
-            :label="$t('view_in_block_explorer')"
-            class="!min-w-8 h-8"
+          <!-- Block Explorer Link -->
+          <a
+            :href="`https://www.ethvm.com/address/${walletAddress}`"
+            :aria-label="$t('view_in_block_explorer')"
+            target="_blank"
+            class="rounded-full !cursor-pointer min-w-8 h-8 flex items-center justify-center hoverNoBG"
           >
             <ArrowTopRightOnSquareIcon class="w-5 h-5 text-primary" />
-          </app-btn-icon>
+          </a>
         </div>
         <div class="mt-4">
-          <p class="font-semibold text-s-32 leading-p-130">
+          <p v-if="!isLoadingBalances" class="font-semibold text-s-32 h-[42px]">
             {{ formattedTotalFiatPortflioValue }}
-            <app-btn-icon :label="$t('refresh_balance')" class="!inline">
+            <!-- Update balances -->
+            <app-btn-icon
+              :label="$t('refresh_balance')"
+              class="!inline"
+              @click="fetchBalances"
+            >
               <ArrowPathIcon class="text-primary" />
             </app-btn-icon>
           </p>
-          <p class="text-info">
+          <div
+            v-else
+            class="animate-pulse bg-grey-10 rounded-full w-[150px] min-h-[39px] mb-[3px]"
+          ></div>
+          <p v-if="!isLoadingBalances" class="text-info">
             {{ formattedBalance }} {{ mainTokenBalance?.symbol || '' }}
             {{ $t('common.and') }} {{ tokensCount }}
           </p>
+          <div
+            v-else
+            class="animate-pulse bg-grey-10 rounded-full w-[180px] min-h-6"
+          ></div>
         </div>
+        <!-- Actions -->
         <div class="mt-4 grid grid-cols-4 gap-1">
           <button
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center min-h-[72px] hoverNoBG"
@@ -49,24 +67,27 @@
             <QrCodeIcon class="w-7 h-7 text-primary mb-1" />
             <p class="text-s-12">{{ $t('deposit') }}</p>
           </button>
-          <button
+          <router-link
+            :to="{ name: ROUTES_MAIN.BUY.NAME }"
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG"
           >
             <icon-buy class="w-7 h-7 text-primary mb-1" />
             <p class="text-s-12">{{ $t('buy-sell') }}</p>
-          </button>
-          <button
+          </router-link>
+          <router-link
+            :to="{ name: ROUTES_SEND.SEND.NAME }"
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
           >
             <icon-send class="w-7 h-7 text-primary mb-1" />
             <p class="text-s-12">{{ $t('common.send') }}</p>
-          </button>
-          <button
+          </router-link>
+          <router-link
+            :to="{ name: ROUTES_MAIN.SWAP.NAME }"
             class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
           >
             <icon-swap class="w-7 h-7 text-primary mb-1" />
             <p class="text-s-12">{{ $t('swap') }}</p>
-          </button>
+          </router-link>
         </div>
         <button
           class="shadow-button shadow-button-elevated rounded-16 p-3 mt-6 hoverNoBG w-full"
@@ -79,7 +100,12 @@
           <p class="text-s-14">{{ $t('switch_connected_address') }}</p>
         </button>
         <div class="flex items-center justify-center mt-6">
-          <app-base-button theme="error" is-outline size="medium">
+          <app-base-button
+            theme="error"
+            is-outline
+            size="medium"
+            @click="disconnectWallet"
+          >
             {{ $t('disconnect_wallet') }}</app-base-button
           >
         </div>
@@ -107,14 +133,20 @@ import {
   ArrowTopRightOnSquareIcon,
   ArrowPathIcon,
 } from '@heroicons/vue/24/outline'
+import { ROUTES_MAIN, ROUTES_SEND } from '@/router/routeNames'
+
 const store = useWalletStore()
+const { setTokens, setIsLoadingBalances } = store
+
 const {
+  wallet,
   isWalletConnected,
   walletAddress,
   formattedTotalFiatPortflioValue,
   formattedBalance,
   mainTokenBalance,
   tokens,
+  isLoadingBalances,
 } = storeToRefs(store)
 
 /** -------------------------------
@@ -138,4 +170,17 @@ const tokensCount = computed(() => {
       return t('common.token_count', { count: length })
   }
 })
+
+const disconnectWallet = () => {
+  store.removeWallet()
+  openDialog.value = false
+}
+
+const fetchBalances = () => {
+  setIsLoadingBalances(true)
+  wallet.value?.getBalance().then(balances => {
+    setTokens(balances.result)
+    setIsLoadingBalances(false)
+  })
+}
 </script>

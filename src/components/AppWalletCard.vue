@@ -31,7 +31,7 @@
           <!-- TODO: add proper link per chain-->
           <a
             :href="`https://www.ethvm.com/address/${walletAddress}`"
-            aria-label="View in block explorer"
+            :aria-label="$t('view_in_block_explorer')"
             target="_blank"
             class="rounded-[8px] !cursor-pointer p-1 flex items-center justify-center backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
           >
@@ -163,7 +163,8 @@ const animateMewCard = (event: Event) => {
 </script>
 <style scoped>
 .drop-shadow {
-  filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.24)),
+  filter:
+    drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.24)),
     drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.24));
 }
 .mew-card {
