@@ -8,7 +8,7 @@
     ]"
     type="button"
     @click="showAllTokens = true"
-    aria-label="Select token"
+    :aria-label="$t('select_token.title')"
     :disabled="isLoading || !selectedToken"
   >
     <div
@@ -23,7 +23,7 @@
           :src="imageReplacer(selectedToken)"
           width="28"
           height="28"
-          alt="token icon"
+          alt=""
         />
       </div>
       <p v-if="!isLoading" class="font-medium text-nowrap">
@@ -36,7 +36,7 @@
   </button>
   <app-dialog
     v-model:is-open="showAllTokens"
-    title="Select token"
+    :title="$t('select_token.title')"
     class="sm:max-w-[500px] sm:mx-auto"
   >
     <template #content>
@@ -45,9 +45,13 @@
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
           >
-            <app-search-input v-model="searchInput" class="grow" />
+            <app-search-input
+              v-model="searchInput"
+              class="grow"
+              :placeholder="$t('select_token.search')"
+            />
             <!--SORT-->
-            <app-pop-up-menu placeholder="sort">
+            <app-pop-up-menu :placeholder="$t('common.sort')">
               <template #menu-button="{ toggleMenu }">
                 <button
                   class="flex items-center px-2 py-2 text-s-15 font-medium hoverNoBG rounded-full"
@@ -64,7 +68,9 @@
               <template #menu-content="{ toggleMenu }">
                 <div class="py-4 flex flex-col">
                   <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3">Sort by</p>
+                    <p class="text-s-17 font-medium ml-3">
+                      {{ $t('common.sort_by') }}
+                    </p>
                     <app-btn-icon-close @click="toggleMenu" />
                   </div>
                   <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
@@ -78,7 +84,7 @@
                     :id="option.value"
                     @click="setActiveSort(option.value)"
                   >
-                    <p>{{ option.label }}</p>
+                    <p class="capitalize">{{ option.label }}</p>
                     <div
                       v-if="activeSortValue === option.value"
                       class="ml-auto"
@@ -133,9 +139,12 @@
         </div>
         <div v-else>
           <div class="flex justify-center items-center h-[400px] text-grey-30">
-            <p v-if="searchInput !== ''">No tokens match your search</p>
-            <!-- TODO: verify other states when it can happen-->
-            <p v-else>No tokens available</p>
+            <p v-if="searchInput !== ''">
+              {{ $t('select_token.no_tokens_match') }}
+            </p>
+            <p v-else>
+              {{ $t('select_token.no_tokens_available') }}
+            </p>
           </div>
         </div>
       </div>
@@ -144,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useWalletStore } from '@/stores/walletStore'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
 import {
@@ -167,16 +176,28 @@ import {
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
-const { isLoadingBalances, tokens } = storeToRefs(store)
+const {
+  isLoadingBalances,
+  tokens: erc20Tokens,
+  safeMainTokenBalance,
+} = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 
 const isLoading = computed(() => {
   return isLoadingBalances.value || !isLoaded.value
+})
+
+const tokens = computed<TokenBalance[]>(() => {
+  if (!isLoaded.value || safeMainTokenBalance.value === null) return []
+  return [safeMainTokenBalance.value, ...erc20Tokens.value]
 })
 
 defineProps({
@@ -189,10 +210,7 @@ const showAllTokens = ref(false)
 const searchInput = ref('')
 
 const defaultImg = computed(() => {
-  const img = tokens.value.find(
-    (token: TokenBalance) => token.contract === MAIN_TOKEN_CONTRACT,
-  )
-  return img ? img.logo_url : eth
+  return safeMainTokenBalance.value?.logo_url || eth
 })
 
 onMounted(() => {
@@ -214,23 +232,23 @@ const sortOptions = computed(() => {
   return [
     {
       value: SortValueString.NAME,
-      label: 'Name',
+      label: t('common.name'),
     },
     {
       value: SortValueString.SYMBOL,
-      label: 'Symbol',
+      label: t('common.symbol'),
     },
     {
       value: SortValueString.PRICE,
-      label: 'Price',
+      label: t('common.price'),
     },
     {
       value: SortValueString.USD,
-      label: 'USD Balance',
+      label: t('common.usd_balance'),
     },
     {
       value: SortValueString.BALANCE,
-      label: 'Balance',
+      label: t('common.balance'),
     },
   ]
 })

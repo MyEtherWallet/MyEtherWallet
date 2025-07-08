@@ -26,8 +26,21 @@ export type EVMTxResponse =
 /** --------------------------
  * GET Gas Fees
  * --------------------------*/
-
 export type FeePriority = components['schemas']['FeePriority']
+export type GasFeeInfo = components['schemas']['EvmGasFeeInfo']
+export type EvmGasFees = components['schemas']['EvmGasFees']
+
+//Estimates
 export type EstimatesResponse =
   components['schemas']['GetEvmTransactionEstimateResponse']
-export type GasFeeInfo = components['schemas']['EvmGasFeeInfo']
+export type EstimatesRequestBody =
+  components['schemas']['GetEvmTransactionEstimateRequest']
+//Quotes
+export type QuotesResponse =
+  components['schemas']['GetEvmTransactionQuoteResponse']
+export type QuotesRequestBody =
+  components['schemas']['GetEvmTransactionQuoteRequest']
+
+// Signable Transactions
+export type EthereumSignableTransactionResponse =
+  components['schemas']['GetUnsignedEvmTransactionResponse']

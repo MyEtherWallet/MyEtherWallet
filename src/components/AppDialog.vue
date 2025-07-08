@@ -43,7 +43,7 @@
               }"
             >
               <slot name="title">
-                <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8">
+                <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8 capitalize">
                   {{ title }}
                 </h1>
               </slot>

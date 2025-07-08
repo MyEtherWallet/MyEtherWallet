@@ -26,6 +26,7 @@ export default {
       'md-header': '940px',
       lg: '1024px',
       'lg-max': '1084px',
+      'xl-min': '1140px',
       xl: '1280px',
       '2xl': '1440px',
       '3xl': '1601px',
