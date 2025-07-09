@@ -11,7 +11,8 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          class="cursor-pointer fixed inset-0 bg-black/40 w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          :class="zIndexOverlay"
           @click="!persistent ? setIsOpen(false) : () => {}"
           aria-hidden
         />
@@ -19,7 +20,8 @@
       <!-- Dialog Container -->
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 z-[100] overscroll-none !overflow-y-scroll"
+        :class="zIndexContainer"
+        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -87,10 +89,11 @@
  * </app-dialog>
  */
 import AppBtnIconClose from './AppBtnIconClose.vue'
+import { computed } from 'vue'
 defineOptions({
   inheritAttrs: false,
 })
-defineProps({
+const props = defineProps({
   /**
    * @title The title of the dialog, not required
    * @type string | undefined
@@ -115,6 +118,10 @@ defineProps({
     default: false,
     type: Boolean,
   },
+  zIndex: {
+    default: 100,
+    type: Number,
+  },
 })
 
 /**
@@ -132,4 +139,12 @@ const isOpen = defineModel('isOpen', {
 const setIsOpen = (_value: boolean = false) => {
   isOpen.value = _value
 }
+
+const zIndexOverlay = computed(() => {
+  return `z-${props.zIndex}`
+})
+
+const zIndexContainer = computed(() => {
+  return `z-${props.zIndex + 1}`
+})
 </script>

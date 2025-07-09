@@ -48,7 +48,9 @@
     "usd_balance": "USD Balance",
     "fee": "Fee",
     "copy_failed": "Copy failed",
-    "and": "and"
+    "and": "and",
+    "deposit_title": "Your {chain} address",
+    "deposit_description": "You can deposit any tokens supported by {chain} to this address."
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",

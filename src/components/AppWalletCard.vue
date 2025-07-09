@@ -70,6 +70,7 @@
           <div class="flex gap-2">
             <button
               class="rounded-[10px] !cursor-pointer p-1 h-8 w-8 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+              @click="openDepositDialog = true"
             >
               <QrCodeIcon class="w-6 h-6" />
             </button>
@@ -84,12 +85,14 @@
       </div>
     </div>
     <the-address-menu-dialog v-model:open-dialog="openDialog" />
+    <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import TheAddressMenuDialog from '@/components/core_layouts/wallet/TheAddressMenuDialog.vue'
+import TheDepositDialog from './core_layouts/wallet/TheDepositDialog.vue'
 import { truncateAddress } from '@/utils/filters'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
@@ -138,9 +141,10 @@ const copyClick = () => {
 }
 
 /** -------------------------------
- * Dialog
+ * Dialogs
  -------------------------------*/
-const openDialog = ref(false)
+const openDepositDialog = ref(false) //deposit dialog
+const openDialog = ref(false) // address menu dialog
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }
