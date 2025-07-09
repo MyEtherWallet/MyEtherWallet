@@ -7,21 +7,11 @@
       Instant crypto exchange with minimal fees
     </p>
     <router-view />
-    <div class="w-full max-w-[478px] mx-auto">
-      <router-link
-        v-if="!isWalletConnected"
-        :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-        class="w-full max-w-[478px]"
-      >
-        <app-base-button class="w-full"> Connect Wallet</app-base-button>
-      </router-link>
-    </div>
   </div>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ROUTES_ACCESS } from '@/router/routeNames'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+
 import { useWalletStore } from '@/stores/walletStore'
 
 const walletStore = useWalletStore()

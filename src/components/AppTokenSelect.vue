@@ -178,6 +178,16 @@ import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
+const props = defineProps({
+  selectedToken: {
+    type: Object as () => TokenBalance,
+  },
+  externalLoading: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const { t } = useI18n()
 const emit = defineEmits(['update:selectedToken'])
 
@@ -192,18 +202,12 @@ const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 
 const isLoading = computed(() => {
-  return isLoadingBalances.value || !isLoaded.value
+  return props.externalLoading || isLoadingBalances.value || !isLoaded.value
 })
 
 const tokens = computed<TokenBalance[]>(() => {
   if (!isLoaded.value || safeMainTokenBalance.value === null) return []
   return [safeMainTokenBalance.value, ...erc20Tokens.value]
-})
-
-defineProps({
-  selectedToken: {
-    type: Object as () => TokenBalance,
-  },
 })
 
 const showAllTokens = ref(false)

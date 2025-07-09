@@ -20,7 +20,10 @@
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select v-model:selected-token="selectedToken" />
+      <app-token-select
+        v-model:selected-token="selectedToken"
+        :external-loading="isLoading"
+      />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
@@ -61,13 +64,17 @@ import {
 } from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: storeLoading } = storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {
     type: Function as PropType<() => void>,
     default: () => {},
     required: true,
+  },
+  externalLoading: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -89,6 +96,10 @@ const tokenBalanceRaw = computed(() => {
   return walletStore.getTokenBalance(
     selectedToken.value?.contract || MAIN_TOKEN_CONTRACT,
   )
+})
+
+const isLoading = computed(() => {
+  return !props.externalLoading || storeLoading.value
 })
 
 const balanceFiatOrError = computed(() => {

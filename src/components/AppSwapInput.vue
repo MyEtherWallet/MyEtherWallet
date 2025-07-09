@@ -7,6 +7,7 @@
       v-model:selected-token="tokenSelected"
       v-model:error="amountError"
       :validate-input="checkAmountForError"
+      :external-loading="isLoading"
       class="mt-4"
     />
   </div>
@@ -23,6 +24,10 @@ defineProps({
   label: {
     type: String,
     default: 'From',
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 })
 
