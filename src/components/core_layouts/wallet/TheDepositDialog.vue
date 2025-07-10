@@ -3,7 +3,8 @@
     v-if="isWalletConnected && isLoadedChainsData"
     v-model:is-open="openDialog"
     class="xs:max-w-[400px] sm:mx-auto !min-h-[400px]"
-    :z-index="200"
+    z-index-overlay="z-[200]"
+    z-index-container="z-[201]"
   >
     <template #title>
       <div>
@@ -83,9 +84,9 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useQR } from '@/composables/useQR'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import QRCodeStyling, { type DrawType, type DotType } from 'qr-code-styling'
-import { ref, defineModel, watch } from 'vue'
+import { defineModel, watch } from 'vue'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
@@ -102,51 +103,12 @@ const openDialog = defineModel<boolean>('openDialog', {
 /** -------------------
  * QR Code Controls
  -------------------*/
-const isLoadingQRCode = ref(true)
+const { qrCode, isLoadingQRCode, setQRCode } = useQR()
 
-const options = ref({
-  width: 150,
-  height: 150,
-  type: 'svg' as DrawType,
-  data: '',
-  image: '',
-  margin: 0,
-  dotsOptions: {
-    color: '#000',
-    type: 'extra-rounded' as DotType,
-  },
-  cornersDotOptions: {
-    color: 'rgb(0,90,229,1',
-    type: 'extra-rounded' as DotType,
-  },
-  backgroundOptions: {
-    color: 'transparent',
-  },
-  imageOptions: {
-    crossOrigin: 'anonymous',
-    margin: 10,
-  },
-})
-
-const qrCode = ref<HTMLDivElement | null>(null)
-const qrCodeStyling = new QRCodeStyling(options.value)
-
-const setQRCode = () => {
-  try {
-    options.value.data = walletAddress.value || ''
-    qrCodeStyling.update(options.value)
-    isLoadingQRCode.value = false
-    if (qrCode.value) {
-      qrCodeStyling.append(qrCode.value)
-    }
-  } catch (error) {
-    console.error('Failed to append QR Code:', error)
-  }
-}
 watch(
   () => [walletAddress.value, openDialog.value, qrCode.value],
   () => {
-    if (openDialog.value) setQRCode()
+    if (openDialog.value) setQRCode(walletAddress.value || undefined)
   },
 )
 </script>

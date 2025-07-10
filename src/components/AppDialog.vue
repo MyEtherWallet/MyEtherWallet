@@ -89,11 +89,10 @@
  * </app-dialog>
  */
 import AppBtnIconClose from './AppBtnIconClose.vue'
-import { computed } from 'vue'
 defineOptions({
   inheritAttrs: false,
 })
-const props = defineProps({
+defineProps({
   /**
    * @title The title of the dialog, not required
    * @type string | undefined
@@ -118,9 +117,13 @@ const props = defineProps({
     default: false,
     type: Boolean,
   },
-  zIndex: {
-    default: 100,
-    type: Number,
+  zIndexOverlay: {
+    default: 'z-[100]',
+    type: String,
+  },
+  zIndexContainer: {
+    default: 'z-[101]',
+    type: String,
   },
 })
 
@@ -139,12 +142,4 @@ const isOpen = defineModel('isOpen', {
 const setIsOpen = (_value: boolean = false) => {
   isOpen.value = _value
 }
-
-const zIndexOverlay = computed(() => {
-  return `z-${props.zIndex}`
-})
-
-const zIndexContainer = computed(() => {
-  return `z-${props.zIndex + 1}`
-})
 </script>
