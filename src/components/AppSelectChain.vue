@@ -140,7 +140,18 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
+  passedChains: {
+    type: Array as () => Chain[],
+    default: () => [],
+  },
+  canStore: {
+    type: Boolean,
+    default: true,
+  },
 })
+
+const emits = defineEmits(['update:selectedChain'])
+
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
 const selectedChain = ref<Chain | null>(null)
 const defaultChains = ref<Chain[]>([])
@@ -155,6 +166,10 @@ const {
   selectedChain: storeSelectedChain,
 } = storeToRefs(chainsStore)
 const lastSelectedChain = ref<Chain | null>(null)
+
+const displayedChains = computed(() => {
+  return prop.passedChains.length > 0 ? prop.passedChains : chains.value
+})
 
 const selectedIsDefault = computed(() => {
   return defaultChains.value.some(
@@ -183,12 +198,12 @@ watch(
   () => {
     if (isLoadedChains.value) {
       defaults.forEach(chainName => {
-        const chain = chains.value.find(c => c.name === chainName)
+        const chain = displayedChains.value.find(c => c.name === chainName)
         if (chain) {
           defaultChains.value.push(chain)
         }
       })
-      const preselected = chains.value.find(
+      const preselected = displayedChains.value.find(
         chain => chain.name === selectedChainStore.value,
       )
       selectedChain.value = preselected ?? defaultChains.value[0]
@@ -209,7 +224,11 @@ const setSelectedChain = (chain: Chain) => {
     }
 
     selectedChain.value = chain
-    setSelectedChainStore(chain.name)
+    if (prop.canStore) {
+      setSelectedChainStore(chain.name)
+    } else {
+      emits('update:selectedChain', chain)
+    }
   }
 
   if (openDialog.value) {
@@ -230,8 +249,8 @@ const setOpenDialog = (value: boolean) => {
 const searchInput = ref('')
 const searchResults = computed(() => {
   const chainsToSearch = prop.isBtnGroup
-    ? chains.value
-    : chains.value.filter(chain => {
+    ? displayedChains.value
+    : displayedChains.value.filter(chain => {
         return chain.type === storeSelectedChain.value?.type
       })
 

@@ -24,7 +24,7 @@
     <div class="pt-2"></div>
     <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
       <p class="text-s-16 mb-2">To</p>
-      <app-select-chain />
+      <app-select-chain :can-store="false" :passed-chains="toChains" />
       <app-enter-amount
         v-model:amount="toAmount"
         v-model:selected-token="toTokenSelected"
@@ -91,7 +91,7 @@ import AppEnterAmount from '@/components/AppEnterAmount.vue'
 const walletStore = useWalletStore()
 
 const { isWalletConnected } = storeToRefs(walletStore)
-const { initSwapper, supportedNetwork, swapLoaded } = useSwap()
+const { initSwapper, supportedNetwork, swapLoaded, toChains } = useSwap()
 
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
