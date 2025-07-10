@@ -3,21 +3,51 @@ import { ref, type Ref, watch } from 'vue'
 
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { supportedSwapEnums } from '@/providers/ethereum/chainToEnum'
+import { useWalletStore } from '@/stores/walletStore'
+import { supportedSwapEnums, enumToChain } from '@/providers/ethereum/chainToEnum'
 import Swapper, { WalletIdentifier } from '@enkryptcom/swap'
-import { SupportedNetworkName } from '@enkryptcom/swap'
+import type { TokenType, TokenTypeTo, SupportedNetworkName } from '@enkryptcom/swap'
 import Web3Eth from 'web3-eth'
+import type { Chain } from '@/mew_api/types'
 
-export const useSwap = () => {
+// TODO: Import types from @enkryptcom/swap
+
+interface NewTokenInfo extends Omit<TokenType, 'balance'> {
+  balance?: string;
+}
+
+interface ToTokenType {
+  top: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
+  trending: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
+  all: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
+}
+
+export const useSwap = (): {
+  initSwapper: () => Promise<void>;
+  supportedNetwork: Ref<boolean>;
+  toTokens: Ref<ToTokenType | null>;
+  fromTokens: Ref<NewTokenInfo[] | null>;
+  toChains: Ref<Chain[]>;
+  swapLoaded: Ref<boolean>;
+} => {
   const chainsStore = useChainsStore()
   const globalStore = useGlobalStore()
+  const walletStore = useWalletStore()
   const swapInstance: Ref<Swapper | null> = ref(null);
-  const { selectedChain } = storeToRefs(chainsStore)
+  const { selectedChain, chains } = storeToRefs(chainsStore)
   const { selectedNetwork } = storeToRefs(globalStore)
+  const { tokens } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(false)
+  const toChains = ref<Chain[]>([])
+  const toTokens = ref<ToTokenType | null>(null)
+  const fromTokens = ref<NewTokenInfo[] | null>(null)
+  const swapLoaded = ref<boolean>(false)
 
+  // Initialize the Swapper instance
+  // parses tokens and to networks available for swapping
   const initSwapper = async () => {
     try {
+      swapLoaded.value = false
       const rpc = selectedChain.value?.rpcUrls?.[0] || ''
       swapInstance.value = new Swapper({
         network: supportedSwapEnums[
@@ -31,8 +61,27 @@ export const useSwap = () => {
         },
       })
       await swapInstance.value.initPromise
-      const fromTokens = swapInstance.value.getFromTokens()
-      supportedNetwork.value = fromTokens.all.length > 0
+      const allFromTokens = swapInstance.value.getFromTokens()
+      supportedNetwork.value = allFromTokens.all.length > 0
+      toTokens.value = swapInstance.value.getToTokens()
+      const toTokensNetworks = Object.keys(toTokens.value.all)
+      toChains.value = toTokensNetworks
+        .map((networkName) => {
+          const chainName = enumToChain[networkName as SupportedNetworkName]
+          const chain = chains.value.find((chain => chain.name === chainName))
+          if (chain) return chain
+        })
+        .filter((chain): chain is Chain => chain !== undefined)
+      fromTokens.value = allFromTokens.all.map((token) => {
+        const tokenBalance = tokens.value.find(
+          (t) => t.contract.toLowerCase() === token.address.toLowerCase()
+        )
+        if (tokenBalance) return {
+          ...token,
+          balance: tokenBalance ? tokenBalance.balance : '0',
+        } as NewTokenInfo
+      }).filter((token => token !== undefined)) as NewTokenInfo[]
+      swapLoaded.value = true
     } catch (error) {
       console.log(error)
     }
@@ -50,6 +99,10 @@ export const useSwap = () => {
 
   return {
     initSwapper,
-    supportedNetwork
+    supportedNetwork,
+    toTokens,
+    fromTokens,
+    toChains,
+    swapLoaded
   }
 }

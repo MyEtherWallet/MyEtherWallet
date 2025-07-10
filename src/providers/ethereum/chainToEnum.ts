@@ -119,7 +119,7 @@ export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
   FANTOM: SupportedNetworkName.Fantom,
   KAIA: SupportedNetworkName.Kaia,
   AURORA: SupportedNetworkName.Aurora,
-  ZKSYNC: SupportedNetworkName.ZkSync,
+  ZKSYNC: SupportedNetworkName.Zksync,
   BASE: SupportedNetworkName.Base,
   POLYGON_ZKEVM: SupportedNetworkName.MaticZK,
   BLAST: SupportedNetworkName.Blast,
@@ -127,3 +127,7 @@ export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
   ROOTSTOCK: SupportedNetworkName.Rootstock,
   SOLANA: SupportedNetworkName.Solana,
 }
+
+export const enumToChain: Record<SupportedNetworkName, string> = Object.fromEntries(
+  Object.entries(chainToEnum).map(([key, value]) => [value, key])
+);

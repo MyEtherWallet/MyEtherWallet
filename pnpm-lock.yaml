@@ -80,6 +80,9 @@ importers:
       bip39:
         specifier: ^3.1.0
         version: 3.1.0
+      bn.js:
+        specifier: ^5.2.2
+        version: 5.2.2
       commitlint:
         specifier: ^19.6.0
         version: 19.8.1(@types/node@22.15.24)(typescript@5.6.3)
