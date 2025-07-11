@@ -9,7 +9,7 @@
     >
       <div
         v-if="isOpen"
-        class="bg-black/40 print:bg-whitecursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll z-[102] fixed"
+        class="bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll z-[102] fixed"
       >
         <div
           class="paper-wallet bg-white print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
@@ -56,7 +56,7 @@
               </div>
             </div>
             <div
-              class="rounded-16 p-3 mr-2 shadow-button shadow-button-elevated h-[174px] w-[174px] flex items-center justify-center"
+              class="rounded-16 p-3 mr-2 shadow-button shadow-button-elevated print:shadow-none print:border-1 print:border-outline h-[174px] w-[174px] flex items-center justify-center"
             >
               <div v-show="!isLoadingQRCode" ref="qrCode"></div>
               <!-- Loading QR Placeholder -->
