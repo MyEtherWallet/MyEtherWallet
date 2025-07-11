@@ -19,7 +19,7 @@ export const useQR = () => {
       type: 'extra-rounded' as DotType,
     },
     cornersDotOptions: {
-      color: 'rgb(0,90,229,1',
+      color: 'rgb(0,90,229,1)',
       type: 'extra-rounded' as DotType,
     },
     backgroundOptions: {

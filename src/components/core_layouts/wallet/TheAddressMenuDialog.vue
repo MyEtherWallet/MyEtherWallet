@@ -27,7 +27,7 @@
             </app-btn-copy>
             <!-- Block Explorer Link -->
             <a
-              :href="`https://www.ethvm.com/address/${walletAddress}`"
+              :href="getExplorerLink"
               :aria-label="$t('view_in_block_explorer')"
               target="_blank"
               class="rounded-full !cursor-pointer min-w-8 h-8 flex items-center justify-center hoverNoBG"
@@ -147,6 +147,7 @@ import {
   ArrowPathIcon,
 } from '@heroicons/vue/24/outline'
 import { ROUTES_MAIN, ROUTES_SEND } from '@/router/routeNames'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const store = useWalletStore()
 const { setTokens, setIsLoadingBalances } = store
@@ -210,4 +211,17 @@ const closeDialog = () => {
 const openDeposit = () => {
   openDepositDialog.value = true
 }
+
+/** -------------------------------
+ * Explorer Link
+ -------------------------------*/
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+const getExplorerLink = computed(() => {
+  return selectedChain.value?.blockExplorerAddr.replace(
+    '[[address]]',
+    walletAddress.value || '',
+  )
+})
 </script>

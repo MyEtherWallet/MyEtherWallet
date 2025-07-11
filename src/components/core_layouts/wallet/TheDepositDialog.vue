@@ -64,7 +64,7 @@
           </app-btn-copy>
           <!-- Block Explorer Link -->
           <a
-            :href="`https://www.ethvm.com/address/${walletAddress}`"
+            :href="getExplorerLink"
             :aria-label="$t('view_in_block_explorer')"
             target="_blank"
             class="rounded-full !cursor-pointer min-w-8 h-8 flex items-center justify-center hoverNoBG"
@@ -86,7 +86,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import { defineModel, watch } from 'vue'
+import { defineModel, watch, computed } from 'vue'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
@@ -111,4 +111,11 @@ watch(
     if (openDialog.value) setQRCode(walletAddress.value || undefined)
   },
 )
+
+const getExplorerLink = computed(() => {
+  return selectedChain.value?.blockExplorerAddr.replace(
+    '[[address]]',
+    walletAddress.value || '',
+  )
+})
 </script>

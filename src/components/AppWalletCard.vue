@@ -28,9 +28,8 @@
               {{ truncateAddress(walletAddress, 6) }}
             </p>
           </div>
-          <!-- TODO: add proper link per chain-->
           <a
-            :href="`https://www.ethvm.com/address/${walletAddress}`"
+            :href="getExplorerLink"
             :aria-label="$t('view_in_block_explorer')"
             target="_blank"
             class="rounded-[8px] !cursor-pointer p-1 flex items-center justify-center backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
@@ -89,7 +88,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import TheAddressMenuDialog from '@/components/core_layouts/wallet/TheAddressMenuDialog.vue'
 import TheDepositDialog from './core_layouts/wallet/TheDepositDialog.vue'
@@ -104,6 +103,7 @@ import {
 import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
@@ -118,6 +118,8 @@ const {
   isLoadingBalances,
   walletCardWasAnimated,
 } = storeToRefs(walletStore)
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 /**
  * Copies the copyValue to the clipboard.
@@ -164,6 +166,13 @@ const animateMewCard = (event: Event) => {
   })
   walletCardWasAnimated.value = true
 }
+
+const getExplorerLink = computed(() => {
+  return selectedChain.value?.blockExplorerAddr.replace(
+    '[[address]]',
+    walletAddress.value || '',
+  )
+})
 </script>
 <style scoped>
 .drop-shadow {
