@@ -99,6 +99,7 @@
           </div>
           <button
             class="shadow-button shadow-button-elevated rounded-16 p-3 mt-6 hoverNoBG w-full"
+            @click="openPaperWalletDialog = true"
           >
             <p class="text-s-14">{{ $t('view_paper_wallet') }}</p>
           </button>
@@ -121,6 +122,7 @@
       </template>
     </app-dialog>
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
+    <the-paper-wallet v-model:is-open="openPaperWalletDialog" />
   </div>
 </template>
 
@@ -135,6 +137,7 @@ import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import ThePaperWallet from './ThePaperWallet.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
@@ -162,6 +165,8 @@ const {
 /** -------------------------------
  * Dialog
  -------------------------------*/
+
+const openPaperWalletDialog = ref(false) //paper wallet dialog
 const openDepositDialog = ref(false) //deposit dialog
 
 const openDialog = defineModel<boolean>('openDialog', {
