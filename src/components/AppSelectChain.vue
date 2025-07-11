@@ -148,6 +148,10 @@ const prop = defineProps({
     type: Boolean,
     default: true,
   },
+  sameType: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits(['update:selectedChain'])
@@ -248,7 +252,7 @@ const setOpenDialog = (value: boolean) => {
  -------------------------------*/
 const searchInput = ref('')
 const searchResults = computed(() => {
-  const chainsToSearch = prop.isBtnGroup
+  const chainsToSearch = !prop.sameType
     ? displayedChains.value
     : displayedChains.value.filter(chain => {
         return chain.type === storeSelectedChain.value?.type
