@@ -16,7 +16,7 @@
         type="text"
         autoComplete="off"
         placeholder="0.0"
-        v-model.number="amount"
+        v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
