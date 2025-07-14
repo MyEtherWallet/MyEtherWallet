@@ -9,10 +9,10 @@
     >
       <div
         v-if="isOpen"
-        class="bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll z-[102] fixed"
+        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll z-[102] fixed"
       >
         <div
-          class="paper-wallet bg-white print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
+          class="bg-white print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
         >
           <div class="flex justify-between items-center my-6 ml-3 mr-5">
             <img
@@ -29,10 +29,13 @@
               Paper Wallet
             </h1>
             <button
-              class="sm:-mr-4 min-w-[32px] ml-auto print:none"
+              class="sm:-mr-4 min-w-[32px] ml-auto"
               @click="setIsOpen(false)"
             >
-              <app-btn-icon-close @click="setIsOpen(false)" />
+              <app-btn-icon-close
+                @click="setIsOpen(false)"
+                class="print:hidden"
+              />
             </button>
           </div>
 
@@ -98,7 +101,7 @@
             </div>
           </div>
           <div
-            class="flex justify-center items-center mx-6 mb-6 mt-10 print:none"
+            class="flex justify-center items-center mx-6 mb-6 mt-10 print:hidden"
           >
             <app-base-button @click="print">Print</app-base-button>
           </div>
@@ -152,10 +155,49 @@ watch(
     if (isOpen.value) setQRCode(walletAddress.value || undefined)
   },
 )
-
 const print = async () => {
-  nextTick(() => {
-    window.print()
+  const element = document.querySelector('.paper-wallet')
+  if (!element) {
+    console.error('Paper wallet element not found')
+    return
+  }
+
+  const printWindow = window.open('', '_blank', 'width=800,height=600')
+  if (!printWindow) {
+    console.error('Failed to open print window')
+    return
+  }
+  await nextTick()
+  // Copy all stylesheets and style tags
+  let styles = ''
+  // Copy <style> tags
+  document.querySelectorAll('style').forEach(style => {
+    console.log('Copying style:', style)
+    styles += style.outerHTML
   })
+  // Copy <link rel="stylesheet"> tags
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+    console.log('Copying link:', link)
+    styles += link.outerHTML
+  })
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>MyEtherWallet</title>
+        ${styles}
+      </head>
+      <body>
+        <div>${element.outerHTML}</div>
+      </body>
+    </html>
+  `)
+  printWindow.document.close()
+  printWindow.focus()
+  // Wait for content to load before printing
+  printWindow.onload = () => {
+    printWindow.print()
+    printWindow.close()
+  }
 }
 </script>
