@@ -44,7 +44,7 @@
       :networkFeeCrypto="networkFeeCrypto"
       :network="selectedChain || null"
       :to-token="tokenSelected"
-      :to-amount="amount.toString()"
+      :to-amount="new BigNumber(amount).toFixed()"
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
@@ -158,7 +158,7 @@ const amountToFiat = computed(() => {
   if (isLoadingBalances.value || !tokenSelected.value?.price) return '0'
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
-    .toString()
+    .toFixed()
 })
 
 watch(
