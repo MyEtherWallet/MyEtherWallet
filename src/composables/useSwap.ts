@@ -12,11 +12,11 @@ import type { Chain } from '@/mew_api/types'
 
 // TODO: Import types from @enkryptcom/swap
 
-interface NewTokenInfo extends Omit<TokenType, 'balance'> {
+export interface NewTokenInfo extends Omit<TokenType, 'balance'> {
   balance?: string;
 }
 
-interface ToTokenType {
+export interface ToTokenType {
   top: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
   trending: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
   all: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
@@ -72,7 +72,8 @@ export const useSwap = (): {
           if (chain) return chain
         })
         .filter((chain): chain is Chain => chain !== undefined)
-      fromTokens.value = allFromTokens.all.map((token) => {
+      // tokens.value length being 0 most likely means the user has not connected their wallet yet
+      fromTokens.value = tokens.value.length > 0 ? allFromTokens.all.map((token) => {
         const tokenBalance = tokens.value.find(
           (t) => t.contract.toLowerCase() === token.address.toLowerCase()
         )
@@ -80,7 +81,12 @@ export const useSwap = (): {
           ...token,
           balance: tokenBalance ? tokenBalance.balance : '0',
         } as NewTokenInfo
-      }).filter((token => token !== undefined)) as NewTokenInfo[]
+      }).filter((token => token !== undefined)) as NewTokenInfo[] : allFromTokens.all.map((token) => {
+        return {
+          ...token,
+          balance: '0',
+        } as NewTokenInfo
+      })
       swapLoaded.value = true
     } catch (error) {
       console.log(error)

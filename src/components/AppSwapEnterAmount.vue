@@ -51,7 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import { type TokenBalance } from '@/mew_api/types'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
@@ -79,8 +78,12 @@ const props = defineProps({
     default: false,
   },
   tokens: {
-    type: Array as () => NewTokenInfo[],
+    type: Array as () => NewTokenInfo[] | null,
     default: () => [],
+  },
+  showBalance: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -90,7 +93,7 @@ const amount = defineModel('amount', {
   required: true,
 })
 
-const selectedToken = defineModel<TokenBalance | NewTokenInfo>('selectedToken')
+const selectedToken = defineModel<NewTokenInfo>('selectedToken')
 
 const error = defineModel('error', {
   type: String,
@@ -99,16 +102,10 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
-  let address: string | undefined
-  if ('contract' in (selectedToken.value || {})) {
-    address = (selectedToken.value as TokenBalance).contract
-  } else if ('address' in (selectedToken.value || {})) {
-    address = (selectedToken.value as NewTokenInfo).address
-  }
-  return walletStore.getTokenBalance(address || MAIN_TOKEN_CONTRACT)
+  return walletStore.getTokenBalance(
+    (selectedToken.value as NewTokenInfo).address || MAIN_TOKEN_CONTRACT,
+  )
 })
-
-console.log(tokenBalanceRaw.value)
 
 const isLoading = computed(() => {
   return !props.externalLoading || storeLoading.value

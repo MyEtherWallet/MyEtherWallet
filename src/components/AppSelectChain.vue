@@ -194,27 +194,13 @@ const shownChains = computed<Chain[]>(() => {
   return [...defaultChains.value, selectedChain.value]
 })
 
-/**
- * @description Watch for the chains to be loaded and set the default chains and selected chain
- */
-watch(
-  () => isLoadedChains.value,
-  () => {
-    if (isLoadedChains.value) {
-      defaults.forEach(chainName => {
-        const chain = displayedChains.value.find(c => c.name === chainName)
-        if (chain) {
-          defaultChains.value.push(chain)
-        }
-      })
-      const preselected = displayedChains.value.find(
-        chain => chain.name === selectedChainStore.value,
-      )
-      selectedChain.value = preselected ?? defaultChains.value[0]
-    }
-  },
-  { immediate: true },
-)
+/** -------------------------------
+ * Dialog
+ -------------------------------*/
+const openDialog = ref(false)
+const setOpenDialog = (value: boolean) => {
+  openDialog.value = value
+}
 
 /**
  * @description Set the selected chain in component and store, closes the dialog if open
@@ -233,19 +219,39 @@ const setSelectedChain = (chain: Chain) => {
     } else {
       emits('update:selectedChain', chain)
     }
+  } else {
+    emits('update:selectedChain', chain)
   }
 
   if (openDialog.value) {
     setOpenDialog(false)
   }
 }
-/** -------------------------------
- * Dialog
- -------------------------------*/
-const openDialog = ref(false)
-const setOpenDialog = (value: boolean) => {
-  openDialog.value = value
-}
+
+/**
+ * @description Watch for the chains to be loaded and set the default chains and selected chain
+ */
+watch(
+  () => isLoadedChains.value,
+  () => {
+    if (isLoadedChains.value) {
+      defaults.forEach(chainName => {
+        const chain = displayedChains.value.find(c => c.name === chainName)
+        if (chain) {
+          defaultChains.value.push(chain)
+        }
+      })
+      const preselected = displayedChains.value.find(
+        chain => chain.name === selectedChainStore.value,
+      )
+      selectedChain.value = preselected ?? defaultChains.value[0]
+      if (!prop.canStore) {
+        emits('update:selectedChain', selectedChain.value)
+      }
+    }
+  },
+  { immediate: true },
+)
 
 /** -------------------------------
  * Search
