@@ -6,6 +6,7 @@
     has-content-gutter
   >
     <template #content>
+      <!--TODO: add animation for tx completion and emit an event that tx was sent out -->
       <div class="flex flex-col gap-2 xs:gap-3">
         <div class="text-info text-s-17">
           {{ $t('verify-tx.description') }}
@@ -268,7 +269,7 @@ interface EvmTxType {
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
-
+const emit = defineEmits(['tx-sent'])
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
@@ -327,6 +328,7 @@ const confirmTransaction = async () => {
   signing.value = false
   openModal.value = false
   model.value = false
+  emit('tx-sent')
 }
 
 const formatFee = computed(() => {

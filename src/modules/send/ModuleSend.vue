@@ -48,6 +48,7 @@
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
+      @tx-sent="resetSendModule"
     />
   </div>
 </template>
@@ -223,16 +224,11 @@ watch(
   },
 )
 
-watch(
-  () => openTxModal.value,
-  (value: boolean) => {
-    if (!value) {
-      amount.value = '0'
-      toAddress.value = ''
-      signedTx.value = ''
-    }
-  },
-)
+const resetSendModule = () => {
+  amount.value = '0'
+  toAddress.value = ''
+  signedTx.value = ''
+}
 
 // toast store
 const toastStore = useToastStore()
