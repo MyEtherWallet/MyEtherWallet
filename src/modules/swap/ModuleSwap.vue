@@ -29,6 +29,7 @@
       <app-select-chain
         :can-store="false"
         :passed-chains="toChains"
+        :preselected-chain="swapValues?.toChain"
         @update:selected-chain="setToChain"
       />
       <app-swap-enter-amount
@@ -59,17 +60,13 @@
       Swap</app-base-button
     >
     <div class="w-full max-w-[478px] mx-auto" v-else>
-      <router-link
-        :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-        class="w-full max-w-[478px]"
+      <app-base-button
+        class="w-full"
+        :disabled="swapLoaded && !supportedNetwork"
+        @click="connectWalletForSwap"
       >
-        <app-base-button
-          class="w-full"
-          :disabled="swapLoaded && !supportedNetwork"
-        >
-          Connect Wallet</app-base-button
-        >
-      </router-link>
+        Connect Wallet</app-base-button
+      >
     </div>
   </div>
   <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
@@ -102,9 +99,13 @@ import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
 import { type ProviderQuoteResponse } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
+import { useInputStore } from '@/stores/inputStore'
+import { useRouter } from 'vue-router'
 
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
+const inputStore = useInputStore()
+const router = useRouter()
 
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const { selectedChain } = storeToRefs(chainsStore)
@@ -117,6 +118,8 @@ const {
   toTokens,
   getQuote,
 } = useSwap()
+const { hasSwapValues, swapValues } = storeToRefs(inputStore)
+const { storeSwapValues } = inputStore
 
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
@@ -125,36 +128,62 @@ const selectedToChain: Ref<Chain | null> = ref(null)
 const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
 
-onMounted(async () => {
-  await initSwapper()
-  setFromToken()
-  setToToken()
-})
-
 const setToToken = () => {
-  const enkryptEnum = chainToEnum[selectedToChain.value?.name || '']
-  localToTokens.value = toTokens.value?.all[enkryptEnum]
-  if (toTokens.value && toTokens.value.all[enkryptEnum]?.length > 0) {
-    const sameNetworks =
-      selectedToChain.value?.name === selectedChain.value?.name
-    toTokenSelected.value =
-      toTokens.value.trending?.length > 0
-        ? toTokens.value.trending[enkryptEnum][sameNetworks ? 1 : 0]
-        : toTokens.value.all[enkryptEnum][sameNetworks ? 1 : 0] // Default to first token
+  if (!hasSwapValues.value) {
+    const enkryptEnum = chainToEnum[selectedToChain.value?.name || '']
+    localToTokens.value = toTokens.value?.all[enkryptEnum]
+    if (toTokens.value && toTokens.value.all[enkryptEnum]?.length > 0) {
+      const sameNetworks =
+        selectedToChain.value?.name === selectedChain.value?.name
+      toTokenSelected.value =
+        toTokens.value.trending?.length > 0
+          ? toTokens.value.trending[enkryptEnum][sameNetworks ? 1 : 0]
+          : toTokens.value.all[enkryptEnum][sameNetworks ? 1 : 0] // Default to first token
+    }
+  } else {
+    // check if swapValue to token is in toTokens
+    const enkryptEnum = chainToEnum[selectedToChain.value?.name || '']
+    const toToken = toTokens.value?.all[enkryptEnum]?.find(
+      (token: NewTokenInfo) =>
+        token.address === swapValues.value.toToken.address,
+    )
+    if (toToken) {
+      toTokenSelected.value = toToken
+    } else {
+      // If not found, default to the first token
+      toTokenSelected.value =
+        toTokens.value?.all[enkryptEnum]?.length > 0
+          ? toTokens.value.all[enkryptEnum][0]
+          : undefined
+    }
   }
 }
 
 const setFromToken = () => {
-  if (fromTokens.value && fromTokens.value.length > 0) {
-    const findFirstToken = fromTokens.value.find(
-      (token: NewTokenInfo) => token.address === MAIN_TOKEN_CONTRACT,
-    )
-    if (findFirstToken) {
-      fromTokenSelected.value = findFirstToken // Default to MEW token if available
-    } else {
+  if (!hasSwapValues.value) {
+    if (fromTokens.value && fromTokens.value.length > 0) {
+      const findFirstToken = fromTokens.value.find(
+        (token: NewTokenInfo) => token.address === MAIN_TOKEN_CONTRACT,
+      )
+      if (findFirstToken) {
+        fromTokenSelected.value = findFirstToken // Default to MEW token if available
+      } else {
+        fromTokenSelected.value = fromTokens.value[0] // Default to first token
+      }
       fromTokenSelected.value = fromTokens.value[0] // Default to first token
     }
-    fromTokenSelected.value = fromTokens.value[0] // Default to first token
+  } else {
+    // check if swapValue from token is in fromTokens
+    const fromToken = fromTokens.value.find(
+      (token: NewTokenInfo) =>
+        token.address === swapValues.value.fromToken.address,
+    )
+    if (fromToken) {
+      fromTokenSelected.value = fromToken
+    } else {
+      // If not found, default to the first token
+      fromTokenSelected.value = fromTokens.value[0]
+    }
   }
 }
 
@@ -177,9 +206,25 @@ const toAddress = computed(() => {
 })
 
 const setToChain = (chain: Chain) => {
+  if (hasSwapValues.value) {
+    selectedToChain.value = swapValues.value.toChain
+    return
+  }
   // Logic to set the selected chain for the "To" section
   selectedToChain.value = chain
   setToToken()
+}
+
+const connectWalletForSwap = () => {
+  storeSwapValues({
+    fromToken: fromTokenSelected.value as NewTokenInfo,
+    toToken: toTokenSelected.value as NewTokenInfo,
+    toChain: selectedToChain.value as Chain,
+    fromAmount: fromAmount.value as string,
+  })
+  router.push({
+    name: ROUTES_ACCESS.ACCESS.NAME,
+  })
 }
 
 const swapButton = () => {
@@ -298,4 +343,14 @@ watch(
     }
   },
 )
+
+onMounted(async () => {
+  await initSwapper()
+  setFromToken()
+  setToToken()
+
+  if (hasSwapValues.value) {
+    fromAmount.value = swapValues.value.fromAmount
+  }
+})
 </script>

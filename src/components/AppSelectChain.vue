@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
@@ -151,6 +151,10 @@ const prop = defineProps({
   sameType: {
     type: Boolean,
     default: false,
+  },
+  preselectedChain: {
+    type: Object as () => Chain | null,
+    default: null,
   },
 })
 
@@ -192,6 +196,23 @@ const shownChains = computed<Chain[]>(() => {
     return [...defaultChains.value, lastSelectedChain.value]
   }
   return [...defaultChains.value, selectedChain.value]
+})
+
+onMounted(() => {
+  // If preselected chain is provided, set it as selected
+  if (prop.preselectedChain) {
+    const preselected = displayedChains.value.find(
+      chain => chain.name === prop.preselectedChain?.name,
+    )
+    if (preselected) {
+      selectedChain.value = preselected
+      if (prop.canStore) {
+        setSelectedChainStore(preselected.name)
+      } else {
+        emits('update:selectedChain', preselected)
+      }
+    }
+  }
 })
 
 /** -------------------------------
