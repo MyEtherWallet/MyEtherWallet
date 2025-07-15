@@ -104,6 +104,8 @@ import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
 import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
+import { type ProviderQuoteResponse } from '@enkryptcom/swap'
+import { fromBase } from '@/utils/unit'
 
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
@@ -126,6 +128,7 @@ const swapInitiatedOpen = ref(false)
 const selectedToChain: Ref<Chain | null> = ref(null)
 const localToTokens = ref<NewTokenInfo[] | null>(null)
 const userToAddress = ref<string>('')
+const providers = ref<ProviderQuoteResponse[]>([])
 
 onMounted(async () => {
   await initSwapper()
@@ -235,21 +238,68 @@ const checkToAmountForError = () => {
   else toAmountError.value = ''
 }
 
+// set to values
 watch(
-  () => fromAmount.value,
-  amount => {
+  () => providers.value,
+  () => {
+    if (providers.value.length > 0) {
+      // Set the toTokenSelected based on the first provider's toTokenAmount
+      toAmount.value = fromBase(
+        providers.value[0].toTokenAmount,
+        toTokenSelected.value?.decimals || 18,
+      )
+    }
+  },
+)
+
+// Watch for changes in fromAmount, fromTokenSelected, userAddress, and toAddress
+watch(
+  () => [
+    fromAmount.value,
+    fromTokenSelected.value,
+    userAddress.value,
+    toAddress.value,
+  ],
+  async () => {
     if (
-      (!BigNumber(amount).isNaN() || !BigNumber(amount).isZero()) &&
+      !BigNumber(fromAmount.value).isNaN() &&
+      !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      // fetch quotes only if toTokenSelected.value is defined
-      getQuote({
+      // fetch quotes only if fromTokenSelected.value is defined
+      const quotes = await getQuote({
         fromToken: fromTokenSelected.value,
         toToken: toTokenSelected.value,
-        amount: amount.toString(),
+        amount: fromAmount.value,
         fromAddress: userAddress.value,
         toAddress: toAddress.value,
       })
+
+      // Combine sorting logic into a single sort function
+      const combinedSort = (
+        a: ProviderQuoteResponse,
+        b: ProviderQuoteResponse,
+      ) => {
+        // Then by lowest additionalNativeFees
+        const feeDiff = new BigNumber(a.additionalNativeFees)
+          .minus(new BigNumber(b.additionalNativeFees))
+          .toNumber()
+        if (feeDiff !== 0) return feeDiff
+
+        // Then by lowest totalGaslimit
+        const totalGasLimitDiff = new BigNumber(a.totalGaslimit)
+          .minus(new BigNumber(b.totalGaslimit))
+          .toNumber()
+        if (totalGasLimitDiff !== 0) return totalGasLimitDiff
+
+        // Sort by highest toTokenAmount first
+        return new BigNumber(b.toTokenAmount)
+          .minus(new BigNumber(a.toTokenAmount))
+          .toNumber()
+      }
+
+      providers.value =
+        quotes && quotes.length > 0 ? quotes.sort(combinedSort) : []
     }
   },
 )

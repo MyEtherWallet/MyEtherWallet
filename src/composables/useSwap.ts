@@ -10,7 +10,7 @@ import type { TokenType, TokenTypeTo, SupportedNetworkName, ProviderQuoteRespons
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
 import BN from 'bn.js'
-import { toWei } from 'web3-utils';
+import { toBase } from '@/utils/unit'
 
 // TODO: Import types from @enkryptcom/swap
 
@@ -30,7 +30,7 @@ export interface ToTokenType {
 export interface QuoteParam {
   fromAddress: string;
   toAddress: string;
-  amount: string;
+  amount: string | number;
   fromToken: NewTokenInfo;
   toToken: NewTokenInfo;
 }
@@ -113,12 +113,13 @@ export const useSwap = (): {
     if (!swapInstance.value) {
       return undefined;
     }
-    const rawAmount = new BN(toWei(params.amount, 'ether'));
+    const rawAmount = toBase(params.amount, params.fromToken.decimals || 18,) // Default to 18 decimals if not specified);
+    console.log('rawAmount', rawAmount)
     return swapInstance.value.getQuotes(
       {
         fromAddress: params.fromAddress,
         toAddress: params.toAddress,
-        amount: rawAmount,
+        amount: new BN(rawAmount),
         fromToken: params.fromToken as TokenType,
         toToken: params.toToken as TokenTypeTo
       }
