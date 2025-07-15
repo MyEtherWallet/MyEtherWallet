@@ -58,7 +58,7 @@ const numberToString = (arg: string | number | BigNumber) => {
  * @returns String
  */
 
-const fromBase = (weiInput: string | number, decimals: number, optionsInput: { pad?: boolean, commify?: boolean }) => {
+const fromBase = (weiInput: string | number, decimals: number, optionsInput?: { pad?: boolean, commify?: boolean }) => {
   let wei = new BN(weiInput)
   const negative = wei.lt(zero)
   const base = getValueOfUnit(decimals)

@@ -44,9 +44,6 @@
       />
     </div>
     <div class="pt-4"></div>
-    <div v-if="isCrossChain">
-      <app-address-book v-model="userToAddress" class="mb-[2px]" />
-    </div>
     <div v-if="swapLoaded && !supportedNetwork" class="text-error text-center">
       <p class="text-s-16">
         The selected from network does not support swaps. Please select a
@@ -101,7 +98,6 @@ import { chainToEnum } from '@/providers/ethereum/chainToEnum.ts'
 import { useChainsStore } from '@/stores/chainsStore'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
-import AppAddressBook from '@/components/AppAddressBook.vue'
 import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
 import { type ProviderQuoteResponse } from '@enkryptcom/swap'
@@ -127,7 +123,6 @@ const bestOfferSelectionOpen = ref(false)
 const swapInitiatedOpen = ref(false)
 const selectedToChain: Ref<Chain | null> = ref(null)
 const localToTokens = ref<NewTokenInfo[] | null>(null)
-const userToAddress = ref<string>('')
 const providers = ref<ProviderQuoteResponse[]>([])
 
 onMounted(async () => {
@@ -163,11 +158,11 @@ const setFromToken = () => {
   }
 }
 
-const isCrossChain = computed(() => {
-  return (
-    selectedChain.value?.type === 'EVM' && selectedToChain.value?.type !== 'EVM'
-  )
-})
+// const isCrossChain = computed(() => {
+//   return (
+//     selectedChain.value?.type === 'EVM' && selectedToChain.value?.type !== 'EVM'
+//   )
+// })
 
 const userAddress = computed(() => {
   return walletAddress.value || '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
@@ -178,7 +173,7 @@ const toAddress = computed(() => {
     return userAddress.value
   }
 
-  return userToAddress.value || '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+  return '0x'
 })
 
 const setToChain = (chain: Chain) => {
@@ -245,7 +240,7 @@ watch(
     if (providers.value.length > 0) {
       // Set the toTokenSelected based on the first provider's toTokenAmount
       toAmount.value = fromBase(
-        providers.value[0].toTokenAmount,
+        providers.value[0].toTokenAmount.toString(),
         toTokenSelected.value?.decimals || 18,
       )
     }
