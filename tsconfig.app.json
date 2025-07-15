@@ -6,7 +6,12 @@
 // this config).
 {
   // Only non-test source files
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "./node_modules/types-bn/index.d.ts"
+  ],
   "exclude": ["src/**/__tests__/*", "v6/*"],
   "compilerOptions": {
     // Project

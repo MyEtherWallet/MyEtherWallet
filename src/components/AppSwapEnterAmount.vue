@@ -17,13 +17,14 @@
         autoComplete="off"
         placeholder="0.0"
         v-model.number="amount"
+        :readonly="readonly"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select
+      <app-swap-token-select
         v-model:selected-token="selectedToken"
         :external-loading="isLoading"
-        :tokens="tokens"
+        :chain-tokens="tokens || []"
       />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
@@ -41,6 +42,7 @@
               'text-sm text-info transition-colors',
               { 'text-primary': inFocusInput },
             ]"
+            v-if="showBalance"
           >
             {{ $t('common.balance') }}: {{ balance }}
           </div>
@@ -55,7 +57,7 @@ import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
-import AppTokenSelect from './AppTokenSelect.vue'
+import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import {
@@ -85,6 +87,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 //String will be returned when input is cleared --> ''
@@ -103,7 +109,7 @@ const error = defineModel('error', {
 
 const tokenBalanceRaw = computed(() => {
   return walletStore.getTokenBalance(
-    (selectedToken.value as NewTokenInfo).address || MAIN_TOKEN_CONTRACT,
+    (selectedToken.value as NewTokenInfo)?.address || MAIN_TOKEN_CONTRACT,
   )
 })
 
@@ -112,6 +118,9 @@ const isLoading = computed(() => {
 })
 
 const balanceFiatOrError = computed(() => {
+  if (!props.showBalance) {
+    return `$ ${selectedToken.value?.price}` || '$ 0.00'
+  }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),

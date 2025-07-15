@@ -6,21 +6,35 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { supportedSwapEnums, enumToChain } from '@/providers/ethereum/chainToEnum'
 import Swapper, { WalletIdentifier } from '@enkryptcom/swap'
-import type { TokenType, TokenTypeTo, SupportedNetworkName } from '@enkryptcom/swap'
+import type { TokenType, TokenTypeTo, SupportedNetworkName, ProviderQuoteResponse } from '@enkryptcom/swap'
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
+import BN from 'bn.js'
+import { toWei } from 'web3-utils';
 
 // TODO: Import types from @enkryptcom/swap
 
-export interface NewTokenInfo extends Omit<TokenType, 'balance'> {
+// Done to temporarily override balance type with string instead of BN
+export interface NewTokenInfo extends Omit<TokenTypeTo, 'balance'> {
   balance?: string;
 }
+
+
 
 export interface ToTokenType {
   top: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
   trending: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
   all: Record<SupportedNetworkName, TokenTypeTo[]> | Record<string, never>;
 }
+
+export interface QuoteParam {
+  fromAddress: string;
+  toAddress: string;
+  amount: string;
+  fromToken: NewTokenInfo;
+  toToken: NewTokenInfo;
+}
+
 
 export const useSwap = (): {
   initSwapper: () => Promise<void>;
@@ -29,6 +43,7 @@ export const useSwap = (): {
   fromTokens: Ref<NewTokenInfo[] | null>;
   toChains: Ref<Chain[]>;
   swapLoaded: Ref<boolean>;
+  getQuote: (params: QuoteParam) => Promise<ProviderQuoteResponse[] | undefined>;
 } => {
   const chainsStore = useChainsStore()
   const globalStore = useGlobalStore()
@@ -88,9 +103,26 @@ export const useSwap = (): {
         } as NewTokenInfo
       })
       swapLoaded.value = true
+      return Promise.resolve()
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const getQuote = async (params: QuoteParam): Promise<ProviderQuoteResponse[] | undefined> => {
+    if (!swapInstance.value) {
+      return undefined;
+    }
+    const rawAmount = new BN(toWei(params.amount, 'ether'));
+    return swapInstance.value.getQuotes(
+      {
+        fromAddress: params.fromAddress,
+        toAddress: params.toAddress,
+        amount: rawAmount,
+        fromToken: params.fromToken as TokenType,
+        toToken: params.toToken as TokenTypeTo
+      }
+    );
   }
 
   watch(
@@ -109,6 +141,7 @@ export const useSwap = (): {
     toTokens,
     fromTokens,
     toChains,
-    swapLoaded
+    swapLoaded,
+    getQuote
   }
 }

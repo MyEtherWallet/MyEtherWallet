@@ -98,6 +98,9 @@ importers:
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
+      types-bn:
+        specifier: ^0.0.1
+        version: 0.0.1
       viem:
         specifier: ^2.29.3
         version: 2.30.5(bufferutil@4.0.9)(typescript@5.6.3)(utf-8-validate@5.0.10)(zod@3.25.36)
@@ -6513,6 +6516,9 @@ packages:
 
   bn.js@4.11.6:
     resolution: {integrity: sha512-XWwnNNFCuuSQ0m3r3C4LE3EiORltHd9M05pq6FOlVeiophzRbMo50Sbz1ehl8K3Z+jw9+vmgnXefY1hz8X+2wA==}
+
+  bn.js@4.11.7:
+    resolution: {integrity: sha512-LxFiV5mefv0ley0SzqkOPR1bC4EbpPx8LkOz5vMe/Yi15t5hzwgO/G+tc7wOtL4PZTYjwHu8JnEiSLumuSjSfA==}
 
   bn.js@4.12.2:
     resolution: {integrity: sha512-n4DSx829VRTRByMRGdjQ9iqsN0Bh4OolPsFnaZBLcbi8iXcB+kJ9s7EnRt4wILZNV3kPLHkRVfOc/HvhC3ovDw==}
@@ -13815,6 +13821,9 @@ packages:
 
   typeforce@1.18.0:
     resolution: {integrity: sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==}
+
+  types-bn@0.0.1:
+    resolution: {integrity: sha512-Kqx+ic862yy/dqXex5M6ZFEf3w1Hwx2yynygY7zhnWw3n58jImSwUlN0JoaWyuCFWfbf12X+7/qiURXYSKv6GA==}
 
   typescript-eslint@8.33.0:
     resolution: {integrity: sha512-5YmNhF24ylCsvdNW2oJwMzTbaeO4bg90KeGtMjUw0AGtHksgEPLRTUil+coHwCfiu4QjVJFnjp94DmU6zV7DhQ==}
@@ -26620,6 +26629,8 @@ snapshots:
 
   bn.js@4.11.6: {}
 
+  bn.js@4.11.7: {}
+
   bn.js@4.12.2: {}
 
   bn.js@5.2.1: {}
@@ -35180,6 +35191,10 @@ snapshots:
       tslib: 2.8.1
 
   typeforce@1.18.0: {}
+
+  types-bn@0.0.1:
+    dependencies:
+      bn.js: 4.11.7
 
   typescript-eslint@8.33.0(eslint@9.27.0(jiti@2.4.2))(typescript@5.6.3):
     dependencies:

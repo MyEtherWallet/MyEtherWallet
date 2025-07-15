@@ -9,8 +9,9 @@
         v-model:error="fromAmountError"
         :validate-input="checkAmountForError"
         :external-loading="swapLoaded && supportedNetwork"
-        class="mt-4"
         :tokens="fromTokens"
+        :show-balance="isWalletConnected"
+        class="mt-4"
       />
     </div>
     <div
@@ -37,10 +38,15 @@
         :validate-input="checkToAmountForError"
         :external-loading="swapLoaded && supportedNetwork"
         :show-balance="false"
+        :tokens="localToTokens"
+        :readonly="true"
         class="mt-4"
       />
     </div>
     <div class="pt-4"></div>
+    <div v-if="isCrossChain">
+      <app-address-book v-model="userToAddress" class="mb-[2px]" />
+    </div>
     <div v-if="swapLoaded && !supportedNetwork" class="text-error text-center">
       <p class="text-s-16">
         The selected from network does not support swaps. Please select a
@@ -79,7 +85,7 @@
 
 <script setup lang="ts">
 import { toWei } from 'web3-utils'
-import { ref, onMounted, Ref } from 'vue'
+import { ref, onMounted, type Ref, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid' // Importing the arrowsUpDown icon from Heroicons
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -95,13 +101,14 @@ import { chainToEnum } from '@/providers/ethereum/chainToEnum.ts'
 import { useChainsStore } from '@/stores/chainsStore'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
-
+import AppAddressBook from '@/components/AppAddressBook.vue'
+import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
 
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
 
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
 const { selectedChain } = storeToRefs(chainsStore)
 const {
   initSwapper,
@@ -110,12 +117,15 @@ const {
   toChains,
   fromTokens,
   toTokens,
+  getQuote,
 } = useSwap()
 
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
 const swapInitiatedOpen = ref(false)
 const selectedToChain: Ref<Chain | null> = ref(null)
+const localToTokens = ref<NewTokenInfo[] | null>(null)
+const userToAddress = ref<string>('')
 
 onMounted(async () => {
   await initSwapper()
@@ -125,11 +135,12 @@ onMounted(async () => {
 
 const setToToken = () => {
   const enkryptEnum = chainToEnum[selectedToChain.value?.name || '']
-  if (toTokens.value && toTokens.value.all[enkryptEnum].length > 0) {
+  localToTokens.value = toTokens.value?.all[enkryptEnum]
+  if (toTokens.value && toTokens.value.all[enkryptEnum]?.length > 0) {
     const sameNetworks =
       selectedToChain.value?.name === selectedChain.value?.name
     toTokenSelected.value =
-      toTokens.value.trending.length > 0
+      toTokens.value.trending?.length > 0
         ? toTokens.value.trending[enkryptEnum][sameNetworks ? 1 : 0]
         : toTokens.value.all[enkryptEnum][sameNetworks ? 1 : 0] // Default to first token
   }
@@ -148,6 +159,24 @@ const setFromToken = () => {
     fromTokenSelected.value = fromTokens.value[0] // Default to first token
   }
 }
+
+const isCrossChain = computed(() => {
+  return (
+    selectedChain.value?.type === 'EVM' && selectedToChain.value?.type !== 'EVM'
+  )
+})
+
+const userAddress = computed(() => {
+  return walletAddress.value || '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+})
+
+const toAddress = computed(() => {
+  if (selectedToChain.value?.type === 'EVM') {
+    return userAddress.value
+  }
+
+  return userToAddress.value || '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
+})
 
 const setToChain = (chain: Chain) => {
   // Logic to set the selected chain for the "To" section
@@ -180,32 +209,48 @@ const checkAmountForError = () => {
     fromAmountError.value = 'Amount is required' // amount is blank
   else if (BigInt(baseAmount) < 0)
     fromAmountError.value = 'Amount must be greater than 0' // amount less than 0
-  else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
+  else if (
+    isWalletConnected.value &&
+    BigInt(baseTokenBalance) < BigInt(baseAmount)
+  )
     fromAmountError.value = 'Insufficient balance' // amount greater than selected balance
   else fromAmountError.value = ''
 }
 
 // To Token models
 const toAmount = ref<number | string>('0')
-const toTokenSelected: Ref<NewTokenInfo | null> = ref(null)
+const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
 const toAmountError = ref('')
 
 // copied from send
 // TODO: consider moving to a shared utility file
 const checkToAmountForError = () => {
   const baseAmount = toAmount.value ? toWei(toAmount.value, 'ether') : 0
-  const tokenSelectedBalance = fromTokenSelected.value.balance
-    ? fromTokenSelected.value.balance
-    : '0'
-  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
 
   // model.value = amount.value
   if (toAmount.value === undefined || toAmount.value === '')
     toAmountError.value = 'Amount is required' // amount is blank
   else if (BigInt(baseAmount) < 0)
     toAmountError.value = 'Amount must be greater than 0' // amount less than 0
-  else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
-    toAmountError.value = 'Insufficient balance' // amount greater than selected balance
   else toAmountError.value = ''
 }
+
+watch(
+  () => fromAmount.value,
+  amount => {
+    if (
+      (!BigNumber(amount).isNaN() || !BigNumber(amount).isZero()) &&
+      toTokenSelected.value
+    ) {
+      // fetch quotes only if toTokenSelected.value is defined
+      getQuote({
+        fromToken: fromTokenSelected.value,
+        toToken: toTokenSelected.value,
+        amount: amount.toString(),
+        fromAddress: userAddress.value,
+        toAddress: toAddress.value,
+      })
+    }
+  },
+)
 </script>
