@@ -28,8 +28,8 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   const removeWallet = () => {
-    wallet.value?.disconnect?.()
-    wallet.value = {} as WalletInterface
+    // wallet.value?.disconnect?.()
+    wallet.value = null
     walletAddress.value = null
     removeTokens()
   }
@@ -148,11 +148,11 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   const getTokenBalance = (contract: string): TokenBalance | null => {
-    if (!tokens.value || tokens.value.length === 0) {
-      return null
-    }
     if (contract.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()) {
       return safeMainTokenBalance.value
+    }
+    if (!tokens.value || tokens.value.length === 0) {
+      return null
     }
     const token = tokens.value.find(
       t => t.contract.toLowerCase() === contract.toLowerCase(),
