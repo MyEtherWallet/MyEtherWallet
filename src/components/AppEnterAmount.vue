@@ -3,15 +3,16 @@
     ref="target"
     class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
     :class="{
-      'border-primary border-2 !p-4': inFocusInput && !error,
-      '!border-error border-2 !p-4': !!error,
+      'border-primary border-2 !p-4':
+        inFocusInput && (!error || !isWalletConnected),
+      '!border-error border-2 !p-4': !!error && isWalletConnected,
     }"
     @click="setInFocusInput"
   >
     <div class="flex justify-between items-center w-full">
       <input
         class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
-        :class="{ 'text-error': !!error }"
+        :class="{ 'text-error': !!error && isWalletConnected }"
         name="amount-input"
         type="text"
         autoComplete="off"
@@ -28,7 +29,10 @@
         <div v-else class="flex justify-between">
           <div
             class="text-sm"
-            :class="{ 'text-error': !!error, 'text-info': !error }"
+            :class="{
+              'text-error': !!error && isWalletConnected,
+              'text-info': !error,
+            }"
           >
             {{ balanceFiatOrError }}
           </div>
@@ -61,7 +65,8 @@ import {
 } from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: isLoading, isWalletConnected } =
+  storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {
@@ -95,12 +100,15 @@ const tokenBalanceRaw = computed(() => {
 })
 
 const balanceFiatOrError = computed(() => {
+  console.log('tokenBalanceRaw', tokenBalanceRaw.value)
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
-  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
+  return error.value && isWalletConnected.value
+    ? error.value
+    : `$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {

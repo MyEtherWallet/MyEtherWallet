@@ -58,6 +58,7 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const safeMainTokenBalance = computed<TokenBalance | null>(() => {
     if (!mainTokenBalance.value && selectedChain.value) {
+      // TODO: fetch the main token price from an API
       return {
         contract: MAIN_TOKEN_CONTRACT,
         decimals: 18, // Default for Ether
