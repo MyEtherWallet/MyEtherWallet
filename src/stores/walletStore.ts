@@ -157,10 +157,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     const token = tokens.value.find(
       t => t.contract.toLowerCase() === contract.toLowerCase(),
     )
-    if (!token) {
-      return null
-    }
-    return token
+    return token || null
   }
 
   /** -------------------------------

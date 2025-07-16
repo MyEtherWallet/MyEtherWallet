@@ -86,6 +86,9 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
+  if (isLoading.value || !selectedToken.value) {
+    return null
+  }
   return walletStore.getTokenBalance(
     selectedToken.value?.contract || MAIN_TOKEN_CONTRACT,
   )

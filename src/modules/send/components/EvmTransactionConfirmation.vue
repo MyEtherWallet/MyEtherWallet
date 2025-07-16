@@ -17,7 +17,7 @@
               class="flex item-center justify-center gap-5 my-5"
               key="confirmation-approve-message"
             >
-              Approve Tx
+              Approve Tx on your device
             </div>
           </div>
         </expand-transition>
