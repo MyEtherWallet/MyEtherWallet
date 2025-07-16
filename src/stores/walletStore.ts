@@ -28,6 +28,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   const removeWallet = () => {
+    wallet.value?.disconnect?.()
     wallet.value = {} as WalletInterface
     walletAddress.value = null
     removeTokens()
@@ -65,6 +66,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         symbol: selectedChain.value.currencyName,
         price: 0, // Price will be set later
         balance: balance.value,
+        balanceWei: balanceWei.value,
       }
     }
     if (mainTokenBalance.value) {
@@ -83,16 +85,22 @@ export const useWalletStore = defineStore('walletStore', () => {
           symbol:
             token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
           balance: fromWei(token.balance, 'ether'),
+          balanceWei: token.balance,
         }
         balance.value = fromWei(token.balance, 'ether')
         balanceWei.value = fromWei(token.balance, 'wei')
       } else {
-        newTokenCopy.push({
-          ...token,
-          name: token.name ?? 'Unknown',
-          symbol: token.symbol ?? 'UNK',
-          balance: fromWei(token.balance, 'ether'),
-        })
+        if (token.decimals) {
+          newTokenCopy.push({
+            ...token,
+            name: token.name ?? 'Unknown',
+            symbol: token.symbol ?? 'UNK',
+            balanceWei: token.balance,
+            balance: BigNumber(token.balance)
+              .div(new BigNumber(10).pow(token.decimals))
+              .toString(),
+          })
+        }
       }
     })
     tokens.value = newTokenCopy

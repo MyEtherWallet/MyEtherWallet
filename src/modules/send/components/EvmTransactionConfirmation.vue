@@ -11,6 +11,16 @@
         <div class="text-info text-s-17">
           {{ $t('verify-tx.description') }}
         </div>
+        <expand-transition>
+          <div v-if="showApproveMessage">
+            <div
+              class="flex item-center justify-center gap-5 my-5"
+              key="confirmation-approve-message"
+            >
+              Approve Tx
+            </div>
+          </div>
+        </expand-transition>
         <div class="flex flex-col gap-1 xs:gap-2 text-wrap break-all">
           <!-- Network -->
           <div
@@ -272,6 +282,7 @@ const model = defineModel()
 const emit = defineEmits(['tx-sent'])
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+const showApproveMessage = ref(false)
 
 // Modal settings
 const openModal = ref(false)
@@ -309,6 +320,10 @@ const confirmTransaction = async () => {
   if (!wallet.value) {
     return
   }
+  showApproveMessage.value = !(
+    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
+    wallet.value?.getWalletType() === WalletType.MNEMONIC
+  )
   signing.value = true
   const txPromise =
     wallet.value?.getWalletType() === WalletType.WAGMI ||
@@ -316,19 +331,27 @@ const confirmTransaction = async () => {
       ? wallet.value?.SendTransaction?.(props.signedTx as HexPrefixedString)
       : wallet.value.broadcastTransaction(props.signedTx as HexPrefixedString)
   // TODO: handle hash for user
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  await txPromise?.then(hash => {
-    toastStore.addToastMessage({
-      type: ToastType.Success,
-      text: t('send.toast.tx-send-success'),
-      duration: 10000,
-    })
-  })
 
+  await txPromise
+    ?.then(hash => {
+      toastStore.addToastMessage({
+        type: ToastType.Success,
+        text: `${t('send.toast.tx-send-success')} ${hash}`,
+        duration: 10000,
+      })
+
+      openModal.value = false
+      model.value = false
+      emit('tx-sent')
+    })
+    .catch(e => {
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: e instanceof Error ? e.message : t('send.toast.failed_to_send'),
+      })
+    })
   signing.value = false
-  openModal.value = false
-  model.value = false
-  emit('tx-sent')
+  showApproveMessage.value = false
 }
 
 const formatFee = computed(() => {
