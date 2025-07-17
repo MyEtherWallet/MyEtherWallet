@@ -2,7 +2,7 @@
   <app-dialog
     v-model:is-open="model"
     title="Swap"
-    class="sm:max-w-[460px] sm:mx-auto h-[535px]"
+    class="sm:max-w-[460px] sm:mx-auto h-[600px]"
   >
     <template #content>
       <div class="mx-4 mb-2">
@@ -103,15 +103,23 @@
             </div>
             <!-- TODO: make library return these values -->
             <!-- <div class="text-s-14 text-grey-50">Price impact: -0.07%</div> -->
-            <!-- <div class="text-s-14 text-grey-50">Max. slippage: 0.5%</div> -->
+            <div class="text-s-14 text-grey-50">
+              Max. slippage: {{ swapInfo?.slippage }}%
+            </div>
             <!-- <div class="text-s-14 text-grey-50">
               Minimum received: 128.345 *tSym*
             </div> -->
-            <div class="text-s-14 text-grey-50">Offer includes 2.5% fee</div>
+            <div class="text-s-14 text-grey-50">
+              Offer includes {{ swapInfo?.fee }}% fee
+            </div>
           </div>
         </div>
         <app-select-tx-fee />
-        <app-base-button class="w-full mt-2" @click="proceedWithSwap">
+        <app-base-button
+          class="w-full mt-12"
+          @click="proceedWithSwap"
+          :loading="isLoading"
+        >
           Proceed with Swap
         </app-base-button>
       </div>
@@ -124,8 +132,11 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ref, watch, computed } from 'vue'
-import { type ProviderQuoteResponse } from '@enkryptcom/swap'
+import { ref, computed } from 'vue'
+import {
+  type ProviderQuoteResponse,
+  type ProviderSwapResponse,
+} from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import BigNumber from 'bignumber.js'
 import { type Chain } from '@/mew_api/types'
@@ -156,33 +167,29 @@ const model = defineModel('swapOfferOpen', {
   default: false,
 })
 
-const props = defineProps({
+const selectedQuote = defineModel('selectedQuote', {
+  type: Object as () => ProviderQuoteResponse,
+})
+
+defineProps({
   quotes: {
     type: Array as () => ProviderQuoteResponse[],
     default: () => [],
   },
   amount: {
-    type: Number,
-    default: 0,
+    type: [String, Number],
+    default: '0',
   },
   toChain: {
     type: Object as () => Chain,
   },
+  swapInfo: {
+    type: Object as () => ProviderSwapResponse,
+  },
 })
 
 const emits = defineEmits(['update:proceedWithSwap'])
-
-const selectedQuote = ref<ProviderQuoteResponse | null>(null)
-
-watch(
-  () => model.value,
-  (newValue: boolean) => {
-    if (newValue) {
-      // Reset selected quote when modal opens
-      selectedQuote.value = props.quotes[0]
-    }
-  },
-)
+const isLoading = ref(false)
 
 const providerName = computed(() => {
   switch (selectedQuote.value?.provider) {
@@ -244,6 +251,7 @@ const toAmountFiat = computed(() => {
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
+  isLoading.value = true
   emits('update:proceedWithSwap', selectedQuote.value?.quote)
 }
 </script>

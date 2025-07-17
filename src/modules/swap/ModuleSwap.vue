@@ -36,7 +36,7 @@
         v-model:selected-token="toTokenSelected"
         v-model:error="toAmountError"
         :validate-input="checkToAmountForError"
-        :external-loading="swapLoaded && supportedNetwork"
+        :external-loading="swapLoaded && supportedNetwork && !isLoadingQuotes"
         :show-balance="false"
         :tokens="localToTokens"
         :readonly="true"
@@ -81,10 +81,12 @@
   <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
   <swap-offer-modal
     v-model:swap-offer-open="bestOfferSelectionOpen"
+    v-model:selected-quote="selectedQuote as ProviderQuoteResponse"
     @update:proceedWithSwap="proceedWithSwap"
     :quotes="providers"
     :amount="fromAmount as number"
     :to-chain="selectedToChain as Chain"
+    :swap-info="swapInfo as ProviderSwapResponse"
   />
   <swap-initiated-modal v-model:swap-initiated-open="swapInitiatedOpen" />
 </template>
@@ -110,7 +112,10 @@ import AppSelectChain from '@/components/AppSelectChain.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
-import { type ProviderQuoteResponse } from '@enkryptcom/swap'
+import {
+  type ProviderQuoteResponse,
+  type ProviderSwapResponse,
+} from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
 import { useRouter } from 'vue-router'
@@ -135,7 +140,7 @@ const {
   getSwap,
 } = useSwap()
 const { hasSwapValues, swapValues } = storeToRefs(inputStore)
-const { storeSwapValues } = inputStore
+const { storeSwapValues, clearSwapValues } = inputStore
 
 const userToAddress = ref<string>('')
 const bestSwapLoadingOpen = ref(false)
@@ -144,6 +149,10 @@ const swapInitiatedOpen = ref(false)
 const selectedToChain: Ref<Chain | null> = ref(null)
 const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
+const isLoadingQuotes = ref(false)
+
+const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
+const selectedQuote = ref<ProviderQuoteResponse | null>(null)
 
 const setToToken = () => {
   if (!hasSwapValues.value) {
@@ -176,13 +185,9 @@ const setToToken = () => {
   }
 }
 
-const proceedWithSwap = async quote => {
+const proceedWithSwap = async () => {
   // Proceed with the swap using the selected quote
-  const { transactions } = await getSwap(quote)
-  for (const transaction of transactions) {
-    // Here you can handle each transaction, e.g., display it or execute it
-    console.log('Transaction:', transaction)
-  }
+  console.log('Proceeding with swap:', swapInfo.value)
 }
 
 const setFromToken = () => {
@@ -200,7 +205,7 @@ const setFromToken = () => {
     }
   } else {
     // check if swapValue from token is in fromTokens
-    const fromToken = fromTokens.value.find(
+    const fromToken = fromTokens.value?.find(
       (token: NewTokenInfo) =>
         token.address === swapValues.value.fromToken.address,
     )
@@ -208,7 +213,7 @@ const setFromToken = () => {
       fromTokenSelected.value = fromToken
     } else {
       // If not found, default to the first token
-      fromTokenSelected.value = fromTokens.value[0]
+      fromTokenSelected.value = fromTokens.value?.[0] as NewTokenInfo
     }
   }
 }
@@ -228,7 +233,7 @@ const toAddress = computed(() => {
     return userAddress.value
   }
 
-  return '0x'
+  return userToAddress.value || '0x'
 })
 
 const setToChain = (chain: Chain) => {
@@ -258,7 +263,6 @@ const swapButton = async () => {
   await fetchQuotes()
   bestSwapLoadingOpen.value = false
   bestOfferSelectionOpen.value = true
-  // swapInitiatedOpen.value = false
 }
 
 // From tokens models
@@ -281,15 +285,7 @@ const checkAmountForError = () => {
   const baseAmount = fromAmount.value
     ? toBase(fromAmount.value, fromTokenSelected.value.decimals)
     : 0
-  // const tokenSelectedBalance = fromTokenSelected.value.balance
-  //   ? fromTokenSelected.value.balance
-  //   : '0'
-  // const baseTokenBalance = toBase(
-  //   tokenSelectedBalance,
-  //   fromTokenSelected.value.decimals,
-  // )
 
-  // model.value = amount.value
   if (fromAmount.value === undefined || fromAmount.value === '')
     fromAmountError.value = 'Amount is required' // amount is blank
   else if (BigInt(baseAmount) < 0)
@@ -313,10 +309,15 @@ const checkToAmountForError = () => {
     toAmountError.value = 'Amount is required' // amount is blank
   else if (BigInt(baseAmount) < 0)
     toAmountError.value = 'Amount must be greater than 0' // amount less than 0
+  else if (providers.value.length === 0)
+    toAmountError.value = 'No quotes available' // no quotes available
   else toAmountError.value = ''
 }
 
 const fetchQuotes = async () => {
+  providers.value = []
+  selectedQuote.value = null
+  isLoadingQuotes.value = true
   // fetch quotes only if fromTokenSelected.value is defined
   const quotes = await getQuote({
     fromToken: fromTokenSelected.value,
@@ -373,7 +374,20 @@ const fetchQuotes = async () => {
             return true
           })
       : []
+  selectedQuote.value = providers.value[0] || null
+  isLoadingQuotes.value = false
 }
+
+// Watch for changes in selectedQuote and update swapInfo
+watch(
+  () => selectedQuote.value,
+  async (provider: ProviderQuoteResponse | null) => {
+    if (provider) {
+      swapInfo.value = await getSwap(provider.quote)
+    }
+  },
+  { deep: true },
+)
 
 // set to values
 watch(
@@ -416,5 +430,6 @@ onMounted(async () => {
   if (hasSwapValues.value) {
     fromAmount.value = swapValues.value.fromAmount
   }
+  clearSwapValues()
 })
 </script>
