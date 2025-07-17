@@ -3,16 +3,15 @@
     ref="target"
     class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
     :class="{
-      'border-primary border-2 !p-4':
-        inFocusInput && (!error || !isWalletConnected),
-      '!border-error border-2 !p-4': !!error && isWalletConnected,
+      'border-primary border-2 !p-4': inFocusInput && !error,
+      '!border-error border-2 !p-4': !!error,
     }"
     @click="setInFocusInput"
   >
     <div class="flex justify-between items-center w-full">
       <input
         class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
-        :class="{ 'text-error': !!error && isWalletConnected }"
+        :class="{ 'text-error': !!error }"
         name="amount-input"
         type="text"
         autoComplete="off"
@@ -21,7 +20,7 @@
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select v-model:selected-token="selectedToken" />
+      <app-token-select v-model:selected-token-contract="selectedToken" />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
@@ -30,7 +29,7 @@
           <div
             class="text-sm"
             :class="{
-              'text-error': !!error && isWalletConnected,
+              'text-error': !!error,
               'text-info': !error,
             }"
           >
@@ -51,7 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import { type TokenBalance } from '@/mew_api/types'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
@@ -65,8 +63,7 @@ import {
 } from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading, isWalletConnected } =
-  storeToRefs(walletStore)
+const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {
@@ -82,7 +79,7 @@ const amount = defineModel('amount', {
   required: true,
 })
 
-const selectedToken = defineModel<TokenBalance>('selectedToken')
+const selectedToken = defineModel<string>('selectedToken')
 
 const error = defineModel('error', {
   type: String,
@@ -94,21 +91,16 @@ const tokenBalanceRaw = computed(() => {
   if (isLoading.value || !selectedToken.value) {
     return null
   }
-  return walletStore.getTokenBalance(
-    selectedToken.value?.contract || MAIN_TOKEN_CONTRACT,
-  )
+  return walletStore.getTokenBalance(selectedToken.value || MAIN_TOKEN_CONTRACT)
 })
 
 const balanceFiatOrError = computed(() => {
-  console.log('tokenBalanceRaw', tokenBalanceRaw.value)
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
-  return error.value && isWalletConnected.value
-    ? error.value
-    : `$ ${formatFiatValue(_balance).value}`
+  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {

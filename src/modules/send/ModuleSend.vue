@@ -7,7 +7,7 @@
         <div class="mb-[25px]">
           <app-enter-amount
             v-model:amount="amount"
-            v-model:selected-token="tokenSelected"
+            v-model:selected-token="tokenSelectedContract"
             v-model:error="amountError"
             :validate-input="checkAmountForError"
           />
@@ -62,11 +62,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
-import type {
-  TokenBalance,
-  QuotesRequestBody,
-  QuotesResponse,
-} from '@/mew_api/types'
+import type { QuotesRequestBody, QuotesResponse } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import { GasPriceType, type HexPrefixedString } from '@/providers/types'
@@ -82,14 +78,14 @@ import { isAddress } from '@/utils/addressUtils'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
-const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
+const { wallet, isWalletConnected, isLoadingBalances } =
   storeToRefs(walletStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const toAddress = ref('')
-const tokenSelected: Ref<TokenBalance | undefined> = ref()
+const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const data = ref('0x')
@@ -106,24 +102,29 @@ const address = ref('')
 onMounted(async () => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
   //AS of Right now, skeleton loader is shown while the chains data is being fetched.
-  tokenSelected.value = safeMainTokenBalance.value || undefined
   if (!wallet.value) return
   address.value = await wallet.value.getAddress()
 })
 
-const checkAmountForError = () => {
-  const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
-  const tokenSelectedBalance = tokenSelected.value?.balance
-    ? tokenSelected.value.balance
-    : '0'
-  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
+const tokenSelected = computed(() => {
+  if (isLoadingBalances.value || !tokenSelectedContract.value) {
+    return null
+  }
+  return walletStore.getTokenBalance(tokenSelectedContract.value)
+})
 
-  // model.value = amount.value
+const checkAmountForError = () => {
+  //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
+  const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
+  const baseTokenBalance = tokenSelected.value?.balanceWei || '0'
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
   else if (BigInt(baseAmount) < 0)
     amountError.value = t('error.amount.less_than_zero') // amount less than 0
-  else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
+  else if (
+    isWalletConnected.value &&
+    BigInt(baseTokenBalance) < BigInt(baseAmount)
+  )
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
   else amountError.value = ''
 }
