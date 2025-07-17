@@ -28,7 +28,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   const removeWallet = () => {
-    wallet.value?.disconnect?.()
+    wallet.value?.disconnect()
     wallet.value = null
     walletAddress.value = null
     removeTokens()

@@ -70,9 +70,6 @@ class PrivateKeyWallet extends BaseEvmWallet {
       toChecksumAddress(bytesToHex(privateToAddress(this.privKey))),
     )
   }
-  override disconnect(): Promise<boolean> {
-    return Promise.resolve(true)
-  }
 }
 
 export default PrivateKeyWallet
