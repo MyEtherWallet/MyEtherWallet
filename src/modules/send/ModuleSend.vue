@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { toWei, fromWei, toBigInt, toHex } from 'web3-utils'
+import { fromWei, toHex } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -174,7 +174,9 @@ watch(
 )
 const amountToHex = computed(() => {
   return data.value === '0x'
-    ? (toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString)
+    ? (toHex(
+        toBase(amount.value, tokenSelected.value?.decimals || 18),
+      ) as HexPrefixedString)
     : '0x0'
 })
 
@@ -184,42 +186,49 @@ watch(
     if (
       tokenSelected.value &&
       tokenSelected.value.contract &&
-      tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT &&
       toAddress.value !== '' &&
       amount.value !== ''
     ) {
-      const web3Contract = new Contract(abi, tokenSelected.value.contract)
-      data.value = web3Contract.methods
-        .transfer(toAddress.value, toWei(amount.value, 'ether'))
-        .encodeABI() //
-    } else {
-      data.value = '0x'
-    }
-    gasFees.value = undefined
-    gasFeeError.value = ''
-    if (!validSend.value) return
-
-    try {
-      isLoadingFees.value = true
-
-      const txData: QuotesRequestBody = {
-        to: toAddress.value as HexPrefixedString,
-        address:
-          (address.value as HexPrefixedString) ||
-          '0x0000000000000000000000000000000000000000',
-        value: amountToHex.value,
-        data: data.value as HexPrefixedString,
+      const isSendingContractToken =
+        tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
+      if (isSendingContractToken) {
+        const web3Contract = new Contract(abi, tokenSelected.value.contract)
+        data.value = web3Contract.methods
+          .transfer(
+            toAddress.value,
+            toBase(amount.value, tokenSelected.value?.decimals || 18),
+          )
+          .encodeABI() //
+      } else {
+        data.value = '0x'
       }
+      gasFees.value = undefined
+      gasFeeError.value = ''
+      if (!validSend.value) return
+      try {
+        isLoadingFees.value = true
 
-      gasFees.value = await wallet.value?.getGasFee(txData)
-      isLoadingFees.value = false
-    } catch (e) {
-      isLoadingFees.value = false
-      //TODO: implement error localization
-      if (e instanceof Error) {
-        if (e.message) gasFeeError.value = e.message
-        else {
-          gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+        const txData: QuotesRequestBody = {
+          to: isSendingContractToken
+            ? tokenSelected.value.contract
+            : (toAddress.value as HexPrefixedString),
+          address:
+            (address.value as HexPrefixedString) ||
+            '0x0000000000000000000000000000000000000000',
+          value: amountToHex.value,
+          data: data.value as HexPrefixedString,
+        }
+
+        gasFees.value = await wallet.value?.getGasFee(txData)
+        isLoadingFees.value = false
+      } catch (e) {
+        isLoadingFees.value = false
+        //TODO: implement error localization
+        if (e instanceof Error) {
+          if (e.message) gasFeeError.value = e.message
+          else {
+            gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+          }
         }
       }
     }
