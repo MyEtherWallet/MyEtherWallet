@@ -2,10 +2,10 @@
   <app-dialog
     v-model:is-open="model"
     title="Swap"
-    class="sm:max-w-[460px] sm:mx-auto h-[600px]"
+    class="sm:max-w-[460px] sm:mx-auto h-[625px]"
   >
     <template #content>
-      <div class="mx-4">
+      <div class="mx-4 mb-2">
         <div
           class="p-4 flex flex-col border border-solid border-grey-outline rounded-lg mb-2"
         >

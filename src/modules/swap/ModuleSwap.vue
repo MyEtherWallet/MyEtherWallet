@@ -227,10 +227,12 @@ const connectWalletForSwap = () => {
   })
 }
 
-const swapButton = () => {
-  // bestSwapLoadingOpen.value = true
-  // bestOfferSelectionOpen.value = true
-  swapInitiatedOpen.value = false
+const swapButton = async () => {
+  bestSwapLoadingOpen.value = true
+  await fetchQuotes()
+  bestSwapLoadingOpen.value = false
+  bestOfferSelectionOpen.value = true
+  // swapInitiatedOpen.value = false
 }
 
 // From tokens models
@@ -278,6 +280,51 @@ const checkToAmountForError = () => {
   else toAmountError.value = ''
 }
 
+const fetchQuotes = async () => {
+  // fetch quotes only if fromTokenSelected.value is defined
+  const quotes = await getQuote({
+    fromToken: fromTokenSelected.value,
+    toToken: toTokenSelected.value,
+    amount: fromAmount.value,
+    fromAddress: userAddress.value,
+    toAddress: toAddress.value,
+  })
+
+  // Combine sorting logic into a single sort function
+  const weightedSort = (provider: ProviderQuoteResponse) => {
+    const weightSortParam = {
+      additionalNativeFees: 0.2,
+      totalGaslimit: 0.3,
+      toTokenAmount: 0.5,
+    }
+    const normalizeAdditionalNativeFees = BigNumber(
+      provider.additionalNativeFees.toString(),
+    ).div(10)
+    const normalizeTotalGaslimit = BigNumber(
+      provider.totalGaslimit.toString(),
+    ).div(100)
+    const normalizeToTokenAmount = BigNumber(
+      provider.toTokenAmount.toString(),
+    ).div(4)
+    return BigNumber(normalizeAdditionalNativeFees)
+      .times(weightSortParam.additionalNativeFees)
+      .plus(
+        BigNumber(normalizeTotalGaslimit).times(weightSortParam.totalGaslimit),
+      )
+      .plus(
+        BigNumber(normalizeToTokenAmount).times(weightSortParam.toTokenAmount),
+      )
+      .toNumber()
+  }
+
+  providers.value =
+    quotes && quotes.length > 0
+      ? quotes.sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
+          return weightedSort(b) - weightedSort(a)
+        })
+      : []
+}
+
 // set to values
 watch(
   () => providers.value,
@@ -306,40 +353,7 @@ watch(
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      // fetch quotes only if fromTokenSelected.value is defined
-      const quotes = await getQuote({
-        fromToken: fromTokenSelected.value,
-        toToken: toTokenSelected.value,
-        amount: fromAmount.value,
-        fromAddress: userAddress.value,
-        toAddress: toAddress.value,
-      })
-
-      // Combine sorting logic into a single sort function
-      const combinedSort = (
-        a: ProviderQuoteResponse,
-        b: ProviderQuoteResponse,
-      ) => {
-        // Then by lowest additionalNativeFees
-        const feeDiff = new BigNumber(a.additionalNativeFees)
-          .minus(new BigNumber(b.additionalNativeFees))
-          .toNumber()
-        if (feeDiff !== 0) return feeDiff
-
-        // Then by lowest totalGaslimit
-        const totalGasLimitDiff = new BigNumber(a.totalGaslimit)
-          .minus(new BigNumber(b.totalGaslimit))
-          .toNumber()
-        if (totalGasLimitDiff !== 0) return totalGasLimitDiff
-
-        // Sort by highest toTokenAmount first
-        return new BigNumber(b.toTokenAmount)
-          .minus(new BigNumber(a.toTokenAmount))
-          .toNumber()
-      }
-
-      providers.value =
-        quotes && quotes.length > 0 ? quotes.sort(combinedSort) : []
+      fetchQuotes()
     }
   },
 )

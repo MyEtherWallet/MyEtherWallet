@@ -3,7 +3,7 @@ import { ref, type Ref, watch } from 'vue'
 
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useWalletStore } from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { supportedSwapEnums, enumToChain } from '@/providers/ethereum/chainToEnum'
 import Swapper, { WalletIdentifier } from '@enkryptcom/swap'
 import type { TokenType, TokenTypeTo, SupportedNetworkName, ProviderQuoteResponse } from '@enkryptcom/swap'
@@ -51,7 +51,7 @@ export const useSwap = (): {
   const swapInstance: Ref<Swapper | null> = ref(null);
   const { selectedChain, chains } = storeToRefs(chainsStore)
   const { selectedNetwork } = storeToRefs(globalStore)
-  const { tokens } = storeToRefs(walletStore)
+  const { tokens, balance } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(false)
   const toChains = ref<Chain[]>([])
   const toTokens = ref<ToTokenType | null>(null)
@@ -89,9 +89,16 @@ export const useSwap = (): {
         .filter((chain): chain is Chain => chain !== undefined)
       // tokens.value length being 0 most likely means the user has not connected their wallet yet
       fromTokens.value = tokens.value.length > 0 ? allFromTokens.all.map((token) => {
+        // make sure native evm token is included
+        if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) return {
+          ...token,
+          balance: balance.value
+        }
+
         const tokenBalance = tokens.value.find(
           (t) => t.contract.toLowerCase() === token.address.toLowerCase()
         )
+
         if (tokenBalance) return {
           ...token,
           balance: tokenBalance ? tokenBalance.balance : '0',
@@ -114,7 +121,6 @@ export const useSwap = (): {
       return undefined;
     }
     const rawAmount = toBase(params.amount, params.fromToken.decimals || 18,) // Default to 18 decimals if not specified);
-    console.log('rawAmount', rawAmount)
     return swapInstance.value.getQuotes(
       {
         fromAddress: params.fromAddress,
