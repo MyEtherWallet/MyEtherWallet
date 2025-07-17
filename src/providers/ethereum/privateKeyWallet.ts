@@ -14,10 +14,6 @@ import BaseEvmWallet from './baseEvmWallet'
 import { type PostSignedTransaction } from './types'
 import { WalletType, type HexPrefixedString } from '../types'
 
-import { useWalletStore } from '@/stores/walletStore'
-import { useRouter } from 'vue-router'
-import { ROUTES_MAIN } from '@/router/routeNames'
-
 class PrivateKeyWallet extends BaseEvmWallet {
   private privKey: Uint8Array
 
@@ -75,10 +71,6 @@ class PrivateKeyWallet extends BaseEvmWallet {
     )
   }
   override disconnect(): Promise<boolean> {
-    const walletStore = useWalletStore()
-    const router = useRouter()
-    walletStore.removeWallet()
-    router.push({ name: ROUTES_MAIN.HOME.NAME })
     return Promise.resolve(true)
   }
 }
