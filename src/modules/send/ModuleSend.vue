@@ -75,6 +75,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { isAddress } from '@/utils/addressUtils'
+import { toBase } from '@/utils/unit'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -115,16 +116,16 @@ const tokenSelected = computed(() => {
 
 const checkAmountForError = () => {
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
-  const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
+
   const baseTokenBalance = tokenSelected.value?.balanceWei || '0'
+  const baseAmount = amount.value
+    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals || 18))
+    : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
-  else if (BigInt(baseAmount) < 0)
+  else if (baseAmount < 0)
     amountError.value = t('error.amount.less_than_zero') // amount less than 0
-  else if (
-    isWalletConnected.value &&
-    BigInt(baseTokenBalance) < BigInt(baseAmount)
-  )
+  else if (isWalletConnected.value && BigInt(baseTokenBalance) < baseAmount)
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
   else amountError.value = ''
 }

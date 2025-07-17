@@ -34,12 +34,8 @@ const numberToString = (arg: string | number | BigNumber | BN) => {
     return arg
   } else if (typeof arg === 'number') {
     return String(arg)
-  } else if (
-    typeof arg === 'object' &&
-    arg.toString &&
-    (arg.toTwos || arg.dividedToIntegerBy)
-  ) {
-    if (arg.toPrecision) {
+  } else if (arg instanceof BN || arg instanceof BigNumber) {
+    if (arg instanceof BigNumber) {
       return String(arg.toPrecision())
     }
     return arg.toString(10)
