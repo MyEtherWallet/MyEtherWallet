@@ -275,7 +275,7 @@ const handleSubmit = async () => {
   } catch (e) {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: e instanceof Error ? e.message : t('send.toast.failed_to_sign'),
+      text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
     })
   }
 }

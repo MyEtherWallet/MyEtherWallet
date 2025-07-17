@@ -345,9 +345,15 @@ const confirmTransaction = async () => {
       emit('tx-sent')
     })
     .catch(e => {
+      //TODO: implement error localization
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: e instanceof Error ? e.message : t('send.toast.failed_to_send'),
+        text:
+          e instanceof Error
+            ? e.message
+            : typeof e === 'string'
+              ? e
+              : t('send.toast.tx-send-failed'),
       })
     })
   signing.value = false
