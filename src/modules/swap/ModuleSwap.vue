@@ -15,10 +15,9 @@
       />
     </div>
     <div
-      class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
+      class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%] top-[41%]"
       :class="{
-        'top-[41%]': isWalletConnected,
-        'top-[38%]': !isWalletConnected,
+        'top-[34%]': isCrossChain,
       }"
     >
       <arrows-up-down-icon class="w-6 h-6" />
@@ -43,6 +42,12 @@
         :readonly="true"
         class="mt-4"
       />
+      <div class="pt-4" v-if="isCrossChain"></div>
+      <app-address-book
+        v-model="userToAddress"
+        class="mb-[2px]"
+        v-if="isCrossChain"
+      />
     </div>
     <div class="pt-4"></div>
     <div v-if="swapLoaded && !supportedNetwork" class="text-error text-center">
@@ -55,11 +60,9 @@
       class="w-full"
       v-if="isWalletConnected"
       :disabled="
-        swapLoaded &&
-        !supportedNetwork &&
-        fromAmount !== '' &&
-        fromAmount !== '0' &&
-        fromAmountError === ''
+        (swapLoaded && !supportedNetwork) ||
+        !(fromAmount !== '' && fromAmount !== '0' && fromAmountError === '') ||
+        (isCrossChain && userToAddress === '')
       "
       @click="swapButton"
     >
@@ -78,9 +81,9 @@
   <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
   <swap-offer-modal
     v-model:swap-offer-open="bestOfferSelectionOpen"
-    @update:proceedWithSwap="swapInitiatedOpen = true"
+    @update:proceedWithSwap="proceedWithSwap"
     :quotes="providers"
-    :amount="fromAmount as string"
+    :amount="fromAmount as number"
     :to-chain="selectedToChain as Chain"
   />
   <swap-initiated-modal v-model:swap-initiated-open="swapInitiatedOpen" />
@@ -97,6 +100,7 @@ import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { ROUTES_ACCESS } from '@/router/routeNames'
+import AppAddressBook from '@/components/AppAddressBook.vue'
 
 import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
@@ -110,6 +114,8 @@ import { type ProviderQuoteResponse } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
 import { useRouter } from 'vue-router'
+import { toBase } from '@/utils/unit'
+import BN from 'bn.js'
 
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
@@ -126,10 +132,12 @@ const {
   fromTokens,
   toTokens,
   getQuote,
+  getSwap,
 } = useSwap()
 const { hasSwapValues, swapValues } = storeToRefs(inputStore)
 const { storeSwapValues } = inputStore
 
+const userToAddress = ref<string>('')
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
 const swapInitiatedOpen = ref(false)
@@ -168,6 +176,15 @@ const setToToken = () => {
   }
 }
 
+const proceedWithSwap = async quote => {
+  // Proceed with the swap using the selected quote
+  const { transactions } = await getSwap(quote)
+  for (const transaction of transactions) {
+    // Here you can handle each transaction, e.g., display it or execute it
+    console.log('Transaction:', transaction)
+  }
+}
+
 const setFromToken = () => {
   if (!hasSwapValues.value) {
     if (fromTokens.value && fromTokens.value.length > 0) {
@@ -196,11 +213,11 @@ const setFromToken = () => {
   }
 }
 
-// const isCrossChain = computed(() => {
-//   return (
-//     selectedChain.value?.type === 'EVM' && selectedToChain.value?.type !== 'EVM'
-//   )
-// })
+const isCrossChain = computed(() => {
+  return (
+    selectedChain.value?.type === 'EVM' && selectedToChain.value?.type !== 'EVM'
+  )
+})
 
 const userAddress = computed(() => {
   return walletAddress.value || '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
@@ -250,23 +267,34 @@ const fromTokenSelected: Ref<NewTokenInfo> = ref({} as NewTokenInfo) // TODO: Im
 const fromAmountError = ref('')
 
 // copied from send
-// TODO: consider moving to a shared utility file
 const checkAmountForError = () => {
-  const baseAmount = fromAmount.value ? toWei(fromAmount.value, 'ether') : 0
-  const tokenSelectedBalance = fromTokenSelected.value.balance
-    ? fromTokenSelected.value.balance
-    : '0'
-  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
+  const baseBalance =
+    fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
+      ? toBase(
+          walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
+          fromTokenSelected.value?.decimals || 18,
+        )
+      : toBase(
+          fromTokenSelected.value?.balance || '0',
+          fromTokenSelected.value?.decimals || 18,
+        )
+  const baseAmount = fromAmount.value
+    ? toBase(fromAmount.value, fromTokenSelected.value.decimals)
+    : 0
+  // const tokenSelectedBalance = fromTokenSelected.value.balance
+  //   ? fromTokenSelected.value.balance
+  //   : '0'
+  // const baseTokenBalance = toBase(
+  //   tokenSelectedBalance,
+  //   fromTokenSelected.value.decimals,
+  // )
 
   // model.value = amount.value
   if (fromAmount.value === undefined || fromAmount.value === '')
     fromAmountError.value = 'Amount is required' // amount is blank
   else if (BigInt(baseAmount) < 0)
     fromAmountError.value = 'Amount must be greater than 0' // amount less than 0
-  else if (
-    isWalletConnected.value &&
-    BigInt(baseTokenBalance) < BigInt(baseAmount)
-  )
+  else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
     fromAmountError.value = 'Insufficient balance' // amount greater than selected balance
   else fromAmountError.value = ''
 }
@@ -277,7 +305,6 @@ const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
 const toAmountError = ref('')
 
 // copied from send
-// TODO: consider moving to a shared utility file
 const checkToAmountForError = () => {
   const baseAmount = toAmount.value ? toWei(toAmount.value, 'ether') : 0
 
@@ -298,45 +325,52 @@ const fetchQuotes = async () => {
     fromAddress: userAddress.value,
     toAddress: toAddress.value,
   })
+  const fromAmountBase = toBase(
+    fromAmount.value.toString(),
+    fromTokenSelected.value?.decimals || 18,
+  )
 
-  // Combine sorting logic into a single sort function
-  const weightedSort = (provider: ProviderQuoteResponse) => {
-    const weightSortParam = {
-      additionalNativeFees: 0.2,
-      totalGaslimit: 0.3,
-      toTokenAmount: 0.5,
-    }
-    const normalizeAdditionalNativeFees = BigNumber(
-      provider.additionalNativeFees.toString(),
-    ).div(10)
-    const normalizeTotalGaslimit = BigNumber(
-      provider.totalGaslimit.toString(),
-    ).div(100)
-    const normalizeToTokenAmount = BigNumber(
-      provider.toTokenAmount.toString(),
-    ).div(4)
-    return BigNumber(normalizeAdditionalNativeFees)
-      .times(weightSortParam.additionalNativeFees)
-      .plus(
-        BigNumber(normalizeTotalGaslimit).times(weightSortParam.totalGaslimit),
-      )
-      .plus(
-        BigNumber(normalizeToTokenAmount).times(weightSortParam.toTokenAmount),
-      )
-      .toNumber()
-  }
+  const remainingBalance = BigNumber(
+    fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
+      ? toBase(
+          walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
+          fromTokenSelected.value?.decimals || 18,
+        )
+      : toBase(
+          fromTokenSelected.value?.balance || '0',
+          fromTokenSelected.value?.decimals || 18,
+        ),
+  ).minus(fromAmountBase)
 
   providers.value =
     quotes && quotes.length > 0
       ? quotes
-          .sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
-            return weightedSort(b) - weightedSort(a)
+          .filter(q => {
+            // Must be swapping enough tokens
+            const firstCheck =
+              q.minMax.minimumFrom.lte(new BN(fromAmountBase)) &&
+              // Must not be swapping too many tokens
+              q.minMax.maximumFrom.gte(new BN(fromAmountBase))
+
+            if (!isWalletConnected.value) {
+              return firstCheck
+            }
+            return (
+              firstCheck &&
+              // Must be able to afford the fees
+              q.additionalNativeFees.lte(new BN(remainingBalance.toString()))
+            )
           })
           .filter((provider: ProviderQuoteResponse) => {
-            // Filter out providers with zero toTokenAmount
-            return BigNumber(provider.minMax.minimumFrom.toString()).lt(
-              fromAmount.value,
+            // Filter out providers where fromAmount is less than minimumFrom
+            // which means its an invalid qupte
+            if (
+              BigNumber(provider.minMax.minimumFrom.toString()).lt(
+                fromAmount.value,
+              )
             )
+              return false
+            return true
           })
       : []
 }

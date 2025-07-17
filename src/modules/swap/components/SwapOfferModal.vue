@@ -72,17 +72,26 @@
                   v-for="(item, idx) in quotes"
                   :key="idx + item.quote.provider + item.toTokenAmount"
                   :class="{ 'pb-4': idx < quotes.length - 1 }"
+                  @click="selectedQuote = item"
                 >
-                  <p class="text-grey-50 text-s-14">Offer {{ idx + 1 }}</p>
-                  <p class="font-bold text-s-14">
-                    ~{{
-                      parseAmount(
-                        item.toTokenAmount,
-                        item.quote.options.toToken.decimals,
-                      )
-                    }}
-                    {{ item.quote.options.toToken.symbol }}
-                  </p>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-grey-50 text-s-14">Offer {{ idx + 1 }}</p>
+                      <p class="font-bold text-s-14">
+                        ~{{
+                          parseAmount(
+                            item.toTokenAmount,
+                            item.quote.options.toToken.decimals,
+                          )
+                        }}
+                        {{ item.quote.options.toToken.symbol }}
+                      </p>
+                    </div>
+                    <check-icon
+                      v-if="item.quote.provider === selectedQuote?.provider"
+                      class="w-8 h-8 text-primary ml-2"
+                    />
+                  </div>
                 </div>
               </div>
             </template>
@@ -121,6 +130,7 @@ import { fromBase } from '@/utils/unit'
 import BigNumber from 'bignumber.js'
 import { type Chain } from '@/mew_api/types'
 import BN from 'bn.js'
+import { CheckIcon } from '@heroicons/vue/24/solid'
 
 enum ProviderName {
   oneInch = 'oneInch',
@@ -234,7 +244,6 @@ const toAmountFiat = computed(() => {
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
-  emits('update:proceedWithSwap', true)
-  model.value = false
+  emits('update:proceedWithSwap', selectedQuote.value?.quote)
 }
 </script>

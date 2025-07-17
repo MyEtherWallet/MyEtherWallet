@@ -6,7 +6,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { supportedSwapEnums, enumToChain } from '@/providers/ethereum/chainToEnum'
 import Swapper, { WalletIdentifier } from '@enkryptcom/swap'
-import type { TokenType, TokenTypeTo, SupportedNetworkName, ProviderQuoteResponse } from '@enkryptcom/swap'
+import type { TokenType, TokenTypeTo, SupportedNetworkName, ProviderQuoteResponse, ProviderSwapResponse } from '@enkryptcom/swap'
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
 import BN from 'bn.js'
@@ -18,7 +18,6 @@ import { toBase } from '@/utils/unit'
 export interface NewTokenInfo extends Omit<TokenTypeTo, 'balance'> {
   balance?: string;
 }
-
 
 
 export interface ToTokenType {
@@ -44,6 +43,7 @@ export const useSwap = (): {
   toChains: Ref<Chain[]>;
   swapLoaded: Ref<boolean>;
   getQuote: (params: QuoteParam) => Promise<ProviderQuoteResponse[] | undefined>;
+  getSwap: (quote: ProviderQuoteResponse) => Promise<ProviderSwapResponse | null>;
 } => {
   const chainsStore = useChainsStore()
   const globalStore = useGlobalStore()
@@ -133,6 +133,21 @@ export const useSwap = (): {
     );
   }
 
+  // @ts-expect-error TODO: make swap library return types
+  const getSwap = async (quote): Promise<ProviderSwapResponse | null> => {
+    if (!swapInstance.value) {
+      return null;
+    }
+
+    try {
+      const response = await swapInstance.value.getSwap(quote);
+      return response;
+    } catch (error) {
+      console.error('Error getting swap:', error);
+      return null;
+    }
+  }
+
   watch(
     () => selectedChain.value?.name,
     async (newChainName) => {
@@ -150,6 +165,7 @@ export const useSwap = (): {
     fromTokens,
     toChains,
     swapLoaded,
-    getQuote
+    getQuote,
+    getSwap
   }
 }
