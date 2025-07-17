@@ -173,11 +173,10 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  return data.value === '0x'
-    ? (toHex(
-        toBase(amount.value, tokenSelected.value?.decimals || 18),
-      ) as HexPrefixedString)
-    : '0x0'
+  const amountBase = Number(
+    toBase(amount.value, tokenSelected.value?.decimals || 18),
+  )
+  return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
 
 watch(
