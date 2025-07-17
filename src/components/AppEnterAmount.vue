@@ -108,8 +108,6 @@ const tokenBalanceRaw = computed(() => {
   return walletStore.getTokenBalance(address || MAIN_TOKEN_CONTRACT)
 })
 
-console.log(tokenBalanceRaw.value)
-
 const isLoading = computed(() => {
   return !props.externalLoading || storeLoading.value
 })

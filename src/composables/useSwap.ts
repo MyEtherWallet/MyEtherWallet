@@ -120,6 +120,7 @@ export const useSwap = (): {
     if (!swapInstance.value) {
       return undefined;
     }
+
     const rawAmount = toBase(params.amount, params.fromToken.decimals || 18,) // Default to 18 decimals if not specified);
     return swapInstance.value.getQuotes(
       {

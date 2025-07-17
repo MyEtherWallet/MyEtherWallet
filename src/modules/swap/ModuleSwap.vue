@@ -54,7 +54,13 @@
     <app-base-button
       class="w-full"
       v-if="isWalletConnected"
-      :disabled="swapLoaded && !supportedNetwork"
+      :disabled="
+        swapLoaded &&
+        !supportedNetwork &&
+        fromAmount !== '' &&
+        fromAmount !== '0' &&
+        fromAmountError === ''
+      "
       @click="swapButton"
     >
       Swap</app-base-button
@@ -73,6 +79,9 @@
   <swap-offer-modal
     v-model:swap-offer-open="bestOfferSelectionOpen"
     @update:proceedWithSwap="swapInitiatedOpen = true"
+    :quotes="providers"
+    :amount="fromAmount as string"
+    :to-chain="selectedToChain as Chain"
   />
   <swap-initiated-modal v-model:swap-initiated-open="swapInitiatedOpen" />
 </template>
@@ -319,9 +328,16 @@ const fetchQuotes = async () => {
 
   providers.value =
     quotes && quotes.length > 0
-      ? quotes.sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
-          return weightedSort(b) - weightedSort(a)
-        })
+      ? quotes
+          .sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
+            return weightedSort(b) - weightedSort(a)
+          })
+          .filter((provider: ProviderQuoteResponse) => {
+            // Filter out providers with zero toTokenAmount
+            return BigNumber(provider.minMax.minimumFrom.toString()).lt(
+              fromAmount.value,
+            )
+          })
       : []
 }
 

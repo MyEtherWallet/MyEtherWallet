@@ -2,7 +2,7 @@
   <app-dialog
     v-model:is-open="model"
     title="Swap"
-    class="sm:max-w-[460px] sm:mx-auto h-[625px]"
+    class="sm:max-w-[460px] sm:mx-auto h-[535px]"
   >
     <template #content>
       <div class="mx-4 mb-2">
@@ -10,62 +10,94 @@
           class="p-4 flex flex-col border border-solid border-grey-outline rounded-lg mb-2"
         >
           <!-- Placeholder for provider name -->
-          <h3 class="font-bold text-s-20">Best offer from *Provider Name*</h3>
+          <h3 class="font-bold text-s-20">
+            Best offer from {{ providerName }}
+          </h3>
           <div class="font-normal text-s-20 my-2 mb-2 flex items-center gap-2">
             for
             <!-- Placeholder for token details -->
             <div
               class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center"
             >
-              <img :src="ethSvg" alt="ETH" class="inline-block w-full" />
+              <img
+                :src="fromToken?.logoURI"
+                :alt="fromToken?.symbol"
+                class="inline-block w-full"
+              />
             </div>
-            <span class="font-bold"> *fAmount* fSym*</span> you will get:
+            <span class="font-bold">
+              {{ amount }}
+              {{ fromToken?.symbol }}</span
+            >
+            you will get:
           </div>
           <div class="flex bg-grey-light-2 rounded-lg p-4 mb-2">
             <div class="relative">
               <div
                 class="w-[64px] h-[64px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center"
               >
-                <img :src="ethSvg" alt="ETH" class="inline-block w-full" />
+                <img
+                  :src="toToken?.logoURI"
+                  alt="ETH"
+                  class="inline-block w-full"
+                />
               </div>
               <div
                 class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-3 right-2 translate-x-1/2 translate-y-1/2"
               >
-                <img :src="ethSvg" alt="ETH" class="inline-block w-full" />
+                <img
+                  :src="toChain.icon"
+                  alt="ETH"
+                  class="inline-block w-full"
+                />
               </div>
             </div>
             <div>
-              <div class="font-bold text-s-24 ml-5">*ToAmount* *ToSymbol*</div>
-              <div class="text-s-12 text-grey-30 ml-5">≈ $41,011.8</div>
+              <div class="font-bold text-s-24 ml-5">
+                {{ toAmount }} {{ toToken?.symbol }}
+              </div>
+              <div class="text-s-12 text-grey-30 ml-5">
+                ≈ ${{ toAmountFiat }}
+              </div>
             </div>
           </div>
-          <app-pop-up-menu placeholder="2 other offers" location="left">
+          <app-pop-up-menu
+            :placeholder="`${quotes.length} other offers`"
+            location="left"
+          >
             <template #menu-content>
               <div class="px-4 pt-4 pb-2">
-                <div class="cursor-pointer">
-                  <p class="text-grey-50 text-s-14">Offer 1</p>
-                  <p class="font-bold text-s-14">~*fAmount* *fSym*</p>
-                </div>
-                <div class="pt-4" />
-                <div class="cursor-pointer">
-                  <p class="text-grey-50 text-s-14">Offer 2</p>
-                  <p class="font-bold text-s-14">~*fAmount* *fSym*</p>
-                </div>
-                <div class="pt-4" />
-                <div class="cursor-pointer">
-                  <p class="text-grey-50 text-s-14">Offer 3</p>
-                  <p class="font-bold text-s-14">~*fAmount* *fSym*</p>
+                <div
+                  class="cursor-pointer"
+                  v-for="(item, idx) in quotes"
+                  :key="idx + item.quote.provider + item.toTokenAmount"
+                  :class="{ 'pb-4': idx < quotes.length - 1 }"
+                >
+                  <p class="text-grey-50 text-s-14">Offer {{ idx + 1 }}</p>
+                  <p class="font-bold text-s-14">
+                    ~{{
+                      parseAmount(
+                        item.toTokenAmount,
+                        item.quote.options.toToken.decimals,
+                      )
+                    }}
+                    {{ item.quote.options.toToken.symbol }}
+                  </p>
                 </div>
               </div>
             </template>
           </app-pop-up-menu>
           <div class="pt-3">
-            <div class="text-s-14 text-grey-50">Rate: 1 ETH ≈ 12.07 *tSym*</div>
-            <div class="text-s-14 text-grey-50">Price impact: -0.07%</div>
-            <div class="text-s-14 text-grey-50">Max. slippage: 1.3%</div>
             <div class="text-s-14 text-grey-50">
-              Minimum received: 128.345 *tSym*
+              Rate: 1 {{ fromToken?.symbol }} ≈ {{ exchangeRate }}
+              {{ toToken?.symbol }}
             </div>
+            <!-- TODO: make library return these values -->
+            <!-- <div class="text-s-14 text-grey-50">Price impact: -0.07%</div> -->
+            <!-- <div class="text-s-14 text-grey-50">Max. slippage: 0.5%</div> -->
+            <!-- <div class="text-s-14 text-grey-50">
+              Minimum received: 128.345 *tSym*
+            </div> -->
             <div class="text-s-14 text-grey-50">Offer includes 2.5% fee</div>
           </div>
         </div>
@@ -80,17 +112,125 @@
 
 <script lang="ts" setup>
 import AppDialog from '@/components/AppDialog.vue'
-import ethSvg from '@/assets/icons/tokens/eth.svg' // Placeholder for token icon
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import { ref, watch, computed } from 'vue'
+import { type ProviderQuoteResponse } from '@enkryptcom/swap'
+import { fromBase } from '@/utils/unit'
+import BigNumber from 'bignumber.js'
+import { type Chain } from '@/mew_api/types'
+import BN from 'bn.js'
+
+enum ProviderName {
+  oneInch = 'oneInch',
+  paraswap = 'paraswap',
+  zerox = 'zerox',
+  changelly = 'changelly',
+  rango = 'rango',
+  jupiter = 'jupiter',
+}
+
+enum DisplayProviderName {
+  oneInch = '1inch',
+  paraswap = 'ParaSwap',
+  zerox = '0x',
+  changelly = 'Changelly',
+  rango = 'Rango',
+  jupiter = 'Jupiter',
+}
+
 const model = defineModel('swapOfferOpen', {
   type: Boolean,
   required: true,
   default: false,
 })
 
+const props = defineProps({
+  quotes: {
+    type: Array as () => ProviderQuoteResponse[],
+    default: () => [],
+  },
+  amount: {
+    type: Number,
+    default: 0,
+  },
+  toChain: {
+    type: Object as () => Chain,
+  },
+})
+
 const emits = defineEmits(['update:proceedWithSwap'])
+
+const selectedQuote = ref<ProviderQuoteResponse | null>(null)
+
+watch(
+  () => model.value,
+  (newValue: boolean) => {
+    if (newValue) {
+      // Reset selected quote when modal opens
+      selectedQuote.value = props.quotes[0]
+    }
+  },
+)
+
+const providerName = computed(() => {
+  switch (selectedQuote.value?.provider) {
+    case ProviderName.oneInch:
+      return DisplayProviderName.oneInch
+    case ProviderName.paraswap:
+      return DisplayProviderName.paraswap
+    case ProviderName.zerox:
+      return DisplayProviderName.zerox
+    case ProviderName.changelly:
+      return DisplayProviderName.changelly
+    case ProviderName.rango:
+      return DisplayProviderName.rango
+    case ProviderName.jupiter:
+      return DisplayProviderName.jupiter
+    default:
+      return 'Unknown Provider'
+  }
+})
+
+const fromToken = computed(() => {
+  return selectedQuote.value?.quote.options.fromToken
+})
+
+const toToken = computed(() => {
+  return selectedQuote.value?.quote.options.toToken
+})
+
+const toAmount = computed(() => {
+  return fromBase(
+    selectedQuote.value?.toTokenAmount.toString() || '0',
+    toToken.value?.decimals || 18,
+  )
+})
+
+const parseAmount = (amount: BN, decimal: number) => {
+  return fromBase(amount.toString(), decimal)
+}
+
+const exchangeRate = computed(() => {
+  if (!fromToken.value || !toToken.value) return '0'
+  const fromTokenPrice = fromToken.value.price || '0'
+  const toTokenPrice = toToken.value.price || '0'
+  return BigNumber(fromTokenPrice).times(toTokenPrice).div(1).toString()
+})
+
+const toAmountFiat = computed(() => {
+  return (
+    BigNumber(
+      fromBase(
+        selectedQuote.value?.toTokenAmount.toString() || '0',
+        toToken.value?.decimals || 18,
+      ),
+    )
+      .times(BigNumber(toToken.value?.price || '0'))
+      .decimalPlaces(2) || '0'
+  )
+})
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {

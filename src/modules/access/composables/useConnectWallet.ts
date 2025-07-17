@@ -55,7 +55,6 @@ export const useConnectWallet = () => {
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
-    console.log(wallet)
     const providerInjected = Eip6963Providers.value.find(
       p => p.info.name.toLowerCase() === wallet.name.toLowerCase() || p.info.name.toLowerCase() === wallet.id.toLowerCase(),
     )
@@ -115,13 +114,11 @@ export const useConnectWallet = () => {
   }
 
   const _connectWagmi = (wallet: WalletConfig) => {
-    console.log(wallet)
     const connector = connectors.find(
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
     connector?.emitter.on('message', msg => {
-      console.log('buh')
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
         openWalletConnectModal.value = true
