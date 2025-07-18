@@ -1,7 +1,7 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
+    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors min-h-[108px]"
     :class="{
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,

@@ -1,6 +1,6 @@
 import type { GasPriceType, HexPrefixedString } from '../types'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
-import type { QuotesRequestBody } from '@/mew_api/types'
+import type { QuotesRequestBody, FeePriority } from '@/mew_api/types'
 export type NativeEthereumTransaction =
   | LegacyTransaction
   | FeeMarketEIP1559Transaction
@@ -15,8 +15,9 @@ export interface APIRequest {
   chainId: HexPrefixedString
 }
 
+// REMOVE
 export interface EthereumSignableTransactionParams {
-  priority: GasPriceType
+  priority: FeePriority
   quoteId: string
 }
 export interface PostSignedTransaction {

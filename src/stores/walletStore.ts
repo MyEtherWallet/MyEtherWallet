@@ -193,6 +193,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     removeTokens,
     tokens,
     balance,
+    balanceWei,
     mainTokenBalance,
     safeMainTokenBalance,
     isLoadingBalances,

@@ -3,7 +3,7 @@
     <div
       class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
     >
-      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-0">
+      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-1">
         <div class="mb-[25px]">
           <app-enter-amount
             v-model:amount="amount"
@@ -13,17 +13,11 @@
           />
         </div>
         <app-address-book v-model="toAddress" class="mb-[2px]" />
-        <app-select-tx-fee :fees="gasFees" :is-loading-fees="isLoadingFees" />
-        <div class="min-h-[30px] mt-2">
-          <transition name="fade" mode="out-in">
-            <p
-              v-if="gasFeeError !== ''"
-              class="text-error text-[10px] xs:text-s-12 leading-[23px] px-5 text-center"
-            >
-              {{ gasFeeError }}
-            </p>
-          </transition>
-        </div>
+        <app-select-tx-fee
+          :fees="gasFees"
+          :is-loading-fees="isLoadingFees"
+          :gas-fee-error="gasFeeError"
+        />
       </app-sheet>
       <app-base-button
         v-if="isWalletConnected"
@@ -65,13 +59,14 @@ import AppAddressBook from '@/components/AppAddressBook.vue'
 import type { QuotesRequestBody, QuotesResponse } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
-import { GasPriceType, type HexPrefixedString } from '@/providers/types'
+import { type HexPrefixedString } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { isAddress } from '@/utils/addressUtils'
@@ -79,8 +74,14 @@ import { toBase } from '@/utils/unit'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
-const { wallet, isWalletConnected, isLoadingBalances } =
+const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
   storeToRefs(walletStore)
+
+/** ----------------
+ * Current Selected Fee
+ ------------------*/
+const globalStore = useGlobalStore()
+const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -92,7 +93,6 @@ const gasPrice = ref('30000000000') // TODO: Implement gas price once api is rea
 const data = ref('0x')
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
-const selectedFee = ref(GasPriceType.REGULAR)
 
 const openTxModal = ref(false)
 const isLoadingFees = ref(false)
@@ -219,13 +219,26 @@ watch(
         }
 
         gasFees.value = await wallet.value?.getGasFee(txData)
+        if (!isSendingContractToken) {
+          const totalBalanceNeeded =
+            BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
+            BigInt(amountToHex.value || '0')
+
+          if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+            gasFeeError.value = 'NOT_ENOUGH_BALANCE'
+          }
+        }
+
         isLoadingFees.value = false
       } catch (e) {
         isLoadingFees.value = false
         //TODO: implement error localization
         if (e instanceof Error) {
-          if (e.message) gasFeeError.value = e.message
-          else {
+          if (e.message) {
+            gasFeeError.value = e.message.includes('insufficient funds')
+              ? 'NOT_ENOUGH_BALANCE'
+              : e.message
+          } else {
             gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
           }
         }
