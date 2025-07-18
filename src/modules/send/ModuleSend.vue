@@ -16,7 +16,8 @@
         <app-select-tx-fee
           :fees="gasFees"
           :is-loading-fees="isLoadingFees"
-          :gas-fee-error="gasFeeError"
+          :txRequestBody="gasFeeTxEstimate"
+          v-model:gas-fee-error="gasFeeError"
         />
       </app-sheet>
       <app-base-button
@@ -56,7 +57,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
-import type { QuotesRequestBody, QuotesResponse } from '@/mew_api/types'
+import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import { type HexPrefixedString } from '@/providers/types'
@@ -71,6 +72,7 @@ import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { isAddress } from '@/utils/addressUtils'
 import { toBase } from '@/utils/unit'
+import { watchDebounced } from '@vueuse/core'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -91,6 +93,7 @@ const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const data = ref('0x')
+const gasFeeTxEstimate = ref<EstimatesRequestBody | undefined>(undefined)
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
 
@@ -179,72 +182,49 @@ const amountToHex = computed(() => {
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
 
-watch(
+const getTxRequestBody = (): EstimatesRequestBody | undefined => {
+  if (
+    tokenSelected.value &&
+    tokenSelected.value.contract &&
+    toAddress.value !== '' &&
+    amount.value !== ''
+  ) {
+    const isSendingContractToken =
+      tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
+    if (isSendingContractToken) {
+      const web3Contract = new Contract(abi, tokenSelected.value.contract)
+      data.value = web3Contract.methods
+        .transfer(
+          toAddress.value,
+          toBase(amount.value, tokenSelected.value?.decimals || 18),
+        )
+        .encodeABI() //
+    } else {
+      data.value = '0x'
+    }
+    return {
+      to: isSendingContractToken
+        ? tokenSelected.value.contract
+        : (toAddress.value as HexPrefixedString),
+      address:
+        (address.value as HexPrefixedString) ||
+        '0x0000000000000000000000000000000000000000',
+      value: amountToHex.value,
+      data: data.value as HexPrefixedString,
+    }
+  }
+}
+
+// Get Estimates
+watchDebounced(
   () => [tokenSelected.value, amount.value, toAddress.value],
   async () => {
-    if (
-      tokenSelected.value &&
-      tokenSelected.value.contract &&
-      toAddress.value !== '' &&
-      amount.value !== ''
-    ) {
-      const isSendingContractToken =
-        tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
-      if (isSendingContractToken) {
-        const web3Contract = new Contract(abi, tokenSelected.value.contract)
-        data.value = web3Contract.methods
-          .transfer(
-            toAddress.value,
-            toBase(amount.value, tokenSelected.value?.decimals || 18),
-          )
-          .encodeABI() //
-      } else {
-        data.value = '0x'
-      }
-      gasFees.value = undefined
-      gasFeeError.value = ''
-      if (!validSend.value) return
-      try {
-        isLoadingFees.value = true
-
-        const txData: QuotesRequestBody = {
-          to: isSendingContractToken
-            ? tokenSelected.value.contract
-            : (toAddress.value as HexPrefixedString),
-          address:
-            (address.value as HexPrefixedString) ||
-            '0x0000000000000000000000000000000000000000',
-          value: amountToHex.value,
-          data: data.value as HexPrefixedString,
-        }
-
-        gasFees.value = await wallet.value?.getGasFee(txData)
-        if (!isSendingContractToken) {
-          const totalBalanceNeeded =
-            BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
-            BigInt(amountToHex.value || '0')
-
-          if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
-            gasFeeError.value = 'NOT_ENOUGH_BALANCE'
-          }
-        }
-
-        isLoadingFees.value = false
-      } catch (e) {
-        isLoadingFees.value = false
-        //TODO: implement error localization
-        if (e instanceof Error) {
-          if (e.message) {
-            gasFeeError.value = e.message.includes('insufficient funds')
-              ? 'NOT_ENOUGH_BALANCE'
-              : e.message
-          } else {
-            gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
-          }
-        }
-      }
-    }
+    gasFeeError.value = ''
+    const body = getTxRequestBody()
+    if (!body) return
+    gasFeeTxEstimate.value = body
   },
+  { debounce: 500, maxWait: 2000 },
 )
 
 const resetSendModule = () => {
@@ -256,7 +236,45 @@ const resetSendModule = () => {
 // toast store
 const toastStore = useToastStore()
 
+// Get quotes:
+
+const getGasFeeQuotes = async () => {
+  try {
+    const body = getTxRequestBody()
+    if (!body || !tokenSelected.value || !validSend.value) return
+    gasFeeTxEstimate.value = body
+    isLoadingFees.value = true
+    gasFees.value = await wallet.value?.getGasFee(gasFeeTxEstimate.value)
+    //Check if user has enough balance to cover gas fees
+    if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
+      gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+    }
+    const totalBalanceNeeded =
+      BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
+      BigInt(body.value)
+
+    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+      gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+    }
+    isLoadingFees.value = false
+  } catch (e) {
+    isLoadingFees.value = false
+    //TODO: implement error localization
+    if (e instanceof Error) {
+      if (e.message) {
+        gasFeeError.value = e.message.includes('insufficient funds')
+          ? 'NOT_ENOUGH_BALANCE'
+          : e.message
+      } else {
+        gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+      }
+    }
+  }
+}
+
 const handleSubmit = async () => {
+  gasFeeError.value = ''
+  await getGasFeeQuotes()
   if (!wallet.value || !gasFees.value) return
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({

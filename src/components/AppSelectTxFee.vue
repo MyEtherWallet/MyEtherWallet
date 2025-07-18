@@ -152,6 +152,7 @@ import { storeToRefs } from 'pinia'
 import type {
   FeePriority,
   EstimatesResponse,
+  EstimatesRequestBody,
   GasFeeInfo,
   QuotesResponse,
   EvmGasFees,
@@ -172,10 +173,23 @@ const DEFAULT_VALUE = '0x0' as HexPrefixedString
 interface Props {
   fees?: QuotesResponse
   isLoadingFees?: boolean
-  gasFeeError?: string
+  txRequestBody?: EstimatesRequestBody
 }
 
 const props = defineProps<Props>()
+
+/** ----------------
+ * Fee Error
+ ------------------*/
+const gasFeeError = defineModel<string>('gasFeeError', {
+  type: String,
+  default: '',
+})
+
+const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
+const isNotEnoughBalance = computed(() => {
+  return gasFeeError.value === NOT_ENOUGH_BALANCE
+})
 
 /** ----------------
  * Fetch Fees
@@ -184,10 +198,14 @@ const props = defineProps<Props>()
 const chainStore = useChainsStore()
 const { isLoaded: isLoadedChainsData, selectedChain } = storeToRefs(chainStore)
 const walletStore = useWalletStore()
-const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
+const { isWalletConnected, walletAddress, balanceWei } =
+  storeToRefs(walletStore)
 
-const txData = computed(() => {
+const txData = computed<EstimatesRequestBody>(() => {
   //EVM CHAINS ONLY
+  if (props.txRequestBody) {
+    return props.txRequestBody
+  }
   const _address =
     isWalletConnected.value && walletAddress.value && walletAddress.value !== ''
       ? (walletAddress.value as HexPrefixedString)
@@ -214,26 +232,43 @@ const feeEstmates = ref<EvmGasFees | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const { data, onFetchResponse, execute } = useMEWFetch<EstimatesResponse>(
-  fetchURL,
-  {
+const { data, onFetchResponse, execute, onFetchError } =
+  useMEWFetch<EstimatesResponse>(fetchURL, {
     immediate: false,
-  },
-)
-  .post(JSON.stringify(txData.value))
-  .json()
+  })
+    .post(JSON.stringify(txData.value))
+    .json()
 
 onFetchResponse(() => {
   if (data.value) {
     feeEstmates.value = data.value.fees
     feesReady.value = true
+
+    //Check if user has enough balance to cover gas fees
+    const totalBalanceNeeded =
+      BigInt(data.value.fees[gasPriceType.value].nativeValue || '0') +
+      BigInt(txData.value.value)
+
+    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+      gasFeeError.value = NOT_ENOUGH_BALANCE
+    }
   } else {
     throw new Error('No gas fees received in response:' + fetchURL.value)
   }
 })
 
+onFetchError(e => {
+  if (e.message) {
+    gasFeeError.value = e.message.includes('insufficient funds')
+      ? NOT_ENOUGH_BALANCE
+      : e.message
+  } else {
+    gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+  }
+})
+
 watch(
-  () => isLoadedChainsData.value,
+  () => [isLoadedChainsData.value, txData.value],
   () => {
     if (isLoadedChainsData.value && selectedChain.value) {
       feesReady.value = false
@@ -351,13 +386,5 @@ const hasFees = computed(() => {
     Object.keys(data.value.fees).length > 0 &&
     !props.isLoadingFees
   )
-})
-/** ----------------
- * Fee Error
- ------------------*/
-
-const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
-const isNotEnoughBalance = computed(() => {
-  return props.gasFeeError === NOT_ENOUGH_BALANCE
 })
 </script>
