@@ -15,7 +15,6 @@ export interface APIRequest {
   chainId: HexPrefixedString
 }
 
-// REMOVE
 export interface EthereumSignableTransactionParams {
   priority: FeePriority
   quoteId: string
