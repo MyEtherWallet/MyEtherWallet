@@ -195,10 +195,22 @@ import AppDialog from './AppDialog.vue'
 import AppBtnIcon from './AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: 'To Address',
+  },
+  customValidator: {
+    type: Function,
+    default: () => true,
+  },
+  hasCustomValidator: {
+    type: Boolean,
+    default: false,
+  },
+  hasResolver: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -223,6 +235,7 @@ const addressSearch = ref('')
 const isAddressBookOpen = ref(false)
 
 const resolver = computed(() => {
+  if (!props.hasResolver) return null
   const chainsStore = useChainsStore()
   const { selectedChain } = storeToRefs(chainsStore)
   return new ENSNameResolver(selectedChain.value?.chainID || '1')
@@ -240,6 +253,12 @@ const debouncedToAddress = useDebounceFn(
       addressErrorMessages.value = ''
       resolvedAddress.value = ''
       toAddress.value = e.target.value
+      // skips the rest of the function if custom validator is provided
+      if (!props.hasCustomValidator) {
+        model.value = toAddress.value
+        validateAddressInput()
+        return
+      }
       try {
         const locResolvedAddr = await resolver.value.resolveName(
           toAddress.value,
@@ -316,12 +335,20 @@ const hasError = computed(() => {
  * Sets error messages accordingly.
  * @returns {boolean} - Returns true if the address is valid, false otherwise.
  */
-const validateAddressInput = () => {
+const validateAddressInput = async () => {
   addressErrorMessages.value = ''
   const addressToCheck = resolvedAddress.value || toAddress.value
   if (addressToCheck === '') {
     addressErrorMessages.value = 'address is required'
     return false
+  }
+  if (props.customValidator) {
+    if (!(await props.customValidator(addressToCheck))) {
+      addressErrorMessages.value = 'invalid address'
+      return false
+    }
+
+    return true
   }
   if (
     !isAddress(addressToCheck) &&

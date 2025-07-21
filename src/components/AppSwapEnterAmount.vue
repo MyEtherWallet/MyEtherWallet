@@ -54,8 +54,7 @@
 
 <script setup lang="ts">
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { defineProps, watch, ref, computed, type PropType } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
+import { defineProps, ref, computed, type PropType } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'
@@ -70,11 +69,6 @@ const walletStore = useWalletStore()
 const { isLoadingBalances: storeLoading } = storeToRefs(walletStore)
 
 const props = defineProps({
-  validateInput: {
-    type: Function as PropType<() => void>,
-    default: () => {},
-    required: true,
-  },
   externalLoading: {
     type: Boolean,
     default: false,
@@ -133,14 +127,6 @@ const balance = computed(() => {
   return formatFloatingPointValue(tokenBalanceRaw.value?.balance || 0).value
 })
 
-watch(
-  () => [amount.value, selectedToken.value],
-  useDebounceFn(() => {
-    if (isLoading.value) return
-    props.validateInput()
-  }, 500),
-)
-
 /**------------------------
  * Focus State
  -------------------------*/
@@ -156,18 +142,7 @@ const setInFocusInput = () => {
 onClickOutside(targetValue, () => {
   targetValue.value = null
   inFocusInput.value = false
-  props.validateInput()
 })
-
-//check if isloading changed and check input if in focus
-watch(
-  () => isLoading.value,
-  () => {
-    if (!isLoading.value && inFocusInput.value) {
-      props.validateInput()
-    }
-  },
-)
 
 const checkIfNumber = (e: KeyboardEvent) => {
   const key = e.key

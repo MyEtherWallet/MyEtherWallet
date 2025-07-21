@@ -65,14 +65,18 @@
             :placeholder="`${quotes.length} other offers`"
             location="left"
           >
-            <template #menu-content>
+            <template #menu-content="{ toggleMenu }">
               <div class="px-4 pt-4 pb-2">
                 <div
                   class="cursor-pointer"
                   v-for="(item, idx) in quotes"
                   :key="idx + item.quote.provider + item.toTokenAmount"
                   :class="{ 'pb-4': idx < quotes.length - 1 }"
-                  @click="selectedQuote = item"
+                  @click="
+                    () => {
+                      setItem(item, toggleMenu)
+                    }
+                  "
                 >
                   <div class="flex items-center justify-between">
                     <div>
@@ -118,7 +122,7 @@
         <app-base-button
           class="w-full mt-12"
           @click="proceedWithSwap"
-          :loading="isLoading"
+          :is-loading="isLoading"
         >
           Proceed with Swap
         </app-base-button>
@@ -186,6 +190,10 @@ defineProps({
   swapInfo: {
     type: Object as () => ProviderSwapResponse,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits(['update:proceedWithSwap'])
@@ -209,6 +217,11 @@ const providerName = computed(() => {
       return 'Unknown Provider'
   }
 })
+
+const setItem = (item: ProviderQuoteResponse, close: () => void) => {
+  selectedQuote.value = item
+  close()
+}
 
 const fromToken = computed(() => {
   return selectedQuote.value?.quote.options.fromToken
@@ -252,6 +265,6 @@ const toAmountFiat = computed(() => {
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
   isLoading.value = true
-  emits('update:proceedWithSwap', selectedQuote.value?.quote)
+  emits('update:proceedWithSwap')
 }
 </script>

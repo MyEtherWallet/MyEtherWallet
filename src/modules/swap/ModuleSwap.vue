@@ -7,7 +7,6 @@
         v-model:amount="fromAmount"
         v-model:selected-token="fromTokenSelected"
         v-model:error="fromAmountError"
-        :validate-input="checkAmountForError"
         :external-loading="swapLoaded && supportedNetwork"
         :tokens="fromTokens"
         :show-balance="isWalletConnected"
@@ -35,7 +34,6 @@
         v-model:amount="toAmount"
         v-model:selected-token="toTokenSelected"
         v-model:error="toAmountError"
-        :validate-input="checkToAmountForError"
         :external-loading="swapLoaded && supportedNetwork && !isLoadingQuotes"
         :show-balance="false"
         :tokens="localToTokens"
@@ -46,6 +44,8 @@
       <app-address-book
         v-model="userToAddress"
         class="mb-[2px]"
+        :has-custom-validator="true"
+        :custom-validator="toTokenSelected?.networkInfo.isAddress"
         v-if="isCrossChain"
       />
     </div>
@@ -61,7 +61,12 @@
       v-if="isWalletConnected"
       :disabled="
         (swapLoaded && !supportedNetwork) ||
-        !(fromAmount !== '' && fromAmount !== '0' && fromAmountError === '') ||
+        !(
+          fromAmount !== '' &&
+          fromAmount !== '0' &&
+          fromAmountError === '' &&
+          toAmount !== '0'
+        ) ||
         (isCrossChain && userToAddress === '')
       "
       @click="swapButton"
@@ -88,7 +93,13 @@
     :to-chain="selectedToChain as Chain"
     :swap-info="swapInfo as ProviderSwapResponse"
   />
-  <swap-initiated-modal v-model:swap-initiated-open="swapInitiatedOpen" />
+  <swap-initiated-modal
+    v-model:swap-initiated-open="swapInitiatedOpen"
+    :from-chain="selectedChain as Chain"
+    :to-chain="selectedToChain as Chain"
+    :selected-quote="selectedQuote as ProviderQuoteResponse"
+    :tx-hash="txHash as HexPrefixedString"
+  />
 </template>
 
 <script setup lang="ts">
@@ -108,6 +119,7 @@ import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum.ts'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import AppSelectChain from '@/components/AppSelectChain.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import BigNumber from 'bignumber.js'
@@ -115,19 +127,29 @@ import { type NewTokenInfo } from '@/composables/useSwap'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
+  type EVMTransaction,
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
 import { useRouter } from 'vue-router'
 import { toBase } from '@/utils/unit'
 import BN from 'bn.js'
+import type { FeePriority } from '@/mew_api/types'
+import { WalletType, type HexPrefixedString } from '@/providers/types'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
+const globalStore = useGlobalStore()
 const chainsStore = useChainsStore()
 const inputStore = useInputStore()
+const toastStore = useToastStore()
+const { t } = useI18n()
 const router = useRouter()
 
-const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
+const { gasPriceType } = storeToRefs(globalStore)
+const { isWalletConnected, walletAddress, wallet } = storeToRefs(walletStore)
 const { selectedChain } = storeToRefs(chainsStore)
 const {
   initSwapper,
@@ -150,6 +172,7 @@ const selectedToChain: Ref<Chain | null> = ref(null)
 const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
 const isLoadingQuotes = ref(false)
+const txHash = ref<HexPrefixedString>('0x')
 
 const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | null>(null)
@@ -186,9 +209,100 @@ const setToToken = () => {
 }
 
 const proceedWithSwap = async () => {
+  let txPromise
   // Proceed with the swap using the selected quote
   console.log('Proceeding with swap:', swapInfo.value)
+
+  // Filter transactions to only include EVMTransaction type
+  const transactions = (swapInfo.value?.transactions || []).filter(
+    (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+  )
+  const getApiQuotes = await Promise.all(
+    transactions.map(async tx => {
+      const newTxData = {
+        address: tx.from,
+        to: tx.to,
+        data: tx.data,
+        value: tx.value,
+      }
+      return await wallet.value?.getGasFee(newTxData)
+    }),
+  )
+
+  const signableTx = await Promise.all(
+    getApiQuotes.map(async apiQuote => {
+      if (!apiQuote) return null
+      const signableTx = await wallet.value?.getSignableTransaction({
+        priority: gasPriceType.value as FeePriority,
+        quoteId: apiQuote?.quoteId,
+      })
+
+      return signableTx
+    }),
+  )
+
+  if (
+    wallet.value?.getWalletType() !== WalletType.WAGMI &&
+    wallet.value?.getWalletType() !== WalletType.INJECTED
+  ) {
+    for (const tx of signableTx) {
+      if (tx) {
+        try {
+          const signedTx = await wallet.value?.SignTransaction?.(
+            tx.serialized as HexPrefixedString,
+          )
+          txPromise = wallet.value?.broadcastTransaction(
+            signedTx as unknown as HexPrefixedString,
+          )
+        } catch {
+          toastStore.addToastMessage({
+            type: ToastType.Error,
+            text: t('send.toast.tx-sign-failed'),
+            duration: 10000,
+          })
+          return
+        }
+      }
+    }
+  } else {
+    for (const tx of signableTx) {
+      if (tx) {
+        txPromise = wallet.value?.SendTransaction?.(
+          tx.serialized as HexPrefixedString,
+        )
+      }
+    }
+  }
+
+  await txPromise?.then(hash => {
+    txHash.value = hash as HexPrefixedString
+    bestOfferSelectionOpen.value = false
+    swapInitiatedOpen.value = true
+    toastStore.addToastMessage({
+      type: ToastType.Success,
+      text: t('send.toast.tx-send-success'),
+      duration: 10000,
+    })
+  })
 }
+
+// Reset values when swap initiated closes
+// tx is already broadcasted at this point
+watch(
+  () => swapInitiatedOpen.value,
+  (value: boolean) => {
+    if (!value) {
+      txHash.value = '0x'
+      providers.value = []
+      selectedQuote.value = null
+      fromAmount.value = '0'
+      toAmount.value = '0'
+      userToAddress.value = ''
+      setToToken()
+      setFromToken()
+    }
+  },
+)
 
 const setFromToken = () => {
   if (!hasSwapValues.value) {
@@ -268,10 +382,8 @@ const swapButton = async () => {
 // From tokens models
 const fromAmount = ref<number | string>('0')
 const fromTokenSelected: Ref<NewTokenInfo> = ref({} as NewTokenInfo) // TODO: Implement token selection
-const fromAmountError = ref('')
 
-// copied from send
-const checkAmountForError = () => {
+const fromAmountError = computed(() => {
   const baseBalance =
     fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
       ? toBase(
@@ -287,32 +399,33 @@ const checkAmountForError = () => {
     : 0
 
   if (fromAmount.value === undefined || fromAmount.value === '')
-    fromAmountError.value = 'Amount is required' // amount is blank
+    return 'Amount is required' // amount is blank
   else if (BigInt(baseAmount) < 0)
-    fromAmountError.value = 'Amount must be greater than 0' // amount less than 0
+    return 'Amount must be greater than 0' // amount less than 0
   else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
-    fromAmountError.value = 'Insufficient balance' // amount greater than selected balance
-  else fromAmountError.value = ''
-}
+    return 'Insufficient balance' // amount greater than selected balance
+  else if (
+    providers.value.length === 0 &&
+    fromAmount.value !== '0' &&
+    !isLoadingQuotes.value
+  )
+    return 'No quotes available' // no quotes available
+  return ''
+})
 
 // To Token models
 const toAmount = ref<number | string>('0')
 const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
-const toAmountError = ref('')
 
-// copied from send
-const checkToAmountForError = () => {
+const toAmountError = computed(() => {
   const baseAmount = toAmount.value ? toWei(toAmount.value, 'ether') : 0
 
   // model.value = amount.value
   if (toAmount.value === undefined || toAmount.value === '')
-    toAmountError.value = 'Amount is required' // amount is blank
-  else if (BigInt(baseAmount) < 0)
-    toAmountError.value = 'Amount must be greater than 0' // amount less than 0
-  else if (providers.value.length === 0)
-    toAmountError.value = 'No quotes available' // no quotes available
-  else toAmountError.value = ''
-}
+    return 'Amount is required' // amount is blank
+  else if (BigInt(baseAmount) < 0) return 'Amount must be greater than 0' // amount less than 0
+  return ''
+})
 
 const fetchQuotes = async () => {
   providers.value = []
@@ -321,7 +434,7 @@ const fetchQuotes = async () => {
   // fetch quotes only if fromTokenSelected.value is defined
   const quotes = await getQuote({
     fromToken: fromTokenSelected.value,
-    toToken: toTokenSelected.value,
+    toToken: toTokenSelected.value as NewTokenInfo,
     amount: fromAmount.value,
     fromAddress: userAddress.value,
     toAddress: toAddress.value,
