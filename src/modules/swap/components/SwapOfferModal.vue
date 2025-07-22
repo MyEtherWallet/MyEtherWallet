@@ -46,7 +46,7 @@
                 class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-3 right-2 translate-x-1/2 translate-y-1/2"
               >
                 <img
-                  :src="toChain.icon"
+                  :src="toChain?.icon"
                   alt="ETH"
                   class="inline-block w-full"
                 />

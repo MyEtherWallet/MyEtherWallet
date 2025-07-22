@@ -105,7 +105,7 @@
         <div v-if="searchResults.length" class="flex flex-col">
           <button
             v-for="token in searchResults"
-            :key="token.contract"
+            :key="token.address"
             class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-16"
             @click="setSelectedToken(token)"
           >
@@ -119,7 +119,7 @@
                 <div class="text-left">
                   <h2>{{ token.name }}</h2>
                   <p class="text-info text-sm">
-                    {{ getBalance(token.balance) }}
+                    {{ getBalance(token?.balance || '0') }}
                     <span class="uppercase text-xs">
                       {{ truncate(token.symbol, 7) }}</span
                     >
@@ -154,7 +154,7 @@
 
 <script setup lang="ts">
 import { useWalletStore } from '@/stores/walletStore'
-import { type NewTokenInfo } from '@/composables/useSwap.ts'
+import { type NewTokenInfo } from '@/composables/useSwap'
 import { ref, computed, onMounted } from 'vue'
 import {
   ChevronDownIcon,

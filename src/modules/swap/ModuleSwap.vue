@@ -114,10 +114,9 @@ import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 import AppAddressBook from '@/components/AppAddressBook.vue'
-
 import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
-import { chainToEnum } from '@/providers/ethereum/chainToEnum.ts'
+import { supportedSwapEnums } from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import AppSelectChain from '@/components/AppSelectChain.vue'
@@ -128,13 +127,14 @@ import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
   type EVMTransaction,
+  type TokenType,
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
 import { useRouter } from 'vue-router'
 import { toBase } from '@/utils/unit'
 import BN from 'bn.js'
-import type { FeePriority } from '@/mew_api/types'
+import { GasPriceType } from '@/providers/types'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -178,21 +178,43 @@ const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | null>(null)
 
 const setToToken = () => {
+  if (selectedToChain.value === null) {
+    console.error('No to chain selected for swap')
+    return
+  }
+  const enkryptEnum = supportedSwapEnums[selectedToChain.value?.name]
+  if (!enkryptEnum) {
+    console.error('Unsupported chain for swap:', selectedToChain.value?.name)
+    return
+  }
   if (!hasSwapValues.value) {
-    const enkryptEnum = chainToEnum[selectedToChain.value?.name || '']
-    localToTokens.value = toTokens.value?.all[enkryptEnum]
-    if (toTokens.value && toTokens.value.all[enkryptEnum]?.length > 0) {
+    localToTokens.value = toTokens.value?.all[enkryptEnum]?.map(
+      (token: TokenType) => ({
+        ...token,
+        balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
+      }),
+    ) as NewTokenInfo[]
+    if (toTokens.value && toTokens.value?.all[enkryptEnum]?.length > 0) {
       const sameNetworks =
         selectedToChain.value?.name === selectedChain.value?.name
-      toTokenSelected.value =
-        toTokens.value.trending?.length > 0
-          ? toTokens.value.trending[enkryptEnum][sameNetworks ? 1 : 0]
-          : toTokens.value.all[enkryptEnum][sameNetworks ? 1 : 0] // Default to first token
+      const tokenFromNetwork =
+        toTokens.value.trending[enkryptEnum].length > 0
+          ? toTokens.value?.trending[enkryptEnum][sameNetworks ? 1 : 0]
+          : toTokens.value?.all[enkryptEnum][sameNetworks ? 1 : 0]
+      const defaultToken = {
+        ...tokenFromNetwork,
+        balance: fromBase(
+          tokenFromNetwork?.balance?.toString() ?? '0',
+          tokenFromNetwork.decimals,
+        ),
+      } as NewTokenInfo
+      toTokenSelected.value = defaultToken
     }
   } else {
     // check if swapValue to token is in toTokens
-    const enkryptEnum = chainToEnum[selectedToChain.value?.name || '']
-    const toToken = toTokens.value?.all[enkryptEnum]?.find(
+    const toToken = (
+      toTokens.value?.all[enkryptEnum] as NewTokenInfo[] | undefined
+    )?.find(
       (token: NewTokenInfo) =>
         token.address === swapValues.value.toToken.address,
     )
@@ -200,10 +222,11 @@ const setToToken = () => {
       toTokenSelected.value = toToken
     } else {
       // If not found, default to the first token
-      toTokenSelected.value =
-        toTokens.value?.all[enkryptEnum]?.length > 0
+      toTokenSelected.value = (
+        toTokens.value?.all && toTokens.value.all[enkryptEnum]?.length > 0
           ? toTokens.value.all[enkryptEnum][0]
           : undefined
+      ) as NewTokenInfo
     }
   }
 }
@@ -211,8 +234,6 @@ const setToToken = () => {
 const proceedWithSwap = async () => {
   let txPromise
   // Proceed with the swap using the selected quote
-  console.log('Proceeding with swap:', swapInfo.value)
-
   // Filter transactions to only include EVMTransaction type
   const transactions = (swapInfo.value?.transactions || []).filter(
     (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
@@ -233,7 +254,7 @@ const proceedWithSwap = async () => {
     getApiQuotes.map(async apiQuote => {
       if (!apiQuote) return null
       const signableTx = await wallet.value?.getSignableTransaction({
-        priority: gasPriceType.value as FeePriority,
+        priority: gasPriceType.value as GasPriceType,
         quoteId: apiQuote?.quoteId,
       })
 
@@ -496,7 +517,7 @@ watch(
   () => selectedQuote.value,
   async (provider: ProviderQuoteResponse | null) => {
     if (provider) {
-      swapInfo.value = await getSwap(provider.quote)
+      swapInfo.value = await getSwap(provider)
     }
   },
   { deep: true },

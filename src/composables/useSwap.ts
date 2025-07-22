@@ -133,14 +133,13 @@ export const useSwap = (): {
     );
   }
 
-  // @ts-expect-error TODO: make swap library return types
-  const getSwap = async (quote): Promise<ProviderSwapResponse | null> => {
+  const getSwap = async (providerQuote: ProviderQuoteResponse): Promise<ProviderSwapResponse | null> => {
     if (!swapInstance.value) {
       return null;
     }
 
     try {
-      const response = await swapInstance.value.getSwap(quote);
+      const response = await swapInstance.value.getSwap(providerQuote.quote);
       return response;
     } catch (error) {
       console.error('Error getting swap:', error);

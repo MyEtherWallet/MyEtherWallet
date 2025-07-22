@@ -20,11 +20,7 @@
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select
-        v-model:selected-token="selectedToken"
-        :external-loading="isLoading"
-        :tokens="tokens"
-      />
+      <app-token-select v-model:selected-token="selectedToken" />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
@@ -42,7 +38,7 @@
               { 'text-primary': inFocusInput },
             ]"
           >
-            {{ $t('common.balance') }}: {{ balance }}
+            Balance: {{ balance }}
           </div>
         </div>
       </transition>
@@ -52,7 +48,7 @@
 
 <script setup lang="ts">
 import { type TokenBalance } from '@/mew_api/types'
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
@@ -63,24 +59,15 @@ import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
-import { type NewTokenInfo } from '@/composables/useSwap'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: storeLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {
     type: Function as PropType<() => void>,
     default: () => {},
     required: true,
-  },
-  externalLoading: {
-    type: Boolean,
-    default: false,
-  },
-  tokens: {
-    type: Array as () => NewTokenInfo[],
-    default: () => [],
   },
 })
 
@@ -90,7 +77,7 @@ const amount = defineModel('amount', {
   required: true,
 })
 
-const selectedToken = defineModel<TokenBalance | NewTokenInfo>('selectedToken')
+const selectedToken = defineModel<TokenBalance>('selectedToken')
 
 const error = defineModel('error', {
   type: String,
@@ -98,23 +85,9 @@ const error = defineModel('error', {
   default: '',
 })
 
-const tokenBalanceRaw = computed(() => {
-  let address: string | undefined
-  if ('contract' in (selectedToken.value || {})) {
-    address = (selectedToken.value as TokenBalance).contract
-  } else if ('address' in (selectedToken.value || {})) {
-    address = (selectedToken.value as NewTokenInfo).address
-  }
-  return walletStore.getTokenBalance(address || MAIN_TOKEN_CONTRACT)
-})
-
-const isLoading = computed(() => {
-  return !props.externalLoading || storeLoading.value
-})
-
 const balanceFiatOrError = computed(() => {
   const _balance = BigNumber(
-    BigNumber(tokenBalanceRaw.value?.price || 0).times(
+    BigNumber(selectedToken.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
@@ -122,11 +95,13 @@ const balanceFiatOrError = computed(() => {
 })
 
 const balance = computed(() => {
-  return formatFloatingPointValue(tokenBalanceRaw.value?.balance || 0).value
+  return selectedToken.value?.balance
+    ? formatFloatingPointValue(selectedToken.value.balance).value
+    : '0'
 })
 
 watch(
-  () => [amount.value, selectedToken.value],
+  () => amount.value,
   useDebounceFn(() => {
     if (isLoading.value) return
     props.validateInput()

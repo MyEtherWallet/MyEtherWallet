@@ -128,6 +128,6 @@ export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
   SOLANA: SupportedNetworkName.Solana,
 }
 
-export const enumToChain: Record<SupportedNetworkName, string> = Object.fromEntries(
+export const enumToChain = Object.fromEntries(
   Object.entries(chainToEnum).map(([key, value]) => [value, key])
-);
+) as Record<SupportedNetworkName, NetworkNames>;

@@ -260,11 +260,11 @@ const debouncedToAddress = useDebounceFn(
         return
       }
       try {
-        const locResolvedAddr = await resolver.value.resolveName(
+        const locResolvedAddr = await resolver.value?.resolveName(
           toAddress.value,
         )
-        resolvedAddress.value = locResolvedAddr
-        model.value = locResolvedAddr
+        resolvedAddress.value = locResolvedAddr ?? ''
+        model.value = locResolvedAddr ?? ''
       } catch {
         if (!isValidAddress(toAddress.value)) {
           resolvedAddress.value = ''
@@ -353,7 +353,8 @@ const validateAddressInput = async () => {
   if (
     !isAddress(addressToCheck) &&
     !(
-      resolver.value.isValidName(addressToCheck) && resolvedAddress.value !== ''
+      resolver.value?.isValidName(addressToCheck) &&
+      resolvedAddress.value !== ''
     )
   ) {
     addressErrorMessages.value = 'invalid address'
