@@ -11,7 +11,8 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          class="cursor-pointer fixed inset-0 bg-black/40 w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          :class="zIndexOverlay"
           @click="!persistent ? setIsOpen(false) : () => {}"
           aria-hidden
         />
@@ -19,7 +20,8 @@
       <!-- Dialog Container -->
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 z-[100] overscroll-none !overflow-y-scroll"
+        :class="zIndexContainer"
+        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -118,6 +120,14 @@ defineProps({
   persistent: {
     default: false,
     type: Boolean,
+  },
+  zIndexOverlay: {
+    default: 'z-[100]',
+    type: String,
+  },
+  zIndexContainer: {
+    default: 'z-[101]',
+    type: String,
   },
 })
 

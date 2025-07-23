@@ -30,6 +30,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const removeWallet = () => {
     wallet.value = {} as WalletInterface
     walletAddress.value = null
+    removeTokens()
   }
 
   const isWalletConnected = computed(() => {
