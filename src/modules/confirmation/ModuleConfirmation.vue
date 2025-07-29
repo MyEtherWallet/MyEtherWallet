@@ -813,7 +813,10 @@ export default {
     trackSwapTransactionSuccessful(param) {
       this.trackSwapAmplitude(SWAP.SUCCESS, {
         hash: param,
-        network: this.network.type.chainID
+        network: this.network.type.chainID,
+        to: this.swapInfo.toType,
+        from: this.swapInfo.fromType,
+        amount: this.swapInfo.fromVal
       });
     },
     trackSwapTransactionReceipt(param) {
