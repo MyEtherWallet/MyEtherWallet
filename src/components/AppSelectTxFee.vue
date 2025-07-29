@@ -36,7 +36,7 @@
         </div>
       </div>
     </button>
-    <div class="min-h-6 mt-1">
+    <div :class="{ 'min-h-6 mt-1': gasFeeError && gasFeeError !== '' }">
       <transition name="fade" mode="out-in">
         <div
           v-if="gasFeeError && gasFeeError !== ''"

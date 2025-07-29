@@ -9,20 +9,18 @@
         <div
           class="p-4 flex flex-col border border-solid border-grey-outline rounded-lg mb-2"
         >
-          <!-- Placeholder for provider name -->
           <h3 class="font-bold text-s-20">
             Best offer from {{ providerName }}
           </h3>
           <div class="font-normal text-s-20 my-2 mb-2 flex items-center gap-2">
             for
-            <!-- Placeholder for token details -->
             <div
-              class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center"
+              class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
             >
               <img
                 :src="fromToken?.logoURI"
                 :alt="fromToken?.symbol"
-                class="inline-block w-full"
+                class="inline-block w-full h-[100%]"
               />
             </div>
             <span class="font-bold">
@@ -34,21 +32,21 @@
           <div class="flex bg-grey-light-2 rounded-lg p-4 mb-2">
             <div class="relative">
               <div
-                class="w-[64px] h-[64px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center"
+                class="w-[64px] h-[64px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
               >
                 <img
                   :src="toToken?.logoURI"
                   alt="ETH"
-                  class="inline-block w-full"
+                  class="inline-block w-[90px] max-w-[200px]"
                 />
               </div>
               <div
-                class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-3 right-2 translate-x-1/2 translate-y-1/2"
+                class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-3 right-2 translate-x-1/2 translate-y-1/2 overflow-hidden"
               >
                 <img
                   :src="toChain?.icon"
                   alt="ETH"
-                  class="inline-block w-full"
+                  class="inline-block w-[28px] h-[28px]"
                 />
               </div>
             </div>
@@ -120,7 +118,7 @@
         </div>
         <app-select-tx-fee />
         <app-base-button
-          class="w-full mt-12"
+          class="w-full"
           @click="proceedWithSwap"
           :is-loading="isLoading"
         >

@@ -453,63 +453,66 @@ const fetchQuotes = async () => {
   selectedQuote.value = null
   isLoadingQuotes.value = true
   // fetch quotes only if fromTokenSelected.value is defined
-  const quotes = await getQuote({
-    fromToken: fromTokenSelected.value,
-    toToken: toTokenSelected.value as NewTokenInfo,
-    amount: fromAmount.value,
-    fromAddress: userAddress.value,
-    toAddress: toAddress.value,
-  })
-  const fromAmountBase = toBase(
-    fromAmount.value.toString(),
-    fromTokenSelected.value?.decimals || 18,
-  )
+  try {
+    const quotes = await getQuote({
+      fromToken: fromTokenSelected.value,
+      toToken: toTokenSelected.value as NewTokenInfo,
+      amount: fromAmount.value,
+      fromAddress: userAddress.value,
+      toAddress: toAddress.value,
+    })
+    const fromAmountBase = toBase(
+      fromAmount.value.toString(),
+      fromTokenSelected.value?.decimals || 18,
+    )
 
-  const remainingBalance = BigNumber(
-    fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
-      ? toBase(
-          walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
-        )
-      : toBase(
-          fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
-        ),
-  ).minus(fromAmountBase)
+    const remainingBalance = BigNumber(
+      fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
+        ? toBase(
+            walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
+            fromTokenSelected.value?.decimals || 18,
+          )
+        : toBase(
+            fromTokenSelected.value?.balance || '0',
+            fromTokenSelected.value?.decimals || 18,
+          ),
+    ).minus(fromAmountBase)
 
-  providers.value =
-    quotes && quotes.length > 0
-      ? quotes
-          .filter(q => {
-            // Must be swapping enough tokens
-            const firstCheck =
-              q.minMax.minimumFrom.lte(new BN(fromAmountBase)) &&
-              // Must not be swapping too many tokens
-              q.minMax.maximumFrom.gte(new BN(fromAmountBase))
-
-            if (!isWalletConnected.value) {
-              return firstCheck
-            }
-            return (
-              firstCheck &&
-              // Must be able to afford the fees
-              q.additionalNativeFees.lte(new BN(remainingBalance.toString()))
-            )
-          })
-          .filter((provider: ProviderQuoteResponse) => {
-            // Filter out providers where fromAmount is less than minimumFrom
-            // which means its an invalid qupte
-            if (
-              BigNumber(provider.minMax.minimumFrom.toString()).lt(
-                fromAmount.value,
+    providers.value =
+      quotes && quotes.length > 0
+        ? quotes
+            .filter(q => {
+              // Must be swapping enough tokens
+              const firstCheck =
+                q.minMax.minimumFrom.lte(new BN(fromAmountBase)) &&
+                // Must not be swapping too many tokens
+                q.minMax.maximumFrom.gte(new BN(fromAmountBase))
+              if (!isWalletConnected.value) {
+                return firstCheck
+              }
+              return (
+                firstCheck &&
+                // Must be able to afford the fees
+                q.additionalNativeFees.lte(new BN(remainingBalance.toString()))
               )
-            )
-              return false
-            return true
-          })
-      : []
-  selectedQuote.value = providers.value[0] || null
-  isLoadingQuotes.value = false
+            })
+            .filter((provider: ProviderQuoteResponse) => {
+              // Filter out providers where fromAmount is less than minimumFrom
+              // which means its an invalid qupte
+              if (
+                BigNumber(provider.minMax.minimumFrom.toString()).gt(
+                  fromAmount.value,
+                )
+              )
+                return false
+              return true
+            })
+        : []
+    selectedQuote.value = providers.value[0] || null
+    isLoadingQuotes.value = false
+  } catch (e) {
+    console.info('Error fetching quotes:', e)
+  }
 }
 
 // Watch for changes in selectedQuote and update swapInfo
@@ -544,6 +547,7 @@ watch(
     fromTokenSelected.value,
     userAddress.value,
     toAddress.value,
+    toTokenSelected.value,
   ],
   async () => {
     if (
