@@ -372,6 +372,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/evm/{chainId}/multi-estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetEvmMultiTransactionEstimate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/evm/{chainId}/quotes": {
         parameters: {
             query?: never;
@@ -396,6 +412,38 @@ export interface paths {
             cookie?: never;
         };
         get: operations["GetUnsignedEvmTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/{chainId}/multi-quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetEvmMultiTransactionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/{chainId}/multi-quotes/{quoteId}/unsigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetUnsignedEvmMultiTransaction"];
         put?: never;
         post?: never;
         delete?: never;
@@ -430,11 +478,6 @@ export interface components {
         BtcAddressInput: string;
         BtcTransactionIdInput: string;
         AnyAddressInput: string;
-        BtcSatoshiValue: number;
-        /** @enum {string} */
-        BtcTransactionSpeed: "MANUAL" | "FAST" | "ECONOMY" | "MINIMUM";
-        /** @enum {string} */
-        BtcBroadcastType: "MEMPOOL" | "RPC";
         ByteStringInput: string;
         StringDecimalUintInput: string;
         StringDecimalUint64Input: string;
@@ -456,28 +499,18 @@ export interface components {
         Hex: string;
         UUID: string;
         ISO8601: string;
+        /** @enum {string} */
+        ChainType: "BITCOIN" | "EVM" | "POLKADOT" | "KADENA" | "SOLANA";
+        /** @enum {string} */
+        EvmTransactionAction: "TOKEN_SWAP" | "TOKEN_APPROVAL" | "TOKEN_TRANSFER";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
             amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
         };
-        BtcTransactionQuote: {
-            speed: components["schemas"]["BtcTransactionSpeed"];
-            feeRate: components["schemas"]["BtcSatoshiValue"];
-            raw: {
-                fee: components["schemas"]["BtcSatoshiValue"];
-                leftover: components["schemas"]["BtcSatoshiValue"];
-                txHex: string;
-            };
-            psbt: {
-                fee: components["schemas"]["BtcSatoshiValue"];
-                leftover: components["schemas"]["BtcSatoshiValue"];
-                psbtBase64: string;
-            };
-        };
         ChainMetadata: {
             name: string;
             nameLong: string;
-            type: string;
+            type: components["schemas"]["ChainType"];
             blockExplorerTX: string;
             blockExplorerAddr: string;
             chainID?: string;
@@ -587,6 +620,14 @@ export interface components {
             data: components["schemas"]["ByteStringInput"];
             accessList?: components["schemas"]["AccessList"];
         };
+        GetEvmMultiTransactionEstimateRequest: {
+            action: components["schemas"]["EvmTransactionAction"];
+            address: components["schemas"]["EvmAddressInput"];
+            to: components["schemas"]["EvmAddressInput"] | null;
+            value: components["schemas"]["HexUintInput"];
+            data: components["schemas"]["ByteStringInput"];
+            accessList?: components["schemas"]["AccessList"];
+        }[];
         GetEvmTransactionQuoteRequest: {
             address: components["schemas"]["EvmAddressInput"];
             to: components["schemas"]["EvmAddressInput"] | null;
@@ -594,6 +635,14 @@ export interface components {
             data: components["schemas"]["ByteStringInput"];
             accessList?: components["schemas"]["AccessList"];
         };
+        GetEvmMultiTransactionQuoteRequest: {
+            action: components["schemas"]["EvmTransactionAction"];
+            address: components["schemas"]["EvmAddressInput"];
+            to: components["schemas"]["EvmAddressInput"] | null;
+            value: components["schemas"]["HexUintInput"];
+            data: components["schemas"]["ByteStringInput"];
+            accessList?: components["schemas"]["AccessList"];
+        }[];
         GetEvmTransactionStatusResponse: {
             status: components["schemas"]["EvmTransactionStatus"];
         };
@@ -603,12 +652,22 @@ export interface components {
         GetEvmTransactionEstimateResponse: {
             fees: components["schemas"]["EvmGasFees"];
         };
+        GetEvmMultiTransactionEstimateResponse: {
+            fees: components["schemas"]["EvmGasFees"];
+        };
         GetEvmTransactionQuoteResponse: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["EvmGasFees"];
+        };
+        GetEvmMultiTransactionQuoteResponse: {
             quoteId: components["schemas"]["UUID"];
             fees: components["schemas"]["EvmGasFees"];
         };
         GetUnsignedEvmTransactionResponse: {
             serialized: components["schemas"]["ByteString"];
+        };
+        GetUnsignedEvmMultiTransactionResponse: {
+            serialized: components["schemas"]["ByteString"][];
         };
         BroadcastEvmTransactionRequest: {
             signedTransaction: components["schemas"]["ByteStringInput"];
@@ -836,19 +895,41 @@ export interface components {
         GetEvmTransactionEstimateSuccess: {
             headers: {
                 "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
                 [name: string]: unknown;
             };
             content: {
                 "application/json": components["schemas"]["GetEvmTransactionEstimateResponse"];
             };
         };
+        GetEvmMultiTransactionEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionEstimateResponse"];
+            };
+        };
         GetEvmTransactionQuoteSuccess: {
             headers: {
                 "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
                 [name: string]: unknown;
             };
             content: {
                 "application/json": components["schemas"]["GetEvmTransactionQuoteResponse"];
+            };
+        };
+        GetEvmMultiTransactionQuoteSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionQuoteResponse"];
             };
         };
         GetUnsignedEvmTransactionSuccess: {
@@ -859,6 +940,16 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetUnsignedEvmTransactionResponse"];
+            };
+        };
+        GetUnsignedEvmMultiTransactionSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetUnsignedEvmMultiTransactionResponse"];
             };
         };
         BroadcastEvmTransactionSuccess: {
@@ -890,9 +981,19 @@ export interface components {
                 "application/json": components["schemas"]["GetEvmTransactionEstimateRequest"];
             };
         };
+        GetEvmMultiTransactionEstimate: {
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionEstimateRequest"];
+            };
+        };
         GetEvmTransactionQuote: {
             content: {
                 "application/json": components["schemas"]["GetEvmTransactionQuoteRequest"];
+            };
+        };
+        GetEvmMultiTransactionQuote: {
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionQuoteRequest"];
             };
         };
         BroadcastEvmTransaction: {
@@ -1241,6 +1342,20 @@ export interface operations {
             201: components["responses"]["GetEvmTransactionEstimateSuccess"];
         };
     };
+    GetEvmMultiTransactionEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetEvmMultiTransactionEstimate"];
+        responses: {
+            201: components["responses"]["GetEvmMultiTransactionEstimateSuccess"];
+        };
+    };
     GetEvmTransactionQuote: {
         parameters: {
             query?: never;
@@ -1270,6 +1385,37 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetUnsignedEvmTransactionSuccess"];
+        };
+    };
+    GetEvmMultiTransactionQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetEvmMultiTransactionQuote"];
+        responses: {
+            201: components["responses"]["GetEvmMultiTransactionQuoteSuccess"];
+        };
+    };
+    GetUnsignedEvmMultiTransaction: {
+        parameters: {
+            query?: {
+                priority?: components["parameters"]["PriorityId"];
+            };
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                quoteId: components["parameters"]["QuoteId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetUnsignedEvmMultiTransactionSuccess"];
         };
     };
     BroadcastEvmTransaction: {
