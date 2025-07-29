@@ -189,7 +189,6 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
 const {
@@ -209,6 +208,14 @@ const tokens = computed<TokenBalance[]>(() => {
   if (!isLoaded.value || safeMainTokenBalance.value === null) return []
   return [safeMainTokenBalance.value, ...erc20Tokens.value]
 })
+
+const selectedTokenContract = defineModel<string>('selectedTokenContract')
+
+// const selectedToken = computed<TokenBalance | null>(() => {
+//   return store.getTokenBalance(
+//     selectedTokenContract.value || MAIN_TOKEN_CONTRACT,
+//   )
+// })
 
 const showAllTokens = ref(false)
 const searchInput = ref('')
@@ -320,7 +327,7 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
 })
 
 const setSelectedToken = (token: TokenBalance) => {
-  emit('update:selectedToken', token)
+  selectedTokenContract.value = token.contract
   showAllTokens.value = false
 }
 

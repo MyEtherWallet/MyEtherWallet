@@ -9,12 +9,36 @@ import { reactive, ref } from 'vue'
  */
 export const useInputStore = defineStore('inputStore', () => {
   const hasSwapValues = ref(false);
+  const hasSendValues = ref(false);
+  const sendValues = reactive({
+    toAddress: '',
+    amount: '',
+    token: '',
+  })
   const swapValues = reactive({
     fromToken: {} as NewTokenInfo,
     toToken: {} as NewTokenInfo,
     fromAmount: '',
     toChain: {} as Chain
   })
+
+  const storeSendValues = (values: {
+    toAddress: string;
+    amount: string;
+    token: string;
+  }) => {
+    sendValues.toAddress = values.toAddress
+    sendValues.amount = values.amount
+    sendValues.token = values.token
+    hasSendValues.value = true
+  }
+
+  const clearSendValues = () => {
+    sendValues.toAddress = ''
+    sendValues.amount = ''
+    sendValues.token = ''
+    hasSendValues.value = false
+  }
 
   const storeSwapValues = (values: {
     fromToken: NewTokenInfo;
@@ -36,5 +60,14 @@ export const useInputStore = defineStore('inputStore', () => {
     hasSwapValues.value = false
   }
 
-  return { swapValues, storeSwapValues, clearSwapValues, hasSwapValues }
+  return {
+    swapValues,
+    storeSwapValues,
+    clearSwapValues,
+    hasSwapValues,
+    hasSendValues,
+    sendValues,
+    storeSendValues,
+    clearSendValues
+  }
 })

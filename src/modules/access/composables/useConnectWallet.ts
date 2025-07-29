@@ -60,20 +60,25 @@ export const useConnectWallet = () => {
     )
 
     if (!providerInjected) {
-      toastStore.addToastMessage({
-        text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
-        link: {
-          title: 'Click here to install',
-          url:
-            wallet.downloadUrls?.browserExtension ||
-            wallet.downloadUrls?.qrCode ||
-            wallet.downloadUrls?.chrome ||
-            wallet.downloadUrls?.firefox ||
-            '',
-        },
-        type: ToastType.Error,
-        isInfinite: true,
-      })
+      if (wallet.type.includes(WalletConfigType.MOBILE)) {
+        // open wallet connect modal if it is also a mobile wallet and extension instance not found
+        _connectWagmi(wallet)
+      } else {
+        toastStore.addToastMessage({
+          text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
+          link: {
+            title: 'Click here to install',
+            url:
+              wallet.downloadUrls?.browserExtension ||
+              wallet.downloadUrls?.qrCode ||
+              wallet.downloadUrls?.chrome ||
+              wallet.downloadUrls?.firefox ||
+              '',
+          },
+          type: ToastType.Error,
+          isInfinite: true,
+        })
+      }
     } else {
       const web3Wallet = new Web3InjectedWallet(
         providerInjected,

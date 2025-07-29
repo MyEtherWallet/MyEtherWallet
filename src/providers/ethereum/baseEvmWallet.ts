@@ -138,7 +138,7 @@ class BaseEvmWallet implements WalletInterface {
     return Promise.resolve(true)
   }
   disconnect(): Promise<boolean> {
-    throw new Error('Method not implemented: getWalletType')
+    return Promise.resolve(true)
   }
 }
 

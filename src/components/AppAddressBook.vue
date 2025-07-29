@@ -226,6 +226,19 @@ onMounted(() => {
   }
 })
 
+// Look for address book being set immediately
+
+watch(
+  model,
+  (newValue, oldValue) => {
+    if (newValue && oldValue === '') {
+      toAddress.value = newValue
+      debouncedToAddress({ target: { value: newValue } })
+    }
+  },
+  { immediate: true },
+)
+
 const store = useAddressBookStore()
 const { currentAddressBook } = storeToRefs(store)
 

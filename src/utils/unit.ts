@@ -24,7 +24,7 @@ const getValueOfUnit = (decimals: number) => {
   return new BN(10).pow(new BN(decimals))
 }
 
-const numberToString = (arg: string | number | BigNumber) => {
+const numberToString = (arg: string | number | BigNumber | BN) => {
   if (typeof arg === 'string') {
     if (!arg.match(/^-?[0-9.]+$/)) {
       throw new Error(
@@ -34,13 +34,8 @@ const numberToString = (arg: string | number | BigNumber) => {
     return arg
   } else if (typeof arg === 'number') {
     return String(arg)
-  } else if (
-    typeof arg === 'object' &&
-    arg.toString &&
-    // @ts-expect-error this checks for BigNumber or similar libraries
-    (arg.toTwos || arg.dividedToIntegerBy)
-  ) {
-    if (arg.toPrecision) {
+  } else if (arg instanceof BN || arg instanceof BigNumber) {
+    if (arg instanceof BigNumber) {
       return String(arg.toPrecision())
     }
     return arg.toString(10)
@@ -58,7 +53,11 @@ const numberToString = (arg: string | number | BigNumber) => {
  * @returns String
  */
 
-const fromBase = (weiInput: string | number, decimals: number, optionsInput?: { pad?: boolean, commify?: boolean }) => {
+const fromBase = (
+  weiInput: string | number,
+  decimals: number,
+  optionsInput?: { pad?: boolean; commify?: boolean },
+) => {
   let wei = new BN(weiInput)
   const negative = wei.lt(zero)
   const base = getValueOfUnit(decimals)

@@ -21,7 +21,7 @@
       <div
         v-if="isOpen"
         :class="zIndexContainer"
-        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
+        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
