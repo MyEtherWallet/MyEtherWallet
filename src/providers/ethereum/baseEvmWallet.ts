@@ -63,7 +63,7 @@ class BaseEvmWallet implements WalletInterface {
     feeObj: EthereumSignableTransactionParams,
   ): Promise<EthereumSignableTransactionResponse[]> => {
     const response = await fetchWithRetry<EthereumSignableTransactionResponse[]>(
-      `/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned/multi?noInjectErrors=false&priority=${feeObj.priority}`,
+      `/v1/evm/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned/multi?noInjectErrors=false&priority=${feeObj.priority}`,
     )
     return response
   }
