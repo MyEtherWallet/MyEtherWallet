@@ -675,6 +675,7 @@ export default {
       this.showSuccessSwap = false;
       this.reset();
       this.isSwap = false;
+      this.swapInfo = {};
     },
     reset() {
       this.showTxOverlay = false;
@@ -690,7 +691,6 @@ export default {
       this.signature = '';
       this.unsignedTxArr = [];
       this.signedTxArray = [];
-      this.swapInfo = {};
       this.sendCurrency = {};
       this.toDetails = {};
       this.signing = false;
