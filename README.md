@@ -89,3 +89,37 @@ Reach out to us at <integrations@myetherwallet.com>, so we can determine if we w
 ### DApps
 
 Please fill out the form [here](https://www.myetherwallet.com/dapp-submission). We will reach out to you as soon as we can.
+
+## Verify Signature with GPG library
+
+### Step 1:
+
+Download GPG file found in the repo https://github.com/MyEtherWallet/MyEtherWallet/blob/main/MEW-PUP-KEY-GPG
+
+### Step 2:
+
+Download signed (file with `.sig` extension) and the corresponding unsigned file (file with the same name and `.zip` extension)
+
+### Step 3:
+
+Open terminal and import downloaded public key:\
+`gpg --import <MEW-PUP-KEY-GPG path>`
+
+### Step 4:
+
+Verify signature:\
+`gpg --verify MyEtherWallet-<version>.zip.sig MyEtherWallet-<version>.zip`
+
+Example output:
+
+    $ gpg --verify MyEtherWallet-v6.9.22-hotfix.1.zip.sig MyEtherWallet-v6.9.22-hotfix.1.zip
+    gpg: Signature made Mon Jun 30 12:17:24 2025 PDT
+    gpg:                using RSA key 2FCA4A1E3AF4278F7AD3B7637F059C0F7B9A12F0
+    gpg: Good signature from "MyEtherWallet Inc <support@myetherwallet.com>" [unknown]
+    gpg: WARNING: This key is not certified with a trusted signature!
+    gpg:          There is no indication that the signature belongs to the owner.
+
+## NOTE
+
+The warning is normal since you haven't marked the `MEW-PUP-KEY-GPG` key as "trusted" in your GPG keyring.\
+You can ignore the warning or add it to your trusted keys in your GPG keyring

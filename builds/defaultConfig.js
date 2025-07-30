@@ -37,7 +37,10 @@ const webpackConfig = {
   plugins: [
     new webpack.SourceMapDevToolPlugin(sourceMapsConfig),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
-    new webpack.NormalModuleReplacementPlugin(/^\@sinclair\/typebox$/, '@sinclair/typebox/build/cjs'),
+    new webpack.NormalModuleReplacementPlugin(
+      /^\@sinclair\/typebox$/,
+      '@sinclair/typebox/build/cjs'
+    ),
     // new BundleAnalyzerPlugin(),
     new ImageminPlugin({
       disable: process.env.NODE_ENV !== 'production',

@@ -10,7 +10,7 @@
       </div>
 
       <!-- NOT ON DASHBOARD BUTTONS-->
-      <div v-if="!isDashboard && !error" class="pa-3" style="min-height: 330px">
+      <div v-if="!isDashboard && !error" class="pa-3 pb-10">
         <v-row v-if="isLoaded" class="justify-start wrap">
           <v-col
             v-for="(data, key) in tokenData"
@@ -507,7 +507,7 @@ export default {
       if (!this.isLoaded) return [];
       let _tokens = [];
       if (this.isEthNetwork) {
-        _tokens = this.ethereumTrendingTokens.slice(0, 4).map(item => {
+        _tokens = this.ethereumTrendingTokens.slice(0, 5).map(item => {
           const token = this.getCoinGeckoTokenById(item.id);
           return {
             ...item,
@@ -523,7 +523,7 @@ export default {
       }
 
       let i = 0;
-      while (_tokens.length < 5 && i < this.defaultList.length) {
+      while (_tokens.length < 6 && i < this.defaultList.length) {
         const token = this.getCoinGeckoTokenById(this.defaultList[i].id);
         _tokens.push({
           ...this.defaultList[i],
@@ -537,7 +537,9 @@ export default {
         });
         i++;
       }
-      return _tokens;
+      return _tokens.filter(item => {
+        return item.id !== 'bitcoin';
+      });
     },
     allTokens() {
       if (!this.isLoaded || !this.isEthNetwork) return [];
