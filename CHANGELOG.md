@@ -1,3 +1,11 @@
+### Release v6.9.23-hotfix.1
+
+### fix
+
+* fix race case [#5182](https://github.com/MyEtherWallet/MyEtherWallet/pull/5182)
+
+### Release v6.9.23
+
 ### fix
 
 * remove btc from trending tokens, add gpg signing doc, add params to amplitude swap success [#5179](https://github.com/MyEtherWallet/MyEtherWallet/pull/5179)
