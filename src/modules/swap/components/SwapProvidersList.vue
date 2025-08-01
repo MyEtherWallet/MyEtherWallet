@@ -199,7 +199,7 @@ export default {
     /**
      * Property returns quotes to be displayed on the ui
      * If more then 3 quotes found: the list will be sliced by max_providers
-     * List Fitlers out null and undefined items
+     * List Filters out null and undefined items
      * Used in Providers Rate Row
      */
     providersList() {
