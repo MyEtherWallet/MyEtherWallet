@@ -238,6 +238,8 @@ const proceedWithSwap = async () => {
   const transactions = (swapInfo.value?.transactions || []).filter(
     (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
   )
+
+  console.log(transactions)
   const getApiQuotes = await Promise.all(
     transactions.map(async tx => {
       const newTxData = {
@@ -511,6 +513,7 @@ const fetchQuotes = async () => {
     selectedQuote.value = providers.value[0] || null
     isLoadingQuotes.value = false
   } catch (e) {
+    console.log(e)
     console.info('Error fetching quotes:', e)
   }
 }
@@ -535,7 +538,7 @@ watch(
       toAmount.value = fromBase(
         providers.value[0].toTokenAmount.toString(),
         toTokenSelected.value?.decimals || 18,
-      )
+      ).substring(0, toTokenSelected.value?.decimals || 18)
     }
   },
 )

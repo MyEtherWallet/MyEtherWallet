@@ -274,6 +274,15 @@ watch(
   { immediate: true },
 )
 
+watch(
+  () => storeSelectedChain.value,
+  newChain => {
+    if (!prop.preselectedChain) {
+      selectedChain.value = newChain ?? null
+    }
+  },
+)
+
 /** -------------------------------
  * Search
  -------------------------------*/
