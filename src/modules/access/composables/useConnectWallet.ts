@@ -123,6 +123,7 @@ export const useConnectWallet = () => {
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
+    connector?.onDisconnect()
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
@@ -134,6 +135,7 @@ export const useConnectWallet = () => {
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
+
     wagWallet
       .connect()
       .then(res => {
