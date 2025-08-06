@@ -86,25 +86,24 @@
   <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
   <swap-offer-modal
     v-model:swap-offer-open="bestOfferSelectionOpen"
-    v-model:selected-quote="selectedQuote as ProviderQuoteResponse"
+    v-model:selected-quote="selectedQuote"
     @update:proceedWithSwap="proceedWithSwap"
     :quotes="providers"
-    :amount="fromAmount as number"
-    :to-chain="selectedToChain as Chain"
-    :swap-info="swapInfo as ProviderSwapResponse"
+    :amount="fromAmount"
+    :to-chain="selectedToChain"
+    :swap-info="swapInfo || undefined"
   />
   <swap-initiated-modal
     v-model:swap-initiated-open="swapInitiatedOpen"
-    :from-chain="selectedChain as Chain"
-    :to-chain="selectedToChain as Chain"
-    :selected-quote="selectedQuote as ProviderQuoteResponse"
-    :tx-hash="txHash as HexPrefixedString"
+    :from-chain="selectedChain"
+    :to-chain="selectedToChain"
+    :selected-quote="selectedQuote"
+    :tx-hash="txHash"
   />
 </template>
 
 <script setup lang="ts">
-import { toWei } from 'web3-utils'
-import { ref, onMounted, type Ref, computed, watch } from 'vue'
+import { ref, onMounted, type Ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid' // Importing the arrowsUpDown icon from Heroicons
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -139,6 +138,7 @@ import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
+import { useDebounceFn } from '@vueuse/core'
 
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()
@@ -168,23 +168,31 @@ const userToAddress = ref<string>('')
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
 const swapInitiatedOpen = ref(false)
-const selectedToChain: Ref<Chain | null> = ref(null)
+const selectedToChain: Ref<Chain | undefined> = ref(undefined)
 const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
 const isLoadingQuotes = ref(false)
 const txHash = ref<HexPrefixedString>('0x')
 
 const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
-const selectedQuote = ref<ProviderQuoteResponse | null>(null)
+const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
 
 const setToToken = () => {
   if (selectedToChain.value === null) {
-    console.error('No to chain selected for swap')
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.toast.select-chain'), // TODO: add to i18n
+      duration: 5000,
+    })
     return
   }
   const enkryptEnum = supportedSwapEnums[selectedToChain.value?.name]
   if (!enkryptEnum) {
-    console.error('Unsupported chain for swap:', selectedToChain.value?.name)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.toast.unsupported-chain'), // TODO: add to i18n
+      duration: 5000,
+    })
     return
   }
   if (!hasSwapValues.value) {
@@ -317,7 +325,7 @@ watch(
     if (!value) {
       txHash.value = '0x'
       providers.value = []
-      selectedQuote.value = null
+      selectedQuote.value = undefined
       fromAmount.value = '0'
       toAmount.value = '0'
       userToAddress.value = ''
@@ -338,7 +346,6 @@ const setFromToken = () => {
       } else {
         fromTokenSelected.value = fromTokens.value[0] // Default to first token
       }
-      fromTokenSelected.value = fromTokens.value[0] // Default to first token
     }
   } else {
     // check if swapValue from token is in fromTokens
@@ -356,9 +363,7 @@ const setFromToken = () => {
 }
 
 const isCrossChain = computed(() => {
-  return (
-    selectedChain.value?.type === 'EVM' && selectedToChain.value?.type !== 'EVM'
-  )
+  return selectedChain.value?.type === selectedToChain.value?.type
 })
 
 const userAddress = computed(() => {
@@ -397,7 +402,7 @@ const connectWalletForSwap = () => {
 
 const swapButton = async () => {
   bestSwapLoadingOpen.value = true
-  await fetchQuotes()
+  await debounceFetchQuotes()
   bestSwapLoadingOpen.value = false
   bestOfferSelectionOpen.value = true
 }
@@ -441,7 +446,9 @@ const toAmount = ref<number | string>('0')
 const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
 
 const toAmountError = computed(() => {
-  const baseAmount = toAmount.value ? toWei(toAmount.value, 'ether') : 0
+  const baseAmount = toAmount.value
+    ? toBase(toAmount.value, toTokenSelected.value?.decimals || 18)
+    : 0
 
   // model.value = amount.value
   if (toAmount.value === undefined || toAmount.value === '')
@@ -510,13 +517,15 @@ const fetchQuotes = async () => {
               return true
             })
         : []
-    selectedQuote.value = providers.value[0] || null
+    selectedQuote.value = providers.value[0] || undefined
     isLoadingQuotes.value = false
   } catch (e) {
     console.log(e)
     console.info('Error fetching quotes:', e)
   }
 }
+
+const debounceFetchQuotes = useDebounceFn(fetchQuotes, 500)
 
 // Watch for changes in selectedQuote and update swapInfo
 watch(
@@ -558,13 +567,15 @@ watch(
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      fetchQuotes()
+      debounceFetchQuotes()
     }
   },
 )
 
 onMounted(async () => {
   await initSwapper()
+
+  await nextTick()
   setFromToken()
   setToToken()
 

@@ -125,7 +125,6 @@ onMounted(async () => {
     amount.value = sendValues.value.amount
     toAddress.value = sendValues.value.toAddress
     tokenSelectedContract.value = sendValues.value.token
-    console.log(sendValues.value, toAddress.value)
     clearSendValues()
   }
 })

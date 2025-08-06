@@ -325,7 +325,11 @@ const setSelectedToken = (token: NewTokenInfo) => {
 }
 
 const imageReplacer = (token: NewTokenInfo) => {
-  if (!token.logoURI || token.logoURI === 'https://img.mewapi.io/?image=null') {
+  if (
+    !token.logoURI ||
+    token.logoURI.includes('null') ||
+    token.logoURI.includes('undefined')
+  ) {
     return defaultImg.value
   }
   return token.logoURI

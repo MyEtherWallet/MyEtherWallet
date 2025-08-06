@@ -244,7 +244,8 @@ const exchangeRate = computed(() => {
   if (!fromToken.value || !toToken.value) return '0'
   const fromTokenPrice = fromToken.value.price || '0'
   const toTokenPrice = toToken.value.price || '0'
-  return BigNumber(fromTokenPrice).times(toTokenPrice).div(1).toString()
+  if (BigNumber(toTokenPrice).isZero()) return '0'
+  return BigNumber(fromTokenPrice).times(toTokenPrice).toString()
 })
 
 const toAmountFiat = computed(() => {

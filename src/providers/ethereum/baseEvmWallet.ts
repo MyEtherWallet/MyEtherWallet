@@ -40,7 +40,7 @@ class BaseEvmWallet implements WalletInterface {
   /**
    * Gets gas fee for multiple transactions. ie token transactions where an approval may be required
    * @param txs - Array of transactions to estimate gas fees for
-   * @returns 
+   * @returns A QuotesResponse containing gas fee estimates for each provided transaction
    */
 
   getMultipleGasFees = (txs: GetEvmMultiTransactionEstimateRequest) => {

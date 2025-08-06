@@ -41,7 +41,7 @@
               { 'text-primary': inFocusInput },
             ]"
           >
-            Balance: {{ balance }}
+            {{ $t('common.balance') }}: {{ balance }}
           </div>
         </div>
       </transition>

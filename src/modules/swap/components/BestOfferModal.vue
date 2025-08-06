@@ -5,7 +5,11 @@
   >
     <template #content>
       <div class="flex items-center justify-center">
-        <img :src="bestOfferIcon" class="w-[175px]" />
+        <img
+          :src="bestOfferIcon"
+          class="w-[175px]"
+          alt="Looking for the best offer"
+        />
       </div>
       <div class="p-8 pb-12 flex flex-col items-center">
         <h3 class="text-s-24 text-p-120 font-bold">

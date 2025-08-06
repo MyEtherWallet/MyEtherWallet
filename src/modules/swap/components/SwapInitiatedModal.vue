@@ -101,9 +101,9 @@ import { type HexPrefixedString } from '@/providers/types'
 import { fromBase } from '@/utils/unit'
 
 const props = defineProps<{
-  fromChain: Chain
-  toChain: Chain
-  selectedQuote: ProviderQuoteResponse
+  fromChain: Chain | undefined
+  toChain: Chain | undefined
+  selectedQuote: ProviderQuoteResponse | undefined
   txHash: HexPrefixedString
 }>()
 

@@ -108,7 +108,7 @@ const tokenBalanceRaw = computed(() => {
 })
 
 const isLoading = computed(() => {
-  return !props.externalLoading || storeLoading.value
+  return props.externalLoading || storeLoading.value
 })
 
 const balanceFiatOrError = computed(() => {

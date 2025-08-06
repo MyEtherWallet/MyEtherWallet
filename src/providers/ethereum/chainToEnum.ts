@@ -129,5 +129,5 @@ export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
 }
 
 export const enumToChain = Object.fromEntries(
-  Object.entries(chainToEnum).map(([key, value]) => [value, key])
+  Object.entries(chainToEnum).filter(([chainKey]) => supportedSwapEnums[chainKey] !== undefined).map(([key, value]) => [value, key])
 ) as Record<SupportedNetworkName, NetworkNames>;

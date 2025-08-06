@@ -87,26 +87,22 @@ export const useSwap = (): {
           if (chain) return chain
         })
         .filter((chain): chain is Chain => chain !== undefined)
-      // tokens.value length being 0 most likely means the user has not connected their wallet yet
-      fromTokens.value = tokens.value.length > 0 ? allFromTokens.all.map((token) => {
-        // make sure native evm token is included
-        if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) return {
-          ...token,
-          balance: balance.value
+      fromTokens.value = fromTokens.value = allFromTokens.all.map((token) => {
+        let tokenBalance = '0'
+        if (tokens.value.length > 0) {
+          if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
+            tokenBalance = balance.value
+          } else {
+            const found = tokens.value.find(
+              (t) => t.contract.toLowerCase() === token.address.toLowerCase()
+            )
+            tokenBalance = found?.balance || '0'
+          }
         }
 
-        const tokenBalance = tokens.value.find(
-          (t) => t.contract.toLowerCase() === token.address.toLowerCase()
-        )
-
-        if (tokenBalance) return {
-          ...token,
-          balance: tokenBalance ? tokenBalance.balance : '0',
-        } as NewTokenInfo
-      }).filter((token => token !== undefined)) as NewTokenInfo[] : allFromTokens.all.map((token) => {
         return {
           ...token,
-          balance: '0',
+          balance: tokenBalance,
         } as NewTokenInfo
       })
       swapLoaded.value = true

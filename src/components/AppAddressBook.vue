@@ -228,16 +228,12 @@ onMounted(() => {
 
 // Look for address book being set immediately
 
-watch(
-  model,
-  (newValue, oldValue) => {
-    if (newValue && oldValue === '') {
-      toAddress.value = newValue
-      debouncedToAddress({ target: { value: newValue } })
-    }
-  },
-  { immediate: true },
-)
+watch(model, (newValue, oldValue) => {
+  if (newValue && oldValue === '') {
+    toAddress.value = newValue
+    debouncedToAddress({ target: { value: newValue } })
+  }
+})
 
 const store = useAddressBookStore()
 const { currentAddressBook } = storeToRefs(store)
@@ -355,7 +351,7 @@ const validateAddressInput = async () => {
     addressErrorMessages.value = 'address is required'
     return false
   }
-  if (props.customValidator) {
+  if (props.hasCustomValidator) {
     if (!(await props.customValidator(addressToCheck))) {
       addressErrorMessages.value = 'invalid address'
       return false
