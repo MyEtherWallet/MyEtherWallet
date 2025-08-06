@@ -113,9 +113,8 @@ const isLoading = computed(() => {
 
 const balanceFiatOrError = computed(() => {
   if (!props.showBalance) {
-    return (
-      `$ ${BigNumber(selectedToken.value?.price || 0).toFixed(2)}` || '$ 0.00'
-    )
+    const val = BigNumber(amount.value || 0).toFixed(2)
+    return `$ ${val}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(

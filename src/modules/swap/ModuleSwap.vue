@@ -178,7 +178,7 @@ const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
 
 const setToToken = () => {
-  if (selectedToChain.value === null) {
+  if (!selectedToChain.value) {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('swap.toast.select-chain'), // TODO: add to i18n
@@ -195,20 +195,24 @@ const setToToken = () => {
     })
     return
   }
+  const allToTokens =
+    toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all]
   if (!hasSwapValues.value) {
-    localToTokens.value = toTokens.value?.all[enkryptEnum]?.map(
-      (token: TokenType) => ({
-        ...token,
-        balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
-      }),
-    ) as NewTokenInfo[]
-    if (toTokens.value && toTokens.value?.all[enkryptEnum]?.length > 0) {
+    localToTokens.value = allToTokens?.map((token: TokenType) => ({
+      ...token,
+      balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
+    })) as NewTokenInfo[]
+    if (toTokens.value && allToTokens && allToTokens.length > 0) {
+      const allToTrending =
+        toTokens.value?.trending[
+          enkryptEnum as keyof typeof toTokens.value.trending
+        ]
       const sameNetworks =
-        selectedToChain.value?.name === selectedChain.value?.name
+        selectedToChain.value?.name === selectedChain.value?.name ? 1 : 0
       const tokenFromNetwork =
-        toTokens.value.trending[enkryptEnum].length > 0
-          ? toTokens.value?.trending[enkryptEnum][sameNetworks ? 1 : 0]
-          : toTokens.value?.all[enkryptEnum][sameNetworks ? 1 : 0]
+        allToTrending.length > 0
+          ? allToTrending[sameNetworks]
+          : allToTokens[sameNetworks]
       const defaultToken = {
         ...tokenFromNetwork,
         balance: fromBase(
@@ -220,19 +224,34 @@ const setToToken = () => {
     }
   } else {
     // check if swapValue to token is in toTokens
-    const toToken = (
-      toTokens.value?.all[enkryptEnum] as NewTokenInfo[] | undefined
-    )?.find(
-      (token: NewTokenInfo) =>
-        token.address === swapValues.value.toToken.address,
-    )
+    const toToken = allToTokens
+      ?.map(
+        (token: TokenType) =>
+          ({
+            ...token,
+            balance: fromBase(
+              token?.balance?.toString() ?? '0',
+              token.decimals,
+            ),
+          }) as NewTokenInfo,
+      )
+      .find(
+        (token: NewTokenInfo) =>
+          token.address === swapValues.value.toToken.address,
+      )
     if (toToken) {
       toTokenSelected.value = toToken
     } else {
       // If not found, default to the first token
       toTokenSelected.value = (
-        toTokens.value?.all && toTokens.value.all[enkryptEnum]?.length > 0
-          ? toTokens.value.all[enkryptEnum][0]
+        allToTokens && allToTokens?.length > 0
+          ? {
+              ...allToTokens[0],
+              balance: fromBase(
+                allToTokens[0]?.balance?.toString() ?? '0',
+                allToTokens[0]?.decimals,
+              ),
+            }
           : undefined
       ) as NewTokenInfo
     }
@@ -363,7 +382,7 @@ const setFromToken = () => {
 }
 
 const isCrossChain = computed(() => {
-  return selectedChain.value?.type === selectedToChain.value?.type
+  return selectedChain.value?.type !== selectedToChain.value?.type
 })
 
 const userAddress = computed(() => {
@@ -459,7 +478,7 @@ const toAmountError = computed(() => {
 
 const fetchQuotes = async () => {
   providers.value = []
-  selectedQuote.value = null
+  selectedQuote.value = undefined
   isLoadingQuotes.value = true
   // fetch quotes only if fromTokenSelected.value is defined
   try {
@@ -530,7 +549,7 @@ const debounceFetchQuotes = useDebounceFn(fetchQuotes, 500)
 // Watch for changes in selectedQuote and update swapInfo
 watch(
   () => selectedQuote.value,
-  async (provider: ProviderQuoteResponse | null) => {
+  async (provider: ProviderQuoteResponse | undefined) => {
     if (provider) {
       swapInfo.value = await getSwap(provider)
     }

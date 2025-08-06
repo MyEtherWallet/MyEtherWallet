@@ -117,52 +117,52 @@ const close = () => {
 }
 
 const toTokenSymbol = computed(() => {
-  return props.selectedQuote.quote.options.toToken.symbol || 'Unknown Token'
+  return props.selectedQuote?.quote.options.toToken.symbol || 'Unknown Token'
 })
 
 const toTokenAmount = computed(() => {
   return fromBase(
-    props.selectedQuote.toTokenAmount.toString() || '0',
-    props.selectedQuote.quote.options.toToken.decimals,
+    props.selectedQuote?.toTokenAmount.toString() || '0',
+    props.selectedQuote?.quote.options.toToken.decimals || 18,
   )
 })
 
 const toTokenIcon = computed(() => {
-  return props.selectedQuote.quote.options.toToken.logoURI || ethSvg // Fallback to ETH icon if no token icon is available
+  return props.selectedQuote?.quote.options.toToken.logoURI || ethSvg // Fallback to ETH icon if no token icon is available
 })
 
 const toTokenChain = computed(() => {
-  return props.toChain.name || 'Unknown Chain'
+  return props.toChain?.name || 'Unknown Chain'
 })
 
 const toTokenChainImg = computed(() => {
-  return props.toChain.icon || ethSvg // Fallback to ETH icon if no chain icon is available
+  return props.toChain?.icon || ethSvg // Fallback to ETH icon if no chain icon is available
 })
 
 const fromTokenSymbol = computed(() => {
-  return props.selectedQuote.quote.options.fromToken.symbol || 'Unknown Token'
+  return props.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
 })
 const fromTokenAmount = computed(() => {
   return fromBase(
-    props.selectedQuote.fromTokenAmount.toString() || '0',
-    props.selectedQuote.quote.options.fromToken.decimals,
+    props.selectedQuote?.fromTokenAmount.toString() || '0',
+    props.selectedQuote?.quote.options.fromToken.decimals || 18,
   )
 })
 const fromTokenChain = computed(() => {
-  return props.fromChain.name || 'Unknown Chain'
+  return props.fromChain?.name || 'Unknown Chain'
 })
 const fromTokenIcon = computed(() => {
-  return props.selectedQuote.quote.options.fromToken.logoURI || ethSvg // Fallback to ETH icon if no token icon is available
+  return props.selectedQuote?.quote.options.fromToken.logoURI || ethSvg // Fallback to ETH icon if no token icon is available
 })
 
 const fromTokenChainImg = computed(() => {
-  return props.fromChain.icon || ethSvg // Fallback to ETH icon if no chain icon is available
+  return props.fromChain?.icon || ethSvg // Fallback to ETH icon if no chain icon is available
 })
 
 const openProgress = () => {
   // Logic to view progress can be added here
   window.open(
-    `${props.toChain.blockExplorerTX.replace('[[txHash]]', props.txHash)}`,
+    `${props.toChain?.blockExplorerTX.replace('[[txHash]]', props.txHash)}`,
     '_blank',
   )
   close()
