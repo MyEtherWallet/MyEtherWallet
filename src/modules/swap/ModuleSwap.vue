@@ -7,7 +7,7 @@
         v-model:amount="fromAmount"
         v-model:selected-token="fromTokenSelected"
         v-model:error="fromAmountError"
-        :external-loading="swapLoaded && supportedNetwork"
+        :external-loading="!swapLoaded && supportedNetwork"
         :tokens="fromTokens"
         :show-balance="isWalletConnected"
         class="mt-4"
@@ -34,7 +34,7 @@
         v-model:amount="toAmount"
         v-model:selected-token="toTokenSelected"
         v-model:error="toAmountError"
-        :external-loading="swapLoaded && supportedNetwork && !isLoadingQuotes"
+        :external-loading="!swapLoaded && supportedNetwork && !isLoadingQuotes"
         :show-balance="false"
         :tokens="localToTokens"
         :readonly="true"
@@ -266,7 +266,6 @@ const proceedWithSwap = async () => {
     (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
   )
 
-  console.log(transactions)
   const getApiQuotes = await Promise.all(
     transactions.map(async tx => {
       const newTxData = {
