@@ -12,7 +12,13 @@
             :validate-input="checkAmountForError"
           />
         </div>
-        <app-address-book v-model="toAddress" class="mb-[2px]" />
+        <address-input
+          v-model:adr-input="adrInput"
+          :resolved-address="toAddress"
+          :address-error-messages="toAddressError"
+          @validate:address="validateAddressInput"
+          @immidate-update:resolved-address="onInput"
+        />
         <app-select-tx-fee
           :fees="gasFees"
           :is-loading-fees="isLoadingFees"
@@ -32,7 +38,7 @@
     </div>
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
-      v-if="isWalletConnected && tokenSelected"
+      v-if="isWalletConnected && tokenSelected && toAddress"
       :fromAddress="address"
       :toAddress="toAddress"
       :networkFeeUSD="networkFeeUSD"
@@ -56,7 +62,7 @@ import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
-import AppAddressBook from '@/components/AppAddressBook.vue'
+import AddressInput from '@/components/address_book/AddressInput.vue'
 import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
@@ -70,9 +76,9 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { isAddress } from '@/utils/addressUtils'
 import { toBase } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
+import { useAddressInput } from '@/composables/useAddressInput'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -88,7 +94,6 @@ const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
-const toAddress = ref('')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
@@ -102,6 +107,18 @@ const isLoadingFees = ref(false)
 
 const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
+
+/** ----------------
+ * Address Input
+ ------------------*/
+const {
+  adrInput,
+  adrError: toAddressError,
+  resolvedAddress: toAddress,
+  isValidAdrInput,
+  onInput,
+  validateAddressInput,
+} = useAddressInput(selectedChain.value)
 
 onMounted(async () => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
@@ -152,8 +169,9 @@ const networkFeeCrypto = computed(() => {
 const validSend = computed(() => {
   return (
     amountError.value === '' &&
-    toAddress.value !== '' &&
-    isAddress(toAddress.value) &&
+    toAddress.value !== undefined &&
+    toAddressError.value === '' &&
+    isValidAdrInput.value &&
     !isLoadingFees.value &&
     gasFeeError.value === ''
   )
