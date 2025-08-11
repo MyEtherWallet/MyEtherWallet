@@ -129,7 +129,7 @@ const toTokenSymbol = computed(() => {
 const toTokenAmount = computed(() => {
   return fromBase(
     props.selectedQuote?.toTokenAmount.toString() || '0',
-    props.selectedQuote?.quote.options.toToken.decimals || 18,
+    props.selectedQuote?.quote.options.toToken.decimals ?? 18,
   )
 })
 
@@ -151,7 +151,7 @@ const fromTokenSymbol = computed(() => {
 const fromTokenAmount = computed(() => {
   return fromBase(
     props.selectedQuote?.fromTokenAmount.toString() || '0',
-    props.selectedQuote?.quote.options.fromToken.decimals || 18,
+    props.selectedQuote?.quote.options.fromToken.decimals ?? 18,
   )
 })
 const fromTokenChain = computed(() => {

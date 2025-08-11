@@ -452,10 +452,10 @@ const fromAmountError = computed(() => {
       ? baseNetworkBalance
       : toBase(
           fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
+          fromTokenSelected.value?.decimals ?? 18,
         )
   const baseAmount = fromAmount.value
-    ? toBase(fromAmount.value, fromTokenSelected.value?.decimals || 18)
+    ? toBase(fromAmount.value, fromTokenSelected.value?.decimals ?? 18)
     : 0
   const remainingBalance = BigNumber(
     fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT &&
@@ -463,7 +463,7 @@ const fromAmountError = computed(() => {
       ? baseNetworkBalance
       : toBase(
           fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
+          fromTokenSelected.value?.decimals ?? 18,
         ),
   ).minus(baseAmount)
   if (fromAmount.value === undefined || fromAmount.value === '')
@@ -527,7 +527,7 @@ const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
 
 const toAmountError = computed(() => {
   const baseAmount = toAmount.value
-    ? toBase(toAmount.value, toTokenSelected.value?.decimals || 18)
+    ? toBase(toAmount.value, toTokenSelected.value?.decimals ?? 18)
     : 0
 
   // model.value = amount.value
@@ -585,8 +585,8 @@ watch(
       // Set the toTokenSelected based on the first provider's toTokenAmount
       toAmount.value = fromBase(
         providers.value[0].toTokenAmount.toString(),
-        toTokenSelected.value?.decimals || 18,
-      ).substring(0, toTokenSelected.value?.decimals || 18)
+        toTokenSelected.value?.decimals ?? 18,
+      ).substring(0, toTokenSelected.value?.decimals ?? 18)
     }
   },
 )

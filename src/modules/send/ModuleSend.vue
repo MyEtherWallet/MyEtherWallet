@@ -142,11 +142,11 @@ const checkAmountForError = () => {
   const baseTokenBalance = BigInt(
     toBase(
       tokenSelected.value?.balance || '0',
-      tokenSelected.value?.decimals || 18,
+      tokenSelected.value?.decimals ?? 18,
     ),
   )
   const baseAmount = amount.value
-    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals || 18))
+    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals ?? 18))
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -210,7 +210,7 @@ watch(
 )
 const amountToHex = computed(() => {
   const amountBase = BigInt(
-    toBase(Number(amount.value), tokenSelected.value?.decimals || 18),
+    toBase(Number(amount.value), tokenSelected.value?.decimals ?? 18),
   )
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
@@ -229,7 +229,7 @@ const getTxRequestBody = (): EstimatesRequestBody | undefined => {
       data.value = web3Contract.methods
         .transfer(
           toAddress.value,
-          toBase(amount.value, tokenSelected.value?.decimals || 18),
+          toBase(amount.value, tokenSelected.value?.decimals ?? 18),
         )
         .encodeABI() //
     } else {

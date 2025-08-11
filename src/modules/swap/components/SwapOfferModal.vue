@@ -246,7 +246,7 @@ const toToken = computed(() => {
 const toAmount = computed(() => {
   return fromBase(
     selectedQuote.value?.toTokenAmount.toString() || '0',
-    toToken.value?.decimals || 18,
+    toToken.value?.decimals ?? 18,
   )
 })
 
@@ -267,7 +267,7 @@ const toAmountFiat = computed(() => {
     BigNumber(
       fromBase(
         selectedQuote.value?.toTokenAmount.toString() || '0',
-        toToken.value?.decimals || 18,
+        toToken.value?.decimals ?? 18,
       ),
     )
       .times(BigNumber(toToken.value?.price || '0'))
