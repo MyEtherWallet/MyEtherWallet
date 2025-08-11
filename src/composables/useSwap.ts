@@ -138,7 +138,7 @@ export const useSwap = (): {
       return undefined;
     }
 
-    const rawAmount = toBase(params.amount, params.fromToken.decimals || 18,) // Default to 18 decimals if not specified);
+    const rawAmount = toBase(params.amount, params.fromToken.decimals ?? 18,) // Default to 18 decimals if not specified);
     return swapInstance.value.getQuotes(
       {
         fromAddress: params.fromAddress,
