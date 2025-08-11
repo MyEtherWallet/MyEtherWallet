@@ -139,7 +139,12 @@ const tokenSelected = computed(() => {
 const checkAmountForError = () => {
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
 
-  const baseTokenBalance = tokenSelected.value?.balanceWei || '0'
+  const baseTokenBalance = BigInt(
+    toBase(
+      tokenSelected.value?.balance || '0',
+      tokenSelected.value?.decimals || 18,
+    ),
+  )
   const baseAmount = amount.value
     ? BigInt(toBase(amount.value, tokenSelected.value?.decimals || 18))
     : BigInt(0)
@@ -147,9 +152,9 @@ const checkAmountForError = () => {
     amountError.value = t('error.amount.required') // amount is undefined or blank
   else if (baseAmount < 0)
     amountError.value = t('error.amount.less_than_zero') // amount less than 0
-  else if (isWalletConnected.value && BigInt(baseTokenBalance) < baseAmount)
+  else if (isWalletConnected.value && BigInt(baseTokenBalance) < baseAmount) {
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
-  else amountError.value = ''
+  } else amountError.value = ''
 }
 
 const connectWallet = () => {
@@ -204,9 +209,8 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  const amountBase = toBase(
-    Number(amount.value),
-    tokenSelected.value?.decimals || 18,
+  const amountBase = BigInt(
+    toBase(Number(amount.value), tokenSelected.value?.decimals || 18),
   )
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
