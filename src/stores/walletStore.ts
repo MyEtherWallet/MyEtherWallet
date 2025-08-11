@@ -8,6 +8,7 @@ export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
+import { fromBase } from '@/utils/unit'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -97,9 +98,7 @@ export const useWalletStore = defineStore('walletStore', () => {
             name: token.name ?? 'Unknown',
             symbol: token.symbol ?? 'UNK',
             balanceWei: token.balance,
-            balance: BigNumber(token.balance)
-              .div(new BigNumber(10).pow(token.decimals))
-              .toString(),
+            balance: fromBase(token.balance, token.decimals).toString(),
           })
         }
       }
@@ -158,6 +157,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     const token = tokens.value.find(
       t => t.contract.toLowerCase() === contract.toLowerCase(),
     )
+
     return token || null
   }
 

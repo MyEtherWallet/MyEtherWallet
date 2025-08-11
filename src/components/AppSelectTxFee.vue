@@ -254,7 +254,10 @@ onFetchResponse(() => {
       BigInt(data.value.fees[gasPriceType.value].nativeValue || '0') +
       BigInt(txData.value.value)
 
-    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+    if (
+      BigInt(totalBalanceNeeded) > BigInt(balanceWei.value) &&
+      isWalletConnected.value
+    ) {
       gasFeeError.value = NOT_ENOUGH_BALANCE
     }
   } else {

@@ -36,6 +36,7 @@
             {{ balanceFiatOrError }}
           </div>
           <div
+            v-if="isWalletConnected"
             :class="[
               'text-sm text-info transition-colors',
               { 'text-primary': inFocusInput },
@@ -64,7 +65,8 @@ import {
 } from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: isLoading, isWalletConnected } =
+  storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {
@@ -90,11 +92,11 @@ const error = defineModel('error', {
 
 const tokenBalanceRaw = computed(() => {
   if (isLoading.value || !selectedToken.value) return null
-
   return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
 })
 
 const balanceFiatOrError = computed(() => {
+  if (!isWalletConnected.value) return ''
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),
