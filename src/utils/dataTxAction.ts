@@ -18,6 +18,14 @@ const signatures = {
     if (value <= 0n) return ACTIONS.approval;
     return ACTIONS.approval;
   },
+  // ERC20 transfer(address,uint256)
+  '0xa9059cbb': () => {
+    return ACTIONS.transfer
+  },
+  // ERC20 transferFrom(address,address,uint256)
+  '0x23b872dd': () => {
+    return ACTIONS.transfer
+  },
   '0x876a02f6': () => { // ETH -> token
     return ACTIONS.swap
   },
