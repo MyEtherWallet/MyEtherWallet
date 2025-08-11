@@ -8,6 +8,8 @@ import type {
   QuotesRequestBody,
   TokenBalancesRaw,
   EthereumSignableTransactionResponse,
+  GetEvmMultiTransactionEstimateRequest,
+  GetUnsignedEvmMultiTransactionResponse,
 } from '@/mew_api/types'
 
 export interface WalletInterface {
@@ -32,4 +34,11 @@ export interface WalletInterface {
   getProvider: () => string
   getBalance: () => Promise<TokenBalancesRaw>
   broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
+  // multiple tx handler
+  getMultipleGasFees?: (
+    txs: GetEvmMultiTransactionEstimateRequest,
+  ) => Promise<QuotesResponse>
+  getMultipleSignableTransactions?: (
+    feeObj: EthereumSignableTransactionParams,
+  ) => Promise<GetUnsignedEvmMultiTransactionResponse>
 }

@@ -10,10 +10,11 @@
           class="p-4 flex flex-col border border-solid border-grey-outline rounded-lg mb-2"
         >
           <h3 class="font-bold text-s-20">
-            Best offer from {{ providerName }}
+            {{ t('swap.swap-offer.best-offer-from') }}
+            {{ providerName }}
           </h3>
           <div class="font-normal text-s-20 my-2 mb-2 flex items-center gap-2">
-            for
+            {{ t('swap.for') }}
             <div
               class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
             >
@@ -27,7 +28,7 @@
               {{ amount }}
               {{ fromToken?.symbol }}</span
             >
-            you will get:
+            {{ t('swap.swap-offer.you-will-get') }}:
           </div>
           <div class="flex bg-grey-light-2 rounded-lg p-4 mb-2">
             <div class="relative">
@@ -60,7 +61,7 @@
             </div>
           </div>
           <app-pop-up-menu
-            :placeholder="`${quotes.length} other offers`"
+            :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length })}`"
             location="left"
           >
             <template #menu-content="{ toggleMenu }">
@@ -78,7 +79,9 @@
                 >
                   <div class="flex items-center justify-between">
                     <div>
-                      <p class="text-grey-50 text-s-14">Offer {{ idx + 1 }}</p>
+                      <p class="text-grey-50 text-s-14">
+                        {{ t('swap.offer') }} {{ idx + 1 }}
+                      </p>
                       <p class="font-bold text-s-14">
                         ~{{
                           parseAmount(
@@ -106,23 +109,27 @@
             <!-- TODO: make library return these values -->
             <!-- <div class="text-s-14 text-grey-50">Price impact: -0.07%</div> -->
             <div class="text-s-14 text-grey-50">
-              Max. slippage: {{ swapInfo?.slippage }}%
+              {{ t('swap.swap-offer.max-slippage') }}: {{ swapInfo?.slippage }}%
             </div>
             <!-- <div class="text-s-14 text-grey-50">
-              Minimum received: 128.345 *tSym*
+              {{ t('swap.swap-offer.minimum-received') }}: 128.345 *tSym*
             </div> -->
             <div class="text-s-14 text-grey-50">
-              Offer includes {{ swapInfo?.fee }}% fee
+              {{
+                t('swap.swap-offer.offer-includes', {
+                  feePercent: swapInfo?.fee,
+                })
+              }}
             </div>
           </div>
         </div>
-        <app-select-tx-fee />
+        <app-select-tx-fee :fees="swapGasFeeQuote" />
         <app-base-button
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="isLoading"
         >
-          Proceed with Swap
+          {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
       </div>
     </template>
@@ -141,9 +148,12 @@ import {
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import BigNumber from 'bignumber.js'
-import { type Chain } from '@/mew_api/types'
+import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 enum ProviderName {
   oneInch = 'oneInch',
@@ -173,7 +183,7 @@ const selectedQuote = defineModel('selectedQuote', {
   type: Object as () => ProviderQuoteResponse,
 })
 
-defineProps({
+const props = defineProps({
   quotes: {
     type: Array as () => ProviderQuoteResponse[],
     default: () => [],
@@ -191,6 +201,10 @@ defineProps({
   loading: {
     type: Boolean,
     default: false,
+  },
+  swapGasFeeQuote: {
+    type: Object as () => QuotesResponse,
+    default: () => ({}),
   },
 })
 
@@ -212,7 +226,7 @@ const providerName = computed(() => {
     case ProviderName.jupiter:
       return DisplayProviderName.jupiter
     default:
-      return 'Unknown Provider'
+      return t('swap.swap-offer.unknown-provider')
   }
 })
 
@@ -264,6 +278,6 @@ const toAmountFiat = computed(() => {
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
   isLoading.value = true
-  emits('update:proceedWithSwap')
+  emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
 }
 </script>

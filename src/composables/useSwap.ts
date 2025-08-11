@@ -11,6 +11,9 @@ import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
 import BN from 'bn.js'
 import { toBase } from '@/utils/unit'
+import { useI18n } from 'vue-i18n';
+import { useToastStore } from '@/stores/toastStore';
+import { ToastType } from '@/types/notification';
 
 // TODO: Import types from @enkryptcom/swap
 
@@ -45,13 +48,15 @@ export const useSwap = (): {
   getQuote: (params: QuoteParam) => Promise<ProviderQuoteResponse[] | undefined>;
   getSwap: (quote: ProviderQuoteResponse) => Promise<ProviderSwapResponse | null>;
 } => {
+  const toastStore = useToastStore()
+  const { t } = useI18n();
   const chainsStore = useChainsStore()
   const globalStore = useGlobalStore()
   const walletStore = useWalletStore()
   const swapInstance: Ref<Swapper | null> = ref(null);
   const { selectedChain, chains } = storeToRefs(chainsStore)
   const { selectedNetwork } = storeToRefs(globalStore)
-  const { tokens, balance } = storeToRefs(walletStore)
+  const { tokens, balance, isWalletConnected } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(false)
   const toChains = ref<Chain[]>([])
   const toTokens = ref<ToTokenType | null>(null)
@@ -87,7 +92,7 @@ export const useSwap = (): {
           if (chain) return chain
         })
         .filter((chain): chain is Chain => chain !== undefined)
-      fromTokens.value = fromTokens.value = allFromTokens.all.map((token) => {
+      const allFromTokensWithBalance = allFromTokens.all.map((token) => {
         let tokenBalance = '0'
         if (tokens.value.length > 0) {
           if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
@@ -100,15 +105,30 @@ export const useSwap = (): {
           }
         }
 
-        return {
+        return Object.freeze({
           ...token,
           balance: tokenBalance,
-        } as NewTokenInfo
+        }) as NewTokenInfo
       })
+
+      const fromAllTokensToWalletTokens = allFromTokensWithBalance.filter((token) => {
+
+        if (tokens.value.find((t) => t.contract.toLowerCase() === token.address.toLowerCase())) {
+          return true;
+        }
+        if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) { return true; }
+        return false;
+      })
+
+      fromTokens.value = isWalletConnected.value ? fromAllTokensToWalletTokens : allFromTokensWithBalance
       swapLoaded.value = true
       return Promise.resolve()
-    } catch (error) {
-      console.log(error)
+    } catch {
+      // TODO: add sentry to catch actual error
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: t('swap.error.initializing-swap-failed'),
+      })
     }
   }
 
@@ -137,14 +157,18 @@ export const useSwap = (): {
     try {
       const response = await swapInstance.value.getSwap(providerQuote.quote);
       return response;
-    } catch (error) {
-      console.error('Error getting swap:', error);
+    } catch {
+      // TODO: add sentry to catch actual error
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: t('swap.error.getting-swap'),
+      });
       return null;
     }
   }
 
   watch(
-    () => selectedChain.value?.name,
+    () => [selectedChain.value?.name, tokens.value],
     async (newChainName) => {
       if (newChainName) {
         await initSwapper()

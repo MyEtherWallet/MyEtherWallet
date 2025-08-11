@@ -1,7 +1,7 @@
 <template>
   <div class="relative max-w-[478px] mx-auto">
     <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
-      <p class="text-s-16 mb-2">From</p>
+      <p class="text-s-16 mb-2">{{ t('common.from') }}</p>
       <app-select-chain />
       <app-swap-enter-amount
         v-model:amount="fromAmount"
@@ -14,16 +14,17 @@
       />
     </div>
     <div
-      class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%] top-[41%]"
+      class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
       :class="{
         'top-[34%]': isCrossChain,
+        'top-[41%]': !isCrossChain,
       }"
     >
       <arrows-up-down-icon class="w-6 h-6" />
     </div>
     <div class="pt-2"></div>
     <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
-      <p class="text-s-16 mb-2">To</p>
+      <p class="text-s-16 mb-2">{{ t('common.to') }}</p>
       <app-select-chain
         :can-store="false"
         :passed-chains="toChains"
@@ -52,8 +53,7 @@
     <div class="pt-4"></div>
     <div v-if="swapLoaded && !supportedNetwork" class="text-error text-center">
       <p class="text-s-16">
-        The selected from network does not support swaps. Please select a
-        different network.
+        {{ t('swap.not-supported-network') }}
       </p>
     </div>
     <app-base-button
@@ -71,7 +71,7 @@
       "
       @click="swapButton"
     >
-      Swap</app-base-button
+      {{ t('common.swap') }}</app-base-button
     >
     <div class="w-full max-w-[478px] mx-auto" v-else>
       <app-base-button
@@ -79,7 +79,7 @@
         :disabled="swapLoaded && !supportedNetwork"
         @click="connectWalletForSwap"
       >
-        Connect Wallet</app-base-button
+        {{ t('connect_wallet') }}</app-base-button
       >
     </div>
   </div>
@@ -92,6 +92,7 @@
     :amount="fromAmount"
     :to-chain="selectedToChain"
     :swap-info="swapInfo || undefined"
+    :swap-gas-fee-quote="swapGasFeeQuote || undefined"
   />
   <swap-initiated-modal
     v-model:swap-initiated-open="swapInitiatedOpen"
@@ -103,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, type Ref, computed, watch, nextTick } from 'vue'
+import { ref, onBeforeMount, type Ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid' // Importing the arrowsUpDown icon from Heroicons
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -122,6 +123,7 @@ import AppSelectChain from '@/components/AppSelectChain.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
+import type { EvmTransactionAction, QuotesResponse } from '@/mew_api/types'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -132,13 +134,13 @@ import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
 import { useRouter } from 'vue-router'
 import { toBase } from '@/utils/unit'
-import BN from 'bn.js'
 import { GasPriceType } from '@/providers/types'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
+import dataTxAction from '@/utils/dataTxAction'
 
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()
@@ -173,6 +175,7 @@ const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
 const isLoadingQuotes = ref(false)
 const txHash = ref<HexPrefixedString>('0x')
+const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
 
 const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
@@ -181,7 +184,7 @@ const setToToken = () => {
   if (!selectedToChain.value) {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: t('swap.toast.select-chain'), // TODO: add to i18n
+      text: t('swap.toast.select-chain'),
       duration: 5000,
     })
     return
@@ -190,7 +193,7 @@ const setToToken = () => {
   if (!enkryptEnum) {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: t('swap.toast.unsupported-chain'), // TODO: add to i18n
+      text: t('swap.toast.unsupported-chain'),
       duration: 5000,
     })
     return
@@ -210,7 +213,7 @@ const setToToken = () => {
       const sameNetworks =
         selectedToChain.value?.name === selectedChain.value?.name ? 1 : 0
       const tokenFromNetwork =
-        allToTrending.length > 0
+        allToTrending && allToTrending.length > 0
           ? allToTrending[sameNetworks]
           : allToTokens[sameNetworks]
       const defaultToken = {
@@ -258,67 +261,57 @@ const setToToken = () => {
   }
 }
 
-const proceedWithSwap = async () => {
+const proceedWithSwap = async (quoteId: string) => {
   let txPromise
   // Proceed with the swap using the selected quote
-  // Filter transactions to only include EVMTransaction type
-  const transactions = (swapInfo.value?.transactions || []).filter(
-    (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
-  )
 
-  const getApiQuotes = await Promise.all(
-    transactions.map(async tx => {
-      const newTxData = {
-        address: tx.from,
-        to: tx.to,
-        data: tx.data,
-        value: tx.value,
-      }
-      return await wallet.value?.getGasFee(newTxData)
-    }),
-  )
-
-  const signableTx = await Promise.all(
-    getApiQuotes.map(async apiQuote => {
-      if (!apiQuote) return null
-      const signableTx = await wallet.value?.getSignableTransaction({
-        priority: gasPriceType.value as GasPriceType,
-        quoteId: apiQuote?.quoteId,
-      })
-
-      return signableTx
-    }),
-  )
+  const getSignableTransactions =
+    await wallet.value?.getMultipleSignableTransactions?.({
+      priority: gasPriceType.value as GasPriceType,
+      quoteId: quoteId,
+    })
 
   if (
-    wallet.value?.getWalletType() !== WalletType.WAGMI &&
-    wallet.value?.getWalletType() !== WalletType.INJECTED
+    getSignableTransactions?.serialized.length &&
+    getSignableTransactions?.serialized.length > 0
   ) {
-    for (const tx of signableTx) {
+    for (let i = 0; i < getSignableTransactions?.serialized.length; i++) {
+      const tx = getSignableTransactions?.serialized[i]
+      const indexAtTheEnd = i === getSignableTransactions?.serialized.length - 1
       if (tx) {
         try {
-          const signedTx = await wallet.value?.SignTransaction?.(
-            tx.serialized as HexPrefixedString,
-          )
-          txPromise = wallet.value?.broadcastTransaction(
-            signedTx as unknown as HexPrefixedString,
-          )
+          if (
+            wallet.value?.getWalletType() === WalletType.WAGMI ||
+            wallet.value?.getWalletType() === WalletType.INJECTED
+          ) {
+            const broadcast = wallet.value?.SendTransaction?.(
+              tx as HexPrefixedString,
+            )
+            // only assign txPromise if it's the last transaction
+            if (indexAtTheEnd) {
+              txPromise = broadcast
+            }
+          } else {
+            const signedTx = await wallet.value?.SignTransaction?.(
+              tx as HexPrefixedString,
+            )
+
+            const broadcast = wallet.value?.broadcastTransaction(
+              signedTx?.signed as unknown as HexPrefixedString,
+            )
+            // assign last transaction to txPromise
+            if (indexAtTheEnd) {
+              txPromise = broadcast
+            }
+          }
         } catch {
           toastStore.addToastMessage({
             type: ToastType.Error,
-            text: t('send.toast.tx-sign-failed'),
+            text: t('swap.toast.tx-sign-failed'),
             duration: 10000,
           })
           return
         }
-      }
-    }
-  } else {
-    for (const tx of signableTx) {
-      if (tx) {
-        txPromise = wallet.value?.SendTransaction?.(
-          tx.serialized as HexPrefixedString,
-        )
       }
     }
   }
@@ -329,7 +322,7 @@ const proceedWithSwap = async () => {
     swapInitiatedOpen.value = true
     toastStore.addToastMessage({
       type: ToastType.Success,
-      text: t('send.toast.tx-send-success'),
+      text: t('swap.toast.tx-send-success'),
       duration: 10000,
     })
   })
@@ -357,7 +350,8 @@ const setFromToken = () => {
   if (!hasSwapValues.value) {
     if (fromTokens.value && fromTokens.value.length > 0) {
       const findFirstToken = fromTokens.value.find(
-        (token: NewTokenInfo) => token.address === MAIN_TOKEN_CONTRACT,
+        (token: NewTokenInfo) =>
+          token.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
       )
       if (findFirstToken) {
         fromTokenSelected.value = findFirstToken // Default to MEW token if available
@@ -421,6 +415,25 @@ const connectWalletForSwap = () => {
 const swapButton = async () => {
   bestSwapLoadingOpen.value = true
   await debounceFetchQuotes()
+  const transactions = (swapInfo.value?.transactions || []).filter(
+    (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+  )
+
+  // format transactions to match api
+  const parsedTransactions = transactions.map(tx => {
+    const action = dataTxAction(tx) as EvmTransactionAction
+    return {
+      address: tx.from,
+      to: tx.to,
+      data: tx.data,
+      value: tx.value || '0x0',
+      action: action,
+    }
+  })
+
+  const signableTransaction =
+    await wallet.value?.getMultipleGasFees?.(parsedTransactions)
+  swapGasFeeQuote.value = signableTransaction || undefined
   bestSwapLoadingOpen.value = false
   bestOfferSelectionOpen.value = true
 }
@@ -430,32 +443,79 @@ const fromAmount = ref<number | string>('0')
 const fromTokenSelected: Ref<NewTokenInfo> = ref({} as NewTokenInfo) // TODO: Implement token selection
 
 const fromAmountError = computed(() => {
+  const baseNetworkBalance = toBase(
+    walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
+    18,
+  )
   const baseBalance =
     fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
-      ? toBase(
-          walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
-        )
+      ? baseNetworkBalance
       : toBase(
           fromTokenSelected.value?.balance || '0',
           fromTokenSelected.value?.decimals || 18,
         )
   const baseAmount = fromAmount.value
-    ? toBase(fromAmount.value, fromTokenSelected.value.decimals)
+    ? toBase(fromAmount.value, fromTokenSelected.value?.decimals || 18)
     : 0
-
+  const remainingBalance = BigNumber(
+    fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT &&
+      isWalletConnected.value
+      ? baseNetworkBalance
+      : toBase(
+          fromTokenSelected.value?.balance || '0',
+          fromTokenSelected.value?.decimals || 18,
+        ),
+  ).minus(baseAmount)
   if (fromAmount.value === undefined || fromAmount.value === '')
-    return 'Amount is required' // amount is blank
+    return t('swap.error.amount-required') // amount is blank
   else if (BigInt(baseAmount) < 0)
-    return 'Amount must be greater than 0' // amount less than 0
-  else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
-    return 'Insufficient balance' // amount greater than selected balance
+    return t('swap.error.more-than-zero') // amount less than 0
+  else if (selectedQuote.value) {
+    if (
+      BigInt(selectedQuote.value?.additionalNativeFees?.toString()) >
+      BigInt(remainingBalance.toString())
+    )
+      return t('swap.error.insufficient-balance-for-fees', {
+        symbol: selectedChain.value?.name,
+      }) // insufficient native token balance for gas
+    if (selectedQuote.value.minMax) {
+      if (
+        BigInt(baseAmount) <
+        BigInt(selectedQuote.value.minMax.minimumFrom.toString())
+      )
+        return t('swap.error.minimum-amount', {
+          minAmount: fromBase(
+            selectedQuote.value.minMax.minimumFrom.toString(),
+            fromTokenSelected.value.decimals,
+          ),
+          symbol: fromTokenSelected.value.symbol,
+        }) // amount less than min amount
+      if (
+        BigInt(baseAmount) >
+        BigInt(selectedQuote.value.minMax.maximumFrom.toString())
+      )
+        return t('swap.error.maximum-amount', {
+          maxAmount: fromBase(
+            selectedQuote.value.minMax.maximumFrom.toString(),
+            fromTokenSelected.value.decimals,
+          ),
+          symbol: fromTokenSelected.value.symbol,
+        }) // amount less than min amount
+    }
+  } else if (
+    isWalletConnected.value &&
+    BigInt(baseBalance) < BigInt(baseAmount)
+  )
+    return t('swap.error.insufficient-native', {
+      symbol: fromTokenSelected.value.symbol,
+    })
+  // amount greater than selected balance
   else if (
     providers.value.length === 0 &&
     fromAmount.value !== '0' &&
     !isLoadingQuotes.value
   )
-    return 'No quotes available' // no quotes available
+    return t('swap.error.no-quotes')
   return ''
 })
 
@@ -470,8 +530,8 @@ const toAmountError = computed(() => {
 
   // model.value = amount.value
   if (toAmount.value === undefined || toAmount.value === '')
-    return 'Amount is required' // amount is blank
-  else if (BigInt(baseAmount) < 0) return 'Amount must be greater than 0' // amount less than 0
+    return t('swap.error.amount-required') // amount is blank
+  else if (BigInt(baseAmount) < 0) return t('swap.error.more-than-zero') // amount less than 0
   return ''
 })
 
@@ -479,6 +539,7 @@ const fetchQuotes = async () => {
   providers.value = []
   selectedQuote.value = undefined
   isLoadingQuotes.value = true
+  toAmount.value = '0'
   // fetch quotes only if fromTokenSelected.value is defined
   try {
     const quotes = await getQuote({
@@ -488,58 +549,16 @@ const fetchQuotes = async () => {
       fromAddress: userAddress.value,
       toAddress: toAddress.value,
     })
-    const fromAmountBase = toBase(
-      fromAmount.value.toString(),
-      fromTokenSelected.value?.decimals || 18,
-    )
 
-    const remainingBalance = BigNumber(
-      fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
-        ? toBase(
-            walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-            fromTokenSelected.value?.decimals || 18,
-          )
-        : toBase(
-            fromTokenSelected.value?.balance || '0',
-            fromTokenSelected.value?.decimals || 18,
-          ),
-    ).minus(fromAmountBase)
-
-    providers.value =
-      quotes && quotes.length > 0
-        ? quotes
-            .filter(q => {
-              // Must be swapping enough tokens
-              const firstCheck =
-                q.minMax.minimumFrom.lte(new BN(fromAmountBase)) &&
-                // Must not be swapping too many tokens
-                q.minMax.maximumFrom.gte(new BN(fromAmountBase))
-              if (!isWalletConnected.value) {
-                return firstCheck
-              }
-              return (
-                firstCheck &&
-                // Must be able to afford the fees
-                q.additionalNativeFees.lte(new BN(remainingBalance.toString()))
-              )
-            })
-            .filter((provider: ProviderQuoteResponse) => {
-              // Filter out providers where fromAmount is less than minimumFrom
-              // which means its an invalid qupte
-              if (
-                BigNumber(provider.minMax.minimumFrom.toString()).gt(
-                  fromAmount.value,
-                )
-              )
-                return false
-              return true
-            })
-        : []
+    providers.value = quotes && quotes.length > 0 ? quotes : []
     selectedQuote.value = providers.value[0] || undefined
     isLoadingQuotes.value = false
-  } catch (e) {
-    console.log(e)
-    console.info('Error fetching quotes:', e)
+  } catch {
+    // TODO: add sentry to catch actual error
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.error.fetching-quotes'),
+    })
   }
 }
 
@@ -590,12 +609,20 @@ watch(
   },
 )
 
-onMounted(async () => {
+watch(
+  () => fromTokens.value,
+  () => {
+    setFromToken()
+  },
+  { deep: true },
+)
+
+onBeforeMount(async () => {
   await initSwapper()
 
   await nextTick()
-  setFromToken()
   setToToken()
+  setFromToken()
 
   if (hasSwapValues.value) {
     fromAmount.value = swapValues.value.fromAmount

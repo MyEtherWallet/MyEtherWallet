@@ -122,7 +122,6 @@ const balanceFiatOrError = computed(() => {
     ),
   )
 
-  console.log(_balance)
   return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
 })
 

@@ -11,10 +11,11 @@
         >
           <img :src="swapInitiatedIcon" alt="Swap Initiated Icon" />
         </div>
-        <h3 class="text-s-24 font-bold mb-2 text-p-120">Swap Initiated</h3>
+        <h3 class="text-s-24 font-bold mb-2 text-p-120">
+          {{ t('swap.initiated.swap-initiated') }}
+        </h3>
         <p class="text-center text-s-14 text-grey-50">
-          Once completed, {{ toTokenSymbol }} will be deposited to the <br />
-          address you specified.
+          {{ t('swap.initiated.completed-note', { symbol: toTokenSymbol }) }}
         </p>
       </div>
       <div class="flex-col justify-start px-8">
@@ -42,7 +43,7 @@
           <div class="text-s-20 font-bold leading-[15px]">
             {{ fromTokenAmount }} {{ fromTokenSymbol }} <br />
             <span class="text-s-14 font-normal text-grey-70"
-              >on {{ fromTokenChain }}</span
+              >{{ t('swap.on') }} {{ fromTokenChain }}</span
             >
           </div>
         </div>
@@ -52,37 +53,39 @@
         <div class="flex gap-2 items-center">
           <div class="relative">
             <div
-              class="w-[36px] h-[36px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center"
+              class="w-[36px] h-[36px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
             >
               <img
                 :src="toTokenIcon"
                 alt="Token Symbol"
-                class="inline-block w-full"
+                class="inline-block max-w-[50px] w-[50px]"
               />
             </div>
             <div
-              class="w-[16px] h-[16px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-2 right-1 translate-x-1/2 translate-y-1/2"
+              class="w-[16px] h-[16px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-2 right-1 translate-x-1/2 translate-y-1/2 overflow-hidden"
             >
               <img
                 :src="toTokenChainImg"
                 alt="To Token Network"
-                class="inline-block w-full"
+                class="inline-block max-w-[50px] w-[50px]"
               />
             </div>
           </div>
           <div class="text-s-20 font-bold leading-[15px]">
             {{ toTokenAmount }} {{ toTokenSymbol }} <br />
             <span class="text-s-14 font-normal text-grey-70"
-              >on {{ toTokenChain }}</span
+              >{{ t('swap.on') }} {{ toTokenChain }}</span
             >
           </div>
         </div>
       </div>
       <div class="px-8 flex mt-10 gap-2">
         <app-base-button class="w-full" @click="openProgress">
-          View Progress
+          {{ t('swap.initiated.view-progress') }}
         </app-base-button>
-        <app-base-button class="w-full" @click="close"> Close </app-base-button>
+        <app-base-button class="w-full capitalize" @click="close">
+          {{ t('common.close') }}
+        </app-base-button>
       </div>
     </template>
   </app-dialog>
@@ -99,6 +102,9 @@ import { type Chain } from '@/mew_api/types'
 import { type ProviderQuoteResponse } from '@enkryptcom/swap'
 import { type HexPrefixedString } from '@/providers/types'
 import { fromBase } from '@/utils/unit'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   fromChain: Chain | undefined

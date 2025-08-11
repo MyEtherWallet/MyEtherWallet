@@ -36,8 +36,15 @@ export type EstimatesResponse =
   components['schemas']['GetEvmTransactionEstimateResponse']
 export type EstimatesRequestBody =
   components['schemas']['GetEvmTransactionEstimateRequest']
+
+// multi-transaction estimates
 export type GetEvmMultiTransactionEstimateRequest =
   components['schemas']['GetEvmMultiTransactionEstimateRequest']
+export type EvmTransactionAction = components['schemas']['EvmTransactionAction']
+
+// mutli quotes
+export type GetUnsignedEvmMultiTransactionResponse =
+  components['schemas']['GetUnsignedEvmMultiTransactionResponse']
 
 //Quotes
 export type QuotesResponse =

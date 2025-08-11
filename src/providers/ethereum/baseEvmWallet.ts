@@ -1,7 +1,7 @@
 import type { WalletInterface } from '../common/walletInterface'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { type TokenBalancesRaw } from '@/mew_api/types'
+import { type TokenBalancesRaw, type GetUnsignedEvmMultiTransactionResponse } from '@/mew_api/types'
 import { WalletType, type HexPrefixedString } from '../types'
 import {
   type EthereumSignableTransactionParams,
@@ -45,7 +45,7 @@ class BaseEvmWallet implements WalletInterface {
 
   getMultipleGasFees = (txs: GetEvmMultiTransactionEstimateRequest) => {
     return fetchWithRetry<QuotesResponse>(
-      `/v1/evm/${this.chainId}/multi-estimates?noInjectErrors=false`,
+      `/v1/evm/${this.chainId}/multi-quotes?noInjectErrors=false`,
       {
         method: 'POST',
         body: JSON.stringify(txs),
@@ -61,9 +61,9 @@ class BaseEvmWallet implements WalletInterface {
    */
   getMultipleSignableTransactions = async (
     feeObj: EthereumSignableTransactionParams,
-  ): Promise<EthereumSignableTransactionResponse[]> => {
-    const response = await fetchWithRetry<EthereumSignableTransactionResponse[]>(
-      `/v1/evm/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned/multi?noInjectErrors=false&priority=${feeObj.priority}`,
+  ): Promise<GetUnsignedEvmMultiTransactionResponse> => {
+    const response = await fetchWithRetry<GetUnsignedEvmMultiTransactionResponse>(
+      `/v1/evm/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
     return response
   }

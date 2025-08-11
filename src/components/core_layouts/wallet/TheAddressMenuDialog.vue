@@ -94,7 +94,7 @@
               @click.stop.prevent="closeDialog"
             >
               <icon-swap class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('swap') }}</p>
+              <p class="text-s-12">{{ $t('common.swap') }}</p>
             </router-link>
           </div>
           <button

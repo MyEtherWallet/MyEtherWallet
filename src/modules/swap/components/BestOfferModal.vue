@@ -13,10 +13,10 @@
       </div>
       <div class="p-8 pb-12 flex flex-col items-center">
         <h3 class="text-s-24 text-p-120 font-bold">
-          Looking for the best offer
+          {{ t('swap.best-offer.looking') }}
         </h3>
         <p class="text-s-14 text-grey-50 font-normal mt-2">
-          Analyzing decentralized exchanges...
+          {{ t('swap.best-offer.analyzing') }}
         </p>
       </div>
     </template>
@@ -26,6 +26,9 @@
 <script lang="ts" setup>
 import AppDialog from '@/components/AppDialog.vue'
 import bestOfferIcon from '@/assets/images/swap/looking-for-best-offer.svg'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const model = defineModel('bestOfferOpen', {
   type: Boolean,
