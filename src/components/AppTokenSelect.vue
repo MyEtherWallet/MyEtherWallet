@@ -153,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWalletStore } from '@/stores/walletStore'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
 import {
@@ -179,7 +179,6 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
 const {
@@ -200,10 +199,12 @@ const tokens = computed<TokenBalance[]>(() => {
   return [safeMainTokenBalance.value, ...erc20Tokens.value]
 })
 
-defineProps({
-  selectedToken: {
-    type: Object as () => TokenBalance,
-  },
+const selectedTokenContract = defineModel<string>('selectedTokenContract')
+
+const selectedToken = computed<TokenBalance | null>(() => {
+  return store.getTokenBalance(
+    selectedTokenContract.value || MAIN_TOKEN_CONTRACT,
+  )
 })
 
 const showAllTokens = ref(false)
@@ -316,7 +317,7 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
 })
 
 const setSelectedToken = (token: TokenBalance) => {
-  emit('update:selectedToken', token)
+  selectedTokenContract.value = token.contract
   showAllTokens.value = false
 }
 

@@ -85,9 +85,10 @@ const onClick = () => {
 }
 
 const defaultClass = computed<string>(() => {
-  const _default = `rounded-full  bg-${props.theme} text-white !focus:bg-error !focus:text-${props.theme} transition-[background] duration-300 !focus:bg-${props.theme}/25`
-  const _outline = `border border-2 border-${props.theme} !text-${props.theme}  !bg-transparent`
+  const shared = `rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white  hover:opacity-90`
+  const _default = `text-white bg-${props.theme}`
+  const _outline = `border border-2 border-${props.theme} text-${props.theme}  bg-transparent`
 
-  return props.isOutline ? `${_default} ${_outline}` : _default
+  return props.isOutline ? `${shared} ${_outline}` : `${shared} ${_default}`
 })
 </script>

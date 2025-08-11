@@ -50,7 +50,9 @@
     "copy_failed": "Copy failed",
     "and": "and",
     "deposit_title": "Your {chain} address",
-    "deposit_description": "You can deposit any tokens supported by {chain} to this address."
+    "deposit_description": "You can deposit any tokens supported by {chain} to this address.",
+    "not_enough_balance_to_cover_fee": "Not enough {symbol} to cover network fee.",
+    "buy_more": "Buy more {symbol}"
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",
