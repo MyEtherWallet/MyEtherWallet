@@ -84,6 +84,7 @@ export const useSwap = (): {
       const allFromTokens = swapInstance.value.getFromTokens()
       supportedNetwork.value = allFromTokens.all.length > 0
       toTokens.value = swapInstance.value.getToTokens()
+      console.log(toTokens.value)
       const toTokensNetworks = Object.keys(toTokens.value.all)
       toChains.value = toTokensNetworks
         .map((networkName) => {
