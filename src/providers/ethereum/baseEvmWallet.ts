@@ -29,7 +29,7 @@ class BaseEvmWallet implements WalletInterface {
    */
   getGasFee = (tx: QuotesRequestBody): Promise<QuotesResponse> => {
     return fetchWithRetry<QuotesResponse>(
-      `/v1/evm/${this.chainId}/quotes?noInjectErrors=false`,
+      `/v1/evm/chains/${this.chainId}/quotes?noInjectErrors=false`,
       {
         method: 'POST',
         body: JSON.stringify(tx),
@@ -45,7 +45,7 @@ class BaseEvmWallet implements WalletInterface {
 
   getMultipleGasFees = (txs: GetEvmMultiTransactionEstimateRequest) => {
     return fetchWithRetry<QuotesResponse>(
-      `/v1/evm/${this.chainId}/multi-quotes?noInjectErrors=false`,
+      `/v1/evm/chains/${this.chainId}/multi-quotes?noInjectErrors=false`,
       {
         method: 'POST',
         body: JSON.stringify(txs),
@@ -63,7 +63,7 @@ class BaseEvmWallet implements WalletInterface {
     feeObj: EthereumSignableTransactionParams,
   ): Promise<GetUnsignedEvmMultiTransactionResponse> => {
     const response = await fetchWithRetry<GetUnsignedEvmMultiTransactionResponse>(
-      `/v1/evm/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+      `/v1/evm/chains/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
     return response
   }
@@ -78,7 +78,7 @@ class BaseEvmWallet implements WalletInterface {
     feeObj: EthereumSignableTransactionParams,
   ): Promise<EthereumSignableTransactionResponse> => {
     return fetchWithRetry<EthereumSignableTransactionResponse>(
-      `/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+      `/v1/evm/chains/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
   }
 
@@ -125,7 +125,7 @@ class BaseEvmWallet implements WalletInterface {
   }
 
   async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/${this.chainId}/broadcasts/?noInjectErrors=false`
+    const url = `/v1/evm/chains/${this.chainId}/broadcasts/?noInjectErrors=false`
     const options = {
       method: 'POST',
       body: JSON.stringify({ signedTransaction: signedTx }),

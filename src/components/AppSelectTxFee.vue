@@ -227,7 +227,7 @@ const txData = computed<EstimatesRequestBody>(() => {
 const fetchURL = computed(() => {
   //EVM CHAINS ONLY
   if (isLoadedChainsData.value && selectedChain.value) {
-    return `/v1/evm/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
+    return `/v1/evm/chains/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
   }
   //TO DO: BITCOIN HANDLER
   return ''

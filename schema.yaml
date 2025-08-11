@@ -78,6 +78,7 @@ paths:
 
   # Balances
 
+  # Ideally this would be: GET /v1/multi/chains/{chainName}/addresses/{address}/token-balances # /balances/{chainName}/{address}:
   /balances/{chainName}/{address}:
     get:
       operationId: GetBalancesByChainNameAndAddress
@@ -227,9 +228,55 @@ paths:
   #       200:
   #         $ref: '#/components/responses/GetUnsignedEvmSwapTransactionSuccess'
 
+  # EVM balances routes
+
+  # TODO:
+  /v1/evm/addresses/{address}/token-balances:
+    get:
+      operationId: GetTokenBalancesByChainNamesAndAddress
+      parameters:
+        - $ref: '#/components/parameters/Address'
+        - $ref: '#/components/parameters/ChainNames'
+      responses:
+        200:
+          $ref: '#/components/responses/GetTokenBalancesByChainNamesAndAddressSuccess'
+
+  # EVM contract routes
+
+  /v1/evm/chains/{chainId}/erc20/{contract}/metadata:
+    get:
+      operationId: GetErc20ContractMetadata
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+        - $ref: '#/components/parameters/EvmContractAddress'
+      responses:
+        200:
+          $ref: '#/components/responses/GetErc20ContractMetadataSuccess'
+
+  /v1/evm/chains/{chainId}/erc20/{contract}/addresses/{address}/balance:
+    get:
+      operationId: GetErc20AddressBalance
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+        - $ref: '#/components/parameters/EvmContractAddress'
+        - $ref: '#/components/parameters/EvmAddress'
+      responses:
+        200:
+          $ref: '#/components/responses/GetErc20AddressBalanceSuccess'
+
+  /v1/evm/chains/{chainId}/erc721/{contract}/metadata:
+    get:
+      operationId: GetErc721ContractMetadata
+      parameters:
+        - $ref: '#/components/parameters/ChainId'
+        - $ref: '#/components/parameters/EvmContractAddress'
+      responses:
+        200:
+          $ref: '#/components/responses/GetErc721ContractMetadataSuccess'
+
   # EVM transaction routes
 
-  /v1/evm/{chainId}/transactions/{txHash}/status:
+  /v1/evm/chains/{chainId}/transactions/{txHash}/status:
     get:
       operationId: GetEvmTransactionStatus
       parameters:
@@ -239,7 +286,7 @@ paths:
         200:
           $ref: '#/components/responses/GetEvmTransactionStatusSuccess'
 
-  /v1/evm/{chainId}/transactions/{txHash}:
+  /v1/evm/chains/{chainId}/transactions/{txHash}:
     get:
       operationId: GetEvmTransaction
       parameters:
@@ -249,7 +296,7 @@ paths:
         200:
           $ref: '#/components/responses/GetEvmTransactionSuccess'
 
-  /v1/evm/{chainId}/estimates:
+  /v1/evm/chains/{chainId}/estimates:
     post:
       operationId: GetEvmTransactionEstimate
       parameters:
@@ -260,7 +307,7 @@ paths:
         201:
           $ref: '#/components/responses/GetEvmTransactionEstimateSuccess'
 
-  /v1/evm/{chainId}/multi-estimates:
+  /v1/evm/chains/{chainId}/multi-estimates:
     post:
       operationId: GetEvmMultiTransactionEstimate
       parameters:
@@ -271,7 +318,7 @@ paths:
         201:
           $ref: '#/components/responses/GetEvmMultiTransactionEstimateSuccess'
 
-  /v1/evm/{chainId}/quotes:
+  /v1/evm/chains/{chainId}/quotes:
     post:
       operationId: GetEvmTransactionQuote
       parameters:
@@ -282,7 +329,7 @@ paths:
         201:
           $ref: '#/components/responses/GetEvmTransactionQuoteSuccess'
 
-  /v1/evm/{chainId}/quotes/{quoteId}/unsigned:
+  /v1/evm/chains/{chainId}/quotes/{quoteId}/unsigned:
     get:
       operationId: GetUnsignedEvmTransaction
       parameters:
@@ -293,7 +340,7 @@ paths:
         200:
           $ref: '#/components/responses/GetUnsignedEvmTransactionSuccess'
 
-  /v1/evm/{chainId}/multi-quotes:
+  /v1/evm/chains/{chainId}/multi-quotes:
     post:
       operationId: GetEvmMultiTransactionQuote
       parameters:
@@ -304,7 +351,7 @@ paths:
         201:
           $ref: '#/components/responses/GetEvmMultiTransactionQuoteSuccess'
 
-  /v1/evm/{chainId}/multi-quotes/{quoteId}/unsigned:
+  /v1/evm/chains/{chainId}/multi-quotes/{quoteId}/unsigned:
     get:
       operationId: GetUnsignedEvmMultiTransaction
       parameters:
@@ -315,7 +362,7 @@ paths:
         200:
           $ref: '#/components/responses/GetUnsignedEvmMultiTransactionSuccess'
 
-  /v1/evm/{chainId}/broadcasts:
+  /v1/evm/chains/{chainId}/broadcasts:
     post:
       operationId: BroadcastEvmTransaction
       parameters:
@@ -336,6 +383,11 @@ components:
     ChainName:
       name: chainName
       in: path
+      schema:
+        type: string
+    ChainNames:
+      name: chains
+      in: query
       schema:
         type: string
     AumAddressType:
@@ -381,6 +433,11 @@ components:
     EvmAddress:
       in: path
       name: address
+      schema:
+        $ref: '#/components/schemas/EvmAddressInput'
+    EvmContractAddress:
+      in: path
+      name: contract
       schema:
         $ref: '#/components/schemas/EvmAddressInput'
     Address:
@@ -517,6 +574,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetBalancesByChainNameAndAddressResponse'
 
+    GetTokenBalancesByChainNamesAndAddressSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTokenBalancesByChainNamesAndAddressResponse'
+
     GetBtcTransactionStatusSuccess:
       content:
         application/json:
@@ -585,6 +648,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BroadcastBtcTransactionResponse'
+
+    GetErc20ContractMetadataSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetErc20ContractMetadataResponse'
+
+    GetErc20AddressBalanceSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetErc20AddressBalanceResponse'
+
+    GetErc721ContractMetadataSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetErc721ContractMetadataResponse'
 
     GetEvmTransactionStatusSuccess:
       content:
@@ -1115,6 +1196,7 @@ components:
       properties:
         nativeValue:
           $ref: '#/components/schemas/HexUint'
+        # TODO: Are you sure?
         fiatValue:
           $ref: '#/components/schemas/HexUint'
         nativeSymbol:
@@ -1143,6 +1225,7 @@ components:
     # Balances
     # ========
 
+    # TODO:
     GetBalancesByChainNameAndAddressResponse:
       type: object
       required:
@@ -1170,6 +1253,51 @@ components:
                 type: number
               symbol:
                 type: string
+
+    GetTokenBalancesByChainNamesAndAddressResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - chainId
+          - chainName
+          - includesTokens
+          - balances
+        properties:
+          chainId:
+            $ref: '#/components/schemas/HexUint'
+          chainName:
+            type: string
+          includesTokens:
+            type: boolean
+          balances:
+            type: array
+            items:
+              type: object
+              required:
+                - contract
+                - nativeValue
+              properties:
+                chainName:
+                  type: string
+                contract:
+                  type: string
+                name:
+                  type: string
+                decimals:
+                  type: number
+                priceFiatPerNative:
+                  type: number
+                logoUrl:
+                  type: string
+                nativeSymbol:
+                  type: string
+                nativeValue:
+                  $ref: '#/components/schemas/HexUint'
+                fiatSymbol:
+                  type: string
+                fiatValue:
+                  type: number
 
     BtcBalance:
       type: object
@@ -1350,6 +1478,51 @@ components:
     # ====================
     # EVM Transactions
     # ====================
+
+    GetErc20ContractMetadataResponse:
+      type: object
+      required:
+        - name
+        - symbol
+        - decimals
+      properties:
+        name:
+          type: string
+        symbol:
+          type: string
+        decimals:
+          type: number
+
+    GetErc20AddressBalanceResponse:
+      type: object
+      required:
+        - nativeValue
+      properties:
+        name:
+          type: string
+        decimals:
+          type: number
+        priceFiatPerNative:
+          type: number
+        nativeSymbol:
+          type: string
+        nativeValue:
+          $ref: '#/components/schemas/HexUint'
+        fiatSymbol:
+          type: string
+        fiatValue:
+          type: number
+
+    GetErc721ContractMetadataResponse:
+      type: object
+      required:
+        - name
+        - symbol
+      properties:
+        name:
+          type: string
+        symbol:
+          type: string
 
     GetEvmTransactionStatusResponse:
       type: object
