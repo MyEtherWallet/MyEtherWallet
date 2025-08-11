@@ -470,6 +470,8 @@ const fromAmountError = computed(() => {
     return t('swap.error.amount-required') // amount is blank
   else if (BigInt(baseAmount) < 0)
     return t('swap.error.more-than-zero') // amount less than 0
+  else if (!isWalletConnected.value)
+    return '' // don't return the rest of the errors if wallet is not connected
   else if (selectedQuote.value) {
     if (
       BigInt(selectedQuote.value?.additionalNativeFees?.toString()) >
