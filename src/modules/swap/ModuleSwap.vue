@@ -450,6 +450,16 @@ const fromAmount = ref<number | string>('0')
 const fromTokenSelected: Ref<NewTokenInfo> = ref({} as NewTokenInfo) // TODO: Implement token selection
 
 const fromAmountError = computed(() => {
+  if (fromAmount.value === undefined || fromAmount.value === '')
+    return t('swap.error.amount-required') // amount is blank
+  if (
+    BigNumber(fromAmount.value).toFixed().length >
+    fromTokenSelected.value.decimals
+  ) {
+    return t('swap.error.too-many-decimals', {
+      decimal: fromTokenSelected.value.decimals,
+    })
+  }
   const baseNetworkBalance = toBase(
     walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
     18,
@@ -473,9 +483,8 @@ const fromAmountError = computed(() => {
           fromTokenSelected.value?.decimals || 18,
         ),
   ).minus(baseAmount)
-  if (fromAmount.value === undefined || fromAmount.value === '')
-    return t('swap.error.amount-required') // amount is blank
-  else if (BigInt(baseAmount) < 0)
+
+  if (BigInt(baseAmount) < 0)
     return t('swap.error.more-than-zero') // amount less than 0
   else if (
     providers.value.length === 0 &&

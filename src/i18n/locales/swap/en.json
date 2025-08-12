@@ -19,7 +19,8 @@
       "no-quotes": "No quotes available.",
       "fetching-quotes": "Error fetching quotes. Please try again.",
       "initializing-swap-failed": "Error initializing swap. Please try again.",
-      "getting-swap": "Error getting swap. Please try again."
+      "getting-swap": "Error getting swap. Please try again.",
+      "too-many-decimals": "Amount has too many decimals. Selected token is {decimal} decimal | Amount has too many decimals. Selected token is {decimal} decimals"
     },
     "best-offer": {
       "looking": "Looking for the best offer",
