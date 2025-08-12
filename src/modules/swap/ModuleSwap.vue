@@ -35,7 +35,7 @@
         v-model:amount="toAmount"
         v-model:selected-token="toTokenSelected"
         v-model:error="toAmountError"
-        :external-loading="!swapLoaded && supportedNetwork && !isLoadingQuotes"
+        :external-loading="toLoadingState"
         :show-balance="false"
         :tokens="localToTokens"
         :readonly="true"
@@ -390,6 +390,13 @@ const toAddress = computed(() => {
   return userToAddress.value || '0x'
 })
 
+const toLoadingState = computed(() => {
+  if (isLoadingQuotes.value) {
+    return true
+  }
+  return !swapLoaded && supportedNetwork
+})
+
 const setToChain = (chain: Chain) => {
   if (hasSwapValues.value) {
     selectedToChain.value = swapValues.value.toChain
@@ -564,7 +571,7 @@ const fetchQuotes = async () => {
   }
 }
 
-const debounceFetchQuotes = useDebounceFn(fetchQuotes, 500)
+const debounceFetchQuotes = useDebounceFn(fetchQuotes, 750)
 
 // Watch for changes in selectedQuote and update swapInfo
 watch(
