@@ -452,10 +452,10 @@ const fromAmountError = computed(() => {
       ? baseNetworkBalance
       : toBase(
           fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals ?? 18,
+          fromTokenSelected.value?.decimals || 18,
         )
   const baseAmount = fromAmount.value
-    ? toBase(fromAmount.value, fromTokenSelected.value?.decimals ?? 18)
+    ? toBase(fromAmount.value, fromTokenSelected.value?.decimals || 18)
     : 0
   const remainingBalance = BigNumber(
     fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT &&
@@ -463,16 +463,22 @@ const fromAmountError = computed(() => {
       ? baseNetworkBalance
       : toBase(
           fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals ?? 18,
+          fromTokenSelected.value?.decimals || 18,
         ),
   ).minus(baseAmount)
   if (fromAmount.value === undefined || fromAmount.value === '')
     return t('swap.error.amount-required') // amount is blank
   else if (BigInt(baseAmount) < 0)
     return t('swap.error.more-than-zero') // amount less than 0
-  else if (!isWalletConnected.value)
+  else if (
+    providers.value.length === 0 &&
+    fromAmount.value !== '0' &&
+    !isLoadingQuotes.value
+  ) {
+    return t('swap.error.no-quotes')
+  } else if (!isWalletConnected.value) {
     return '' // don't return the rest of the errors if wallet is not connected
-  else if (selectedQuote.value) {
+  } else if (selectedQuote.value) {
     if (
       BigInt(selectedQuote.value?.additionalNativeFees?.toString()) >
       BigInt(remainingBalance.toString())
@@ -512,12 +518,6 @@ const fromAmountError = computed(() => {
       symbol: fromTokenSelected.value.symbol,
     })
   // amount greater than selected balance
-  else if (
-    providers.value.length === 0 &&
-    fromAmount.value !== '0' &&
-    !isLoadingQuotes.value
-  )
-    return t('swap.error.no-quotes')
   return ''
 })
 
@@ -527,7 +527,7 @@ const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
 
 const toAmountError = computed(() => {
   const baseAmount = toAmount.value
-    ? toBase(toAmount.value, toTokenSelected.value?.decimals ?? 18)
+    ? toBase(toAmount.value, toTokenSelected.value?.decimals || 18)
     : 0
 
   // model.value = amount.value
@@ -585,8 +585,8 @@ watch(
       // Set the toTokenSelected based on the first provider's toTokenAmount
       toAmount.value = fromBase(
         providers.value[0].toTokenAmount.toString(),
-        toTokenSelected.value?.decimals ?? 18,
-      ).substring(0, toTokenSelected.value?.decimals ?? 18)
+        toTokenSelected.value?.decimals || 18,
+      ).substring(0, toTokenSelected.value?.decimals || 18)
     }
   },
 )

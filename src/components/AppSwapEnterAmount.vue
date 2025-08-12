@@ -116,7 +116,7 @@ const balanceFiatOrError = computed(() => {
     const val = BigNumber(selectedToken.value?.price || 0)
       .times(BigNumber(amount.value).gt(0) ? amount.value : 1)
       .toFixed(2)
-    return `$ ${val}`
+    return error.value ? error.value : `$ ${val}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
