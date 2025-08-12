@@ -472,7 +472,10 @@ const fromAmountError = computed(() => {
           fromTokenSelected.value?.decimals || 18,
         )
   const baseAmount = fromAmount.value
-    ? toBase(fromAmount.value, fromTokenSelected.value?.decimals || 18)
+    ? toBase(
+        BigNumber(fromAmount.value).toFixed(),
+        fromTokenSelected.value?.decimals || 18,
+      )
     : 0
   const remainingBalance = BigNumber(
     fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT &&
@@ -492,12 +495,11 @@ const fromAmountError = computed(() => {
     !isLoadingQuotes.value
   ) {
     return t('swap.error.no-quotes')
-  } else if (!isWalletConnected.value) {
-    return '' // don't return the rest of the errors if wallet is not connected
   } else if (selectedQuote.value) {
     if (
+      isWalletConnected.value &&
       BigInt(selectedQuote.value?.additionalNativeFees?.toString()) >
-      BigInt(remainingBalance.toString())
+        BigInt(remainingBalance.toString())
     )
       return t('swap.error.insufficient-balance-for-fees', {
         symbol: selectedChain.value?.name,
@@ -563,7 +565,7 @@ const fetchQuotes = async () => {
     const quotes = await getQuote({
       fromToken: fromTokenSelected.value,
       toToken: toTokenSelected.value as NewTokenInfo,
-      amount: fromAmount.value,
+      amount: BigNumber(fromAmount.value).toFixed(),
       fromAddress: userAddress.value,
       toAddress: toAddress.value,
     })
