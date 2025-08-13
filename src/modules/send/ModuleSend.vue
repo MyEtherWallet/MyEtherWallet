@@ -16,6 +16,7 @@
           v-model:adr-input="adrInput"
           :resolved-address="toAddress"
           :address-error-messages="toAddressError"
+          :network="selectedChain"
           @validate:address="validateAddressInput"
           @immidate-update:resolved-address="onInput"
         />

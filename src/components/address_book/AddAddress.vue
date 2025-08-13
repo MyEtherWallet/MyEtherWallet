@@ -30,6 +30,7 @@
       :resolved-address="resolvedAddress"
       :address-error-messages="addressErrorMessages"
       :has-address-book="false"
+      :network="selectedChain"
       @validate:address="validateAddressInput"
       @immidate-update:resolved-address="onInput"
     />

@@ -90,6 +90,9 @@
     <address-book-dialog
       v-if="hasAddressBook"
       v-model:is-open="isAddressBookOpen"
+      :network="network"
+      :selected-address="adrInput"
+      @set-selected="setAddress"
     />
   </div>
 </template>
@@ -109,6 +112,7 @@
  *         :label="Address"
  *         :resolved-address="resolvedAddress"
  *         :address-error-messages="tadrError"
+ *         :chain="selectedChain"
  *         @validate:address="validateAddressInput"
  *         @immidate-update:resolved-address="onInput"
  *       />
@@ -129,6 +133,7 @@ import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import AddressBookDialog from './AddressBookDialog.vue'
+import type { Chain } from '@ethereumjs/common'
 
 const props = defineProps({
   label: {
@@ -145,6 +150,9 @@ const props = defineProps({
   hasAddressBook: {
     type: Boolean,
     default: true,
+  },
+  network: {
+    type: Object as () => Chain,
   },
 })
 
@@ -172,6 +180,12 @@ const clearAdrInput = () => {
     emit('immidate-update:resolvedAddress')
     emit('validate:address')
   })
+}
+
+const setAddress = (address: string) => {
+  adrInput.value = address
+  emit('immidate-update:resolvedAddress')
+  emit('validate:address')
 }
 
 /**------------------------

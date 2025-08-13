@@ -66,28 +66,35 @@
                 v-if="currentChainOnlyAdrs.length"
                 class="font-medium text-s-17 mb-2 mx-5 mt-5"
               >
-                {{ selectedChain?.nameLong }} Addresses
+                {{ network?.nameLong || selectedChain?.nameLong }} Addresses
               </p>
               <address-book-item
                 v-for="adr in currentChainOnlyAdrs"
                 :key="adr.address"
                 :adr="adr"
+                :isSelectable="!isStandAlone"
+                :selected-address="selectedAddress"
                 @edit="editItem"
                 @delete="deleteAddress"
+                @set-item="setItem"
               />
               <p
                 v-if="otherChainsAdrs.length"
                 class="font-medium text-s-17 mb-2 mx-5 mt-10"
               >
-                Non-{{ selectedChain?.nameLong }} Compatible Addresses
+                Non-{{ network?.nameLong || selectedChain?.nameLong }}
+                Compatible Addresses
               </p>
               <address-book-item
                 v-for="adr in otherChainsAdrs"
                 :key="adr.address"
                 :adr="adr"
+                :isSelectable="!isStandAlone"
+                :selected-address="selectedAddress"
                 show-chain
                 @edit="editItem"
                 @delete="deleteAddress"
+                @set-item="setItem"
               />
               <p
                 v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
@@ -107,6 +114,7 @@
                 v-for="adr in incompatibleAddresses"
                 :key="adr.address"
                 :adr="adr"
+                :isSelectable="isStandAlone"
                 @edit="editItem"
                 @delete="deleteAddress"
                 show-chain
@@ -120,6 +128,15 @@
 </template>
 
 <script lang="ts" setup>
+/** Address Book Dialog
+ * Displays a dialog with a list of saved addresses.
+ * Allows users to search, add, edit, and delete addresses.
+ *
+ * NOTE: This component is used in the Address Book section of the application.
+ * AS WELL AS Can be used alone.
+ * When used alone, it allows users to edit and delete items.
+ *
+ */
 import AddAddress from './AddAddress.vue'
 import { ref, computed } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
@@ -133,19 +150,27 @@ import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
+import { type Chain } from '@/mew_api/types'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: '',
   },
+
+  /**
+   * @network - The network to filter addresses by.
+   */
   network: {
-    type: String,
-    required: false,
+    type: Object as () => Chain,
   },
   selectedAddress: {
     type: String,
     default: '',
+  },
+  isStandAlone: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -195,8 +220,9 @@ const { selectedChain } = storeToRefs(chainsStore)
  * Computed property to filter addresses for the current chain.
  */
 const currentChainOnlyAdrs = computed(() => {
+  const _net = props.network || selectedChain.value
   const list = currentAddressBook.value.filter(
-    item => item.chainName === selectedChain.value?.name,
+    item => item.chainName === _net?.name,
   )
   if (searchInput.value) {
     return searchArrayByKeysStr(list, ['name', 'address'], searchInput.value)
@@ -208,8 +234,9 @@ const currentChainOnlyAdrs = computed(() => {
  * Computed property to filter addresses for other chains.
  */
 const otherChainsAdrs = computed(() => {
+  const _net = props.network || selectedChain.value
   const list = currentAddressBook.value.filter(
-    item => item.chainName !== selectedChain.value?.name,
+    item => item.chainName !== _net?.name,
   )
   if (searchInput.value) {
     return searchArrayByKeysStr(list, ['name', 'address'], searchInput.value)
@@ -248,5 +275,13 @@ const editItem = (adr: Address) => {
 const closeAddEdit = () => {
   showAddAddress.value = false
   editAdr.value = undefined
+}
+
+const emit = defineEmits<{
+  (e: 'set-selected', address: string): void
+}>()
+const setItem = (adr: Address) => {
+  emit('set-selected', adr.address)
+  isOpen.value = false
 }
 </script>
