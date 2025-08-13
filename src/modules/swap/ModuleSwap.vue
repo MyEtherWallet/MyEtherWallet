@@ -509,24 +509,12 @@ const fromAmountError = computed(() => {
         BigInt(baseAmount) <
         BigInt(selectedQuote.value.minMax.minimumFrom.toString())
       )
-        return t('swap.error.minimum-amount', {
-          minAmount: fromBase(
-            selectedQuote.value.minMax.minimumFrom.toString(),
-            fromTokenSelected.value.decimals,
-          ),
-          symbol: fromTokenSelected.value.symbol,
-        }) // amount less than min amount
+        return t('swap.error.minimum-amount') // amount less than min amount
       if (
         BigInt(baseAmount) >
         BigInt(selectedQuote.value.minMax.maximumFrom.toString())
       )
-        return t('swap.error.maximum-amount', {
-          maxAmount: fromBase(
-            selectedQuote.value.minMax.maximumFrom.toString(),
-            fromTokenSelected.value.decimals,
-          ),
-          symbol: fromTokenSelected.value.symbol,
-        }) // amount less than min amount
+        return t('swap.error.maximum-amount') // amount less than min amount
     }
   } else if (
     isWalletConnected.value &&
@@ -599,7 +587,7 @@ watch(
 watch(
   () => providers.value,
   () => {
-    if (providers.value.length > 0) {
+    if (providers.value.length > 0 && fromAmountError.value === '') {
       // Set the toTokenSelected based on the first provider's toTokenAmount
       toAmount.value = fromBase(
         providers.value[0].toTokenAmount.toString(),
