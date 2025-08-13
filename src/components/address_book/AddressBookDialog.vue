@@ -104,7 +104,7 @@
                 Incompatible Addresses
               </p>
               <address-book-item
-                v-for="adr in otherAddressBook"
+                v-for="adr in incompatibleAddresses"
                 :key="adr.address"
                 :adr="adr"
                 @edit="editItem"
@@ -132,6 +132,7 @@ import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
+import { searchArrayByKeysStr } from '@/utils/searchArray'
 
 defineProps({
   label: {
@@ -179,20 +180,49 @@ const deleteAddress = (adr: Address) => {
   adrBook.removeAddress(adr, adr.chainType)
 }
 
+/** -------------------------------
+ * Search
+ -------------------------------*/
+const searchInput = ref('')
+
 /**------------------------
  * Chains Store
  -------------------------*/
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+
+/**
+ * Computed property to filter addresses for the current chain.
+ */
 const currentChainOnlyAdrs = computed(() => {
-  return currentAddressBook.value.filter(
+  const list = currentAddressBook.value.filter(
     item => item.chainName === selectedChain.value?.name,
   )
+  if (searchInput.value) {
+    return searchArrayByKeysStr(list, ['name', 'address'], searchInput.value)
+  }
+  return list
 })
+
+/**
+ * Computed property to filter addresses for other chains.
+ */
 const otherChainsAdrs = computed(() => {
-  return currentAddressBook.value.filter(
+  const list = currentAddressBook.value.filter(
     item => item.chainName !== selectedChain.value?.name,
   )
+  if (searchInput.value) {
+    return searchArrayByKeysStr(list, ['name', 'address'], searchInput.value)
+  }
+  return list
+})
+
+const incompatibleAddresses = computed(() => {
+  const list = otherAddressBook.value
+  if (searchInput.value) {
+    return searchArrayByKeysStr(list, ['name', 'address'], searchInput.value)
+  }
+  return list
 })
 
 /** -------------------------------
@@ -219,9 +249,4 @@ const closeAddEdit = () => {
   showAddAddress.value = false
   editAdr.value = undefined
 }
-
-/** -------------------------------
- * Search
- -------------------------------*/
-const searchInput = ref('')
 </script>
