@@ -65,9 +65,14 @@
         <x-circle-icon class="w-6 h-6 text-primary" />
       </app-btn-icon>
       <!-- Open Address Book button-->
-      <!-- <div v-if="$slots.adrbook" class="absolute top-3 right-3">
-        <slot name="adrbook" />
-      </div> -->
+      <app-btn-icon
+        v-if="hasAddressBook"
+        class="absolute top-3 right-3"
+        label="open address book"
+        @click="isAddressBookOpen = true"
+      >
+        <users-icon class="w-6 h-6 text-primary" />
+      </app-btn-icon>
     </div>
     <!-- Error Messages OR Resolved Address -->
     <transition name="fade" mode="out-in">
@@ -82,12 +87,43 @@
         {{ addressErrorMessages || resolvedAddress }}
       </p>
     </transition>
-    <address-book-dialog v-model:is-open="isAddressBookOpen" />
+    <address-book-dialog
+      v-if="hasAddressBook"
+      v-model:is-open="isAddressBookOpen"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
+/**
+ * Address Input Component
+ * Displays an input field for entering an address with optional address book functionality.
+ * Allows for address resolution and error handling.
+ *
+ * use with `useAddressInput` composable to manage address input state and validation.
+ *
+ * @component
+ * @example
+ *        <address-input
+ *         v-model:adr-input="adrInput"
+ *         :label="Address"
+ *         :resolved-address="resolvedAddress"
+ *         :address-error-messages="tadrError"
+ *         @validate:address="validateAddressInput"
+ *         @immidate-update:resolved-address="onInput"
+ *       />
+ *
+ * import { useAddressInput } from '@/composables/useAddressInput'
+ *
+ * const {
+ *  adrInput,
+ *  adrError,
+ *  resolvedAddress,
+ *  onInput,
+ *  validateAddressInput } = useAddressInput(selectedChain.value)
+ */
 import { XCircleIcon } from '@heroicons/vue/24/outline'
+import { UsersIcon } from '@heroicons/vue/24/solid'
 import { ref, computed, watch, nextTick } from 'vue'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
@@ -105,6 +141,10 @@ const props = defineProps({
   addressErrorMessages: {
     type: String,
     default: '',
+  },
+  hasAddressBook: {
+    type: Boolean,
+    default: true,
   },
 })
 

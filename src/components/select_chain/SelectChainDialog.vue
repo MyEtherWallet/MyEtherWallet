@@ -5,6 +5,8 @@
     v-model:is-open="openDialog"
     title="Select Chain"
     class="xs:max-w-[428px] sm:mx-auto"
+    z-index-overlay="z-[200]"
+    z-index-container="z-[201]"
   >
     <template #content>
       <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">

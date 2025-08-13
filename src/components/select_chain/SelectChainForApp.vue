@@ -4,6 +4,7 @@
       name="network-button"
       :openNetworkDialog="setOpenDialog"
       :selectedChain="selectedChain"
+      :filterChainType="true"
     >
       <app-btn-group
         v-if="isBtnGroup"
@@ -11,7 +12,8 @@
         :btn-list="shownChains"
         :use-emit-only="true"
         :is-loaded="isLoadedChains"
-        is-tall
+        size="large"
+        class="!p-2"
         @onUpdate:selected="setSelectedChain"
       >
         <template #btn-content="{ data }">

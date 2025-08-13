@@ -4,10 +4,11 @@ import { useLocalStorage } from '@vueuse/core'
 import { useGlobalStore } from './globalStore'
 import { useChainsStore } from './chainsStore'
 
-interface Address {
+export interface Address {
   address: string
   name: string
   chainName: string
+  chainType: string
 }
 // This interface represents the structure of the address book, where each key is a network type and the value is an array of addresses associated with that network.
 interface AddressBook {
@@ -87,8 +88,23 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
       addressBook.value[chainType] = [address]
     }
   }
-  const removeAddress = (index: number, chainType: string) => {
-    addressBook.value[chainType].splice(index, 1)
+
+  const removeAddress = (adr: Address, chainType: string) => {
+    const index = addressBook.value[chainType].findIndex(
+      (_address: Address) => _address.address === adr.address,
+    )
+    if (index !== -1) {
+      addressBook.value[chainType].splice(index, 1)
+    }
+  }
+
+  const editAddress = (address: Address, chainType: string) => {
+    const index = addressBook.value[chainType].findIndex(
+      (_address: Address) => _address.address === address.address,
+    )
+    if (index !== -1) {
+      addressBook.value[chainType][index] = address
+    }
   }
 
   const addRecentAddress = (address: string) => {
@@ -120,6 +136,7 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     isNameAdded,
     addAddress,
     removeAddress,
+    editAddress,
     /** RecentAddress */
     recentAddresses,
     addRecentAddress,
