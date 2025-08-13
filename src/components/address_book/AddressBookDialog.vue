@@ -52,7 +52,6 @@
             <app-btn-group
               v-model:selected="selectedListItem"
               :btn-list="addressList"
-              :use-emit-only="true"
               class="my-2 mx-3 sm:mx-6"
               size="small"
               variant="outline"
@@ -163,8 +162,8 @@ interface AddressListItem {
 }
 
 const addressList = ref<AddressListItem[]>([
-  { name: 'Saved', id: 'my-addresses' },
-  { name: ' Recent', id: 'contacts' },
+  { name: 'Saved', id: 'addresses' },
+  { name: ' Recent', id: 'recent' },
 ])
 
 const selectedListItem = ref<AddressListItem>(addressList.value[0])
