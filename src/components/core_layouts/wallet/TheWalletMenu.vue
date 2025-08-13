@@ -49,7 +49,7 @@
               />
               <AppBtnIconClose @click="sidebarIsOpen = false" />
             </div>
-            <app-select-chain
+            <select-chain-for-app
               v-if="isMobile && isWalletConnected"
               :has-label="false"
               class="mb-2"
@@ -130,7 +130,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import TheAddressMenu from './TheAddressMenu.vue'
 import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'

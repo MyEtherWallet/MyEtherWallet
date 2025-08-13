@@ -31,7 +31,7 @@
         <div
           class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
         >
-          <app-select-chain />
+          <select-chain-for-app />
           <hardware-wallet-derivation
             :paths="paths"
             :wallet-type="selectedHwWalletType"
@@ -76,7 +76,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter, useRoute } from 'vue-router'
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'

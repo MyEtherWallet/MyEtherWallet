@@ -24,8 +24,6 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
   const chainsStore = useChainsStore()
   const { selectedChain } = storeToRefs(chainsStore)
   const storeAdrObject: Record<string, Address[]> = {}
-  storeAdrObject[currentNetworkName.value] = []
-
   const storeObject: Record<string, string[]> = {}
   storeObject[currentNetworkName.value] = []
 
@@ -47,9 +45,12 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     () => recentAddresses.value[currentNetworkName.value]?.length || 0,
   )
 
-  const currentAddressBook = computed<Address[]>(
-    () => addressBook.value[selectedChain.value?.type || ''],
-  )
+  const currentAddressBook = computed<Address[]>(() => {
+    return selectedChain.value?.type &&
+      addressBook.value[selectedChain.value.type]
+      ? addressBook.value[selectedChain.value?.type]
+      : []
+  })
 
   const isAdrAdded = (address: string, chainType: string) => {
     return (
@@ -73,7 +74,7 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
   })
 
   const addAddress = (address: Address, chainType: string) => {
-    if (currentAddressBook.value.length > 0) {
+    if (currentAddressBook.value && currentAddressBook.value.length > 0) {
       const index = addressBook.value[chainType].findIndex(
         (_address: Address) => _address.address === address.address,
       )

@@ -55,7 +55,7 @@
         <div
           class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
         >
-          <app-select-chain />
+          <select-chain-for-app />
           <derivation-path />
         </div>
         <select-address-list
@@ -103,7 +103,7 @@ import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import DerivationPath from './components/DerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'

@@ -1,6 +1,6 @@
 <template>
   <!-- App Select Chain -->
-  <app-select-chain :has-label="false">
+  <select-chain-for-app :has-label="false">
     <template #network-button="{ openNetworkDialog, selectedChain }">
       <button
         class="hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full max-w-[178px] shadow-button shadow-button-elevated"
@@ -28,10 +28,10 @@
         </div>
       </button>
     </template>
-  </app-select-chain>
+  </select-chain-for-app>
 </template>
 <script setup lang="ts">
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
