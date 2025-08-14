@@ -5,7 +5,9 @@ import { toChecksumAddress, isAddress } from '@/utils/addressUtils'
 import { useDebounceFn } from '@vueuse/core'
 import ENSNameResolver from '@/providers/common/nameResolver'
 
-export const useAddressInput = (network: Ref<Chain> | Chain | undefined) => {
+export const useAddressInput = (
+  network: Ref<Chain | undefined> | Chain | undefined,
+) => {
   const adrInput = ref<string>('')
   const adrError = ref<string | undefined>(undefined)
   const resolvedAddress = ref<string | undefined>(undefined)

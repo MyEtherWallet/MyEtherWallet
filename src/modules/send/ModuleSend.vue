@@ -119,7 +119,7 @@ const {
   isValidAdrInput,
   onInput,
   validateAddressInput,
-} = useAddressInput(selectedChain.value)
+} = useAddressInput(selectedChain)
 
 onMounted(async () => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.

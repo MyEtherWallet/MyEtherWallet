@@ -82,7 +82,7 @@ const {
   resolvedAddress,
   onInput,
   validateAddressInput,
-} = useAddressInput(selectedChain.value)
+} = useAddressInput(selectedChain)
 
 const emit = defineEmits(['add-address', 'close'])
 

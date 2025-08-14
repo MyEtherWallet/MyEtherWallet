@@ -34,6 +34,7 @@
       </label>
       <!-- Input  -->
       <input
+        id="address-input"
         ref="adrInputRef"
         v-model="adrInput"
         name="address-input"
@@ -124,7 +125,7 @@
  *  adrError,
  *  resolvedAddress,
  *  onInput,
- *  validateAddressInput } = useAddressInput(selectedChain.value)
+ *  validateAddressInput } = useAddressInput(selectedChain)
  */
 import { XCircleIcon } from '@heroicons/vue/24/outline'
 import { UsersIcon } from '@heroicons/vue/24/solid'
