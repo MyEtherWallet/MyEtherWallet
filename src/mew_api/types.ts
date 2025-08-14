@@ -10,6 +10,7 @@ export type TokenBalanceRaw =
 export interface TokenBalance extends TokenBalanceRaw {
   name: string
   symbol: string
+  balanceWei: string
 }
 /** --------------------------
  * GET Chains

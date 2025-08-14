@@ -3,29 +3,24 @@
     <div
       class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
     >
-      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-0">
+      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-1">
         <div class="mb-[25px]">
           <app-enter-amount
             v-model:amount="amount"
-            v-model:selected-token="tokenSelected"
+            v-model:selected-token="tokenSelectedContract"
             v-model:error="amountError"
             :validate-input="checkAmountForError"
           />
         </div>
         <app-address-book v-model="toAddress" class="mb-[2px]" />
-        <app-select-tx-fee :fees="gasFees" :is-loading-fees="isLoadingFees" />
-        <div class="min-h-[30px] mt-2">
-          <transition name="fade" mode="out-in">
-            <p
-              v-if="gasFeeError !== ''"
-              class="text-error text-[10px] xs:text-s-12 leading-[23px] px-5 text-center"
-            >
-              {{ gasFeeError }}
-            </p>
-          </transition>
-        </div>
+        <app-select-tx-fee
+          :fees="gasFees"
+          :is-loading-fees="isLoadingFees"
+          :txRequestBody="gasFeeTxEstimate"
+          v-model:gas-fee-error="gasFeeError"
+        />
         <div class="flex items-center justify-end mb-4">
-          <app-btn-text class="text-primary" @click="clearSendForm"
+          <app-btn-text class="text-primary" @click="resetSendModule"
             >Clear</app-btn-text
           >
         </div>
@@ -49,18 +44,18 @@
       :networkFeeCrypto="networkFeeCrypto"
       :network="selectedChain || null"
       :to-token="tokenSelected"
-      :to-amount="amount.toString()"
+      :to-amount="new BigNumber(amount).toFixed()"
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
-      @clear-form="clearSendForm"
+      @tx-sent="resetSendModule"
     />
   </div>
 </template>
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { toWei, fromWei, toBigInt, toHex } from 'web3-utils'
+import { fromWei, toHex } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -68,40 +63,45 @@ import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import type {
-  TokenBalance,
-  QuotesRequestBody,
-  QuotesResponse,
-} from '@/mew_api/types'
+import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
-import { GasPriceType, type HexPrefixedString } from '@/providers/types'
+import { type HexPrefixedString } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
 import { useToastStore } from '@/stores/toastStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { isAddress } from '@/utils/addressUtils'
+import { toBase } from '@/utils/unit'
+import { watchDebounced } from '@vueuse/core'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
-const { wallet, isWalletConnected, isLoadingBalances, safeMainTokenBalance } =
+const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
   storeToRefs(walletStore)
+
+/** ----------------
+ * Current Selected Fee
+ ------------------*/
+const globalStore = useGlobalStore()
+const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const toAddress = ref('')
-const tokenSelected: Ref<TokenBalance | undefined> = ref()
+const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const data = ref('0x')
+const gasFeeTxEstimate = ref<EstimatesRequestBody | undefined>(undefined)
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
-const selectedFee = ref(GasPriceType.REGULAR)
 
 const openTxModal = ref(false)
 const isLoadingFees = ref(false)
@@ -112,24 +112,29 @@ const address = ref('')
 onMounted(async () => {
   //NOTE: The send module should not be loaded before the chains data has been retrieved.
   //AS of Right now, skeleton loader is shown while the chains data is being fetched.
-  tokenSelected.value = safeMainTokenBalance.value || undefined
   if (!wallet.value) return
   address.value = await wallet.value.getAddress()
 })
 
-const checkAmountForError = () => {
-  const baseAmount = amount.value ? toWei(amount.value, 'ether') : 0
-  const tokenSelectedBalance = tokenSelected.value?.balance
-    ? tokenSelected.value.balance
-    : '0'
-  const baseTokenBalance = toWei(tokenSelectedBalance, 'ether')
+const tokenSelected = computed(() => {
+  if (isLoadingBalances.value || !tokenSelectedContract.value) {
+    return null
+  }
+  return walletStore.getTokenBalance(tokenSelectedContract.value)
+})
 
-  // model.value = amount.value
+const checkAmountForError = () => {
+  //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
+
+  const baseTokenBalance = tokenSelected.value?.balanceWei || '0'
+  const baseAmount = amount.value
+    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals || 18))
+    : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
-  else if (BigInt(baseAmount) < 0)
+  else if (baseAmount < 0)
     amountError.value = t('error.amount.less_than_zero') // amount less than 0
-  else if (BigInt(baseTokenBalance) < BigInt(baseAmount))
+  else if (isWalletConnected.value && BigInt(baseTokenBalance) < baseAmount)
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
   else amountError.value = ''
 }
@@ -164,7 +169,7 @@ const amountToFiat = computed(() => {
   if (isLoadingBalances.value || !tokenSelected.value?.price) return '0'
   return BigNumber(tokenSelected.value.price)
     .times(BigNumber(amount.value))
-    .toString()
+    .toFixed()
 })
 
 watch(
@@ -177,60 +182,58 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  return data.value === '0x'
-    ? (toHex(toBigInt(toWei(amount.value, 'ether'))) as HexPrefixedString)
-    : '0x0'
+  const amountBase = BigInt(
+    toBase(amount.value, tokenSelected.value?.decimals || 18),
+  )
+  return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
 
-watch(
-  () => [tokenSelected.value, amount.value, toAddress.value],
-  async () => {
-    if (
-      tokenSelected.value &&
-      tokenSelected.value.contract &&
-      tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT &&
-      toAddress.value !== '' &&
-      amount.value !== ''
-    ) {
+const getTxRequestBody = (): EstimatesRequestBody | undefined => {
+  if (
+    tokenSelected.value &&
+    tokenSelected.value.contract &&
+    toAddress.value !== '' &&
+    amount.value !== ''
+  ) {
+    const isSendingContractToken =
+      tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
+    if (isSendingContractToken) {
       const web3Contract = new Contract(abi, tokenSelected.value.contract)
       data.value = web3Contract.methods
-        .transfer(toAddress.value, toWei(amount.value, 'ether'))
+        .transfer(
+          toAddress.value,
+          toBase(amount.value, tokenSelected.value?.decimals || 18),
+        )
         .encodeABI() //
     } else {
       data.value = '0x'
     }
-    gasFees.value = undefined
-    gasFeeError.value = ''
-    if (!validSend.value) return
-
-    try {
-      isLoadingFees.value = true
-
-      const txData: QuotesRequestBody = {
-        to: toAddress.value as HexPrefixedString,
-        address:
-          (address.value as HexPrefixedString) ||
-          '0x0000000000000000000000000000000000000000',
-        value: amountToHex.value,
-        data: data.value as HexPrefixedString,
-      }
-
-      gasFees.value = await wallet.value?.getGasFee(txData)
-      isLoadingFees.value = false
-    } catch (e) {
-      isLoadingFees.value = false
-      //TODO: implement error localization
-      if (e instanceof Error) {
-        if (e.message) gasFeeError.value = e.message
-        else {
-          gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
-        }
-      }
+    return {
+      to: isSendingContractToken
+        ? tokenSelected.value.contract
+        : (toAddress.value as HexPrefixedString),
+      address:
+        (address.value as HexPrefixedString) ||
+        '0x0000000000000000000000000000000000000000',
+      value: amountToHex.value,
+      data: data.value as HexPrefixedString,
     }
+  }
+}
+
+// Get Estimates
+watchDebounced(
+  () => [tokenSelected.value, amount.value, toAddress.value],
+  async () => {
+    gasFeeError.value = ''
+    const body = getTxRequestBody()
+    if (!body) return
+    gasFeeTxEstimate.value = body
   },
+  { debounce: 500, maxWait: 2000 },
 )
 
-const clearSendForm = () => {
+const resetSendModule = () => {
   amount.value = '0'
   toAddress.value = ''
   signedTx.value = ''
@@ -239,7 +242,45 @@ const clearSendForm = () => {
 // toast store
 const toastStore = useToastStore()
 
+// Get quotes:
+
+const getGasFeeQuotes = async () => {
+  try {
+    const body = getTxRequestBody()
+    if (!body || !tokenSelected.value || !validSend.value) return
+    gasFeeTxEstimate.value = body
+    isLoadingFees.value = true
+    gasFees.value = await wallet.value?.getGasFee(gasFeeTxEstimate.value)
+    //Check if user has enough balance to cover gas fees
+    if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
+      gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+    }
+    const totalBalanceNeeded =
+      BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
+      BigInt(body.value)
+
+    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+      gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+    }
+    isLoadingFees.value = false
+  } catch (e) {
+    isLoadingFees.value = false
+    //TODO: implement error localization
+    if (e instanceof Error) {
+      if (e.message) {
+        gasFeeError.value = e.message.includes('insufficient funds')
+          ? 'NOT_ENOUGH_BALANCE'
+          : e.message
+      } else {
+        gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
+      }
+    }
+  }
+}
+
 const handleSubmit = async () => {
+  gasFeeError.value = ''
+  await getGasFeeQuotes()
   if (!wallet.value || !gasFees.value) return
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
@@ -271,7 +312,7 @@ const handleSubmit = async () => {
   } catch (e) {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: e instanceof Error ? e.message : t('send.toast.failed_to_sign'),
+      text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
     })
   }
 }

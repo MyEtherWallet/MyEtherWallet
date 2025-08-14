@@ -28,7 +28,7 @@ class BaseEvmWallet implements WalletInterface {
    */
   getGasFee = (tx: QuotesRequestBody): Promise<QuotesResponse> => {
     return fetchWithRetry<QuotesResponse>(
-      `/v1/evm/${this.chainId}/quotes?noInjectErrors=false`,
+      `/v1/evm/chains/${this.chainId}/quotes?noInjectErrors=false`,
       {
         method: 'POST',
         body: JSON.stringify(tx),
@@ -45,7 +45,7 @@ class BaseEvmWallet implements WalletInterface {
     feeObj: EthereumSignableTransactionParams,
   ): Promise<EthereumSignableTransactionResponse> => {
     return fetchWithRetry<EthereumSignableTransactionResponse>(
-      `/v1/evm/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+      `/v1/evm/chains/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
   }
 
@@ -93,7 +93,7 @@ class BaseEvmWallet implements WalletInterface {
   }
 
   async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/${this.chainId}/broadcasts/?noInjectErrors=false`
+    const url = `/v1/evm/chains/${this.chainId}/broadcasts/?noInjectErrors=false`
     const options = {
       method: 'POST',
       body: JSON.stringify({ signedTransaction: signedTx }),
@@ -106,7 +106,7 @@ class BaseEvmWallet implements WalletInterface {
     return Promise.resolve(true)
   }
   disconnect(): Promise<boolean> {
-    throw new Error('Method not implemented: getWalletType')
+    return Promise.resolve(true)
   }
 }
 

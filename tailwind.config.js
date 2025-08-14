@@ -30,6 +30,7 @@ export default {
       xl: '1280px',
       '2xl': '1440px',
       '3xl': '1601px',
+      print: { raw: 'print' }, // => @media  print { ... }
     },
     colors: {
       transparent: 'transparent',

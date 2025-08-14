@@ -6,10 +6,21 @@
     has-content-gutter
   >
     <template #content>
+      <!--TODO: add animation for tx completion and emit an event that tx was sent out -->
       <div class="flex flex-col gap-2 xs:gap-3">
         <div class="text-info text-s-17">
           {{ $t('verify-tx.description') }}
         </div>
+        <expand-transition>
+          <div v-if="showApproveMessage">
+            <div
+              class="flex item-center justify-center gap-5 my-5"
+              key="confirmation-approve-message"
+            >
+              Approve Tx on your device
+            </div>
+          </div>
+        </expand-transition>
         <div class="flex flex-col gap-1 xs:gap-2 text-wrap break-all">
           <!-- Network -->
           <div
@@ -266,12 +277,12 @@ interface EvmTxType {
   signedTx: HexPrefixedString | string // rawTx may be different,
 }
 
-const emit = defineEmits(['clear-form'])
 const props = defineProps<EvmTxType>()
 const model = defineModel()
-
+const emit = defineEmits(['tx-sent'])
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+const showApproveMessage = ref(false)
 
 // Modal settings
 const openModal = ref(false)
@@ -309,6 +320,10 @@ const confirmTransaction = async () => {
   if (!wallet.value) {
     return
   }
+  showApproveMessage.value = !(
+    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
+    wallet.value?.getWalletType() === WalletType.MNEMONIC
+  )
   signing.value = true
   const txPromise =
     wallet.value?.getWalletType() === WalletType.WAGMI ||
@@ -316,19 +331,33 @@ const confirmTransaction = async () => {
       ? wallet.value?.SendTransaction?.(props.signedTx as HexPrefixedString)
       : wallet.value.broadcastTransaction(props.signedTx as HexPrefixedString)
   // TODO: handle hash for user
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  await txPromise?.then(hash => {
-    toastStore.addToastMessage({
-      type: ToastType.Success,
-      text: t('send.toast.tx-send-success'),
-      duration: 10000,
-    })
-  })
 
+  await txPromise
+    ?.then(hash => {
+      toastStore.addToastMessage({
+        type: ToastType.Success,
+        text: `${t('send.toast.tx-send-success')} ${hash}`,
+        duration: 10000,
+      })
+
+      openModal.value = false
+      model.value = false
+      emit('tx-sent')
+    })
+    .catch(e => {
+      //TODO: implement error localization
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text:
+          e instanceof Error
+            ? e.message
+            : typeof e === 'string'
+              ? e
+              : t('send.toast.tx-send-failed'),
+      })
+    })
   signing.value = false
-  openModal.value = false
-  model.value = false
-  emit('clear-form')
+  showApproveMessage.value = false
 }
 
 const formatFee = computed(() => {

@@ -9,7 +9,6 @@
         <app-blockie
           :address="walletAddress"
           :size="6"
-          is-flat
           class="mr-1 rounded-full"
         />
         <div v-if="!isXS" class="mr-2 ml-1 font-medium text-sm">

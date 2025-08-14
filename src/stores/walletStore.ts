@@ -28,8 +28,10 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   const removeWallet = () => {
-    wallet.value = {} as WalletInterface
+    wallet.value?.disconnect()
+    wallet.value = null
     walletAddress.value = null
+    removeTokens()
   }
 
   const isWalletConnected = computed(() => {
@@ -56,6 +58,7 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const safeMainTokenBalance = computed<TokenBalance | null>(() => {
     if (!mainTokenBalance.value && selectedChain.value) {
+      // TODO: fetch the main token price from an API
       return {
         contract: MAIN_TOKEN_CONTRACT,
         decimals: 18, // Default for Ether
@@ -64,6 +67,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         symbol: selectedChain.value.currencyName,
         price: 0, // Price will be set later
         balance: balance.value,
+        balanceWei: balanceWei.value,
       }
     }
     if (mainTokenBalance.value) {
@@ -82,16 +86,22 @@ export const useWalletStore = defineStore('walletStore', () => {
           symbol:
             token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
           balance: fromWei(token.balance, 'ether'),
+          balanceWei: token.balance,
         }
         balance.value = fromWei(token.balance, 'ether')
         balanceWei.value = fromWei(token.balance, 'wei')
       } else {
-        newTokenCopy.push({
-          ...token,
-          name: token.name ?? 'Unknown',
-          symbol: token.symbol ?? 'UNK',
-          balance: fromWei(token.balance, 'ether'),
-        })
+        if (token.decimals) {
+          newTokenCopy.push({
+            ...token,
+            name: token.name ?? 'Unknown',
+            symbol: token.symbol ?? 'UNK',
+            balanceWei: token.balance,
+            balance: BigNumber(token.balance)
+              .div(new BigNumber(10).pow(token.decimals))
+              .toString(),
+          })
+        }
       }
     })
     tokens.value = newTokenCopy
@@ -139,19 +149,16 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   const getTokenBalance = (contract: string): TokenBalance | null => {
-    if (!tokens.value || tokens.value.length === 0) {
-      return null
-    }
     if (contract.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()) {
       return safeMainTokenBalance.value
+    }
+    if (!tokens.value || tokens.value.length === 0) {
+      return null
     }
     const token = tokens.value.find(
       t => t.contract.toLowerCase() === contract.toLowerCase(),
     )
-    if (!token) {
-      return null
-    }
-    return token
+    return token || null
   }
 
   /** -------------------------------
@@ -186,6 +193,7 @@ export const useWalletStore = defineStore('walletStore', () => {
     removeTokens,
     tokens,
     balance,
+    balanceWei,
     mainTokenBalance,
     safeMainTokenBalance,
     isLoadingBalances,
