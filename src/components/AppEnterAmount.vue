@@ -33,6 +33,7 @@
             {{ balanceFiatOrError }}
           </div>
           <div
+            v-if="isWalletConnected"
             :class="[
               'text-sm text-info transition-colors',
               { 'text-primary': inFocusInput },
@@ -61,7 +62,8 @@ import {
 } from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: isLoading, isWalletConnected } =
+  storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {

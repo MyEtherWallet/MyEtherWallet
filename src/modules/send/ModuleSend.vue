@@ -24,6 +24,11 @@
             </p>
           </transition>
         </div>
+        <div class="flex items-center justify-end mb-4">
+          <app-btn-text class="text-primary" @click="clearSendForm"
+            >Clear</app-btn-text
+          >
+        </div>
       </app-sheet>
       <app-base-button
         v-if="isWalletConnected"
@@ -48,6 +53,7 @@
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
+      @clear-form="clearSendForm"
     />
   </div>
 </template>
@@ -61,6 +67,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import type {
   TokenBalance,
   QuotesRequestBody,
@@ -223,16 +230,11 @@ watch(
   },
 )
 
-watch(
-  () => openTxModal.value,
-  (value: boolean) => {
-    if (!value) {
-      amount.value = '0'
-      toAddress.value = ''
-      signedTx.value = ''
-    }
-  },
-)
+const clearSendForm = () => {
+  amount.value = '0'
+  toAddress.value = ''
+  signedTx.value = ''
+}
 
 // toast store
 const toastStore = useToastStore()

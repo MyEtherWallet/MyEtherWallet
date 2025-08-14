@@ -266,6 +266,7 @@ interface EvmTxType {
   signedTx: HexPrefixedString | string // rawTx may be different,
 }
 
+const emit = defineEmits(['clear-form'])
 const props = defineProps<EvmTxType>()
 const model = defineModel()
 
@@ -327,6 +328,7 @@ const confirmTransaction = async () => {
   signing.value = false
   openModal.value = false
   model.value = false
+  emit('clear-form')
 }
 
 const formatFee = computed(() => {
