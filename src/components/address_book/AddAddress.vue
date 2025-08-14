@@ -32,7 +32,7 @@
       :has-address-book="false"
       :network="selectedChain"
       @validate:address="validateAddressInput"
-      @immidate-update:resolved-address="onInput"
+      @immediate-update:resolved-address="onInput"
     />
     <div class="flex justify-center gap-3">
       <app-base-button
@@ -159,7 +159,7 @@ const tryAdd = () => {
       ...props.addressEdit,
       name: name.value,
     }
-    adrBookStore.editAddress(updatedAddress, selectedChain.value?.type || 'EVM')
+    adrBookStore.editAddress(updatedAddress, updatedAddress.chainType)
     emit('close')
     isOpen.value = false
   }

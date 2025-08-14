@@ -114,7 +114,7 @@
                 v-for="adr in incompatibleAddresses"
                 :key="adr.address"
                 :adr="adr"
-                :isSelectable="isStandAlone"
+                :isSelectable="false"
                 @edit="editItem"
                 @delete="deleteAddress"
                 show-chain
@@ -138,7 +138,7 @@
  *
  */
 import AddAddress from './AddAddress.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, type PropType } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBaseButton from '../AppBaseButton.vue'
 import AppBtnGroup from '../AppBtnGroup.vue'
@@ -150,19 +150,18 @@ import { useChainsStore } from '@/stores/chainsStore'
 import AddressBookItem from './AddressBookItem.vue'
 import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
-import { type Chain } from '@/mew_api/types'
+import type { Chain } from '@/mew_api/types'
 
 const props = defineProps({
   label: {
     type: String,
     default: '',
   },
-
   /**
    * @network - The network to filter addresses by.
    */
   network: {
-    type: Object as () => Chain,
+    type: Object as PropType<Chain>,
   },
   selectedAddress: {
     type: String,
@@ -189,7 +188,7 @@ interface AddressListItem {
 
 const addressList = ref<AddressListItem[]>([
   { name: 'Saved', id: 'addresses' },
-  { name: ' Recent', id: 'recent' },
+  { name: 'Recent', id: 'recent' },
 ])
 
 const selectedListItem = ref<AddressListItem>(addressList.value[0])

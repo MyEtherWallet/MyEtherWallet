@@ -97,8 +97,8 @@ const setItem = (adr: Address) => {
   }
 }
 
-const isSelected = computed(() => {
-  return (
+const isSelected = computed<boolean>(() => {
+  return !!(
     props.selectedAddress &&
     props.selectedAddress.toLowerCase() === props.adr.address.toLowerCase()
   )

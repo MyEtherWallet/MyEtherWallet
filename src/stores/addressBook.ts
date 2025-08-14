@@ -75,7 +75,10 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
   })
 
   const addAddress = (address: Address, chainType: string) => {
-    if (currentAddressBook.value && currentAddressBook.value.length > 0) {
+    if (
+      addressBook.value[chainType] &&
+      addressBook.value[chainType].length > 0
+    ) {
       const index = addressBook.value[chainType].findIndex(
         (_address: Address) => _address.address === address.address,
       )
@@ -90,6 +93,7 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
   }
 
   const removeAddress = (adr: Address, chainType: string) => {
+    if (!addressBook.value[chainType]) return
     const index = addressBook.value[chainType].findIndex(
       (_address: Address) => _address.address === adr.address,
     )
@@ -99,6 +103,7 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
   }
 
   const editAddress = (address: Address, chainType: string) => {
+    if (!addressBook.value[chainType]) return
     const index = addressBook.value[chainType].findIndex(
       (_address: Address) => _address.address === address.address,
     )

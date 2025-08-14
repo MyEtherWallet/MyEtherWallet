@@ -54,7 +54,11 @@ export const useAddressInput = (network: Ref<Chain> | Chain | undefined) => {
     resolvedAddress.value = undefined
     try {
       const locResolvedAddr = await resolver.value.resolveName(adrInput.value)
-      resolvedAddress.value = locResolvedAddr
+      if (locResolvedAddr && locResolvedAddr !== '') {
+        resolvedAddress.value = locResolvedAddr
+      } else {
+        throw new Error('Address resolution failed')
+      }
     } catch {
       if (!isValidAddress(adrInput.value)) {
         resolvedAddress.value = ''

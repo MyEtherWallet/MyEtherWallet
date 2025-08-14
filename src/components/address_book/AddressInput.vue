@@ -114,7 +114,7 @@
  *         :address-error-messages="tadrError"
  *         :chain="selectedChain"
  *         @validate:address="validateAddressInput"
- *         @immidate-update:resolved-address="onInput"
+ *         @immediate-update:resolved-address="onInput"
  *       />
  *
  * import { useAddressInput } from '@/composables/useAddressInput'
@@ -128,12 +128,12 @@
  */
 import { XCircleIcon } from '@heroicons/vue/24/outline'
 import { UsersIcon } from '@heroicons/vue/24/solid'
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, type PropType } from 'vue'
 import createIcon from '@/providers/ethereum/blockies'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import AddressBookDialog from './AddressBookDialog.vue'
-import type { Chain } from '@ethereumjs/common'
+import type { Chain } from '@/mew_api/types'
 
 const props = defineProps({
   label: {
@@ -152,12 +152,12 @@ const props = defineProps({
     default: true,
   },
   network: {
-    type: Object as () => Chain,
+    type: Object as PropType<Chain>,
   },
 })
 
 const emit = defineEmits([
-  'immidate-update:resolvedAddress',
+  'immediate-update:resolved-address',
   'validate:address',
 ])
 
@@ -177,14 +177,14 @@ const clearAdrInput = () => {
   setInFocusInput()
   nextTick(() => {
     adrInput.value = ''
-    emit('immidate-update:resolvedAddress')
+    emit('immediate-update:resolved-address')
     emit('validate:address')
   })
 }
 
 const setAddress = (address: string) => {
   adrInput.value = address
-  emit('immidate-update:resolvedAddress')
+  emit('immediate-update:resolved-address')
   emit('validate:address')
 }
 
