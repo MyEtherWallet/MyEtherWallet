@@ -39,6 +39,7 @@
         :show-balance="false"
         :tokens="localToTokens"
         :readonly="true"
+        :is-estimate="true"
         class="mt-4"
       />
       <div class="pt-4" v-if="isCrossChain"></div>
@@ -532,14 +533,6 @@ const toAmount = ref<number | string>('0')
 const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
 
 const toAmountError = computed(() => {
-  const baseAmount = toAmount.value
-    ? toBase(toAmount.value, toTokenSelected.value?.decimals || 18)
-    : 0
-
-  // model.value = amount.value
-  if (toAmount.value === undefined || toAmount.value === '')
-    return t('swap.error.amount-required') // amount is blank
-  else if (BigInt(baseAmount) < 0) return t('swap.error.more-than-zero') // amount less than 0
   return ''
 })
 
@@ -589,10 +582,10 @@ watch(
   () => {
     if (providers.value.length > 0 && fromAmountError.value === '') {
       // Set the toTokenSelected based on the first provider's toTokenAmount
-      toAmount.value = fromBase(
+      toAmount.value = `≈ ${fromBase(
         providers.value[0].toTokenAmount.toString(),
         toTokenSelected.value?.decimals || 18,
-      ).substring(0, toTokenSelected.value?.decimals || 18)
+      ).substring(0, toTokenSelected.value?.decimals || 8)}`
     }
   },
 )

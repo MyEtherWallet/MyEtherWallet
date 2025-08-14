@@ -57,7 +57,7 @@
       <app-btn-icon
         class="absolute top-3 right-11"
         label="clear search"
-        @click="cleatAdrInput"
+        @click="clearAdrInput"
         :class="[
           toAddress !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
@@ -227,7 +227,6 @@ onMounted(() => {
 })
 
 // Look for address book being set immediately
-
 watch(model, (newValue, oldValue) => {
   if (newValue && oldValue === '') {
     toAddress.value = newValue
@@ -310,7 +309,7 @@ const clearSearch = () => {
   addressSearch.value = ''
 }
 
-const cleatAdrInput = () => {
+const clearAdrInput = () => {
   setInFocusInput()
   nextTick(() => {
     toAddress.value = ''

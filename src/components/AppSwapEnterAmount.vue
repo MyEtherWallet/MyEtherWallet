@@ -85,6 +85,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isEstimate: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 //String will be returned when input is cleared --> ''
@@ -116,7 +120,7 @@ const balanceFiatOrError = computed(() => {
     const val = BigNumber(selectedToken.value?.price || 0)
       .times(BigNumber(amount.value).gt(0) ? amount.value : 1)
       .toFixed(2)
-    return error.value ? error.value : `$ ${val}`
+    return error.value ? error.value : `${props.isEstimate ? '≈' : ''}$ ${val}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
@@ -124,7 +128,9 @@ const balanceFiatOrError = computed(() => {
     ),
   )
 
-  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
+  return error.value
+    ? error.value
+    : `${props.isEstimate ? '≈' : ''}$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
