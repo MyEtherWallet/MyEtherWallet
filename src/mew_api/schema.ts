@@ -670,7 +670,6 @@ export interface components {
             chainName: string;
             includesTokens: boolean;
             balances: {
-                chainName?: string;
                 contract: string;
                 name?: string;
                 decimals?: number;

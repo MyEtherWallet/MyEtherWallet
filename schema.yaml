@@ -1278,8 +1278,6 @@ components:
                 - contract
                 - nativeValue
               properties:
-                chainName:
-                  type: string
                 contract:
                   type: string
                 name:
