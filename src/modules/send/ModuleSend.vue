@@ -19,6 +19,11 @@
           :txRequestBody="gasFeeTxEstimate"
           v-model:gas-fee-error="gasFeeError"
         />
+        <div class="flex items-center justify-end mb-4">
+          <app-btn-text class="text-primary" @click="resetSendModule"
+            >Clear</app-btn-text
+          >
+        </div>
       </app-sheet>
       <app-base-button
         v-if="isWalletConnected"
@@ -57,6 +62,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppAddressBook from '@/components/AppAddressBook.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
@@ -176,7 +182,7 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  const amountBase = Number(
+  const amountBase = BigInt(
     toBase(amount.value, tokenSelected.value?.decimals || 18),
   )
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'

@@ -2,7 +2,10 @@
   <div class="min-h-[76px]">
     <button
       class="hoverNoBG rounded-16 border-1 bg-white border-grey-outline border-solid px-4 py-3 flex justify-between items-center text-sm w-full"
-      :class="{ 'border-error border-2': gasFeeError && gasFeeError !== '' }"
+      :class="{
+        '!border-error border-2':
+          isWalletConnected && gasFeeError && gasFeeError !== '',
+      }"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
     >
@@ -39,7 +42,7 @@
     <div class="min-h-6 mt-1">
       <transition name="fade" mode="out-in">
         <div
-          v-if="gasFeeError && gasFeeError !== ''"
+          v-if="isWalletConnected && gasFeeError && gasFeeError !== ''"
           class="text-error text-[10px] xs:text-s-12 leading-[23px] px-5"
         >
           <!-- TODO Add PROPER LINK -->
@@ -49,14 +52,16 @@
                 symbol: selectedChain?.currencyName || 'ETH',
               })
             }}
-            <span
+            <a
+              href="https://ccswap.myetherwallet.com/"
+              target="_blank"
               class="text-primary cursor-pointer underline underline-offset-2"
               @click="openFeeModal"
               >{{
                 $t('common.buy_more', {
                   symbol: selectedChain?.currencyName || 'ETH',
                 })
-              }}</span
+              }}</a
             >
           </p>
           <p v-else>{{ gasFeeError }}</p>
