@@ -4,6 +4,7 @@
       name="network-button"
       :openNetworkDialog="setOpenDialog"
       :selectedChain="selectedChain"
+      :filterChainType="true"
     >
       <app-btn-group
         v-if="isBtnGroup"
@@ -11,7 +12,8 @@
         :btn-list="shownChains"
         :use-emit-only="true"
         :is-loaded="isLoadedChains"
-        is-tall
+        size="large"
+        class="!p-2"
         @onUpdate:selected="setSelectedChain"
       >
         <template #btn-content="{ data }">
@@ -67,60 +69,13 @@
       </button>
     </slot>
     <!-- Dialog with chains list -->
-    <app-dialog
+    <select-chain-dialog
       v-if="isLoadedChains"
       v-model:is-open="openDialog"
-      title="Select Chain"
-      class="xs:max-w-[428px] sm:mx-auto"
-    >
-      <template #content>
-        <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
-          <!-- Seacrh -->
-          <div class="sticky top-0 bg-white z-10">
-            <div class="px-5 mb-1">
-              <app-search-input
-                v-model="searchInput"
-                class="grow"
-                placeholder="Search by Name"
-              />
-            </div>
-            <hr class="h-px bg-grey-outline border-0 w-full" />
-          </div>
-          <!-- Seacrh Result-->
-          <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
-            <button
-              v-for="chain in searchResults"
-              :key="chain.name"
-              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-12 box-border"
-              :class="{ 'bg-grey-5': chain.name === selectedChain?.name }"
-              @click="setSelectedChain(chain)"
-            >
-              <div class="flex justify-between items-center w-full">
-                <div class="flex items-center">
-                  <img
-                    v-if="chain.icon"
-                    class="mr-4 w-7 h-7 rounded-full overflow-hidden"
-                    :src="chain.icon"
-                    alt="token icon"
-                  />
-                  <span>{{ chain.nameLong }}</span>
-                </div>
-                <check-icon
-                  v-if="chain.name === selectedChain?.name"
-                  class="w-6 h-6 text-primary"
-                />
-              </div>
-            </button>
-          </div>
-          <!-- Search not found-->
-          <div v-else>
-            <div class="flex justify-center mt-10 h-[400px] text-info">
-              <p>{{ $t('common.not_found.chains') }}</p>
-            </div>
-          </div>
-        </div>
-      </template>
-    </app-dialog>
+      :selected-chain="selectedChain"
+      :filter-chain-type="isBtnGroup"
+      @update:chain="setSelectedChain"
+    />
   </div>
 </template>
 
@@ -129,13 +84,12 @@ import { ref, watch, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from './AppSearchInput.vue'
-import AppBtnGroup from './AppBtnGroup.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
-const prop = defineProps({
+defineProps({
   isBtnGroup: {
     type: Boolean,
     default: false,
@@ -149,11 +103,7 @@ const globalStore = useGlobalStore()
 const { selectedNetwork: selectedChainStore } = storeToRefs(globalStore)
 const { setSelectedNetwork: setSelectedChainStore } = globalStore
 const chainsStore = useChainsStore()
-const {
-  chains,
-  isLoaded: isLoadedChains,
-  selectedChain: storeSelectedChain,
-} = storeToRefs(chainsStore)
+const { chains, isLoaded: isLoadedChains } = storeToRefs(chainsStore)
 const lastSelectedChain = ref<Chain | null>(null)
 
 const selectedIsDefault = computed(() => {
@@ -223,32 +173,4 @@ const openDialog = ref(false)
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }
-
-/** -------------------------------
- * Search
- -------------------------------*/
-const searchInput = ref('')
-const searchResults = computed(() => {
-  const chainsToSearch = prop.isBtnGroup
-    ? chains.value
-    : chains.value.filter(chain => {
-        return chain.type === storeSelectedChain.value?.type
-      })
-
-  if (!searchInput.value || searchInput.value === '') {
-    if (!selectedChain.value) {
-      return chainsToSearch
-    }
-    const unique = new Set([selectedChain.value, ...chainsToSearch])
-    return [...unique]
-  }
-  const beginsWith = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
-  })
-  const other = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
-  })
-  const unique = new Set([...beginsWith, ...other])
-  return [...unique]
-})
 </script>

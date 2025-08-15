@@ -37,6 +37,7 @@
         v-model:selected="activeFilter"
         :btn-list="filterOptions"
         :is-loaded="true"
+        size="large"
       >
         <template #btn-content="{ data }">
           {{ data.name }}

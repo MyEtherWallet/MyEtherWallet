@@ -31,7 +31,7 @@
         <h2 class="text5 font-semibold mb-4 md:ml-4">
           {{ $t('common.select_network') }}
         </h2>
-        <app-select-chain is-btn-group />
+        <select-chain-for-app is-btn-group />
       </div>
     </div>
     <WalletsDefaultList class="mt-10 mb-12 sm:mb-[64px]" />
@@ -42,5 +42,5 @@
 import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
 import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 </script>

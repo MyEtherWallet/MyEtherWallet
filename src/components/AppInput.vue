@@ -1,5 +1,8 @@
 <template>
   <div class="relative min-h-[86px]">
+    <div v-if="$slots.prepend" class="absolute left-3 top-[13px] w-8 h-8">
+      <slot name="prepend" />
+    </div>
     <input
       ref="baseInput"
       :type="inputType"
@@ -12,6 +15,7 @@
           '!border-primary !border-2': inFocusInput && !hasError,
         },
         'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm text-normal rounded-16 h-[58px] w-full pl-7 pr-20 pt-[24px] pb-[10px] text-xl transition-colors',
+        { '!pl-12': $slots.prepend },
       ]"
       :aria-label="placeholder"
       @focus="setInFocusInput()"
@@ -24,6 +28,7 @@
         'pointer-events-none absolute top-[17px] left-5 bottom-auto transition-all pl-2 aria-hidden',
         inFocusInput ? (hasError ? 'text-error' : 'text-primary') : 'text-info',
         { 'text-[10px] translate-y-[-70%]': inFocusInput || model !== '' },
+        { 'pl-8': $slots.prepend },
       ]"
     >
       {{ placeholder }}
@@ -92,7 +97,6 @@ const props = defineProps({
   },
   type: {
     type: String as PropType<InputTypeHTMLAttribute>,
-    required: true,
     default: 'text',
   },
   isRequired: {
