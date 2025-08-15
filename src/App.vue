@@ -70,6 +70,9 @@ watch(
   () => selectedChain.value,
   newChain => {
     if (newChain) {
+      if (newChain.chainID) {
+        wallet.value?.updateChainId(newChain.chainID)
+      }
       fetchBalances()
     } else {
       setTokens([])

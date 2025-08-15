@@ -32,4 +32,5 @@ export interface WalletInterface {
   getProvider: () => string
   getBalance: () => Promise<TokenBalancesRaw>
   broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
+  updateChainId: (chainId: string) => void
 }
