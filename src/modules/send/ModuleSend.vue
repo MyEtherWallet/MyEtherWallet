@@ -26,6 +26,11 @@
           :txRequestBody="gasFeeTxEstimate"
           v-model:gas-fee-error="gasFeeError"
         />
+        <div class="flex items-center justify-end mb-4">
+          <app-btn-text class="text-primary" @click="resetSendModule"
+            >Clear</app-btn-text
+          >
+        </div>
       </app-sheet>
       <app-base-button
         v-if="isWalletConnected"
@@ -195,7 +200,7 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  const amountBase = Number(
+  const amountBase = BigInt(
     toBase(amount.value, tokenSelected.value?.decimals || 18),
   )
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
