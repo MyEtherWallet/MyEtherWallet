@@ -8,7 +8,7 @@
         v-model:selected-token="fromTokenSelected"
         v-model:error="fromAmountError"
         :external-loading="!swapLoaded && supportedNetwork"
-        :tokens="fromTokens"
+        :tokens="parsedFromTokens"
         :show-balance="isWalletConnected"
         class="mt-4"
       />
@@ -37,7 +37,7 @@
         v-model:error="toAmountError"
         :external-loading="toLoadingState"
         :show-balance="false"
-        :tokens="localToTokens"
+        :tokens="parsedToTokens"
         :readonly="true"
         :is-estimate="true"
         class="mt-4"
@@ -261,6 +261,21 @@ const setToToken = () => {
     }
   }
 }
+// removes the selected to token from the from tokens list
+const parsedFromTokens = computed(() => {
+  const toToken = toTokenSelected.value as NewTokenInfo
+  return fromTokens.value?.filter(
+    (token: NewTokenInfo) => token.address !== toToken?.address,
+  )
+})
+// removes the selected to token from the from tokens list
+const parsedToTokens = computed(() => {
+  const fromToken = fromTokenSelected.value as NewTokenInfo
+  if (!localToTokens.value) return []
+  return localToTokens?.value.filter(
+    (token: NewTokenInfo) => token.address !== fromToken.address,
+  )
+})
 
 const proceedWithSwap = async (quoteId: string) => {
   let txPromise
@@ -581,11 +596,12 @@ watch(
   () => providers.value,
   () => {
     if (providers.value.length > 0 && fromAmountError.value === '') {
-      // Set the toTokenSelected based on the first provider's toTokenAmount
-      toAmount.value = `≈ ${fromBase(
+      const value = fromBase(
         providers.value[0].toTokenAmount.toString(),
         toTokenSelected.value?.decimals || 18,
-      ).substring(0, toTokenSelected.value?.decimals || 8)}`
+      )
+      // Set the toTokenSelected based on the first provider's toTokenAmount
+      toAmount.value = `≈ ${value.length > 8 ? BigNumber(value).decimalPlaces(8) : value.toString()}`
     }
   },
 )

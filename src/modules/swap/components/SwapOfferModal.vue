@@ -42,7 +42,7 @@
                 />
               </div>
               <div
-                class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-3 right-2 translate-x-1/2 translate-y-1/2 overflow-hidden"
+                class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-[5px] right-[-10px] overflow-hidden"
               >
                 <img
                   :src="toChain?.icon"
