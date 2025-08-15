@@ -470,10 +470,10 @@ const fromAmountError = computed(() => {
     return t('swap.error.amount-required') // amount is blank
   if (
     BigNumber(fromAmount.value).toFixed().length >
-    fromTokenSelected.value.decimals
+    fromTokenSelected.value?.decimals
   ) {
     return t('swap.error.too-many-decimals', {
-      decimal: fromTokenSelected.value.decimals,
+      decimal: fromTokenSelected.value?.decimals,
     })
   }
   const baseNetworkBalance = toBase(
@@ -566,7 +566,15 @@ const fetchQuotes = async () => {
       toAddress: toAddress.value,
     })
 
-    providers.value = quotes && quotes.length > 0 ? quotes : []
+    // sort quotes by lowest minimum
+    providers.value =
+      quotes && quotes.length > 0
+        ? quotes.sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
+            const aFees = BigNumber(a.minMax.minimumFrom.toString() || 0)
+            const bFees = BigNumber(b.minMax.minimumFrom.toString() || 0)
+            return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
+          })
+        : []
     selectedQuote.value = providers.value[0] || undefined
     isLoadingQuotes.value = false
   } catch {

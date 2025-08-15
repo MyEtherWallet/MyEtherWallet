@@ -53,7 +53,7 @@ export default (
   if (!tx.data || tx.data === '0x') return ACTIONS.swap;
   const sig = getSignature(tx.data) as SignatureKey;
   if (!signatures[sig]) {
-    return '';
+    return 'TOKEN_SWAP';
   }
   return signatures[sig]({
     data: tx.data,
