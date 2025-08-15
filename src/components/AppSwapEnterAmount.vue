@@ -66,7 +66,8 @@ import {
 import { type NewTokenInfo } from '@/composables/useSwap'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: storeLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: storeLoading, isWalletConnected } =
+  storeToRefs(walletStore)
 
 const props = defineProps({
   externalLoading: {
@@ -112,7 +113,10 @@ const tokenBalanceRaw = computed(() => {
 })
 
 const isLoading = computed(() => {
-  return props.externalLoading || storeLoading.value
+  if (isWalletConnected.value) {
+    return props.externalLoading || storeLoading.value
+  }
+  return props.externalLoading
 })
 
 const balanceFiatOrError = computed(() => {

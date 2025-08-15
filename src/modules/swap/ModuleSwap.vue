@@ -2,12 +2,12 @@
   <div class="relative max-w-[478px] mx-auto">
     <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
       <p class="text-s-16 mb-2">{{ t('common.from') }}</p>
-      <app-select-chain />
+      <select-chain-for-app :filter-chain-type="true" />
       <app-swap-enter-amount
         v-model:amount="fromAmount"
         v-model:selected-token="fromTokenSelected"
         v-model:error="fromAmountError"
-        :external-loading="!swapLoaded && supportedNetwork"
+        :external-loading="fromLoadingState"
         :tokens="parsedFromTokens"
         :show-balance="isWalletConnected"
         class="mt-4"
@@ -25,10 +25,11 @@
     <div class="pt-2"></div>
     <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
       <p class="text-s-16 mb-2">{{ t('common.to') }}</p>
-      <app-select-chain
+      <select-chain-for-app
         :can-store="false"
         :passed-chains="toChains"
-        :preselected-chain="swapValues?.toChain"
+        :preselected-chain="selectedToChain"
+        :filter-chain-type="true"
         @update:selected-chain="setToChain"
       />
       <app-swap-enter-amount
@@ -43,11 +44,11 @@
         class="mt-4"
       />
       <div class="pt-4" v-if="isCrossChain"></div>
-      <app-address-book
-        v-model="userToAddress"
-        class="mb-[2px]"
-        :has-custom-validator="true"
-        :custom-validator="toTokenSelected?.networkInfo.isAddress"
+      <address-input
+        v-model:adr-input="userToAddress"
+        :resolved-address="toAddress"
+        :address-error-messages="toAddressError"
+        @validate:address="validateToAddress"
         v-if="isCrossChain"
       />
     </div>
@@ -68,7 +69,7 @@
           fromAmountError === '' &&
           toAmount !== '0'
         ) ||
-        (isCrossChain && userToAddress === '')
+        (isCrossChain && toAddressError !== '')
       "
       @click="swapButton"
     >
@@ -114,13 +115,12 @@ import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { ROUTES_ACCESS } from '@/router/routeNames'
-import AppAddressBook from '@/components/AppAddressBook.vue'
 import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
 import { supportedSwapEnums } from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import BigNumber from 'bignumber.js'
 import { type NewTokenInfo } from '@/composables/useSwap'
@@ -142,6 +142,7 @@ import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import dataTxAction from '@/utils/dataTxAction'
+import AddressInput from '@/components/address_book/AddressInput.vue'
 
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()
@@ -167,6 +168,7 @@ const {
 const { hasSwapValues, swapValues } = storeToRefs(inputStore)
 const { storeSwapValues, clearSwapValues } = inputStore
 
+const toAddressError = ref<string>('')
 const userToAddress = ref<string>('')
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
@@ -276,6 +278,14 @@ const parsedToTokens = computed(() => {
     (token: NewTokenInfo) => token.address !== fromToken.address,
   )
 })
+
+const validateToAddress = async () => {
+  const address = userToAddress.value
+  const validAddress =
+    await toTokenSelected.value?.networkInfo.isAddress(address)
+  if (!address) toAddressError.value = 'address is required'
+  if (!validAddress) toAddressError.value = 'invalid address'
+}
 
 const proceedWithSwap = async (quoteId: string) => {
   let txPromise
@@ -410,7 +420,11 @@ const toLoadingState = computed(() => {
   if (isLoadingQuotes.value) {
     return true
   }
-  return !swapLoaded && supportedNetwork
+  return !swapLoaded.value && supportedNetwork.value
+})
+
+const fromLoadingState = computed(() => {
+  return !swapLoaded.value && supportedNetwork.value
 })
 
 const setToChain = (chain: Chain) => {
@@ -629,6 +643,7 @@ watch(
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
+      if (isCrossChain.value && toAddress.value === '') return
       debounceFetchQuotes()
     }
   },

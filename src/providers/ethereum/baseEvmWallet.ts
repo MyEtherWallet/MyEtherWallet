@@ -140,6 +140,9 @@ class BaseEvmWallet implements WalletInterface {
   disconnect(): Promise<boolean> {
     return Promise.resolve(true)
   }
+  updateChainId(chainId: string): void {
+    this.chainId = chainId
+  }
 }
 
 export default BaseEvmWallet

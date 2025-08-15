@@ -22,15 +22,19 @@ const { wallet, walletAddress } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
 
+const fetchBalances = () => {
+  setIsLoadingBalances(true)
+  wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
+    setTokens(balances.result)
+    setIsLoadingBalances(false)
+  })
+}
+
 watch(
   () => walletAddress.value,
   newWallet => {
-    setIsLoadingBalances(true)
     if (newWallet) {
-      wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-        setTokens(balances.result)
-        setIsLoadingBalances(false)
-      })
+      fetchBalances()
     } else {
       setTokens([])
       setIsLoadingBalances(false)
@@ -43,6 +47,7 @@ const providerStore = useProviderStore()
 const { addProvider } = providerStore
 const chainStore = useChainsStore()
 const { setChainData } = chainStore
+const { selectedChain } = storeToRefs(chainStore)
 
 const { useMEWFetch } = useFetchMewApi()
 const { data, onFetchResponse } = useMEWFetch<ChainsRaw>('/chains').get().json()
@@ -60,4 +65,20 @@ onMounted(() => {
     addProvider(provider)
   })
 })
+
+watch(
+  () => selectedChain.value,
+  newChain => {
+    if (newChain) {
+      if (newChain.chainID) {
+        wallet.value?.updateChainId(newChain.chainID)
+      }
+      fetchBalances()
+    } else {
+      setTokens([])
+      setIsLoadingBalances(false)
+    }
+  },
+  { immediate: true },
+)
 </script>

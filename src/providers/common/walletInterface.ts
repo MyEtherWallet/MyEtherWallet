@@ -41,4 +41,5 @@ export interface WalletInterface {
   getMultipleSignableTransactions?: (
     feeObj: EthereumSignableTransactionParams,
   ) => Promise<GetUnsignedEvmMultiTransactionResponse>
+  updateChainId: (chainId: string) => void
 }

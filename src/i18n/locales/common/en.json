@@ -14,6 +14,8 @@
     "not_found": {
       "chains": "No chains found"
     },
+    "edit": "Edit",
+    "delete": "Delete",
     "token_count": "no tokens| 1 token | {count} Tokens",
     "sort": "Sort",
     "sort_by": "Sort by",

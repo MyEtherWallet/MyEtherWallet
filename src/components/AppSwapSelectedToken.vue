@@ -233,13 +233,16 @@ const { t } = useI18n()
 const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
-const { isLoadingBalances } = storeToRefs(store)
+const { isLoadingBalances, isWalletConnected } = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 
 const isLoading = computed(() => {
-  return props.externalLoading || isLoadingBalances.value || !isLoaded.value
+  if (isWalletConnected.value) {
+    return props.externalLoading || isLoadingBalances.value || !isLoaded.value
+  }
+  return props.externalLoading || !isLoaded.value
 })
 
 const tokens = computed<NewTokenInfo[]>(() => {
