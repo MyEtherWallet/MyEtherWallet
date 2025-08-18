@@ -53,7 +53,7 @@
             </div>
             <div>
               <div class="font-bold text-s-24 ml-5">
-                {{ toAmount }} {{ toToken?.symbol }}
+                ≈ {{ toAmount }} {{ toToken?.symbol }}
               </div>
               <div class="text-s-12 text-grey-30 ml-5">
                 ≈ ${{ toAmountFiat }}
@@ -244,10 +244,12 @@ const toToken = computed(() => {
 })
 
 const toAmount = computed(() => {
-  return fromBase(
-    selectedQuote.value?.toTokenAmount.toString() || '0',
-    toToken.value?.decimals ?? 18,
-  )
+  return BigNumber(
+    fromBase(
+      selectedQuote.value?.toTokenAmount.toString() || '0',
+      toToken.value?.decimals ?? 18,
+    ),
+  ).decimalPlaces(8)
 })
 
 const parseAmount = (amount: BN, decimal: number) => {

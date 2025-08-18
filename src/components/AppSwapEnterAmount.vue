@@ -134,7 +134,7 @@ const balanceFiatOrError = computed(() => {
 
   return error.value
     ? error.value
-    : `${props.isEstimate ? '≈' : ''}$ ${formatFiatValue(_balance).value}`
+    : `${props.isEstimate ? '≈ ' : ''}$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
