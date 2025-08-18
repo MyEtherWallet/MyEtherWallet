@@ -45,6 +45,7 @@ export default {
             this.tokensData.set(token.id, token);
           });
           this.setCoinGeckoTokens(this.tokensData);
+          this.setTokenAndEthBalance();
         }
       },
       error(error) {
@@ -72,6 +73,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions('external', ['setCoinGeckoTokens', 'setCoinGeckoNetworkIds'])
+    ...mapActions('external', [
+      'setCoinGeckoTokens',
+      'setCoinGeckoNetworkIds',
+      'setTokenAndEthBalance'
+    ])
   }
 };
