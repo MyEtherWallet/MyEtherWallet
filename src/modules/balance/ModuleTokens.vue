@@ -204,7 +204,7 @@ export default {
       'hasSwap',
       'getFiatValue'
     ]),
-    ...mapGetters('external', ['totalTokenFiatValue']),
+    ...mapState('external', ['totalTokenFiatValue']),
     loading() {
       return this.loadingWalletInfo;
     },

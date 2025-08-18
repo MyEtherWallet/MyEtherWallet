@@ -86,15 +86,18 @@ const setTokenAndEthBalance = function ({
           )
         ],
         { root: true }
-      )
-        .then(() =>
-          dispatch('wallet/setAccountBalance', toBN(res), { root: true })
+      ).then(() =>
+        dispatch('wallet/setAccountBalance', toBN(res), { root: true }).then(
+          () => {
+            // dispatch can't be blank
+            dispatch('custom/updateCustomTokenBalances', false, { root: true });
+            commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
+            commit('external/SET_TOTAL_TOKEN_FIAT_VALUE', rootGetters, {
+              root: true
+            });
+          }
         )
-        .then(() => {
-          // dispatch can't be blank
-          dispatch('custom/updateCustomTokenBalances', false, { root: true });
-          commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
-        });
+      );
     });
   };
 
@@ -227,6 +230,9 @@ const setTokenAndEthBalance = function ({
           dispatch('custom/updateCustomTokenBalances', false, {
             root: true
           }).catch(e => Toast(e, {}, ERROR));
+          commit('external/SET_TOTAL_TOKEN_FIAT_VALUE', rootGetters, {
+            root: true
+          });
           commit('wallet/SET_LOADING_WALLET_INFO', false, { root: true });
         })
       );

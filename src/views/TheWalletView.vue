@@ -48,7 +48,7 @@
         <mew-button
           title="Click Here"
           :has-full-width="true"
-          btn-link="https://mewwallet.typeform.com/pkuser-research"
+          btn-link="https://qkdo7pcz90y.typeform.com/to/peXf18zO"
           @click.native="openSurvey"
         />
       </div>
@@ -118,7 +118,7 @@ export default {
       'selectedEIP6963Provider',
       'selectedEIP6963Info'
     ]),
-    ...mapState('popups', ['pkSurveyShown', 'pkSurveyShownCounter']),
+    ...mapState('survey', ['userSurveyShown', 'userSurveyShownCounter']),
     ...mapGetters('global', [
       'network',
       'gasPrice',
@@ -126,21 +126,15 @@ export default {
     ]),
     ...mapGetters('wallet', ['balanceInWei']),
     showSurvey() {
-      const isPrivKey = this.identifier === WALLET_TYPES.PRIV_KEY;
       const userClosed = !this.tempClose;
-      const userAnswered = !this.pkSurveyShown;
-      const shownTwice = this.pkSurveyShownCounter > 2;
-      return (
-        isPrivKey &&
-        userClosed &&
-        userAnswered &&
-        !shownTwice &&
-        this.withinDate
-      );
+      const userAnswered = !this.userSurveyShown;
+      const shownTwice = this.userSurveyShownCounter > 2;
+
+      return userClosed && userAnswered && !shownTwice && this.withinDate;
     },
     withinDate() {
-      const startDate = new Date('03/26/2024');
-      const endDate = new Date('04/29/2024');
+      const startDate = new Date('08/18/2025');
+      const endDate = new Date('09/02/2025');
       return moment(new Date()).isBetween(startDate, endDate);
     }
   },
@@ -195,7 +189,7 @@ export default {
   },
   mounted() {
     if (this.showSurvey) {
-      this.shownPkSurveyCounter();
+      this.shownUserSurveyCounter();
       this.trackSurvey('Shown');
     }
     this.$vuetify.theme.dark = this.darkMode;
@@ -259,13 +253,13 @@ export default {
       'setValidNetwork'
     ]),
     ...mapActions('external', ['setTokenAndEthBalance', 'setNetworkTokens']),
-    ...mapActions('popups', ['setPkSurvey', 'shownPkSurveyCounter']),
+    ...mapActions('survey', ['setUserSurvey', 'shownUserSurveyCounter']),
     closeSurveyModal() {
       this.tempClose = true;
       this.trackSurvey('Closed');
     },
     openSurvey() {
-      this.setPkSurvey();
+      this.setUserSurvey();
       this.trackSurvey('Answered');
     },
     /**
@@ -299,11 +293,11 @@ export default {
       });
     },
     setTokensAndBalance() {
-      if (this.coinGeckoTokens?.get) {
-        this.setTokenAndEthBalance();
-      } else {
-        this.setTokens([]);
-      }
+      // if (this.coinGeckoTokens?.get) {
+      //   this.setTokenAndEthBalance();
+      // } else {
+      // }
+      this.setTokens([]);
     },
     checkAndSetBaseFee(baseFee) {
       if (baseFee) {
