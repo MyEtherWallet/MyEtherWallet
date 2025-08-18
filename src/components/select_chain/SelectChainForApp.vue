@@ -73,14 +73,14 @@
       v-if="isLoadedChains"
       v-model:is-open="openDialog"
       :selected-chain="selectedChain"
-      :filter-chain-type="isBtnGroup"
+      :filter-chain-type="isBtnGroup ? isBtnGroup : filterChainType"
       @update:chain="setSelectedChain"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
@@ -89,13 +89,30 @@ import AppBtnGroup from '@components/AppBtnGroup.vue'
 import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
-defineProps({
+const prop = defineProps({
   isBtnGroup: {
     type: Boolean,
     default: false,
   },
+  passedChains: {
+    type: Array as () => Chain[],
+    default: () => [],
+  },
+  canStore: {
+    type: Boolean,
+    default: true,
+  },
+  filterChainType: {
+    type: Boolean,
+    default: false,
+  },
+  preselectedChain: {
+    type: Object as () => Chain | null,
+    default: null,
+  },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
+const emits = defineEmits(['update:selectedChain'])
 const selectedChain = ref<Chain | null>(null)
 const defaultChains = ref<Chain[]>([])
 
@@ -103,8 +120,16 @@ const globalStore = useGlobalStore()
 const { selectedNetwork: selectedChainStore } = storeToRefs(globalStore)
 const { setSelectedNetwork: setSelectedChainStore } = globalStore
 const chainsStore = useChainsStore()
-const { chains, isLoaded: isLoadedChains } = storeToRefs(chainsStore)
+const {
+  chains,
+  isLoaded: isLoadedChains,
+  selectedChain: storedSelectedChain,
+} = storeToRefs(chainsStore)
 const lastSelectedChain = ref<Chain | null>(null)
+
+const displayedChains = computed(() => {
+  return prop.passedChains.length > 0 ? prop.passedChains : chains.value
+})
 
 const selectedIsDefault = computed(() => {
   return defaultChains.value.some(
@@ -125,27 +150,56 @@ const shownChains = computed<Chain[]>(() => {
   return [...defaultChains.value, selectedChain.value]
 })
 
-/**
- * @description Watch for the chains to be loaded and set the default chains and selected chain
- */
 watch(
-  () => isLoadedChains.value,
-  () => {
-    if (isLoadedChains.value) {
-      defaults.forEach(chainName => {
-        const chain = chains.value.find(c => c.name === chainName)
-        if (chain) {
-          defaultChains.value.push(chain)
+  isLoadedChains,
+  newVal => {
+    if (newVal) {
+      defaults.forEach(defaultChainName => {
+        const defaultChain = chains.value.find(
+          chain => chain.name === defaultChainName,
+        )
+        if (defaultChain) {
+          defaultChains.value.push(defaultChain)
         }
       })
-      const preselected = chains.value.find(
-        chain => chain.name === selectedChainStore.value,
+      const preselected = displayedChains.value.find(
+        chain => chain.name === prop.preselectedChain?.name,
       )
-      selectedChain.value = preselected ?? defaultChains.value[0]
+      selectedChain.value = preselected ?? defaultChains.value[0] ?? null
+      if (!prop.canStore) {
+        emits('update:selectedChain', selectedChain.value)
+      }
     }
   },
   { immediate: true },
 )
+
+onMounted(() => {
+  // If preselected chain is provided, set it as selected
+  if (prop.preselectedChain) {
+    const preselected = displayedChains.value.find(
+      chain => chain.name === prop.preselectedChain?.name,
+    )
+    if (preselected) {
+      selectedChain.value = preselected
+      if (prop.canStore) {
+        setSelectedChainStore(preselected.name)
+      } else {
+        emits('update:selectedChain', preselected)
+      }
+    }
+  } else {
+    selectedChain.value = storedSelectedChain.value ?? null
+  }
+})
+
+/** -------------------------------
+ * Dialog
+ -------------------------------*/
+const openDialog = ref(false)
+const setOpenDialog = (value: boolean) => {
+  openDialog.value = value
+}
 
 /**
  * @description Set the selected chain in component and store, closes the dialog if open
@@ -159,18 +213,27 @@ const setSelectedChain = (chain: Chain) => {
     }
 
     selectedChain.value = chain
-    setSelectedChainStore(chain.name)
+    if (prop.canStore) {
+      setSelectedChainStore(chain.name)
+    } else {
+      emits('update:selectedChain', chain)
+    }
+  } else {
+    emits('update:selectedChain', chain)
   }
 
   if (openDialog.value) {
     setOpenDialog(false)
   }
 }
-/** -------------------------------
- * Dialog
- -------------------------------*/
-const openDialog = ref(false)
-const setOpenDialog = (value: boolean) => {
-  openDialog.value = value
-}
+
+watch(
+  () => selectedChainStore.value,
+  (newChain: string) => {
+    if (!prop.preselectedChain) {
+      const chain = displayedChains.value.find(c => c.name === newChain)
+      if (chain) setSelectedChain(chain)
+    }
+  },
+)
 </script>

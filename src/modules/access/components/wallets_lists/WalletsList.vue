@@ -101,7 +101,7 @@ import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
-import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
+import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 

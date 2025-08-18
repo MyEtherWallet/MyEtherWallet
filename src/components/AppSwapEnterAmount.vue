@@ -1,7 +1,7 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors min-h-[108px]"
+    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
     :class="{
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,
@@ -16,11 +16,16 @@
         type="text"
         autoComplete="off"
         placeholder="0.0"
-        v-model="amount"
+        v-model.number="amount"
+        :readonly="readonly"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select v-model:selected-token-contract="selectedToken" />
+      <app-swap-token-select
+        v-model:selected-token="selectedToken"
+        :external-loading="isLoading"
+        :chain-tokens="tokens || []"
+      />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
@@ -28,19 +33,16 @@
         <div v-else class="flex justify-between">
           <div
             class="text-sm"
-            :class="{
-              'text-error': !!error,
-              'text-info': !error,
-            }"
+            :class="{ 'text-error': !!error, 'text-info': !error }"
           >
             {{ balanceFiatOrError }}
           </div>
           <div
-            v-if="isWalletConnected"
             :class="[
               'text-sm text-info transition-colors',
               { 'text-primary': inFocusInput },
             ]"
+            v-if="showBalance"
           >
             {{ $t('common.balance') }}: {{ balance }}
           </div>
@@ -51,28 +53,42 @@
 </template>
 
 <script setup lang="ts">
-import { type TokenBalance } from '@/mew_api/types'
-import { useWalletStore } from '@/stores/walletStore'
-import { defineProps, watch, ref, computed, type PropType } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
+import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { defineProps, ref, computed, type PropType } from 'vue'
 import BigNumber from 'bignumber.js'
-import AppTokenSelect from './AppTokenSelect.vue'
+import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
+import { type NewTokenInfo } from '@/composables/useSwap'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading, isWalletConnected } =
+const { isLoadingBalances: storeLoading, isWalletConnected } =
   storeToRefs(walletStore)
 
 const props = defineProps({
-  validateInput: {
-    type: Function as PropType<() => void>,
-    default: () => {},
-    required: true,
+  externalLoading: {
+    type: Boolean,
+    default: false,
+  },
+  tokens: {
+    type: Array as () => NewTokenInfo[] | null,
+    default: () => [],
+  },
+  showBalance: {
+    type: Boolean,
+    default: true,
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
+  isEstimate: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -82,7 +98,7 @@ const amount = defineModel('amount', {
   required: true,
 })
 
-const selectedToken = defineModel<string>('selectedToken')
+const selectedToken = defineModel<NewTokenInfo>('selectedToken')
 
 const error = defineModel('error', {
   type: String,
@@ -91,33 +107,39 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
-  if (isLoading.value || !selectedToken.value) return null
-  return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
+  return walletStore.getTokenBalance(
+    (selectedToken.value as NewTokenInfo)?.address || MAIN_TOKEN_CONTRACT,
+  )
+})
+
+const isLoading = computed(() => {
+  if (isWalletConnected.value) {
+    return props.externalLoading || storeLoading.value
+  }
+  return props.externalLoading
 })
 
 const balanceFiatOrError = computed(() => {
-  if (!isWalletConnected.value) return ''
+  if (!props.showBalance) {
+    const val = BigNumber(selectedToken.value?.price || 0)
+      .times(BigNumber(amount.value).gt(0) ? amount.value : 1)
+      .toFixed(2)
+    return error.value ? error.value : `${props.isEstimate ? '≈ ' : ''}$ ${val}`
+  }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
-  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
+
+  return error.value
+    ? error.value
+    : `${props.isEstimate ? '≈ ' : ''}$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
-  return tokenBalanceRaw.value?.balance
-    ? formatFloatingPointValue(tokenBalanceRaw.value.balance).value
-    : '0'
+  return formatFloatingPointValue(tokenBalanceRaw.value?.balance || 0).value
 })
-
-watch(
-  () => amount.value,
-  useDebounceFn(() => {
-    if (isLoading.value) return
-    props.validateInput()
-  }, 500),
-)
 
 /**------------------------
  * Focus State
@@ -134,18 +156,7 @@ const setInFocusInput = () => {
 onClickOutside(targetValue, () => {
   targetValue.value = null
   inFocusInput.value = false
-  props.validateInput()
 })
-
-//check if isloading changed and check input if in focus
-watch(
-  () => isLoading.value,
-  () => {
-    if (!isLoading.value && inFocusInput.value) {
-      props.validateInput()
-    }
-  },
-)
 
 const checkIfNumber = (e: KeyboardEvent) => {
   const key = e.key

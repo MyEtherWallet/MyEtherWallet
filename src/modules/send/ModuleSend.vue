@@ -41,6 +41,9 @@
       >
         {{ $t('common.send') }}</app-base-button
       >
+      <app-base-button class="w-full capitalize" @click="connectWallet" v-else>
+        {{ $t('common.connect_wallet') }}</app-base-button
+      >
     </div>
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
@@ -60,6 +63,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ROUTES_ACCESS } from '@/router/routeNames'
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei, toHex } from 'web3-utils'
@@ -84,8 +88,10 @@ import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { toBase } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 import { useAddressInput } from '@/composables/useAddressInput'
 
+const router = useRouter()
 const { t } = useI18n()
 const walletStore = useWalletStore()
 const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
@@ -96,6 +102,12 @@ const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
  ------------------*/
 const globalStore = useGlobalStore()
 const { gasPriceType: selectedFee } = storeToRefs(globalStore)
+
+// stored inputs
+import { useInputStore } from '@/stores/inputStore'
+const inputStore = useInputStore()
+const { storeSendValues, clearSendValues } = inputStore
+const { hasSendValues, sendValues } = storeToRefs(inputStore)
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -131,6 +143,13 @@ onMounted(async () => {
   //AS of Right now, skeleton loader is shown while the chains data is being fetched.
   if (!wallet.value) return
   address.value = await wallet.value.getAddress()
+
+  if (hasSendValues.value) {
+    amount.value = sendValues.value.amount
+    toAddress.value = sendValues.value.toAddress
+    tokenSelectedContract.value = sendValues.value.token
+    clearSendValues()
+  }
 })
 
 const tokenSelected = computed(() => {
@@ -143,17 +162,31 @@ const tokenSelected = computed(() => {
 const checkAmountForError = () => {
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
 
-  const baseTokenBalance = tokenSelected.value?.balanceWei || '0'
+  const baseTokenBalance = BigInt(
+    toBase(
+      tokenSelected.value?.balance || '0',
+      tokenSelected.value?.decimals ?? 18,
+    ),
+  )
   const baseAmount = amount.value
-    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals || 18))
+    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals ?? 18))
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
   else if (baseAmount < 0)
     amountError.value = t('error.amount.less_than_zero') // amount less than 0
-  else if (isWalletConnected.value && BigInt(baseTokenBalance) < baseAmount)
+  else if (isWalletConnected.value && BigInt(baseTokenBalance) < baseAmount) {
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
-  else amountError.value = ''
+  } else amountError.value = ''
+}
+
+const connectWallet = () => {
+  storeSendValues({
+    toAddress: toAddress.value ?? '',
+    amount: amount.value.toString(),
+    token: tokenSelectedContract.value,
+  })
+  router.push({ name: ROUTES_ACCESS.ACCESS.NAME })
 }
 
 // Gas Fee for display
@@ -201,7 +234,7 @@ watch(
 )
 const amountToHex = computed(() => {
   const amountBase = BigInt(
-    toBase(amount.value, tokenSelected.value?.decimals || 18),
+    toBase(Number(amount.value), tokenSelected.value?.decimals ?? 18),
   )
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
@@ -220,7 +253,7 @@ const getTxRequestBody = (): EstimatesRequestBody | undefined => {
       data.value = web3Contract.methods
         .transfer(
           toAddress.value,
-          toBase(amount.value, tokenSelected.value?.decimals || 18),
+          toBase(amount.value, tokenSelected.value?.decimals ?? 18),
         )
         .encodeABI() //
     } else {

@@ -1,7 +1,7 @@
 import type { WalletInterface } from '../common/walletInterface'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { type TokenBalancesRaw } from '@/mew_api/types'
+import { type TokenBalancesRaw, type GetUnsignedEvmMultiTransactionResponse } from '@/mew_api/types'
 import { WalletType, type HexPrefixedString } from '../types'
 import {
   type EthereumSignableTransactionParams,
@@ -12,6 +12,7 @@ import type {
   QuotesResponse,
   QuotesRequestBody,
   EthereumSignableTransactionResponse,
+  GetEvmMultiTransactionEstimateRequest
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 
@@ -37,6 +38,38 @@ class BaseEvmWallet implements WalletInterface {
   }
 
   /**
+   * Gets gas fee for multiple transactions. ie token transactions where an approval may be required
+   * @param txs - Array of transactions to estimate gas fees for
+   * @returns A QuotesResponse containing gas fee estimates for each provided transaction
+   */
+
+  getMultipleGasFees = (txs: GetEvmMultiTransactionEstimateRequest) => {
+    return fetchWithRetry<QuotesResponse>(
+      `/v1/evm/chains/${this.chainId}/multi-quotes?noInjectErrors=false`,
+      {
+        method: 'POST',
+        body: JSON.stringify(txs),
+      },
+    )
+  }
+
+  /**
+   * Get multiple unsigned transactions using the MEW API.
+   * @param feeObj - Object containing quoteId and priority for the transaction
+   * @returns Promise resolving to EthereumSignableTransactionResponse containing the unsigned transaction
+   * 
+   */
+  getMultipleSignableTransactions = async (
+    feeObj: EthereumSignableTransactionParams,
+  ): Promise<GetUnsignedEvmMultiTransactionResponse> => {
+    const response = await fetchWithRetry<GetUnsignedEvmMultiTransactionResponse>(
+      `/v1/evm/chains/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+    )
+    return response
+  }
+
+
+  /**
    * Get a signable transaction from the MEW API.
    * @param feeObj - Object containing quoteId and priority for the transaction
    * @returns Promise resolving to EthereumSignableTransactionResponse containing the unsigned transaction
@@ -55,7 +88,6 @@ class BaseEvmWallet implements WalletInterface {
    * currently making library figure out tx type
    * TODO: switch to using the type from the API
    */
-
   SignTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {

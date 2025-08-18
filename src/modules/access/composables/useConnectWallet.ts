@@ -56,7 +56,7 @@ export const useConnectWallet = () => {
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
     const providerInjected = Eip6963Providers.value.find(
-      p => p.info.name === wallet.name,
+      p => p.info.name.toLowerCase() === wallet.name.toLowerCase() || p.info.name.toLowerCase() === wallet.id.toLowerCase(),
     )
 
     if (!providerInjected) {
@@ -123,6 +123,7 @@ export const useConnectWallet = () => {
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
     )
+    connector?.onDisconnect()
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
@@ -134,6 +135,7 @@ export const useConnectWallet = () => {
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
+
     wagWallet
       .connect()
       .then(res => {

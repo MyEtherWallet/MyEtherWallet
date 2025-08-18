@@ -40,7 +40,10 @@
     class="sm:max-w-[500px] sm:mx-auto"
   >
     <template #content>
-      <div class="h-[80vh] xs:h-[500px] !overflow-y-scroll px-3 sm:px-7">
+      <div
+        class="h-[80vh] xs:h-[500px] !overflow-y-scroll px-3 sm:px-7"
+        ref="scrollContainer"
+      >
         <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2 xs:pt-0">
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
@@ -105,7 +108,7 @@
         <div v-if="searchResults.length" class="flex flex-col">
           <button
             v-for="token in searchResults"
-            :key="token.contract"
+            :key="token.address"
             class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-16"
             @click="setSelectedToken(token)"
           >
@@ -119,7 +122,7 @@
                 <div class="text-left">
                   <h2>{{ token.name }}</h2>
                   <p class="text-info text-sm">
-                    {{ getBalance(token.balance) }}
+                    {{ getBalance(token?.balance || '0') }}
                     <span class="uppercase text-xs">
                       {{ truncate(token.symbol, 7) }}</span
                     >
@@ -147,15 +150,48 @@
             </p>
           </div>
         </div>
+        <div>
+          <div
+            v-show="tokens.length > paginatedTokens.length"
+            class="h-[44px] w-[444px] sm:h-[44px] sm:w-[444px] flex items-center justify-center bg-grey-5 rounded-xl mb-5"
+            :class="{
+              'cursor-pointer': !loadingMoreItems,
+            }"
+            @click="loadMoreItems"
+          >
+            <svg
+              v-if="loadingMoreItems"
+              aria-hidden="true"
+              class="w-6 h-6 text-primary animate-spin fill-white mx-auto"
+              viewBox="0 0 100 101"
+              width="24"
+              height="24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+              />
+            </svg>
+            <p v-else class="text-s-15 font-medium text-grey-70 cursor-pointer">
+              {{ $t('common.load_more') }}
+            </p>
+          </div>
+        </div>
       </div>
     </template>
   </app-dialog>
 </template>
 
 <script setup lang="ts">
-import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-import { type TokenBalance } from '@/mew_api/types'
-import { ref, computed, onMounted } from 'vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { type NewTokenInfo } from '@/composables/useSwap'
+import { type Ref, ref, computed, onMounted } from 'vue'
 import {
   ChevronDownIcon,
   ArrowDownIcon,
@@ -177,52 +213,61 @@ import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
+import { useScroll } from '@vueuse/core'
 
 const props = defineProps({
+  selectedToken: {
+    type: Object as () => NewTokenInfo,
+  },
   externalLoading: {
     type: Boolean,
     default: false,
   },
+  chainTokens: {
+    type: Array as () => NewTokenInfo[],
+    default: () => [],
+  },
 })
 
 const { t } = useI18n()
+const emit = defineEmits(['update:selectedToken'])
 
 const store = useWalletStore()
-const {
-  isLoadingBalances,
-  tokens: erc20Tokens,
-  safeMainTokenBalance,
-} = storeToRefs(store)
+const { isLoadingBalances, isWalletConnected } = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 
 const isLoading = computed(() => {
-  return props.externalLoading || isLoadingBalances.value || !isLoaded.value
+  if (isWalletConnected.value) {
+    return props.externalLoading || isLoadingBalances.value || !isLoaded.value
+  }
+  return props.externalLoading || !isLoaded.value
 })
 
-const tokens = computed<TokenBalance[]>(() => {
-  if (!isLoaded.value || safeMainTokenBalance.value === null) return []
-  return [safeMainTokenBalance.value, ...erc20Tokens.value]
-})
-
-const selectedTokenContract = defineModel<string>('selectedTokenContract')
-
-const selectedToken = computed<TokenBalance | null>(() => {
-  return store.getTokenBalance(
-    selectedTokenContract.value || MAIN_TOKEN_CONTRACT,
-  )
+const tokens = computed<NewTokenInfo[]>(() => {
+  if (!isLoaded.value) return []
+  return [...props.chainTokens]
 })
 
 const showAllTokens = ref(false)
 const searchInput = ref('')
+const loadingMoreItems = ref(false)
+const scrollContainer = ref<HTMLElement | null>(null)
+const { y } = useScroll(scrollContainer)
 
 const defaultImg = computed(() => {
-  return safeMainTokenBalance.value?.logo_url || eth
+  return eth
 })
 
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
+})
+
+// pagination
+const endingPagination = ref(100)
+const paginatedTokens: Ref<NewTokenInfo[]> = computed(() => {
+  return tokens.value.slice(0, endingPagination.value)
 })
 
 /** -------------------
@@ -283,13 +328,29 @@ const setActiveSort = (value: SortValueString) => {
   }
 }
 
-interface TokenBalanceWithUsd extends TokenBalance {
+interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
 }
+
+/**
+ * if searchInput is empty, sort the paginatedItems based on the activeSortValue and activeSortDirection
+ * else return search results from all of the tokens
+ */
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
-  const items = tokens.value.map(token => {
+  const allItems = tokens.value.map(token => {
     const usdBalance = BigNumber(
-      BigNumber(token.price || 0).times(BigNumber(token.balance)),
+      BigNumber(token.price || 0).times(BigNumber(token.balance ?? '0')),
+    ).toNumber()
+    return {
+      ...token,
+      usd_balance: usdBalance, // Add usd_balance to each token
+      price: token.price || 0, // Ensure price is defined
+    }
+  })
+
+  const paginatedItems = paginatedTokens.value.map(token => {
+    const usdBalance = BigNumber(
+      BigNumber(token.price || 0).times(BigNumber(token.balance ?? '0')),
     ).toNumber()
     return {
       ...token,
@@ -300,42 +361,69 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
 
   if (!searchInput.value) {
     if (activeSortValue.value === SortValueString.NAME) {
-      return sortObjectArrayString(items, 'name', activeSortDirection.value)
+      return sortObjectArrayString(
+        paginatedItems,
+        'name',
+        activeSortDirection.value,
+      )
     }
     if (activeSortValue.value === SortValueString.SYMBOL) {
-      return sortObjectArrayString(items, 'symbol', activeSortDirection.value)
+      return sortObjectArrayString(
+        paginatedItems,
+        'symbol',
+        activeSortDirection.value,
+      )
     }
     if (activeSortValue.value === SortValueString.PRICE) {
-      return sortObjectArrayNumber(items, 'price', activeSortDirection.value)
+      return sortObjectArrayNumber(
+        paginatedItems,
+        'price',
+        activeSortDirection.value,
+      )
     }
     if (activeSortValue.value === SortValueString.USD) {
       return sortObjectArrayNumber(
-        items,
+        paginatedItems,
         'usd_balance',
         activeSortDirection.value,
       )
     }
     if (activeSortValue.value === SortValueString.BALANCE) {
-      return sortObjectArrayNumber(items, 'balance', activeSortDirection.value)
+      return sortObjectArrayNumber(
+        paginatedItems,
+        'balance',
+        activeSortDirection.value,
+      )
     }
-    return items
+    return paginatedItems
   }
-  return searchArrayByKeysStr(items, ['name', 'symbol'], searchInput.value)
+  return searchArrayByKeysStr(allItems, ['name', 'symbol'], searchInput.value)
 })
 
-const setSelectedToken = (token: TokenBalance) => {
-  selectedTokenContract.value = token.contract
+const loadMoreItems = () => {
+  loadingMoreItems.value = true
+  // false loading
+  setTimeout(() => {
+    loadingMoreItems.value = false
+    endingPagination.value += 100
+    y.value -= 600
+  }, 500)
+}
+
+const setSelectedToken = (token: NewTokenInfo) => {
+  emit('update:selectedToken', token)
   showAllTokens.value = false
 }
 
-const imageReplacer = (token: TokenBalance) => {
+const imageReplacer = (token: NewTokenInfo) => {
   if (
-    !token.logo_url ||
-    token.logo_url === 'https://img.mewapi.io/?image=null'
+    !token.logoURI ||
+    token.logoURI.includes('null') ||
+    token.logoURI.includes('undefined')
   ) {
     return defaultImg.value
   }
-  return token.logo_url
+  return token.logoURI
 }
 
 const formatUsdBalance = (_value: number) => {
