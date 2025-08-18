@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js';
-
 const SET_CURRENCY_RATE = async function (state, rate) {
   state.currencyRate = rate;
 };
@@ -46,23 +44,6 @@ const STORE_EIP6963_WALLET = function (state, detail) {
   }
   state.eip6963Providers = newArr;
 };
-
-const SET_TOTAL_TOKEN_FIAT_VALUE = function (state, rootGetters) {
-  const tokenList = rootGetters['wallet/tokensList'];
-  if (!tokenList.length) return new BigNumber(0);
-  const totalValue = tokenList.reduce((total, currentVal) => {
-    const balance =
-      !currentVal.isHidden &&
-      currentVal.usdBalance !== null &&
-      (currentVal.price_change_percentage_24h !== null ||
-        currentVal.market_cap !== 0)
-        ? currentVal.usdBalance
-        : 0;
-    return new BigNumber(total).plus(balance);
-  }, 0);
-  state.totalTokenFiatValue = totalValue;
-};
-
 export default {
   SET_LAST_PATH,
   SET_CURRENCY_RATE,
@@ -72,6 +53,5 @@ export default {
   SET_SELECTED_EIP6963_PROVIDER,
   SET_SELECTED_EIP6963_INFO,
   STORE_EIP6963_WALLET,
-  CLEAR_EIP6963_PROVIDERS,
-  SET_TOTAL_TOKEN_FIAT_VALUE
+  CLEAR_EIP6963_PROVIDERS
 };

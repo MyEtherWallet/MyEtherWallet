@@ -307,7 +307,7 @@ export default {
       'isOfflineApp',
       'loadingWalletInfo'
     ]),
-    ...mapState('external', ['totalTokenFiatValue']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['network', 'isTestNetwork', 'getFiatValue']),
     ...mapGetters('wallet', ['tokensList', 'balanceInETH']),
     ...mapState('wallet', ['web3']),

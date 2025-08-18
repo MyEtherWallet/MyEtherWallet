@@ -17,30 +17,27 @@ const totalOwnedDomains = function (state) {
 
 const tokensList = function (state, getters, rootState, rootGetters) {
   const tokens = state.tokens;
-  const newTokens =
-    tokens.length > 0
-      ? tokens.map(item => {
-          if (!item.hasOwnProperty('balance')) {
-            item.balance = toBN(0);
-          } else {
-            item.balance = toBN(item.balance);
-          }
-          // Check if token is in hiddenTokens
-          let isHidden = false;
-          const hiddenTokens = rootGetters['custom/hiddenTokens'];
-          if (hiddenTokens.length > 0) {
-            isHidden =
-              hiddenTokens.find(token => {
-                return item.contract == token.address;
-              }) !== undefined;
-          }
-          item.isHidden = isHidden;
-          item.img = item.img || rootGetters['global/network'].type.icon;
-          return item;
-        })
-      : [];
-
-  return newTokens;
+  return tokens.length > 0
+    ? tokens.map(item => {
+        if (!item.hasOwnProperty('balance')) {
+          item.balance = toBN(0);
+        } else {
+          item.balance = toBN(item.balance);
+        }
+        // Check if token is in hiddenTokens
+        let isHidden = false;
+        const hiddenTokens = rootGetters['custom/hiddenTokens'];
+        if (hiddenTokens.length > 0) {
+          isHidden =
+            hiddenTokens.find(token => {
+              return item.contract == token.address;
+            }) !== undefined;
+        }
+        item.isHidden = isHidden;
+        item.img = item.img || rootGetters['global/network'].type.icon;
+        return item;
+      })
+    : [];
 };
 
 const initialLoad = function (state) {

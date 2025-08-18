@@ -293,11 +293,11 @@ export default {
       });
     },
     setTokensAndBalance() {
-      // if (this.coinGeckoTokens?.get) {
-      //   this.setTokenAndEthBalance();
-      // } else {
-      // }
-      this.setTokens([]);
+      if (this.coinGeckoTokens?.get) {
+        this.setTokenAndEthBalance();
+      } else {
+        this.setTokens([]);
+      }
     },
     checkAndSetBaseFee(baseFee) {
       if (baseFee) {

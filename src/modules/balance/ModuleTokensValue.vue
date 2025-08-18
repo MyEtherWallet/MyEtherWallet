@@ -94,7 +94,7 @@ export default {
   computed: {
     ...mapGetters('wallet', ['tokensList']),
     ...mapState('wallet', ['initialLoad']),
-    ...mapState('external', ['totalTokenFiatValue']),
+    ...mapGetters('external', ['totalTokenFiatValue']),
     ...mapGetters('global', ['getFiatValue', 'network']),
     canBuy() {
       return this.network.type.canBuy;
