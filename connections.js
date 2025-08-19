@@ -99,7 +99,9 @@ module.exports = [
   'https://staked.mewapi.io:443', // staked
   'https://stakedtest.mewapi.io:443', // staked
   'https://ethblocksapi.mewapi.io:443', // Eth Blocks
+  'https://dnssec-oracle.ens.domains:443/',
   'https://unstoppabledomains.com:443', // unstoppable
+  'https://api.unstoppabledomains.com:443/resolve/supported_tlds', // unstoppable
   'wss://api.thegraph.com/subgraphs/name/aave/', // Aave
   'https://api.thegraph.com:443/subgraphs/name/aave/', // Aave
   'https://protocol-api.aave.com:443', // Aave

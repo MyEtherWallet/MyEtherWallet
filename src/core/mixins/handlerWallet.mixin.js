@@ -45,6 +45,7 @@ export default {
             this.tokensData.set(token.id, token);
           });
           this.setCoinGeckoTokens(this.tokensData);
+          this.setTokenAndEthBalance();
         }
       },
       error(error) {
