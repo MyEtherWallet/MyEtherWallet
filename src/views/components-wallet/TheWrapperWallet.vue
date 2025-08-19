@@ -187,7 +187,6 @@ export default {
   computed: {
     ...mapGetters('global', ['isEthNetwork']),
     ...mapState('wallet', ['isOfflineApp']),
-    ...mapState('popups', ['pkSurveyShown']),
     dragOptions() {
       return {
         animation: 200,

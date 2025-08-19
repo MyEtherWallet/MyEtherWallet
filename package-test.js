@@ -111,7 +111,9 @@ const EXCEPTIONS = [
   'moment-timezone',
   'babel-jest',
   'protobufjs',
-  '@amplitude/analytics-browser'
+  '@amplitude/analytics-browser',
+  '@sentry/tracing',
+  'follow-redirects'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

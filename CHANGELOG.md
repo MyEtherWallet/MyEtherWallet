@@ -1,3 +1,9 @@
+### Release v6.9.24
+
+### devop
+
+* update connections, add new survey, redo totalFiatValue [#5184](https://github.com/MyEtherWallet/MyEtherWallet/pull/5184)
+
 ### Release v6.9.23-hotfix.1
 
 ### fix

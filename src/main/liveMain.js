@@ -111,6 +111,7 @@ new Vue({
     this.$store.commit('addressBook/INIT_STORE');
     this.$store.commit('article/INIT_STORE');
     this.$store.commit('popups/INIT_STORE');
+    this.$store.commit('survey/INIT_STORE');
     this.$store.commit('stakingBanner/INIT_STORE');
     dappStoreBeforeCreate(this.$store);
 
