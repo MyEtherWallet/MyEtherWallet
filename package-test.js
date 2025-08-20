@@ -113,7 +113,8 @@ const EXCEPTIONS = [
   'protobufjs',
   '@amplitude/analytics-browser',
   '@sentry/tracing',
-  'follow-redirects'
+  'follow-redirects',
+  '@ensdomains/address-encoder'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
