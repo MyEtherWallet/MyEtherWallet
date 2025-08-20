@@ -48,7 +48,7 @@
         <mew-button
           title="Click Here"
           :has-full-width="true"
-          btn-link="https://qkdo7pcz90y.typeform.com/to/peXf18zO"
+          btn-link="https://mewwallet.typeform.com/to/peXf18zO"
           @click.native="openSurvey"
         />
       </div>

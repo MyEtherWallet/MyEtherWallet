@@ -1,3 +1,9 @@
+### Release v6.9.24-hotfix.1
+
+### fix
+
+* fix typeform link [#5191](https://github.com/MyEtherWallet/MyEtherWallet/pull/5191)
+
 ### Release v6.9.24
 
 ### devop
