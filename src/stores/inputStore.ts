@@ -4,12 +4,12 @@ import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
 
 /**
-  * Input store used to hold swap/send values when changed before accessing wallet.
-  * Values are cleared on refresh and after a successful wallet access.
+ * Input store used to hold swap/send values when changed before accessing wallet.
+ * Values are cleared on refresh and after a successful wallet access.
  */
 export const useInputStore = defineStore('inputStore', () => {
-  const hasSwapValues = ref(false);
-  const hasSendValues = ref(false);
+  const hasSwapValues = ref(false)
+  const hasSendValues = ref(false)
   const sendValues = reactive({
     toAddress: '',
     amount: '',
@@ -19,13 +19,13 @@ export const useInputStore = defineStore('inputStore', () => {
     fromToken: {} as NewTokenInfo,
     toToken: {} as NewTokenInfo,
     fromAmount: '',
-    toChain: {} as Chain
+    toChain: {} as Chain,
   })
 
   const storeSendValues = (values: {
-    toAddress: string;
-    amount: string;
-    token: string;
+    toAddress: string
+    amount: string
+    token: string
   }) => {
     sendValues.toAddress = values.toAddress
     sendValues.amount = values.amount
@@ -41,10 +41,10 @@ export const useInputStore = defineStore('inputStore', () => {
   }
 
   const storeSwapValues = (values: {
-    fromToken: NewTokenInfo;
-    toToken: NewTokenInfo;
-    fromAmount: string;
-    toChain: Chain;
+    fromToken: NewTokenInfo
+    toToken: NewTokenInfo
+    fromAmount: string
+    toChain: Chain
   }) => {
     swapValues.fromToken = values.fromToken
     swapValues.toToken = values.toToken
@@ -68,6 +68,6 @@ export const useInputStore = defineStore('inputStore', () => {
     hasSendValues,
     sendValues,
     storeSendValues,
-    clearSendValues
+    clearSendValues,
   }
 })

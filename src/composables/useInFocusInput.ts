@@ -2,7 +2,6 @@ import { ref, onBeforeUnmount, type Ref } from 'vue'
 import { useTimeoutFn } from '@vueuse/core'
 
 export const useInFocusInput = (inputEl: Ref<HTMLElement | null>) => {
-
   /**------------------------
    * Focus State
    -------------------------*/

@@ -1,4 +1,3 @@
-
 import { ROUTES_MAIN, ROUTES_SEND } from './routeNames'
 const TempView = () => import('@view-default/ViewTemp.vue')
 const SendView = () => import('@/views/wallet/send/ViewSend.vue')
@@ -53,7 +52,7 @@ const DefaultRoutes = [
         path: '',
         name: ROUTES_MAIN.SWAP.NAME,
         component: ModuleSwap,
-      }
+      },
     ],
     meta: {
       noAuth: true,
