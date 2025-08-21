@@ -3,6 +3,7 @@ import { ROUTES_MAIN, ROUTES_SEND } from './routeNames'
 const TempView = () => import('@view-default/ViewTemp.vue')
 const SendView = () => import('@/views/wallet/send/ViewSend.vue')
 const SwapView = () => import('@/views/wallet/swap/ViewSwap.vue')
+const ViewCrypto = () => import('@/views/wallet/crypto/ViewCrypto.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
 const ModuleSend = () => import('@/modules/send/ModuleSend.vue')
 const ModuleSwap = () => import('@/modules/swap/ModuleSwap.vue')
@@ -13,6 +14,14 @@ const DefaultRoutes = [
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
     component: TempView,
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
+    path: ROUTES_MAIN.CRYPTO.PATH,
+    name: ROUTES_MAIN.CRYPTO.NAME,
+    component: ViewCrypto,
     meta: {
       noAuth: true,
     },
