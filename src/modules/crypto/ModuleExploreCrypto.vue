@@ -1,20 +1,16 @@
 <template>
   <div class="flex items-center justify-between gap-3">
-    <h2 class="text-s-24">Explore Crypto Tokens</h2>
-    <div class="flex flex-wrap gap-2">
-      <button
-        v-for="f in filters"
-        :key="f"
-        @click="activeFilter = f"
-        :class="[
-          'px-3 py-1.5 rounded-full text-sm border transition',
-          activeFilter === f
-            ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-            : '  hover:',
-        ]"
+    <h2 class="text-s-20">Explore Crypto Tokens</h2>
+    <div>
+      <app-btn-group
+        v-model:selected="selectedCryptoFilter"
+        :btn-list="cryptoFilterOptions"
+        size="small"
       >
-        {{ f }}
-      </button>
+        <template #btn-content="{ data }">
+          {{ data.name }}
+        </template>
+      </app-btn-group>
     </div>
   </div>
 
@@ -25,11 +21,13 @@
     <app-select
       v-model:selected="activeSort"
       :options="sortOptions"
-      placeholder="Sort"
+      :emit-only="true"
+      @toggle-select="openChainDialog = true"
+      placeholder="Filter by Chain"
     />
   </div>
 
-  <div class="relative bg-white shadow-sm rounded-2xl p-2">
+  <div class="bg-white shadow-sm rounded-2xl p-2">
     <div class="overflow-x-auto">
       <table class="w-full text-sm table-fixed">
         <thead>
@@ -46,10 +44,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(token, index) in filteredTokens" :key="token.symbol">
+          <tr
+            v-for="(token, index) in filteredTokens"
+            :key="token.symbol"
+            class="h-14"
+          >
             <td class="px-1 py-2">
-              <star-outline-icon class="h-4 w-4 cursor-pointer" />
-              <star-solid-icon class="h-4 w-4" v-if="false" />
+              <!-- changes color when active -->
+              <star-solid-icon class="h-4 w-4 text-grey-10" />
             </td>
             <td class="px-1 py-2">{{ index + 1 }}.</td>
             <td class="px-1 py-2">
@@ -73,6 +75,7 @@
     </div>
 
     <div class="flex items-center justify-between text-xs mt-2">
+      <small>{{ filteredTokens.length }} of {{ tokens.length }} results</small>
       <div class="flex items-center gap-2">
         <button
           class="px-2 py-1 rounded-lg border bg-white disabled:opacity-50"
@@ -90,18 +93,49 @@
           Next
         </button>
       </div>
-      <small>{{ filteredTokens.length }} of {{ tokens.length }} results</small>
+      <app-pop-up-menu
+        :placeholder="`Shown items: ${shownItems}`"
+        label-size="14"
+      >
+        <template #menu-content="{ toggleMenu }">
+          <div
+            v-for="n in shownItemsOptions"
+            :key="`shown-items-${n}`"
+            class="px-4 pt-4 pb-2 cursor-pointer flex items-center"
+            @click="setShownItems(n, toggleMenu)"
+          >
+            {{ n }}
+            <check-icon class="text-success w-6" v-if="shownItems === n" />
+          </div>
+        </template>
+      </app-pop-up-menu>
     </div>
+    <select-chain-dialog
+      v-if="isLoadedChains"
+      v-model:is-open="openChainDialog"
+      :selected-chain="selectedChainFilter"
+      :filter-chain-type="true"
+      @update:chain="setSelectedChain"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import { StarIcon as StarSolidIcon, CheckIcon } from '@heroicons/vue/24/solid'
+import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
+import { useChainsStore } from '@/stores/chainsStore'
+import { storeToRefs } from 'pinia'
+import type { Chain } from '@/mew_api/types'
+
+const chainsStore = useChainsStore()
+const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
+  storeToRefs(chainsStore)
 const searchInput = ref('')
 const sortOptions = [
   { label: 'Market Cap', value: 'market_cap' },
@@ -109,18 +143,42 @@ const sortOptions = [
   { label: 'Price', value: 'price' },
   { label: 'Change (24h)', value: 'change_24h' },
 ]
-const activeSort = ref(sortOptions[0])
+const activeSort = ref({ label: '', value: '' })
+const shownItems = ref<number>(50)
+
+const shownItemsOptions = [5, 10, 50, 100]
+const selectedChainFilter = ref<Chain | null>(null)
+const openChainDialog = ref<boolean>(false)
+
+onMounted(() => {
+  if (isLoadedChains.value && selectedChainStore.value) {
+    selectedChainFilter.value = selectedChainStore.value
+  }
+})
+
+const setShownItems = (n: number, toggle: () => void) => {
+  shownItems.value = n
+  page.value = 1
+  toggle()
+}
+
+const setSelectedChain = (chain: Chain) => {
+  selectedChainFilter.value = chain
+  openChainDialog.value = false
+}
+
+const cryptoFilterOptions = ref([
+  { name: 'All', id: 'all' },
+  { name: 'DeFi', id: 'defi' },
+  { name: 'MEME', id: 'meme' },
+  { name: 'StableCoin', id: 'stable' },
+])
+
+const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
 
 // ----------------------
 // Types & Interfaces
 // ----------------------
-export type FilterTag =
-  | 'All'
-  | 'DeFi'
-  | 'MEME'
-  | 'Stable'
-  | 'TikTok'
-  | 'Watchlist'
 
 export interface TokenRow {
   name: string
@@ -137,15 +195,6 @@ export interface PaginationState {
   totalPages: number
 }
 
-const filters: FilterTag[] = [
-  'All',
-  'DeFi',
-  'MEME',
-  'Stable',
-  'TikTok',
-  'Watchlist',
-]
-const activeFilter = ref<FilterTag>('All')
 const search = ref<string>('')
 
 const tokens = ref<TokenRow[]>([

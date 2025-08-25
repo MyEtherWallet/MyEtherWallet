@@ -1,7 +1,7 @@
 <template>
   <!-- Top: Trending -->
   <header class="rounded-2xl p-4 bg-white shadow-md">
-    <h2 class="text-s-24 mb-3">Trending</h2>
+    <h2 class="text-s-20 mb-3">Trending Tokens</h2>
     <div class="flex justify-around">
       <div
         v-for="token in trendingTokens"

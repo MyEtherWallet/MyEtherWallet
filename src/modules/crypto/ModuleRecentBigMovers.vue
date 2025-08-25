@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h2 class="pb-2 text-s-24">Recent Big Movers</h2>
+    <h2 class="pb-2 text-s-20">Recent Big Movers</h2>
     <div class="gap-2 flex-column">
       <div
         v-for="(m, i) in bigMovers"
