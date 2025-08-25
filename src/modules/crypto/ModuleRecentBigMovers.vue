@@ -1,28 +1,22 @@
 <template>
   <section>
-    <h2 class="px-4 pb-4 text-s-32">Recent Big Movers</h2>
-    <div class="gap-2 flex">
+    <h2 class="pb-2 text-s-24">Recent Big Movers</h2>
+    <div class="gap-2 flex-column">
       <div
         v-for="(m, i) in bigMovers"
         :key="i"
-        class="rounded-xl border border-2 px-2 mb-5 py-1 bg-white border-grey-light shadow-md relative"
+        class="rounded-xl border border-2 px-2 mb-2 py-1 bg-white border-grey-light shadow-md relative flex justify-between items-center"
       >
         <div class="flex items-center gap-2">
           <img :src="m.icon" class="w-6 h-6 rounded-full" alt="" />
           <div>
-            <div
-              class="font-medium overflow-hidden max-w-[60px] text-ellipsis whitespace-nowrap"
-            >
-              {{ m.name }}
-            </div>
             <div class="text-grey-30">{{ m.symbol }}</div>
+            <div class="font-semibold text-right">
+              {{ m.price }}
+            </div>
           </div>
         </div>
-        <div class="mt-2 font-semibold text-right">
-          {{ m.price }}
-        </div>
         <div class="mt-1 text-s-11 flex items-center gap-1 text-grey-30">
-          {{ m.from }}
           <div
             :class="[
               m.change.startsWith('-') ? 'text-error' : 'text-success',
@@ -31,9 +25,6 @@
           >
             {{ m.change }}
           </div>
-        </div>
-        <div class="absolute bottom-[-28px]">
-          <small class="text-grey-30">{{ m.ago }}</small>
         </div>
       </div>
     </div>
