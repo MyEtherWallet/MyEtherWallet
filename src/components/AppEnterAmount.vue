@@ -96,12 +96,13 @@ const tokenBalanceRaw = computed(() => {
 })
 
 const balanceFiatOrError = computed(() => {
-  if (!isWalletConnected.value) return ''
-  const _balance = BigNumber(
-    BigNumber(tokenBalanceRaw.value?.price || 0).times(
-      BigNumber(amount.value || 0),
-    ),
-  )
+  const _balance = isWalletConnected.value
+    ? BigNumber(
+        BigNumber(tokenBalanceRaw.value?.price || 0).times(
+          BigNumber(amount.value || 0),
+        ),
+      )
+    : BigNumber(0)
   return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
 })
 

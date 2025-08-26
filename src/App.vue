@@ -18,7 +18,7 @@ import { storeToRefs } from 'pinia'
 import { type TokenBalancesRaw } from '@/mew_api/types'
 
 const store = useWalletStore()
-const { wallet, walletAddress } = storeToRefs(store)
+const { wallet, walletAddress, isWalletConnected } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
 
@@ -69,7 +69,7 @@ onMounted(() => {
 watch(
   () => selectedChain.value,
   newChain => {
-    if (newChain) {
+    if (newChain && isWalletConnected.value) {
       if (newChain.chainID) {
         wallet.value?.updateChainId(newChain.chainID)
       }

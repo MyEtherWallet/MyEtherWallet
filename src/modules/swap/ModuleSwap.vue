@@ -342,16 +342,27 @@ const proceedWithSwap = async (quoteId: string) => {
     }
   }
 
-  await txPromise?.then(hash => {
-    txHash.value = hash as HexPrefixedString
-    bestOfferSelectionOpen.value = false
-    swapInitiatedOpen.value = true
-    toastStore.addToastMessage({
-      type: ToastType.Success,
-      text: t('swap.toast.tx-send-success'),
-      duration: 10000,
+  await txPromise
+    ?.then(hash => {
+      txHash.value = hash as HexPrefixedString
+      bestOfferSelectionOpen.value = false
+      swapInitiatedOpen.value = true
+      toastStore.addToastMessage({
+        type: ToastType.Success,
+        text: t('swap.toast.tx-send-success'),
+        duration: 10000,
+      })
     })
-  })
+    .catch(e => {
+      const errorMsg =
+        e?.message || t('swap.toast.tx-sign-failed') || 'Transaction failed'
+      bestOfferSelectionOpen.value = false
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: errorMsg,
+        duration: 10000,
+      })
+    })
 }
 
 // Reset values when swap initiated closes
