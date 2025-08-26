@@ -14,18 +14,13 @@
           <span class="text-s-14">{{ token.symbol }}</span>
         </div>
         <div class="flex items-center">
-          <arrow-down-icon
-            v-if="token.price_change_percentage_24hf < 0"
-            class="w-3 h-3 text-error"
-          />
-          <arrow-up-icon v-else class="w-3 h-3 text-success" />
           <span
             class="text-s-12"
             :class="{
               'text-error': token.price_change_percentage_24hf < 0,
               'text-success': token.price_change_percentage_24hf >= 0,
             }"
-            >{{ token.price_change_percentage_24hf }}</span
+            >{{ token.price_change_percentage_24hf }}%</span
           >
         </div>
       </div>
@@ -34,9 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
-import { ArrowUpIcon } from '@heroicons/vue/24/solid'
-
 const trendingTokens = [
   {
     symbol: 'ETH',
