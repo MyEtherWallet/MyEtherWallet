@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen -5 md:p-6 lg:p-8 space-y-4">
+  <div class="min-h-screen md:px-6 lg:px-8 space-y-4">
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-2">
       <!-- Left Sidebar -->
       <aside class="space-y-4 col-span-1">
@@ -15,7 +15,7 @@
         <module-trending />
         <module-explore-crypto />
 
-        <module-ad-space-banner v-if="false" />
+        <module-ad-space-banner />
       </main>
     </div>
   </div>

@@ -1,6 +1,9 @@
 <template>
-  <section>
-    <h2 class="pb-2 text-s-20">Top Losers</h2>
+  <section class="rounded-2xl p-2 shadow-sm bg-white">
+    <div class="flex justify-between items-center pb-2">
+      <h2 class="text-s-18 font-bold">Top Losers</h2>
+      <p class="text-grey-30 text-s-12">24 hours</p>
+    </div>
     <div class="gap-2 flex-column">
       <div
         v-for="(m, i) in bigMovers"
@@ -10,20 +13,25 @@
         <div class="flex items-center gap-2">
           <img :src="m.icon" class="w-6 h-6 rounded-full" alt="" />
           <div>
-            <div class="text-grey-30">{{ m.symbol }}</div>
-            <div class="font-semibold text-right">
-              {{ m.price }}
+            <div class="font-semibold text-s-14">{{ m.symbol }}</div>
+            <div
+              class="text-grey-30 text-right text-s-12 max-w-[70px] overflow-hidden text-ellipsis text-nowrap"
+            >
+              {{ m.name }}
             </div>
           </div>
         </div>
-        <div class="mt-1 text-s-11 flex items-center gap-1 text-grey-30">
+        <div class="flex-column items-center gap-1">
           <div
             :class="[
               m.change.startsWith('-') ? 'text-error' : 'text-success',
-              'text-s-17',
+              'text-s-14',
             ]"
           >
             {{ m.change }}
+          </div>
+          <div class="text-grey-30 text-right text-s-12">
+            {{ m.price }}
           </div>
         </div>
       </div>
