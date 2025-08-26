@@ -20,7 +20,7 @@
     <app-search-input v-model="searchInput" class="grow" />
     <app-select
       v-model:selected="activeSort"
-      :options="sortOptions"
+      :options="[]"
       :emit-only="true"
       @toggle-select="openChainDialog = true"
       placeholder="Filter by Chain"
@@ -33,14 +33,29 @@
         <thead>
           <tr class="text-left">
             <th class="px-1 py-2 w-6"></th>
-            <th class="w-4 cursor-pointer">#</th>
-            <th class="px-1 py-2 cursor-pointer">Name</th>
-            <th class="px-1 py-2 cursor-pointer">Price</th>
-            <th class="px-1 py-2 cursor-pointer">24h</th>
-            <th class="px-1 py-2 cursor-pointer">Market Cap</th>
-            <th class="px-1 py-2 cursor-pointer w-[130px] text-center">
-              Action
+            <th
+              v-for="(label, key) in HEADER_SORT_OPTIONS"
+              :key="`${label}-${key}`"
+              class="cursor-pointer"
+              :class="{
+                'w-8': label === '#',
+                'px-1 py-2': label !== '#',
+              }"
+              @click="setHeaderSort(key)"
+            >
+              <div class="flex items-center gap-1">
+                {{ label }}
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === key && tableDirection === 'asc'"
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === key && tableDirection === 'desc'"
+                />
+              </div>
             </th>
+            <th class="px-1 py-2 w-[130px] text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -127,28 +142,37 @@ import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import { StarIcon as StarSolidIcon, CheckIcon } from '@heroicons/vue/24/solid'
+import {
+  StarIcon as StarSolidIcon,
+  CheckIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from '@heroicons/vue/24/solid'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import type { Chain } from '@/mew_api/types'
 
+const HEADER_SORT_OPTIONS = {
+  RANK: '#',
+  NAME: 'Name',
+  PRICE: 'Price',
+  '24h_CHANGE': '24h',
+  MARKET_CAP: 'Market Cap',
+}
+
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
   storeToRefs(chainsStore)
 const searchInput = ref('')
-const sortOptions = [
-  { label: 'Market Cap', value: 'market_cap' },
-  { label: '24h Volume', value: '24h_volume' },
-  { label: 'Price', value: 'price' },
-  { label: 'Change (24h)', value: 'change_24h' },
-]
 const activeSort = ref({ label: '', value: '' })
 const shownItems = ref<number>(50)
 
 const shownItemsOptions = [5, 10, 50, 100]
 const selectedChainFilter = ref<Chain | null>(null)
 const openChainDialog = ref<boolean>(false)
+const headerSort = ref<string>('')
+const tableDirection = ref<'asc' | 'desc'>('asc')
 
 onMounted(() => {
   if (isLoadedChains.value && selectedChainStore.value) {
@@ -160,6 +184,15 @@ const setShownItems = (n: number, toggle: () => void) => {
   shownItems.value = n
   page.value = 1
   toggle()
+}
+
+const setHeaderSort = (key: string) => {
+  if (headerSort.value === key) {
+    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    headerSort.value = key
+    tableDirection.value = 'asc'
+  }
 }
 
 const setSelectedChain = (chain: Chain) => {
