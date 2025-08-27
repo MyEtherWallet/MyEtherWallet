@@ -34,16 +34,16 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
 import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 
 const privateKeyInput = ref('')
-
+const accessRedirectStore = useAccessRedirectStore()
 const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
@@ -92,7 +92,9 @@ const unlock = () => {
     setWallet(wallet)
     addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
-    router.push({ path: ROUTES_MAIN.HOME.PATH })
+    router.push({
+      name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+    })
   } catch (error) {
     // TODO: handle error when toast is implemented
     console.error(error)

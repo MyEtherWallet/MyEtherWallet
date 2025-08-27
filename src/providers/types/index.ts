@@ -53,6 +53,7 @@ export enum WalletType {
   WAGMI = 'WAGMI',
   INJECTED = 'INJECTED',
   TREZOR = 'TREZOR',
+  LEDGER = 'LEDGER',
 }
 
 export interface BalanceResponse {

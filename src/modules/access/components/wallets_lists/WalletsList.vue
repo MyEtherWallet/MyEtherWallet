@@ -37,6 +37,7 @@
         v-model:selected="activeFilter"
         :btn-list="filterOptions"
         :is-loaded="true"
+        size="large"
       >
         <template #btn-content="{ data }">
           {{ data.name }}
@@ -100,7 +101,7 @@ import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
-import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
+import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 
@@ -114,8 +115,7 @@ const { defaultWallets, newWalletList } = useWalletList()
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  const convertedNetworkName =
-    chainToEnum[selectedChain.value?.chainID as string]
+  const convertedNetworkName = chainToEnum[selectedChain.value?.name as string]
   const supportedDefaultWallets = defaultWallets.value.filter(wallet => {
     return wallet.canSupport && !!wallet.canSupport(convertedNetworkName)
   })

@@ -1,24 +1,27 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import {
-  getPriorityFeeBasedOnType,
-  getBaseFeeBasedOnType,
-} from '@/modules/access/common/helpers'
-import { toBigInt } from 'web3-utils'
+// import {
+//   getPriorityFeeBasedOnType,
+//   getBaseFeeBasedOnType,
+// } from '@/modules/access/common/helpers'
+// import { toBigInt } from 'web3-utils'
 import { useLocalStorage } from '@vueuse/core'
-
+import type { FeePriority } from '@/mew_api/types'
 interface SelectedNetwork {
-  selectedNetwork: string;
+  selectedNetwork: string
 }
-
 
 export const useGlobalStore = defineStore('global', () => {
   /** --------------------
  * NETWORK
  --------------------*/
-  const storage = useLocalStorage<SelectedNetwork>('selectedNetwork', {
-    selectedNetwork: 'ETHEREUM', // default network
-  }, { mergeDefaults: true })
+  const storage = useLocalStorage<SelectedNetwork>(
+    'selectedNetwork',
+    {
+      selectedNetwork: 'ETHEREUM', // default network
+    },
+    { mergeDefaults: true },
+  )
 
   const selectedNetwork = computed(() => {
     return storage.value.selectedNetwork
@@ -34,32 +37,10 @@ export const useGlobalStore = defineStore('global', () => {
     baseFeePerGas: '0',
     maxFeePerGas: '0',
   })
-  const gasPriceType = ref('regular')
-  const gasFeeMarketInfo = () => {
-    const priorityFeePerGas = getPriorityFeeBasedOnType(
-      toBigInt(eip1559.value.baseFeePerGas),
-      gasPriceType.value,
-    )
-    const maxPriorityFeePerGas = getPriorityFeeBasedOnType(
-      toBigInt(eip1559.value.maxFeePerGas),
-      gasPriceType.value,
-    )
-    const baseFeePerGas = getBaseFeeBasedOnType(
-      toBigInt(eip1559.value.baseFeePerGas),
-      gasPriceType.value,
-    )
-    const maxFeePerGas = baseFeePerGas + priorityFeePerGas
+  const gasPriceType = ref<FeePriority>('REGULAR') // default gas price type
 
-    return {
-      priorityFeePerGas,
-      maxPriorityFeePerGas,
-      baseFeePerGas,
-      maxFeePerGas,
-    }
-  }
   return {
     isEIP1559SupportedNetwork,
-    gasFeeMarketInfo,
     eip1559,
     gasPriceType,
     selectedNetwork,

@@ -29,7 +29,7 @@
                 @click.stop
               />
               <app-btn-icon
-                :href="`https://ethvm.com/address/${walletList[i - 1].address}`"
+                :href="blockExplorerUrl(walletList[i - 1].address)"
                 label="view address in explorer"
                 class="text-primary ml-1 xs:ml-0"
                 @click.stop
@@ -130,6 +130,13 @@ const { selectedChain } = storeToRefs(chainStore)
 const model = defineModel<number>()
 
 const emit = defineEmits(['prevpage', 'nextpage'])
+
+const blockExplorerUrl = (address: string) => {
+  return (
+    selectedChain.value?.blockExplorerAddr.replace('[[address]]', address) ??
+    `https://ethvm.com/address/${address}`
+  )
+}
 
 const isDisabled = computed(() => {
   return props.isLoading ? true : props.walletList[0].index === 0

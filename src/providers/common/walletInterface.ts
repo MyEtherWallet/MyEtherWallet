@@ -1,11 +1,16 @@
-import { type TokenBalancesRaw } from '@/mew_api/types'
-import type { GasFeeResponse, HexPrefixedString, WalletType } from '../types'
+import type { HexPrefixedString, WalletType } from '../types'
 import {
-  type PreEthereumTransaction,
   type EthereumSignableTransactionParams,
-  type EthereumSignableTransactionResult,
   type PostSignedTransaction,
 } from '@/providers/ethereum/types'
+import type {
+  QuotesResponse,
+  QuotesRequestBody,
+  TokenBalancesRaw,
+  EthereumSignableTransactionResponse,
+  GetEvmMultiTransactionEstimateRequest,
+  GetUnsignedEvmMultiTransactionResponse,
+} from '@/mew_api/types'
 
 export interface WalletInterface {
   connect?: () => Promise<boolean>
@@ -18,8 +23,8 @@ export interface WalletInterface {
   disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: EthereumSignableTransactionParams,
-  ) => Promise<EthereumSignableTransactionResult>
-  getGasFee: (tx: PreEthereumTransaction) => Promise<GasFeeResponse>
+  ) => Promise<EthereumSignableTransactionResponse>
+  getGasFee: (tx: QuotesRequestBody) => Promise<QuotesResponse>
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown
@@ -29,4 +34,12 @@ export interface WalletInterface {
   getProvider: () => string
   getBalance: () => Promise<TokenBalancesRaw>
   broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
+  // multiple tx handler
+  getMultipleGasFees?: (
+    txs: GetEvmMultiTransactionEstimateRequest,
+  ) => Promise<QuotesResponse>
+  getMultipleSignableTransactions?: (
+    feeObj: EthereumSignableTransactionParams,
+  ) => Promise<GetUnsignedEvmMultiTransactionResponse>
+  updateChainId: (chainId: string) => void
 }

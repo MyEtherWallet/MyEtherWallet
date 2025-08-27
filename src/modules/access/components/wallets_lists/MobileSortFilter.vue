@@ -52,7 +52,7 @@
           <AppBaseButton
             class="ml-auto"
             variant="primary"
-            size="large"
+            size="medium"
             @click="reset"
           >
             {{ $t('common.reset') }}

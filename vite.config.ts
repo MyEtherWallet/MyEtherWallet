@@ -14,7 +14,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    viteCommonjs(),
+    viteCommonjs({ skipPreBuild: true }),
     nightwatchPlugin(),
     vueDevTools(),
     nodePolyfills({
@@ -49,7 +49,7 @@ export default defineConfig({
     include: ['vue', '@vueuse/core', 'crypto'],
     esbuildOptions: {
       plugins: [
-        esbuildCommonjs(['@enkryptcom/hw-wallets', '@trezor/connect', '@trezor/connect-web']),
+        esbuildCommonjs(['@enkryptcom/hw-wallets', '@trezor/connect', '@trezor/connect-web', '@enkryptcom/swap']),
       ],
     },
   },

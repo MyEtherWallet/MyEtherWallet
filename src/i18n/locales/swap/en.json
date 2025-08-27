@@ -1,0 +1,48 @@
+{
+  "swap": {
+    "title1": "Simple and Secure Token Swap",
+    "title2": "Instant crypto exchange with minimal fees",
+    "not-supported-network": "The selected from network does not support swaps. Please select a different network.",
+    "toast": {
+      "select-chain": "Please select a chain.",
+      "unsupported-chain": "The selected chain is not supported.",
+      "tx-sign-failed": "Transaction signing failed. Please try again.",
+      "tx-send-success": "Swap executed successfully."
+    },
+    "error": {
+      "amount-required": "Amount is required.",
+      "more-than-zero": "Amount must be greater than 0.",
+      "insufficient-balance-for-fees": "Insufficient {symbol} balance to cover fees.",
+      "insufficient-native": "Insufficient {symbol} balance.",
+      "minimum-amount": "Amount too low.",
+      "maximum-amount": "Amount too high.",
+      "no-quotes": "No quotes available.",
+      "fetching-quotes": "Error fetching quotes. Please try again.",
+      "initializing-swap-failed": "Error initializing swap. Please try again.",
+      "getting-swap": "Error getting swap. Please try again.",
+      "too-many-decimals": "Amount has too many decimals. Selected token is {decimal} decimal | Amount has too many decimals. Selected token is {decimal} decimals"
+    },
+    "best-offer": {
+      "looking": "Looking for the best offer",
+      "analyzing": "Analyzing decentralized exchanges..."
+    },
+    "initiated": {
+      "swap-initiated": "Swap initiated",
+      "completed-note": "Once completed, {symbol} will be deposited to the <br /> address you specified.",
+      "view-progress": "View Progress"
+    },
+    "swap-offer": {
+      "best-offer-from": "Best offer from",
+      "you-will-get": "you will get",
+      "max-slippage": "Max. slippage",
+      "minimum-received": "Minimum received",
+      "offer-includes": "Offer includes {feePercent}% fee",
+      "proceed": "Proceed With Swap",
+      "unknown-provider": "Unknown provider",
+      "offers": "{count} other offer | {count} other offers"
+    },
+    "on": "on",
+    "for": "for",
+    "offer": "Offer"
+  }
+}

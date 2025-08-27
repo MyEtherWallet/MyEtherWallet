@@ -9,6 +9,7 @@ export const useAppBreakpoints = () => {
     'md-header': 940,
     lg: 1024,
     'lg-max': 1084,
+    'xl-min': 1140,
     xl: 1280,
     '2xl': 1440,
     '3xl': 1601,
@@ -32,6 +33,10 @@ export const useAppBreakpoints = () => {
   const isDesktopMaxAndUp = computed<boolean>(
     () => breakpoints.greaterOrEqual('lg-max').value,
   )
+  const isXLMinAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('xl-min').value,
+  )
+
   return {
     breakpoints,
     isMobile,
@@ -41,5 +46,6 @@ export const useAppBreakpoints = () => {
     isMDAndUp,
     isDesktopMaxAndUp,
     isHeaderMaxAndUp,
+    isXLMinAndUp,
   }
 }

@@ -675,7 +675,8 @@ export default {
     height: 14px !important;
     width: 14px !important;
     font-size: 8px !important;
-    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.24),
+    box-shadow:
+      0px 2px 8px 0px rgba(0, 0, 0, 0.24),
       0px 1px 4px 0px rgba(0, 0, 0, 0.24);
   }
 
@@ -689,7 +690,9 @@ export default {
 }
 
 .text-shadow {
-  text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.24), 0px 1px 4px rgba(0, 0, 0, 0.24);
+  text-shadow:
+    0px 2px 8px rgba(0, 0, 0, 0.24),
+    0px 1px 4px rgba(0, 0, 0, 0.24);
 }
 
 .drop-shadow {

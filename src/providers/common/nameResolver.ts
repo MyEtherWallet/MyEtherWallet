@@ -37,7 +37,11 @@ export default class ENSNameResolver {
   isValidName(name: string): boolean {
     const splitName = name.split('.')
     if (splitName.length > 1) {
-      return normalize(name).indexOf('.') > 0;
+      try {
+        return normalize(name).indexOf('.') > 0;
+      } catch {
+        return false
+      }
     }
     return false;
   }
