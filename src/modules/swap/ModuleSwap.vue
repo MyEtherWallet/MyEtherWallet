@@ -213,17 +213,26 @@ const setToToken = () => {
         toTokens.value?.trending[
           enkryptEnum as keyof typeof toTokens.value.trending
         ]
+
+      const trendingOrAllToTokens =
+        allToTrending && allToTrending.length > 0 ? allToTrending : allToTokens
+
       const sameNetworks =
-        selectedToChain.value?.name === selectedChain.value?.name ? 1 : 0
-      const tokenFromNetwork =
-        allToTrending && allToTrending.length > 0
-          ? allToTrending[sameNetworks]
-          : allToTokens[sameNetworks]
+        selectedToChain.value?.chainID === selectedChain.value?.chainID
+
+      // Find a token from the network that is not the selected fromToken
+      const tokenFromNetwork = sameNetworks
+        ? trendingOrAllToTokens.find(
+            (token: TokenType) =>
+              token.address.toLowerCase() !==
+              fromTokenSelected.value?.address.toLowerCase(),
+          )
+        : trendingOrAllToTokens[0]
       const defaultToken = {
         ...tokenFromNetwork,
         balance: fromBase(
           tokenFromNetwork?.balance?.toString() ?? '0',
-          tokenFromNetwork.decimals,
+          tokenFromNetwork?.decimals ?? 18,
         ),
       } as NewTokenInfo
       toTokenSelected.value = defaultToken
@@ -649,6 +658,12 @@ watch(
     toTokenSelected.value,
   ],
   async () => {
+    if (
+      fromTokenSelected.value.address === toTokenSelected.value?.address &&
+      selectedChain.value?.chainID === selectedToChain.value?.chainID
+    ) {
+      setToToken()
+    }
     if (
       !BigNumber(fromAmount.value).isNaN() &&
       !BigNumber(fromAmount.value).isZero() &&
