@@ -16,8 +16,6 @@ import fantom from './fantom-ws';
 import gnosis from './gnosis-ws';
 import kaia from './kaia-ws';
 import opmew from './op-mew-ws';
-import arthera from './arthera-ws';
-import artheratest from './arthera-test-ws';
 import rootstocktestnet from './rootstock-testnet-ws';
 import amoyws from './amoy-mew-ws';
 import cotiws from './coti-ws';
@@ -46,8 +44,6 @@ export {
   gnosis,
   kaia,
   opmew,
-  arthera,
-  artheratest,
   rootstocktestnet,
   amoyws,
   xlayer,
