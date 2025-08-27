@@ -1,3 +1,7 @@
+### devop
+
+* remove arthera, replace gnosis node [#5197](https://github.com/MyEtherWallet/MyEtherWallet/pull/5197)
+
 ### Release v6.9.24-hotfix.1
 
 ### fix
