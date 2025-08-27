@@ -120,15 +120,20 @@ const isLoading = computed(() => {
 })
 
 const balanceFiatOrError = computed(() => {
+  // handles the case where toAmount has the ≈ sign
+  const numAmount =
+    typeof amount.value === 'string'
+      ? amount.value.replace(/[^0-9.-]/g, '')
+      : amount.value
   if (!props.showBalance) {
     const val = BigNumber(selectedToken.value?.price || 0)
-      .times(BigNumber(amount.value).gt(0) ? amount.value : 1)
+      .times(BigNumber(numAmount).gt(0) ? numAmount : 1)
       .toFixed(2)
     return error.value ? error.value : `${props.isEstimate ? '≈ ' : ''}$ ${val}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
-      BigNumber(amount.value || 0),
+      BigNumber(numAmount || 0),
     ),
   )
 

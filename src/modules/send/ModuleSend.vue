@@ -136,6 +136,7 @@ const {
   isValidAdrInput,
   onInput,
   validateAddressInput,
+  clearAddressInput,
 } = useAddressInput(selectedChain)
 
 onMounted(async () => {
@@ -288,6 +289,7 @@ const resetSendModule = () => {
   amount.value = '0'
   toAddress.value = ''
   signedTx.value = ''
+  clearAddressInput()
 }
 
 // toast store

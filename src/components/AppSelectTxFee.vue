@@ -56,7 +56,6 @@
               href="https://ccswap.myetherwallet.com/"
               target="_blank"
               class="text-primary cursor-pointer underline underline-offset-2"
-              @click="openCcSwap"
               >{{
                 $t('common.buy_more', {
                   symbol: selectedChain?.currencyName || 'ETH',
@@ -195,11 +194,6 @@ const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
 const isNotEnoughBalance = computed(() => {
   return gasFeeError.value === NOT_ENOUGH_BALANCE
 })
-
-const openCcSwap = () => {
-  // TODO: send params to auto fill ccswap
-  window.open('https://ccswap.myetherwallet.com/', '_blank')
-}
 
 /** ----------------
  * Fetch Fees
