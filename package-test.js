@@ -114,7 +114,8 @@ const EXCEPTIONS = [
   '@amplitude/analytics-browser',
   '@sentry/tracing',
   'follow-redirects',
-  '@ensdomains/address-encoder'
+  '@ensdomains/address-encoder',
+  'less'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

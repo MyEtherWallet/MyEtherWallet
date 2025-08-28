@@ -126,6 +126,7 @@ export default {
     ]),
     ...mapGetters('wallet', ['balanceInWei']),
     showSurvey() {
+      if (this.isOfflineApp) return false;
       const userClosed = !this.tempClose;
       const userAnswered = !this.userSurveyShown;
       const shownTwice = this.userSurveyShownCounter > 2;

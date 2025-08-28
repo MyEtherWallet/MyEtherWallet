@@ -605,7 +605,7 @@ export default {
           },
           {
             title: 'Gas Price',
-            value: details.gasPrice
+            value: fromWei(details.gasPrice, 'gwei')
           },
           {
             title: 'Gas Limit',
