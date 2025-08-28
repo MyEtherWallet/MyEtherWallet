@@ -119,7 +119,7 @@ const timeAgo = computed(() => {
   if (!firstFetched.value) return ''
   const diff = currentTime.value - firstFetched.value
   const minutes = Math.floor(diff / 60000)
-  if (minutes === 0) return 'Just now'
+  if (minutes === 0 || diff < 0) return 'Just now'
   return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
 })
 
