@@ -180,6 +180,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/top-gainers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTopGainers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/coingecko/chains/{chainName}/preview": {
         parameters: {
             query?: never;
@@ -721,6 +737,19 @@ export interface components {
                 logoUrl?: string;
             }[];
         };
+        GetWebTopGainersSuccessResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl?: string;
+            }[];
+        };
         GetCoinGeckoChainPreviewResponse: {
             name?: string;
             symbol?: string;
@@ -1004,6 +1033,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetWebTokensTableResponse"];
+            };
+        };
+        GetWebTopGainersSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTopGainersSuccessResponse"];
             };
         };
         GetCoinGeckoChainPreviewSuccess: {
@@ -1429,6 +1466,22 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebTokensTableSuccess"];
+        };
+    };
+    GetWebTopGainers: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sortDir?: components["parameters"]["SortDirection"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTopGainersSuccess"];
         };
     };
     GetCoinGeckoChainPreview: {

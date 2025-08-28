@@ -5,8 +5,8 @@
       <aside class="space-y-4 col-span-1">
         <module-ad-space v-if="false" />
         <module-recent-big-movers />
-        <module-top-gainers />
-        <module-top-losers />
+        <module-top-changes />
+        <module-top-changes :losers="true" />
         <module-education-space />
       </aside>
 
@@ -25,8 +25,7 @@
 import ModuleAdSpace from '@/modules/crypto/ModuleAdSpace.vue'
 import ModuleAdSpaceBanner from '@/modules/crypto/ModuleAdSpaceBanner.vue'
 import ModuleRecentBigMovers from '@/modules/crypto/ModuleRecentBigMovers.vue'
-import ModuleTopGainers from '@/modules/crypto/ModuleTopGainers.vue'
-import ModuleTopLosers from '@/modules/crypto/ModuleTopLosers.vue'
+import ModuleTopChanges from '@/modules/crypto/ModuleTopChanges.vue'
 import ModuleEducationSpace from '@/modules/crypto/ModuleEducationSpace.vue'
 import ModuleTrending from '@/modules/crypto/ModuleTrending.vue'
 import ModuleExploreCrypto from '@/modules/crypto/ModuleExploreCrypto.vue'

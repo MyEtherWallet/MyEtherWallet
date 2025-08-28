@@ -91,6 +91,17 @@ paths:
         200:
           $ref: '#/components/responses/GetWebTokensTableSuccess'
 
+  /v1/web/top-gainers:
+    get:
+      operationId: GetWebTopGainers
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/SortDirection'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTopGainersSuccess'
+
   /v1/coingecko/chains/{chainName}/preview:
     get:
       operationId: GetCoinGeckoChainPreview
@@ -630,6 +641,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetWebTokensTableResponse'
+
+    GetWebTopGainersSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebTopGainersSuccessResponse'
 
     GetCoinGeckoChainPreviewSuccess:
       content:
@@ -1355,6 +1372,44 @@ components:
                 type: number
               address:
                 type: string
+              logoUrl:
+                type: string
+
+    GetWebTopGainersSuccessResponse:
+      type: object
+      required:
+        - page
+        - pages
+        - perPage
+        - total
+        - items
+      properties:
+        page:
+          type: number
+        pages:
+          type: number
+        perPage:
+          type: number
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - symbol
+              - price
+              - priceChangePercentage24h
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
               logoUrl:
                 type: string
 

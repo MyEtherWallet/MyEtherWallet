@@ -200,6 +200,7 @@ import {
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
+import isValidUrl from '@/utils/isValidUrl'
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -316,16 +317,6 @@ onMounted(() => {
   fetchTokens()
 })
 
-const validUrl = (urlString: string) => {
-  let url
-  try {
-    url = new URL(urlString)
-  } catch {
-    return false
-  }
-  return url.protocol === 'http:' || url.protocol === 'https:'
-}
-
 onFetchResponse(() => {
   totalTokenCount.value = data.value?.total ?? 0
   totalPages.value = data.value?.pages ?? 0
@@ -333,9 +324,9 @@ onFetchResponse(() => {
     tokens.value = data.value.items.map(
       (item: GetWebTokensTableResponse['items'][number]) => {
         const logo =
-          item.logoUrl && validUrl(item.logoUrl)
+          item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
-            : 'https://dummyimage.com/32x32/008ECC/000&text=B'
+            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
         return {
           ...item,
           logoUrl: logo,
@@ -352,16 +343,16 @@ onFetchResponse(() => {
   isLoading.value = false
 })
 
-const parsePercent = (val: number): string => {
-  return formatPercentageValue(val ?? 0).value
-}
-
 onFetchError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
     text: err,
   })
 })
+
+const parsePercent = (val: number): string => {
+  return formatPercentageValue(val ?? 0).value
+}
 
 watch(
   () => [
@@ -373,6 +364,9 @@ watch(
   ],
   () => {
     fetchTokens()
+  },
+  {
+    deep: true,
   },
 )
 </script>
