@@ -305,6 +305,7 @@ const { data, onFetchResponse, execute, onFetchError } =
 const fetchTokens = () => {
   isLoading.value = true
   execute()
+  tableContainer.value?.scrollTo(0, 0)
 }
 
 onMounted(() => {
