@@ -256,7 +256,7 @@ const setHeaderSort = (key: string) => {
   if (headerSort.value === key) {
     tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
-    tableDirection.value = 'asc'
+    tableDirection.value = 'desc'
   }
   headerSort.value = key as WebTokensTableSortCol
 }

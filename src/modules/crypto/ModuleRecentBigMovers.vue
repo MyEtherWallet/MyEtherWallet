@@ -2,16 +2,16 @@
   <section class="rounded-2xl p-2 shadow-sm bg-white">
     <div class="flex justify-between items-center pb-2">
       <h2 class="text-s-18 font-bold">Recent Big Movers</h2>
-      <p class="text-grey-30 text-s-12">1 hour</p>
+      <p class="text-grey-30 text-s-12">{{ timeAgo }}</p>
     </div>
-    <div class="gap-2 flex-column">
+    <div class="gap-2 flex-column" v-if="!isLoading && topGainers.length > 0">
       <div
-        v-for="(m, i) in bigMovers"
+        v-for="(m, i) in topGainers"
         :key="i"
         class="rounded-xl border border-2 px-2 mb-2 py-1 bg-white border-grey-light shadow-md relative flex justify-between items-center"
       >
         <div class="flex items-center gap-2">
-          <img :src="m.icon" class="w-6 h-6 rounded-full" alt="" />
+          <img :src="m.iconPng" class="w-6 h-6 rounded-full" alt="" />
           <div>
             <div class="font-semibold text-s-14">{{ m.symbol }}</div>
             <div
@@ -24,11 +24,11 @@
         <div class="flex-column items-center gap-1">
           <div
             :class="[
-              m.change.startsWith('-') ? 'text-error' : 'text-success',
+              m.priceChangePercentage < 0 ? 'text-error' : 'text-success',
               'text-s-14',
             ]"
           >
-            {{ m.change }}
+            {{ formatPercentageValue(m.priceChangePercentage).value }}
           </div>
           <div class="text-grey-30 text-right text-s-12">
             {{ m.price }}
@@ -36,51 +36,153 @@
         </div>
       </div>
     </div>
+    <div class="gap-2 flex-column" v-else>
+      <div
+        v-for="(m, i) in 3"
+        :key="`top-gainers-${i}`"
+        class="rounded-xl border border-2 px-2 mb-2 py-1 bg-white border-grey-light shadow-md relative flex justify-between items-center animate-pulse"
+      >
+        <div class="flex items-center justify-between w-full">
+          <div class="flex items-center gap-1">
+            <div class="size-8 rounded-full bg-grey-8"></div>
+            <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
+          </div>
+          <div class="col-span-2 h-6 w-10 rounded bg-grey-8"></div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed, watch, onMounted, type Ref } from 'vue'
+import { storeToRefs } from 'pinia'
 
-// TODO: replace with api types
-interface BigMover {
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useToastStore } from '@/stores/toastStore'
+import isValidUrl from '@/utils/isValidUrl'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+
+interface EthVmBigMoversItems {
   name: string
   symbol: string
-  price: string
-  change: string // e.g. "+2.3%" or "-1.1%"
-  ago: string
-  from: string
-  icon: string
+  price: number
+  iconPng: string
+  priceChangePercentage: number
+}
+interface EthVmBigMoversResponse {
+  data: {
+    getTokenMarketMovers: {
+      items: EthVmBigMoversItems[]
+    }
+  }
 }
 
-// TODO: Replace with api data
-const bigMovers = ref<BigMover[]>([
-  {
-    name: 'Wrapped Bitcoin',
-    symbol: 'WBTC',
-    price: '$1,156.95',
-    change: '-2.3%',
-    ago: '23 minutes ago',
-    from: 'in one hour',
-    icon: 'https://dummyimage.com/32x32/ffd700/000&text=B',
+const chainsStore = useChainsStore()
+const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
+  storeToRefs(chainsStore)
+const toastStore = useToastStore()
+const { useMEWFetch } = useFetchMewApi()
+
+const topGainers: Ref<EthVmBigMoversItems[]> = ref([])
+const intervalHolder = ref<ReturnType<typeof setInterval> | number>(0)
+const isLoading = ref(true)
+const firstFetched: Ref<number> = ref(0)
+const currentTime: Ref<number> = ref(0)
+const currentTimeInterval = ref<ReturnType<typeof setInterval> | number>(0)
+
+onMounted(() => {
+  if (currentTimeInterval.value) {
+    clearInterval(currentTimeInterval.value)
+  }
+  currentTimeInterval.value = setInterval(() => {
+    currentTime.value = Date.now()
+  }, 1000)
+  if (isLoadedChains.value) {
+    firstFetched.value = Date.now()
+    fetchTokens()
+    if (intervalHolder.value) {
+      clearInterval(intervalHolder.value)
+    }
+    intervalHolder.value = setInterval(() => {
+      currentTime.value = Date.now()
+      firstFetched.value = Date.now()
+      fetchTokens()
+    }, 300000) // 5 minutes
+  }
+})
+
+const timeAgo = computed(() => {
+  if (!firstFetched.value) return ''
+  const diff = currentTime.value - firstFetched.value
+  const minutes = Math.floor(diff / 60000)
+  if (minutes === 0 || diff < 0) return 'Just now'
+  return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
+})
+
+const { data, onFetchResponse, execute, onFetchError } =
+  useMEWFetch<EthVmBigMoversResponse>('https://api-v3.ethvm.dev/', {
+    immediate: false,
+  })
+    .post(
+      JSON.stringify({
+        query: `query getBigMovers {
+          getTokenMarketMovers {
+              items {
+                  name
+                  symbol
+                  price
+                  iconPng
+                  priceChangePercentage
+              }
+          }
+      }`,
+      }),
+    )
+    .json()
+
+const fetchTokens = () => {
+  isLoading.value = true
+  execute()
+}
+
+onFetchResponse(() => {
+  if (data.value && data.value.data.getTokenMarketMovers.items) {
+    topGainers.value = data.value.data.getTokenMarketMovers.items
+      .map((item: EthVmBigMoversItems) => {
+        const logo =
+          item.iconPng && isValidUrl(item.iconPng)
+            ? item.iconPng
+            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+        return {
+          ...item,
+          iconPng: logo,
+          price: new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 2,
+          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+        }
+      })
+      .splice(0, 3)
+  }
+  isLoading.value = false
+})
+
+onFetchError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+
+watch(
+  () => selectedChainStore.value,
+  () => {
+    if (isLoadedChains.value) {
+      fetchTokens()
+    }
   },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$1,156.95',
-    change: '-2.3%',
-    ago: '23 minutes ago',
-    from: 'in one day',
-    icon: 'https://dummyimage.com/32x32/f7931a/000&text=B',
-  },
-  {
-    name: 'Wrapped Bitcoin (Arb)',
-    symbol: 'WBTC',
-    price: '$1,156.95',
-    change: '-2.3%',
-    ago: '23 minutes ago',
-    from: 'in one hour',
-    icon: 'https://dummyimage.com/32x32/cc9900/000&text=W',
-  },
-])
+)
 </script>
