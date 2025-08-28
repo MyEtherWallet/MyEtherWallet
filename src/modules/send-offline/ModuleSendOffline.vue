@@ -172,13 +172,7 @@
 
 <script>
 import clipboardCopy from 'clipboard-copy';
-import {
-  toBN,
-  isHexStrict,
-  toWei,
-  hexToNumberString,
-  fromWei
-} from 'web3-utils';
+import { toBN, isHexStrict, toWei, toHex, fromWei } from 'web3-utils';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
@@ -188,7 +182,7 @@ import * as nodes from '@/utils/networks/nodes';
 
 import sanitizeHex from '@/core/helpers/sanitizeHex';
 import { ERROR, SUCCESS, Toast } from '../toast/handler/handlerToast';
-import { toBNSafe } from '@/core/helpers/numberFormatHelper';
+// import { toBNSafe } from '@/core/helpers/numberFormatHelper';
 import { toBase } from '@/core/helpers/unit';
 export default {
   components: {
@@ -406,10 +400,10 @@ export default {
         try {
           const file = JSON.parse(result);
           if (file.nonce) {
-            const uploadedGasPrice = hexToNumberString(file.gasPrice);
-            self.localNonce = hexToNumberString(file.nonce);
+            const uploadedGasPrice = BigNumber(file.gasPrice).toString();
+            self.localNonce = BigNumber(file.nonce).toString();
             self.gasPrice = fromWei(uploadedGasPrice, 'gwei');
-            self.chainID = hexToNumberString(file.chainID);
+            self.chainID = BigNumber(file.chainID).toString();
             self.setNetworkDebounced(self.chainID);
             self.$refs.upload.value = '';
             return;
@@ -424,19 +418,17 @@ export default {
     async generateTx() {
       const symbol = this.network.type.currencyName;
       const isToken = this.selectedCurrency.symbol !== symbol;
-      const amtWei = toWei(this.amount, 'ether');
+      const amtWei = toBase(this.amount, 18);
       const raw = {
-        nonce: sanitizeHex(toBNSafe(this.localNonce).toString(16)),
-        gasLimit: sanitizeHex(toBNSafe(this.gasLimit).toString(16)),
-        gasPrice: sanitizeHex(
-          toWei(toBNSafe(this.gasPrice), 'gwei').toString(16)
-        ),
+        nonce: sanitizeHex(BigNumber(this.localNonce).toString(16)),
+        gasLimit: sanitizeHex(BigNumber(this.gasLimit).toString(16)),
+        gasPrice: toHex(toWei(this.gasPrice, 'gwei')),
         to: isToken
           ? this.selectedCurrency.address
           : this.toAddress.toLowerCase().trim(),
         value: isToken
-          ? sanitizeHex(toBNSafe(0).toString(16))
-          : sanitizeHex(toBNSafe(amtWei).toString(16)),
+          ? sanitizeHex(BigNumber(0).toString(16))
+          : sanitizeHex(BigNumber(amtWei).toString(16)),
         data: this.data,
         chainId: this.network.type.chainID
       };
