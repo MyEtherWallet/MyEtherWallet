@@ -100,7 +100,6 @@ onMounted(() => {
   }
   currentTimeInterval.value = setInterval(() => {
     currentTime.value = Date.now()
-    console.log(currentTime.value, 'changes every second')
   }, 1000)
   if (isLoadedChains.value) {
     firstFetched.value = Date.now()
@@ -109,6 +108,8 @@ onMounted(() => {
       clearInterval(intervalHolder.value)
     }
     intervalHolder.value = setInterval(() => {
+      currentTime.value = Date.now()
+      firstFetched.value = Date.now()
       fetchTokens()
     }, 300000) // 5 minutes
   }
