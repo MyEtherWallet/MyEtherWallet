@@ -76,6 +76,38 @@ paths:
         200:
           $ref: '#/components/responses/GetChainMetadataSuccess'
 
+  # Tokens
+
+  /v1/web/tokens-table:
+    get:
+      operationId: GetWebTokensTable
+      parameters:
+        - $ref: '#/components/parameters/QueryChainName'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/SortDirection'
+        - $ref: '#/components/parameters/WebTokensTableSortCol'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTokensTableSuccess'
+
+  /v1/coingecko/chains/{chainName}/preview:
+    get:
+      operationId: GetCoinGeckoChainPreview
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      responses:
+        200:
+          $ref: '#/components/responses/GetCoinGeckoChainPreviewSuccess'
+
+  # TODO: ? Remove ?
+  /v1/coingecko/market-data:
+    get:
+      operationId: GetCoinGeckoAllMarketData
+      responses:
+        200:
+          $ref: '#/components/responses/GetCoinGeckoAllMarketDataSuccess'
+
   # Balances
 
   # Ideally this would be: GET /v1/multi/chains/{chainName}/addresses/{address}/token-balances # /balances/{chainName}/{address}:
@@ -385,6 +417,31 @@ components:
       in: path
       schema:
         type: string
+    QueryChainName:
+      name: chainName
+      in: query
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: number
+    PerPage:
+      name: perPage
+      in: query
+      schema:
+        type: number
+    SortDirection:
+      name: sortDir
+      in: query
+      schema:
+        $ref: '#/components/schemas/SortDirection'
+    WebTokensTableSortCol:
+      name: sortBy
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebTokensTableSortCol'
     ChainNames:
       name: chains
       in: query
@@ -567,6 +624,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetChainMetadataResponse'
+
+    GetWebTokensTableSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebTokensTableResponse'
+
+    GetCoinGeckoChainPreviewSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetCoinGeckoChainPreviewResponse'
+
+    GetCoinGeckoAllMarketDataSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetCoinGeckoAllMarketDataResponse'
 
     GetBalancesByChainNameAndAddressSuccess:
       content:
@@ -907,6 +982,20 @@ components:
         - TOKEN_APPROVAL
         - TOKEN_TRANSFER
 
+    SortDirection:
+      type: string
+      enum:
+        - ASC
+        - DESC
+
+    WebTokensTableSortCol:
+      type: string
+      enum:
+        - NAME
+        - PRICE
+        - PRICE_CHANGE_PERCENTAGE_24H
+        - MARKET_CAP
+
     # Composite types
     BtcOutputInput:
       type: object
@@ -1221,11 +1310,150 @@ components:
         FASTEST:
           $ref: '#/components/schemas/EvmGasFeeInfo'
 
+    # Web
+
+    GetWebTokensTableResponse:
+      type: object
+      required:
+        - page
+        - pages
+        - perPage
+        - total
+        - chainName
+        - items
+      properties:
+        page:
+          type: number
+        pages:
+          type: number
+        perPage:
+          type: number
+        total:
+          type: number
+        chainName:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              # - symbol
+              - price
+              - priceChangePercentage24h
+              - marketCap
+            properties:
+              name:
+                type: string
+              # symbol:
+              #   type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              marketCap:
+                type: number
+              address:
+                type: string
+              logoUrl:
+                type: string
+
+    # CoinGecko
+
+    GetCoinGeckoChainPreviewResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          symbol:
+            type: string
+          fiatPrice:
+            type: number
+          fiatSymbol:
+            type: string
+
+    GetCoinGeckoAllMarketDataResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - coinId
+        properties:
+          coinId:
+            type: string
+          currentPrice:
+            type: number
+          marketCap:
+            type: number
+          marketCapRank:
+            type: number
+          fullyDilutedValuation:
+            type: number
+          totalVolume:
+            type: number
+          high24h:
+            type: number
+          low24h:
+            type: number
+          priceChange24h:
+            type: number
+          priceChangePercentage24h:
+            type: number
+          marketCapChange24h:
+            type: number
+          marketCapChangePercentage24h:
+            type: number
+          circulatingSupply:
+            type: number
+          totalSupply:
+            type: number
+          maxSupply:
+            type: number
+          ath:
+            type: number
+          athChangePercentage:
+            type: number
+          athDate:
+            $ref: '#/components/schemas/ISO8601'
+          atl:
+            type: number
+          atlChangePercentage:
+            type: number
+          atlDate:
+            $ref: '#/components/schemas/ISO8601'
+          roiTimes:
+            type: number
+          roiCurrency:
+            type: string
+          roiPercentage:
+            type: number
+          lastUpdated:
+            $ref: '#/components/schemas/ISO8601'
+          priceChangePercentage14dInCurrency:
+            type: number
+          priceChangePercentage1hInCurrency:
+            type: number
+          priceChangePercentage1yInCurrency:
+            type: number
+          priceChangePercentage200dInCurrency:
+            type: number
+          priceChangePercentage24hInCurrency:
+            type: number
+          priceChangePercentage30dInCurrency:
+            type: number
+          priceChangePercentage7dInCurrency:
+            type: number
+          sparklineIn7d:
+            type: array
+            items:
+              type: number
+
     # ========
     # Balances
     # ========
 
-    # TODO:
     GetBalancesByChainNameAndAddressResponse:
       type: object
       required:
@@ -1773,6 +2001,7 @@ components:
       required:
         - signedTransaction
       properties:
+        # Hex string
         signedTransaction:
           type: string
 

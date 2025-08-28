@@ -28,17 +28,17 @@
   </div>
 
   <div class="bg-white shadow-sm rounded-2xl p-2">
-    <div class="overflow-scroll h-[400px]">
+    <div class="overflow-scroll h-[400px]" ref="tableContainer">
       <table class="w-full text-sm table-fixed">
         <thead class="sticky top-0 bg-white">
           <tr class="text-left">
             <th class="px-1 py-2 w-6"></th>
+            <th class="px-1 py-2 w-12">#</th>
             <th
               v-for="(label, key) in HEADER_SORT_OPTIONS"
               :key="`${label}-${key}`"
               class="cursor-pointer"
               :class="{
-                'w-8': label === '#',
                 'px-1 py-2': label !== '#',
               }"
               @click="setHeaderSort(key)"
@@ -58,36 +58,69 @@
             <th class="px-1 py-2 w-[130px] text-center">Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="!isLoading">
           <tr
-            v-for="(token, index) in filteredTokens"
-            :key="token.symbol"
+            v-for="(token, index) in tokens"
+            :key="token.name + token.marketCap"
             class="h-14"
           >
             <td class="px-1 py-2">
               <!-- changes color when active -->
               <star-solid-icon class="h-4 w-4 text-grey-10" />
             </td>
-            <td class="px-1 py-2">{{ index + 1 }}.</td>
+            <td class="px-1 py-2">{{ ranker(index) }}.</td>
             <td class="px-1 py-2">
-              <img
-                :src="token.icon"
-                alt="favorite"
-                class="inline-block h-5 w-5 mr-1 rounded-full"
-              />
-              {{ token.name }}
+              <div class="flex">
+                <img
+                  :src="token.logoUrl"
+                  alt="favorite"
+                  class="inline-block h-5 w-5 mr-1 rounded-full"
+                />
+                <div class="w-[65px] overflow-hidden text-ellipsis truncate">
+                  {{ token.name }}
+                </div>
+              </div>
             </td>
             <td class="px-1 py-2">{{ token.price }}</td>
             <td
               class="px-1 py-2"
-              :class="[token.changeNum < 0 ? 'text-error' : 'text-success']"
+              :class="[
+                parsePercent(token.priceChangePercentage24h).includes('-')
+                  ? 'text-error'
+                  : 'text-success',
+              ]"
             >
-              {{ token.changeNum }}%
+              {{ parsePercent(token.priceChangePercentage24h) }}
             </td>
-            <td class="px-1 py-2">{{ token.mcap }}</td>
+            <td class="px-1 py-2">{{ token.marketCap }}</td>
             <td class="px-1 py-2 text-center">
-              <app-base-button size="small" class="mr-1">Buy</app-base-button>
-              <app-base-button size="small">Swap</app-base-button>
+              <app-base-button size="small" class="mr-1" @click="buyBtn"
+                >Buy</app-base-button
+              >
+              <app-base-button size="small" @click="swapBtn"
+                >Swap</app-base-button
+              >
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr v-for="n in 12" :key="`loading-${n}`" class="animate-pulse">
+            <td></td>
+            <td></td>
+            <td class="px-1 py-2">
+              <div class="flex items-center gap-1">
+                <div class="size-8 rounded-full bg-grey-8"></div>
+                <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
+              </div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
             </td>
           </tr>
         </tbody>
@@ -95,20 +128,20 @@
     </div>
 
     <div class="flex items-center justify-between text-xs mt-2">
-      <small>{{ filteredTokens.length }} of {{ tokens.length }} results</small>
+      <small>{{ tokens.length * page }} of {{ totalTokenCount }} results</small>
       <div class="flex items-center gap-2">
         <button
           class="px-2 py-1 rounded-lg border bg-white disabled:opacity-50"
-          :disabled="page === 1"
-          @click="page--"
+          :disabled="!isLoading && page === 1"
+          @click="previousPage"
         >
           Prev
         </button>
-        <span class="px-2">{{ page }}</span>
+        <span class="px-2">{{ page }} of {{ totalPages }}</span>
         <button
           class="px-2 py-1 rounded-lg border bg-white disabled:opacity-50"
-          :disabled="page >= totalPages"
-          @click="page++"
+          :disabled="!isLoading && page >= totalPages"
+          @click="nextPage"
         >
           Next
         </button>
@@ -141,7 +174,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -156,15 +189,27 @@ import {
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import type { Chain } from '@/mew_api/types'
+import type {
+  Chain,
+  WebTokensTableSortCol,
+  GetWebTokensTableResponse,
+} from '@/mew_api/types'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import {
+  formatIntegerValue,
+  formatPercentageValue,
+} from '@/utils/numberFormatHelper'
+import { useToastStore } from '@/stores/toastStore'
+
+const tableContainer = ref<HTMLElement | null>(null)
 
 const HEADER_SORT_OPTIONS = {
-  RANK: '#',
   NAME: 'Name',
   PRICE: 'Price',
-  '24h_CHANGE': '24h',
+  PRICE_CHANGE_PERCENTAGE_24H: '24h',
   MARKET_CAP: 'Market Cap',
 }
+const toastStore = useToastStore()
 
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
@@ -176,14 +221,29 @@ const shownItems = ref<number>(50)
 const shownItemsOptions = [5, 10, 50, 100]
 const selectedChainFilter = ref<Chain | null>(null)
 const openChainDialog = ref<boolean>(false)
-const headerSort = ref<string>('')
-const tableDirection = ref<'asc' | 'desc'>('asc')
+const headerSort = ref<WebTokensTableSortCol>('MARKET_CAP')
+const tableDirection = ref<'asc' | 'desc'>('desc')
+const totalTokenCount = ref<number>(0)
+const isLoading = ref<boolean>(true)
 
-onMounted(() => {
-  if (isLoadedChains.value && selectedChainStore.value) {
-    selectedChainFilter.value = selectedChainStore.value
+const previousPage = () => {
+  if (page.value > 1) {
+    page.value--
   }
-})
+  tableContainer.value?.scrollTo(0, 0)
+}
+
+const nextPage = () => {
+  if (page.value < totalPages.value) {
+    page.value++
+  }
+  tableContainer.value?.scrollTo(0, 0)
+}
+
+const buyBtn = () => {
+  window.open('https://ccswap.myetherwallet.com', '_blank')
+}
+const swapBtn = () => {}
 
 const setShownItems = (n: number, toggle: () => void) => {
   shownItems.value = n
@@ -195,9 +255,9 @@ const setHeaderSort = (key: string) => {
   if (headerSort.value === key) {
     tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
-    headerSort.value = key
     tableDirection.value = 'asc'
   }
+  headerSort.value = key as WebTokensTableSortCol
 }
 
 const setSelectedChain = (chain: Chain) => {
@@ -215,1041 +275,103 @@ const cryptoFilterOptions = ref([
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
-
-// ----------------------
-// Types & Interfaces
-// ----------------------
-
-export interface TokenRow {
-  name: string
-  symbol: string
-  price: string
-  changeNum: number // numeric % change
-  mcap: string
-  icon: string
-  spark: number[]
-}
-
-export interface PaginationState {
-  page: number
-  totalPages: number
-}
-
-const search = ref<string>('')
-
-const tokens = ref<TokenRow[]>([
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-  {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    price: '$68,947',
-    changeNum: 1.08,
-    mcap: '$1.36T',
-    icon: 'https://dummyimage.com/24x24/f7931a/000&text=B',
-    spark: [1, 2, 2.4, 2.2, 2.5, 2.7, 2.9],
-  },
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    price: '$3,497',
-    changeNum: 7.64,
-    mcap: '$419B',
-    icon: 'https://dummyimage.com/24x24/62688f/fff&text=Ξ',
-    spark: [1, 1.1, 1.2, 1.15, 1.3, 1.4, 1.6],
-  },
-  {
-    name: 'XRP',
-    symbol: 'XRP',
-    price: '$0.62',
-    changeNum: -0.85,
-    mcap: '$34B',
-    icon: 'https://dummyimage.com/24x24/000/fff&text=X',
-    spark: [1, 0.95, 0.9, 0.92, 0.88, 0.9, 0.93],
-  },
-  {
-    name: 'Tether',
-    symbol: 'USDT',
-    price: '$1.00',
-    changeNum: 0.02,
-    mcap: '$112B',
-    icon: 'https://dummyimage.com/24x24/26a17b/fff&text=T',
-    spark: [1, 1, 1, 1, 1, 1, 1],
-  },
-  {
-    name: 'Dogecoin',
-    symbol: 'DOGE',
-    price: '$0.14',
-    changeNum: 2.26,
-    mcap: '$20B',
-    icon: 'https://dummyimage.com/24x24/c2a633/000&text=D',
-    spark: [1, 1.05, 1.03, 1.1, 1.2, 1.18, 1.25],
-  },
-])
-
+const tokens: Ref<GetWebTokensTableResponse['items']> = ref([])
 const page = ref<number>(1)
 const totalPages = ref<number>(1)
 
-// ----------------------
-// Computed & Helpers
-// ----------------------
-const filteredTokens = computed<TokenRow[]>(() => {
-  // NOTE: Active filter is a stub—hook into your API/category field here
-  const q = search.value.trim().toLowerCase()
-  return tokens.value.filter(
-    t =>
-      !q ||
-      t.name.toLowerCase().includes(q) ||
-      t.symbol.toLowerCase().includes(q),
-  )
+const { useMEWFetch } = useFetchMewApi()
+
+const fetchUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
+  return `${baseUrl}?chainName=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sortBy=${headerSort.value}&sortDir=${tableDirection.value}`
 })
 
-// function pct(n: number): string {
-//   return (n >= 0 ? '+' : '') + n.toFixed(2) + '%'
-// }
-// function signed(n: number): string {
-//   return (n >= 0 ? '+' : '') + n.toFixed(2)
-// }
+const ranker = (idx: number): number => {
+  if (tableDirection.value === 'desc') {
+    return idx + 1 + (page.value - 1) * shownItems.value
+  } else {
+    return totalTokenCount.value - idx - (page.value - 1) * shownItems.value
+  }
+}
 
-// // ----------------------
-// // Sparkline component (typed, no JSX requirement)
-// // ----------------------
-// const Sparkline = defineComponent({
-//   name: 'spark-line',
-//   props: {
-//     points: { type: Array as PropType<number[]>, required: true },
-//     width: { type: Number, default: 96 },
-//     height: { type: Number, default: 28 },
-//   },
-//   setup(props) {
-//     const pathPoints = computed(() => {
-//       const pts = props.points
-//       const w = props.width
-//       const h = props.height
-//       const max = Math.max(...pts)
-//       const min = Math.min(...pts)
-//       const norm = (v: number) => h - ((v - min) / (max - min || 1)) * h
-//       return pts
-//         .map((v, i) => `${(i / (pts.length - 1)) * w},${norm(v)}`)
-//         .join(' ')
-//     })
+const { data, onFetchResponse, execute, onFetchError } =
+  useMEWFetch<GetWebTokensTableResponse>(fetchUrl, {
+    immediate: false,
+  })
+    .get()
+    .json()
 
-//     return () =>
-//       h(
-//         'svg',
-//         {
-//           width: props.width,
-//           height: props.height,
-//           viewBox: `0 0 ${props.width} ${props.height}`,
-//           class: 'block',
-//         },
-//         [
-//           h('polyline', {
-//             points: pathPoints.value,
-//             fill: 'none',
-//             stroke: 'currentColor',
-//             'stroke-width': 2,
-//           }),
-//         ],
-//       )
-//   },
-// })
+const fetchTokens = () => {
+  isLoading.value = true
+  execute()
+}
+
+onMounted(() => {
+  if (isLoadedChains.value && selectedChainStore.value) {
+    selectedChainFilter.value = selectedChainStore.value
+  }
+  // Fetch tokens based on the selected filter
+  fetchTokens()
+})
+
+const validUrl = (urlString: string) => {
+  let url
+  try {
+    url = new URL(urlString)
+  } catch {
+    return false
+  }
+  return url.protocol === 'http:' || url.protocol === 'https:'
+}
+
+onFetchResponse(() => {
+  totalTokenCount.value = data.value?.total ?? 0
+  totalPages.value = data.value?.pages ?? 0
+  if (data.value && data.value.items) {
+    tokens.value = data.value.items.map(
+      (item: GetWebTokensTableResponse['items'][number]) => {
+        const logo =
+          item.logoUrl && validUrl(item.logoUrl)
+            ? item.logoUrl
+            : 'https://dummyimage.com/32x32/008ECC/000&text=B'
+        return {
+          ...item,
+          logoUrl: logo,
+          price: new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 2,
+          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+        }
+      },
+    )
+  }
+  isLoading.value = false
+})
+
+const parsePercent = (val: number): string => {
+  return formatPercentageValue(val ?? 0).value
+}
+
+onFetchError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+
+watch(
+  () => [
+    selectedChainFilter.value,
+    page.value,
+    shownItems.value,
+    headerSort.value,
+    tableDirection.value,
+  ],
+  () => {
+    fetchTokens()
+  },
+)
 </script>

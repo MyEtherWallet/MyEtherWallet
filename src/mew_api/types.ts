@@ -55,3 +55,8 @@ export type QuotesRequestBody =
 // Signable Transactions
 export type EthereumSignableTransactionResponse =
   components['schemas']['GetUnsignedEvmTransactionResponse']
+
+
+// Explore page
+export type WebTokensTableSortCol = components['schemas']['WebTokensTableSortCol']
+export type GetWebTokensTableResponse = components['schemas']['GetWebTokensTableResponse']
