@@ -1,4 +1,4 @@
-import { SupportedNetworkName } from '@enkryptcom/swap';
+import { SupportedNetworkName } from '@enkryptcom/swap'
 import { NetworkNames } from '@enkryptcom/types'
 
 export const chainToEnum: Record<string, NetworkNames> = {
@@ -98,8 +98,8 @@ export const chainToEnum: Record<string, NetworkNames> = {
   UNIQUE: NetworkNames.Unique,
   VARA: NetworkNames.Vara,
   WESTEND: NetworkNames.Westend,
-  SOLANA: NetworkNames.Solana
-};
+  SOLANA: NetworkNames.Solana,
+}
 
 export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
   ETHEREUM: SupportedNetworkName.Ethereum,
@@ -129,5 +129,7 @@ export const supportedSwapEnums: Record<string, SupportedNetworkName> = {
 }
 
 export const enumToChain = Object.fromEntries(
-  Object.entries(chainToEnum).filter(([chainKey]) => supportedSwapEnums[chainKey] !== undefined).map(([key, value]) => [value, key])
-) as Record<SupportedNetworkName, NetworkNames>;
+  Object.entries(chainToEnum)
+    .filter(([chainKey]) => supportedSwapEnums[chainKey] !== undefined)
+    .map(([key, value]) => [value, key]),
+) as Record<SupportedNetworkName, NetworkNames>

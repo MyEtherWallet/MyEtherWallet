@@ -12,7 +12,6 @@ const isAddress = (address: string): boolean => {
   const store = useGlobalStore()
   const { selectedNetwork } = storeToRefs(store)
 
-
   // TODO: change to global definition instead of hardcoding
   if (selectedNetwork.value === 'ROOTSTOCK') {
     // check if it has the basic requirements of an address

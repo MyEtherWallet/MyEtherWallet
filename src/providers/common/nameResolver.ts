@@ -10,27 +10,27 @@ const enkryptType: { [key: string]: string } = {
   '137': 'MATIC',
 }
 
-const ROOTSTOCK_CHAIN = '30';
-const ROOTSTOCK_TEST_CHAIN = '31';
+const ROOTSTOCK_CHAIN = '30'
+const ROOTSTOCK_TEST_CHAIN = '31'
 
 export default class ENSNameResolver {
-  networkId: string;
-  web3Name: ReturnType<typeof createWeb3Name>;
-  resolver: NameResolver;
+  networkId: string
+  web3Name: ReturnType<typeof createWeb3Name>
+  resolver: NameResolver
 
   constructor(networkId: string) {
     this.networkId = networkId
     this.web3Name = createWeb3Name()
     this.resolver = new NameResolver({
       ens: {
-        node: 'https://nodes.mewapi.io/rpc/eth'
+        node: 'https://nodes.mewapi.io/rpc/eth',
       },
       sid: {
         node: {
           bnb: 'https://nodes.mewapi.io/rpc/bsc',
-          arb: 'https://nodes.mewapi.io/rpc/arb'
-        }
-      }
+          arb: 'https://nodes.mewapi.io/rpc/arb',
+        },
+      },
     })
   }
 
@@ -38,19 +38,27 @@ export default class ENSNameResolver {
     const splitName = name.split('.')
     if (splitName.length > 1) {
       try {
-        return normalize(name).indexOf('.') > 0;
+        return normalize(name).indexOf('.') > 0
       } catch {
         return false
       }
     }
-    return false;
+    return false
   }
 
   async resolveName(name: string): Promise<string> {
-    if (!this.isValidName(name)) { throw new Error('Invalid name') }
-    const normalized = normalize(name);
-    let address: string | null = await this.resolver.resolveAddress(normalized, enkryptType[this.networkId] as CoinType)
-    if (this.networkId === ROOTSTOCK_CHAIN || this.networkId === ROOTSTOCK_TEST_CHAIN) {
+    if (!this.isValidName(name)) {
+      throw new Error('Invalid name')
+    }
+    const normalized = normalize(name)
+    let address: string | null = await this.resolver.resolveAddress(
+      normalized,
+      enkryptType[this.networkId] as CoinType,
+    )
+    if (
+      this.networkId === ROOTSTOCK_CHAIN ||
+      this.networkId === ROOTSTOCK_TEST_CHAIN
+    ) {
       address = toChecksumAddress(address as string)
     }
     if (isAddress(address as string) && address !== ZERO_ADDRESS) {
@@ -62,12 +70,13 @@ export default class ENSNameResolver {
 
   async resolveAddress(address: string): Promise<object | undefined> {
     if (isAddress(address) && address !== ZERO_ADDRESS) {
-      let resolvedName: string | null = await this.resolver.resolveReverseName(address)
+      let resolvedName: string | null =
+        await this.resolver.resolveReverseName(address)
 
       if (!resolvedName) {
         resolvedName = await this.web3Name.getDomainName({
           address: address,
-          queryChainIdList: [Number(this.networkId)]
+          queryChainIdList: [Number(this.networkId)],
         })
       }
 
@@ -75,7 +84,6 @@ export default class ENSNameResolver {
         name: resolvedName ? resolvedName : '',
       }
     }
-    return undefined;
+    return undefined
   }
-
 }

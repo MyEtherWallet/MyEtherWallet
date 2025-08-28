@@ -6,14 +6,14 @@ export enum ToastType {
 }
 
 export interface ToastLink {
-  title: string;
-  url: string;
+  title: string
+  url: string
 }
 
 export interface Toast {
-  type?: ToastType;
-  text: string;
-  link?: ToastLink;
-  duration?: number;
-  isInfinite?: boolean;
+  type?: ToastType
+  text: string
+  link?: ToastLink
+  duration?: number
+  isInfinite?: boolean
 }

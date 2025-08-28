@@ -110,8 +110,6 @@
       @apply text-xl leading-p-150;
     }
   }
-
-
 }
 
 /*FADE Transition*/
@@ -130,14 +128,12 @@
 }
 
 .hoverOnDarkBG {
-  @apply hover:bg-white/5 transition-all duration-300 ease-in
+  @apply hover:bg-white/5 transition-all duration-300 ease-in;
 }
 
 .hoverBGWhite {
   @apply hover:bg-grey-light transition-all duration-300 ease-in;
 }
-
-
 
 /**
 * Shadow mask for and image
@@ -147,7 +143,6 @@
   -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
   mask-image: linear-gradient(to top, transparent 0%, black 30%);
 }
-
 
 /**
 * Ripple effect
@@ -192,12 +187,15 @@ span.ripple {
 
 .fadelist-move,
 .fadelist-enter-active {
-  transition: opacity 0.5s ease, transform 0.4s cubic-bezier(0.55, 0, 0.1, 1);
+  transition:
+    opacity 0.5s ease,
+    transform 0.4s cubic-bezier(0.55, 0, 0.1, 1);
   transform-origin: center top;
 }
 
 .fadelist-leave-active {
-  transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1),
+  transition:
+    opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1),
     transform 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 

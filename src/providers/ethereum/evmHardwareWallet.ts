@@ -1,11 +1,8 @@
-import { bytesToHex } from 'web3-utils';
+import { bytesToHex } from 'web3-utils'
 import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
-import {
-  fromRpcSig,
-  hexToBytes,
-} from '@ethereumjs/util'
+import { fromRpcSig, hexToBytes } from '@ethereumjs/util'
 import { type PostSignedTransaction } from './types'
 
 import BaseEvmWallet from './baseEvmWallet'
@@ -24,7 +21,15 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
   private walletType: HWwalletType
   private hwWalletInstance: HWwallet
 
-  constructor(chainId: string, address: HexPrefixedString, networkName: string, index: string, path: PathType, walletType: HWwalletType, hwWalletInstance: HWwallet) {
+  constructor(
+    chainId: string,
+    address: HexPrefixedString,
+    networkName: string,
+    index: string,
+    path: PathType,
+    walletType: HWwalletType,
+    hwWalletInstance: HWwallet,
+  ) {
     super(chainId)
     this.address = address
     this.networkName = networkName
@@ -35,11 +40,11 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
   }
 
   /**
-     *
-     * @param serializedTx
-     * currently making library figure out tx type
-     * TODO: switch to using the type from the API
-     */
+   *
+   * @param serializedTx
+   * currently making library figure out tx type
+   * TODO: switch to using the type from the API
+   */
   override async SignTransaction(
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {
@@ -49,18 +54,16 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
         hexToBytes(serializedTx),
         { common },
       )
-      const walletSig = await this.hwWalletInstance.signTransaction(
-        {
-          transaction: tx,
-          networkName: this.networkName as NetworkNames,
-          pathIndex: this.index,
-          pathType: {
-            basePath: this.path.basePath ?? "",
-            path: this.path.path,
-          },
-          wallet: this.walletType,
-        }
-      ) as HexPrefixedString
+      const walletSig = (await this.hwWalletInstance.signTransaction({
+        transaction: tx,
+        networkName: this.networkName as NetworkNames,
+        pathIndex: this.index,
+        pathType: {
+          basePath: this.path.basePath ?? '',
+          path: this.path.path,
+        },
+        wallet: this.walletType,
+      })) as HexPrefixedString
       const rpcSig = fromRpcSig(walletSig)
       const signedTx = tx.addSignature(
         BigInt(rpcSig.v),
@@ -83,7 +86,7 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
       case HWwalletType.ledger:
         return WalletType.LEDGER
       default:
-        throw new Error(`Unsupported hardware wallet type: ${this.walletType}`);
+        throw new Error(`Unsupported hardware wallet type: ${this.walletType}`)
     }
   }
 

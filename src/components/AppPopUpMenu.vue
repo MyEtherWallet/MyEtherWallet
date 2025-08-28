@@ -9,7 +9,7 @@
         @click="toggleMenu"
       >
         <div class="flex items-center">
-          <span>{{ placeholder }}</span>
+          <span :class="`text-s-${props.labelSize}`">{{ placeholder }}</span>
           <chevron-down-icon class="w-4 h-4 ml-1" />
         </div>
       </button>
@@ -92,6 +92,10 @@ const props = defineProps({
   location: {
     type: String as PropType<'left' | 'right' | 'center'>,
     default: 'right',
+  },
+  labelSize: {
+    type: String,
+    default: '28',
   },
 })
 

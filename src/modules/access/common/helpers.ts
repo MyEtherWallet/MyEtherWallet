@@ -201,8 +201,8 @@ const unlockKeystore = async (
 }
 
 const isPrivateKey = (key: string) => {
-  const priv = key ? key.replace('0x', '') : '';
-  return key !== '' && isHexString('0x' + priv, 32);
+  const priv = key ? key.replace('0x', '') : ''
+  return key !== '' && isHexString('0x' + priv, 32)
 }
 
 export type { EthSaleKeystore, V3Keystore, MEWKeystore }
@@ -219,5 +219,5 @@ export {
   sanitizeHex,
   getPriorityFeeBasedOnType,
   getBaseFeeBasedOnType,
-  isPrivateKey
+  isPrivateKey,
 }
