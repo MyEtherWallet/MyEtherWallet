@@ -31,7 +31,7 @@
     </div>
     <div class="flex justify-start gap-3 flex-wrap animate-pulse" v-else>
       <div
-        v-for="token in 6"
+        v-for="token in 10"
         :key="`loading-trending-${token}`"
         class="bg-grey-5 w-[115px] h-[100px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
       >

@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-between gap-3">
-    <div class="flex items-center gap-4">
+    <div class="flex items-center justify-between w-full">
       <h2 class="text-s-40 font-bold">Explore <br />Crypto Tokens</h2>
       <div>
         <div class="pb-2">
