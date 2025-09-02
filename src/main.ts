@@ -16,7 +16,7 @@ import { StoreConfigs } from './stores/configs'
 import { Provider } from './providers'
 import type { PopupState } from './stores/popup'
 import { Analytics } from './analytics/amplitude'
-import rippleDirective from '@/directives/ripple';
+import rippleDirective from '@/directives/ripple'
 
 const app = createApp(App)
 
@@ -102,7 +102,7 @@ amplitude.init(__TMP_HASHED_VERSION__, {
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
-app.directive('ripple', rippleDirective);
+app.directive('ripple', rippleDirective)
 /**
  * Usage:
  *

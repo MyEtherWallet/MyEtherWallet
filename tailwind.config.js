@@ -75,6 +75,9 @@ export default {
       success: 'rgb(5,192,165,1)',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
+      // blues
+      'blue-2': 'rgba(0, 91, 229, 1)',
+      'blue-3': 'rgba(0, 123, 238, 1)',
     },
     extend: {
       fontSize: {

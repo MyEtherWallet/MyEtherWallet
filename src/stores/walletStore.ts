@@ -98,7 +98,10 @@ export const useWalletStore = defineStore('walletStore', () => {
             name: token.name ?? 'Unknown',
             symbol: token.symbol ?? 'UNK',
             balanceWei: token.balance,
-            balance: fromBase(BigNumber(token.balance).toFixed(), token.decimals),
+            balance: fromBase(
+              BigNumber(token.balance).toFixed(),
+              token.decimals,
+            ),
           })
         }
       }

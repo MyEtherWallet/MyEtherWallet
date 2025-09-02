@@ -21,8 +21,6 @@ src/_generated
 # Apollo files
 src/apollo/global/globalTypes.json
 
-/////
-
 # Logs
 logs/
 *.log

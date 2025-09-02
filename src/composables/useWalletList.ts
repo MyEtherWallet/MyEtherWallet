@@ -1,6 +1,11 @@
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
-import { type WalletConfig, WalletConfigType, walletConfigs, type defaultWalletId } from '@/modules/access/common/walletConfigs'
+import {
+  type WalletConfig,
+  WalletConfigType,
+  walletConfigs,
+  type defaultWalletId,
+} from '@/modules/access/common/walletConfigs'
 import * as rainbowkitWallets from '@rainbow-me/rainbowkit/wallets'
 import Configs from '@/configs'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -12,8 +17,8 @@ export const useWalletList = () => {
   const { selectedChain } = storeToRefs(chainStore)
 
   /** -------------------
- * Wallets
- * -------------------*/
+   * Wallets
+   * -------------------*/
   const allRainbowWallets = Object.values(rainbowkitWallets)
 
   const initializedWallets = allRainbowWallets.map(wallet =>
