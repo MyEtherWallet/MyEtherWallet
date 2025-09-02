@@ -1,30 +1,33 @@
 <template>
   <div class="flex items-center justify-between gap-3">
-    <h2 class="text-s-20">Explore Crypto Tokens</h2>
-    <div>
-      <app-btn-group
-        v-model:selected="selectedCryptoFilter"
-        :btn-list="cryptoFilterOptions"
-        size="small"
-      >
-        <template #btn-content="{ data }">
-          {{ data.name }}
-        </template>
-      </app-btn-group>
+    <div class="flex items-center gap-4">
+      <h2 class="text-s-40 font-bold">Explore <br />Crypto Tokens</h2>
+      <div>
+        <div class="pb-2">
+          <app-btn-group
+            v-model:selected="selectedCryptoFilter"
+            :btn-list="cryptoFilterOptions"
+            size="small"
+          >
+            <template #btn-content="{ data }">
+              {{ data.name }}
+            </template>
+          </app-btn-group>
+        </div>
+        <div
+          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
+        >
+          <app-search-input v-model="searchInput" class="grow" />
+          <app-select
+            v-model:selected="activeSort"
+            :options="[]"
+            :emit-only="true"
+            @toggle-select="openChainDialog = true"
+            placeholder="Filter by Chain"
+          />
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div
-    class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
-  >
-    <app-search-input v-model="searchInput" class="grow" />
-    <app-select
-      v-model:selected="activeSort"
-      :options="[]"
-      :emit-only="true"
-      @toggle-select="openChainDialog = true"
-      placeholder="Filter by Chain"
-    />
   </div>
 
   <div class="bg-white shadow-sm rounded-2xl p-2">
@@ -66,7 +69,16 @@
           >
             <td class="px-1 py-2">
               <!-- changes color when active -->
-              <star-solid-icon class="h-4 w-4 text-grey-10 cursor-pointer" />
+              <star-solid-icon
+                class="h-4 w-4 text-grey-10 cursor-pointer"
+                @click="addTokenToWatchList(token.coinId)"
+                v-if="!isWatchListed(token.coinId)"
+              />
+              <star-solid-icon
+                class="h-4 w-4 text-gold cursor-pointer"
+                @click="removeTokenWatchList(token.coinId)"
+                v-else
+              />
             </td>
             <td class="px-1 py-2">{{ ranker(index) }}.</td>
             <td class="px-1 py-2">
@@ -198,6 +210,7 @@ import {
 import { useToastStore } from '@/stores/toastStore'
 import isValidUrl from '@/utils/isValidUrl'
 import { useDebounceFn } from '@vueuse/core'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -208,7 +221,6 @@ const HEADER_SORT_OPTIONS = {
   MARKET_CAP: 'Market Cap',
 }
 const toastStore = useToastStore()
-
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
   storeToRefs(chainsStore)
@@ -223,6 +235,9 @@ const headerSort = ref<string>('MARKET_CAP')
 const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
+
+const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
+  useWatchlistStore()
 
 const previousPage = () => {
   if (page.value > 1) {
@@ -266,6 +281,8 @@ const setSelectedChain = (chain: Chain) => {
 const cryptoFilterOptions = ref([
   { name: 'All', id: 'all' },
   { name: 'DeFi', id: 'defi' },
+  { name: 'Top Gainers', id: 'topGainers' },
+  { name: 'Top Losers', id: 'topLosers' },
   { name: 'MEME', id: 'meme' },
   { name: 'StableCoin', id: 'stable' },
   { name: 'TikTok', id: 'tiktok' },

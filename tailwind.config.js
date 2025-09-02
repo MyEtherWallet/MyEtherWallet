@@ -36,6 +36,7 @@ export default {
       transparent: 'transparent',
       current: 'currentColor',
       appBackground: '#f5f5f7',
+      gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
       titleColor: '#222222',
       primary: 'rgb(0,90,229,1)',
