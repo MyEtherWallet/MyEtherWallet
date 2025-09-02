@@ -66,7 +66,7 @@
           >
             <td class="px-1 py-2">
               <!-- changes color when active -->
-              <star-solid-icon class="h-4 w-4 text-grey-10" />
+              <star-solid-icon class="h-4 w-4 text-grey-10 cursor-pointer" />
             </td>
             <td class="px-1 py-2">{{ ranker(index) }}.</td>
             <td class="px-1 py-2">
@@ -301,7 +301,6 @@ const { data, onFetchResponse, execute, onFetchError } =
     .json()
 
 const fetchTokens = useDebounceFn(() => {
-  isLoading.value = true
   execute()
   tableContainer.value?.scrollTo(0, 0)
 }, 500)
@@ -311,6 +310,7 @@ onMounted(() => {
     selectedChainFilter.value = selectedChainStore.value
   }
   // Fetch tokens based on the selected filter
+  isLoading.value = true
   fetchTokens()
 })
 
@@ -362,6 +362,7 @@ watch(
     selectedCryptoFilter.value,
   ],
   () => {
+    isLoading.value = true
     fetchTokens()
   },
   {

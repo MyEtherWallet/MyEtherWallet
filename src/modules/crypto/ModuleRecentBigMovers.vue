@@ -150,6 +150,9 @@ const fetchTokens = () => {
 onFetchResponse(() => {
   if (data.value && data.value.data.getTokenMarketMovers.items) {
     topGainers.value = data.value.data.getTokenMarketMovers.items
+      .filter((item: EthVmBigMoversItems) => {
+        return item.priceChangePercentage
+      })
       .map((item: EthVmBigMoversItems) => {
         const logo =
           item.iconPng && isValidUrl(item.iconPng)
