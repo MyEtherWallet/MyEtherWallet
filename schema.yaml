@@ -78,15 +78,29 @@ paths:
 
   # Tokens
 
+  /v1/web/trending-tokens:
+    get:
+      operationId: GetWebTrendingTokens
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/SortDirection'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTrendingTokensSuccess'
+
   /v1/web/tokens-table:
     get:
       operationId: GetWebTokensTable
       parameters:
         - $ref: '#/components/parameters/QueryChainName'
+        # - $ref: '#/components/parameters/ChainNames'
+        - $ref: '#/components/parameters/Category'
+        # - $ref: '#/components/parameters/Categories'
+        - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/SortDirection'
-        - $ref: '#/components/parameters/WebTokensTableSortCol'
+        - $ref: '#/components/parameters/WebTokensTableSort'
       responses:
         200:
           $ref: '#/components/responses/GetWebTokensTableSuccess'
@@ -429,7 +443,22 @@ components:
       schema:
         type: string
     QueryChainName:
-      name: chainName
+      name: chain
+      in: query
+      schema:
+        type: string
+    Category:
+      name: category
+      in: query
+      schema:
+        type: string
+    # Categories:
+    #   name: categories
+    #   in: query
+    #   schema:
+    #     type: string
+    Search:
+      name: search
       in: query
       schema:
         type: string
@@ -444,15 +473,15 @@ components:
       schema:
         type: number
     SortDirection:
-      name: sortDir
+      name: sort
       in: query
       schema:
         $ref: '#/components/schemas/SortDirection'
-    WebTokensTableSortCol:
-      name: sortBy
+    WebTokensTableSort:
+      name: sort
       in: query
       schema:
-        $ref: '#/components/schemas/WebTokensTableSortCol'
+        $ref: '#/components/schemas/WebTokensTableSort'
     ChainNames:
       name: chains
       in: query
@@ -635,6 +664,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetChainMetadataResponse'
+
+    GetWebTrendingTokensSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebTrendingTokensResponse'
 
     GetWebTokensTableSuccess:
       content:
@@ -1005,13 +1040,17 @@ components:
         - ASC
         - DESC
 
-    WebTokensTableSortCol:
+    WebTokensTableSort:
       type: string
       enum:
-        - NAME
-        - PRICE
-        - PRICE_CHANGE_PERCENTAGE_24H
-        - MARKET_CAP
+        - NAME_ASC
+        - NAME_DESC
+        - PRICE_ASC
+        - PRICE_DESC
+        - PRICE_CHANGE_PERCENTAGE_24H_ASC
+        - PRICE_CHANGE_PERCENTAGE_24H_DESC
+        - MARKET_CAP_ASC
+        - MARKET_CAP_DESC
 
     # Composite types
     BtcOutputInput:
@@ -1329,14 +1368,13 @@ components:
 
     # Web
 
-    GetWebTokensTableResponse:
+    GetWebTrendingTokensResponse:
       type: object
       required:
         - page
         - pages
         - perPage
         - total
-        - chainName
         - items
       properties:
         page:
@@ -1347,23 +1385,62 @@ components:
           type: number
         total:
           type: number
-        chainName:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - coinId
+              - name
+              - symbol
+              - priceChangePercentage24h
+            properties:
+              coinId:
+                type: string
+              name:
+                type: string
+              symbol:
+                type: string
+              priceChangePercentage24h:
+                type: number
+              logoUrl:
+                type: string
+
+    GetWebTokensTableResponse:
+      type: object
+      required:
+        - page
+        - pages
+        - perPage
+        - total
+        - chain
+        - items
+      properties:
+        page:
+          type: number
+        pages:
+          type: number
+        perPage:
+          type: number
+        total:
+          type: number
+        chain:
           type: string
         items:
           type: array
           items:
             type: object
             required:
+              - coinId
               - name
-              # - symbol
               - price
               - priceChangePercentage24h
               - marketCap
             properties:
+              coinId:
+                type: string
               name:
                 type: string
-              # symbol:
-              #   type: string
               price:
                 type: number
               priceChangePercentage24h:
@@ -1397,11 +1474,14 @@ components:
           items:
             type: object
             required:
+              - coinId
               - name
               - symbol
               - price
               - priceChangePercentage24h
             properties:
+              coinId:
+                type: string
               name:
                 type: string
               symbol:

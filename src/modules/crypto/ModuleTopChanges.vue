@@ -88,7 +88,7 @@ const isLoading = ref(true)
 const fetchUrl = computed(() => {
   const chainName = selectedChainStore.value?.name ?? 'ETHEREUM'
   const sortDirection = props.losers ? 'asc' : 'desc'
-  return `https://mew-api-dev.ethvm.dev/v1/web/top-gainers?chainName=${chainName}&page=1&perPage=3&sortDir=${sortDirection}&sortBy=MARKET_CAP`
+  return `https://mew-api-dev.ethvm.dev/v1/web/top-gainers?chainName=${chainName}&page=1&perPage=3&sort=${sortDirection}`
 })
 const firstFetched: Ref<number> = ref(0)
 const currentTime: Ref<number> = ref(0)

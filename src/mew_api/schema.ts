@@ -164,6 +164,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/trending-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTrendingTokens"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/tokens-table": {
         parameters: {
             query?: never;
@@ -634,7 +650,7 @@ export interface components {
         /** @enum {string} */
         SortDirection: "ASC" | "DESC";
         /** @enum {string} */
-        WebTokensTableSortCol: "NAME" | "PRICE" | "PRICE_CHANGE_PERCENTAGE_24H" | "MARKET_CAP";
+        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
             amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
@@ -722,13 +738,27 @@ export interface components {
             FAST: components["schemas"]["EvmGasFeeInfo"];
             FASTEST: components["schemas"]["EvmGasFeeInfo"];
         };
+        GetWebTrendingTokensResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                priceChangePercentage24h: number;
+                logoUrl?: string;
+            }[];
+        };
         GetWebTokensTableResponse: {
             page: number;
             pages: number;
             perPage: number;
             total: number;
-            chainName: string;
+            chain: string;
             items: {
+                coinId: string;
                 name: string;
                 price: number;
                 priceChangePercentage24h: number;
@@ -743,6 +773,7 @@ export interface components {
             perPage: number;
             total: number;
             items: {
+                coinId: string;
                 name: string;
                 symbol: string;
                 price: number;
@@ -1027,6 +1058,14 @@ export interface components {
                 "application/json": components["schemas"]["GetChainMetadataResponse"];
             };
         };
+        GetWebTrendingTokensSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTrendingTokensResponse"];
+            };
+        };
         GetWebTokensTableSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -1264,10 +1303,12 @@ export interface components {
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
         QueryChainName: string;
+        Category: string;
+        Search: string;
         Page: number;
         PerPage: number;
         SortDirection: components["schemas"]["SortDirection"];
-        WebTokensTableSortCol: components["schemas"]["WebTokensTableSortCol"];
+        WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
         ChainNames: string;
         AumAddressType: string;
         AumAddressPlatform: string;
@@ -1450,14 +1491,31 @@ export interface operations {
             200: components["responses"]["GetChainMetadataSuccess"];
         };
     };
+    GetWebTrendingTokens: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["SortDirection"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTrendingTokensSuccess"];
+        };
+    };
     GetWebTokensTable: {
         parameters: {
             query?: {
-                chainName?: components["parameters"]["QueryChainName"];
+                chain?: components["parameters"]["QueryChainName"];
+                category?: components["parameters"]["Category"];
+                search?: components["parameters"]["Search"];
                 page?: components["parameters"]["Page"];
                 perPage?: components["parameters"]["PerPage"];
-                sortDir?: components["parameters"]["SortDirection"];
-                sortBy?: components["parameters"]["WebTokensTableSortCol"];
+                sort?: components["parameters"]["WebTokensTableSort"];
             };
             header?: never;
             path?: never;
@@ -1473,7 +1531,7 @@ export interface operations {
             query?: {
                 page?: components["parameters"]["Page"];
                 perPage?: components["parameters"]["PerPage"];
-                sortDir?: components["parameters"]["SortDirection"];
+                sort?: components["parameters"]["SortDirection"];
             };
             header?: never;
             path?: never;

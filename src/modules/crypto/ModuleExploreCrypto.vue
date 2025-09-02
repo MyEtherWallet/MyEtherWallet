@@ -189,11 +189,7 @@ import {
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import type {
-  Chain,
-  WebTokensTableSortCol,
-  GetWebTokensTableResponse,
-} from '@/mew_api/types'
+import type { Chain, GetWebTokensTableResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
   formatIntegerValue,
@@ -201,6 +197,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
 import isValidUrl from '@/utils/isValidUrl'
+import { useDebounceFn } from '@vueuse/core'
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -222,7 +219,7 @@ const shownItems = ref<number>(50)
 const shownItemsOptions = [5, 10, 50, 100]
 const selectedChainFilter = ref<Chain | null>(null)
 const openChainDialog = ref<boolean>(false)
-const headerSort = ref<WebTokensTableSortCol>('MARKET_CAP')
+const headerSort = ref<string>('MARKET_CAP')
 const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
@@ -258,7 +255,7 @@ const setHeaderSort = (key: string) => {
   } else {
     tableDirection.value = 'desc'
   }
-  headerSort.value = key as WebTokensTableSortCol
+  headerSort.value = key
 }
 
 const setSelectedChain = (chain: Chain) => {
@@ -285,7 +282,7 @@ const { useMEWFetch } = useFetchMewApi()
 const fetchUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
   const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
-  return `${baseUrl}?chainName=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sortBy=${headerSort.value}&sortDir=${tableDirection.value}`
+  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}`
 })
 
 const ranker = (idx: number): number => {
@@ -303,11 +300,11 @@ const { data, onFetchResponse, execute, onFetchError } =
     .get()
     .json()
 
-const fetchTokens = () => {
+const fetchTokens = useDebounceFn(() => {
   isLoading.value = true
   execute()
   tableContainer.value?.scrollTo(0, 0)
-}
+}, 500)
 
 onMounted(() => {
   if (isLoadedChains.value && selectedChainStore.value) {
@@ -361,6 +358,8 @@ watch(
     shownItems.value,
     headerSort.value,
     tableDirection.value,
+    searchInput.value,
+    selectedCryptoFilter.value,
   ],
   () => {
     fetchTokens()

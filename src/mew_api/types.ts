@@ -58,6 +58,7 @@ export type EthereumSignableTransactionResponse =
 
 
 // Explore page
-export type WebTokensTableSortCol = components['schemas']['WebTokensTableSortCol']
+export type WebTokensTableSort = components['schemas']['WebTokensTableSort']
 export type GetWebTokensTableResponse = components['schemas']['GetWebTokensTableResponse']
 export type GetWebTopGainersSuccessResponse = components['schemas']['GetWebTopGainersSuccessResponse']
+export type GetWebTrendingTokensResponse = components['schemas']['GetWebTrendingTokensResponse']

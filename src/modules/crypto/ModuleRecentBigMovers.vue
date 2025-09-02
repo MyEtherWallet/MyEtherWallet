@@ -1,7 +1,7 @@
 <template>
   <section class="rounded-2xl p-2 shadow-sm bg-white">
     <div class="flex justify-between items-center pb-2">
-      <h2 class="text-s-18 font-bold">Recent Big Movers</h2>
+      <h2 class="text-s-18 font-bold">Big Movers</h2>
       <p class="text-grey-30 text-s-12">{{ timeAgo }}</p>
     </div>
     <div class="gap-2 flex-column" v-if="!isLoading && topGainers.length > 0">
