@@ -1,27 +1,29 @@
 <template>
-  <div ref="appBodyRef" class="min-h-screen w-full static">
+  <div ref="appBodyRef" class="h-screen w-full static">
     <the-wallet-header />
     <div
-      :class="[
-        backgroundClass,
-        'flex flex-col justify-center overflow-y-auto relative px-5 md-header:px-10',
-      ]"
+      :class="[backgroundClass, 'relative flex justify-center overflow-hidden']"
     >
-      <main :class="['flex-initial w-full max-w-[1440px] mx-auto']">
-        <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12">
+      <main
+        :class="[
+          ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto pr-[64px]  lg:pr-[400px]',
+        ]"
+      >
+        <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10">
           <router-view />
         </div>
+        <MewFooter
+          :use-i18n="useI18n"
+          :amplitude="analytics.amplitude"
+          :link-component="RouterLink"
+          :package-version="packageVersion"
+          :user-consent="popupStore.consent"
+          :curr-project="CURR_PROJECT"
+          @update:consent="handleSetConsent"
+        />
       </main>
     </div>
-    <MewFooter
-      :use-i18n="useI18n"
-      :amplitude="analytics.amplitude"
-      :link-component="RouterLink"
-      :package-version="packageVersion"
-      :user-consent="popupStore.consent"
-      :curr-project="CURR_PROJECT"
-      @update:consent="handleSetConsent"
-    />
+    <layout-wallet />
   </div>
 </template>
 
@@ -34,6 +36,7 @@ import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
+import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 
 const popupStore = usePopupStore()

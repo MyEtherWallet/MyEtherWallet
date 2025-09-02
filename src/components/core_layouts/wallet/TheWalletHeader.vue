@@ -1,10 +1,8 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] sticky top-0 z-10 px-5 md-header:px-10 bg-white bg-opacity-70 shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);] backdrop-blur-xl"
+    class="flex items-center w-full h-[68px] sm:h-[76px] absolute top-0 z-10 px-5 md-header:px-10 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
   >
-    <div
-      class="flex w-full max-w-[1440px] justify-between items-center mx-auto gap-3"
-    >
+    <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
       <div class="flex items-center gap-2">
         <router-link

@@ -3,7 +3,7 @@
     <div
       class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
     >
-      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-1">
+      <div sheetClass="w-full !px-4 mt-4 !pb-1">
         <div class="mb-[25px]">
           <app-enter-amount
             v-model:amount="amount"
@@ -31,7 +31,7 @@
             >Clear</app-btn-text
           >
         </div>
-      </app-sheet>
+      </div>
       <app-base-button
         v-if="isWalletConnected"
         :disabled="!validSend"
@@ -64,7 +64,6 @@ import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei, toHex } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
-import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
