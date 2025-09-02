@@ -8,14 +8,14 @@
       "tx-send-success": "Transaction sent successfully",
       "tx-send-failed": "Transaction failed to send",
       "failed_to_fetch_gas_fees": "Failed to fetch gas fees"
-   } 
+    }
   },
   "verify-tx": {
-      "title": "Verify Transaction",
-      "description": "Double check the information before confirming the transaction.",
-      "unknown-network":"Unknown network",
-      "confirm": "Confirm and send"
-    },
+    "title": "Verify Transaction",
+    "description": "Double check the information before confirming the transaction.",
+    "unknown-network": "Unknown network",
+    "confirm": "Confirm and send"
+  },
 
   "error": {
     "amount": {
@@ -27,12 +27,3 @@
     }
   }
 }
-
-
-           
-         
-
-           
-      
-            
-        

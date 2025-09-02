@@ -164,6 +164,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/trending-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTrendingTokens"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/tokens-table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokensTable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/top-gainers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTopGainers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/coingecko/chains/{chainName}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCoinGeckoChainPreview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/coingecko/market-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCoinGeckoAllMarketData"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/balances/{chainName}/{address}": {
         parameters: {
             query?: never;
@@ -567,6 +647,10 @@ export interface components {
         ChainType: "BITCOIN" | "EVM" | "POLKADOT" | "KADENA" | "SOLANA";
         /** @enum {string} */
         EvmTransactionAction: "TOKEN_SWAP" | "TOKEN_APPROVAL" | "TOKEN_TRANSFER";
+        /** @enum {string} */
+        SortDirection: "ASC" | "DESC";
+        /** @enum {string} */
+        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
             amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
@@ -654,6 +738,90 @@ export interface components {
             FAST: components["schemas"]["EvmGasFeeInfo"];
             FASTEST: components["schemas"]["EvmGasFeeInfo"];
         };
+        GetWebTrendingTokensResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                priceChangePercentage24h: number;
+                logoUrl?: string;
+            }[];
+        };
+        GetWebTokensTableResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            chain: string;
+            items: {
+                coinId: string;
+                name: string;
+                price: number;
+                priceChangePercentage24h: number;
+                marketCap: number;
+                address?: string;
+                logoUrl?: string;
+            }[];
+        };
+        GetWebTopGainersSuccessResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl?: string;
+            }[];
+        };
+        GetCoinGeckoChainPreviewResponse: {
+            name?: string;
+            symbol?: string;
+            fiatPrice?: number;
+            fiatSymbol?: string;
+        }[];
+        GetCoinGeckoAllMarketDataResponse: {
+            coinId: string;
+            currentPrice?: number;
+            marketCap?: number;
+            marketCapRank?: number;
+            fullyDilutedValuation?: number;
+            totalVolume?: number;
+            high24h?: number;
+            low24h?: number;
+            priceChange24h?: number;
+            priceChangePercentage24h?: number;
+            marketCapChange24h?: number;
+            marketCapChangePercentage24h?: number;
+            circulatingSupply?: number;
+            totalSupply?: number;
+            maxSupply?: number;
+            ath?: number;
+            athChangePercentage?: number;
+            athDate?: components["schemas"]["ISO8601"];
+            atl?: number;
+            atlChangePercentage?: number;
+            atlDate?: components["schemas"]["ISO8601"];
+            roiTimes?: number;
+            roiCurrency?: string;
+            roiPercentage?: number;
+            lastUpdated?: components["schemas"]["ISO8601"];
+            priceChangePercentage14dInCurrency?: number;
+            priceChangePercentage1hInCurrency?: number;
+            priceChangePercentage1yInCurrency?: number;
+            priceChangePercentage200dInCurrency?: number;
+            priceChangePercentage24hInCurrency?: number;
+            priceChangePercentage30dInCurrency?: number;
+            priceChangePercentage7dInCurrency?: number;
+            sparklineIn7d?: number[];
+        }[];
         GetBalancesByChainNameAndAddressResponse: {
             result: {
                 balance: string;
@@ -890,6 +1058,46 @@ export interface components {
                 "application/json": components["schemas"]["GetChainMetadataResponse"];
             };
         };
+        GetWebTrendingTokensSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTrendingTokensResponse"];
+            };
+        };
+        GetWebTokensTableSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokensTableResponse"];
+            };
+        };
+        GetWebTopGainersSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTopGainersSuccessResponse"];
+            };
+        };
+        GetCoinGeckoChainPreviewSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetCoinGeckoChainPreviewResponse"];
+            };
+        };
+        GetCoinGeckoAllMarketDataSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetCoinGeckoAllMarketDataResponse"];
+            };
+        };
         GetBalancesByChainNameAndAddressSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -1094,6 +1302,13 @@ export interface components {
     parameters: {
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
+        QueryChainName: string;
+        Category: string;
+        Search: string;
+        Page: number;
+        PerPage: number;
+        SortDirection: components["schemas"]["SortDirection"];
+        WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
         ChainNames: string;
         AumAddressType: string;
         AumAddressPlatform: string;
@@ -1274,6 +1489,83 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetChainMetadataSuccess"];
+        };
+    };
+    GetWebTrendingTokens: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["SortDirection"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTrendingTokensSuccess"];
+        };
+    };
+    GetWebTokensTable: {
+        parameters: {
+            query?: {
+                chain?: components["parameters"]["QueryChainName"];
+                category?: components["parameters"]["Category"];
+                search?: components["parameters"]["Search"];
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["WebTokensTableSort"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokensTableSuccess"];
+        };
+    };
+    GetWebTopGainers: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["SortDirection"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTopGainersSuccess"];
+        };
+    };
+    GetCoinGeckoChainPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetCoinGeckoChainPreviewSuccess"];
+        };
+    };
+    GetCoinGeckoAllMarketData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetCoinGeckoAllMarketDataSuccess"];
         };
     };
     GetBalancesByChainNameAndAddress: {

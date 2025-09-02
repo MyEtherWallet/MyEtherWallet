@@ -50,7 +50,9 @@ export default {
       surface: 'rgba(232, 232, 237, 1)',
       info: 'rgba(0, 0, 0, 0.65)',
       'grey-light': 'rgba(232, 232, 237, 1)',
+      'grey-light-2': 'rgba(248, 250, 252, 1)',
       'grey-outline': 'rgba(188,200,204,1)',
+      'grey-70': 'rgba(0,0,0,0.7)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
       'grey-10': 'rgba(0,0,0,0.1)',
@@ -73,6 +75,9 @@ export default {
       success: 'rgb(5,192,165,1)',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
+      // blues
+      'blue-2': 'rgba(0, 91, 229, 1)',
+      'blue-3': 'rgba(0, 123, 238, 1)',
     },
     extend: {
       fontSize: {
@@ -86,6 +91,7 @@ export default {
         's-24': '24px',
         's-20': '20px',
         's-17': '17px',
+        's-16': '16px',
         's-15': '15px',
         's-14': '14px',
         's-12': '12px',

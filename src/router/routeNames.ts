@@ -31,6 +31,7 @@ const ROUTES_MAIN: RouteNameCollection = {
   EARN: { NAME: 'Earn', PATH: '/earn' },
   SWAP: { NAME: 'Swap', PATH: '/swap' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: '/verify' },
+  CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
 }
 
 const ROUTES_SEND: RouteNameCollection = {
@@ -62,5 +63,14 @@ enum LEDGER_ALIAS {
   access = '/ledger',
 }
 
-export { ROUTES_MAIN, ROUTES_CREATE_WALLET, ROUTES_SEND, ROUTES_ACCESS, ACCESS_ALIAS, KEYSTORE_ALIAS, MNEMONIC_ALIAS, TREZOR_ALIAS, LEDGER_ALIAS };
-
+export {
+  ROUTES_MAIN,
+  ROUTES_CREATE_WALLET,
+  ROUTES_SEND,
+  ROUTES_ACCESS,
+  ACCESS_ALIAS,
+  KEYSTORE_ALIAS,
+  MNEMONIC_ALIAS,
+  TREZOR_ALIAS,
+  LEDGER_ALIAS,
+}

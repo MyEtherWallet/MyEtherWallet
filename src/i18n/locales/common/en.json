@@ -1,5 +1,6 @@
 {
   "common": {
+    "swap": "Swap",
     "network": "network",
     "close": "close",
     "clear_icon": "clear input",
@@ -9,7 +10,8 @@
     "dont_have_wallet": "Don't have a wallet?",
     "create_wallet": "Create wallet",
     "access_wallet": "Access wallet",
-    "not_found":  {
+    "load_more": "Load more",
+    "not_found": {
       "chains": "No chains found"
     },
     "edit": "Edit",
@@ -26,7 +28,7 @@
     "back": "Back",
     "next": "Next",
     "error": {
-          "user_canceled_request": "User canceled the request"
+      "user_canceled_request": "User canceled the request"
     },
     "yes": "Yes",
     "no": "No",
@@ -41,7 +43,7 @@
     "nonce": "Nonce",
     "data": "Data",
     "balance": "Balance",
-    "send" :"Send",
+    "send": "Send",
     "connect_wallet": "connect wallet",
     "select_token": "select token",
     "name": "name",
@@ -93,19 +95,19 @@
   "select_fee": {
     "title": "Select transaction fee",
     "description": "This fee is charged by the Ethereum network and fluctuates depending on network traffic. MEW does not profit from this fee.",
-    "economy" : {
+    "economy": {
       "title": "Economy",
       "description": "Will likely go through unless activity increases"
     },
-    "regular" : {
+    "regular": {
       "title": "Recommended",
       "description": "Will reliably go through in most scenarios"
     },
-    "fast" : {
+    "fast": {
       "title": "Higher Priority",
-      "description": "Will go through even if there is a sudden activity increase"     
+      "description": "Will go through even if there is a sudden activity increase"
     },
-    "fastest" : {
+    "fastest": {
       "title": "Highest Priority",
       "description": "Will go through, fast, in 99.99% of the cases"
     }
@@ -116,6 +118,4 @@
     "max_fee": "Max Fee Per Gas",
     "max_priority": "Max Priority Fee Per Gas"
   }
-
-  
 }

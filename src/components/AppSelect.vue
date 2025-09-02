@@ -94,12 +94,20 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { computed, watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
 
+const emit = defineEmits<{
+  (e: 'toggleSelect'): void
+}>()
+
 const props = defineProps({
   /**
    * @placeholder The placeholder text of the button field. Also used as the aria label.
    */
   placeholder: {
     type: String,
+  },
+  emitOnly: {
+    type: Boolean,
+    default: false,
   },
   /**
    * @options The options for the select dropdown.
@@ -154,6 +162,10 @@ const showSelected = computed(() => {
  * Toggles the open state of the select dropdown.
  */
 const toggleSelect = () => {
+  if (props.emitOnly) {
+    emit('toggleSelect')
+    return
+  }
   openSelect.value = !openSelect.value
   if (openSelect.value) {
     targetValue.value = target.value

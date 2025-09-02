@@ -1,4 +1,9 @@
-import { ROUTES_ACCESS, KEYSTORE_ALIAS, LEDGER_ALIAS, TREZOR_ALIAS } from './routeNames'
+import {
+  ROUTES_ACCESS,
+  KEYSTORE_ALIAS,
+  LEDGER_ALIAS,
+  TREZOR_ALIAS,
+} from './routeNames'
 import { beforeAccessEnter } from './helpers/helpersAccess'
 const ViewAccessWallet = () => import('@view-default/ViewAccessWallet.vue')
 const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')

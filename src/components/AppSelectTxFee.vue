@@ -39,7 +39,7 @@
         </div>
       </div>
     </button>
-    <div class="min-h-6 mt-1">
+    <div :class="{ 'min-h-6 mt-1': gasFeeError && gasFeeError !== '' }">
       <transition name="fade" mode="out-in">
         <div
           v-if="isWalletConnected && gasFeeError && gasFeeError !== ''"
@@ -56,7 +56,6 @@
               href="https://ccswap.myetherwallet.com/"
               target="_blank"
               class="text-primary cursor-pointer underline underline-offset-2"
-              @click="openFeeModal"
               >{{
                 $t('common.buy_more', {
                   symbol: selectedChain?.currencyName || 'ETH',
@@ -254,7 +253,10 @@ onFetchResponse(() => {
       BigInt(data.value.fees[gasPriceType.value].nativeValue || '0') +
       BigInt(txData.value.value)
 
-    if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
+    if (
+      BigInt(totalBalanceNeeded) > BigInt(balanceWei.value) &&
+      isWalletConnected.value
+    ) {
       gasFeeError.value = NOT_ENOUGH_BALANCE
     }
   } else {

@@ -157,7 +157,7 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('swap'),
+      title: t('common.swap'),
       routeName: ROUTES_MAIN.SWAP.NAME,
       iconID: ICON_IDS.SWAP,
     },

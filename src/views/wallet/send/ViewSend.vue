@@ -24,14 +24,6 @@
           label="Send Tabs"
           class="w-full max-w-[478px] mx-auto"
         ></app-tabs>
-        <router-link
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          class="w-full max-w-[478px]"
-        >
-          <app-base-button v-if="!isWalletConnected" class="w-full capitalize">
-            {{ $t('common.connect_wallet') }}</app-base-button
-          >
-        </router-link>
         <app-need-help
           :title="$t('send.need-help')"
           help-link="https://help.myetherwallet.com/en/article/what-is-gas"
@@ -58,9 +50,8 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ROUTES_SEND, ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_SEND } from '@/router/routeNames'
 import AppTabs from '@/components/tabs/AppTabs.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SideBalance from '@/modules/side_balance/SideBalance.vue'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'

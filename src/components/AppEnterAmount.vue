@@ -51,7 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { type TokenBalance } from '@/mew_api/types'
+import { useWalletStore } from '@/stores/walletStore'
 import { defineProps, watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
@@ -90,27 +91,29 @@ const error = defineModel('error', {
 })
 
 const tokenBalanceRaw = computed(() => {
-  if (isLoading.value || !selectedToken.value) {
-    return null
-  }
-  return walletStore.getTokenBalance(selectedToken.value || MAIN_TOKEN_CONTRACT)
+  if (isLoading.value || !selectedToken.value) return null
+  return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
 })
 
 const balanceFiatOrError = computed(() => {
-  const _balance = BigNumber(
-    BigNumber(tokenBalanceRaw.value?.price || 0).times(
-      BigNumber(amount.value || 0),
-    ),
-  )
+  const _balance = isWalletConnected.value
+    ? BigNumber(
+        BigNumber(tokenBalanceRaw.value?.price || 0).times(
+          BigNumber(amount.value || 0),
+        ),
+      )
+    : BigNumber(0)
   return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
-  return formatFloatingPointValue(tokenBalanceRaw.value?.balance || 0).value
+  return tokenBalanceRaw.value?.balance
+    ? formatFloatingPointValue(tokenBalanceRaw.value.balance).value
+    : '0'
 })
 
 watch(
-  () => [amount.value, selectedToken.value],
+  () => amount.value,
   useDebounceFn(() => {
     if (isLoading.value) return
     props.validateInput()

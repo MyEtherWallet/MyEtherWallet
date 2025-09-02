@@ -84,6 +84,12 @@ export const useAddressInput = (
     },
   )
 
+  const clearAddressInput = () => {
+    adrInput.value = ''
+    adrError.value = undefined
+    resolvedAddress.value = undefined
+  }
+
   return {
     adrInput,
     adrError,
@@ -91,5 +97,6 @@ export const useAddressInput = (
     isValidAdrInput,
     onInput,
     validateAddressInput,
+    clearAddressInput
   }
 }

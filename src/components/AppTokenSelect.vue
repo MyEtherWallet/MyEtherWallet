@@ -153,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
 import {
@@ -178,6 +178,13 @@ import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 
+const props = defineProps({
+  externalLoading: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const { t } = useI18n()
 
 const store = useWalletStore()
@@ -191,7 +198,7 @@ const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
 
 const isLoading = computed(() => {
-  return isLoadingBalances.value || !isLoaded.value
+  return props.externalLoading || isLoadingBalances.value || !isLoaded.value
 })
 
 const tokens = computed<TokenBalance[]>(() => {
