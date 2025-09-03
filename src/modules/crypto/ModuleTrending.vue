@@ -9,7 +9,11 @@
         class="bg-grey-5 w-[115px] h-[100px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
       >
         <div class="flex gap-1 items-center justify-between">
-          <img :src="token.logoUrl" class="w-6 h-6 rounded-full" alt="" />
+          <img
+            :src="token.logoUrl as string"
+            class="w-6 h-6 rounded-full"
+            alt=""
+          />
           <span
             class="text-s-18"
             :class="{

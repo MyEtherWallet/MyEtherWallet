@@ -93,10 +93,9 @@ paths:
     get:
       operationId: GetWebTokensTable
       parameters:
-        - $ref: '#/components/parameters/QueryChainName'
-        # - $ref: '#/components/parameters/ChainNames'
+        - $ref: '#/components/parameters/AddressChain'
+        - $ref: '#/components/parameters/FilterChain'
         - $ref: '#/components/parameters/Category'
-        # - $ref: '#/components/parameters/Categories'
         - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
@@ -104,6 +103,16 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/GetWebTokensTableSuccess'
+
+  /v1/web/tokens-watchlist:
+    get:
+      operationId: GetWebTokensWatchlist
+      parameters:
+        - $ref: '#/components/parameters/AddressChain'
+        - $ref: '#/components/parameters/CoinIds'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTokensWatchlistSuccess'
 
   /v1/web/top-gainers:
     get:
@@ -432,6 +441,11 @@ paths:
 
 components:
   parameters:
+    CoinIds:
+      name: coins
+      in: query
+      schema:
+        type: string
     ChainId:
       name: chainId
       in: path
@@ -442,8 +456,13 @@ components:
       in: path
       schema:
         type: string
-    QueryChainName:
-      name: chain
+    AddressChain:
+      name: addressChain
+      in: query
+      schema:
+        type: string
+    FilterChain:
+      name: filterChain
       in: query
       schema:
         type: string
@@ -452,11 +471,6 @@ components:
       in: query
       schema:
         type: string
-    # Categories:
-    #   name: categories
-    #   in: query
-    #   schema:
-    #     type: string
     Search:
       name: search
       in: query
@@ -677,11 +691,17 @@ components:
           schema:
             $ref: '#/components/schemas/GetWebTokensTableResponse'
 
+    GetWebTokensWatchlistSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebTokensWatchlistResponse'
+
     GetWebTopGainersSuccess:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetWebTopGainersSuccessResponse'
+            $ref: '#/components/schemas/GetWebTopGainersResponse'
 
     GetCoinGeckoChainPreviewSuccess:
       content:
@@ -1047,8 +1067,12 @@ components:
         - NAME_DESC
         - PRICE_ASC
         - PRICE_DESC
+        - PRICE_CHANGE_PERCENTAGE_1H_ASC
+        - PRICE_CHANGE_PERCENTAGE_1H_DESC
         - PRICE_CHANGE_PERCENTAGE_24H_ASC
         - PRICE_CHANGE_PERCENTAGE_24H_DESC
+        - PRICE_CHANGE_PERCENTAGE_7D_ASC
+        - PRICE_CHANGE_PERCENTAGE_7D_DESC
         - MARKET_CAP_ASC
         - MARKET_CAP_DESC
 
@@ -1394,6 +1418,7 @@ components:
               - name
               - symbol
               - priceChangePercentage24h
+              - logoUrl
             properties:
               coinId:
                 type: string
@@ -1404,7 +1429,7 @@ components:
               priceChangePercentage24h:
                 type: number
               logoUrl:
-                type: string
+                type: [string, 'null']
 
     GetWebTokensTableResponse:
       type: object
@@ -1413,7 +1438,6 @@ components:
         - pages
         - perPage
         - total
-        - chain
         - items
       properties:
         page:
@@ -1424,8 +1448,6 @@ components:
           type: number
         total:
           type: number
-        chain:
-          type: string
         items:
           type: array
           items:
@@ -1434,25 +1456,81 @@ components:
               - coinId
               - name
               - price
+              - priceChangePercentage1h
               - priceChangePercentage24h
+              - priceChangePercentage7d
               - marketCap
+              - address
+              - logoUrl
+              - sparklineIn7d
             properties:
               coinId:
                 type: string
               name:
                 type: string
               price:
-                type: number
+                type: [number, 'null']
+              priceChangePercentage1h:
+                type: [number, 'null']
               priceChangePercentage24h:
-                type: number
+                type: [number, 'null']
+              priceChangePercentage7d:
+                type: [number, 'null']
               marketCap:
-                type: number
+                type: [number, 'null']
               address:
-                type: string
+                type: [string, 'null']
               logoUrl:
-                type: string
+                type: [string, 'null']
+              sparklineIn7d:
+                oneOf:
+                  - type: 'null'
+                  - type: array
+                    items:
+                      type: number
 
-    GetWebTopGainersSuccessResponse:
+    GetWebTokensWatchlistResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - coinId
+          - name
+          - price
+          - priceChangePercentage1h
+          - priceChangePercentage24h
+          - priceChangePercentage7d
+          - marketCap
+          - address
+          - logoUrl
+          - sparklineIn7d
+        properties:
+          coinId:
+            type: string
+          name:
+            type: string
+          price:
+            type: [number, 'null']
+          priceChangePercentage1h:
+            type: [number, 'null']
+          priceChangePercentage24h:
+            type: [number, 'null']
+          priceChangePercentage7d:
+            type: [number, 'null']
+          marketCap:
+            type: [number, 'null']
+          address:
+            type: [string, 'null']
+          logoUrl:
+            type: [string, 'null']
+          sparklineIn7d:
+            oneOf:
+              - type: 'null'
+              - type: array
+                items:
+                  type: number
+
+    GetWebTopGainersResponse:
       type: object
       required:
         - page
@@ -1479,6 +1557,7 @@ components:
               - symbol
               - price
               - priceChangePercentage24h
+              - logoUrl
             properties:
               coinId:
                 type: string
@@ -1491,7 +1570,7 @@ components:
               priceChangePercentage24h:
                 type: number
               logoUrl:
-                type: string
+                type: [string, 'null']
 
     # CoinGecko
 
@@ -1576,9 +1655,9 @@ components:
             type: number
           priceChangePercentage24hInCurrency:
             type: number
-          priceChangePercentage30dInCurrency:
-            type: number
           priceChangePercentage7dInCurrency:
+            type: number
+          priceChangePercentage30dInCurrency:
             type: number
           sparklineIn7d:
             type: array

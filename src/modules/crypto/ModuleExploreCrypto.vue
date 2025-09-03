@@ -84,7 +84,7 @@
             <td class="px-1 py-2">
               <div class="flex">
                 <img
-                  :src="token.logoUrl"
+                  :src="token.logoUrl as string"
                   alt="favorite"
                   class="inline-block h-5 w-5 mr-1 rounded-full"
                 />
@@ -97,12 +97,14 @@
             <td
               class="px-1 py-2"
               :class="[
-                parsePercent(token.priceChangePercentage24h).includes('-')
+                parsePercent(token.priceChangePercentage24h as number).includes(
+                  '-',
+                )
                   ? 'text-error'
                   : 'text-success',
               ]"
             >
-              {{ parsePercent(token.priceChangePercentage24h) }}
+              {{ parsePercent(token.priceChangePercentage24h as number) }}
             </td>
             <td class="px-1 py-2">{{ token.marketCap }}</td>
             <td class="px-1 py-2 text-center">
@@ -201,7 +203,11 @@ import {
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import type { Chain, GetWebTokensTableResponse } from '@/mew_api/types'
+import type {
+  Chain,
+  GetWebTokensTableResponse,
+  GetWebTopGainersResponse,
+} from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
   formatIntegerValue,
@@ -236,9 +242,10 @@ const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
 
+const watchListStore = useWatchlistStore()
 const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  useWatchlistStore()
-
+  watchListStore
+const { watchListedTokens } = storeToRefs(watchListStore)
 const previousPage = () => {
   if (page.value > 1) {
     page.value--
@@ -280,12 +287,12 @@ const setSelectedChain = (chain: Chain) => {
 
 const cryptoFilterOptions = ref([
   { name: 'All', id: 'all' },
-  { name: 'DeFi', id: 'defi' },
+  { name: 'DeFi', id: 'defi-index' },
   { name: 'Top Gainers', id: 'topGainers' },
   { name: 'Top Losers', id: 'topLosers' },
-  { name: 'MEME', id: 'meme' },
-  { name: 'StableCoin', id: 'stable' },
-  { name: 'TikTok', id: 'tiktok' },
+  { name: 'MEME', id: 'meme-token' },
+  { name: 'StableCoin', id: 'stablecoins' },
+  { name: 'TikTok', id: 'tiktok-meme' },
   { name: 'Watchlist', id: 'watchlist' },
 ])
 
@@ -296,10 +303,23 @@ const totalPages = ref<number>(1)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const fetchUrl = computed(() => {
+const fetchWatchListUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
+  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
+  return `${baseUrl}?addressChain=${defaultChain}&coins=${watchListedTokens.value}`
+})
+
+const fetchGainersUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/top-gainers'
+  const direction =
+    selectedCryptoFilter.value.id !== 'topGainers' ? 'ASC' : 'DESC'
+  return `${baseUrl}?page=${page.value}&perPage=${shownItems.value}&sort=${direction}`
+})
+
+const fetchTableUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
   const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
-  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}`
+  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.id !== 'all' ? '&category=' + selectedCryptoFilter.value.id : ''}`
 })
 
 const ranker = (idx: number): number => {
@@ -310,15 +330,41 @@ const ranker = (idx: number): number => {
   }
 }
 
-const { data, onFetchResponse, execute, onFetchError } =
-  useMEWFetch<GetWebTokensTableResponse>(fetchUrl, {
-    immediate: false,
-  })
-    .get()
-    .json()
+const {
+  data: fetchGainersData,
+  onFetchResponse: onFetchGainersResponse,
+  execute: fetchGainers,
+  onFetchError: onFetchGainersError,
+} = useMEWFetch<GetWebTokensTableResponse>(fetchGainersUrl, {
+  immediate: false,
+})
+  .get()
+  .json()
+
+const {
+  data: fetchWatchlistData,
+  onFetchResponse: onFetchWatchlistResponse,
+  execute: fetchWatchlist,
+  onFetchError: onFetchWatchlistError,
+} = useMEWFetch<GetWebTokensTableResponse>(fetchWatchListUrl, {
+  immediate: false,
+})
+  .get()
+  .json()
+
+const {
+  data: fetchTokenData,
+  onFetchResponse: onFetchTokenTableResponse,
+  execute: fetchTokenTable,
+  onFetchError: onFetchTokenTableError,
+} = useMEWFetch<GetWebTokensTableResponse>(fetchTableUrl, {
+  immediate: false,
+})
+  .get()
+  .json()
 
 const fetchTokens = useDebounceFn(() => {
-  execute()
+  fetchTokenTable()
   tableContainer.value?.scrollTo(0, 0)
 }, 500)
 
@@ -331,11 +377,11 @@ onMounted(() => {
   fetchTokens()
 })
 
-onFetchResponse(() => {
-  totalTokenCount.value = data.value?.total ?? 0
-  totalPages.value = data.value?.pages ?? 0
-  if (data.value && data.value.items) {
-    tokens.value = data.value.items.map(
+onFetchWatchlistResponse(() => {
+  totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
+  totalPages.value = 1
+  if (fetchWatchlistData.value) {
+    tokens.value = fetchWatchlistData.value.map(
       (item: GetWebTokensTableResponse['items'][number]) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
@@ -344,6 +390,59 @@ onFetchResponse(() => {
         return {
           ...item,
           logoUrl: logo,
+          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+          price: new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 2,
+          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+        }
+      },
+    )
+  }
+  isLoading.value = false
+})
+onFetchGainersResponse(() => {
+  totalTokenCount.value = fetchGainersData.value?.total ?? 0
+  totalPages.value = fetchGainersData.value?.pages ?? 0
+  if (fetchGainersData.value && fetchGainersData.value.items) {
+    tokens.value = fetchGainersData.value.items.map(
+      (item: GetWebTopGainersResponse['items'][number]) => {
+        const logo =
+          item.logoUrl && isValidUrl(item.logoUrl)
+            ? item.logoUrl
+            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+        return {
+          ...item,
+          logoUrl: logo,
+          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+          price: new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 2,
+          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          // TODO: add marketcap once api returns it
+        }
+      },
+    )
+  }
+  isLoading.value = false
+})
+onFetchTokenTableResponse(() => {
+  totalTokenCount.value = fetchTokenData.value?.total ?? 0
+  totalPages.value = fetchTokenData.value?.pages ?? 0
+  if (fetchTokenData.value && fetchTokenData.value.items) {
+    tokens.value = fetchTokenData.value.items.map(
+      (item: GetWebTokensTableResponse['items'][number]) => {
+        const logo =
+          item.logoUrl && isValidUrl(item.logoUrl)
+            ? item.logoUrl
+            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+        return {
+          ...item,
+          logoUrl: logo,
+          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
           price: new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -357,7 +456,19 @@ onFetchResponse(() => {
   isLoading.value = false
 })
 
-onFetchError(err => {
+onFetchGainersError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+onFetchWatchlistError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+onFetchTokenTableError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
     text: err,
@@ -380,7 +491,17 @@ watch(
   ],
   () => {
     isLoading.value = true
-    fetchTokens()
+    tokens.value = []
+    if (
+      selectedCryptoFilter.value.id === 'topGainers' ||
+      selectedCryptoFilter.value.id === 'topLosers'
+    ) {
+      fetchGainers()
+    } else if (selectedCryptoFilter.value.id === 'watchlist') {
+      fetchWatchlist()
+    } else {
+      fetchTokens()
+    }
   },
   {
     deep: true,

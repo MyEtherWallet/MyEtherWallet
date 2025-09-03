@@ -13,7 +13,7 @@
         class="rounded-xl border border-2 px-2 mb-2 py-1 bg-white border-grey-light shadow-md relative flex justify-between items-center"
       >
         <div class="flex items-center gap-2">
-          <img :src="m.logoUrl" class="w-6 h-6 rounded-full" alt="" />
+          <img :src="m.logoUrl as string" class="w-6 h-6 rounded-full" alt="" />
           <div>
             <div class="font-semibold text-s-14">{{ m.symbol }}</div>
             <div
@@ -63,7 +63,7 @@ import { storeToRefs } from 'pinia'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
-import type { GetWebTopGainersSuccessResponse } from '@/mew_api/types'
+import type { GetWebTopGainersResponse } from '@/mew_api/types'
 import isValidUrl from '@/utils/isValidUrl'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 
@@ -80,9 +80,7 @@ const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
 const toastStore = useToastStore()
 const { useMEWFetch } = useFetchMewApi()
 
-const topGainers: Ref<GetWebTopGainersSuccessResponse['items'][number][]> = ref(
-  [],
-)
+const topGainers: Ref<GetWebTopGainersResponse['items'][number][]> = ref([])
 const intervalHolder = ref<ReturnType<typeof setInterval> | number>(0)
 const isLoading = ref(true)
 const fetchUrl = computed(() => {
@@ -124,7 +122,7 @@ const timeAgo = computed(() => {
 })
 
 const { data, onFetchResponse, execute, onFetchError } =
-  useMEWFetch<GetWebTopGainersSuccessResponse>(fetchUrl, {
+  useMEWFetch<GetWebTopGainersResponse>(fetchUrl, {
     immediate: false,
   })
     .get()
@@ -138,7 +136,7 @@ const fetchTokens = () => {
 onFetchResponse(() => {
   if (data.value && data.value.items) {
     topGainers.value = data.value.items.map(
-      (item: GetWebTopGainersSuccessResponse['items'][number]) => {
+      (item: GetWebTopGainersResponse['items'][number]) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
