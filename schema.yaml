@@ -1075,6 +1075,8 @@ components:
         - PRICE_CHANGE_PERCENTAGE_7D_DESC
         - MARKET_CAP_ASC
         - MARKET_CAP_DESC
+        - TOTAL_VOLUME_ASC
+        - TOTAL_VOLUME_DESC
 
     # Composite types
     BtcOutputInput:
@@ -1459,6 +1461,7 @@ components:
               - priceChangePercentage1h
               - priceChangePercentage24h
               - priceChangePercentage7d
+              - totalVolume
               - marketCap
               - address
               - logoUrl
@@ -1475,6 +1478,8 @@ components:
               priceChangePercentage24h:
                 type: [number, 'null']
               priceChangePercentage7d:
+                type: [number, 'null']
+              totalVolume:
                 type: [number, 'null']
               marketCap:
                 type: [number, 'null']
@@ -1500,6 +1505,7 @@ components:
           - priceChangePercentage1h
           - priceChangePercentage24h
           - priceChangePercentage7d
+          - totalVolume
           - marketCap
           - address
           - logoUrl
@@ -1516,6 +1522,8 @@ components:
           priceChangePercentage24h:
             type: [number, 'null']
           priceChangePercentage7d:
+            type: [number, 'null']
+          totalVolume:
             type: [number, 'null']
           marketCap:
             type: [number, 'null']

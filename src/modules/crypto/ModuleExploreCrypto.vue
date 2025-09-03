@@ -52,7 +52,7 @@
                 />
               </div>
             </th>
-            <th class="cursor-pointer px-1 py-2 w-[100px]">
+            <th class="cursor-pointer px-1 py-2 w-[120px]">
               <div
                 class="flex items-center gap-1 justify-end"
                 @click="setHeaderSort('price')"
@@ -71,23 +71,27 @@
             <th class="px-1 py-2 text-right w-[100px]">1 hr</th>
             <th class="px-1 py-2 text-right w-[100px]">24 hr</th>
             <th class="px-1 py-2 text-right w-[100px]">7 days</th>
-            <th class="cursor-pointer px-1 py-2 w-[100px]">
+            <th class="cursor-pointer px-1 py-2 w-[130px]">
               <div
                 class="flex items-center gap-1 justify-end"
-                @click="setHeaderSort('24h')"
+                @click="setHeaderSort('TOTAL_VOLUME')"
               >
                 24h Volume
                 <chevron-up-icon
                   class="w-3 h-3"
-                  v-if="headerSort === '24h' && tableDirection === 'asc'"
+                  v-if="
+                    headerSort === 'TOTAL_VOLUME' && tableDirection === 'asc'
+                  "
                 />
                 <chevron-down-icon
                   class="w-3 h-3"
-                  v-if="headerSort === '24h' && tableDirection === 'desc'"
+                  v-if="
+                    headerSort === 'TOTAL_VOLUME' && tableDirection === 'desc'
+                  "
                 />
               </div>
             </th>
-            <th class="cursor-pointer px-1 py-2 text-right w-[120px]">
+            <th class="cursor-pointer px-1 py-2 text-right w-[130px]">
               <div
                 class="flex items-center gap-1 justify-end"
                 @click="setHeaderSort('MARKET_CAP')"
@@ -105,7 +109,7 @@
                 />
               </div>
             </th>
-            <th class="px-1 py-2 w-[100px] text-center">Last 7 days</th>
+            <th class="px-1 py-2 w-[120px] text-center">Last 7 days</th>
             <th class="px-1 py-2 w-[175px] text-center">Action</th>
           </tr>
         </thead>
@@ -145,41 +149,36 @@
             <td
               class="px-1 py-2 text-right"
               :class="[
-                parsePercent(token.priceChangePercentage1h as number).includes(
-                  '-',
-                )
+                parsePercent(token.priceChangePercentage1h).includes('-')
                   ? 'text-error'
                   : 'text-success',
               ]"
             >
-              {{ parsePercent(token.priceChangePercentage1h as number) }}
+              {{ parsePercent(token.priceChangePercentage1h) }}
             </td>
             <td
               class="px-1 py-2 text-right"
               :class="[
-                parsePercent(token.priceChangePercentage24h as number).includes(
-                  '-',
-                )
+                parsePercent(token.priceChangePercentage24h).includes('-')
                   ? 'text-error'
                   : 'text-success',
               ]"
             >
-              {{ parsePercent(token.priceChangePercentage24h as number) }}
+              {{ parsePercent(token.priceChangePercentage24h) }}
             </td>
             <td
               class="px-1 py-2 text-right"
               :class="[
-                parsePercent(token.priceChangePercentage7d as number).includes(
-                  '-',
-                )
+                parsePercent(token.priceChangePercentage7d).includes('-')
                   ? 'text-error'
                   : 'text-success',
               ]"
             >
-              {{ parsePercent(token.priceChangePercentage7d as number) }}
+              {{ parsePercent(token.priceChangePercentage7d) }}
             </td>
-            <!-- <td class="px-1 py-2 text-right">{{ token.totalVolume }}</td> -->
-            <td class="px-1 py-2 text-right">0</td>
+            <td class="px-1 py-2 text-right">
+              ${{ formatFiatValue(token.totalVolume ?? 0).value }}
+            </td>
             <td class="px-1 py-2 text-right">${{ token.marketCap ?? 0 }}</td>
             <td class="px-1 py-2 text-right">
               <div v-if="!token.sparklineIn7d"></div>
@@ -382,8 +381,8 @@ const cryptoFilterOptions = ref([
   { name: 'DeFi', id: 'defi-index' },
   { name: 'Top Gainers', id: 'topGainers' },
   { name: 'Top Losers', id: 'topLosers' },
+  { name: 'Stablecoins', id: 'stablecoins' },
   { name: 'MEME', id: 'meme-token' },
-  { name: 'StableCoin', id: 'stablecoins' },
   { name: 'TikTok', id: 'tiktok-meme' },
   { name: 'Watchlist', id: 'watchlist' },
 ])
@@ -402,10 +401,11 @@ const fetchWatchListUrl = computed(() => {
 })
 
 const fetchGainersUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/top-gainers'
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
   const direction =
     selectedCryptoFilter.value.id !== 'topGainers' ? 'ASC' : 'DESC'
-  return `${baseUrl}?page=${page.value}&perPage=${shownItems.value}&sort=${direction}`
+  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
 })
 
 const fetchTableUrl = computed(() => {
@@ -562,7 +562,8 @@ onFetchTokenTableError(err => {
   })
 })
 
-const parsePercent = (val: number): string => {
+const parsePercent = (val: number | null): string => {
+  if (!val) return ''
   return formatPercentageValue(val ?? 0).value
 }
 

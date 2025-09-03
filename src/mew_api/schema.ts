@@ -666,7 +666,7 @@ export interface components {
         /** @enum {string} */
         SortDirection: "ASC" | "DESC";
         /** @enum {string} */
-        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC";
+        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
             amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
@@ -779,6 +779,7 @@ export interface components {
                 priceChangePercentage1h: number | null;
                 priceChangePercentage24h: number | null;
                 priceChangePercentage7d: number | null;
+                totalVolume: number | null;
                 marketCap: number | null;
                 address: string | null;
                 logoUrl: string | null;
@@ -792,6 +793,7 @@ export interface components {
             priceChangePercentage1h: number | null;
             priceChangePercentage24h: number | null;
             priceChangePercentage7d: number | null;
+            totalVolume: number | null;
             marketCap: number | null;
             address: string | null;
             logoUrl: string | null;
