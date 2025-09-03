@@ -1,12 +1,14 @@
 <template>
-  <div ref="appBodyRef" class="h-screen w-full static">
+  <div class="h-screen w-full static">
     <the-wallet-header />
     <!-- Background -->
     <teleport to="#app">
       <transition
-        enter-active-class="transform ease-out duration-300 transition opacity-0 "
+        enter-from-class="opacity-0"
+        enter-active-class="transform ease-out duration-300 transition"
         enter-to-class="opacity-100"
-        leave-active-class="opacity-0"
+        leave-from-class="opacity-100"
+        leave-active-class="ease-in duration-100 transition"
         leave-to-class="opacity-0"
         appear
       >

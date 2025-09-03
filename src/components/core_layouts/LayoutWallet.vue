@@ -10,7 +10,7 @@
     <div
       :class="[
         isOpenSideMenu ? 'p-4' : 'p-[6px]',
-        'bg-white min-h-[calc(100vh-69px)] sm:h-[calc(100vh-200px)]  shadow-[0pxx_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
+        'bg-white min-h-[calc(100vh-69px)] sm:h-[calc(100vh-200px)]  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
       ]"
     >
       <app-btn-icon
@@ -45,7 +45,7 @@
 
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
-          @click="openDeposit"
+          @click="openDepositDialog = true"
         >
           <QrCodeIcon
             :class="[
@@ -69,7 +69,6 @@
             isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
-          @click.stop.prevent="closeDialog"
         >
           <icon-buy
             :class="[
@@ -94,7 +93,6 @@
 
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
-          @click.stop.prevent="closeDialog"
         >
           <icon-send
             :class="[
@@ -118,7 +116,6 @@
             isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
-          @click.stop.prevent="closeDialog"
         >
           <icon-swap
             :class="[
@@ -145,6 +142,7 @@
         </div>
       </transition>
     </div>
+    <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
   </div>
 </template>
 <script setup lang="ts">
@@ -165,6 +163,7 @@ import {
 } from '@heroicons/vue/24/outline'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import AppBtnIcon from '../AppBtnIcon.vue'
+import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
@@ -173,15 +172,6 @@ const breakpoints = useAppBreakpoints()
 const { isDesktopAndUp, isXsAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
-
-const openDialog = ref(false)
-const closeDialog = () => {
-  openDialog.value = false
-}
-
-const openDeposit = () => {
-  openDialog.value = true
-}
 
 onMounted(() => {
   if (isDesktopAndUp.value) {
@@ -205,4 +195,6 @@ const openPanel = (panel: number) => {
   }
   walletMenu.setWalletPanel(panel)
 }
+
+const openDepositDialog = ref(false) //deposit dialog
 </script>
