@@ -2,28 +2,37 @@
   <div ref="appBodyRef" class="h-screen w-full static">
     <the-wallet-header />
     <div
-      :class="[backgroundClass, 'relative flex justify-center overflow-hidden']"
+      :class="[
+        backgroundClass,
+
+        'relative flex justify-between h-[calc(100vh-68px)] sm:h-[calc(100vh-76px)] overflow-hidden',
+      ]"
     >
-      <main
-        :class="[
-          ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto pr-[64px]  lg:pr-[400px]',
-        ]"
-      >
-        <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10">
-          <router-view />
-        </div>
-        <MewFooter
-          :use-i18n="useI18n"
-          :amplitude="analytics.amplitude"
-          :link-component="RouterLink"
-          :package-version="packageVersion"
-          :user-consent="popupStore.consent"
-          :curr-project="CURR_PROJECT"
-          @update:consent="handleSetConsent"
-        />
-      </main>
+      <div :class="['relative flex justify-center overflow-hidden mx-auto ']">
+        <main
+          :class="[
+            ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0',
+          ]"
+        >
+          <div
+            class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10"
+          >
+            <router-view />
+          </div>
+          <MewFooter
+            :use-i18n="useI18n"
+            :amplitude="analytics.amplitude"
+            :link-component="RouterLink"
+            :package-version="packageVersion"
+            :user-consent="popupStore.consent"
+            :curr-project="CURR_PROJECT"
+            @update:consent="handleSetConsent"
+            class="mr-[64px] lg:mr-0'"
+          />
+        </main>
+      </div>
+      <layout-wallet />
     </div>
-    <layout-wallet />
   </div>
 </template>
 
