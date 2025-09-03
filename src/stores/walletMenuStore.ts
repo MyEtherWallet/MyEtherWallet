@@ -1,6 +1,7 @@
 import { ref } from 'vue'
+import { defineStore } from 'pinia'
 
-export const useWalletMenu = () => {
+export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const isOpenSideMenu = ref(false)
   const walletPanel = ref(0)
 
@@ -18,4 +19,4 @@ export const useWalletMenu = () => {
     walletPanel,
     setWalletPanel,
   }
-}
+})

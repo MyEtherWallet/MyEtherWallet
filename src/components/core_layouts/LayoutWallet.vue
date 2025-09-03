@@ -15,7 +15,7 @@
     >
       <app-btn-icon
         label="expand"
-        @click="setIsOpenSideMenu(!isOpenSideMenu)"
+        @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
         :class="
           isXsAndUp || !isOpenSideMenu ? 'absolute top-2 -left-8 z-10' : ''
         "
@@ -152,7 +152,7 @@ import { storeToRefs } from 'pinia'
 import { ref, onMounted, watch } from 'vue'
 import AppWalletCard from '@/components/AppWalletCard.vue'
 import { useWalletStore } from '@/stores/walletStore'
-import { useWalletMenu } from '@/composables/useWalletMenu'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
@@ -166,9 +166,8 @@ import {
 import { ROUTES_MAIN } from '@/router/routeNames'
 import AppBtnIcon from '../AppBtnIcon.vue'
 
-const walletMenu = useWalletMenu()
-const { isOpenSideMenu, walletPanel, setIsOpenSideMenu, setWalletPanel } =
-  walletMenu
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
 const { isDesktopAndUp, isXsAndUp } = breakpoints
@@ -186,24 +185,24 @@ const openDeposit = () => {
 
 onMounted(() => {
   if (isDesktopAndUp.value) {
-    setIsOpenSideMenu(true)
+    walletMenu.setIsOpenSideMenu(true)
   } else {
-    setIsOpenSideMenu(false)
+    walletMenu.setIsOpenSideMenu(false)
   }
 })
 
 watch(isDesktopAndUp, newVal => {
   if (newVal) {
-    setIsOpenSideMenu(true)
+    walletMenu.setIsOpenSideMenu(true)
   } else {
-    setIsOpenSideMenu(false)
+    walletMenu.setIsOpenSideMenu(false)
   }
 })
 
 const openPanel = (panel: number) => {
   if (!isOpenSideMenu.value) {
-    setIsOpenSideMenu(true)
+    walletMenu.setIsOpenSideMenu(true)
   }
-  setWalletPanel(panel)
+  walletMenu.setWalletPanel(panel)
 }
 </script>

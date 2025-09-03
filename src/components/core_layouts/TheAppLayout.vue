@@ -1,6 +1,23 @@
 <template>
   <div ref="appBodyRef" class="h-screen w-full static">
     <the-wallet-header />
+    <!-- Background -->
+    <teleport to="#app">
+      <transition
+        enter-active-class="transform ease-out duration-300 transition opacity-0 "
+        enter-to-class="opacity-100"
+        leave-active-class="opacity-0"
+        leave-to-class="opacity-0"
+        appear
+      >
+        <div
+          v-if="isOpenSideMenu"
+          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden lg:hidden"
+          @click="walletMenu.setIsOpenSideMenu(false)"
+          aria-hidden
+        />
+      </transition>
+    </teleport>
     <div
       :class="[
         backgroundClass,
@@ -27,7 +44,6 @@
             :user-consent="popupStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
-            class="mr-[64px] lg:mr-0'"
           />
         </main>
       </div>
@@ -47,9 +63,13 @@ import { usePopupStore } from '@/stores/popup'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS } from '@/router/routeNames'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { storeToRefs } from 'pinia'
 
 const popupStore = usePopupStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 //TODO: make a new project for MEW  PORTOFLIO APP
 const CURR_PROJECT = 'MEW_BLOG'
