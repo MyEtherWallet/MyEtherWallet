@@ -36,7 +36,6 @@
         <thead class="sticky top-0 bg-white">
           <tr class="text-left">
             <th class="px-1 py-2 w-6"></th>
-            <th class="px-1 py-2 w-12">#</th>
             <th class="cursor-pointer px-1 py-2">
               <div
                 class="flex items-center gap-1"
@@ -106,12 +105,13 @@
                 />
               </div>
             </th>
+            <th class="px-1 py-2 w-[100px] text-center">Last 7 days</th>
             <th class="px-1 py-2 w-[175px] text-center">Action</th>
           </tr>
         </thead>
         <tbody v-if="!isLoading">
           <tr
-            v-for="(token, index) in tokens"
+            v-for="token in tokens"
             :key="token.name + token.marketCap"
             class="h-14"
           >
@@ -128,7 +128,6 @@
                 v-else
               />
             </td>
-            <td class="px-1 py-2">{{ ranker(index) }}.</td>
             <td class="px-1 py-2 w-[150px]">
               <div class="flex items-center">
                 <img
@@ -181,7 +180,15 @@
             </td>
             <!-- <td class="px-1 py-2 text-right">{{ token.totalVolume }}</td> -->
             <td class="px-1 py-2 text-right">0</td>
-            <td class="px-1 py-2 text-right">{{ token.marketCap }}</td>
+            <td class="px-1 py-2 text-right">${{ token.marketCap ?? 0 }}</td>
+            <td class="px-1 py-2 text-right">
+              <div v-if="!token.sparklineIn7d"></div>
+              <table-sparkline
+                v-else
+                :points="token.sparklineIn7d"
+                :width="100"
+              />
+            </td>
             <td class="px-1 py-2 text-center">
               <app-base-button size="small" class="mr-1" @click="buyBtn"
                 >Buy</app-base-button
@@ -201,6 +208,9 @@
                 <div class="size-8 rounded-full bg-grey-8"></div>
                 <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
               </div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
             </td>
             <td class="px-1 py-2">
               <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
@@ -287,6 +297,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/solid'
+import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
@@ -403,14 +414,6 @@ const fetchTableUrl = computed(() => {
   const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
   return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.id !== 'all' ? '&category=' + selectedCryptoFilter.value.id : ''}`
 })
-
-const ranker = (idx: number): number => {
-  if (tableDirection.value === 'desc') {
-    return idx + 1 + (page.value - 1) * shownItems.value
-  } else {
-    return totalTokenCount.value - idx - (page.value - 1) * shownItems.value
-  }
-}
 
 const {
   data: fetchGainersData,
