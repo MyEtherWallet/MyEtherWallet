@@ -1,8 +1,8 @@
 <template>
   <!-- Top: Trending -->
   <div>
-    <h2 class="text-s-20 mb-3">Trending Tokens</h2>
-    <div class="flex justify-start gap-3 flex-wrap" v-if="!isLoading">
+    <h2 class="text-s-32 mb-1">Trending Tokens</h2>
+    <div class="flex justify-start gap-1 flex-wrap" v-if="!isLoading">
       <div
         v-for="token in trendingTokens"
         :key="token.symbol"
@@ -61,7 +61,7 @@ const isLoading = ref(false)
 const trendingTokens: Ref<GetWebTrendingTokensResponse['items']> = ref([])
 
 const fetchUrl =
-  'https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=1&sort=desc'
+  'https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=1&sort=desc&perPage=12'
 const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
   immediate: false,
 })
