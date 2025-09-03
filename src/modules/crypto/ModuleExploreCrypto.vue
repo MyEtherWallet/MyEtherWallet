@@ -37,28 +37,76 @@
           <tr class="text-left">
             <th class="px-1 py-2 w-6"></th>
             <th class="px-1 py-2 w-12">#</th>
-            <th
-              v-for="(label, key) in HEADER_SORT_OPTIONS"
-              :key="`${label}-${key}`"
-              class="cursor-pointer"
-              :class="{
-                'px-1 py-2': label !== '#',
-              }"
-              @click="setHeaderSort(key)"
-            >
-              <div class="flex items-center gap-1">
-                {{ label }}
+            <th class="cursor-pointer px-1 py-2">
+              <div
+                class="flex items-center gap-1"
+                @click="setHeaderSort('name')"
+              >
+                Name
                 <chevron-up-icon
                   class="w-3 h-3"
-                  v-if="headerSort === key && tableDirection === 'asc'"
+                  v-if="headerSort === 'name' && tableDirection === 'asc'"
                 />
                 <chevron-down-icon
                   class="w-3 h-3"
-                  v-if="headerSort === key && tableDirection === 'desc'"
+                  v-if="headerSort === 'name' && tableDirection === 'desc'"
                 />
               </div>
             </th>
-            <th class="px-1 py-2 w-[130px] text-center">Action</th>
+            <th class="cursor-pointer px-1 py-2 w-[100px]">
+              <div
+                class="flex items-center gap-1 justify-end"
+                @click="setHeaderSort('price')"
+              >
+                Price
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === 'price' && tableDirection === 'asc'"
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === 'price' && tableDirection === 'desc'"
+                />
+              </div>
+            </th>
+            <th class="px-1 py-2 text-right w-[100px]">1 hr</th>
+            <th class="px-1 py-2 text-right w-[100px]">24 hr</th>
+            <th class="px-1 py-2 text-right w-[100px]">7 days</th>
+            <th class="cursor-pointer px-1 py-2 w-[100px]">
+              <div
+                class="flex items-center gap-1 justify-end"
+                @click="setHeaderSort('24h')"
+              >
+                24h Volume
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === '24h' && tableDirection === 'asc'"
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === '24h' && tableDirection === 'desc'"
+                />
+              </div>
+            </th>
+            <th class="cursor-pointer px-1 py-2 text-right w-[120px]">
+              <div
+                class="flex items-center gap-1 justify-end"
+                @click="setHeaderSort('MARKET_CAP')"
+              >
+                Market Cap
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === 'MARKET_CAP' && tableDirection === 'asc'"
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="
+                    headerSort === 'MARKET_CAP' && tableDirection === 'desc'
+                  "
+                />
+              </div>
+            </th>
+            <th class="px-1 py-2 w-[175px] text-center">Action</th>
           </tr>
         </thead>
         <tbody v-if="!isLoading">
@@ -81,21 +129,34 @@
               />
             </td>
             <td class="px-1 py-2">{{ ranker(index) }}.</td>
-            <td class="px-1 py-2">
-              <div class="flex">
+            <td class="px-1 py-2 w-[150px]">
+              <div class="flex items-center">
                 <img
                   :src="token.logoUrl as string"
                   alt="favorite"
                   class="inline-block h-5 w-5 mr-1 rounded-full"
                 />
-                <div class="w-[65px] overflow-hidden text-ellipsis truncate">
+                <div class="overflow-hidden truncate">
                   {{ token.name }}
                 </div>
               </div>
             </td>
-            <td class="px-1 py-2">{{ token.price }}</td>
+            <!-- TODO: change with currency parser -->
+            <td class="px-1 py-2 text-right">${{ token.price }}</td>
             <td
-              class="px-1 py-2"
+              class="px-1 py-2 text-right"
+              :class="[
+                parsePercent(token.priceChangePercentage1h as number).includes(
+                  '-',
+                )
+                  ? 'text-error'
+                  : 'text-success',
+              ]"
+            >
+              {{ parsePercent(token.priceChangePercentage1h as number) }}
+            </td>
+            <td
+              class="px-1 py-2 text-right"
               :class="[
                 parsePercent(token.priceChangePercentage24h as number).includes(
                   '-',
@@ -106,7 +167,21 @@
             >
               {{ parsePercent(token.priceChangePercentage24h as number) }}
             </td>
-            <td class="px-1 py-2">{{ token.marketCap }}</td>
+            <td
+              class="px-1 py-2 text-right"
+              :class="[
+                parsePercent(token.priceChangePercentage7d as number).includes(
+                  '-',
+                )
+                  ? 'text-error'
+                  : 'text-success',
+              ]"
+            >
+              {{ parsePercent(token.priceChangePercentage7d as number) }}
+            </td>
+            <!-- <td class="px-1 py-2 text-right">{{ token.totalVolume }}</td> -->
+            <td class="px-1 py-2 text-right">0</td>
+            <td class="px-1 py-2 text-right">{{ token.marketCap }}</td>
             <td class="px-1 py-2 text-center">
               <app-base-button size="small" class="mr-1" @click="buyBtn"
                 >Buy</app-base-button
@@ -126,6 +201,18 @@
                 <div class="size-8 rounded-full bg-grey-8"></div>
                 <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
               </div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
             </td>
             <td class="px-1 py-2">
               <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
@@ -210,6 +297,7 @@ import type {
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
+  formatFiatValue,
   formatIntegerValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
@@ -220,12 +308,6 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 
 const tableContainer = ref<HTMLElement | null>(null)
 
-const HEADER_SORT_OPTIONS = {
-  NAME: 'Name',
-  PRICE: 'Price',
-  PRICE_CHANGE_PERCENTAGE_24H: '24h',
-  MARKET_CAP: 'Market Cap',
-}
 const toastStore = useToastStore()
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
@@ -391,11 +473,12 @@ onFetchWatchlistResponse(() => {
           ...item,
           logoUrl: logo,
           priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 2,
-          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          price: formatFiatValue(item.price ?? 0).value,
+          // price: new Intl.NumberFormat('en-US', {
+          //   style: 'currency',
+          //   currency: 'USD',
+          //   maximumFractionDigits: 2,
+          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
           marketCap: formatIntegerValue(item.marketCap ?? 0).value,
         }
       },
@@ -417,11 +500,12 @@ onFetchGainersResponse(() => {
           ...item,
           logoUrl: logo,
           priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 2,
-          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          price: formatFiatValue(item.price ?? 0).value,
+          // price: new Intl.NumberFormat('en-US', {
+          //   style: 'currency',
+          //   currency: 'USD',
+          //   maximumFractionDigits: 2,
+          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
           // TODO: add marketcap once api returns it
         }
       },
@@ -443,11 +527,12 @@ onFetchTokenTableResponse(() => {
           ...item,
           logoUrl: logo,
           priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 2,
-          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          price: formatFiatValue(item.price ?? 0).value,
+          // price: new Intl.NumberFormat('en-US', {
+          //   style: 'currency',
+          //   currency: 'USD',
+          //   maximumFractionDigits: 2,
+          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
           marketCap: formatIntegerValue(item.marketCap ?? 0).value,
         }
       },
