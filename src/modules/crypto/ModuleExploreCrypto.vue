@@ -202,7 +202,6 @@
         <tbody v-else>
           <tr v-for="n in 12" :key="`loading-${n}`" class="animate-pulse">
             <td></td>
-            <td></td>
             <td class="px-1 py-2">
               <div class="flex items-center gap-1">
                 <div class="size-8 rounded-full bg-grey-8"></div>
