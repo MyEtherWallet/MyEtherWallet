@@ -41,4 +41,11 @@ import WalletsDefaultList from '@/modules/access/components/wallets_lists/Wallet
 import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { onMounted } from 'vue'
+const walletMenu = useWalletMenuStore()
+
+onMounted(() => {
+  walletMenu.setIsOpenSideMenu(false)
+})
 </script>
