@@ -40,6 +40,10 @@
         v-else-if="listItem.iconID === ICON_IDS.TOOLS"
         class="w-4 h-4"
       />
+      <book-open-icon
+        v-else-if="listItem.iconID === ICON_IDS.LEARN"
+        class="w-4 h-4"
+      />
     </div>
     <p class="capitalize">{{ listItem.title }}</p>
     <chevron-down-icon
@@ -65,6 +69,7 @@ import {
   CogIcon,
   ChevronDownIcon,
   WrenchScrewdriverIcon,
+  BookOpenIcon,
 } from '@heroicons/vue/24/solid'
 import { useRouter } from 'vue-router'
 

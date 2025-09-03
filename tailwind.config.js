@@ -96,6 +96,7 @@ export default {
         's-14': '14px',
         's-12': '12px',
         's-11': '11px',
+        's-8': '8px',
       },
       lineHeight: {
         'p-100': '100%',

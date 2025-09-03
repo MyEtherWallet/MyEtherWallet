@@ -8,20 +8,22 @@
       <Bars3Icon class="w-8 h-8" />
     </app-btn-icon>
     <!-- Background -->
-    <transition
-      enter-active-class="transform ease-out duration-300 transition opacity-0 "
-      enter-to-class="opacity-100"
-      leave-active-class="opacity-0"
-      leave-to-class="opacity-0"
-      appear
-    >
-      <div
-        v-if="sidebarIsOpen"
-        class="cursor-pointer fixed inset-0 bg-black/30 z-[39] h-screen w-screen overscroll-none overflow-hidden"
-        @click="sidebarIsOpen = false"
-        aria-hidden
-      />
-    </transition>
+    <teleport to="#app">
+      <transition
+        enter-active-class="transform ease-out duration-300 transition opacity-0 "
+        enter-to-class="opacity-100"
+        leave-active-class="opacity-0"
+        leave-to-class="opacity-0"
+        appear
+      >
+        <div
+          v-if="sidebarIsOpen"
+          class="cursor-pointer fixed inset-0 bg-black/30 z-[39] h-screen w-screen overscroll-none overflow-hidden"
+          @click="sidebarIsOpen = false"
+          aria-hidden
+        />
+      </transition>
+    </teleport>
     <!-- Side Menu -->
     <teleport to="#app">
       <transition

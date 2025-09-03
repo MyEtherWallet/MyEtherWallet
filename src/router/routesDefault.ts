@@ -106,6 +106,22 @@ const DefaultRoutes = [
       noAuth: true,
     },
   },
+  {
+    path: ROUTES_MAIN.LEARN.PATH,
+    name: ROUTES_MAIN.LEARN.NAME,
+    component: TempView,
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
+    path: ROUTES_MAIN.STOCKS.PATH,
+    name: ROUTES_MAIN.STOCKS.NAME,
+    component: TempView,
+    meta: {
+      noAuth: true,
+    },
+  },
 
   {
     path: '/:pathMatch(.*)*',

@@ -1,22 +1,27 @@
 <template>
   <div
     :class="[
-      isOpenSideMenu ? 'min-w-[400px] max-w-[400px] w-[400px]' : 'min-w-[60px]',
+      isOpenSideMenu
+        ? 'xs:min-w-[400px] max-w-[400px] xs:w-[400px]'
+        : 'min-w-[60px]',
       'absolute lg:sticky z-20  mt-[1px] top-0 right-0  lg:h-screen transition-all duration-200 ease-out',
     ]"
   >
     <div
       :class="[
-        isOpenSideMenu ? 'p-4' : 'p-2',
+        isOpenSideMenu ? 'p-4' : 'p-[6px]',
         'bg-white min-h-[calc(100vh-69px)] sm:h-[calc(100vh-200px)]  shadow-[0pxx_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
       ]"
     >
       <app-btn-icon
         label="expand"
         @click="setIsOpenSideMenu(!isOpenSideMenu)"
-        class="absolute top-2 -left-8 z-10"
+        :class="
+          isXsAndUp || !isOpenSideMenu ? 'absolute top-2 -left-8 z-10' : ''
+        "
       >
-        <ChevronDoubleLeftIcon class="w-5 h-5" />
+        <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
+        <ChevronDoubleRightIcon v-else class="w-5 h-5" />
       </app-btn-icon>
       <transition name="fade" mode="out-in">
         <app-wallet-card
@@ -32,62 +37,104 @@
           'mt-2 flex justify-between gap-2',
         ]"
       >
+        <!-- Deposit button -->
         <button
           v-if="isWalletConnected"
           :class="[
-            isOpenSideMenu ? 'py-2' : 'h-12',
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
 
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
           @click="openDeposit"
         >
           <QrCodeIcon
-            :class="[{ 'mb-1': isOpenSideMenu }, 'w-6 h-6 text-primary']"
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[18px] h-[18px]',
+              'text-primary',
+            ]"
           />
-          <p v-if="isOpenSideMenu" class="text-s-12">{{ $t('deposit') }}</p>
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[2px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('deposit') }}
+          </p>
         </button>
+        <!-- Buy button -->
         <router-link
           :to="{ name: ROUTES_MAIN.BUY.NAME }"
           :class="[
-            isOpenSideMenu ? 'py-2' : 'h-12',
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
           @click.stop.prevent="closeDialog"
         >
           <icon-buy
-            :class="[{ 'mb-1': isOpenSideMenu }, 'w-6 h-6 text-primary']"
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
           />
-          <p v-if="isOpenSideMenu" class="text-s-12">{{ $t('buy-sell') }}</p>
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[2px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('buy-sell') }}
+          </p>
         </router-link>
-        <div
+        <!-- Send button -->
+        <button
           @click="openPanel(0)"
           :class="[
-            isOpenSideMenu ? 'py-2' : 'h-12',
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
 
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
           @click.stop.prevent="closeDialog"
         >
           <icon-send
-            :class="[{ 'mb-1': isOpenSideMenu }, 'w-6 h-6 text-primary']"
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
           />
-          <p v-if="isOpenSideMenu" class="text-s-12">{{ $t('common.send') }}</p>
-        </div>
-        <div
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[1px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('common.send') }}
+          </p>
+        </button>
+        <!-- Swap button -->
+        <button
           @click="openPanel(1)"
           :class="[
-            isOpenSideMenu ? 'py-2' : 'h-12',
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
           @click.stop.prevent="closeDialog"
         >
           <icon-swap
-            :class="[{ 'mb-1': isOpenSideMenu }, 'w-6 h-6 text-primary']"
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
           />
-          <p v-if="isOpenSideMenu" class="text-s-12 capitalize">
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[1px]',
+              'capitalize',
+            ]"
+          >
             {{ $t('swap') }}
           </p>
-        </div>
+        </button>
       </div>
       <transition name="fade" mode="out-in">
         <div v-if="isOpenSideMenu">
@@ -111,7 +158,11 @@ import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
-import { QrCodeIcon, ChevronDoubleLeftIcon } from '@heroicons/vue/24/outline'
+import {
+  QrCodeIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from '@heroicons/vue/24/outline'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import AppBtnIcon from '../AppBtnIcon.vue'
 
@@ -120,7 +171,7 @@ const { isOpenSideMenu, walletPanel, setIsOpenSideMenu, setWalletPanel } =
   walletMenu
 
 const breakpoints = useAppBreakpoints()
-const { isDesktopAndUp } = breakpoints
+const { isDesktopAndUp, isXsAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
