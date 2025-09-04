@@ -3,14 +3,14 @@
     :class="[
       isOpenSideMenu
         ? 'xs:min-w-[400px] max-w-[400px] xs:w-[400px]'
-        : 'min-w-[60px]',
+        : 'min-w-[60px] w-[60px]',
       'absolute lg:sticky z-20  mt-[1px] top-0 right-0  lg:h-screen transition-all duration-200 ease-out',
     ]"
   >
     <div
       :class="[
         isOpenSideMenu ? 'p-4' : 'p-[6px]',
-        'bg-white min-h-[calc(100vh-69px)] sm:h-[calc(100vh-200px)]  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
+        'bg-white min-h-[calc(100vh-69px)] sm:min-h-[calc(100vh-200px)]  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
       ]"
     >
       <app-btn-icon
@@ -82,7 +82,30 @@
               'capitalize',
             ]"
           >
-            {{ $t('buy-sell') }}
+            {{ $t('buy') }}
+          </p>
+        </router-link>
+        <!--sell button-->
+        <router-link
+          :to="{ name: ROUTES_MAIN.BUY.NAME }"
+          :class="[
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
+            'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
+          ]"
+        >
+          <icon-buy
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
+          />
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[2px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('sell') }}
           </p>
         </router-link>
         <!-- Send button -->
