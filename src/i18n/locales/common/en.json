@@ -5,6 +5,7 @@
     "close": "close",
     "clear_icon": "clear input",
     "copy": "copy",
+    "copy_address": "copy address",
     "select_network": "Select network",
     "more": "more",
     "dont_have_wallet": "Don't have a wallet?",
