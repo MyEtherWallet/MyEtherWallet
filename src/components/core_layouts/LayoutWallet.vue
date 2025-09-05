@@ -2,15 +2,15 @@
   <div
     :class="[
       isOpenSideMenu
-        ? 'xs:min-w-[400px] max-w-[400px] xs:w-[400px]'
-        : 'min-w-[60px] w-[60px]',
-      'absolute lg:sticky z-20  mt-[1px] top-0 right-0  lg:h-screen transition-all duration-200 ease-out',
+        ? 'w-screen xs:min-w-[400px] xs:max-w-[400px] xs:w-[400px] fixed top-0 xs:absolute'
+        : 'min-w-[60px] w-[60px] absolute ',
+      ' z-[50] lg:sticky  lg:mt-[1px]  right-0  h-screen transition-all duration-200 ease-out',
     ]"
   >
     <div
       :class="[
         isOpenSideMenu ? 'p-4' : 'p-[6px]',
-        'bg-white min-h-[calc(100vh-69px)] sm:min-h-[calc(100vh-200px)]  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
+        'bg-white h-full  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
       ]"
     >
       <app-btn-icon
@@ -34,7 +34,7 @@
       <div
         :class="[
           { 'flex-col mt-1': !isOpenSideMenu },
-          'mt-2 flex justify-between gap-2',
+          'mt-2 flex justify-between gap-2 min-w-12',
         ]"
       >
         <!-- Deposit button -->
@@ -63,12 +63,12 @@
           </p>
         </button>
         <!-- Buy button -->
-        <router-link
-          :to="{ name: ROUTES_MAIN.BUY.NAME }"
+        <button
           :class="[
             isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
+          @click="openPanel(0)"
         >
           <icon-buy
             :class="[
@@ -84,14 +84,15 @@
           >
             {{ $t('buy') }}
           </p>
-        </router-link>
+        </button>
         <!--sell button-->
-        <router-link
+        <button
           :to="{ name: ROUTES_MAIN.BUY.NAME }"
           :class="[
             isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
           ]"
+          @click="openPanel(1)"
         >
           <icon-buy
             :class="[
@@ -107,10 +108,10 @@
           >
             {{ $t('sell') }}
           </p>
-        </router-link>
+        </button>
         <!-- Send button -->
         <button
-          @click="openPanel(0)"
+          @click="openPanel(2)"
           :class="[
             isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
 
@@ -134,7 +135,7 @@
         </button>
         <!-- Swap button -->
         <button
-          @click="openPanel(1)"
+          @click="openPanel(3)"
           :class="[
             isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
             'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
@@ -157,10 +158,13 @@
         </button>
       </div>
       <transition name="fade" mode="out-in">
-        <div v-if="isOpenSideMenu">
+        <div v-if="isOpenSideMenu" class="max-w-[400px]">
           <transition name="fade" mode="out-in">
             <!-- Modules -->
-            <ModuleSend v-if="walletPanel === 0" key="send" />
+            <ModuleSend v-if="walletPanel === 2" key="send" />
+            <div v-else key="coming-soon" class="mt-6 text-center font-medium">
+              {{ comingSoon }}
+            </div>
           </transition>
         </div>
       </transition>
@@ -170,7 +174,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import AppWalletCard from '@/components/AppWalletCard.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -220,4 +224,15 @@ const openPanel = (panel: number) => {
 }
 
 const openDepositDialog = ref(false) //deposit dialog
+
+const comingSoon = computed(() => {
+  const map = new Map<number, string>([
+    [0, 'Buy'],
+    [1, 'Sell'],
+    [3, 'Swap'],
+  ])
+  return map.get(walletPanel.value)
+    ? `${map.get(walletPanel.value)} is coming soon`
+    : 'Coming Soon'
+})
 </script>
