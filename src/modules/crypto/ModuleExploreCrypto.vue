@@ -508,7 +508,7 @@ onFetchGainersResponse(() => {
           //   currency: 'USD',
           //   maximumFractionDigits: 2,
           // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-          // TODO: add marketcap once api returns it
+          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
         }
       },
     )
