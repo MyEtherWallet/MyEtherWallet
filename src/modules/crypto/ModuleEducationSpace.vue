@@ -7,7 +7,12 @@
     }"
     @click="navigateToMewtopia"
   >
-    <img src="@/assets/icons/mewtopia-dog.svg" class="w-[115px] absolute" />
+    <img
+      src="@/assets/icons/mewtopia-dog.svg"
+      class="w-[115px] absolute"
+      alt="Mewtopia Dog"
+      aria-hidden="true"
+    />
     <div class="text-left pl-[35%] w-full">
       <h3 class="text-white text-s-24">MEWtopia</h3>
       <p class="text-white text-s-12" v-if="full">A Blog by MyEtherWallet</p>

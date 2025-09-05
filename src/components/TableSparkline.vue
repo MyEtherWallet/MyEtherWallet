@@ -83,6 +83,9 @@ const lineColor = computed(() => {
 
 const yBounds = computed(() => {
   const arr = displayPoints.value
+  if (arr.length === 0) {
+    return { min: 0, max: 1 }
+  }
   const min = Math.min(...arr)
   const max = Math.max(...arr)
   const span = Math.max(max - min, 1e-9)

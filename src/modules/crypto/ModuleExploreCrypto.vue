@@ -39,32 +39,32 @@
             <th class="cursor-pointer px-1 py-2">
               <div
                 class="flex items-center gap-1"
-                @click="setHeaderSort('name')"
+                @click="setHeaderSort('NAME')"
               >
                 Name
                 <chevron-up-icon
                   class="w-3 h-3"
-                  v-if="headerSort === 'name' && tableDirection === 'asc'"
+                  v-if="headerSort === 'NAME' && tableDirection === 'asc'"
                 />
                 <chevron-down-icon
                   class="w-3 h-3"
-                  v-if="headerSort === 'name' && tableDirection === 'desc'"
+                  v-if="headerSort === 'NAME' && tableDirection === 'desc'"
                 />
               </div>
             </th>
             <th class="cursor-pointer px-1 py-2 w-[120px]">
               <div
                 class="flex items-center gap-1 justify-end"
-                @click="setHeaderSort('price')"
+                @click="setHeaderSort('PRICE')"
               >
                 Price
                 <chevron-up-icon
                   class="w-3 h-3"
-                  v-if="headerSort === 'price' && tableDirection === 'asc'"
+                  v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
                 />
                 <chevron-down-icon
                   class="w-3 h-3"
-                  v-if="headerSort === 'price' && tableDirection === 'desc'"
+                  v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
                 />
               </div>
             </th>
@@ -302,7 +302,7 @@ import { storeToRefs } from 'pinia'
 import type {
   Chain,
   GetWebTokensTableResponse,
-  GetWebTopGainersResponse,
+  GetWebTokensWatchlistResponse,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
@@ -430,7 +430,7 @@ const {
   onFetchResponse: onFetchWatchlistResponse,
   execute: fetchWatchlist,
   onFetchError: onFetchWatchlistError,
-} = useMEWFetch<GetWebTokensTableResponse>(fetchWatchListUrl, {
+} = useMEWFetch<GetWebTokensWatchlistResponse>(fetchWatchListUrl, {
   immediate: false,
 })
   .get()
@@ -466,7 +466,7 @@ onFetchWatchlistResponse(() => {
   totalPages.value = 1
   if (fetchWatchlistData.value) {
     tokens.value = fetchWatchlistData.value.map(
-      (item: GetWebTokensTableResponse['items'][number]) => {
+      (item: GetWebTokensWatchlistResponse[number]) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
@@ -493,7 +493,7 @@ onFetchGainersResponse(() => {
   totalPages.value = fetchGainersData.value?.pages ?? 0
   if (fetchGainersData.value && fetchGainersData.value.items) {
     tokens.value = fetchGainersData.value.items.map(
-      (item: GetWebTopGainersResponse['items'][number]) => {
+      (item: GetWebTokensTableResponse['items'][number]) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
@@ -563,7 +563,7 @@ onFetchTokenTableError(err => {
 })
 
 const parsePercent = (val: number | null): string => {
-  if (!val) return ''
+  if (val === null || val === undefined) return ''
   return formatPercentageValue(val ?? 0).value
 }
 

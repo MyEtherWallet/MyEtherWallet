@@ -2223,9 +2223,10 @@ components:
       required:
         - signedTransaction
       properties:
-        # Hex string
+        # Hex string (sometimes prefixed, sometimes not prefixed?)
         signedTransaction:
-          type: string
+          $ref: '#/components/schemas/ByteString'
+          # type: string
 
     BroadcastBtcTransactionResponse:
       type: object

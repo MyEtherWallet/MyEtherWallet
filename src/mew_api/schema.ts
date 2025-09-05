@@ -1019,7 +1019,7 @@ export interface components {
             ordinalsFilteredOut: boolean;
         };
         BroadcastBtcTransactionRequest: {
-            signedTransaction: string;
+            signedTransaction: components["schemas"]["ByteString"];
         };
         BroadcastBtcTransactionResponse: {
             txid: string;
