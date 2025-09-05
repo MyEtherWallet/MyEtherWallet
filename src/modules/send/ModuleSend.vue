@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="static max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
+      class="static w-full xs:max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
     >
       <div class="relative">
         <div class="flex items-center justify-between mb-3 mt-4">

@@ -158,7 +158,7 @@
         </button>
       </div>
       <transition name="fade" mode="out-in">
-        <div v-if="isOpenSideMenu" class="max-w-[400px]">
+        <div v-if="isOpenSideMenu" class="xs:max-w-[400px]">
           <transition name="fade" mode="out-in">
             <!-- Modules -->
             <ModuleSend v-if="walletPanel === 2" key="send" />
