@@ -5,11 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Limit minimum width */
-html {
-  min-width: 320px !important;
-  font-size: 14px !important;
-}
 
 /**
  * VARIABLES

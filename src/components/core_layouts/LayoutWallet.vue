@@ -153,7 +153,7 @@
               'capitalize',
             ]"
           >
-            {{ $t('swap') }}
+            {{ $t('common.swap') }}
           </p>
         </button>
       </div>

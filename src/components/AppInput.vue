@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-[86px] flex">
+  <div class="relative min-h-[86px]">
     <div v-if="$slots.prepend" class="absolute left-3 top-[13px] w-8 h-8">
       <slot name="prepend" />
     </div>
@@ -58,13 +58,13 @@
     <transition name="fade" mode="out-in">
       <p
         v-if="errorMessage"
-        class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
+        class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
         {{ errorMessage }}
       </p>
       <p
         v-else-if="hasRequiredError"
-        class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
+        class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
         required
       </p>

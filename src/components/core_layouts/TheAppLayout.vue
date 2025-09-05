@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-full static min-w-[320px]">
+  <div class="h-screen static">
     <the-wallet-header />
     <!-- Background -->
     <teleport to="#app">
@@ -29,12 +29,12 @@
     >
       <div
         :class="[
-          'relative flex justify-center overflow-hidden lg:mx-auto w-screen max-w-[1440px]',
+          'relative flex justify-center overflow-hidden lg:mx-auto min-w-[320px] w-screen max-w-[1440px]',
         ]"
       >
         <main
           :class="[
-            ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0',
+            ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0 ',
           ]"
         >
           <div
