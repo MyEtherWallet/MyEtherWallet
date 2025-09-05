@@ -1,11 +1,11 @@
 <template>
-  <div class="h-screen w-full static">
+  <div class="h-screen w-full static min-w-[320px]">
     <the-wallet-header />
     <!-- Background -->
     <teleport to="#app">
       <transition
         enter-from-class="opacity-0"
-        enter-active-class="transform ease-out duration-300 transition opacity-0 "
+        enter-active-class="transform ease-out duration-300 transition "
         enter-to-class="opacity-100"
         leave-from-class="opacity-100"
         leave-active-class="ease-in duration-100 transition"
@@ -24,10 +24,14 @@
       :class="[
         backgroundClass,
 
-        'relative flex justify-between h-[calc(100vh-68px)] sm:h-[calc(100vh-76px)] overflow-hidden',
+        'relative flex  h-[calc(100vh-68px)] sm:h-[calc(100vh-76px)] overflow-hidden w-screen  min-w-[320px]',
       ]"
     >
-      <div :class="['relative flex justify-center overflow-hidden mx-auto ']">
+      <div
+        :class="[
+          'relative flex justify-center overflow-hidden lg:mx-auto w-screen max-w-[1440px]',
+        ]"
+      >
         <main
           :class="[
             ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0',
