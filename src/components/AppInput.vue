@@ -1,5 +1,5 @@
 <template>
-  <div class="relative min-h-[86px]">
+  <div class="relative min-h-[86px] flex">
     <div v-if="$slots.prepend" class="absolute left-3 top-[13px] w-8 h-8">
       <slot name="prepend" />
     </div>
@@ -85,7 +85,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
-
 const props = defineProps({
   placeholder: {
     type: String,
