@@ -417,7 +417,7 @@ const fetchTableUrl = computed(() => {
 const {
   data: fetchGainersData,
   onFetchResponse: onFetchGainersResponse,
-  execute: fetchGainers,
+  execute: fetchGainersTable,
   onFetchError: onFetchGainersError,
 } = useMEWFetch<GetWebTokensTableResponse>(fetchGainersUrl, {
   immediate: false,
@@ -428,7 +428,7 @@ const {
 const {
   data: fetchWatchlistData,
   onFetchResponse: onFetchWatchlistResponse,
-  execute: fetchWatchlist,
+  execute: fetchWatchlistTable,
   onFetchError: onFetchWatchlistError,
 } = useMEWFetch<GetWebTokensWatchlistResponse>(fetchWatchListUrl, {
   immediate: false,
@@ -447,10 +447,18 @@ const {
   .get()
   .json()
 
-const fetchTokens = useDebounceFn(() => {
+const debounceFetchTokens = useDebounceFn(() => {
   fetchTokenTable()
   tableContainer.value?.scrollTo(0, 0)
-}, 500)
+}, 100)
+const debounceFetchWatchlist = useDebounceFn(() => {
+  fetchWatchlistTable()
+  tableContainer.value?.scrollTo(0, 0)
+}, 100)
+const debounceFetchGainers = useDebounceFn(() => {
+  fetchGainersTable()
+  tableContainer.value?.scrollTo(0, 0)
+}, 100)
 
 onMounted(() => {
   if (isLoadedChains.value && selectedChainStore.value) {
@@ -458,7 +466,7 @@ onMounted(() => {
   }
   // Fetch tokens based on the selected filter
   isLoading.value = true
-  fetchTokens()
+  fetchTokenTable()
 })
 
 onFetchWatchlistResponse(() => {
@@ -568,13 +576,31 @@ const parsePercent = (val: number | null): string => {
 }
 
 watch(
+  () => searchInput.value,
+  () => {
+    page.value = 1
+    isLoading.value = true
+    tokens.value = []
+    if (
+      selectedCryptoFilter.value.id === 'topGainers' ||
+      selectedCryptoFilter.value.id === 'topLosers'
+    ) {
+      debounceFetchGainers()
+    } else if (selectedCryptoFilter.value.id === 'watchlist') {
+      debounceFetchWatchlist()
+    } else {
+      debounceFetchTokens()
+    }
+  },
+)
+
+watch(
   () => [
     selectedChainFilter.value,
     page.value,
     shownItems.value,
     headerSort.value,
     tableDirection.value,
-    searchInput.value,
     selectedCryptoFilter.value,
   ],
   () => {
@@ -584,11 +610,11 @@ watch(
       selectedCryptoFilter.value.id === 'topGainers' ||
       selectedCryptoFilter.value.id === 'topLosers'
     ) {
-      fetchGainers()
+      fetchGainersTable()
     } else if (selectedCryptoFilter.value.id === 'watchlist') {
-      fetchWatchlist()
+      fetchWatchlistTable()
     } else {
-      fetchTokens()
+      fetchTokenTable()
     }
   },
   {

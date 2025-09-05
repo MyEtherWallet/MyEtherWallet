@@ -1,5 +1,5 @@
 <template>
-  <div class="relative max-w-[478px] mx-auto">
+  <div class="relative max-w-[478px] mx-auto mt-4">
     <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
       <p class="text-s-16 mb-2">{{ t('common.from') }}</p>
       <select-chain-for-app :filter-chain-type="true" />

@@ -135,9 +135,12 @@
       </div>
       <transition name="fade" mode="out-in">
         <div v-if="isOpenSideMenu">
+          <!-- Modules -->
           <transition name="fade" mode="out-in">
-            <!-- Modules -->
             <ModuleSend v-if="walletPanel === 0" key="send" />
+          </transition>
+          <transition name="fade" mode="out-in">
+            <ModuleSwap v-if="walletPanel === 1" key="swap" />
           </transition>
         </div>
       </transition>
@@ -156,6 +159,8 @@ import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
+import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
+
 import {
   QrCodeIcon,
   ChevronDoubleLeftIcon,
