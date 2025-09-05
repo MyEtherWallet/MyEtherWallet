@@ -1,15 +1,19 @@
 <template>
   <!-- Top: Trending -->
   <div>
-    <h2 class="text-s-20 mb-3">Trending Tokens</h2>
-    <div class="flex justify-start gap-3 flex-wrap" v-if="!isLoading">
+    <h2 class="text-s-32 mb-1">Trending Tokens</h2>
+    <div class="flex justify-start gap-1 flex-wrap" v-if="!isLoading">
       <div
         v-for="token in trendingTokens"
         :key="token.symbol"
-        class="bg-grey-5 w-[115px] h-[100px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
+        class="bg-grey-5 w-[130px] h-[115px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
       >
         <div class="flex gap-1 items-center justify-between">
-          <img :src="token.logoUrl" class="w-6 h-6 rounded-full" alt="" />
+          <img
+            :src="token.logoUrl as string"
+            class="w-6 h-6 rounded-full"
+            alt=""
+          />
           <span
             class="text-s-18"
             :class="{
@@ -31,7 +35,7 @@
     </div>
     <div class="flex justify-start gap-3 flex-wrap animate-pulse" v-else>
       <div
-        v-for="token in 6"
+        v-for="token in 10"
         :key="`loading-trending-${token}`"
         class="bg-grey-5 w-[115px] h-[100px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
       >
@@ -61,7 +65,7 @@ const isLoading = ref(false)
 const trendingTokens: Ref<GetWebTrendingTokensResponse['items']> = ref([])
 
 const fetchUrl =
-  'https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=1&sort=desc'
+  'https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=1&sort=desc&perPage=12'
 const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
   immediate: false,
 })
