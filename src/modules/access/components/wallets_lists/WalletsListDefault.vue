@@ -4,7 +4,12 @@
       {{ $t('access_wallet.select_wallet') }}
     </h2>
     <div
-      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
+      :class="
+        isOpenSideMenu
+          ? 'lg:grid-cols-3  xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6'
+          : 'lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-7'
+      "
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-4 md:gap-6"
     >
       <!-- RECENTLY USED WALLETS -->
       <btn-wallet
@@ -53,6 +58,10 @@ import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { useWalletList } from '@/composables/useWalletList'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
   useConnectWallet()

@@ -1,10 +1,8 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] sticky top-0 z-10 px-5 md-header:px-10 bg-white bg-opacity-70 shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);] backdrop-blur-xl"
+    class="flex items-center w-full h-[68px] sm:h-[76px] sticky top-0 z-10 px-5 md-header:px-10 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
   >
-    <div
-      class="flex w-full max-w-[1440px] justify-between items-center mx-auto gap-3"
-    >
+    <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
       <div class="flex items-center gap-2">
         <router-link
@@ -40,7 +38,7 @@
             v-for="(item, index) in displayLinks"
             :key="index"
             :to="{ name: item.routeName }"
-            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium"
+            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
             active-class="bg-surface"
             v-ripple
           >
@@ -57,7 +55,7 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center"
+              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
               @click="toggleSelect"
             >
               {{ hideSend ? $t('common.more') : $t('tools') }}
@@ -125,7 +123,7 @@ import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ROUTES_MAIN, ROUTES_SEND, ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useBreakpoints } from '@vueuse/core'
@@ -159,14 +157,14 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('common.swap'),
-      routeName: ROUTES_MAIN.SWAP.NAME,
-      iconID: ICON_IDS.SWAP,
+      title: t('stocks'),
+      routeName: ROUTES_MAIN.STOCKS.NAME,
+      iconID: ICON_IDS.BUY,
     },
     {
-      title: t('buy-sell'),
-      routeName: ROUTES_MAIN.BUY.NAME,
-      iconID: ICON_IDS.BUY,
+      title: t('crypto'),
+      routeName: ROUTES_MAIN.CRYPTO.NAME,
+      iconID: ICON_IDS.SWAP,
     },
     {
       title: t('earn'),
@@ -174,9 +172,9 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.STAKE,
     },
     {
-      title: t('common.send'),
-      routeName: ROUTES_SEND.SEND.NAME,
-      iconID: ICON_IDS.SEND,
+      title: t('learn'),
+      routeName: ROUTES_MAIN.LEARN.NAME,
+      iconID: ICON_IDS.LEARN,
     },
   ]
 })

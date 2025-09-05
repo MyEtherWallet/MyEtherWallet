@@ -1,36 +1,200 @@
 <template>
-  <div class="h-screen w-full static">
-    <TheWalletHeader />
+  <div
+    :class="[
+      isOpenSideMenu
+        ? 'xs:min-w-[400px] max-w-[400px] xs:w-[400px]'
+        : 'min-w-[60px]',
+      'absolute lg:sticky z-20  mt-[1px] top-0 right-0  lg:h-screen transition-all duration-200 ease-out',
+    ]"
+  >
     <div
       :class="[
-        'flex flex-col justify-center overflow-y-auto relative px-5 xs:px-10',
+        isOpenSideMenu ? 'p-4' : 'p-[6px]',
+        'bg-white min-h-[calc(100vh-69px)] sm:h-[calc(100vh-200px)]  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
       ]"
     >
-      <main
-        :class="['flex-initial w-full max-w-[496px] xs:max-w-[932px] mx-auto']"
+      <app-btn-icon
+        label="expand"
+        @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
+        :class="
+          isXsAndUp || !isOpenSideMenu ? 'absolute top-2 -left-8 z-10' : ''
+        "
       >
-        <div class="mt-[84px] xs:mt-[104px] min-h-[500px]">
-          <router-view />
+        <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
+        <ChevronDoubleRightIcon v-else class="w-5 h-5" />
+      </app-btn-icon>
+      <transition name="fade" mode="out-in">
+        <app-wallet-card
+          v-if="isWalletConnected && isOpenSideMenu"
+          class="mb-4"
+        />
+      </transition>
+
+      <!-- Actions -->
+      <div
+        :class="[
+          { 'flex-col mt-1': !isOpenSideMenu },
+          'mt-2 flex justify-between gap-2',
+        ]"
+      >
+        <!-- Deposit button -->
+        <button
+          v-if="isWalletConnected"
+          :class="[
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
+
+            'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
+          ]"
+          @click="openDepositDialog = true"
+        >
+          <QrCodeIcon
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[18px] h-[18px]',
+              'text-primary',
+            ]"
+          />
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[2px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('deposit') }}
+          </p>
+        </button>
+        <!-- Buy button -->
+        <router-link
+          :to="{ name: ROUTES_MAIN.BUY.NAME }"
+          :class="[
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
+            'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
+          ]"
+        >
+          <icon-buy
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
+          />
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[2px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('buy-sell') }}
+          </p>
+        </router-link>
+        <!-- Send button -->
+        <button
+          @click="openPanel(0)"
+          :class="[
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
+
+            'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
+          ]"
+        >
+          <icon-send
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
+          />
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[1px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('common.send') }}
+          </p>
+        </button>
+        <!-- Swap button -->
+        <button
+          @click="openPanel(1)"
+          :class="[
+            isOpenSideMenu ? 'py-2' : 'h-12 pt-[2px]',
+            'rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full',
+          ]"
+        >
+          <icon-swap
+            :class="[
+              isOpenSideMenu ? ' mb-1 w-6 h-6 ' : 'w-[19px] h-[19px]',
+              'text-primary',
+            ]"
+          />
+          <p
+            :class="[
+              isOpenSideMenu ? 'text-s-12' : 'text-s-8 mt-[1px]',
+              'capitalize',
+            ]"
+          >
+            {{ $t('swap') }}
+          </p>
+        </button>
+      </div>
+      <transition name="fade" mode="out-in">
+        <div v-if="isOpenSideMenu">
+          <transition name="fade" mode="out-in">
+            <!-- Modules -->
+            <ModuleSend v-if="walletPanel === 0" key="send" />
+          </transition>
         </div>
-      </main>
+      </transition>
     </div>
+    <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
   </div>
 </template>
-
 <script setup lang="ts">
-import TheWalletHeader from './wallet/TheWalletHeader.vue'
-import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { type TokenBalancesRaw } from '@/mew_api/types'
+import { ref, onMounted, watch } from 'vue'
+import AppWalletCard from '@/components/AppWalletCard.vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import IconSend from '@/assets/icons/core_menu/icon-send.vue'
+import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
+import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
+import ModuleSend from '@/modules/send/ModuleSend.vue'
+import {
+  QrCodeIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from '@heroicons/vue/24/outline'
+import { ROUTES_MAIN } from '@/router/routeNames'
+import AppBtnIcon from '../AppBtnIcon.vue'
+import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 
-const store = useWalletStore()
-const { wallet } = storeToRefs(store)
-const { setTokens, setIsLoadingBalances } = store
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
 
-wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-  setTokens(balances.result)
-  setIsLoadingBalances(false)
+const breakpoints = useAppBreakpoints()
+const { isDesktopAndUp, isXsAndUp } = breakpoints
+const walletStore = useWalletStore()
+const { isWalletConnected } = storeToRefs(walletStore)
+
+onMounted(() => {
+  if (isDesktopAndUp.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  } else {
+    walletMenu.setIsOpenSideMenu(false)
+  }
 })
-</script>
 
-<style scoped></style>
+watch(isDesktopAndUp, newVal => {
+  if (newVal) {
+    walletMenu.setIsOpenSideMenu(true)
+  } else {
+    walletMenu.setIsOpenSideMenu(false)
+  }
+})
+
+const openPanel = (panel: number) => {
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  walletMenu.setWalletPanel(panel)
+}
+
+const openDepositDialog = ref(false) //deposit dialog
+</script>

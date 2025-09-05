@@ -1,9 +1,7 @@
 <template>
   <main>
-    <div
-      class="flex flex-col 2xl:flex-row 2xl:items-center 2xl:justify-between mb-8 lg-max:mb-10"
-    >
-      <div class="flex flex-col sm:flex-row sm:items-center justify-start">
+    <div class="flex flex-col mb-8 lg-max:mb-10">
+      <div class="flex flex-col sm:flex-row justify-start">
         <img
           src="@/assets/images/access/portfolio_icon.webp"
           alt=""
@@ -22,7 +20,7 @@
       <app-need-help
         title="Need help accessing your wallet?"
         help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-        class="sm:ml-[93px] md:ml-[123px] 2xl:ml-auto mt-5 sm:mt-1 xl:mt-2 22xl:mt-0 ml- 2xl:ml-auto"
+        class="sm:ml-[93px] md:ml-[123px] mt-5 sm:mt-1 xl:mt-2"
       />
     </div>
 
@@ -43,4 +41,11 @@ import WalletsDefaultList from '@/modules/access/components/wallets_lists/Wallet
 import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { onMounted } from 'vue'
+const walletMenu = useWalletMenuStore()
+
+onMounted(() => {
+  walletMenu.setIsOpenSideMenu(false)
+})
 </script>

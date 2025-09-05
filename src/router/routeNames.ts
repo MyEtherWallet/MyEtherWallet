@@ -32,6 +32,8 @@ const ROUTES_MAIN: RouteNameCollection = {
   SWAP: { NAME: 'Swap', PATH: '/swap' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: '/verify' },
   CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
+  LEARN: { NAME: 'Learn', PATH: '/learn' },
+  STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
 }
 
 const ROUTES_SEND: RouteNameCollection = {

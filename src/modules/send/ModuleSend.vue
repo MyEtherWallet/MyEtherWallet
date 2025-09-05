@@ -1,9 +1,16 @@
 <template>
   <div>
     <div
-      class="max-w-[478px] flex flex-col items-center justify-items-stretch gap-5"
+      class="static max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
     >
-      <app-sheet sheetClass="w-full !px-4 mt-4 !pb-1">
+      <div class="relative">
+        <div class="flex items-center justify-between mb-3 mt-4">
+          <p class="font-semibold text-s-24 ml-3">Send</p>
+          <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
+            >Clear</app-btn-text
+          >
+        </div>
+
         <div class="mb-[25px]">
           <app-enter-amount
             v-model:amount="amount"
@@ -26,24 +33,24 @@
           :txRequestBody="gasFeeTxEstimate"
           v-model:gas-fee-error="gasFeeError"
         />
-        <div class="flex items-center justify-end mb-4">
-          <app-btn-text class="text-primary" @click="resetSendModule"
-            >Clear</app-btn-text
-          >
-        </div>
-      </app-sheet>
+      </div>
       <app-base-button
         v-if="isWalletConnected"
         :disabled="!validSend"
         :is-loading="isLoadingFees"
         @click="handleSubmit"
-        class="w-full mt-4"
+        class="w-full"
       >
         {{ $t('common.send') }}</app-base-button
       >
       <app-base-button class="w-full capitalize" @click="connectWallet" v-else>
         {{ $t('common.connect_wallet') }}</app-base-button
       >
+      <app-need-help
+        :title="$t('send.need-help')"
+        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+        class="mt-4"
+      />
     </div>
     <!-- TODO: replace network with actual selected network info -->
     <evm-transaction-confirmation
@@ -68,10 +75,10 @@ import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei, toHex } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
-import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -90,6 +97,7 @@ import { toBase } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useAddressInput } from '@/composables/useAddressInput'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
 
 const router = useRouter()
 const { t } = useI18n()
