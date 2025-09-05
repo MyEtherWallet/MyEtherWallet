@@ -1,27 +1,56 @@
 <template>
-  <div ref="appBodyRef" class="min-h-screen w-full static">
+  <div class="h-screen w-full static">
     <the-wallet-header />
+    <!-- Background -->
+    <teleport to="#app">
+      <transition
+        enter-from-class="opacity-0"
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-to-class="opacity-100"
+        leave-from-class="opacity-100"
+        leave-active-class="ease-in duration-100 transition"
+        leave-to-class="opacity-0"
+        appear
+      >
+        <div
+          v-if="isOpenSideMenu"
+          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden lg:hidden"
+          @click="walletMenu.setIsOpenSideMenu(false)"
+          aria-hidden
+        />
+      </transition>
+    </teleport>
     <div
       :class="[
         backgroundClass,
-        'flex flex-col justify-center overflow-y-auto relative px-5 md-header:px-10',
+
+        'relative flex justify-between h-[calc(100vh-68px)] sm:h-[calc(100vh-76px)] overflow-hidden',
       ]"
     >
-      <main :class="['flex-initial w-full max-w-[1440px] mx-auto']">
-        <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12">
-          <router-view />
-        </div>
-      </main>
+      <div :class="['relative flex justify-center overflow-hidden mx-auto ']">
+        <main
+          :class="[
+            ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0',
+          ]"
+        >
+          <div
+            class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10"
+          >
+            <router-view />
+          </div>
+          <MewFooter
+            :use-i18n="useI18n"
+            :amplitude="analytics.amplitude"
+            :link-component="RouterLink"
+            :package-version="packageVersion"
+            :user-consent="popupStore.consent"
+            :curr-project="CURR_PROJECT"
+            @update:consent="handleSetConsent"
+          />
+        </main>
+      </div>
+      <layout-wallet />
     </div>
-    <MewFooter
-      :use-i18n="useI18n"
-      :amplitude="analytics.amplitude"
-      :link-component="RouterLink"
-      :package-version="packageVersion"
-      :user-consent="popupStore.consent"
-      :curr-project="CURR_PROJECT"
-      @update:consent="handleSetConsent"
-    />
   </div>
 </template>
 
@@ -34,10 +63,15 @@ import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
+import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS } from '@/router/routeNames'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { storeToRefs } from 'pinia'
 
 const popupStore = usePopupStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 //TODO: make a new project for MEW  PORTOFLIO APP
 const CURR_PROJECT = 'MEW_BLOG'
