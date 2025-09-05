@@ -10,9 +10,9 @@
           <module-trending />
         </div>
         <module-explore-crypto />
-        <div class="flex gap-4">
-          <module-education-space :full="true" />
-          <module-ad-space-banner />
+        <div class="grid grid-cols-5 gap-4">
+          <module-education-space :full="true" class="col-span-2" />
+          <module-ad-space-banner class="col-span-3" />
         </div>
       </main>
     </div>

@@ -6,7 +6,7 @@
       <div
         v-for="token in trendingTokens"
         :key="token.symbol"
-        class="bg-grey-5 w-[115px] h-[100px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
+        class="bg-grey-5 w-[130px] h-[115px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
       >
         <div class="flex gap-1 items-center justify-between">
           <img

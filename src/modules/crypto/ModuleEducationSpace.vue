@@ -2,8 +2,8 @@
   <section
     class="rounded-2xl text-center shadow-sm bg-gradient-to-t from-blue-3 to-blue-2 flex items-center cursor-pointer relative"
     :class="{
-      'h-[190px] w-[300px]': full,
-      'h-[115px]': !full,
+      'h-[190px] w-full': full,
+      'h-[145px]': !full,
     }"
     @click="navigateToMewtopia"
   >
