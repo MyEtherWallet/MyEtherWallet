@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen space-y-4">
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-2">
-      <main class="relative rounded-2xl px-4 pb-4 space-y-3 col-span-4">
+    <div>
+      <main class="relative rounded-2xl px-4 pb-4 space-y-3">
         <div class="flex gap-4">
           <div class="flex flex-col gap-2">
             <module-ad-space />
