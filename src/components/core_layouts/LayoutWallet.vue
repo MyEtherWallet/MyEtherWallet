@@ -2,7 +2,7 @@
   <div
     :class="[
       isOpenSideMenu
-        ? 'w-screen xs:min-w-[400px] xs:max-w-[400px] xs:w-[400px] fixed top-0 xs:absolute'
+        ? 'w-full !max-w-screen xs:min-w-[400px] xs:max-w-[400px] xs:w-[400px] fixed top-0 xs:absolute'
         : 'min-w-[60px] w-[60px] absolute ',
       ' z-[50] lg:sticky  lg:mt-[1px]  right-0  h-screen transition-all duration-200 ease-out',
     ]"
