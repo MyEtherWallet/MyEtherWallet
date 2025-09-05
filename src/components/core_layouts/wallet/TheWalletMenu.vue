@@ -72,7 +72,18 @@
                     :list-item="item"
                     @click="clickListItem(item)"
                   />
+                  <a
+                    href="https://help.myetherwallet.com/en/"
+                    target="_blank"
+                    class="text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG"
+                  >
+                    <div class="mr-3 opacity-80">
+                      <book-open-icon class="w-4 h-4" />
+                    </div>
+                    <p class="capitalize">{{ t('learn') }}</p>
+                  </a>
                 </div>
+
                 <!-- TOOLS MENU -->
                 <menu-list-item
                   :list-item="toolsMenuItem"
@@ -133,7 +144,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
-import { Bars3Icon } from '@heroicons/vue/24/solid'
+import { Bars3Icon, BookOpenIcon } from '@heroicons/vue/24/solid'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import TheAddressMenu from './TheAddressMenu.vue'
 import { useI18n } from 'vue-i18n'

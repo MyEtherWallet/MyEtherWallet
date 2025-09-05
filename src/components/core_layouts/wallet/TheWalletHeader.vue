@@ -45,6 +45,14 @@
             {{ item.title }}
           </router-link>
         </div>
+        <a href="https://help.myetherwallet.com/en/" target="_blank">
+          <p
+            v-if="!showMobileMenu"
+            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+          >
+            {{ $t('learn') }}
+          </p>
+        </a>
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
@@ -170,11 +178,6 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       title: t('earn'),
       routeName: ROUTES_MAIN.EARN.NAME,
       iconID: ICON_IDS.STAKE,
-    },
-    {
-      title: t('learn'),
-      routeName: ROUTES_MAIN.LEARN.NAME,
-      iconID: ICON_IDS.LEARN,
     },
   ]
 })
