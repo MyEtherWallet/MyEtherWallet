@@ -26,7 +26,10 @@
             />
           </div>
         </div>
-        <AppSubscribeToUpdates class="pr-6 sm:pr-8" />
+        <AppSubscribeToUpdates
+          class="pr-6 sm:pr-8"
+          @subscribed="openWelcomeDialog = false"
+        />
       </div>
     </template>
   </app-dialog>

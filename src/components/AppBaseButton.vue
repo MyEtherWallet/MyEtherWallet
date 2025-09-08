@@ -12,6 +12,7 @@
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
+      'relative',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -20,9 +21,13 @@
     :aria-disabled="disabled"
   >
     <svg
-      v-if="isLoading"
       aria-hidden="true"
-      class="w-6 h-6 text-white/30 animate-spin fill-white mx-auto"
+      :class="[
+        isLoading
+          ? 'w-6 h-6 text-white/30 animate-spin fill-white mx-auto'
+          : 'hidden',
+        'absolute inset-x-0 top-[25%]',
+      ]"
       viewBox="0 0 100 101"
       width="24"
       height="24"
@@ -38,8 +43,9 @@
         fill="currentFill"
       />
     </svg>
-
-    <slot v-else />
+    <div :class="{ 'opacity-0': isLoading }">
+      <slot />
+    </div>
   </button>
 </template>
 <script setup lang="ts">
