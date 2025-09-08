@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const isOpenSideMenu = ref(false)
-  const walletPanel = ref(0)
+  const walletPanel = ref(3)
 
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value

@@ -1,30 +1,33 @@
 <template>
   <div class="flex items-center justify-between gap-3">
-    <h2 class="text-s-20">Explore Crypto Tokens</h2>
-    <div>
-      <app-btn-group
-        v-model:selected="selectedCryptoFilter"
-        :btn-list="cryptoFilterOptions"
-        size="small"
-      >
-        <template #btn-content="{ data }">
-          {{ data.name }}
-        </template>
-      </app-btn-group>
+    <div class="flex items-center justify-between w-full">
+      <h2 class="text-s-40 font-bold">Explore <br />Crypto Tokens</h2>
+      <div>
+        <div class="pb-2">
+          <app-btn-group
+            v-model:selected="selectedCryptoFilter"
+            :btn-list="cryptoFilterOptions"
+            size="small"
+          >
+            <template #btn-content="{ data }">
+              {{ data.name }}
+            </template>
+          </app-btn-group>
+        </div>
+        <div
+          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
+        >
+          <app-search-input v-model="searchInput" class="grow" />
+          <app-select
+            v-model:selected="activeSort"
+            :options="[]"
+            :emit-only="true"
+            @toggle-select="openChainDialog = true"
+            placeholder="Filter by Chain"
+          />
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div
-    class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
-  >
-    <app-search-input v-model="searchInput" class="grow" />
-    <app-select
-      v-model:selected="activeSort"
-      :options="[]"
-      :emit-only="true"
-      @toggle-select="openChainDialog = true"
-      placeholder="Filter by Chain"
-    />
   </div>
 
   <div class="bg-white shadow-sm rounded-2xl p-2">
@@ -33,57 +36,128 @@
         <thead class="sticky top-0 bg-white">
           <tr class="text-left">
             <th class="px-1 py-2 w-6"></th>
-            <th class="px-1 py-2 w-12">#</th>
-            <th
-              v-for="(label, key) in HEADER_SORT_OPTIONS"
-              :key="`${label}-${key}`"
-              class="cursor-pointer"
-              :class="{
-                'px-1 py-2': label !== '#',
-              }"
-              @click="setHeaderSort(key)"
-            >
-              <div class="flex items-center gap-1">
-                {{ label }}
+            <th class="cursor-pointer px-1 py-2">
+              <div
+                class="flex items-center gap-1"
+                @click="setHeaderSort('NAME')"
+              >
+                Name
                 <chevron-up-icon
                   class="w-3 h-3"
-                  v-if="headerSort === key && tableDirection === 'asc'"
+                  v-if="headerSort === 'NAME' && tableDirection === 'asc'"
                 />
                 <chevron-down-icon
                   class="w-3 h-3"
-                  v-if="headerSort === key && tableDirection === 'desc'"
+                  v-if="headerSort === 'NAME' && tableDirection === 'desc'"
                 />
               </div>
             </th>
-            <th class="px-1 py-2 w-[130px] text-center">Action</th>
+            <th class="cursor-pointer px-1 py-2 w-[120px]">
+              <div
+                class="flex items-center gap-1 justify-end"
+                @click="setHeaderSort('PRICE')"
+              >
+                Price
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
+                />
+              </div>
+            </th>
+            <th class="px-1 py-2 text-right w-[100px]">1 hr</th>
+            <th class="px-1 py-2 text-right w-[100px]">24 hr</th>
+            <th class="px-1 py-2 text-right w-[100px]">7 days</th>
+            <th class="cursor-pointer px-1 py-2 w-[130px]">
+              <div
+                class="flex items-center gap-1 justify-end"
+                @click="setHeaderSort('TOTAL_VOLUME')"
+              >
+                24h Volume
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="
+                    headerSort === 'TOTAL_VOLUME' && tableDirection === 'asc'
+                  "
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="
+                    headerSort === 'TOTAL_VOLUME' && tableDirection === 'desc'
+                  "
+                />
+              </div>
+            </th>
+            <th class="cursor-pointer px-1 py-2 text-right w-[130px]">
+              <div
+                class="flex items-center gap-1 justify-end"
+                @click="setHeaderSort('MARKET_CAP')"
+              >
+                Market Cap
+                <chevron-up-icon
+                  class="w-3 h-3"
+                  v-if="headerSort === 'MARKET_CAP' && tableDirection === 'asc'"
+                />
+                <chevron-down-icon
+                  class="w-3 h-3"
+                  v-if="
+                    headerSort === 'MARKET_CAP' && tableDirection === 'desc'
+                  "
+                />
+              </div>
+            </th>
+            <th class="px-1 py-2 w-[120px] text-center">Last 7 days</th>
+            <th class="px-1 py-2 w-[175px] text-center">Action</th>
           </tr>
         </thead>
         <tbody v-if="!isLoading">
           <tr
-            v-for="(token, index) in tokens"
+            v-for="token in tokens"
             :key="token.name + token.marketCap"
             class="h-14"
           >
             <td class="px-1 py-2">
               <!-- changes color when active -->
-              <star-solid-icon class="h-4 w-4 text-grey-10 cursor-pointer" />
+              <star-solid-icon
+                class="h-4 w-4 text-grey-10 cursor-pointer"
+                @click="addTokenToWatchList(token.coinId)"
+                v-if="!isWatchListed(token.coinId)"
+              />
+              <star-solid-icon
+                class="h-4 w-4 text-gold cursor-pointer"
+                @click="removeTokenWatchList(token.coinId)"
+                v-else
+              />
             </td>
-            <td class="px-1 py-2">{{ ranker(index) }}.</td>
-            <td class="px-1 py-2">
-              <div class="flex">
+            <td class="px-1 py-2 w-[150px]">
+              <div class="flex items-center">
                 <img
-                  :src="token.logoUrl"
+                  :src="token.logoUrl as string"
                   alt="favorite"
                   class="inline-block h-5 w-5 mr-1 rounded-full"
                 />
-                <div class="w-[65px] overflow-hidden text-ellipsis truncate">
+                <div class="overflow-hidden truncate">
                   {{ token.name }}
                 </div>
               </div>
             </td>
-            <td class="px-1 py-2">{{ token.price }}</td>
+            <!-- TODO: change with currency parser -->
+            <td class="px-1 py-2 text-right">${{ token.price }}</td>
             <td
-              class="px-1 py-2"
+              class="px-1 py-2 text-right"
+              :class="[
+                parsePercent(token.priceChangePercentage1h).includes('-')
+                  ? 'text-error'
+                  : 'text-success',
+              ]"
+            >
+              {{ parsePercent(token.priceChangePercentage1h) }}
+            </td>
+            <td
+              class="px-1 py-2 text-right"
               :class="[
                 parsePercent(token.priceChangePercentage24h).includes('-')
                   ? 'text-error'
@@ -92,7 +166,28 @@
             >
               {{ parsePercent(token.priceChangePercentage24h) }}
             </td>
-            <td class="px-1 py-2">{{ token.marketCap }}</td>
+            <td
+              class="px-1 py-2 text-right"
+              :class="[
+                parsePercent(token.priceChangePercentage7d).includes('-')
+                  ? 'text-error'
+                  : 'text-success',
+              ]"
+            >
+              {{ parsePercent(token.priceChangePercentage7d) }}
+            </td>
+            <td class="px-1 py-2 text-right">
+              ${{ formatFiatValue(token.totalVolume ?? 0).value }}
+            </td>
+            <td class="px-1 py-2 text-right">${{ token.marketCap ?? 0 }}</td>
+            <td class="px-1 py-2 text-right">
+              <div v-if="!token.sparklineIn7d"></div>
+              <table-sparkline
+                v-else
+                :points="token.sparklineIn7d"
+                :width="100"
+              />
+            </td>
             <td class="px-1 py-2 text-center">
               <app-base-button size="small" class="mr-1" @click="buyBtn"
                 >Buy</app-base-button
@@ -106,12 +201,26 @@
         <tbody v-else>
           <tr v-for="n in 12" :key="`loading-${n}`" class="animate-pulse">
             <td></td>
-            <td></td>
             <td class="px-1 py-2">
               <div class="flex items-center gap-1">
                 <div class="size-8 rounded-full bg-grey-8"></div>
                 <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
               </div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+            </td>
+            <td class="px-1 py-2">
+              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
             </td>
             <td class="px-1 py-2">
               <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
@@ -186,29 +295,29 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/solid'
+import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import type { Chain, GetWebTokensTableResponse } from '@/mew_api/types'
+import type {
+  Chain,
+  GetWebTokensTableResponse,
+  GetWebTokensWatchlistResponse,
+} from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
+  formatFiatValue,
   formatIntegerValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
 import isValidUrl from '@/utils/isValidUrl'
 import { useDebounceFn } from '@vueuse/core'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 
 const tableContainer = ref<HTMLElement | null>(null)
 
-const HEADER_SORT_OPTIONS = {
-  NAME: 'Name',
-  PRICE: 'Price',
-  PRICE_CHANGE_PERCENTAGE_24H: '24h',
-  MARKET_CAP: 'Market Cap',
-}
 const toastStore = useToastStore()
-
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
   storeToRefs(chainsStore)
@@ -224,6 +333,10 @@ const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
 
+const watchListStore = useWatchlistStore()
+const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
+  watchListStore
+const { watchListedTokens } = storeToRefs(watchListStore)
 const previousPage = () => {
   if (page.value > 1) {
     page.value--
@@ -265,10 +378,12 @@ const setSelectedChain = (chain: Chain) => {
 
 const cryptoFilterOptions = ref([
   { name: 'All', id: 'all' },
-  { name: 'DeFi', id: 'defi' },
-  { name: 'MEME', id: 'meme' },
-  { name: 'StableCoin', id: 'stable' },
-  { name: 'TikTok', id: 'tiktok' },
+  { name: 'DeFi', id: 'defi-index' },
+  { name: 'Top Gainers', id: 'topGainers' },
+  { name: 'Top Losers', id: 'topLosers' },
+  { name: 'Stablecoins', id: 'stablecoins' },
+  { name: 'MEME', id: 'meme-token' },
+  { name: 'TikTok', id: 'tiktok-meme' },
   { name: 'Watchlist', id: 'watchlist' },
 ])
 
@@ -279,31 +394,71 @@ const totalPages = ref<number>(1)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const fetchUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+const fetchWatchListUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
   const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
-  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}`
+  return `${baseUrl}?addressChain=${defaultChain}&coins=${watchListedTokens.value}`
 })
 
-const ranker = (idx: number): number => {
-  if (tableDirection.value === 'desc') {
-    return idx + 1 + (page.value - 1) * shownItems.value
-  } else {
-    return totalTokenCount.value - idx - (page.value - 1) * shownItems.value
-  }
-}
+const fetchGainersUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
+  const direction =
+    selectedCryptoFilter.value.id !== 'topGainers' ? 'ASC' : 'DESC'
+  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
+})
 
-const { data, onFetchResponse, execute, onFetchError } =
-  useMEWFetch<GetWebTokensTableResponse>(fetchUrl, {
-    immediate: false,
-  })
-    .get()
-    .json()
+const fetchTableUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
+  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.id !== 'all' ? '&category=' + selectedCryptoFilter.value.id : ''}`
+})
 
-const fetchTokens = useDebounceFn(() => {
-  execute()
+const {
+  data: fetchGainersData,
+  onFetchResponse: onFetchGainersResponse,
+  execute: fetchGainersTable,
+  onFetchError: onFetchGainersError,
+} = useMEWFetch<GetWebTokensTableResponse>(fetchGainersUrl, {
+  immediate: false,
+})
+  .get()
+  .json()
+
+const {
+  data: fetchWatchlistData,
+  onFetchResponse: onFetchWatchlistResponse,
+  execute: fetchWatchlistTable,
+  onFetchError: onFetchWatchlistError,
+} = useMEWFetch<GetWebTokensWatchlistResponse>(fetchWatchListUrl, {
+  immediate: false,
+})
+  .get()
+  .json()
+
+const {
+  data: fetchTokenData,
+  onFetchResponse: onFetchTokenTableResponse,
+  execute: fetchTokenTable,
+  onFetchError: onFetchTokenTableError,
+} = useMEWFetch<GetWebTokensTableResponse>(fetchTableUrl, {
+  immediate: false,
+})
+  .get()
+  .json()
+
+const debounceFetchTokens = useDebounceFn(() => {
+  fetchTokenTable()
   tableContainer.value?.scrollTo(0, 0)
-}, 500)
+}, 100)
+const debounceFetchWatchlist = useDebounceFn(() => {
+  fetchWatchlistTable()
+  tableContainer.value?.scrollTo(0, 0)
+}, 100)
+const debounceFetchGainers = useDebounceFn(() => {
+  fetchGainersTable()
+  tableContainer.value?.scrollTo(0, 0)
+}, 100)
 
 onMounted(() => {
   if (isLoadedChains.value && selectedChainStore.value) {
@@ -311,14 +466,41 @@ onMounted(() => {
   }
   // Fetch tokens based on the selected filter
   isLoading.value = true
-  fetchTokens()
+  fetchTokenTable()
 })
 
-onFetchResponse(() => {
-  totalTokenCount.value = data.value?.total ?? 0
-  totalPages.value = data.value?.pages ?? 0
-  if (data.value && data.value.items) {
-    tokens.value = data.value.items.map(
+onFetchWatchlistResponse(() => {
+  totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
+  totalPages.value = 1
+  if (fetchWatchlistData.value) {
+    tokens.value = fetchWatchlistData.value.map(
+      (item: GetWebTokensWatchlistResponse[number]) => {
+        const logo =
+          item.logoUrl && isValidUrl(item.logoUrl)
+            ? item.logoUrl
+            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+        return {
+          ...item,
+          logoUrl: logo,
+          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+          price: formatFiatValue(item.price ?? 0).value,
+          // price: new Intl.NumberFormat('en-US', {
+          //   style: 'currency',
+          //   currency: 'USD',
+          //   maximumFractionDigits: 2,
+          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+        }
+      },
+    )
+  }
+  isLoading.value = false
+})
+onFetchGainersResponse(() => {
+  totalTokenCount.value = fetchGainersData.value?.total ?? 0
+  totalPages.value = fetchGainersData.value?.pages ?? 0
+  if (fetchGainersData.value && fetchGainersData.value.items) {
+    tokens.value = fetchGainersData.value.items.map(
       (item: GetWebTokensTableResponse['items'][number]) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
@@ -327,11 +509,40 @@ onFetchResponse(() => {
         return {
           ...item,
           logoUrl: logo,
-          price: new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 2,
-          }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+          price: formatFiatValue(item.price ?? 0).value,
+          // price: new Intl.NumberFormat('en-US', {
+          //   style: 'currency',
+          //   currency: 'USD',
+          //   maximumFractionDigits: 2,
+          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+        }
+      },
+    )
+  }
+  isLoading.value = false
+})
+onFetchTokenTableResponse(() => {
+  totalTokenCount.value = fetchTokenData.value?.total ?? 0
+  totalPages.value = fetchTokenData.value?.pages ?? 0
+  if (fetchTokenData.value && fetchTokenData.value.items) {
+    tokens.value = fetchTokenData.value.items.map(
+      (item: GetWebTokensTableResponse['items'][number]) => {
+        const logo =
+          item.logoUrl && isValidUrl(item.logoUrl)
+            ? item.logoUrl
+            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+        return {
+          ...item,
+          logoUrl: logo,
+          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+          price: formatFiatValue(item.price ?? 0).value,
+          // price: new Intl.NumberFormat('en-US', {
+          //   style: 'currency',
+          //   currency: 'USD',
+          //   maximumFractionDigits: 2,
+          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
           marketCap: formatIntegerValue(item.marketCap ?? 0).value,
         }
       },
@@ -340,16 +551,48 @@ onFetchResponse(() => {
   isLoading.value = false
 })
 
-onFetchError(err => {
+onFetchGainersError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+onFetchWatchlistError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+onFetchTokenTableError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
     text: err,
   })
 })
 
-const parsePercent = (val: number): string => {
+const parsePercent = (val: number | null): string => {
+  if (val === null || val === undefined) return ''
   return formatPercentageValue(val ?? 0).value
 }
+
+watch(
+  () => searchInput.value,
+  () => {
+    page.value = 1
+    isLoading.value = true
+    tokens.value = []
+    if (
+      selectedCryptoFilter.value.id === 'topGainers' ||
+      selectedCryptoFilter.value.id === 'topLosers'
+    ) {
+      debounceFetchGainers()
+    } else if (selectedCryptoFilter.value.id === 'watchlist') {
+      debounceFetchWatchlist()
+    } else {
+      debounceFetchTokens()
+    }
+  },
+)
 
 watch(
   () => [
@@ -358,12 +601,21 @@ watch(
     shownItems.value,
     headerSort.value,
     tableDirection.value,
-    searchInput.value,
     selectedCryptoFilter.value,
   ],
   () => {
     isLoading.value = true
-    fetchTokens()
+    tokens.value = []
+    if (
+      selectedCryptoFilter.value.id === 'topGainers' ||
+      selectedCryptoFilter.value.id === 'topLosers'
+    ) {
+      fetchGainersTable()
+    } else if (selectedCryptoFilter.value.id === 'watchlist') {
+      fetchWatchlistTable()
+    } else {
+      fetchTokenTable()
+    }
   },
   {
     deep: true,

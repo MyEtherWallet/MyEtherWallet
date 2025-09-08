@@ -1,108 +1,121 @@
 <template>
-  <div class="relative max-w-[478px] mx-auto">
-    <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
-      <p class="text-s-16 mb-2">{{ t('common.from') }}</p>
-      <select-chain-for-app :filter-chain-type="true" />
-      <app-swap-enter-amount
-        v-model:amount="fromAmount"
-        v-model:selected-token="fromTokenSelected"
-        v-model:error="fromAmountError"
-        :external-loading="fromLoadingState"
-        :tokens="parsedFromTokens"
-        :show-balance="isWalletConnected"
-        class="mt-4"
-      />
-    </div>
-    <div
-      class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
-      :class="{
-        'top-[34%]': isCrossChain,
-        'top-[41%]': !isCrossChain,
-      }"
-    >
-      <arrows-up-down-icon class="w-6 h-6" />
-    </div>
-    <div class="pt-2"></div>
-    <div class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto">
-      <p class="text-s-16 mb-2">{{ t('common.to') }}</p>
-      <select-chain-for-app
-        :can-store="false"
-        :passed-chains="toChains"
-        :preselected-chain="selectedToChain"
-        :filter-chain-type="true"
-        @update:selected-chain="setToChain"
-      />
-      <app-swap-enter-amount
-        v-model:amount="toAmount"
-        v-model:selected-token="toTokenSelected"
-        v-model:error="toAmountError"
-        :external-loading="toLoadingState"
-        :show-balance="false"
-        :tokens="parsedToTokens"
-        :readonly="true"
-        :is-estimate="true"
-        class="mt-4"
-      />
-      <div class="pt-4" v-if="isCrossChain"></div>
-      <address-input
-        v-model:adr-input="userToAddress"
-        :resolved-address="toAddress"
-        :address-error-messages="toAddressError"
-        @validate:address="validateToAddress"
-        v-if="isCrossChain"
-      />
-    </div>
-    <div class="pt-4"></div>
-    <div v-if="swapLoaded && !supportedNetwork" class="text-error text-center">
-      <p class="text-s-16">
-        {{ t('swap.not-supported-network') }}
-      </p>
-    </div>
-    <app-base-button
-      class="w-full"
-      v-if="isWalletConnected"
-      :disabled="
-        (swapLoaded && !supportedNetwork) ||
-        !(
-          fromAmount !== '' &&
-          fromAmount !== '0' &&
-          fromAmountError === '' &&
-          toAmount !== '0'
-        ) ||
-        (isCrossChain && toAddressError !== '')
-      "
-      @click="swapButton"
-    >
-      {{ t('common.swap') }}</app-base-button
-    >
-    <div class="w-full max-w-[478px] mx-auto" v-else>
+  <div>
+    <div class="relative max-w-[478px] mx-auto mt-4">
+      <div class="flex items-center justify-between mt-4">
+        <p class="font-semibold text-s-24 ml-3">Swap</p>
+        <!-- <app-btn-text class="text-primary ml-auto">Clear</app-btn-text> -->
+      </div>
+      <div
+        class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto"
+      >
+        <p class="text-s-16 mb-2">{{ t('common.from') }}</p>
+        <select-chain-for-app :filter-chain-type="true" />
+        <app-swap-enter-amount
+          v-model:amount="fromAmount"
+          v-model:selected-token="fromTokenSelected"
+          v-model:error="fromAmountError"
+          :external-loading="fromLoadingState"
+          :tokens="parsedFromTokens"
+          :show-balance="isWalletConnected"
+          class="mt-4"
+        />
+      </div>
+      <div
+        class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
+        :class="{
+          'top-[34%]': isCrossChain,
+          'top-[41%]': !isCrossChain,
+        }"
+      >
+        <arrows-up-down-icon class="w-6 h-6" />
+      </div>
+      <div class="pt-2"></div>
+      <div
+        class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto"
+      >
+        <p class="text-s-16 mb-2">{{ t('common.to') }}</p>
+        <select-chain-for-app
+          :can-store="false"
+          :passed-chains="toChains"
+          :preselected-chain="selectedToChain"
+          :filter-chain-type="true"
+          @update:selected-chain="setToChain"
+        />
+        <app-swap-enter-amount
+          v-model:amount="toAmount"
+          v-model:selected-token="toTokenSelected"
+          v-model:error="toAmountError"
+          :external-loading="toLoadingState"
+          :show-balance="false"
+          :tokens="parsedToTokens"
+          :readonly="true"
+          :is-estimate="true"
+          class="mt-4"
+        />
+        <div class="pt-4" v-if="isCrossChain"></div>
+        <address-input
+          v-model:adr-input="userToAddress"
+          :resolved-address="toAddress"
+          :address-error-messages="toAddressError"
+          @validate:address="validateToAddress"
+          v-if="isCrossChain"
+        />
+      </div>
+      <div class="pt-4"></div>
+      <div
+        v-if="swapLoaded && !supportedNetwork"
+        class="text-error text-center"
+      >
+        <p class="text-s-16">
+          {{ t('swap.not-supported-network') }}
+        </p>
+      </div>
       <app-base-button
         class="w-full"
-        :disabled="swapLoaded && !supportedNetwork"
-        @click="connectWalletForSwap"
+        v-if="isWalletConnected"
+        :disabled="
+          (swapLoaded && !supportedNetwork) ||
+          !(
+            fromAmount !== '' &&
+            fromAmount !== '0' &&
+            fromAmountError === '' &&
+            toAmount !== '0'
+          ) ||
+          (isCrossChain && toAddressError !== '')
+        "
+        @click="swapButton"
       >
-        {{ t('connect_wallet') }}</app-base-button
+        {{ t('common.swap') }}</app-base-button
       >
+      <div class="w-full max-w-[478px] mx-auto" v-else>
+        <app-base-button
+          class="w-full"
+          :disabled="swapLoaded && !supportedNetwork"
+          @click="connectWalletForSwap"
+        >
+          {{ t('connect_wallet') }}</app-base-button
+        >
+      </div>
     </div>
+    <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
+    <swap-offer-modal
+      v-model:swap-offer-open="bestOfferSelectionOpen"
+      v-model:selected-quote="selectedQuote"
+      @update:proceedWithSwap="proceedWithSwap"
+      :quotes="providers"
+      :amount="fromAmount"
+      :to-chain="selectedToChain"
+      :swap-info="swapInfo || undefined"
+      :swap-gas-fee-quote="swapGasFeeQuote || undefined"
+    />
+    <swap-initiated-modal
+      v-model:swap-initiated-open="swapInitiatedOpen"
+      :from-chain="selectedChain"
+      :to-chain="selectedToChain"
+      :selected-quote="selectedQuote"
+      :tx-hash="txHash"
+    />
   </div>
-  <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
-  <swap-offer-modal
-    v-model:swap-offer-open="bestOfferSelectionOpen"
-    v-model:selected-quote="selectedQuote"
-    @update:proceedWithSwap="proceedWithSwap"
-    :quotes="providers"
-    :amount="fromAmount"
-    :to-chain="selectedToChain"
-    :swap-info="swapInfo || undefined"
-    :swap-gas-fee-quote="swapGasFeeQuote || undefined"
-  />
-  <swap-initiated-modal
-    v-model:swap-initiated-open="swapInitiatedOpen"
-    :from-chain="selectedChain"
-    :to-chain="selectedToChain"
-    :selected-quote="selectedQuote"
-    :tx-hash="txHash"
-  />
 </template>
 
 <script setup lang="ts">

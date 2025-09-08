@@ -10,7 +10,7 @@
     <div
       :class="[
         isOpenSideMenu ? 'p-4' : 'p-[6px]',
-        'bg-white h-full  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]  overflow-y-scroll',
+        'bg-white h-full  shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]  overflow-y-scroll',
       ]"
     >
       <app-btn-icon
@@ -34,7 +34,7 @@
       <div
         :class="[
           { 'flex-col mt-1': !isOpenSideMenu },
-          'mt-2 flex justify-between gap-2 min-w-12',
+          'mt-2 flex justify-between gap-2 min-w-full',
         ]"
       >
         <!-- Deposit button -->
@@ -162,6 +162,7 @@
           <transition name="fade" mode="out-in">
             <!-- Modules -->
             <ModuleSend v-if="walletPanel === 2" key="send" />
+            <ModuleSwap v-else-if="walletPanel === 3" key="swap" />
             <div v-else key="coming-soon" class="mt-6 text-center font-medium">
               {{ comingSoon }}
             </div>
@@ -183,6 +184,8 @@ import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
+import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
+
 import {
   QrCodeIcon,
   ChevronDoubleLeftIcon,

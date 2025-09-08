@@ -196,6 +196,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/tokens-watchlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokensWatchlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/top-gainers": {
         parameters: {
             query?: never;
@@ -650,7 +666,7 @@ export interface components {
         /** @enum {string} */
         SortDirection: "ASC" | "DESC";
         /** @enum {string} */
-        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC";
+        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
             amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
@@ -748,7 +764,7 @@ export interface components {
                 name: string;
                 symbol: string;
                 priceChangePercentage24h: number;
-                logoUrl?: string;
+                logoUrl: string | null;
             }[];
         };
         GetWebTokensTableResponse: {
@@ -756,18 +772,34 @@ export interface components {
             pages: number;
             perPage: number;
             total: number;
-            chain: string;
             items: {
                 coinId: string;
                 name: string;
-                price: number;
-                priceChangePercentage24h: number;
-                marketCap: number;
-                address?: string;
-                logoUrl?: string;
+                price: number | null;
+                priceChangePercentage1h: number | null;
+                priceChangePercentage24h: number | null;
+                priceChangePercentage7d: number | null;
+                totalVolume: number | null;
+                marketCap: number | null;
+                address: string | null;
+                logoUrl: string | null;
+                sparklineIn7d: null | number[];
             }[];
         };
-        GetWebTopGainersSuccessResponse: {
+        GetWebTokensWatchlistResponse: {
+            coinId: string;
+            name: string;
+            price: number | null;
+            priceChangePercentage1h: number | null;
+            priceChangePercentage24h: number | null;
+            priceChangePercentage7d: number | null;
+            totalVolume: number | null;
+            marketCap: number | null;
+            address: string | null;
+            logoUrl: string | null;
+            sparklineIn7d: null | number[];
+        }[];
+        GetWebTopGainersResponse: {
             page: number;
             pages: number;
             perPage: number;
@@ -778,7 +810,7 @@ export interface components {
                 symbol: string;
                 price: number;
                 priceChangePercentage24h: number;
-                logoUrl?: string;
+                logoUrl: string | null;
             }[];
         };
         GetCoinGeckoChainPreviewResponse: {
@@ -818,8 +850,8 @@ export interface components {
             priceChangePercentage1yInCurrency?: number;
             priceChangePercentage200dInCurrency?: number;
             priceChangePercentage24hInCurrency?: number;
-            priceChangePercentage30dInCurrency?: number;
             priceChangePercentage7dInCurrency?: number;
+            priceChangePercentage30dInCurrency?: number;
             sparklineIn7d?: number[];
         }[];
         GetBalancesByChainNameAndAddressResponse: {
@@ -987,7 +1019,7 @@ export interface components {
             ordinalsFilteredOut: boolean;
         };
         BroadcastBtcTransactionRequest: {
-            signedTransaction: string;
+            signedTransaction: components["schemas"]["ByteString"];
         };
         BroadcastBtcTransactionResponse: {
             txid: string;
@@ -1074,12 +1106,20 @@ export interface components {
                 "application/json": components["schemas"]["GetWebTokensTableResponse"];
             };
         };
+        GetWebTokensWatchlistSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokensWatchlistResponse"];
+            };
+        };
         GetWebTopGainersSuccess: {
             headers: {
                 [name: string]: unknown;
             };
             content: {
-                "application/json": components["schemas"]["GetWebTopGainersSuccessResponse"];
+                "application/json": components["schemas"]["GetWebTopGainersResponse"];
             };
         };
         GetCoinGeckoChainPreviewSuccess: {
@@ -1300,9 +1340,11 @@ export interface components {
         };
     };
     parameters: {
+        CoinIds: string;
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
-        QueryChainName: string;
+        AddressChain: string;
+        FilterChain: string;
         Category: string;
         Search: string;
         Page: number;
@@ -1510,7 +1552,8 @@ export interface operations {
     GetWebTokensTable: {
         parameters: {
             query?: {
-                chain?: components["parameters"]["QueryChainName"];
+                addressChain?: components["parameters"]["AddressChain"];
+                filterChain?: components["parameters"]["FilterChain"];
                 category?: components["parameters"]["Category"];
                 search?: components["parameters"]["Search"];
                 page?: components["parameters"]["Page"];
@@ -1524,6 +1567,21 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebTokensTableSuccess"];
+        };
+    };
+    GetWebTokensWatchlist: {
+        parameters: {
+            query?: {
+                addressChain?: components["parameters"]["AddressChain"];
+                coins?: components["parameters"]["CoinIds"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokensWatchlistSuccess"];
         };
     };
     GetWebTopGainers: {
