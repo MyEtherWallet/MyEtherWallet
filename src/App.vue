@@ -16,6 +16,8 @@ import { onMounted, watch, ref } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type TokenBalancesRaw } from '@/mew_api/types'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 
 const store = useWalletStore()
 const { wallet, walletAddress, isWalletConnected } = storeToRefs(store)
@@ -58,14 +60,6 @@ onFetchResponse(() => {
   return data.value.result
 })
 
-onMounted(() => {
-  window.addEventListener('eip6963:announceProvider', (event: Event) => {
-    const customEvent = event as CustomEvent
-    const provider = customEvent.detail
-    addProvider(provider)
-  })
-})
-
 watch(
   () => selectedChain.value,
   newChain => {
@@ -81,4 +75,28 @@ watch(
   },
   { immediate: true },
 )
+/**-------------------------------
+ * Toast Feedback
+ -------------------------------*/
+
+const toastStore = useToastStore()
+
+onMounted(() => {
+  window.addEventListener('eip6963:announceProvider', (event: Event) => {
+    const customEvent = event as CustomEvent
+    const provider = customEvent.detail
+    addProvider(provider)
+  })
+  toastStore.addToastMessage({
+    text: 'Your opinion matters!',
+    textSecondary: 'Let us know what you think of this new version of MEW. ',
+    type: ToastType.Info,
+    isInfinite: true,
+    link: {
+      title: 'Submit Feedback',
+      url: 'https://www.myetherwallet.com/',
+      isButton: true,
+    },
+  })
+})
 </script>
