@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -9,6 +9,8 @@ export const useEmailSubscription = () => {
   const email = ref('')
   const isValidEmail = ref<boolean>(true)
   const emailErrorMessage = ref<string | undefined>(undefined)
+  const emit = defineEmits(['subscribed'])
+
   // Valid Email:
   const validateEmail = () => {
     isValidEmail.value = true
@@ -36,7 +38,7 @@ export const useEmailSubscription = () => {
   const subscribeToUpdates = async () => {
     validateEmail()
     if (isValidEmail.value && email.value !== '') {
-      const _url = `https://mainnet.mewwallet.dev/email-web`
+      const _url = `https://mewwallet.dev/email-web`
       isLoading.value = true
 
       const groups = ['V7_UPDATES']
@@ -60,10 +62,12 @@ export const useEmailSubscription = () => {
         isLoading.value = false
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`)
+        } else {
+          toastStore.addToastMessage({
+            text: 'Thank you for subscribing!',
+          })
+          emit('subscribed')
         }
-        toastStore.addToastMessage({
-          text: 'Thank you for subscribing!',
-        })
       } catch {
         toastStore.addToastMessage({
           text: 'Something went wrong, please try again later.',
