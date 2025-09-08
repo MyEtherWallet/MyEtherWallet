@@ -1,5 +1,6 @@
 <template>
   <div class="relative">
+    <welcome-dialog @close-welcome-dialog="showFeedbackToast" />
     <the-app-layout v-if="isLoadingComplete" />
     <module-toast />
   </div>
@@ -18,6 +19,7 @@ import { storeToRefs } from 'pinia'
 import { type TokenBalancesRaw } from '@/mew_api/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 
 const store = useWalletStore()
 const { wallet, walletAddress, isWalletConnected } = storeToRefs(store)
@@ -81,22 +83,26 @@ watch(
 
 const toastStore = useToastStore()
 
+const showFeedbackToast = () => {
+  setTimeout(() => {
+    toastStore.addToastMessage({
+      text: 'Your opinion matters!',
+      textSecondary: 'Let us know what you think of this new version of MEW. ',
+      type: ToastType.Info,
+      isInfinite: true,
+      link: {
+        title: 'Submit Feedback',
+        url: 'https://www.myetherwallet.com/',
+        isButton: true,
+      },
+    })
+  }, 4000)
+}
 onMounted(() => {
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
     const customEvent = event as CustomEvent
     const provider = customEvent.detail
     addProvider(provider)
-  })
-  toastStore.addToastMessage({
-    text: 'Your opinion matters!',
-    textSecondary: 'Let us know what you think of this new version of MEW. ',
-    type: ToastType.Info,
-    isInfinite: true,
-    link: {
-      title: 'Submit Feedback',
-      url: 'https://www.myetherwallet.com/',
-      isButton: true,
-    },
   })
 })
 </script>

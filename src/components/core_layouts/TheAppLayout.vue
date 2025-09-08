@@ -1,7 +1,5 @@
 <template>
   <div class="h-screen static">
-    <welcome-dialog />
-
     <the-wallet-header />
     <!-- Background -->
     <teleport to="#app">
@@ -73,7 +71,6 @@ import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
-import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 
 const popupStore = usePopupStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!

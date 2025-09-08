@@ -38,15 +38,22 @@
 <script setup lang="ts">
 import AppDialog from '@/components/AppDialog.vue'
 import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
-
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 const openWelcomeDialog = ref(false)
-
+const emit = defineEmits<{
+  (e: 'close-welcome-dialog'): void
+}>()
 onMounted(() => {
   setTimeout(() => {
     openWelcomeDialog.value = true
   }, 1000)
+})
+
+watch(openWelcomeDialog, newVal => {
+  if (!newVal) {
+    emit('close-welcome-dialog')
+  }
 })
 </script>
 
