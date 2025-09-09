@@ -1,6 +1,7 @@
 <template>
-  <div class="h-screen static">
-    <the-wallet-header />
+  <div class="h-screen relative flex overflow-y-auto">
+    <the-wallet-header class="basis-full" />
+
     <!-- Background -->
     <teleport to="#app">
       <transition
@@ -22,21 +23,17 @@
     </teleport>
     <div
       :class="[
+        isOpenSideMenu ? 'lg:mr-[400px]' : 'lg:mr-[60px]',
         backgroundClass,
-
-        'relative flex  h-[calc(100vh-68px)] sm:h-[calc(100vh-76px)] overflow-hidden w-screen  min-w-[320px]',
+        'flex w-full mr-[60px] overflow-y-auto',
       ]"
     >
       <div
         :class="[
-          'relative flex justify-center overflow-hidden lg:mx-auto min-w-[320px] w-screen max-w-[1440px]',
+          'relative flex justify-center min-w-[320px] w-full   mt-[68px] sm:mt-[76px]',
         ]"
       >
-        <main
-          :class="[
-            ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0 ',
-          ]"
-        >
+        <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
           <div
             class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10"
           >
@@ -53,8 +50,8 @@
           />
         </main>
       </div>
-      <layout-wallet />
     </div>
+    <layout-wallet />
   </div>
 </template>
 
@@ -68,7 +65,7 @@ import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
-import { ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_ACCESS, ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
@@ -92,7 +89,10 @@ const handleSetConsent = (consent: boolean) => {
 const route = useRoute()
 
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_ACCESS.ACCESS.NAME) {
+  if (
+    route.name === ROUTES_ACCESS.ACCESS.NAME ||
+    route.name === ROUTES_MAIN.CRYPTO.NAME
+  ) {
     return ''
   } else {
     return 'blue-gradient'
