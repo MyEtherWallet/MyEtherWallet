@@ -15,7 +15,7 @@
       >
         <div
           v-if="isOpenSideMenu"
-          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden lg:hidden"
+          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
           @click="walletMenu.setIsOpenSideMenu(false)"
           aria-hidden
         />
@@ -23,7 +23,7 @@
     </teleport>
     <div
       :class="[
-        isOpenSideMenu ? 'lg:mr-[400px]' : 'lg:mr-[60px]',
+        isOpenSideMenu ? 'xl:mr-[400px]' : 'xl:mr-[60px]',
         backgroundClass,
         'flex w-full mr-[60px] overflow-y-auto',
       ]"
@@ -34,9 +34,7 @@
         ]"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
-          <div
-            class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10"
-          >
+          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 2xl:px-7">
             <router-view />
           </div>
           <MewFooter
@@ -47,6 +45,7 @@
             :user-consent="popupStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
+            class="!px-5 !2xl:px-7"
           />
         </main>
       </div>

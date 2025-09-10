@@ -19,7 +19,7 @@
         isOpenSideMenu
           ? 'w-full !w-screen xs:min-w-[400px] xs:max-w-[400px] xs:w-[400px] top-0 xs:[69px] p-4 h-screen sm:h-[calc(100vh-76px)] sm:top-[77px]'
           : 'min-w-[60px] w-[60px] top-[69px] p-[6px] h-[calc(100vh-69px)]  xs:max-w-[400px]',
-        'z-[50] absolute lg:fixed sm:top-[77px]  right-0  transition-all duration-200 ease-out  sm:h-[calc(100vh-76px)] overflow-y-scroll bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]',
+        'z-[50] absolute xl:fixed sm:top-[77px]  right-0  transition-all duration-200 ease-out  sm:h-[calc(100vh-76px)] overflow-y-scroll bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]',
       ]"
     >
       <div>
@@ -213,19 +213,19 @@ const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
-const { isDesktopAndUp, isXsAndUp } = breakpoints
+const { isXLAndUp, isXsAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
 onMounted(() => {
-  if (isDesktopAndUp.value) {
+  if (isXLAndUp.value) {
     walletMenu.setIsOpenSideMenu(true)
   } else {
     walletMenu.setIsOpenSideMenu(false)
   }
 })
 
-watch(isDesktopAndUp, newVal => {
+watch(isXLAndUp, newVal => {
   if (newVal) {
     walletMenu.setIsOpenSideMenu(true)
   } else {

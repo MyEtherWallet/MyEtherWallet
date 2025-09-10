@@ -1,20 +1,15 @@
 <template>
-  <div class="min-h-screen space-y-4">
-    <div>
-      <main class="relative rounded-2xl px-4 pb-4 space-y-3">
-        <div class="flex gap-4">
-          <div class="flex flex-col gap-2">
-            <module-ad-space />
-            <module-education-space />
-          </div>
-          <module-trending />
-        </div>
-        <module-explore-crypto />
-        <div class="grid grid-cols-5 gap-4">
-          <module-education-space :full="true" class="col-span-2" />
-          <module-ad-space-banner class="col-span-3" />
-        </div>
-      </main>
+  <div class="flex flex-col gap-6">
+    <div class="grid grid-cols-12 w-full gap-6">
+      <div class="col-span-12 lg:col-span-3 bg-primary">
+        <module-ad-space />
+        <module-trending />
+      </div>
+      <module-explore-crypto class="col-span-12 lg:col-span-9" />
+    </div>
+    <div class="grid grid-cols-5 gap-4">
+      <module-education-space :full="true" class="col-span-2" />
+      <module-ad-space-banner class="col-span-3" />
     </div>
   </div>
 </template>

@@ -1,19 +1,10 @@
 <template>
-  <div class="flex items-center justify-between gap-3">
-    <div class="flex items-center justify-between w-full">
-      <h2 class="text-s-40 font-bold">Explore <br />Crypto Tokens</h2>
+  <div class="flex flex-col gap-2 xl:gap-3 w-full">
+    <h1 class="text5 font-bold rounded-32">Explore Crypto Tokens</h1>
+
+    <div class="basis-full">
       <div>
-        <div class="pb-2">
-          <app-btn-group
-            v-model:selected="selectedCryptoFilter"
-            :btn-list="cryptoFilterOptions"
-            size="small"
-          >
-            <template #btn-content="{ data }">
-              {{ data.name }}
-            </template>
-          </app-btn-group>
-        </div>
+        <!-- Search and Filter Chains-->
         <div
           class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
         >
@@ -26,259 +17,368 @@
             placeholder="Filter by Chain"
           />
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-white shadow-sm rounded-2xl p-2">
-    <div class="overflow-scroll h-[400px]" ref="tableContainer">
-      <table class="w-full text-sm table-fixed">
-        <thead class="sticky top-0 bg-white">
-          <tr class="text-left">
-            <th class="px-1 py-2 w-6"></th>
-            <th class="cursor-pointer px-1 py-2">
-              <div
-                class="flex items-center gap-1"
-                @click="setHeaderSort('NAME')"
-              >
-                Name
-                <chevron-up-icon
-                  class="w-3 h-3"
-                  v-if="headerSort === 'NAME' && tableDirection === 'asc'"
-                />
-                <chevron-down-icon
-                  class="w-3 h-3"
-                  v-if="headerSort === 'NAME' && tableDirection === 'desc'"
-                />
-              </div>
-            </th>
-            <th class="cursor-pointer px-1 py-2 w-[120px]">
-              <div
-                class="flex items-center gap-1 justify-end"
-                @click="setHeaderSort('PRICE')"
-              >
-                Price
-                <chevron-up-icon
-                  class="w-3 h-3"
-                  v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
-                />
-                <chevron-down-icon
-                  class="w-3 h-3"
-                  v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
-                />
-              </div>
-            </th>
-            <th class="px-1 py-2 text-right w-[100px]">1 hr</th>
-            <th class="px-1 py-2 text-right w-[100px]">24 hr</th>
-            <th class="px-1 py-2 text-right w-[100px]">7 days</th>
-            <th class="cursor-pointer px-1 py-2 w-[130px]">
-              <div
-                class="flex items-center gap-1 justify-end"
-                @click="setHeaderSort('TOTAL_VOLUME')"
-              >
-                24h Volume
-                <chevron-up-icon
-                  class="w-3 h-3"
-                  v-if="
-                    headerSort === 'TOTAL_VOLUME' && tableDirection === 'asc'
-                  "
-                />
-                <chevron-down-icon
-                  class="w-3 h-3"
-                  v-if="
-                    headerSort === 'TOTAL_VOLUME' && tableDirection === 'desc'
-                  "
-                />
-              </div>
-            </th>
-            <th class="cursor-pointer px-1 py-2 text-right w-[130px]">
-              <div
-                class="flex items-center gap-1 justify-end"
-                @click="setHeaderSort('MARKET_CAP')"
-              >
-                Market Cap
-                <chevron-up-icon
-                  class="w-3 h-3"
-                  v-if="headerSort === 'MARKET_CAP' && tableDirection === 'asc'"
-                />
-                <chevron-down-icon
-                  class="w-3 h-3"
-                  v-if="
-                    headerSort === 'MARKET_CAP' && tableDirection === 'desc'
-                  "
-                />
-              </div>
-            </th>
-            <th class="px-1 py-2 w-[120px] text-center">Last 7 days</th>
-            <th class="px-1 py-2 w-[175px] text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody v-if="!isLoading">
-          <tr
-            v-for="token in tokens"
-            :key="token.name + token.marketCap"
-            class="h-14"
+        <!--Filter Lists-->
+        <div class="flex justify-end pt-2 ml-auto">
+          <app-btn-group
+            v-model:selected="selectedCryptoFilter"
+            :btn-list="cryptoFilterOptions"
+            size="small"
+            class=""
           >
-            <td class="px-1 py-2">
-              <!-- changes color when active -->
-              <star-solid-icon
-                class="h-4 w-4 text-grey-10 cursor-pointer"
-                @click="addTokenToWatchList(token.coinId)"
-                v-if="!isWatchListed(token.coinId)"
-              />
-              <star-solid-icon
-                class="h-4 w-4 text-gold cursor-pointer"
-                @click="removeTokenWatchList(token.coinId)"
-                v-else
-              />
-            </td>
-            <td class="px-1 py-2 w-[150px]">
-              <div class="flex items-center">
-                <img
-                  :src="token.logoUrl as string"
-                  alt="favorite"
-                  class="inline-block h-5 w-5 mr-1 rounded-full"
-                />
-                <div class="overflow-hidden truncate">
-                  {{ token.name }}
-                </div>
-              </div>
-            </td>
-            <!-- TODO: change with currency parser -->
-            <td class="px-1 py-2 text-right">${{ token.price }}</td>
-            <td
-              class="px-1 py-2 text-right"
-              :class="[
-                parsePercent(token.priceChangePercentage1h).includes('-')
-                  ? 'text-error'
-                  : 'text-success',
-              ]"
-            >
-              {{ parsePercent(token.priceChangePercentage1h) }}
-            </td>
-            <td
-              class="px-1 py-2 text-right"
-              :class="[
-                parsePercent(token.priceChangePercentage24h).includes('-')
-                  ? 'text-error'
-                  : 'text-success',
-              ]"
-            >
-              {{ parsePercent(token.priceChangePercentage24h) }}
-            </td>
-            <td
-              class="px-1 py-2 text-right"
-              :class="[
-                parsePercent(token.priceChangePercentage7d).includes('-')
-                  ? 'text-error'
-                  : 'text-success',
-              ]"
-            >
-              {{ parsePercent(token.priceChangePercentage7d) }}
-            </td>
-            <td class="px-1 py-2 text-right">
-              ${{ formatFiatValue(token.totalVolume ?? 0).value }}
-            </td>
-            <td class="px-1 py-2 text-right">${{ token.marketCap ?? 0 }}</td>
-            <td class="px-1 py-2 text-right">
-              <div v-if="!token.sparklineIn7d"></div>
-              <table-sparkline
-                v-else
-                :points="token.sparklineIn7d"
-                :width="100"
-              />
-            </td>
-            <td class="px-1 py-2 text-center">
-              <app-base-button size="small" class="mr-1" @click="buyBtn"
-                >Buy</app-base-button
-              >
-              <app-base-button size="small" @click="swapBtn"
-                >Swap</app-base-button
-              >
-            </td>
-          </tr>
-        </tbody>
-        <tbody v-else>
-          <tr v-for="n in 12" :key="`loading-${n}`" class="animate-pulse">
-            <td></td>
-            <td class="px-1 py-2">
-              <div class="flex items-center gap-1">
-                <div class="size-8 rounded-full bg-grey-8"></div>
-                <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
-              </div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-            <td class="px-1 py-2">
-              <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="flex items-center justify-between text-xs mt-2">
-      <small>{{ tokens.length * page }} of {{ totalTokenCount }} results</small>
-      <div class="flex items-center gap-2">
-        <button
-          class="px-2 py-1 rounded-lg border bg-white disabled:opacity-50"
-          :disabled="!isLoading && page === 1"
-          @click="previousPage"
-        >
-          Prev
-        </button>
-        <span class="px-2">{{ page }} of {{ totalPages }}</span>
-        <button
-          class="px-2 py-1 rounded-lg border bg-white disabled:opacity-50"
-          :disabled="!isLoading && page >= totalPages"
-          @click="nextPage"
-        >
-          Next
-        </button>
+            <template #btn-content="{ data }">
+              {{ data.name }}
+            </template>
+          </app-btn-group>
+        </div>
       </div>
-      <app-pop-up-menu
-        :placeholder="`Shown items: ${shownItems}`"
-        label-size="14"
-      >
-        <template #menu-content="{ toggleMenu }">
-          <div
-            v-for="n in shownItemsOptions"
-            :key="`shown-items-${n}`"
-            class="px-4 pt-4 pb-2 cursor-pointer flex items-center"
-            @click="setShownItems(n, toggleMenu)"
+
+      <div class="mt-5 bg-white rounded-16 shadow-button py-4 px-2">
+        <div class="" ref="tableContainer">
+          <table class="w-full text-sm table-fixed">
+            <!-- Header-->
+            <thead class="sticky top-0 bg-white">
+              <tr
+                class="text-left text-s-11 uppercase text-info tracking-sp-06"
+              >
+                <!-- Watchlist -->
+                <th class="w-8 xs:w-10 hidden sm:table-cell"></th>
+                <!-- Name -->
+                <th
+                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors xs:w-[180px]"
+                >
+                  <div
+                    class="flex items-center gap-1 ml-11"
+                    :class="{
+                      'text-black': headerSort === 'NAME',
+                    }"
+                    @click="setHeaderSort('NAME')"
+                  >
+                    Name
+                    <arrow-long-up-icon
+                      class="w-3 h-3"
+                      v-if="headerSort === 'NAME' && tableDirection === 'asc'"
+                    />
+                    <arrow-long-down-icon
+                      class="w-3 h-3"
+                      v-if="headerSort === 'NAME' && tableDirection === 'desc'"
+                    />
+                  </div>
+                </th>
+                <!-- Price -->
+                <th
+                  class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors w-[150px] xs:w-auto xl:w-[120px]"
+                >
+                  <div
+                    class="flex items-center gap-1 justify-end xs:justify-center sm:justify-end relative"
+                    :class="{
+                      'text-black': headerSort === 'PRICE',
+                    }"
+                    @click="setHeaderSort('PRICE')"
+                  >
+                    Price
+                    <arrow-long-up-icon
+                      class="w-3 h-3 absolute xs:static sm:absolute -right-4"
+                      v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
+                    />
+                    <arrow-long-down-icon
+                      class="w-3 h-3 absolute xs:static sm:absolute -right-4"
+                      v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
+                    />
+                  </div>
+                </th>
+                <!-- 24h % -->
+                <th class="hidden sm:table-cell xl:min-w-[115px]">
+                  <app-select
+                    v-model:selected="activePercent"
+                    :options="percentOptions"
+                    class="text-black !text-s-14"
+                  >
+                    <template #select-button="{ toggleSelect }">
+                      <button
+                        class="px-1 py-2 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        @click="toggleSelect"
+                      >
+                        <div class="flex items-center justify-end gap-1">
+                          <p>{{ activePercent.label }}</p>
+                          <chevron-down-icon class="w-3 h-3" />
+                        </div>
+                      </button>
+                    </template>
+                  </app-select>
+                </th>
+                <!-- Last 7 days -->
+                <!-- <th
+                  class="px-1 py-2 text-right hidden sm:table-cell xl:min-w-[115px]"
+                >
+                  Last 7 days
+                </th> -->
+                <!-- 24h Volume -->
+                <th
+                  :class="
+                    isOpenSideMenu ? 'hidden 2xl:table-cell' : 'xl:table-cell'
+                  "
+                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden xl:min-w-[115px]"
+                >
+                  <div
+                    class="flex items-center gap-1 justify-end relative"
+                    :class="{
+                      'text-black': headerSort === 'TOTAL_VOLUME',
+                    }"
+                    @click="setHeaderSort('TOTAL_VOLUME')"
+                  >
+                    24h Volume
+                    <arrow-long-up-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'TOTAL_VOLUME' &&
+                        tableDirection === 'asc'
+                      "
+                    />
+                    <arrow-long-down-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'TOTAL_VOLUME' &&
+                        tableDirection === 'desc'
+                      "
+                    />
+                  </div>
+                </th>
+                <!-- Market Cap -->
+                <th
+                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden md:table-cell xl:min-w-[115px]"
+                >
+                  <div
+                    class="flex items-center gap-1 justify-end relative text-right"
+                    :class="{
+                      'text-black': headerSort === 'MARKET_CAP',
+                    }"
+                    @click="setHeaderSort('MARKET_CAP')"
+                  >
+                    Market Cap
+                    <arrow-long-up-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'MARKET_CAP' && tableDirection === 'asc'
+                      "
+                    />
+                    <arrow-long-down-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'MARKET_CAP' && tableDirection === 'desc'
+                      "
+                    />
+                  </div>
+                </th>
+                <!-- Actions -->
+                <th
+                  class="pl-1 pr-3 py-2 text-right hidden xs:table-cell w-[150px]"
+                  :class="[
+                    isOpenSideMenu
+                      ? '2xl:w-[130px] 3xl:w-[180px]'
+                      : 'xl:w-[180px]',
+                  ]"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <!-- Body-->
+            <tbody v-if="!isLoading">
+              <tr
+                v-for="token in tokens"
+                :key="token.name + token.marketCap"
+                class="h-14 hoverBGWhite !rounded-12"
+              >
+                <!-- Watchlist -->
+                <td class="xs:pr-2 hidden sm:table-cell">
+                  <button
+                    :class="{
+                      'text-primary hover:text-text-grey-30': isWatchListed(
+                        token.coinId,
+                      ),
+                      'text-grey-30 hover:text-primary': !isWatchListed(
+                        token.coinId,
+                      ),
+                    }"
+                    class="p-2 rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  >
+                    <!-- changes color when active -->
+
+                    <star-solid-icon
+                      class="h-4 w-4 cursor-pointer"
+                      @click="setWatchlistToken(token.coinId)"
+                    />
+                  </button>
+                </td>
+                <!-- Name -->
+                <td class="px-1 py-2">
+                  <div class="flex items-center gap-3">
+                    <img
+                      :src="token.logoUrl as string"
+                      alt="favorite"
+                      class="inline-block h-8 w-8 rounded-full shadow-token"
+                    />
+                    <div class="truncate">
+                      <p class="truncate">{{ token.name }}</p>
+                      <p class="text-info text-s-12 uppercase">
+                        {{ truncate(token.symbol, 7) }}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <!-- Price -->
+                <!-- TODO: change with currency parser -->
+                <td class="px-1 py-2 text-right">
+                  <p class="text-right xs:text-center sm:text-right">
+                    ${{ token.price }}
+                  </p>
+                  <p
+                    class="text-right xs:text-center sm:hidden text-s-12"
+                    :class="[
+                      parsePercent(getActivePercent(token)).includes('-')
+                        ? 'text-error'
+                        : 'text-success',
+                    ]"
+                  >
+                    {{ parsePercent(getActivePercent(token)) }}
+                  </p>
+                </td>
+                <!-- 24h % -->
+                <td
+                  class="px-1 py-1 text-right hidden sm:table-cell text-s-11 leading-p-100"
+                  :class="[
+                    parsePercent(getActivePercent(token)).includes('-')
+                      ? 'text-error'
+                      : 'text-success',
+                  ]"
+                >
+                  <div>
+                    <p>{{ parsePercent(getActivePercent(token)) }}</p>
+                    <div v-if="getSparkLinePoints(token).length === 0"></div>
+                    <table-sparkline
+                      v-else
+                      :points="getSparkLinePoints(token)"
+                      :width="50"
+                      :height="35"
+                      :max-points="35"
+                    />
+                  </div>
+                </td>
+                <!-- Last 7 days -->
+                <!-- <td class="px-1 py-2 text-right hidden sm:table-cell"> -->
+                <!-- <div v-if="getSparkLinePoints(token).length === 0"></div>
+                  <table-sparkline
+                    v-else
+                    :points="getSparkLinePoints(token)"
+                    :width="50"
+                    :max-points="24"
+                  /> -->
+                <!-- </td> -->
+                <!-- 24h Volume -->
+                <td
+                  :class="
+                    isOpenSideMenu ? 'hidden 2xl:table-cell' : 'xl:table-cell'
+                  "
+                  class="px-1 py-2 text-right hidden"
+                >
+                  ${{ formatFiatValue(token.totalVolume ?? 0).value }}
+                </td>
+                <!-- Market Cap -->
+                <td class="px-1 py-2 text-right hidden md:table-cell">
+                  ${{ token.marketCap ?? 0 }}
+                </td>
+                <!-- Actions -->
+                <td class="pl-1 py-2 hidden xs:table-cell">
+                  <div class="flex flex-row gap-1 justify-end flex-wrap">
+                    <app-base-button size="small" @click="buyBtn" is-outline
+                      >Buy</app-base-button
+                    >
+                    <app-base-button size="small" @click="swapBtn"
+                      >Swap</app-base-button
+                    >
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr v-for="n in 12" :key="`loading-${n}`" class="animate-pulse">
+                <td></td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="flex items-center gap-1">
+                    <div class="size-8 rounded-full bg-grey-8"></div>
+                    <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
+                  </div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+                <td class="px-1 py-3 xs:py-2">
+                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex items-center justify-between text-xs mt-2">
+          <small class="text-info ml-4"
+            >{{ tokens.length * page }} of {{ totalTokenCount }} results</small
           >
-            {{ n }}
-            <check-icon class="text-success w-6" v-if="shownItems === n" />
+          <div class="flex items-center gap-2">
+            <app-btn-icon
+              class=""
+              :disabled="!isLoading && page === 1"
+              label="previous page"
+              @click="previousPage"
+            >
+              <ChevronLeftIcon class="w-4 h-4" />
+            </app-btn-icon>
+
+            <span class="px-2">{{ page }} of {{ totalPages }}</span>
+            <app-btn-icon
+              class=""
+              :disabled="!isLoading && page >= totalPages"
+              label="next page"
+              @click="nextPage"
+            >
+              <ChevronRightIcon class="w-4 h-4" />
+            </app-btn-icon>
           </div>
-        </template>
-      </app-pop-up-menu>
+          <app-select
+            v-model:selected="activeShownItems"
+            :options="shownItemsOptions"
+            placeholder="Items per page"
+            class="text-black !text-s-14"
+            position="-right-1"
+          />
+        </div>
+        <select-chain-dialog
+          v-if="isLoadedChains"
+          v-model:is-open="openChainDialog"
+          :selected-chain="selectedChainFilter"
+          :filter-chain-type="true"
+          @update:chain="setSelectedChain"
+        />
+      </div>
     </div>
-    <select-chain-dialog
-      v-if="isLoadedChains"
-      v-model:is-open="openChainDialog"
-      :selected-chain="selectedChainFilter"
-      :filter-chain-type="true"
-      @update:chain="setSelectedChain"
-    />
   </div>
 </template>
 
@@ -287,21 +387,26 @@ import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+// import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import {
   StarIcon as StarSolidIcon,
-  CheckIcon,
-  ChevronUpIcon,
   ChevronDownIcon,
+  ArrowLongDownIcon,
+  ArrowLongUpIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@heroicons/vue/24/solid'
 import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
+import { truncate } from '@/utils/filters'
 import type {
   Chain,
   GetWebTokensTableResponse,
+  GetWebTokensTableResponseToken,
   GetWebTokensWatchlistResponse,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -314,6 +419,11 @@ import { useToastStore } from '@/stores/toastStore'
 import isValidUrl from '@/utils/isValidUrl'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { type AppSelectOption } from '@/types/components/appSelect'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -323,9 +433,6 @@ const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
   storeToRefs(chainsStore)
 const searchInput = ref('')
 const activeSort = ref({ label: '', value: '' })
-const shownItems = ref<number>(50)
-
-const shownItemsOptions = [5, 10, 50, 100]
 const selectedChainFilter = ref<Chain | null>(null)
 const openChainDialog = ref<boolean>(false)
 const headerSort = ref<string>('MARKET_CAP')
@@ -333,10 +440,42 @@ const tableDirection = ref<'asc' | 'desc'>('desc')
 const totalTokenCount = ref<number>(0)
 const isLoading = ref<boolean>(true)
 
+/** -------------------------------
+ * Watchlist
+-------------------------------*/
+
 const watchListStore = useWatchlistStore()
 const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
   watchListStore
 const { watchListedTokens } = storeToRefs(watchListStore)
+
+const setWatchlistToken = (tokenId: string) => {
+  if (isWatchListed(tokenId)) {
+    removeTokenWatchList(tokenId)
+  } else {
+    addTokenToWatchList(tokenId)
+  }
+}
+
+/** -------------------------------
+ * Number of items shown in the table
+-------------------------------*/
+const shownItemsOptions = <AppSelectOption[]>[
+  { label: '5', value: '5' },
+  { label: '10', value: '10' },
+  { label: '50', value: '50' },
+  { label: '100', value: '100' },
+]
+
+const activeShownItems = ref<AppSelectOption>(shownItemsOptions[1])
+
+const shownItems = computed<number>(() => {
+  return Number(activeShownItems.value.value)
+})
+
+/** -------------------------------
+ * Pagination
+-------------------------------*/
 const previousPage = () => {
   if (page.value > 1) {
     page.value--
@@ -356,11 +495,11 @@ const buyBtn = () => {
 }
 const swapBtn = () => {}
 
-const setShownItems = (n: number, toggle: () => void) => {
-  shownItems.value = n
-  page.value = 1
-  toggle()
-}
+// const setShownItems = (n: number, toggle: () => void) => {
+//   shownItems.value = n
+//   page.value = 1
+//   toggle()
+// }
 
 const setHeaderSort = (key: string) => {
   if (headerSort.value === key) {
@@ -388,7 +527,7 @@ const cryptoFilterOptions = ref([
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
-const tokens: Ref<GetWebTokensTableResponse['items']> = ref([])
+const tokens: Ref<GetWebTokensTableResponseToken[]> = ref([])
 const page = ref<number>(1)
 const totalPages = ref<number>(1)
 
@@ -501,7 +640,7 @@ onFetchGainersResponse(() => {
   totalPages.value = fetchGainersData.value?.pages ?? 0
   if (fetchGainersData.value && fetchGainersData.value.items) {
     tokens.value = fetchGainersData.value.items.map(
-      (item: GetWebTokensTableResponse['items'][number]) => {
+      (item: GetWebTokensTableResponseToken) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
@@ -528,7 +667,7 @@ onFetchTokenTableResponse(() => {
   totalPages.value = fetchTokenData.value?.pages ?? 0
   if (fetchTokenData.value && fetchTokenData.value.items) {
     tokens.value = fetchTokenData.value.items.map(
-      (item: GetWebTokensTableResponse['items'][number]) => {
+      (item: GetWebTokensTableResponseToken) => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
@@ -621,4 +760,63 @@ watch(
     deep: true,
   },
 )
+
+/**-------------------------------
+ * Active percent change options
+ --------------------------------*/
+enum activePercentChange {
+  ONE_HOUR = '1h',
+  TWENTY_FOUR_HOURS = '24h',
+  SEVEN_DAYS = '7d',
+}
+
+const percentOptions = <AppSelectOption[]>[
+  { label: '1h', value: activePercentChange.ONE_HOUR },
+  { label: '24h', value: activePercentChange.TWENTY_FOUR_HOURS },
+  { label: '7d', value: activePercentChange.SEVEN_DAYS },
+]
+
+const activePercent = ref<AppSelectOption>(percentOptions[1])
+
+const getActivePercent = (token: GetWebTokensTableResponseToken) => {
+  switch (activePercent.value.value) {
+    case activePercentChange.ONE_HOUR:
+      return token.priceChangePercentage1h
+    case activePercentChange.TWENTY_FOUR_HOURS:
+      return token.priceChangePercentage24h
+    case activePercentChange.SEVEN_DAYS:
+      return token.priceChangePercentage7d
+    default:
+      return token.priceChangePercentage24h
+  }
+}
+
+watch(
+  () => selectedCryptoFilter.value,
+  () => {
+    if (
+      selectedCryptoFilter.value.id === 'topGainers' ||
+      selectedCryptoFilter.value.id === 'topLosers'
+    ) {
+      activePercent.value = percentOptions[1]
+    }
+  },
+)
+
+const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
+  console.log(token)
+  if (
+    token.sparklineIn7d &&
+    token.sparklineIn7d.length > 0 &&
+    activePercent.value.value !== '1h'
+  ) {
+    if (activePercent.value.value === '7d') {
+      return token.sparklineIn7d
+    }
+    const totalPoints = token.sparklineIn7d.length / 7
+    console.log(token.sparklineIn7d.slice(-totalPoints))
+    return token.sparklineIn7d.slice(-totalPoints)
+  }
+  return []
+}
 </script>

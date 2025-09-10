@@ -314,11 +314,11 @@ const formatPercentageValue = (
   const absoluteValue = value.absoluteValue() // Get Absolute value
 
   /**
-   * Case II: |value| > 10000
-   * Return: >10,000% or <-10000% and tooltip
+   * Case II: |value| > 1000
+   * Return: >1000% or <-1000% and tooltip
    */
-  if (absoluteValue.isGreaterThan(TenThousand)) {
-    const result = isNegative ? '< -10,000%' : '> 10,000%'
+  if (absoluteValue.isGreaterThan(1000)) {
+    const result = isNegative ? '< -1000%' : '> 1000%'
     return {
       value: result,
       unit: unit,
@@ -348,18 +348,10 @@ const formatPercentageValue = (
   }
 
   /**
-   * Case V: |value| >= 0.01
-   * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
+   * Case V: If |value| < 0.01
+   * Return: '>-0.01' '<0.01' and tooltip
    */
-  if (absoluteValue.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return { value: `${getRoundNumber(value, 6).value}%`, unit: unit }
-  }
-
-  /**
-   * Case VI: If |value| < 0.000001
-   * Return: '>-0.000001' '<0.000001'r and tooltip
-   */
-  const result = isNegative ? '> -0.000001%' : '< 0.000001%'
+  const result = isNegative ? '> -0.01%' : '< 0.01%'
   return { value: result, unit: unit, tooltipText: `${value.toFormat()}%` }
 }
 
