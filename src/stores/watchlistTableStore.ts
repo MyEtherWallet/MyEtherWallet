@@ -10,8 +10,8 @@ export const useWatchlistStore = defineStore(
 
     const addTokenToWatchList = (coinId: string) => {
       const watchListArray = watchListedTokens.value;
-      if (watchListArray.includes(coinId)) {
-        watchListedTokens.value = [...watchListedTokens.value, coinId]
+      if (!watchListArray.includes(coinId)) {
+        watchListedTokens.value = [...watchListArray, coinId]
       }
     }
 
