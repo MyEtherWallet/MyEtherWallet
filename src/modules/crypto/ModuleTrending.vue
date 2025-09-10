@@ -1,35 +1,42 @@
 <template>
   <!-- Top: Trending -->
   <div>
-    <h2 class="text-s-40 mb-2 ml-4">Trending Tokens</h2>
-    <div class="flex justify-start gap-1 flex-wrap" v-if="!isLoading">
+    <h2 class="text-s-20 font-bold ml-4">Trending Tokens</h2>
+    <div
+      class="flex justify-start gap-2 flex-wrap overflow-scroll"
+      v-if="!isLoading"
+    >
       <button
         v-for="token in trendingTokens"
         :key="token.symbol"
-        class="bg-white w-[130px] shadow-button px-3 pt-1 pb-3 mt-2 mr-1 flex flex-col rounded-2xl hoverBGWhite"
+        class="basis-full bg-white w-[130px] shadow-button px-3 py-2 flex items-center justify-between rounded-16 hoverBGWhite"
       >
-        <span
-          class="text-s-11 text-right"
-          :class="{
-            'text-error': token.priceChangePercentage24h < 0,
-            'text-success': token.priceChangePercentage24h >= 0,
-          }"
-          >{{
-            formatPercentageValue(token.priceChangePercentage24h).value
-          }}</span
-        >
-        <div class="flex gap-2 items-center justify-start">
+        <div class="flex gap-2 items-center justify-start overflow-hidden">
           <img
             :src="token.logoUrl as string"
             class="w-8 h-8 rounded-full shadow-token"
             alt=""
           />
           <div class="text-left">
-            <p class="text-s-14 font-bold truncate">
+            <p class="text-s-14 font-bold">
+              {{ token.name }}
+            </p>
+            <p class="text-s-12 text-info">
               {{ truncate(token.symbol, 6) }}
             </p>
-            <p class="text-s-12 text-righ text-info">$200.00</p>
           </div>
+        </div>
+        <div>
+          <p class="text-right">$200.00</p>
+          <p
+            class="text-s-12 text-right"
+            :class="{
+              'text-error': token.priceChangePercentage24h < 0,
+              'text-success': token.priceChangePercentage24h >= 0,
+            }"
+          >
+            {{ formatPercentageValue(token.priceChangePercentage24h).value }}
+          </p>
         </div>
       </button>
     </div>
