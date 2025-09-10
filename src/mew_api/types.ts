@@ -66,5 +66,7 @@ export type GetWebTopGainersResponse =
   components['schemas']['GetWebTopGainersResponse']
 export type GetWebTrendingTokensResponse =
   components['schemas']['GetWebTrendingTokensResponse']
+export type GetWebTrendingTokensResponseToken =
+  components['schemas']['GetWebTrendingTokensResponse']['items'][number]
 export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']

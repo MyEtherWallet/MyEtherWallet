@@ -1,24 +1,48 @@
 <template>
   <!-- Top: Trending -->
   <div>
-    <h2 class="text-s-20 font-bold ml-4">Trending Tokens</h2>
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-s-20 font-bold ml-2">Trending</h2>
+
+      <div class="flex">
+        <app-btn-icon
+          class=""
+          :disabled="!isLoading && page === 1"
+          label="previous page"
+          @click="previousPage"
+        >
+          <ChevronLeftIcon class="w-4 h-4" />
+        </app-btn-icon>
+        <app-btn-icon
+          class=""
+          :disabled="!isLoading && page >= totalPages"
+          label="next page"
+          @click="nextPage"
+        >
+          <ChevronRightIcon class="w-4 h-4" />
+        </app-btn-icon>
+      </div>
+    </div>
+
     <div
-      class="flex justify-start gap-2 flex-wrap overflow-scroll"
+      class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2"
       v-if="!isLoading"
     >
       <button
-        v-for="token in trendingTokens"
+        v-for="token in currentTrendingTokens"
         :key="token.symbol"
-        class="basis-full bg-white w-[130px] shadow-button px-3 py-2 flex items-center justify-between rounded-16 hoverBGWhite"
+        class="w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"
       >
-        <div class="flex gap-2 items-center justify-start overflow-hidden">
+        <div
+          class="flex gap-2 items-center justify-start overflow-hidden flex-wrap"
+        >
           <img
             :src="token.logoUrl as string"
             class="w-8 h-8 rounded-full shadow-token"
             alt=""
           />
           <div class="text-left">
-            <p class="text-s-14 font-bold">
+            <p class="text-s-14 font-bold text-wrap">
               {{ token.name }}
             </p>
             <p class="text-s-12 text-info">
@@ -26,8 +50,8 @@
             </p>
           </div>
         </div>
-        <div>
-          <p class="text-right">$200.00</p>
+        <div class="pl-2">
+          <p class="text-s-14 text-right">$200.00</p>
           <p
             class="text-s-12 text-right"
             :class="{
@@ -40,45 +64,51 @@
         </div>
       </button>
     </div>
-    <div class="flex justify-start gap-3 flex-wrap animate-pulse" v-else>
+    <div class="flex justify-start gap-2 flex-wrap animate-pulse" v-else>
       <div
         v-for="token in 10"
         :key="`loading-trending-${token}`"
-        class="bg-grey-5 w-[115px] h-[100px] shadow-md gap-2 p-4 mt-2 mr-1 flex flex-col bg-white rounded-2xl"
-      >
-        <div class="flex gap-1 items-center justify-between">
-          <div class="size-8 rounded-full bg-grey-8"></div>
-          <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-        </div>
-        <div class="flex flex-col gap-1">
-          <div class="col-span-2 h-4 w-full rounded bg-grey-8"></div>
-          <div class="col-span-2 h-4 w-full rounded bg-grey-8"></div>
-        </div>
-      </div>
+        class="basis-full bg-surface shadow-button px-3 py-2 flex items-end justify-between rounded-16 w-full h-[55px]"
+      ></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useToastStore } from '@/stores/toastStore'
-import { onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref, type Ref, watch } from 'vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
-import type { GetWebTrendingTokensResponse } from '@/mew_api/types'
+import type {
+  GetWebTrendingTokensResponse,
+  GetWebTrendingTokensResponseToken,
+} from '@/mew_api/types'
 import { truncate } from '@/utils/filters'
+import BigNumber from 'bignumber.js'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
 const { useMEWFetch } = useFetchMewApi()
 const toastStore = useToastStore()
-const isLoading = ref(false)
-const trendingTokens: Ref<GetWebTrendingTokensResponse['items']> = ref([])
+const isLoading = ref(true)
+const trendingTokens: Ref<GetWebTrendingTokensResponseToken[]> = ref([])
 
-const fetchUrl =
-  'https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=1&sort=desc&perPage=12'
-const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
-  immediate: false,
+const apiPage = ref(1)
+const apiTotalItems = ref(1)
+
+// const pageStore: Map<string, GetWebTrendingTokensResponseToken[]> = new Map()
+
+const url = computed(() => {
+  return `https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`
 })
-  .get()
-  .json()
+const fetchUrl = url
+const { execute, data, onFetchResponse, onFetchError } =
+  useMEWFetch<GetWebTrendingTokensResponse>(fetchUrl, {
+    immediate: false,
+  })
+    .get()
+    .json()
 
 onMounted(() => {
   isLoading.value = true
@@ -87,15 +117,16 @@ onMounted(() => {
 
 onFetchResponse(() => {
   if (data.value && data.value.items) {
-    trendingTokens.value = data.value.items.map(
-      (token: GetWebTrendingTokensResponse['items'][number]) => {
+    apiTotalItems.value = data.value.total
+    trendingTokens.value = [
+      ...trendingTokens.value,
+      ...data.value.items.map((token: GetWebTrendingTokensResponseToken) => {
         return {
           ...token,
-          name: token.name,
           symbol: token.symbol.toUpperCase(),
         }
-      },
-    )
+      }),
+    ]
   }
   isLoading.value = false
 })
@@ -106,4 +137,69 @@ onFetchError(err => {
     text: err,
   })
 })
+
+/** --------------------------
+ * Pagination
+ --------------------------*/
+const { isMobile, isTablet } = useAppBreakpoints()
+const page = ref(1)
+
+const totalPages = computed(() =>
+  new BigNumber(apiTotalItems.value)
+    .div(itemsPerPage.value)
+    .integerValue(BigNumber.ROUND_CEIL)
+    .toNumber(),
+)
+const itemsPerPage = computed(() => {
+  if (isMobile.value) {
+    return 4
+  }
+  if (isTablet.value) {
+    return 6
+  }
+  return isMobile.value ? 4 : 10
+})
+
+const paginateArray = (page: number) => {
+  const startIndex = (page - 1) * itemsPerPage.value
+  const endIndex = page * itemsPerPage.value
+  return trendingTokens.value.slice(startIndex, endIndex)
+}
+
+const currentTrendingTokens = computed(() => {
+  return paginateArray(page.value)
+})
+
+const nextPage = () => {
+  if (page.value < totalPages.value) {
+    const nextPage = page.value + 1
+    const nextItems = paginateArray(nextPage)
+    if (
+      nextItems.length === itemsPerPage.value ||
+      nextPage === totalPages.value
+    ) {
+      page.value += 1
+    } else {
+      isLoading.value = true
+      apiPage.value += 1
+      execute().then(() => {
+        page.value += 1
+      })
+    }
+  }
+}
+const previousPage = () => {
+  if (page.value > 1) {
+    page.value -= 1
+  }
+}
+
+watch(
+  () => itemsPerPage.value,
+  () => {
+    if (page.value > totalPages.value) {
+      page.value = totalPages.value
+    }
+  },
+)
 </script>

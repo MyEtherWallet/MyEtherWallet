@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1 class="text5 font-bold rounded-32">Explore Crypto Tokens</h1>
+    <h1 class="text5 font-bold rounded-32 ml-2">Explore Crypto Tokens</h1>
 
     <div class="basis-full">
       <div>
@@ -804,7 +804,6 @@ watch(
 )
 
 const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
-  console.log(token)
   if (
     token.sparklineIn7d &&
     token.sparklineIn7d.length > 0 &&
@@ -814,7 +813,6 @@ const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
       return token.sparklineIn7d
     }
     const totalPoints = token.sparklineIn7d.length / 7
-    console.log(token.sparklineIn7d.slice(-totalPoints))
     return token.sparklineIn7d.slice(-totalPoints)
   }
   return []
