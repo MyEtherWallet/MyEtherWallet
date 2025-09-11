@@ -336,7 +336,7 @@
               class="flex w-full h-[56px] py-2"
             >
               <div
-                class="bg-surface rounded-12 w-full h-full animate-pulse"
+                class="bg-surface/30 rounded-12 w-full h-full animate-pulse"
               ></div>
             </div>
           </div>
