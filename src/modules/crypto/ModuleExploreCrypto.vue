@@ -1,42 +1,69 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1 class="text5 font-bold rounded-32 ml-2">Explore Crypto Tokens</h1>
+    <h1 class="text-s-20 lg:text-s-32 2xl:text-s-40 font-bold rounded-32 ml-2">
+      Explore Crypto Tokens
+    </h1>
 
     <div class="basis-full">
-      <div>
+      <div class="flex flex-wrap justify-start items-center gap-2">
         <!-- Search and Filter Chains-->
         <div
-          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
+          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 md:min-w-[400px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
-          <app-select
-            v-model:selected="activeSort"
-            :options="[]"
-            :emit-only="true"
-            @toggle-select="openChainDialog = true"
-            placeholder="Filter by Chain"
-          />
+          <button
+            class="rounded-full hoverNoBG p-2"
+            @click="openChainDialog = true"
+          >
+            <div class="flex items-center">
+              <span class="text-s-17 leading-p-140 font-medium"
+                >All Chains</span
+              >
+              <chevron-down-icon class="w-4 h-4 ml-1" />
+            </div>
+          </button>
         </div>
         <!--Filter Lists-->
-        <div class="flex justify-end pt-2 ml-auto">
+        <div class="2xl:ml-2">
           <app-btn-group
             v-model:selected="selectedCryptoFilter"
-            :btn-list="cryptoFilterOptions"
-            size="small"
-            class=""
+            :btn-list="cryptoFilterOptions.slice(0, 4)"
+            size="large"
           >
             <template #btn-content="{ data }">
-              {{ data.name }}
+              {{ data.label }}
+            </template>
+            <template #custom>
+              <app-select
+                v-model:selected="selectedCryptoFilter"
+                :options="
+                  cryptoFilterOptions.slice(4, cryptoFilterOptions.length)
+                "
+                position="-right-1"
+                class="text-s-12"
+              >
+                <template #select-button="{ toggleSelect }">
+                  <button
+                    class="rounded-full hoverNoBG p-2"
+                    @click="toggleSelect"
+                  >
+                    <div class="flex items-center">
+                      <span>More</span>
+                      <chevron-down-icon class="w-4 h-4 ml-1" />
+                    </div>
+                  </button>
+                </template>
+              </app-select>
             </template>
           </app-btn-group>
         </div>
       </div>
 
       <div class="mt-5 bg-white rounded-16 shadow-button py-4 px-2">
-        <div class="" ref="tableContainer">
+        <div class="static" ref="tableContainer">
           <table class="w-full text-sm table-fixed">
             <!-- Header-->
-            <thead class="sticky top-0 bg-white">
+            <thead class="bg-white">
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06"
               >
@@ -187,7 +214,7 @@
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
-                class="h-14 hoverBGWhite !rounded-12"
+                class="h-14"
               >
                 <!-- Watchlist -->
                 <td class="xs:pr-2 hidden sm:table-cell">
@@ -495,12 +522,6 @@ const buyBtn = () => {
 }
 const swapBtn = () => {}
 
-// const setShownItems = (n: number, toggle: () => void) => {
-//   shownItems.value = n
-//   page.value = 1
-//   toggle()
-// }
-
 const setHeaderSort = (key: string) => {
   if (headerSort.value === key) {
     tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
@@ -511,19 +532,20 @@ const setHeaderSort = (key: string) => {
 }
 
 const setSelectedChain = (chain: Chain) => {
+  activeSort.value = { label: chain.nameLong, value: chain.name }
   selectedChainFilter.value = chain
   openChainDialog.value = false
 }
 
 const cryptoFilterOptions = ref([
-  { name: 'All', id: 'all' },
-  { name: 'DeFi', id: 'defi-index' },
-  { name: 'Top Gainers', id: 'topGainers' },
-  { name: 'Top Losers', id: 'topLosers' },
-  { name: 'Stablecoins', id: 'stablecoins' },
-  { name: 'MEME', id: 'meme-token' },
-  { name: 'TikTok', id: 'tiktok-meme' },
-  { name: 'Watchlist', id: 'watchlist' },
+  { label: 'All', value: 'all' },
+  { label: 'Top Gainers', value: 'topGainers' },
+  { label: 'Top Losers', value: 'topLosers' },
+  { label: 'Watchlist', value: 'watchlist' },
+  { label: 'Stablecoins', value: 'stablecoins' },
+  { label: 'DeFi', value: 'defi-index' },
+  { label: 'MEME', value: 'meme-token' },
+  { label: 'TikTok', value: 'tiktok-meme' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
@@ -543,14 +565,14 @@ const fetchGainersUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
   const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
   const direction =
-    selectedCryptoFilter.value.id !== 'topGainers' ? 'ASC' : 'DESC'
+    selectedCryptoFilter.value.value !== 'topGainers' ? 'ASC' : 'DESC'
   return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
 })
 
 const fetchTableUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
   const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
-  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.id !== 'all' ? '&category=' + selectedCryptoFilter.value.id : ''}`
+  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
 })
 
 const {
@@ -721,11 +743,11 @@ watch(
     isLoading.value = true
     tokens.value = []
     if (
-      selectedCryptoFilter.value.id === 'topGainers' ||
-      selectedCryptoFilter.value.id === 'topLosers'
+      selectedCryptoFilter.value.value === 'topGainers' ||
+      selectedCryptoFilter.value.value === 'topLosers'
     ) {
       debounceFetchGainers()
-    } else if (selectedCryptoFilter.value.id === 'watchlist') {
+    } else if (selectedCryptoFilter.value.value === 'watchlist') {
       debounceFetchWatchlist()
     } else {
       debounceFetchTokens()
@@ -746,11 +768,11 @@ watch(
     isLoading.value = true
     tokens.value = []
     if (
-      selectedCryptoFilter.value.id === 'topGainers' ||
-      selectedCryptoFilter.value.id === 'topLosers'
+      selectedCryptoFilter.value.value === 'topGainers' ||
+      selectedCryptoFilter.value.value === 'topLosers'
     ) {
       fetchGainersTable()
-    } else if (selectedCryptoFilter.value.id === 'watchlist') {
+    } else if (selectedCryptoFilter.value.value === 'watchlist') {
       fetchWatchlistTable()
     } else {
       fetchTokenTable()
@@ -795,8 +817,8 @@ watch(
   () => selectedCryptoFilter.value,
   () => {
     if (
-      selectedCryptoFilter.value.id === 'topGainers' ||
-      selectedCryptoFilter.value.id === 'topLosers'
+      selectedCryptoFilter.value.value === 'topGainers' ||
+      selectedCryptoFilter.value.value === 'topLosers'
     ) {
       activePercent.value = percentOptions[1]
     }

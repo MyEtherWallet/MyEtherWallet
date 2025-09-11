@@ -41,6 +41,9 @@ export const useAppBreakpoints = () => {
   const isXLAndUp = computed<boolean>(
     () => breakpoints.greaterOrEqual('xl').value,
   )
+  const is3XLAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('3xl').value,
+  )
 
   return {
     breakpoints,
@@ -54,5 +57,6 @@ export const useAppBreakpoints = () => {
     isXLMinAndUp,
     isXsAndUp,
     isXLAndUp,
+    is3XLAndUp,
   }
 }

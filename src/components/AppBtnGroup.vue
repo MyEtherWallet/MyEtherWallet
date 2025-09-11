@@ -21,7 +21,7 @@
                 variant === 'default' && areEqual(selected, btn),
             },
             {
-              'border border-grey-outline':
+              'border border-grey-outline ':
                 variant === 'outline' && !areEqual(selected, btn),
             },
             {

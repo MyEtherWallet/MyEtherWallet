@@ -33,14 +33,15 @@
         :key="token.symbol"
         class="w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"
       >
-        <div
-          class="flex gap-2 items-center justify-start overflow-hidden flex-wrap"
-        >
-          <img
-            :src="token.logoUrl as string"
-            class="w-8 h-8 rounded-full shadow-token"
-            alt=""
-          />
+        <div class="flex gap-2 items-center justify-start flex-wrap">
+          <div class="xs:basis-full overflow-visible">
+            <img
+              :src="token.logoUrl as string"
+              class="w-7 h-7 xl:w-8 xl:h-8 rounded-full shadow-token"
+              alt=""
+            />
+          </div>
+
           <div class="text-left">
             <p class="text-s-14 font-bold text-wrap">
               {{ token.name }}
@@ -141,7 +142,7 @@ onFetchError(err => {
 /** --------------------------
  * Pagination
  --------------------------*/
-const { isMobile, isTablet } = useAppBreakpoints()
+const { isMobile } = useAppBreakpoints()
 const page = ref(1)
 
 const totalPages = computed(() =>
@@ -154,10 +155,7 @@ const itemsPerPage = computed(() => {
   if (isMobile.value) {
     return 4
   }
-  if (isTablet.value) {
-    return 6
-  }
-  return isMobile.value ? 4 : 10
+  return 6
 })
 
 const paginateArray = (page: number) => {
