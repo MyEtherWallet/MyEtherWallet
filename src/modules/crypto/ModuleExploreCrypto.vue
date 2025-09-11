@@ -291,16 +291,6 @@
                     />
                   </div>
                 </td>
-                <!-- Last 7 days -->
-                <!-- <td class="px-1 py-2 text-right hidden sm:table-cell"> -->
-                <!-- <div v-if="getSparkLinePoints(token).length === 0"></div>
-                  <table-sparkline
-                    v-else
-                    :points="getSparkLinePoints(token)"
-                    :width="50"
-                    :max-points="24"
-                  /> -->
-                <!-- </td> -->
                 <!-- 24h Volume -->
                 <td
                   :class="
@@ -395,7 +385,6 @@ import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-// import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import {
   StarIcon as StarSolidIcon,

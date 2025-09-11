@@ -53,7 +53,9 @@
           </div>
         </div>
         <div class="pl-2">
-          <p class="text-s-14 text-right">$200.00</p>
+          <p class="text-s-14 text-right">
+            ${{ formatFiatValue(token.price).value }}
+          </p>
           <p
             class="text-s-12 text-right"
             :class="{
@@ -82,7 +84,10 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useToastStore } from '@/stores/toastStore'
 import { computed, onMounted, ref, type Ref, watch } from 'vue'
-import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import {
+  formatPercentageValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 import type {
   GetWebTrendingTokensResponse,
   GetWebTrendingTokensResponseToken,

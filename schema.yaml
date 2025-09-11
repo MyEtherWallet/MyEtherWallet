@@ -1421,6 +1421,7 @@ components:
               - coinId
               - name
               - symbol
+              - price
               - priceChangePercentage24h
               - logoUrl
             properties:
@@ -1430,6 +1431,8 @@ components:
                 type: string
               symbol:
                 type: string
+              price:
+                type: number
               priceChangePercentage24h:
                 type: number
               logoUrl:

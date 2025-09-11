@@ -763,6 +763,7 @@ export interface components {
                 coinId: string;
                 name: string;
                 symbol: string;
+                price: number;
                 priceChangePercentage24h: number;
                 logoUrl: string | null;
             }[];
