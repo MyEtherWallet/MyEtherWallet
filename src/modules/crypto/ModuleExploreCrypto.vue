@@ -227,14 +227,12 @@
                         token.coinId,
                       ),
                     }"
+                    @click="setWatchlistToken(token.coinId)"
                     class="p-2 rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
 
-                    <star-solid-icon
-                      class="h-4 w-4 cursor-pointer"
-                      @click="setWatchlistToken(token.coinId)"
-                    />
+                    <star-solid-icon class="h-4 w-4 cursor-pointer" />
                   </button>
                 </td>
                 <!-- Name -->
@@ -419,6 +417,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const walletMenu = useWalletMenuStore()
+const { setIsOpenSideMenu, setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const tableContainer = ref<HTMLElement | null>(null)
@@ -489,7 +488,10 @@ const nextPage = () => {
 const buyBtn = () => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
-const swapBtn = () => {}
+const swapBtn = () => {
+  setIsOpenSideMenu(true)
+  setWalletPanel(3)
+}
 
 const setHeaderSort = (key: string) => {
   if (headerSort.value === key) {
