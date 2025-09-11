@@ -327,49 +327,29 @@
                 </td>
               </tr>
             </tbody>
-            <tbody v-else>
-              <tr v-for="n in 12" :key="`loading-${n}`" class="animate-pulse">
-                <td></td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="flex items-center gap-1">
-                    <div class="size-8 rounded-full bg-grey-8"></div>
-                    <div class="col-span-2 h-6 w-20 rounded bg-grey-8"></div>
-                  </div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-                <td class="px-1 py-3 xs:py-2">
-                  <div class="col-span-2 h-6 w-full rounded bg-grey-8"></div>
-                </td>
-              </tr>
-            </tbody>
           </table>
+          <!-- Loading State -->
+          <div v-if="isLoading" class="">
+            <div
+              v-for="n in Number(activeShownItems.value)"
+              :key="n"
+              class="flex w-full h-[56px] py-2"
+            >
+              <div
+                class="bg-surface rounded-12 w-full h-full animate-pulse"
+              ></div>
+            </div>
+          </div>
         </div>
 
-        <div class="flex items-center justify-between text-xs mt-2">
-          <small class="text-info ml-4"
+        <div
+          class="flex flex-col xs:flex-row items-center justify-center justify-between text-xs mt-2"
+        >
+          <small
+            class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"
             >{{ tokens.length * page }} of {{ totalTokenCount }} results</small
           >
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 order-2 xs:order-2">
             <app-btn-icon
               class=""
               :disabled="!isLoading && page === 1"
@@ -393,7 +373,7 @@
             v-model:selected="activeShownItems"
             :options="shownItemsOptions"
             placeholder="Items per page"
-            class="text-black !text-s-14"
+            class="text-black !text-s-14 order-1 xs:order-3 ml-auto xs:ml-0"
             position="-right-1"
           />
         </div>
