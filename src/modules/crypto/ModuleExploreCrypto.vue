@@ -24,7 +24,7 @@
           </button>
         </div>
         <!--Filter Lists-->
-        <div class="2xl:ml-2">
+        <div class="">
           <app-btn-group
             v-model:selected="selectedCryptoFilter"
             :btn-list="cryptoFilterOptions.slice(0, 4)"
