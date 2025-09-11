@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-
+import Configs from '@/configs'
 export const useEmailSubscription = () => {
   const toastStore = useToastStore()
 
@@ -37,7 +37,7 @@ export const useEmailSubscription = () => {
   const subscribeToUpdates = async (): Promise<boolean> => {
     validateEmail()
     if (isValidEmail.value && email.value !== '') {
-      const _url = `https://mewwallet.dev/email-web`
+      const _url = Configs.MEW_EMAIL
       isLoading.value = true
 
       const groups = ['V7_UPDATES']

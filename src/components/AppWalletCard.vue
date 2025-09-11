@@ -81,7 +81,7 @@
           ></div>
           <!-- Refresh balance button -->
           <button
-            :aria-label="$t('refresh_balances')"
+            :aria-label="$t('refresh_balance')"
             class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="fetchBalances"
           >

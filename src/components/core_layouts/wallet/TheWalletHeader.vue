@@ -45,13 +45,13 @@
             {{ item.title }}
           </router-link>
         </div>
-        <a href="https://help.myetherwallet.com/en/" target="_blank">
-          <p
-            v-if="!showMobileMenu"
-            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
-          >
-            {{ $t('learn') }}
-          </p>
+        <a
+          v-if="!showMobileMenu"
+          href="https://help.myetherwallet.com/en/"
+          target="_blank"
+          class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+        >
+          {{ $t('learn') }}
         </a>
         <app-select
           v-if="!showMobileMenu"

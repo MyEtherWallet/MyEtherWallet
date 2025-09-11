@@ -7,7 +7,7 @@
       <div class="flex">
         <app-btn-icon
           class=""
-          :disabled="!isLoading && page === 1"
+          :disabled="isLoading || page === 1"
           label="previous page"
           @click="previousPage"
         >
@@ -15,7 +15,7 @@
         </app-btn-icon>
         <app-btn-icon
           class=""
-          :disabled="!isLoading && page >= totalPages"
+          :disabled="isLoading || page >= totalPages"
           label="next page"
           @click="nextPage"
         >
@@ -35,6 +35,7 @@
       >
         <div class="flex gap-2 items-center justify-start flex-wrap">
           <div class="xs:basis-full overflow-visible">
+            <!-- TODO: replace with token image component-->
             <img
               :src="token.logoUrl as string"
               class="w-7 h-7 xl:w-8 xl:h-8 rounded-full shadow-token"

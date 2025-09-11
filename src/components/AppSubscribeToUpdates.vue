@@ -4,9 +4,6 @@
       v-model="email"
       placeholder="Enter your email"
       type="email"
-      name="email"
-      id="email"
-      autocomplete="email"
       :error-message="emailErrorMessage"
     />
     <app-base-button
