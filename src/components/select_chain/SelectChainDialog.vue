@@ -34,10 +34,14 @@
               <div class="flex items-center">
                 <img
                   v-if="chain.icon"
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden"
+                  class="mr-4 w-7 h-7 rounded-full overflow-hidden shadow-token"
                   :src="chain.icon"
                   alt="token icon"
                 />
+                <div
+                  v-else
+                  class="mr-4 w-7 h-7 rounded-full overflow-hidden bg-surface shadow-token"
+                ></div>
                 <span>{{ chain.nameLong }}</span>
               </div>
               <check-icon
@@ -59,6 +63,25 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * @example
+ *
+ *   <select-chain-dialog
+ *     v-model:chain="selectedChain"
+ *     :filter-chain-type="false"
+ *     :has-all="true"
+ *   />
+ * @example: with all chains option
+ *
+ * import { ALL_CHAINS } from '@/components/select_chain/helpers'
+ *
+ * <select-chain-dialog
+ *  v-model:chain="selectedChain"
+ * :filter-chain-type="false"
+ * :has-all="true"
+ * />
+ *
+ */
 import { ref, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
@@ -66,7 +89,7 @@ import { type Chain } from '@/mew_api/types'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
-
+import { ALL_CHAINS } from './helpers'
 const prop = defineProps({
   filterChainType: {
     type: Boolean,
@@ -76,8 +99,11 @@ const prop = defineProps({
     type: Object as () => Chain | null,
     default: null,
   },
+  hasAll: {
+    type: Boolean,
+    default: false,
+  },
 })
-// const selectedChain = defineModel<Chain | null>('selected-chain')
 
 const chainsStore = useChainsStore()
 const {
@@ -116,10 +142,13 @@ const setOpenDialog = (value: boolean) => {
  * Search
  -------------------------------*/
 const searchInput = ref('')
-const searchResults = computed(() => {
+const searchResults = computed<Chain[]>(() => {
+  const _chains = prop.hasAll
+    ? [ALL_CHAINS.value, ...chains.value]
+    : chains.value
   const chainsToSearch = prop.filterChainType
-    ? chains.value
-    : chains.value.filter(chain => {
+    ? _chains
+    : _chains.filter(chain => {
         return chain.type === storeSelectedChain.value?.type
       })
 
