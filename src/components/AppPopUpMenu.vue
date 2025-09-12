@@ -95,7 +95,7 @@ const props = defineProps({
   },
   labelSize: {
     type: String,
-    default: '28',
+    default: '14',
   },
 })
 

@@ -1,65 +1,69 @@
 <template>
   <div>
-    <div class="relative max-w-[478px] mx-auto mt-4">
-      <div class="flex items-center justify-between mt-4">
-        <p class="font-semibold text-s-24 ml-3">Swap</p>
-        <!-- <app-btn-text class="text-primary ml-auto">Clear</app-btn-text> -->
+    <div class="relative flex flex-col items-center mx-auto mt-4">
+      <div class="w-full flex items-center justify-start">
+        <p class="font-semibold text-s-24 ml-3 mb-1 text-left w-full">Swap</p>
+        <app-btn-text class="text-primary ml-auto">Clear</app-btn-text>
       </div>
-      <div
-        class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto"
-      >
-        <p class="text-s-16 mb-2">{{ t('common.from') }}</p>
-        <select-chain-for-app :filter-chain-type="true" />
-        <app-swap-enter-amount
-          v-model:amount="fromAmount"
-          v-model:selected-token="fromTokenSelected"
-          v-model:error="fromAmountError"
-          :external-loading="fromLoadingState"
-          :tokens="parsedFromTokens"
-          :show-balance="isWalletConnected"
-          class="mt-4"
-        />
-      </div>
-      <div
-        class="bg-white border border-solid border-grey-10 rounded-[12px] h-[40px] w-[40px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
-        :class="{
-          'top-[34%]': isCrossChain,
-          'top-[41%]': !isCrossChain,
-        }"
-      >
-        <arrows-up-down-icon class="w-6 h-6" />
-      </div>
-      <div class="pt-2"></div>
-      <div
-        class="bg-white rounded-[20px] !px-4 pt-3 pb-4 max-w-[478px] mx-auto"
-      >
-        <p class="text-s-16 mb-2">{{ t('common.to') }}</p>
-        <select-chain-for-app
-          :can-store="false"
-          :passed-chains="toChains"
-          :preselected-chain="selectedToChain"
-          :filter-chain-type="true"
-          @update:selected-chain="setToChain"
-        />
-        <app-swap-enter-amount
-          v-model:amount="toAmount"
-          v-model:selected-token="toTokenSelected"
-          v-model:error="toAmountError"
-          :external-loading="toLoadingState"
-          :show-balance="false"
-          :tokens="parsedToTokens"
-          :readonly="true"
-          :is-estimate="true"
-          class="mt-4"
-        />
-        <div class="pt-4" v-if="isCrossChain"></div>
-        <address-input
-          v-model:adr-input="userToAddress"
-          :resolved-address="toAddress"
-          :address-error-messages="toAddressError"
-          @validate:address="validateToAddress"
-          v-if="isCrossChain"
-        />
+      <div class="relative">
+        <!-- From Section -->
+        <div
+          class="bg-surface-light rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+        >
+          <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
+          <select-chain-for-app :filter-chain-type="true" />
+          <app-swap-enter-amount
+            v-model:amount="fromAmount"
+            v-model:selected-token="fromTokenSelected"
+            v-model:error="fromAmountError"
+            :external-loading="fromLoadingState"
+            :tokens="parsedFromTokens"
+            :show-balance="isWalletConnected"
+            class="mt-3"
+          />
+        </div>
+        <div
+          class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
+          :class="{
+            'top-[calc(50%-67px)]': isCrossChain,
+            'top-[calc(50%-18px)]': !isCrossChain,
+          }"
+        >
+          <arrows-up-down-icon class="w-5 h-5" />
+        </div>
+        <div class="pt-2"></div>
+        <!-- To Section -->
+        <div
+          class="bg-surface-light rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+        >
+          <p class="text-s-12 mb-1 font-bold">{{ t('common.to') }}</p>
+          <select-chain-for-app
+            :can-store="false"
+            :passed-chains="toChains"
+            :preselected-chain="selectedToChain"
+            :filter-chain-type="true"
+            @update:selected-chain="setToChain"
+          />
+          <app-swap-enter-amount
+            v-model:amount="toAmount"
+            v-model:selected-token="toTokenSelected"
+            v-model:error="toAmountError"
+            :external-loading="toLoadingState"
+            :show-balance="false"
+            :tokens="parsedToTokens"
+            :readonly="true"
+            :is-estimate="true"
+            class="mt-4"
+          />
+          <div class="pt-4" v-if="isCrossChain"></div>
+          <address-input
+            v-model:adr-input="userToAddress"
+            :resolved-address="toAddress"
+            :address-error-messages="toAddressError"
+            @validate:address="validateToAddress"
+            v-if="isCrossChain"
+          />
+        </div>
       </div>
       <div class="pt-4"></div>
       <div
@@ -96,6 +100,11 @@
           {{ t('connect_wallet') }}</app-base-button
         >
       </div>
+      <app-need-help
+        :title="$t('send.need-help')"
+        help-link="https://help.myetherwallet.com/en/article/what-is-gas"
+        class="mt-4 mx-auto"
+      />
     </div>
     <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
     <swap-offer-modal
@@ -126,6 +135,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useSwap } from '@/composables/useSwap'

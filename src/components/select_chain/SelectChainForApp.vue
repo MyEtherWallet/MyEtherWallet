@@ -42,7 +42,7 @@
       </app-btn-group>
       <button
         v-else
-        class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
+        class="bg-white hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
         @click="setOpenDialog(true)"
       >
         <div v-if="selectedChain" class="flex items-center">

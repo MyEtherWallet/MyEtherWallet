@@ -16,8 +16,10 @@
             @click="openChainDialog = true"
           >
             <div class="flex items-center">
-              <span class="text-s-17 leading-p-140 font-medium"
-                >All Chains</span
+              <span
+                v-if="selectedChainFilter"
+                class="text-s-17 leading-p-140 font-medium"
+                >{{ selectedChainFilter.nameLong }}</span
               >
               <chevron-down-icon class="w-4 h-4 ml-1" />
             </div>
@@ -370,6 +372,7 @@
           v-model:is-open="openChainDialog"
           :selected-chain="selectedChainFilter"
           :filter-chain-type="true"
+          has-all
           @update:chain="setSelectedChain"
         />
       </div>
@@ -415,7 +418,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-
+import { ALL_CHAINS } from '@/components/select_chain/helpers'
 const walletMenu = useWalletMenuStore()
 const { setIsOpenSideMenu, setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -528,22 +531,31 @@ const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
-  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
-  return `${baseUrl}?addressChain=${defaultChain}&coins=${watchListedTokens.value}`
+  const defaultChain =
+    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
+      ? ''
+      : `filterChain=${selectedChainFilter.value.name}`
+  return `${baseUrl}?${defaultChain}&coins=${watchListedTokens.value}`
 })
 
 const fetchGainersUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
-  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
+  const defaultChain =
+    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
+      ? ''
+      : `filterChain=${selectedChainFilter.value.name}`
   const direction =
     selectedCryptoFilter.value.value !== 'topGainers' ? 'ASC' : 'DESC'
-  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
+  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
 })
 
 const fetchTableUrl = computed(() => {
   const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
-  const defaultChain = selectedChainFilter.value?.name ?? 'ETHEREUEM'
-  return `${baseUrl}?chain=${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
+  const defaultChain =
+    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
+      ? ''
+      : `filterChain=${selectedChainFilter.value.name}`
+  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
 })
 
 const {
@@ -593,10 +605,10 @@ const debounceFetchGainers = useDebounceFn(() => {
 }, 100)
 
 onMounted(() => {
-  if (isLoadedChains.value && selectedChainStore.value) {
-    selectedChainFilter.value = selectedChainStore.value
-  }
   // Fetch tokens based on the selected filter
+  if (isLoadedChains.value && selectedChainStore.value) {
+    selectedChainFilter.value = ALL_CHAINS.value
+  }
   isLoading.value = true
   fetchTokenTable()
 })
