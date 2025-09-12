@@ -7,47 +7,49 @@
     <template #content>
       <div class="mx-4 mb-2">
         <div
-          class="p-4 flex flex-col border border-solid border-grey-outline rounded-lg mb-2"
+          class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
         >
-          <h3 class="font-bold text-s-20">
+          <h3 class="font-bold text-s-20 ml-2">
             {{ t('swap.swap-offer.best-offer-from') }}
             {{ providerName }}
           </h3>
-          <div class="font-normal text-s-20 my-2 mb-2 flex items-center gap-2">
+          <p
+            class="font-normal text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
+          >
             {{ t('swap.for') }}
-            <div
-              class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
+            <span
+              class="w-[32px] h-[32px] rounded-[50%] inline-flex items-center justify-center overflow-hidden shadow-token"
             >
               <img
                 :src="fromToken?.logoURI"
                 :alt="fromToken?.symbol"
                 class="inline-block w-full h-[100%]"
               />
-            </div>
+            </span>
             <span class="font-bold">
               {{ amount }}
               {{ fromToken?.symbol }}</span
             >
             {{ t('swap.swap-offer.you-will-get') }}:
-          </div>
-          <div class="flex bg-grey-light-2 rounded-lg p-4 mb-2">
-            <div class="relative">
+          </p>
+          <div class="flex bg-surface-light rounded-20 p-4 my-2">
+            <div class="relative h-[64px] overflow-visible">
               <div
-                class="w-[64px] h-[64px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
+                class="w-[64px] h-[64px] rounded-[50%] inline-flex items-center justify-center overflow-hidden bg-white shadow-token"
               >
                 <img
                   :src="toToken?.logoURI"
                   alt="ETH"
-                  class="inline-block w-[90px] max-w-[200px]"
+                  class="inline-block w-[64px]"
                 />
               </div>
               <div
-                class="w-[32px] h-[32px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-[5px] right-[-10px] overflow-hidden"
+                class="w-[24px] h-[24px] bg-white shadow-token rounded-[50%] inline-flex items-center justify-center absolute bottom-[-3px] right-[-6px] overflow-hidden"
               >
                 <img
                   :src="toChain?.icon"
                   alt="ETH"
-                  class="inline-block w-[28px] h-[28px]"
+                  class="inline-block w-[24px] h-[24px]"
                 />
               </div>
             </div>
@@ -79,7 +81,7 @@
                 >
                   <div class="flex items-center justify-between">
                     <div>
-                      <p class="text-grey-50 text-s-14">
+                      <p class="text-info text-s-14">
                         {{ t('swap.offer') }} {{ idx + 1 }}
                       </p>
                       <p class="font-bold text-s-14">
@@ -101,20 +103,20 @@
               </div>
             </template>
           </app-pop-up-menu>
-          <div class="pt-3">
-            <div class="text-s-14 text-grey-50">
+          <div class="pt-3 ml-2">
+            <div class="text-s-14 text-info">
               Rate: 1 {{ fromToken?.symbol }} ≈ {{ exchangeRate }}
               {{ toToken?.symbol }}
             </div>
             <!-- TODO: make library return these values -->
-            <!-- <div class="text-s-14 text-grey-50">Price impact: -0.07%</div> -->
-            <div class="text-s-14 text-grey-50">
+            <!-- <div class="text-s-14 text-info">Price impact: -0.07%</div> -->
+            <div class="text-s-14 text-info">
               {{ t('swap.swap-offer.max-slippage') }}: {{ swapInfo?.slippage }}%
             </div>
-            <!-- <div class="text-s-14 text-grey-50">
+            <!-- <div class="text-s-14 text-info">
               {{ t('swap.swap-offer.minimum-received') }}: 128.345 *tSym*
             </div> -->
-            <div class="text-s-14 text-grey-50">
+            <div class="text-s-14 text-info">
               {{
                 t('swap.swap-offer.offer-includes', {
                   feePercent: swapInfo?.fee,

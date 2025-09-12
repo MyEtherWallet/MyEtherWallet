@@ -49,6 +49,7 @@ export default {
       black: '#000000',
       white: '#ffffff',
       surface: 'rgba(232, 232, 237, 1)',
+      'surface-light': 'rgba(249, 250, 251, 1)',
       info: 'rgba(0, 0, 0, 0.65)',
       'grey-light': 'rgba(232, 232, 237, 1)',
       'grey-light-2': 'rgba(248, 250, 252, 1)',

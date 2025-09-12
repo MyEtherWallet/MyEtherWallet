@@ -46,7 +46,7 @@
           {
             '!border-primary !border-2': inFocusInput && !hasError,
           },
-          'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm text-normal rounded-16 h-[58px] w-full pl-[50px] pr-[70px] pt-[24px] pb-[12px]  transition-colors',
+          'grow focus:outline-none focus:ring-0 bg-white shadow-button shadow-button-elevated  text-sm text-normal rounded-16 h-[58px] w-full pl-[50px] pr-[70px] pt-[24px] pb-[12px]  transition-colors',
         ]"
         :aria-label="label"
         @focus="setInFocusInput()"

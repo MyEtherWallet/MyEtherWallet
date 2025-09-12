@@ -17,7 +17,7 @@
     <div
       :class="[
         isOpenSideMenu
-          ? 'w-full !w-screen xs:min-w-[400px] xs:max-w-[400px] xs:w-[400px] top-0 xs:[69px] p-4 h-screen sm:h-[calc(100vh-76px)] sm:top-[77px]'
+          ? 'w-full !w-screen xs:min-w-[400px] xs:max-w-[400px] xs:w-[400px] top-0 xs:[69px] px-4 pb-4 pt-0 xs:p-4 h-screen sm:h-[calc(100vh-76px)] sm:top-[77px]'
           : 'min-w-[60px] w-[60px] top-[69px] p-[6px] h-[calc(100vh-69px)]  xs:max-w-[400px]',
         'z-[50] absolute xl:fixed sm:top-[77px]  right-0  transition-all duration-200 ease-out  sm:h-[calc(100vh-76px)] overflow-y-scroll bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]',
       ]"
