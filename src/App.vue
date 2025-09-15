@@ -92,7 +92,7 @@ const showFeedbackToast = () => {
       isInfinite: true,
       link: {
         title: 'Submit Feedback',
-        url: 'https://www.myetherwallet.com/',
+        url: 'https://mewwallet.typeform.com/to/WtgSdMJr',
         isButton: true,
       },
     })
