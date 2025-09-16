@@ -220,7 +220,7 @@
             <app-base-button
               @click="goBack"
               is-outline
-              class="min-w-[130px] xs:w-full"
+              class="xs:min-w-[130px] xs:w-full"
             >
               {{ $t('common.back') }}
             </app-base-button>
