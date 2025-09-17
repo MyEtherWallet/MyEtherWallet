@@ -64,7 +64,7 @@
             ></div>
           </div>
           <!-- Actions -->
-          <div class="mt-4 grid grid-cols-4 gap-1">
+          <div class="mt-4 grid grid-cols-5 gap-1">
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center min-h-[72px] hoverNoBG"
               @click="openDeposit"
@@ -72,30 +72,34 @@
               <QrCodeIcon class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('deposit') }}</p>
             </button>
-            <router-link
-              :to="{ name: ROUTES_MAIN.BUY.NAME }"
+            <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG"
-              @click.stop.prevent="closeDialog"
+              @click.stop.prevent="openWalletMenu(0)"
             >
               <icon-buy class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('buy-sell') }}</p>
-            </router-link>
-            <router-link
-              :to="{ name: ROUTES_SEND.SEND.NAME }"
+              <p class="text-s-12">{{ $t('buy') }}</p>
+            </button>
+            <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="closeDialog"
+              @click.stop.prevent="openWalletMenu(1)"
+            >
+              <icon-buy class="w-7 h-7 text-primary mb-1" />
+              <p class="text-s-12">{{ $t('sell') }}</p>
+            </button>
+            <button
+              class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
+              @click.stop.prevent="openWalletMenu(2)"
             >
               <icon-send class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.send') }}</p>
-            </router-link>
-            <router-link
-              :to="{ name: ROUTES_MAIN.SWAP.NAME }"
+            </button>
+            <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="closeDialog"
+              @click.stop.prevent="openWalletMenu(1)"
             >
               <icon-swap class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.swap') }}</p>
-            </router-link>
+            </button>
           </div>
           <button
             class="shadow-button shadow-button-elevated rounded-16 p-3 mt-6 hoverNoBG w-full"
@@ -146,9 +150,11 @@ import {
   ArrowTopRightOnSquareIcon,
   ArrowPathIcon,
 } from '@heroicons/vue/24/outline'
-import { ROUTES_MAIN, ROUTES_SEND } from '@/router/routeNames'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 const store = useWalletStore()
 const { setTokens, setIsLoadingBalances } = store
 
@@ -192,6 +198,13 @@ const tokensCount = computed(() => {
 /** -------------------------------
  * Actions
  -------------------------------*/
+const openWalletMenu = (walletPanel: number) => {
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  walletMenu.setWalletPanel(walletPanel)
+  closeDialog()
+}
 const disconnectWallet = () => {
   store.removeWallet()
   openDialog.value = false
