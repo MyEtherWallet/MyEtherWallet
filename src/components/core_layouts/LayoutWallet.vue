@@ -246,7 +246,6 @@ const comingSoon = computed(() => {
   const map = new Map<number, string>([
     [0, 'Buy'],
     [1, 'Sell'],
-    [3, 'Swap'],
   ])
   return map.get(walletPanel.value)
     ? `${map.get(walletPanel.value)} is coming soon`
