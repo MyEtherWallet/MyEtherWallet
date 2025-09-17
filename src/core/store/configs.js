@@ -14,7 +14,7 @@ export default {
   VERSION: {
     global: '1.0.9',
     popups: '1.0.2',
-    survey: '1.0.0',
+    survey: '1.0.1',
     notifications: '1.0.4',
     custom: '1.0.4',
     addressBook: '1.0.0',
