@@ -74,7 +74,7 @@ const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 //TODO: make a new project for MEW  PORTOFLIO APP
-const CURR_PROJECT = 'MEW_BLOG'
+const CURR_PROJECT = 'MEW_PORTFOLIO'
 /**
  * App Version
  */
