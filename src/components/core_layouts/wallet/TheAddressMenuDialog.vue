@@ -95,7 +95,7 @@
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(1)"
+              @click.stop.prevent="openWalletMenu(3)"
             >
               <icon-swap class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.swap') }}</p>
