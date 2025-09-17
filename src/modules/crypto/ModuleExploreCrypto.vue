@@ -213,6 +213,15 @@
             </thead>
             <!-- Body-->
             <tbody v-if="!isLoading">
+              <div
+                v-if="
+                  watchListedTokens.length === 0 &&
+                  selectedCryptoFilter.value === 'watchlist'
+                "
+                class="text-nowrap px-3"
+              >
+                <h3>No watchlisted tokens</h3>
+              </div>
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
@@ -341,7 +350,6 @@
           >
           <div class="flex items-center gap-2 order-2 xs:order-2">
             <app-btn-icon
-              class=""
               :disabled="!isLoading && page === 1"
               label="previous page"
               @click="previousPage"
@@ -755,7 +763,10 @@ watch(
       selectedCryptoFilter.value.value === 'topLosers'
     ) {
       fetchGainersTable()
-    } else if (selectedCryptoFilter.value.value === 'watchlist') {
+    } else if (
+      selectedCryptoFilter.value.value === 'watchlist' &&
+      watchListedTokens.value.length > 0
+    ) {
       fetchWatchlistTable()
     } else {
       fetchTokenTable()
