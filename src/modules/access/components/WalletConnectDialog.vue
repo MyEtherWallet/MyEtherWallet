@@ -7,7 +7,7 @@
     <!-- Title -->
     <template #title>
       <div>
-        <h1 class="title4 pr-2 pt-4 sm:pt-8 mx-auto">
+        <h1 class="title4 pr-2 pt-4 sm:pt-8">
           {{ $t('wc_dialog.title') }}
         </h1>
         <!-- TODO: add link-->

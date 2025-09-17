@@ -58,13 +58,13 @@
     <transition name="fade" mode="out-in">
       <p
         v-if="errorMessage"
-        class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
+        class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
         {{ errorMessage }}
       </p>
       <p
         v-else-if="hasRequiredError"
-        class="pl-4 pt-[1px] absolute text-error text-[12px] leading-[23px]"
+        class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
         required
       </p>
@@ -85,7 +85,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
-
 const props = defineProps({
   placeholder: {
     type: String,

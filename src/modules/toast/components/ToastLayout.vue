@@ -10,14 +10,30 @@
     <div class="flex w-full items-start py-3 px-2">
       <component :is="icon" :class="[iconColor, 'w-7 h-7 mt-1 ml-2 mr-1']" />
       <div class="flex-1 px-2 pt-[5px]">
-        <p :class="[{ 'mb-2': toast.link }, 'text-balance break-all']">
+        <p
+          :class="[
+            { 'mb-2': toast.link },
+            { 'font-bold': toast.textSecondary },
+            'text-balance break-all ',
+          ]"
+        >
           {{ toast.text }}
+        </p>
+        <p
+          v-if="toast.textSecondary"
+          :class="[{ 'mb-3': toast.link }, 'text-info word-break']"
+        >
+          {{ toast.textSecondary }}
         </p>
         <a
           v-if="toast.link"
           :href="toast.link.url"
           target="_blank"
-          class="underline"
+          :class="[
+            toast.link.isButton
+              ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
+              : 'underline',
+          ]"
           >{{ toast.link.title }}</a
         >
       </div>

@@ -20,7 +20,7 @@
       >
         <div
           v-if="sidebarIsOpen"
-          class="cursor-pointer fixed inset-0 bg-black/30 z-[39] h-screen w-screen overscroll-none overflow-hidden"
+          class="cursor-pointer fixed inset-0 bg-black/30 z-[100] h-screen w-screen overscroll-none overflow-hidden"
           @click="sidebarIsOpen = false"
           aria-hidden
         />
@@ -39,7 +39,7 @@
         <aside
           v-if="sidebarIsOpen"
           id="default-sidebar"
-          class="fixed top-0 left-0 z-40 w-[300px] h-screen bg-white"
+          class="fixed top-0 left-0 z-[101] w-[300px] h-screen bg-white"
           aria-label="Sidebar"
         >
           <div class="h-full px-3 py-4 overflow-y-auto bg-white">
@@ -53,15 +53,6 @@
               />
               <AppBtnIconClose @click="sidebarIsOpen = false" />
             </div>
-            <select-chain-for-app
-              v-if="isMobile && isWalletConnected"
-              :has-label="false"
-              class="mb-2"
-            />
-            <the-address-menu
-              v-if="isMobile && isWalletConnected"
-              class="mb-2"
-            />
             <div class="relative">
               <transition-group name="fadelist">
                 <!-- CORE MENU -->
@@ -72,7 +63,18 @@
                     :list-item="item"
                     @click="clickListItem(item)"
                   />
+                  <a
+                    href="https://help.myetherwallet.com/en/"
+                    target="_blank"
+                    class="text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG"
+                  >
+                    <div class="mr-3 opacity-80">
+                      <book-open-icon class="w-4 h-4" />
+                    </div>
+                    <p class="capitalize">{{ t('learn') }}</p>
+                  </a>
                 </div>
+
                 <!-- TOOLS MENU -->
                 <menu-list-item
                   :list-item="toolsMenuItem"
@@ -129,13 +131,10 @@
 </template>
 
 <script setup lang="ts">
-import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
-import { Bars3Icon } from '@heroicons/vue/24/solid'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import TheAddressMenu from './TheAddressMenu.vue'
+import { Bars3Icon, BookOpenIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import MenuListItem from './MenuListItem.vue'
@@ -146,8 +145,6 @@ import { ROUTES_ACCESS } from '@/router/routeNames'
 const { t } = useI18n()
 const store = useWalletStore()
 const { isWalletConnected } = storeToRefs(store)
-
-const { isMobile } = useAppBreakpoints()
 
 defineProps({
   coreMenuList: {

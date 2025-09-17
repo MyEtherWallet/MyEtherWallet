@@ -35,6 +35,29 @@ import type { Toast } from '@/types/notification/index'
  *   },
  * })
  *
+ * // with link option as a button (Note: button is blue)
+ * toastStore.addToastMessage({
+ *   text: 'This is a toast message',
+ *   link: {
+ *     title: 'Click here',
+ *     url: 'https://www.google.com',
+ *     isButton: true,
+ *   },
+ * })
+ *
+ * // with secondary text and link as a button
+ * toastStore.addToastMessage({
+ *   text: 'This is a toast title',
+ *   secondaryText: 'This is a secondary text',
+ *   link: {
+ *     title: 'Click here',
+ *     url: 'https://www.google.com',
+ *     isButton: true,
+ *   },
+ * })
+ *
+ *
+ *
  * // with duration and toast type
  * toastStore.addToastMessage({
  *   text: 'This is a toast message',

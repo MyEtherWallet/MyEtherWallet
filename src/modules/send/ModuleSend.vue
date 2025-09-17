@@ -1,38 +1,39 @@
 <template>
   <div>
     <div
-      class="static max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
+      class="static w-full xs:max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
     >
       <div class="relative">
-        <div class="flex items-center justify-between mb-3 mt-4">
+        <div class="flex items-center justify-between mb-1 mt-4">
           <p class="font-semibold text-s-24 ml-3">Send</p>
           <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
             >Clear</app-btn-text
           >
         </div>
-
-        <div class="mb-[25px]">
-          <app-enter-amount
-            v-model:amount="amount"
-            v-model:selected-token="tokenSelectedContract"
-            v-model:error="amountError"
-            :validate-input="checkAmountForError"
+        <div class="p-4 rounded-20 bg-surface-light mb-2">
+          <div class="mb-[25px]">
+            <app-enter-amount
+              v-model:amount="amount"
+              v-model:selected-token="tokenSelectedContract"
+              v-model:error="amountError"
+              :validate-input="checkAmountForError"
+            />
+          </div>
+          <address-input
+            v-model:adr-input="adrInput"
+            :resolved-address="toAddress"
+            :address-error-messages="toAddressError"
+            :network="selectedChain"
+            @validate:address="validateAddressInput"
+            @immediate-update:resolved-address="onInput"
+          />
+          <app-select-tx-fee
+            :fees="gasFees"
+            :is-loading-fees="isLoadingFees"
+            :txRequestBody="gasFeeTxEstimate"
+            v-model:gas-fee-error="gasFeeError"
           />
         </div>
-        <address-input
-          v-model:adr-input="adrInput"
-          :resolved-address="toAddress"
-          :address-error-messages="toAddressError"
-          :network="selectedChain"
-          @validate:address="validateAddressInput"
-          @immediate-update:resolved-address="onInput"
-        />
-        <app-select-tx-fee
-          :fees="gasFees"
-          :is-loading-fees="isLoadingFees"
-          :txRequestBody="gasFeeTxEstimate"
-          v-model:gas-fee-error="gasFeeError"
-        />
       </div>
       <app-base-button
         v-if="isWalletConnected"

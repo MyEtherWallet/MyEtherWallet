@@ -38,6 +38,12 @@ export const useAppBreakpoints = () => {
   const isXLMinAndUp = computed<boolean>(
     () => breakpoints.greaterOrEqual('xl-min').value,
   )
+  const isXLAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('xl').value,
+  )
+  const is3XLAndUp = computed<boolean>(
+    () => breakpoints.greaterOrEqual('3xl').value,
+  )
 
   return {
     breakpoints,
@@ -50,5 +56,7 @@ export const useAppBreakpoints = () => {
     isHeaderMaxAndUp,
     isXLMinAndUp,
     isXsAndUp,
+    isXLAndUp,
+    is3XLAndUp,
   }
 }

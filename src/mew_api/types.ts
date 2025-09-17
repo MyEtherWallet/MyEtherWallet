@@ -56,10 +56,17 @@ export type QuotesRequestBody =
 export type EthereumSignableTransactionResponse =
   components['schemas']['GetUnsignedEvmTransactionResponse']
 
-
 // Explore page
 export type WebTokensTableSort = components['schemas']['WebTokensTableSort']
-export type GetWebTokensTableResponse = components['schemas']['GetWebTokensTableResponse']
-export type GetWebTopGainersResponse = components['schemas']['GetWebTopGainersResponse']
-export type GetWebTrendingTokensResponse = components['schemas']['GetWebTrendingTokensResponse']
-export type GetWebTokensWatchlistResponse = components['schemas']['GetWebTokensWatchlistResponse']
+export type GetWebTokensTableResponse =
+  components['schemas']['GetWebTokensTableResponse']
+export type GetWebTokensTableResponseToken =
+  components['schemas']['GetWebTokensTableResponse']['items'][number]
+export type GetWebTopGainersResponse =
+  components['schemas']['GetWebTopGainersResponse']
+export type GetWebTrendingTokensResponse =
+  components['schemas']['GetWebTrendingTokensResponse']
+export type GetWebTrendingTokensResponseToken =
+  components['schemas']['GetWebTrendingTokensResponse']['items'][number]
+export type GetWebTokensWatchlistResponse =
+  components['schemas']['GetWebTokensWatchlistResponse']

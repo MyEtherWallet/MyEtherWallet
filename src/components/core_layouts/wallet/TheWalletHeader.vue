@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] sticky top-0 z-10 px-5 md-header:px-10 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:px-10 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -45,6 +45,14 @@
             {{ item.title }}
           </router-link>
         </div>
+        <a
+          v-if="!showMobileMenu"
+          href="https://help.myetherwallet.com/en/"
+          target="_blank"
+          class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+        >
+          {{ $t('learn') }}
+        </a>
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
@@ -58,7 +66,7 @@
               class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
               @click="toggleSelect"
             >
-              {{ hideSend ? $t('common.more') : $t('tools') }}
+              {{ $t('common.more') }}
               <chevron-down-icon class="w-4 h-4 ml-2" />
             </button>
           </template>
@@ -126,7 +134,6 @@ import { useI18n } from 'vue-i18n'
 import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import { useBreakpoints } from '@vueuse/core'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
@@ -139,11 +146,7 @@ const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
 /** ------------------------------
  * Breakpoints determine menu visibility
  ------------------------------*/
-const breakpoints = useBreakpoints({
-  hideSend: 1200,
-})
 
-const hideSend = computed<boolean>(() => breakpoints.smaller('hideSend').value)
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
 /** ------------------------------
@@ -159,22 +162,17 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
     {
       title: t('stocks'),
       routeName: ROUTES_MAIN.STOCKS.NAME,
-      iconID: ICON_IDS.BUY,
+      iconID: ICON_IDS.STOCKS,
     },
     {
       title: t('crypto'),
       routeName: ROUTES_MAIN.CRYPTO.NAME,
-      iconID: ICON_IDS.SWAP,
+      iconID: ICON_IDS.CRYPTO,
     },
     {
       title: t('earn'),
       routeName: ROUTES_MAIN.EARN.NAME,
       iconID: ICON_IDS.STAKE,
-    },
-    {
-      title: t('learn'),
-      routeName: ROUTES_MAIN.LEARN.NAME,
-      iconID: ICON_IDS.LEARN,
     },
   ]
 })
@@ -200,13 +198,10 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
 })
 
 const displayLinks = computed(() => {
-  return hideSend.value ? coreMenuList.value.slice(0, 4) : coreMenuList.value
+  return coreMenuList.value
 })
 const displayTools = computed<AppSelectOption[]>(() => {
   const tools = [...toolsMenuList.value]
-  if (hideSend.value) {
-    tools.unshift(coreMenuList.value[4])
-  }
   return tools.map(item => ({
     label: item.title,
     value: item.routeName as string,

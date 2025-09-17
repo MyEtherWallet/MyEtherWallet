@@ -40,14 +40,17 @@
             v-bind="$attrs"
           >
             <div
-              class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex bg-white sticky top-0"
+              class="z-10 pb-2 sm:pb-2 px-6 sm:px-8 basis-full order-2 sm:order-1 flex bg-white sticky top-0"
               :class="{
-                'justify-between': title,
-                'justify-end': !title,
+                'justify-between': title || $slots.title,
+                'justify-end': !title && !$slots.title,
               }"
             >
               <slot name="title">
-                <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8 capitalize">
+                <h1
+                  v-if="title && !$slots.title"
+                  class="title4 pr-2 pt-4 sm:pt-7 capitalize"
+                >
                   {{ title }}
                 </h1>
               </slot>

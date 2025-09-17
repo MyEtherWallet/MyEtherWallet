@@ -25,20 +25,33 @@
               <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
             </button>
             <p class="text-[10px] leading-p-110 pl-1">
-              {{ truncateAddress(walletAddress, 6) }}
+              {{ truncateAddress(walletAddress) }}
             </p>
           </div>
-          <a
-            :href="getExplorerLink"
-            :aria-label="$t('view_in_block_explorer')"
-            target="_blank"
-            class="rounded-[8px] !cursor-pointer p-1 flex items-center justify-center backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
-          >
-            <ArrowTopRightOnSquareIcon class="w-4 h-4" />
-          </a>
+          <div class="flex items-center ml-2 gap-2">
+            <!-- Copy address button -->
+            <button
+              :aria-label="$t('common.copy_address')"
+              class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+              @click="copyClick"
+            >
+              <ClipboardDocumentIcon class="w-5 h-5" />
+            </button>
+            <!-- Link to block explorer -->
+            <a
+              :href="getExplorerLink"
+              :aria-label="$t('view_in_block_explorer')"
+              target="_blank"
+              class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            >
+              <ArrowTopRightOnSquareIcon class="w-5 h-5" />
+            </a>
+          </div>
         </div>
         <!-- Portfolio value-->
-        <div class="flex flex-col justify-center h-[44px] z-1 relative">
+        <div
+          class="flex flex-row justify-start items-center z-1 relative gap-3"
+        >
           <p
             v-if="!isLoadingBalances"
             class="font-bold text-s-32 leading-p-130"
@@ -50,7 +63,7 @@
             class="h-8 w-32 bg-white/15 rounded-12 animate-pulse"
           ></div>
         </div>
-        <!-- Token balances and Actions-->
+        <!-- Token balances -->
         <div
           class="self-end pl-3 flex items-center justify-between z-1 relative"
         >
@@ -66,20 +79,14 @@
             v-else
             class="h-[38px] w-24 bg-white/15 rounded-12 animate-pulse"
           ></div>
-          <div class="flex gap-2">
-            <button
-              class="rounded-[10px] !cursor-pointer p-1 h-8 w-8 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
-              @click="openDepositDialog = true"
-            >
-              <QrCodeIcon class="w-6 h-6" />
-            </button>
-            <button
-              class="rounded-[10px] !cursor-pointer p-1 h-8 w-8 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
-              @click="copyClick"
-            >
-              <ClipboardDocumentIcon class="w-6 h-6" />
-            </button>
-          </div>
+          <!-- Refresh balance button -->
+          <button
+            :aria-label="$t('refresh_balance')"
+            class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            @click="fetchBalances"
+          >
+            <ArrowPathIcon class="w-5 h-5" />
+          </button>
         </div>
       </div>
     </div>
@@ -97,7 +104,7 @@ import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import {
   ClipboardDocumentIcon,
-  QrCodeIcon,
+  ArrowPathIcon,
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/vue/24/outline'
 import { animate } from 'animejs'
@@ -109,6 +116,7 @@ const { t } = useI18n()
 const toastStore = useToastStore()
 const walletStore = useWalletStore()
 const {
+  wallet,
   tokens,
   walletAddress,
   isWalletConnected,
@@ -118,9 +126,18 @@ const {
   isLoadingBalances,
   walletCardWasAnimated,
 } = storeToRefs(walletStore)
+const { setTokens, setIsLoadingBalances } = walletStore
+
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
+const fetchBalances = () => {
+  setIsLoadingBalances(true)
+  wallet.value?.getBalance().then(balances => {
+    setTokens(balances.result)
+    setIsLoadingBalances(false)
+  })
+}
 /**
  * Copies the copyValue to the clipboard.
  */

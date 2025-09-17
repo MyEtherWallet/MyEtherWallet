@@ -1,11 +1,12 @@
 <template>
-  <div class="h-screen w-full static">
-    <the-wallet-header />
+  <div class="h-screen relative flex overflow-y-auto">
+    <the-wallet-header class="basis-full" />
+
     <!-- Background -->
     <teleport to="#app">
       <transition
         enter-from-class="opacity-0"
-        enter-active-class="transform ease-out duration-300 transition"
+        enter-active-class="transform ease-out duration-300 transition "
         enter-to-class="opacity-100"
         leave-from-class="opacity-100"
         leave-active-class="ease-in duration-100 transition"
@@ -14,7 +15,7 @@
       >
         <div
           v-if="isOpenSideMenu"
-          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden lg:hidden"
+          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
           @click="walletMenu.setIsOpenSideMenu(false)"
           aria-hidden
         />
@@ -22,20 +23,18 @@
     </teleport>
     <div
       :class="[
+        isOpenSideMenu ? 'xl:mr-[400px]' : 'xl:mr-[60px]',
         backgroundClass,
-
-        'relative flex justify-between h-[calc(100vh-68px)] sm:h-[calc(100vh-76px)] overflow-hidden',
+        'flex w-full mr-[60px] overflow-y-auto',
       ]"
     >
-      <div :class="['relative flex justify-center overflow-hidden mx-auto ']">
-        <main
-          :class="[
-            ' flex-initial w-full max-w-[1440px] mx-auto overflow-y-auto mr-[64px] lg:mr-0',
-          ]"
-        >
-          <div
-            class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 md-header:px-10"
-          >
+      <div
+        :class="[
+          'relative flex justify-center min-w-[320px] w-full   mt-[68px] sm:mt-[76px]',
+        ]"
+      >
+        <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
+          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 2xl:px-7">
             <router-view />
           </div>
           <MewFooter
@@ -46,11 +45,12 @@
             :user-consent="popupStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
+            class="!px-5 !2xl:px-7"
           />
         </main>
       </div>
-      <layout-wallet />
     </div>
+    <layout-wallet />
   </div>
 </template>
 
@@ -64,7 +64,7 @@ import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
-import { ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_ACCESS, ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
@@ -88,7 +88,10 @@ const handleSetConsent = (consent: boolean) => {
 const route = useRoute()
 
 const backgroundClass = computed(() => {
-  if (route.name === ROUTES_ACCESS.ACCESS.NAME) {
+  if (
+    route.name === ROUTES_ACCESS.ACCESS.NAME ||
+    route.name === ROUTES_MAIN.CRYPTO.NAME
+  ) {
     return ''
   } else {
     return 'blue-gradient'

@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-[76px]">
     <button
-      class="hoverNoBG rounded-16 border-1 bg-white border-grey-outline border-solid px-4 py-3 flex justify-between items-center text-sm w-full"
+      class="hoverNoBG rounded-16 bg-white shadow-button shadow-button-elevated border-solid px-4 py-3 flex justify-between items-center text-sm w-full"
       :class="{
         '!border-error border-2':
           isWalletConnected && gasFeeError && gasFeeError !== '',
