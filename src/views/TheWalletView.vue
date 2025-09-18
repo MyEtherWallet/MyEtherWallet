@@ -48,7 +48,7 @@
         <mew-button
           title="Click Here"
           :has-full-width="true"
-          btn-link="https://mewwallet.typeform.com/to/peXf18zO"
+          btn-link="https://tally.so/r/nGMpdL"
           @click.native="openSurvey"
         />
       </div>
@@ -60,7 +60,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 import { toBN } from 'web3-utils';
 import { debounce } from 'lodash';
-import moment from 'moment';
+// import moment from 'moment';
 
 import handlerWallet from '@/core/mixins/handlerWallet.mixin';
 import nodeList from '@/utils/networks';
@@ -131,13 +131,13 @@ export default {
       const userAnswered = !this.userSurveyShown;
       const shownTwice = this.userSurveyShownCounter > 2;
 
-      return userClosed && userAnswered && !shownTwice && this.withinDate;
-    },
-    withinDate() {
-      const startDate = new Date('08/18/2025');
-      const endDate = new Date('09/02/2025');
-      return moment(new Date()).isBetween(startDate, endDate);
+      return userClosed && userAnswered && !shownTwice;
     }
+    // withinDate() {
+    //   const startDate = new Date('08/18/2025');
+    //   const endDate = new Date('09/02/2025');
+    //   return moment(new Date()).isBetween(startDate, endDate);
+    // }
   },
   watch: {
     address(newVal) {
