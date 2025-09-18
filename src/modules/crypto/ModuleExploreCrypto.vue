@@ -135,13 +135,6 @@
                     </template>
                   </app-select>
                 </th>
-                <!-- Last 7 days -->
-                <!-- <th
-                  class="px-1 py-2 text-right hidden sm:table-cell xl:min-w-[115px]"
-                >
-                  Last 7 days
-                </th> -->
-                <!-- 24h Volume -->
                 <th
                   :class="
                     isOpenSideMenu ? 'hidden 2xl:table-cell' : 'xl:table-cell'
@@ -216,10 +209,11 @@
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
-                class="h-14"
+                class="h-14 hoverBGWhite cursor-pointer"
+                @click="goToTokenPage(token)"
               >
                 <!-- Watchlist -->
-                <td class="xs:pr-2 hidden sm:table-cell">
+                <td class="xs:pr-2 hidden sm:table-cell rounded-l-12">
                   <button
                     :class="{
                       'text-primary hover:text-text-grey-30': isWatchListed(
@@ -238,8 +232,17 @@
                   </button>
                 </td>
                 <!-- Name -->
-                <td class="px-1 py-2">
-                  <div class="flex items-center gap-3">
+                <td class="px-1 py-2 rounded-l-12 sm:rounded-none">
+                  <router-link
+                    :to="{
+                      name: 'TokenInfo',
+                      params: {
+                        networkId: token.coinId,
+                        tokenId: token.coinId,
+                      },
+                    }"
+                    class="flex items-center gap-3"
+                  >
                     <img
                       :src="token.logoUrl as string"
                       alt="favorite"
@@ -251,11 +254,11 @@
                         {{ truncate(token.symbol, 7) }}
                       </p>
                     </div>
-                  </div>
+                  </router-link>
                 </td>
                 <!-- Price -->
                 <!-- TODO: change with currency parser -->
-                <td class="px-1 py-2 text-right">
+                <td class="px-1 py-2 text-right rounded-r-12 xs:rounded-none">
                   <p class="text-right xs:text-center sm:text-right">
                     ${{ token.price }}
                   </p>
@@ -305,7 +308,7 @@
                   ${{ token.marketCap ?? 0 }}
                 </td>
                 <!-- Actions -->
-                <td class="pl-1 py-2 hidden xs:table-cell">
+                <td class="pl-1 py-2 hidden xs:table-cell rounded-r-12">
                   <div class="flex flex-row gap-1 justify-end flex-wrap">
                     <app-base-button size="small" @click="buyBtn" is-outline
                       >Buy</app-base-button
@@ -419,6 +422,9 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
+import { useRouter } from 'vue-router'
+import { ROUTES_MAIN } from '@/router/routeNames'
+
 const walletMenu = useWalletMenuStore()
 const { setIsOpenSideMenu, setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -821,5 +827,17 @@ const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
     return token.sparklineIn7d.slice(-totalPoints)
   }
   return []
+}
+
+/**-------------------------------
+ * Token Link
+ --------------------------------*/
+const router = useRouter()
+
+const goToTokenPage = (token: GetWebTokensTableResponseToken) => {
+  router.push({
+    name: ROUTES_MAIN.TOKEN_INFO.NAME,
+    params: { networkId: token.coinId, tokenId: token.coinId },
+  })
 }
 </script>
