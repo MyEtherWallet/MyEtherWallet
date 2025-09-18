@@ -5,6 +5,7 @@ on:
       - feat/v7
       - devop/v7-*
       - feat/v7-*
+      - fix/v7-*
 jobs:
   logs-build:
     runs-on: ubuntu-latest

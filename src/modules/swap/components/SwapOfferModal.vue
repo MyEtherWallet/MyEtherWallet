@@ -143,7 +143,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -278,6 +278,13 @@ const toAmountFiat = computed(() => {
       .decimalPlaces(2) || '0'
   )
 })
+
+watch(
+  () => model.value,
+  () => {
+    isLoading.value = false
+  },
+)
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
