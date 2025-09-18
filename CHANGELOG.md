@@ -1,3 +1,9 @@
+### Release v6.9.26
+
+### feature
+
+* add survey [#5207](https://github.com/MyEtherWallet/MyEtherWallet/pull/5207)
+
 ### Release v6.9.25
 
 ### devop
