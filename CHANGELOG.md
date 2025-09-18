@@ -1,4 +1,4 @@
-### Release v6.9.26
+### Release v6.9.25-hotfix.1
 
 ### feature
 
