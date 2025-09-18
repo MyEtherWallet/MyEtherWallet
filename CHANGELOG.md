@@ -1,6 +1,6 @@
-### Release v6.9.26
+### Release v6.9.25-hotfix.1
 
-### feat
+### feature
 
 * add survey [#5207](https://github.com/MyEtherWallet/MyEtherWallet/pull/5207)
 
