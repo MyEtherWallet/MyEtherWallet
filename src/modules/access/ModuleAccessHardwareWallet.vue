@@ -236,6 +236,7 @@ const unlockWallet = async () => {
   const networkName = chainToEnum[
     selectedChain.value?.name as string
   ] as NetworkNames
+  console.log('here', selectedHwWalletType.value, networkName, hwWalletInstance)
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
@@ -245,6 +246,9 @@ const unlockWallet = async () => {
       hwWalletInstance.close()
       hwWalletInstance = new HWwallet()
       return new Promise(r => setTimeout(r, 1000))
+    })
+    .catch(e => {
+      console.log('AAAAAAA', e)
     })
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
