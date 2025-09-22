@@ -6,7 +6,7 @@
       :class="[
         isOpenSideMenu
           ? 'top-5 sm:top-[95px] right-[400px]'
-          : 'top-[95px] right-[60px]',
+          : 'top-[70px] sm:top-[95px] right-[60px]',
         { hidden: !isXsAndUp && isOpenSideMenu },
         'absolute  z-[51]',
       ]"

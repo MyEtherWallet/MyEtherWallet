@@ -215,20 +215,15 @@
                 <!-- Watchlist -->
                 <td class="xs:pr-2 hidden sm:table-cell rounded-l-12">
                   <button
-                    :class="{
-                      'text-primary hover:text-text-grey-30': isWatchListed(
-                        token.coinId,
-                      ),
-                      'text-grey-30 hover:text-primary': !isWatchListed(
-                        token.coinId,
-                      ),
-                    }"
-                    @click="setWatchlistToken(token.coinId)"
-                    class="p-2 rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                    @click.stop="setWatchlistToken(token.coinId)"
+                    class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
-
-                    <star-solid-icon class="h-4 w-4 cursor-pointer" />
+                    <star-outline-icon
+                      class="h-4 w-4 cursor-pointer"
+                      v-if="!isWatchListed(token.coinId)"
+                    />
+                    <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
                   </button>
                 </td>
                 <!-- Name -->
@@ -398,6 +393,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/vue/24/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'

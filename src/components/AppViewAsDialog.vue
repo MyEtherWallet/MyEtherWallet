@@ -22,7 +22,7 @@
     <div
       v-if="isOpen"
       :class="[isOpenSideMenu ? 'mr-[400px]' : 'mr-[60px]', zIndexContainer]"
-      class="cursor-pointer fixed inset-0 flex items-center justify-center p-6 overscroll-none !overflow-y-scroll mt-[68px] sm:mt-[76px]"
+      class="cursor-pointer fixed inset-0 flex items-center justify-center py-6 px-3 xs:p-6 overscroll-none !overflow-y-scroll mt-[68px] sm:mt-[76px]"
       @click="setIsOpen(false)"
     >
       <transition
@@ -34,15 +34,18 @@
       >
         <div
           v-if="isOpen"
-          class="cursor-default max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden relative"
+          :class="[
+            'cursor-default max-h-[100%] w-[100%] xs:w-[95%] max-w-[1384px] bg-white rounded-16 sm:rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden relative',
+            containerClass,
+          ]"
           @click.stop
           v-bind="$attrs"
         >
           <app-btn-icon-close
             @click="setIsOpen(false)"
-            class="absolute top-4 right-4 min-w-[32px]"
+            class="absolute top-2 sm:top-4 right-4 min-w-[32px]"
           />
-          <div class="py-2 px-6">
+          <div>
             <slot name="content" />
           </div>
         </div>
@@ -80,6 +83,10 @@ defineProps({
   },
   zIndexContainer: {
     default: 'z-[11]',
+    type: String,
+  },
+  containerClass: {
+    default: '',
     type: String,
   },
 })
