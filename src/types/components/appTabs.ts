@@ -1,5 +1,3 @@
-
-
 export interface Tab {
   name: string
   routeName?: string

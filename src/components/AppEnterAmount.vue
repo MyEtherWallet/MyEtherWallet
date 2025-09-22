@@ -1,7 +1,7 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 box-border border border-1 border-grey-outline bg-white p-[17px] transition-colors"
+    class="w-full rounded-16 box-border shadow-button shadow-button-elevated bg-white p-[18px] transition-colors min-h-[108px]"
     :class="{
       'border-primary border-2 !p-4': inFocusInput && !error,
       '!border-error border-2 !p-4': !!error,
@@ -16,11 +16,11 @@
         type="text"
         autoComplete="off"
         placeholder="0.0"
-        v-model.number="amount"
+        v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select v-model:selected-token="selectedToken" />
+      <app-token-select v-model:selected-token-contract="selectedToken" />
     </div>
     <div :class="{ 'animate-pulse': isLoading }">
       <transition name="fade" mode="out-in">
@@ -28,17 +28,21 @@
         <div v-else class="flex justify-between">
           <div
             class="text-sm"
-            :class="{ 'text-error': !!error, 'text-info': !error }"
+            :class="{
+              'text-error': !!error,
+              'text-info': !error,
+            }"
           >
             {{ balanceFiatOrError }}
           </div>
           <div
+            v-if="isWalletConnected"
             :class="[
               'text-sm text-info transition-colors',
               { 'text-primary': inFocusInput },
             ]"
           >
-            Balance: {{ balance }}
+            {{ $t('common.balance') }}: {{ balance }}
           </div>
         </div>
       </transition>
@@ -61,7 +65,8 @@ import {
 } from '@/utils/numberFormatHelper'
 
 const walletStore = useWalletStore()
-const { isLoadingBalances: isLoading } = storeToRefs(walletStore)
+const { isLoadingBalances: isLoading, isWalletConnected } =
+  storeToRefs(walletStore)
 
 const props = defineProps({
   validateInput: {
@@ -77,10 +82,7 @@ const amount = defineModel('amount', {
   required: true,
 })
 
-const selectedToken = defineModel('selectedToken', {
-  type: Object as () => TokenBalance,
-  required: true,
-})
+const selectedToken = defineModel<string>('selectedToken')
 
 const error = defineModel('error', {
   type: String,
@@ -88,18 +90,25 @@ const error = defineModel('error', {
   default: '',
 })
 
+const tokenBalanceRaw = computed(() => {
+  if (isLoading.value || !selectedToken.value) return null
+  return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
+})
+
 const balanceFiatOrError = computed(() => {
-  const _balance = BigNumber(
-    BigNumber(selectedToken.value.price || 0).times(
-      BigNumber(amount.value || 0),
-    ),
-  )
+  const _balance = isWalletConnected.value
+    ? BigNumber(
+        BigNumber(tokenBalanceRaw.value?.price || 0).times(
+          BigNumber(amount.value || 0),
+        ),
+      )
+    : BigNumber(0)
   return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
-  return selectedToken.value.balance
-    ? formatFloatingPointValue(selectedToken.value.balance).value
+  return tokenBalanceRaw.value?.balance
+    ? formatFloatingPointValue(tokenBalanceRaw.value.balance).value
     : '0'
 })
 

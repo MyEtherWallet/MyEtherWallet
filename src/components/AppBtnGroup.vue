@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      isTall ? 'p-2' : 'p-1',
-      'flex justify-start bg-surface rounded-2xl md:rounded-32 gap-1 max-w-fit',
+      { 'bg-surface rounded-2xl md:rounded-32 p-1': variant === 'default' },
+      'flex justify-start  gap-1 max-w-fit',
     ]"
   >
     <div v-if="isLoaded">
@@ -13,13 +13,24 @@
           role="tab"
           :aria-selected="areEqual(selected, btn)"
           :class="[
+            { 'min-h-10 min-w-[110px]': size === 'large' },
+            { 'min-h-8 min-w-[95px]': size === 'medium' },
+            { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
             {
-              'bg-white shadow-button-group hover:bg-white': areEqual(
-                selected,
-                btn,
-              ),
+              'bg-white shadow-container hover:bg-white':
+                variant === 'default' && areEqual(selected, btn),
             },
-            'text-s-17 px-2 leading-p-140 min-h-10 rounded-full bg-transparent font-medium hoverNoBG min-w-[110px]',
+            {
+              'border border-grey-outline ':
+                variant === 'outline' && !areEqual(selected, btn),
+            },
+            {
+              'border-2 border-primary !bg-primary text-white':
+                variant === 'outline' && areEqual(selected, btn),
+            },
+            'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium hoverNoBG ',
+
+            variant === 'outline' ? '' : '',
           ]"
           @click="setSelected(btn)"
         >
@@ -89,11 +100,18 @@ const props = defineProps({
     default: false,
   },
   /**
-   * @isTall - A boolean to indicate if the button group should be tall. Default is false. Adds extra padding.
+   * @size - The size of the buttons. Can be 'small', 'medium', or 'large'. Default is 'medium'.
    */
-  isTall: {
-    type: Boolean,
-    default: false,
+  size: {
+    type: String as PropType<'small' | 'medium' | 'large'>,
+    default: 'medium',
+  },
+  /**
+   * @variant - The variant of the buttons. Can be 'default' or 'outline'. Default is 'default'.
+   */
+  variant: {
+    type: String as PropType<'default' | 'outline'>,
+    default: 'default',
   },
 })
 const emit = defineEmits<{

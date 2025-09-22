@@ -7,7 +7,7 @@
     <!-- Title -->
     <template #title>
       <div>
-        <h1 class="title4 pr-2 pt-4 sm:pt-8 mx-auto">
+        <h1 class="title4 pr-2 pt-4 sm:pt-8">
           {{ $t('wc_dialog.title') }}
         </h1>
         <!-- TODO: add link-->
@@ -81,12 +81,12 @@
   </app-dialog>
 </template>
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import QRCodeStyling, { type DrawType, type DotType } from 'qr-code-styling'
 import AppCopyButton from '@/components/AppBtnCopy.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useQR } from '@/composables/useQR'
 
 const props = defineProps<{
   qrcodeData: string
@@ -104,37 +104,12 @@ const isOpen = defineModel('isOpen', {
   required: true,
 })
 
-const isLoadingQRCode = ref(true)
-
 /** -------------------
  * QR Code Controls
  -------------------*/
-const options = ref({
-  width: 280,
-  height: 280,
-  type: 'svg' as DrawType,
-  data: props.qrcodeData,
-  image: '',
-  margin: 0,
-  dotsOptions: {
-    color: '#000',
-    type: 'extra-rounded' as DotType,
-  },
-  cornersDotOptions: {
-    color: 'rgb(0,90,229,1',
-    type: 'extra-rounded' as DotType,
-  },
-  backgroundOptions: {
-    color: 'transparent',
-  },
-  imageOptions: {
-    crossOrigin: 'anonymous',
-    margin: 10,
-  },
-})
-
-const qrCode = ref<HTMLDivElement | null>(null)
-const qrCodeStyling = new QRCodeStyling(options.value)
+const qrWidth = ref(isMobile.value ? 200 : 280)
+const qrHeight = ref(isMobile.value ? 200 : 280)
+const { qrCode, isLoadingQRCode, setQRCode } = useQR()
 
 /**
  * Watches for changes and updates the QR code styling accordingly.
@@ -154,27 +129,33 @@ const qrCodeStyling = new QRCodeStyling(options.value)
  * @returns {Promise<void>}
  */
 watchEffect(async () => {
-  try {
-    isLoadingQRCode.value = true
-    if (isMobile.value) {
-      options.value.width = 200
-      options.value.height = 200
-    } else {
-      options.value.width = 280
-      options.value.height = 280
-    }
-    options.value.data = props.qrcodeData
-    if (props.walletIcon) {
-      options.value.image = props.walletIcon
-    }
-
-    qrCodeStyling.update(options.value)
-    isLoadingQRCode.value = false
-    if (qrCode.value) {
-      qrCodeStyling.append(qrCode.value)
-    }
-  } catch (error) {
-    console.error('Failed to append QR Code:', error)
+  if (isMobile.value) {
+    qrWidth.value = 200
+    qrHeight.value = 200
+  } else {
+    qrWidth.value = 280
+    qrHeight.value = 280
   }
 })
+
+watch(
+  () => [
+    props.qrcodeData,
+    props.walletIcon,
+    isOpen.value,
+    qrCode.value,
+    qrWidth.value,
+    qrHeight.value,
+  ],
+  () => {
+    if (isOpen.value) {
+      setQRCode(
+        props.qrcodeData,
+        qrWidth.value,
+        qrHeight.value,
+        props.walletIcon,
+      )
+    }
+  },
+)
 </script>

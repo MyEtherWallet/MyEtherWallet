@@ -26,14 +26,17 @@ export default {
       'md-header': '940px',
       lg: '1024px',
       'lg-max': '1084px',
+      'xl-min': '1140px',
       xl: '1280px',
       '2xl': '1440px',
       '3xl': '1601px',
+      print: { raw: 'print' }, // => @media  print { ... }
     },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
       appBackground: '#f5f5f7',
+      gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
       titleColor: '#222222',
       primary: 'rgb(0,90,229,1)',
@@ -46,9 +49,12 @@ export default {
       black: '#000000',
       white: '#ffffff',
       surface: 'rgba(232, 232, 237, 1)',
+      'surface-light': 'rgba(249, 250, 251, 1)',
       info: 'rgba(0, 0, 0, 0.65)',
       'grey-light': 'rgba(232, 232, 237, 1)',
+      'grey-light-2': 'rgba(248, 250, 252, 1)',
       'grey-outline': 'rgba(188,200,204,1)',
+      'grey-70': 'rgba(0,0,0,0.7)',
       'grey-50': 'rgba(0,0,0,0.5)',
       'grey-30': 'rgba(0,0,0,0.3)',
       'grey-10': 'rgba(0,0,0,0.1)',
@@ -71,6 +77,9 @@ export default {
       success: 'rgb(5,192,165,1)',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
+      // blues
+      'blue-2': 'rgba(0, 91, 229, 1)',
+      'blue-3': 'rgba(0, 123, 238, 1)',
     },
     extend: {
       fontSize: {
@@ -81,10 +90,15 @@ export default {
         's-40': '40px',
         's-32': '32px',
         's-28': '28px',
+        's-24': '24px',
+        's-20': '20px',
         's-17': '17px',
+        's-16': '16px',
         's-15': '15px',
+        's-14': '14px',
         's-12': '12px',
         's-11': '11px',
+        's-8': '8px',
       },
       lineHeight: {
         'p-100': '100%',
@@ -109,11 +123,12 @@ export default {
         20: '20px',
         32: '32px',
         16: '16px',
+        12: '12px',
       },
       boxShadow: {
         token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
         button: '0px 1px 4px 0px rgba(0, 0, 0, 0.12)',
-        'button-group': '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
+        container: '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
         'button-elevated':
           '0px 1px 4px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.25)',
       },

@@ -1,7 +1,6 @@
-import type { Config } from '@wagmi/core'
 import { mainnet } from '@wagmi/core/chains'
 import * as allChains from '@wagmi/core/chains'
-import { createConfig, http } from '@wagmi/core'
+import { createConfig, http, type Config } from '@wagmi/core'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import Configs from '@/configs'
@@ -26,12 +25,10 @@ const connectorsLocal = connectorsForWallets(
 export const generateConfig = (chainsFromApi: Chain[]): Config => {
   const filteredChains = chainsFromApi.filter(chain => {
     return chain.chainID
-  });
+  })
   const chains: wChain[] = Object.values(allChains).filter((chain: wChain) => {
     return filteredChains.some((filteredChain: Chain) => {
-      return (
-        chain.id === Number(filteredChain.chainID)
-      )
+      return chain.id === Number(filteredChain.chainID)
     })
   })
 
@@ -39,14 +36,16 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
     chains.push(mainnet)
   }
 
-  const transports = chains.reduce((acc: Record<number, ReturnType<typeof http>>, chain: wChain) => {
-    acc[chain.id] = http()
-    return acc
-  }, {} as Record<number, ReturnType<typeof http>>)
-
+  const transports = chains.reduce(
+    (acc: Record<number, ReturnType<typeof http>>, chain: wChain) => {
+      acc[chain.id] = http()
+      return acc
+    },
+    {} as Record<number, ReturnType<typeof http>>,
+  )
   return createConfig({
     chains: chains as [wChain, ...wChain[]],
     transports: transports,
-    connectors: connectorsLocal
+    connectors: connectorsLocal,
   })
 }

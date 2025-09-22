@@ -15,14 +15,16 @@
         <Bars3Icon class="h-6 w-6" />
       </app-btn-icon>
     </div>
-    <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4">
+    <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4 flex-wrap">
       <!-- Search and Sort -->
       <div
-        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 md-header:max-w-[510px]"
+        :class="{ 'md-header:max-w-[510px]': !isOpenSideMenu }"
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
       >
         <app-search-input
           v-model="searchInput"
-          class="grow md-header:max-w-[315px]"
+          :class="{ 'md-header:max-w-[315px]': !isOpenSideMenu }"
+          class="grow"
         />
         <app-select
           v-if="isHeaderMaxAndUp"
@@ -37,6 +39,7 @@
         v-model:selected="activeFilter"
         :btn-list="filterOptions"
         :is-loaded="true"
+        size="large"
       >
         <template #btn-content="{ data }">
           {{ data.name }}
@@ -46,7 +49,12 @@
     <!-- Wallets-->
     <div
       v-if="displayWallets.length > 0"
-      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 md:gap-6"
+      :class="
+        isOpenSideMenu
+          ? 'lg:grid-cols-3  xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6'
+          : 'lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-7'
+      "
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-4 md:gap-6"
     >
       <btn-wallet
         v-for="wallet in displayWallets"
@@ -100,9 +108,13 @@ import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
-import { chainToEnum } from '@/providers/ethereum/trezorSupportedEnum'
+import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
@@ -114,8 +126,7 @@ const { defaultWallets, newWalletList } = useWalletList()
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  const convertedNetworkName =
-    chainToEnum[selectedChain.value?.chainID as string]
+  const convertedNetworkName = chainToEnum[selectedChain.value?.name as string]
   const supportedDefaultWallets = defaultWallets.value.filter(wallet => {
     return wallet.canSupport && !!wallet.canSupport(convertedNetworkName)
   })

@@ -1,17 +1,24 @@
 {
   "common": {
+    "swap": "Swap",
     "network": "network",
     "close": "close",
     "clear_icon": "clear input",
     "copy": "copy",
+    "copy_address": "copy address",
     "select_network": "Select network",
     "more": "more",
     "dont_have_wallet": "Don't have a wallet?",
     "create_wallet": "Create wallet",
     "access_wallet": "Access wallet",
-    "not_found":  {
+    "load_more": "Load more",
+    "not_found": {
       "chains": "No chains found"
     },
+    "edit": "Edit",
+    "delete": "Delete",
+    "token_count": "no tokens| 1 token | {count} Tokens",
+    "sort": "Sort",
     "sort_by": "Sort by",
     "filter": "Filter",
     "reset": "reset",
@@ -22,19 +29,46 @@
     "back": "Back",
     "next": "Next",
     "error": {
-          "user_canceled_request": "User canceled the request"
+      "user_canceled_request": "User canceled the request"
     },
     "yes": "Yes",
     "no": "No",
     "clear": "clear",
-    "required": "required"
+    "required": "required",
+    "copied_to_clipboard": "Copied to clipboard",
+    "from": "From",
+    "to": "To",
+    "amount": "Amount",
+    "network_fee": "Network fee",
+    "more_details": "More details",
+    "nonce": "Nonce",
+    "data": "Data",
+    "balance": "Balance",
+    "send": "Send",
+    "connect_wallet": "connect wallet",
+    "select_token": "select token",
+    "name": "name",
+    "symbol": "symbol",
+    "price": "price",
+    "usd_balance": "USD Balance",
+    "fee": "Fee",
+    "copy_failed": "Copy failed",
+    "and": "and",
+    "deposit_title": "Your {chain} address",
+    "deposit_description": "You can deposit any tokens supported by {chain} to this address.",
+    "not_enough_balance_to_cover_fee": "Not enough {symbol} to cover network fee.",
+    "buy_more": "Buy more {symbol}"
   },
+  "deposit": "Deposit",
   "portfolio": "Portfolio",
+  "stocks": "Stocks",
+  "learn": "Learn",
   "swap": "Swap",
-  "send": "Send",
   "stake": "Stake",
+  "crypto": "Crypto",
   "earn": "Earn",
   "buy": "Buy",
+  "sell": "Sell",
   "buy-sell": "Buy & Sell",
   "tools": "Tools",
   "verify-message": "Verify Message",
@@ -44,11 +78,49 @@
   "settings": "Settings",
   "notifications": "Notifications",
   "help-center": "Help Center",
+  "view_paper_wallet": "View Paper Wallet",
+  "switch_connected_address": "Switch Connected Address",
   "menu": {
     "open-settings": "Open Settings",
     "open-notifications": "Open Notifications",
     "open-menu": "Open Menu"
   },
   "home": "Home",
-  "connect_wallet": "Connect wallet"
+  "connect_wallet": "Connect wallet",
+  "disconnect_wallet": "Disconnect wallet",
+  "connected_wallet": "Connected Wallet",
+  "view_in_block_explorer": "View in block explorer",
+  "refresh_balance": "Refresh Balance",
+  "select_token": {
+    "title": "Select Token",
+    "search": "Search tokens by name or symbol",
+    "no_tokens_match": "No tokens match your search",
+    "no_tokens_available": "No tokens available"
+  },
+  "select_fee": {
+    "title": "Select transaction fee",
+    "description": "This fee is charged by the Ethereum network and fluctuates depending on network traffic. MEW does not profit from this fee.",
+    "economy": {
+      "title": "Economy",
+      "description": "Will likely go through unless activity increases"
+    },
+    "regular": {
+      "title": "Recommended",
+      "description": "Will reliably go through in most scenarios"
+    },
+    "fast": {
+      "title": "Higher Priority",
+      "description": "Will go through even if there is a sudden activity increase"
+    },
+    "fastest": {
+      "title": "Highest Priority",
+      "description": "Will go through, fast, in 99.99% of the cases"
+    }
+  },
+  "gas": {
+    "limit": "Gas Limit",
+    "price": "Gas Price",
+    "max_fee": "Max Fee Per Gas",
+    "max_priority": "Max Priority Fee Per Gas"
+  }
 }

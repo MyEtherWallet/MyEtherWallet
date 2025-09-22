@@ -1,5 +1,10 @@
 <template>
-  <div :class="[isXS ? 'bottom-2 left-0 w-full' : 'bottom-6 left-10', 'fixed']">
+  <div
+    :class="[
+      isXS ? 'bottom-2 left-0 w-full' : 'bottom-6 left-10',
+      'fixed z-[300]',
+    ]"
+  >
     <div class="relative">
       <transition-group name="fadelist">
         <toast-layout

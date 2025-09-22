@@ -1,15 +1,24 @@
+import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
-import { type WalletConfig, WalletConfigType, walletConfigs, type defaultWalletId } from '@/modules/access/common/walletConfigs'
+import {
+  type WalletConfig,
+  WalletConfigType,
+  walletConfigs,
+  type defaultWalletId,
+} from '@/modules/access/common/walletConfigs'
 import * as rainbowkitWallets from '@rainbow-me/rainbowkit/wallets'
 import Configs from '@/configs'
+import { useChainsStore } from '@/stores/chainsStore'
 
 export const useWalletList = () => {
   const DEFAULT_IDS = ['enkrypt', 'mew']
   const projectId = Configs.WALLET_CONNECT_PROJECT_ID
+  const chainStore = useChainsStore()
+  const { selectedChain } = storeToRefs(chainStore)
 
   /** -------------------
- * Wallets
- * -------------------*/
+   * Wallets
+   * -------------------*/
   const allRainbowWallets = Object.values(rainbowkitWallets)
 
   const initializedWallets = allRainbowWallets.map(wallet =>
@@ -17,6 +26,7 @@ export const useWalletList = () => {
   )
 
   const newWalletList = computed<WalletConfig[]>(() => {
+    if (selectedChain.value && selectedChain.value.type !== 'EVM') return []
     const newConArr: WalletConfig[] = []
     initializedWallets.forEach(wallet => {
       if (!DEFAULT_IDS.includes(wallet.id) && wallet.id !== 'ledger') {

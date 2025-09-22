@@ -27,7 +27,7 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <x-circle-icon class="text-grey-50 w-6 h-6"
+        <x-circle-icon class="text-primary w-6 h-6"
       /></app-btn-icon>
     </div>
   </div>
@@ -36,7 +36,8 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/vue/24/solid'
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
+import { XCircleIcon } from '@heroicons/vue/24/outline'
 import { defineProps } from 'vue'
 
 /**

@@ -12,6 +12,7 @@ const ROUTES_ACCESS: RouteNameCollection = {
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
   ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
   ACCESS_TREZOR: { NAME: 'AccessTrezor', PATH: 'trezor' },
+  ACCESS_LEDGER: { NAME: 'AccessLedger', PATH: 'ledger' },
 }
 
 const ROUTES_CREATE_WALLET: RouteNameCollection = {
@@ -30,6 +31,9 @@ const ROUTES_MAIN: RouteNameCollection = {
   EARN: { NAME: 'Earn', PATH: '/earn' },
   SWAP: { NAME: 'Swap', PATH: '/swap' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: '/verify' },
+  CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
+  LEARN: { NAME: 'Learn', PATH: '/learn' },
+  STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
 }
 
 const ROUTES_SEND: RouteNameCollection = {
@@ -57,5 +61,18 @@ enum TREZOR_ALIAS {
   access = '/trezor',
 }
 
-export { ROUTES_MAIN, ROUTES_CREATE_WALLET, ROUTES_SEND, ROUTES_ACCESS, ACCESS_ALIAS, KEYSTORE_ALIAS, MNEMONIC_ALIAS, TREZOR_ALIAS };
+enum LEDGER_ALIAS {
+  access = '/ledger',
+}
 
+export {
+  ROUTES_MAIN,
+  ROUTES_CREATE_WALLET,
+  ROUTES_SEND,
+  ROUTES_ACCESS,
+  ACCESS_ALIAS,
+  KEYSTORE_ALIAS,
+  MNEMONIC_ALIAS,
+  TREZOR_ALIAS,
+  LEDGER_ALIAS,
+}

@@ -5,16 +5,16 @@ import nightwatchPlugin from 'vite-plugin-nightwatch'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import basicSsl from '@vitejs/plugin-basic-ssl'
-import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
+import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs'
 
 // https://vite.dev/config/
 export default defineConfig({
   server: {
-    port: 8080
+    port: 8080,
   },
   plugins: [
     vue(),
-    viteCommonjs(),
+    viteCommonjs({ skipPreBuild: true }),
     nightwatchPlugin(),
     vueDevTools(),
     nodePolyfills({
@@ -46,11 +46,9 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['vue', '@vueuse/core', 'crypto'],
+    include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets'],
     esbuildOptions: {
-      plugins: [
-        esbuildCommonjs(['@enkryptcom/hw-wallets', '@trezor/connect', '@trezor/connect-web']),
-      ],
+      plugins: [esbuildCommonjs(['@trezor/connect', '@trezor/connect-web'])],
     },
   },
   resolve: {

@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js';
-import { fromWei } from 'web3-utils';
+import BigNumber from 'bignumber.js'
+import { fromWei } from 'web3-utils'
 
 /**
  * ---------------------------------
@@ -16,9 +16,9 @@ import { fromWei } from 'web3-utils';
  * };
  */
 interface FormattedNumber {
-  value: string;
-  tooltipText?: string;
-  unit?: string;
+  value: string
+  tooltipText?: string
+  unit?: string
 }
 
 /**
@@ -26,14 +26,14 @@ interface FormattedNumber {
  * Constants
  * ---------------------------------
  */
-const SmallNumberBreakpoint = 0.000001;
-const SmallFiatBreakpoint = 0.01;
-const TenThousand = 1e4;
-const OneMillion = 1e6;
-const OneBillion = 1e9;
-const TenBillion = 1e10;
-const OneTrillion = 1e12;
-const OneQuadrillion = 1e15;
+const SmallNumberBreakpoint = 0.000001
+const SmallFiatBreakpoint = 0.01
+const TenThousand = 1e4
+const OneMillion = 1e6
+const OneBillion = 1e9
+const TenBillion = 1e10
+const OneTrillion = 1e12
+const OneQuadrillion = 1e15
 
 const FormattedNumberUnit = {
   ETH: 'ETH',
@@ -45,17 +45,17 @@ const FormattedNumberUnit = {
   T: 'T',
   Q: 'Q',
   M: 'M',
-  FIAT: 'fiat'
-};
+  FIAT: 'fiat',
+}
 
 /*  Set the global formatting options */
 const fmt = {
   decimalSeparator: '.',
   groupSeparator: ',',
-  groupSize: 3
-};
-BigNumber.config({ FORMAT: fmt });
-BigNumber.config({ ROUNDING_MODE: 1 }); // equivalent
+  groupSize: 3,
+}
+BigNumber.config({ FORMAT: fmt })
+BigNumber.config({ ROUNDING_MODE: 1 }) // equivalent
 
 /**
  * ---------------------------------
@@ -71,8 +71,8 @@ BigNumber.config({ ROUNDING_MODE: 1 }); // equivalent
  */
 
 const formatIntegerToString = (_value: string | number | BigNumber): string => {
-  return new BigNumber(_value).toFormat();
-};
+  return new BigNumber(_value).toFormat()
+}
 
 /**
  * GROUP II: Formatted integers
@@ -81,30 +81,30 @@ const formatIntegerToString = (_value: string | number | BigNumber): string => {
  * @return {object} FormattedNumber
  */
 const formatIntegerValue = (_value: string | number | BigNumber) => {
-  const value = new BigNumber(_value);
+  const value = new BigNumber(_value)
   /* Case I: value >= 1,000,000,000,000,000 */
   if (value.isGreaterThanOrEqualTo(OneQuadrillion)) {
-    return convertToQuadrillion(value);
+    return convertToQuadrillion(value)
   }
 
   /* Case II: value >= 1,000,000,000,000 */
   if (value.isGreaterThanOrEqualTo(OneTrillion)) {
-    return convertToTrillions(value);
+    return convertToTrillions(value)
   }
 
   /* Case III: value >= 1,000,000,000 */
   if (value.isGreaterThanOrEqualTo(OneBillion)) {
-    return convertToBillions(value);
+    return convertToBillions(value)
   }
 
   /* Case IV: value >= 1,000,000 */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return convertToMillions(value);
+    return convertToMillions(value)
   }
 
   /* Case V: value < 1,000,000,000 */
-  return { value: value.toFormat() };
-};
+  return { value: value.toFormat() }
+}
 
 /**
  * GROUP III: Floating point values
@@ -114,14 +114,16 @@ const formatIntegerValue = (_value: string | number | BigNumber) => {
  * @param {any} _value number to convert takes BigNumber || string || number
  * @returns {object} FormattedNumber with value as formatted string, and tooltipText
  */
-const formatFloatingPointValue = (_value: string | number | BigNumber): FormattedNumber => {
-  const value = new BigNumber(_value);
+const formatFloatingPointValue = (
+  _value: string | number | BigNumber,
+): FormattedNumber => {
+  const value = new BigNumber(_value)
   /**
    * Case I: value === 0
    * Return: "0"
    */
   if (value.isZero() || value.isNaN()) {
-    return { value: '0' };
+    return { value: '0' }
   }
 
   /**
@@ -129,7 +131,7 @@ const formatFloatingPointValue = (_value: string | number | BigNumber): Formatte
    * Return: formated integer value with tooltip
    */
   if (value.isGreaterThanOrEqualTo(OneMillion)) {
-    return formatIntegerValue(value);
+    return formatIntegerValue(value)
   }
 
   /**
@@ -137,7 +139,7 @@ const formatFloatingPointValue = (_value: string | number | BigNumber): Formatte
    * Return: a number, rounded to 2 decimal points and tooltip with full value if > 2 decimal places
    */
   if (value.isGreaterThanOrEqualTo(TenThousand)) {
-    return getRoundNumber(value, 2);
+    return getRoundNumber(value, 2)
   }
 
   /**
@@ -145,7 +147,7 @@ const formatFloatingPointValue = (_value: string | number | BigNumber): Formatte
    * Return: a number, rounded to 4 decimal points and tooltip with full value if > 4 decimal places
    */
   if (value.isGreaterThanOrEqualTo(1)) {
-    return getRoundNumber(value, 4);
+    return getRoundNumber(value, 4)
   }
 
   /**
@@ -153,7 +155,7 @@ const formatFloatingPointValue = (_value: string | number | BigNumber): Formatte
    * Return: a number, rounded up to 7 decimal places and tooltip with full value if > 7 decimal places
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return getRoundNumber(value, 6);
+    return getRoundNumber(value, 6)
   }
 
   /**
@@ -162,8 +164,8 @@ const formatFloatingPointValue = (_value: string | number | BigNumber): Formatte
    */
   return {
     value: `< ${SmallNumberBreakpoint}`,
-    tooltipText: value.toFormat()
-  };
+    tooltipText: value.toFormat(),
+  }
 }
 
 /**
@@ -174,16 +176,18 @@ const formatFloatingPointValue = (_value: string | number | BigNumber): Formatte
  * @param {any} _value MUST BE IN WEI number to convert takes BigNumber || string || number
  * @returns {object} FormattedNumber with value as formatted string, unit and tooltipText
  */
-const formatBalanceEthValue = (_value: string | number | BigNumber): FormattedNumber => {
-  const value = new BigNumber(_value);
-  const ethValue = new BigNumber(fromWei(_value.toString(), "ether"));
+const formatBalanceEthValue = (
+  _value: string | number | BigNumber,
+): FormattedNumber => {
+  const value = new BigNumber(_value)
+  const ethValue = new BigNumber(fromWei(_value.toString(), 'ether'))
 
   /**
    * Case I: value === 0
    * Return: "0 ETH"
    */
   if (value.isZero()) {
-    return { value: '0', unit: FormattedNumberUnit.ETH };
+    return { value: '0', unit: FormattedNumberUnit.ETH }
   }
   /**
    * Case II: value < 10,000 wei
@@ -193,8 +197,8 @@ const formatBalanceEthValue = (_value: string | number | BigNumber): FormattedNu
     return {
       value: value.toFormat(),
       unit: FormattedNumberUnit.WEI,
-      tooltipText: `${ethValue.toFormat()}`
-    };
+      tooltipText: `${ethValue.toFormat()}`,
+    }
   }
   /**
    * Case III: value < 10 Billion Wei OR value < 10 Gwei
@@ -204,28 +208,28 @@ const formatBalanceEthValue = (_value: string | number | BigNumber): FormattedNu
     return {
       value: new BigNumber(fromWei(_value.toString(), 'gwei')).toFormat(),
       unit: FormattedNumberUnit.GWEI,
-      tooltipText: `${ethValue.toFormat()}`
-    };
+      tooltipText: `${ethValue.toFormat()}`,
+    }
   }
   /**
    * Case IV: 0.00000001 ETH <= x < 0.000001 ETH
    * Return: rounded number to 8 dps
    */
   if (value.isLessThan(OneTrillion)) {
-    const formatted = getRoundNumber(ethValue, 8);
+    const formatted = getRoundNumber(ethValue, 8)
     return {
       value: formatted.value,
       unit: FormattedNumberUnit.ETH,
-      tooltipText: formatted.tooltipText
-    };
+      tooltipText: formatted.tooltipText,
+    }
   }
 
   /**
    * Case V: x >= 0.000001 ETH
    * Return: formatFloatingPointValue
    */
-  return formatFloatingPointValue(ethValue);
-};
+  return formatFloatingPointValue(ethValue)
+}
 /**
  * GROUP V: Gwei (gas) values
  * Converts a floating point WEI value to a FormattedNumber object. Returns formatted value in ETH, Gwei or wei.
@@ -234,18 +238,20 @@ const formatBalanceEthValue = (_value: string | number | BigNumber): FormattedNu
  * @param {any} _value MUST BE IN WEI number to convert takes BigNumber || string || number
  * @returns {object} FormattedNumber with value as formatted string, unit and tooltipText
  */
-const formatGasValue = (_value: string | number | BigNumber): FormattedNumber => {
-  const value = new BigNumber(_value);
-  const gweiValue = new BigNumber(fromWei(_value.toString(), 'gwei'));
-  const ethValue = new BigNumber(fromWei(_value.toString(), 'ether'));
-  const unit = FormattedNumberUnit.GWEI;
+const formatGasValue = (
+  _value: string | number | BigNumber,
+): FormattedNumber => {
+  const value = new BigNumber(_value)
+  const gweiValue = new BigNumber(fromWei(_value.toString(), 'gwei'))
+  const ethValue = new BigNumber(fromWei(_value.toString(), 'ether'))
+  const unit = FormattedNumberUnit.GWEI
 
   /**
    * Case I: value === 0
    * Return: "0 Gwei"
    */
   if (value.isZero()) {
-    return { value: '0', unit };
+    return { value: '0', unit }
   }
 
   /**
@@ -256,8 +262,8 @@ const formatGasValue = (_value: string | number | BigNumber): FormattedNumber =>
     return {
       value: value.toFormat(),
       unit: FormattedNumberUnit.WEI,
-      tooltipText: `${ethValue.toFormat()}`
-    };
+      tooltipText: `${ethValue.toFormat()}`,
+    }
   }
 
   /**
@@ -269,53 +275,55 @@ const formatGasValue = (_value: string | number | BigNumber): FormattedNumber =>
     return {
       value: formatFloatingPointValue(gweiValue).value,
       unit: unit,
-      tooltipText: `${ethValue.toFormat()}`
-    };
+      tooltipText: `${ethValue.toFormat()}`,
+    }
   }
 
   /**
    * Case IV: x >= 1 mill
    * Return: number in eth and show tooltip with Gwei value
    */
-  const formatted = formatFloatingPointValue(ethValue);
+  const formatted = formatFloatingPointValue(ethValue)
   return {
     value: formatted.value,
     unit: FormattedNumberUnit.ETH,
-    tooltipText: `${formatted.tooltipText}`
-  };
-};
+    tooltipText: `${formatted.tooltipText}`,
+  }
+}
 /**
  * GROUP VI: Percentage values
  * Converts a percentage value to a FormattedNumber
  * @param {any} _value number to convert takes string || number
  * @returns {object} FormattedNumber with value as formatted string, unit and tooltipText
  */
-const formatPercentageValue = (_value: string | number | BigNumber): FormattedNumber => {
+const formatPercentageValue = (
+  _value: string | number | BigNumber,
+): FormattedNumber => {
   /* Strip '%' if necessary */
-  const value = new BigNumber(_value.toString().replace(/%/g, ''));
-  const unit = FormattedNumberUnit.PERCENT;
+  const value = new BigNumber(_value.toString().replace(/%/g, ''))
+  const unit = FormattedNumberUnit.PERCENT
   /**
    * Case I: value === 0
    * Return: "0%"
    */
   if (value.isZero()) {
-    return { value: '0', unit };
+    return { value: '0', unit }
   }
 
-  const isNegative = value.isNegative(); // Record whether value is negative
-  const absoluteValue = value.absoluteValue(); // Get Absolute value
+  const isNegative = value.isNegative() // Record whether value is negative
+  const absoluteValue = value.absoluteValue() // Get Absolute value
 
   /**
-   * Case II: |value| > 10000
-   * Return: >10,000% or <-10000% and tooltip
+   * Case II: |value| > 1000
+   * Return: >1000% or <-1000% and tooltip
    */
-  if (absoluteValue.isGreaterThan(TenThousand)) {
-    const result = isNegative ? '< -10,000%' : '> 10,000%';
+  if (absoluteValue.isGreaterThan(1000)) {
+    const result = isNegative ? '< -1000%' : '> 1000%'
     return {
       value: result,
       unit: unit,
-      tooltipText: `${value.toFormat()}%`
-    };
+      tooltipText: `${value.toFormat()}%`,
+    }
   }
 
   /**
@@ -323,12 +331,12 @@ const formatPercentageValue = (_value: string | number | BigNumber): FormattedNu
    * Return: whole number and tooltips if has decimal points
    */
   if (absoluteValue.isGreaterThanOrEqualTo(1000)) {
-    const dps = value.decimalPlaces();
+    const dps = value.decimalPlaces()
     return {
       value: `${value.toFormat(0)}%`,
       unit: unit,
-      tooltipText: dps ? `${value.toFormat()}%` : undefined
-    };
+      tooltipText: dps ? `${value.toFormat()}%` : undefined,
+    }
   }
 
   /**
@@ -336,24 +344,16 @@ const formatPercentageValue = (_value: string | number | BigNumber): FormattedNu
    * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
    */
   if (absoluteValue.isGreaterThanOrEqualTo(0.01)) {
-    return { value: `${getRoundNumber(value, 2, true).value}%`, unit: unit };
+    return { value: `${getRoundNumber(value, 2, true).value}%`, unit: unit }
   }
 
   /**
-   * Case V: |value| >= 0.01
-   * Return: rounded to 2 decimal points number and tooltip if > 2 decimal points
+   * Case V: If |value| < 0.01
+   * Return: '>-0.01' '<0.01' and tooltip
    */
-  if (absoluteValue.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return { value: `${getRoundNumber(value, 6).value}%`, unit: unit };
-  }
-
-  /**
-   * Case VI: If |value| < 0.000001
-   * Return: '>-0.000001' '<0.000001'r and tooltip
-   */
-  const result = isNegative ? '> -0.000001%' : '< 0.000001%';
-  return { value: result, unit: unit, tooltipText: `${value.toFormat()}%` };
-};
+  const result = isNegative ? '> -0.01%' : '< 0.01%'
+  return { value: result, unit: unit, tooltipText: `${value.toFormat()}%` }
+}
 
 /**
  * GROUP VII: Fiat Values
@@ -365,9 +365,9 @@ const formatPercentageValue = (_value: string | number | BigNumber): FormattedNu
  */
 const formatFiatValue = (
   _value: string | number | BigNumber,
-  options = { locale: 'en-US', currency: 'USD', rate: 1 }
+  options = { locale: 'en-US', currency: 'USD', rate: 1 },
 ): FormattedNumber => {
-  const value = new BigNumber(_value);
+  const value = new BigNumber(_value)
   /**
    * Case I: value === 0
    * Return: "$0.00"
@@ -375,7 +375,7 @@ const formatFiatValue = (
   if (value === undefined || value.isZero() || value.isNaN()) {
     //TODO
     //return { value: localizeCurrency({ number: _value, ...options }) };
-    return { value: '0.00', ...options };
+    return { value: '0.00', ...options }
   }
 
   /**
@@ -435,7 +435,7 @@ const formatFiatValue = (
   //   tooltipText: value.toFormat()
   // };
   return { value: `< ${SmallNumberBreakpoint}`, tooltipText: value.toFormat() }
-};
+}
 
 /**
  * ---------------------------------
@@ -450,13 +450,12 @@ const formatFiatValue = (
  * @return {object} - FormatterNumber
  */
 const convertToMillions = (value: BigNumber): FormattedNumber => {
-
-  const result = value.dividedBy(OneMillion);
+  const result = value.dividedBy(OneMillion)
   return {
     value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.M}`,
-    tooltipText: value.toFormat()
-  };
-};
+    tooltipText: value.toFormat(),
+  }
+}
 
 /**
  * Helper function. Converts a value to Billions in FormattedNumber object
@@ -464,24 +463,24 @@ const convertToMillions = (value: BigNumber): FormattedNumber => {
  * @return {object} - FormatterNumber
  */
 const convertToBillions = (value: BigNumber): FormattedNumber => {
-  const result = value.dividedBy(OneBillion);
+  const result = value.dividedBy(OneBillion)
   return {
     value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.B}`,
-    tooltipText: value.toFormat()
-  };
-};
+    tooltipText: value.toFormat(),
+  }
+}
 /**
  * Helper function. Converts a value to Trillions in FormattedNumber object
  * @param {BigNumber} value - number to convert takes BigNumber || string || number
  * @return {object} - FormatterNumber
  */
 const convertToTrillions = (value: BigNumber): FormattedNumber => {
-  const result = value.dividedBy(OneTrillion);
+  const result = value.dividedBy(OneTrillion)
   return {
     value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.T}`,
-    tooltipText: value.toFormat()
-  };
-};
+    tooltipText: value.toFormat(),
+  }
+}
 
 /**
  * Helper function. returns Quadrillion in FormattedNumber object
@@ -492,9 +491,9 @@ const convertToQuadrillion = (value: BigNumber): FormattedNumber => {
   return {
     value: '> 1Q',
     unit: FormattedNumberUnit.Q,
-    tooltipText: value.toFormat()
-  };
-};
+    tooltipText: value.toFormat(),
+  }
+}
 
 /**
  * Helper function. Rounds a value to specified decimal points and tooltip with full value if > more decimal points then round
@@ -503,15 +502,19 @@ const convertToQuadrillion = (value: BigNumber): FormattedNumber => {
  * @param {boolean} hasTrailingZeros - set this to true, if you want to dispaly trailing zeros ie: desired result 12.3000 instead of 12.3
  * @return {object} - FormatterNumber
  */
-const getRoundNumber = (value: BigNumber, round: number, hasTrailingZeros = false): FormattedNumber => {
-  const dps = value.decimalPlaces();
+const getRoundNumber = (
+  value: BigNumber,
+  round: number,
+  hasTrailingZeros = false,
+): FormattedNumber => {
+  const dps = value.decimalPlaces()
   return {
     value: hasTrailingZeros
       ? value.decimalPlaces(round).toFormat(round)
       : value.decimalPlaces(round).toFormat(),
-    tooltipText: dps || 0 > round ? value.toFormat() : undefined
-  };
-};
+    tooltipText: dps || 0 > round ? value.toFormat() : undefined,
+  }
+}
 
 /**
  * Handles edge cases for web3 util toBN
@@ -533,4 +536,4 @@ export {
   formatBalanceEthValue,
   formatPercentageValue,
   formatGasValue,
-};
+}

@@ -23,7 +23,8 @@
         role="listbox"
         aria-label="Select an option"
         v-show="openSelect"
-        class="absolute -left-4 origin-top-right focus:outline-none"
+        class="absolute focus:outline-none z-10"
+        :class="position"
       >
         <div
           class="px-2 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
@@ -94,12 +95,20 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { computed, watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
 
+const emit = defineEmits<{
+  (e: 'toggleSelect'): void
+}>()
+
 const props = defineProps({
   /**
    * @placeholder The placeholder text of the button field. Also used as the aria label.
    */
   placeholder: {
     type: String,
+  },
+  emitOnly: {
+    type: Boolean,
+    default: false,
   },
   /**
    * @options The options for the select dropdown.
@@ -121,6 +130,10 @@ const props = defineProps({
   hasOnHover: {
     type: Boolean,
     default: false,
+  },
+  position: {
+    type: String,
+    default: '-left-4',
   },
 })
 
@@ -154,6 +167,10 @@ const showSelected = computed(() => {
  * Toggles the open state of the select dropdown.
  */
 const toggleSelect = () => {
+  if (props.emitOnly) {
+    emit('toggleSelect')
+    return
+  }
   openSelect.value = !openSelect.value
   if (openSelect.value) {
     targetValue.value = target.value

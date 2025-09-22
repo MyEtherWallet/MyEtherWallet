@@ -1,8 +1,11 @@
 import { ROUTES_MAIN, ROUTES_SEND } from './routeNames'
 const TempView = () => import('@view-default/ViewTemp.vue')
 const SendView = () => import('@/views/wallet/send/ViewSend.vue')
+const SwapView = () => import('@/views/wallet/swap/ViewSwap.vue')
+const ViewCrypto = () => import('@/views/wallet/crypto/ViewCrypto.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
 const ModuleSend = () => import('@/modules/send/ModuleSend.vue')
+const ModuleSwap = () => import('@/modules/swap/ModuleSwap.vue')
 const ModuleSendNft = () => import('@/modules/nft/ModuleSendNft.vue')
 
 const DefaultRoutes = [
@@ -10,6 +13,14 @@ const DefaultRoutes = [
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
     component: TempView,
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
+    path: ROUTES_MAIN.CRYPTO.PATH,
+    name: ROUTES_MAIN.CRYPTO.NAME,
+    component: ViewCrypto,
     meta: {
       noAuth: true,
     },
@@ -35,8 +46,14 @@ const DefaultRoutes = [
   },
   {
     path: ROUTES_MAIN.SWAP.PATH,
-    name: ROUTES_MAIN.SWAP.NAME,
-    component: TempView,
+    component: SwapView,
+    children: [
+      {
+        path: '',
+        name: ROUTES_MAIN.SWAP.NAME,
+        component: ModuleSwap,
+      },
+    ],
     meta: {
       noAuth: true,
     },
@@ -84,6 +101,22 @@ const DefaultRoutes = [
   {
     path: ROUTES_MAIN.DEPLOY_CONTRACT.PATH,
     name: ROUTES_MAIN.DEPLOY_CONTRACT.NAME,
+    component: TempView,
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
+    path: ROUTES_MAIN.LEARN.PATH,
+    name: ROUTES_MAIN.LEARN.NAME,
+    component: TempView,
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
+    path: ROUTES_MAIN.STOCKS.PATH,
+    name: ROUTES_MAIN.STOCKS.NAME,
     component: TempView,
     meta: {
       noAuth: true,

@@ -8,6 +8,9 @@ export enum ICON_IDS {
   'SETTINGS' = 'settings',
   'HELP' = 'help',
   'NOTIFICATIONS' = 'notifications',
+  'LEARN' = 'learn',
+  'CRYPTO' = 'crypto',
+  'STOCKS' = 'stocks',
 }
 export interface AppMenuListItem {
   iconID?: ICON_IDS

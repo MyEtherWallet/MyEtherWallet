@@ -55,12 +55,12 @@
         <div
           class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
         >
-          <app-select-chain />
+          <select-chain-for-app />
           <derivation-path />
         </div>
         <select-address-list
           v-model="selectedIndex"
-          :walletList="walletList"
+          :walletList="walletList as SelectAddress[]"
           :isLoading="isLoadingWalletList"
           class="mt-5"
           @nextpage="setPage(true)"
@@ -103,7 +103,7 @@ import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
-import AppSelectChain from '@/components/AppSelectChain.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import DerivationPath from './components/DerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
@@ -111,6 +111,7 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 
@@ -157,7 +158,7 @@ const extraWord = ref('')
 const defaultPath = "m/44'/60'/0'/0"
 
 /**------------------------
- * Mnemonic
+ * Mnemonic phrase
  -------------------------*/
 
 const mnemonic = ref('')
@@ -203,6 +204,15 @@ const unlockWallet = () => {
     activeStep.value = 1
   }
 }
+
+watch(
+  () => selectedChain.value?.chainID,
+  newValue => {
+    if (newValue) {
+      loadList()
+    }
+  },
+)
 
 watch(
   () => selectedDerivation.value.path,
@@ -265,6 +275,7 @@ const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
+const accessRedirectStore = useAccessRedirectStore()
 
 const access = async () => {
   isUnlockingWallet.value = true
@@ -277,6 +288,8 @@ const access = async () => {
   })
 
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_MAIN.HOME.PATH })
+  router.push({
+    name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
+  })
 }
 </script>

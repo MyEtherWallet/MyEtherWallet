@@ -3,15 +3,18 @@
     <div>
       <!-- The backdrop, rendered as an absolute sibling to the panel container -->
       <transition
-        enter-active-class="transform ease-out duration-400 transition opacity-0 delay-100"
+        enter-from-class="opacity-0"
+        enter-active-class="transform ease-out duration-300 transition"
         enter-to-class="opacity-100"
-        leave-active-class="opacity-0"
+        leave-from-class="opacity-100"
+        leave-active-class="ease-in duration-100 transition"
         leave-to-class="opacity-0"
         appear
       >
         <div
           v-if="isOpen"
-          class="cursor-pointer fixed inset-0 bg-black/40 z-[99] w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          class="cursor-pointer fixed inset-0 bg-black/40 w-screen overscroll-none overflow-hidden min-w-[320px] min-h-lvh"
+          :class="zIndexOverlay"
           @click="!persistent ? setIsOpen(false) : () => {}"
           aria-hidden
         />
@@ -19,7 +22,8 @@
       <!-- Dialog Container -->
       <div
         v-if="isOpen"
-        class="cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 z-[100] overscroll-none !overflow-y-scroll"
+        :class="zIndexContainer"
+        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -36,10 +40,17 @@
             v-bind="$attrs"
           >
             <div
-              class="z-10 pb-2 sm:pb-5 px-6 sm:px-8 basis-full order-2 sm:order-1 flex justify-between bg-white sticky top-0"
+              class="z-10 pb-2 sm:pb-2 px-6 sm:px-8 basis-full order-2 sm:order-1 flex bg-white sticky top-0"
+              :class="{
+                'justify-between': title || $slots.title,
+                'justify-end': !title && !$slots.title,
+              }"
             >
               <slot name="title">
-                <h1 v-if="title" class="title4 pr-2 pt-4 sm:pt-8">
+                <h1
+                  v-if="title && !$slots.title"
+                  class="title4 pr-2 pt-4 sm:pt-7 capitalize"
+                >
                   {{ title }}
                 </h1>
               </slot>
@@ -114,6 +125,14 @@ defineProps({
   persistent: {
     default: false,
     type: Boolean,
+  },
+  zIndexOverlay: {
+    default: 'z-[100]',
+    type: String,
+  },
+  zIndexContainer: {
+    default: 'z-[101]',
+    type: String,
   },
 })
 

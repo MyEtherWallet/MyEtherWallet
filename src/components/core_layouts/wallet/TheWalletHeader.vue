@@ -1,10 +1,8 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] sticky top-0 z-10 px-5 md-header:px-10 bg-white bg-opacity-70 shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);] backdrop-blur-xl"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:px-10 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
   >
-    <div
-      class="flex w-full max-w-[1440px] justify-between items-center mx-auto gap-3"
-    >
+    <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
       <div class="flex items-center gap-2">
         <router-link
@@ -40,13 +38,21 @@
             v-for="(item, index) in displayLinks"
             :key="index"
             :to="{ name: item.routeName }"
-            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium"
+            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
             active-class="bg-surface"
             v-ripple
           >
             {{ item.title }}
           </router-link>
         </div>
+        <a
+          v-if="!showMobileMenu"
+          href="https://help.myetherwallet.com/en/"
+          target="_blank"
+          class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+        >
+          {{ $t('learn') }}
+        </a>
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
@@ -57,10 +63,10 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center"
+              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
               @click="toggleSelect"
             >
-              {{ hideSend ? 'More' : $t('tools') }}
+              {{ $t('common.more') }}
               <chevron-down-icon class="w-4 h-4 ml-2" />
             </button>
           </template>
@@ -125,10 +131,9 @@ import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ROUTES_MAIN, ROUTES_SEND, ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import { useBreakpoints } from '@vueuse/core'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
@@ -136,20 +141,13 @@ import { useRoute } from 'vue-router'
 const { t } = useI18n()
 const store = useWalletStore()
 const { isWalletConnected } = storeToRefs(store)
-const { isMobile, isXS } = useAppBreakpoints()
+const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
 
 /** ------------------------------
  * Breakpoints determine menu visibility
  ------------------------------*/
-const breakpoints = useBreakpoints({
-  hideSend: 1200,
-  showMobileMenu: 1140,
-})
 
-const hideSend = computed<boolean>(() => breakpoints.smaller('hideSend').value)
-const showMobileMenu = computed<boolean>(
-  () => breakpoints.smaller('showMobileMenu').value,
-)
+const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
 
 /** ------------------------------
  * Menu Items
@@ -162,24 +160,19 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.PORTFOLIO,
     },
     {
-      title: t('swap'),
-      routeName: ROUTES_MAIN.SWAP.NAME,
-      iconID: ICON_IDS.SWAP,
+      title: t('stocks'),
+      routeName: ROUTES_MAIN.STOCKS.NAME,
+      iconID: ICON_IDS.STOCKS,
     },
     {
-      title: t('buy-sell'),
-      routeName: ROUTES_MAIN.BUY.NAME,
-      iconID: ICON_IDS.BUY,
+      title: t('crypto'),
+      routeName: ROUTES_MAIN.CRYPTO.NAME,
+      iconID: ICON_IDS.CRYPTO,
     },
     {
       title: t('earn'),
       routeName: ROUTES_MAIN.EARN.NAME,
       iconID: ICON_IDS.STAKE,
-    },
-    {
-      title: t('send'),
-      routeName: ROUTES_SEND.SEND.NAME,
-      iconID: ICON_IDS.SEND,
     },
   ]
 })
@@ -205,13 +198,10 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
 })
 
 const displayLinks = computed(() => {
-  return hideSend.value ? coreMenuList.value.slice(0, 4) : coreMenuList.value
+  return coreMenuList.value
 })
 const displayTools = computed<AppSelectOption[]>(() => {
   const tools = [...toolsMenuList.value]
-  if (hideSend.value) {
-    tools.unshift(coreMenuList.value[4])
-  }
   return tools.map(item => ({
     label: item.title,
     value: item.routeName as string,

@@ -3,7 +3,7 @@
     :key="listItem.title"
     :class="[
       'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
-      { 'bg-grey-5': isCurrentRoute },
+      { 'bg-surface': isCurrentRoute },
       { 'pl-12': isSubmenu },
     ]"
     :is="listItem.routeName ? 'router-link' : 'button'"
@@ -40,6 +40,18 @@
         v-else-if="listItem.iconID === ICON_IDS.TOOLS"
         class="w-4 h-4"
       />
+      <book-open-icon
+        v-else-if="listItem.iconID === ICON_IDS.LEARN"
+        class="w-4 h-4"
+      />
+      <icon-crypto
+        v-else-if="listItem.iconID === ICON_IDS.CRYPTO"
+        class="w-5 h-5"
+      />
+      <icon-stocks
+        v-else-if="listItem.iconID === ICON_IDS.STOCKS"
+        class="w-5 h-5"
+      />
     </div>
     <p class="capitalize">{{ listItem.title }}</p>
     <chevron-down-icon
@@ -60,11 +72,14 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
 import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
+import IconCrypto from '@/assets/icons/core_menu/icon-crypto.vue'
+import IconStocks from '@/assets/icons/core_menu/icon-stocks.vue'
 import {
   BellIcon,
   CogIcon,
   ChevronDownIcon,
   WrenchScrewdriverIcon,
+  BookOpenIcon,
 } from '@heroicons/vue/24/solid'
 import { useRouter } from 'vue-router'
 

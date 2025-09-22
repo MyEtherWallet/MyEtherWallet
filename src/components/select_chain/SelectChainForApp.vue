@@ -4,6 +4,7 @@
       name="network-button"
       :openNetworkDialog="setOpenDialog"
       :selectedChain="selectedChain"
+      :filterChainType="true"
     >
       <app-btn-group
         v-if="isBtnGroup"
@@ -11,7 +12,8 @@
         :btn-list="shownChains"
         :use-emit-only="true"
         :is-loaded="isLoadedChains"
-        is-tall
+        size="large"
+        class="!p-2"
         @onUpdate:selected="setSelectedChain"
       >
         <template #btn-content="{ data }">
@@ -40,7 +42,7 @@
       </app-btn-group>
       <button
         v-else
-        class="hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
+        class="bg-white hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
         @click="setOpenDialog(true)"
       >
         <div v-if="selectedChain" class="flex items-center">
@@ -67,81 +69,50 @@
       </button>
     </slot>
     <!-- Dialog with chains list -->
-    <app-dialog
+    <select-chain-dialog
       v-if="isLoadedChains"
       v-model:is-open="openDialog"
-      title="Select Chain"
-      class="xs:max-w-[428px] sm:mx-auto"
-    >
-      <template #content>
-        <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
-          <!-- Seacrh -->
-          <div class="sticky top-0 bg-white z-10">
-            <div class="px-5 mb-1">
-              <app-search-input
-                v-model="searchInput"
-                class="grow"
-                placeholder="Search by Name"
-              />
-            </div>
-            <hr class="h-px bg-grey-outline border-0 w-full" />
-          </div>
-          <!-- Seacrh Result-->
-          <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
-            <button
-              v-for="chain in searchResults"
-              :key="chain.name"
-              class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-xl box-border"
-              :class="{ 'bg-grey-5': chain.name === selectedChain?.name }"
-              @click="setSelectedChain(chain)"
-            >
-              <div class="flex justify-between items-center w-full">
-                <div class="flex items-center">
-                  <img
-                    v-if="chain.icon"
-                    class="mr-4 w-7 h-7 rounded-full overflow-hidden"
-                    :src="chain.icon"
-                    alt="token icon"
-                  />
-                  <span>{{ chain.nameLong }}</span>
-                </div>
-                <check-icon
-                  v-if="chain.name === selectedChain?.name"
-                  class="w-6 h-6 text-primary"
-                />
-              </div>
-            </button>
-          </div>
-          <!-- Search not found-->
-          <div v-else>
-            <div class="flex justify-center mt-10 h-[400px] text-info">
-              <p>{{ $t('common.not_found.chains') }}</p>
-            </div>
-          </div>
-        </div>
-      </template>
-    </app-dialog>
+      :selected-chain="selectedChain"
+      :filter-chain-type="isBtnGroup ? isBtnGroup : filterChainType"
+      @update:chain="setSelectedChain"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
-import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from './AppSearchInput.vue'
-import AppBtnGroup from './AppBtnGroup.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+import SelectChainDialog from './SelectChainDialog.vue'
 import { useGlobalStore } from '@/stores/globalStore'
 
-defineProps({
+const prop = defineProps({
   isBtnGroup: {
     type: Boolean,
     default: false,
   },
+  passedChains: {
+    type: Array as () => Chain[],
+    default: () => [],
+  },
+  canStore: {
+    type: Boolean,
+    default: true,
+  },
+  filterChainType: {
+    type: Boolean,
+    default: false,
+  },
+  preselectedChain: {
+    type: Object as () => Chain | null,
+    default: null,
+  },
 })
 const defaults = ['ETHEREUM', 'BITCOIN', 'SOLANA']
+const emits = defineEmits(['update:selectedChain'])
 const selectedChain = ref<Chain | null>(null)
 const defaultChains = ref<Chain[]>([])
 
@@ -149,8 +120,16 @@ const globalStore = useGlobalStore()
 const { selectedNetwork: selectedChainStore } = storeToRefs(globalStore)
 const { setSelectedNetwork: setSelectedChainStore } = globalStore
 const chainsStore = useChainsStore()
-const { chains, isLoaded: isLoadedChains } = storeToRefs(chainsStore)
+const {
+  chains,
+  isLoaded: isLoadedChains,
+  selectedChain: storedSelectedChain,
+} = storeToRefs(chainsStore)
 const lastSelectedChain = ref<Chain | null>(null)
+
+const displayedChains = computed(() => {
+  return prop.passedChains.length > 0 ? prop.passedChains : chains.value
+})
 
 const selectedIsDefault = computed(() => {
   return defaultChains.value.some(
@@ -171,27 +150,56 @@ const shownChains = computed<Chain[]>(() => {
   return [...defaultChains.value, selectedChain.value]
 })
 
-/**
- * @description Watch for the chains to be loaded and set the default chains and selected chain
- */
 watch(
-  () => isLoadedChains.value,
-  () => {
-    if (isLoadedChains.value) {
-      defaults.forEach(chainName => {
-        const chain = chains.value.find(c => c.name === chainName)
-        if (chain) {
-          defaultChains.value.push(chain)
+  isLoadedChains,
+  newVal => {
+    if (newVal) {
+      defaults.forEach(defaultChainName => {
+        const defaultChain = chains.value.find(
+          chain => chain.name === defaultChainName,
+        )
+        if (defaultChain) {
+          defaultChains.value.push(defaultChain)
         }
       })
-      const preselected = chains.value.find(
-        chain => chain.name === selectedChainStore.value,
+      const preselected = displayedChains.value.find(
+        chain => chain.name === prop.preselectedChain?.name,
       )
-      selectedChain.value = preselected ?? defaultChains.value[0]
+      selectedChain.value = preselected ?? defaultChains.value[0] ?? null
+      if (!prop.canStore) {
+        emits('update:selectedChain', selectedChain.value)
+      }
     }
   },
   { immediate: true },
 )
+
+onMounted(() => {
+  // If preselected chain is provided, set it as selected
+  if (prop.preselectedChain) {
+    const preselected = displayedChains.value.find(
+      chain => chain.name === prop.preselectedChain?.name,
+    )
+    if (preselected) {
+      selectedChain.value = preselected
+      if (prop.canStore) {
+        setSelectedChainStore(preselected.name)
+      } else {
+        emits('update:selectedChain', preselected)
+      }
+    }
+  } else {
+    selectedChain.value = storedSelectedChain.value ?? null
+  }
+})
+
+/** -------------------------------
+ * Dialog
+ -------------------------------*/
+const openDialog = ref(false)
+const setOpenDialog = (value: boolean) => {
+  openDialog.value = value
+}
 
 /**
  * @description Set the selected chain in component and store, closes the dialog if open
@@ -205,40 +213,27 @@ const setSelectedChain = (chain: Chain) => {
     }
 
     selectedChain.value = chain
-    setSelectedChainStore(chain.name)
+    if (prop.canStore) {
+      setSelectedChainStore(chain.name)
+    } else {
+      emits('update:selectedChain', chain)
+    }
+  } else {
+    emits('update:selectedChain', chain)
   }
 
   if (openDialog.value) {
     setOpenDialog(false)
   }
 }
-/** -------------------------------
- * Dialog
- -------------------------------*/
-const openDialog = ref(false)
-const setOpenDialog = (value: boolean) => {
-  openDialog.value = value
-}
 
-/** -------------------------------
- * Search
- -------------------------------*/
-const searchInput = ref('')
-const searchResults = computed(() => {
-  if (!searchInput.value || searchInput.value === '') {
-    if (!selectedChain.value) {
-      return chains.value
+watch(
+  () => selectedChainStore.value,
+  (newChain: string) => {
+    if (!prop.preselectedChain) {
+      const chain = displayedChains.value.find(c => c.name === newChain)
+      if (chain) setSelectedChain(chain)
     }
-    const unique = new Set([selectedChain.value, ...chains.value])
-    return [...unique]
-  }
-  const beginsWith = chains.value.filter(chain => {
-    return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
-  })
-  const other = chains.value.filter(chain => {
-    return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
-  })
-  const unique = new Set([...beginsWith, ...other])
-  return [...unique]
-})
+  },
+)
 </script>
