@@ -301,7 +301,6 @@ const loadList = async (page: number = 0) => {
         selectedHwWalletType.value as HWwalletType,
         hwWalletInstance,
       )
-      hwWalletInstance.close()
 
       const fetchBalance = await hardwareWalletInstance.getBalance()
       const mainToken = fetchBalance.result.find(
