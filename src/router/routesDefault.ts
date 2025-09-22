@@ -1,4 +1,5 @@
 import { ROUTES_MAIN, ROUTES_SEND } from './routeNames'
+import { TOKEN_INFO_ROUTE } from './helpers/helpersTokenInfo'
 const TempView = () => import('@view-default/ViewTemp.vue')
 const SendView = () => import('@/views/wallet/send/ViewSend.vue')
 const SwapView = () => import('@/views/wallet/swap/ViewSwap.vue')
@@ -24,6 +25,7 @@ const DefaultRoutes = [
     meta: {
       noAuth: true,
     },
+    children: [TOKEN_INFO_ROUTE],
   },
   {
     path: ROUTES_SEND.SEND.PATH,

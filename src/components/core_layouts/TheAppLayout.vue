@@ -25,7 +25,8 @@
       :class="[
         isOpenSideMenu ? 'xl:mr-[400px]' : 'xl:mr-[60px]',
         backgroundClass,
-        'flex w-full mr-[60px] overflow-y-auto',
+        'flex w-full mr-[60px]',
+        isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
       ]"
     >
       <div
@@ -66,6 +67,7 @@ import TheWalletHeader from './wallet/TheWalletHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS, ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 
 const popupStore = usePopupStore()
@@ -90,13 +92,17 @@ const route = useRoute()
 const backgroundClass = computed(() => {
   if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
-    route.name === ROUTES_MAIN.CRYPTO.NAME
+    route.name === ROUTES_MAIN.CRYPTO.NAME ||
+    route.name === ROUTES_MAIN.TOKEN_INFO.NAME
   ) {
     return ''
   } else {
     return 'blue-gradient'
   }
 })
+
+const appLayoutStore = useAppLayoutStore()
+const { isOverflowHidden } = storeToRefs(appLayoutStore)
 </script>
 
 <style scoped>
