@@ -279,7 +279,7 @@ const loadList = async (page: number = 0) => {
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
-  const chainId = selectedChain.value?.name || 'ETH'
+  const chainId = selectedChain.value?.name ?? 'ETH'
   const networkName = chainToEnum[chainId] ?? 'ETH'
 
   for (let i = startIndex; i < startIndex + 5; i++) {
@@ -301,7 +301,7 @@ const loadList = async (page: number = 0) => {
         selectedHwWalletType.value as HWwalletType,
         hwWalletInstance,
       )
-
+      hwWalletInstance.close()
       const fetchBalance = await hardwareWalletInstance.getBalance()
       const mainToken = fetchBalance.result.find(
         token => token.contract === MAIN_TOKEN_CONTRACT,
