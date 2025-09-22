@@ -46,9 +46,9 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets'],
+    include: ['vue', '@vueuse/core', 'crypto'],
     esbuildOptions: {
-      plugins: [esbuildCommonjs(['@trezor/connect', '@trezor/connect-web'])],
+      plugins: [esbuildCommonjs(['@trezor/connect', '@trezor/connect-web', '@enkryptcom/hw-wallets'])],
     },
   },
   resolve: {
