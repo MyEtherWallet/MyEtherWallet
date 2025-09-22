@@ -27,7 +27,7 @@
           />
         </router-link>
         <!--Mobile Menu button -->
-        <the-wallet-menu
+        <the-app-side-menu
           v-if="showMobileMenu"
           :core-menu-list="coreMenuList"
           :tools-menu-list="toolsMenuList"
@@ -124,9 +124,9 @@
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import TheWalletMenu from './TheWalletMenu.vue'
-import TheAddressMenu from './TheAddressMenu.vue'
-import TheCurrentNetwork from './TheCurrentNetwork.vue'
+import TheAppSideMenu from './TheAppSideMenu.vue'
+import TheAddressMenu from './wallet/TheAddressMenu.vue'
+import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
 import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed } from 'vue'

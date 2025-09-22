@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen relative flex overflow-y-auto">
-    <the-wallet-header class="basis-full" />
+    <the-header class="basis-full" />
 
     <!-- Background -->
     <teleport to="#app">
@@ -63,7 +63,7 @@ import { inject, computed } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
-import TheWalletHeader from './wallet/TheWalletHeader.vue'
+import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS, ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
