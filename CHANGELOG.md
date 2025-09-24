@@ -1,3 +1,13 @@
+### devop
+
+* remove survey [#5219](https://github.com/MyEtherWallet/MyEtherWallet/pull/5219)
+
+### Release v6.9.25-hotfix.2
+
+### devop
+
+* remove survey [#5219](https://github.com/MyEtherWallet/MyEtherWallet/pull/5219)
+
 ### Release v6.9.25-hotfix.1
 
 ### feature
