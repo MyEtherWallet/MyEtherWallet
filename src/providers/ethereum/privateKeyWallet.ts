@@ -11,7 +11,7 @@ import {
   hexToBytes,
 } from '@ethereumjs/util'
 import BaseEvmWallet from './baseEvmWallet'
-import { type PostSignedTransaction } from './types'
+import { type PostSignedTransaction } from '../common/types'
 import { WalletType, type HexPrefixedString } from '../types'
 
 class PrivateKeyWallet extends BaseEvmWallet {

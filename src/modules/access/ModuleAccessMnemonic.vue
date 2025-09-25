@@ -101,6 +101,7 @@ import { watchDebounced } from '@vueuse/core'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
+import MnemonicToBitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import { type SelectAddress } from './types/selectAddress'
 import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
@@ -186,7 +187,7 @@ watchDebounced(
   { debounce: 2000 },
 )
 
-const wallet = ref<MnemonicToWallet | null>(null)
+const wallet = ref<MnemonicToWallet | MnemonicToBitcoinWallet | null>(null)
 const derivationStore = useDerivationStore()
 const chainsStore = useChainsStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
@@ -198,8 +199,12 @@ const unlockWallet = () => {
       basePath: selectedDerivation.value?.path || defaultPath,
       chainId: selectedChain.value?.chainID ?? '1',
       extraWord: extraWord.value,
+      chainName: selectedChain.value?.name || 'ETHEREUM',
     }
-    wallet.value = new MnemonicToWallet(options)
+    wallet.value =
+      selectedChain.value?.type === 'EVM'
+        ? new MnemonicToWallet(options)
+        : new MnemonicToBitcoinWallet(options)
     loadList(0)
     activeStep.value = 1
   }
@@ -240,17 +245,25 @@ const loadList = async (page: number = 0) => {
     await wallet.value?.getWallet(i).then(async wallet => {
       if (wallet) {
         const fetchBalance = await wallet.getBalance()
-        const mainToken = fetchBalance.result.find(
-          token => token.contract === MAIN_TOKEN_CONTRACT,
-        )
-        walletList.value.push({
-          address: await wallet.getAddress(),
-          index: i,
-          balance: fromWei(
-            (mainToken?.balance || '0x0') as HexPrefixedString,
-            'ether',
-          ).toString(),
-        })
+        if (Array.isArray(fetchBalance.result)) {
+          const mainToken = fetchBalance.result.find(
+            token => token.contract === MAIN_TOKEN_CONTRACT,
+          )
+          walletList.value.push({
+            address: await wallet.getAddress(),
+            index: i,
+            balance: fromWei(
+              (mainToken?.balance || '0x0') as HexPrefixedString,
+              'ether',
+            ).toString(),
+          })
+        } else {
+          walletList.value.push({
+            address: await wallet.getAddress(),
+            index: i,
+            balance: fetchBalance.balance.nativeValue,
+          })
+        }
       }
     })
   }

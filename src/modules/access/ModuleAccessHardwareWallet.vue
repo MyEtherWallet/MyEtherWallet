@@ -98,6 +98,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
+import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -237,6 +238,7 @@ const unlockWallet = async () => {
     selectedChain.value?.name as string
   ] as NetworkNames
 
+  console.log(networkName)
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
@@ -292,30 +294,52 @@ const loadList = async (page: number = 0) => {
         wallet: selectedHwWalletType.value as HWwalletType,
       })
 
-      const hardwareWalletInstance = new EvmHardwareWallet(
-        chainId,
-        addressResponse.address as HexPrefixedString,
-        networkName,
-        i.toString(),
-        selectedDerivation.value as PathType,
-        selectedHwWalletType.value as HWwalletType,
-        hwWalletInstance,
-      )
-      hwWalletInstance.close()
+      const hardwareWalletInstance =
+        selectedChain.value?.type === 'EVM'
+          ? new EvmHardwareWallet(
+              chainId,
+              addressResponse.address as HexPrefixedString,
+              networkName,
+              i.toString(),
+              selectedDerivation.value as PathType,
+              selectedHwWalletType.value as HWwalletType,
+              hwWalletInstance,
+            )
+          : new BtcHardwareWallet(
+              addressResponse.address as HexPrefixedString,
+              networkName,
+              i.toString(),
+              selectedDerivation.value as PathType,
+              selectedHwWalletType.value as HWwalletType,
+              hwWalletInstance,
+            )
       const fetchBalance = await hardwareWalletInstance.getBalance()
-      const mainToken = fetchBalance.result.find(
-        token => token.contract === MAIN_TOKEN_CONTRACT,
-      )
-      walletList.value.push({
-        address: addressResponse.address,
-        index: i,
-        balance: fromWei(
-          (mainToken?.balance || '0x0') as HexPrefixedString,
-          'ether',
-        ).toString(),
-        walletInstance: hardwareWalletInstance,
-      })
+
+      if (Array.isArray(fetchBalance.result)) {
+        const mainToken = fetchBalance.result.find(
+          token => token.contract === MAIN_TOKEN_CONTRACT,
+        )
+
+        walletList.value.push({
+          address: addressResponse.address,
+          index: i,
+          balance: fromWei(
+            (mainToken?.balance || '0x0') as HexPrefixedString,
+            'ether',
+          ).toString(),
+          walletInstance: hardwareWalletInstance as EvmHardwareWallet,
+        })
+      } else {
+        console.log(fetchBalance, 'here?')
+        walletList.value.push({
+          address: await hardwareWalletInstance.getAddress(),
+          index: i,
+          balance: fetchBalance.balance.nativeValue || '0',
+          walletInstance: hardwareWalletInstance as BtcHardwareWallet,
+        })
+      }
     } catch (e) {
+      console.log(e, 'here?')
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: e instanceof Error ? e.message : String(e),

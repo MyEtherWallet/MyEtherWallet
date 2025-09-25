@@ -70,3 +70,12 @@ export type GetWebTrendingTokensResponseToken =
   components['schemas']['GetWebTrendingTokensResponse']['items'][number]
 export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']
+
+/** --------------------------
+ * BTC types
+ --------------------------*/
+export type BitcoinQuotesResponse = components['schemas']['GetBtcTransactionQuoteResponse']
+export type BitcoinQuotesRequestBody = components['schemas']['GetBtcTransactionQuoteRequest']
+export type BitcoinSignableTransactionResponse = components['schemas']['GetUnsignedBtcTransactionResponse']
+export type BitcoinTxResponse = components['schemas']['BroadcastBtcTransactionResponse']
+export type BitcoinBalanceResponse = components['schemas']['GetBtcBalanceByChainNameAndAddressesResponse']

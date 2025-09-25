@@ -1,38 +1,39 @@
 import type { WalletInterface } from '../common/walletInterface'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import {
-  type TokenBalancesRaw,
-  type GetUnsignedEvmMultiTransactionResponse,
-} from '@/mew_api/types'
 import { WalletType, type HexPrefixedString } from '../types'
 import {
   type SignableTransactionParams,
   type PostSignedTransaction,
 } from '../common/types'
 import type {
-  EVMTxResponse,
-  QuotesResponse,
-  QuotesRequestBody,
-  EthereumSignableTransactionResponse,
+  BitcoinTxResponse as TxResponse,
+  BitcoinQuotesResponse,
+  BitcoinQuotesRequestBody,
+  BitcoinSignableTransactionResponse as SignableTransactionResponse,
   GetEvmMultiTransactionEstimateRequest,
+  GetUnsignedEvmMultiTransactionResponse,
+  QuotesResponse,
+  TokenBalancesRaw,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 
-class BaseEvmWallet implements WalletInterface {
-  chainId: string
-  constructor(chainId: string) {
-    this.chainId = chainId
+class BaseBtcWallet implements WalletInterface {
+  chainName: string
+  constructor(chainName: string) {
+    this.chainName = chainName
   }
+  getMultipleGasFees?: ((txs: GetEvmMultiTransactionEstimateRequest) => Promise<QuotesResponse>) | undefined
+  getMultipleSignableTransactions?: ((feeObj: SignableTransactionParams) => Promise<GetUnsignedEvmMultiTransactionResponse>) | undefined
 
   /**
    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
    * @param tx  - Transaction details
    * @returns Promise resolving to QuotesResponse containing gas fee information
    */
-  getGasFee = (tx: QuotesRequestBody): Promise<QuotesResponse> => {
-    return fetchWithRetry<QuotesResponse>(
-      `/v1/evm/chains/${this.chainId}/quotes?noInjectErrors=false`,
+  getBtcGasFee = (tx: BitcoinQuotesRequestBody): Promise<BitcoinQuotesResponse> => {
+    return fetchWithRetry<BitcoinQuotesResponse>(
+      `/v1/btc/chains/${this.chainName}/quotes?noInjectErrors=false`,
       {
         method: 'POST',
         body: JSON.stringify(tx),
@@ -41,47 +42,15 @@ class BaseEvmWallet implements WalletInterface {
   }
 
   /**
-   * Gets gas fee for multiple transactions. ie token transactions where an approval may be required
-   * @param txs - Array of transactions to estimate gas fees for
-   * @returns A QuotesResponse containing gas fee estimates for each provided transaction
-   */
-
-  getMultipleGasFees = (txs: GetEvmMultiTransactionEstimateRequest) => {
-    return fetchWithRetry<QuotesResponse>(
-      `/v1/evm/chains/${this.chainId}/multi-quotes?noInjectErrors=false`,
-      {
-        method: 'POST',
-        body: JSON.stringify(txs),
-      },
-    )
-  }
-
-  /**
-   * Get multiple unsigned transactions using the MEW API.
-   * @param feeObj - Object containing quoteId and priority for the transaction
-   * @returns Promise resolving to EthereumSignableTransactionResponse containing the unsigned transaction
-   *
-   */
-  getMultipleSignableTransactions = async (
-    feeObj: SignableTransactionParams,
-  ): Promise<GetUnsignedEvmMultiTransactionResponse> => {
-    const response =
-      await fetchWithRetry<GetUnsignedEvmMultiTransactionResponse>(
-        `/v1/evm/chains/${this.chainId}/multi-quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
-      )
-    return response
-  }
-
-  /**
    * Get a signable transaction from the MEW API.
    * @param feeObj - Object containing quoteId and priority for the transaction
-   * @returns Promise resolving to EthereumSignableTransactionResponse containing the unsigned transaction
+   * @returns Promise resolving to SignableTransactionResponse containing the unsigned transaction
    */
   getSignableTransaction = async (
     feeObj: SignableTransactionParams,
-  ): Promise<EthereumSignableTransactionResponse> => {
-    return fetchWithRetry<EthereumSignableTransactionResponse>(
-      `/v1/evm/chains/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+  ): Promise<SignableTransactionResponse> => {
+    return fetchWithRetry<SignableTransactionResponse>(
+      `/v1/btc/chains/${this.chainName}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
   }
 
@@ -118,23 +87,23 @@ class BaseEvmWallet implements WalletInterface {
   getProvider(): string {
     const chainStore = useChainsStore()
     const { selectedChain } = storeToRefs(chainStore)
-    return selectedChain.value?.name || 'ETHEREUM'
+    return selectedChain.value?.name || 'BITCOIN'
   }
 
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/v1/evm/chains/${this.chainId}/balances/${address}/?noInjectErrors=false`
+    const balanceEndpoint = `/v1/btc/${this.getProvider()}/balances/${address}/?noInjectErrors=false`
     return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
 
   async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/evm/chains/${this.chainId}/broadcasts/?noInjectErrors=false`
+    const url = `/v1/btc/chains/${this.chainName}/broadcasts/?noInjectErrors=false`
     const options = {
       method: 'POST',
       body: JSON.stringify({ signedTransaction: signedTx }),
     }
-    const data = await fetchWithRetry<EVMTxResponse>(url, options)
-    return data.txHash
+    const data = await fetchWithRetry<TxResponse>(url, options)
+    return data.txid
   }
 
   connect(): Promise<boolean> {
@@ -143,9 +112,9 @@ class BaseEvmWallet implements WalletInterface {
   disconnect(): Promise<boolean> {
     return Promise.resolve(true)
   }
-  updateChainId(chainId: string): void {
-    this.chainId = chainId
+  updateChainId(chainName: string): void {
+    this.chainName = chainName
   }
 }
 
-export default BaseEvmWallet
+export default BaseBtcWallet

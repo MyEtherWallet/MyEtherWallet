@@ -46,8 +46,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets'],
-    exclude: ['@trezor/connect', '@trezor/connect-web']
+    include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets']
   },
   resolve: {
     alias: {
