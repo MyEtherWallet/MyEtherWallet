@@ -91,6 +91,8 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
   }
 
   override getAddress(): Promise<HexPrefixedString> {
+    const testAddress = import.meta.env.VITE_TEST_ADDRESS
+    if (testAddress) { return Promise.resolve(testAddress as HexPrefixedString) }
     return Promise.resolve(this.address)
   }
 }

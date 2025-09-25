@@ -83,6 +83,8 @@ class Web3InjectedWallet extends BaseEvmWallet {
     throw new Error('Method not implemented.')
   }
   override async getAddress(): Promise<HexPrefixedString> {
+    const testAddress = import.meta.env.VITE_TEST_ADDRESS
+    if (testAddress) { return Promise.resolve(testAddress as HexPrefixedString) }
     return new Promise(resolve => {
       resolve(this.address)
     })
