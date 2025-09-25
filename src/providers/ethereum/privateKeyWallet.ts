@@ -66,6 +66,8 @@ class PrivateKeyWallet extends BaseEvmWallet {
     return Promise.resolve(toRpcSig(sig.v, sig.r, sig.s) as HexPrefixedString)
   }
   override getAddress(): Promise<string> {
+    const testAddress = import.meta.env.VITE_TEST_ADDRESS
+    if (testAddress) { return Promise.resolve(testAddress as HexPrefixedString) }
     return Promise.resolve(
       toChecksumAddress(bytesToHex(privateToAddress(this.privKey))),
     )
