@@ -130,14 +130,17 @@ import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
-import PATHS from '../common/bip44'
+import Bip44Paths from '../common/bip44'
+import Bip84Paths from '../common/bip84'
 import {
   type DerivationPath,
   ethereum as ethereumPath,
+  bip84Segwit as bitcoinPath,
 } from '../common/configs/configPaths'
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
+import { useChainsStore } from '@/stores/chainsStore'
 
 const { t } = useI18n()
 defineProps({
@@ -147,12 +150,26 @@ defineProps({
   },
 })
 
+const chainStore = useChainsStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
+const { selectedChain } = storeToRefs(chainStore)
+// TODO: handle DOT and SOL later on
+const defaultPath =
+  selectedChain.value?.type === 'EVM'
+    ? Bip44Paths[WALLET_TYPES.MNEMONIC]
+    : selectedChain.value?.type === 'BITCOIN'
+      ? Bip84Paths[WALLET_TYPES.MNEMONIC]
+      : Bip44Paths[WALLET_TYPES.MNEMONIC]
 
-const paths = ref(PATHS[WALLET_TYPES.MNEMONIC])
-const defaultEthereumPath = ethereumPath
+const paths = ref(defaultPath)
+const initialDefaultPath =
+  selectedChain.value?.type === 'EVM'
+    ? ethereumPath
+    : selectedChain.value?.type === 'BITCOIN'
+      ? bitcoinPath
+      : ethereumPath
 
 const selectedPath = defineModel<DerivationPath>('selectedPath', {
   // type: Object as () => DerivationPath,
@@ -217,7 +234,7 @@ const searchResults = computed(() => {
 onMounted(() => {
   //TODO: set default path per chain .IE bitcoin has its own path
   if (!selectedPath.value) {
-    selectedPath.value = defaultEthereumPath
+    selectedPath.value = initialDefaultPath
   }
 })
 

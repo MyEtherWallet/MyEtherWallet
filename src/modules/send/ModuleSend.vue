@@ -312,7 +312,7 @@ const getGasFeeQuotes = async () => {
     if (!body || !tokenSelected.value || !validSend.value) return
     gasFeeTxEstimate.value = body
     isLoadingFees.value = true
-    gasFees.value = await wallet.value?.getGasFee(gasFeeTxEstimate.value)
+    gasFees.value = await wallet.value?.getGasFee?.(gasFeeTxEstimate.value)
     //Check if user has enough balance to cover gas fees
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')

@@ -3,7 +3,7 @@ import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
 import { fromRpcSig, hexToBytes } from '@ethereumjs/util'
-import { type PostSignedTransaction } from './types'
+import { type PostSignedTransaction } from '../common/types'
 
 import BaseEvmWallet from './baseEvmWallet'
 import { WalletType, type HexPrefixedString } from '../types'
