@@ -32,7 +32,8 @@ import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
-import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
+import EthereumPrivateKey from '@/providers/ethereum/privateKeyWallet'
+import BitcoinPrivateKey from '@/providers/bitcoin/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
@@ -41,7 +42,14 @@ import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
+import { decode } from 'wif'
+import bs58check from 'bs58check'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import type { WalletInterface } from '@/providers/common/walletInterface'
 
+const toastStore = useToastStore()
+const { addToastMessage } = toastStore
 const privateKeyInput = ref('')
 const accessRedirectStore = useAccessRedirectStore()
 const walletStore = useWalletStore()
@@ -76,28 +84,50 @@ const strippedHexPrivateKey = computed<string>(() => {
 })
 
 const isValidPrivateKey = computed<boolean>(() => {
-  const privateKey = Buffer.isBuffer(strippedHexPrivateKey.value)
-    ? strippedHexPrivateKey.value
-    : getBufferFromHex(sanitizeHex(strippedHexPrivateKey.value))
-  return isPrivateKey(privateKeyInput.value) && isValidPrivate(privateKey)
+  try {
+    if (selectedChain.value?.type === 'EVM') {
+      const privateKey = Buffer.isBuffer(strippedHexPrivateKey.value)
+        ? strippedHexPrivateKey.value
+        : getBufferFromHex(sanitizeHex(strippedHexPrivateKey.value))
+      return isPrivateKey(privateKeyInput.value) && isValidPrivate(privateKey)
+    }
+    decode(strippedHexPrivateKey.value)
+    return true
+  } catch {
+    return false
+  }
 })
 
 const unlock = () => {
   // TODO: remove hardcoded network id
+  let wallet
   try {
-    const wallet = new PrivateKeyWallet(
-      Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
-      selectedChain?.value?.chainID || '1',
-    )
-    setWallet(wallet)
+    if (selectedChain.value?.type === 'EVM') {
+      new EthereumPrivateKey(
+        Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
+        selectedChain?.value?.chainID || '1',
+      )
+    } else if (selectedChain.value?.type === 'BITCOIN') {
+      const decoded = bs58check.decode(strippedHexPrivateKey.value)
+      const rawPrivKey = decoded.slice(1, 33)
+      wallet = new BitcoinPrivateKey(selectedChain?.value?.name || 'BITCOIN', {
+        privateKey: Buffer.from(Buffer.from(rawPrivKey)),
+      })
+    }
+
+    setWallet(wallet as WalletInterface)
     addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
     router.push({
       name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
     })
   } catch (error) {
-    // TODO: handle error when toast is implemented
-    console.error(error)
+    addToastMessage({
+      text: (error as Error).message
+        ? (error as Error).message
+        : 'There was an error creating the wallet. Please try again.',
+      type: ToastType.Error,
+    })
   }
 }
 </script>

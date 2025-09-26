@@ -1,7 +1,7 @@
 import HDkey from "hdkey";
 import { mnemonicToSeed } from "bip39"
 
-import { BitcoinPrivateKeyWallet } from "./privateKeyWallet";
+import BitcoinPrivateKeyWallet from "./privateKeyWallet";
 
 export default class BitcoinWallet {
   private mnemonic;

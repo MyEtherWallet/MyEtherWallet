@@ -238,11 +238,14 @@ const unlockWallet = async () => {
     selectedChain.value?.name as string
   ] as NetworkNames
 
-  console.log(networkName)
+  const parsedNetworkName =
+    networkName === NetworkNames.BitcoinTest
+      ? NetworkNames.Bitcoin
+      : networkName
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
-      networkName: networkName,
+      networkName: parsedNetworkName,
     })
     .then(() => {
       hwWalletInstance.close()
@@ -252,7 +255,7 @@ const unlockWallet = async () => {
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: networkName,
+    networkName: parsedNetworkName,
   })) as PathType[]
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
@@ -283,12 +286,16 @@ const loadList = async (page: number = 0) => {
   const startIndex = page * 5
   const chainId = selectedChain.value?.name ?? 'ETH'
   const networkName = chainToEnum[chainId] ?? 'ETH'
+  const parsedNetworkName =
+    networkName === NetworkNames.BitcoinTest
+      ? NetworkNames.Bitcoin
+      : networkName
 
   for (let i = startIndex; i < startIndex + 5; i++) {
     try {
       const addressResponse = await hwWalletInstance.getAddress({
         confirmAddress: false,
-        networkName: networkName,
+        networkName: parsedNetworkName,
         pathType: selectedDerivation.value as PathType,
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
@@ -299,7 +306,7 @@ const loadList = async (page: number = 0) => {
           ? new EvmHardwareWallet(
               chainId,
               addressResponse.address as HexPrefixedString,
-              networkName,
+              parsedNetworkName,
               i.toString(),
               selectedDerivation.value as PathType,
               selectedHwWalletType.value as HWwalletType,
@@ -307,7 +314,7 @@ const loadList = async (page: number = 0) => {
             )
           : new BtcHardwareWallet(
               addressResponse.address as HexPrefixedString,
-              networkName,
+              parsedNetworkName,
               i.toString(),
               selectedDerivation.value as PathType,
               selectedHwWalletType.value as HWwalletType,
@@ -330,12 +337,16 @@ const loadList = async (page: number = 0) => {
           walletInstance: hardwareWalletInstance as EvmHardwareWallet,
         })
       } else {
-        console.log(fetchBalance, 'here?')
+        // TODO: change this once api changes are made to return consistent data
+        // for all networks
+        const newFetchBalance = fetchBalance as unknown as {
+          balance: { nativeValue: string }
+        }
         walletList.value.push({
           address: await hardwareWalletInstance.getAddress(),
           index: i,
-          balance: fetchBalance.balance.nativeValue || '0',
-          walletInstance: hardwareWalletInstance as BtcHardwareWallet,
+          balance: newFetchBalance.balance.nativeValue || '0',
+          walletInstance: hardwareWalletInstance,
         })
       }
     } catch (e) {

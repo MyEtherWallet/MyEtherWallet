@@ -258,10 +258,15 @@ const loadList = async (page: number = 0) => {
             ).toString(),
           })
         } else {
+          // TODO: change this once api changes are made to return consistent data
+          // for all networks
+          const newFetchBalance = fetchBalance as unknown as {
+            balance: { nativeValue: string }
+          }
           walletList.value.push({
             address: await wallet.getAddress(),
             index: i,
-            balance: fetchBalance.balance.nativeValue,
+            balance: newFetchBalance.balance.nativeValue,
           })
         }
       }

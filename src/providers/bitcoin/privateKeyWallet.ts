@@ -11,10 +11,10 @@ import { payments } from "bitcoinjs-lib"
 
 import btcInfo from "../common/btcInfo";
 
-export class BitcoinPrivateKeyWallet extends BaseBtcWallet {
+export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   private privateKey: Buffer;
 
-  constructor(chainName: string, hdkeyInstance: HDkey) {
+  constructor(chainName: string, hdkeyInstance: HDkey | { privateKey: Buffer }) {
     super(chainName);
     this.privateKey = hdkeyInstance.privateKey!;
   }

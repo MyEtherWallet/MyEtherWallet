@@ -51,6 +51,7 @@
     "bip39": "^3.1.0",
     "bitcoinjs-lib": "^6.1.7",
     "bn.js": "^5.2.2",
+    "bs58check": "^4.0.0",
     "chart.js": "^4.5.0",
     "commitlint": "^19.6.0",
     "hdkey": "^2.1.0",
@@ -66,7 +67,8 @@
     "web3-eth": "1.10.4",
     "web3-eth-contract": "^4.7.2",
     "web3-utils": "^4.3.3",
-    "web3-validator": "^2.0.6"
+    "web3-validator": "^2.0.6",
+    "wif": "^5.0.0"
   },
   "devDependencies": {
     "@heroicons/vue": "^2.2.0",
