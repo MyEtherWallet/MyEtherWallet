@@ -495,7 +495,7 @@ const nextPage = () => {
 const buyBtn = () => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
-const swapBtn = (token: GetWebTokensTableResponseToken) => {
+const swapBtn = (token: DisplayToken) => {
   setWalletPanel('swap')
   goToTokenPage(token)
 }
@@ -527,7 +527,13 @@ const cryptoFilterOptions = ref([
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
-const tokens: Ref<GetWebTokensTableResponseToken[]> = ref([])
+
+interface DisplayToken
+  extends Omit<GetWebTokensTableResponseToken, 'price' | 'marketCap'> {
+  price: string
+  marketCap: string
+}
+const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
 const totalPages = ref<number>(1)
 
@@ -567,33 +573,33 @@ const {
   onFetchResponse: onFetchGainersResponse,
   execute: fetchGainersTable,
   onFetchError: onFetchGainersError,
-} = useMEWFetch<GetWebTokensTableResponse>(fetchGainersUrl, {
+} = useMEWFetch(fetchGainersUrl, {
   immediate: false,
 })
   .get()
-  .json()
+  .json<GetWebTokensTableResponse>()
 
 const {
   data: fetchWatchlistData,
   onFetchResponse: onFetchWatchlistResponse,
   execute: fetchWatchlistTable,
   onFetchError: onFetchWatchlistError,
-} = useMEWFetch<GetWebTokensWatchlistResponse>(fetchWatchListUrl, {
+} = useMEWFetch(fetchWatchListUrl, {
   immediate: false,
 })
   .get()
-  .json()
+  .json<GetWebTokensWatchlistResponse>()
 
 const {
   data: fetchTokenData,
   onFetchResponse: onFetchTokenTableResponse,
   execute: fetchTokenTable,
   onFetchError: onFetchTokenTableError,
-} = useMEWFetch<GetWebTokensTableResponse>(fetchTableUrl, {
+} = useMEWFetch(fetchTableUrl, {
   immediate: false,
 })
   .get()
-  .json()
+  .json<GetWebTokensTableResponse>()
 
 const debounceFetchTokens = useDebounceFn(() => {
   fetchTokenTable()
@@ -621,26 +627,24 @@ onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(
-      (item: GetWebTokensWatchlistResponse[number]) => {
-        const logo =
-          item.logoUrl && isValidUrl(item.logoUrl)
-            ? item.logoUrl
-            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-        return {
-          ...item,
-          logoUrl: logo,
-          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: formatFiatValue(item.price ?? 0).value,
-          // price: new Intl.NumberFormat('en-US', {
-          //   style: 'currency',
-          //   currency: 'USD',
-          //   maximumFractionDigits: 2,
-          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-        }
-      },
-    )
+    tokens.value = fetchWatchlistData.value.map(item => {
+      const logo =
+        item.logoUrl && isValidUrl(item.logoUrl)
+          ? item.logoUrl
+          : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+      return {
+        ...item,
+        logoUrl: logo,
+        priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+        price: formatFiatValue(item.price ?? 0).value,
+        // price: new Intl.NumberFormat('en-US', {
+        //   style: 'currency',
+        //   currency: 'USD',
+        //   maximumFractionDigits: 2,
+        // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+        marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+      }
+    })
   }
   isLoading.value = false
 })
@@ -648,8 +652,8 @@ onFetchGainersResponse(() => {
   totalTokenCount.value = fetchGainersData.value?.total ?? 0
   totalPages.value = fetchGainersData.value?.pages ?? 0
   if (fetchGainersData.value && fetchGainersData.value.items) {
-    tokens.value = fetchGainersData.value.items.map(
-      (item: GetWebTokensTableResponseToken) => {
+    tokens.value =
+      fetchGainersData.value.items.map(item => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
@@ -666,8 +670,7 @@ onFetchGainersResponse(() => {
           // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
           marketCap: formatIntegerValue(item.marketCap ?? 0).value,
         }
-      },
-    )
+      }) || []
   }
   isLoading.value = false
 })
@@ -675,26 +678,24 @@ onFetchTokenTableResponse(() => {
   totalTokenCount.value = fetchTokenData.value?.total ?? 0
   totalPages.value = fetchTokenData.value?.pages ?? 0
   if (fetchTokenData.value && fetchTokenData.value.items) {
-    tokens.value = fetchTokenData.value.items.map(
-      (item: GetWebTokensTableResponseToken) => {
-        const logo =
-          item.logoUrl && isValidUrl(item.logoUrl)
-            ? item.logoUrl
-            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-        return {
-          ...item,
-          logoUrl: logo,
-          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: formatFiatValue(item.price ?? 0).value,
-          // price: new Intl.NumberFormat('en-US', {
-          //   style: 'currency',
-          //   currency: 'USD',
-          //   maximumFractionDigits: 2,
-          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-        }
-      },
-    )
+    tokens.value = fetchTokenData.value.items.map(item => {
+      const logo =
+        item.logoUrl && isValidUrl(item.logoUrl)
+          ? item.logoUrl
+          : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+      return {
+        ...item,
+        logoUrl: logo,
+        priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+        price: formatFiatValue(item.price ?? 0).value,
+        // price: new Intl.NumberFormat('en-US', {
+        //   style: 'currency',
+        //   currency: 'USD',
+        //   maximumFractionDigits: 2,
+        // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+        marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+      }
+    })
   }
   isLoading.value = false
 })
@@ -787,7 +788,7 @@ const percentOptions = <AppSelectOption[]>[
 
 const activePercent = ref<AppSelectOption>(percentOptions[1])
 
-const getActivePercent = (token: GetWebTokensTableResponseToken) => {
+const getActivePercent = (token: DisplayToken) => {
   switch (activePercent.value.value) {
     case activePercentChange.ONE_HOUR:
       return token.priceChangePercentage1h
@@ -812,7 +813,7 @@ watch(
   },
 )
 
-const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
+const getSparkLinePoints = (token: DisplayToken) => {
   if (
     token.sparklineIn7d &&
     token.sparklineIn7d.length > 0 &&
@@ -832,7 +833,7 @@ const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
  --------------------------------*/
 const router = useRouter()
 
-const goToTokenPage = (token: GetWebTokensTableResponseToken) => {
+const goToTokenPage = (token: DisplayToken) => {
   router.push({
     name: ROUTES_MAIN.TOKEN_INFO.NAME,
     params: { networkId: token.coinId, tokenId: token.coinId },

@@ -113,12 +113,11 @@ const url = computed(() => {
   return `https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`
 })
 const fetchUrl = url
-const { execute, data, onFetchResponse, onFetchError } =
-  useMEWFetch<GetWebTrendingTokensResponse>(fetchUrl, {
-    immediate: false,
-  })
-    .get()
-    .json()
+const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
+  immediate: false,
+})
+  .get()
+  .json<GetWebTrendingTokensResponse>()
 
 onMounted(() => {
   isLoading.value = true

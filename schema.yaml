@@ -78,6 +78,37 @@ paths:
 
   # Tokens
 
+  /v1/web/token-price-chart/coins/{coin}:
+    get:
+      operationId: GetWebTokenPriceChartByCoin
+      parameters:
+        - $ref: '#/components/parameters/WebTokenPriceChartInterval'
+        - $ref: '#/components/parameters/PathCoinId'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTokenPriceChartSuccess'
+
+  /v1/web/token-price-chart/chains/{chainName}/contracts/{contract}:
+    get:
+      operationId: GetWebTokenPriceChartByContract
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+        - $ref: '#/components/parameters/AnyContractAddress'
+        - $ref: '#/components/parameters/WebTokenPriceChartInterval'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTokenPriceChartSuccess'
+
+  /v1/web/pages/token-info/coins/{coin}:
+    get:
+      operationId: GetWebTokenInfoPageByCoin
+      parameters:
+      - $ref: '#/components/parameters/PathCoinId'
+      - $ref: '#/components/parameters/QueryEvmAddresses'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebTokenInfoPageSuccess'
+
   /v1/web/trending-tokens:
     get:
       operationId: GetWebTrendingTokens
@@ -93,7 +124,7 @@ paths:
     get:
       operationId: GetWebTokensTable
       parameters:
-        - $ref: '#/components/parameters/AddressChain'
+        - $ref: '#/components/parameters/AddressChains'
         - $ref: '#/components/parameters/FilterChain'
         - $ref: '#/components/parameters/Category'
         - $ref: '#/components/parameters/Search'
@@ -108,8 +139,10 @@ paths:
     get:
       operationId: GetWebTokensWatchlist
       parameters:
-        - $ref: '#/components/parameters/AddressChain'
+        - $ref: '#/components/parameters/AddressChains'
+        - $ref: '#/components/parameters/FilterChain'
         - $ref: '#/components/parameters/CoinIds'
+        - $ref: '#/components/parameters/WebTokensWatchlistSort'
       responses:
         200:
           $ref: '#/components/responses/GetWebTokensWatchlistSuccess'
@@ -441,6 +474,11 @@ paths:
 
 components:
   parameters:
+    PathCoinId:
+      name: coin
+      in: path
+      schema:
+        type: string
     CoinIds:
       name: coins
       in: query
@@ -456,8 +494,8 @@ components:
       in: path
       schema:
         type: string
-    AddressChain:
-      name: addressChain
+    AddressChains:
+      name: addressChains
       in: query
       schema:
         type: string
@@ -491,11 +529,21 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/SortDirection'
+    WebTokenPriceChartInterval:
+      name: interval
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebTokenPriceChartInterval'
     WebTokensTableSort:
       name: sort
       in: query
       schema:
         $ref: '#/components/schemas/WebTokensTableSort'
+    WebTokensWatchlistSort:
+      name: sort
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebTokensWatchlistSort'
     ChainNames:
       name: chains
       in: query
@@ -531,6 +579,17 @@ components:
       name: btcAddress
       schema:
         $ref: '#/components/schemas/BtcAddressInput'
+    QueryEvmAddresses:
+      in: query
+      name: evmAddresses
+      schema:
+        oneOf:
+          - type: string
+          - type: array
+            items:
+              minItems: 1
+              maxItems: 10
+              type: string
     BtcAddresses:
       in: query
       name: addresses
@@ -546,6 +605,11 @@ components:
       name: address
       schema:
         $ref: '#/components/schemas/EvmAddressInput'
+    AnyContractAddress:
+      in: path
+      name: contract
+      schema:
+        type: string
     EvmContractAddress:
       in: path
       name: contract
@@ -678,6 +742,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetChainMetadataResponse'
+
+    GetWebTokenPriceChartSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebTokenPriceChartResponse'
+
+    GetWebTokenInfoPageSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebTokenInfoPageResponse'
 
     GetWebTrendingTokensSuccess:
       content:
@@ -1060,9 +1136,40 @@ components:
         - ASC
         - DESC
 
+    WebTokenPriceChartInterval:
+      type: string
+      enum:
+        - '1D'
+        - '7D'
+        - '1M'
+        - '3M'
+        - '1Y'
+        - 'ALL'
+
     WebTokensTableSort:
       type: string
       enum:
+        - NAME_ASC
+        - NAME_DESC
+        - SYMBOL_ASC
+        - SYMBOL_DESC
+        - PRICE_ASC
+        - PRICE_DESC
+        - PRICE_CHANGE_PERCENTAGE_1H_ASC
+        - PRICE_CHANGE_PERCENTAGE_1H_DESC
+        - PRICE_CHANGE_PERCENTAGE_24H_ASC
+        - PRICE_CHANGE_PERCENTAGE_24H_DESC
+        - PRICE_CHANGE_PERCENTAGE_7D_ASC
+        - PRICE_CHANGE_PERCENTAGE_7D_DESC
+        - MARKET_CAP_ASC
+        - MARKET_CAP_DESC
+        - TOTAL_VOLUME_ASC
+        - TOTAL_VOLUME_DESC
+
+    WebTokensWatchlistSort:
+      type: string
+      enum:
+        - NONE
         - NAME_ASC
         - NAME_DESC
         - SYMBOL_ASC
@@ -1396,6 +1503,161 @@ components:
 
     # Web
 
+    GetWebTokenPriceChartResponse:
+      type: object
+      required:
+        - from
+        - to
+        - prices
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        prices:
+          type: array
+          items:
+            type: object
+            required:
+              - timestamp
+              - price
+            properties:
+              timestamp:
+                type: number
+              price:
+                type: number
+
+    GetWebTokenInfoPageResponse:
+      type: object
+      required:
+        - coinId
+        - name
+        - symbol
+        - marketCap
+        - maxSupply
+        - price
+        - circulatingSupply
+        - totalVolume
+        - low24h
+        - high24h
+        - chainBalances
+        - nativeChainName
+        - supportedChains
+      properties:
+        coinId:
+          type: string
+        name:
+          type: string
+        symbol:
+          type: string
+        marketCap:
+          type: ['null', number]
+        maxSupply:
+          type: ['null', number]
+        circulatingSupply:
+          type: ['null', number]
+        totalVolume:
+          type: ['null', number]
+        low24h:
+          type: ['null', number]
+        high24h:
+          type: ['null', number]
+        chainBalances:
+          type: array
+          items:
+            type: object
+            required:
+              - chainName
+              - result
+            properties:
+              chainName:
+                type: string
+              result:
+                oneOf:
+                  - type: object
+                    required:
+                      - ok
+                      - value
+                    properties:
+                      ok:
+                        const: false
+                      value:
+                        type: object
+                        required:
+                          - reason
+                        properties:
+                          reason:
+                            type: string
+                  - type: object
+                    required:
+                      - ok
+                      - value
+                    properties:
+                      ok:
+                        const: true
+                      value:
+                        type: object
+                        required:
+                          - contract
+                          - balances
+                        properties:
+                          contract:
+                            type: string
+                          balances:
+                            type: array
+                            items:
+                              oneOf:
+                                - type: object
+                                  required:
+                                    - ok
+                                    - value
+                                  properties:
+                                    ok:
+                                      const: false
+                                    value:
+                                      type: object
+                                      required:
+                                        - reason
+                                        - owner
+                                      properties:
+                                        reason:
+                                          type: string
+                                        owner:
+                                          type: string
+                                - type: object
+                                  required:
+                                    - ok
+                                    - value
+                                  properties:
+                                    ok:
+                                      const: true
+                                    value:
+                                      type: object
+                                      required:
+                                        - owner
+                                        - value
+                                      properties:
+                                        owner:
+                                          type: string
+                                        value:
+                                          type: string
+        nativeChainName:
+          type: ['null', string]
+        supportedChains:
+          type: array
+          items:
+            type: object
+            required:
+              - chainName
+              - contract
+            properties:
+              chainName:
+                type: string
+              contract:
+                type: string
+
     GetWebTrendingTokensResponse:
       type: object
       required:
@@ -1469,7 +1731,7 @@ components:
               - priceChangePercentage7d
               - totalVolume
               - marketCap
-              - address
+              - addresses
               - logoUrl
               - sparklineIn7d
             properties:
@@ -1491,8 +1753,11 @@ components:
                 type: [number, 'null']
               marketCap:
                 type: [number, 'null']
-              address:
-                type: [string, 'null']
+              # String (chain name) -> address (Record<string, string>)
+              addresses:
+                type: object
+                additionalProperties:
+                  type: string
               logoUrl:
                 type: [string, 'null']
               sparklineIn7d:
@@ -1516,7 +1781,7 @@ components:
           - priceChangePercentage7d
           - totalVolume
           - marketCap
-          - address
+          - addresses
           - logoUrl
           - sparklineIn7d
         properties:
@@ -1538,8 +1803,11 @@ components:
             type: [number, 'null']
           marketCap:
             type: [number, 'null']
-          address:
-            type: [string, 'null']
+          # String (chain name) -> address (Record<string, string>)
+          addresses:
+            type: object
+            additionalProperties:
+              type: string
           logoUrl:
             type: [string, 'null']
           sparklineIn7d:
