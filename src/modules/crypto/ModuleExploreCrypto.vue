@@ -303,14 +303,16 @@
                   ${{ token.marketCap ?? 0 }}
                 </td>
                 <!-- Actions -->
-                <td class="pl-1 py-2 hidden xs:table-cell rounded-r-12">
+                <td
+                  class="pl-1 py-2 hidden xs:table-cell rounded-r-12 relative"
+                >
                   <div class="flex flex-row gap-1 justify-end flex-wrap">
-                    <app-base-button size="small" @click="buyBtn" is-outline
+                    <app-base-button size="small" @click="buyBtn()" is-outline
                       >Buy</app-base-button
                     >
-                    <app-base-button size="small" @click="swapBtn"
-                      >Swap</app-base-button
-                    >
+                    <app-base-button size="small" @click="swapBtn(token)"
+                      >Swap
+                    </app-base-button>
                   </div>
                 </td>
               </tr>
@@ -422,7 +424,7 @@ import { useRouter } from 'vue-router'
 import { ROUTES_MAIN } from '@/router/routeNames'
 
 const walletMenu = useWalletMenuStore()
-const { setIsOpenSideMenu, setWalletPanel } = walletMenu
+const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const tableContainer = ref<HTMLElement | null>(null)
@@ -493,9 +495,9 @@ const nextPage = () => {
 const buyBtn = () => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
-const swapBtn = () => {
-  setIsOpenSideMenu(true)
-  setWalletPanel(3)
+const swapBtn = (token: GetWebTokensTableResponseToken) => {
+  setWalletPanel('swap')
+  goToTokenPage(token)
 }
 
 const setHeaderSort = (key: string) => {

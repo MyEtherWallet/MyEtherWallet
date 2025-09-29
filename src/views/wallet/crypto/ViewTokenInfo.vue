@@ -18,7 +18,9 @@
           </app-btn-icon>
         </div>
         <!-- Token logo, name, price, price change -->
-        <div class="flex items-center gap-4 px-3 xs:px-6 sm:px-10">
+        <div
+          class="flex items-center gap-4 px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+        >
           <div class="relative">
             <app-token-logo
               :url="tokenData.logoUrl"
@@ -40,7 +42,7 @@
             <h1 class="text-s-20 xs:text-s-24 leading-p-110 font-bold">
               {{ tokenData.name }} ({{ tokenData.symbol.toUpperCase() }})
               <span
-                class="text-s-17 hidden sm:inline-block font-medium uppercase text-info mr-1 tracking-sp-06"
+                class="text-s-17 hidden lg:inline-block font-medium uppercase text-info mr-1 tracking-sp-06"
               >
                 on {{ selectedChain?.name }}
               </span>
@@ -74,13 +76,15 @@
           </div>
         </div>
         <p
-          class="text-s-8 tracking-sp-06 sm:hidden font-bold uppercase text-info px-3 xs:px-6 ml-[58px] xs:ml-[74px]"
+          class="text-s-8 md:text-s-11 tracking-sp-06 lg:hidden font-bold uppercase text-info px-3 xs:px-6 ml-[58px] xs:ml-[74px] md:ml-[66px]"
         >
           on {{ selectedChain?.name }}
         </p>
         <hr class="h-px bg-grey-10 border-0 w-full my-3 xs:mt-5" />
         <!-- Chart and balance -->
-        <div class="flex flex-col px-3 xs:px-6 sm:px-10 gap-3 sm:gap-4">
+        <div
+          class="flex flex-col px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 gap-3 sm:gap-4"
+        >
           <div class="w-full">
             <app-btn-group
               v-model:selected="selectedChartFilter"
@@ -158,42 +162,10 @@
               </div>
             </div>
           </div>
-          <div
-            class="mt-2 sm:mt-0 items-center justify-start flex gap-2 sm:gap-3"
-          >
-            <button
-              class="py-2 max-w-[86px] rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full"
-              @click.stop.prevent="openWalletMenu(0)"
-            >
-              <icon-buy class="h-6 h-6 sm:w-7 sm:h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('buy') }}</p>
-            </button>
-            <button
-              class="max-w-[86px] py-2 rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full"
-              @click.stop.prevent="openWalletMenu(1)"
-            >
-              <icon-buy class="h-6 h-6 sm:w-7 sm:h-7 text-primary mb-1" />
-              <p class="text-s-12">Earn</p>
-            </button>
-            <button
-              class="max-w-[86px] py-2 rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full"
-              @click.stop.prevent="openWalletMenu(2)"
-            >
-              <icon-send class="h-6 h-6 sm:w-7 sm:h-7 text-primary mb-1" />
-              <p class="text-s-12">Bridge</p>
-            </button>
-            <button
-              class="max-w-[86px] py-2 rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG shadow-button shadow-button-elevated w-full"
-              @click.stop.prevent="openWalletMenu(3)"
-            >
-              <icon-swap class="h-6 h-6 sm:w-7 sm:h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('common.swap') }}</p>
-            </button>
-          </div>
         </div>
         <hr class="h-px bg-grey-10 border-0 w-full my-5" />
         <!-- Balance on other chains -->
-        <div class="px-3 xs:px-6 sm:px-10">
+        <div class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10">
           <h3 class="text-s-20 font-bold mb-1">
             {{ tokenData.symbol.toUpperCase() }} balance on other chains:
           </h3>
@@ -232,7 +204,7 @@
         <hr class="h-px bg-grey-10 border-0 w-full my-5" />
         <!-- Market Data -->
         <div
-          class="px-3 xs:px-6 sm:px-10 grid grid-cols-2 xs:grid-cols-3 gap-4 max-w-[700px]"
+          class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 grid grid-cols-2 xs:grid-cols-3 gap-4 max-w-[700px]"
         >
           <div
             v-for="(item, index) in marketData"
@@ -245,7 +217,7 @@
         </div>
         <hr class="h-px bg-grey-10 border-0 w-full my-5" />
         <!-- About -->
-        <div class="px-3 xs:px-6 sm:px-10">
+        <div class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10">
           <h3 class="text-s-20 font-bold mb-2">About {{ tokenData.name }}</h3>
           <p class="text-s-14 text-info max-w-[700px]">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -259,7 +231,7 @@
         </div>
         <hr class="h-px bg-grey-10 border-0 w-full my-5" />
         <!-- Supported Chains -->
-        <div class="px-3 xs:px-6 sm:px-10 mb-5">
+        <div class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5">
           <h3 class="text-s-20 font-bold mb-2">Supported Chains</h3>
           <div
             v-for="i in 3"
@@ -324,7 +296,7 @@ import {
   ChevronDownIcon,
   ArrowUturnRightIcon,
 } from '@heroicons/vue/24/outline'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import {
   formatFiatValue,
   formatFloatingPointValue,
@@ -336,10 +308,8 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { truncateAddress } from '@/utils/filters'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import IconSend from '@/assets/icons/core_menu/icon-send.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
 defineProps({
   networkId: {
     type: String,
@@ -350,18 +320,20 @@ defineProps({
     required: true,
   },
 })
+
+const { isXS, isMDAndUp } = useAppBreakpoints()
+
 /** --------------------
  * Wallet Menu Buttons
  --------------------*/
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
-const openWalletMenu = (walletPanel: number) => {
-  if (!isOpenSideMenu.value) {
-    walletMenu.setIsOpenSideMenu(true)
-  }
-  walletMenu.setWalletPanel(walletPanel)
-}
 
+onMounted(() => {
+  if (!isMDAndUp.value && isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(false)
+  }
+})
 /** --------------------
  * Chart Filter
  --------------------*/
@@ -379,8 +351,6 @@ const chartFilterOptions = ref<Item[]>([
 ])
 
 const selectedChartFilter = ref(chartFilterOptions.value[0])
-
-const { isXS } = useAppBreakpoints()
 
 /** --------------------
  * Market Data

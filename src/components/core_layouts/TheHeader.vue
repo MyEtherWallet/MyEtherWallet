@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:px-10 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:pl-10 md-header:pr-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->

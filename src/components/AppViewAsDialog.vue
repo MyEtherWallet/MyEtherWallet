@@ -21,21 +21,25 @@
     <!-- Dialog Container -->
     <div
       v-if="isOpen"
-      :class="[isOpenSideMenu ? 'mr-[400px]' : 'mr-[60px]', zIndexContainer]"
-      class="cursor-pointer fixed inset-0 flex items-center justify-center py-6 px-3 xs:p-6 overscroll-none !overflow-y-scroll mt-[68px] sm:mt-[76px]"
+      :class="[
+        isOpenSideMenu ? 'mr-[445px]' : 'mr-[60px] xs:mr-[70px]',
+        zIndexContainer,
+      ]"
+      class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none !overflow-y-scroll mt-[69px] sm:mt-[77px]"
       @click="setIsOpen(false)"
     >
       <transition
-        enter-active-class="transform ease-out duration-400 transition opacity-0 delay-100"
-        enter-to-class="opacity-100"
-        leave-active-class="opacity-0"
-        leave-to-class="opacity-0"
+        enter-from-class="opacity-0 translate-x-full"
+        enter-active-class="transform ease-out duration-300 transition "
+        enter-to-class="-translate-x-0"
+        leave-from-class="transform ease-out duration-300 -translate-x-0"
+        leave-active-class=" translate-x-full"
         appear
       >
         <div
           v-if="isOpen"
           :class="[
-            'cursor-default max-h-[100%] w-[100%] xs:w-[95%] max-w-[1384px] bg-white rounded-16 sm:rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden relative',
+            'cursor-default max-h-[100%] w-[100%] max-w-[1384px] bg-white rounded-l-16 lg:rounded-l-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden relative',
             containerClass,
           ]"
           @click.stop
@@ -68,13 +72,14 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu } = storeToRefs(walletMenu)
+const { isOpenSideMenu, hasShadow } = storeToRefs(walletMenu)
 
 /**
  *  the overflow hidden on the body
  */
 onMounted(() => {
   isOverflowHidden.value = true
+  hasShadow.value = false
 })
 defineProps({
   zIndexOverlay: {
@@ -82,7 +87,7 @@ defineProps({
     type: String,
   },
   zIndexContainer: {
-    default: 'z-[11]',
+    default: 'z-[51]',
     type: String,
   },
   containerClass: {
@@ -103,10 +108,11 @@ const router = useRouter()
  * @param _value - boolean value to set the dialog state
  */
 const setIsOpen = (_value: boolean = false) => {
-  if (route.matched.length > 1) {
+  if (route.matched.length > 1 && _value === false) {
     // The parent route is the second to last item in the matched array
     const parentRouteName = route.matched[route.matched.length - 2].name
     isOpen.value = _value
+    hasShadow.value = true
     isOverflowHidden.value = false
     router.push({ name: parentRouteName })
   }

@@ -1,16 +1,16 @@
 <template>
   <div>
     <div
-      class="static w-full xs:max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
+      class="static w-full flex flex-col items-center justify-items-stretch gap-1"
     >
-      <div class="relative">
-        <div class="flex items-center justify-between mb-1 mt-4">
-          <p class="font-semibold text-s-24 ml-3">Send</p>
-          <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
-            >Clear</app-btn-text
-          >
-        </div>
-        <div class="p-4 rounded-20 bg-surface-light mb-2">
+      <div class="mb-3">
+        <p class="font-bold text-s-28 ml-5 mb-4 mt-1 xs:mt-5">Send</p>
+        <div class="p-4 rounded-20 bg-mewBg mb-2 relative">
+          <div class="absolute -top-8 right-4">
+            <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
+              >Clear all</app-btn-text
+            >
+          </div>
           <div class="mb-[25px]">
             <app-enter-amount
               v-model:amount="amount"
@@ -40,17 +40,17 @@
         :disabled="!validSend"
         :is-loading="isLoadingFees"
         @click="handleSubmit"
-        class="w-full"
+        class="w-[70%]"
       >
         {{ $t('common.send') }}</app-base-button
       >
-      <app-base-button class="w-full capitalize" @click="connectWallet" v-else>
+      <app-base-button class="w-[70%] capitalize" @click="connectWallet" v-else>
         {{ $t('common.connect_wallet') }}</app-base-button
       >
       <app-need-help
         :title="$t('send.need-help')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mt-4"
+        class="mt-5"
       />
     </div>
     <!-- TODO: replace network with actual selected network info -->

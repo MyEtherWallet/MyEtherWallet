@@ -15,7 +15,7 @@
       >
         <div
           v-if="isOpenSideMenu"
-          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
+          class="cursor-pointer top-0 xs:top-[69px] sm:top-[77px] fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
           @click="walletMenu.setIsOpenSideMenu(false)"
           aria-hidden
         />
@@ -23,15 +23,15 @@
     </teleport>
     <div
       :class="[
-        isOpenSideMenu ? 'xl:mr-[400px]' : 'xl:mr-[60px]',
+        isOpenSideMenu ? 'xl:mr-[445px]' : 'xl:mr-[70px]',
         backgroundClass,
-        'flex w-full mr-[60px]',
+        'flex w-full mr-[60px] xs:mr-[70px]',
         isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
       ]"
     >
       <div
         :class="[
-          'relative flex justify-center min-w-[320px] w-full   mt-[68px] sm:mt-[76px]',
+          'relative flex justify-center min-w-[320px] w-full mt-[68px] sm:mt-[76px]',
         ]"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
