@@ -24,7 +24,7 @@ import {
 import { Toast, ERROR } from '@/modules/toast/handler/handlerToast';
 import { EventBus } from '@/core/plugins/eventBus';
 import EventNames from '@/utils/web3-provider/events.js';
-import { fromBase } from '@/core/helpers/unit';
+import { fromBase, toBase } from '@/core/helpers/unit';
 import { isArray } from 'lodash';
 
 /**
@@ -334,7 +334,7 @@ class Changelly {
               toBN(toWei(response.data.result.amountExpectedFrom, 'ether'))
             );
           } else {
-            let amountBN = fromBase(
+            let amountBN = toBase(
               response.data.result.amountExpectedFrom,
               fromT.decimals
             );
