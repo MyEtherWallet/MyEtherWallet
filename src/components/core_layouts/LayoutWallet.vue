@@ -208,7 +208,7 @@ const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
-const { isXLAndUp } = breakpoints
+const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
@@ -222,12 +222,23 @@ onMounted(() => {
     }
   }
 })
+watch(isMDAndUp, newVal => {
+  if (route.name === ROUTES_MAIN.TOKEN_INFO.NAME) {
+    if (newVal) {
+      walletMenu.setIsOpenSideMenu(true)
+    } else {
+      walletMenu.setIsOpenSideMenu(false)
+    }
+  }
+})
 
 watch(isXLAndUp, newVal => {
-  if (newVal) {
-    walletMenu.setIsOpenSideMenu(true)
-  } else {
-    walletMenu.setIsOpenSideMenu(false)
+  if (route.name !== ROUTES_MAIN.TOKEN_INFO.NAME) {
+    if (newVal) {
+      walletMenu.setIsOpenSideMenu(true)
+    } else {
+      walletMenu.setIsOpenSideMenu(false)
+    }
   }
 })
 

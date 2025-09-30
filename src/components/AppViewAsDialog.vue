@@ -68,7 +68,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const walletMenu = useWalletMenuStore()
@@ -101,6 +101,7 @@ defineProps({
  */
 const isOpen = ref(true)
 
+const { isXLAndUp } = useAppBreakpoints()
 const route = useRoute()
 const router = useRouter()
 /**
@@ -108,6 +109,9 @@ const router = useRouter()
  * @param _value - boolean value to set the dialog state
  */
 const setIsOpen = (_value: boolean = false) => {
+  if (!isXLAndUp.value) {
+    walletMenu.setIsOpenSideMenu(false)
+  }
   if (route.matched.length > 1 && _value === false) {
     // The parent route is the second to last item in the matched array
     const parentRouteName = route.matched[route.matched.length - 2].name
