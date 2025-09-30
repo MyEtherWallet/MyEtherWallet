@@ -56,10 +56,24 @@ const marketData = computed<Item[]>(() => {
         ? `$${formatFiatValue(props.tokenData.marketCap).value}`
         : '--',
     },
+
+    {
+      label: 'Total Supply',
+      value: props.tokenData.totalSupply
+        ? `$${formatFiatValue(props.tokenData.totalSupply).value}`
+        : '--',
+    },
     {
       label: 'Max Supply',
       value: props.tokenData.maxSupply
         ? `$${formatFiatValue(props.tokenData.maxSupply).value}`
+        : '--',
+    },
+
+    {
+      label: 'Circulating Supply',
+      value: props.tokenData.circulatingSupply
+        ? `$${formatFiatValue(props.tokenData.circulatingSupply).value}`
         : '--',
     },
     {
@@ -69,16 +83,11 @@ const marketData = computed<Item[]>(() => {
         : '--',
     },
     {
-      label: 'Circulating Supply',
-      value: props.tokenData.circulatingSupply
-        ? `$${formatFiatValue(props.tokenData.circulatingSupply).value}`
+      label: 'Fully Diluted Valuation',
+      value: props.tokenData.fullyDilutedValuation
+        ? `$${formatFiatValue(props.tokenData.fullyDilutedValuation).value}`
         : '--',
     },
-    // { label: '24h Trading Volume', value: tokenData.tradingVolume24h? `$${formatFiatValue(tokenData.tradingVolume24h).value}` : '--' },
-    // {
-    //   label: 'Fully Diluted Valuation',
-    //   value: `$${formatFiatValue(tokenData.marketCap).value}`,
-    // },
     {
       label: '24h High',
       value: props.tokenData.high24h

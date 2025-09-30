@@ -820,8 +820,12 @@ export interface components {
             coinId: string;
             name: string;
             symbol: string;
+            currentPrice: null | number;
+            priceChangePercentage24h: null | number;
+            fullyDilutedValuation: null | number;
             marketCap: null | number;
             maxSupply: null | number;
+            totalSupply: null | number;
             circulatingSupply: null | number;
             totalVolume: null | number;
             low24h: null | number;
@@ -857,10 +861,10 @@ export interface components {
                     };
                 };
             }[];
-            nativeChainName: null | string;
             supportedChains: {
                 chainName: string;
                 contract: string;
+                iconUrl: string;
             }[];
         };
         GetWebTrendingTokensResponse: {

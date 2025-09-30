@@ -40,7 +40,12 @@
       </div>
     </div>
 
-    <hr class="h-px bg-grey-10 border-0 w-full my-5" />
+    <hr
+      v-if="
+        isWalletConnected && !isLoading && tokenData && otherChains.length > 0
+      "
+      class="h-px bg-grey-10 border-0 w-full my-5"
+    />
     <!-- Balance on other chains -->
     <div
       v-if="

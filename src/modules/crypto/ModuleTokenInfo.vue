@@ -47,11 +47,18 @@
         </h1>
         <div>
           <p class="text-s-20 xs:text-s-24 inline">
-            ${{ formatFiatValue(tokenDataTemp.price).value }}
+            ${{
+              tokenData.currentPrice
+                ? formatFiatValue(tokenData.currentPrice).value
+                : '--'
+            }}
           </p>
-          <div class="inline-block ml-2">
+          <div
+            v-if="tokenData.priceChangePercentage24h"
+            class="inline-block ml-2"
+          >
             <ArrowTrendingDownIcon
-              v-if="tokenDataTemp.priceChangePercentage24h < 0"
+              v-if="tokenData.priceChangePercentage24h < 0"
               class="w-4 h-4 inline-block text-error"
             />
             <ArrowTrendingUpIcon
@@ -61,13 +68,13 @@
             <span
               :class="[
                 {
-                  'text-success': tokenDataTemp.priceChangePercentage24h >= 0,
-                  'text-error': tokenDataTemp.priceChangePercentage24h < 0,
+                  'text-success': tokenData.priceChangePercentage24h >= 0,
+                  'text-error': tokenData.priceChangePercentage24h < 0,
                 },
                 'ml-1 text-s-14 xs:text-s-17 ',
               ]"
             >
-              {{ tokenDataTemp.priceChangePercentage24h.toFixed(2) }}%
+              {{ tokenData.priceChangePercentage24h.toFixed(2) }}%
             </span>
           </div>
         </div>

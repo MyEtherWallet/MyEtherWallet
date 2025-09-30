@@ -1535,15 +1535,17 @@ components:
         - coinId
         - name
         - symbol
+        - currentPrice
+        - priceChangePercentage24h
+        - fullyDilutedValuation
         - marketCap
         - maxSupply
-        - price
+        - totalSupply
         - circulatingSupply
         - totalVolume
         - low24h
         - high24h
         - chainBalances
-        - nativeChainName
         - supportedChains
       properties:
         coinId:
@@ -1552,9 +1554,17 @@ components:
           type: string
         symbol:
           type: string
+        currentPrice:
+          type: ['null', number]
+        priceChangePercentage24h:
+          type: ['null', number]
+        fullyDilutedValuation:
+          type: ['null', number]
         marketCap:
           type: ['null', number]
         maxSupply:
+          type: ['null', number]
+        totalSupply:
           type: ['null', number]
         circulatingSupply:
           type: ['null', number]
@@ -1643,8 +1653,6 @@ components:
                                           type: string
                                         value:
                                           type: string
-        nativeChainName:
-          type: ['null', string]
         supportedChains:
           type: array
           items:
@@ -1652,10 +1660,13 @@ components:
             required:
               - chainName
               - contract
+              - iconUrl
             properties:
               chainName:
                 type: string
               contract:
+                type: string
+              iconUrl:
                 type: string
 
     GetWebTrendingTokensResponse:
