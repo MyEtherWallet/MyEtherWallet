@@ -81,9 +81,7 @@
               <!-- Seacrh not found-->
               <div v-else>
                 <div class="flex justify-center mt-10 h-[400px] text-info">
-                  <p>
-                    {{ $t('derivation_path.not_found') }}: {{ searchInput }}
-                  </p>
+                  <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
                 </div>
               </div>
             </div>
@@ -131,16 +129,15 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
 import Bip44Paths from '../common/bip44'
-import Bip84Paths from '../common/bip84'
 import {
   type DerivationPath,
   ethereum as ethereumPath,
-  bip84Segwit as bitcoinPath,
 } from '../common/configs/configPaths'
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 
 const { t } = useI18n()
 defineProps({
@@ -160,15 +157,14 @@ const defaultPath =
   selectedChain.value?.type === 'EVM'
     ? Bip44Paths[WALLET_TYPES.MNEMONIC]
     : selectedChain.value?.type === 'BITCOIN'
-      ? Bip84Paths[WALLET_TYPES.MNEMONIC]
+      ? BitcoinWallet.getSupportedPaths(selectedChain.value.name)
       : Bip44Paths[WALLET_TYPES.MNEMONIC]
-
 const paths = ref(defaultPath)
 const initialDefaultPath =
   selectedChain.value?.type === 'EVM'
     ? ethereumPath
     : selectedChain.value?.type === 'BITCOIN'
-      ? bitcoinPath
+      ? BitcoinWallet.getSupportedPaths(selectedChain.value.name)[0]
       : ethereumPath
 
 const selectedPath = defineModel<DerivationPath>('selectedPath', {
@@ -185,6 +181,21 @@ const setSelectedPath = (path: DerivationPath) => {
 onMounted(() => {
   if (selectedDerivation.value) {
     selectedPath.value = selectedDerivation.value
+  }
+
+  // set path automatically if chain type differs from current selected path
+  if (selectedChain.value?.type !== selectedPath.value?.type) {
+    if (selectedChain.value?.type === 'EVM') {
+      selectedPath.value = ethereumPath
+    } else if (selectedChain.value?.type === 'BITCOIN') {
+      selectedPath.value = BitcoinWallet.getSupportedPaths(
+        selectedChain.value.name,
+      )[0]
+    } else {
+      selectedPath.value = initialDefaultPath
+    }
+    console.log(selectedPath.value)
+    setToStore(selectedPath.value!)
   }
 })
 

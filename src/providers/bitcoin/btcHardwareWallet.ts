@@ -8,7 +8,7 @@ import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import BaseBtcWallet from './baseBitcoinWallet'
-import btcInfo from '../common/btcInfo'
+import { bitcoinInfo } from '../common/btcInfo'
 import { hexToBuffer } from '@/utils/hexToBuffer'
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
@@ -88,7 +88,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   }
 
   override getAddress(): Promise<HexPrefixedString> {
-    const { address } = payments.p2pkh({ ...btcInfo, pubkey: hexToBuffer(this.address) })
+    const { address } = payments.p2pkh({ ...bitcoinInfo, pubkey: hexToBuffer(this.address) })
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 }

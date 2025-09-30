@@ -208,8 +208,14 @@ const binanceChain: DerivationPath = {
 
 // Bitcoin specific derivation paths
 const bip84Segwit: DerivationPath = {
-  label: "BIP 84",
-  path: "m/84'/0'/0'/0",
+  label: "Bitcoin",
+  path: "m/84'/0'/0/0",
+  type: "BITCOIN"
+}
+
+const bip84SegwitTest: DerivationPath = {
+  label: "Bitcoin Testnet",
+  path: "m/84'/1'/0/0",
   type: "BITCOIN"
 }
 
@@ -259,5 +265,6 @@ export {
 
 // bitcoin paths
 export {
-  bip84Segwit
+  bip84Segwit,
+  bip84SegwitTest
 }
