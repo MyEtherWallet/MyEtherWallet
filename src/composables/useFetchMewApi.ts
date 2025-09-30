@@ -69,6 +69,7 @@ export const useFetchMewApi = (
           response?.status >= 500
         ) {
           retryCount.value++
+          // wait for delay
           await new Promise(resolve => setTimeout(resolve, delay.value))
           delay.value = delay.value + 1000
 
@@ -79,7 +80,7 @@ export const useFetchMewApi = (
             console.error('Failed to fetch. URL: ', url.value)
           }
           // ctx.data = null
-          error.value = data.message || 'Unkown Error.Failed to fetch.'
+          error.value = data?.message || 'Unkown Error.Failed to fetch.'
 
           return error
         }

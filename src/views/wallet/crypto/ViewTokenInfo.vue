@@ -4,32 +4,37 @@
       <h2 class="text-lg font-medium">Token Information</h2>
     </template>
     <template #content>
-      <div class="flex flex-col">
+      <div class="flex flex-col mb-10">
         <div
           class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[60px]"
         >
           <!--TODO: add link-->
-          <app-btn-icon label="Share">
+          <app-btn-icon label="Share" :disabled="isLoading">
             <share-icon class="h-5 w-5" />
           </app-btn-icon>
-          <app-btn-icon label="Star">
+          <app-btn-icon label="Star" :disabled="isLoading">
             <star-solid-icon v-if="isWatchlisted" class="h-5 w-5" />
             <star-outline-icon v-else class="h-5 w-5" />
           </app-btn-icon>
         </div>
         <!-- Token logo, name, price, price change -->
         <div
-          class="flex items-center gap-4 px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+          v-if="isLoading || tokenData === null"
+          class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[64px] xs:h-[80px] lg:h-[65px] animate-pulse bg-surface rounded-12 w-[60%]"
+        ></div>
+        <div
+          v-else
+          class="flex items-center gap-4 px-3 xs:px-6 md:px-4 lg:px-10"
         >
           <div class="relative">
             <app-token-logo
-              :url="tokenData.logoUrl"
+              :url="tokenDataTemp.logoUrl"
               :symbol="tokenData.symbol"
               width="w-10 xs:w-[56px]"
               height="h-10 xs:h-[56px]"
             />
             <app-token-logo
-              v-if="selectedChain"
+              v-if="selectedChain && exhistsOnCurrentChain"
               :url="selectedChain.icon"
               :symbol="selectedChain.name"
               width="w-5"
@@ -42,6 +47,7 @@
             <h1 class="text-s-20 xs:text-s-24 leading-p-110 font-bold">
               {{ tokenData.name }} ({{ tokenData.symbol.toUpperCase() }})
               <span
+                v-if="exhistsOnCurrentChain"
                 class="text-s-17 hidden lg:inline-block font-medium uppercase text-info mr-1 tracking-sp-06"
               >
                 on {{ selectedChain?.name }}
@@ -49,11 +55,11 @@
             </h1>
             <div>
               <p class="text-s-20 xs:text-s-24 inline">
-                ${{ formatFiatValue(tokenData.price).value }}
+                ${{ formatFiatValue(tokenDataTemp.price).value }}
               </p>
               <div class="inline-block ml-2">
                 <ArrowTrendingDownIcon
-                  v-if="tokenData.priceChangePercentage24h < 0"
+                  v-if="tokenDataTemp.priceChangePercentage24h < 0"
                   class="w-4 h-4 inline-block text-error"
                 />
                 <ArrowTrendingUpIcon
@@ -63,20 +69,22 @@
                 <span
                   :class="[
                     {
-                      'text-success': tokenData.priceChangePercentage24h >= 0,
-                      'text-error': tokenData.priceChangePercentage24h < 0,
+                      'text-success':
+                        tokenDataTemp.priceChangePercentage24h >= 0,
+                      'text-error': tokenDataTemp.priceChangePercentage24h < 0,
                     },
                     'ml-1 text-s-14 xs:text-s-17 ',
                   ]"
                 >
-                  {{ tokenData.priceChangePercentage24h.toFixed(2) }}%
+                  {{ tokenDataTemp.priceChangePercentage24h.toFixed(2) }}%
                 </span>
               </div>
             </div>
           </div>
         </div>
         <p
-          class="text-s-8 md:text-s-11 tracking-sp-06 lg:hidden font-bold uppercase text-info px-3 xs:px-6 ml-[58px] xs:ml-[74px] md:ml-[66px]"
+          v-if="!isLoading && exhistsOnCurrentChain"
+          class="text-s-8 xs:text-s-11 tracking-sp-06 lg:hidden font-bold uppercase text-info px-3 xs:px-6 ml-[58px] xs:ml-[74px] md:ml-[66px]"
         >
           on {{ selectedChain?.name }}
         </p>
@@ -88,6 +96,7 @@
           <div class="w-full">
             <app-btn-group
               v-model:selected="selectedChartFilter"
+              :is-loaded="!isLoading"
               :btn-list="
                 isXS ? chartFilterOptions.slice(0, 3) : chartFilterOptions
               "
@@ -123,7 +132,15 @@
               class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg"
             ></div>
             <!-- Balance -->
-            <div class="flex flex-wrap items-center mt-2 sm:mt-5">
+            <div
+              v-if="
+                isWalletConnected &&
+                !isLoading &&
+                exhistsOnCurrentChain &&
+                tokenData
+              "
+              class="flex flex-wrap items-center mt-2 sm:mt-5"
+            >
               <h2
                 class="basis-full xs:basis-auto font-bold text-s-17 xs:text-s-24"
               >
@@ -132,7 +149,7 @@
               <div class="flex mt-1 items-center">
                 <div class="relative xs:ml-4">
                   <app-token-logo
-                    :url="tokenData.logoUrl"
+                    :url="tokenDataTemp.logoUrl"
                     :symbol="tokenData.symbol"
                     width=" w-9 xs:w-[28px]"
                     height="h-9 xs:h-[28px]"
@@ -150,13 +167,13 @@
                   class="flex flex-col xs:flex-row xs:items-center ml-3 xs:ml-2"
                 >
                   <p class="text-s-17 xs:text-s-24 font-bold leading-p-110">
-                    {{ formatFloatingPointValue(tokenData.balance).value }}
+                    {{ currentBalance }}
                     {{ tokenData.symbol.toUpperCase() }}
                   </p>
                   <p
                     class="xs:ml-2 font-medium text-s-14 xs:text-s-24 text-info"
                   >
-                    ${{ formatFiatValue(tokenData.balance).value }}
+                    ${{ formatFiatValue(tokenDataTemp.balance).value }}
                   </p>
                 </div>
               </div>
@@ -165,18 +182,26 @@
         </div>
         <hr class="h-px bg-grey-10 border-0 w-full my-5" />
         <!-- Balance on other chains -->
-        <div class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10">
+        <div
+          v-if="
+            isWalletConnected &&
+            !isLoading &&
+            tokenData &&
+            otherChains.length > 0
+          "
+          class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+        >
           <h3 class="text-s-20 font-bold mb-1">
             {{ tokenData.symbol.toUpperCase() }} balance on other chains:
           </h3>
           <div
-            v-for="i in 3"
-            :key="i"
+            v-for="(i, index) in otherChains"
+            :key="index"
             class="flex items-center justify-start py-2 xs:max-w-[250px]"
           >
             <div class="relative mr-4">
               <app-token-logo
-                :url="tokenData.logoUrl"
+                :url="tokenDataTemp.logoUrl"
                 :symbol="tokenData.symbol"
                 width="w-[24px]"
                 height="h-[24px]"
@@ -184,7 +209,7 @@
               <app-token-logo
                 v-if="selectedChain"
                 :url="selectedChain.icon"
-                :symbol="selectedChain.name"
+                :symbol="i.chainName"
                 width="w-3"
                 height="h-3"
                 class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
@@ -192,18 +217,31 @@
             </div>
             <div>
               <p class="text-s-16 font-medium">
-                0.345 {{ tokenData.symbol.toUpperCase() }}
+                {{ getBalanceForChain(i.chainName) }}
+                {{ tokenData.symbol.toUpperCase() }}
               </p>
-              <p class="text-info text-s-12 leading-p-110">on Ethereum</p>
+              <p class="text-info text-s-12 leading-p-110 capitalize">
+                on {{ i.chainName.toLowerCase() }}
+              </p>
             </div>
             <p class="text-right ml-auto text-info text-s-14 leading-p-110">
               ${{ formatFiatValue(35.67).value }}
             </p>
           </div>
         </div>
-        <hr class="h-px bg-grey-10 border-0 w-full my-5" />
+        <hr
+          v-if="
+            isWalletConnected && !isLoading && tokenData?.supportedChains.length
+          "
+          class="h-px bg-grey-10 border-0 w-full my-5"
+        />
         <!-- Market Data -->
         <div
+          v-if="isLoading"
+          class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-[60%]"
+        ></div>
+        <div
+          v-else
           class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 grid grid-cols-2 xs:grid-cols-3 gap-4 max-w-[700px]"
         >
           <div
@@ -215,10 +253,12 @@
             <p class="text-s-16 font-medium">{{ item.value }}</p>
           </div>
         </div>
-        <hr class="h-px bg-grey-10 border-0 w-full my-5" />
+        <!-- <hr class="h-px bg-grey-10 border-0 w-full my-5" /> -->
         <!-- About -->
-        <div class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10">
-          <h3 class="text-s-20 font-bold mb-2">About {{ tokenData.name }}</h3>
+        <!-- <div v-if="!isLoading" class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10">
+          <h3 class="text-s-20 font-bold mb-2">
+            About {{ tokenData?.name || tokenId }}
+          </h3>
           <p class="text-s-14 text-info max-w-[700px]">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
@@ -228,44 +268,43 @@
             pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
             culpa qui officia deserunt mollit anim id est laborum.
           </p>
-        </div>
-        <hr class="h-px bg-grey-10 border-0 w-full my-5" />
+        </div> -->
+        <hr
+          v-if="!isLoading && tokenData?.supportedChains.length"
+          class="h-px bg-grey-10 border-0 w-full my-5"
+        />
         <!-- Supported Chains -->
-        <div class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5">
+        <div
+          v-if="!isLoading && tokenData?.supportedChains.length"
+          class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5"
+        >
           <h3 class="text-s-20 font-bold mb-2">Supported Chains</h3>
           <div
-            v-for="i in 3"
-            :key="i"
+            v-for="i in tokenData.supportedChains"
+            :key="i.chainName"
             class="flex items-center justify-start py-2 max-w-[250px]"
           >
             <div class="relative mr-4">
-              <app-blockie
-                address="0x300D2f8ECBe670a0ECb8a418598dC914E0dD91cE"
-                :scale="8"
-                class=""
-              />
+              <app-blockie :address="i.contract" :scale="8" class="" />
               <app-token-logo
                 v-if="selectedChain"
                 :url="selectedChain.icon"
-                :symbol="selectedChain.name"
+                :symbol="i.chainName"
                 width="w-4"
                 height="h-4"
                 class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
               />
             </div>
             <div>
-              <p class="text-s-16 font-medium leading-p-100">Ethereum (ETH)</p>
+              <p class="text-s-16 font-medium leading-p-100 capitalize">
+                {{ i.chainName.toLowerCase() }}
+              </p>
               <div class="flex items-center gap-[2px]">
                 <p class="text-info text-s-12 leading-p-110 truncate">
-                  {{
-                    truncateAddress(
-                      '0x300D2f8ECBe670a0ECb8a418598dC914E0dD91cE',
-                      16,
-                    )
-                  }}
+                  {{ truncateAddress(i.contract, 16) }}
                 </p>
                 <app-btn-copy
-                  text="0x300D2f8ECBe670a0ECb8a418598dC914E0dD91cE"
+                  :text="i.contract"
                   class="ml-2"
                   width="w-7"
                   height="h-7"
@@ -309,8 +348,12 @@ import AppSelect from '@/components/AppSelect.vue'
 import { truncateAddress } from '@/utils/filters'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { type GetWebTokenInfo } from '@/mew_api/types'
+import { useWalletStore } from '@/stores/walletStore'
+import { fromBase } from '@/utils/unit'
 
-defineProps({
+const props = defineProps({
   networkId: {
     type: String,
     required: true,
@@ -323,6 +366,8 @@ defineProps({
 
 const { isXS, isMDAndUp } = useAppBreakpoints()
 
+const walletStore = useWalletStore()
+const { walletAddress, isWalletConnected } = storeToRefs(walletStore)
 /** --------------------
  * Wallet Menu Buttons
  --------------------*/
@@ -357,38 +402,152 @@ const selectedChartFilter = ref(chartFilterOptions.value[0])
  --------------------*/
 
 const marketData = computed<Item[]>(() => {
+  if (tokenData.value === null) {
+    return []
+  }
   return [
     {
       label: 'Market Cap',
-      value: `$${formatFiatValue(tokenData.value.marketCap).value}`,
+      value: tokenData.value.marketCap
+        ? `$${formatFiatValue(tokenData.value.marketCap).value}`
+        : '--',
     },
-    { label: 'Max Supply', value: '$21,000,000' },
+    {
+      label: 'Max Supply',
+      value: tokenData.value.maxSupply
+        ? `$${formatFiatValue(tokenData.value.maxSupply).value}`
+        : '--',
+    },
     {
       label: 'Total Volume',
-      value: `$${formatFiatValue(tokenData.value.totalVolume).value}`,
+      value: tokenData.value.totalVolume
+        ? `$${formatFiatValue(tokenData.value.totalVolume).value}`
+        : '--',
     },
-    { label: 'Circulating Supply', value: '$19,244,662 ' },
-    { label: '24h Trading Volume', value: '$48,242,324' },
     {
-      label: 'Fully Diluted Valuation',
-      value: `$${formatFiatValue(tokenData.value.marketCap).value}`,
+      label: 'Circulating Supply',
+      value: tokenData.value.circulatingSupply
+        ? `$${formatFiatValue(tokenData.value.circulatingSupply).value}`
+        : '--',
     },
-    { label: '24h High', value: `$120,234.42` },
-    { label: '24h Low', value: `$110,343,234.12` },
+    // { label: '24h Trading Volume', value: tokenData.value.tradingVolume24h? `$${formatFiatValue(tokenData.value.tradingVolume24h).value}` : '--' },
+    // {
+    //   label: 'Fully Diluted Valuation',
+    //   value: `$${formatFiatValue(tokenData.value.marketCap).value}`,
+    // },
+    {
+      label: '24h High',
+      value: tokenData.value.high24h
+        ? `$${formatFiatValue(tokenData.value.high24h).value}`
+        : '--',
+    },
+    {
+      label: '24h Low',
+      value: tokenData.value.low24h
+        ? `$${formatFiatValue(tokenData.value.low24h).value}`
+        : '--',
+    },
   ]
 })
 
-/**
- * CHART FILTER
- */
+/** --------------------
+ * Fetch Data
+ --------------------*/
+const endpoint = computed(() => {
+  const wallet =
+    isWalletConnected.value && walletAddress.value
+      ? `?evmAddress=${walletAddress.value}`
+      : ''
+  return `/v1/web/pages/token-info/coins/${props.tokenId}${wallet}`
+})
+const isLoadedData = ref(false)
+
+const { useMEWFetch } = useFetchMewApi()
+const { data: tokenData, onFetchResponse } = useMEWFetch(endpoint)
+  .get()
+  .json<GetWebTokenInfo>()
+
+const isLoading = computed(() => {
+  return !isLoadedData.value
+})
+onFetchResponse(() => {
+  if (tokenData.value === null) {
+    return
+  }
+  console.log('Token Info response', tokenData.value)
+  if (!exhistsOnCurrentChain.value) {
+    walletMenu.setWalletPanel('bridge')
+  } else {
+    walletMenu.setWalletPanel('swap')
+  }
+  isLoadedData.value = true
+})
+
+/** --------------------
+ * Balances
+ --------------------*/
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+const exhistsOnCurrentChain = computed(() => {
+  if (tokenData.value && selectedChain.value) {
+    return tokenData.value.supportedChains.some(
+      chain => chain.chainName === selectedChain.value?.name,
+    )
+  }
+  return false
+})
+
+const otherChains = computed(() => {
+  if (tokenData.value && selectedChain.value) {
+    return tokenData.value.supportedChains.filter(
+      chain => chain.chainName !== selectedChain.value?.name,
+    )
+  }
+  return []
+})
+
+const getBalanceForChain = (_chainName: string) => {
+  if (
+    tokenData.value?.chainBalances &&
+    tokenData.value.chainBalances.length > 0
+  ) {
+    const chainData = tokenData.value.chainBalances.find(
+      chain => chain.chainName === _chainName,
+    )
+    if (
+      chainData &&
+      chainData.result.ok &&
+      chainData.result.value.balances.length > 0
+    ) {
+      const _okBalances = chainData.result.value.balances.filter(
+        balance => balance.ok,
+      )
+      const _rawBalance = _okBalances.filter(
+        balance =>
+          balance.value.owner.toLowerCase() ===
+          walletAddress.value?.toLowerCase(),
+      )
+      if (_rawBalance && _rawBalance.length > 0) {
+        const _balance = fromBase(
+          BigInt(_rawBalance[0].value.value).toString(),
+          6,
+        )
+        return formatFloatingPointValue(_balance).value
+      }
+    }
+  }
+  return 'N/A'
+}
+const currentBalance = computed(() => {
+  return getBalanceForChain(selectedChain.value?.name || '')
+})
 
 /**
  * TEMP DATA FOR UI
  */
-const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
 
-const tokenData = ref({
+const tokenDataTemp = ref({
   balance: 1.2345,
   balanceInFiat: 1234.56,
   coinId: 'bitcoin',
