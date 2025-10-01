@@ -6,8 +6,17 @@ import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import BaseBtcWallet from './baseBitcoinWallet'
-import { bitcoinInfo } from '../common/btcInfo'
 import { hexToBuffer } from '@/utils/hexToBuffer'
+
+import { bitcoinInfo, bitcoinTestInfo, dogecoinInfo, litecoinInfo, type InfoTemplate } from "../common/btcInfo";
+
+const INFO_MAP: Record<string, InfoTemplate> = {
+  "BITCOIN": bitcoinInfo,
+  "BITCOIN_TEST": bitcoinTestInfo,
+  "DOGECOIN": dogecoinInfo,
+  "LITECOIN": litecoinInfo
+};
+
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
   private address: HexPrefixedString
@@ -86,7 +95,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   }
 
   override getAddress(): Promise<HexPrefixedString> {
-    const { address } = bitcoinInfo.paymentType({ ...bitcoinInfo, pubkey: hexToBuffer(this.address) })
+    const { address } = INFO_MAP[this.walletType].paymentType({ ...INFO_MAP[this.walletType], pubkey: hexToBuffer(this.address) })
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 }
