@@ -6,13 +6,15 @@
       v-if="
         isWalletConnected && !isLoading && exhistsOnCurrentChain && tokenData
       "
-      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 gap-2"
     >
-      <h2 class="basis-full xs:basis-auto font-bold text-s-17 xs:text-s-24">
+      <h2
+        class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150"
+      >
         Your Balance:
       </h2>
       <div class="flex mt-1 items-center">
-        <div class="relative xs:ml-4">
+        <div class="relative">
           <app-token-logo
             :url="tokenData.iconUrl"
             :symbol="tokenData.symbol"
