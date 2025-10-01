@@ -47,14 +47,6 @@
             >
               current chain
             </spa>
-            <app-btn-icon
-              v-else
-              label="View on Explorer"
-              width="w-7"
-              height="h-7"
-            >
-              <ArrowUturnRightIcon class="w-4 h-4" />
-            </app-btn-icon>
           </div>
         </div>
       </div>
@@ -63,10 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
-import { ArrowUturnRightIcon } from '@heroicons/vue/24/outline'
 import { type PropType } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'

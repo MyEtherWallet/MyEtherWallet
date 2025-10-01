@@ -59,36 +59,43 @@
       <div
         v-for="(i, index) in otherChains"
         :key="index"
-        class="flex items-center justify-start py-2 xs:max-w-[250px]"
+        class="flex items-center justify-between py-2 w-full gap-4"
       >
-        <div class="relative mr-4">
-          <app-token-logo
-            :url="tokenDataTemp.logoUrl"
-            :symbol="tokenData.symbol"
-            width="w-[24px]"
-            height="h-[24px]"
-          />
-          <app-token-logo
-            v-if="selectedChain"
-            :url="selectedChain.icon"
-            :symbol="i.chainName"
-            width="w-3"
-            height="h-3"
-            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
-          />
-        </div>
-        <div>
-          <p class="text-s-16 font-medium">
-            {{ getBalanceForChain(i.chainName) }}
-            {{ tokenData.symbol.toUpperCase() }}
+        <div class="flex w-full items-center justify-between xs:max-w-[300px]">
+          <div class="relative mr-4">
+            <app-token-logo
+              :url="tokenDataTemp.logoUrl"
+              :symbol="tokenData.symbol"
+              width="w-[24px]"
+              height="h-[24px]"
+            />
+            <app-token-logo
+              v-if="selectedChain"
+              :url="selectedChain.icon"
+              :symbol="i.chainName"
+              width="w-3"
+              height="h-3"
+              class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+            />
+          </div>
+          <div>
+            <p class="text-s-16 font-medium">
+              {{ getBalanceForChain(i.chainName) }}
+              {{ tokenData.symbol.toUpperCase() }}
+            </p>
+            <p class="text-info text-s-12 leading-p-110 capitalize">
+              on {{ i.chainName.toLowerCase() }}
+            </p>
+          </div>
+
+          <p class="text-right ml-auto text-info text-s-14 leading-p-110">
+            ${{ formatFiatValue(35.67).value }}
           </p>
-          <p class="text-info text-s-12 leading-p-110 capitalize">
-            on {{ i.chainName.toLowerCase() }}
-          </p>
         </div>
-        <p class="text-right ml-auto text-info text-s-14 leading-p-110">
-          ${{ formatFiatValue(35.67).value }}
-        </p>
+
+        <app-base-button size="small" class="hidden xs:block ml-auto">
+          Bridge</app-base-button
+        >
       </div>
     </div>
   </div>
@@ -106,6 +113,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { type GetWebTokenInfo } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
 import { fromBase } from '@/utils/unit'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 
 const props = defineProps({
   isLoading: {

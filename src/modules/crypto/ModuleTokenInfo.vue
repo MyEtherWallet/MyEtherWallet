@@ -227,7 +227,7 @@ const selectedChartFilter = ref(chartFilterOptions.value[0])
 const endpoint = computed(() => {
   const wallet =
     isWalletConnected.value && walletAddress.value
-      ? `?evmAddress=${walletAddress.value}`
+      ? `?evmAddresses=${walletAddress.value}`
       : ''
   return `/v1/web/pages/token-info/coins/${props.tokenId}${wallet}`
 })
