@@ -7,20 +7,15 @@ import BaseBtcWallet from "./baseBitcoinWallet";
 import type { PostSignedTransaction } from "../common/types";
 import { WalletType, type HexPrefixedString } from '../types'
 import HDkey from "hdkey";
-import { payments, type PaymentCreator } from "bitcoinjs-lib"
 
-import { bitcoinInfo, bitcoinTestInfo, type InfoTemplate } from "../common/btcInfo";
+import { bitcoinInfo, bitcoinTestInfo, dogecoinInfo, litecoinInfo, type InfoTemplate } from "../common/btcInfo";
 
 const INFO_MAP: Record<string, InfoTemplate> = {
   "BITCOIN": bitcoinInfo,
-  "BITCOIN_TEST": bitcoinTestInfo
+  "BITCOIN_TEST": bitcoinTestInfo,
+  "DOGECOIN": dogecoinInfo,
+  "LITECOIN": litecoinInfo
 };
-const { p2wpkh } = payments;
-
-const PAYMENT_MAP: Record<string, PaymentCreator> = {
-  "BITCOIN": p2wpkh,
-  "BITCOIN_TEST": p2wpkh
-}
 
 export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   private privateKey: Buffer;
@@ -53,7 +48,7 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   }
 
   override async getAddress(): Promise<string> {
-    const { address } = PAYMENT_MAP[this.chainName]({ ...INFO_MAP[this.chainName], pubkey: hexToBuffer(bytesToHex(getPublicKey(this.privateKey, true))) },)
+    const { address } = INFO_MAP[this.chainName].paymentType({ ...INFO_MAP[this.chainName], pubkey: hexToBuffer(bytesToHex(getPublicKey(this.privateKey, true))) },)
     return address!;
   }
 

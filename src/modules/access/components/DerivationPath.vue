@@ -194,9 +194,19 @@ onMounted(() => {
     } else {
       selectedPath.value = initialDefaultPath
     }
-    console.log(selectedPath.value)
     setToStore(selectedPath.value!)
+  } else {
+    if (selectedChain.value?.type === 'BITCOIN' && selectedPath.value) {
+      // ensure selected path is supported by the selected bitcoin chain
+      const supportedPaths = BitcoinWallet.getSupportedPaths(
+        selectedChain.value.name,
+      )
+      selectedPath.value = supportedPaths[0]
+      setToStore(selectedPath.value!)
+    }
   }
+
+  console.log(selectedPath.value)
 })
 
 watch(

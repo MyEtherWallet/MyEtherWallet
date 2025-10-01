@@ -215,10 +215,21 @@ const bip84Segwit: DerivationPath = {
 
 const bip84SegwitTest: DerivationPath = {
   label: "Bitcoin Testnet",
-  path: "m/84'/1'/0/0",
+  path: "m/84'/1'/0'/0",
   type: "BITCOIN"
 }
 
+const dogecoinPath: DerivationPath = {
+  label: "Dogecoin",
+  path: "m/44'/3'/0'/0",
+  type: "DOGECOIN"
+}
+
+const litecoinPath: DerivationPath = {
+  label: "Litecoin",
+  path: "m/44'/2'/0'/0",
+  type: "LITECOIN"
+}
 
 export {
   ethereum,
@@ -266,5 +277,7 @@ export {
 // bitcoin paths
 export {
   bip84Segwit,
-  bip84SegwitTest
+  bip84SegwitTest,
+  dogecoinPath,
+  litecoinPath
 }

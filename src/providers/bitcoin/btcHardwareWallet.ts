@@ -1,6 +1,4 @@
 
-import { payments } from 'bitcoinjs-lib'
-
 import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
@@ -88,7 +86,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   }
 
   override getAddress(): Promise<HexPrefixedString> {
-    const { address } = payments.p2pkh({ ...bitcoinInfo, pubkey: hexToBuffer(this.address) })
+    const { address } = bitcoinInfo.paymentType({ ...bitcoinInfo, pubkey: hexToBuffer(this.address) })
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 }

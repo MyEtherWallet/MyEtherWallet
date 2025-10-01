@@ -1,4 +1,8 @@
 
+
+import { payments, type PaymentCreator } from 'bitcoinjs-lib'
+
+const { p2wpkh, p2pkh } = payments;
 interface InfoTemplate {
   name: string
   network: {
@@ -13,7 +17,7 @@ interface InfoTemplate {
     wif: number
   }
   dustThreshold: number | null
-  paymentType: string
+  paymentType: PaymentCreator
   maxFeeRate: number
 }
 
@@ -31,7 +35,7 @@ const bitcoinInfo: InfoTemplate = {
     wif: 0x80,
   },
   dustThreshold: null,
-  paymentType: "p2wpkh",
+  paymentType: p2wpkh,
   maxFeeRate: 5000,
 }
 
@@ -49,8 +53,44 @@ const bitcoinTestInfo: InfoTemplate = {
     wif: 0xef,
   },
   dustThreshold: null,
-  paymentType: "p2wpkh",
+  paymentType: p2wpkh,
   maxFeeRate: 5000 * 2,
 }
 
-export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate }
+const dogecoinInfo: InfoTemplate = {
+  name: "DOGE",
+  network: {
+    messagePrefix: '\x19Dogecoin Signed Message:\n',
+    bech32: 'dc',
+    bip32: {
+      public: 0x02facafd,
+      private: 0x02fac398,
+    },
+    pubKeyHash: 0x1e,
+    scriptHash: 0x16,
+    wif: 0x9e,
+  },
+  dustThreshold: null,
+  paymentType: p2pkh,
+  maxFeeRate: 100000 * 10,
+}
+
+const litecoinInfo: InfoTemplate = {
+  name: "LTC",
+  network: {
+    messagePrefix: '\x19Litecoin Signed Message:\n',
+    bech32: 'ltc',
+    bip32: {
+      public: 0x019da462,
+      private: 0x019d9cfe,
+    },
+    pubKeyHash: 0x30,
+    scriptHash: 0x32,
+    wif: 0xb0,
+  },
+  dustThreshold: null,
+  paymentType: p2wpkh,
+  maxFeeRate: 5000 * 2,
+}
+
+export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo }

@@ -115,6 +115,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
+import { fromBase } from '@/utils/unit'
 
 const { t } = useI18n()
 /**------------------------
@@ -211,7 +212,7 @@ const unlockWallet = () => {
 }
 
 watch(
-  () => selectedChain.value?.chainID,
+  () => selectedChain.value,
   newValue => {
     if (newValue) {
       loadList()
@@ -266,7 +267,10 @@ const loadList = async (page: number = 0) => {
           walletList.value.push({
             address: await wallet.getAddress(),
             index: i,
-            balance: newFetchBalance.balance.nativeValue,
+            balance: fromBase(
+              newFetchBalance.balance.nativeValue,
+              8,
+            ).toString(),
           })
         }
       }

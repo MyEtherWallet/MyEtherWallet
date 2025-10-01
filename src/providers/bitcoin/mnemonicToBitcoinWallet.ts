@@ -2,7 +2,7 @@ import HDkey from "hdkey";
 import { mnemonicToSeed } from "bip39"
 
 import BitcoinPrivateKeyWallet from "./privateKeyWallet";
-import { bip84Segwit, bip84SegwitTest, type DerivationPath } from "@/modules/access/common/configs/configPaths";
+import { bip84Segwit, bip84SegwitTest, dogecoinPath, litecoinPath, type DerivationPath } from "@/modules/access/common/configs/configPaths";
 
 export default class BitcoinWallet {
   private mnemonic;
@@ -28,6 +28,10 @@ export default class BitcoinWallet {
       return [bip84Segwit]
     } else if (chainName === "BITCOIN_TEST") {
       return [bip84SegwitTest]
+    } else if (chainName === "DOGECOIN") {
+      return [dogecoinPath]
+    } else if (chainName === "LITECOIN") {
+      return [litecoinPath]
     }
     return [];
   }
