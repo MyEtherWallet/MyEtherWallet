@@ -830,8 +830,11 @@ export interface components {
             totalVolume: null | number;
             low24h: null | number;
             high24h: null | number;
+            iconUrl: null | string;
             chainBalances: {
                 chainName: string;
+                chainType: components["schemas"]["ChainType"];
+                iconUrl: string;
                 result: {
                     /** @constant */
                     ok: false;
@@ -842,7 +845,8 @@ export interface components {
                     /** @constant */
                     ok: true;
                     value: {
-                        contract: string;
+                        contract: null | string;
+                        decimals: null | number;
                         balances: ({
                             /** @constant */
                             ok: false;
@@ -863,7 +867,8 @@ export interface components {
             }[];
             supportedChains: {
                 chainName: string;
-                contract: string;
+                chainType: components["schemas"]["ChainType"];
+                contract: null | string;
                 iconUrl: string;
             }[];
         };

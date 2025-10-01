@@ -30,7 +30,7 @@
 import { onMounted, ref } from 'vue'
 const props = defineProps({
   url: {
-    type: String,
+    type: [String, null],
     required: false,
   },
   symbol: {

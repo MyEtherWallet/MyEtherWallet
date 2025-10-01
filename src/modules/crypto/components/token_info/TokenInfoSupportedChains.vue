@@ -16,7 +16,7 @@
         class="flex items-center justify-start py-2 max-w-[360px]"
       >
         <div class="relative mr-4">
-          <app-blockie :address="i.contract" :scale="8" class="" />
+          <app-blockie :address="i.contract || ''" :scale="8" class="" />
           <app-token-logo
             v-if="selectedChain"
             :url="selectedChain.icon"
@@ -32,21 +32,21 @@
           </p>
           <div class="flex items-center gap-[2px]">
             <p class="text-info text-s-12 tracking-sp-06 truncate w-[170px]">
-              {{ truncateAddress(i.contract, 16) }}
+              {{ truncateAddress(i.contract || '', 16) }}
             </p>
             <app-btn-copy
-              :text="i.contract"
+              :text="i.contract || ''"
               class="ml-2"
               width="w-7"
               height="h-7"
               icon-class="w-4 h-4"
             />
-            <spa
+            <span
               v-if="selectedChain?.name === i.chainName"
               class="uppercase text-s-8 text-primary"
             >
               current chain
-            </spa>
+            </span>
           </div>
         </div>
       </div>

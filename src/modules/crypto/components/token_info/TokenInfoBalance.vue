@@ -6,7 +6,7 @@
       v-if="
         isWalletConnected && !isLoading && exhistsOnCurrentChain && tokenData
       "
-      class="flex flex-wrap items-center mt-2 sm:mt-5 px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
     >
       <h2 class="basis-full xs:basis-auto font-bold text-s-17 xs:text-s-24">
         Your Balance:
@@ -14,7 +14,7 @@
       <div class="flex mt-1 items-center">
         <div class="relative xs:ml-4">
           <app-token-logo
-            :url="tokenDataTemp.logoUrl"
+            :url="tokenData.iconUrl"
             :symbol="tokenData.symbol"
             width=" w-9 xs:w-[28px]"
             height="h-9 xs:h-[28px]"
@@ -33,8 +33,8 @@
             {{ currentBalance }}
             {{ tokenData.symbol.toUpperCase() }}
           </p>
-          <p class="xs:ml-2 font-medium text-s-14 xs:text-s-24 text-info">
-            ${{ formatFiatValue(tokenDataTemp.balance).value }}
+          <p class="xs:ml-3 font-normal text-s-14 xs:text-s-24 text-info">
+            ${{ getFormattedFiatValueForChain(currentBalance) }}
           </p>
         </div>
       </div>
@@ -64,14 +64,14 @@
         <div class="flex w-full items-center justify-between xs:max-w-[300px]">
           <div class="relative mr-4">
             <app-token-logo
-              :url="tokenDataTemp.logoUrl"
+              :url="tokenData.iconUrl"
               :symbol="tokenData.symbol"
               width="w-[24px]"
               height="h-[24px]"
             />
             <app-token-logo
               v-if="selectedChain"
-              :url="selectedChain.icon"
+              :url="getChainIcon(i.chainName)"
               :symbol="i.chainName"
               width="w-3"
               height="h-3"
@@ -89,7 +89,9 @@
           </div>
 
           <p class="text-right ml-auto text-info text-s-14 leading-p-110">
-            ${{ formatFiatValue(35.67).value }}
+            ${{
+              getFormattedFiatValueForChain(getBalanceForChain(i.chainName))
+            }}
           </p>
         </div>
 
@@ -114,6 +116,7 @@ import { type GetWebTokenInfo } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
 import { fromBase } from '@/utils/unit'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import BigNumber from 'bignumber.js'
 
 const props = defineProps({
   isLoading: {
@@ -148,7 +151,9 @@ const exhistsOnCurrentChain = computed(() => {
 const otherChains = computed(() => {
   if (props.tokenData && selectedChain.value) {
     return props.tokenData.supportedChains.filter(
-      chain => chain.chainName !== selectedChain.value?.name,
+      chain =>
+        chain.chainName !== selectedChain.value?.name &&
+        selectedChain.value?.type === chain.chainType,
     )
   }
   return []
@@ -167,6 +172,7 @@ const getBalanceForChain = (_chainName: string) => {
       chainData.result.ok &&
       chainData.result.value.balances.length > 0
     ) {
+      const _decimals = chainData.result.value.decimals
       const _okBalances = chainData.result.value.balances.filter(
         balance => balance.ok,
       )
@@ -175,10 +181,10 @@ const getBalanceForChain = (_chainName: string) => {
           balance.value.owner.toLowerCase() ===
           walletAddress.value?.toLowerCase(),
       )
-      if (_rawBalance && _rawBalance.length > 0) {
+      if (_rawBalance && _rawBalance.length > 0 && _decimals) {
         const _balance = fromBase(
           BigInt(_rawBalance[0].value.value).toString(),
-          6,
+          _decimals,
         )
         return formatFloatingPointValue(_balance).value
       }
@@ -190,20 +196,20 @@ const currentBalance = computed(() => {
   return getBalanceForChain(selectedChain.value?.name || '')
 })
 
-const tokenDataTemp = {
-  balance: 1.2345,
-  balanceInFiat: 1234.56,
-  coinId: 'bitcoin',
-  name: 'Bitcoin',
-  symbol: 'btc',
-  price: 117344,
-  priceChangePercentage1h: -0.1973938102015114,
-  priceChangePercentage24h: 1.13026,
-  priceChangePercentage7d: 2.571203116739959,
-  marketCap: 2339230573449,
-  addresses: {},
-  logoUrl:
-    'https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400',
-  totalVolume: 46494511169,
+const getChainIcon = (_chainName: string) => {
+  if (!props.tokenData) return ''
+  const chain = props.tokenData.chainBalances.find(
+    c => c.chainName === _chainName,
+  )
+
+  return chain ? chain.iconUrl : ''
+}
+
+const getFormattedFiatValueForChain = (balance: string) => {
+  if (balance === 'N/A' || !props.tokenData?.currentPrice) return 'N/A'
+  const fiat = new BigNumber(balance).multipliedBy(
+    props.tokenData?.currentPrice || 0,
+  )
+  return formatFiatValue(fiat).value
 }
 </script>

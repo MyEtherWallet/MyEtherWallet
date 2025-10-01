@@ -1545,6 +1545,7 @@ components:
         - totalVolume
         - low24h
         - high24h
+        - iconUrl
         - chainBalances
         - supportedChains
       properties:
@@ -1574,15 +1575,23 @@ components:
           type: ['null', number]
         high24h:
           type: ['null', number]
+        iconUrl:
+          type: ['null', string]
         chainBalances:
           type: array
           items:
             type: object
             required:
               - chainName
+              - chainType
+              - iconUrl
               - result
             properties:
               chainName:
+                type: string
+              chainType:
+                $ref: '#/components/schemas/ChainType'
+              iconUrl:
                 type: string
               result:
                 oneOf:
@@ -1611,10 +1620,16 @@ components:
                         type: object
                         required:
                           - contract
+                          - decimals
+                          # - iconUrl
                           - balances
                         properties:
                           contract:
-                            type: string
+                            type: ['null', string]
+                          decimals:
+                            type: ['null', number]
+                          # iconUrl:
+                          #   type: ['null', string]
                           balances:
                             type: array
                             items:
@@ -1659,13 +1674,16 @@ components:
             type: object
             required:
               - chainName
+              - chainType
               - contract
               - iconUrl
             properties:
               chainName:
                 type: string
+              chainType:
+                $ref: '#/components/schemas/ChainType'
               contract:
-                type: string
+                type: ['null', string]
               iconUrl:
                 type: string
 
