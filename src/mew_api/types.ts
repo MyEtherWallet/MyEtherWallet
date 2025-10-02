@@ -47,7 +47,7 @@ export type GetUnsignedEvmMultiTransactionResponse =
   components['schemas']['GetUnsignedEvmMultiTransactionResponse']
 
 //Quotes
-export type QuotesResponse =
+export type GetEvmTransactionQuoteResponse =
   components['schemas']['GetEvmTransactionQuoteResponse']
 export type QuotesRequestBody =
   components['schemas']['GetEvmTransactionQuoteRequest']
@@ -78,6 +78,17 @@ export type BitcoinQuotesResponse = components['schemas']['GetBtcTransactionQuot
 export type BitcoinQuotesRequestBody = components['schemas']['GetBtcTransactionQuoteRequest']
 export type BitcoinSignableTransactionResponse = components['schemas']['GetUnsignedBtcTransactionResponse']
 export type BitcoinTxResponse = components['schemas']['BroadcastBtcTransactionResponse']
-export type BitcoinBalanceResponse = components['schemas']['GetBtcBalanceByChainNameAndAddressesResponse']
+export type BitcoinBalanceResponse = components['schemas']['GetBtcBalanceByChainNameAndAddressResponse']
+
+export type GetBtcTransactionEstimateBody = components['schemas']['GetBtcTransactionEstimateRequest']
 export type GetBtcTransactionEstimateResponse = components['schemas']['GetBtcTransactionEstimateResponse']
-export type BtcGasFees = components['schemas']['BtcTransactionQuotes']
+export type BtcGasFeesQuote = components['schemas']['BtcTransactionQuotes']
+export type BtcGasFees = components['schemas']['BtcTransactionFeeQuote']
+
+
+/**
+ * Custom types. Usually to merge similar types or add extra fields
+ */
+
+export type FeeOption = BtcGasFeesQuote & EvmGasFees;
+export type QuotesResponse = BitcoinQuotesResponse & GetEvmTransactionQuoteResponse;

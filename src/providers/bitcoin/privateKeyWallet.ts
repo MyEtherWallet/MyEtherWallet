@@ -1,15 +1,15 @@
-
-import { bufferToHex } from "@/modules/access/common/helpers";
-import { getPublicKey, signAsync, verify } from "@noble/secp256k1"
-import { hexToBytes, bytesToHex } from "web3-utils";
-import { hexToBuffer } from "@/utils/hexToBuffer";
 import BaseBtcWallet from "./baseBitcoinWallet";
 import type { PostSignedTransaction } from "../common/types";
 import { WalletType, type HexPrefixedString } from '../types'
 import HDkey from "hdkey";
+// import * as sec from "@noble/secp256k1"
+// import { sha256 } from '@noble/hashes/sha2.js'
 
+import { Psbt } from "bitcoinjs-lib";
+import { ECPairFactory } from 'ecpair'
+import * as tinysecp from 'tiny-secp256k1'
 import { INFO_MAP } from "../common/btcInfo";
-
+const ECPair = ECPairFactory(tinysecp)
 
 export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   private privateKey: Buffer;
@@ -19,20 +19,16 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
     this.privateKey = hdkeyInstance.privateKey!;
   }
 
-
-  private _verify(message: string, signature: string): boolean {
-    const publicKey = getPublicKey(this.privateKey);
-    return verify(hexToBytes(signature), hexToBytes(message), publicKey);
-  }
-
   override async SignTransaction(serializedTx: HexPrefixedString): Promise<PostSignedTransaction> {
-    const msgHash = hexToBytes(serializedTx);
-    const rsig = await signAsync(msgHash, hexToBytes(bufferToHex(this.privateKey)), { prehash: false });
-    if (!this._verify(bytesToHex(msgHash), bytesToHex(rsig))) {
-      throw new Error('Signature verification failed');
-    }
+
+    const priv = ECPair.fromPrivateKey(this.privateKey, { network: INFO_MAP[this.chainName].network });
+    const psbt = Psbt.fromHex(serializedTx, { network: INFO_MAP[this.chainName].network });
+    psbt.signAllInputs(priv);
+    psbt.finalizeAllInputs();
+    const tx = psbt.extractTransaction(false);
+    const rsig = tx.toHex();
     return Promise.resolve({
-      signed: bytesToHex(rsig) as HexPrefixedString,
+      signed: `0x${rsig}`,
     });
 
   }
@@ -42,7 +38,9 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   }
 
   override async getAddress(): Promise<string> {
-    const { address } = INFO_MAP[this.chainName].paymentType({ ...INFO_MAP[this.chainName], pubkey: hexToBuffer(bytesToHex(getPublicKey(this.privateKey, true))) },)
+    const priv = ECPair.fromPrivateKey(this.privateKey, { network: INFO_MAP[this.chainName].network });
+    const publicKey = priv.publicKey;
+    const { address } = INFO_MAP[this.chainName].paymentType({ ...INFO_MAP[this.chainName], pubkey: publicKey },)
     return address!;
   }
 

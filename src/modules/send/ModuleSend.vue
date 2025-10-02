@@ -81,7 +81,11 @@ import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
-import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
+import type {
+  QuotesResponse,
+  EstimatesRequestBody,
+  GetBtcTransactionEstimateBody,
+} from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import { type HexPrefixedString } from '@/providers/types'
@@ -119,13 +123,15 @@ const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
 
 const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const data = ref('0x')
-const gasFeeTxEstimate = ref<EstimatesRequestBody | undefined>(undefined)
+const gasFeeTxEstimate = ref<
+  EstimatesRequestBody | GetBtcTransactionEstimateBody | undefined
+>(undefined)
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
 
@@ -237,8 +243,9 @@ watch(
   () => [selectedFee.value, gasFees.value?.fees],
   () => {
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) return
+    const _fee = gasFees.value.fees[selectedFee.value]
     gasPrice.value = hexToBigInt(
-      gasFees.value.fees[selectedFee.value].nativeValue,
+      _fee.nativeValue ?? _fee.nativeFeeTotal,
     ).toString()
   },
 )
@@ -249,35 +256,51 @@ const amountToHex = computed(() => {
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
 
-const getTxRequestBody = (): EstimatesRequestBody | undefined => {
+const getTxRequestBody = ():
+  | EstimatesRequestBody
+  | GetBtcTransactionEstimateBody
+  | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
     toAddress.value !== '' &&
     amount.value !== ''
   ) {
-    const isSendingContractToken =
-      tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
-    if (isSendingContractToken) {
-      const web3Contract = new Contract(abi, tokenSelected.value.contract)
-      data.value = web3Contract.methods
-        .transfer(
-          toAddress.value,
-          toBase(amount.value, tokenSelected.value?.decimals ?? 18),
-        )
-        .encodeABI() //
-    } else {
-      data.value = '0x'
-    }
-    return {
-      to: isSendingContractToken
-        ? tokenSelected.value.contract
-        : (toAddress.value as HexPrefixedString),
-      address:
-        (address.value as HexPrefixedString) ||
-        '0x0000000000000000000000000000000000000000',
-      value: amountToHex.value,
-      data: data.value as HexPrefixedString,
+    if (isEvmChain.value) {
+      const isSendingContractToken =
+        tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
+      if (isSendingContractToken) {
+        const web3Contract = new Contract(abi, tokenSelected.value.contract)
+        data.value = web3Contract.methods
+          .transfer(
+            toAddress.value,
+            toBase(amount.value, tokenSelected.value?.decimals ?? 18),
+          )
+          .encodeABI() //
+      } else {
+        data.value = '0x'
+      }
+      return {
+        to: isSendingContractToken
+          ? tokenSelected.value.contract
+          : (toAddress.value as HexPrefixedString),
+        address:
+          (address.value as HexPrefixedString) ||
+          '0x0000000000000000000000000000000000000000',
+        value: amountToHex.value,
+        data: data.value as HexPrefixedString,
+      }
+    } else if (isBitcoinChain.value) {
+      return {
+        fromAddresses: [address.value],
+        changeAddress: address.value,
+        outputs: [
+          {
+            address: toAddress.value ?? '',
+            amount: toBase(amount.value, 8),
+          },
+        ],
+      }
     }
   }
 }
@@ -312,14 +335,24 @@ const getGasFeeQuotes = async () => {
     if (!body || !tokenSelected.value || !validSend.value) return
     gasFeeTxEstimate.value = body
     isLoadingFees.value = true
-    gasFees.value = await wallet.value?.getGasFee?.(gasFeeTxEstimate.value)
+    if (isEvmChain.value) {
+      gasFees.value = await wallet.value?.getGasFee?.(
+        gasFeeTxEstimate.value as EstimatesRequestBody,
+      )
+    } else {
+      gasFees.value = (await wallet.value?.getBtcGasFee?.(
+        gasFeeTxEstimate.value as GetBtcTransactionEstimateBody,
+      )) as QuotesResponse
+    }
     //Check if user has enough balance to cover gas fees
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
+    const btcValue = (body as GetBtcTransactionEstimateBody).outputs?.[0].amount
+    const evmValue = (body as EstimatesRequestBody).value
     const totalBalanceNeeded =
       BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
-      BigInt(body.value)
+      BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
 
     if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
@@ -327,7 +360,6 @@ const getGasFeeQuotes = async () => {
     isLoadingFees.value = false
   } catch (e) {
     isLoadingFees.value = false
-    //TODO: implement error localization
     if (e instanceof Error) {
       if (e.message) {
         gasFeeError.value = e.message.includes('insufficient funds')

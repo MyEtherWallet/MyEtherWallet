@@ -6,6 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
+import wasm from 'vite-plugin-wasm'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -31,6 +32,7 @@ export default defineConfig({
       protocolImports: true,
     }),
     basicSsl(),
+    wasm(),
   ],
   build: {
     rollupOptions: {

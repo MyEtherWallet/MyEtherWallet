@@ -229,11 +229,9 @@ watchDebounced<[Chain | undefined, DerivationPathType | undefined]>(
       loadList()
     } else if (derivationChanged && chainChanged) {
       unlockWallet()
-    } else if (!derivationChanged && !chainChanged) {
-      unlockWallet()
     }
   },
-  { debounce: 300 },
+  { debounce: 500 },
 )
 
 /**------------------------

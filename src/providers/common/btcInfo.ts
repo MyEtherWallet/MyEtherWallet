@@ -1,6 +1,11 @@
 
 
 import { payments, type PaymentCreator } from 'bitcoinjs-lib'
+const P2PKH_DUST = 546
+const P2SH_DUST = 540
+const P2WPKH_DUST = 294
+const P2WSH_DUST = 330
+const P2TR_DUST = 330
 
 const { p2wpkh, p2pkh } = payments;
 interface InfoTemplate {
@@ -100,4 +105,4 @@ const INFO_MAP: Record<string, InfoTemplate> = {
   "LITECOIN": litecoinInfo
 };
 
-export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP }
+export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP, P2PKH_DUST, P2SH_DUST, P2WPKH_DUST, P2WSH_DUST, P2TR_DUST };

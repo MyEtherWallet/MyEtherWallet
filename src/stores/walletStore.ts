@@ -1,14 +1,13 @@
 import { ref, type Ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
-import { fromWei } from 'web3-utils'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
-import { fromBase } from '@/utils/unit'
+import { fromBase, toBase } from '@/utils/unit'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -86,11 +85,11 @@ export const useWalletStore = defineStore('walletStore', () => {
             token.name ?? (selectedChain.value?.currencyNameLong || 'Ether'),
           symbol:
             token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
-          balance: fromWei(token.balance, 'ether'),
+          balance: fromBase(token.balance, token.decimals || 18),
           balanceWei: token.balance,
         }
-        balance.value = fromWei(token.balance, 'ether')
-        balanceWei.value = fromWei(token.balance, 'wei')
+        balance.value = fromBase(token.balance, token.decimals || 18)
+        balanceWei.value = toBase(token.balance, token.decimals || 18)
       } else {
         if (token.decimals) {
           newTokenCopy.push({
