@@ -160,13 +160,15 @@ import type {
   GasFeeInfo,
   QuotesResponse,
   EvmGasFees,
+  BtcGasFees,
+  BtcTransactionQuotes,
 } from '@/mew_api/types'
 import { useI18n } from 'vue-i18n'
 
 /** ----------------
  * DEFAULTS
  ------------------*/
-const DEFAULT_ADR =
+const DEFAULT_EVM_ADDR =
   '0x0000000000000000000000000000000000000000' as HexPrefixedString
 const DEFAULT_DATA = '0x' as HexPrefixedString
 const DEFAULT_VALUE = '0x0' as HexPrefixedString
@@ -205,34 +207,51 @@ const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress, balanceWei } =
   storeToRefs(walletStore)
 
-const txData = computed<EstimatesRequestBody>(() => {
+const txData = computed<EstimatesRequestBody | BtcTransactionQuotes>(() => {
   //EVM CHAINS ONLY
-  if (props.txRequestBody) {
-    return props.txRequestBody
+  if (selectedChain.value?.type === 'EVM') {
+    if (props.txRequestBody) {
+      return props.txRequestBody
+    }
+    const _address =
+      isWalletConnected.value &&
+      walletAddress.value &&
+      walletAddress.value !== ''
+        ? (walletAddress.value as HexPrefixedString)
+        : DEFAULT_EVM_ADDR
+    return {
+      to: DEFAULT_EVM_ADDR,
+      address: _address,
+      value: DEFAULT_VALUE,
+      data: DEFAULT_DATA,
+    }
   }
-  const _address =
-    isWalletConnected.value && walletAddress.value && walletAddress.value !== ''
-      ? (walletAddress.value as HexPrefixedString)
-      : DEFAULT_ADR
+  if (
+    !isWalletConnected.value &&
+    !walletAddress.value &&
+    walletAddress.value === ''
+  )
+    return {} as EstimatesRequestBody
+  /**
+   * Right now bitcoin wallets are only fetched when the user is logged in.
+   */
   return {
-    to: DEFAULT_ADR,
-    address: _address,
-    value: DEFAULT_VALUE,
-    data: DEFAULT_DATA,
+    fromAddresses: [walletAddress.value],
+    changeAddress: walletAddress.value,
+    consolidationAddress: walletAddress.value,
   }
-  //TO DO: BITCOIN HANDLER
 })
 
 const fetchURL = computed(() => {
   //EVM CHAINS ONLY
-  if (isLoadedChainsData.value && selectedChain.value) {
+  if (isLoadedChainsData.value && selectedChain.value?.type === 'EVM') {
     return `/v1/evm/chains/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
   }
   //TO DO: BITCOIN HANDLER
-  return ''
+  return `/v1/btc/${selectedChain.value?.name}/estimates/?noInjectErrors=false`
 })
 const feesReady = ref(false)
-const feeEstmates = ref<EvmGasFees | undefined>(undefined)
+const feeEstmates = ref<EvmGasFees | BtcGasFees | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
@@ -279,6 +298,11 @@ watch(
   () => {
     if (isLoadedChainsData.value && selectedChain.value) {
       feesReady.value = false
+      if (selectedChain.value?.type === 'BITCOIN' && !isWalletConnected.value) {
+        // bitcoin fees are fetched only when user is logged in
+        feesReady.value = true
+        return
+      }
       execute()
     }
   },
@@ -287,6 +311,11 @@ watch(
 onMounted(() => {
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
+    if (selectedChain.value?.type === 'BITCOIN' && !isWalletConnected.value) {
+      // bitcoin fees are fetched only when user is logged in
+      feesReady.value = true
+      return
+    }
     execute()
   }
 })

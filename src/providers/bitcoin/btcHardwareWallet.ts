@@ -8,14 +8,8 @@ import HWwallet from '@enkryptcom/hw-wallets'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { hexToBuffer } from '@/utils/hexToBuffer'
 
-import { bitcoinInfo, bitcoinTestInfo, dogecoinInfo, litecoinInfo, type InfoTemplate } from "../common/btcInfo";
+import { INFO_MAP } from "../common/btcInfo";
 
-const INFO_MAP: Record<string, InfoTemplate> = {
-  "BITCOIN": bitcoinInfo,
-  "BITCOIN_TEST": bitcoinTestInfo,
-  "DOGECOIN": dogecoinInfo,
-  "LITECOIN": litecoinInfo
-};
 
 
 export default class BtcHardwareWallet extends BaseBtcWallet {

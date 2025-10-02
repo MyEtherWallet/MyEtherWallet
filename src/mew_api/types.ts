@@ -79,3 +79,5 @@ export type BitcoinQuotesRequestBody = components['schemas']['GetBtcTransactionQ
 export type BitcoinSignableTransactionResponse = components['schemas']['GetUnsignedBtcTransactionResponse']
 export type BitcoinTxResponse = components['schemas']['BroadcastBtcTransactionResponse']
 export type BitcoinBalanceResponse = components['schemas']['GetBtcBalanceByChainNameAndAddressesResponse']
+export type GetBtcTransactionEstimateResponse = components['schemas']['GetBtcTransactionEstimateResponse']
+export type BtcGasFees = components['schemas']['BtcTransactionQuotes']

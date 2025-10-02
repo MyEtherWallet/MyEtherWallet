@@ -179,6 +179,31 @@ const setSelectedPath = (path: DerivationPath) => {
 }
 
 onMounted(() => {
+  setPaths()
+})
+
+watch(
+  selectedPath,
+  newValue => {
+    if (newValue) {
+      setToStore(newValue)
+    }
+  },
+  { immediate: true },
+)
+
+watch(
+  () => selectedChain.value,
+  newValue => {
+    if (newValue) {
+      setPaths()
+      // reset search input
+      searchInput.value = ''
+    }
+  },
+)
+
+const setPaths = () => {
   if (selectedDerivation.value) {
     selectedPath.value = selectedDerivation.value
   }
@@ -205,20 +230,7 @@ onMounted(() => {
       setToStore(selectedPath.value!)
     }
   }
-
-  console.log(selectedPath.value)
-})
-
-watch(
-  selectedPath,
-  newValue => {
-    if (newValue) {
-      setToStore(newValue)
-    }
-  },
-  { immediate: true },
-)
-
+}
 /** -------------------------------
  * Dialog
  -------------------------------*/
@@ -250,13 +262,6 @@ const searchResults = computed(() => {
   })
   const unique = new Set([...beginsWithLabel, ...beginsWithPath, ...other])
   return [...unique]
-})
-
-onMounted(() => {
-  //TODO: set default path per chain .IE bitcoin has its own path
-  if (!selectedPath.value) {
-    selectedPath.value = initialDefaultPath
-  }
 })
 
 /** -------------------------------

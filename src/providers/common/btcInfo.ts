@@ -93,4 +93,11 @@ const litecoinInfo: InfoTemplate = {
   maxFeeRate: 5000 * 2,
 }
 
-export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo }
+const INFO_MAP: Record<string, InfoTemplate> = {
+  "BITCOIN": bitcoinInfo,
+  "BITCOIN_TEST": bitcoinTestInfo,
+  "DOGECOIN": dogecoinInfo,
+  "LITECOIN": litecoinInfo
+};
+
+export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP }

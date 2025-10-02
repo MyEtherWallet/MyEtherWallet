@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -116,6 +116,8 @@ import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
+import type { Chain } from '@/mew_api/types'
+import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 
 const { t } = useI18n()
 /**------------------------
@@ -211,23 +213,27 @@ const unlockWallet = () => {
   }
 }
 
-watch(
-  () => selectedChain.value,
+watchDebounced<[Chain | undefined, DerivationPathType | undefined]>(
+  () =>
+    [selectedChain.value, selectedDerivation.value] as [
+      Chain | undefined,
+      DerivationPathType | undefined,
+    ],
   newValue => {
-    if (newValue) {
-      loadList()
-    }
-  },
-)
+    // verify if values actually changed
+    const chainChanged = newValue[0]?.name !== selectedChain.value?.name
+    const derivationChanged =
+      newValue[1]?.path !== selectedDerivation.value?.path
 
-watch(
-  () => selectedDerivation.value.path,
-  newValue => {
-    if (newValue) {
+    if (chainChanged && !derivationChanged) {
+      loadList()
+    } else if (derivationChanged && chainChanged) {
+      unlockWallet()
+    } else if (!derivationChanged && !chainChanged) {
       unlockWallet()
     }
   },
-  { immediate: true },
+  { debounce: 300 },
 )
 
 /**------------------------

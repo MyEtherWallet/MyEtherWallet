@@ -8,14 +8,8 @@ import type { PostSignedTransaction } from "../common/types";
 import { WalletType, type HexPrefixedString } from '../types'
 import HDkey from "hdkey";
 
-import { bitcoinInfo, bitcoinTestInfo, dogecoinInfo, litecoinInfo, type InfoTemplate } from "../common/btcInfo";
+import { INFO_MAP } from "../common/btcInfo";
 
-const INFO_MAP: Record<string, InfoTemplate> = {
-  "BITCOIN": bitcoinInfo,
-  "BITCOIN_TEST": bitcoinTestInfo,
-  "DOGECOIN": dogecoinInfo,
-  "LITECOIN": litecoinInfo
-};
 
 export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   private privateKey: Buffer;
