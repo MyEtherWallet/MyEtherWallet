@@ -92,42 +92,15 @@
       class="flex flex-col px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 gap-3 sm:gap-4"
     >
       <div class="w-full mb-2 sm:mb-5">
-        <app-btn-group
-          v-model:selected="selectedChartFilter"
-          :is-loaded="!isLoading"
-          :btn-list="isXS ? chartFilterOptions.slice(0, 3) : chartFilterOptions"
-          size="xs"
-          class="ml-auto mb-1 sm:mb-3"
-        >
-          <template #btn-content="{ data }">
-            {{ data.label }}
-          </template>
-          <template #custom>
-            <app-select
-              v-if="isXS"
-              v-model:selected="selectedChartFilter"
-              :options="chartFilterOptions.slice(3, chartFilterOptions.length)"
-              position="-right-1"
-              class="text-s-12"
-            >
-              <template #select-button="{ toggleSelect }">
-                <button
-                  class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
-                  @click="toggleSelect"
-                >
-                  <p>More</p>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
-                </button>
-              </template>
-            </app-select>
-          </template>
-        </app-btn-group>
-        <div class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg"></div>
+        <token-info-chart :token-id="tokenId" />
       </div>
     </div>
     <!-- Balance -->
     <token-info-balance :is-loading="isLoading" :token-data="tokenData" />
-    <hr v-if="!isLoading" class="h-px bg-grey-10 border-0 w-full my-5" />
+    <hr
+      v-if="!isLoading && isWalletConnected"
+      class="h-px bg-grey-10 border-0 w-full my-5"
+    />
     <!-- Market Data -->
     <token-info-market-data :is-loading="isLoading" :token-data="tokenData" />
     <!-- <hr class="h-px bg-grey-10 border-0 w-full my-5" /> -->
@@ -158,21 +131,18 @@
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import TokenInfoMarketData from './components/token_info/TokenInfoMarketData.vue'
 import TokenInfoSupportedChains from './components/token_info/TokenInfoSupportedChains.vue'
+import TokenInfoChart from './components/token_info/TokenInfoChart.vue'
 import { ShareIcon, StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
 import {
   StarIcon as StarOutlineIcon,
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
-  ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
 import { computed, ref } from 'vue'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import AppSelect from '@/components/AppSelect.vue'
-import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { type GetWebTokenInfo } from '@/mew_api/types'
@@ -189,32 +159,12 @@ const props = defineProps({
   },
 })
 
-const { isXS } = useAppBreakpoints()
-
 const walletStore = useWalletStore()
 const { walletAddress, isWalletConnected } = storeToRefs(walletStore)
 /** --------------------
  * Wallet Menu Buttons
  --------------------*/
 const walletMenu = useWalletMenuStore()
-
-/** --------------------
- * Chart Filter
- --------------------*/
-interface Item {
-  label: string
-  value: string
-}
-const chartFilterOptions = ref<Item[]>([
-  { label: '1h', value: '1h' },
-  { label: '7d', value: '7d' },
-  { label: '1m', value: '1m' },
-  { label: '3m', value: '3m' },
-  { label: '1y', value: '1y' },
-  { label: 'all', value: 'all' },
-])
-
-const selectedChartFilter = ref(chartFilterOptions.value[0])
 
 /** --------------------
  * Fetch Data
@@ -240,7 +190,6 @@ onFetchResponse(() => {
   if (tokenData.value === null) {
     return
   }
-  console.log('Token Info response', tokenData.value)
   if (!exhistsOnCurrentChain.value) {
     walletMenu.setWalletPanel('bridge')
   } else {

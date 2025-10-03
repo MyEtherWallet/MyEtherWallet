@@ -74,3 +74,10 @@ export type GetWebTokensWatchlistResponse =
 //Tokens Page
 export type GetWebTokenInfo =
   components['schemas']['GetWebTokenInfoPageResponse']
+
+export type GetWebTokenPriceChartByCoinResponse =
+  components['schemas']['GetWebTokenPriceChartResponse']
+export type GetWebTokenPriceChartPoint =
+  GetWebTokenPriceChartByCoinResponse['prices'][number]
+export type WebTokenPriceChartInterval =
+  components['schemas']['WebTokenPriceChartInterval']
