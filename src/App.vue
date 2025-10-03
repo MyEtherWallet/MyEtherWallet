@@ -1,6 +1,9 @@
 <template>
   <div class="relative">
-    <welcome-dialog @close-welcome-dialog="showFeedbackToast" />
+    <welcome-dialog
+      v-if="!isDevMode"
+      @close-welcome-dialog="showFeedbackToast"
+    />
     <the-app-layout v-if="isLoadingComplete" />
     <module-toast />
   </div>
@@ -20,7 +23,9 @@ import { type TokenBalancesRaw } from '@/mew_api/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
+import configs from './configs'
 
+const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
 const { wallet, walletAddress, isWalletConnected } = storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
@@ -54,12 +59,12 @@ const { setChainData } = chainStore
 const { selectedChain } = storeToRefs(chainStore)
 
 const { useMEWFetch } = useFetchMewApi()
-const { data, onFetchResponse } = useMEWFetch<ChainsRaw>('/chains').get().json()
+const { data, onFetchResponse } = useMEWFetch('/chains').get().json<ChainsRaw>()
 
 onFetchResponse(() => {
-  setChainData(data.value.result || [])
+  setChainData(data.value?.result || [])
   isLoadingComplete.value = true
-  return data.value.result
+  return data.value?.result || []
 })
 
 watch(

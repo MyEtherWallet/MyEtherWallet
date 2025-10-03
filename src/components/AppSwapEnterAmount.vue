@@ -3,7 +3,7 @@
     ref="target"
     class="w-full rounded-16 box-border bg-white p-[18px] transition-colors shadow-button shadow-button-elevated"
     :class="{
-      'border-primary border-2 !p-4': inFocusInput && !error,
+      'border-primary border-2 !p-4': inFocusInput && !error && !readonly,
       '!border-error border-2 !p-4': !!error,
     }"
     @click="setInFocusInput"

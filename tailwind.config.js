@@ -45,6 +45,7 @@ export default {
       violetActive: '#a81aff',
       portfolio: '#0c5876',
       mewBg: 'rgba(53,94,236,0.1)',
+      mewBgHex: '#355eec1a',
       enkryptBg: 'rgba(186,74,255,0.1)',
       black: '#000000',
       white: '#ffffff',
@@ -98,6 +99,7 @@ export default {
         's-14': '14px',
         's-12': '12px',
         's-11': '11px',
+        's-9': '9px',
         's-8': '8px',
       },
       lineHeight: {

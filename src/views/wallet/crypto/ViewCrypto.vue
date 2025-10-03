@@ -6,6 +6,7 @@
       </div>
       <module-explore-crypto class="col-span-12 lg:col-span-9" />
     </div>
+    <router-view />
   </div>
 </template>
 

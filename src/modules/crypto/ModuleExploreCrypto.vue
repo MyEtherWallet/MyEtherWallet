@@ -135,13 +135,6 @@
                     </template>
                   </app-select>
                 </th>
-                <!-- Last 7 days -->
-                <!-- <th
-                  class="px-1 py-2 text-right hidden sm:table-cell xl:min-w-[115px]"
-                >
-                  Last 7 days
-                </th> -->
-                <!-- 24h Volume -->
                 <th
                   :class="
                     isOpenSideMenu ? 'hidden 2xl:table-cell' : 'xl:table-cell'
@@ -225,30 +218,35 @@
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
-                class="h-14"
+                class="h-14 hoverBGWhite cursor-pointer"
+                @click="goToTokenPage(token)"
               >
                 <!-- Watchlist -->
-                <td class="xs:pr-2 hidden sm:table-cell">
+                <td class="xs:pr-2 hidden sm:table-cell rounded-l-12">
                   <button
-                    :class="{
-                      'text-primary hover:text-text-grey-30': isWatchListed(
-                        token.coinId,
-                      ),
-                      'text-grey-30 hover:text-primary': !isWatchListed(
-                        token.coinId,
-                      ),
-                    }"
-                    @click="setWatchlistToken(token.coinId)"
-                    class="p-2 rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                    @click.stop="setWatchlistToken(token.coinId)"
+                    class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
-
-                    <star-solid-icon class="h-4 w-4 cursor-pointer" />
+                    <star-outline-icon
+                      class="h-4 w-4 cursor-pointer"
+                      v-if="!isWatchListed(token.coinId)"
+                    />
+                    <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
                   </button>
                 </td>
                 <!-- Name -->
-                <td class="px-1 py-2">
-                  <div class="flex items-center gap-3">
+                <td class="px-1 py-2 rounded-l-12 sm:rounded-none">
+                  <router-link
+                    :to="{
+                      name: 'TokenInfo',
+                      params: {
+                        networkId: token.coinId,
+                        tokenId: token.coinId,
+                      },
+                    }"
+                    class="flex items-center gap-3"
+                  >
                     <img
                       :src="token.logoUrl as string"
                       alt="favorite"
@@ -260,11 +258,11 @@
                         {{ truncate(token.symbol, 7) }}
                       </p>
                     </div>
-                  </div>
+                  </router-link>
                 </td>
                 <!-- Price -->
                 <!-- TODO: change with currency parser -->
-                <td class="px-1 py-2 text-right">
+                <td class="px-1 py-2 text-right rounded-r-12 xs:rounded-none">
                   <p class="text-right xs:text-center sm:text-right">
                     ${{ token.price }}
                   </p>
@@ -314,14 +312,16 @@
                   ${{ token.marketCap ?? 0 }}
                 </td>
                 <!-- Actions -->
-                <td class="pl-1 py-2 hidden xs:table-cell">
+                <td
+                  class="pl-1 py-2 hidden xs:table-cell rounded-r-12 relative"
+                >
                   <div class="flex flex-row gap-1 justify-end flex-wrap">
-                    <app-base-button size="small" @click="buyBtn" is-outline
+                    <app-base-button size="small" @click="buyBtn()" is-outline
                       >Buy</app-base-button
                     >
-                    <app-base-button size="small" @click="swapBtn"
-                      >Swap</app-base-button
-                    >
+                    <app-base-button size="small" @click="swapBtn(token)"
+                      >Swap
+                    </app-base-button>
                   </div>
                 </td>
               </tr>
@@ -403,6 +403,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/vue/24/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -427,8 +428,11 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
+import { useRouter } from 'vue-router'
+import { ROUTES_MAIN } from '@/router/routeNames'
+
 const walletMenu = useWalletMenuStore()
-const { setIsOpenSideMenu, setWalletPanel } = walletMenu
+const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const tableContainer = ref<HTMLElement | null>(null)
@@ -499,9 +503,9 @@ const nextPage = () => {
 const buyBtn = () => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
-const swapBtn = () => {
-  setIsOpenSideMenu(true)
-  setWalletPanel(3)
+const swapBtn = (token: DisplayToken) => {
+  setWalletPanel('swap')
+  goToTokenPage(token)
 }
 
 const setHeaderSort = (key: string) => {
@@ -531,7 +535,13 @@ const cryptoFilterOptions = ref([
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
-const tokens: Ref<GetWebTokensTableResponseToken[]> = ref([])
+
+interface DisplayToken
+  extends Omit<GetWebTokensTableResponseToken, 'price' | 'marketCap'> {
+  price: string
+  marketCap: string
+}
+const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
 const totalPages = ref<number>(1)
 
@@ -571,33 +581,33 @@ const {
   onFetchResponse: onFetchGainersResponse,
   execute: fetchGainersTable,
   onFetchError: onFetchGainersError,
-} = useMEWFetch<GetWebTokensTableResponse>(fetchGainersUrl, {
+} = useMEWFetch(fetchGainersUrl, {
   immediate: false,
 })
   .get()
-  .json()
+  .json<GetWebTokensTableResponse>()
 
 const {
   data: fetchWatchlistData,
   onFetchResponse: onFetchWatchlistResponse,
   execute: fetchWatchlistTable,
   onFetchError: onFetchWatchlistError,
-} = useMEWFetch<GetWebTokensWatchlistResponse>(fetchWatchListUrl, {
+} = useMEWFetch(fetchWatchListUrl, {
   immediate: false,
 })
   .get()
-  .json()
+  .json<GetWebTokensWatchlistResponse>()
 
 const {
   data: fetchTokenData,
   onFetchResponse: onFetchTokenTableResponse,
   execute: fetchTokenTable,
   onFetchError: onFetchTokenTableError,
-} = useMEWFetch<GetWebTokensTableResponse>(fetchTableUrl, {
+} = useMEWFetch(fetchTableUrl, {
   immediate: false,
 })
   .get()
-  .json()
+  .json<GetWebTokensTableResponse>()
 
 const debounceFetchTokens = useDebounceFn(() => {
   fetchTokenTable()
@@ -625,26 +635,24 @@ onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(
-      (item: GetWebTokensWatchlistResponse[number]) => {
-        const logo =
-          item.logoUrl && isValidUrl(item.logoUrl)
-            ? item.logoUrl
-            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-        return {
-          ...item,
-          logoUrl: logo,
-          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: formatFiatValue(item.price ?? 0).value,
-          // price: new Intl.NumberFormat('en-US', {
-          //   style: 'currency',
-          //   currency: 'USD',
-          //   maximumFractionDigits: 2,
-          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-        }
-      },
-    )
+    tokens.value = fetchWatchlistData.value.map(item => {
+      const logo =
+        item.logoUrl && isValidUrl(item.logoUrl)
+          ? item.logoUrl
+          : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+      return {
+        ...item,
+        logoUrl: logo,
+        priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+        price: formatFiatValue(item.price ?? 0).value,
+        // price: new Intl.NumberFormat('en-US', {
+        //   style: 'currency',
+        //   currency: 'USD',
+        //   maximumFractionDigits: 2,
+        // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+        marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+      }
+    })
   }
   isLoading.value = false
 })
@@ -652,8 +660,8 @@ onFetchGainersResponse(() => {
   totalTokenCount.value = fetchGainersData.value?.total ?? 0
   totalPages.value = fetchGainersData.value?.pages ?? 0
   if (fetchGainersData.value && fetchGainersData.value.items) {
-    tokens.value = fetchGainersData.value.items.map(
-      (item: GetWebTokensTableResponseToken) => {
+    tokens.value =
+      fetchGainersData.value.items.map(item => {
         const logo =
           item.logoUrl && isValidUrl(item.logoUrl)
             ? item.logoUrl
@@ -670,8 +678,7 @@ onFetchGainersResponse(() => {
           // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
           marketCap: formatIntegerValue(item.marketCap ?? 0).value,
         }
-      },
-    )
+      }) || []
   }
   isLoading.value = false
 })
@@ -679,26 +686,24 @@ onFetchTokenTableResponse(() => {
   totalTokenCount.value = fetchTokenData.value?.total ?? 0
   totalPages.value = fetchTokenData.value?.pages ?? 0
   if (fetchTokenData.value && fetchTokenData.value.items) {
-    tokens.value = fetchTokenData.value.items.map(
-      (item: GetWebTokensTableResponseToken) => {
-        const logo =
-          item.logoUrl && isValidUrl(item.logoUrl)
-            ? item.logoUrl
-            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-        return {
-          ...item,
-          logoUrl: logo,
-          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: formatFiatValue(item.price ?? 0).value,
-          // price: new Intl.NumberFormat('en-US', {
-          //   style: 'currency',
-          //   currency: 'USD',
-          //   maximumFractionDigits: 2,
-          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-        }
-      },
-    )
+    tokens.value = fetchTokenData.value.items.map(item => {
+      const logo =
+        item.logoUrl && isValidUrl(item.logoUrl)
+          ? item.logoUrl
+          : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
+      return {
+        ...item,
+        logoUrl: logo,
+        priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
+        price: formatFiatValue(item.price ?? 0).value,
+        // price: new Intl.NumberFormat('en-US', {
+        //   style: 'currency',
+        //   currency: 'USD',
+        //   maximumFractionDigits: 2,
+        // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
+        marketCap: formatIntegerValue(item.marketCap ?? 0).value,
+      }
+    })
   }
   isLoading.value = false
 })
@@ -794,7 +799,7 @@ const percentOptions = <AppSelectOption[]>[
 
 const activePercent = ref<AppSelectOption>(percentOptions[1])
 
-const getActivePercent = (token: GetWebTokensTableResponseToken) => {
+const getActivePercent = (token: DisplayToken) => {
   switch (activePercent.value.value) {
     case activePercentChange.ONE_HOUR:
       return token.priceChangePercentage1h
@@ -819,7 +824,7 @@ watch(
   },
 )
 
-const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
+const getSparkLinePoints = (token: DisplayToken) => {
   if (
     token.sparklineIn7d &&
     token.sparklineIn7d.length > 0 &&
@@ -832,5 +837,17 @@ const getSparkLinePoints = (token: GetWebTokensTableResponseToken) => {
     return token.sparklineIn7d.slice(-totalPoints)
   }
   return []
+}
+
+/**-------------------------------
+ * Token Link
+ --------------------------------*/
+const router = useRouter()
+
+const goToTokenPage = (token: DisplayToken) => {
+  router.push({
+    name: ROUTES_MAIN.TOKEN_INFO.NAME,
+    params: { tokenId: token.coinId },
+  })
 }
 </script>

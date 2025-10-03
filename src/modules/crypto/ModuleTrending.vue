@@ -28,10 +28,14 @@
       class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2"
       v-if="!isLoading"
     >
-      <button
+      <router-link
         v-for="token in currentTrendingTokens"
+        :to="{
+          name: ROUTES_MAIN.TOKEN_INFO.NAME,
+          params: { tokenId: token.coinId },
+        }"
         :key="token.symbol"
-        class="w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"
+        class="relative w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"
       >
         <div class="flex gap-2 items-center justify-start flex-wrap">
           <div class="xs:basis-full overflow-visible">
@@ -66,7 +70,7 @@
             {{ formatPercentageValue(token.priceChangePercentage24h).value }}
           </p>
         </div>
-      </button>
+      </router-link>
     </div>
     <div class="flex justify-start gap-2 flex-wrap animate-pulse" v-else>
       <div
@@ -95,6 +99,7 @@ import type {
 import { truncate } from '@/utils/filters'
 import BigNumber from 'bignumber.js'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { ROUTES_MAIN } from '@/router/routeNames'
 
 const { useMEWFetch } = useFetchMewApi()
 const toastStore = useToastStore()
@@ -104,18 +109,15 @@ const trendingTokens: Ref<GetWebTrendingTokensResponseToken[]> = ref([])
 const apiPage = ref(1)
 const apiTotalItems = ref(1)
 
-// const pageStore: Map<string, GetWebTrendingTokensResponseToken[]> = new Map()
-
 const url = computed(() => {
   return `https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`
 })
 const fetchUrl = url
-const { execute, data, onFetchResponse, onFetchError } =
-  useMEWFetch<GetWebTrendingTokensResponse>(fetchUrl, {
-    immediate: false,
-  })
-    .get()
-    .json()
+const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
+  immediate: false,
+})
+  .get()
+  .json<GetWebTrendingTokensResponse>()
 
 onMounted(() => {
   isLoading.value = true

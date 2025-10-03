@@ -3,8 +3,10 @@
     @click="copyClick"
     :is-white="props.isWhite"
     :label="label ?? $t('common.copy')"
+    :height="height"
+    :width="width"
   >
-    <ClipboardDocumentIcon class="w-5 h-5" />
+    <ClipboardDocumentIcon :class="iconClass" />
   </app-btn-icon>
 </template>
 <script setup lang="ts">
@@ -47,6 +49,18 @@ const props = defineProps({
   copyValue: {
     type: String,
     default: '',
+  },
+  height: {
+    type: String,
+    default: 'h-[32px]',
+  },
+  width: {
+    type: String,
+    default: 'w-[32px]',
+  },
+  iconClass: {
+    type: String,
+    default: 'w-5 h-5',
   },
 })
 const emit = defineEmits<{

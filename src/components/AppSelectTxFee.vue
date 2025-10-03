@@ -236,12 +236,11 @@ const feeEstmates = ref<EvmGasFees | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const { data, onFetchResponse, execute, onFetchError } =
-  useMEWFetch<EstimatesResponse>(fetchURL, {
-    immediate: false,
-  })
-    .post(JSON.stringify(txData.value))
-    .json()
+const { data, onFetchResponse, execute, onFetchError } = useMEWFetch(fetchURL, {
+  immediate: false,
+})
+  .post(JSON.stringify(txData.value))
+  .json<EstimatesResponse>()
 
 onFetchResponse(() => {
   if (data.value) {

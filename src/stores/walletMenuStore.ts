@@ -1,28 +1,20 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useWalletMenuStore = defineStore('walletMenuStore', () => {
-  const isOpenSideMenu = ref(false)
-  type WalletPanel = 0 | 1 | 2 | 3
+export type WalletPanel = 'swap' | 'send' | 'buy' | 'sell' | 'bridge'
 
-  /**
-   * Current Active panel in the wallet menu
-   * 0 - Buy
-   * 1 - Sell
-   * 2 - Send
-   * 3 - Swap
-   */
-  const walletPanel = ref<WalletPanel>(3)
+export const useWalletMenuStore = defineStore('walletMenuStore', () => {
+  const hasShadow = ref(true)
+  const isOpenSideMenu = ref(false)
+
+  const walletPanel = ref<WalletPanel>('swap')
 
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value
   }
 
-  const setWalletPanel = (value: number) => {
-    if (value < 0 || value > 3) {
-      throw new Error('Invalid wallet panel')
-    }
-    walletPanel.value = value as WalletPanel
+  const setWalletPanel = (value: WalletPanel) => {
+    walletPanel.value = value
   }
 
   return {
@@ -30,5 +22,6 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setIsOpenSideMenu,
     walletPanel,
     setWalletPanel,
+    hasShadow,
   }
 })

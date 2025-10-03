@@ -74,28 +74,28 @@
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG"
-              @click.stop.prevent="openWalletMenu(0)"
+              @click.stop.prevent="openWalletMenu('buy')"
             >
               <icon-buy class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('buy') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(1)"
+              @click.stop.prevent="openWalletMenu('sell')"
             >
               <icon-buy class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('sell') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(2)"
+              @click.stop.prevent="openWalletMenu('send')"
             >
               <icon-send class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.send') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(3)"
+              @click.stop.prevent="openWalletMenu('swap')"
             >
               <icon-swap class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.swap') }}</p>
@@ -151,7 +151,7 @@ import {
   ArrowPathIcon,
 } from '@heroicons/vue/24/outline'
 import { useChainsStore } from '@/stores/chainsStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { type WalletPanel, useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -198,7 +198,7 @@ const tokensCount = computed(() => {
 /** -------------------------------
  * Actions
  -------------------------------*/
-const openWalletMenu = (walletPanel: number) => {
+const openWalletMenu = (walletPanel: WalletPanel) => {
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)
   }

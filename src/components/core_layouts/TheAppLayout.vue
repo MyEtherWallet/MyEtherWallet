@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen relative flex overflow-y-auto">
-    <the-wallet-header class="basis-full" />
+    <the-header class="basis-full" />
 
     <!-- Background -->
     <teleport to="#app">
@@ -15,7 +15,7 @@
       >
         <div
           v-if="isOpenSideMenu"
-          class="cursor-pointer fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
+          class="cursor-pointer top-0 xs:top-[69px] sm:top-[77px] fixed inset-0 bg-black/30 z-[19] h-screen w-screen overscroll-none overflow-hidden xl:hidden"
           @click="walletMenu.setIsOpenSideMenu(false)"
           aria-hidden
         />
@@ -23,14 +23,15 @@
     </teleport>
     <div
       :class="[
-        isOpenSideMenu ? 'xl:mr-[400px]' : 'xl:mr-[60px]',
+        isOpenSideMenu ? 'xl:mr-[445px]' : 'xl:mr-[70px]',
         backgroundClass,
-        'flex w-full mr-[60px] overflow-y-auto',
+        'flex w-full mr-[60px] xs:mr-[70px]',
+        isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
       ]"
     >
       <div
         :class="[
-          'relative flex justify-center min-w-[320px] w-full   mt-[68px] sm:mt-[76px]',
+          'relative flex justify-center min-w-[320px] w-full mt-[68px] sm:mt-[76px]',
         ]"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
@@ -62,10 +63,11 @@ import { inject, computed } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
-import TheWalletHeader from './wallet/TheWalletHeader.vue'
+import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_ACCESS, ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 
 const popupStore = usePopupStore()
@@ -90,13 +92,17 @@ const route = useRoute()
 const backgroundClass = computed(() => {
   if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
-    route.name === ROUTES_MAIN.CRYPTO.NAME
+    route.name === ROUTES_MAIN.CRYPTO.NAME ||
+    route.name === ROUTES_MAIN.TOKEN_INFO.NAME
   ) {
     return ''
   } else {
     return 'blue-gradient'
   }
 })
+
+const appLayoutStore = useAppLayoutStore()
+const { isOverflowHidden } = storeToRefs(appLayoutStore)
 </script>
 
 <style scoped>
