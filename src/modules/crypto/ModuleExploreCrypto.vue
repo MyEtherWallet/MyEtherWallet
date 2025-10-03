@@ -836,7 +836,7 @@ const router = useRouter()
 const goToTokenPage = (token: DisplayToken) => {
   router.push({
     name: ROUTES_MAIN.TOKEN_INFO.NAME,
-    params: { networkId: token.coinId, tokenId: token.coinId },
+    params: { tokenId: token.coinId },
   })
 }
 </script>

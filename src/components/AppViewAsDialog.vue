@@ -69,6 +69,7 @@ import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { ROUTES_MAIN } from '@/router/routeNames'
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const walletMenu = useWalletMenuStore()
@@ -112,13 +113,16 @@ const setIsOpen = (_value: boolean = false) => {
   if (!isXLAndUp.value) {
     walletMenu.setIsOpenSideMenu(false)
   }
+  isOpen.value = _value
+  hasShadow.value = true
+  isOverflowHidden.value = false
   if (route.matched.length > 1 && _value === false) {
     // The parent route is the second to last item in the matched array
     const parentRouteName = route.matched[route.matched.length - 2].name
-    isOpen.value = _value
-    hasShadow.value = true
-    isOverflowHidden.value = false
+
     router.push({ name: parentRouteName })
+  } else {
+    router.push({ name: ROUTES_MAIN.HOME.NAME })
   }
 }
 </script>

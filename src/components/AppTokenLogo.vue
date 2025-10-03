@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 const props = defineProps({
   url: {
     type: [String, null],
@@ -57,7 +57,7 @@ const getSymbol = (): string => {
 const isLoading = ref<boolean>(true)
 const image = ref<string | null>(null)
 
-onMounted(() => {
+const resolveImage = () => {
   if (props.url) {
     const img = new Image()
     img.src = props.url
@@ -73,5 +73,16 @@ onMounted(() => {
     isLoading.value = false
     image.value = null
   }
+}
+onMounted(() => {
+  resolveImage()
 })
+
+watch(
+  () => props.url,
+  () => {
+    isLoading.value = true
+    resolveImage()
+  },
+)
 </script>

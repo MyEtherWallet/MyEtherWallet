@@ -32,7 +32,7 @@
         v-for="token in currentTrendingTokens"
         :to="{
           name: ROUTES_MAIN.TOKEN_INFO.NAME,
-          params: { networkId: token.coinId, tokenId: token.coinId },
+          params: { tokenId: token.coinId },
         }"
         :key="token.symbol"
         class="relative w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"

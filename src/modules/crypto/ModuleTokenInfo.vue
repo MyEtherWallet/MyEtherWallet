@@ -149,10 +149,6 @@ import { type GetWebTokenInfo } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
 import TokenInfoBalance from './components/token_info/TokenInfoBalance.vue'
 const props = defineProps({
-  networkId: {
-    type: String,
-    required: true,
-  },
   tokenId: {
     type: String,
     required: true,

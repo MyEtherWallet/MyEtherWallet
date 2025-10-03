@@ -34,7 +34,7 @@ const ROUTES_MAIN: RouteNameCollection = {
   CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
   LEARN: { NAME: 'Learn', PATH: '/learn' },
   STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
-  TOKEN_INFO: { NAME: 'TokenInfo', PATH: 'network/:networkId/token/:tokenId' },
+  TOKEN_INFO: { NAME: 'TokenInfo', PATH: 'token/:tokenId' },
 }
 
 const ROUTES_SEND: RouteNameCollection = {
