@@ -219,15 +219,20 @@ watchDebounced<[Chain | undefined, DerivationPathType | undefined]>(
       Chain | undefined,
       DerivationPathType | undefined,
     ],
-  newValue => {
+  (
+    newValue: [Chain | undefined, DerivationPathType | undefined],
+    oldValue: [Chain | undefined, DerivationPathType | undefined],
+  ) => {
     // verify if values actually changed
-    const chainChanged = newValue[0]?.name !== selectedChain.value?.name
-    const derivationChanged =
-      newValue[1]?.path !== selectedDerivation.value?.path
+    const chainChanged = newValue[0]?.name !== oldValue[0]?.name
+    const derivationChanged = newValue[1]?.path !== oldValue[1]?.path
 
     if (chainChanged && !derivationChanged) {
       loadList()
-    } else if (derivationChanged && chainChanged) {
+    } else if (
+      (derivationChanged && chainChanged) ||
+      (!chainChanged && derivationChanged)
+    ) {
       unlockWallet()
     }
   },

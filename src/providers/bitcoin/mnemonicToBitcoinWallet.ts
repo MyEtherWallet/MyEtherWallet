@@ -19,7 +19,9 @@ export default class BitcoinWallet {
   async getWallet(index: number): Promise<BitcoinPrivateKeyWallet> {
     const seed = await mnemonicToSeed(this.mnemonic, this.extraWord);
     const hdkey = HDkey.fromMasterSeed(seed);
-    const derived = hdkey.derive(`${this.basePath}/${index}'`);
+    const hasLastTick = this.chainName === "BITCOIN" || this.chainName === "BITCOIN_TEST"
+
+    const derived = hdkey.derive(`${this.basePath}/${index}${hasLastTick ? "'" : ""}`);
     return new BitcoinPrivateKeyWallet(this.chainName, derived);
   }
 

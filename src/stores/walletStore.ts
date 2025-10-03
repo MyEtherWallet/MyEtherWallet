@@ -7,7 +7,7 @@ export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
-import { fromBase, toBase } from '@/utils/unit'
+import { fromBase } from '@/utils/unit'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -89,7 +89,7 @@ export const useWalletStore = defineStore('walletStore', () => {
           balanceWei: token.balance,
         }
         balance.value = fromBase(token.balance, token.decimals || 18)
-        balanceWei.value = toBase(token.balance, token.decimals || 18)
+        balanceWei.value = token.balance
       } else {
         if (token.decimals) {
           newTokenCopy.push({
