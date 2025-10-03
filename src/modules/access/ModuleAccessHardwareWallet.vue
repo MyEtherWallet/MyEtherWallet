@@ -236,6 +236,7 @@ const unlockWallet = async () => {
   const networkName = chainToEnum[
     selectedChain.value?.name as string
   ] as NetworkNames
+
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
@@ -278,8 +279,8 @@ const loadList = async (page: number = 0) => {
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
-  const chainId = selectedChain.value?.chainID || '1'
-  const networkName = chainToEnum[chainId]
+  const chainId = selectedChain.value?.name || 'ETH'
+  const networkName = chainToEnum[chainId] ?? 'ETH'
 
   for (let i = startIndex; i < startIndex + 5; i++) {
     try {
@@ -300,6 +301,7 @@ const loadList = async (page: number = 0) => {
         selectedHwWalletType.value as HWwalletType,
         hwWalletInstance,
       )
+      hwWalletInstance.close()
 
       const fetchBalance = await hardwareWalletInstance.getBalance()
       const mainToken = fetchBalance.result.find(

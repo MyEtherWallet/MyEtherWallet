@@ -239,11 +239,11 @@ const setToToken = () => {
   }
   const allToTokens =
     toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all]
+  localToTokens.value = allToTokens?.map((token: TokenType) => ({
+    ...token,
+    balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
+  })) as NewTokenInfo[]
   if (!hasSwapValues.value) {
-    localToTokens.value = allToTokens?.map((token: TokenType) => ({
-      ...token,
-      balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
-    })) as NewTokenInfo[]
     if (toTokens.value && allToTokens && allToTokens.length > 0) {
       const allToTrending =
         toTokens.value?.trending[
