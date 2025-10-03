@@ -2,7 +2,6 @@
 import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
-// import type { NetworkNames } from '@enkryptcom/types'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import BaseBtcWallet from './baseBitcoinWallet'

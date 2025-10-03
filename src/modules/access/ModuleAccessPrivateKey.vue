@@ -56,7 +56,7 @@ const walletStore = useWalletStore()
 const router = useRouter()
 const { setWallet } = walletStore
 const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
@@ -85,7 +85,7 @@ const strippedHexPrivateKey = computed<string>(() => {
 
 const isValidPrivateKey = computed<boolean>(() => {
   try {
-    if (selectedChain.value?.type === 'EVM') {
+    if (isEvmChain.value) {
       const privateKey = Buffer.isBuffer(strippedHexPrivateKey.value)
         ? strippedHexPrivateKey.value
         : getBufferFromHex(sanitizeHex(strippedHexPrivateKey.value))
@@ -102,12 +102,12 @@ const unlock = () => {
   // TODO: remove hardcoded network id
   let wallet
   try {
-    if (selectedChain.value?.type === 'EVM') {
-      new EthereumPrivateKey(
+    if (isEvmChain.value) {
+      wallet = new EthereumPrivateKey(
         Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
         selectedChain?.value?.chainID || '1',
       )
-    } else if (selectedChain.value?.type === 'BITCOIN') {
+    } else if (isBitcoinChain.value) {
       const decoded = bs58check.decode(strippedHexPrivateKey.value)
       const rawPrivKey = decoded.slice(1, 33)
       wallet = new BitcoinPrivateKey(selectedChain?.value?.name || 'BITCOIN', {

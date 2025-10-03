@@ -2,8 +2,6 @@ import BaseBtcWallet from "./baseBitcoinWallet";
 import type { PostSignedTransaction } from "../common/types";
 import { WalletType, type HexPrefixedString } from '../types'
 import HDkey from "hdkey";
-// import * as sec from "@noble/secp256k1"
-// import { sha256 } from '@noble/hashes/sha2.js'
 
 import { Psbt } from "bitcoinjs-lib";
 import { ECPairFactory } from 'ecpair'
