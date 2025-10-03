@@ -81,9 +81,7 @@
               <!-- Seacrh not found-->
               <div v-else>
                 <div class="flex justify-center mt-10 h-[400px] text-info">
-                  <p>
-                    {{ $t('derivation_path.not_found') }}: {{ searchInput }}
-                  </p>
+                  <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
                 </div>
               </div>
             </div>
@@ -130,7 +128,7 @@ import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
-import PATHS from '../common/bip44'
+import Bip44Paths from '../common/bip44'
 import {
   type DerivationPath,
   ethereum as ethereumPath,
@@ -138,6 +136,8 @@ import {
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
+import { useChainsStore } from '@/stores/chainsStore'
+import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 
 const { t } = useI18n()
 defineProps({
@@ -147,12 +147,25 @@ defineProps({
   },
 })
 
+const chainStore = useChainsStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
-
-const paths = ref(PATHS[WALLET_TYPES.MNEMONIC])
-const defaultEthereumPath = ethereumPath
+const { selectedChain } = storeToRefs(chainStore)
+// TODO: handle DOT and SOL later on
+const defaultPath =
+  selectedChain.value?.type === 'EVM'
+    ? Bip44Paths[WALLET_TYPES.MNEMONIC]
+    : selectedChain.value?.type === 'BITCOIN'
+      ? BitcoinWallet.getSupportedPaths(selectedChain.value.name)
+      : Bip44Paths[WALLET_TYPES.MNEMONIC]
+const paths = ref(defaultPath)
+const initialDefaultPath =
+  selectedChain.value?.type === 'EVM'
+    ? ethereumPath
+    : selectedChain.value?.type === 'BITCOIN'
+      ? BitcoinWallet.getSupportedPaths(selectedChain.value.name)[0]
+      : ethereumPath
 
 const selectedPath = defineModel<DerivationPath>('selectedPath', {
   // type: Object as () => DerivationPath,
@@ -166,9 +179,7 @@ const setSelectedPath = (path: DerivationPath) => {
 }
 
 onMounted(() => {
-  if (selectedDerivation.value) {
-    selectedPath.value = selectedDerivation.value
-  }
+  setPaths()
 })
 
 watch(
@@ -181,6 +192,45 @@ watch(
   { immediate: true },
 )
 
+watch(
+  () => selectedChain.value,
+  newValue => {
+    if (newValue) {
+      setPaths()
+      // reset search input
+      searchInput.value = ''
+    }
+  },
+)
+
+const setPaths = () => {
+  if (selectedDerivation.value) {
+    selectedPath.value = selectedDerivation.value
+  }
+
+  // set path automatically if chain type differs from current selected path
+  if (selectedChain.value?.type !== selectedPath.value?.type) {
+    if (selectedChain.value?.type === 'EVM') {
+      selectedPath.value = ethereumPath
+    } else if (selectedChain.value?.type === 'BITCOIN') {
+      selectedPath.value = BitcoinWallet.getSupportedPaths(
+        selectedChain.value.name,
+      )[0]
+    } else {
+      selectedPath.value = initialDefaultPath
+    }
+    setToStore(selectedPath.value!)
+  } else {
+    if (selectedChain.value?.type === 'BITCOIN' && selectedPath.value) {
+      // ensure selected path is supported by the selected bitcoin chain
+      const supportedPaths = BitcoinWallet.getSupportedPaths(
+        selectedChain.value.name,
+      )
+      selectedPath.value = supportedPaths[0]
+      setToStore(selectedPath.value!)
+    }
+  }
+}
 /** -------------------------------
  * Dialog
  -------------------------------*/
@@ -212,13 +262,6 @@ const searchResults = computed(() => {
   })
   const unique = new Set([...beginsWithLabel, ...beginsWithPath, ...other])
   return [...unique]
-})
-
-onMounted(() => {
-  //TODO: set default path per chain .IE bitcoin has its own path
-  if (!selectedPath.value) {
-    selectedPath.value = defaultEthereumPath
-  }
 })
 
 /** -------------------------------

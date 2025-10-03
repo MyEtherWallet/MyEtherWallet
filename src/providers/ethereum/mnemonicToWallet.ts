@@ -3,10 +3,10 @@ import HDkey from 'hdkey'
 import PrivateKeyWallet from './privateKeyWallet'
 
 class MnemonicToWallet {
-  mnemonic: string
-  basePath: string
-  chainId: string
-  extraWord?: string
+  private mnemonic: string
+  private basePath: string
+  private chainId: string
+  private extraWord?: string
   constructor(options: {
     mnemonic: string
     basePath: string

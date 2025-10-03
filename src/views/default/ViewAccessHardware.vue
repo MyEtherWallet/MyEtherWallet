@@ -8,7 +8,7 @@
       <!-- TODO add proper link arrow icon?-->
       <div class="flex justify-center">
         <router-link
-          :to="{ name: ROUTES_MAIN.HOME.NAME }"
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
           class="text-center underline text-base mb-8 mx-auto"
           >or select another access method
         </router-link>
@@ -27,7 +27,7 @@ import { computed } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import ModuleAccessHardwareWallet from '@/modules/access/ModuleAccessHardwareWallet.vue'
-import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
