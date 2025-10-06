@@ -14,7 +14,7 @@
         v-if="isOpen"
         class="cursor-pointer fixed inset-0 bg-black/40 overscroll-none overflow-hidden min-w-[320px] min-h-lvh mt-[68px] sm:mt-[76px]"
         :class="zIndexOverlay"
-        @click="setIsOpen(false)"
+        @click="closeDialog()"
         aria-hidden
       />
     </transition>
@@ -26,7 +26,7 @@
         zIndexContainer,
       ]"
       class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none !overflow-y-scroll mt-[69px] sm:mt-[77px]"
-      @click="setIsOpen(false)"
+      @click="closeDialog()"
     >
       <transition
         enter-from-class="opacity-0 translate-x-full"
@@ -46,7 +46,7 @@
           v-bind="$attrs"
         >
           <app-btn-icon-close
-            @click="setIsOpen(false)"
+            @click="closeDialog()"
             class="absolute top-2 sm:top-4 right-4 min-w-[32px]"
           />
           <div>
@@ -106,17 +106,17 @@ const { isXLAndUp } = useAppBreakpoints()
 const route = useRoute()
 const router = useRouter()
 /**
- * @setIsOpen - function to set the dialog state
+ * @closeDialog - function to set the dialog state
  * @param _value - boolean value to set the dialog state
  */
-const setIsOpen = (_value: boolean = false) => {
+const closeDialog = () => {
   if (!isXLAndUp.value) {
     walletMenu.setIsOpenSideMenu(false)
   }
-  isOpen.value = _value
+  isOpen.value = false
   hasShadow.value = true
   isOverflowHidden.value = false
-  if (route.matched.length > 1 && _value === false) {
+  if (route.matched.length > 1) {
     // The parent route is the second to last item in the matched array
     const parentRouteName = route.matched[route.matched.length - 2].name
 

@@ -26,7 +26,7 @@
           height="h-10 xs:h-[56px]"
         />
         <app-token-logo
-          v-if="selectedChain && exhistsOnCurrentChain"
+          v-if="selectedChain && existsOnCurrentChain"
           :url="selectedChain.icon"
           :symbol="selectedChain.name"
           width="w-5"
@@ -39,7 +39,7 @@
         <h1 class="text-s-20 xs:text-s-24 leading-p-110 font-bold">
           {{ tokenData.name }} ({{ tokenData.symbol.toUpperCase() }})
           <span
-            v-if="exhistsOnCurrentChain"
+            v-if="existsOnCurrentChain"
             class="text-s-17 hidden lg:inline-block font-medium uppercase text-info mr-1 tracking-sp-06"
           >
             on {{ selectedChain?.name }}
@@ -81,7 +81,7 @@
       </div>
     </div>
     <p
-      v-if="!isLoading && exhistsOnCurrentChain"
+      v-if="!isLoading && existsOnCurrentChain"
       class="text-s-8 xs:text-s-11 tracking-sp-06 lg:hidden font-bold uppercase text-info px-3 xs:px-6 ml-[58px] xs:ml-[74px] md:ml-[66px]"
     >
       on {{ selectedChain?.name }}
@@ -186,7 +186,7 @@ onFetchResponse(() => {
   if (tokenData.value === null) {
     return
   }
-  if (!exhistsOnCurrentChain.value) {
+  if (!existsOnCurrentChain.value) {
     walletMenu.setWalletPanel('bridge')
   } else {
     walletMenu.setWalletPanel('swap')
@@ -200,7 +200,7 @@ onFetchResponse(() => {
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
-const exhistsOnCurrentChain = computed(() => {
+const existsOnCurrentChain = computed(() => {
   if (tokenData.value && selectedChain.value) {
     return tokenData.value.supportedChains.some(
       chain => chain.chainName === selectedChain.value?.name,
