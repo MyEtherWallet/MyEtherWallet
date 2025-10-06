@@ -1,68 +1,76 @@
 <template>
   <div>
-    <div class="relative flex flex-col items-center mx-auto mt-4">
-      <div class="w-full flex items-center justify-start">
-        <p class="font-semibold text-s-24 ml-3 mb-1 text-left w-full">Swap</p>
-        <app-btn-text class="text-primary ml-auto">Clear</app-btn-text>
-      </div>
-      <div class="relative">
-        <!-- From Section -->
-        <div
-          class="bg-surface-light rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
-        >
-          <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
-          <select-chain-for-app :filter-chain-type="true" />
-          <app-swap-enter-amount
-            v-model:amount="fromAmount"
-            v-model:selected-token="fromTokenSelected"
-            v-model:error="fromAmountError"
-            :external-loading="fromLoadingState"
-            :tokens="parsedFromTokens"
-            :show-balance="isWalletConnected"
-            class="mt-3"
-          />
-        </div>
-        <div
-          class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
-          :class="{
-            'top-[calc(50%-67px)]': isCrossChain,
-            'top-[calc(50%-18px)]': !isCrossChain,
-          }"
-        >
-          <arrows-up-down-icon class="w-5 h-5" />
-        </div>
-        <div class="pt-2"></div>
-        <!-- To Section -->
-        <div
-          class="bg-surface-light rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
-        >
-          <p class="text-s-12 mb-1 font-bold">{{ t('common.to') }}</p>
-          <select-chain-for-app
-            :can-store="false"
-            :passed-chains="toChains"
-            :preselected-chain="selectedToChain"
-            :filter-chain-type="true"
-            @update:selected-chain="setToChain"
-          />
-          <app-swap-enter-amount
-            v-model:amount="toAmount"
-            v-model:selected-token="toTokenSelected"
-            v-model:error="toAmountError"
-            :external-loading="toLoadingState"
-            :show-balance="false"
-            :tokens="parsedToTokens"
-            :readonly="true"
-            :is-estimate="true"
-            class="mt-4"
-          />
-          <div class="pt-4" v-if="isCrossChain"></div>
-          <address-input
-            v-model:adr-input="userToAddress"
-            :resolved-address="toAddress"
-            :address-error-messages="toAddressError"
-            @validate:address="validateToAddress"
-            v-if="isCrossChain"
-          />
+    <div
+      :class="[
+        'static w-full flex flex-col items-center justify-items-stretch gap-1',
+      ]"
+    >
+      <div class="mb-3">
+        <p class="font-bold text-s-28 ml-5 mb-4 mt-1 xs:mt-5">
+          {{ walletPanel === 'swap' ? 'Swap' : 'Bridge' }}
+        </p>
+        <div class="relative">
+          <div class="absolute -top-8 right-4">
+            <app-btn-text class="text-primary ml-auto">Clear all</app-btn-text>
+          </div>
+          <!-- From Section -->
+          <div
+            class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+          >
+            <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
+            <select-chain-for-app :filter-chain-type="true" />
+            <app-swap-enter-amount
+              v-model:amount="fromAmount"
+              v-model:selected-token="fromTokenSelected"
+              v-model:error="fromAmountError"
+              :external-loading="fromLoadingState"
+              :tokens="parsedFromTokens"
+              :show-balance="isWalletConnected"
+              class="mt-3"
+            />
+          </div>
+          <div
+            class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
+            :class="{
+              'top-[calc(50%-67px)]': isCrossChain,
+              'top-[calc(50%-18px)]': !isCrossChain,
+            }"
+          >
+            <arrows-up-down-icon class="w-5 h-5" />
+          </div>
+          <div class="pt-2"></div>
+          <!-- To Section -->
+          <div
+            class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+          >
+            <p class="text-s-12 mb-1 font-bold">{{ t('common.to') }}</p>
+            <select-chain-for-app
+              :can-store="false"
+              :passed-chains="toChains"
+              :preselected-chain="selectedToChain"
+              :filter-chain-type="true"
+              @update:selected-chain="setToChain"
+            />
+            <app-swap-enter-amount
+              v-model:amount="toAmount"
+              v-model:selected-token="toTokenSelected"
+              v-model:error="toAmountError"
+              :external-loading="toLoadingState"
+              :show-balance="false"
+              :tokens="parsedToTokens"
+              :readonly="true"
+              :is-estimate="true"
+              class="mt-4"
+            />
+            <div class="pt-4" v-if="isCrossChain"></div>
+            <address-input
+              v-model:adr-input="userToAddress"
+              :resolved-address="toAddress"
+              :address-error-messages="toAddressError"
+              @validate:address="validateToAddress"
+              v-if="isCrossChain"
+            />
+          </div>
         </div>
       </div>
       <div class="pt-4"></div>
@@ -75,7 +83,7 @@
         </p>
       </div>
       <app-base-button
-        class="w-full"
+        class="w-[70%]"
         v-if="isWalletConnected"
         :disabled="
           (swapLoaded && !supportedNetwork) ||
@@ -91,7 +99,7 @@
       >
         {{ t('common.swap') }}</app-base-button
       >
-      <div class="w-full max-w-[478px] mx-auto" v-else>
+      <div class="mx-auto w-[70%]" v-else>
         <app-base-button
           class="w-full"
           :disabled="swapLoaded && !supportedNetwork"
@@ -167,6 +175,10 @@ import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import dataTxAction from '@/utils/dataTxAction'
 import AddressInput from '@/components/address_book/AddressInput.vue'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
+const walletMenu = useWalletMenuStore()
+const { walletPanel } = storeToRefs(walletMenu)
 
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()

@@ -61,7 +61,7 @@ export type WebTokensTableSort = components['schemas']['WebTokensTableSort']
 export type GetWebTokensTableResponse =
   components['schemas']['GetWebTokensTableResponse']
 export type GetWebTokensTableResponseToken =
-  components['schemas']['GetWebTokensTableResponse']['items'][number]
+  GetWebTokensTableResponse['items'][number]
 export type GetWebTopGainersResponse =
   components['schemas']['GetWebTopGainersResponse']
 export type GetWebTrendingTokensResponse =
@@ -70,3 +70,14 @@ export type GetWebTrendingTokensResponseToken =
   components['schemas']['GetWebTrendingTokensResponse']['items'][number]
 export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']
+
+//Tokens Page
+export type GetWebTokenInfo =
+  components['schemas']['GetWebTokenInfoPageResponse']
+
+export type GetWebTokenPriceChartByCoinResponse =
+  components['schemas']['GetWebTokenPriceChartResponse']
+export type GetWebTokenPriceChartPoint =
+  GetWebTokenPriceChartByCoinResponse['prices'][number]
+export type WebTokenPriceChartInterval =
+  components['schemas']['WebTokenPriceChartInterval']
