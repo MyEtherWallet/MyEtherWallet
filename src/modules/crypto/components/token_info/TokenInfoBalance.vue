@@ -4,7 +4,7 @@
 
     <div
       v-if="
-        isWalletConnected && !isLoading && exhistsOnCurrentChain && tokenData
+        isWalletConnected && !isLoading && existsOnCurrentChain && tokenData
       "
       class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 gap-2"
     >
@@ -141,7 +141,7 @@ const { walletAddress, isWalletConnected } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
-const exhistsOnCurrentChain = computed(() => {
+const existsOnCurrentChain = computed(() => {
   if (props.tokenData && selectedChain.value) {
     return props.tokenData.supportedChains.some(
       chain => chain.chainName === selectedChain.value?.name,
