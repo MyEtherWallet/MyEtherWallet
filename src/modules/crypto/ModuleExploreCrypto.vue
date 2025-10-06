@@ -239,9 +239,8 @@
                 <td class="px-1 py-2 rounded-l-12 sm:rounded-none">
                   <router-link
                     :to="{
-                      name: 'TokenInfo',
+                      name: ROUTES_MAIN.TOKEN_INFO.NAME,
                       params: {
-                        networkId: token.coinId,
                         tokenId: token.coinId,
                       },
                     }"
