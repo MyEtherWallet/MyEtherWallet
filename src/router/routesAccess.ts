@@ -4,7 +4,6 @@ import {
   LEDGER_ALIAS,
   TREZOR_ALIAS,
 } from './routeNames'
-import { beforeAccessEnter } from './helpers/helpersAccess'
 const ViewAccessWallet = () => import('@view-default/ViewAccessWallet.vue')
 const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
 const ViewAccessPrivateKey = () =>
@@ -15,7 +14,6 @@ const ViewAccessHardware = () => import('@view-default/ViewAccessHardware.vue')
 export const ACCESS_ROUTES = {
   path: ROUTES_ACCESS.ACCESS.PATH,
   props: true,
-  beforeEnter: beforeAccessEnter,
   children: [
     {
       path: '',

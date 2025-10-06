@@ -79,11 +79,8 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { watchDebounced } from '@vueuse/core'
-
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
@@ -100,9 +97,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
-
+import { useAccessStore } from '@/stores/accessStore'
 // useChainStore
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -180,7 +176,6 @@ const resetKeystore = () => {
 const walletStore = useWalletStore()
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
-const router = useRouter()
 const { setWallet } = walletStore
 
 const password = ref('')
@@ -194,7 +189,7 @@ const submitIsDisabled = computed<boolean>(() => {
   return password.value === '' || errorPassword.value !== ''
 })
 
-const accessRedirectStore = useAccessRedirectStore()
+const accessStore = useAccessStore()
 
 const enterPassword = async () => {
   try {
@@ -212,9 +207,7 @@ const enterPassword = async () => {
       setWallet(wallet)
       addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
-      router.push({
-        name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
-      })
+      accessStore.closeAccessDialog()
     }
   } catch {
     errorPassword.value = 'Invalid password'

@@ -2,7 +2,6 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import {
@@ -13,7 +12,7 @@ import {
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 
-import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
+import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -46,12 +45,10 @@ export const useConnectWallet = () => {
   ) => {
     wagmiWalletData.value = ''
     openWalletConnectModal.value = false
-    const accessRedirectStore = useAccessRedirectStore()
+    const accessStore = useAccessStore()
     setWallet(wallet)
     addWallet(config)
-    router.push({
-      name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
-    })
+    accessStore.closeAccessDialog()
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {

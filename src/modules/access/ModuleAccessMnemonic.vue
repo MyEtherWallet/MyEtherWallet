@@ -99,10 +99,8 @@ import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import DerivationPath from './components/DerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -111,7 +109,7 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
-import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
+import { useAccessStore } from '@/stores/accessStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 
@@ -272,10 +270,9 @@ const setPage = (isNext: boolean) => {
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
-const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
-const accessRedirectStore = useAccessRedirectStore()
+const accessStore = useAccessStore()
 
 const access = async () => {
   isUnlockingWallet.value = true
@@ -288,8 +285,6 @@ const access = async () => {
   })
 
   isUnlockingWallet.value = false
-  router.push({
-    name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
-  })
+  accessStore.closeAccessDialog()
 }
 </script>

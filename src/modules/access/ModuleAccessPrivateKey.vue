@@ -25,10 +25,7 @@
 import { isValidPrivate } from '@ethereumjs/util'
 
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
@@ -40,12 +37,11 @@ import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
-import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
+import { useAccessStore } from '@/stores/accessStore'
 
 const privateKeyInput = ref('')
-const accessRedirectStore = useAccessRedirectStore()
+const accessStore = useAccessStore()
 const walletStore = useWalletStore()
-const router = useRouter()
 const { setWallet } = walletStore
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -92,9 +88,7 @@ const unlock = () => {
     setWallet(wallet)
     addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
-    router.push({
-      name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
-    })
+    accessStore.closeAccessDialog()
   } catch (error) {
     // TODO: handle error when toast is implemented
     console.error(error)
