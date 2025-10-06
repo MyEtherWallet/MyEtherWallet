@@ -46,6 +46,7 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    target: 'esnext',
   },
   optimizeDeps: {
     include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets']
