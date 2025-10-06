@@ -90,13 +90,13 @@
           {{ $t('common.create_wallet') }}
         </router-link>
         <!-- Connect wallet button -->
-        <router-link
+        <button
           v-if="!isWalletConnected && !isAccessPage"
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          @click="connectWallet"
           class="px-4 bg-black text-white h-8 sm:h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('connect_wallet') }}
-        </router-link>
+        </button>
         <the-current-network v-if="isWalletConnected && !isAccessPage" />
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected && !isAccessPage" />
@@ -137,7 +137,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
-
+import { useAccessStore } from '@/stores/accessStore'
 const { t } = useI18n()
 const store = useWalletStore()
 const { isWalletConnected } = storeToRefs(store)
@@ -232,4 +232,13 @@ const isAccessPage = computed(() => {
     route.matched.some(route => route.path === ROUTES_ACCESS.ACCESS.PATH)
   )
 })
+
+/** ------------------------------
+ * Connect Wallet
+ ------------------------------*/
+const accessStore = useAccessStore()
+
+const connectWallet = () => {
+  accessStore.openAccessDialog()
+}
 </script>

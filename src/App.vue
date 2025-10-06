@@ -4,8 +4,15 @@
       v-if="!isDevMode"
       @close-welcome-dialog="showFeedbackToast"
     />
-    <the-app-layout v-if="isLoadingComplete" />
+    <the-app-layout
+      v-if="isLoadingComplete"
+      :aria-hidden="isOpenAccessDialog"
+    />
     <module-toast />
+    <module-access-wallet
+      v-if="isLoadingComplete"
+      v-model:is-open="isOpenAccessDialog"
+    />
   </div>
 </template>
 
@@ -23,7 +30,9 @@ import { type TokenBalancesRaw } from '@/mew_api/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
+import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import configs from './configs'
+import { useAccessStore } from '@/stores/accessStore'
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
@@ -110,4 +119,11 @@ onMounted(() => {
     addProvider(provider)
   })
 })
+
+/**-------------------------------
+ * Access Wallet Dialog
+ -------------------------------*/
+
+const accessStore = useAccessStore()
+const { isOpenAccessDialog } = storeToRefs(accessStore)
 </script>

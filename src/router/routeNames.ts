@@ -7,7 +7,7 @@ export type RouteName = {
 }
 
 const ROUTES_ACCESS: RouteNameCollection = {
-  ACCESS: { NAME: 'Access', PATH: '/access' },
+  ACCESS: { NAME: 'Access', PATH: 'access' },
   ACCESS_KEYSTORE: { NAME: 'AccessKeystore', PATH: 'keystore' },
   ACCESS_MNEMONIC: { NAME: 'AccessMnemonic', PATH: 'mnemonic' },
   ACCESS_PRIVATE_KEY: { NAME: 'AccessPrivateKey', PATH: 'private-key' },
@@ -34,7 +34,11 @@ const ROUTES_MAIN: RouteNameCollection = {
   CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
   LEARN: { NAME: 'Learn', PATH: '/learn' },
   STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
-  TOKEN_INFO: { NAME: 'TokenInfo', PATH: 'token/:tokenId' },
+}
+const TOKEN_INFO = { PATH: 'token/:tokenId' }
+const TOKEN_INFO_ROUTE_NAMES = {
+  crypto: 'token-info-crypto',
+  home: 'token-info-home',
 }
 
 const ROUTES_SEND: RouteNameCollection = {
@@ -71,6 +75,8 @@ export {
   ROUTES_CREATE_WALLET,
   ROUTES_SEND,
   ROUTES_ACCESS,
+  TOKEN_INFO,
+  TOKEN_INFO_ROUTE_NAMES,
   ACCESS_ALIAS,
   KEYSTORE_ALIAS,
   MNEMONIC_ALIAS,

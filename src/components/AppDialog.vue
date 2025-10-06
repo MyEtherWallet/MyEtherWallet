@@ -144,11 +144,16 @@ const isOpen = defineModel('isOpen', {
   required: true,
 })
 
+const emit = defineEmits(['close-dialog'])
+
 /**
  * @setIsOpen - function to set the dialog state
  * @param _value - boolean value to set the dialog state
  */
 const setIsOpen = (_value: boolean = false) => {
   isOpen.value = _value
+  if (!_value) {
+    emit('close-dialog')
+  }
 }
 </script>

@@ -71,7 +71,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei, toHex } from 'web3-utils'
@@ -96,11 +95,10 @@ import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { toBase } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 import { useAddressInput } from '@/composables/useAddressInput'
+import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 
-const router = useRouter()
 const { t } = useI18n()
 const walletStore = useWalletStore()
 const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
@@ -190,13 +188,15 @@ const checkAmountForError = () => {
   } else amountError.value = ''
 }
 
+const accessStore = useAccessStore()
+
 const connectWallet = () => {
   storeSendValues({
     toAddress: toAddress.value ?? '',
     amount: amount.value.toString(),
     token: tokenSelectedContract.value,
   })
-  router.push({ name: ROUTES_ACCESS.ACCESS.NAME })
+  accessStore.openAccessDialog()
 }
 
 // Gas Fee for display

@@ -1,9 +1,8 @@
-import { ROUTES_MAIN } from '../routeNames'
+import { TOKEN_INFO } from './routeNames'
 const ViewTokenInfo = () => import('@/views/wallet/crypto/ViewTokenInfo.vue')
 
 export const TOKEN_INFO_ROUTE = {
-  path: ROUTES_MAIN.TOKEN_INFO.PATH,
-  name: ROUTES_MAIN.TOKEN_INFO.NAME,
+  path: TOKEN_INFO.PATH,
   component: ViewTokenInfo,
   props: true,
   meta: {
