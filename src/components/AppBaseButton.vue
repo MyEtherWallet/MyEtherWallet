@@ -2,7 +2,7 @@
   <button
     :class="[
       defaultClass,
-      { 'py-1 px-3 text-s-15': size === BtnSize.SMALL },
+      { 'py-1 px-3 text-s-14': size === BtnSize.SMALL },
       { 'py-2 px-5': size === BtnSize.MEDIUM },
       { 'py-3 md:py-4 px-6 md:px-7': size === BtnSize.LARGE },
       disabled
@@ -15,7 +15,7 @@
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
-    @click="onClick"
+    @click.stop="onClick"
     v-ripple
     :aria-disabled="disabled"
   >
