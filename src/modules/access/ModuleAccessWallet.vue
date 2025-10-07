@@ -1,9 +1,10 @@
 <template>
   <app-dialog
-    v-model:is-open="isOpen"
+    v-model:is-open="isOpenAccessDialog"
     class="!max-w-[900px]"
     bg="bg-appBackground"
     has-title-underline
+    @close-dialog="closeAccess()"
   >
     <template #title>
       <div
@@ -30,16 +31,24 @@
       <div
         class="px-4 xs:px-6 h-[calc(95vh-107px)] xs:h-[calc(95vh-150px)] !overflow-y-scroll pb-8"
       >
-        <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
-          <div>
-            <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
-              {{ $t('common.select_network') }}
-            </h2>
-            <select-chain-for-app is-btn-group />
+        <div v-if="currentView === 'default'">
+          <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
+            <div>
+              <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
+                {{ $t('common.select_network') }}
+              </h2>
+              <select-chain-for-app is-btn-group />
+            </div>
           </div>
+          <WalletsDefaultList class="mt-10 mb-12" />
+          <WalletsList />
         </div>
-        <WalletsDefaultList class="mt-10 mb-12" />
-        <WalletsList />
+        <module-access-keystore v-else-if="currentView === 'keystore'" />
+        <module-access-private-key v-else-if="currentView === 'private_key'" />
+        <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
+        <module-access-hardware-wallet
+          v-else-if="currentView === 'ledger' || currentView === 'trezor'"
+        />
       </div>
     </template>
   </app-dialog>
@@ -50,9 +59,20 @@ import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.v
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
+import { useAccessStore } from '@/stores/accessStore'
+import { storeToRefs } from 'pinia'
+import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
+import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
+import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
+import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
+/**-------------------------------
+ * Access Wallet Dialog
+ -------------------------------*/
 
-const isOpen = defineModel('isOpen', {
-  type: Boolean,
-  required: true,
-})
+const accessStore = useAccessStore()
+const { isOpenAccessDialog, currentView } = storeToRefs(accessStore)
+
+const closeAccess = () => {
+  accessStore.setCurrentView('default')
+}
 </script>

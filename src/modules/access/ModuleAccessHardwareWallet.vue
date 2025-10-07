@@ -1,69 +1,96 @@
 <template>
-  <div>
-    <app-stepper
-      :steps="walletSteps"
-      :description="walletStepsDescription"
-      :active-step="activeStep"
-      @update:active-step="backStep"
+  <div class="flex justify-center w-full">
+    <app-sheet
+      :title="$t(`${hardwareDetails.title}`)"
+      :sheet-class="'max-w-[624px]'"
+      :title-class="'text-center'"
     >
-      <!-- Enter Mnemonic -->
-      <div v-if="activeStep === 0">
-        <app-step-description
-          :description="walletStepsDescription[0]"
-          :activeStep="activeStep"
-        />
-        <div class="flex items-center justify-center mt-[40px]">
-          <app-base-button
-            @click="unlockWallet"
-            :is-loading="connectingWallet"
-            :disabled="connectingWallet"
-          >
-            {{ connectButtonText }}
-          </app-base-button>
-        </div>
+      <!-- TODO add proper link arrow icon?-->
+      <div class="flex justify-center">
+        <router-link
+          :to="{ name: ROUTES_MAIN.HOME.NAME }"
+          class="text-center underline text-base mb-8 mx-auto"
+          >or select another access method
+        </router-link>
       </div>
-      <!-- Select Network, Address, DP -->
-      <div v-if="activeStep === 1">
-        <app-step-description
-          :description="walletStepsDescription[1]"
-          :activeStep="activeStep"
-        />
-        <div
-          class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
+      <div>
+        <app-stepper
+          :steps="walletSteps"
+          :description="walletStepsDescription"
+          :active-step="activeStep"
+          @update:active-step="backStep"
         >
-          <select-chain-for-app />
-          <hardware-wallet-derivation
-            :paths="paths"
-            :wallet-type="selectedHwWalletType"
-          />
-        </div>
-        <select-address-list
-          v-model="selectedIndex"
-          :walletList="walletList as SelectAddress[]"
-          :isLoading="isLoadingWalletList"
-          class="mt-5"
-          @nextpage="setPage(true)"
-          @prevpage="setPage(false)"
-        />
-        <div class="flex items-center flex-col justify-center">
-          <app-base-button
-            @click="access"
-            :disabled="walletList.length === 0 || isLoadingWalletList"
-            class="mt-10"
-            :is-loading="isUnlockingWallet"
-          >
-            {{ $t('common.access_wallet') }}
-          </app-base-button>
-          <app-btn-text @click="backStep" is-large class="mt-2 text-primary">
-            {{ $t('common.back') }}
-          </app-btn-text>
-        </div>
+          <!-- Enter Mnemonic -->
+          <div v-if="activeStep === 0">
+            <app-step-description
+              :description="walletStepsDescription[0]"
+              :activeStep="activeStep"
+            />
+            <div class="flex items-center justify-center mt-[40px]">
+              <app-base-button
+                @click="unlockWallet"
+                :is-loading="connectingWallet"
+                :disabled="connectingWallet"
+              >
+                {{ connectButtonText }}
+              </app-base-button>
+            </div>
+          </div>
+          <!-- Select Network, Address, DP -->
+          <div v-if="activeStep === 1">
+            <app-step-description
+              :description="walletStepsDescription[1]"
+              :activeStep="activeStep"
+            />
+            <div
+              class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
+            >
+              <select-chain-for-app />
+              <hardware-wallet-derivation
+                :paths="paths"
+                :wallet-type="selectedHwWalletType"
+              />
+            </div>
+            <select-address-list
+              v-model="selectedIndex"
+              :walletList="walletList as SelectAddress[]"
+              :isLoading="isLoadingWalletList"
+              class="mt-5"
+              @nextpage="setPage(true)"
+              @prevpage="setPage(false)"
+            />
+            <div class="flex items-center flex-col justify-center">
+              <app-base-button
+                @click="access"
+                :disabled="walletList.length === 0 || isLoadingWalletList"
+                class="mt-10"
+                :is-loading="isUnlockingWallet"
+              >
+                {{ $t('common.access_wallet') }}
+              </app-base-button>
+              <app-btn-text
+                @click="backStep"
+                is-large
+                class="mt-2 text-primary"
+              >
+                {{ $t('common.back') }}
+              </app-btn-text>
+            </div>
+          </div>
+        </app-stepper>
       </div>
-    </app-stepper>
+      <app-need-help
+        :title="hardwareDetails.articleTitle"
+        :help-link="hardwareDetails.articleLink"
+        class="md:mt-[80px] mt-10 mb-4 text-center"
+      />
+    </app-sheet>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppSheet from '@/components/AppSheet.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import { ref, watch, markRaw, computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
@@ -73,9 +100,9 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -98,7 +125,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
-
+import { useAccessStore } from '@/stores/accessStore'
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
 const derivationStore = useDerivationStore()
@@ -114,10 +141,39 @@ const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
 
 const { t } = useI18n()
 // used to define which hardware wallet is being accessed
-const route = useRoute()
+const accessStore = useAccessStore()
 
 // Wallet instance
 let hwWalletInstance = new HWwallet()
+
+/**------------------------
+ * Hardware details for help link and title
+ ------------------------*/
+const { currentView } = storeToRefs(accessStore)
+const hardwareDetails = computed(() => {
+  switch (currentView.value) {
+    case 'trezor':
+      return {
+        title: 'access_wallet_trezor.title',
+        articleTitle: 'How to connect your wallet with Trezor',
+        articleLink:
+          'https://help.myetherwallet.com/en/articles/5433710-using-a-trezor-hardware-wallet-with-mew',
+      }
+    case 'ledger':
+      return {
+        title: 'access_wallet_ledger.title',
+        articleTitle: 'How to connect your wallet with Ledger',
+        articleLink:
+          'https://help.myetherwallet.com/en/articles/5433709-using-a-ledger-hardware-wallet-with-mew',
+      }
+    default:
+      return {
+        title: '',
+        articleTitle: '',
+        articleLink: '',
+      }
+  }
+})
 
 /**------------------------
  * Derivation Path
@@ -136,10 +192,10 @@ const activeStep = ref(0)
  * allows for uniformity in accessing different hardware wallets
  */
 const selectedHwWalletType = computed(() => {
-  switch (route.name) {
-    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+  switch (currentView.value) {
+    case 'trezor':
       return HWwalletType.trezor
-    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+    case 'ledger':
       return HWwalletType.ledger
     default:
       return null
@@ -147,10 +203,10 @@ const selectedHwWalletType = computed(() => {
 })
 
 const connectButtonText = computed(() => {
-  switch (route.name) {
-    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+  switch (currentView.value) {
+    case 'trezor':
       return t('access_wallet_trezor.connect')
-    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+    case 'ledger':
       return t('access_wallet_ledger.connect')
     default:
       return ''
@@ -158,8 +214,8 @@ const connectButtonText = computed(() => {
 })
 
 const walletStepsDescription: Ref<StepDescription[]> = computed(() => {
-  switch (route.name) {
-    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+  switch (currentView.value) {
+    case 'trezor':
       return [
         {
           title: t('access_wallet_trezor.step.step1.title'),
@@ -169,7 +225,7 @@ const walletStepsDescription: Ref<StepDescription[]> = computed(() => {
           title: t('access_wallet_trezor.step.step2.title'),
         },
       ]
-    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+    case 'ledger':
       return [
         {
           title: t('access_wallet_ledger.step.step1.title'),
@@ -185,13 +241,13 @@ const walletStepsDescription: Ref<StepDescription[]> = computed(() => {
 })
 
 const walletSteps = computed(() => {
-  switch (route.name) {
-    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+  switch (currentView.value) {
+    case 'trezor':
       return [
         t('access_wallet_trezor.step.step1.short'),
         t('access_wallet_trezor.step.step2.short'),
       ]
-    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+    case 'ledger':
       return [
         t('access_wallet_ledger.step.step1.short'),
         t('access_wallet_ledger.step.step2.short'),
@@ -202,10 +258,10 @@ const walletSteps = computed(() => {
 })
 
 const selectedDerivation: ComputedRef<PathType | undefined> = computed(() => {
-  switch (route.name) {
-    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+  switch (currentView.value) {
+    case 'trezor':
       return trezorSelectedDerivation.value
-    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+    case 'ledger':
       return ledgerSelectedDerivation.value
     default:
       return {
@@ -217,9 +273,9 @@ const selectedDerivation: ComputedRef<PathType | undefined> = computed(() => {
 })
 
 const setSelectedDerivation = (path: PathType) => {
-  if (route.name === ROUTES_ACCESS.ACCESS_TREZOR.NAME) {
+  if (currentView.value === 'trezor') {
     setSelectedTrezorDerivation(path)
-  } else if (route.name === ROUTES_ACCESS.ACCESS_LEDGER.NAME) {
+  } else if (currentView.value === 'ledger') {
     setSelectedLedgerDerivation(path)
   }
 }
@@ -370,10 +426,10 @@ const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
-  switch (route.name) {
-    case ROUTES_ACCESS.ACCESS_TREZOR.NAME:
+  switch (currentView.value) {
+    case 'trezor':
       return walletConfigs.trezor
-    case ROUTES_ACCESS.ACCESS_LEDGER.NAME:
+    case 'ledger':
       return walletConfigs.ledger
     default:
       return null

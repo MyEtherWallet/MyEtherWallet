@@ -9,10 +9,7 @@
       :aria-hidden="isOpenAccessDialog"
     />
     <module-toast />
-    <module-access-wallet
-      v-if="isLoadingComplete"
-      v-model:is-open="isOpenAccessDialog"
-    />
+    <module-access-wallet v-if="isLoadingComplete" />
   </div>
 </template>
 

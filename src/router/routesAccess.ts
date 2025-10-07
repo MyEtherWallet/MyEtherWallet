@@ -1,70 +1,35 @@
-import {
-  ROUTES_ACCESS,
-  KEYSTORE_ALIAS,
-  LEDGER_ALIAS,
-  TREZOR_ALIAS,
-} from './routeNames'
+import { ROUTES_ACCESS } from './routeNames'
+import { type RouterOptions } from 'vue-router'
+import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 const ViewAccessWallet = () => import('@view-default/ViewAccessWallet.vue')
-const ViewAccessKeystore = () => import('@view-default/ViewAccessKeystore.vue')
-const ViewAccessPrivateKey = () =>
-  import('@view-default/ViewAccessPrivateKey.vue')
-const ViewAccessMnemonic = () => import('@view-default/ViewAccessMnemonic.vue')
-const ViewAccessHardware = () => import('@view-default/ViewAccessHardware.vue')
 
-export const ACCESS_ROUTES = {
+const beforeRouteEnter = (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext,
+) => {
+  //NOTE: IF this will be changed, ensure onMounted in ViewAccessWallet is changed accordingly
+  if (
+    to.query.type &&
+    typeof to.query.type === 'string' &&
+    WALLET_VIEWS.includes(to.query.type as (typeof WALLET_VIEWS)[number])
+  ) {
+    next()
+  } else {
+    console.log(
+      'No or invalid wallet type provided, redirecting to default view',
+    )
+    next({ name: ROUTES_ACCESS.ACCESS.NAME, query: { type: 'default' } })
+  }
+}
+type RouteOption = RouterOptions['routes'][0]
+export const ACCESS_ROUTES = <RouteOption>{
   path: ROUTES_ACCESS.ACCESS.PATH,
-  props: true,
-  children: [
-    {
-      path: '',
-      name: ROUTES_ACCESS.ACCESS.NAME,
-      component: ViewAccessWallet,
-      meta: {
-        noAuth: true,
-      },
-    },
-    {
-      path: ROUTES_ACCESS.ACCESS_KEYSTORE.PATH,
-      name: ROUTES_ACCESS.ACCESS_KEYSTORE.NAME,
-      component: ViewAccessKeystore,
-      alias: KEYSTORE_ALIAS.upload,
-      meta: {
-        noAuth: true,
-      },
-    },
-    {
-      path: ROUTES_ACCESS.ACCESS_MNEMONIC.PATH,
-      name: ROUTES_ACCESS.ACCESS_MNEMONIC.NAME,
-      component: ViewAccessMnemonic,
-      meta: {
-        noAuth: true,
-      },
-    },
-    {
-      path: ROUTES_ACCESS.ACCESS_PRIVATE_KEY.PATH,
-      name: ROUTES_ACCESS.ACCESS_PRIVATE_KEY.NAME,
-      component: ViewAccessPrivateKey,
-      meta: {
-        noAuth: true,
-      },
-    },
-    {
-      path: ROUTES_ACCESS.ACCESS_TREZOR.PATH,
-      name: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
-      component: ViewAccessHardware,
-      alias: TREZOR_ALIAS.access,
-      meta: {
-        noAuth: true,
-      },
-    },
-    {
-      path: ROUTES_ACCESS.ACCESS_LEDGER.PATH,
-      name: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
-      component: ViewAccessHardware,
-      alias: LEDGER_ALIAS.access,
-      meta: {
-        noAuth: true,
-      },
-    },
-  ],
+  name: ROUTES_ACCESS.ACCESS.NAME,
+  component: ViewAccessWallet,
+  beforeEnter: beforeRouteEnter,
+  meta: {
+    noAuth: true,
+  },
 }

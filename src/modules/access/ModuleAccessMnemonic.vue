@@ -1,86 +1,116 @@
 <template>
-  <div>
-    <app-stepper
-      :steps="steps"
-      :description="stepDescription"
-      :active-step="activeStep"
-      @update:active-step="backStep"
+  <div class="flex justify-center w-full">
+    <app-sheet
+      :title="$t('access_wallet_recovery_phrase.title')"
+      :sheet-class="'max-w-[624px] min-h-[500px]'"
+      :title-class="'text-center'"
     >
-      <!-- Enter Mnemonic -->
-      <div v-if="activeStep === 0">
-        <app-step-description
-          :description="stepDescription[0]"
-          :activeStep="activeStep"
-        />
-        <app-text-field
-          v-model="mnemonic"
-          :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
-          class="mt-4 text-center"
-          is-required
-          :error-message="
-            hasMnemonicError
-              ? $t('access_wallet_recovery_phrase.invalid_phrase')
-              : ''
-          "
-        />
-        <div class="flex items-center justify-between gap-4 my-7 w-full">
-          <p class="font-medium">
-            {{ $t('access_wallet_recovery_phrase.do_you_have_an_extra_word') }}
-          </p>
-          <app-toggle v-model="hasExtraWord" :label="extraWordToggleString" />
-        </div>
-        <!-- Extra Word -->
-        <expand-transition>
-          <div v-if="hasExtraWord">
-            <app-input
-              v-model="extraWord"
-              :placeholder="
-                $t('access_wallet_recovery_phrase.enter_extra_word')
+      <!-- TODO add proper link arrow icon?-->
+      <div class="flex justify-center">
+        <!-- <router-link
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          class="text-center underline text-base mb-8 mx-auto"
+          >or select another access method
+        </router-link> -->
+      </div>
+      <div>
+        <app-stepper
+          :steps="steps"
+          :description="stepDescription"
+          :active-step="activeStep"
+          @update:active-step="backStep"
+        >
+          <!-- Enter Mnemonic -->
+          <div v-if="activeStep === 0">
+            <app-step-description
+              :description="stepDescription[0]"
+              :activeStep="activeStep"
+            />
+            <app-text-field
+              v-model="mnemonic"
+              :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
+              class="mt-4 text-center"
+              is-required
+              :error-message="
+                hasMnemonicError
+                  ? $t('access_wallet_recovery_phrase.invalid_phrase')
+                  : ''
               "
             />
+            <div class="flex items-center justify-between gap-4 my-7 w-full">
+              <p class="font-medium">
+                {{
+                  $t('access_wallet_recovery_phrase.do_you_have_an_extra_word')
+                }}
+              </p>
+              <app-toggle
+                v-model="hasExtraWord"
+                :label="extraWordToggleString"
+              />
+            </div>
+            <!-- Extra Word -->
+            <expand-transition>
+              <div v-if="hasExtraWord">
+                <app-input
+                  v-model="extraWord"
+                  :placeholder="
+                    $t('access_wallet_recovery_phrase.enter_extra_word')
+                  "
+                />
+              </div>
+            </expand-transition>
+            <div class="flex items-center justify-center">
+              <app-base-button @click="unlockWallet" :disabled="!isValid">
+                {{ $t('common.next') }}
+              </app-base-button>
+            </div>
           </div>
-        </expand-transition>
-        <div class="flex items-center justify-center">
-          <app-base-button @click="unlockWallet" :disabled="!isValid">
-            {{ $t('common.next') }}
-          </app-base-button>
-        </div>
+          <!-- Select Network, Address, DP -->
+          <div v-if="activeStep === 1">
+            <app-step-description
+              :description="stepDescription[1]"
+              :activeStep="activeStep"
+            />
+            <div
+              class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
+            >
+              <select-chain-for-app />
+              <derivation-path />
+            </div>
+            <select-address-list
+              v-model="selectedIndex"
+              :walletList="walletList as SelectAddress[]"
+              :isLoading="isLoadingWalletList"
+              class="mt-5"
+              @nextpage="setPage(true)"
+              @prevpage="setPage(false)"
+            />
+            <div class="flex items-center flex-col justify-center">
+              <app-base-button
+                @click="access"
+                :disabled="!isValid"
+                class="mt-10"
+                :is-loading="isUnlockingWallet"
+              >
+                {{ $t('common.access_wallet') }}
+              </app-base-button>
+              <app-btn-text
+                @click="backStep"
+                is-large
+                class="mt-2 text-primary"
+              >
+                {{ $t('common.back') }}
+              </app-btn-text>
+            </div>
+          </div>
+        </app-stepper>
       </div>
-      <!-- Select Network, Address, DP -->
-      <div v-if="activeStep === 1">
-        <app-step-description
-          :description="stepDescription[1]"
-          :activeStep="activeStep"
-        />
-        <div
-          class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
-        >
-          <select-chain-for-app />
-          <derivation-path />
-        </div>
-        <select-address-list
-          v-model="selectedIndex"
-          :walletList="walletList as SelectAddress[]"
-          :isLoading="isLoadingWalletList"
-          class="mt-5"
-          @nextpage="setPage(true)"
-          @prevpage="setPage(false)"
-        />
-        <div class="flex items-center flex-col justify-center">
-          <app-base-button
-            @click="access"
-            :disabled="!isValid"
-            class="mt-10"
-            :is-loading="isUnlockingWallet"
-          >
-            {{ $t('common.access_wallet') }}
-          </app-base-button>
-          <app-btn-text @click="backStep" is-large class="mt-2 text-primary">
-            {{ $t('common.back') }}
-          </app-btn-text>
-        </div>
-      </div>
-    </app-stepper>
+      <app-need-help
+        title="How to connect your wallet with recovery phrase"
+        help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
+        class="md:mt-[80px] mt-10 mb-4 text-center"
+      />
+    </app-sheet>
   </div>
 </template>
 
@@ -95,6 +125,8 @@ import AppTextField from '@/components/AppTextField.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
+import AppSheet from '@/components/AppSheet.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'

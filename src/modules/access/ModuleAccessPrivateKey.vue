@@ -1,29 +1,44 @@
 <template>
-  <div>
-    <div class="mt-5 flex flex-col align-center">
-      <app-input
-        v-model="privateKeyInput"
-        placeholder="Enter your private key"
-        type="password"
-        :required="true"
-        aria-label="private key input"
-        @keyup.enter="unlock"
-        :error-message="errorMessages"
-      />
-      <div class="flex align-center justify-center">
-        <app-base-button @click="unlock" :disabled="submitIsDisabled">
-          Access Wallet
-        </app-base-button>
+  <div class="flex justify-center w-full">
+    <AppSheet
+      :title="$t('access_wallet_private_key.title')"
+      :sheet-class="'max-w-[624px]'"
+      :title-class="'text-center'"
+    >
+      <!-- TODO add proper link arrow icon?-->
+      <!-- <div class="flex justify-center">
+        <router-link
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          class="text-center underline text-sm mb-8 mx-auto"
+          >or select another access method
+        </router-link>
+      </div> -->
+      <div>
+        <div class="mt-5 flex flex-col align-center">
+          <app-input
+            v-model="privateKeyInput"
+            placeholder="Enter your private key"
+            type="password"
+            :required="true"
+            aria-label="private key input"
+            @keyup.enter="unlock"
+            :error-message="errorMessages"
+          />
+          <div class="flex align-center justify-center">
+            <app-base-button @click="unlock" :disabled="submitIsDisabled">
+              Access Wallet
+            </app-base-button>
+          </div>
+        </div>
       </div>
-    </div>
+    </AppSheet>
+    <app-not-recommended />
   </div>
-
-  <app-not-recommended />
 </template>
 
 <script setup lang="ts">
 import { isValidPrivate } from '@ethereumjs/util'
-
+import AppSheet from '@/components/AppSheet.vue'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'

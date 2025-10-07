@@ -1,79 +1,104 @@
 <template>
-  <div>
-    <app-stepper
-      :steps="steps"
-      :description="stepDescription"
-      :active-step="activeStep"
-      @update:active-step="backStep"
+  <div class="flex justify-center w-full">
+    <app-sheet
+      :title="$t('access_wallet_keystore.title')"
+      :sheet-class="'max-w-[624px] min-h-[500px]'"
+      :title-class="'text-center'"
     >
-      <div v-if="activeStep === 0">
-        <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-between">
-          <div>
+      <!-- TODO add proper link arrow icon?-->
+      <div class="flex justify-center">
+        <!-- <router-link
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          class="text-center underline text-base mb-8 mx-auto"
+          >or select another access method
+        </router-link> -->
+      </div>
+      <div>
+        <app-stepper
+          :steps="steps"
+          :description="stepDescription"
+          :active-step="activeStep"
+          @update:active-step="backStep"
+        >
+          <div v-if="activeStep === 0">
+            <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-between">
+              <div>
+                <app-step-description
+                  :description="stepDescription[0]"
+                  :activeStep="activeStep"
+                />
+                <img
+                  src="@/assets/images/access/keystore-file.jpg"
+                  alt="Keystore File"
+                  class="xs:hidden xs:mt-0 w-3/5 xs:w-3/4 mx-auto"
+                  width="300"
+                  height="285"
+                />
+                <app-base-button @click="clickUpload" class="mt-5 xs:mt-8">
+                  Select Keystore
+                </app-base-button>
+                <input
+                  ref="jsonInput"
+                  type="file"
+                  name="file"
+                  style="display: none"
+                  @change="uploadKeystoreFile"
+                />
+              </div>
+              <img
+                src="@/assets/images/access/keystore-file.jpg"
+                alt="Keystore File"
+                class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
+                width="300"
+                height="285"
+              />
+            </div>
+
+            <div v-if="fileError.value" class="text-error mt-4">
+              {{ fileError.description }}
+            </div>
+          </div>
+          <div v-if="activeStep === 1">
             <app-step-description
-              :description="stepDescription[0]"
+              :description="stepDescription[1]"
               :activeStep="activeStep"
             />
-            <img
-              src="@/assets/images/access/keystore-file.jpg"
-              alt="Keystore File"
-              class="xs:hidden xs:mt-0 w-3/5 xs:w-3/4 mx-auto"
-              width="300"
-              height="285"
+            <app-input
+              v-model="password"
+              placeholder="Enter Password"
+              type="password"
+              :error-message="errorPassword"
+              is-required
+              class="mt-7"
+              @keyup.enter="enterPassword"
             />
-            <app-base-button @click="clickUpload" class="mt-5 xs:mt-8">
-              Select Keystore
-            </app-base-button>
-            <input
-              ref="jsonInput"
-              type="file"
-              name="file"
-              style="display: none"
-              @change="uploadKeystoreFile"
-            />
+            <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
+              <app-base-button
+                @click="backStep"
+                is-outline
+                class="!min-w-[120px]"
+              >
+                Back
+              </app-base-button>
+              <app-base-button
+                @click="enterPassword"
+                class="!min-w-[120px]"
+                :disabled="submitIsDisabled"
+                :is-loading="isUnlockingKeystore"
+              >
+                Submit
+              </app-base-button>
+            </div>
           </div>
-          <img
-            src="@/assets/images/access/keystore-file.jpg"
-            alt="Keystore File"
-            class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
-            width="300"
-            height="285"
-          />
-        </div>
-
-        <div v-if="fileError.value" class="text-error mt-4">
-          {{ fileError.description }}
-        </div>
+        </app-stepper>
+        <app-not-recommended />
       </div>
-      <div v-if="activeStep === 1">
-        <app-step-description
-          :description="stepDescription[1]"
-          :activeStep="activeStep"
-        />
-        <app-input
-          v-model="password"
-          placeholder="Enter Password"
-          type="password"
-          :error-message="errorPassword"
-          is-required
-          class="mt-7"
-          @keyup.enter="enterPassword"
-        />
-        <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
-          <app-base-button @click="backStep" is-outline class="!min-w-[120px]">
-            Back
-          </app-base-button>
-          <app-base-button
-            @click="enterPassword"
-            class="!min-w-[120px]"
-            :disabled="submitIsDisabled"
-            :is-loading="isUnlockingKeystore"
-          >
-            Submit
-          </app-base-button>
-        </div>
-      </div>
-    </app-stepper>
-    <app-not-recommended />
+      <app-need-help
+        title="How to connect your keystore wallet"
+        help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
+        class="md:mt-[80px] mb-4 text-center"
+      />
+    </app-sheet>
   </div>
 </template>
 
@@ -99,6 +124,9 @@ import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { useAccessStore } from '@/stores/accessStore'
+import AppSheet from '@/components/AppSheet.vue'
+import AppNeedHelp from '@/components/AppNeedHelp.vue'
+
 // useChainStore
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)

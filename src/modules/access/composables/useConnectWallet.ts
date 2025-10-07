@@ -1,4 +1,4 @@
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ref } from 'vue'
 import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import WagmiWallet from '@/providers/ethereum/wagmiWallet'
@@ -8,15 +8,13 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
-
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
-
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-
+import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 
@@ -37,7 +35,9 @@ export const useConnectWallet = () => {
   const { addWallet } = recentWalletsStore
   const { setWallet } = walletStore
   const router = useRouter()
+  const route = useRoute()
   const toastStore = useToastStore()
+  const accessStore = useAccessStore()
 
   const _storeWallet = (
     wallet: WagmiWallet | Web3InjectedWallet,
@@ -45,7 +45,6 @@ export const useConnectWallet = () => {
   ) => {
     wagmiWalletData.value = ''
     openWalletConnectModal.value = false
-    const accessStore = useAccessStore()
     setWallet(wallet)
     addWallet(config)
     accessStore.closeAccessDialog()
@@ -168,8 +167,14 @@ export const useConnectWallet = () => {
   }
 
   const connect = async (wallet: WalletConfig) => {
-    if ('routeName' in wallet && wallet.routeName) {
-      router.push({ name: wallet.routeName })
+    if (wallet.walletViewType) {
+      if (route.name && route.name === ROUTES_ACCESS.ACCESS.NAME) {
+        router.push({
+          name: ROUTES_ACCESS.ACCESS.NAME,
+          query: { type: wallet.walletViewType },
+        })
+      }
+      accessStore.setCurrentView(wallet.walletViewType)
     } else {
       const _icon =
         typeof wallet.icon === 'string' ? wallet.icon : await wallet.icon()
