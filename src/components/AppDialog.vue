@@ -35,16 +35,21 @@
         >
           <div
             v-if="isOpen"
-            class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+            :class="[bg, $attrs.class]"
+            class="cursor-default fixed max-h-[95%] w-[95%] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
             @click.stop
-            v-bind="$attrs"
           >
             <div
-              class="z-10 pb-2 sm:pb-2 px-6 sm:px-8 basis-full order-2 sm:order-1 flex bg-white sticky top-0"
-              :class="{
-                'justify-between': title || $slots.title,
-                'justify-end': !title && !$slots.title,
-              }"
+              class="z-10 pb-2 basis-full order-2 sm:order-1 flex sticky top-0"
+              :class="[
+                {
+                  'justify-between': title || $slots.title,
+                  'justify-end': !title && !$slots.title,
+                },
+                hasContentGutter ? 'px-4 xs:px-6 sm:px-8' : '',
+                bg,
+                hasTitleUnderline ? 'border-b border-grey-outline' : '',
+              ]"
             >
               <slot name="title">
                 <h1
@@ -57,10 +62,10 @@
               <app-btn-icon-close
                 v-if="!persistent"
                 @click="setIsOpen(false)"
-                class="mt-4 sm:-mr-4 min-w-[32px]"
+                class="mt-4 mr-4 min-w-[32px]"
               />
             </div>
-            <div :class="{ 'pt-2 px-6 sm:px-8': hasContentGutter }">
+            <div :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]">
               <slot name="content" />
             </div>
           </div>
@@ -133,6 +138,22 @@ defineProps({
   zIndexContainer: {
     default: 'z-[101]',
     type: String,
+  },
+  /**
+   * @bg - background color of the dialog, default is white
+   * @type string
+   */
+  bg: {
+    type: String,
+    default: 'bg-white',
+  },
+  /**
+   * @hasTitleUnderline - boolean to add a border bottom to the title section
+   * @type boolean
+   */
+  hasTitleUnderline: {
+    type: Boolean,
+    default: false,
   },
 })
 

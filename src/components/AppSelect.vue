@@ -1,12 +1,12 @@
 <template>
-  <div ref="target" class="relative text-s-17 leading-p-130 font-medium">
+  <div ref="target" class="relative text-s-14 leading-p-130 font-medium">
     <label for="select" class="sr-only">
       {{ props.placeholder }}
     </label>
     <slot name="select-button" :toggleSelect="toggleSelect">
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
-          <span>{{ showSelected }}</span>
+          <span>{{ selected.label }}</span>
           <chevron-down-icon class="w-4 h-4 ml-1" />
         </div>
       </button>
@@ -92,7 +92,7 @@
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { defineProps, ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
-import { computed, watch, onBeforeUnmount } from 'vue'
+import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
 
 const emit = defineEmits<{
@@ -151,16 +151,6 @@ const selected = defineModel<AppSelectOption>('selected', { required: true })
  * controls the open state of the select dropdown
  */
 const openSelect = ref(false)
-
-/**
- * @showSelected The text that is shown in the button field.
- * If a placeholder is provided, it will be shown before the selected option.
- */
-const showSelected = computed(() => {
-  return props.placeholder
-    ? `${props.placeholder} ${selected.value?.label}`
-    : selected.value.label
-})
 
 /**
  * @method toggleSelect

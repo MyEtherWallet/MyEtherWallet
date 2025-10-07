@@ -1,6 +1,6 @@
 <template>
   <button
-    class="flex flex-col gap-2 justify-stretch bg-white p-2 rounded-20 hoverNoBG cursor-pointer shadow-button"
+    class="flex flex-col gap-2 justify-between bg-white p-2 rounded-20 hoverNoBG cursor-pointer shadow-button"
     aria-labelledby="wallet-name"
     @click="clickDefaultWallet(wallet)"
   >
@@ -9,9 +9,9 @@
         v-if="wallet.isOfficial"
         :src="OfficialBadge"
         alt="Official MyEtherWallet"
-        height="20px"
-        width="68px"
-        class="w-[68px] h-5"
+        height="20"
+        width="68"
+        class="w-[56px] object-contain h-5"
       />
       <h5
         v-if="isDetected || isRecent"
@@ -34,9 +34,7 @@
         </div>
       </div>
     </div>
-    <div
-      class="mx-auto mx-auto w-[64px] h-[64px] md:w-[80px] md:h-[80px] md:my-5"
-    >
+    <div class="mx-auto w-10 h-10">
       <AsyncImg
         :img="img"
         :is-loaded="isLoadedImg"
@@ -44,13 +42,14 @@
         class="rounded-lg mx-auto"
       />
     </div>
-
-    <p
-      id="wallet-name"
-      class="mb-4 text-s-15 font-medium leading-p-150 text-center mx-auto"
-    >
-      {{ wallet.name }}
-    </p>
+    <div class="flex justify-center items-center">
+      <p
+        id="wallet-name"
+        class="text-s-14 my-2 font-medium leading-p-150 text-center mx-auto"
+      >
+        {{ wallet.name }}
+      </p>
+    </div>
   </button>
 </template>
 <script setup lang="ts">

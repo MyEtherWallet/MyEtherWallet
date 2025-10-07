@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex justify-between items-center gap-4 mb-4">
-      <h3 class="text-s-17 font-bold leading-p-150 sm:ml-4">
+    <div class="flex justify-between items-center gap-4 mb-3">
+      <h3 class="text-s-14 font-bold leading-p-150 sm:ml-3">
         {{ $t('access_wallet.all_wallets.title') }}
         <span class="hidden sm:inline-block font-normal">
           • {{ $t('access_wallet.all_wallets.description') }}</span
@@ -15,11 +15,11 @@
         <Bars3Icon class="h-6 w-6" />
       </app-btn-icon>
     </div>
-    <div class="flex mb-4 sm:mb-6 justify-between items-center gap-4 flex-wrap">
+    <div class="flex mb-4 sm:mb-6 justify-between items-center gap-3 flex-wrap">
       <!-- Search and Sort -->
       <div
-        :class="{ 'md-header:max-w-[510px]': !isOpenSideMenu }"
-        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1"
+        :class="{ 'md-header:max-w-[50%]': !isOpenSideMenu }"
+        class="flex grow gap-1 justify-between items-center bg-surface rounded-full p-1"
       >
         <app-search-input
           v-model="searchInput"
@@ -30,7 +30,7 @@
           v-if="isHeaderMaxAndUp"
           v-model:selected="activeSort"
           :options="sortOptions"
-          :placeholder="$t('common.sort_by')"
+          :placeholder="$t('common.sort')"
         />
       </div>
       <!-- Filter -->
@@ -49,12 +49,7 @@
     <!-- Wallets-->
     <div
       v-if="displayWallets.length > 0"
-      :class="
-        isOpenSideMenu
-          ? 'lg:grid-cols-3  xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6'
-          : 'lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-7'
-      "
-      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-4 md:gap-6"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md-header:grid-cols-5 gap-4 sm:gap-5"
     >
       <btn-wallet
         v-for="wallet in displayWallets"

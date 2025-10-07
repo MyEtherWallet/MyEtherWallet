@@ -1,42 +1,44 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    containerClass="max-w-[900px]  h-[600px]"
+    class="!max-w-[900px]"
+    bg="bg-appBackground"
+    has-title-underline
   >
-    <template #content>
-      <div>
-        <div class="flex flex-col mb-8 lg-max:mb-10">
-          <div class="flex flex-col sm:flex-row justify-start">
-            <img
-              src="@/assets/images/access/portfolio_icon.webp"
-              alt=""
-              width="100"
-              height="100"
-              class="w-[80px] h-[80px] md:w-[109px] md:h-[109px] flex-none"
-            />
+    <template #title>
+      <div
+        class="flex flex-col sm:flex-row justify-start sm:items-center mt-5 pl-4 xs:pl-6"
+      >
+        <img
+          src="@/assets/images/access/portfolio_icon.webp"
+          alt=""
+          width="100"
+          height="100"
+          class="w-[75px] h-[75px] flex-none hidden sm:block"
+        />
 
-            <div class="flex-initial sm:mt-0 sm:ml-4">
-              <h1 class="title3">Connect to Mew Portfolio</h1>
-              <p class="text7 !font-normal">
-                {{ $t('access_wallet.description') }}
-              </p>
-            </div>
-          </div>
+        <div class="flex-initial sm:mt-0 sm:ml-4 border-primary mb-1">
+          <h1 class="font-bold text-s-32 sm:text-s-40">Connect Wallet</h1>
           <app-need-help
             title="Need help accessing your wallet?"
             help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-            class="sm:ml-[93px] md:ml-[123px] mt-5 sm:mt-1 xl:mt-2"
           />
         </div>
-        <div class="flex flex-row flex-wrap mb-5 gap-y-5 gap-x-[54px]">
+      </div>
+    </template>
+    <template #content>
+      <div
+        class="px-4 xs:px-6 h-[calc(95vh-107px)] xs:h-[calc(95vh-150px)] !overflow-y-scroll pb-8"
+      >
+        <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
           <div>
-            <h2 class="text5 font-semibold mb-4 md:ml-4">
+            <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
               {{ $t('common.select_network') }}
             </h2>
             <select-chain-for-app is-btn-group />
           </div>
         </div>
-        <WalletsDefaultList class="mt-10 mb-12 sm:mb-[64px]" />
+        <WalletsDefaultList class="mt-10 mb-12" />
         <WalletsList />
       </div>
     </template>
