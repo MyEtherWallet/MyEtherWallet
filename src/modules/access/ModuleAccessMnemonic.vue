@@ -1,19 +1,8 @@
 <template>
   <div class="flex justify-center w-full">
-    <app-sheet
-      :title="$t('access_wallet_recovery_phrase.title')"
-      :sheet-class="'max-w-[624px] min-h-[500px]'"
-      :title-class="'text-center'"
-    >
-      <!-- TODO add proper link arrow icon?-->
-      <div class="flex justify-center">
-        <!-- <router-link
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          class="text-center underline text-base mb-8 mx-auto"
-          >or select another access method
-        </router-link> -->
-      </div>
-      <div>
+    <div class="max-w-[624px]">
+      <app-not-recommended />
+      <app-sheet class="mt-6">
         <app-stepper
           :steps="steps"
           :description="stepDescription"
@@ -29,7 +18,7 @@
             <app-text-field
               v-model="mnemonic"
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
-              class="mt-4 text-center"
+              class="mt-2 xs:mt-4 text-center"
               is-required
               :error-message="
                 hasMnemonicError
@@ -37,8 +26,10 @@
                   : ''
               "
             />
-            <div class="flex items-center justify-between gap-4 my-7 w-full">
-              <p class="font-medium">
+            <div
+              class="flex items-center justify-between gap-4 mt-4 xs:mt-7 mb-7 w-full"
+            >
+              <p class="font-medium text-s-14 xs:text-s-16 leading-p-130">
                 {{
                   $t('access_wallet_recovery_phrase.do_you_have_an_extra_word')
                 }}
@@ -60,7 +51,11 @@
               </div>
             </expand-transition>
             <div class="flex items-center justify-center">
-              <app-base-button @click="unlockWallet" :disabled="!isValid">
+              <app-base-button
+                @click="unlockWallet"
+                :disabled="!isValid"
+                class="w-full xs:w-auto xs:min-w-[250px]"
+              >
                 {{ $t('common.next') }}
               </app-base-button>
             </div>
@@ -104,13 +99,8 @@
             </div>
           </div>
         </app-stepper>
-      </div>
-      <app-need-help
-        title="How to connect your wallet with recovery phrase"
-        help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-        class="md:mt-[80px] mt-10 mb-4 text-center"
-      />
-    </app-sheet>
+      </app-sheet>
+    </div>
   </div>
 </template>
 
@@ -126,7 +116,8 @@ import AppToggle from '@/components/AppToggle.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppNotRecommended from '@/components/AppNotRecommended.vue'
+
 import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'

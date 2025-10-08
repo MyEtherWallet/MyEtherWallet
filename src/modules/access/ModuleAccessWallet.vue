@@ -7,21 +7,29 @@
     @close-dialog="closeAccess()"
   >
     <template #title>
-      <div
-        class="flex flex-col sm:flex-row justify-start sm:items-center mt-5 pl-4 xs:pl-6"
-      >
-        <img
-          src="@/assets/images/access/portfolio_icon.webp"
-          alt=""
-          width="100"
-          height="100"
-          class="w-[75px] h-[75px] flex-none hidden sm:block"
-        />
-
-        <div class="flex-initial sm:mt-0 sm:ml-4 border-primary mb-1">
-          <h1 class="font-bold text-s-32 sm:text-s-40">Connect Wallet</h1>
+      <div class="flex w-full flex-col sm:flex-row">
+        <div class="ml-4 w-8">
+          <app-btn-icon
+            v-if="currentView !== 'default'"
+            icon="icon-arrow-left"
+            label="back to connect options"
+            class="!w-10 !h-10 mr-auto mt-4"
+            @click="accessStore.setCurrentView('default')"
+          >
+            <arrow-right-icon class="w-5 h-5 rotate-180" />
+          </app-btn-icon>
+        </div>
+        <div
+          :class="currentView === 'default' ? 'ml-4 mt-4 sm:ml-0' : ''"
+          class="flex flex-col sm:items-center justify-start sm:justify-center pl-4 xs:pl-6 w-full sm:mt-4 sm:mb-2"
+        >
+          <h1
+            class="font-bold text-s-28 sm:text-s-32 mb-3 sm:mb-1 leading-p-120"
+          >
+            {{ getTitle }}
+          </h1>
           <app-need-help
-            title="Need help accessing your wallet?"
+            :title="helpLinkText"
             help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
           />
         </div>
@@ -29,7 +37,7 @@
     </template>
     <template #content>
       <div
-        class="px-4 xs:px-6 h-[calc(95vh-107px)] xs:h-[calc(95vh-150px)] !overflow-y-scroll pb-8"
+        class="px-4 xs:px-6 h-[calc(96vh-190px)] sm:h-[calc(100vh-104px)] !overflow-y-scroll pb-6"
       >
         <div v-if="currentView === 'default'">
           <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
@@ -59,20 +67,68 @@ import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.v
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import { ArrowRightIcon } from '@heroicons/vue/24/outline'
+
 import { useAccessStore } from '@/stores/accessStore'
 import { storeToRefs } from 'pinia'
 import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
 import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
 import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
+import { computed } from 'vue'
+
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
-
 const accessStore = useAccessStore()
 const { isOpenAccessDialog, currentView } = storeToRefs(accessStore)
 
 const closeAccess = () => {
   accessStore.setCurrentView('default')
 }
+/**-------------------------------
+ * UI Elements
+ -------------------------------*/
+const getTitle = computed(() => {
+  let method = ''
+  switch (currentView.value) {
+    case 'keystore':
+      method = 'keystore'
+      break
+    case 'private_key':
+      method = 'private key'
+      break
+    case 'mnemonic':
+      method = 'mnemonic phrase'
+      break
+    case 'ledger':
+      method = 'Ledger'
+      break
+    case 'trezor':
+      method = 'Trezor'
+      break
+    default:
+      method = ''
+      break
+  }
+  return method ? `Connect with ${method}` : 'Connect Wallet'
+})
+
+const helpLinkText = computed(() => {
+  switch (currentView.value) {
+    case 'keystore':
+      return 'How to connect your keystore wallet'
+    case 'private_key':
+      return 'How to connect with your private key'
+    case 'mnemonic':
+      return 'How to connect with your recovery phrase'
+    case 'ledger':
+      return 'How to connect your Ledger wallet'
+    case 'trezor':
+      return 'How to connect your Trezor wallet'
+    default:
+      return 'Need Help connecting your wallet?'
+  }
+})
 </script>

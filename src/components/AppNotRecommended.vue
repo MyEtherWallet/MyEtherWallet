@@ -7,7 +7,7 @@
     </div>
 
     <!-- text container -->
-    <p class="pt-2">
+    <p class="pt-2 text-s-14 sm:text-s-16 leading-p-150">
       {{ description }}
     </p>
   </div>

@@ -1,96 +1,88 @@
 <template>
   <div class="flex justify-center w-full">
-    <app-sheet
-      :title="$t(`${hardwareDetails.title}`)"
-      :sheet-class="'max-w-[624px]'"
-      :title-class="'text-center'"
-    >
-      <!-- TODO add proper link arrow icon?-->
-      <div class="flex justify-center">
-        <router-link
-          :to="{ name: ROUTES_MAIN.HOME.NAME }"
-          class="text-center underline text-base mb-8 mx-auto"
-          >or select another access method
-        </router-link>
-      </div>
-      <div>
-        <app-stepper
-          :steps="walletSteps"
-          :description="walletStepsDescription"
-          :active-step="activeStep"
-          @update:active-step="backStep"
-        >
-          <!-- Enter Mnemonic -->
-          <div v-if="activeStep === 0">
-            <app-step-description
-              :description="walletStepsDescription[0]"
-              :activeStep="activeStep"
-            />
-            <div class="flex items-center justify-center mt-[40px]">
-              <app-base-button
-                @click="unlockWallet"
-                :is-loading="connectingWallet"
-                :disabled="connectingWallet"
-              >
-                {{ connectButtonText }}
-              </app-base-button>
-            </div>
-          </div>
-          <!-- Select Network, Address, DP -->
-          <div v-if="activeStep === 1">
-            <app-step-description
-              :description="walletStepsDescription[1]"
-              :activeStep="activeStep"
-            />
-            <div
-              class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
-            >
-              <select-chain-for-app />
-              <hardware-wallet-derivation
-                :paths="paths"
-                :wallet-type="selectedHwWalletType"
+    <div class="max-w-[624px]">
+      <app-sheet class="mt-6">
+        <!-- TODO add proper link arrow icon?-->
+        <div class="flex justify-center">
+          <router-link
+            :to="{ name: ROUTES_MAIN.HOME.NAME }"
+            class="text-center underline text-base mb-8 mx-auto"
+            >or select another access method
+          </router-link>
+        </div>
+        <div>
+          <app-stepper
+            :steps="walletSteps"
+            :description="walletStepsDescription"
+            :active-step="activeStep"
+            @update:active-step="backStep"
+          >
+            <!-- Enter Mnemonic -->
+            <div v-if="activeStep === 0">
+              <app-step-description
+                :description="walletStepsDescription[0]"
+                :activeStep="activeStep"
               />
+              <div class="flex items-center justify-center mt-[40px]">
+                <app-base-button
+                  @click="unlockWallet"
+                  :is-loading="connectingWallet"
+                  :disabled="connectingWallet"
+                >
+                  {{ connectButtonText }}
+                </app-base-button>
+              </div>
             </div>
-            <select-address-list
-              v-model="selectedIndex"
-              :walletList="walletList as SelectAddress[]"
-              :isLoading="isLoadingWalletList"
-              class="mt-5"
-              @nextpage="setPage(true)"
-              @prevpage="setPage(false)"
-            />
-            <div class="flex items-center flex-col justify-center">
-              <app-base-button
-                @click="access"
-                :disabled="walletList.length === 0 || isLoadingWalletList"
-                class="mt-10"
-                :is-loading="isUnlockingWallet"
+            <!-- Select Network, Address, DP -->
+            <div v-if="activeStep === 1">
+              <app-step-description
+                :description="walletStepsDescription[1]"
+                :activeStep="activeStep"
+              />
+              <div
+                class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
               >
-                {{ $t('common.access_wallet') }}
-              </app-base-button>
-              <app-btn-text
-                @click="backStep"
-                is-large
-                class="mt-2 text-primary"
-              >
-                {{ $t('common.back') }}
-              </app-btn-text>
+                <select-chain-for-app />
+                <hardware-wallet-derivation
+                  :paths="paths"
+                  :wallet-type="selectedHwWalletType"
+                />
+              </div>
+              <select-address-list
+                v-model="selectedIndex"
+                :walletList="walletList as SelectAddress[]"
+                :isLoading="isLoadingWalletList"
+                class="mt-5"
+                @nextpage="setPage(true)"
+                @prevpage="setPage(false)"
+              />
+              <div class="flex items-center flex-col justify-center">
+                <app-base-button
+                  @click="access"
+                  :disabled="walletList.length === 0 || isLoadingWalletList"
+                  class="mt-10"
+                  :is-loading="isUnlockingWallet"
+                >
+                  {{ $t('common.access_wallet') }}
+                </app-base-button>
+                <app-btn-text
+                  @click="backStep"
+                  is-large
+                  class="mt-2 text-primary"
+                >
+                  {{ $t('common.back') }}
+                </app-btn-text>
+              </div>
             </div>
-          </div>
-        </app-stepper>
-      </div>
-      <app-need-help
-        :title="hardwareDetails.articleTitle"
-        :help-link="hardwareDetails.articleLink"
-        class="md:mt-[80px] mt-10 mb-4 text-center"
-      />
-    </app-sheet>
+          </app-stepper>
+        </div>
+      </app-sheet>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import { ref, watch, markRaw, computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
@@ -145,35 +137,7 @@ const accessStore = useAccessStore()
 
 // Wallet instance
 let hwWalletInstance = new HWwallet()
-
-/**------------------------
- * Hardware details for help link and title
- ------------------------*/
 const { currentView } = storeToRefs(accessStore)
-const hardwareDetails = computed(() => {
-  switch (currentView.value) {
-    case 'trezor':
-      return {
-        title: 'access_wallet_trezor.title',
-        articleTitle: 'How to connect your wallet with Trezor',
-        articleLink:
-          'https://help.myetherwallet.com/en/articles/5433710-using-a-trezor-hardware-wallet-with-mew',
-      }
-    case 'ledger':
-      return {
-        title: 'access_wallet_ledger.title',
-        articleTitle: 'How to connect your wallet with Ledger',
-        articleLink:
-          'https://help.myetherwallet.com/en/articles/5433709-using-a-ledger-hardware-wallet-with-mew',
-      }
-    default:
-      return {
-        title: '',
-        articleTitle: '',
-        articleLink: '',
-      }
-  }
-})
 
 /**------------------------
  * Derivation Path

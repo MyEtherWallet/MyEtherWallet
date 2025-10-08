@@ -1,38 +1,30 @@
 <template>
   <div class="flex justify-center w-full">
-    <AppSheet
-      :title="$t('access_wallet_private_key.title')"
-      :sheet-class="'max-w-[624px]'"
-      :title-class="'text-center'"
-    >
-      <!-- TODO add proper link arrow icon?-->
-      <!-- <div class="flex justify-center">
-        <router-link
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          class="text-center underline text-sm mb-8 mx-auto"
-          >or select another access method
-        </router-link>
-      </div> -->
-      <div>
+    <div class="max-w-[624px]">
+      <app-not-recommended />
+      <app-sheet class="mt-6">
         <div class="mt-5 flex flex-col align-center">
           <app-input
             v-model="privateKeyInput"
             placeholder="Enter your private key"
             type="password"
-            :required="true"
+            is-required
             aria-label="private key input"
             @keyup.enter="unlock"
             :error-message="errorMessages"
           />
           <div class="flex align-center justify-center">
-            <app-base-button @click="unlock" :disabled="submitIsDisabled">
-              Access Wallet
+            <app-base-button
+              @click="unlock"
+              :disabled="submitIsDisabled"
+              class="w-full xs:w-auto xs:min-w-[250px]"
+            >
+              Connect
             </app-base-button>
           </div>
         </div>
-      </div>
-    </AppSheet>
-    <app-not-recommended />
+      </app-sheet>
+    </div>
   </div>
 </template>
 
@@ -69,8 +61,9 @@ const submitIsDisabled = computed<boolean>(() => {
 })
 
 const errorMessages = computed<string>(() => {
+  //Error will be thrown by input component if empty
   if (privateKeyInput.value === '') {
-    return 'Required'
+    return ''
   }
 
   if (!isValidPrivateKey.value) {
@@ -103,6 +96,7 @@ const unlock = () => {
     setWallet(wallet)
     addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
+    accessStore.setCurrentView('default')
     accessStore.closeAccessDialog()
   } catch (error) {
     // TODO: handle error when toast is implemented

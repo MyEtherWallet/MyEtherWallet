@@ -1,19 +1,8 @@
 <template>
   <div class="flex justify-center w-full">
-    <app-sheet
-      :title="$t('access_wallet_keystore.title')"
-      :sheet-class="'max-w-[624px] min-h-[500px]'"
-      :title-class="'text-center'"
-    >
-      <!-- TODO add proper link arrow icon?-->
-      <div class="flex justify-center">
-        <!-- <router-link
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          class="text-center underline text-base mb-8 mx-auto"
-          >or select another access method
-        </router-link> -->
-      </div>
-      <div>
+    <div class="max-w-[624px]">
+      <app-not-recommended />
+      <app-sheet class="mt-6">
         <app-stepper
           :steps="steps"
           :description="stepDescription"
@@ -34,7 +23,10 @@
                   width="300"
                   height="285"
                 />
-                <app-base-button @click="clickUpload" class="mt-5 xs:mt-8">
+                <app-base-button
+                  @click="clickUpload"
+                  class="mt-5 mx-auto xs:mt-8 w-full xs:w-auto"
+                >
                   Select Keystore
                 </app-base-button>
                 <input
@@ -86,19 +78,13 @@
                 :disabled="submitIsDisabled"
                 :is-loading="isUnlockingKeystore"
               >
-                Submit
+                Connect
               </app-base-button>
             </div>
           </div>
         </app-stepper>
-        <app-not-recommended />
-      </div>
-      <app-need-help
-        title="How to connect your keystore wallet"
-        help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-        class="md:mt-[80px] mb-4 text-center"
-      />
-    </app-sheet>
+      </app-sheet>
+    </div>
   </div>
 </template>
 
@@ -125,7 +111,6 @@ import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import AppSheet from '@/components/AppSheet.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
 
 // useChainStore
 const chainsStore = useChainsStore()
@@ -235,6 +220,7 @@ const enterPassword = async () => {
       setWallet(wallet)
       addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
+      accessStore.setCurrentView('default')
       accessStore.closeAccessDialog()
     }
   } catch {
