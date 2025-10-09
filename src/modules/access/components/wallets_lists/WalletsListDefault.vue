@@ -31,18 +31,10 @@
 
       <dont-have-wallet />
     </div>
-    <wallet-connect-dialog
-      v-if="clickedWallet"
-      v-model:is-open="openWalletConnectModal"
-      :qrcode-data="wagmiWalletData"
-      :wallet-name="clickedWallet.name"
-      :wallet-icon="clickedWallet.icon as string"
-    />
   </div>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import WalletConnectDialog from '../WalletConnectDialog.vue'
 import DontHaveWallet from './DontHaveWallet.vue'
 import {
   type WalletConfig,
@@ -54,8 +46,7 @@ import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { useWalletList } from '@/composables/useWalletList'
 
-const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
-  useConnectWallet()
+const { connect } = useConnectWallet()
 
 const { newWalletList } = useWalletList()
 const recentWalletsStore = useRecentWalletsStore()

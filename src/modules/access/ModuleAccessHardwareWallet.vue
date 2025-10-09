@@ -1,15 +1,7 @@
 <template>
   <div class="flex justify-center w-full">
-    <div class="max-w-[624px]">
+    <div class="max-w-[624px] flex flex-col items-center justify-center">
       <app-sheet class="mt-6">
-        <!-- TODO add proper link arrow icon?-->
-        <div class="flex justify-center">
-          <router-link
-            :to="{ name: ROUTES_MAIN.HOME.NAME }"
-            class="text-center underline text-base mb-8 mx-auto"
-            >or select another access method
-          </router-link>
-        </div>
         <div>
           <app-stepper
             :steps="walletSteps"
@@ -77,6 +69,16 @@
           </app-stepper>
         </div>
       </app-sheet>
+      <!-- TODO: add link-->
+      <div
+        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+      >
+        {{ $t('wc_dialog.no_wallet') }}
+        <span class="underline">
+          {{ $t('wc_dialog.get_wallet') }}
+          <span class="text-sm"> →</span></span
+        >
+      </div>
     </div>
   </div>
 </template>

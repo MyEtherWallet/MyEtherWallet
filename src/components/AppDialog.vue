@@ -23,7 +23,7 @@
       <div
         v-if="isOpen"
         :class="zIndexContainer"
-        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
+        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-4 xs:p-6 sm:p-9 overscroll-none !overflow-y-scroll"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -36,7 +36,7 @@
           <div
             v-if="isOpen"
             :class="[bg, $attrs.class]"
-            class="cursor-default fixed max-h-[95%] w-[95%] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+            class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
             @click.stop
           >
             <div

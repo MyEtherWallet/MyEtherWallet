@@ -22,7 +22,6 @@ export const useConnectWallet = () => {
   const { t } = useI18n()
   const wagmiWalletData = ref('')
   const clickedWallet = ref<WalletConfig | undefined>()
-  const openWalletConnectModal = ref(false)
 
   const providerStore = useProviderStore()
   const chainsStore = useChainsStore()
@@ -44,7 +43,7 @@ export const useConnectWallet = () => {
     config: WalletConfig,
   ) => {
     wagmiWalletData.value = ''
-    openWalletConnectModal.value = false
+    accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
     setWallet(wallet)
     addWallet(config)
     accessStore.closeAccessDialog()
@@ -100,7 +99,6 @@ export const useConnectWallet = () => {
         .catch(err => {
           let error = t('error_connecting')
           let _type = ToastType.Warning
-          openWalletConnectModal.value = false
           if (
             err.message &&
             err.message.toLowerCase().includes('user rejected')
@@ -117,6 +115,16 @@ export const useConnectWallet = () => {
   }
 
   const _connectWagmi = (wallet: WalletConfig) => {
+    accessStore.setClickedWalletConnect({
+      walletName: wallet.name,
+      walletIcon:
+        typeof wallet.icon === 'string' ? wallet.icon : '' /* async */,
+    })
+    // open Wallet Connect View
+    accessStore.setCurrentView('wallet_connect')
+
+    // find connector by id
+    // some connectors have different ids in our config vs wagmi (e.g. rabby)
     const connector = connectors.find(
       c =>
         c.id === wallet.id || (c.rkDetails as { id: string })?.id === wallet.id,
@@ -125,7 +133,7 @@ export const useConnectWallet = () => {
     connector?.emitter.on('message', msg => {
       if (msg.type === 'display_uri') {
         wagmiWalletData.value = msg.data as string // possibly a temp fix
-        openWalletConnectModal.value = true
+        accessStore.setWagmiWalletData(wagmiWalletData.value)
       }
     })
     const wagWallet = new WagmiWallet(
@@ -151,7 +159,6 @@ export const useConnectWallet = () => {
       .catch(err => {
         let error = t('error_connecting')
         let _type = ToastType.Warning
-        openWalletConnectModal.value = false
         if (
           err.message &&
           err.message.toLowerCase().includes('user rejected')
@@ -174,6 +181,13 @@ export const useConnectWallet = () => {
           query: { type: wallet.walletViewType },
         })
       }
+      if (wallet.walletViewType === 'wallet_connect') {
+        accessStore.setClickedWalletConnect({
+          walletName: wallet.name,
+          walletIcon:
+            typeof wallet.icon === 'string' ? wallet.icon : '' /* async */,
+        })
+      }
       accessStore.setCurrentView(wallet.walletViewType)
     } else {
       const _icon =
@@ -192,7 +206,6 @@ export const useConnectWallet = () => {
   }
   return {
     wagmiWalletData,
-    openWalletConnectModal,
     clickedWallet,
     connect,
   }

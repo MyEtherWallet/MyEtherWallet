@@ -1,8 +1,10 @@
 <template>
   <div class="flex justify-center w-full">
-    <div class="max-w-[624px]">
+    <div
+      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
+    >
       <app-not-recommended />
-      <app-sheet class="mt-6">
+      <app-sheet class="mt-1">
         <app-stepper
           :steps="steps"
           :description="stepDescription"
@@ -100,6 +102,16 @@
           </div>
         </app-stepper>
       </app-sheet>
+      <!-- TODO: add link-->
+      <div
+        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+      >
+        {{ $t('wc_dialog.no_wallet') }}
+        <span class="underline">
+          {{ $t('wc_dialog.get_wallet') }}
+          <span class="text-sm"> →</span></span
+        >
+      </div>
     </div>
   </div>
 </template>

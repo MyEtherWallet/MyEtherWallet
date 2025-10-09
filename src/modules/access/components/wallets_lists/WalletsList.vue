@@ -64,14 +64,6 @@
     >
       {{ $t('access_wallet.not_found') }} {{ searchInput }}
     </div>
-
-    <wallet-connect-dialog
-      v-if="clickedWallet"
-      v-model:is-open="openWalletConnectModal"
-      :qrcode-data="wagmiWalletData"
-      :wallet-name="clickedWallet.name"
-      :wallet-icon="clickedWallet.icon as string"
-    />
     <mobile-sort-filter
       v-if="!isHeaderMaxAndUp"
       :filter-options="filterOptions"
@@ -84,7 +76,6 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import WalletConnectDialog from '../WalletConnectDialog.vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
@@ -113,8 +104,7 @@ const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
-const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
-  useConnectWallet()
+const { connect } = useConnectWallet()
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const { defaultWallets, newWalletList } = useWalletList()

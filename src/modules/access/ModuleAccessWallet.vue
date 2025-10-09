@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="isOpenAccessDialog"
-    class="!max-w-[900px]"
+    class="!max-w-[900px] h-[100%] w-full"
     bg="bg-appBackground"
     has-title-underline
     @close-dialog="closeAccess()"
@@ -20,8 +20,8 @@
           </app-btn-icon>
         </div>
         <div
-          :class="currentView === 'default' ? 'ml-4 mt-4 sm:ml-0' : ''"
-          class="flex flex-col sm:items-center justify-start sm:justify-center pl-4 xs:pl-6 w-full sm:mt-4 sm:mb-2"
+          :class="currentView === 'default' ? 'ml-4 mt-4  sm:ml-0' : ''"
+          class="flex flex-col sm:items-center justify-start sm:justify-center pl-4 xs:pl-6 w-full sm:mt-6 sm:mb-2"
         >
           <h1
             class="font-bold text-s-28 sm:text-s-32 mb-3 sm:mb-1 leading-p-120"
@@ -36,9 +36,7 @@
       </div>
     </template>
     <template #content>
-      <div
-        class="px-4 xs:px-6 h-[calc(96vh-190px)] sm:h-[calc(100vh-104px)] !overflow-y-scroll pb-6"
-      >
+      <div class="px-4 xs:px-6 !overflow-y-scroll pb-6">
         <div v-if="currentView === 'default'">
           <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
             <div>
@@ -56,6 +54,9 @@
         <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
         <module-access-hardware-wallet
           v-else-if="currentView === 'ledger' || currentView === 'trezor'"
+        />
+        <module-access-wallet-connect
+          v-else-if="currentView === 'wallet_connect'"
         />
       </div>
     </template>
@@ -76,13 +77,15 @@ import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
 import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
 import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
+import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import { computed } from 'vue'
 
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const { isOpenAccessDialog, currentView } = storeToRefs(accessStore)
+const { isOpenAccessDialog, currentView, clickedWalletConnect } =
+  storeToRefs(accessStore)
 
 const closeAccess = () => {
   accessStore.setCurrentView('default')
@@ -107,6 +110,9 @@ const getTitle = computed(() => {
       break
     case 'trezor':
       method = 'Trezor'
+      break
+    case 'wallet_connect':
+      method = clickedWalletConnect.value?.walletName || ''
       break
     default:
       method = ''

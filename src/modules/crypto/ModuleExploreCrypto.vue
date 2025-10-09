@@ -624,10 +624,12 @@ const debounceFetchGainers = useDebounceFn(() => {
 onMounted(() => {
   // Fetch tokens based on the selected filter
   if (isLoadedChains.value && selectedChainStore.value) {
+    // This will trigger fetching tokens in watch below
     selectedChainFilter.value = ALL_CHAINS.value
+  } else {
+    isLoading.value = true
+    fetchTokenTable()
   }
-  isLoading.value = true
-  fetchTokenTable()
 })
 
 onFetchWatchlistResponse(() => {
