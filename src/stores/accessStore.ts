@@ -38,7 +38,6 @@ export const useAccessStore = defineStore('accessStore', () => {
 
   watch(currentView, newView => {
     if (newView === 'default') {
-      console.log('Reset clicked wallet connect')
       setClickedWalletConnect(undefined)
     }
   })

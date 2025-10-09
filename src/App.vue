@@ -4,12 +4,9 @@
       v-if="!isDevMode"
       @close-welcome-dialog="showFeedbackToast"
     />
-    <the-app-layout
-      v-if="isLoadingComplete"
-      :aria-hidden="isOpenAccessDialog"
-    />
+    <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
-    <module-access-wallet v-if="isLoadingComplete" />
+    <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
   </div>
 </template>
 
@@ -29,7 +26,10 @@ import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import configs from './configs'
-import { useAccessStore } from '@/stores/accessStore'
+import { useDialogStore } from '@/stores/dialogStore'
+
+const dialogStore = useDialogStore()
+const { isAreaHidden } = storeToRefs(dialogStore)
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
@@ -116,11 +116,4 @@ onMounted(() => {
     addProvider(provider)
   })
 })
-
-/**-------------------------------
- * Access Wallet Dialog
- -------------------------------*/
-
-const accessStore = useAccessStore()
-const { isOpenAccessDialog } = storeToRefs(accessStore)
 </script>

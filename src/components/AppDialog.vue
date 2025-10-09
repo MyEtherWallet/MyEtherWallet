@@ -38,6 +38,10 @@
             :class="[bg, $attrs.class]"
             class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
             @click.stop
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref="targetDialog"
           >
             <div
               class="z-10 pb-2 basis-full order-2 sm:order-1 flex sticky top-0"
@@ -55,6 +59,7 @@
                 <h1
                   v-if="title && !$slots.title"
                   class="title4 pr-2 pt-4 sm:pt-7 capitalize"
+                  id="dialogTitle"
                 >
                   {{ title }}
                 </h1>
@@ -102,7 +107,18 @@
  * </template>
  * </app-dialog>
  */
+import { shallowRef, watch } from 'vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
+import { useFocus } from '@vueuse/core'
+import { useDialogStore } from '@/stores/dialogStore'
+import { storeToRefs } from 'pinia'
+
+const targetDialog = shallowRef<HTMLElement | null>(null)
+
+const { focused } = useFocus(targetDialog, { initialValue: true })
+const dialogStore = useDialogStore()
+const { isAreaHidden } = storeToRefs(dialogStore)
+
 defineOptions({
   inheritAttrs: false,
 })
@@ -177,4 +193,15 @@ const setIsOpen = (_value: boolean = false) => {
     emit('close-dialog')
   }
 }
+
+watch(
+  () => isOpen.value,
+  () => {
+    if (isOpen.value && focused.value) {
+      isAreaHidden.value = true
+    } else {
+      isAreaHidden.value = false
+    }
+  },
+)
 </script>
