@@ -173,6 +173,21 @@ export const useConnectWallet = () => {
       })
   }
 
+  const connectWallet = async (wallet: WalletConfig) => {
+    const _icon =
+      typeof wallet.icon === 'string' ? wallet.icon : await wallet.icon()
+    wallet.icon = _icon
+    clickedWallet.value = wallet
+
+    const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
+    if (isWeb3) {
+      _connectWeb3(wallet)
+      return
+    }
+
+    _connectWagmi(wallet)
+  }
+
   const connect = async (wallet: WalletConfig) => {
     if (wallet.walletViewType) {
       if (route.name && route.name === ROUTES_ACCESS.ACCESS.NAME) {
@@ -187,21 +202,11 @@ export const useConnectWallet = () => {
           walletIcon:
             typeof wallet.icon === 'string' ? wallet.icon : '' /* async */,
         })
+        connectWallet(wallet)
       }
       accessStore.setCurrentView(wallet.walletViewType)
     } else {
-      const _icon =
-        typeof wallet.icon === 'string' ? wallet.icon : await wallet.icon()
-      wallet.icon = _icon
-      clickedWallet.value = wallet
-
-      const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
-      if (isWeb3) {
-        _connectWeb3(wallet)
-        return
-      }
-
-      _connectWagmi(wallet)
+      connectWallet(wallet)
     }
   }
   return {
