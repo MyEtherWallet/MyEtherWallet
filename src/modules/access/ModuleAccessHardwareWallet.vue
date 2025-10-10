@@ -99,6 +99,7 @@ import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
+import { fromBase } from '@/utils/unit'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -106,7 +107,7 @@ const derivationStore = useDerivationStore()
 const chainsStore = useChainsStore()
 const { trezorSelectedDerivation, ledgerSelectedDerivation } =
   storeToRefs(derivationStore)
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isEvmChain } = storeToRefs(chainsStore)
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
@@ -238,14 +239,10 @@ const unlockWallet = async () => {
     selectedChain.value?.name as string
   ] as NetworkNames
 
-  const parsedNetworkName =
-    networkName === NetworkNames.BitcoinTest
-      ? NetworkNames.Bitcoin
-      : networkName
   await hwWalletInstance
     .isConnected({
       wallet: selectedHwWalletType.value as HWwalletType,
-      networkName: parsedNetworkName,
+      networkName: networkName,
     })
     .then(() => {
       hwWalletInstance.close()
@@ -255,7 +252,7 @@ const unlockWallet = async () => {
   activeStep.value = 1
   paths.value = (await hwWalletInstance.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: parsedNetworkName,
+    networkName: networkName,
   })) as PathType[]
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
@@ -284,42 +281,37 @@ const loadList = async (page: number = 0) => {
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
-  const chainId = selectedChain.value?.name ?? 'ETH'
-  const networkName = chainToEnum[chainId] ?? 'ETH'
-  const parsedNetworkName =
-    networkName === NetworkNames.BitcoinTest
-      ? NetworkNames.Bitcoin
-      : networkName
+  const chainId = selectedChain.value?.chainID ?? '1'
+  const chainName = selectedChain.value?.name ?? 'ETH'
+  const networkName = chainToEnum[chainName] ?? 'Ethereum'
 
   for (let i = startIndex; i < startIndex + 5; i++) {
     try {
       const addressResponse = await hwWalletInstance.getAddress({
         confirmAddress: false,
-        networkName: parsedNetworkName,
+        networkName: networkName,
         pathType: selectedDerivation.value as PathType,
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
       })
-
-      const hardwareWalletInstance =
-        selectedChain.value?.type === 'EVM'
-          ? new EvmHardwareWallet(
-              chainId,
-              addressResponse.address as HexPrefixedString,
-              parsedNetworkName,
-              i.toString(),
-              selectedDerivation.value as PathType,
-              selectedHwWalletType.value as HWwalletType,
-              hwWalletInstance,
-            )
-          : new BtcHardwareWallet(
-              addressResponse.address as HexPrefixedString,
-              parsedNetworkName,
-              i.toString(),
-              selectedDerivation.value as PathType,
-              selectedHwWalletType.value as HWwalletType,
-              hwWalletInstance,
-            )
+      const hardwareWalletInstance = isEvmChain.value
+        ? new EvmHardwareWallet(
+            chainId,
+            addressResponse.address as HexPrefixedString,
+            networkName,
+            i.toString(),
+            selectedDerivation.value as PathType,
+            selectedHwWalletType.value as HWwalletType,
+            hwWalletInstance,
+          )
+        : new BtcHardwareWallet(
+            addressResponse.address as HexPrefixedString,
+            networkName,
+            i.toString(),
+            selectedDerivation.value as PathType,
+            selectedHwWalletType.value as HWwalletType,
+            hwWalletInstance,
+          )
       const fetchBalance = await hardwareWalletInstance.getBalance()
 
       if (Array.isArray(fetchBalance.result)) {
@@ -345,7 +337,7 @@ const loadList = async (page: number = 0) => {
         walletList.value.push({
           address: await hardwareWalletInstance.getAddress(),
           index: i,
-          balance: newFetchBalance.balance.nativeValue || '0',
+          balance: fromBase(newFetchBalance.balance.nativeValue || '0', 8),
           walletInstance: hardwareWalletInstance,
         })
       }

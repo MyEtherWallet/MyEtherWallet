@@ -383,31 +383,30 @@ const handleSubmit = async () => {
   })
 
   if (
-    wallet.value?.getWalletType() === WalletType.WAGMI ||
-    wallet.value?.getWalletType() === WalletType.INJECTED
+    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
+    wallet.value?.getWalletType() === WalletType.MNEMONIC
   ) {
-    openTxModal.value = true
-    signedTx.value = signableTx.serialized
+    if (!wallet.value?.SignTransaction) {
+      console.error('SignTransaction not implemented')
+      return
+    }
+    try {
+      const signResponse = await wallet.value?.SignTransaction(
+        signableTx.serialized as HexPrefixedString,
+      )
+
+      signedTx.value = signResponse.signed
+      openTxModal.value = true
+    } catch (e) {
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
+      })
+    }
     return
   }
 
-  // sign transaction
-  if (!wallet.value?.SignTransaction) {
-    console.error('SignTransaction not implemented')
-    return
-  }
-  try {
-    const signResponse = await wallet.value?.SignTransaction(
-      signableTx.serialized as HexPrefixedString,
-    )
-
-    signedTx.value = signResponse.signed
-    openTxModal.value = true
-  } catch (e) {
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
-    })
-  }
+  openTxModal.value = true
+  signedTx.value = signableTx.serialized
 }
 </script>

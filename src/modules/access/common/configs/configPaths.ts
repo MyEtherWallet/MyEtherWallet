@@ -214,7 +214,7 @@ const bip84Segwit: DerivationPath = {
 }
 
 const bip84SegwitTest: DerivationPath = {
-  label: "Bitcoin Testnet",
+  label: "Bitcoin Test",
   path: "m/84'/1'/0'/0",
   type: "BITCOIN"
 }

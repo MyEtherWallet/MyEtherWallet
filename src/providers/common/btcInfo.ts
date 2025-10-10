@@ -105,4 +105,11 @@ const INFO_MAP: Record<string, InfoTemplate> = {
   "LITECOIN": litecoinInfo
 };
 
-export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP, P2PKH_DUST, P2SH_DUST, P2WPKH_DUST, P2WSH_DUST, P2TR_DUST };
+const NODE_MAP: Record<string, string> = {
+  "BITCOIN": "https://partners.mewapi.io/nodes/hk/btc/",
+  "BITCOIN_TEST": "https://partners.mewapi.io/nodes/hk/btct/",
+  "DOGECOIN": "https://partners.mewapi.io/nodes/ss/doge",
+  "LITECOIN": "https://partners.mewapi.io/nodes/ss/ltc",
+}
+
+export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP, P2PKH_DUST, P2SH_DUST, P2WPKH_DUST, P2WSH_DUST, P2TR_DUST, NODE_MAP };

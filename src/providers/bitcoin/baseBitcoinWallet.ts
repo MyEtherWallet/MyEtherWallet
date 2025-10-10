@@ -21,7 +21,7 @@ import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 class BaseBtcWallet implements WalletInterface {
   chainName: string
   constructor(chainName: string) {
-    this.chainName = chainName
+    this.chainName = chainName // refers to chain in enkrypt library not chain object from the api
   }
   getMultipleGasFees?: ((txs: GetEvmMultiTransactionEstimateRequest) => Promise<QuotesResponse>) | undefined
   getMultipleSignableTransactions?: ((feeObj: SignableTransactionParams) => Promise<GetUnsignedEvmMultiTransactionResponse>) | undefined
@@ -33,7 +33,7 @@ class BaseBtcWallet implements WalletInterface {
    */
   getBtcGasFee = (tx: BitcoinQuotesRequestBody): Promise<BitcoinQuotesResponse> => {
     return fetchWithRetry<BitcoinQuotesResponse>(
-      `/v1/btc/${this.chainName}/quotes?noInjectErrors=false`,
+      `/v2/btc/${this.getProvider()}/quotes?noInjectErrors=false`,
       {
         method: 'POST',
         body: JSON.stringify(tx),
@@ -50,7 +50,7 @@ class BaseBtcWallet implements WalletInterface {
     feeObj: SignableTransactionParams,
   ): Promise<SignableTransactionResponse> => {
     return fetchWithRetry<SignableTransactionResponse>(
-      `/v1/btc/${this.chainName}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
+      `/v1/btc/${this.getProvider()}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
     )
   }
 
@@ -97,7 +97,7 @@ class BaseBtcWallet implements WalletInterface {
   }
 
   async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
-    const url = `/v1/btc/${this.chainName}/broadcasts/?noInjectErrors=false`
+    const url = `/v1/btc/${this.getProvider()}/broadcasts/?noInjectErrors=false`
     const options = {
       method: 'POST',
       body: JSON.stringify({ signedTransaction: signedTx }),

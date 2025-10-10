@@ -138,6 +138,7 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
+import type { Chain } from '@/mew_api/types'
 
 const { t } = useI18n()
 defineProps({
@@ -151,21 +152,19 @@ const chainStore = useChainsStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
-const { selectedChain } = storeToRefs(chainStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 // TODO: handle DOT and SOL later on
-const defaultPath =
-  selectedChain.value?.type === 'EVM'
-    ? Bip44Paths[WALLET_TYPES.MNEMONIC]
-    : selectedChain.value?.type === 'BITCOIN'
-      ? BitcoinWallet.getSupportedPaths(selectedChain.value.name)
-      : Bip44Paths[WALLET_TYPES.MNEMONIC]
+const defaultPath = isEvmChain.value
+  ? Bip44Paths[WALLET_TYPES.MNEMONIC]
+  : isBitcoinChain.value
+    ? BitcoinWallet.getSupportedPaths(selectedChain.value?.name ?? 'BITCOIN')
+    : Bip44Paths[WALLET_TYPES.MNEMONIC]
 const paths = ref(defaultPath)
-const initialDefaultPath =
-  selectedChain.value?.type === 'EVM'
-    ? ethereumPath
-    : selectedChain.value?.type === 'BITCOIN'
-      ? BitcoinWallet.getSupportedPaths(selectedChain.value.name)[0]
-      : ethereumPath
+const initialDefaultPath = isEvmChain.value
+  ? ethereumPath
+  : isBitcoinChain.value
+    ? BitcoinWallet.getSupportedPaths(selectedChain.value?.name ?? 'BITCOIN')[0]
+    : ethereumPath
 
 const selectedPath = defineModel<DerivationPath>('selectedPath', {
   // type: Object as () => DerivationPath,
@@ -183,8 +182,8 @@ onMounted(() => {
 })
 
 watch(
-  selectedPath,
-  newValue => {
+  () => selectedPath.value,
+  (newValue: DerivationPath | undefined) => {
     if (newValue) {
       setToStore(newValue)
     }
@@ -194,7 +193,7 @@ watch(
 
 watch(
   () => selectedChain.value,
-  newValue => {
+  (newValue: Chain | undefined) => {
     if (newValue) {
       setPaths()
       // reset search input
@@ -210,21 +209,21 @@ const setPaths = () => {
 
   // set path automatically if chain type differs from current selected path
   if (selectedChain.value?.type !== selectedPath.value?.type) {
-    if (selectedChain.value?.type === 'EVM') {
+    if (isEvmChain.value) {
       selectedPath.value = ethereumPath
-    } else if (selectedChain.value?.type === 'BITCOIN') {
+    } else if (isBitcoinChain.value) {
       selectedPath.value = BitcoinWallet.getSupportedPaths(
-        selectedChain.value.name,
+        selectedChain.value?.name || 'BITCOIN',
       )[0]
     } else {
       selectedPath.value = initialDefaultPath
     }
     setToStore(selectedPath.value!)
   } else {
-    if (selectedChain.value?.type === 'BITCOIN' && selectedPath.value) {
+    if (isBitcoinChain.value && selectedPath.value) {
       // ensure selected path is supported by the selected bitcoin chain
       const supportedPaths = BitcoinWallet.getSupportedPaths(
-        selectedChain.value.name,
+        selectedChain.value?.name || 'BITCOIN',
       )
       selectedPath.value = supportedPaths[0]
       setToStore(selectedPath.value!)
@@ -248,13 +247,13 @@ const searchResults = computed(() => {
     return paths.value
   }
   const search = searchInput.value.toLowerCase()
-  const beginsWithLabel = paths.value.filter(path => {
+  const beginsWithLabel = paths.value.filter((path: DerivationPath) => {
     return path.label.toLowerCase().startsWith(search)
   })
-  const beginsWithPath = paths.value.filter(path => {
+  const beginsWithPath = paths.value.filter((path: DerivationPath) => {
     return path.path.toLowerCase().startsWith(search)
   })
-  const other = paths.value.filter(path => {
+  const other = paths.value.filter((path: DerivationPath) => {
     return (
       path.label.toLowerCase().includes(search) ||
       path.path.toLowerCase().includes(search)

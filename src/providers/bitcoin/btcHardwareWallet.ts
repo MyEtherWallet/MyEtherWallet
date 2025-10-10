@@ -1,15 +1,21 @@
+import { bytesToHex } from 'web3-utils';
 
 import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
-import { HWwalletType } from '@enkryptcom/types'
+import { HWwalletType, NetworkNames } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { hexToBuffer } from '@/utils/hexToBuffer'
+import {
+  type PostSignedTransaction,
+} from '../common/types'
 
 import { INFO_MAP } from "../common/btcInfo";
-
-
+import { Psbt } from 'bitcoinjs-lib'
+import { chainToEnum } from '../ethereum/chainToEnum'
+import reverseBytes from '@/utils/reverseBytes'
+import { NODE_MAP } from '../common/btcInfo';
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
   private address: HexPrefixedString
@@ -34,6 +40,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     this.path = path
     this.walletType = walletType
     this.hwWalletInstance = hwWalletInstance as HWwallet
+    console.log(this.hwWalletInstance)
   }
 
   /**
@@ -42,39 +49,44 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
    * currently making library figure out tx type
    * TODO: switch to using the type from the API
    */
-  // override async SignTransaction(
-  //   serializedTx: HexPrefixedString,
-  // ): Promise<PostSignedTransaction> {
-  //   try {
-  //     const common = commonGenerator(BigInt(this.chainId), Hardfork.London)
-  //     const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
-  //       hexToBytes(serializedTx),
-  //       { common },
-  //     )
-  //     const walletSig = (await this.hwWalletInstance.signTransaction({
-  //       transaction: tx,
-  //       networkName: this.networkName as NetworkNames,
-  //       pathIndex: this.index,
-  //       pathType: {
-  //         basePath: this.path.basePath ?? '',
-  //         path: this.path.path,
-  //       },
-  //       wallet: this.walletType,
-  //     })) as HexPrefixedString
-  //     const rpcSig = fromRpcSig(walletSig)
-  //     const signedTx = tx.addSignature(
-  //       BigInt(rpcSig.v),
-  //       rpcSig.r,
-  //       rpcSig.s,
-  //       true,
-  //     )
-  //     return Promise.resolve({
-  //       signed: bytesToHex(signedTx.serialize()) as HexPrefixedString,
-  //     })
-  //   } catch (e) {
-  //     return Promise.reject(e)
-  //   }
-  // }
+  override async SignTransaction(
+    serializedTx: HexPrefixedString,
+  ): Promise<PostSignedTransaction> {
+    try {
+      const psbt = Psbt.fromHex(serializedTx, { network: INFO_MAP[this.getProvider()].network });
+      const transactionObj: { psbtTx: Psbt; rawTxs: string[] } = { psbtTx: psbt, rawTxs: [] }
+      if (this.getWalletType() === WalletType.LEDGER) {
+        const fetchTxs = psbt.txInputs.map(async (u) => {
+          const txID = bytesToHex(reverseBytes(u.hash)).replace('0x', '')
+          const isSS = this.getProvider() === 'DOGECOIN' || this.getProvider() === 'LITECOIN'
+          const node = NODE_MAP[this.getProvider()]
+          const url = isSS ? `${node}/api/v1/${txID}/raw` : `${node}transaction/${txID}/raw`
+          const response = await fetch(url)
+          const rawTx = await response.json()
+          return rawTx.result as string;
+        })
+        const txIds = await Promise.all(fetchTxs)
+        transactionObj.rawTxs = txIds as string[]
+      }
+      console.log(this.hwWalletInstance)
+      const walletSigned = (await this.hwWalletInstance.signTransaction({
+        transaction: { ...transactionObj },
+        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+        pathIndex: this.index,
+        pathType: {
+          basePath: this.path.basePath ?? '',
+          path: this.path.path,
+        },
+        wallet: this.walletType,
+      }))
+      return Promise.resolve(
+        { signed: `0x${walletSigned}` as HexPrefixedString, }
+      )
+    } catch (e) {
+      console.log(e)
+      return Promise.reject(e)
+    }
+  }
 
   override getWalletType(): WalletType {
     switch (this.walletType) {

@@ -21,6 +21,7 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
 
     const priv = ECPair.fromPrivateKey(this.privateKey, { network: INFO_MAP[this.chainName].network });
     const psbt = Psbt.fromHex(serializedTx, { network: INFO_MAP[this.chainName].network });
+
     psbt.signAllInputs(priv);
     psbt.finalizeAllInputs();
     const tx = psbt.extractTransaction(false);

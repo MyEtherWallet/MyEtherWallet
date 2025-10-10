@@ -263,7 +263,7 @@ const fetchURL = computed(() => {
     return `/v1/evm/chains/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
   }
   //TO DO: SOL and DOT HANDLER
-  return `/v1/btc/${selectedChain.value?.name}/estimates/?noInjectErrors=false`
+  return `/v2/btc/${selectedChain.value?.name}/estimates/?noInjectErrors=false`
 })
 const feesReady = ref(false)
 const feeEstmates = ref<FeeOption | undefined>(undefined)
