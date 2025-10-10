@@ -11,10 +11,11 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "nightwatch --config ./nightwatch.conf.cjs tests/e2e/*",
-    "build-only": "vite build",
+    "build:preview": "vite preview",
+    "build:only": "vite build",
+    "build:watchonly": "vite build --watch",
     "type-check": "vue-tsc -p tsconfig.app.json",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
@@ -25,7 +26,7 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
     "@commitlint/config-conventional": "^19.6.0",
-    "@enkryptcom/hw-wallets": "^0.0.12",
+    "@enkryptcom/hw-wallets": "^0.0.13",
     "@enkryptcom/name-resolution": "^0.0.8",
     "@enkryptcom/swap": "^0.0.5",
     "@enkryptcom/types": "^0.0.5",

@@ -15,8 +15,8 @@ importers:
         specifier: ^19.6.0
         version: 19.8.1
       '@enkryptcom/hw-wallets':
-        specifier: ^0.0.12
-        version: 0.0.12(tyovuts4x5dwqaxset3n6out2e)
+        specifier: ^0.0.13
+        version: 0.0.13(tyovuts4x5dwqaxset3n6out2e)
       '@enkryptcom/name-resolution':
         specifier: ^0.0.8
         version: 0.0.8(@siddomains/sid-contracts@0.1.31(@nomiclabs/hardhat-web3@2.1.0(hardhat@2.26.3(bufferutil@4.0.9)(ts-node@10.9.2(@types/node@22.18.9)(typescript@5.6.3))(typescript@5.6.3)(utf-8-validate@5.0.10))(web3@1.10.4(bufferutil@4.0.9)(utf-8-validate@5.0.10)))(bufferutil@4.0.9)(ethers@5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(hardhat@2.26.3(bufferutil@4.0.9)(ts-node@10.9.2(@types/node@22.18.9)(typescript@5.6.3))(typescript@5.6.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(web3-core-helpers@1.10.4)(web3-core-promievent@1.10.4)(web3-eth-abi@4.4.1(typescript@5.6.3)(zod@4.1.12))(web3-utils@4.3.3))(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -1516,8 +1516,8 @@ packages:
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0':
     resolution: {integrity: sha512-Bz1zLGEqBQ0BVkqt1OgMxdBOE3BdUWUd7Ly9Ecr/aUwkA8AV1w1XzBMe4xblmJHnB1XXNlPH4SraXCvO+q0Mig==}
 
-  '@enkryptcom/hw-wallets@0.0.12':
-    resolution: {integrity: sha512-onzKr8/15CSsW9IfjogaKUk1Q2HmmwtC1qk642+m2iI4kDdBb17wsuvs7N1/J4VWfzO79i22+h2Ol2A9Mz+H5Q==}
+  '@enkryptcom/hw-wallets@0.0.13':
+    resolution: {integrity: sha512-7+G/6AjNmJ8dTDroff3+Kh6tIgJ6MnnvMp1l1GAsZVP6qZV8io326Q+VJuPw9h4vB3J2dzNR41nSTldU3QzkaQ==}
     engines: {node: '>=14.15.0'}
 
   '@enkryptcom/name-resolution@0.0.8':
@@ -14003,8 +14003,8 @@ packages:
     resolution: {integrity: sha512-LbBDqdIC5s8iROCUjMbW1f5dJQTEFB1+KO9ogbvlb3nm9n4YHa5p4KTvFPWvh2Hs8gZMBuiB1/8+pdfe/tDPug==}
     hasBin: true
 
-  ua-parser-js@2.0.5:
-    resolution: {integrity: sha512-sZErtx3rhpvZQanWW5umau4o/snfoLqRcQwQIZ54377WtRzIecnIKvjpkd5JwPcSUMglGnbIgcsQBGAbdi3S9Q==}
+  ua-parser-js@2.0.6:
+    resolution: {integrity: sha512-EmaxXfltJaDW75SokrY4/lXMrVyXomE/0FpIIqP2Ctic93gK7rlme55Cwkz8l3YZ6gqf94fCU7AnIkidd/KXPg==}
     hasBin: true
 
   uc.micro@2.1.0:
@@ -15611,7 +15611,7 @@ snapshots:
       '@aptos-labs/aptos-client': 1.2.0(axios@1.7.7)(got@12.1.0)
       '@aptos-labs/script-composer-pack': 0.0.9
       '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.7.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       eventemitter3: 5.0.1
@@ -17508,7 +17508,7 @@ snapshots:
 
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0': {}
 
-  '@enkryptcom/hw-wallets@0.0.12(tyovuts4x5dwqaxset3n6out2e)':
+  '@enkryptcom/hw-wallets@0.0.13(tyovuts4x5dwqaxset3n6out2e)':
     dependencies:
       '@enkryptcom/types': 0.0.5
       '@enkryptcom/utils': 0.0.5(@polkadot/util@13.5.6)
@@ -18092,7 +18092,7 @@ snapshots:
 
   '@ethereumjs/tx@3.3.2':
     dependencies:
-      '@ethereumjs/common': 2.6.5
+      '@ethereumjs/common': 2.5.0
       ethereumjs-util: 7.1.5
 
   '@ethereumjs/tx@3.5.2':
@@ -18590,7 +18590,7 @@ snapshots:
 
   '@expo/osascript@2.0.33':
     dependencies:
-      '@expo/spawn-async': 1.7.2
+      '@expo/spawn-async': 1.5.0
       exec-async: 2.2.0
 
   '@expo/osascript@2.3.7':
@@ -18601,7 +18601,7 @@ snapshots:
   '@expo/package-manager@0.0.60':
     dependencies:
       '@expo/json-file': 8.3.3
-      '@expo/spawn-async': 1.7.2
+      '@expo/spawn-async': 1.5.0
       ansi-regex: 5.0.1
       chalk: 4.1.2
       find-up: 5.0.0
@@ -19400,8 +19400,8 @@ snapshots:
       '@ledgerhq/live-env': 2.18.0
       '@ledgerhq/live-network': 2.0.19
       '@ledgerhq/logs': 6.13.0
-      '@ledgerhq/types-cryptoassets': 7.28.0
-      '@ledgerhq/types-live': 6.86.0
+      '@ledgerhq/types-cryptoassets': 7.19.0
+      '@ledgerhq/types-live': 6.61.0
       bignumber.js: 9.3.1
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -19421,8 +19421,8 @@ snapshots:
       '@ledgerhq/live-env': 2.18.0
       '@ledgerhq/live-network': 2.0.19
       '@ledgerhq/logs': 6.13.0
-      '@ledgerhq/types-cryptoassets': 7.28.0
-      '@ledgerhq/types-live': 6.86.0
+      '@ledgerhq/types-cryptoassets': 7.20.0
+      '@ledgerhq/types-live': 6.62.0
       bignumber.js: 9.3.1
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -20181,20 +20181,20 @@ snapshots:
 
   '@ledgerhq/hw-transport@6.28.1':
     dependencies:
-      '@ledgerhq/devices': 8.6.1
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.26.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.30.6':
     dependencies:
-      '@ledgerhq/devices': 8.6.1
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.26.0
       '@ledgerhq/logs': 6.13.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.31.0':
     dependencies:
-      '@ledgerhq/devices': 8.6.1
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.26.0
       '@ledgerhq/logs': 6.13.0
       events: 3.3.0
@@ -20208,7 +20208,7 @@ snapshots:
 
   '@ledgerhq/hw-transport@6.31.3':
     dependencies:
-      '@ledgerhq/devices': 8.6.1
+      '@ledgerhq/devices': 8.4.4
       '@ledgerhq/errors': 6.26.0
       '@ledgerhq/logs': 6.13.0
       events: 3.3.0
@@ -21017,7 +21017,7 @@ snapshots:
       uuid: 8.3.2
     optionalDependencies:
       '@multiversx/sdk-bls-wasm': 0.3.5
-      axios: 1.12.2
+      axios: 1.7.7(debug@4.4.3)
       bip39: 3.1.0
     transitivePeerDependencies:
       - debug
@@ -22506,7 +22506,7 @@ snapshots:
   '@scure/bip32@1.1.5':
     dependencies:
       '@noble/hashes': 1.2.0
-      '@noble/secp256k1': 1.7.2
+      '@noble/secp256k1': 1.7.1
       '@scure/base': 1.1.9
 
   '@scure/bip32@1.4.0':
@@ -23450,7 +23450,7 @@ snapshots:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
       '@stacks/common': 6.16.0
-      '@stacks/network': 6.17.0
+      '@stacks/network': 6.10.0
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
@@ -23494,7 +23494,7 @@ snapshots:
   '@stellar/stellar-sdk@11.3.0':
     dependencies:
       '@stellar/stellar-base': 11.0.1
-      axios: 1.12.2
+      axios: 1.7.7(debug@4.4.3)
       bignumber.js: 9.3.1
       eventsource: 2.0.2
       randombytes: 2.1.0
@@ -23764,7 +23764,7 @@ snapshots:
     dependencies:
       '@ton/core': 0.56.3(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
-      axios: 1.12.2
+      axios: 1.7.7(debug@4.4.3)
       dataloader: 2.2.3
       symbol.inspect: 1.0.1
       teslabot: 1.5.0
@@ -23956,7 +23956,7 @@ snapshots:
   '@trezor/env-utils@1.4.3(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.28.4)))(react-native@0.82.0(@babel/core@7.28.4)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)':
     dependencies:
       tslib: 2.8.1
-      ua-parser-js: 2.0.5
+      ua-parser-js: 2.0.6
     optionalDependencies:
       expo-constants: 13.1.1(expo@45.0.8(@babel/core@7.28.4))
       react-native: 0.82.0(@babel/core@7.28.4)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)
@@ -26109,7 +26109,7 @@ snapshots:
     dependencies:
       '@ledgerhq/hw-transport': 6.31.0
       '@zondax/ledger-js': 0.8.2
-      axios: 1.12.2
+      axios: 1.7.7(debug@4.4.3)
     transitivePeerDependencies:
       - debug
 
@@ -27160,7 +27160,7 @@ snapshots:
 
   c32check@2.0.0:
     dependencies:
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.1.5
       base-x: 4.0.1
 
   cac@6.7.14: {}
@@ -27174,7 +27174,7 @@ snapshots:
       glob: 7.2.3
       infer-owner: 1.0.4
       lru-cache: 6.0.0
-      minipass: 3.3.6
+      minipass: 3.1.6
       minipass-collect: 1.0.2
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
@@ -28511,7 +28511,7 @@ snapshots:
     dependencies:
       bn.js: 4.12.2
       brorand: 1.1.0
-      hash.js: 1.1.7
+      hash.js: 1.1.3
       hmac-drbg: 1.0.1
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
@@ -29545,7 +29545,7 @@ snapshots:
 
   extension-port-stream@3.0.0:
     dependencies:
-      readable-stream: 4.7.0
+      readable-stream: 3.6.2
       webextension-polyfill: 0.10.0
 
   extract-zip@2.0.1:
@@ -29892,7 +29892,7 @@ snapshots:
 
   fs-minipass@2.1.0:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   fs-monkey@1.1.0: {}
 
@@ -30886,7 +30886,7 @@ snapshots:
 
   isomorphic-fetch@3.0.0:
     dependencies:
-      node-fetch: 2.7.0
+      node-fetch: 2.6.13
       whatwg-fetch: 3.6.20
     transitivePeerDependencies:
       - encoding
@@ -32048,15 +32048,15 @@ snapshots:
 
   minipass-collect@1.0.2:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   minipass-flush@1.0.5:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   minipass-pipeline@1.2.4:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
 
   minipass@2.9.0:
     dependencies:
@@ -32081,7 +32081,7 @@ snapshots:
 
   minizlib@2.1.2:
     dependencies:
-      minipass: 3.3.6
+      minipass: 3.1.6
       yallist: 4.0.0
 
   mipd@0.0.7(typescript@5.6.3):
@@ -33547,7 +33547,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/node': 22.18.9
-      long: 5.3.2
+      long: 5.2.5
 
   protobufjs@7.5.4:
     dependencies:
@@ -35563,12 +35563,11 @@ snapshots:
 
   ua-parser-js@1.0.41: {}
 
-  ua-parser-js@2.0.5:
+  ua-parser-js@2.0.6:
     dependencies:
       detect-europe-js: 0.1.2
       is-standalone-pwa: 0.1.1
       ua-is-frozen: 0.1.2
-      undici: 7.16.0
 
   uc.micro@2.1.0: {}
 

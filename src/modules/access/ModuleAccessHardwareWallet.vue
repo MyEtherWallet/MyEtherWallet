@@ -232,7 +232,6 @@ const backStep = () => {
 
 const connectingWallet = ref(false)
 
-// TODO: Handle non EVM networks
 const unlockWallet = async () => {
   connectingWallet.value = true
   const networkName = chainToEnum[
@@ -254,6 +253,7 @@ const unlockWallet = async () => {
     wallet: selectedHwWalletType.value as HWwalletType,
     networkName: networkName,
   })) as PathType[]
+
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
   if (
@@ -282,7 +282,7 @@ const loadList = async (page: number = 0) => {
   walletList.value = []
   const startIndex = page * 5
   const chainId = selectedChain.value?.chainID ?? '1'
-  const chainName = selectedChain.value?.name ?? 'ETH'
+  const chainName = selectedChain.value?.name ?? 'ETHEREUM'
   const networkName = chainToEnum[chainName] ?? 'Ethereum'
 
   for (let i = startIndex; i < startIndex + 5; i++) {
