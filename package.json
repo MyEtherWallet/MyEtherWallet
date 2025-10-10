@@ -25,7 +25,7 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.9",
     "@commitlint/config-conventional": "^19.6.0",
-    "@enkryptcom/hw-wallets": "^0.0.13",
+    "@enkryptcom/hw-wallets": "^0.0.12",
     "@enkryptcom/name-resolution": "^0.0.8",
     "@enkryptcom/swap": "^0.0.5",
     "@enkryptcom/types": "^0.0.5",
