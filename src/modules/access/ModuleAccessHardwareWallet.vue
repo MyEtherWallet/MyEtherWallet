@@ -342,7 +342,6 @@ const loadList = async (page: number = 0) => {
         })
       }
     } catch (e) {
-      console.log(e, 'here?')
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: e instanceof Error ? e.message : String(e),

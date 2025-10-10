@@ -40,7 +40,6 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     this.path = path
     this.walletType = walletType
     this.hwWalletInstance = hwWalletInstance as HWwallet
-    console.log(this.hwWalletInstance)
   }
 
   /**
@@ -68,7 +67,6 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
         const txIds = await Promise.all(fetchTxs)
         transactionObj.rawTxs = txIds as string[]
       }
-      console.log(this.hwWalletInstance)
       const walletSigned = (await this.hwWalletInstance.signTransaction({
         transaction: { ...transactionObj },
         networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
@@ -83,7 +81,6 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
         { signed: `0x${walletSigned}` as HexPrefixedString, }
       )
     } catch (e) {
-      console.log(e)
       return Promise.reject(e)
     }
   }
