@@ -10,7 +10,7 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check \"build-only {@}\" --",
+    "build": "run-p type-check \"build:only {@}\" --",
     "test:unit": "vitest",
     "test:e2e": "nightwatch --config ./nightwatch.conf.cjs tests/e2e/*",
     "build:preview": "vite preview",
