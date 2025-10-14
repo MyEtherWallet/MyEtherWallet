@@ -65,7 +65,11 @@ import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
-import { ROUTES_ACCESS, ROUTES_MAIN } from '@/router/routeNames'
+import {
+  ROUTES_ACCESS,
+  ROUTES_MAIN,
+  TOKEN_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
@@ -93,7 +97,7 @@ const backgroundClass = computed(() => {
   if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
     route.name === ROUTES_MAIN.CRYPTO.NAME ||
-    route.name === ROUTES_MAIN.TOKEN_INFO.NAME
+    route.name === TOKEN_INFO_ROUTE_NAMES.crypto
   ) {
     return ''
   } else {

@@ -31,7 +31,7 @@
       <router-link
         v-for="token in currentTrendingTokens"
         :to="{
-          name: ROUTES_MAIN.TOKEN_INFO.NAME,
+          name: TOKEN_INFO_ROUTE_NAMES.crypto,
           params: { tokenId: token.coinId },
         }"
         :key="token.symbol"
@@ -99,7 +99,7 @@ import type {
 import { truncate } from '@/utils/filters'
 import BigNumber from 'bignumber.js'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { ROUTES_MAIN } from '@/router/routeNames'
+import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const { useMEWFetch } = useFetchMewApi()
 const toastStore = useToastStore()

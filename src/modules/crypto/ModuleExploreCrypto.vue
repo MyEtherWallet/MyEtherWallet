@@ -239,9 +239,8 @@
                 <td class="px-1 py-2 rounded-l-12 sm:rounded-none">
                   <router-link
                     :to="{
-                      name: 'TokenInfo',
+                      name: TOKEN_INFO_ROUTE_NAMES.crypto,
                       params: {
-                        networkId: token.coinId,
                         tokenId: token.coinId,
                       },
                     }"
@@ -429,7 +428,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
-import { ROUTES_MAIN } from '@/router/routeNames'
+import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
@@ -625,10 +624,12 @@ const debounceFetchGainers = useDebounceFn(() => {
 onMounted(() => {
   // Fetch tokens based on the selected filter
   if (isLoadedChains.value && selectedChainStore.value) {
+    // This will trigger fetching tokens in watch below
     selectedChainFilter.value = ALL_CHAINS.value
+  } else {
+    isLoading.value = true
+    fetchTokenTable()
   }
-  isLoading.value = true
-  fetchTokenTable()
 })
 
 onFetchWatchlistResponse(() => {
@@ -846,7 +847,7 @@ const router = useRouter()
 
 const goToTokenPage = (token: DisplayToken) => {
   router.push({
-    name: ROUTES_MAIN.TOKEN_INFO.NAME,
+    name: TOKEN_INFO_ROUTE_NAMES.crypto,
     params: { tokenId: token.coinId },
   })
 }

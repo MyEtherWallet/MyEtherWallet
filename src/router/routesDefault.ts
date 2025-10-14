@@ -1,22 +1,30 @@
-import { ROUTES_MAIN, ROUTES_SEND } from './routeNames'
-import { TOKEN_INFO_ROUTE } from './helpers/helpersTokenInfo'
+import { ROUTES_MAIN } from './routeNames'
+import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
+import { ACCESS_ROUTES } from './routesAccess'
+import { TOKEN_INFO_ROUTE_NAMES } from './routeNames'
+import { type RouterOptions } from 'vue-router'
+
 const TempView = () => import('@view-default/ViewTemp.vue')
-const SendView = () => import('@/views/wallet/send/ViewSend.vue')
-const SwapView = () => import('@/views/wallet/swap/ViewSwap.vue')
+const PortfolioView = () => import('@view-default/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/wallet/crypto/ViewCrypto.vue')
 const NotFoundView = () => import('@view-default/ViewNotFound.vue')
-const ModuleSend = () => import('@/modules/send/ModuleSend.vue')
-const ModuleSwap = () => import('@/modules/swap/ModuleSwap.vue')
-const ModuleSendNft = () => import('@/modules/nft/ModuleSendNft.vue')
 
-const DefaultRoutes = [
+type RouteNameCollection = RouterOptions['routes']
+const DefaultRoutes = <RouteNameCollection>[
   {
     path: ROUTES_MAIN.HOME.PATH,
     name: ROUTES_MAIN.HOME.NAME,
-    component: TempView,
+    component: PortfolioView,
     meta: {
       noAuth: true,
     },
+    children: [
+      ACCESS_ROUTES,
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.home,
+        ...TOKEN_INFO_ROUTE,
+      },
+    ],
   },
   {
     path: ROUTES_MAIN.CRYPTO.PATH,
@@ -25,48 +33,12 @@ const DefaultRoutes = [
     meta: {
       noAuth: true,
     },
-    children: [TOKEN_INFO_ROUTE],
-  },
-  {
-    path: ROUTES_SEND.SEND.PATH,
-    component: SendView,
     children: [
       {
-        path: '',
-        name: ROUTES_SEND.SEND.NAME,
-        component: ModuleSend,
-      },
-      {
-        path: ROUTES_SEND.SEND_NFT.PATH,
-        name: ROUTES_SEND.SEND_NFT.NAME,
-        component: ModuleSendNft,
+        name: TOKEN_INFO_ROUTE_NAMES.crypto,
+        ...TOKEN_INFO_ROUTE,
       },
     ],
-    meta: {
-      noAuth: true,
-    },
-  },
-  {
-    path: ROUTES_MAIN.SWAP.PATH,
-    component: SwapView,
-    children: [
-      {
-        path: '',
-        name: ROUTES_MAIN.SWAP.NAME,
-        component: ModuleSwap,
-      },
-    ],
-    meta: {
-      noAuth: true,
-    },
-  },
-  {
-    path: ROUTES_MAIN.BUY.PATH,
-    name: ROUTES_MAIN.BUY.NAME,
-    component: TempView,
-    meta: {
-      noAuth: true,
-    },
   },
   {
     path: ROUTES_MAIN.EARN.PATH,
@@ -109,14 +81,6 @@ const DefaultRoutes = [
     },
   },
   {
-    path: ROUTES_MAIN.LEARN.PATH,
-    name: ROUTES_MAIN.LEARN.NAME,
-    component: TempView,
-    meta: {
-      noAuth: true,
-    },
-  },
-  {
     path: ROUTES_MAIN.STOCKS.PATH,
     name: ROUTES_MAIN.STOCKS.NAME,
     component: TempView,
@@ -124,7 +88,6 @@ const DefaultRoutes = [
       noAuth: true,
     },
   },
-
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',

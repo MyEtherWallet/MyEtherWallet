@@ -13,7 +13,6 @@
         :use-emit-only="true"
         :is-loaded="isLoadedChains"
         size="large"
-        class="!p-2"
         @onUpdate:selected="setSelectedChain"
       >
         <template #btn-content="{ data }">
@@ -21,19 +20,19 @@
             <img
               :src="data.icon"
               alt=""
-              class="w-8 h-8 mr-3 rounded-full object-contain"
-              height="32px"
-              width="32px"
+              class="w-7 h-7 mr-2 rounded-full object-contain"
+              height="32"
+              width="32"
             />
             <span class="mr-2"> {{ data.nameLong }}</span>
           </div>
         </template>
         <template #custom>
           <button
-            class="min-h-12 text-s-17 px-4 py-2 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
+            class="h-10 text-s-17 py-2 px-4 rounded-full bg-transparent font-medium hoverNoBG min-w-[89px]"
             @click="setOpenDialog(true)"
           >
-            <div class="flex items-center capitalize">
+            <div class="flex items-center justify-center capitalize">
               <span>{{ $t('common.more') }}</span>
               <chevron-down-icon class="text-info w-4 h-4 ml-1" />
             </div>

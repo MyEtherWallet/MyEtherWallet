@@ -1,7 +1,7 @@
 <template>
   <app-view-as-dialog containerClass="max-w-[900px] ">
     <template #content>
-      <ModuleTokenInfo :networkId="networkId" :tokenId="tokenId" />
+      <ModuleTokenInfo :tokenId="tokenId" />
     </template>
   </app-view-as-dialog>
 </template>
@@ -14,10 +14,6 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 defineProps({
-  networkId: {
-    type: String,
-    required: true,
-  },
   tokenId: {
     type: String,
     required: true,

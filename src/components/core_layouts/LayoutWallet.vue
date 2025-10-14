@@ -200,7 +200,7 @@ import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from '@heroicons/vue/24/outline'
-import { ROUTES_MAIN } from '@/router/routeNames'
+import { ROUTES_MAIN, TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import { useRoute } from 'vue-router'
 
@@ -214,7 +214,10 @@ const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
 
 onMounted(() => {
-  if (route.name !== ROUTES_MAIN.TOKEN_INFO.NAME) {
+  if (
+    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    route.name === TOKEN_INFO_ROUTE_NAMES.home
+  ) {
     if (isXLAndUp.value) {
       walletMenu.setIsOpenSideMenu(true)
     } else {
@@ -223,7 +226,10 @@ onMounted(() => {
   }
 })
 watch(isMDAndUp, newVal => {
-  if (route.name === ROUTES_MAIN.TOKEN_INFO.NAME) {
+  if (
+    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    route.name === TOKEN_INFO_ROUTE_NAMES.home
+  ) {
     if (newVal) {
       walletMenu.setIsOpenSideMenu(true)
     } else {
@@ -233,7 +239,10 @@ watch(isMDAndUp, newVal => {
 })
 
 watch(isXLAndUp, newVal => {
-  if (route.name !== ROUTES_MAIN.TOKEN_INFO.NAME) {
+  if (
+    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    route.name === TOKEN_INFO_ROUTE_NAMES.home
+  ) {
     if (newVal) {
       walletMenu.setIsOpenSideMenu(true)
     } else {

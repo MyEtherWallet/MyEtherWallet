@@ -108,14 +108,14 @@
                   v-if="!isWalletConnected"
                   class="flex flex-col gap-3 pt-5 px-5 mt-1"
                 >
-                  <router-link
-                    :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+                  <button
+                    @click="connectWallet"
                     class="px-4 bg-black text-white h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
                   >
                     {{ $t('connect_wallet') }}
-                  </router-link>
+                  </button>
                   <router-link
-                    :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+                    :to="{ name: ROUTES_MAIN.HOME.NAME }"
                     class="px-4 py-2 border-1 border-black text-black h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
                   >
                     {{ $t('common.create_wallet') }}
@@ -140,7 +140,8 @@ import { ref, computed } from 'vue'
 import MenuListItem from './MenuListItem.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { ROUTES_ACCESS } from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
+import { useAccessStore } from '@/stores/accessStore'
 
 const { t } = useI18n()
 const store = useWalletStore()
@@ -185,6 +186,16 @@ const otherMenuList = computed<AppMenuListItem[]>(() => {
 //TODO: Add click handler
 const clickListItem = (item: AppMenuListItem) => {
   console.log('clickListItem', item)
+  sidebarIsOpen.value = false
+}
+
+/** ------------------------------
+ * Connect Wallet
+ ------------------------------*/
+const accessStore = useAccessStore()
+
+const connectWallet = () => {
+  accessStore.openAccessDialog()
   sidebarIsOpen.value = false
 }
 </script>

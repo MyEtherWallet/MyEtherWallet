@@ -1,86 +1,118 @@
 <template>
-  <div>
-    <app-stepper
-      :steps="steps"
-      :description="stepDescription"
-      :active-step="activeStep"
-      @update:active-step="backStep"
+  <div class="flex justify-center w-full">
+    <div
+      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
     >
-      <!-- Enter Mnemonic -->
-      <div v-if="activeStep === 0">
-        <app-step-description
-          :description="stepDescription[0]"
-          :activeStep="activeStep"
-        />
-        <app-text-field
-          v-model="mnemonic"
-          :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
-          class="mt-4 text-center"
-          is-required
-          :error-message="
-            hasMnemonicError
-              ? $t('access_wallet_recovery_phrase.invalid_phrase')
-              : ''
-          "
-        />
-        <div class="flex items-center justify-between gap-4 my-7 w-full">
-          <p class="font-medium">
-            {{ $t('access_wallet_recovery_phrase.do_you_have_an_extra_word') }}
-          </p>
-          <app-toggle v-model="hasExtraWord" :label="extraWordToggleString" />
-        </div>
-        <!-- Extra Word -->
-        <expand-transition>
-          <div v-if="hasExtraWord">
-            <app-input
-              v-model="extraWord"
-              :placeholder="
-                $t('access_wallet_recovery_phrase.enter_extra_word')
+      <app-not-recommended />
+      <app-sheet class="mt-1">
+        <app-stepper
+          :steps="steps"
+          :description="stepDescription"
+          :active-step="activeStep"
+          @update:active-step="backStep"
+        >
+          <!-- Enter Mnemonic -->
+          <div v-if="activeStep === 0">
+            <app-step-description
+              :description="stepDescription[0]"
+              :activeStep="activeStep"
+            />
+            <app-text-field
+              v-model="mnemonic"
+              :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
+              class="mt-2 xs:mt-4 text-center"
+              is-required
+              :error-message="
+                hasMnemonicError
+                  ? $t('access_wallet_recovery_phrase.invalid_phrase')
+                  : ''
               "
             />
+            <div
+              class="flex items-center justify-between gap-4 mt-4 xs:mt-7 mb-7 w-full"
+            >
+              <p class="font-medium text-s-14 xs:text-s-16 leading-p-130">
+                {{
+                  $t('access_wallet_recovery_phrase.do_you_have_an_extra_word')
+                }}
+              </p>
+              <app-toggle
+                v-model="hasExtraWord"
+                :label="extraWordToggleString"
+              />
+            </div>
+            <!-- Extra Word -->
+            <expand-transition>
+              <div v-if="hasExtraWord">
+                <app-input
+                  v-model="extraWord"
+                  :placeholder="
+                    $t('access_wallet_recovery_phrase.enter_extra_word')
+                  "
+                />
+              </div>
+            </expand-transition>
+            <div class="flex items-center justify-center">
+              <app-base-button
+                @click="unlockWallet"
+                :disabled="!isValid"
+                class="w-full xs:w-auto xs:min-w-[250px]"
+              >
+                {{ $t('common.next') }}
+              </app-base-button>
+            </div>
           </div>
-        </expand-transition>
-        <div class="flex items-center justify-center">
-          <app-base-button @click="unlockWallet" :disabled="!isValid">
-            {{ $t('common.next') }}
-          </app-base-button>
-        </div>
-      </div>
-      <!-- Select Network, Address, DP -->
-      <div v-if="activeStep === 1">
-        <app-step-description
-          :description="stepDescription[1]"
-          :activeStep="activeStep"
-        />
-        <div
-          class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
+          <!-- Select Network, Address, DP -->
+          <div v-if="activeStep === 1">
+            <app-step-description
+              :description="stepDescription[1]"
+              :activeStep="activeStep"
+            />
+            <div
+              class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
+            >
+              <select-chain-for-app />
+              <derivation-path />
+            </div>
+            <select-address-list
+              v-model="selectedIndex"
+              :walletList="walletList as SelectAddress[]"
+              :isLoading="isLoadingWalletList"
+              class="mt-5"
+              @nextpage="setPage(true)"
+              @prevpage="setPage(false)"
+            />
+            <div class="flex items-center flex-col justify-center">
+              <app-base-button
+                @click="access"
+                :disabled="!isValid"
+                class="mt-10"
+                :is-loading="isUnlockingWallet"
+              >
+                {{ $t('common.access_wallet') }}
+              </app-base-button>
+              <app-btn-text
+                @click="backStep"
+                is-large
+                class="mt-2 text-primary"
+              >
+                {{ $t('common.back') }}
+              </app-btn-text>
+            </div>
+          </div>
+        </app-stepper>
+      </app-sheet>
+      <!-- TODO: add link-->
+      <div
+        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+      >
+        {{ $t('wc_dialog.no_wallet') }}
+        <span class="underline">
+          {{ $t('wc_dialog.get_wallet') }}
+          <span class="text-sm"> →</span></span
         >
-          <select-chain-for-app />
-          <derivation-path />
-        </div>
-        <select-address-list
-          v-model="selectedIndex"
-          :walletList="walletList as SelectAddress[]"
-          :isLoading="isLoadingWalletList"
-          class="mt-5"
-          @nextpage="setPage(true)"
-          @prevpage="setPage(false)"
-        />
-        <div class="flex items-center flex-col justify-center">
-          <app-base-button
-            @click="access"
-            :disabled="!isValid"
-            class="mt-10"
-            :is-loading="isUnlockingWallet"
-          >
-            {{ $t('common.access_wallet') }}
-          </app-base-button>
-          <app-btn-text @click="backStep" is-large class="mt-2 text-primary">
-            {{ $t('common.back') }}
-          </app-btn-text>
-        </div>
       </div>
-    </app-stepper>
+    </div>
   </div>
 </template>
 
@@ -95,15 +127,16 @@ import AppTextField from '@/components/AppTextField.vue'
 import AppToggle from '@/components/AppToggle.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
+import AppSheet from '@/components/AppSheet.vue'
+import AppNotRecommended from '@/components/AppNotRecommended.vue'
+
 import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import MnemonicToBitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import DerivationPath from './components/DerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -112,7 +145,7 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
-import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
+import { useAccessStore } from '@/stores/accessStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
@@ -303,10 +336,9 @@ const setPage = (isNext: boolean) => {
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
-const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
-const accessRedirectStore = useAccessRedirectStore()
+const accessStore = useAccessStore()
 
 const access = async () => {
   isUnlockingWallet.value = true
@@ -319,8 +351,6 @@ const access = async () => {
   })
 
   isUnlockingWallet.value = false
-  router.push({
-    name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
-  })
+  accessStore.closeAccessDialog()
 }
 </script>

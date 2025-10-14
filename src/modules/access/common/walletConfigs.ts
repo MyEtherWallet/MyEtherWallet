@@ -5,11 +5,22 @@ import TrezorLogo from '@/assets/images/access/trezor.webp'
 import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import HWWallet from '@enkryptcom/hw-wallets'
 import { NetworkNames } from '@enkryptcom/types'
 import type { Chain } from '@/mew_api/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
+
+export const WALLET_VIEWS = [
+  'default',
+  'ledger',
+  'trezor',
+  'keystore',
+  'mnemonic',
+  'private_key',
+  'wallet_connect',
+] as const
+
+export type WalletView = (typeof WALLET_VIEWS)[number]
 
 export enum WalletConfigType {
   MOBILE = 'mobile',
@@ -60,7 +71,7 @@ export type WalletConfig = {
   isDefault?: boolean
   isWC?: boolean
   isOfficial?: boolean
-  routeName?: string
+  walletViewType?: WalletView
   downloadUrls?: downloadUrls
   canSupport?: (chain?: Chain) => boolean
 }
@@ -88,23 +99,23 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
-    routeName: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
     canSupport: hardwareSupportNetwork,
+    walletViewType: 'ledger',
   },
   trezor: {
     id: 'trezor',
     name: 'Trezor',
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
-    routeName: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
     canSupport: hardwareSupportNetwork,
+    walletViewType: 'trezor',
   },
   keystore: {
     id: 'keystore',
     name: 'Keystore',
     icon: KeystoreLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_ACCESS.ACCESS_KEYSTORE.NAME,
+    walletViewType: 'keystore',
     canSupport: keystoreSupportNetwork,
   },
   mnemonic: {
@@ -112,7 +123,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Recovery (mnemonic) Phrase',
     icon: MnemonicLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_ACCESS.ACCESS_MNEMONIC.NAME,
+    walletViewType: 'mnemonic',
     canSupport: () => true,
   },
   privateKey: {
@@ -120,8 +131,8 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Private Key',
     icon: PrivateKeyLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_ACCESS.ACCESS_PRIVATE_KEY.NAME,
-    canSupport: () => true, // Supports all chains
+    walletViewType: 'private_key',
+    canSupport: () => true,
   },
   mew: {
     id: 'mew',
@@ -132,6 +143,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     isDefault: true,
     isOfficial: true,
     isWC: true,
+    walletViewType: 'wallet_connect',
   },
   enkrypt: {
     id: 'enkrypt',
