@@ -1,39 +1,22 @@
 <template>
-  <app-dialog
-    v-model:is-open="isOpen"
-    class="sm:max-w-[560px]"
-    has-content-gutter
-  >
-    <!-- Title -->
-    <template #title>
-      <div>
-        <h1 class="title4 pr-2 pt-4 sm:pt-8">
-          {{ $t('wc_dialog.title') }}
-        </h1>
-        <!-- TODO: add link-->
-        <div class="mt-4 text-info text7 hoverOpacity">
-          {{ $t('wc_dialog.no_wallet') }}
-          <span class="underline">
-            {{ $t('wc_dialog.get_wallet') }}
-            <span class="text-sm"> →</span></span
-          >
-        </div>
-      </div>
-    </template>
-    <!-- Content -->
-    <template #content>
-      <div
-        class="bg-mewBg rounded-xl px-8 pt-6 pb-4 text-center text-sm sm:text-base"
-      >
-        <p class="mb-2">
-          {{ $t('wc_dialog.scan_qr_code', { walletName: walletName }) }}
+  <div class="flex justify-center w-full">
+    <div
+      class="max-w-[624px] flex flex-col items-center justify-center py-6 sm:py-10"
+    >
+      <app-sheet>
+        <p v-if="clickedWalletConnect" class="mb-2 text-center">
+          {{
+            $t('wc_dialog.scan_qr_code', {
+              walletName: clickedWalletConnect?.walletName,
+            })
+          }}
         </p>
         <div class="flex items-center justify-center">
           <!-- QR Code -->
-          <div v-show="!isLoadingQRCode" ref="qrCode"></div>
+          <div v-show="!isLoading" ref="qrCode" class="mt-5"></div>
           <!-- Loading QR Placeholder -->
           <div
-            v-show="isLoadingQRCode"
+            v-show="isLoading"
             class="h-[200px] w-[200px] sm:h-[280px] sm:w-[280px] flex items-center justify-center bg-grey-5 rounded-xl mt-5"
           >
             <svg
@@ -60,7 +43,10 @@
           class="flex items-center justify-center mt-2 mb-4 sm:mb-6 text-sm sm:text-base"
         >
           <p>{{ $t('wc_dialog.or_copy_link') }}</p>
-          <AppCopyButton :copy-value="qrcodeData" />
+          <AppCopyButton
+            v-if="clickedWalletConnect"
+            :copy-value="clickedWalletConnect.wagmiWalletData"
+          />
         </div>
         <a
           class="text-info text-center text-xs mx-auto block"
@@ -70,39 +56,32 @@
         >
           {{ $t('common.powered_by') }} WalletConnect
         </a>
+      </app-sheet>
+      <!-- TODO: add link-->
+      <div
+        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+      >
+        {{ $t('wc_dialog.no_wallet') }}
+        <span class="underline">
+          {{ $t('wc_dialog.get_wallet') }}
+          <span class="text-sm"> →</span></span
+        >
       </div>
-      <!--TODO: ensure correct link is provided-->
-      <app-need-help
-        :title="$t('wc_dialog.need_help')"
-        help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-        class="mt-5 sm:mt-10 mb-8 text-center"
-      />
-    </template>
-  </app-dialog>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
-import { ref, watchEffect, watch } from 'vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import AppDialog from '@/components/AppDialog.vue'
+import { ref, watchEffect, watch, computed } from 'vue'
 import AppCopyButton from '@/components/AppBtnCopy.vue'
+import AppSheet from '@/components/AppSheet.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useQR } from '@/composables/useQR'
-
-const props = defineProps<{
-  qrcodeData: string
-  walletName: string
-  walletIcon?: string
-}>()
-
+import { useAccessStore } from '@/stores/accessStore'
+import { storeToRefs } from 'pinia'
 const { isMobile } = useAppBreakpoints()
 
-/** -------------------
- * Dialog Controls
- -------------------*/
-const isOpen = defineModel('isOpen', {
-  type: Boolean,
-  required: true,
-})
+const accessStore = useAccessStore()
+const { clickedWalletConnect } = storeToRefs(accessStore)
 
 /** -------------------
  * QR Code Controls
@@ -111,6 +90,13 @@ const qrWidth = ref(isMobile.value ? 200 : 280)
 const qrHeight = ref(isMobile.value ? 200 : 280)
 const { qrCode, isLoadingQRCode, setQRCode } = useQR()
 
+const isLoading = computed(() => {
+  return (
+    isLoadingQRCode.value ||
+    !clickedWalletConnect.value?.wagmiWalletData ||
+    clickedWalletConnect.value?.wagmiWalletData == ''
+  )
+})
 /**
  * Watches for changes and updates the QR code styling accordingly.
  *
@@ -140,22 +126,20 @@ watchEffect(async () => {
 
 watch(
   () => [
-    props.qrcodeData,
-    props.walletIcon,
-    isOpen.value,
+    clickedWalletConnect.value?.wagmiWalletData,
+    clickedWalletConnect.value?.walletIcon,
     qrCode.value,
     qrWidth.value,
     qrHeight.value,
   ],
   () => {
-    if (isOpen.value) {
-      setQRCode(
-        props.qrcodeData,
-        qrWidth.value,
-        qrHeight.value,
-        props.walletIcon,
-      )
-    }
+    // clickedWallet.value?.icon is being resolved in wallet list components
+    setQRCode(
+      clickedWalletConnect.value?.wagmiWalletData,
+      qrWidth.value,
+      qrHeight.value,
+      clickedWalletConnect.value?.walletIcon as string,
+    )
   },
 )
 </script>

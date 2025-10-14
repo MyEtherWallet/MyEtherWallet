@@ -4,8 +4,9 @@
       v-if="!isDevMode"
       @close-welcome-dialog="showFeedbackToast"
     />
-    <the-app-layout v-if="isLoadingComplete" />
+    <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
+    <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
   </div>
 </template>
 
@@ -23,7 +24,12 @@ import { type TokenBalancesRaw } from '@/mew_api/types'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
+import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import configs from './configs'
+import { useDialogStore } from '@/stores/dialogStore'
+
+const dialogStore = useDialogStore()
+const { isAreaHidden } = storeToRefs(dialogStore)
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()

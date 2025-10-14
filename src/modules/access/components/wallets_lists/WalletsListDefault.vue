@@ -1,15 +1,10 @@
 <template>
   <div>
-    <h2 class="text5 font-semibold mb-4 md:ml-4">
+    <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
       {{ $t('access_wallet.select_wallet') }}
     </h2>
     <div
-      :class="
-        isOpenSideMenu
-          ? 'lg:grid-cols-3  xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6'
-          : 'lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 3xl:grid-cols-7'
-      "
-      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-4 md:gap-6"
+      class="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md-header:grid-cols-5 gap-4 sm:gap-5"
     >
       <!-- RECENTLY USED WALLETS -->
       <btn-wallet
@@ -36,18 +31,10 @@
 
       <dont-have-wallet />
     </div>
-    <wallet-connect-dialog
-      v-if="clickedWallet"
-      v-model:is-open="openWalletConnectModal"
-      :qrcode-data="wagmiWalletData"
-      :wallet-name="clickedWallet.name"
-      :wallet-icon="clickedWallet.icon as string"
-    />
   </div>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import WalletConnectDialog from '../WalletConnectDialog.vue'
 import DontHaveWallet from './DontHaveWallet.vue'
 import {
   type WalletConfig,
@@ -58,13 +45,8 @@ import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { useWalletList } from '@/composables/useWalletList'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
-const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu } = storeToRefs(walletMenu)
-
-const { wagmiWalletData, openWalletConnectModal, connect, clickedWallet } =
-  useConnectWallet()
+const { connect } = useConnectWallet()
 
 const { newWalletList } = useWalletList()
 const recentWalletsStore = useRecentWalletsStore()

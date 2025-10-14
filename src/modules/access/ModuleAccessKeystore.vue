@@ -1,89 +1,109 @@
 <template>
-  <div>
-    <app-stepper
-      :steps="steps"
-      :description="stepDescription"
-      :active-step="activeStep"
-      @update:active-step="backStep"
+  <div class="flex justify-center w-full">
+    <div
+      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-3"
     >
-      <div v-if="activeStep === 0">
-        <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-between">
-          <div>
+      <app-not-recommended />
+      <app-sheet class="mt-1">
+        <app-stepper
+          :steps="steps"
+          :description="stepDescription"
+          :active-step="activeStep"
+          @update:active-step="backStep"
+        >
+          <div v-if="activeStep === 0">
+            <div class="mt-5 grid grid-cols-1 xs:grid-cols-2 justify-between">
+              <div>
+                <app-step-description
+                  :description="stepDescription[0]"
+                  :activeStep="activeStep"
+                />
+                <img
+                  src="@/assets/images/access/keystore-file.jpg"
+                  alt="Keystore File"
+                  class="xs:hidden xs:mt-0 w-3/5 xs:w-3/4 mx-auto"
+                  width="300"
+                  height="285"
+                />
+                <app-base-button
+                  @click="clickUpload"
+                  class="mt-5 mx-auto xs:mt-8 w-full xs:w-auto"
+                >
+                  Select Keystore
+                </app-base-button>
+                <input
+                  ref="jsonInput"
+                  type="file"
+                  name="file"
+                  style="display: none"
+                  @change="uploadKeystoreFile"
+                />
+              </div>
+              <img
+                src="@/assets/images/access/keystore-file.jpg"
+                alt="Keystore File"
+                class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
+                width="300"
+                height="285"
+              />
+            </div>
+
+            <div v-if="fileError.value" class="text-error mt-4">
+              {{ fileError.description }}
+            </div>
+          </div>
+          <div v-if="activeStep === 1">
             <app-step-description
-              :description="stepDescription[0]"
+              :description="stepDescription[1]"
               :activeStep="activeStep"
             />
-            <img
-              src="@/assets/images/access/keystore-file.jpg"
-              alt="Keystore File"
-              class="xs:hidden xs:mt-0 w-3/5 xs:w-3/4 mx-auto"
-              width="300"
-              height="285"
+            <app-input
+              v-model="password"
+              placeholder="Enter Password"
+              type="password"
+              :error-message="errorPassword"
+              is-required
+              class="mt-7"
+              @keyup.enter="enterPassword"
             />
-            <app-base-button @click="clickUpload" class="mt-5 xs:mt-8">
-              Select Keystore
-            </app-base-button>
-            <input
-              ref="jsonInput"
-              type="file"
-              name="file"
-              style="display: none"
-              @change="uploadKeystoreFile"
-            />
+            <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
+              <app-base-button
+                @click="backStep"
+                is-outline
+                class="!min-w-[120px]"
+              >
+                Back
+              </app-base-button>
+              <app-base-button
+                @click="enterPassword"
+                class="!min-w-[120px]"
+                :disabled="submitIsDisabled"
+                :is-loading="isUnlockingKeystore"
+              >
+                Connect
+              </app-base-button>
+            </div>
           </div>
-          <img
-            src="@/assets/images/access/keystore-file.jpg"
-            alt="Keystore File"
-            class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
-            width="300"
-            height="285"
-          />
-        </div>
-
-        <div v-if="fileError.value" class="text-error mt-4">
-          {{ fileError.description }}
-        </div>
+        </app-stepper>
+      </app-sheet>
+      <!-- TODO: add link-->
+      <div
+        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+      >
+        {{ $t('wc_dialog.no_wallet') }}
+        <span class="underline">
+          {{ $t('wc_dialog.get_wallet') }}
+          <span class="text-sm"> →</span></span
+        >
       </div>
-      <div v-if="activeStep === 1">
-        <app-step-description
-          :description="stepDescription[1]"
-          :activeStep="activeStep"
-        />
-        <app-input
-          v-model="password"
-          placeholder="Enter Password"
-          type="password"
-          :error-message="errorPassword"
-          is-required
-          class="mt-7"
-          @keyup.enter="enterPassword"
-        />
-        <div class="flex ites-center justify-center gap-4 mt-5 xs:mt-8">
-          <app-base-button @click="backStep" is-outline class="!min-w-[120px]">
-            Back
-          </app-base-button>
-          <app-base-button
-            @click="enterPassword"
-            class="!min-w-[120px]"
-            :disabled="submitIsDisabled"
-            :is-loading="isUnlockingKeystore"
-          >
-            Submit
-          </app-base-button>
-        </div>
-      </div>
-    </app-stepper>
-    <app-not-recommended />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { watchDebounced } from '@vueuse/core'
-
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
@@ -100,8 +120,9 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import { useAccessRedirectStore } from '@/stores/accessRedirectStore'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import { useAccessStore } from '@/stores/accessStore'
+import AppSheet from '@/components/AppSheet.vue'
 
 // useChainStore
 const chainsStore = useChainsStore()
@@ -180,7 +201,6 @@ const resetKeystore = () => {
 const walletStore = useWalletStore()
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
-const router = useRouter()
 const { setWallet } = walletStore
 
 const password = ref('')
@@ -194,7 +214,7 @@ const submitIsDisabled = computed<boolean>(() => {
   return password.value === '' || errorPassword.value !== ''
 })
 
-const accessRedirectStore = useAccessRedirectStore()
+const accessStore = useAccessStore()
 
 const enterPassword = async () => {
   try {
@@ -212,9 +232,8 @@ const enterPassword = async () => {
       setWallet(wallet)
       addWallet(walletConfigs.keystore)
       isUnlockingKeystore.value = false
-      router.push({
-        name: accessRedirectStore.lastVisitedRouteName || ROUTES_MAIN.HOME.NAME,
-      })
+      accessStore.setCurrentView('default')
+      accessStore.closeAccessDialog()
     }
   } catch {
     errorPassword.value = 'Invalid password'

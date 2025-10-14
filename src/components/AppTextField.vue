@@ -1,5 +1,5 @@
 <template>
-  <div class="relative mb-7">
+  <div class="relative">
     <textarea
       ref="baseInput"
       type="text"

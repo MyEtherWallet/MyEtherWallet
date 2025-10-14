@@ -7,11 +7,11 @@
       :height="props.height"
       :width="props.width"
       @error="handleImageError"
-      class="w-[64px] h-[64px] md:w-[80px] md:h-[80px] flex-none rounded-lg mx-auto"
+      class="w-10 h-10 flex-none rounded-lg mx-auto"
     />
     <div
       v-else
-      class="w-[64px] h-[64px] md:w-[80px] md:h-[80px] rounded-lg flex items-center justify-center bg-grey-5 rounded-xl"
+      class="w-10 h-10 rounded-lg flex items-center justify-center bg-grey-5 rounded-xl"
     ></div>
   </div>
 </template>

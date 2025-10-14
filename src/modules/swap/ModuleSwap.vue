@@ -146,7 +146,6 @@ import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
 import { supportedSwapEnums } from '@/providers/ethereum/chainToEnum'
@@ -165,7 +164,6 @@ import {
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
-import { useRouter } from 'vue-router'
 import { toBase } from '@/utils/unit'
 import { GasPriceType } from '@/providers/types'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
@@ -176,7 +174,7 @@ import { useDebounceFn } from '@vueuse/core'
 import dataTxAction from '@/utils/dataTxAction'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-
+import { useAccessStore } from '@/stores/accessStore'
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
 
@@ -186,7 +184,6 @@ const chainsStore = useChainsStore()
 const inputStore = useInputStore()
 const toastStore = useToastStore()
 const { t } = useI18n()
-const router = useRouter()
 
 const { gasPriceType } = storeToRefs(globalStore)
 const { isWalletConnected, walletAddress, wallet } = storeToRefs(walletStore)
@@ -493,6 +490,7 @@ const setToChain = (chain: Chain) => {
   setToToken()
 }
 
+const accessStore = useAccessStore()
 const connectWalletForSwap = () => {
   storeSwapValues({
     fromToken: fromTokenSelected.value as NewTokenInfo,
@@ -500,9 +498,7 @@ const connectWalletForSwap = () => {
     toChain: selectedToChain.value as Chain,
     fromAmount: fromAmount.value as string,
   })
-  router.push({
-    name: ROUTES_ACCESS.ACCESS.NAME,
-  })
+  accessStore.openAccessDialog()
 }
 
 const swapButton = async () => {
