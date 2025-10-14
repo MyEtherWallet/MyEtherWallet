@@ -120,6 +120,7 @@ const route = useRoute()
 
 // Wallet instance
 let hwWalletInstance = new HWwallet()
+console.log('asdf', hwWalletInstance)
 
 /**------------------------
  * Derivation Path
@@ -244,8 +245,10 @@ const unlockWallet = async () => {
       networkName: networkName,
     })
     .then(() => {
-      hwWalletInstance.close()
-      hwWalletInstance = new HWwallet()
+      // maybe closing here is not needed
+      // hwWalletInstance.close()
+      // console.log('Closed previous connection', hwWalletInstance)
+      // hwWalletInstance = new HWwallet()
       return new Promise(r => setTimeout(r, 1000))
     })
   activeStep.value = 1
