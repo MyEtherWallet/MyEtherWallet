@@ -17,6 +17,7 @@ import { ToastType } from '@/types/notification'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
+import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -25,7 +26,7 @@ export const useConnectWallet = () => {
 
   const providerStore = useProviderStore()
   const chainsStore = useChainsStore()
-  const { selectedChain, chains } = storeToRefs(chainsStore)
+  const { selectedChain, chains, isBitcoinChain } = storeToRefs(chainsStore)
   const wagmiConfig = generateConfig(chains.value)
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
@@ -39,7 +40,7 @@ export const useConnectWallet = () => {
   const accessStore = useAccessStore()
 
   const _storeWallet = (
-    wallet: WagmiWallet | Web3InjectedWallet,
+    wallet: WagmiWallet | Web3InjectedWallet | UnisatInjectWallet,
     config: WalletConfig,
   ) => {
     wagmiWalletData.value = ''
@@ -50,6 +51,40 @@ export const useConnectWallet = () => {
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
+    // skip everything else as wagmi doesn't support btc
+    if (isBitcoinChain.value && window.unisat) {
+      const unisatWallet = new UnisatInjectWallet(window.unisat, selectedChain.value?.name ?? "BITCOIN")
+      unisatWallet
+        .connect()
+        .then(res => {
+          if (res) {
+            try {
+              _storeWallet(unisatWallet, wallet)
+            } catch (error) {
+              toastStore.addToastMessage({
+                text: `Web3 connect failed: ${error}`,
+                type: ToastType.Error,
+              })
+            }
+          }
+        })
+        .catch(err => {
+          let error = t('error_connecting')
+          let _type = ToastType.Warning
+          if (
+            err.message &&
+            err.message.toLowerCase().includes('user rejected')
+          ) {
+            error = t('common.error.user_canceled_request')
+            _type = ToastType.Info
+          }
+          toastStore.addToastMessage({
+            text: error,
+            type: _type,
+          })
+        })
+      return;
+    }
     const providerInjected = Eip6963Providers.value.find(
       p =>
         p.info.name.toLowerCase() === wallet.name.toLowerCase() ||

@@ -112,4 +112,10 @@ const NODE_MAP: Record<string, string> = {
   "LITECOIN": "https://partners.mewapi.io/nodes/ss/ltc",
 }
 
-export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP, P2PKH_DUST, P2SH_DUST, P2WPKH_DUST, P2WSH_DUST, P2TR_DUST, NODE_MAP };
+const UNISAT_MAP: Record<string, string> = {
+  "BITCOIN": 'livenet',
+  "BITCOIN_TEST": 'testnet',
+  "LITECOIN": 'litecoin',
+}
+
+export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP, P2PKH_DUST, P2SH_DUST, P2WPKH_DUST, P2WSH_DUST, P2TR_DUST, NODE_MAP, UNISAT_MAP };
