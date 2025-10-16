@@ -84,7 +84,6 @@ const chartData = computed<ChartData<'line'>>(() => {
             // or the size of the chart has changed
             chartWidth.value = _chartWidth
             chartHeight.value = _chartHeight
-            console.log(chartArea.top, chartArea.bottom)
             gradient.value = ctx.createLinearGradient(
               0,
               chartArea.top,

@@ -5,7 +5,7 @@
         isOpenSideMenu
           ? 'lg-max:grid-cols-[300px_1fr] 2xl:grid-cols-[300px_1fr_1fr]'
           : 'lg-max:grid-cols-[300px_1fr_1fr]',
-        'grid grid-cols-12 gap-4',
+        'grid grid-cols-12 gap-4 items-stretch',
       ]"
     >
       <app-wallet-card class="col-span-12 sm:col-span-5 lg-max:col-span-1" />

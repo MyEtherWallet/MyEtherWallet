@@ -3,13 +3,22 @@
     v-if="isWalletConnected"
     sheet-class=" !px-4 !pt-3 pb-2 overflow-hidden "
   >
-    <h2 class="text-s-20 font-bold w-full mb-1">Allocation</h2>
+    <div class="flex items-center w-full justify-between">
+      <h2 class="text-s-20 font-bold mb-1">{{ $t('common.allocation') }}</h2>
+      <allocation-dialog v-if="!isLoadingBalances" :tokens="topTokens" />
+    </div>
 
     <div
       class="flex flex-col xs:flex-row items-center sm:justify-between gap-4 w-full"
     >
-      <AllocationChart :tokens="topTokens" :isLoading="isLoadingBalances" />
-      <AllocationTokens :tokens="topTokens" :isLoading="isLoadingBalances" />
+      <AllocationChart
+        :tokens="topTokens.slice(0, 5)"
+        :isLoading="isLoadingBalances"
+      />
+      <AllocationTokens
+        :tokens="topTokens.slice(0, 5)"
+        :isLoading="isLoadingBalances"
+      />
     </div>
   </app-sheet>
 </template>
@@ -18,10 +27,14 @@ import { storeToRefs } from 'pinia'
 import AppSheet from '@/components/AppSheet.vue'
 import AllocationTokens from './components/allocation/AllocationTokens.vue'
 import AllocationChart from './components/allocation/AllocationChart.vue'
+import AllocationDialog from './components/allocation/AllocationDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
-import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import {
+  formatPercentageValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 import { type TokenAllocation } from '@/modules/portfolio/types'
 
 const walletStore = useWalletStore()
@@ -32,8 +45,14 @@ const {
   safeMainTokenBalance,
   totalFiatPortfolioValueBN,
   balanceFiatBN,
+  formattedBalanceFiat,
 } = storeToRefs(walletStore)
 
+/**
+ *
+ * @param contract - token contract address
+ * @returns BigNumber - token balance in fiat value
+ */
 const getTokenBalance = (contract: string) => {
   const tokenBalanceRaw = walletStore.getTokenBalance(contract)
   if (!tokenBalanceRaw) {
@@ -52,9 +71,10 @@ const topTokens = computed<TokenAllocation[]>(() => {
     return []
   }
   const _tokens: TokenAllocation[] = tokens.value.map(token => {
+    const tokenBalanceFiatBN = getTokenBalance(token.contract)
     const percentage = totalFiatPortfolioValueBN.value.isZero()
       ? new BigNumber(0)
-      : getTokenBalance(token.contract)
+      : tokenBalanceFiatBN
           .div(totalFiatPortfolioValueBN.value)
           .multipliedBy(100)
     return {
@@ -65,6 +85,8 @@ const topTokens = computed<TokenAllocation[]>(() => {
       formattedPercentage: formatPercentageValue(percentage).value,
       percentageNumber: percentage.toNumber(),
       id: token.coinId,
+      usdBalanceFormatted: formatFiatValue(tokenBalanceFiatBN).value,
+      usdBalanceRaw: tokenBalanceFiatBN.toString(),
     }
   })
 
@@ -79,6 +101,8 @@ const topTokens = computed<TokenAllocation[]>(() => {
     formattedPercentage: formatPercentageValue(mainBalancePercentage).value,
     percentageNumber: mainBalancePercentage.toNumber(),
     id: safeMainTokenBalance.value.coinId,
+    usdBalanceFormatted: formattedBalanceFiat.value,
+    usdBalanceRaw: formattedBalanceFiat.value,
   })
 
   _tokens.sort((a, b) => {
@@ -87,6 +111,6 @@ const topTokens = computed<TokenAllocation[]>(() => {
     const compared = bValue.comparedTo(aValue)
     return compared ? compared : 0
   })
-  return _tokens.splice(0, 5)
+  return _tokens
 })
 </script>
