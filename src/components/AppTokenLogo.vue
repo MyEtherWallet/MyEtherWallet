@@ -39,11 +39,11 @@ const props = defineProps({
   },
   width: {
     type: String,
-    default: 'w-7',
+    default: 'w-8',
   },
   height: {
     type: String,
-    default: 'h-7',
+    default: 'h-8',
   },
 })
 

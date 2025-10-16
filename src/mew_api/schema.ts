@@ -420,6 +420,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v2/btc/{chainName}/estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionEstimateV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/simple-estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionSimpleEstimate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/btc/{chainName}/quotes": {
         parameters: {
             query?: never;
@@ -430,6 +462,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["GetBtcTransactionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v2/btc/{chainName}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionQuoteV2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -781,11 +829,23 @@ export interface components {
             fiatSymbol?: string;
             fiatFeeRate?: string;
         };
+        BtcTransactionSimpleEstimate: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
         BtcTransactionQuotes: {
             ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
             REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
             FAST: components["schemas"]["BtcTransactionFeeQuote"];
             FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
+        BtcTransactionQuotesV2: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR?: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST?: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST?: components["schemas"]["BtcTransactionFeeQuote"];
         };
         GetBtcTransactionFeesResponse: {
             provider?: string;
@@ -833,6 +893,7 @@ export interface components {
             iconUrl: null | string;
             chainBalances: {
                 chainName: string;
+                chainNameLong: string;
                 chainType: components["schemas"]["ChainType"];
                 iconUrl: string;
                 result: {
@@ -867,6 +928,7 @@ export interface components {
             }[];
             supportedChains: {
                 chainName: string;
+                chainNameLong: string;
                 chainType: components["schemas"]["ChainType"];
                 contract: null | string;
                 iconUrl: string;
@@ -981,6 +1043,7 @@ export interface components {
         }[];
         GetBalancesByChainNameAndAddressResponse: {
             result: {
+                coinId?: string;
                 balance: string;
                 contract: string;
                 decimals?: number;
@@ -1121,6 +1184,14 @@ export interface components {
             fromAddresses: components["schemas"]["BtcAddressInput"][];
             outputs?: components["schemas"]["BtcOutputInput"][];
         };
+        GetBtcTransactionEstimateRequestV2: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
         GetBtcTransactionQuoteRequest: {
             doNotFilterOutOrdinals?: boolean;
             allowSendingDust?: boolean;
@@ -1129,14 +1200,33 @@ export interface components {
             fromAddresses: components["schemas"]["BtcAddressInput"][];
             outputs?: components["schemas"]["BtcOutputInput"][];
         };
+        GetBtcTransactionQuoteRequestV2: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
         GetBtcTransactionEstimateResponse: {
-            quoteId?: components["schemas"]["UUID"];
             fees: components["schemas"]["BtcTransactionQuotes"];
             ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionEstimateResponseV2: {
+            fees: components["schemas"]["BtcTransactionQuotesV2"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionSimpleEstimateResponse: {
+            fees: components["schemas"]["BtcTransactionSimpleEstimate"];
         };
         GetBtcTransactionQuoteResponse: {
             quoteId: components["schemas"]["UUID"];
             fees: components["schemas"]["BtcTransactionQuotes"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionQuoteResponseV2: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["BtcTransactionQuotesV2"];
             ordinalsFilteredOut: boolean;
         };
         GetUnsignedBtcTransactionResponse: {
@@ -1344,6 +1434,24 @@ export interface components {
                 "application/json": components["schemas"]["GetBtcTransactionEstimateResponse"];
             };
         };
+        GetBtcTransactionEstimateSuccessV2: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateResponseV2"];
+            };
+        };
+        GetBtcTransactionSimpleEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionSimpleEstimateResponse"];
+            };
+        };
         GetBtcTransactionQuoteSuccess: {
             headers: {
                 "X-MEW-API-Signature"?: string;
@@ -1351,6 +1459,15 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetBtcTransactionQuoteResponse"];
+            };
+        };
+        GetBtcTransactionQuoteSuccessV2: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteResponseV2"];
             };
         };
         GetUnsignedBtcTransactionSuccess: {
@@ -1541,9 +1658,19 @@ export interface components {
                 "application/json": components["schemas"]["GetBtcTransactionEstimateRequest"];
             };
         };
+        GetBtcTransactionEstimateV2: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateRequestV2"];
+            };
+        };
         GetBtcTransactionQuote: {
             content: {
                 "application/json": components["schemas"]["GetBtcTransactionQuoteRequest"];
+            };
+        };
+        GetBtcTransactionQuoteV2: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteRequestV2"];
             };
         };
         BroadcastBtcTransaction: {
@@ -1932,6 +2059,34 @@ export interface operations {
             201: components["responses"]["GetBtcTransactionEstimateSuccess"];
         };
     };
+    GetBtcTransactionEstimateV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionEstimateV2"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionEstimateSuccessV2"];
+        };
+    };
+    GetBtcTransactionSimpleEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: components["responses"]["GetBtcTransactionSimpleEstimateSuccess"];
+        };
+    };
     GetBtcTransactionQuote: {
         parameters: {
             query?: never;
@@ -1944,6 +2099,20 @@ export interface operations {
         requestBody: components["requestBodies"]["GetBtcTransactionQuote"];
         responses: {
             201: components["responses"]["GetBtcTransactionQuoteSuccess"];
+        };
+    };
+    GetBtcTransactionQuoteV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionQuoteV2"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionQuoteSuccessV2"];
         };
     };
     GetUnsignedBtcTransaction: {

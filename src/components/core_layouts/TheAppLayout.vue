@@ -35,7 +35,7 @@
         ]"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
-          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 2xl:px-7">
+          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5">
             <router-view />
           </div>
           <MewFooter
@@ -97,7 +97,9 @@ const backgroundClass = computed(() => {
   if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
     route.name === ROUTES_MAIN.CRYPTO.NAME ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto
+    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    route.name === TOKEN_INFO_ROUTE_NAMES.home ||
+    route.name === ROUTES_MAIN.HOME.NAME
   ) {
     return ''
   } else {

@@ -247,6 +247,8 @@ paths:
         200:
           $ref: '#/components/responses/GetBtcTransactionSuccess'
 
+  # @deprecated
+  # Prefer /v2/btc/{chainName}/estimates
   /v1/btc/{chainName}/estimates:
     post:
       operationId: GetBtcTransactionEstimate
@@ -258,6 +260,28 @@ paths:
         201:
           $ref: '#/components/responses/GetBtcTransactionEstimateSuccess'
 
+  /v2/btc/{chainName}/estimates:
+    post:
+      operationId: GetBtcTransactionEstimateV2
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      requestBody:
+        $ref: '#/components/requestBodies/GetBtcTransactionEstimateV2'
+      responses:
+        201:
+          $ref: '#/components/responses/GetBtcTransactionEstimateSuccessV2'
+
+  /v1/btc/{chainName}/simple-estimates:
+    get:
+      operationId: GetBtcTransactionSimpleEstimate
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      responses:
+        201:
+          $ref: '#/components/responses/GetBtcTransactionSimpleEstimateSuccess'
+
+  # @deprecated
+  # Prefer /v2/btc/{chainName}/quotes
   /v1/btc/{chainName}/quotes:
     post:
       operationId: GetBtcTransactionQuote
@@ -268,6 +292,17 @@ paths:
       responses:
         201:
           $ref: '#/components/responses/GetBtcTransactionQuoteSuccess'
+
+  /v2/btc/{chainName}/quotes:
+    post:
+      operationId: GetBtcTransactionQuoteV2
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+      requestBody:
+        $ref: '#/components/requestBodies/GetBtcTransactionQuoteV2'
+      responses:
+        201:
+          $ref: '#/components/responses/GetBtcTransactionQuoteSuccessV2'
 
   /v1/btc/{chainName}/quotes/{quoteId}/unsigned:
     get:
@@ -680,12 +715,26 @@ components:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionEstimateRequest'
 
+    GetBtcTransactionEstimateV2:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionEstimateRequestV2'
+
     GetBtcTransactionQuote:
       required: true
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionQuoteRequest'
+
+    GetBtcTransactionQuoteV2:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionQuoteRequestV2'
 
     BroadcastBtcTransaction:
       required: true
@@ -843,6 +892,26 @@ components:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionEstimateResponse'
 
+    GetBtcTransactionEstimateSuccessV2:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionEstimateResponseV2'
+
+    GetBtcTransactionSimpleEstimateSuccess:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionSimpleEstimateResponse'
+
     GetBtcTransactionQuoteSuccess:
       headers:
         X-MEW-API-Signature:
@@ -852,6 +921,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetBtcTransactionQuoteResponse'
+
+    GetBtcTransactionQuoteSuccessV2:
+      headers:
+        X-MEW-API-Signature:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcTransactionQuoteResponseV2'
 
     GetUnsignedBtcTransactionSuccess:
       headers:
@@ -1424,17 +1503,45 @@ components:
         fiatFeeRate:
           type: string
 
-    BtcTransactionQuotes:
+    BtcTransactionSimpleEstimate:
       type: object
       required:
-        # - feeProvider
         - ECONOMY
         - REGULAR
         - FAST
         - FASTEST
       properties:
-        # feeProvider:
-        #   type: string
+        ECONOMY:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+        REGULAR:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+        FAST:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+        FASTEST:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+
+    BtcTransactionQuotes:
+      type: object
+      required:
+        - ECONOMY
+        - REGULAR
+        - FAST
+        - FASTEST
+      properties:
+        ECONOMY:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+        REGULAR:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+        FAST:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+        FASTEST:
+          $ref: '#/components/schemas/BtcTransactionFeeQuote'
+
+    BtcTransactionQuotesV2:
+      type: object
+      required:
+        - ECONOMY
+      properties:
         ECONOMY:
           $ref: '#/components/schemas/BtcTransactionFeeQuote'
         REGULAR:
@@ -1583,11 +1690,14 @@ components:
             type: object
             required:
               - chainName
+              - chainNameLong
               - chainType
               - iconUrl
               - result
             properties:
               chainName:
+                type: string
+              chainNameLong:
                 type: string
               chainType:
                 $ref: '#/components/schemas/ChainType'
@@ -1674,11 +1784,14 @@ components:
             type: object
             required:
               - chainName
+              - chainNameLong
               - chainType
               - contract
               - iconUrl
             properties:
               chainName:
+                type: string
+              chainNameLong:
                 type: string
               chainType:
                 $ref: '#/components/schemas/ChainType'
@@ -1998,6 +2111,8 @@ components:
               - contract
               - balance
             properties:
+              coinId:
+                type: string
               balance:
                 type: string
               contract:
@@ -2463,7 +2578,59 @@ components:
           items:
             $ref: '#/components/schemas/BtcOutputInput'
 
+    GetBtcTransactionEstimateRequestV2:
+      type: object
+      required:
+        - fromAddresses
+      properties:
+        doNotFilterOutOrdinals:
+          type: boolean
+        allowSendingDust:
+          type: boolean
+        changeAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        consolidationAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        fromAddresses:
+          minItems: 1
+          maxItems: 255
+          type: array
+          items:
+            $ref: '#/components/schemas/BtcAddressInput'
+        outputs:
+          type: array
+          minItems: 0
+          maxItems: 255
+          items:
+            $ref: '#/components/schemas/BtcOutputInput'
+
     GetBtcTransactionQuoteRequest:
+      type: object
+      required:
+        - fromAddresses
+      properties:
+        doNotFilterOutOrdinals:
+          type: boolean
+        allowSendingDust:
+          type: boolean
+        changeAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        consolidationAddress:
+          $ref: '#/components/schemas/BtcAddressInput'
+        fromAddresses:
+          minItems: 1
+          maxItems: 255
+          type: array
+          items:
+            $ref: '#/components/schemas/BtcAddressInput'
+        outputs:
+          type: array
+          minItems: 0
+          maxItems: 255
+          items:
+            $ref: '#/components/schemas/BtcOutputInput'
+
+    GetBtcTransactionQuoteRequestV2:
       type: object
       required:
         - fromAddresses
@@ -2495,12 +2662,29 @@ components:
         - fees
         - ordinalsFilteredOut
       properties:
-        quoteId:
-          $ref: '#/components/schemas/UUID'
         fees:
           $ref: '#/components/schemas/BtcTransactionQuotes'
         ordinalsFilteredOut:
           type: boolean
+
+    GetBtcTransactionEstimateResponseV2:
+      type: object
+      required:
+        - fees
+        - ordinalsFilteredOut
+      properties:
+        fees:
+          $ref: '#/components/schemas/BtcTransactionQuotesV2'
+        ordinalsFilteredOut:
+          type: boolean
+
+    GetBtcTransactionSimpleEstimateResponse:
+      type: object
+      required:
+        - fees
+      properties:
+        fees:
+          $ref: '#/components/schemas/BtcTransactionSimpleEstimate'
 
     GetBtcTransactionQuoteResponse:
       type: object
@@ -2513,6 +2697,20 @@ components:
           $ref: '#/components/schemas/UUID'
         fees:
           $ref: '#/components/schemas/BtcTransactionQuotes'
+        ordinalsFilteredOut:
+          type: boolean
+
+    GetBtcTransactionQuoteResponseV2:
+      type: object
+      required:
+        - quoteId
+        - fees
+        - ordinalsFilteredOut
+      properties:
+        quoteId:
+          $ref: '#/components/schemas/UUID'
+        fees:
+          $ref: '#/components/schemas/BtcTransactionQuotesV2'
         ordinalsFilteredOut:
           type: boolean
 

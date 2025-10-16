@@ -2,7 +2,7 @@
   <div>
     <div v-if="isWalletConnected && walletAddress" class="">
       <div
-        class="relative bg-grey-50 rounded-16 h-[170px] grid grid-rows-3 px-5 py-4 content-between text-white"
+        class="relative bg-grey-50 rounded-16 min-h-[205px] grid grid-rows-3 px-5 py-4 content-between text-white shadow-button"
       >
         <img
           ref="mewCard"
@@ -10,7 +10,7 @@
           alt="MEW Card"
           width="670"
           height="424"
-          class="rounded-16 drop-shadow absolute z-0 h-[170px]"
+          class="rounded-16 drop-shadow absolute z-0 min-h-[205px]"
           @load="animateMewCard"
         />
         <!-- wallet address, wallet menu, link to explorer-->
