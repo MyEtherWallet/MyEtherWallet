@@ -169,7 +169,7 @@ const adrInput = defineModel<string>('adrInput', {
 const isAddressBookOpen = ref(false)
 
 const addressBlockie = computed(() => {
-  const addressToCheck = props.resolvedAddress || adrInput.value
+  const addressToCheck = adrInput.value || props.resolvedAddress
   if (!addressToCheck) return ''
   return createIcon(addressToCheck)
 })

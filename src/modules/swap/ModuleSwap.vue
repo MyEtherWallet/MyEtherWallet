@@ -161,6 +161,7 @@ import {
   type ProviderSwapResponse,
   type EVMTransaction,
   type TokenType,
+  type GenericTransaction,
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
@@ -187,7 +188,7 @@ const { t } = useI18n()
 
 const { gasPriceType } = storeToRefs(globalStore)
 const { isWalletConnected, walletAddress, wallet } = storeToRefs(walletStore)
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isBitcoinChain } = storeToRefs(chainsStore)
 const {
   initSwapper,
   supportedNetwork,
@@ -314,17 +315,23 @@ const parsedFromTokens = computed(() => {
 })
 // removes the selected to token from the from tokens list
 const parsedToTokens = computed(() => {
+  const sameNetworks =
+    selectedToChain.value?.chainID === selectedChain.value?.chainID
   const fromToken = fromTokenSelected.value as NewTokenInfo
   if (!localToTokens.value) return []
-  return localToTokens?.value.filter(
-    (token: NewTokenInfo) => token.address !== fromToken.address,
-  )
+  const filtered = sameNetworks
+    ? localToTokens?.value.filter(
+        (token: NewTokenInfo) => token.address !== fromToken.address,
+      )
+    : localToTokens?.value
+  return filtered
 })
 
 const validateToAddress = async () => {
   const address = userToAddress.value
-  const validAddress =
-    await toTokenSelected.value?.networkInfo.isAddress(address)
+  const validAddress = await toTokenSelected.value?.networkInfo.isAddress(
+    address.toLowerCase(),
+  )
   if (!address) toAddressError.value = 'address is required'
   if (!validAddress) toAddressError.value = 'invalid address'
 }
@@ -332,46 +339,31 @@ const validateToAddress = async () => {
 const proceedWithSwap = async (quoteId: string) => {
   let txPromise
   // Proceed with the swap using the selected quote
-
-  const getSignableTransactions =
-    await wallet.value?.getMultipleSignableTransactions?.({
-      priority: gasPriceType.value as GasPriceType,
-      quoteId: quoteId,
-    })
-
-  if (
-    getSignableTransactions?.serialized.length &&
-    getSignableTransactions?.serialized.length > 0
-  ) {
-    for (let i = 0; i < getSignableTransactions?.serialized.length; i++) {
-      const tx = getSignableTransactions?.serialized[i]
-      const indexAtTheEnd = i === getSignableTransactions?.serialized.length - 1
-      if (tx) {
+  if (isBitcoinChain.value) {
+    await wallet.value
+      ?.getSignableTransaction({
+        priority: gasPriceType.value as GasPriceType,
+        quoteId: quoteId,
+      })
+      .then(async signableTx => {
         try {
           if (
             wallet.value?.getWalletType() === WalletType.WAGMI ||
             wallet.value?.getWalletType() === WalletType.INJECTED
           ) {
             const broadcast = wallet.value?.SendTransaction?.(
-              tx as HexPrefixedString,
+              signableTx.serialized as HexPrefixedString,
             )
-            // only assign txPromise if it's the last transaction
-            if (indexAtTheEnd) {
-              txPromise = broadcast
-            }
-          } else {
-            const signedTx = await wallet.value?.SignTransaction?.(
-              tx as HexPrefixedString,
-            )
-
-            const broadcast = wallet.value?.broadcastTransaction(
-              signedTx?.signed as unknown as HexPrefixedString,
-            )
-            // assign last transaction to txPromise
-            if (indexAtTheEnd) {
-              txPromise = broadcast
-            }
+            txPromise = broadcast
+            return
           }
+          const signedTx = await wallet.value?.SignTransaction?.(
+            signableTx.serialized as HexPrefixedString,
+          )
+          const broadcast = wallet.value?.broadcastTransaction(
+            signedTx?.signed as unknown as HexPrefixedString,
+          )
+          txPromise = broadcast
         } catch {
           toastStore.addToastMessage({
             type: ToastType.Error,
@@ -379,6 +371,57 @@ const proceedWithSwap = async (quoteId: string) => {
             duration: 10000,
           })
           return
+        }
+      })
+  } else {
+    const getSignableTransactions =
+      await wallet.value?.getMultipleSignableTransactions?.({
+        priority: gasPriceType.value as GasPriceType,
+        quoteId: quoteId,
+      })
+
+    if (
+      getSignableTransactions?.serialized.length &&
+      getSignableTransactions?.serialized.length > 0
+    ) {
+      for (let i = 0; i < getSignableTransactions?.serialized.length; i++) {
+        const tx = getSignableTransactions?.serialized[i]
+        const indexAtTheEnd =
+          i === getSignableTransactions?.serialized.length - 1
+        if (tx) {
+          try {
+            if (
+              wallet.value?.getWalletType() === WalletType.WAGMI ||
+              wallet.value?.getWalletType() === WalletType.INJECTED
+            ) {
+              const broadcast = wallet.value?.SendTransaction?.(
+                tx as HexPrefixedString,
+              )
+              // only assign txPromise if it's the last transaction
+              if (indexAtTheEnd) {
+                txPromise = broadcast
+              }
+            } else {
+              const signedTx = await wallet.value?.SignTransaction?.(
+                tx as HexPrefixedString,
+              )
+
+              const broadcast = wallet.value?.broadcastTransaction(
+                signedTx?.signed as unknown as HexPrefixedString,
+              )
+              // assign last transaction to txPromise
+              if (indexAtTheEnd) {
+                txPromise = broadcast
+              }
+            }
+          } catch {
+            toastStore.addToastMessage({
+              type: ToastType.Error,
+              text: t('swap.toast.tx-sign-failed'),
+              duration: 10000,
+            })
+            return
+          }
         }
       }
     }
@@ -462,11 +505,16 @@ const userAddress = computed(() => {
 })
 
 const toAddress = computed(() => {
-  if (selectedToChain.value?.type === 'EVM') {
+  // if the chain is the same as the from chain, return the user address
+  if (selectedToChain.value?.name === selectedChain.value?.name) {
     return userAddress.value
   }
 
-  return userToAddress.value || '0x'
+  if (!isCrossChain.value) {
+    return userAddress.value
+  }
+
+  return userToAddress.value || ''
 })
 
 const toLoadingState = computed(() => {
@@ -501,7 +549,34 @@ const connectWalletForSwap = () => {
   accessStore.openAccessDialog()
 }
 
-const swapButton = async () => {
+// Split btc swap since this will flow like send tx
+const swapForBtc = async () => {
+  bestSwapLoadingOpen.value = true
+  await debounceFetchQuotes()
+  const transactions = (
+    (swapInfo.value?.transactions as GenericTransaction[]) || []
+  ).map(tx => ({ address: tx.to, amount: tx.value }))
+  const txForm = {
+    fromAddresses: [userAddress.value],
+    consolidationAddress: userAddress.value,
+    outputs: transactions,
+  }
+
+  const signableTransaction = await wallet.value?.getBtcGasFee?.(txForm)
+  swapGasFeeQuote.value = (signableTransaction as QuotesResponse) || undefined
+  bestSwapLoadingOpen.value = false
+  bestOfferSelectionOpen.value = true
+}
+
+const swapButton = () => {
+  if (isBitcoinChain.value) {
+    swapForBtc()
+  } else {
+    swapForEvm()
+  }
+}
+
+const swapForEvm = async () => {
   bestSwapLoadingOpen.value = true
   await debounceFetchQuotes()
   const transactions = (swapInfo.value?.transactions || []).filter(

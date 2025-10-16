@@ -65,6 +65,7 @@
           <app-pop-up-menu
             :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length })}`"
             location="left"
+            v-if="quotes.length > 1"
           >
             <template #menu-content="{ toggleMenu }">
               <div class="px-4 pt-4 pb-2">
