@@ -20,3 +20,13 @@ export const ALLOCATION_COLORS = [
   'rgba(255,165,0,1)', //orange
   'rgba(0,0,0,0.7)', //others
 ]
+export interface TokenGainOrLoss {
+  name: string
+  symbol: string
+  logo_url?: string
+  gainOrLoss: BigNumber
+  percentChange: number
+  price: number
+  id: string
+  contract?: string
+}

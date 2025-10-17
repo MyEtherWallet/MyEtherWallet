@@ -21,6 +21,15 @@
         ]"
       />
     </div>
+    <div
+      :class="[
+        ,
+        'grid grid-cols-1 lg-max:grid-cols-[300px_1fr_1fr] gap-4 items-stretch',
+      ]"
+    >
+      <div></div>
+      <portofolio-trends class="col-span-1" />
+    </div>
 
     <router-view />
   </div>
@@ -29,6 +38,7 @@
 import AppWalletCard from '@/components/AppWalletCard.vue'
 import PortfolioHistory from '@/modules/portfolio/PortfolioHistory.vue'
 import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'
+import PortofolioTrends from '@/modules/portfolio/PortofolioTrends.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 const walletMenuStore = useWalletMenuStore()

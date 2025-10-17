@@ -341,7 +341,7 @@
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-center justify-between text-xs mt-2"
+          class="flex flex-col xs:flex-row items-center justify-center justify-between text-s-12 mt-2"
         >
           <small
             class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"

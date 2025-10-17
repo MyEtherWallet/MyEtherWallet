@@ -9,6 +9,7 @@
     </div>
 
     <div
+      v-if="!isLoadingBalances && topTokens.length"
       class="flex flex-col xs:flex-row items-center sm:justify-between gap-4 w-full"
     >
       <AllocationChart
@@ -20,6 +21,10 @@
         :isLoading="isLoadingBalances"
       />
     </div>
+    <div
+      v-else-if="isLoadingBalances"
+      class="bg-grey-10 rounded-2xl animate-pulse h-[140px]"
+    ></div>
   </app-sheet>
 </template>
 <script setup lang="ts">
