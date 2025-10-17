@@ -27,7 +27,7 @@
       class="flex items-center justify-center gap-2 order-2 xs:order-2 w-full"
     >
       <app-btn-icon
-        :disabled="!isLoading && currentPage === 1"
+        :disabled="!isLoading && currentPage === 0"
         label="previous page"
         @click="prevPage"
       >
@@ -39,7 +39,7 @@
       >
       <app-btn-icon
         class=""
-        :disabled="!isLoading && currentPage >= totalPages"
+        :disabled="!isLoading && currentPage + 1 >= totalPages"
         label="next page"
         @click="nextPage"
       >
