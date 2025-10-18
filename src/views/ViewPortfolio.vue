@@ -21,14 +21,9 @@
         ]"
       />
     </div>
-    <div
-      :class="[
-        ,
-        'grid grid-cols-1 lg-max:grid-cols-[300px_1fr_1fr] gap-4 items-stretch',
-      ]"
-    >
-      <div></div>
-      <portofolio-trends class="col-span-1" />
+    <div class="flex flex-col lg-max:flex-row gap-4">
+      <portofolio-trends trend="all" />
+      <portofolio-trends trend="stock" />
     </div>
 
     <router-view />

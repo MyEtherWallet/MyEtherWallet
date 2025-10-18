@@ -8,13 +8,11 @@
           class="w-6 h-6 rounded-full object-cover flex-none mt-1"
         />
         <div>
-          <p
-            class="hidden xs:block lg-max:hidden 2xl:block text-s-14 font-medium text-wrap"
-          >
+          <p class="hidden xs:block text-s-14 font-medium text-wrap">
             {{ token.name }}
           </p>
           <p
-            class="text-s-14 font-medium xs:text-s-12 xs:text-info xs:font-normal lg-max:text-s-14 lg-max:font-medium 2xl:text-s-12 2xl:text-info 2xl:font-normal"
+            class="text-s-14 font-medium xs:text-s-12 xs:text-info xs:font-normal"
           >
             {{ truncate(token.symbol, 6) }}
           </p>

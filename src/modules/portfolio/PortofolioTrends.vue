@@ -3,8 +3,29 @@
     v-if="isWalletConnected"
     sheet-class=" !px-4 !pt-3 pb-2 overflow-hidden "
   >
-    <div class="flex items-center w-full justify-between">
-      <h2 class="text-s-18 font-bold mb-4">Top Crypto Gainers & Loosers</h2>
+    <div class="flex items-center w-full justify-between mb-3">
+      <h2 class="text-s-18 font-bold">{{ title }}</h2>
+      <div class="flex items-center justify-center gap-2 order-2 xs:order-2">
+        <app-btn-icon
+          :disabled="!isLoading && currentPage === 0"
+          label="previous page"
+          @click="prevPage"
+        >
+          <ChevronLeftIcon class="w-4 h-4" />
+        </app-btn-icon>
+
+        <span class="px-2 text-s-12"
+          >{{ currentPage + 1 }} of {{ totalPages }}</span
+        >
+        <app-btn-icon
+          class=""
+          :disabled="!isLoading && currentPage + 1 >= totalPages"
+          label="next page"
+          @click="nextPage"
+        >
+          <ChevronRightIcon class="w-4 h-4" />
+        </app-btn-icon>
+      </div>
     </div>
     <div
       class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end"
@@ -23,28 +44,19 @@
       </TokenRow>
     </div>
     <div v-else class="bg-grey-10 rounded-2xl animate-pulse h-[270px]"></div>
-    <div
-      class="flex items-center justify-center gap-2 order-2 xs:order-2 w-full"
-    >
-      <app-btn-icon
-        :disabled="!isLoading && currentPage === 0"
-        label="previous page"
-        @click="prevPage"
+    <div class="flex justify-end my-1 items-center">
+      <router-link
+        :to="{
+          name:
+            props.trend === 'stock'
+              ? ROUTES_MAIN.STOCKS.NAME
+              : ROUTES_MAIN.CRYPTO.NAME,
+        }"
+        class="font-bold text-s-14 transition-[background] duration-300 hoverNoBG rounded-full px-3 py-1"
       >
-        <ChevronLeftIcon class="w-4 h-4" />
-      </app-btn-icon>
-
-      <span class="px-2 text-s-12"
-        >{{ currentPage + 1 }} of {{ totalPages }}</span
-      >
-      <app-btn-icon
-        class=""
-        :disabled="!isLoading && currentPage + 1 >= totalPages"
-        label="next page"
-        @click="nextPage"
-      >
-        <ChevronRightIcon class="w-4 h-4" />
-      </app-btn-icon>
+        {{ buttonText }}
+        <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex ml-1"
+      /></router-link>
     </div>
   </app-sheet>
 </template>
@@ -56,10 +68,42 @@ import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ArrowLongUpIcon,
+} from '@heroicons/vue/24/solid'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
 import { usePaginate } from '@/composables/usePaginate'
+import { ROUTES_MAIN } from '@/router/routeNames'
+type Trend = 'all' | 'stock'
 
+const props = withDefaults(
+  defineProps<{
+    trend: Trend
+  }>(),
+  {
+    trend: 'all',
+  },
+)
+
+const title = computed(() => {
+  switch (props.trend) {
+    case 'stock':
+      return 'Stock Gains & Losses'
+    default:
+      return 'All Gains & Losses'
+  }
+})
+
+const buttonText = computed(() => {
+  switch (props.trend) {
+    case 'stock':
+      return 'All stock trends'
+    default:
+      return 'All crypto trends'
+  }
+})
 const walletStore = useWalletStore()
 const {
   isWalletConnected,
