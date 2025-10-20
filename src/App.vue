@@ -27,6 +27,8 @@ import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
+import { fromBase } from './utils/unit'
+import BigNumber from 'bignumber.js'
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -49,6 +51,10 @@ const fetchBalances = () => {
       } else {
         // reformatted to be compatible with TokenBalancesRaw
         // TODO: replace once it gets fixed in the API
+        const percent = fromBase(
+          (balances as BitcoinBalanceResponse).balance.nativeValue,
+          8,
+        )
         const btcBalances = {
           balance: (balances as BitcoinBalanceResponse).balance.nativeValue,
           contract: MAIN_TOKEN_CONTRACT,
@@ -56,11 +62,15 @@ const fetchBalances = () => {
           decimals: 8,
           name: selectedChain.value?.name || 'Bitcoin',
           symbol: (balances as BitcoinBalanceResponse).balance.nativeSymbol,
-          price: Number(
-            (balances as BitcoinBalanceResponse).balance.fiatValue ?? 0,
+          price: parseFloat(
+            BigNumber(
+              (balances as BitcoinBalanceResponse).balance?.fiatValue || '0',
+            )
+              .dividedBy(BigNumber(percent))
+              .decimalPlaces(2)
+              .toString(),
           ),
         }
-
         setTokens([btcBalances])
       }
       setIsLoadingBalances(false)

@@ -52,7 +52,13 @@ export const useConnectWallet = () => {
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
     // skip everything else as wagmi doesn't support btc
-    if (isBitcoinChain.value && window.unisat) {
+    if (isBitcoinChain.value) {
+      if (!window.unisat) {
+        toastStore.addToastMessage({
+          text: `Unisat injection not detected. Please enable unisat in the ${wallet.name} extension.`,
+        })
+        return;
+      }
       const unisatWallet = new UnisatInjectWallet(window.unisat, selectedChain.value?.name ?? "BITCOIN")
       unisatWallet
         .connect()

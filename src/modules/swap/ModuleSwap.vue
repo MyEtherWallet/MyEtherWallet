@@ -562,10 +562,20 @@ const swapForBtc = async () => {
     outputs: transactions,
   }
 
-  const signableTransaction = await wallet.value?.getBtcGasFee?.(txForm)
-  swapGasFeeQuote.value = (signableTransaction as QuotesResponse) || undefined
-  bestSwapLoadingOpen.value = false
-  bestOfferSelectionOpen.value = true
+  try {
+    const signableTransaction = await wallet.value?.getBtcGasFee?.(txForm)
+    swapGasFeeQuote.value = (signableTransaction as QuotesResponse) || undefined
+    bestSwapLoadingOpen.value = false
+    bestOfferSelectionOpen.value = true
+  } catch (e) {
+    bestSwapLoadingOpen.value = false
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: (e as Error)?.message || 'Error fetching BTC gas fees',
+      duration: 10000,
+    })
+    return
+  }
 }
 
 const swapButton = () => {
