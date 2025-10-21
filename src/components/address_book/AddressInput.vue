@@ -189,6 +189,13 @@ const setAddress = (address: string) => {
   emit('validate:address')
 }
 
+watch(
+  () => adrInput.value,
+  () => {
+    emit('validate:address')
+  },
+)
+
 /**------------------------
  * Error State
  -------------------------*/

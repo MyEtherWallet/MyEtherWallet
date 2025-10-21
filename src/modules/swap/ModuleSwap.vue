@@ -329,10 +329,18 @@ const parsedToTokens = computed(() => {
 
 const validateToAddress = async () => {
   const address = userToAddress.value
+  console.log(address)
   const validAddress = await toTokenSelected.value?.networkInfo.isAddress(
     address.toLowerCase(),
   )
-  if (!address) toAddressError.value = 'address is required'
+  if (validAddress) {
+    toAddressError.value = ''
+    return
+  }
+  if (!address) {
+    toAddressError.value = 'address is required'
+    return
+  }
   if (!validAddress) toAddressError.value = 'invalid address'
 }
 
