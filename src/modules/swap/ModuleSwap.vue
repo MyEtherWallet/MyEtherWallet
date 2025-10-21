@@ -329,7 +329,6 @@ const parsedToTokens = computed(() => {
 
 const validateToAddress = async () => {
   const address = userToAddress.value
-  console.log(address)
   const validAddress = await toTokenSelected.value?.networkInfo.isAddress(
     address.toLowerCase(),
   )
