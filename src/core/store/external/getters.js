@@ -68,6 +68,7 @@ const networkTokenUSDMarket = function (
 const getCoinGeckoTokenById = state => cgid => {
   const cgToken = state.coinGeckoTokens.get(cgid);
   const networkCurrencyTokens = state.coinGeckoNetworkCurrencies.get(cgid);
+  console.log(networkCurrencyTokens, cgToken);
   return {
     name: networkCurrencyTokens
       ? networkCurrencyTokens.symbol.toUpperCase()
