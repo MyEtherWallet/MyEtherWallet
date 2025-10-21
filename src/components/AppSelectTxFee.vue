@@ -155,7 +155,6 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type {
   FeePriority,
-  EstimatesResponse,
   EstimatesRequestBody,
   GasFeeInfo,
   QuotesResponse,
@@ -274,7 +273,7 @@ const { data, onFetchResponse, execute, onFetchError } = useMEWFetch(fetchURL, {
   immediate: false,
 })
   .post(JSON.stringify(txData.value))
-  .json<EstimatesResponse>()
+  .json<QuotesResponse>()
 
 onFetchResponse(() => {
   if (data.value) {
@@ -368,13 +367,18 @@ const selectedFeeNative = computed(() => {
   }
   return ''
 })
+const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
+  return props.fees ? props.fees.fees : feeEstmates.value
+})
 
 const selectedFeeFiat = computed(() => {
-  if (hasFees.value && data.value) {
+  if (hasFees.value && usedFeeToDisplay.value) {
     const fiatValue = formatFiatValue(
-      data.value.fees[gasPriceType.value].fiatValue || 0,
+      usedFeeToDisplay.value[gasPriceType.value].fiatValue ||
+        usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal ||
+        0,
     ).value
-    return `${data.value.fees[gasPriceType.value].fiatSymbol} ${fiatValue} `
+    return `${usedFeeToDisplay.value[gasPriceType.value].fiatSymbol} ${fiatValue} `
   }
   return ''
 })
@@ -398,28 +402,23 @@ interface DisplayFee {
   fiatValue: string
   nativeValue: string
 }
-
 const { t } = useI18n()
 const displayFees = computed<DisplayFee[]>(() => {
-  const _fees: FeeOption | undefined = props.fees
-    ? props.fees.fees
-    : feeEstmates.value
-
-  const economy = _fees
-    ? (_fees[GasPriceType.ECONOMY].fiatFeeTotal ??
-      _fees[GasPriceType.ECONOMY].fiatValue)
+  const economy = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatValue)
     : undefined
-  const regular = _fees
-    ? (_fees[GasPriceType.REGULAR].fiatFeeTotal ??
-      _fees[GasPriceType.REGULAR].fiatValue)
+  const regular = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.REGULAR].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.REGULAR].fiatValue)
     : undefined
-  const fast = _fees
-    ? (_fees[GasPriceType.FAST].fiatFeeTotal ??
-      _fees[GasPriceType.FAST].fiatValue)
+  const fast = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.FAST].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.FAST].fiatValue)
     : undefined
-  const fastest = _fees
-    ? (_fees[GasPriceType.FASTEST].fiatFeeTotal ??
-      _fees[GasPriceType.FASTEST].fiatValue)
+  const fastest = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.FASTEST].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.FASTEST].fiatValue)
     : undefined
   const a = [
     {
@@ -427,28 +426,36 @@ const displayFees = computed<DisplayFee[]>(() => {
       title: t('select_fee.economy.title'),
       description: t('select_fee.economy.description'),
       fiatValue: `$${formatFiatValue(economy || 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.ECONOMY]) : '0',
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.ECONOMY])
+        : '0',
     },
     {
       id: GasPriceType.REGULAR,
       title: t('select_fee.regular.title'),
       description: t('select_fee.regular.description'),
       fiatValue: `$${formatFiatValue(regular || 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.REGULAR]) : '0',
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.REGULAR])
+        : '0',
     },
     {
       id: GasPriceType.FAST,
       title: t('select_fee.fast.title'),
       description: t('select_fee.fast.description'),
       fiatValue: `$${formatFiatValue(fast || 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.FAST]) : '0',
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.FAST])
+        : '0',
     },
     {
       id: GasPriceType.FASTEST,
       title: t('select_fee.fastest.title'),
       description: t('select_fee.fastest.description'),
       fiatValue: `$${formatFiatValue(fastest || 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.FASTEST]) : '0',
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.FASTEST])
+        : '0',
     },
   ]
   return a
