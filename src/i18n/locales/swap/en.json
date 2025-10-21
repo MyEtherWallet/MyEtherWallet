@@ -20,7 +20,7 @@
       "fetching-quotes": "Error fetching quotes. Please try again.",
       "initializing-swap-failed": "Error initializing swap. Please try again.",
       "getting-swap": "Error getting swap. Please try again.",
-      "too-many-decimals": "Amount has too many decimals. | Amount has too many decimals."
+      "too-many-decimals": "Amount has too many decimals"
     },
     "best-offer": {
       "looking": "Looking for the best offer",

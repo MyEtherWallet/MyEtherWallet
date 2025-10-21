@@ -630,9 +630,7 @@ const fromAmountError = computed(() => {
     BigNumber(fromAmount.value).toFixed().length >
     fromTokenSelected.value?.decimals
   ) {
-    return t('swap.error.too-many-decimals', {
-      decimal: fromTokenSelected.value?.decimals,
-    })
+    return t('swap.error.too-many-decimals')
   }
   const baseNetworkBalance = toBase(
     walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
