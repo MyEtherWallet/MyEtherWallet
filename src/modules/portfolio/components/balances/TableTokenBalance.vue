@@ -207,7 +207,7 @@
             <td class="px-1 py-2" colspan="2">
               <router-link
                 :to="{
-                  name: TOKEN_INFO_ROUTE_NAMES.crypto,
+                  name: TOKEN_INFO_ROUTE_NAMES.home,
                   params: {
                     tokenId: token.coinId,
                   },

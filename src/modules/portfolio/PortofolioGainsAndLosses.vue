@@ -26,7 +26,7 @@
         </app-btn-icon>
       </div>
     </div>
-    <app-sheet sheet-class="!py-4 !px-2 overflow-hidden ">
+    <app-sheet sheet-class="!pt-4 !pb-0 !px-2 overflow-hidden ">
       <div
         class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end px-3"
       >
@@ -34,7 +34,7 @@
         <p class="col-span-1">Price</p>
         <p class="text-right col-span-1">Portfolio Gain / Loss</p>
       </div>
-      <div v-if="!isLoading" class="min-h-[160px]">
+      <div v-if="!isLoading" class="min-h-[181px]">
         <TokenRow
           v-for="token in paginatedArray"
           :key="token.contract + token.id"
@@ -43,7 +43,10 @@
         >
         </TokenRow>
       </div>
-      <div v-else class="bg-grey-10 rounded-2xl animate-pulse h-[160px]"></div>
+      <div
+        v-else
+        class="bg-grey-10 rounded-2xl animate-pulse h-[173px] mb-2"
+      ></div>
     </app-sheet>
     <div class="flex justify-end my-1 items-center">
       <router-link
