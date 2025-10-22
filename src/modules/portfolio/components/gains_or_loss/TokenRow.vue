@@ -27,13 +27,14 @@
             'text-success': token.percentChange >= 0,
           }"
         >
+          {{ formatPercentageValue(token.percentChange).value }}
           <span
             ><ArrowTrendingDownIcon
               v-if="token.percentChange < 0"
               class="text-error h-3 w-3" /><ArrowTrendingUpIcon
               v-else
-              class="text-success h-3 w-3" /></span
-          >{{ formatPercentageValue(token.percentChange).value }}
+              class="text-success h-3 w-3"
+          /></span>
         </p>
       </div>
       <div class="text-right col-span-1">

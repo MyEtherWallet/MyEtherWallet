@@ -134,23 +134,26 @@ const getGainOrLoss = (percent: number, contract: string) => {
   )
   return newBalance.minus(oldBalance)
 }
-/**
- * TEMP
- */
-const getRandomNumber = () => Math.round((Math.random() * 198 - 99) * 100) / 100
 
 const topTokens = computed<TokenGainOrLoss[]>(() => {
   const _tokens = tokens.value
-    .filter(token => token.price !== undefined && token.coinId !== undefined)
+    .filter(
+      token =>
+        token.price !== undefined &&
+        token.coinId !== undefined &&
+        token.price_change_percentage_24h !== undefined,
+    )
     .map(token => {
-      const percentChange = getRandomNumber()
       return {
         name: token.name,
         symbol: token.symbol,
         logo_url: token.logo_url,
         price: token.price,
-        percentChange: percentChange,
-        gainOrLoss: getGainOrLoss(percentChange, token.contract),
+        percentChange: token.price_change_percentage_24h,
+        gainOrLoss: getGainOrLoss(
+          token.price_change_percentage_24h || 0,
+          token.contract,
+        ),
         id: token.coinId,
         contract: token.contract,
       }
