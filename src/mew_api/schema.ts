@@ -1051,6 +1051,11 @@ export interface components {
                 name?: string;
                 price?: number;
                 symbol?: string;
+                market_cap?: number;
+                price_change_percentage_24h?: number;
+                is_rwa?: boolean;
+                is_stablecoin?: boolean;
+                sparkline_in_7d?: null | number[];
             }[];
         };
         GetTokenBalancesByChainNamesAndAddressResponse: {
@@ -1598,6 +1603,7 @@ export interface components {
         };
     };
     parameters: {
+        IncludeSparklines: boolean;
         PathCoinId: string;
         CoinIds: string;
         ChainId: components["schemas"]["BigIntInput"];
@@ -1952,7 +1958,9 @@ export interface operations {
     };
     GetBalancesByChainNameAndAddress: {
         parameters: {
-            query?: never;
+            query?: {
+                sparklines?: components["parameters"]["IncludeSparklines"];
+            };
             header?: never;
             path: {
                 chainName: components["parameters"]["ChainName"];

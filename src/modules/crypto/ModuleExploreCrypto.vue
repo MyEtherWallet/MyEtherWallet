@@ -294,6 +294,7 @@
                       :width="50"
                       :height="35"
                       :max-points="35"
+                      :percent-change="getActivePercent(token) || undefined"
                     />
                   </div>
                 </td>

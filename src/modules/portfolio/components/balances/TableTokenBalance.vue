@@ -66,14 +66,14 @@
                   class="w-3 h-3"
                   v-if="
                     headerSort === SortValueString.NAME &&
-                    tableDirection === 'asc'
+                    tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
                   class="w-3 h-3"
                   v-if="
                     headerSort === SortValueString.NAME &&
-                    tableDirection === 'desc'
+                    tableDirection === 'asc'
                   "
                 />
               </div>
@@ -94,14 +94,14 @@
                   class="w-3 h-3 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'asc'
+                    tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
                   class="w-3 h-3 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'desc'
+                    tableDirection === 'asc'
                   "
                 />
               </div>
@@ -122,14 +122,14 @@
                   class="w-3 h-3 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'asc'
+                    tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
                   class="w-3 h-3 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'desc'
+                    tableDirection === 'asc'
                   "
                 />
               </div>
@@ -141,23 +141,23 @@
               <div
                 class="flex items-center gap-1 justify-end relative text-right"
                 :class="{
-                  'text-black': headerSort === SortValueString.MARKET_CAP,
+                  'text-black': headerSort === SortValueString.VALUE,
                 }"
-                @click="setHeaderSort(SortValueString.MARKET_CAP)"
+                @click="setHeaderSort(SortValueString.VALUE)"
               >
                 Value
                 <arrow-long-up-icon
                   class="w-3 h-3 absolute -right-4"
                   v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'asc'
+                    headerSort === SortValueString.VALUE &&
+                    tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
                   class="w-3 h-3 absolute -right-4"
                   v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'desc'
+                    headerSort === SortValueString.VALUE &&
+                    tableDirection === 'asc'
                   "
                 />
               </div>
@@ -184,7 +184,7 @@
           </div>
           <tr
             v-for="token in paginatedArray"
-            :key="token.name + token.marketCap + token.coinId + token.contract"
+            :key="token.name + token.market_cap + token.coinId + token.contract"
             class="h-14 md:hoverBGWhite cursor-pointer"
             @click="goToTokenPage(token)"
           >
@@ -232,8 +232,10 @@
             <td
               class="hidden xs:table-cell w-[80px] px-1 py-1 text-right text-s-11 leading-p-100"
               :class="[
-                token.percentChange24h
-                  ? parsePercent(token.percentChange24h).includes('-')
+                token.price_change_percentage_24h
+                  ? parsePercent(token.price_change_percentage_24h).includes(
+                      '-',
+                    )
                     ? 'text-error'
                     : 'text-success'
                   : 'text-black',
@@ -242,32 +244,33 @@
               <div>
                 <p>
                   {{
-                    token.percentChange24h
-                      ? parsePercent(token.percentChange24h)
+                    token.price_change_percentage_24h
+                      ? parsePercent(token.price_change_percentage_24h)
                       : '-'
                   }}
                 </p>
-                <div v-if="getSparkLinePoints().length === 0"></div>
+                <div v-if="getSparkLinePoints(token).length === 0"></div>
                 <table-sparkline
                   v-else
-                  :points="getSparkLinePoints()"
+                  :points="getSparkLinePoints(token)"
                   :width="50"
                   :height="35"
                   :max-points="35"
+                  :percent-change="token.price_change_percentage_24h"
                 />
               </div>
             </td>
             <!-- MarketCap -->
             <td class="hidden md:table-cell px-1 py-2 text-right">
               {{
-                token.marketCap
-                  ? `$${formatFiatValue(token.marketCap).value}`
+                token.market_cap
+                  ? `$${formatFiatValue(token.market_cap).value}`
                   : '-'
               }}
             </td>
             <!-- Value -->
             <td class="px-1 py-2 text-right">
-              <p>${{ getFiatValue(token) }}</p>
+              <p>{{ token.fiatBalanceFormatted }}</p>
               <p class="text-info text-s-12">
                 @ ${{ token.price ? formatFiatValue(token.price).value : '-' }}
               </p>
@@ -437,7 +440,6 @@ import {
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
-// import { useToastStore } from '@/stores/toastStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -464,9 +466,6 @@ const {
 } = storeToRefs(walletStore)
 
 const tableContainer = ref<HTMLElement | null>(null)
-
-// const toastStore = useToastStore()
-
 const searchInput = ref('')
 
 /** -------------------------------
@@ -498,7 +497,7 @@ enum SortValueString {
   VALUE = 'USD_Balance',
 }
 const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
-const tableDirection = ref<'asc' | 'desc'>('desc')
+const tableDirection = ref<'asc' | 'desc'>('asc')
 
 const setHeaderSort = (key: SortValueString) => {
   if (headerSort.value === key) {
@@ -512,25 +511,18 @@ const setHeaderSort = (key: SortValueString) => {
 /**-------------------------------
  * Balances Table Data
 -------------------------------*/
-
 interface DisplayToken extends TokenBalance {
-  marketCap?: number
-  percentChange24h?: number
+  fiatBalance?: number
+  fiatBalanceFormatted?: string
 }
+
 const tokens = computed<DisplayToken[]>(() => {
   const tokens = [...allTokens.value].map(token => {
-    //TODO: remove TEMP FOR TESTING PURPOSES
-    const randomA = Math.round((Math.random() * 198 - 99) * 100) / 100
-    const random =
-      randomA > 0
-        ? undefined
-        : Math.round((Math.random() * 198 - 99) * 100) / 100
-    const marketCap =
-      randomA > 0 ? undefined : Math.floor(Math.random() * 1000000000 + 1000000)
+    const fiatBalance = getFiatValue(token)
     return {
       ...token,
-      marketCap: marketCap,
-      percentChange24h: random,
+      fiatBalance: fiatBalance.toNumber(),
+      fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
     }
   })
 
@@ -541,21 +533,22 @@ const tokens = computed<DisplayToken[]>(() => {
   if (headerSort.value === SortValueString.PERCENT) {
     return sortObjectArrayNumber(
       tokens,
-      'percentChange24h',
+      'price_change_percentage_24h',
       tableDirection.value,
     )
   }
   if (headerSort.value === SortValueString.MARKET_CAP) {
-    return sortObjectArrayNumber(tokens, 'marketCap', tableDirection.value)
+    return sortObjectArrayNumber(tokens, 'market_cap', tableDirection.value)
+  }
+  if (headerSort.value === SortValueString.VALUE) {
+    return sortObjectArrayNumber(tokens, 'fiatBalance', tableDirection.value)
   }
 
   return tokens
 })
 
-const getFiatValue = (token: DisplayToken) => {
-  return formatFiatValue(
-    BigNumber(token.price || 0).multipliedBy(token.balance),
-  ).value
+const getFiatValue = (token: TokenBalance): BigNumber => {
+  return BigNumber(token.price || 0).multipliedBy(token.balance)
 }
 
 /** -------------------------------
@@ -640,76 +633,13 @@ const parsePercent = (val: number | null): string => {
   return formatPercentageValue(val ?? 0).value
 }
 
-const getSparkLinePoints = () => {
-  // if (
-  //   token.sparklineIn7d &&
-  //   token.sparklineIn7d.length > 0 &&
-  //   activePercent.value.value !== '1h'
-  // ) {
-  //   if (activePercent.value.value === '7d') {
-  //     return token.sparklineIn7d
-  //   }
-  //   const totalPoints = token.sparklineIn7d.length / 7
-  //   return token.sparklineIn7d.slice(-totalPoints)
-  // }
-  return [
-    112870.01637755331, 112929.9397716864, 112715.50165167684,
-    112990.21580043276, 113442.28069364143, 113253.1113223007,
-    113156.56943826913, 112995.308511099, 112700.04411105992,
-    113062.13544234853, 112088.22986745652, 112422.24901596077,
-    112476.0869349915, 112443.6612941868, 112592.77559223701, 113042.7817158566,
-    112562.48777658338, 112421.39545765055, 111972.49734494487,
-    111771.39865374852, 111487.93584452692, 111121.72507506835,
-    110767.84168895654, 110818.25472180649, 111199.93148834158,
-    111421.2073092355, 111311.1263122397, 111172.12653064249,
-    110752.26596267126, 110793.48679619528, 110708.66960879423,
-    110531.09583273325, 111271.68118521282, 111516.32075982497,
-    111563.02242448437, 111076.6155384864, 110968.85054268927,
-    111693.47908038496, 110689.07472780014, 110871.19673179896,
-    111183.20320387377, 111585.59359375246, 111444.15250991116,
-    111606.05066574663, 110922.2576204432, 110648.09858393036,
-    108705.59082599828, 108797.48915023833, 108351.07919531601,
-    108681.9674782462, 108357.1050855725, 107808.50597374301,
-    108417.82422450527, 107985.60383108161, 108168.17353436728,
-    108721.02286448535, 108614.70730145884, 108850.80479080149,
-    109181.00611204734, 108844.69706569162, 108418.74567209769,
-    106777.58590344951, 105720.55420111967, 104941.22576466638,
-    104953.76270225686, 104777.54392041727, 105637.72456941512,
-    105353.87398216527, 105909.58504396181, 105410.36143840729,
-    106825.8474195911, 106436.7153558714, 106458.72871351143,
-    106637.64075028818, 106567.25320451484, 107107.46307298902,
-    107429.45346955593, 107016.94179918483, 106443.61194984635,
-    106873.8466281408, 107099.65206107982, 106609.13013785085,
-    107128.71710851924, 106536.96768166094, 106794.97175083953,
-    106919.60377644845, 107022.8593157679, 106803.86682905952,
-    106932.4066286696, 106991.11301872972, 106980.1455985165,
-    107070.93471032777, 106968.26416692934, 107011.34462815462,
-    106992.63460145699, 106706.53067279152, 106897.87467019023,
-    106873.61641543529, 107094.35594603926, 107044.77083141152,
-    107210.23428047558, 107147.81742888642, 107156.00337647724,
-    106903.79932474553, 106994.99026184587, 106892.59199791536,
-    107277.8900097389, 107097.55099996917, 106894.00465728603,
-    106765.30322754725, 106815.08572050236, 106489.79430051908,
-    107601.94399619543, 107661.60148137854, 107804.49082162174,
-    107580.78284153281, 108074.73428483192, 108440.14412851754,
-    108430.33239110556, 108701.68249623412, 109198.03762001857,
-    109404.69898589609, 108953.78744965605, 108899.47537203658,
-    108703.11827939545, 108976.71889815509, 108655.50525004533,
-    107984.75530202611, 108031.89967462847, 108802.63136876836,
-    110213.82084744876, 110408.77985590181, 110988.93843181919,
-    111313.87149220676, 111154.61395542785, 111127.01051419933,
-    110867.09387240493, 110771.30592452061, 111032.33988398887,
-    110846.45798521055, 111057.76323610534, 111322.7026176929,
-    111427.00607037144, 110455.59307840143, 110340.15173252257,
-    110880.01637720925, 110828.02730463324, 111027.57915637184,
-    110585.68622264663, 110836.40846709388, 110608.5714932665,
-    110490.77048453045, 110033.27171327456, 109587.65776738718,
-    109133.49157778294, 107726.40857946868, 107603.55609132143,
-    107941.29470249634, 108131.8700683883, 107766.34807709047,
-    107763.47584764786, 108596.10577425564, 108617.2385815631,
-    108971.72776049396, 108309.2361192458, 111287.67777555031,
-    113348.64642768126, 113187.82370886576,
-  ]
+const getSparkLinePoints = (token: DisplayToken) => {
+  if (token.sparkline_in_7d && token.sparkline_in_7d.length > 0) {
+    const totalPoints = token.sparkline_in_7d.length / 7
+    const lastDay = token.sparkline_in_7d.slice(-totalPoints)
+    return lastDay
+  }
+  return []
 }
 
 /**-------------------------------

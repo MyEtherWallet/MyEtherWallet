@@ -184,6 +184,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ChainName'
         - $ref: '#/components/parameters/Address'
+        - $ref: '#/components/parameters/IncludeSparklines'
       responses:
         200:
           $ref: '#/components/responses/GetBalancesByChainNameAndAddressSuccess'
@@ -509,6 +510,11 @@ paths:
 
 components:
   parameters:
+    IncludeSparklines:
+      name: sparklines
+      in: query
+      schema:
+        type: boolean
     PathCoinId:
       name: coin
       in: path
@@ -2127,6 +2133,22 @@ components:
                 type: number
               symbol:
                 type: string
+              market_cap:
+                type: number
+              # price_change_24h:
+              #   type: number
+              price_change_percentage_24h:
+                type: number
+              is_rwa:
+                type: boolean
+              is_stablecoin:
+                type: boolean
+              sparkline_in_7d:
+                oneOf:
+                  - type: 'null'
+                  - type: array
+                    items:
+                      type: number
 
     GetTokenBalancesByChainNamesAndAddressResponse:
       type: array
