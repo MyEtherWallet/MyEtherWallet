@@ -79,16 +79,17 @@ export const useWalletStore = defineStore('walletStore', () => {
     const newTokenCopy: Array<TokenBalance> = []
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
+        const _balance = fromBase(BigNumber(token.balance).toString(), token.decimals || 18);
         mainTokenBalance.value = {
           ...token,
           name:
             token.name ?? (selectedChain.value?.currencyNameLong || 'Ether'),
           symbol:
             token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
-          balance: fromBase(token.balance, token.decimals || 18),
+          balance: _balance,
           balanceWei: token.balance,
         }
-        balance.value = fromBase(token.balance, token.decimals || 18)
+        balance.value = _balance
         balanceWei.value = token.balance
       } else {
         if (token.decimals) {

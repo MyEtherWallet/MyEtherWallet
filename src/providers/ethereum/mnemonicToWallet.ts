@@ -1,6 +1,7 @@
 import { mnemonicToSeed } from 'bip39'
 import HDkey from 'hdkey'
 import PrivateKeyWallet from './privateKeyWallet'
+import { WalletType } from '../types'
 
 class MnemonicToWallet {
   private mnemonic: string
@@ -22,7 +23,7 @@ class MnemonicToWallet {
     const seed = await mnemonicToSeed(this.mnemonic, this.extraWord)
     const hdkey = HDkey.fromMasterSeed(seed)
     const derived = hdkey.derive(`${this.basePath}/${index}`)
-    return new PrivateKeyWallet(derived.privateKey!, this.chainId)
+    return new PrivateKeyWallet(derived.privateKey!, this.chainId, WalletType.MNEMONIC)
   }
 }
 

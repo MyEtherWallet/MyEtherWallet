@@ -108,7 +108,9 @@
             <p class="text-s-14">{{ $t('view_paper_wallet') }}</p>
           </button>
           <button
+            v-if="canSwitchAddress"
             class="shadow-button shadow-button-elevated rounded-16 p-3 mt-3 hoverNoBG w-full"
+            @click="switchAddress"
           >
             <p class="text-s-14">{{ $t('switch_connected_address') }}</p>
           </button>
@@ -152,6 +154,9 @@ import {
 } from '@heroicons/vue/24/outline'
 import { useChainsStore } from '@/stores/chainsStore'
 import { type WalletPanel, useWalletMenuStore } from '@/stores/walletMenuStore'
+import { WalletType } from '@/providers/types'
+import { useAccessStore } from '@/stores/accessStore'
+import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -194,6 +199,40 @@ const tokensCount = computed(() => {
       return t('common.token_count', { count: length })
   }
 })
+
+// Switch Address
+const canSwitchAddress = computed(() => {
+  // only show switch address if wallet type is NOT private key AND NOT injected
+  const type = wallet.value?.getWalletType()
+  return (
+    !!type &&
+    type !== WalletType.PRIVATE_KEY &&
+    type !== WalletType.INJECTED &&
+    type !== WalletType.WAGMI
+  )
+})
+
+const accessStore = useAccessStore()
+const { setCurrentView, openAccessDialog } = accessStore
+const switchAddress = () => {
+  // Map wallet types to their corresponding WALLET_VIEWS index
+  const currentWalletType = wallet.value?.getWalletType()
+  const viewIndexByType: Partial<Record<WalletType, number>> = {
+    [WalletType.LEDGER]: 1,
+    [WalletType.TREZOR]: 2,
+    [WalletType.MNEMONIC]: 4,
+  }
+
+  const index =
+    currentWalletType !== undefined &&
+    viewIndexByType[currentWalletType] !== undefined
+      ? (viewIndexByType[currentWalletType] as number)
+      : 0
+
+  setCurrentView(WALLET_VIEWS[index])
+  closeDialog()
+  openAccessDialog()
+}
 
 /** -------------------------------
  * Actions

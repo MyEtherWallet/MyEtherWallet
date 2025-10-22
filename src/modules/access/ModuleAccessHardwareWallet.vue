@@ -94,9 +94,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -135,13 +133,13 @@ const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
 const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
   derivationStore
-
+const { wallet } = storeToRefs(walletStore)
 const { t } = useI18n()
 // used to define which hardware wallet is being accessed
 const accessStore = useAccessStore()
 
 // Wallet instance
-let hwWalletInstance = new HWwallet()
+let hwWalletInstance: HWwallet | null = new HWwallet()
 const { currentView } = storeToRefs(accessStore)
 
 /**------------------------
@@ -261,20 +259,18 @@ const unlockWallet = async () => {
     selectedChain.value?.name as string
   ] as NetworkNames
 
-  await hwWalletInstance
-    .isConnected({
-      wallet: selectedHwWalletType.value as HWwalletType,
-      networkName: networkName,
-    })
-    .then(() => {
-      // maybe closing here is not needed
-      // hwWalletInstance.close()
-      // console.log('Closed previous connection', hwWalletInstance)
-      // hwWalletInstance = new HWwallet()
-      return new Promise(r => setTimeout(r, 1000))
-    })
+  if (!wallet.value) {
+    await hwWalletInstance!
+      .isConnected({
+        wallet: selectedHwWalletType.value as HWwalletType,
+        networkName: networkName,
+      })
+      .then(() => {
+        return new Promise(r => setTimeout(r, 1000))
+      })
+  }
   activeStep.value = 1
-  paths.value = (await hwWalletInstance.getSupportedPaths({
+  paths.value = (await hwWalletInstance!.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
     networkName: networkName,
   })) as PathType[]
@@ -309,10 +305,13 @@ const loadList = async (page: number = 0) => {
   const chainId = selectedChain.value?.chainID ?? '1'
   const chainName = selectedChain.value?.name ?? 'ETHEREUM'
   const networkName = chainToEnum[chainName] ?? 'Ethereum'
+  const instance = wallet.value
+    ? wallet.value.getWalletInstance?.()
+    : hwWalletInstance
 
   for (let i = startIndex; i < startIndex + 5; i++) {
     try {
-      const addressResponse = await hwWalletInstance.getAddress({
+      const addressResponse = await instance!.getAddress({
         confirmAddress: false,
         networkName: networkName,
         pathType: selectedDerivation.value as PathType,
@@ -327,7 +326,7 @@ const loadList = async (page: number = 0) => {
             i.toString(),
             selectedDerivation.value as PathType,
             selectedHwWalletType.value as HWwalletType,
-            hwWalletInstance,
+            instance!,
           )
         : new BtcHardwareWallet(
             addressResponse.address as HexPrefixedString,
@@ -335,7 +334,7 @@ const loadList = async (page: number = 0) => {
             i.toString(),
             selectedDerivation.value as PathType,
             selectedHwWalletType.value as HWwalletType,
-            hwWalletInstance,
+            instance!,
           )
       const fetchBalance = await hardwareWalletInstance.getBalance()
 
@@ -416,7 +415,6 @@ const setPage = (isNext: boolean) => {
  * Access Wallet
  ------------------------*/
 
-const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
@@ -429,6 +427,7 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
       return null
   }
 })
+const { closeAccessDialog } = useAccessStore()
 
 const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
@@ -436,8 +435,8 @@ const access = async () => {
 
   setWallet(markRaw(wallet as EvmHardwareWallet) as WalletInterface)
   addWallet(walletConfig.value as WalletConfig)
-
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_MAIN.HOME.PATH })
+  hwWalletInstance = null
+  closeAccessDialog()
 }
 </script>

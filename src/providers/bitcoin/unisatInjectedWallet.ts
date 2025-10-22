@@ -70,6 +70,14 @@ class UnisatInjectWallet extends BaseBtcWallet {
   override getWalletType(): WalletType {
     return WalletType.INJECTED
   }
+
+  updateAddress(newAddress: string): void {
+    this.address = newAddress
+  }
+
+  getProviderInstance(): NonNullable<typeof window.unisat> {
+    return this.unisat
+  }
 }
 
 export default UnisatInjectWallet

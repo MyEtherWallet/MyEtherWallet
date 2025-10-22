@@ -93,4 +93,9 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
   override getAddress(): Promise<HexPrefixedString> {
     return Promise.resolve(this.address)
   }
+
+  getWalletInstance(): HWwallet | null {
+    return this.hwWalletInstance
+  }
+
 }

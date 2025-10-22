@@ -100,4 +100,8 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     const { address } = INFO_MAP[this.getProvider()].paymentType({ ...INFO_MAP[this.getProvider()], pubkey: hexToBuffer(this.address) })
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
+
+  getWalletInstance(): HWwallet | null {
+    return this.hwWalletInstance
+  }
 }

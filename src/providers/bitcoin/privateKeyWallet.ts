@@ -11,10 +11,12 @@ const ECPair = ECPairFactory(tinysecp)
 
 export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   private privateKey: Buffer;
+  private walletType: WalletType;
 
-  constructor(chainName: string, hdkeyInstance: HDkey | { privateKey: Buffer }) {
+  constructor(chainName: string, hdkeyInstance: HDkey | { privateKey: Buffer }, walletType?: WalletType) {
     super(chainName);
     this.privateKey = hdkeyInstance.privateKey!;
+    this.walletType = walletType || WalletType.PRIVATE_KEY;
   }
 
   override async SignTransaction(serializedTx: HexPrefixedString): Promise<PostSignedTransaction> {
@@ -33,7 +35,7 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   }
 
   override getWalletType(): WalletType {
-    return WalletType.PRIVATE_KEY;
+    return this.walletType;
   }
 
   override async getAddress(): Promise<string> {

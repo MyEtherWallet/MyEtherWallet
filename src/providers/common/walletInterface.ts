@@ -1,3 +1,4 @@
+import HWwallet from '@enkryptcom/hw-wallets'
 import type { HexPrefixedString, WalletType } from '../types'
 import {
   type SignableTransactionParams,
@@ -14,6 +15,8 @@ import type {
   BitcoinQuotesResponse,
   BitcoinSignableTransactionResponse,
 } from '@/mew_api/types'
+
+import type { Provider as Eip6963Provider } from '@/stores/providerStore.ts'
 
 export interface WalletInterface {
   connect?: () => Promise<boolean>
@@ -46,4 +49,6 @@ export interface WalletInterface {
     feeObj: SignableTransactionParams,
   ) => Promise<GetUnsignedEvmMultiTransactionResponse>
   updateChainId: (chainId: string) => void
+  getWalletInstance?: () => HWwallet | null
+  getProviderInstance?: () => Eip6963Provider | NonNullable<typeof window.unisat> | null
 }

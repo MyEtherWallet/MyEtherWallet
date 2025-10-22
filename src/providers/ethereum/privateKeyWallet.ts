@@ -16,10 +16,12 @@ import { WalletType, type HexPrefixedString } from '../types'
 
 class PrivateKeyWallet extends BaseEvmWallet {
   private privKey: Uint8Array
+  private walletType: WalletType
 
-  constructor(privateKey: Uint8Array, chainId: string) {
+  constructor(privateKey: Uint8Array, chainId: string, walletType?: WalletType) {
     super(chainId)
     this.privKey = privateKey
+    this.walletType = walletType || WalletType.PRIVATE_KEY
   }
 
   /**
@@ -55,7 +57,7 @@ class PrivateKeyWallet extends BaseEvmWallet {
   }
 
   override getWalletType(): WalletType {
-    return WalletType.PRIVATE_KEY
+    return this.walletType
   }
   override SignMessage(options: {
     message: `0x${string}`

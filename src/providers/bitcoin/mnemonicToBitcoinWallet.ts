@@ -3,6 +3,7 @@ import { mnemonicToSeed } from "bip39"
 
 import BitcoinPrivateKeyWallet from "./privateKeyWallet";
 import { bip84Segwit, bip84SegwitTest, dogecoinPath, litecoinPath, type DerivationPath } from "@/modules/access/common/configs/configPaths";
+import { WalletType } from "../types";
 
 export default class BitcoinWallet {
   private mnemonic;
@@ -22,7 +23,7 @@ export default class BitcoinWallet {
     const hasLastTick = this.chainName === "BITCOIN" || this.chainName === "BITCOIN_TEST"
 
     const derived = hdkey.derive(`${this.basePath}/${index}${hasLastTick ? "'" : ""}`);
-    return new BitcoinPrivateKeyWallet(this.chainName, derived);
+    return new BitcoinPrivateKeyWallet(this.chainName, derived, WalletType.MNEMONIC);
   }
 
   static getSupportedPaths(chainName: string): DerivationPath[] {
