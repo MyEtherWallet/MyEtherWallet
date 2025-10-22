@@ -22,8 +22,8 @@
       />
     </div>
     <div class="flex flex-col lg-max:flex-row gap-4 mt-7">
-      <portofolio-trends trend="all" />
-      <portofolio-trends trend="stock" />
+      <portofolio-gains-and-losses type="all" />
+      <portofolio-gains-and-losses type="stock" />
     </div>
     <portfolio-balance />
     <router-view />
@@ -33,7 +33,7 @@
 import AppWalletCard from '@/components/AppWalletCard.vue'
 import PortfolioHistory from '@/modules/portfolio/PortfolioHistory.vue'
 import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'
-import PortofolioTrends from '@/modules/portfolio/PortofolioTrends.vue'
+import PortofolioGainsAndLosses from '@/modules/portfolio/PortofolioGainsAndLosses.vue'
 import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'

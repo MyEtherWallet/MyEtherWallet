@@ -49,7 +49,7 @@
       <router-link
         :to="{
           name:
-            props.trend === 'stock'
+            props.type === 'stock'
               ? ROUTES_MAIN.STOCKS.NAME
               : ROUTES_MAIN.CRYPTO.NAME,
         }"
@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import AppSheet from '@/components/AppSheet.vue'
-import TokenRow from './components/trends/TokenRow.vue'
+import TokenRow from './components/gains_or_loss/TokenRow.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
@@ -77,19 +77,19 @@ import {
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
 import { usePaginate } from '@/composables/usePaginate'
 import { ROUTES_MAIN } from '@/router/routeNames'
-type Trend = 'all' | 'stock'
+type GainOrLossType = 'all' | 'stock'
 
 const props = withDefaults(
   defineProps<{
-    trend: Trend
+    type: GainOrLossType
   }>(),
   {
-    trend: 'all',
+    type: 'all',
   },
 )
 
 const title = computed(() => {
-  switch (props.trend) {
+  switch (props.type) {
     case 'stock':
       return 'Stock Gains & Losses'
     default:
@@ -98,7 +98,7 @@ const title = computed(() => {
 })
 
 const buttonText = computed(() => {
-  switch (props.trend) {
+  switch (props.type) {
     case 'stock':
       return 'All stock trends'
     default:
