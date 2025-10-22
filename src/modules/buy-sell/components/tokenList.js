@@ -51,7 +51,7 @@ const coingeckoContracts = {
   //   'binance-bridged-usdt-bnb-smart-chain'
   // ],
   POL: [
-    'matic-network',
+    'polygon-ecosystem-token',
     'bridged-usdc-polygon-pos-bridge',
     'polygon-bridged-usdt-polygon'
   ],
