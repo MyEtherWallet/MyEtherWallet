@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-6">
+  <div class="flex flex-col">
     <div
       :class="[
         isOpenSideMenu
@@ -21,11 +21,11 @@
         ]"
       />
     </div>
-    <div class="flex flex-col lg-max:flex-row gap-4">
+    <div class="flex flex-col lg-max:flex-row gap-4 mt-7">
       <portofolio-trends trend="all" />
       <portofolio-trends trend="stock" />
     </div>
-
+    <portfolio-balance />
     <router-view />
   </div>
 </template>
@@ -34,6 +34,7 @@ import AppWalletCard from '@/components/AppWalletCard.vue'
 import PortfolioHistory from '@/modules/portfolio/PortfolioHistory.vue'
 import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'
 import PortofolioTrends from '@/modules/portfolio/PortofolioTrends.vue'
+import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 const walletMenuStore = useWalletMenuStore()

@@ -19,6 +19,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const mainTokenBalance = ref<TokenBalance | null>(null)
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
+  const hasMissingBalances = ref(false)
 
   /** -------------------------------
   * The Wallet
@@ -78,6 +79,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
   const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
     const newTokenCopy: Array<TokenBalance> = []
+    hasMissingBalances.value = false
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
         mainTokenBalance.value = {
@@ -103,11 +105,22 @@ export const useWalletStore = defineStore('walletStore', () => {
               token.decimals,
             ),
           })
+        } else {
+          hasMissingBalances.value = true
         }
       }
     })
     tokens.value = newTokenCopy
   }
+
+  const allTokens = computed<Array<TokenBalance>>(() => {
+    const all = []
+    if (mainTokenBalance.value) {
+      all.push(mainTokenBalance.value)
+    }
+    all.push(...tokens.value)
+    return all
+  })
 
   const removeTokens = () => {
     tokens.value = []
@@ -170,9 +183,9 @@ export const useWalletStore = defineStore('walletStore', () => {
   //TODO: add proper formatting for fiat values
 
   /**
-   * @formattedTotalFiatPortflioValue - the total portfolio value in fiat, formatted .
+   * @formattedTotalFiatPortfolioValue - the total portfolio value in fiat, formatted .
    */
-  const formattedTotalFiatPortflioValue = computed<string>(() => {
+  const formattedTotalFiatPortfolioValue = computed<string>(() => {
     return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
@@ -210,8 +223,10 @@ export const useWalletStore = defineStore('walletStore', () => {
     balanceFiatBN,
     totalFiatPortfolioValueBN,
     // Formatted values
-    formattedTotalFiatPortflioValue,
+    formattedTotalFiatPortfolioValue,
     formattedBalance,
     formattedBalanceFiat,
+    allTokens,
+    hasMissingBalances,
   }
 })

@@ -33,7 +33,8 @@ const { isAreaHidden } = storeToRefs(dialogStore)
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
-const { wallet, walletAddress, isWalletConnected } = storeToRefs(store)
+const { wallet, walletAddress, isWalletConnected, hasMissingBalances } =
+  storeToRefs(store)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
 
@@ -42,6 +43,22 @@ const fetchBalances = () => {
   wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
     setTokens(balances.result)
     setIsLoadingBalances(false)
+    if (hasMissingBalances.value) {
+      // Refetch balances after 5 minutes if there are missing balances
+      setTimeout(() => {
+        toastStore.addToastMessage({
+          text: 'Sit tight!',
+          textSecondary:
+            "We are processing more tokens in your wallet. We'll update your balances soon.",
+          type: ToastType.Info,
+          duration: 300000,
+        })
+      }, 2000)
+
+      setTimeout(() => {
+        fetchBalances()
+      }, 300000)
+    }
   })
 }
 

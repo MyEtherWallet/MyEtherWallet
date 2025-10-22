@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full mb-2 py-1">
-    <div class="grid grid-cols-4 w-full justify-between gap-1">
+  <div class="w-full mb-2 py-1 hoverBGWhite cursor-pointer rounded-12 px-2">
+    <div class="grid grid-cols-4 w-full items-center justify-between gap-1">
       <div class="col-span-2 flex items-center gap-2">
         <app-token-logo
           :url="token.logo_url"
           :alt="token.symbol"
-          class="w-6 h-6 rounded-full object-cover flex-none mt-1"
+          class="rounded-full object-cover flex-none mt-1"
         />
         <div>
           <p class="hidden xs:block text-s-14 font-medium text-wrap">

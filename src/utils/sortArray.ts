@@ -10,12 +10,15 @@ export const sortObjectArrayNumber = <T>(
   key: keyof T,
   order: 'asc' | 'desc' = 'asc',
 ): T[] => {
-  const clone = [...array] // Clone the array to avoid mutating the original array
-  return clone.sort((a, b) => {
+  const clone = [...array] // Clone the array to avoid mutating the original
+  let flagHasUndefined: boolean = false
+
+  const sorted = clone.sort((a, b) => {
     const valueA = Number(a[key])
     const valueB = Number(b[key])
 
     if (isNaN(valueA) || isNaN(valueB)) {
+      flagHasUndefined = true
       return 0 // If either value is not a number, do not change their order
     }
 
@@ -25,6 +28,12 @@ export const sortObjectArrayNumber = <T>(
       return valueB - valueA
     }
   })
+  if (flagHasUndefined) {
+    const defined = sorted.filter(item => !isNaN(Number(item[key])))
+    const undefined = sorted.filter(item => isNaN(Number(item[key])))
+    return [...defined, ...undefined]
+  }
+  return sorted
 }
 
 /**

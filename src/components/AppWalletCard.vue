@@ -56,7 +56,7 @@
             v-if="!isLoadingBalances"
             class="font-bold text-s-32 leading-p-130"
           >
-            {{ formattedTotalFiatPortflioValue }}
+            {{ formattedTotalFiatPortfolioValue }}
           </p>
           <div
             v-else
@@ -121,7 +121,7 @@ const {
   walletAddress,
   isWalletConnected,
   formattedBalance,
-  formattedTotalFiatPortflioValue,
+  formattedTotalFiatPortfolioValue,
   safeMainTokenBalance,
   isLoadingBalances,
   walletCardWasAnimated,

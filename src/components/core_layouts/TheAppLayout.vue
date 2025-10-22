@@ -30,12 +30,10 @@
       ]"
     >
       <div
-        :class="[
-          'relative flex justify-center min-w-[320px] w-full mt-[68px] sm:mt-[76px]',
-        ]"
+        :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
-          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5">
+        <main :class="[' basis-full w-full max-w-[1440px] mx-auto']">
+          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-3 xs:px-5">
             <router-view />
           </div>
           <MewFooter
@@ -46,7 +44,7 @@
             :user-consent="popupStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
-            class="!px-5 !2xl:px-7"
+            class="!px-3 !xs:px-5"
           />
         </main>
       </div>

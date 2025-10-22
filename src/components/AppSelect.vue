@@ -6,7 +6,7 @@
     <slot name="select-button" :toggleSelect="toggleSelect">
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
-          <span>{{ selected.label }}</span>
+          <span>{{ selected ? selected.label : '' }}</span>
           <chevron-down-icon class="w-4 h-4 ml-1" />
         </div>
       </button>
@@ -27,14 +27,14 @@
         :class="position"
       >
         <div
-          class="px-2 py-3 min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
+          class="px-2 py-3 min-w-60 max-w-full bg-white shadow-button rounded-xl"
         >
           <div v-if="!useVueRouter" class="grid grid-cols-1">
             <button
               v-for="option in options"
               :key="option.value"
               :class="[
-                { 'bg-grey-5': option.value === selected.value },
+                { 'bg-grey-5': selected && option.value === selected.value },
                 'flex items-center p-3 hoverNoBG rounded-lg',
               ]"
               role="option"
@@ -43,7 +43,7 @@
             >
               {{ option.label }}
               <check-icon
-                v-if="option.value === selected.value"
+                v-if="selected && option.value === selected.value"
                 class="ml-auto w-5 h-5 text-primary"
               />
             </button>
@@ -88,6 +88,10 @@
  *   </template>
  * </app-select>
  *
+ * @example emit only
+ * <app-select
+ *   :emit-only="true" @select-option="selectHandler" />
+ *
  */
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { defineProps, ref } from 'vue'
@@ -96,7 +100,7 @@ import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
 
 const emit = defineEmits<{
-  (e: 'toggleSelect'): void
+  (e: 'select-option'): void
 }>()
 
 const props = defineProps({
@@ -146,7 +150,7 @@ const targetValue = ref<HTMLElement | null>(null)
 /**
  * @model The v-model for the input field.
  */
-const selected = defineModel<AppSelectOption>('selected', { required: true })
+const selected = defineModel<AppSelectOption>('selected', { required: false })
 /**
  * controls the open state of the select dropdown
  */
@@ -157,10 +161,6 @@ const openSelect = ref(false)
  * Toggles the open state of the select dropdown.
  */
 const toggleSelect = () => {
-  if (props.emitOnly) {
-    emit('toggleSelect')
-    return
-  }
   openSelect.value = !openSelect.value
   if (openSelect.value) {
     targetValue.value = target.value
@@ -184,6 +184,10 @@ onClickOutside(targetValue, () => {
 const selectOption = (option: AppSelectOption) => {
   selected.value = option
   toggleSelect()
+  if (props.emitOnly) {
+    emit('select-option')
+    return
+  }
 }
 
 /** ------------------------------

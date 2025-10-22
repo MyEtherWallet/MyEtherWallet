@@ -1,70 +1,74 @@
 <template>
-  <app-sheet
-    v-if="isWalletConnected"
-    sheet-class="md:max-w-[360px] !px-0 !pt-4 !pb-0 overflow-hidden"
-  >
-    <app-wallet-card class="px-4" />
-    <app-tabs-simple
-      v-model:activeTabIndex="activePanel"
-      :tabs="tabs"
-      :panel="panels"
-      label="Wallet Tabs"
-      class="w-full mt-4"
+  <div class="flex flex-col w-full">
+    <div
+      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-2 mt-6 mb-4"
     >
-      <template #tab-panel>
-        <table-tokens v-if="activePanel === 0" class="w-full" />
-        <div v-else-if="activePanel === 1" class="w-full h-[250px]">
-          <p class="text-center text-s-15 text-info mt-10">TODO</p>
-        </div>
-      </template>
-    </app-tabs-simple>
-  </app-sheet>
+      <h1
+        class="text-s-24 xs:text-s-32 font-bold rounded-32 sm:ml-4 px-2 xs:px-4 text-left"
+      >
+        Your Balances
+      </h1>
+      <!--Filter Lists-->
+      <div class="hidden lg:flex lg:items-center">
+        <app-btn-group
+          v-model:selected="selectedCryptoFilter"
+          :btn-list="cryptoFilterOptions"
+          size="large"
+          class="flex-wrap"
+        >
+          <template #btn-content="{ data }">
+            {{ data.label }}
+          </template>
+        </app-btn-group>
+      </div>
+      <app-select
+        v-model:selected="selectedCryptoFilter"
+        :options="cryptoFilterOptions"
+        position="right-0"
+        placeholder="Balance Filter"
+        class="lg:hidden"
+      >
+        <template #select-button="{ toggleSelect }">
+          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <button
+              class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+              @click="toggleSelect"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-s-16 font-medium">{{
+                  selectedCryptoFilter.label
+                }}</span>
+                <chevron-down-icon class="w-4 h-4 ml-1" />
+              </div>
+            </button>
+          </div>
+        </template>
+      </app-select>
+    </div>
+
+    <app-sheet sheet-class="py-4 !px-2 min-h-[200px] ">
+      <table-token-balance
+        v-if="selectedCryptoFilter.value === 'all'"
+        view="all"
+      />
+      <div v-else class="text-center my-10">Coming soon</div>
+    </app-sheet>
+  </div>
 </template>
-<script setup lang="ts">
-import { storeToRefs } from 'pinia'
+
+<script lang="ts" setup>
+import TableTokenBalance from './components/balances/TableTokenBalance.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import { ref } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
-import AppWalletCard from '@/components/AppWalletCard.vue'
-import AppTabsSimple from '@/components/tabs/AppTabsSimple.vue'
-import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
-import TableTokens from './components/TableTokens.vue'
-import { useWalletStore } from '@/stores/walletStore'
+import AppSelect from '@/components/AppSelect.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+const cryptoFilterOptions = ref([
+  { label: 'All Tokens', value: 'all' },
+  { label: 'Stocks', value: 'stocks' },
+  { label: 'Earning Interest', value: 'earning' },
+  { label: 'NFTS', value: 'nfts' },
+])
 
-const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
-
-enum TAB_ID {
-  TOKENS = 'tokens',
-  NFTS = 'nfts',
-}
-enum PANEL_ID {
-  TOKENS = `tab-tokens`,
-  NFTS = `tab-nfts`,
-}
-const tabs: Tab[] = [
-  {
-    name: 'Tokens',
-    id: TAB_ID.TOKENS,
-    controlsPanel: PANEL_ID.TOKENS,
-  },
-  {
-    name: 'NFTs',
-    id: TAB_ID.NFTS,
-
-    controlsPanel: PANEL_ID.NFTS,
-  },
-]
-
-const panels: Tab_Panel[] = [
-  {
-    id: PANEL_ID.TOKENS,
-    ariaLabelledBy: TAB_ID.TOKENS,
-  },
-  {
-    id: PANEL_ID.NFTS,
-    ariaLabelledBy: TAB_ID.NFTS,
-  },
-]
-
-const activePanel = ref(0)
+const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
 </script>

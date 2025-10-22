@@ -1,11 +1,10 @@
 <template>
-  <app-sheet
-    v-if="isWalletConnected"
-    sheet-class=" !px-4 !pt-3 pb-2 overflow-hidden "
-  >
-    <div class="flex items-center w-full justify-between mb-3">
-      <h2 class="text-s-18 font-bold">{{ title }}</h2>
-      <div class="flex items-center justify-center gap-2 order-2 xs:order-2">
+  <div class="w-full" v-if="isWalletConnected">
+    <div class="flex flex-wrap items-center w-full justify-between mb-2">
+      <h2 class="text-s-18 font-bold ml-2 xs:ml-4">{{ title }}</h2>
+      <div
+        class="flex items-center justify-center gap-2 order-2 xs:order-2 ml-auto"
+      >
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
           label="previous page"
@@ -27,23 +26,25 @@
         </app-btn-icon>
       </div>
     </div>
-    <div
-      class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end"
-    >
-      <p class="col-span-2">Token</p>
-      <p class="col-span-1">Price</p>
-      <p class="text-right col-span-1">Portfolio Gain / Loss</p>
-    </div>
-    <div v-if="!isLoading" class="min-h-[270px]">
-      <TokenRow
-        v-for="token in paginatedArray"
-        :key="token.contract + token.id"
-        class="w-full mb-2"
-        :token="token"
+    <app-sheet sheet-class="!py-4 !px-2 overflow-hidden ">
+      <div
+        class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end px-3"
       >
-      </TokenRow>
-    </div>
-    <div v-else class="bg-grey-10 rounded-2xl animate-pulse h-[270px]"></div>
+        <p class="col-span-2">Token</p>
+        <p class="col-span-1">Price</p>
+        <p class="text-right col-span-1">Portfolio Gain / Loss</p>
+      </div>
+      <div v-if="!isLoading" class="min-h-[160px]">
+        <TokenRow
+          v-for="token in paginatedArray"
+          :key="token.contract + token.id"
+          class="w-full mb-2"
+          :token="token"
+        >
+        </TokenRow>
+      </div>
+      <div v-else class="bg-grey-10 rounded-2xl animate-pulse h-[160px]"></div>
+    </app-sheet>
     <div class="flex justify-end my-1 items-center">
       <router-link
         :to="{
@@ -58,7 +59,7 @@
         <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex ml-1"
       /></router-link>
     </div>
-  </app-sheet>
+  </div>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
@@ -159,5 +160,5 @@ const topTokens = computed<TokenGainOrLoss[]>(() => {
 })
 
 const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
-  usePaginate<TokenGainOrLoss>(topTokens, 5)
+  usePaginate<TokenGainOrLoss>(topTokens, 3)
 </script>
