@@ -15,11 +15,14 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="rounded-full hoverNoBG p-2 min-w-[150px]"
+              class="rounded-full hoverNoBG p-2 xs:min-w-[140px] xs:px-3"
               @click="toggleSelect"
             >
               <div class="flex items-center justify-between">
-                <span>{{ selectedAllTokensFilter.label }}</span>
+                <span class="hidden xs:inline">{{
+                  selectedAllTokensFilter.label
+                }}</span>
+                <span class="inline xs:hidden">Filter</span>
                 <chevron-down-icon class="w-4 h-4 ml-1" />
               </div>
             </button>
@@ -185,7 +188,7 @@
           <tr
             v-for="token in paginatedArray"
             :key="token.name + token.market_cap + token.coinId + token.contract"
-            class="h-14 md:hoverBGWhite cursor-pointer"
+            class="h-14 cursor-pointer hoverBGWhite"
             @click="goToTokenPage(token)"
           >
             <!-- Watchlist -->
@@ -204,7 +207,7 @@
               </button>
             </td>
             <!-- Name & Balance -->
-            <td class="px-1 py-2" colspan="2">
+            <td class="px-1 py-2 rounded-l-12 xs:rounded-none" colspan="2">
               <router-link
                 :to="{
                   name: TOKEN_INFO_ROUTE_NAMES.home,

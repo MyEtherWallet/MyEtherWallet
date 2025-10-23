@@ -26,7 +26,7 @@
         </app-btn-icon>
       </div>
     </div>
-    <app-sheet sheet-class="!pt-4 !pb-0 !px-2 overflow-hidden ">
+    <app-sheet sheet-class="!pt-4 !pb-2 !px-2 overflow-hidden ">
       <div
         class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end px-3"
       >
@@ -38,15 +38,12 @@
         <TokenRow
           v-for="token in paginatedArray"
           :key="token.contract + token.id"
-          class="w-full mb-2"
+          class="w-full mb-2 last:mb-0"
           :token="token"
         >
         </TokenRow>
       </div>
-      <div
-        v-else
-        class="bg-grey-10 rounded-2xl animate-pulse h-[173px] mb-2"
-      ></div>
+      <div v-else class="bg-grey-10 rounded-2xl animate-pulse h-[181px]"></div>
     </app-sheet>
     <div class="flex justify-end my-1 items-center">
       <router-link
