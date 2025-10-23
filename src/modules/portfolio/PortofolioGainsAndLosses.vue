@@ -31,14 +31,14 @@
         class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end px-3"
       >
         <p class="col-span-2">Token</p>
-        <p class="col-span-1">Price</p>
+        <p class="col-span-1">Price / 24h</p>
         <p class="text-right col-span-1">Portfolio Gain / Loss</p>
       </div>
       <div v-if="!isLoading" class="min-h-[181px]">
         <TokenRow
           v-for="token in paginatedArray"
           :key="token.contract + token.id"
-          class="w-full mb-2 last:mb-0"
+          class="w-full last:mb-0"
           :token="token"
         >
         </TokenRow>
@@ -108,7 +108,7 @@ const buttonText = computed(() => {
 const walletStore = useWalletStore()
 const {
   isWalletConnected,
-  tokens,
+  allTokens,
   isLoadingBalances: isLoading,
 } = storeToRefs(walletStore)
 
@@ -136,7 +136,7 @@ const getGainOrLoss = (percent: number, contract: string) => {
 }
 
 const topTokens = computed<TokenGainOrLoss[]>(() => {
-  const _tokens = tokens.value
+  const _tokens = allTokens.value
     .filter(
       token =>
         token.price !== undefined &&
