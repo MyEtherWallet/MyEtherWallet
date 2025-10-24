@@ -85,10 +85,10 @@ export const useWalletStore = defineStore('walletStore', () => {
             token.name ?? (selectedChain.value?.currencyNameLong || 'Ether'),
           symbol:
             token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
-          balance: fromBase(token.balance, token.decimals || 18),
+          balance: fromBase(BigNumber(token.balance).toString(), token.decimals || 18),
           balanceWei: token.balance,
         }
-        balance.value = fromBase(token.balance, token.decimals || 18)
+        balance.value = fromBase(BigNumber(token.balance).toString(), token.decimals || 18)
         balanceWei.value = token.balance
       } else {
         if (token.decimals) {

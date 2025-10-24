@@ -28,7 +28,7 @@
     },
     "initiated": {
       "swap-initiated": "Swap initiated",
-      "completed-note": "Once completed, {symbol} will be deposited to the <br /> address you specified.",
+      "completed-note": "Once completed, {symbol} will be deposited to the address you specified.",
       "view-progress": "View Progress"
     },
     "swap-offer": {
@@ -38,6 +38,7 @@
       "minimum-received": "Minimum received",
       "offer-includes": "Offer includes {feePercent}% fee",
       "proceed": "Proceed With Swap",
+      "decline": "Decline Swap",
       "unknown-provider": "Unknown provider",
       "offers": "{count} other offer | {count} other offers"
     },

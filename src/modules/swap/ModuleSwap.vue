@@ -119,6 +119,7 @@
       v-model:swap-offer-open="bestOfferSelectionOpen"
       v-model:selected-quote="selectedQuote"
       @update:proceedWithSwap="proceedWithSwap"
+      @update:declineSwap="bestOfferSelectionOpen = false"
       :quotes="providers"
       :amount="fromAmount"
       :to-chain="selectedToChain"

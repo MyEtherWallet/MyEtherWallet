@@ -134,6 +134,14 @@
         >
           {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
+        <app-base-button
+          class="w-full mt-5"
+          :is-outline="true"
+          theme="error"
+          @click="declineSwap"
+        >
+          {{ t('swap.swap-offer.decline') }}
+        </app-base-button>
       </div>
     </template>
   </app-dialog>
@@ -211,7 +219,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['update:proceedWithSwap'])
+const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 const isLoading = ref(false)
 
 const providerName = computed(() => {
@@ -291,5 +299,8 @@ watch(
 const proceedWithSwap = () => {
   isLoading.value = true
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
+}
+const declineSwap = () => {
+  emits('update:declineSwap')
 }
 </script>
