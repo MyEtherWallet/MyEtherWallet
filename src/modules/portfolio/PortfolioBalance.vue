@@ -6,10 +6,10 @@
       <h1
         class="text-s-24 xs:text-s-32 font-bold rounded-32 sm:ml-4 px-2 xs:px-4 text-left"
       >
-        Your Balances
+        {{ isWalletConnected ? 'Your Balances' : 'Watchlist' }}
       </h1>
       <!--Filter Lists-->
-      <div class="hidden lg:flex lg:items-center">
+      <div v-if="isWalletConnected" class="hidden lg:flex lg:items-center">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions"
@@ -22,6 +22,7 @@
         </app-btn-group>
       </div>
       <app-select
+        v-if="isWalletConnected"
         v-model:selected="selectedCryptoFilter"
         :options="cryptoFilterOptions"
         position="right-0"
@@ -63,6 +64,11 @@ import { ref } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWalletConnected } = storeToRefs(walletStore)
 const cryptoFilterOptions = ref([
   { label: 'All Tokens', value: 'all' },
   { label: 'Stocks', value: 'stocks' },

@@ -44,13 +44,13 @@
         </div>
         <div class="text-right col-span-1">
           <p
-            class="text-s-14"
+            class="text-s-14 text-info"
             :class="{
-              'text-error': token.percentChange < 0,
-              'text-success': token.percentChange >= 0,
+              'text-error': token.gainOrLoss.isLessThan(0),
+              'text-success': token.gainOrLoss.isGreaterThan(0),
             }"
           >
-            <span v-if="token.percentChange < 0"> -</span>
+            <span v-if="token.gainOrLoss.isLessThan(0)"> -</span>
             <span v-else> +</span>${{
               formatFiatValue(token.gainOrLoss.abs()).value
             }}

@@ -10,7 +10,7 @@
           alt="MEW Card"
           width="670"
           height="424"
-          class="rounded-16 drop-shadow absolute z-0 h-[205px]"
+          class="rounded-16 drop-shadow absolute z-0 h-[205px] w-full"
           @load="animateMewCard"
         />
         <!-- wallet address, wallet menu, link to explorer-->

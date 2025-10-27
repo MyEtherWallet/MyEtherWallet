@@ -200,6 +200,13 @@ export const useWalletStore = defineStore('walletStore', () => {
     return `$${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
+  const hasBalances = computed(() => {
+    return (
+      allTokens.value.length > 1 &&
+      BigNumber(safeMainTokenBalance.value?.balanceWei || 0).isGreaterThan(0)
+    )
+  })
+
   return {
     wallet,
     walletAddress,
@@ -228,5 +235,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     formattedBalanceFiat,
     allTokens,
     hasMissingBalances,
+    hasBalances,
   }
 })

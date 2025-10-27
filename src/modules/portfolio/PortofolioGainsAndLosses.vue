@@ -42,8 +42,8 @@
           :token="token"
         >
         </TokenRow>
+        <div v-if="!hasBalances" class="text-center"></div>
       </div>
-      <div v-else class="bg-grey-10 rounded-2xl animate-pulse h-[181px]"></div>
     </app-sheet>
     <div class="flex justify-end my-1 items-center">
       <router-link
@@ -110,6 +110,7 @@ const {
   isWalletConnected,
   allTokens,
   isLoadingBalances: isLoading,
+  hasBalances,
 } = storeToRefs(walletStore)
 
 /**
