@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col w-full">
+  <div v-if="isWalletConnected" class="flex flex-col w-full">
     <div
       class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-2 mt-6 mb-4"
     >
       <h1
         class="text-s-24 xs:text-s-32 font-bold rounded-32 sm:ml-4 px-2 xs:px-4 text-left"
       >
-        {{ isWalletConnected ? 'Your Balances' : 'Watchlist' }}
+        Your Balances
       </h1>
       <!--Filter Lists-->
-      <div v-if="isWalletConnected" class="hidden lg:flex lg:items-center">
+      <div class="hidden lg:flex lg:items-center">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions"
@@ -22,7 +22,6 @@
         </app-btn-group>
       </div>
       <app-select
-        v-if="isWalletConnected"
         v-model:selected="selectedCryptoFilter"
         :options="cryptoFilterOptions"
         position="right-0"

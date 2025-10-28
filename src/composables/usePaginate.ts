@@ -33,7 +33,7 @@ export const usePaginate = <T>(
   watch(
     () => totalPages.value,
     () => {
-      if (currentPage.value >= totalPages.value) {
+      if (currentPage.value >= totalPages.value && currentPage.value > 0) {
         currentPage.value = totalPages.value - 1
       }
     },

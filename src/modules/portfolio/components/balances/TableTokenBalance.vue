@@ -36,7 +36,10 @@
         >
           Total Value
         </p>
-        <p v-if="!isLoading" class="text-s-20 font-bold sm:text-right">
+        <p
+          v-if="!isLoading"
+          class="text-s-20 font-bold sm:text-right rounded-12"
+        >
           {{ totalValue }}
         </p>
         <div
@@ -176,18 +179,15 @@
         </thead>
         <!-- Body-->
         <tbody v-if="!isLoading">
-          <div
-            v-if="
-              watchListedTokens.length === 0 &&
-              selectedAllTokensFilter.value === 'watchlist'
-            "
-            class="text-nowrap px-3"
-          >
-            <h3>No watchlisted tokens</h3>
-          </div>
           <tr
-            v-for="token in paginatedArray"
-            :key="token.name + token.market_cap + token.coinId + token.contract"
+            v-for="(token, index) in paginatedArray"
+            :key="
+              index +
+              token.name +
+              token.market_cap +
+              token.coinId +
+              token.contract
+            "
             class="h-14 cursor-pointer hoverBGWhite"
             @click="goToTokenPage(token)"
           >
@@ -360,6 +360,19 @@
           </tr>
         </tbody>
       </table>
+      <div
+        v-if="
+          paginatedArray.length === 0 &&
+          selectedAllTokensFilter.value === 'watchlist'
+        "
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-1 lg:mt-10">You dont have any watchlisted tokens.</p>
+        <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
+          >Discover more tokens
+          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+        </router-link>
+      </div>
       <!-- Loading State -->
       <div v-if="isLoading" class="">
         <div
@@ -452,10 +465,9 @@ import { useWalletStore } from '@/stores/walletStore'
 import BigNumber from 'bignumber.js'
 import { usePaginate } from '@/composables/usePaginate'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
-
-const props = defineProps<{
-  view: 'all' | 'stock' | 'watchlist'
-}>()
+import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { ROUTES_MAIN } from '@/router/routeNames'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
@@ -464,7 +476,7 @@ const walletStore = useWalletStore()
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
-  isLoadingBalances: isLoading,
+  isLoadingBalances,
   allTokens,
 } = storeToRefs(walletStore)
 
@@ -487,7 +499,18 @@ const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
  * Total Value
 -------------------------------*/
 const totalValue = computed(() => {
-  return props.view === 'all' ? formattedTotalFiatPortfolioValue.value : ''
+  if (selectedAllTokensFilter.value.value === 'all')
+    return formattedTotalFiatPortfolioValue.value
+  else if (selectedAllTokensFilter.value.value === 'watchlist') {
+    const sum = tokens.value.reduce((acc, token) => {
+      const fiatValue = BigNumber(token.fiatBalance || 0)
+      return acc.plus(fiatValue)
+    }, new BigNumber(0))
+
+    return `$${formatFiatValue(sum).value}`
+  } else {
+    return `$0.00`
+  }
 })
 
 /** -------------------------------
@@ -510,7 +533,48 @@ const setHeaderSort = (key: SortValueString) => {
   }
   headerSort.value = key
 }
+/** -------------------------------
+ * Watchlist
+-------------------------------*/
 
+const watchListStore = useWatchlistStore()
+const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
+  watchListStore
+const { watchListedTokens } = storeToRefs(watchListStore)
+
+const setWatchlistToken = (tokenId: string) => {
+  if (isWatchListed(tokenId)) {
+    removeTokenWatchList(tokenId)
+  } else {
+    addTokenToWatchList(tokenId)
+    fetchWatchlistTable()
+  }
+}
+
+/**-------------------------------
+ * Watchlist Fetch URL
+-------------------------------*/
+
+const { useMEWFetch } = useFetchMewApi()
+
+const fetchWatchListUrl = computed(() => {
+  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
+  return `${baseUrl}?coins=${watchListedTokens.value}`
+})
+
+const {
+  data: wachListMarketData,
+  isFetching: isLoadingWatchlist,
+  execute: fetchWatchlistTable,
+} = useMEWFetch(fetchWatchListUrl, {})
+  .get()
+  .json<GetWebTokensWatchlistResponse>()
+
+const isLoading = computed<boolean>(() => {
+  return selectedAllTokensFilter.value.value === 'watchlist'
+    ? isLoadingBalances.value || isLoadingWatchlist.value
+    : isLoadingBalances.value
+})
 /**-------------------------------
  * Balances Table Data
 -------------------------------*/
@@ -520,14 +584,50 @@ interface DisplayToken extends TokenBalance {
 }
 
 const tokens = computed<DisplayToken[]>(() => {
-  const tokens = [...allTokens.value].map(token => {
-    const fiatBalance = getFiatValue(token)
-    return {
-      ...token,
-      fiatBalance: fiatBalance.toNumber(),
-      fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
-    }
-  })
+  let tokens: DisplayToken[] = []
+  if (selectedAllTokensFilter.value.value === 'watchlist') {
+    tokens =
+      [...(wachListMarketData.value || [])]
+        .filter(token => watchListedTokens.value.includes(token.coinId))
+        .map(token => {
+          const hasTokenBalance = allTokens.value.filter(
+            _token => token.coinId === _token.coinId,
+          )
+          if (hasTokenBalance.length > 0) {
+            const _token = hasTokenBalance[0]
+            const fiatBalance = getFiatValue(_token)
+            return {
+              ..._token,
+              fiatBalance: fiatBalance.toNumber(),
+              fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+            }
+          }
+          return {
+            ...token,
+            fiatBalance: 0,
+            fiatBalanceFormatted: `$0.00`,
+            balanceWei: '0x',
+            balance: '0',
+            contract: '',
+            price: token.price || undefined,
+            market_cap: token.marketCap || undefined,
+            price_change_percentage_24h: token.priceChangePercentage24h || 0,
+            sparkline_in_7d: token.sparklineIn7d || [],
+            logo_url: token.logoUrl || '',
+          }
+        }) || []
+  } else if (selectedAllTokensFilter.value.value === 'customTokens') {
+    return tokens
+  } else {
+    tokens = [...allTokens.value].map(token => {
+      const fiatBalance = getFiatValue(token)
+      return {
+        ...token,
+        fiatBalance: fiatBalance.toNumber(),
+        fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+      }
+    })
+  }
 
   //Sorting
   if (headerSort.value === SortValueString.NAME) {
@@ -569,23 +669,6 @@ const getFiatValue = (token: TokenBalance): BigNumber => {
 //     text: 'The custom token feature is coming soon!',
 //   })
 // }
-
-/** -------------------------------
- * Watchlist
--------------------------------*/
-
-const watchListStore = useWatchlistStore()
-const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  watchListStore
-const { watchListedTokens } = storeToRefs(watchListStore)
-
-const setWatchlistToken = (tokenId: string) => {
-  if (isWatchListed(tokenId)) {
-    removeTokenWatchList(tokenId)
-  } else {
-    addTokenToWatchList(tokenId)
-  }
-}
 
 /** -------------------------------
  * Number of items shown in the table

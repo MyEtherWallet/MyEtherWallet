@@ -1,7 +1,5 @@
 <template>
-  <app-sheet
-    sheet-class="no-balance-gradient  bg-no-repeat bg-cover !p-0 flex items-end justify-center relative overflow-hidden"
-  >
+  <div class="!p-0 flex items-end justify-center relative overflow-hidden">
     <img
       :src="ImgEthLeft"
       class="contain max-w-[20%] place-self-start"
@@ -36,10 +34,9 @@
       </div>
     </div>
     <img :src="ImgEthRight" class="contain max-w-[20%]" />
-  </app-sheet>
+  </div>
 </template>
 <script setup lang="ts">
-import AppSheet from '@/components/AppSheet.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -47,20 +44,3 @@ import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 const { isDesktopAndUp } = useAppBreakpoints()
 </script>
-<style scoped>
-.no-balance-gradient {
-  background:
-    radial-gradient(
-      circle 500px at 50% 100%,
-      rgba(255, 255, 255, 0.5) 60%,
-      transparent 100%
-    ),
-    linear-gradient(to bottom, transparent, rgba(255, 255, 255, 1) 190px),
-    linear-gradient(
-      to right,
-      rgba(90, 197, 210, 1) 0%,
-      rgba(149, 206, 253, 1) 50%,
-      rgba(126, 138, 250, 1) 100%
-    );
-}
-</style>

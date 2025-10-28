@@ -27,7 +27,7 @@
         </p>
       </div>
     </div>
-    <p class="text-info text-center text-s-12 mt-10">Chart is coming soon</p>
+    <p class="text-info text-center text-s-12 my-10">Chart is coming soon</p>
     <!-- <history-chart :data="tempData" /> -->
   </app-sheet>
 </template>
