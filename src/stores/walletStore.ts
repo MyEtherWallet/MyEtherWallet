@@ -8,6 +8,8 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
 import { fromBase } from '@/utils/unit'
+import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
+import { useRecentAddressStore } from './recentAddressStore'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -18,20 +20,37 @@ export const useWalletStore = defineStore('walletStore', () => {
   const mainTokenBalance = ref<TokenBalance | null>(null)
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
+  const isWatchOnly = ref(false);
 
   /** -------------------------------
   * The Wallet
   -------------------------------*/
   const setWallet = (newWallet: WalletInterface) => {
+    if (newWallet instanceof WatchOnlyWallet) {
+      isWatchOnly.value = true;
+    } else {
+      isWatchOnly.value = false;
+    }
     wallet.value = newWallet
     setAddress()
   }
 
   const removeWallet = () => {
-    wallet.value?.disconnect()
-    wallet.value = null
-    walletAddress.value = null
-    removeTokens()
+    const { selectedChain } = storeToRefs(useChainsStore())
+    if (!(wallet.value instanceof WatchOnlyWallet)) {
+      isWatchOnly.value = true;
+      wallet.value?.disconnect()
+      const address = walletAddress.value;
+      const walletType = wallet.value?.getWalletType();
+      wallet.value = null
+      walletAddress.value = null
+      const watchOnlyWallet = new WatchOnlyWallet(address as string, selectedChain.value!, walletType!)
+      setWallet(watchOnlyWallet)
+    } else {
+      wallet.value = null
+      walletAddress.value = null
+      removeTokens()
+    }
   }
 
   const isWalletConnected = computed(() => {
@@ -43,7 +62,10 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
+      const { addWallet: _addWallet } = useRecentAddressStore();
+      const { selectedChain } = storeToRefs(useChainsStore())
       walletAddress.value = await wallet.value.getAddress()
+      _addWallet(walletAddress.value, selectedChain.value!, wallet.value.getWalletType());
     }
   }
 
@@ -213,5 +235,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     formattedTotalFiatPortflioValue,
     formattedBalance,
     formattedBalanceFiat,
+    isWatchOnly,
   }
 })

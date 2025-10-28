@@ -88,7 +88,9 @@
   "home": "Home",
   "connect_wallet": "Connect wallet",
   "disconnect_wallet": "Disconnect wallet",
+  "delete_watch_only_wallet": "Delete Watch Only Wallet",
   "connected_wallet": "Connected Wallet",
+  "watch_only_wallet": "Watch Only Wallet",
   "view_in_block_explorer": "View in block explorer",
   "refresh_balance": "Refresh Balance",
   "select_token": {

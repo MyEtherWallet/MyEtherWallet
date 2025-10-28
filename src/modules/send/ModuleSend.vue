@@ -36,7 +36,7 @@
         </div>
       </div>
       <app-base-button
-        v-if="isWalletConnected"
+        v-if="isWalletConnected && !isWatchOnly"
         :disabled="!validSend"
         :is-loading="isLoadingFees"
         @click="handleSubmit"
@@ -105,8 +105,13 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
-const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
-  storeToRefs(walletStore)
+const {
+  wallet,
+  isWalletConnected,
+  isLoadingBalances,
+  balanceWei,
+  isWatchOnly,
+} = storeToRefs(walletStore)
 
 /** ----------------
  * Current Selected Fee

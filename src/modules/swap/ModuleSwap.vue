@@ -84,7 +84,7 @@
       </div>
       <app-base-button
         class="w-[70%]"
-        v-if="isWalletConnected"
+        v-if="isWalletConnected && !isWatchOnly"
         :disabled="
           (swapLoaded && !supportedNetwork) ||
           !(
@@ -187,7 +187,8 @@ const toastStore = useToastStore()
 const { t } = useI18n()
 
 const { gasPriceType } = storeToRefs(globalStore)
-const { isWalletConnected, walletAddress, wallet } = storeToRefs(walletStore)
+const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
+  storeToRefs(walletStore)
 const { selectedChain, isBitcoinChain } = storeToRefs(chainsStore)
 const {
   initSwapper,

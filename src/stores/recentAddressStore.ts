@@ -2,50 +2,48 @@ import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import type { Chain } from '@/mew_api/types'
 
-
-interface AddressKeyMap {
-  [key: string]: string
+interface AddressKeyValue {
+  walletName: string;
+  chain: Chain;
 }
-type ChainType = 'EVM' | 'BITCOIN' | 'SOLANA' | 'POLKADOT' | 'KADENA'
-type RecentAddresses = Record<ChainType, AddressKeyMap[]>
+
+interface AddressKey {
+  [key: string]: AddressKeyValue;
+}
+interface RecentAddress {
+  [key: string]: AddressKey;
+}
 export const useRecentAddressStore = defineStore(
   'useRecentAddressStore',
   () => {
-    const recentAddresses = useLocalStorage<RecentAddresses>(
-      'recentAddresses',
-      {
-        EVM: [],
-        BITCOIN: [],
-        SOLANA: [],
-        POLKADOT: [],
-        KADENA: [],
-      },
-      {
-        mergeDefaults: true,
-      },
-    )
+    const recentAddresses = useLocalStorage<RecentAddress>('recentAddresses', {
+      EVM: {},
+      BITCOIN: {},
+      SOLANA: {},
+      POLKADOT: {},
+      KADENA: {},
+    }, {
+      mergeDefaults: true,
+    })
 
     // Takes address to store, chain type to store under, and wallet name
     // to allow easy opening for the popup
     const addWallet = (address: string, chain: Chain, walletName: string) => {
-      const addressKeyMap: AddressKeyMap = {};
-      addressKeyMap[address] = walletName;
+      const addressKeyMap: AddressKeyValue = { walletName, chain };
 
 
-      const key = chain.type as ChainType
-      if (recentAddresses.value[key]) {
-        recentAddresses.value[key].push(addressKeyMap)
+      if (recentAddresses.value[chain.type]) {
+        recentAddresses.value[chain.type][address] = addressKeyMap
       } else {
-        recentAddresses.value[key] = [addressKeyMap]
+        recentAddresses.value[chain.type] = {
+          [address]: addressKeyMap
+        }
       }
     }
 
     const removeWallet = (address: string, chain: Chain) => {
-      const key = chain.type as ChainType
-      if (recentAddresses.value[key]) {
-        recentAddresses.value[key] = recentAddresses.value[key].filter(
-          (item) => !item[address]
-        )
+      if (recentAddresses.value[chain.type]) {
+        delete recentAddresses.value[chain.type][address]
       }
     }
 

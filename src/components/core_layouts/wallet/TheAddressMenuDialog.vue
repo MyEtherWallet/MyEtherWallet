@@ -3,7 +3,7 @@
     <app-dialog
       v-if="isWalletConnected"
       v-model:is-open="openDialog"
-      :title="$t('connected_wallet')"
+      :title="isWatchOnly ? $t('watch_only_wallet') : $t('connected_wallet')"
       class="xs:max-w-[428px] sm:mx-auto"
     >
       <template #content>
@@ -114,14 +114,23 @@
           >
             <p class="text-s-14">{{ $t('switch_connected_address') }}</p>
           </button>
-          <div class="flex items-center justify-center mt-6">
+          <div class="flex items-center justify-center mt-3" v-if="isWatchOnly">
+            <app-base-button is-outline size="medium" @click="openAccess">
+              {{ $t('connect_wallet') }}</app-base-button
+            >
+          </div>
+          <div class="flex items-center justify-center mt-3">
             <app-base-button
               theme="error"
               is-outline
               size="medium"
               @click="disconnectWallet"
             >
-              {{ $t('disconnect_wallet') }}</app-base-button
+              {{
+                isWatchOnly
+                  ? $t('delete_watch_only_wallet')
+                  : $t('disconnect_wallet')
+              }}</app-base-button
             >
           </div>
         </div>
@@ -157,6 +166,7 @@ import { type WalletPanel, useWalletMenuStore } from '@/stores/walletMenuStore'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { useRecentAddressStore } from '@/stores/recentAddressStore'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -172,6 +182,7 @@ const {
   mainTokenBalance,
   tokens,
   isLoadingBalances,
+  isWatchOnly,
 } = storeToRefs(store)
 
 /** -------------------------------
@@ -212,6 +223,11 @@ const canSwitchAddress = computed(() => {
   )
 })
 
+const openAccess = () => {
+  openAccessDialog()
+  closeDialog()
+}
+
 const accessStore = useAccessStore()
 const { setCurrentView, openAccessDialog } = accessStore
 const switchAddress = () => {
@@ -245,6 +261,15 @@ const openWalletMenu = (walletPanel: WalletPanel) => {
   closeDialog()
 }
 const disconnectWallet = () => {
+  if (isWatchOnly.value) {
+    // add delete watch only wallet here
+    const recentAddressStore = useRecentAddressStore()
+    recentAddressStore.removeWallet(
+      walletAddress.value as string,
+      selectedChain.value!,
+    )
+    openDialog.value = false
+  }
   store.removeWallet()
   openDialog.value = false
 }

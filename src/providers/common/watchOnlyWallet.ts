@@ -23,12 +23,14 @@ import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 import type { Provider } from '@/stores/providerStore'
 import type HWwalletManager from '@enkryptcom/hw-wallets'
 
-class FakeWallet implements WalletInterface {
-  address: HexPrefixedString
+class WatchOnlyWallet implements WalletInterface {
+  address: string
   chain: Chain
-  constructor(address: HexPrefixedString, chain: Chain) {
+  walletType: WalletType
+  constructor(address: string, chain: Chain, walletType: WalletType) {
     this.address = address
     this.chain = chain
+    this.walletType = walletType
   }
   updateChainId: (chainId: string) => void = () => { }
   getWalletInstance?: (() => HWwalletManager | null) | undefined
@@ -134,10 +136,10 @@ class FakeWallet implements WalletInterface {
     throw new Error('Method not implemented: SignMessage')
   }
   getAddress(): Promise<string> {
-    throw new Error('Method not implemented: getAddress')
+    return Promise.resolve(this.address)
   }
   getWalletType(): WalletType {
-    throw new Error('Method not implemented: getWalletType')
+    return this.walletType
   }
   getProvider(): string {
     const chainStore = useChainsStore()
@@ -163,4 +165,4 @@ class FakeWallet implements WalletInterface {
   }
 }
 
-export default FakeWallet
+export default WatchOnlyWallet
