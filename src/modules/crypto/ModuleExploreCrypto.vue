@@ -46,10 +46,10 @@
               >
                 <template #select-button="{ toggleSelect }">
                   <button
-                    class="rounded-full hoverNoBG p-2"
+                    class="rounded-full hoverNoBG p-3"
                     @click="toggleSelect"
                   >
-                    <div class="flex items-center">
+                    <div class="flex items-center text-s-16">
                       <span>More</span>
                       <chevron-down-icon class="w-4 h-4 ml-1" />
                     </div>

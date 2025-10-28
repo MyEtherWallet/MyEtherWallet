@@ -7,7 +7,7 @@
       <div class="flex items-end gap-1">
         <h2 class="text-s-20 font-bold">History</h2>
         <app-tooltip
-          text="Aproximate values based on current token holdings."
+          text="Approximate values based on current token holdings."
         />
       </div>
       <div class="text-right">

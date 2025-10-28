@@ -146,7 +146,6 @@ enum SortValueString {
   NAME = 'Name',
   SYMBOL = 'Symbol',
   ALLOCATION = 'Allocation',
-  USD = 'USD Balance',
 }
 
 const sortOptions = computed(() => {
@@ -162,10 +161,6 @@ const sortOptions = computed(() => {
     {
       value: SortValueString.ALLOCATION,
       label: t('common.allocation'),
-    },
-    {
-      value: SortValueString.USD,
-      label: t('common.usd_balance'),
     },
   ]
 })
@@ -214,13 +209,6 @@ const searchResults = computed<TokenAllocation[]>(() => {
       return sortObjectArrayNumber(
         props.tokens,
         'percentageNumber',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.USD) {
-      return sortObjectArrayNumber(
-        props.tokens,
-        'usdBalanceRaw',
         activeSortDirection.value,
       )
     }

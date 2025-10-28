@@ -30,8 +30,8 @@ export const sortObjectArrayNumber = <T>(
   })
   if (flagHasUndefined) {
     const defined = sorted.filter(item => !isNaN(Number(item[key])))
-    const undefined = sorted.filter(item => isNaN(Number(item[key])))
-    return [...defined, ...undefined]
+    const undefinedItems = sorted.filter(item => isNaN(Number(item[key])))
+    return [...defined, ...undefinedItems]
   }
   return sorted
 }

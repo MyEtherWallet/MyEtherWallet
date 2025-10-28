@@ -82,7 +82,11 @@ const { selectedChain } = storeToRefs(chainsStore)
 const { isDesktopAndUp } = useAppBreakpoints()
 
 const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com', '_blank')
+  window.open(
+    'https://ccswap.myetherwallet.com',
+    '_blank',
+    'noopener,noreferrer',
+  )
 }
 </script>
 <style scoped>

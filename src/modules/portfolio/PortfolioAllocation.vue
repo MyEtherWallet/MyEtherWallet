@@ -91,7 +91,6 @@ const topTokens = computed<TokenAllocation[]>(() => {
       percentageNumber: percentage.toNumber(),
       id: token.coinId,
       usdBalanceFormatted: formatFiatValue(tokenBalanceFiatBN).value,
-      usdBalanceRaw: tokenBalanceFiatBN.toString(),
     }
   })
 
@@ -107,7 +106,6 @@ const topTokens = computed<TokenAllocation[]>(() => {
     percentageNumber: mainBalancePercentage.toNumber(),
     id: safeMainTokenBalance.value.coinId,
     usdBalanceFormatted: formattedBalanceFiat.value,
-    usdBalanceRaw: formattedBalanceFiat.value,
   })
 
   _tokens.sort((a, b) => {

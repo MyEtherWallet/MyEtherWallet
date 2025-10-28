@@ -36,8 +36,8 @@
       v-if="isWalletConnected"
       class="flex flex-col lg-max:flex-row gap-4 mt-7"
     >
-      <portofolio-gains-and-losses type="all" />
-      <portofolio-gains-and-losses type="stock" />
+      <portfolio-gains-and-losses type="all" />
+      <portfolio-gains-and-losses type="stock" />
     </div>
     <div v-else>
       <connect-wallet />
@@ -50,7 +50,7 @@
 import AppWalletCard from '@/components/AppWalletCard.vue'
 import PortfolioHistory from '@/modules/portfolio/PortfolioHistory.vue'
 import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'
-import PortofolioGainsAndLosses from '@/modules/portfolio/PortofolioGainsAndLosses.vue'
+import PortfolioGainsAndLosses from '@/modules/portfolio/PortfolioGainsAndLosses.vue'
 import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import ConnectWallet from '@/modules/portfolio/components/ConnectWallet.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'

@@ -7,7 +7,6 @@ export interface TokenAllocation {
   percentage: BigNumber
   formattedPercentage: string
   percentageNumber: number
-  usdBalanceRaw: string
   usdBalanceFormatted: string
   id?: string
 }

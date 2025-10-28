@@ -27,6 +27,7 @@ import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
+import { useTimeoutFn } from '@vueuse/core'
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -38,8 +39,13 @@ const { wallet, walletAddress, isWalletConnected, hasMissingBalances } =
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
 
+const { isPending, start, stop } = useTimeoutFn(() => {
+  fetchBalances()
+}, 300000)
+
 const fetchBalances = () => {
   setIsLoadingBalances(true)
+  stop()
   wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
     setTokens(balances.result)
     setIsLoadingBalances(false)
@@ -54,10 +60,10 @@ const fetchBalances = () => {
           duration: 300000,
         })
       }, 2000)
-
-      setTimeout(() => {
-        fetchBalances()
-      }, 300000)
+      if (isPending.value) {
+        stop()
+      }
+      start()
     }
   })
 }
