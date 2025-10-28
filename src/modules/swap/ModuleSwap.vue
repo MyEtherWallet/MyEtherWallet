@@ -662,6 +662,11 @@ const fromAmountError = computed(() => {
 
   if (BigInt(baseAmount) < 0)
     return t('swap.error.more-than-zero') // amount less than 0
+  else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
+    return t('swap.error.insufficient-native', {
+      symbol: fromTokenSelected.value.symbol,
+    })
+  // amount greater than selected balance
   else if (
     providers.value.length === 0 &&
     fromAmount.value !== '0' &&
@@ -689,14 +694,7 @@ const fromAmountError = computed(() => {
       )
         return t('swap.error.maximum-amount') // amount less than min amount
     }
-  } else if (
-    isWalletConnected.value &&
-    BigInt(baseBalance) < BigInt(baseAmount)
-  )
-    return t('swap.error.insufficient-native', {
-      symbol: fromTokenSelected.value.symbol,
-    })
-  // amount greater than selected balance
+  }
   return ''
 })
 
