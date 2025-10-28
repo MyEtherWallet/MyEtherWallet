@@ -191,7 +191,7 @@ export default {
       this.trackStaking(STAKING.STAKE_CENTER_MORE_ABOUT);
     },
     /**
-     * defaultName is used to route to dapps that has defalt child route
+     * defaultName is used to route to dapps that has default child route
      */
     checkIfNew(release) {
       return isNew(release);

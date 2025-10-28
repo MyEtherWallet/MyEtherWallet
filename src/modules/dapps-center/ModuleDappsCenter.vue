@@ -137,7 +137,7 @@ export default {
       this.$router.push({ name: name });
     },
     /**
-     * defaultName is used to route to dapps that has defalt child route
+     * defaultName is used to route to dapps that has default child route
      */
     dappName(dapp) {
       return dapp.name || dapp.defaultName;
