@@ -14,21 +14,21 @@
 import TheAppLayout from '@components/core_layouts/TheAppLayout.vue'
 import ModuleToast from './modules/toast/ModuleToast.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { type BitcoinBalanceResponse, type ChainsRaw } from '@/mew_api/types'
+import { type ChainsRaw } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { onMounted, watch, ref } from 'vue'
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { type TokenBalancesRaw } from '@/mew_api/types'
+
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
-import { fromBase } from './utils/unit'
-import BigNumber from 'bignumber.js'
+
+import useBalanceHandler from './utils/balanceHandler'
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -43,38 +43,9 @@ const isLoadingComplete = ref(false)
 
 const fetchBalances = () => {
   setIsLoadingBalances(true)
-  wallet.value
-    ?.getBalance()
-    .then((balances: TokenBalancesRaw | BitcoinBalanceResponse) => {
-      if ((balances as TokenBalancesRaw).result) {
-        setTokens((balances as TokenBalancesRaw).result)
-      } else {
-        // reformatted to be compatible with TokenBalancesRaw
-        // TODO: replace once it gets fixed in the API
-        const percent = fromBase(
-          (balances as BitcoinBalanceResponse).balance.nativeValue,
-          8,
-        )
-        const btcBalances = {
-          balance: (balances as BitcoinBalanceResponse).balance.nativeValue,
-          contract: MAIN_TOKEN_CONTRACT,
-          logo_url: selectedChain.value?.icon || '',
-          decimals: 8,
-          name: selectedChain.value?.name || 'Bitcoin',
-          symbol: (balances as BitcoinBalanceResponse).balance.nativeSymbol,
-          price: parseFloat(
-            BigNumber(
-              (balances as BitcoinBalanceResponse).balance?.fiatValue || '0',
-            )
-              .dividedBy(BigNumber(percent))
-              .decimalPlaces(2)
-              .toString(),
-          ),
-        }
-        setTokens([btcBalances])
-      }
-      setIsLoadingBalances(false)
-    })
+  wallet.value?.getBalance().then(res => {
+    useBalanceHandler(res, setTokens, setIsLoadingBalances)
+  })
 }
 
 watch(

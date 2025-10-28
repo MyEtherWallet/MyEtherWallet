@@ -149,7 +149,10 @@ class WatchOnlyWallet implements WalletInterface {
 
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
+    const btcEndpoint = `/v1/btc/${this.getProvider()}/balances/${address}/?noInjectErrors=false`
+    const evmEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
+    // TODO: add DOT and SOL support
+    const balanceEndpoint = this.chain.type === 'BITCOIN' ? btcEndpoint : evmEndpoint
     return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -111,6 +111,7 @@ import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 import { useChainsStore } from '@/stores/chainsStore'
+import useBalanceHandler from '@/utils/balanceHandler'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
@@ -134,8 +135,7 @@ const { selectedChain } = storeToRefs(chainsStore)
 const fetchBalances = () => {
   setIsLoadingBalances(true)
   wallet.value?.getBalance().then(balances => {
-    setTokens(balances.result)
-    setIsLoadingBalances(false)
+    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
   })
 }
 /**

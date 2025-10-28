@@ -167,6 +167,7 @@ import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { useRecentAddressStore } from '@/stores/recentAddressStore'
+import useBalanceHandler from '@/utils/balanceHandler'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -277,8 +278,7 @@ const disconnectWallet = () => {
 const fetchBalances = () => {
   setIsLoadingBalances(true)
   wallet.value?.getBalance().then(balances => {
-    setTokens(balances.result)
-    setIsLoadingBalances(false)
+    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
   })
 }
 const closeDialog = () => {
