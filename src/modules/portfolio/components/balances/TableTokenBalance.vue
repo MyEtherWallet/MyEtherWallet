@@ -646,7 +646,6 @@ const tokens = computed<DisplayToken[]>(() => {
   if (headerSort.value === SortValueString.VALUE) {
     return sortObjectArrayNumber(tokens, 'fiatBalance', tableDirection.value)
   }
-
   return tokens
 })
 

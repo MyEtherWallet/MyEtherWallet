@@ -153,7 +153,7 @@
         <div>
           <div
             v-show="tokens.length > paginatedTokens.length"
-            class="h-[44px] w-[444px] sm:h-[44px] sm:w-[444px] flex items-center justify-center bg-grey-5 rounded-xl mb-5"
+            class="h-[44px] w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-grey-5 rounded-full mt-1 mb-5"
             :class="{
               'cursor-pointer': !loadingMoreItems,
             }"
