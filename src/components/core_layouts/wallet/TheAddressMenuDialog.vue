@@ -40,7 +40,7 @@
               v-if="!isLoadingBalances"
               class="font-semibold text-s-32 h-[42px]"
             >
-              {{ formattedTotalFiatPortflioValue }}
+              {{ formattedTotalFiatPortfolioValue }}
               <!-- Update balances -->
               <app-btn-icon
                 :label="$t('refresh_balance')"
@@ -178,7 +178,7 @@ const {
   wallet,
   isWalletConnected,
   walletAddress,
-  formattedTotalFiatPortflioValue,
+  formattedTotalFiatPortfolioValue,
   formattedBalance,
   mainTokenBalance,
   tokens,

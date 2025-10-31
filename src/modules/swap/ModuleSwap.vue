@@ -66,7 +66,9 @@
             <address-input
               v-model:adr-input="userToAddress"
               :resolved-address="toAddress"
+              :found-nick-name="foundNickName"
               :address-error-messages="toAddressError"
+              :network="selectedToChain"
               @validate:address="validateToAddress"
               v-if="isCrossChain"
             />
@@ -176,9 +178,10 @@ import dataTxAction from '@/utils/dataTxAction'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useAddressBookStore } from '@/stores/addressBook'
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
-
+const { inAddressBook } = useAddressBookStore()
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()
 const chainsStore = useChainsStore()
@@ -217,6 +220,7 @@ const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
 
 const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
+const foundNickName = ref('')
 
 const setToToken = () => {
   if (!selectedToChain.value) {
@@ -524,6 +528,16 @@ const toAddress = computed(() => {
 
   return userToAddress.value || ''
 })
+
+watch(
+  () => toAddress.value,
+  newval => {
+    foundNickName.value = ''
+    foundNickName.value =
+      inAddressBook(newval || '', selectedToChain.value?.type || '') || ''
+  },
+  { immediate: true },
+)
 
 const toLoadingState = computed(() => {
   if (isLoadingQuotes.value) {

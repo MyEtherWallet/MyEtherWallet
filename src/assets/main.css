@@ -16,6 +16,7 @@
   zoom: 1;
   background-color: #f5f5f7;
   color: rgba(0, 0, 0, 1);
+  box-sizing: border-box;
 }
 
 /**

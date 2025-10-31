@@ -123,7 +123,7 @@ class BaseEvmWallet implements WalletInterface {
 
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
+    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
     return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
 

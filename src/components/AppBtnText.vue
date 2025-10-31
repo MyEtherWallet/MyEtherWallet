@@ -2,7 +2,7 @@
   <button
     :class="[
       isLarge ? 'py-3 px-5' : 'py-1  px-3',
-      ' rounded-full  text-black transition-[background] duration-300 hoverNoBG',
+      ' rounded-full text-black transition-[background] duration-300 hoverNoBG',
       { '!text-info': disabled },
     ]"
     :disabled="disabled"

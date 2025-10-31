@@ -10,7 +10,7 @@
       },
       isLoading ? 'animate-pulse' : 'shadow-token',
     ]"
-    class="rounded-full overflow-hidden"
+    class="rounded-full overflow-hidden flex-none"
   >
     <p v-if="!image" class="text-info font-medium text-center uppercase">
       {{ getSymbol() }}
@@ -39,11 +39,11 @@ const props = defineProps({
   },
   width: {
     type: String,
-    default: 'w-7',
+    default: 'w-6 xs:w-8',
   },
   height: {
     type: String,
-    default: 'h-7',
+    default: 'h-6 xs:h-8',
   },
 })
 

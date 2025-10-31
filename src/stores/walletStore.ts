@@ -21,6 +21,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
   const isWatchOnly = ref(false);
+  const hasMissingBalances = ref(false)
 
   /** -------------------------------
   * The Wallet
@@ -99,6 +100,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
   const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
     const newTokenCopy: Array<TokenBalance> = []
+    hasMissingBalances.value = false
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
         const _balance = fromBase(BigNumber(token.balance).toString(), token.decimals || 18);
@@ -125,11 +127,22 @@ export const useWalletStore = defineStore('walletStore', () => {
               token.decimals,
             ),
           })
+        } else {
+          hasMissingBalances.value = true
         }
       }
     })
     tokens.value = newTokenCopy
   }
+
+  const allTokens = computed<Array<TokenBalance>>(() => {
+    const all = []
+    if (mainTokenBalance.value) {
+      all.push(mainTokenBalance.value)
+    }
+    all.push(...tokens.value)
+    return all
+  })
 
   const removeTokens = () => {
     tokens.value = []
@@ -192,9 +205,9 @@ export const useWalletStore = defineStore('walletStore', () => {
   //TODO: add proper formatting for fiat values
 
   /**
-   * @formattedTotalFiatPortflioValue - the total portfolio value in fiat, formatted .
+   * @formattedTotalFiatPortfolioValue - the total portfolio value in fiat, formatted .
    */
-  const formattedTotalFiatPortflioValue = computed<string>(() => {
+  const formattedTotalFiatPortfolioValue = computed<string>(() => {
     return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
@@ -207,6 +220,13 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const formattedBalanceFiat = computed<string>(() => {
     return `$${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+  })
+
+  const hasBalances = computed(() => {
+    return (
+      allTokens.value.length > 1 &&
+      BigNumber(safeMainTokenBalance.value?.balanceWei || 0).isGreaterThan(0)
+    )
   })
 
   return {
@@ -232,9 +252,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     balanceFiatBN,
     totalFiatPortfolioValueBN,
     // Formatted values
-    formattedTotalFiatPortflioValue,
+    formattedTotalFiatPortfolioValue,
     formattedBalance,
     formattedBalanceFiat,
     isWatchOnly,
+    allTokens,
+    hasMissingBalances,
+    hasBalances,
   }
 })

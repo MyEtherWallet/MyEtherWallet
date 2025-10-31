@@ -24,6 +24,7 @@
             :resolved-address="toAddress"
             :address-error-messages="toAddressError"
             :network="selectedChain"
+            :found-nick-name="foundNickName"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
           />
@@ -121,9 +122,11 @@ const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 
 // stored inputs
 import { useInputStore } from '@/stores/inputStore'
+import { useAddressBookStore } from '@/stores/addressBook'
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
+const { inAddressBook } = useAddressBookStore()
 
 const chainsStore = useChainsStore()
 const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
@@ -143,6 +146,7 @@ const isLoadingFees = ref(false)
 
 const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
+const foundNickName = ref('')
 
 /** ----------------
  * Address Input
@@ -315,7 +319,11 @@ watchDebounced(
   () => [tokenSelected.value, amount.value, toAddress.value],
   async () => {
     gasFeeError.value = ''
+    foundNickName.value = ''
     const body = getTxRequestBody()
+    foundNickName.value =
+      inAddressBook(toAddress.value || '', selectedChain.value?.type || '') ||
+      ''
     if (!body) return
     gasFeeTxEstimate.value = body
   },

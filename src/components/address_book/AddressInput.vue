@@ -85,13 +85,14 @@
         }"
         class="text-[10px] xs:text-s-12 leading-[23px] pl-5"
       >
-        {{ addressErrorMessages || resolvedAddress }}
+        {{ addressErrorMessages || foundNickName || resolvedAddress }}
       </p>
     </transition>
+
     <address-book-dialog
       v-if="hasAddressBook"
       v-model:is-open="isAddressBookOpen"
-      :network="network"
+      :network="networkChain"
       :selected-address="adrInput"
       @set-selected="setAddress"
     />
@@ -135,6 +136,11 @@ import { useInFocusInput } from '@/composables/useInFocusInput'
 import AppBtnIcon from '@components/AppBtnIcon.vue'
 import AddressBookDialog from './AddressBookDialog.vue'
 import type { Chain } from '@/mew_api/types'
+import { storeToRefs } from 'pinia'
+
+import { useChainsStore } from '@/stores/chainsStore'
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
 
 const props = defineProps({
   label: {
@@ -155,6 +161,10 @@ const props = defineProps({
   network: {
     type: Object as PropType<Chain>,
   },
+  foundNickName: {
+    type: String,
+    default: '',
+  },
 })
 
 const emit = defineEmits([
@@ -172,6 +182,11 @@ const addressBlockie = computed(() => {
   const addressToCheck = adrInput.value || props.resolvedAddress
   if (!addressToCheck) return ''
   return createIcon(addressToCheck)
+})
+
+const networkChain = computed(() => {
+  console.log('props.network', props.network)
+  return props.network || selectedChain.value
 })
 
 const clearAdrInput = () => {

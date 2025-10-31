@@ -26,7 +26,7 @@ interface FormattedNumber {
  * Constants
  * ---------------------------------
  */
-const SmallNumberBreakpoint = 0.000001
+const SmallNumberBreakpoint = 0.0001
 const SmallFiatBreakpoint = 0.01
 const TenThousand = 1e4
 const OneMillion = 1e6
@@ -108,7 +108,7 @@ const formatIntegerValue = (_value: string | number | BigNumber) => {
 
 /**
  * GROUP III: Floating point values
- * Converts a floating point value to a FormattedNumber object. Returns formatted value, unless the value is less then 0.000001.
+ * Converts a floating point value to a FormattedNumber object. Returns formatted value, unless the value is less then 0.0001.
  * Show upto 6 decimal points or to the last decimal point. Ie: 1.3 should be shown as 1.3. Follows Group II (formatIntegerValue) if value is greater than 1 million.
  * Use cases: Token Balances / Quantities / Tx fee/ Tx amount
  * @param {any} _value number to convert takes BigNumber || string || number
@@ -151,7 +151,7 @@ const formatFloatingPointValue = (
   }
 
   /**
-   * Case V: value >= 0.0000001
+   * Case V: value >= 0.0001
    * Return: a number, rounded up to 7 decimal places and tooltip with full value if > 7 decimal places
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
@@ -159,8 +159,8 @@ const formatFloatingPointValue = (
   }
 
   /**
-   * Case V: value < 0.000001
-   * Return: string "< 0.000001" and tooltip with full value
+   * Case V: value <0.0001
+   * Return: string "< 0.0001" and tooltip with full value
    */
   return {
     value: `< ${SmallNumberBreakpoint}`,
@@ -212,7 +212,7 @@ const formatBalanceEthValue = (
     }
   }
   /**
-   * Case IV: 0.00000001 ETH <= x < 0.000001 ETH
+   * Case IV: 0.00000001 ETH <= x < 0.0001 ETH
    * Return: rounded number to 8 dps
    */
   if (value.isLessThan(OneTrillion)) {
@@ -225,7 +225,7 @@ const formatBalanceEthValue = (
   }
 
   /**
-   * Case V: x >= 0.000001 ETH
+   * Case V: x >= 0.0001 ETH
    * Return: formatFloatingPointValue
    */
   return formatFloatingPointValue(ethValue)
@@ -358,7 +358,7 @@ const formatPercentageValue = (
 /**
  * GROUP VII: Fiat Values
  * Converts a fiat value to a FormattedNumber
- * Shows upto 6 decimal points or to the last decimal point on 0.000001 <= X < 0.01.
+ * Shows upto 6 decimal points or to the last decimal point on 0.0001 <= X < 0.01.
  * Shows 2 decimal points or to the last decimal point on 0.01 <= X < 1,000,000.
  * @param _value: BigNumber
  * @returns Object FormattedNumber with value as formatted string and tooltipText
@@ -406,7 +406,7 @@ const formatFiatValue = (
   }
 
   /**
-   * Case VI: 0.000001  <= value < 0.01
+   * Case VI: 0.0001  <= value < 0.01
    * Return: rounded number up to 6 decimal points", no tooltip
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
@@ -418,12 +418,12 @@ const formatFiatValue = (
     //     ...options
     //   })
     // };
-    return { ...getRoundNumber(value, 6), ...options }
+    return { ...getRoundNumber(value, 4), ...options }
   }
 
   /**
-   * Case V: value < 0.0000001
-   * Return: string "< $0.0000001" and tooltip with full value with tooltip
+   * Case V: value < 0.0001
+   * Return: string "< $0.0001" and tooltip with full value with tooltip
    */
   //todo
   // return {
@@ -452,7 +452,7 @@ const formatFiatValue = (
 const convertToMillions = (value: BigNumber): FormattedNumber => {
   const result = value.dividedBy(OneMillion)
   return {
-    value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.M}`,
+    value: `${getRoundNumber(result, 2).value}${FormattedNumberUnit.M}`,
     tooltipText: value.toFormat(),
   }
 }
@@ -465,7 +465,7 @@ const convertToMillions = (value: BigNumber): FormattedNumber => {
 const convertToBillions = (value: BigNumber): FormattedNumber => {
   const result = value.dividedBy(OneBillion)
   return {
-    value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.B}`,
+    value: `${getRoundNumber(result, 2).value}${FormattedNumberUnit.B}`,
     tooltipText: value.toFormat(),
   }
 }
@@ -477,7 +477,7 @@ const convertToBillions = (value: BigNumber): FormattedNumber => {
 const convertToTrillions = (value: BigNumber): FormattedNumber => {
   const result = value.dividedBy(OneTrillion)
   return {
-    value: `${getRoundNumber(result, 4).value}${FormattedNumberUnit.T}`,
+    value: `${getRoundNumber(result, 2).value}${FormattedNumberUnit.T}`,
     tooltipText: value.toFormat(),
   }
 }

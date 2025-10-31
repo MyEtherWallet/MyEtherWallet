@@ -1,12 +1,12 @@
 <template>
   <div>
     <hr
-      v-if="!isLoading && tokenData?.supportedChains.length"
+      v-if="!isLoading && tokenData?.supportedChains?.length"
       class="h-px bg-grey-10 border-0 w-full my-5"
     />
     <!-- Supported Chains -->
     <div
-      v-if="!isLoading && tokenData?.supportedChains.length"
+      v-if="!isLoading && tokenData?.supportedChains?.length"
       class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5"
     >
       <h3 class="text-s-20 font-bold mb-2">Supported Chains</h3>

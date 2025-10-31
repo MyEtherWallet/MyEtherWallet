@@ -1,7 +1,7 @@
 <template>
   <app-btn-group
     v-model:selected="selectedChartFilter"
-    :disabled="isLoading"
+    :disabled="isLoadingFetch"
     :btn-list="isXS ? chartFilterOptions.slice(0, 3) : chartFilterOptions"
     size="xs"
     class="ml-auto mb-1 sm:mb-4"
@@ -30,13 +30,17 @@
     </template>
   </app-btn-group>
   <chart-price
-    v-if="!isLoading"
+    v-if="!isLoadingFetch && !notAvailable"
     :labels="labels"
     :points="points"
     :time-frame="selectedChartFilter.value"
     class="w-full h-[200px] sm:h-[320px]"
   />
-  <div v-else class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg"></div>
+  <div v-else class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg">
+    <div class="flex flex-col items-center h-full justify-center gap-2">
+      <p class="text-s-14 text-info">No data available</p>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -126,17 +130,25 @@ const refetch = computed(() => {
   return !storeData.value.has(selectedChartFilter.value.value)
 })
 
+const notAvailable = ref(false)
+
 const { useMEWFetch } = useFetchMewApi()
 const {
   data,
   onFetchResponse,
-  isFetching: isLoading,
+  isFetching: isLoadingFetch,
+  onFetchError,
 } = useMEWFetch(endpoint, { refetch: refetch })
   .get()
   .json<GetWebTokenPriceChartByCoinResponse>()
 
+onFetchError(() => {
+  notAvailable.value = true
+})
+
 onFetchResponse(() => {
   if (data.value?.prices) {
+    notAvailable.value = false
     storeData.value.set(selectedChartFilter.value.value, data.value.prices)
   }
 })

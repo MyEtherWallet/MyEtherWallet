@@ -4,10 +4,10 @@ import { ACCESS_ROUTES } from './routesAccess'
 import { TOKEN_INFO_ROUTE_NAMES } from './routeNames'
 import { type RouterOptions } from 'vue-router'
 
-const TempView = () => import('@view-default/ViewTemp.vue')
-const PortfolioView = () => import('@view-default/ViewPortfolio.vue')
-const ViewCrypto = () => import('@/views/wallet/crypto/ViewCrypto.vue')
-const NotFoundView = () => import('@view-default/ViewNotFound.vue')
+const TempView = () => import('@/views/ViewTemp.vue')
+const PortfolioView = () => import('@/views/ViewPortfolio.vue')
+const ViewCrypto = () => import('@/views/ViewCrypto.vue')
+const NotFoundView = () => import('@/views/ViewNotFound.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[

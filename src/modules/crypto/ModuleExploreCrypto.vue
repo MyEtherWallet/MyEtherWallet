@@ -46,10 +46,10 @@
               >
                 <template #select-button="{ toggleSelect }">
                   <button
-                    class="rounded-full hoverNoBG p-2"
+                    class="rounded-full hoverNoBG p-3"
                     @click="toggleSelect"
                   >
-                    <div class="flex items-center">
+                    <div class="flex items-center text-s-16">
                       <span>More</span>
                       <chevron-down-icon class="w-4 h-4 ml-1" />
                     </div>
@@ -294,6 +294,7 @@
                       :width="50"
                       :height="35"
                       :max-points="35"
+                      :percent-change="getActivePercent(token) || undefined"
                     />
                   </div>
                 </td>
@@ -341,7 +342,7 @@
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-center justify-between text-xs mt-2"
+          class="flex flex-col xs:flex-row items-center justify-center justify-between text-s-12 mt-2"
         >
           <small
             class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"

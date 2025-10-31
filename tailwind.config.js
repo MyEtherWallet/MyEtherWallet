@@ -73,9 +73,9 @@ export default {
       'mew-purple': 'rgba(104, 76, 255, 1)',
       'purple-10': 'rgba(104,76,255,0.1)',
       'purple-7': 'rgba(104,76,255,0.07)',
-      warning: 'rgb(255,165,0, 1)',
-      'warning-10': 'rgb(255,165,0,0.1)',
-      success: 'rgb(5,192,165,1)',
+      warning: 'rgba(255,165,0, 1)',
+      'warning-10': 'rgba(255,165,0,0.1)',
+      success: 'rgba(5,192,165,1)',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
       // blues
@@ -109,6 +109,7 @@ export default {
         'p-130': '130%',
         'p-140': '140%',
         'p-150': '150%',
+        'p-160': '160%',
       },
       letterSpacing: {
         'sp-06': '0.6px',
