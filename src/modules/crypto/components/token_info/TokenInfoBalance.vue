@@ -140,7 +140,11 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
 const existsOnCurrentChain = computed(() => {
-  if (props.tokenData && selectedChain.value) {
+  if (
+    props.tokenData &&
+    props.tokenData.supportedChains &&
+    selectedChain.value
+  ) {
     return props.tokenData.supportedChains.some(
       chain => chain.chainName === selectedChain.value?.name,
     )
@@ -149,7 +153,11 @@ const existsOnCurrentChain = computed(() => {
 })
 
 const otherChains = computed(() => {
-  if (props.tokenData && selectedChain.value) {
+  if (
+    props.tokenData &&
+    props.tokenData.supportedChains &&
+    selectedChain.value
+  ) {
     return props.tokenData.supportedChains.filter(
       chain =>
         chain.chainName !== selectedChain.value?.name &&
