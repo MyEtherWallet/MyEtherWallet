@@ -185,7 +185,6 @@ const addressBlockie = computed(() => {
 })
 
 const networkChain = computed(() => {
-  console.log('props.network', props.network)
   return props.network || selectedChain.value
 })
 

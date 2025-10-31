@@ -67,7 +67,7 @@
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
-      @tx-sent="resetSendModule"
+      @tx-sent="saveToAddressBookAfterSending"
     />
   </div>
 </template>
@@ -122,11 +122,11 @@ const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 
 // stored inputs
 import { useInputStore } from '@/stores/inputStore'
-import { useAddressBookStore } from '@/stores/addressBook'
+import { useAddressBookStore, type Address } from '@/stores/addressBook'
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
-const { inAddressBook } = useAddressBookStore()
+const { inAddressBook, addAddress } = useAddressBookStore()
 
 const chainsStore = useChainsStore()
 const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
@@ -321,9 +321,11 @@ watchDebounced(
     gasFeeError.value = ''
     foundNickName.value = ''
     const body = getTxRequestBody()
-    foundNickName.value =
-      inAddressBook(toAddress.value || '', selectedChain.value?.type || '') ||
-      ''
+    const foundAddress = inAddressBook(
+      toAddress.value || '',
+      selectedChain.value?.type || '',
+    )
+    foundNickName.value = foundAddress ? (foundAddress as Address).name : ''
     if (!body) return
     gasFeeTxEstimate.value = body
   },
@@ -335,6 +337,20 @@ const resetSendModule = () => {
   toAddress.value = ''
   signedTx.value = ''
   clearAddressInput()
+}
+
+const saveToAddressBookAfterSending = () => {
+  const name = foundNickName.value // if address not in address book, name will be ''
+  if (name === '') {
+    const newAddress: Address = {
+      address: toAddress.value || '',
+      name: '', // TODO: generate default name like 'Address 1'
+      chainName: selectedChain.value?.name || '',
+      chainType: selectedChain.value?.type || '',
+    }
+    addAddress(newAddress, selectedChain.value?.type || '')
+  }
+  resetSendModule()
 }
 
 // toast store

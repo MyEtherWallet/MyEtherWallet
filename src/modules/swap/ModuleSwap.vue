@@ -178,10 +178,10 @@ import dataTxAction from '@/utils/dataTxAction'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { useAddressBookStore } from '@/stores/addressBook'
+import { useAddressBookStore, type Address } from '@/stores/addressBook'
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
-const { inAddressBook } = useAddressBookStore()
+const { inAddressBook, addAddress } = useAddressBookStore()
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()
 const chainsStore = useChainsStore()
@@ -468,12 +468,22 @@ watch(
   () => swapInitiatedOpen.value,
   (value: boolean) => {
     if (!value) {
+      if (foundNickName.value === '') {
+        const newAddress: Address = {
+          address: toAddress.value || '',
+          name: '', // TODO: generate default name like 'Address 1'
+          chainName: selectedToChain.value?.name || '',
+          chainType: selectedToChain.value?.type || '',
+        }
+        addAddress(newAddress, selectedToChain.value?.type || '')
+      }
       txHash.value = '0x'
       providers.value = []
       selectedQuote.value = undefined
       fromAmount.value = '0'
       toAmount.value = '0'
       userToAddress.value = ''
+      foundNickName.value = ''
       setToToken()
       setFromToken()
     }
@@ -533,8 +543,11 @@ watch(
   () => toAddress.value,
   newval => {
     foundNickName.value = ''
-    foundNickName.value =
-      inAddressBook(newval || '', selectedToChain.value?.type || '') || ''
+    const foundAddress = inAddressBook(
+      newval || '',
+      selectedToChain.value?.type || '',
+    )
+    foundNickName.value = foundAddress ? (foundAddress as Address).name : ''
   },
   { immediate: true },
 )

@@ -130,12 +130,10 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     recentAddresses.value[currentNetworkName.value].splice(index, 1)
   }
 
-  const inAddressBook = (address: string, chainType: string) => {
-    console.log('Checking address in address book:', address, chainType, addressBook.value[chainType])
+  const inAddressBook = (address: string, chainType: string): Address | string => {
     const found = addressBook.value[chainType]?.find(entry => entry.address === address)
-    console.log('Found entry:', found)
     return (
-      found?.name || ''
+      found || ''
     )
   }
   return {

@@ -74,6 +74,7 @@ export const useAddressInput = (
   }
 
   const onInput = async () => {
+    if (adrError.value) return // skip if there's already an error
     adrError.value = ''
     resolvedAddress.value = undefined
     try {

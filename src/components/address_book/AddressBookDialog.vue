@@ -238,7 +238,6 @@ const { selectedChain } = storeToRefs(chainsStore)
  */
 const currentChainOnlyAdrs = computed(() => {
   const _net = props.network || selectedChain.value
-  console.log('currentChainOnlyAdrs _net', _net, props.network)
   const list = currentAddressBook.value.filter(
     item => item.chainName === _net?.name,
   )
