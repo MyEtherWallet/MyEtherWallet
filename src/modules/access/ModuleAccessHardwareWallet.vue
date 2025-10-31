@@ -94,9 +94,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -415,8 +413,6 @@ const setPage = (isNext: boolean) => {
 /** ------------------------
  * Access Wallet
  ------------------------*/
-
-const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
@@ -438,6 +434,6 @@ const access = async () => {
   addWallet(walletConfig.value as WalletConfig)
 
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_MAIN.HOME.PATH })
+  accessStore.closeAccessDialog()
 }
 </script>
