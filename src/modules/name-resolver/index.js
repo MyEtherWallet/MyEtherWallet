@@ -1,41 +1,63 @@
-import NameResolver from '@enkryptcom/name-resolution';
-import { createWeb3Name } from '@web3-name-sdk/core';
-
-import normalise from '@/core/helpers/normalise';
-import { isAddress, toChecksumAddress } from '@/core/helpers/addressUtils.js';
-import { ROOTSTOCK, ROOTSTOCKTESTNET } from '@/utils/networks/types';
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+import NameResolver from "@enkryptcom/name-resolution";
+import { createWeb3Name } from "@web3-name-sdk/core";
+import { createPaymentIdName } from "@web3-name-sdk/core/paymentIdName";
+import normalise from "@/core/helpers/normalise";
+import { isAddress, toChecksumAddress } from "@/core/helpers/addressUtils.js";
+import { ROOTSTOCK, ROOTSTOCKTESTNET } from "@/utils/networks/types";
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 export default class Resolver {
   constructor(network) {
     this.network = network;
     this.web3Name = createWeb3Name();
+    this.web3PaymentIdName = createPaymentIdName();
     this.resolver = new NameResolver({
       ens: {
-        node: 'https://nodes.mewapi.io/rpc/eth'
+        node: "https://nodes.mewapi.io/rpc/eth",
       },
       sid: {
         node: {
-          bnb: 'https://nodes.mewapi.io/rpc/bsc',
-          arb: 'https://nodes.mewapi.io/rpc/arb'
-        }
-      }
+          bnb: "https://nodes.mewapi.io/rpc/bsc",
+          arb: "https://nodes.mewapi.io/rpc/arb",
+        },
+      },
     });
   }
   isValidName(name) {
-    const splitName = name.split('.');
+    const splitName = name.split(".");
     if (splitName.length > 1) {
       name = normalise(name);
-      return name.indexOf('.') > 0;
+      return name.indexOf(".") > 0;
     }
     return false;
   }
+  isValidPaymentId(name) {
+    const isValid = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+$/.test(name);
+    return isValid;
+  }
   async resolveName(name) {
-    if (!this.isValidName(name)) throw new Error('Invalid Address!');
+    if (this.isValidPaymentId(name)) {
+      return await this.web3PaymentIdName.getAddress({
+        name,
+        chainId: 1,
+      });
+    }
+    if (!this.isValidName(name)) throw new Error("Invalid Address!");
+    let address;
     name = normalise(name);
-    let address = await this.resolver.resolveAddress(
-      name,
-      this.network.type.ensEnkryptType
-    );
+    try {
+      address = await this.web3Name.getAddress({
+        name,
+      });
+    } catch (error) {
+      console.error("web3Name getAddress error", error);
+    }
+
+    if (!address) {
+      address = await this.resolver.resolveAddress(
+        name,
+        this.network.type.ensEnkryptType
+      );
+    }
     if (
       this.network.type.chainID === ROOTSTOCK.chainID ||
       this.network.type.chainID === ROOTSTOCKTESTNET.chainID
@@ -45,7 +67,7 @@ export default class Resolver {
     if (isAddress(address) && address !== ZERO_ADDRESS) {
       return address;
     }
-    throw new Error('Invalid Address!');
+    throw new Error("Invalid Address!");
   }
 
   async resolveAddress(address) {
@@ -54,7 +76,7 @@ export default class Resolver {
       if (!resolvedName) {
         resolvedName = await this.web3Name.getDomainName({
           address,
-          queryChainIdList: [this.network.type.chainID]
+          queryChainIdList: [this.network.type.chainID],
         });
       }
       return {
@@ -62,7 +84,7 @@ export default class Resolver {
           ? resolvedName.name
           : resolvedName
           ? resolvedName
-          : ''
+          : "",
       };
     }
   }
