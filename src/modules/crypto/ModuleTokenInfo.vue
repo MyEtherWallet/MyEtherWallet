@@ -210,7 +210,11 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
 const existsOnCurrentChain = computed(() => {
-  if (tokenData.value && selectedChain.value) {
+  if (
+    tokenData.value &&
+    tokenData.value.supportedChains &&
+    selectedChain.value
+  ) {
     return tokenData.value.supportedChains.some(
       chain => chain.chainName === selectedChain.value?.name,
     )
@@ -225,16 +229,54 @@ const tokenData = computed(() => {
   if (fetchedTokenData.value) {
     return fetchedTokenData.value
   }
+  const isInStore = tokenInfo.value?.symbol === props.tokenId
   const _tokenInfo = tokenInfo.value as TokenBalanceRaw & DisplayToken
-  const parsedTokenInfo = {
-    name: _tokenInfo?.name || '',
-    symbol: _tokenInfo?.symbol || '',
+  const parsedTokenInfo: {
+    name: string
+    symbol: string
+    iconUrl: string
+    currentPrice: string
+    balance: string
+    balanceWei: string
+    decimals: string | number
+    chainBalances?: Array<{
+      chainName: string
+      chainNameLong: string
+      chainType: string
+      iconUrl: string
+      result: {
+        ok: boolean
+        value: {
+          balances: Array<{
+            ok: boolean
+            value: {
+              owner: string
+              value: string
+            }
+          }>
+          decimals: number
+        }
+      }
+    }>
+    supportedChains?: Array<{
+      chainName: string
+      chainType: string
+      contract: string
+      iconUrl: string
+    }>
+  } = {
+    name: isInStore
+      ? _tokenInfo?.name || ''
+      : `${props.tokenId} token not found`,
+    symbol: isInStore ? _tokenInfo?.symbol || '' : 'N/A',
     iconUrl: '',
     currentPrice: 'N/A',
-    balance: _tokenInfo?.balance || '0',
-    balanceWei: _tokenInfo?.balanceWei || '0',
-    decimals: _tokenInfo?.decimals || 18,
-    chainBalances: [
+    balance: isInStore ? _tokenInfo?.balance || '0' : 'N/A',
+    balanceWei: isInStore ? _tokenInfo?.balanceWei || '0' : 'N/A',
+    decimals: isInStore ? _tokenInfo?.decimals || 18 : 'N/A',
+  }
+  if (isInStore) {
+    parsedTokenInfo['chainBalances'] = [
       {
         chainName: selectedChain.value?.name || '',
         chainNameLong: selectedChain.value?.name || '',
@@ -256,15 +298,15 @@ const tokenData = computed(() => {
           },
         },
       },
-    ],
-    supportedChains: [
+    ]
+    parsedTokenInfo['supportedChains'] = [
       {
         chainName: selectedChain.value?.name || '',
         chainType: selectedChain.value?.type || '',
         contract: _tokenInfo?.contract || '',
         iconUrl: selectedChain.value?.icon || '',
       },
-    ],
+    ]
   }
   // force instance as its fake data
   return parsedTokenInfo as unknown as GetWebTokenInfo
