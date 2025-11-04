@@ -11,7 +11,9 @@
         </p>
         <div class="relative">
           <div class="absolute -top-8 right-4">
-            <app-btn-text class="text-primary ml-auto">Clear all</app-btn-text>
+            <app-btn-text class="text-primary ml-auto" @click="clearValues"
+              >Clear all</app-btn-text
+            >
           </div>
           <!-- From Section -->
           <div
@@ -466,6 +468,17 @@ const proceedWithSwap = async (quoteId: string) => {
     })
 }
 
+const clearValues = () => {
+  clearSwapValues()
+  fromAmount.value = '0'
+  toAmount.value = '0'
+  userToAddress.value = ''
+  foundNickName.value = ''
+  selectedQuote.value = undefined
+  setToToken()
+  setFromToken()
+}
+
 // Reset values when swap initiated closes
 // tx is already broadcasted at this point
 watch(
@@ -662,10 +675,6 @@ const fromAmountError = computed(() => {
     BigNumber(fromAmount.value).toFixed().split('.')[1]?.length >
     fromTokenSelected.value?.decimals
   ) {
-    console.log(
-      BigNumber(fromAmount.value).toString().split('.')[1]?.length,
-      fromTokenSelected.value?.decimals,
-    )
     return t('swap.error.too-many-decimals')
   }
   const baseNetworkBalance = toBase(
