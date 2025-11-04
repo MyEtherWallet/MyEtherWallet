@@ -63,7 +63,7 @@
             </div>
           </div>
           <app-pop-up-menu
-            :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length })}`"
+            :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length - 1 })}`"
             location="left"
             v-if="quotes.length > 1"
           >
@@ -267,6 +267,14 @@ const toAmount = computed(() => {
   ).decimalPlaces(8)
 })
 
+const toAmountFiat = computed(() => {
+  const toTokenPrice = toToken.value?.price || '0'
+  return BigNumber(toAmount.value)
+    .multipliedBy(toTokenPrice)
+    .decimalPlaces(2)
+    .toString()
+})
+
 const parseAmount = (amount: BN, decimal: number) => {
   return fromBase(amount.toString(), decimal)
 }
@@ -276,20 +284,7 @@ const exchangeRate = computed(() => {
   const fromTokenPrice = fromToken.value.price || '0'
   const toTokenPrice = toToken.value.price || '0'
   if (BigNumber(toTokenPrice).isZero()) return '0'
-  return BigNumber(fromTokenPrice).times(toTokenPrice).toString()
-})
-
-const toAmountFiat = computed(() => {
-  return (
-    BigNumber(
-      fromBase(
-        selectedQuote.value?.toTokenAmount.toString() || '0',
-        toToken.value?.decimals ?? 18,
-      ),
-    )
-      .times(BigNumber(toToken.value?.price || '0'))
-      .decimalPlaces(2) || '0'
-  )
+  return BigNumber(fromTokenPrice).div(toTokenPrice).toFixed(2)
 })
 
 watch(

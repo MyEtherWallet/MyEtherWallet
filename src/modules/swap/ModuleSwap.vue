@@ -768,11 +768,20 @@ const fetchQuotes = async () => {
     // sort quotes by lowest minimum
     providers.value =
       quotes && quotes.length > 0
-        ? quotes.sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
-            const aFees = BigNumber(a.minMax.minimumFrom.toString() || 0)
-            const bFees = BigNumber(b.minMax.minimumFrom.toString() || 0)
-            return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
-          })
+        ? quotes
+            .sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
+              const aFees = BigNumber(a.minMax.minimumFrom.toString() || 0)
+              const bFees = BigNumber(b.minMax.minimumFrom.toString() || 0)
+              return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
+            })
+            .filter((quote: ProviderQuoteResponse) =>
+              BigNumber(quote.minMax.minimumFrom.toString()).lte(
+                toBase(
+                  BigNumber(fromAmount.value).toFixed(),
+                  fromTokenSelected.value?.decimals || 18,
+                ),
+              ),
+            )
         : []
     selectedQuote.value = providers.value[0] || undefined
     isLoadingQuotes.value = false
