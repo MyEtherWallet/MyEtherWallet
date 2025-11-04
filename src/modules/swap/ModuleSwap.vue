@@ -120,7 +120,9 @@
     <swap-offer-modal
       v-model:swap-offer-open="bestOfferSelectionOpen"
       v-model:selected-quote="selectedQuote"
+      v-model:loading="txProceeding"
       @update:proceedWithSwap="proceedWithSwap"
+      @update:declineSwap="bestOfferSelectionOpen = false"
       :quotes="providers"
       :amount="fromAmount"
       :to-chain="selectedToChain"
@@ -221,6 +223,7 @@ const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
 const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
 const foundNickName = ref('')
+const txProceeding = ref(false) // allows loading button on swap offer modal to be overridden
 
 const setToToken = () => {
   if (!selectedToChain.value) {
@@ -377,6 +380,7 @@ const proceedWithSwap = async (quoteId: string) => {
           )
           txPromise = broadcast
         } catch {
+          txProceeding.value = false
           toastStore.addToastMessage({
             type: ToastType.Error,
             text: t('swap.toast.tx-sign-failed'),
@@ -655,12 +659,14 @@ const fromAmountError = computed(() => {
   if (fromAmount.value === undefined || fromAmount.value === '')
     return t('swap.error.amount-required') // amount is blank
   if (
-    BigNumber(fromAmount.value).toFixed().length >
+    BigNumber(fromAmount.value).toFixed().split('.')[1]?.length >
     fromTokenSelected.value?.decimals
   ) {
-    return t('swap.error.too-many-decimals', {
-      decimal: fromTokenSelected.value?.decimals,
-    })
+    console.log(
+      BigNumber(fromAmount.value).toString().split('.')[1]?.length,
+      fromTokenSelected.value?.decimals,
+    )
+    return t('swap.error.too-many-decimals')
   }
   const baseNetworkBalance = toBase(
     walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
@@ -691,6 +697,11 @@ const fromAmountError = computed(() => {
 
   if (BigInt(baseAmount) < 0)
     return t('swap.error.more-than-zero') // amount less than 0
+  else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
+    return t('swap.error.insufficient-native', {
+      symbol: fromTokenSelected.value.symbol,
+    })
+  // amount greater than selected balance
   else if (
     providers.value.length === 0 &&
     fromAmount.value !== '0' &&
@@ -718,14 +729,7 @@ const fromAmountError = computed(() => {
       )
         return t('swap.error.maximum-amount') // amount less than min amount
     }
-  } else if (
-    isWalletConnected.value &&
-    BigInt(baseBalance) < BigInt(baseAmount)
-  )
-    return t('swap.error.insufficient-native', {
-      symbol: fromTokenSelected.value.symbol,
-    })
-  // amount greater than selected balance
+  }
   return ''
 })
 

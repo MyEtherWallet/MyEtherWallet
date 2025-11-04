@@ -130,9 +130,17 @@
         <app-base-button
           class="w-full"
           @click="proceedWithSwap"
-          :is-loading="isLoading"
+          :is-loading="loadingModel"
         >
           {{ t('swap.swap-offer.proceed') }}
+        </app-base-button>
+        <app-base-button
+          class="w-full mt-5"
+          :is-outline="true"
+          theme="error"
+          @click="declineSwap"
+        >
+          {{ t('swap.swap-offer.decline') }}
         </app-base-button>
       </div>
     </template>
@@ -144,7 +152,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ref, computed, watch } from 'vue'
+import { computed, watch } from 'vue'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -182,6 +190,11 @@ const model = defineModel('swapOfferOpen', {
   default: false,
 })
 
+const loadingModel = defineModel('loading', {
+  type: Boolean,
+  default: false,
+})
+
 const selectedQuote = defineModel('selectedQuote', {
   type: Object as () => ProviderQuoteResponse,
 })
@@ -211,8 +224,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['update:proceedWithSwap'])
-const isLoading = ref(false)
+const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 
 const providerName = computed(() => {
   switch (selectedQuote.value?.provider) {
@@ -283,13 +295,16 @@ const toAmountFiat = computed(() => {
 watch(
   () => model.value,
   () => {
-    isLoading.value = false
+    loadingModel.value = false
   },
 )
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
-  isLoading.value = true
+  loadingModel.value = true
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
+}
+const declineSwap = () => {
+  emits('update:declineSwap')
 }
 </script>

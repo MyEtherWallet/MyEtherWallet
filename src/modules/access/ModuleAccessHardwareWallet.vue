@@ -307,6 +307,8 @@ const loadList = async (page: number = 0) => {
   const networkName = chainToEnum[chainName] ?? 'Ethereum'
   const instance = wallet.value
     ? wallet.value.getWalletInstance?.()
+      ? wallet.value.getWalletInstance()
+      : hwWalletInstance
     : hwWalletInstance
 
   for (let i = startIndex; i < startIndex + 5; i++) {
@@ -414,7 +416,6 @@ const setPage = (isNext: boolean) => {
 /** ------------------------
  * Access Wallet
  ------------------------*/
-
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
