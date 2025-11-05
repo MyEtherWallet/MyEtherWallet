@@ -72,7 +72,8 @@
       v-if="isLoadedChains"
       v-model:is-open="openDialog"
       :selected-chain="selectedChain"
-      :filter-chain-type="isBtnGroup ? isBtnGroup : filterChainType"
+      :filter-chain-type="filterChainType ? filterChainType : isBtnGroup"
+      :passed-chains="passedChains"
       @update:chain="setSelectedChain"
     />
   </div>

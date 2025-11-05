@@ -20,7 +20,12 @@
             class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
           >
             <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
-            <select-chain-for-app :filter-chain-type="true" />
+            <select-chain-for-app
+              :filter-chain-type="true"
+              :can-store="false"
+              :passed-chains="fromChains"
+              :preselected-chain="selectedFromChain"
+            />
             <app-swap-enter-amount
               v-model:amount="fromAmount"
               v-model:selected-token="fromTokenSelected"
@@ -50,7 +55,6 @@
               :can-store="false"
               :passed-chains="toChains"
               :preselected-chain="selectedToChain"
-              :filter-chain-type="true"
               @update:selected-chain="setToChain"
             />
             <app-swap-enter-amount
@@ -154,7 +158,10 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
-import { supportedSwapEnums } from '@/providers/ethereum/chainToEnum'
+import {
+  enumToChain,
+  supportedSwapEnums,
+} from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
@@ -168,6 +175,7 @@ import {
   type EVMTransaction,
   type TokenType,
   type GenericTransaction,
+  getSupportedNetworks,
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
@@ -196,7 +204,7 @@ const { t } = useI18n()
 const { gasPriceType } = storeToRefs(globalStore)
 const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
   storeToRefs(walletStore)
-const { selectedChain, isBitcoinChain } = storeToRefs(chainsStore)
+const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
 const {
   initSwapper,
   supportedNetwork,
@@ -226,7 +234,7 @@ const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
 const foundNickName = ref('')
 const txProceeding = ref(false) // allows loading button on swap offer modal to be overridden
-
+const selectedFromChain: Ref<Chain | undefined> = ref(selectedChain.value)
 const setToToken = () => {
   if (!selectedToChain.value) {
     toastStore.addToastMessage({
@@ -352,6 +360,19 @@ const validateToAddress = async () => {
   }
   if (!validAddress) toAddressError.value = 'invalid address'
 }
+
+const fromChains = computed(() => {
+  const supportedNetworks = getSupportedNetworks()
+  const toMEWChain = supportedNetworks
+    .map(chain => {
+      const toChainByEnum = enumToChain[chain.id]
+      if (!toChainByEnum) return null
+      const foundInChains = chains.value.find(c => c.name === toChainByEnum)
+      return foundInChains ? foundInChains : null
+    })
+    .filter(chain => chain !== null) as Chain[]
+  return toMEWChain
+})
 
 const proceedWithSwap = async (quoteId: string) => {
   let txPromise
