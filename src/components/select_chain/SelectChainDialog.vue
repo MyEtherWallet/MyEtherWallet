@@ -103,6 +103,10 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
+  passedChains: {
+    type: Array as () => Chain[],
+    default: () => [],
+  },
 })
 
 const chainsStore = useChainsStore()
@@ -143,14 +147,14 @@ const setOpenDialog = (value: boolean) => {
  -------------------------------*/
 const searchInput = ref('')
 const searchResults = computed<Chain[]>(() => {
-  const _chains = prop.hasAll
-    ? [ALL_CHAINS.value, ...chains.value]
-    : chains.value
+  const locChain =
+    prop.passedChains.length > 0 ? prop.passedChains : chains.value
+  const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
   const chainsToSearch = prop.filterChainType
-    ? _chains
-    : _chains.filter(chain => {
+    ? _chains.filter(chain => {
         return chain.type === storeSelectedChain.value?.type
       })
+    : _chains
 
   if (!searchInput.value || searchInput.value === '') {
     if (!prop.selectedChain) {
