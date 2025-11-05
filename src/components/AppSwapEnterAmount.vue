@@ -1,17 +1,20 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 box-border bg-white p-[18px] transition-colors shadow-button shadow-button-elevated"
+    class="w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
     :class="{
-      'border-primary border-2 !p-4': inFocusInput && !error && !readonly,
-      '!border-error border-2 !p-4': !!error,
+      '!border-primary ': inFocusInput && !error && !readonly,
+      '!border-error': !!error,
     }"
     @click="setInFocusInput"
   >
-    <div class="flex justify-between items-center w-full">
+    <div class="flex justify-between items-center w-full pr-2">
       <input
-        class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
-        :class="{ 'text-error': !!error }"
+        class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none"
+        :class="{
+          'text-error': !!error,
+          'animate-pulse text-info': isLoading,
+        }"
         name="amount-input"
         type="text"
         autoComplete="off"
@@ -27,7 +30,7 @@
         :chain-tokens="tokens || []"
       />
     </div>
-    <div :class="{ 'animate-pulse': isLoading }">
+    <div :class="{ 'animate-pulse': isLoading }" class="pr-2 pl-3">
       <transition name="fade" mode="out-in">
         <div v-if="isLoading" class="h-5 flex bg-grey-10 rounded-full"></div>
         <div v-else class="flex justify-between">
