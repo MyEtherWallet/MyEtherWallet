@@ -208,15 +208,7 @@
             </td>
             <!-- Name & Balance -->
             <td class="px-1 py-2 rounded-l-12 xs:rounded-none" colspan="2">
-              <router-link
-                :to="{
-                  name: TOKEN_INFO_ROUTE_NAMES.home,
-                  params: {
-                    tokenId: token.coinId,
-                  },
-                }"
-                class="flex items-center gap-3"
-              >
+              <div class="flex items-center gap-3">
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
@@ -229,7 +221,7 @@
                     {{ truncate(token.symbol, 7) }}
                   </p>
                 </div>
-              </router-link>
+              </div>
             </td>
             <!-- 24h % -->
             <td
@@ -468,6 +460,7 @@ import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ROUTES_MAIN } from '@/router/routeNames'
+import { useTokenInfoStore } from '@/stores/tokenInfoStore'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
@@ -543,6 +536,7 @@ const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
 const { watchListedTokens } = storeToRefs(watchListStore)
 
 const setWatchlistToken = (tokenId: string) => {
+  if (!tokenId) return
   if (isWatchListed(tokenId)) {
     removeTokenWatchList(tokenId)
   } else {
@@ -578,7 +572,7 @@ const isLoading = computed<boolean>(() => {
 /**-------------------------------
  * Balances Table Data
 -------------------------------*/
-interface DisplayToken extends TokenBalance {
+export interface DisplayToken extends TokenBalance {
   fiatBalance?: number
   fiatBalanceFormatted?: string
 }
@@ -733,9 +727,10 @@ const getSparkLinePoints = (token: DisplayToken) => {
 const router = useRouter()
 
 const goToTokenPage = (token: DisplayToken) => {
+  useTokenInfoStore().setTokenInfo(token)
   router.push({
     name: TOKEN_INFO_ROUTE_NAMES.home,
-    params: { tokenId: token.coinId },
+    params: { tokenId: token.coinId || token.symbol },
   })
 }
 </script>
