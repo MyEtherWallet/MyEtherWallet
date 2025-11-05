@@ -1,10 +1,10 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
+    class="w-full rounded-16 bg-white pt-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
     :class="{
-      '!border-primary ': inFocusInput && !error && !readonly,
-      '!border-error': !!error,
+      '!border-primary': inFocusInput && !hasError && !readonly,
+      '!border-error': hasError,
     }"
     @click="setInFocusInput"
   >
@@ -12,8 +12,13 @@
       <input
         class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none"
         :class="{
-          'text-error': !!error,
+          'text-error': hasError,
           'animate-pulse text-info': isLoading,
+          'text-s-24':
+            amount &&
+            amount.toString().length > 9 &&
+            amount.toString().length <= 14,
+          'text-s-16': amount && amount.toString().length > 14,
         }"
         name="amount-input"
         type="text"
@@ -21,6 +26,7 @@
         placeholder="0.0"
         v-model.number="amount"
         :readonly="readonly"
+        @input="validateAmount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
@@ -33,17 +39,14 @@
     <div :class="{ 'animate-pulse': isLoading }" class="pr-2 pl-3">
       <transition name="fade" mode="out-in">
         <div v-if="isLoading" class="h-5 flex bg-grey-10 rounded-full"></div>
-        <div v-else class="flex justify-between">
-          <div
-            class="text-sm"
-            :class="{ 'text-error': !!error, 'text-info': !error }"
-          >
+        <div v-else class="flex flex-wrap justify-between">
+          <div class="basis-1/2 text-s-14 text-info">
             {{ balanceFiatOrError }}
           </div>
           <div
             :class="[
-              'text-sm text-info transition-colors',
-              { 'text-primary': inFocusInput },
+              'basis-1/2 text-s-14 text-info transition-colors text-right',
+              { 'text-primary': inFocusInput && !hasError },
             ]"
             v-if="showBalance"
           >
@@ -51,6 +54,16 @@
           </div>
         </div>
       </transition>
+      <div class="my-1 min-h-[16px]">
+        <transition name="fade" mode="out-in">
+          <p
+            v-if="hasError && !isLoading"
+            class="basis-full text-error text-s-12 leading-p-130"
+          >
+            {{ errorMessage }}
+          </p>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +80,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { type NewTokenInfo } from '@/composables/useSwap'
+import { useDebounceFn } from '@vueuse/core'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
@@ -103,12 +117,32 @@ const amount = defineModel('amount', {
 
 const selectedToken = defineModel<NewTokenInfo>('selectedToken')
 
+const hasError = ref(false)
+const errorMessage = ref('')
 const error = defineModel('error', {
   type: String,
   required: true,
   default: '',
 })
 
+const debouncedValidate = useDebounceFn(
+  () => {
+    if (error.value !== '') {
+      hasError.value = true
+      errorMessage.value = error.value
+    } else {
+      hasError.value = false
+      errorMessage.value = ''
+    }
+  },
+  1000,
+  { maxWait: 5000 },
+)
+
+const validateAmount = () => {
+  hasError.value = false
+  debouncedValidate()
+}
 const tokenBalanceRaw = computed(() => {
   return walletStore.getTokenBalance(
     (selectedToken.value as NewTokenInfo)?.address || MAIN_TOKEN_CONTRACT,
@@ -132,17 +166,14 @@ const balanceFiatOrError = computed(() => {
     const val = BigNumber(selectedToken.value?.price || 0)
       .times(BigNumber(numAmount).gt(0) ? numAmount : 1)
       .toFixed(2)
-    return error.value ? error.value : `${props.isEstimate ? '≈ ' : ''}$ ${val}`
+    return `${props.isEstimate ? '≈ ' : ''}$ ${val}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(numAmount || 0),
     ),
   )
-
-  return error.value
-    ? error.value
-    : `${props.isEstimate ? '≈ ' : ''}$ ${formatFiatValue(_balance).value}`
+  return `${props.isEstimate ? '≈ ' : ''}$ ${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
@@ -164,6 +195,13 @@ const setInFocusInput = () => {
 onClickOutside(targetValue, () => {
   targetValue.value = null
   inFocusInput.value = false
+  if (error.value !== '') {
+    hasError.value = true
+    errorMessage.value = error.value
+  } else {
+    hasError.value = false
+    errorMessage.value = ''
+  }
 })
 
 const checkIfNumber = (e: KeyboardEvent) => {

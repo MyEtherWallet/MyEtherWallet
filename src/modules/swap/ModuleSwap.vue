@@ -19,7 +19,16 @@
           >
             <p class="text-s-12 mb-2 ml-2 font-bold">You are selling</p>
             <select-chain-for-app :filter-chain-type="true" />
+            <div
+              v-if="swapLoaded && !supportedNetwork"
+              class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
+            >
+              <p class="text-error text-center text-s-12">
+                {{ t('swap.not-supported-network') }}
+              </p>
+            </div>
             <app-swap-enter-amount
+              v-else
               v-model:amount="fromAmount"
               v-model:selected-token="fromTokenSelected"
               v-model:error="fromAmountError"
@@ -73,14 +82,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="swapLoaded && !supportedNetwork"
-        class="text-error text-center"
-      >
-        <p class="text-s-16">
-          {{ t('swap.not-supported-network') }}
-        </p>
-      </div>
+
       <app-base-button
         class="w-[70%]"
         v-if="isWalletConnected"
@@ -584,7 +586,7 @@ const fromAmountError = computed(() => {
         BigInt(remainingBalance.toString())
     )
       return t('swap.error.insufficient-balance-for-fees', {
-        symbol: selectedChain.value?.name,
+        symbol: selectedChain.value?.currencyName,
       }) // insufficient native token balance for gas
     if (selectedQuote.value.minMax) {
       if (
