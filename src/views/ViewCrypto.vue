@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-6">
     <div class="grid grid-cols-12 w-full gap-4">
       <div
-        class="flex flex-col gap-6 lg:gap-3 col-span-12 lg:col-span-3 mb-4 lg:mb-0"
+        class="flex flex-col gap-6 lg:gap-3 col-span-12 lg:col-span-3 mb-4 lg:mb-0 lg:mt-1"
       >
         <module-trending />
       </div>
