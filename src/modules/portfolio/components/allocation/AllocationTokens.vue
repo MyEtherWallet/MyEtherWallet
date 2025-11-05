@@ -14,7 +14,7 @@
           v-if="i.id"
           :to="{
             name: TOKEN_INFO_ROUTE_NAMES.home,
-            params: { tokenId: i.id },
+            params: { tokenId: i.id || i.symbol },
           }"
           class="p-1"
           >{{ truncate(i.symbol, 7) }}</router-link

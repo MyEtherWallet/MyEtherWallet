@@ -28,44 +28,45 @@
       class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2"
       v-if="!isLoading"
     >
-      <router-link
-        v-for="token in currentTrendingTokens"
-        :to="{
-          name: TOKEN_INFO_ROUTE_NAMES.crypto,
-          params: { tokenId: token.coinId },
-        }"
-        :key="token.symbol"
-        class="relative w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"
-      >
-        <div class="flex gap-2 items-center justify-start flex-wrap">
-          <div class="xs:basis-full overflow-visible">
-            <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
-          </div>
+      <div v-for="token in currentTrendingTokens" :key="token.symbol">
+        <router-link
+          v-if="token.coinId"
+          :to="{
+            name: TOKEN_INFO_ROUTE_NAMES.crypto,
+            params: { tokenId: token.coinId },
+          }"
+          class="relative w-full bg-white shadow-button px-3 py-2 flex items-end justify-between rounded-16 hoverBGWhite gap-3"
+        >
+          <div class="flex gap-2 items-center justify-start flex-wrap">
+            <div class="xs:basis-full overflow-visible">
+              <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
+            </div>
 
-          <div class="text-left">
-            <p class="text-s-14 font-bold text-wrap">
-              {{ token.name }}
+            <div class="text-left">
+              <p class="text-s-14 font-bold text-wrap">
+                {{ token.name }}
+              </p>
+              <p class="text-s-12 text-info">
+                {{ truncate(token.symbol, 6) }}
+              </p>
+            </div>
+          </div>
+          <div class="pl-2">
+            <p class="text-s-14 text-right">
+              ${{ formatFiatValue(token.price).value }}
             </p>
-            <p class="text-s-12 text-info">
-              {{ truncate(token.symbol, 6) }}
+            <p
+              class="text-s-12 text-right"
+              :class="{
+                'text-error': token.priceChangePercentage24h < 0,
+                'text-success': token.priceChangePercentage24h >= 0,
+              }"
+            >
+              {{ formatPercentageValue(token.priceChangePercentage24h).value }}
             </p>
           </div>
-        </div>
-        <div class="pl-2">
-          <p class="text-s-14 text-right">
-            ${{ formatFiatValue(token.price).value }}
-          </p>
-          <p
-            class="text-s-12 text-right"
-            :class="{
-              'text-error': token.priceChangePercentage24h < 0,
-              'text-success': token.priceChangePercentage24h >= 0,
-            }"
-          >
-            {{ formatPercentageValue(token.priceChangePercentage24h).value }}
-          </p>
-        </div>
-      </router-link>
+        </router-link>
+      </div>
     </div>
     <div
       class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 animate-pulse"

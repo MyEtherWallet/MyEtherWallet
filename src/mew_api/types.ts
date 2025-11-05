@@ -70,6 +70,8 @@ export type GetWebTrendingTokensResponseToken =
   components['schemas']['GetWebTrendingTokensResponse']['items'][number]
 export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']
+export type GetWebTokensWatchlistResponseToken =
+  components['schemas']['GetWebTokensWatchlistResponse'][number]
 
 //Tokens Page
 export type GetWebTokenInfo =
