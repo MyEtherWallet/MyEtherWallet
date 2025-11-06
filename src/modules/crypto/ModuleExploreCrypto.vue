@@ -264,15 +264,6 @@
             </thead>
             <!-- Body-->
             <tbody v-if="!isLoading">
-              <div
-                v-if="
-                  watchListedTokens.length === 0 &&
-                  selectedCryptoFilter.value === 'watchlist'
-                "
-                class="text-nowrap px-3"
-              >
-                <h3>No watchlisted tokens</h3>
-              </div>
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
@@ -454,6 +445,28 @@
               </tr>
             </tbody>
           </table>
+          <div
+            v-if="!isLoading && tokens.length === 0"
+            class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+          >
+            <p
+              v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+              class="mb-1 text-center lg:mt-10"
+            >
+              You dont have any watchlisted tokens.
+            </p>
+            <p v-if="searchInput" class="mb-1 text-center lg:my-10">
+              No results found for "{{ searchInput }}".
+            </p>
+            <button
+              v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+              class="underline lg:mb-10"
+              @click="selectedCryptoFilter = cryptoFilterOptions[0]"
+            >
+              Discover more tokens
+              <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+            </button>
+          </div>
           <!-- Loading State -->
           <div v-if="isLoading" class="">
             <div
