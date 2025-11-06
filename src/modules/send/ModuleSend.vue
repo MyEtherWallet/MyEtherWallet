@@ -4,7 +4,7 @@
       class="static w-full flex flex-col items-center justify-items-stretch gap-1"
     >
       <div class="mb-3">
-        <p class="font-bold text-s-28 ml-5 mb-4 mt-1 xs:mt-5">Send</p>
+        <p class="font-bold text-s-28 ml-5 mb-4">Send</p>
         <div class="p-4 rounded-20 bg-mewBg mb-2 relative">
           <div class="absolute -top-8 right-4">
             <app-btn-text class="text-primary ml-auto" @click="resetSendModule"

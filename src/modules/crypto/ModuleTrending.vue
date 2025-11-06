@@ -1,6 +1,6 @@
 <template>
   <!-- Top: Trending -->
-  <div>
+  <div class="min-h-[284px] xs:min-h-[238px]">
     <div class="flex items-center justify-between mb-2">
       <h2 class="text-s-20 font-bold ml-2">Trending</h2>
 
@@ -39,12 +39,7 @@
         >
           <div class="flex gap-2 items-center justify-start flex-wrap">
             <div class="xs:basis-full overflow-visible">
-              <!-- TODO: replace with token image component-->
-              <img
-                :src="token.logoUrl as string"
-                class="w-7 h-7 xl:w-8 xl:h-8 rounded-full shadow-token"
-                alt=""
-              />
+              <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
             </div>
 
             <div class="text-left">
@@ -73,11 +68,14 @@
         </router-link>
       </div>
     </div>
-    <div class="flex justify-start gap-2 flex-wrap animate-pulse" v-else>
+    <div
+      class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2 animate-pulse"
+      v-else
+    >
       <div
-        v-for="token in 10"
+        v-for="token in totalPlaceholderItems"
         :key="`loading-trending-${token}`"
-        class="basis-full bg-surface shadow-button px-3 py-2 flex items-end justify-between rounded-16 w-full h-[55px]"
+        class="basis-full bg-surface shadow-button px-3 py-2 flex items-end justify-between rounded-16 w-full h-[55px] xs:h-[95px]"
       ></div>
     </div>
   </div>
@@ -85,6 +83,7 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useToastStore } from '@/stores/toastStore'
@@ -209,4 +208,8 @@ watch(
     }
   },
 )
+
+const totalPlaceholderItems = computed(() => {
+  return isMobile.value ? 4 : 6
+})
 </script>

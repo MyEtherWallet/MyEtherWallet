@@ -49,7 +49,7 @@ const props = defineProps({
 
 const getSymbol = (): string => {
   if (props.symbol) {
-    return props.symbol.substring(0, 3)
+    return props.symbol.substring(0, 2)
   }
   return 'MN'
 }

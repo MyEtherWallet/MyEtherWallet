@@ -144,18 +144,18 @@ const formatFloatingPointValue = (
 
   /**
    * Case IV: value >= 1
-   * Return: a number, rounded to 4 decimal points and tooltip with full value if > 4 decimal places
+   * Return: a number, rounded to 2 decimal points and tooltip with full value if > 4 decimal places
    */
   if (value.isGreaterThanOrEqualTo(1)) {
-    return getRoundNumber(value, 4)
+    return getRoundNumber(value, 2)
   }
 
   /**
    * Case V: value >= 0.0001
-   * Return: a number, rounded up to 7 decimal places and tooltip with full value if > 7 decimal places
+   * Return: a number, rounded up to 4 decimal places and tooltip with full value if > 7 decimal places
    */
   if (value.isGreaterThanOrEqualTo(SmallNumberBreakpoint)) {
-    return getRoundNumber(value, 6)
+    return getRoundNumber(value, 4)
   }
 
   /**

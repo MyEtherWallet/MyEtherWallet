@@ -180,13 +180,11 @@ onMounted(() => {
     const preselected = displayedChains.value.find(
       chain => chain.name === prop.preselectedChain?.name,
     )
-    if (preselected) {
-      selectedChain.value = preselected
-      if (prop.canStore) {
-        setSelectedChainStore(preselected.name)
-      } else {
-        emits('update:selectedChain', preselected)
-      }
+    selectedChain.value = preselected ?? prop.preselectedChain // Fallback to preselectedChain prop
+    if (prop.canStore) {
+      setSelectedChainStore(selectedChain.value?.name || '')
+    } else {
+      emits('update:selectedChain', preselected)
     }
   } else {
     selectedChain.value = storedSelectedChain.value ?? null

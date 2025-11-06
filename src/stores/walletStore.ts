@@ -116,7 +116,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         balance.value = _balance
         balanceWei.value = token.balance
       } else {
-        if (token.decimals) {
+        if (token.decimals !== undefined) {
           newTokenCopy.push({
             ...token,
             name: token.name ?? 'Unknown',

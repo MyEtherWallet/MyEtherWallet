@@ -9,7 +9,7 @@
     z-index-container="z-[201]"
   >
     <template #content>
-      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+      <div class="h-[70vh] sm:h-[500px] !overflow-y-scroll">
         <!-- Seacrh -->
         <div class="sticky top-0 bg-white z-10">
           <div class="px-5 mb-1">
