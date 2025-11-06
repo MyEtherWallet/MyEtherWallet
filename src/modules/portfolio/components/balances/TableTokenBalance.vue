@@ -292,7 +292,11 @@
                     >
                       <div
                         v-if="token.coinId"
-                        class="xs:hidden flex items-center p-2"
+                        class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                        @click.stop="[
+                          setWatchlistToken(token.coinId),
+                          toggleMenu(),
+                        ]"
                       >
                         <star-outline-icon
                           class="h-4 w-4 cursor-pointer"
@@ -314,22 +318,22 @@
 
                       <ul>
                         <li
-                          @click.stop="toggleMenu"
-                          class="p-2 flex items-center"
+                          @click.stop="[buyBtn(), toggleMenu()]"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <icon-buy class="text-primary w-4 h-4 mr-2" />
                           <p>Buy</p>
                         </li>
                         <li
-                          @click.stop="toggleMenu"
-                          class="p-2 flex items-center"
+                          @click.stop="[swapBtn(token, true), toggleMenu()]"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <icon-swap class="text-primary w-4 h-4 mr-2" />
                           <p>Swap</p>
                         </li>
                         <li
-                          @click.stop="toggleMenu"
-                          class="p-2 flex items-center"
+                          @click.stop="[bridgeBtn(token, true), toggleMenu()]"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <icon-bridge class="text-primary w-4 h-4 mr-2" />
                           <p>Bridge</p>
@@ -702,9 +706,23 @@ const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
 const buyBtn = () => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
-const swapBtn = (token: DisplayToken) => {
+const bridgeBtn = (token: DisplayToken, isMobile = false) => {
+  setWalletPanel('bridge')
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
+}
+const swapBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('swap')
-  goToTokenPage(token)
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
 }
 
 const parsePercent = (val: number | null): string => {
