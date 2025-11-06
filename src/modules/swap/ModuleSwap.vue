@@ -6,7 +6,7 @@
       ]"
     >
       <div class="mb-3">
-        <p class="font-bold text-s-28 ml-5 mb-4 mt-1 xs:mt-5">
+        <p class="font-bold text-s-28 ml-5 mb-4">
           {{ walletPanel === 'swap' ? 'Swap' : 'Bridge' }}
         </p>
         <div class="relative">
@@ -17,9 +17,18 @@
           <div
             class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
           >
-            <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
+            <p class="text-s-12 mb-2 ml-2 font-bold">You are selling</p>
             <select-chain-for-app :filter-chain-type="true" />
+            <div
+              v-if="swapLoaded && !supportedNetwork"
+              class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
+            >
+              <p class="text-error text-center text-s-12">
+                {{ t('swap.not-supported-network') }}
+              </p>
+            </div>
             <app-swap-enter-amount
+              v-else
               v-model:amount="fromAmount"
               v-model:selected-token="fromTokenSelected"
               v-model:error="fromAmountError"
@@ -43,7 +52,7 @@
           <div
             class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
           >
-            <p class="text-s-12 mb-1 font-bold">{{ t('common.to') }}</p>
+            <p class="text-s-12 mb-2 ml-2 font-bold">You are buying</p>
             <select-chain-for-app
               :can-store="false"
               :passed-chains="toChains"
@@ -73,15 +82,7 @@
           </div>
         </div>
       </div>
-      <div class="pt-4"></div>
-      <div
-        v-if="swapLoaded && !supportedNetwork"
-        class="text-error text-center"
-      >
-        <p class="text-s-16">
-          {{ t('swap.not-supported-network') }}
-        </p>
-      </div>
+
       <app-base-button
         class="w-[70%]"
         v-if="isWalletConnected"
@@ -175,6 +176,7 @@ import dataTxAction from '@/utils/dataTxAction'
 import AddressInput from '@/components/address_book/AddressInput.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
 
@@ -584,7 +586,7 @@ const fromAmountError = computed(() => {
         BigInt(remainingBalance.toString())
     )
       return t('swap.error.insufficient-balance-for-fees', {
-        symbol: selectedChain.value?.name,
+        symbol: selectedChain.value?.currencyName,
       }) // insufficient native token balance for gas
     if (selectedQuote.value.minMax) {
       if (
@@ -675,7 +677,7 @@ watch(
         toTokenSelected.value?.decimals || 18,
       )
       // Set the toTokenSelected based on the first provider's toTokenAmount
-      toAmount.value = `≈ ${value.length > 8 ? BigNumber(value).decimalPlaces(8) : value.toString()}`
+      toAmount.value = `≈ ${formatFloatingPointValue(value).value}`
     }
   },
 )

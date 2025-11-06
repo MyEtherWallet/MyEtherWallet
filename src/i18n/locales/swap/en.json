@@ -2,17 +2,17 @@
   "swap": {
     "title1": "Simple and Secure Token Swap",
     "title2": "Instant crypto exchange with minimal fees",
-    "not-supported-network": "The selected from network does not support swaps. Please select a different network.",
+    "not-supported-network": "Selected network does not support swaps. Please select a different network.",
     "toast": {
       "select-chain": "Please select a chain.",
-      "unsupported-chain": "The selected chain is not supported.",
+      "unsupported-chain": "Selected chain is not supported.",
       "tx-sign-failed": "Transaction signing failed. Please try again.",
       "tx-send-success": "Swap executed successfully."
     },
     "error": {
       "amount-required": "Amount is required.",
       "more-than-zero": "Amount must be greater than 0.",
-      "insufficient-balance-for-fees": "Insufficient {symbol} balance to cover fees.",
+      "insufficient-balance-for-fees": "Not enough {symbol} to cover network fees.",
       "insufficient-native": "Insufficient {symbol} balance.",
       "minimum-amount": "Amount too low.",
       "maximum-amount": "Amount too high.",

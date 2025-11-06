@@ -25,7 +25,7 @@
         v-model:selected="selectedCryptoFilter"
         :options="cryptoFilterOptions"
         position="right-0"
-        placeholder="Balance Filter"
+        placeholder="Balance Menu"
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">

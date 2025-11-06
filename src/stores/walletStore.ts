@@ -94,7 +94,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         balance.value = fromWei(token.balance, 'ether')
         balanceWei.value = fromWei(token.balance, 'wei')
       } else {
-        if (token.decimals) {
+        if (token.decimals !== undefined) {
           newTokenCopy.push({
             ...token,
             name: token.name ?? 'Unknown',

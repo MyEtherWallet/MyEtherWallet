@@ -33,7 +33,7 @@
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
         <main :class="[' basis-full w-full max-w-[1440px] mx-auto']">
-          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-3 xs:px-5">
+          <div class="min-h-[600px] pt-3 xs:pt-6 px-3 xs:px-5">
             <router-view />
           </div>
           <MewFooter
