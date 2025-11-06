@@ -385,7 +385,11 @@
                         >
                           <div
                             v-if="token.coinId"
-                            class="sm:hidden flex items-center p-2"
+                            class="sm:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                            @click.stop="[
+                              setWatchlistToken(token.coinId),
+                              toggleMenu(),
+                            ]"
                           >
                             <star-outline-icon
                               class="h-4 w-4 cursor-pointer"
@@ -408,21 +412,21 @@
                           <ul>
                             <li
                               @click.stop="[toggleMenu, buyBtn()]"
-                              class="p-2 flex items-center"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-buy class="text-primary w-4 h-4 mr-2" />
                               <p>Buy</p>
                             </li>
                             <li
                               @click.stop="[toggleMenu, swapBtn(token, true)]"
-                              class="p-2 flex items-center"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-swap class="text-primary w-4 h-4 mr-2" />
                               <p>Swap</p>
                             </li>
                             <li
                               @click.stop="[toggleMenu, bridgeBtn(token, true)]"
-                              class="p-2 flex items-center"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-bridge class="text-primary w-4 h-4 mr-2" />
                               <p>Bridge</p>
