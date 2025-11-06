@@ -25,7 +25,7 @@
         <app-base-button
           class="min-w-[190px]"
           :size="isDesktopAndUp ? 'large' : 'medium'"
-          @click="accessStore.openAccessDialog"
+          @click="connectWallet"
         >
           Connect Wallet
         </app-base-button>
@@ -44,6 +44,15 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import { useAccessStore } from '@/stores/accessStore'
+
 const { isDesktopAndUp } = useAppBreakpoints()
+
+/** ------------------------------
+ * Connect Wallet
+ ------------------------------*/
 const accessStore = useAccessStore()
+
+const connectWallet = () => {
+  accessStore.openAccessDialog()
+}
 </script>
