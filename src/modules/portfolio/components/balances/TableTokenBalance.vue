@@ -358,6 +358,7 @@
       </table>
       <div
         v-if="
+          searchInput.length === 0 &&
           paginatedArray.length === 0 &&
           selectedAllTokensFilter.value === 'watchlist'
         "
@@ -368,6 +369,12 @@
           >Discover more tokens
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
+      </div>
+      <div
+        v-if="searchInput.length > 0 && paginatedArray.length === 0"
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-1 lg:mt-10">No results found for "{{ searchInput }}".</p>
       </div>
       <!-- Loading State -->
       <div v-if="isLoading" class="">
@@ -461,6 +468,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import BigNumber from 'bignumber.js'
 import { usePaginate } from '@/composables/usePaginate'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
+import { searchArrayByKeysStr } from '@/utils/searchArray'
 import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ROUTES_MAIN } from '@/router/routeNames'
@@ -627,6 +635,10 @@ const tokens = computed<DisplayToken[]>(() => {
     })
   }
 
+  //Search
+  if (searchInput.value && searchInput.value.length > 0) {
+    return searchArrayByKeysStr(tokens, ['name', 'symbol'], searchInput.value)
+  }
   //Sorting
   if (headerSort.value === SortValueString.NAME) {
     return sortObjectArrayString(tokens, 'name', tableDirection.value)
