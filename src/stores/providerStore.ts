@@ -19,7 +19,8 @@ export interface Provider {
   provider: {
     request: (
       params: requestParams,
-    ) => Promise<HexPrefixedString | HexPrefixedString[]>
+    ) => Promise<HexPrefixedString | HexPrefixedString[]>,
+    on: (event: string, handler: (...args: unknown[]) => void) => void
   }
 }
 

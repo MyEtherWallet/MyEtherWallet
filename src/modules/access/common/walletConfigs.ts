@@ -7,6 +7,8 @@ import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
 import HWWallet from '@enkryptcom/hw-wallets'
 import { NetworkNames } from '@enkryptcom/types'
+import type { Chain } from '@/mew_api/types'
+import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 
 export const WALLET_VIEWS = [
   'default',
@@ -71,13 +73,24 @@ export type WalletConfig = {
   isOfficial?: boolean
   walletViewType?: WalletView
   downloadUrls?: downloadUrls
-  canSupport?: (networkName?: string) => boolean
+  canSupport?: (chain?: Chain) => boolean
 }
 
-const canSupport = (networkName?: string): boolean => {
-  if (!networkName) return false
+const hardwareSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  const convertedNetworkName = chainToEnum[chain.name as string]
   const hwWallet = new HWWallet()
-  return hwWallet.isNetworkSupported(networkName as NetworkNames)
+  return hwWallet.isNetworkSupported(convertedNetworkName as NetworkNames)
+}
+
+const keystoreSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  return chain.type === 'EVM'
+}
+
+const enkryptSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  return chain.type === 'EVM' || ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') && !!window.unisat)
 }
 
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
@@ -86,7 +99,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
-    canSupport: canSupport,
+    canSupport: hardwareSupportNetwork,
     walletViewType: 'ledger',
   },
   trezor: {
@@ -94,7 +107,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Trezor',
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
-    canSupport: canSupport,
+    canSupport: hardwareSupportNetwork,
     walletViewType: 'trezor',
   },
   keystore: {
@@ -103,7 +116,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: KeystoreLogo,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'keystore',
-    canSupport: () => true,
+    canSupport: keystoreSupportNetwork,
   },
   mnemonic: {
     id: 'mnemonic',
@@ -126,7 +139,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'MEW Mobile',
     icon: MewLogo,
     type: [WalletConfigType.MOBILE],
-    canSupport: () => true,
+    canSupport: keystoreSupportNetwork, // TODO: replace with actual mew wallet support once we confirm DOT and SOL diverges from this
     isDefault: true,
     isOfficial: true,
     isWC: true,
@@ -137,7 +150,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Enkrypt',
     icon: EnkryptLogo,
     type: [WalletConfigType.EXTENSION],
-    canSupport: () => true,
+    canSupport: enkryptSupportNetwork,
     isDefault: true,
     isOfficial: true,
     isWC: true,

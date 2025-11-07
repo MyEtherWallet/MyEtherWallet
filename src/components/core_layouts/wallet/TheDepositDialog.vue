@@ -8,12 +8,12 @@
   >
     <template #title>
       <div>
-        <img
+        <app-token-logo
           v-if="selectedChain?.icon"
-          class="mr-4 mt-4 w-8 h-8 rounded-full overflow-hidden shadow-token"
-          :src="selectedChain?.icon"
-          alt=""
-        />
+          :url="selectedChain?.icon"
+          :symbol="selectedChain.currencyName"
+          class="mx-6 mt-3"
+        ></app-token-logo>
       </div>
     </template>
     <template #content>
@@ -82,6 +82,7 @@ import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'

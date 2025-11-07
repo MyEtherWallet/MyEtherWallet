@@ -9,7 +9,7 @@
     z-index-container="z-[201]"
   >
     <template #content>
-      <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+      <div class="h-[70vh] sm:h-[500px] !overflow-y-scroll">
         <!-- Seacrh -->
         <div class="sticky top-0 bg-white z-10">
           <div class="px-5 mb-1">
@@ -103,6 +103,10 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
+  passedChains: {
+    type: Array as () => Chain[],
+    default: () => [],
+  },
 })
 
 const chainsStore = useChainsStore()
@@ -143,14 +147,14 @@ const setOpenDialog = (value: boolean) => {
  -------------------------------*/
 const searchInput = ref('')
 const searchResults = computed<Chain[]>(() => {
-  const _chains = prop.hasAll
-    ? [ALL_CHAINS.value, ...chains.value]
-    : chains.value
+  const locChain =
+    prop.passedChains.length > 0 ? prop.passedChains : chains.value
+  const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
   const chainsToSearch = prop.filterChainType
-    ? _chains
-    : _chains.filter(chain => {
+    ? _chains.filter(chain => {
         return chain.type === storeSelectedChain.value?.type
       })
+    : _chains
 
   if (!searchInput.value || searchInput.value === '') {
     if (!prop.selectedChain) {

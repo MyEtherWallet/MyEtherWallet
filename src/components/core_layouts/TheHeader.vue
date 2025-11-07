@@ -129,7 +129,7 @@ import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
 import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
@@ -138,10 +138,23 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import { useAccessStore } from '@/stores/accessStore'
+import { WalletType, type HexPrefixedString } from '@/providers/types'
+import { useChainsStore } from '@/stores/chainsStore'
+import { watch } from 'vue'
+import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
+import type { Provider } from '@/stores/providerStore'
+import { useRecentAddressStore } from '@/stores/recentAddressStore'
+import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
+
 const { t } = useI18n()
 const store = useWalletStore()
-const { isWalletConnected } = storeToRefs(store)
+const chainStore = useChainsStore()
+const { isWalletConnected, wallet } = storeToRefs(store)
+const { setWallet } = store
+const { isEvmChain, isBitcoinChain, selectedChain } = storeToRefs(chainStore)
 const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
+const recentAddressStore = useRecentAddressStore()
+const { recentAddresses } = storeToRefs(recentAddressStore)
 
 /** ------------------------------
  * Breakpoints determine menu visibility
@@ -200,6 +213,7 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
 const displayLinks = computed(() => {
   return coreMenuList.value
 })
+
 const displayTools = computed<AppSelectOption[]>(() => {
   const tools = [...toolsMenuList.value]
   return tools.map(item => ({
@@ -220,6 +234,63 @@ const selectedOption = ref<AppSelectOption>({
 const btnClick = (payload: MouseEvent) => {
   console.log('btnClick', payload)
 }
+
+onMounted(() => {
+  const currentRecentAddressList =
+    recentAddresses.value[selectedChain.value?.type || 'EVM'] || {}
+  const addresses = Object.keys(currentRecentAddressList)
+  const chain =
+    recentAddresses.value[selectedChain.value?.type || 'EVM'][addresses[0]]
+      ?.chain
+  const walletName = recentAddresses.value[selectedChain.value?.type || 'EVM'][
+    addresses[0]
+  ]?.walletName as WalletType
+  if (addresses.length > 0) {
+    const newWallet = new WatchOnlyWallet(addresses[0], chain!, walletName!)
+
+    setWallet(newWallet)
+  }
+})
+
+watch(
+  () => wallet.value,
+  newVal => {
+    if (newVal?.getWalletType() === WalletType.INJECTED) {
+      if (isEvmChain.value) {
+        const injectedInfo = wallet.value?.getProviderInstance?.() as Provider
+        injectedInfo?.provider.on(
+          'accountsChanged',
+          async (accounts: unknown) => {
+            if (
+              (accounts as string[])[0] !== (await wallet.value?.getAddress())
+            ) {
+              const _wallet = wallet.value as Web3InjectedWallet
+              _wallet.updateAddress(
+                (accounts as string[])[0] as HexPrefixedString,
+              )
+              setWallet(_wallet)
+            }
+          },
+        )
+      } else if (isBitcoinChain.value) {
+        const unisatInfo =
+          wallet.value?.getProviderInstance?.() as typeof window.unisat
+        unisatInfo?.on('accountsChanged', async (accounts: unknown) => {
+          if (
+            (accounts as string[])[0] !== (await wallet.value?.getAddress())
+          ) {
+            const _wallet = wallet.value as Web3InjectedWallet
+            _wallet.updateAddress(
+              (accounts as string[])[0] as HexPrefixedString,
+            )
+
+            setWallet(_wallet)
+          }
+        })
+      }
+    }
+  },
+)
 
 /** ------------------------------
  * Determine if the user is on the access page

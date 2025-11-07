@@ -2,7 +2,7 @@ import { ROUTES_ACCESS } from './routeNames'
 import { type RouterOptions } from 'vue-router'
 import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
-const ViewAccessWallet = () => import('@view-default/ViewAccessWallet.vue')
+const ViewAccessWallet = () => import('@/views/ViewAccessWallet.vue')
 
 const beforeRouteEnter = (
   to: RouteLocationNormalized,

@@ -6,16 +6,73 @@
 
     <div class="basis-full">
       <div class="flex flex-wrap justify-start items-center gap-2">
+        <!-- Mobile to MD only Categories and Chain Filter-->
+        <app-select
+          v-model:selected="selectedCryptoFilter"
+          :options="cryptoFilterOptions"
+          position="left-0"
+          placeholder="Category Menu"
+          class="w-full xs:w-auto md:hidden"
+        >
+          <template #select-button="{ toggleSelect }">
+            <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+              <button
+                class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
+                @click="toggleSelect"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="text-s-16 font-medium truncate">
+                    {{ selectedCryptoFilter.label }}</span
+                  >
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
+            </div>
+          </template>
+        </app-select>
+        <div class="bg-surface rounded-full p-1 md:hidden w-full xs:w-auto">
+          <button
+            class="rounded-full bg-white py-2 px-3 shadow-button h-[42px] w-full xs:min-w-[180px]"
+            @click="openChainDialog = true"
+          >
+            <div class="flex items-center justify-start gap-2">
+              <app-token-logo
+                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
+                :url="selectedChainFilter?.icon"
+                :symbol="selectedChainFilter?.nameLong"
+                width="w-6"
+                height="h-6"
+              />
+              <span
+                class="text-s-16 font-medium truncate"
+                :class="{
+                  'ml-2': selectedChainFilter?.nameLong === 'All Chains',
+                }"
+              >
+                {{ selectedChainFilter?.nameLong }}</span
+              >
+              <chevron-down-icon class="w-4 h-4 ml-auto" />
+            </div>
+          </button>
+        </div>
         <!-- Search and Filter Chains-->
         <div
-          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 md:min-w-[400px]"
+          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:w-auto md:min-w-[400px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
           <button
-            class="rounded-full hoverNoBG p-2"
+            class="rounded-full hoverNoBG p-2 hidden md:flex"
             @click="openChainDialog = true"
           >
             <div class="flex items-center">
+              <app-token-logo
+                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
+                :url="selectedChainFilter?.icon"
+                :symbol="selectedChainFilter?.nameLong"
+                width="w-5"
+                height="h-5"
+                class="mr-2"
+              />
               <span
                 v-if="selectedChainFilter"
                 class="text-s-17 leading-p-140 font-medium"
@@ -31,6 +88,7 @@
             v-model:selected="selectedCryptoFilter"
             :btn-list="cryptoFilterOptions.slice(0, 4)"
             size="large"
+            class="hidden md:flex"
           >
             <template #btn-content="{ data }">
               {{ data.label }}
@@ -46,10 +104,10 @@
               >
                 <template #select-button="{ toggleSelect }">
                   <button
-                    class="rounded-full hoverNoBG p-2"
+                    class="rounded-full hoverNoBG px-3 py-2"
                     @click="toggleSelect"
                   >
-                    <div class="flex items-center">
+                    <div class="flex items-center text-s-17 leading-p-140">
                       <span>More</span>
                       <chevron-down-icon class="w-4 h-4 ml-1" />
                     </div>
@@ -61,7 +119,7 @@
         </div>
       </div>
 
-      <div class="mt-5 bg-white rounded-16 shadow-button py-4 px-2">
+      <div class="mt-3 bg-white rounded-16 shadow-button py-4 px-2">
         <div class="static" ref="tableContainer">
           <table class="w-full text-sm table-fixed">
             <!-- Header-->
@@ -70,10 +128,15 @@
                 class="text-left text-s-11 uppercase text-info tracking-sp-06"
               >
                 <!-- Watchlist -->
-                <th class="w-8 xs:w-10 hidden sm:table-cell"></th>
+                <th class="w-8 sm:w-9 3xl:w-10 hidden sm:table-cell"></th>
                 <!-- Name -->
                 <th
-                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors xs:w-[180px]"
+                  :class="
+                    isOpenSideMenu
+                      ? 'xl:w-[140px] 3xl:w-[180px]'
+                      : 'xl:w-[180px]'
+                  "
+                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors w-[55%] sm:w-[180px]"
                 >
                   <div
                     class="flex items-center gap-1 ml-11"
@@ -95,10 +158,10 @@
                 </th>
                 <!-- Price -->
                 <th
-                  class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors w-[150px] xs:w-auto xl:w-[120px]"
+                  class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end xs:justify-center sm:justify-end relative"
+                    class="flex items-center gap-1 justify-end relative text-right"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
@@ -106,17 +169,17 @@
                   >
                     Price
                     <arrow-long-up-icon
-                      class="w-3 h-3 absolute xs:static sm:absolute -right-4"
+                      class="w-3 h-3 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
                     />
                     <arrow-long-down-icon
-                      class="w-3 h-3 absolute xs:static sm:absolute -right-4"
+                      class="w-3 h-3 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
                     />
                   </div>
                 </th>
                 <!-- 24h % -->
-                <th class="hidden sm:table-cell xl:min-w-[115px]">
+                <th class="hidden sm:table-cell">
                   <app-select
                     v-model:selected="activePercent"
                     :options="percentOptions"
@@ -193,28 +256,14 @@
                 </th>
                 <!-- Actions -->
                 <th
-                  class="pl-1 pr-3 py-2 text-right hidden xs:table-cell w-[150px]"
-                  :class="[
-                    isOpenSideMenu
-                      ? '2xl:w-[130px] 3xl:w-[180px]'
-                      : 'xl:w-[180px]',
-                  ]"
+                  class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  Actions
+                  <p class="hidden lg:block">Actions</p>
                 </th>
               </tr>
             </thead>
             <!-- Body-->
             <tbody v-if="!isLoading">
-              <div
-                v-if="
-                  watchListedTokens.length === 0 &&
-                  selectedCryptoFilter.value === 'watchlist'
-                "
-                class="text-nowrap px-3"
-              >
-                <h3>No watchlisted tokens</h3>
-              </div>
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
@@ -222,7 +271,7 @@
                 @click="goToTokenPage(token)"
               >
                 <!-- Watchlist -->
-                <td class="xs:pr-2 hidden sm:table-cell rounded-l-12">
+                <td class="sm:pr-1 hidden sm:table-cell rounded-l-12">
                   <button
                     @click.stop="setWatchlistToken(token.coinId)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
@@ -246,10 +295,9 @@
                     }"
                     class="flex items-center gap-3"
                   >
-                    <img
-                      :src="token.logoUrl as string"
-                      alt="favorite"
-                      class="inline-block h-8 w-8 rounded-full shadow-token"
+                    <app-token-logo
+                      :url="token.logoUrl"
+                      :symbol="token.symbol"
                     />
                     <div class="truncate">
                       <p class="truncate">{{ token.name }}</p>
@@ -261,17 +309,13 @@
                 </td>
                 <!-- Price -->
                 <!-- TODO: change with currency parser -->
-                <td class="px-1 py-2 text-right rounded-r-12 xs:rounded-none">
-                  <p class="text-right xs:text-center sm:text-right">
-                    ${{ token.price }}
+                <td class="px-1 py-2 text-right">
+                  <p class="text-right">
+                    {{ token.price }}
                   </p>
                   <p
-                    class="text-right xs:text-center sm:hidden text-s-12"
-                    :class="[
-                      parsePercent(getActivePercent(token)).includes('-')
-                        ? 'text-error'
-                        : 'text-success',
-                    ]"
+                    class="text-right sm:hidden text-s-12"
+                    :class="getPercentClass(getActivePercent(token))"
                   >
                     {{ parsePercent(getActivePercent(token)) }}
                   </p>
@@ -279,11 +323,7 @@
                 <!-- 24h % -->
                 <td
                   class="px-1 py-1 text-right hidden sm:table-cell text-s-11 leading-p-100"
-                  :class="[
-                    parsePercent(getActivePercent(token)).includes('-')
-                      ? 'text-error'
-                      : 'text-success',
-                  ]"
+                  :class="getPercentClass(getActivePercent(token))"
                 >
                   <div>
                     <p>{{ parsePercent(getActivePercent(token)) }}</p>
@@ -294,6 +334,7 @@
                       :width="50"
                       :height="35"
                       :max-points="35"
+                      :percent-change="getActivePercent(token) || undefined"
                     />
                   </div>
                 </td>
@@ -304,18 +345,96 @@
                   "
                   class="px-1 py-2 text-right hidden"
                 >
-                  ${{ formatFiatValue(token.totalVolume ?? 0).value }}
+                  {{ token.totalVolume }}
                 </td>
                 <!-- Market Cap -->
                 <td class="px-1 py-2 text-right hidden md:table-cell">
-                  ${{ token.marketCap ?? 0 }}
+                  {{ token.marketCap }}
                 </td>
                 <!-- Actions -->
-                <td
-                  class="pl-1 py-2 hidden xs:table-cell rounded-r-12 relative"
-                >
-                  <div class="flex flex-row gap-1 justify-end flex-wrap">
-                    <app-base-button size="small" @click="buyBtn()" is-outline
+                <td class="pl-1 pr-2 py-2 rounded-r-12 relative">
+                  <div
+                    class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
+                  >
+                    <app-pop-up-menu
+                      placeholder="actions menu"
+                      location="right"
+                    >
+                      <template #menu-button="{ toggleMenu }">
+                        <app-btn-icon
+                          label="action menu"
+                          @click.stop="toggleMenu"
+                          height="h-7 xs:h-8"
+                          width="w-7 xs:w-8"
+                        >
+                          <ellipsis-vertical-icon class="w-5 h-5" />
+                        </app-btn-icon>
+                      </template>
+                      <template #menu-content="{ toggleMenu }">
+                        <div
+                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        >
+                          <div
+                            v-if="token.coinId"
+                            class="sm:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                            @click.stop="[
+                              setWatchlistToken(token.coinId),
+                              toggleMenu(),
+                            ]"
+                          >
+                            <star-outline-icon
+                              class="h-4 w-4 cursor-pointer"
+                              v-if="!isWatchListed(token.coinId)"
+                            />
+                            <star-solid-icon
+                              v-else
+                              class="h-4 w-4 cursor-pointer"
+                            />
+                            <span class="ml-2">{{
+                              isWatchListed(token.coinId)
+                                ? 'Remove from Watchlist'
+                                : 'Add to Watchlist'
+                            }}</span>
+                          </div>
+                          <hr
+                            class="h-px bg-grey-outline border-0 w-full my-2 sm:hidden"
+                          />
+
+                          <ul>
+                            <li
+                              @click.stop="[toggleMenu, buyBtn()]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <icon-buy class="text-primary w-4 h-4 mr-2" />
+                              <p>Buy</p>
+                            </li>
+                            <li
+                              @click.stop="[toggleMenu, swapBtn(token, true)]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <icon-swap class="text-primary w-4 h-4 mr-2" />
+                              <p>Swap</p>
+                            </li>
+                            <li
+                              @click.stop="[toggleMenu, bridgeBtn(token, true)]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <icon-bridge class="text-primary w-4 h-4 mr-2" />
+                              <p>Bridge</p>
+                            </li>
+                          </ul>
+                        </div>
+                      </template>
+                    </app-pop-up-menu>
+                  </div>
+                  <div
+                    class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                  >
+                    <app-base-button
+                      size="small"
+                      @click="buyBtn()"
+                      is-outline
+                      class="hidden 3xl:block"
                       >Buy</app-base-button
                     >
                     <app-base-button size="small" @click="swapBtn(token)"
@@ -326,6 +445,28 @@
               </tr>
             </tbody>
           </table>
+          <div
+            v-if="!isLoading && tokens.length === 0"
+            class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+          >
+            <p
+              v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+              class="mb-1 text-center lg:mt-10"
+            >
+              You dont have any watchlisted tokens.
+            </p>
+            <p v-if="searchInput" class="mb-1 text-center lg:my-10">
+              No results found for "{{ searchInput }}".
+            </p>
+            <button
+              v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
+              class="underline lg:mb-10"
+              @click="selectedCryptoFilter = cryptoFilterOptions[0]"
+            >
+              Discover more tokens
+              <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+            </button>
+          </div>
           <!-- Loading State -->
           <div v-if="isLoading" class="">
             <div
@@ -341,7 +482,7 @@
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-center justify-between text-xs mt-2"
+          class="flex flex-col xs:flex-row items-center justify-center justify-between text-s-12 mt-2"
         >
           <small
             class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"
@@ -394,6 +535,11 @@ import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
+import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
+import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import {
   StarIcon as StarSolidIcon,
   ChevronDownIcon,
@@ -401,6 +547,7 @@ import {
   ArrowLongUpIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  EllipsisVerticalIcon,
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
@@ -421,7 +568,6 @@ import {
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
-import isValidUrl from '@/utils/isValidUrl'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
@@ -502,9 +648,23 @@ const nextPage = () => {
 const buyBtn = () => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
-const swapBtn = (token: DisplayToken) => {
+const bridgeBtn = (token: DisplayToken, isMobile = false) => {
+  setWalletPanel('bridge')
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
+}
+const swapBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('swap')
-  goToTokenPage(token)
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
 }
 
 const setHeaderSort = (key: string) => {
@@ -523,7 +683,7 @@ const setSelectedChain = (chain: Chain) => {
 }
 
 const cryptoFilterOptions = ref([
-  { label: 'All', value: 'all' },
+  { label: 'All Tokens', value: 'all' },
   { label: 'Top Gainers', value: 'topGainers' },
   { label: 'Top Losers', value: 'topLosers' },
   { label: 'Watchlist', value: 'watchlist' },
@@ -536,9 +696,13 @@ const cryptoFilterOptions = ref([
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
 
 interface DisplayToken
-  extends Omit<GetWebTokensTableResponseToken, 'price' | 'marketCap'> {
+  extends Omit<
+    GetWebTokensTableResponseToken,
+    'price' | 'marketCap' | 'totalVolume'
+  > {
   price: string
   marketCap: string
+  totalVolume: string
 }
 const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
@@ -632,28 +796,24 @@ onMounted(() => {
   }
 })
 
+const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
+  return {
+    ...item,
+    // TODO: update this to convert price to user selected currency
+    price: item.price ? `$${formatFiatValue(item.price).value}` : '-',
+    marketCap: item.marketCap
+      ? `$${formatIntegerValue(item.marketCap).value}`
+      : '-',
+    totalVolume: item.totalVolume
+      ? `$${formatIntegerValue(item.totalVolume).value}`
+      : '-',
+  }
+}
 onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(item => {
-      const logo =
-        item.logoUrl && isValidUrl(item.logoUrl)
-          ? item.logoUrl
-          : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-      return {
-        ...item,
-        logoUrl: logo,
-        priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-        price: formatFiatValue(item.price ?? 0).value,
-        // price: new Intl.NumberFormat('en-US', {
-        //   style: 'currency',
-        //   currency: 'USD',
-        //   maximumFractionDigits: 2,
-        // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-        marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-      }
-    })
+    tokens.value = fetchWatchlistData.value.map(item => formatToken(item)) || []
   }
   isLoading.value = false
 })
@@ -662,24 +822,7 @@ onFetchGainersResponse(() => {
   totalPages.value = fetchGainersData.value?.pages ?? 0
   if (fetchGainersData.value && fetchGainersData.value.items) {
     tokens.value =
-      fetchGainersData.value.items.map(item => {
-        const logo =
-          item.logoUrl && isValidUrl(item.logoUrl)
-            ? item.logoUrl
-            : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-        return {
-          ...item,
-          logoUrl: logo,
-          priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-          price: formatFiatValue(item.price ?? 0).value,
-          // price: new Intl.NumberFormat('en-US', {
-          //   style: 'currency',
-          //   currency: 'USD',
-          //   maximumFractionDigits: 2,
-          // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-          marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-        }
-      }) || []
+      fetchGainersData.value.items.map(item => formatToken(item)) || []
   }
   isLoading.value = false
 })
@@ -687,24 +830,8 @@ onFetchTokenTableResponse(() => {
   totalTokenCount.value = fetchTokenData.value?.total ?? 0
   totalPages.value = fetchTokenData.value?.pages ?? 0
   if (fetchTokenData.value && fetchTokenData.value.items) {
-    tokens.value = fetchTokenData.value.items.map(item => {
-      const logo =
-        item.logoUrl && isValidUrl(item.logoUrl)
-          ? item.logoUrl
-          : `https://dummyimage.com/32x32/008ECC/000&text=${item.name.charAt(0)}`
-      return {
-        ...item,
-        logoUrl: logo,
-        priceChangePercentage24h: item.priceChangePercentage24h ?? 0,
-        price: formatFiatValue(item.price ?? 0).value,
-        // price: new Intl.NumberFormat('en-US', {
-        //   style: 'currency',
-        //   currency: 'USD',
-        //   maximumFractionDigits: 2,
-        // }).format(item.price ?? 0), // TODO: update this to convert price to user selected currency
-        marketCap: formatIntegerValue(item.marketCap ?? 0).value,
-      }
-    })
+    tokens.value =
+      fetchTokenData.value.items.map(item => formatToken(item)) || []
   }
   isLoading.value = false
 })
@@ -729,8 +856,15 @@ onFetchTokenTableError(err => {
 })
 
 const parsePercent = (val: number | null): string => {
-  if (val === null || val === undefined) return ''
+  if (val === null || val === undefined) return '-'
   return formatPercentageValue(val ?? 0).value
+}
+
+const getPercentClass = (val: number | null): string => {
+  if (val === null || val === undefined) return ''
+  if (val > 0) return 'text-success'
+  if (val < 0) return 'text-error'
+  return 'text-primary'
 }
 
 watch(

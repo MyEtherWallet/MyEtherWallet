@@ -63,8 +63,9 @@
             </div>
           </div>
           <app-pop-up-menu
-            :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length })}`"
+            :placeholder="`${t('swap.swap-offer.offers', { count: quotes.length - 1 })}`"
             location="left"
+            v-if="quotes.length > 1"
           >
             <template #menu-content="{ toggleMenu }">
               <div class="px-4 pt-4 pb-2">
@@ -129,9 +130,17 @@
         <app-base-button
           class="w-full"
           @click="proceedWithSwap"
-          :is-loading="isLoading"
+          :is-loading="loadingModel"
         >
           {{ t('swap.swap-offer.proceed') }}
+        </app-base-button>
+        <app-base-button
+          class="w-full mt-5"
+          :is-outline="true"
+          theme="error"
+          @click="declineSwap"
+        >
+          {{ t('swap.swap-offer.decline') }}
         </app-base-button>
       </div>
     </template>
@@ -143,7 +152,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ref, computed, watch } from 'vue'
+import { computed, watch } from 'vue'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -181,6 +190,11 @@ const model = defineModel('swapOfferOpen', {
   default: false,
 })
 
+const loadingModel = defineModel('loading', {
+  type: Boolean,
+  default: false,
+})
+
 const selectedQuote = defineModel('selectedQuote', {
   type: Object as () => ProviderQuoteResponse,
 })
@@ -210,8 +224,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['update:proceedWithSwap'])
-const isLoading = ref(false)
+const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 
 const providerName = computed(() => {
   switch (selectedQuote.value?.provider) {
@@ -254,6 +267,14 @@ const toAmount = computed(() => {
   ).decimalPlaces(8)
 })
 
+const toAmountFiat = computed(() => {
+  const toTokenPrice = toToken.value?.price || '0'
+  return BigNumber(toAmount.value)
+    .multipliedBy(toTokenPrice)
+    .decimalPlaces(2)
+    .toString()
+})
+
 const parseAmount = (amount: BN, decimal: number) => {
   return fromBase(amount.toString(), decimal)
 }
@@ -263,32 +284,22 @@ const exchangeRate = computed(() => {
   const fromTokenPrice = fromToken.value.price || '0'
   const toTokenPrice = toToken.value.price || '0'
   if (BigNumber(toTokenPrice).isZero()) return '0'
-  return BigNumber(fromTokenPrice).times(toTokenPrice).toString()
-})
-
-const toAmountFiat = computed(() => {
-  return (
-    BigNumber(
-      fromBase(
-        selectedQuote.value?.toTokenAmount.toString() || '0',
-        toToken.value?.decimals ?? 18,
-      ),
-    )
-      .times(BigNumber(toToken.value?.price || '0'))
-      .decimalPlaces(2) || '0'
-  )
+  return BigNumber(fromTokenPrice).div(toTokenPrice).toFixed(2)
 })
 
 watch(
   () => model.value,
   () => {
-    isLoading.value = false
+    loadingModel.value = false
   },
 )
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
-  isLoading.value = true
+  loadingModel.value = true
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
+}
+const declineSwap = () => {
+  emits('update:declineSwap')
 }
 </script>

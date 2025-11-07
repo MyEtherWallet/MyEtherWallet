@@ -94,9 +94,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { type SelectAddress } from './types/selectAddress'
-import { useRouter } from 'vue-router'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
@@ -119,6 +117,9 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
+import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
+import { fromBase } from '@/utils/unit'
+
 import { useAccessStore } from '@/stores/accessStore'
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -126,19 +127,19 @@ const derivationStore = useDerivationStore()
 const chainsStore = useChainsStore()
 const { trezorSelectedDerivation, ledgerSelectedDerivation } =
   storeToRefs(derivationStore)
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isEvmChain } = storeToRefs(chainsStore)
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
 const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
   derivationStore
-
+const { wallet } = storeToRefs(walletStore)
 const { t } = useI18n()
 // used to define which hardware wallet is being accessed
 const accessStore = useAccessStore()
 
 // Wallet instance
-let hwWalletInstance = new HWwallet()
+let hwWalletInstance: HWwallet | null = new HWwallet()
 const { currentView } = storeToRefs(accessStore)
 
 /**------------------------
@@ -252,28 +253,28 @@ const backStep = () => {
 
 const connectingWallet = ref(false)
 
-// TODO: Handle non EVM networks
 const unlockWallet = async () => {
   connectingWallet.value = true
   const networkName = chainToEnum[
     selectedChain.value?.name as string
   ] as NetworkNames
 
-  await hwWalletInstance
-    .isConnected({
-      wallet: selectedHwWalletType.value as HWwalletType,
-      networkName: networkName,
-    })
-    .then(() => {
-      hwWalletInstance.close()
-      hwWalletInstance = new HWwallet()
-      return new Promise(r => setTimeout(r, 1000))
-    })
+  if (!wallet.value) {
+    await hwWalletInstance!
+      .isConnected({
+        wallet: selectedHwWalletType.value as HWwalletType,
+        networkName: networkName,
+      })
+      .then(() => {
+        return new Promise(r => setTimeout(r, 1000))
+      })
+  }
   activeStep.value = 1
-  paths.value = (await hwWalletInstance.getSupportedPaths({
+  paths.value = (await hwWalletInstance!.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
     networkName: networkName,
   })) as PathType[]
+
   // if path is empty, set a path
   // if currently selected path is not in the list, set the first one
   if (
@@ -301,43 +302,71 @@ const loadList = async (page: number = 0) => {
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
-  const chainId = selectedChain.value?.name || 'ETH'
-  const networkName = chainToEnum[chainId] ?? 'ETH'
+  const chainId = selectedChain.value?.chainID ?? '1'
+  const chainName = selectedChain.value?.name ?? 'ETHEREUM'
+  const networkName = chainToEnum[chainName] ?? 'Ethereum'
+  const instance = wallet.value
+    ? wallet.value.getWalletInstance?.()
+      ? wallet.value.getWalletInstance()
+      : hwWalletInstance
+    : hwWalletInstance
 
   for (let i = startIndex; i < startIndex + 5; i++) {
     try {
-      const addressResponse = await hwWalletInstance.getAddress({
+      const addressResponse = await instance!.getAddress({
         confirmAddress: false,
         networkName: networkName,
         pathType: selectedDerivation.value as PathType,
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
       })
-
-      const hardwareWalletInstance = new EvmHardwareWallet(
-        chainId,
-        addressResponse.address as HexPrefixedString,
-        networkName,
-        i.toString(),
-        selectedDerivation.value as PathType,
-        selectedHwWalletType.value as HWwalletType,
-        hwWalletInstance,
-      )
-      hwWalletInstance.close()
-
+      const hardwareWalletInstance = isEvmChain.value
+        ? new EvmHardwareWallet(
+            chainId,
+            addressResponse.address as HexPrefixedString,
+            networkName,
+            i.toString(),
+            selectedDerivation.value as PathType,
+            selectedHwWalletType.value as HWwalletType,
+            instance!,
+          )
+        : new BtcHardwareWallet(
+            addressResponse.address as HexPrefixedString,
+            networkName,
+            i.toString(),
+            selectedDerivation.value as PathType,
+            selectedHwWalletType.value as HWwalletType,
+            instance!,
+          )
       const fetchBalance = await hardwareWalletInstance.getBalance()
-      const mainToken = fetchBalance.result.find(
-        token => token.contract === MAIN_TOKEN_CONTRACT,
-      )
-      walletList.value.push({
-        address: addressResponse.address,
-        index: i,
-        balance: fromWei(
-          (mainToken?.balance || '0x0') as HexPrefixedString,
-          'ether',
-        ).toString(),
-        walletInstance: hardwareWalletInstance,
-      })
+
+      if (Array.isArray(fetchBalance.result)) {
+        const mainToken = fetchBalance.result.find(
+          token => token.contract === MAIN_TOKEN_CONTRACT,
+        )
+
+        walletList.value.push({
+          address: addressResponse.address,
+          index: i,
+          balance: fromWei(
+            (mainToken?.balance || '0x0') as HexPrefixedString,
+            'ether',
+          ).toString(),
+          walletInstance: hardwareWalletInstance as EvmHardwareWallet,
+        })
+      } else {
+        // TODO: change this once api changes are made to return consistent data
+        // for all networks
+        const newFetchBalance = fetchBalance as unknown as {
+          balance: { nativeValue: string }
+        }
+        walletList.value.push({
+          address: await hardwareWalletInstance.getAddress(),
+          index: i,
+          balance: fromBase(newFetchBalance.balance.nativeValue || '0', 8),
+          walletInstance: hardwareWalletInstance,
+        })
+      }
     } catch (e) {
       toastStore.addToastMessage({
         type: ToastType.Error,
@@ -387,8 +416,6 @@ const setPage = (isNext: boolean) => {
 /** ------------------------
  * Access Wallet
  ------------------------*/
-
-const router = useRouter()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
@@ -401,6 +428,7 @@ const walletConfig: ComputedRef<WalletConfig | null> = computed(() => {
       return null
   }
 })
+const { closeAccessDialog } = useAccessStore()
 
 const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
@@ -408,8 +436,8 @@ const access = async () => {
 
   setWallet(markRaw(wallet as EvmHardwareWallet) as WalletInterface)
   addWallet(walletConfig.value as WalletConfig)
-
   isUnlockingWallet.value = false
-  router.push({ path: ROUTES_MAIN.HOME.PATH })
+  hwWalletInstance = null
+  closeAccessDialog()
 }
 </script>

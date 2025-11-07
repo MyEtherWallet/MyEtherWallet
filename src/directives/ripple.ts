@@ -28,7 +28,7 @@ const ripple = (event: Event) => {
 
 const addEventListeners = (el: HTMLElement) => {
   el.addEventListener('click', ripple)
-  el.addEventListener('touchstart', ripple)
+  el.addEventListener('touchstart', ripple, { passive: true })
   el.addEventListener('keydown', ripple)
 }
 

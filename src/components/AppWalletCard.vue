@@ -2,7 +2,7 @@
   <div>
     <div v-if="isWalletConnected && walletAddress" class="">
       <div
-        class="relative bg-grey-50 rounded-16 h-[170px] grid grid-rows-3 px-5 py-4 content-between text-white"
+        class="relative bg-grey-50 rounded-16 h-[205px] grid grid-rows-3 px-5 py-4 content-between text-white shadow-button"
       >
         <img
           ref="mewCard"
@@ -10,7 +10,7 @@
           alt="MEW Card"
           width="670"
           height="424"
-          class="rounded-16 drop-shadow absolute z-0 h-[170px]"
+          class="rounded-16 drop-shadow absolute z-0 h-[205px] w-full"
           @load="animateMewCard"
         />
         <!-- wallet address, wallet menu, link to explorer-->
@@ -56,7 +56,7 @@
             v-if="!isLoadingBalances"
             class="font-bold text-s-32 leading-p-130"
           >
-            {{ formattedTotalFiatPortflioValue }}
+            {{ formattedTotalFiatPortfolioValue }}
           </p>
           <div
             v-else
@@ -111,6 +111,7 @@ import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 import { useChainsStore } from '@/stores/chainsStore'
+import useBalanceHandler from '@/utils/balanceHandler'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
@@ -121,7 +122,7 @@ const {
   walletAddress,
   isWalletConnected,
   formattedBalance,
-  formattedTotalFiatPortflioValue,
+  formattedTotalFiatPortfolioValue,
   safeMainTokenBalance,
   isLoadingBalances,
   walletCardWasAnimated,
@@ -134,8 +135,7 @@ const { selectedChain } = storeToRefs(chainsStore)
 const fetchBalances = () => {
   setIsLoadingBalances(true)
   wallet.value?.getBalance().then(balances => {
-    setTokens(balances.result)
-    setIsLoadingBalances(false)
+    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
   })
 }
 /**

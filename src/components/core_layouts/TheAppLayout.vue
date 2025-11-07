@@ -30,12 +30,10 @@
       ]"
     >
       <div
-        :class="[
-          'relative flex justify-center min-w-[320px] w-full mt-[68px] sm:mt-[76px]',
-        ]"
+        :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto  ']">
-          <div class="min-h-[600px] pt-6 xs:pt-10 lg:pt-12 px-5 2xl:px-7">
+        <main :class="[' basis-full w-full max-w-[1440px] mx-auto']">
+          <div class="min-h-[600px] pt-3 xs:pt-6 px-3 xs:px-5">
             <router-view />
           </div>
           <MewFooter
@@ -46,7 +44,7 @@
             :user-consent="popupStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
-            class="!px-5 !2xl:px-7"
+            class="!px-3 !xs:px-5"
           />
         </main>
       </div>
@@ -73,6 +71,10 @@ import {
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
+import { useWalletStore } from '@/stores/walletStore'
+
+const walletStore = useWalletStore()
+const { isWalletConnected } = storeToRefs(walletStore)
 
 const popupStore = usePopupStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
@@ -94,10 +96,14 @@ const handleSetConsent = (consent: boolean) => {
 const route = useRoute()
 
 const backgroundClass = computed(() => {
-  if (
+  if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
+    return 'home-not-connected-background'
+  } else if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
     route.name === ROUTES_MAIN.CRYPTO.NAME ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto
+    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
+    route.name === TOKEN_INFO_ROUTE_NAMES.home ||
+    route.name === ROUTES_MAIN.HOME.NAME
   ) {
     return ''
   } else {
@@ -116,5 +122,25 @@ const { isOverflowHidden } = storeToRefs(appLayoutStore)
     rgba(44, 91, 255, 0.24) 0%,
     rgba(0, 152, 166, 0) 100%
   );
+}
+.home-not-connected-background {
+  background:
+    radial-gradient(
+      circle 350px at 50% 45%,
+      rgba(255, 255, 255, 0.5) 60%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255, 255, 255, 1) 400px,
+      #f5f5f7 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(90, 197, 210, 1) 0%,
+      rgba(149, 206, 253, 1) 50%,
+      rgba(126, 138, 250, 1) 100%
+    );
 }
 </style>

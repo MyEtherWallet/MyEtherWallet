@@ -18,15 +18,15 @@
           <app-token-logo
             :url="tokenData.iconUrl"
             :symbol="tokenData.symbol"
-            width=" w-9 xs:w-[28px]"
-            height="h-9 xs:h-[28px]"
+            width="w-9 xs:w-8"
+            height="h-9 xs:h-8"
           />
           <app-token-logo
             v-if="selectedChain"
             :url="selectedChain.icon"
             :symbol="selectedChain.name"
-            width="w-3"
-            height="h-3"
+            width="w-4"
+            height="h-4"
             class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
           />
         </div>
@@ -68,15 +68,13 @@
             <app-token-logo
               :url="tokenData.iconUrl"
               :symbol="tokenData.symbol"
-              width="w-[24px]"
-              height="h-[24px]"
             />
             <app-token-logo
               v-if="selectedChain"
               :url="getChainIcon(i.chainName)"
               :symbol="i.chainName"
-              width="w-3"
-              height="h-3"
+              width="w-4"
+              height="h-4"
               class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
             />
           </div>
@@ -142,7 +140,11 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
 const existsOnCurrentChain = computed(() => {
-  if (props.tokenData && selectedChain.value) {
+  if (
+    props.tokenData &&
+    props.tokenData.supportedChains &&
+    selectedChain.value
+  ) {
     return props.tokenData.supportedChains.some(
       chain => chain.chainName === selectedChain.value?.name,
     )
@@ -151,7 +153,11 @@ const existsOnCurrentChain = computed(() => {
 })
 
 const otherChains = computed(() => {
-  if (props.tokenData && selectedChain.value) {
+  if (
+    props.tokenData &&
+    props.tokenData.supportedChains &&
+    selectedChain.value
+  ) {
     return props.tokenData.supportedChains.filter(
       chain =>
         chain.chainName !== selectedChain.value?.name &&

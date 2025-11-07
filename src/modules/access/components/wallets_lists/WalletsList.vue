@@ -94,7 +94,6 @@ import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
-import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -111,9 +110,8 @@ const { defaultWallets, newWalletList } = useWalletList()
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  const convertedNetworkName = chainToEnum[selectedChain.value?.name as string]
   const supportedDefaultWallets = defaultWallets.value.filter(wallet => {
-    return wallet.canSupport && !!wallet.canSupport(convertedNetworkName)
+    return wallet.canSupport && !!wallet.canSupport(selectedChain.value)
   })
 
   wallets.push(...supportedDefaultWallets)

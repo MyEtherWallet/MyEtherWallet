@@ -31,7 +31,7 @@
       :address-error-messages="addressErrorMessages"
       :has-address-book="false"
       :network="selectedChain"
-      @validate:address="validateAddressInput"
+      @validate:address="additionalAddressValidation"
       @immediate-update:resolved-address="onInput"
     />
     <div class="flex justify-center gap-3">
@@ -42,9 +42,13 @@
         @click="cancelEdit"
         >Cancel</app-base-button
       >
-      <app-base-button size="medium" class="min-w-[100px]" @click="tryAdd">{{
-        buttonText
-      }}</app-base-button>
+      <app-base-button
+        size="medium"
+        class="min-w-[100px]"
+        @click="tryAdd"
+        :disabled="addressErrorMessages !== '' || nameErrorMessages !== ''"
+        >{{ buttonText }}</app-base-button
+      >
     </div>
   </div>
 </template>
@@ -94,6 +98,16 @@ const setSelectedChain = (chain: Chain) => {
  -------------------------*/
 
 const nameErrorMessages = ref<undefined | string>(undefined)
+
+const additionalAddressValidation = () => {
+  if (
+    adrBookStore.isAdrAdded(address.value, selectedChain.value?.type || 'EVM')
+  ) {
+    addressErrorMessages.value = 'address already exists'
+    return false
+  }
+  return validateAddressInput()
+}
 
 const validateNameInput = () => {
   nameErrorMessages.value = ''

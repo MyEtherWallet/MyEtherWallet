@@ -316,48 +316,70 @@ const toastStore = useToastStore()
 const { t } = useI18n()
 
 const confirmTransaction = async () => {
-  //TO: show message that wallet is not connected
-  if (!wallet.value) {
-    return
+  try {
+    //TO: show message that wallet is not connected
+    if (!wallet.value) {
+      return
+    }
+    showApproveMessage.value = !(
+      wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
+      wallet.value?.getWalletType() === WalletType.MNEMONIC
+    )
+    signing.value = true
+    // This is done because the modal needs to be shown and the user needs to actually
+    // consent to signing the transaction
+    const signedTx =
+      wallet.value?.getWalletType() === WalletType.LEDGER ||
+      wallet.value?.getWalletType() === WalletType.TREZOR
+        ? (
+            await wallet.value?.SignTransaction?.(
+              props.signedTx as HexPrefixedString,
+            )
+          )?.signed
+        : (props.signedTx as HexPrefixedString)
+
+    const txPromise =
+      wallet.value?.getWalletType() === WalletType.WAGMI ||
+      wallet.value?.getWalletType() === WalletType.INJECTED
+        ? wallet.value?.SendTransaction?.(signedTx as HexPrefixedString)
+        : wallet.value.broadcastTransaction(signedTx as HexPrefixedString)
+    // TODO: handle hash for user
+
+    await txPromise
+      ?.then(hash => {
+        toastStore.addToastMessage({
+          type: ToastType.Success,
+          text: `${t('send.toast.tx-send-success')} ${hash}`,
+          duration: 10000,
+        })
+
+        openModal.value = false
+        model.value = false
+        emit('tx-sent')
+      })
+      .catch(e => {
+        //TODO: implement error localization
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text:
+            e instanceof Error
+              ? e.message
+              : typeof e === 'string'
+                ? e
+                : t('send.toast.tx-send-failed'),
+        })
+      })
+    signing.value = false
+    showApproveMessage.value = false
+  } catch (e) {
+    // possibly catch more errors
+    signing.value = false
+    showApproveMessage.value = false
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
+    })
   }
-  showApproveMessage.value = !(
-    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
-    wallet.value?.getWalletType() === WalletType.MNEMONIC
-  )
-  signing.value = true
-  const txPromise =
-    wallet.value?.getWalletType() === WalletType.WAGMI ||
-    wallet.value?.getWalletType() === WalletType.INJECTED
-      ? wallet.value?.SendTransaction?.(props.signedTx as HexPrefixedString)
-      : wallet.value.broadcastTransaction(props.signedTx as HexPrefixedString)
-  // TODO: handle hash for user
-
-  await txPromise
-    ?.then(hash => {
-      toastStore.addToastMessage({
-        type: ToastType.Success,
-        text: `${t('send.toast.tx-send-success')} ${hash}`,
-        duration: 10000,
-      })
-
-      openModal.value = false
-      model.value = false
-      emit('tx-sent')
-    })
-    .catch(e => {
-      //TODO: implement error localization
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text:
-          e instanceof Error
-            ? e.message
-            : typeof e === 'string'
-              ? e
-              : t('send.toast.tx-send-failed'),
-      })
-    })
-  signing.value = false
-  showApproveMessage.value = false
 }
 
 const formatFee = computed(() => {

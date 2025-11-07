@@ -48,7 +48,8 @@ import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
-import PrivateKeyWallet from '@/providers/ethereum/privateKeyWallet'
+import EthereumPrivateKey from '@/providers/ethereum/privateKeyWallet'
+import BitcoinPrivateKey from '@/providers/bitcoin/privateKeyWallet'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
@@ -56,14 +57,21 @@ import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
+import { decode } from 'wif'
+import bs58check from 'bs58check'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useAccessStore } from '@/stores/accessStore'
 
+const toastStore = useToastStore()
+const { addToastMessage } = toastStore
 const privateKeyInput = ref('')
 const accessStore = useAccessStore()
 const walletStore = useWalletStore()
 const { setWallet } = walletStore
 const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
@@ -92,27 +100,49 @@ const strippedHexPrivateKey = computed<string>(() => {
 })
 
 const isValidPrivateKey = computed<boolean>(() => {
-  const privateKey = Buffer.isBuffer(strippedHexPrivateKey.value)
-    ? strippedHexPrivateKey.value
-    : getBufferFromHex(sanitizeHex(strippedHexPrivateKey.value))
-  return isPrivateKey(privateKeyInput.value) && isValidPrivate(privateKey)
+  try {
+    if (isEvmChain.value) {
+      const privateKey = Buffer.isBuffer(strippedHexPrivateKey.value)
+        ? strippedHexPrivateKey.value
+        : getBufferFromHex(sanitizeHex(strippedHexPrivateKey.value))
+      return isPrivateKey(privateKeyInput.value) && isValidPrivate(privateKey)
+    }
+    decode(strippedHexPrivateKey.value)
+    return true
+  } catch {
+    return false
+  }
 })
 
 const unlock = () => {
   // TODO: remove hardcoded network id
+  let wallet
   try {
-    const wallet = new PrivateKeyWallet(
-      Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
-      selectedChain?.value?.chainID || '1',
-    )
-    setWallet(wallet)
+    if (isEvmChain.value) {
+      wallet = new EthereumPrivateKey(
+        Buffer.from(hexToBytes(`0x${strippedHexPrivateKey.value}`)),
+        selectedChain?.value?.chainID || '1',
+      )
+    } else if (isBitcoinChain.value) {
+      const decoded = bs58check.decode(strippedHexPrivateKey.value)
+      const rawPrivKey = decoded.slice(1, 33)
+      wallet = new BitcoinPrivateKey(selectedChain?.value?.name || 'BITCOIN', {
+        privateKey: Buffer.from(Buffer.from(rawPrivKey)),
+      })
+    }
+
+    setWallet(wallet as WalletInterface)
     addWallet(walletConfigs.privateKey)
     privateKeyInput.value = ''
     accessStore.setCurrentView('default')
     accessStore.closeAccessDialog()
   } catch (error) {
-    // TODO: handle error when toast is implemented
-    console.error(error)
+    addToastMessage({
+      text: (error as Error).message
+        ? (error as Error).message
+        : 'There was an error creating the wallet. Please try again.',
+      type: ToastType.Error,
+    })
   }
 }
 </script>

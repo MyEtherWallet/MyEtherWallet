@@ -1,9 +1,12 @@
 import { ref, computed, type Ref, unref, watch } from 'vue'
 import { type Chain } from '@/mew_api/types'
-import { isValidAddress } from '@ethereumjs/util'
 import { toChecksumAddress, isAddress } from '@/utils/addressUtils'
 import { useDebounceFn } from '@vueuse/core'
 import ENSNameResolver from '@/providers/common/nameResolver'
+import { toOutputScript } from 'bitcoinjs-lib/src/address'
+import { INFO_MAP } from '@/providers/common/btcInfo'
+import { useChainsStore } from '@/stores/chainsStore'
+import { storeToRefs } from 'pinia'
 
 export const useAddressInput = (
   network: Ref<Chain | undefined> | Chain | undefined,
@@ -11,8 +14,11 @@ export const useAddressInput = (
   const adrInput = ref<string>('')
   const adrError = ref<string | undefined>(undefined)
   const resolvedAddress = ref<string | undefined>(undefined)
+  const chainStore = useChainsStore()
+  const { isBitcoinChain, isEvmChain } = storeToRefs(chainStore)
 
   const isValidAdrInput = computed<boolean>(() => {
+    if (isBitcoinChain.value) return true
     return (
       resolvedAddress.value !== undefined &&
       resolvedAddress.value !== '' &&
@@ -32,26 +38,43 @@ export const useAddressInput = (
    * @returns {boolean} - Returns true if the address is valid, false otherwise.
    */
   const validateAddressInput = () => {
-    adrError.value = ''
-    const addressToCheck = resolvedAddress.value || adrInput.value
-    if (addressToCheck === '') {
-      adrError.value = 'address is required'
-      return false
-    }
-    if (
-      !isAddress(addressToCheck) &&
-      !(
-        resolver.value.isValidName(addressToCheck) &&
-        resolvedAddress.value !== ''
-      )
-    ) {
+    try {
+      const currentSelectedNetwork = unref(network)
+      adrError.value = ''
+      const addressToCheck = resolvedAddress.value || adrInput.value
+      if (addressToCheck === '') {
+        adrError.value = 'address is required'
+        return false
+      }
+      if (isEvmChain.value) {
+        if (
+          !isAddress(addressToCheck) &&
+          !(
+            resolver.value.isValidName(addressToCheck) &&
+            resolvedAddress.value !== ''
+          )
+        ) {
+          adrError.value = 'invalid address'
+          return false
+        }
+      } else if (isBitcoinChain.value) {
+        if (!currentSelectedNetwork) {
+          adrError.value = 'network is required'
+          return false
+        }
+        const bitcoinNetworkInfo = INFO_MAP[currentSelectedNetwork.name]?.network
+        toOutputScript(addressToCheck, bitcoinNetworkInfo) // throws invalid
+        return true
+      }
+      return true
+    } catch {
       adrError.value = 'invalid address'
       return false
     }
-    return true
   }
 
   const onInput = async () => {
+    if (adrError.value) return // skip if there's already an error
     adrError.value = ''
     resolvedAddress.value = undefined
     try {
@@ -62,10 +85,10 @@ export const useAddressInput = (
         throw new Error('Address resolution failed')
       }
     } catch {
-      if (!isValidAddress(adrInput.value)) {
+      if (!validateAddressInput()) {
         resolvedAddress.value = ''
       } else {
-        const locResolvedAddr = toChecksumAddress(adrInput.value)
+        const locResolvedAddr = isBitcoinChain.value ? adrInput.value : toChecksumAddress(adrInput.value)
         resolvedAddress.value = locResolvedAddr
       }
     }
