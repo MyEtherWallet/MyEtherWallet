@@ -28,7 +28,7 @@
     </div>
     <app-sheet sheet-class="!pt-4 !pb-2 !px-2 overflow-hidden ">
       <div
-        class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end px-3"
+        class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 font-bold mb-3 items-end px-3 font-semibold"
       >
         <p class="col-span-2">Token</p>
         <p class="col-span-1">Price / 24h</p>

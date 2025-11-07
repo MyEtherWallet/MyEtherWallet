@@ -24,12 +24,10 @@
       </div>
     </div>
 
-    <div
-      class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-2"
-      v-if="!isLoading"
-    >
+    <div class="grid grid-cols-1 gap-2" v-if="!isLoading">
       <div v-for="token in currentTrendingTokens" :key="token.symbol">
-        <router-link
+        <token-row :token="token" />
+        <!-- <router-link
           v-if="token.coinId"
           :to="{
             name: TOKEN_INFO_ROUTE_NAMES.crypto,
@@ -65,7 +63,7 @@
               {{ formatPercentageValue(token.priceChangePercentage24h).value }}
             </p>
           </div>
-        </router-link>
+        </router-link> -->
       </div>
     </div>
     <div
@@ -83,24 +81,17 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useToastStore } from '@/stores/toastStore'
 import { computed, onMounted, ref, type Ref, watch } from 'vue'
-import {
-  formatPercentageValue,
-  formatFiatValue,
-} from '@/utils/numberFormatHelper'
 import type {
   GetWebTrendingTokensResponse,
   GetWebTrendingTokensResponseToken,
 } from '@/mew_api/types'
-import { truncate } from '@/utils/filters'
 import BigNumber from 'bignumber.js'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
-
+import TokenRow from './components/overview/TokenRow.vue'
 const { useMEWFetch } = useFetchMewApi()
 const toastStore = useToastStore()
 const isLoading = ref(true)
@@ -160,10 +151,11 @@ const totalPages = computed(() =>
     .toNumber(),
 )
 const itemsPerPage = computed(() => {
-  if (isMobile.value) {
-    return 4
-  }
-  return 6
+  // if (isMobile.value) {
+  //   return 4
+  // }
+  // return 6
+  return 3
 })
 
 const paginateArray = (page: number) => {
