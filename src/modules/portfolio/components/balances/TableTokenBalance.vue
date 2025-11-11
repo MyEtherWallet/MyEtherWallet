@@ -267,7 +267,9 @@
             <td class="px-1 py-2 text-right">
               <p>{{ token.fiatBalanceFormatted }}</p>
               <p class="text-info text-s-12">
-                @ ${{ token.price ? formatFiatValue(token.price).value : '-' }}
+                {{
+                  token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
+                }}
               </p>
             </td>
             <!-- Actions -->
