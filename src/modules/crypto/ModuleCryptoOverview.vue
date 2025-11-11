@@ -22,12 +22,20 @@
           <span
             class="text-s-8 md:text-s-12 font-semibold leading-p-150 text-nowrap"
             :class="{
-              'text-error': randomNumber < 0,
-              'text-success': randomNumber >= 0,
+              'text-error': data.marketCapChange24hPercentage < 0,
+              'text-success': data.marketCapChange24hPercentage >= 0,
             }"
           >
-            {{ BigNumber(randomNumber).isLessThan(0) ? '-' : '' }}
-            {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
+            {{
+              BigNumber(data.marketCapChange24hPercentage).isLessThan(0)
+                ? '-'
+                : ''
+            }}
+            {{
+              formatPercentageValue(
+                BigNumber(data.marketCapChange24hPercentage).abs(),
+              ).value
+            }}
           </span>
         </p>
 
@@ -63,7 +71,11 @@
           v-if="data && !isLoading"
           class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
         >
-          {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
+          {{
+            data.btcDominancePercentage
+              ? formatPercentageValue(data.btcDominancePercentage).value
+              : '-'
+          }}
         </p>
 
         <div
@@ -81,7 +93,11 @@
           v-if="data && !isLoading"
           class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
         >
-          {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
+          {{
+            data.ethDominancePercentage
+              ? formatPercentageValue(data.ethDominancePercentage).value
+              : '-'
+          }}
         </p>
 
         <div
@@ -195,7 +211,6 @@ import { usePaginate } from '@/composables/usePaginate'
 const { useMEWFetch } = useFetchMewApi()
 const toastStore = useToastStore()
 
-const randomNumber = Math.random() * 200 - 100
 const newTokens = ref<CryptoOverviewToken[]>([])
 const gainersTokens = ref<CryptoOverviewToken[]>([])
 const fetchUrl = 'https://mew-api-dev.ethvm.dev/v1/web/overview'

@@ -212,6 +212,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWeb7dBalancesBackProjectionChartByChainAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/trending-tokens": {
         parameters: {
             query?: never;
@@ -950,6 +966,10 @@ export interface components {
                 iconUrl: string;
             }[];
         };
+        GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse: {
+            timestamps: number[];
+            prices: number[];
+        };
         GetWebTrendingTokensResponse: {
             page: number;
             pages: number;
@@ -1019,6 +1039,9 @@ export interface components {
         GetWebCryptoOverviewResponse: {
             volume24h: number;
             marketCap: number;
+            marketCapChange24hPercentage: number;
+            ethDominancePercentage?: number;
+            btcDominancePercentage?: number;
             newCoins: {
                 coinId: string;
                 name: string;
@@ -1360,6 +1383,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetWebTokenInfoPageResponse"];
+            };
+        };
+        GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse"];
             };
         };
         GetWebTrendingTokensSuccess: {
@@ -1902,6 +1933,21 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebTokenInfoPageSuccess"];
+        };
+    };
+    GetWeb7dBalancesBackProjectionChartByChainAndAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                address: components["parameters"]["Address"];
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess"];
         };
     };
     GetWebTrendingTokens: {

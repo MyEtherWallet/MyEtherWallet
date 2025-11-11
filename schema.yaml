@@ -109,6 +109,16 @@ paths:
         200:
           $ref: '#/components/responses/GetWebTokenInfoPageSuccess'
 
+  /v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection:
+    get:
+      operationId: GetWeb7dBalancesBackProjectionChartByChainAndAddress
+      parameters:
+      - $ref: '#/components/parameters/Address'
+      - $ref: '#/components/parameters/ChainName'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess'
+
   /v1/web/trending-tokens:
     get:
       operationId: GetWebTrendingTokens
@@ -816,6 +826,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetWebTokenInfoPageResponse'
+
+    GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse'
 
     GetWebTrendingTokensSuccess:
       content:
@@ -1819,6 +1835,21 @@ components:
               iconUrl:
                 type: string
 
+    GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse:
+      type: object
+      required:
+        - timestamps
+        - prices
+      properties:
+        timestamps:
+          type: array
+          items:
+            type: number
+        prices:
+          type: array
+          items:
+            type: number
+
     GetWebTrendingTokensResponse:
       type: object
       required:
@@ -2026,12 +2057,19 @@ components:
       required:
         - volume24h
         - marketCap
+        - marketCapChange24hPercentage
         - newCoins
         - rwaTopGainers
       properties:
         volume24h:
           type: number
         marketCap:
+          type: number
+        marketCapChange24hPercentage:
+          type: number
+        ethDominancePercentage:
+          type: number
+        btcDominancePercentage:
           type: number
         newCoins:
           type: array
