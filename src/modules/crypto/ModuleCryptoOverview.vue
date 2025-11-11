@@ -1,16 +1,16 @@
 <template>
   <div class="grid grid-cols-12 w-full gap-5 2xl:gap-10 items-stretch mb-4">
     <div
-      class="col-span-12 grid grid-cols-4 md:grid-cols-[140px_1fr_1fr_1fr_1fr] items-center justify-between gap-4 lg:gap-10 mb-5"
+      class="col-span-12 grid grid-cols-4 lg:grid-cols-[140px_1fr_1fr_1fr_1fr] items-stretch justify-between gap-4 lg:gap-10 mb-5"
     >
       <h2
-        class="col-span-4 md:col-span-1 text-s-16 md:text-s-20 font-bold md:ml-2 leading-p-120 min-w-[140px]"
+        class="col-span-4 lg:col-span-1 text-s-16 md:text-s-20 font-bold md:ml-2 leading-p-120 min-w-[140px]"
       >
         Crypto Today
       </h2>
       <div class="border-l-1 border-grey-10 md:pl-2">
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold"
+          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
         >
           Total Market Cap
         </p>
@@ -19,6 +19,16 @@
           class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
         >
           ${{ formatFiatValue(data.marketCap).value }}
+          <span
+            class="text-s-8 md:text-s-12 font-semibold leading-p-150 text-nowrap"
+            :class="{
+              'text-error': randomNumber < 0,
+              'text-success': randomNumber >= 0,
+            }"
+          >
+            {{ BigNumber(randomNumber).isLessThan(0) ? '-' : '' }}
+            {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
+          </span>
         </p>
 
         <div
@@ -28,29 +38,7 @@
       </div>
       <div class="border-l-1 border-grey-10 md:pl-2">
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold"
-        >
-          24h Market Cap
-        </p>
-        <p
-          v-if="data && !isLoading"
-          class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
-          :class="{
-            'text-error': randomNumber < 0,
-            'text-success': randomNumber >= 0,
-          }"
-        >
-          {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
-        </p>
-
-        <div
-          v-else
-          class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
-        ></div>
-      </div>
-      <div class="border-l-1 border-grey-10 md:pl-2">
-        <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold"
+          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
         >
           24h Trading Volume
         </p>
@@ -65,18 +53,35 @@
           class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
         ></div>
       </div>
-
       <div class="border-l-1 border-grey-10 md:pl-2">
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold"
+          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
         >
-          Total Market Cap
+          BTC Dominance
         </p>
         <p
           v-if="data && !isLoading"
           class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
         >
-          ${{ formatFiatValue(data.marketCap).value }}
+          {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
+        </p>
+
+        <div
+          v-else
+          class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
+        ></div>
+      </div>
+      <div class="border-l-1 border-grey-10 md:pl-2">
+        <p
+          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
+        >
+          ETH Dominance
+        </p>
+        <p
+          v-if="data && !isLoading"
+          class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
+        >
+          {{ formatPercentageValue(BigNumber(randomNumber).abs()).value }}
         </p>
 
         <div
@@ -116,11 +121,11 @@
           :token="token"
         />
       </div>
-      <div v-else class="flex flex-col">
+      <div v-else class="flex flex-col gap-2">
         <div
           v-for="n in 3"
           :key="n"
-          class="h-[42px] my-2 animate-pulse bg-grey-10 rounded-full"
+          class="h-[55px] animate-pulse bg-grey-10 rounded-16"
         ></div>
       </div>
     </div>
@@ -153,7 +158,6 @@
             </app-btn-icon>
           </div>
         </div>
-        <h2 class="text-s-20 font-bold ml-2 mb-3"></h2>
         <div v-if="data && !isLoading" class="flex flex-col gap-2">
           <token-row
             v-for="token in paginatedGainersTokensArray"
@@ -161,11 +165,11 @@
             :token="token"
           />
         </div>
-        <div v-else class="flex flex-col">
+        <div v-else class="flex flex-col gap-2">
           <div
             v-for="n in 3"
             :key="n"
-            class="h-[42px] my-2 animate-pulse bg-grey-10 rounded-full"
+            class="h-[55px] animate-pulse bg-grey-10 rounded-16"
           ></div>
         </div>
       </div>
