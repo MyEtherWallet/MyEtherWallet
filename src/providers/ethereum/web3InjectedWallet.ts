@@ -91,6 +91,14 @@ class Web3InjectedWallet extends BaseEvmWallet {
   override getWalletType(): WalletType {
     return WalletType.INJECTED
   }
+
+  getProviderInstance(): Eip6963Provider {
+    return this.provider
+  }
+
+  updateAddress(newAddress: HexPrefixedString): void {
+    this.address = newAddress
+  }
 }
 
 export default Web3InjectedWallet

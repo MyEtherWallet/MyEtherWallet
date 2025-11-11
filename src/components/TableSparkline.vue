@@ -37,8 +37,7 @@ const props = withDefaults(
     width?: number
     height?: number
     /** Visuals */
-    upColor?: string
-    downColor?: string
+    percentChange?: number
     fill?: boolean
     yMin?: number | null
     yMax?: number | null
@@ -48,8 +47,6 @@ const props = withDefaults(
   {
     width: 150,
     height: 40,
-    upColor: '#22c55e',
-    downColor: '#ef4444',
     fill: false,
     yMin: null,
     yMax: null,
@@ -76,9 +73,9 @@ const displayPoints = computed(() =>
 )
 
 const lineColor = computed(() => {
-  const first = props.points?.[0] ?? 0
-  const last = props.points?.[props.points.length - 1] ?? 0
-  return last >= first ? props.upColor : props.downColor
+  if (props.percentChange && props.percentChange !== 0)
+    return props.percentChange < 0 ? 'rgba(228,12,91,1)' : 'rgba(5,192,165,1)'
+  return 'rgb(0,90,229,1)'
 })
 
 const yBounds = computed(() => {

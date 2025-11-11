@@ -23,7 +23,7 @@
       <div
         v-if="isOpen"
         :class="zIndexContainer"
-        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-9 overscroll-none !overflow-y-scroll"
+        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-4 xs:p-6 sm:p-9 overscroll-none !overflow-y-scroll"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -35,21 +35,31 @@
         >
           <div
             v-if="isOpen"
-            class="cursor-default fixed max-h-[95%] w-[95%] bg-white rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+            :class="[bg, $attrs.class]"
+            class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
             @click.stop
-            v-bind="$attrs"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref="targetDialog"
           >
             <div
-              class="z-10 pb-2 sm:pb-2 px-6 sm:px-8 basis-full order-2 sm:order-1 flex bg-white sticky top-0"
-              :class="{
-                'justify-between': title || $slots.title,
-                'justify-end': !title && !$slots.title,
-              }"
+              class="z-10 pb-2 basis-full order-2 sm:order-1 flex sticky top-0"
+              :class="[
+                {
+                  'justify-between': title || $slots.title,
+                  'justify-end': !title && !$slots.title,
+                },
+                hasContentGutter ? 'px-4 xs:px-6 sm:px-8' : '',
+                bg,
+                hasTitleUnderline ? 'border-b border-grey-outline' : '',
+              ]"
             >
               <slot name="title">
                 <h1
                   v-if="title && !$slots.title"
-                  class="title4 pr-2 pt-4 sm:pt-7 capitalize"
+                  class="text-s-28 font-bold pr-2 pt-4 sm:pt-7 pl-6 capitalize"
+                  id="dialogTitle"
                 >
                   {{ title }}
                 </h1>
@@ -57,10 +67,10 @@
               <app-btn-icon-close
                 v-if="!persistent"
                 @click="setIsOpen(false)"
-                class="mt-4 sm:-mr-4 min-w-[32px]"
+                class="mt-4 mr-4 min-w-[32px]"
               />
             </div>
-            <div :class="{ 'pt-2 px-6 sm:px-8': hasContentGutter }">
+            <div :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]">
               <slot name="content" />
             </div>
           </div>
@@ -97,7 +107,18 @@
  * </template>
  * </app-dialog>
  */
+import { shallowRef, watch } from 'vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
+import { useFocus } from '@vueuse/core'
+import { useDialogStore } from '@/stores/dialogStore'
+import { storeToRefs } from 'pinia'
+
+const targetDialog = shallowRef<HTMLElement | null>(null)
+
+const { focused } = useFocus(targetDialog, { initialValue: true })
+const dialogStore = useDialogStore()
+const { isAreaHidden } = storeToRefs(dialogStore)
+
 defineOptions({
   inheritAttrs: false,
 })
@@ -134,6 +155,22 @@ defineProps({
     default: 'z-[101]',
     type: String,
   },
+  /**
+   * @bg - background color of the dialog, default is white
+   * @type string
+   */
+  bg: {
+    type: String,
+    default: 'bg-white',
+  },
+  /**
+   * @hasTitleUnderline - boolean to add a border bottom to the title section
+   * @type boolean
+   */
+  hasTitleUnderline: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 /**
@@ -144,11 +181,27 @@ const isOpen = defineModel('isOpen', {
   required: true,
 })
 
+const emit = defineEmits(['close-dialog'])
+
 /**
  * @setIsOpen - function to set the dialog state
  * @param _value - boolean value to set the dialog state
  */
 const setIsOpen = (_value: boolean = false) => {
   isOpen.value = _value
+  if (!_value) {
+    emit('close-dialog')
+  }
 }
+
+watch(
+  () => isOpen.value,
+  () => {
+    if (isOpen.value && focused.value) {
+      isAreaHidden.value = true
+    } else {
+      isAreaHidden.value = false
+    }
+  },
+)
 </script>

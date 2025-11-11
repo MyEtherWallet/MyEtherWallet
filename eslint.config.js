@@ -52,6 +52,9 @@ export default [
           '**/*.{vue}': 'PASCAL_CASE',
           '**/*.{js,ts}': 'CAMEL_CASE',
         },
+        {
+          ignoreMiddleExtensions: true,
+        },
       ],
       'check-file/folder-naming-convention': [
         'error',

@@ -5,9 +5,22 @@ import TrezorLogo from '@/assets/images/access/trezor.webp'
 import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import HWWallet from '@enkryptcom/hw-wallets'
 import { NetworkNames } from '@enkryptcom/types'
+import type { Chain } from '@/mew_api/types'
+import { chainToEnum } from '@/providers/ethereum/chainToEnum'
+
+export const WALLET_VIEWS = [
+  'default',
+  'ledger',
+  'trezor',
+  'keystore',
+  'mnemonic',
+  'private_key',
+  'wallet_connect',
+] as const
+
+export type WalletView = (typeof WALLET_VIEWS)[number]
 
 export enum WalletConfigType {
   MOBILE = 'mobile',
@@ -58,15 +71,26 @@ export type WalletConfig = {
   isDefault?: boolean
   isWC?: boolean
   isOfficial?: boolean
-  routeName?: string
+  walletViewType?: WalletView
   downloadUrls?: downloadUrls
-  canSupport?: (networkName?: string) => boolean
+  canSupport?: (chain?: Chain) => boolean
 }
 
-const canSupport = (networkName?: string): boolean => {
-  if (!networkName) return false
+const hardwareSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  const convertedNetworkName = chainToEnum[chain.name as string]
   const hwWallet = new HWWallet()
-  return hwWallet.isNetworkSupported(networkName as NetworkNames)
+  return hwWallet.isNetworkSupported(convertedNetworkName as NetworkNames)
+}
+
+const keystoreSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  return chain.type === 'EVM'
+}
+
+const enkryptSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  return chain.type === 'EVM' || ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') && !!window.unisat)
 }
 
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
@@ -75,31 +99,31 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
-    routeName: ROUTES_ACCESS.ACCESS_LEDGER.NAME,
-    canSupport: canSupport,
+    canSupport: hardwareSupportNetwork,
+    walletViewType: 'ledger',
   },
   trezor: {
     id: 'trezor',
     name: 'Trezor',
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
-    routeName: ROUTES_ACCESS.ACCESS_TREZOR.NAME,
-    canSupport: canSupport,
+    canSupport: hardwareSupportNetwork,
+    walletViewType: 'trezor',
   },
   keystore: {
     id: 'keystore',
     name: 'Keystore',
     icon: KeystoreLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_ACCESS.ACCESS_KEYSTORE.NAME,
-    canSupport: () => true,
+    walletViewType: 'keystore',
+    canSupport: keystoreSupportNetwork,
   },
   mnemonic: {
     id: 'mnemonic',
     name: 'Recovery (mnemonic) Phrase',
     icon: MnemonicLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_ACCESS.ACCESS_MNEMONIC.NAME,
+    walletViewType: 'mnemonic',
     canSupport: () => true,
   },
   privateKey: {
@@ -107,7 +131,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Private Key',
     icon: PrivateKeyLogo,
     type: [WalletConfigType.SOFTWARE],
-    routeName: ROUTES_ACCESS.ACCESS_PRIVATE_KEY.NAME,
+    walletViewType: 'private_key',
     canSupport: () => true,
   },
   mew: {
@@ -115,17 +139,18 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'MEW Mobile',
     icon: MewLogo,
     type: [WalletConfigType.MOBILE],
-    canSupport: () => true,
+    canSupport: keystoreSupportNetwork, // TODO: replace with actual mew wallet support once we confirm DOT and SOL diverges from this
     isDefault: true,
     isOfficial: true,
     isWC: true,
+    walletViewType: 'wallet_connect',
   },
   enkrypt: {
     id: 'enkrypt',
     name: 'Enkrypt',
     icon: EnkryptLogo,
     type: [WalletConfigType.EXTENSION],
-    canSupport: () => true,
+    canSupport: enkryptSupportNetwork,
     isDefault: true,
     isOfficial: true,
     isWC: true,

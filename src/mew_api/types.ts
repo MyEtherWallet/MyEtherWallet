@@ -47,7 +47,7 @@ export type GetUnsignedEvmMultiTransactionResponse =
   components['schemas']['GetUnsignedEvmMultiTransactionResponse']
 
 //Quotes
-export type QuotesResponse =
+export type GetEvmTransactionQuoteResponse =
   components['schemas']['GetEvmTransactionQuoteResponse']
 export type QuotesRequestBody =
   components['schemas']['GetEvmTransactionQuoteRequest']
@@ -61,7 +61,7 @@ export type WebTokensTableSort = components['schemas']['WebTokensTableSort']
 export type GetWebTokensTableResponse =
   components['schemas']['GetWebTokensTableResponse']
 export type GetWebTokensTableResponseToken =
-  components['schemas']['GetWebTokensTableResponse']['items'][number]
+  GetWebTokensTableResponse['items'][number]
 export type GetWebTopGainersResponse =
   components['schemas']['GetWebTopGainersResponse']
 export type GetWebTrendingTokensResponse =
@@ -70,3 +70,37 @@ export type GetWebTrendingTokensResponseToken =
   components['schemas']['GetWebTrendingTokensResponse']['items'][number]
 export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']
+export type GetWebTokensWatchlistResponseToken =
+  components['schemas']['GetWebTokensWatchlistResponse'][number]
+
+/** --------------------------
+ * BTC types
+ --------------------------*/
+export type BitcoinQuotesResponse = components['schemas']['GetBtcTransactionQuoteResponse']
+export type BitcoinQuotesRequestBody = components['schemas']['GetBtcTransactionQuoteRequest']
+export type BitcoinSignableTransactionResponse = components['schemas']['GetUnsignedBtcTransactionResponse']
+export type BitcoinTxResponse = components['schemas']['BroadcastBtcTransactionResponse']
+export type BitcoinBalanceResponse = components['schemas']['GetBtcBalanceByChainNameAndAddressResponse']
+
+export type GetBtcTransactionEstimateBody = components['schemas']['GetBtcTransactionEstimateRequest']
+export type GetBtcTransactionEstimateResponse = components['schemas']['GetBtcTransactionEstimateResponse']
+export type BtcGasFeesQuote = components['schemas']['BtcTransactionQuotes']
+export type BtcGasFees = components['schemas']['BtcTransactionFeeQuote']
+
+
+/**
+ * Custom types. Usually to merge similar types or add extra fields
+ */
+
+export type FeeOption = BtcGasFeesQuote & EvmGasFees;
+export type QuotesResponse = BitcoinQuotesResponse & GetEvmTransactionQuoteResponse;
+//Tokens Page
+export type GetWebTokenInfo =
+  components['schemas']['GetWebTokenInfoPageResponse']
+
+export type GetWebTokenPriceChartByCoinResponse =
+  components['schemas']['GetWebTokenPriceChartResponse']
+export type GetWebTokenPriceChartPoint =
+  GetWebTokenPriceChartByCoinResponse['prices'][number]
+export type WebTokenPriceChartInterval =
+  components['schemas']['WebTokenPriceChartInterval']

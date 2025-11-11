@@ -198,11 +198,29 @@ const selectedListItem = ref<AddressListItem>(addressList.value[0])
  -------------------------*/
 
 const adrBook = useAddressBookStore()
-const { currentAddressBook, otherAddressBook } = storeToRefs(adrBook)
+const { addressBook } = storeToRefs(adrBook)
 
 const deleteAddress = (adr: Address) => {
   adrBook.removeAddress(adr, adr.chainType)
 }
+
+const _chain = computed(() => {
+  return props.network || selectedChain.value
+})
+
+const currentAddressBook = computed<Address[]>(() => {
+  return _chain.value?.type && addressBook.value[_chain.value.type]
+    ? addressBook.value[_chain.value?.type]
+    : []
+})
+
+const otherAddressBook = computed(() => {
+  const keys = Object.keys(addressBook.value).filter(
+    key => key !== _chain.value?.type,
+  )
+
+  return keys.flatMap(key => addressBook.value[key])
+})
 
 /** -------------------------------
  * Search

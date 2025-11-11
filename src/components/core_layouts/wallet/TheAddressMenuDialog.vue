@@ -3,7 +3,7 @@
     <app-dialog
       v-if="isWalletConnected"
       v-model:is-open="openDialog"
-      :title="$t('connected_wallet')"
+      :title="isWatchOnly ? $t('watch_only_wallet') : $t('connected_wallet')"
       class="xs:max-w-[428px] sm:mx-auto"
     >
       <template #content>
@@ -40,7 +40,7 @@
               v-if="!isLoadingBalances"
               class="font-semibold text-s-32 h-[42px]"
             >
-              {{ formattedTotalFiatPortflioValue }}
+              {{ formattedTotalFiatPortfolioValue }}
               <!-- Update balances -->
               <app-btn-icon
                 :label="$t('refresh_balance')"
@@ -74,28 +74,28 @@
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG"
-              @click.stop.prevent="openWalletMenu(0)"
+              @click.stop.prevent="openWalletMenu('buy')"
             >
               <icon-buy class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('buy') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(1)"
+              @click.stop.prevent="openWalletMenu('sell')"
             >
               <icon-buy class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('sell') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(2)"
+              @click.stop.prevent="openWalletMenu('send')"
             >
               <icon-send class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.send') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
-              @click.stop.prevent="openWalletMenu(3)"
+              @click.stop.prevent="openWalletMenu('swap')"
             >
               <icon-swap class="w-7 h-7 text-primary mb-1" />
               <p class="text-s-12">{{ $t('common.swap') }}</p>
@@ -108,18 +108,29 @@
             <p class="text-s-14">{{ $t('view_paper_wallet') }}</p>
           </button>
           <button
+            v-if="canSwitchAddress"
             class="shadow-button shadow-button-elevated rounded-16 p-3 mt-3 hoverNoBG w-full"
+            @click="switchAddress"
           >
             <p class="text-s-14">{{ $t('switch_connected_address') }}</p>
           </button>
-          <div class="flex items-center justify-center mt-6">
+          <div class="flex items-center justify-center mt-3" v-if="isWatchOnly">
+            <app-base-button is-outline size="medium" @click="openAccess">
+              {{ $t('connect_wallet') }}</app-base-button
+            >
+          </div>
+          <div class="flex items-center justify-center mt-3">
             <app-base-button
               theme="error"
               is-outline
               size="medium"
               @click="disconnectWallet"
             >
-              {{ $t('disconnect_wallet') }}</app-base-button
+              {{
+                isWatchOnly
+                  ? $t('delete_watch_only_wallet')
+                  : $t('disconnect_wallet')
+              }}</app-base-button
             >
           </div>
         </div>
@@ -151,7 +162,12 @@ import {
   ArrowPathIcon,
 } from '@heroicons/vue/24/outline'
 import { useChainsStore } from '@/stores/chainsStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { type WalletPanel, useWalletMenuStore } from '@/stores/walletMenuStore'
+import { WalletType } from '@/providers/types'
+import { useAccessStore } from '@/stores/accessStore'
+import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { useRecentAddressStore } from '@/stores/recentAddressStore'
+import useBalanceHandler from '@/utils/balanceHandler'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -162,11 +178,12 @@ const {
   wallet,
   isWalletConnected,
   walletAddress,
-  formattedTotalFiatPortflioValue,
+  formattedTotalFiatPortfolioValue,
   formattedBalance,
   mainTokenBalance,
   tokens,
   isLoadingBalances,
+  isWatchOnly,
 } = storeToRefs(store)
 
 /** -------------------------------
@@ -195,10 +212,49 @@ const tokensCount = computed(() => {
   }
 })
 
+// Switch Address
+const canSwitchAddress = computed(() => {
+  // only show switch address if wallet type is NOT private key AND NOT injected
+  const type = wallet.value?.getWalletType()
+  return (
+    !!type &&
+    type !== WalletType.PRIVATE_KEY &&
+    type !== WalletType.INJECTED &&
+    type !== WalletType.WAGMI
+  )
+})
+
+const openAccess = () => {
+  openAccessDialog()
+  closeDialog()
+}
+
+const accessStore = useAccessStore()
+const { setCurrentView, openAccessDialog } = accessStore
+const switchAddress = () => {
+  // Map wallet types to their corresponding WALLET_VIEWS index
+  const currentWalletType = wallet.value?.getWalletType()
+  const viewIndexByType: Partial<Record<WalletType, number>> = {
+    [WalletType.LEDGER]: 1,
+    [WalletType.TREZOR]: 2,
+    [WalletType.MNEMONIC]: 4,
+  }
+
+  const index =
+    currentWalletType !== undefined &&
+    viewIndexByType[currentWalletType] !== undefined
+      ? (viewIndexByType[currentWalletType] as number)
+      : 0
+
+  setCurrentView(WALLET_VIEWS[index])
+  closeDialog()
+  openAccessDialog()
+}
+
 /** -------------------------------
  * Actions
  -------------------------------*/
-const openWalletMenu = (walletPanel: number) => {
+const openWalletMenu = (walletPanel: WalletPanel) => {
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)
   }
@@ -206,6 +262,15 @@ const openWalletMenu = (walletPanel: number) => {
   closeDialog()
 }
 const disconnectWallet = () => {
+  if (isWatchOnly.value) {
+    // add delete watch only wallet here
+    const recentAddressStore = useRecentAddressStore()
+    recentAddressStore.removeWallet(
+      walletAddress.value as string,
+      selectedChain.value!,
+    )
+    openDialog.value = false
+  }
   store.removeWallet()
   openDialog.value = false
 }
@@ -213,8 +278,7 @@ const disconnectWallet = () => {
 const fetchBalances = () => {
   setIsLoadingBalances(true)
   wallet.value?.getBalance().then(balances => {
-    setTokens(balances.result)
-    setIsLoadingBalances(false)
+    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
   })
 }
 const closeDialog = () => {

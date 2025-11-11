@@ -155,18 +155,21 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type {
   FeePriority,
-  EstimatesResponse,
   EstimatesRequestBody,
   GasFeeInfo,
   QuotesResponse,
-  EvmGasFees,
+  BtcGasFees,
+  FeeOption,
+  GetBtcTransactionEstimateBody,
 } from '@/mew_api/types'
 import { useI18n } from 'vue-i18n'
+import { fromBase } from '@/utils/unit'
+import { P2WPKH_DUST } from '@/providers/common/btcInfo'
 
 /** ----------------
  * DEFAULTS
  ------------------*/
-const DEFAULT_ADR =
+const DEFAULT_EVM_ADDR =
   '0x0000000000000000000000000000000000000000' as HexPrefixedString
 const DEFAULT_DATA = '0x' as HexPrefixedString
 const DEFAULT_VALUE = '0x0' as HexPrefixedString
@@ -177,7 +180,7 @@ const DEFAULT_VALUE = '0x0' as HexPrefixedString
 interface Props {
   fees?: QuotesResponse
   isLoadingFees?: boolean
-  txRequestBody?: EstimatesRequestBody
+  txRequestBody?: EstimatesRequestBody | GetBtcTransactionEstimateBody
 }
 
 const props = defineProps<Props>()
@@ -200,58 +203,91 @@ const isNotEnoughBalance = computed(() => {
  ------------------*/
 
 const chainStore = useChainsStore()
-const { isLoaded: isLoadedChainsData, selectedChain } = storeToRefs(chainStore)
+const {
+  isLoaded: isLoadedChainsData,
+  selectedChain,
+  isEvmChain,
+  isBitcoinChain,
+} = storeToRefs(chainStore)
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress, balanceWei } =
   storeToRefs(walletStore)
 
-const txData = computed<EstimatesRequestBody>(() => {
-  //EVM CHAINS ONLY
-  if (props.txRequestBody) {
-    return props.txRequestBody
-  }
-  const _address =
-    isWalletConnected.value && walletAddress.value && walletAddress.value !== ''
-      ? (walletAddress.value as HexPrefixedString)
-      : DEFAULT_ADR
-  return {
-    to: DEFAULT_ADR,
-    address: _address,
-    value: DEFAULT_VALUE,
-    data: DEFAULT_DATA,
-  }
-  //TO DO: BITCOIN HANDLER
-})
+const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
+  (): EstimatesRequestBody | GetBtcTransactionEstimateBody => {
+    // EVM CHAINS ONLY
+    if (selectedChain.value?.type === 'EVM') {
+      if (props.txRequestBody) {
+        return props.txRequestBody
+      }
+      const _address =
+        isWalletConnected.value &&
+        walletAddress.value &&
+        walletAddress.value !== ''
+          ? (walletAddress.value as HexPrefixedString)
+          : DEFAULT_EVM_ADDR
+      return {
+        to: DEFAULT_EVM_ADDR,
+        address: _address,
+        value: DEFAULT_VALUE,
+        data: DEFAULT_DATA,
+      }
+    }
+    // For unsupported or disconnected cases, return a default object instead of null
+    if (
+      !isWalletConnected.value &&
+      (!walletAddress.value ||
+        walletAddress.value === '' ||
+        walletAddress.value === null ||
+        walletAddress.value === undefined)
+    ) {
+      // Return a default BTC estimate body
+      return {} as unknown as
+        | EstimatesRequestBody
+        | GetBtcTransactionEstimateBody
+    }
+    /**
+     * Right now bitcoin wallets are only fetched when the user is logged in.
+     */
+    return {
+      fromAddresses: [walletAddress.value!],
+      consolidationAddress: walletAddress.value!,
+    }
+  },
+)
 
 const fetchURL = computed(() => {
   //EVM CHAINS ONLY
-  if (isLoadedChainsData.value && selectedChain.value) {
+  if (isLoadedChainsData.value && selectedChain.value && isEvmChain.value) {
     return `/v1/evm/chains/${selectedChain.value.chainID}/estimates/?noInjectErrors=false`
   }
-  //TO DO: BITCOIN HANDLER
-  return ''
+  //TO DO: SOL and DOT HANDLER
+  return `/v2/btc/${selectedChain.value?.name}/estimates/?noInjectErrors=false`
 })
 const feesReady = ref(false)
-const feeEstmates = ref<EvmGasFees | undefined>(undefined)
+const feeEstmates = ref<FeeOption | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const { data, onFetchResponse, execute, onFetchError } =
-  useMEWFetch<EstimatesResponse>(fetchURL, {
-    immediate: false,
-  })
-    .post(JSON.stringify(txData.value))
-    .json()
+const { data, onFetchResponse, execute, onFetchError } = useMEWFetch(fetchURL, {
+  immediate: false,
+})
+  .post(JSON.stringify(txData.value))
+  .json<QuotesResponse>()
 
 onFetchResponse(() => {
   if (data.value) {
-    feeEstmates.value = data.value.fees
+    feeEstmates.value = data.value.fees as FeeOption
     feesReady.value = true
-
+    const _gasPriceType = gasPriceType.value as GasPriceType
+    const nativeFeeValue =
+      feeEstmates.value[_gasPriceType].nativeValue ||
+      feeEstmates.value[_gasPriceType].nativeFeeTotal ||
+      0
+    const txDataValue =
+      (txData.value as EstimatesRequestBody).value ?? P2WPKH_DUST
     //Check if user has enough balance to cover gas fees
-    const totalBalanceNeeded =
-      BigInt(data.value.fees[gasPriceType.value].nativeValue || '0') +
-      BigInt(txData.value.value)
+    const totalBalanceNeeded = BigInt(nativeFeeValue) + BigInt(txDataValue)
 
     if (
       BigInt(totalBalanceNeeded) > BigInt(balanceWei.value) &&
@@ -279,6 +315,11 @@ watch(
   () => {
     if (isLoadedChainsData.value && selectedChain.value) {
       feesReady.value = false
+      if (isBitcoinChain.value && !isWalletConnected.value) {
+        // bitcoin fees are fetched only when user is logged in
+        feesReady.value = true
+        return
+      }
       execute()
     }
   },
@@ -287,6 +328,11 @@ watch(
 onMounted(() => {
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
+    if (isBitcoinChain.value && !isWalletConnected.value) {
+      // bitcoin fees are fetched only when user is logged in
+      feesReady.value = true
+      return
+    }
     execute()
   }
 })
@@ -321,20 +367,27 @@ const selectedFeeNative = computed(() => {
   }
   return ''
 })
+const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
+  return props.fees ? props.fees.fees : feeEstmates.value
+})
 
 const selectedFeeFiat = computed(() => {
-  if (hasFees.value && data.value) {
+  if (hasFees.value && usedFeeToDisplay.value) {
     const fiatValue = formatFiatValue(
-      data.value.fees[gasPriceType.value].fiatValue || 0,
+      usedFeeToDisplay.value[gasPriceType.value].fiatValue ||
+        usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal ||
+        0,
     ).value
-    return `${data.value.fees[gasPriceType.value].fiatSymbol} ${fiatValue} `
+    return `${usedFeeToDisplay.value[gasPriceType.value].fiatSymbol} ${fiatValue} `
   }
   return ''
 })
 
 //TODO: import proper type form the api
-const formatFee = (fee: GasFeeInfo) => {
-  const converted = fromWei(fee.nativeValue, 'ether')
+const formatFee = (fee: GasFeeInfo | BtcGasFees) => {
+  const converted = isEvmChain.value
+    ? fromWei((fee as GasFeeInfo).nativeValue || '0', 'ether')
+    : fromBase((fee as BtcGasFees).nativeFeeTotal || '0', 8)
   return `${formatFloatingPointValue(converted).value} ${fee.nativeSymbol}`
 }
 
@@ -349,38 +402,60 @@ interface DisplayFee {
   fiatValue: string
   nativeValue: string
 }
-
 const { t } = useI18n()
 const displayFees = computed<DisplayFee[]>(() => {
-  const _fees = props.fees ? props.fees.fees : feeEstmates.value
+  const economy = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.ECONOMY].fiatValue)
+    : undefined
+  const regular = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.REGULAR].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.REGULAR].fiatValue)
+    : undefined
+  const fast = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.FAST].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.FAST].fiatValue)
+    : undefined
+  const fastest = usedFeeToDisplay.value
+    ? (usedFeeToDisplay.value[GasPriceType.FASTEST].fiatFeeTotal ??
+      usedFeeToDisplay.value[GasPriceType.FASTEST].fiatValue)
+    : undefined
   const a = [
     {
       id: GasPriceType.ECONOMY,
       title: t('select_fee.economy.title'),
       description: t('select_fee.economy.description'),
-      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.ECONOMY].fiatValue || 0 : 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.ECONOMY]) : '0',
+      fiatValue: `$${formatFiatValue(economy || 0).value}`,
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.ECONOMY])
+        : '0',
     },
     {
       id: GasPriceType.REGULAR,
       title: t('select_fee.regular.title'),
       description: t('select_fee.regular.description'),
-      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.REGULAR].fiatValue || 0 : 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.REGULAR]) : '0',
+      fiatValue: `$${formatFiatValue(regular || 0).value}`,
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.REGULAR])
+        : '0',
     },
     {
       id: GasPriceType.FAST,
       title: t('select_fee.fast.title'),
       description: t('select_fee.fast.description'),
-      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.FAST].fiatValue || 0 : 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.FAST]) : '0',
+      fiatValue: `$${formatFiatValue(fast || 0).value}`,
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.FAST])
+        : '0',
     },
     {
       id: GasPriceType.FASTEST,
       title: t('select_fee.fastest.title'),
       description: t('select_fee.fastest.description'),
-      fiatValue: `$${formatFiatValue(_fees ? _fees[GasPriceType.FASTEST].fiatValue || 0 : 0).value}`,
-      nativeValue: _fees ? formatFee(_fees[GasPriceType.FASTEST]) : '0',
+      fiatValue: `$${formatFiatValue(fastest || 0).value}`,
+      nativeValue: usedFeeToDisplay.value
+        ? formatFee(usedFeeToDisplay.value[GasPriceType.FASTEST])
+        : '0',
     },
   ]
   return a

@@ -1,7 +1,6 @@
 import { ref, type Ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
-import { fromWei } from 'web3-utils'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -9,6 +8,8 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
 import { fromBase } from '@/utils/unit'
+import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
+import { useRecentAddressStore } from './recentAddressStore'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -19,20 +20,38 @@ export const useWalletStore = defineStore('walletStore', () => {
   const mainTokenBalance = ref<TokenBalance | null>(null)
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
+  const isWatchOnly = ref(false);
+  const hasMissingBalances = ref(false)
 
   /** -------------------------------
   * The Wallet
   -------------------------------*/
   const setWallet = (newWallet: WalletInterface) => {
+    if (newWallet instanceof WatchOnlyWallet) {
+      isWatchOnly.value = true;
+    } else {
+      isWatchOnly.value = false;
+    }
     wallet.value = newWallet
     setAddress()
   }
 
   const removeWallet = () => {
-    wallet.value?.disconnect()
-    wallet.value = null
-    walletAddress.value = null
-    removeTokens()
+    const { selectedChain } = storeToRefs(useChainsStore())
+    if (!(wallet.value instanceof WatchOnlyWallet)) {
+      isWatchOnly.value = true;
+      wallet.value?.disconnect()
+      const address = walletAddress.value;
+      const walletType = wallet.value?.getWalletType();
+      wallet.value = null
+      walletAddress.value = null
+      const watchOnlyWallet = new WatchOnlyWallet(address as string, selectedChain.value!, walletType!)
+      setWallet(watchOnlyWallet)
+    } else {
+      wallet.value = null
+      walletAddress.value = null
+      removeTokens()
+    }
   }
 
   const isWalletConnected = computed(() => {
@@ -44,7 +63,10 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
+      const { addWallet: _addWallet } = useRecentAddressStore();
+      const { selectedChain } = storeToRefs(useChainsStore())
       walletAddress.value = await wallet.value.getAddress()
+      _addWallet(walletAddress.value, selectedChain.value!, wallet.value.getWalletType());
     }
   }
 
@@ -78,21 +100,23 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
   const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
     const newTokenCopy: Array<TokenBalance> = []
+    hasMissingBalances.value = false
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
+        const _balance = fromBase(BigNumber(token.balance).toString(), token.decimals || 18);
         mainTokenBalance.value = {
           ...token,
           name:
             token.name ?? (selectedChain.value?.currencyNameLong || 'Ether'),
           symbol:
             token.symbol ?? (selectedChain.value?.currencyNameLong || 'ETH'),
-          balance: fromWei(token.balance, 'ether'),
+          balance: _balance,
           balanceWei: token.balance,
         }
-        balance.value = fromWei(token.balance, 'ether')
-        balanceWei.value = fromWei(token.balance, 'wei')
+        balance.value = _balance
+        balanceWei.value = token.balance
       } else {
-        if (token.decimals) {
+        if (token.decimals !== undefined) {
           newTokenCopy.push({
             ...token,
             name: token.name ?? 'Unknown',
@@ -103,11 +127,22 @@ export const useWalletStore = defineStore('walletStore', () => {
               token.decimals,
             ),
           })
+        } else {
+          hasMissingBalances.value = true
         }
       }
     })
     tokens.value = newTokenCopy
   }
+
+  const allTokens = computed<Array<TokenBalance>>(() => {
+    const all = []
+    if (mainTokenBalance.value) {
+      all.push(mainTokenBalance.value)
+    }
+    all.push(...tokens.value)
+    return all
+  })
 
   const removeTokens = () => {
     tokens.value = []
@@ -170,9 +205,9 @@ export const useWalletStore = defineStore('walletStore', () => {
   //TODO: add proper formatting for fiat values
 
   /**
-   * @formattedTotalFiatPortflioValue - the total portfolio value in fiat, formatted .
+   * @formattedTotalFiatPortfolioValue - the total portfolio value in fiat, formatted .
    */
-  const formattedTotalFiatPortflioValue = computed<string>(() => {
+  const formattedTotalFiatPortfolioValue = computed<string>(() => {
     return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
@@ -185,6 +220,13 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const formattedBalanceFiat = computed<string>(() => {
     return `$${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+  })
+
+  const hasBalances = computed(() => {
+    return (
+      allTokens.value.length > 1 &&
+      BigNumber(safeMainTokenBalance.value?.balanceWei || 0).isGreaterThan(0)
+    )
   })
 
   return {
@@ -210,8 +252,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     balanceFiatBN,
     totalFiatPortfolioValueBN,
     // Formatted values
-    formattedTotalFiatPortflioValue,
+    formattedTotalFiatPortfolioValue,
     formattedBalance,
     formattedBalanceFiat,
+    isWatchOnly,
+    allTokens,
+    hasMissingBalances,
+    hasBalances,
   }
 })

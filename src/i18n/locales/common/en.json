@@ -57,7 +57,8 @@
     "deposit_title": "Your {chain} address",
     "deposit_description": "You can deposit any tokens supported by {chain} to this address.",
     "not_enough_balance_to_cover_fee": "Not enough {symbol} to cover network fee.",
-    "buy_more": "Buy more {symbol}"
+    "buy_more": "Buy more {symbol}",
+    "allocation": "Allocation"
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",
@@ -88,12 +89,14 @@
   "home": "Home",
   "connect_wallet": "Connect wallet",
   "disconnect_wallet": "Disconnect wallet",
+  "delete_watch_only_wallet": "Delete Watch Only Wallet",
   "connected_wallet": "Connected Wallet",
+  "watch_only_wallet": "Watch Only Wallet",
   "view_in_block_explorer": "View in block explorer",
   "refresh_balance": "Refresh Balance",
   "select_token": {
     "title": "Select Token",
-    "search": "Search tokens by name or symbol",
+    "search": "Search by name or symbol",
     "no_tokens_match": "No tokens match your search",
     "no_tokens_available": "No tokens available"
   },

@@ -2,9 +2,9 @@
   <button
     :class="[
       defaultClass,
-      { 'py-1 px-3 text-s-15': size === BtnSize.SMALL },
-      { 'py-2 px-5': size === BtnSize.MEDIUM },
-      { 'py-3 md:py-4 px-6 md:px-7': size === BtnSize.LARGE },
+      { 'py-1 px-3 text-s-14': size === BtnSize.SMALL },
+      { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
+      { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
       disabled
         ? isOutline
           ? '!border-grey-outline !text-grey-50'
@@ -15,7 +15,7 @@
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
-    @click="onClick"
+    @click.stop="onClick"
     v-ripple
     :aria-disabled="disabled"
   >
@@ -98,9 +98,9 @@ const onClick = () => {
 }
 
 const defaultClass = computed<string>(() => {
-  const shared = `rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white  hover:opacity-90`
+  const shared = `rounded-full font-medium transition-colors hover:opacity-90   !box-border`
   const _default = `text-white bg-${props.theme}`
-  const _outline = `border border-2 border-${props.theme} text-${props.theme}  bg-transparent`
+  const _outline = `border border-2 border-${props.theme} text-${props.theme} bg-transparent`
 
   return props.isOutline ? `${shared} ${_outline}` : `${shared} ${_default}`
 })

@@ -7,9 +7,9 @@ import {
 } from '@/mew_api/types'
 import { WalletType, type HexPrefixedString } from '../types'
 import {
-  type EthereumSignableTransactionParams,
+  type SignableTransactionParams,
   type PostSignedTransaction,
-} from './types'
+} from '../common/types'
 import type {
   EVMTxResponse,
   QuotesResponse,
@@ -63,7 +63,7 @@ class BaseEvmWallet implements WalletInterface {
    *
    */
   getMultipleSignableTransactions = async (
-    feeObj: EthereumSignableTransactionParams,
+    feeObj: SignableTransactionParams,
   ): Promise<GetUnsignedEvmMultiTransactionResponse> => {
     const response =
       await fetchWithRetry<GetUnsignedEvmMultiTransactionResponse>(
@@ -78,7 +78,7 @@ class BaseEvmWallet implements WalletInterface {
    * @returns Promise resolving to EthereumSignableTransactionResponse containing the unsigned transaction
    */
   getSignableTransaction = async (
-    feeObj: EthereumSignableTransactionParams,
+    feeObj: SignableTransactionParams,
   ): Promise<EthereumSignableTransactionResponse> => {
     return fetchWithRetry<EthereumSignableTransactionResponse>(
       `/v1/evm/chains/${this.chainId}/quotes/${feeObj.quoteId}/unsigned?noInjectErrors=false&priority=${feeObj.priority}`,
@@ -123,7 +123,7 @@ class BaseEvmWallet implements WalletInterface {
 
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
+    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
     return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
 

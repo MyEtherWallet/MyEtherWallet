@@ -2,7 +2,6 @@ import { computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { useGlobalStore } from './globalStore'
-import { useChainsStore } from './chainsStore'
 
 export interface Address {
   address: string
@@ -22,8 +21,6 @@ interface RecentAddress {
 export const useAddressBookStore = defineStore('addressBookStore', () => {
   const globalStore = useGlobalStore()
   const { selectedNetwork: currentNetworkName } = storeToRefs(globalStore)
-  const chainsStore = useChainsStore()
-  const { selectedChain } = storeToRefs(chainsStore)
   const storeAdrObject: Record<string, Address[]> = {}
   const storeObject: Record<string, string[]> = {}
   storeObject[currentNetworkName.value] = []
@@ -46,13 +43,6 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     () => recentAddresses.value[currentNetworkName.value]?.length || 0,
   )
 
-  const currentAddressBook = computed<Address[]>(() => {
-    return selectedChain.value?.type &&
-      addressBook.value[selectedChain.value.type]
-      ? addressBook.value[selectedChain.value?.type]
-      : []
-  })
-
   const isAdrAdded = (address: string, chainType: string) => {
     return (
       addressBook.value[chainType]?.some(entry => entry.address === address) ||
@@ -66,13 +56,20 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     )
   }
 
-  const otherAddressBook = computed(() => {
-    const keys = Object.keys(addressBook.value).filter(
-      key => key !== selectedChain.value?.type,
-    )
+  // const currentAddressBook = computed<Address[]>(() => {
+  //   return selectedChain.value?.type &&
+  //     addressBook.value[selectedChain.value.type]
+  //     ? addressBook.value[selectedChain.value?.type]
+  //     : []
+  // })
 
-    return keys.flatMap(key => addressBook.value[key])
-  })
+  // const otherAddressBook = computed(() => {
+  //   const keys = Object.keys(addressBook.value).filter(
+  //     key => key !== selectedChain.value?.type,
+  //   )
+
+  //   return keys.flatMap(key => addressBook.value[key])
+  // })
 
   const addAddress = (address: Address, chainType: string) => {
     if (
@@ -132,16 +129,24 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
   const removeRecentAddress = (index: number) => {
     recentAddresses.value[currentNetworkName.value].splice(index, 1)
   }
+
+  const inAddressBook = (address: string, chainType: string): Address | string => {
+    const found = addressBook.value[chainType]?.find(entry => entry.address === address)
+    return (
+      found || ''
+    )
+  }
   return {
     /** AddressBook */
     addressBook,
-    currentAddressBook,
-    otherAddressBook,
+    // currentAddressBook,
+    // otherAddressBook,
     isAdrAdded,
     isNameAdded,
     addAddress,
     removeAddress,
     editAddress,
+    inAddressBook,
     /** RecentAddress */
     recentAddresses,
     addRecentAddress,

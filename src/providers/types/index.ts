@@ -1,7 +1,7 @@
 import type {
   NativeEthereumTransaction,
   PostEthereumTransaction,
-} from '../ethereum/types'
+} from '../common/types'
 
 export type HexPrefixedString = `0x${string}`
 

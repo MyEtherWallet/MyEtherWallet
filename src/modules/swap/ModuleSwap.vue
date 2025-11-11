@@ -1,82 +1,99 @@
 <template>
   <div>
-    <div class="relative flex flex-col items-center mx-auto mt-4">
-      <div class="w-full flex items-center justify-start">
-        <p class="font-semibold text-s-24 ml-3 mb-1 text-left w-full">Swap</p>
-        <app-btn-text class="text-primary ml-auto">Clear</app-btn-text>
-      </div>
-      <div class="relative">
-        <!-- From Section -->
-        <div
-          class="bg-surface-light rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
-        >
-          <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
-          <select-chain-for-app :filter-chain-type="true" />
-          <app-swap-enter-amount
-            v-model:amount="fromAmount"
-            v-model:selected-token="fromTokenSelected"
-            v-model:error="fromAmountError"
-            :external-loading="fromLoadingState"
-            :tokens="parsedFromTokens"
-            :show-balance="isWalletConnected"
-            class="mt-3"
-          />
-        </div>
-        <div
-          class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
-          :class="{
-            'top-[calc(50%-67px)]': isCrossChain,
-            'top-[calc(50%-18px)]': !isCrossChain,
-          }"
-        >
-          <arrows-up-down-icon class="w-5 h-5" />
-        </div>
-        <div class="pt-2"></div>
-        <!-- To Section -->
-        <div
-          class="bg-surface-light rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
-        >
-          <p class="text-s-12 mb-1 font-bold">{{ t('common.to') }}</p>
-          <select-chain-for-app
-            :can-store="false"
-            :passed-chains="toChains"
-            :preselected-chain="selectedToChain"
-            :filter-chain-type="true"
-            @update:selected-chain="setToChain"
-          />
-          <app-swap-enter-amount
-            v-model:amount="toAmount"
-            v-model:selected-token="toTokenSelected"
-            v-model:error="toAmountError"
-            :external-loading="toLoadingState"
-            :show-balance="false"
-            :tokens="parsedToTokens"
-            :readonly="true"
-            :is-estimate="true"
-            class="mt-4"
-          />
-          <div class="pt-4" v-if="isCrossChain"></div>
-          <address-input
-            v-model:adr-input="userToAddress"
-            :resolved-address="toAddress"
-            :address-error-messages="toAddressError"
-            @validate:address="validateToAddress"
-            v-if="isCrossChain"
-          />
-        </div>
-      </div>
-      <div class="pt-4"></div>
-      <div
-        v-if="swapLoaded && !supportedNetwork"
-        class="text-error text-center"
-      >
-        <p class="text-s-16">
-          {{ t('swap.not-supported-network') }}
+    <div
+      :class="[
+        'static w-full flex flex-col items-center justify-items-stretch gap-1',
+      ]"
+    >
+      <div class="mb-3">
+        <p class="font-bold text-s-28 ml-5 mb-4">
+          {{ walletPanel === 'swap' ? 'Swap' : 'Bridge' }}
         </p>
+        <div class="relative">
+          <div class="absolute -top-8 right-4">
+            <app-btn-text class="text-primary ml-auto" @click="clearValues"
+              >Clear all</app-btn-text
+            >
+          </div>
+          <!-- From Section -->
+          <div
+            class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+          >
+            <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
+            <select-chain-for-app
+              :filter-chain-type="true"
+              :can-store="false"
+              :passed-chains="fromChains"
+              :preselected-chain="selectedFromChain"
+            />
+            <div
+              v-if="swapLoaded && !supportedNetwork"
+              class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
+            >
+              <p class="text-error text-center text-s-12">
+                {{ t('swap.not-supported-network') }}
+              </p>
+            </div>
+            <app-swap-enter-amount
+              v-else
+              v-model:amount="fromAmount"
+              v-model:selected-token="fromTokenSelected"
+              v-model:error="fromAmountError"
+              :external-loading="fromLoadingState"
+              :tokens="parsedFromTokens"
+              :show-balance="isWalletConnected"
+              class="mt-3"
+            />
+          </div>
+          <div
+            class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
+            :class="{
+              'top-[calc(50%-67px)]': isCrossChain,
+              'top-[calc(50%-18px)]': !isCrossChain,
+            }"
+          >
+            <arrows-up-down-icon class="w-5 h-5" />
+          </div>
+          <div class="pt-2"></div>
+          <!-- To Section -->
+          <div
+            class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+          >
+            <p class="text-s-12 mb-2 ml-2 font-bold">You are buying</p>
+            <select-chain-for-app
+              :can-store="false"
+              :passed-chains="toChains"
+              :preselected-chain="selectedToChain"
+              @update:selected-chain="setToChain"
+            />
+            <app-swap-enter-amount
+              v-model:amount="toAmount"
+              v-model:selected-token="toTokenSelected"
+              v-model:error="toAmountError"
+              :external-loading="toLoadingState"
+              :show-balance="false"
+              :tokens="parsedToTokens"
+              :readonly="true"
+              :is-estimate="true"
+              class="mt-4"
+            />
+            <div class="pt-4" v-if="isCrossChain"></div>
+            <address-input
+              v-model:adr-input="userToAddress"
+              :resolved-address="toAddress"
+              :found-nick-name="foundNickName"
+              :address-error-messages="toAddressError"
+              :network="selectedToChain"
+              @validate:address="validateToAddress"
+              v-if="isCrossChain"
+            />
+          </div>
+        </div>
       </div>
+
       <app-base-button
-        class="w-full"
-        v-if="isWalletConnected"
+        class="w-[70%]"
+        v-if="isWalletConnected && !isWatchOnly"
         :disabled="
           (swapLoaded && !supportedNetwork) ||
           !(
@@ -91,7 +108,7 @@
       >
         {{ t('common.swap') }}</app-base-button
       >
-      <div class="w-full max-w-[478px] mx-auto" v-else>
+      <div class="mx-auto w-[70%]" v-else>
         <app-base-button
           class="w-full"
           :disabled="swapLoaded && !supportedNetwork"
@@ -110,7 +127,9 @@
     <swap-offer-modal
       v-model:swap-offer-open="bestOfferSelectionOpen"
       v-model:selected-quote="selectedQuote"
+      v-model:loading="txProceeding"
       @update:proceedWithSwap="proceedWithSwap"
+      @update:declineSwap="bestOfferSelectionOpen = false"
       :quotes="providers"
       :amount="fromAmount"
       :to-chain="selectedToChain"
@@ -138,10 +157,12 @@ import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useSwap } from '@/composables/useSwap'
 import { type Chain } from '@/mew_api/types'
-import { supportedSwapEnums } from '@/providers/ethereum/chainToEnum'
+import {
+  enumToChain,
+  supportedSwapEnums,
+} from '@/providers/ethereum/chainToEnum'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
@@ -154,10 +175,11 @@ import {
   type ProviderSwapResponse,
   type EVMTransaction,
   type TokenType,
+  type GenericTransaction,
+  getSupportedNetworks,
 } from '@enkryptcom/swap'
 import { fromBase } from '@/utils/unit'
 import { useInputStore } from '@/stores/inputStore'
-import { useRouter } from 'vue-router'
 import { toBase } from '@/utils/unit'
 import { GasPriceType } from '@/providers/types'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
@@ -167,18 +189,24 @@ import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
 import dataTxAction from '@/utils/dataTxAction'
 import AddressInput from '@/components/address_book/AddressInput.vue'
-
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { useAddressBookStore, type Address } from '@/stores/addressBook'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+const walletMenu = useWalletMenuStore()
+const { walletPanel } = storeToRefs(walletMenu)
+const { inAddressBook, addAddress } = useAddressBookStore()
 const walletStore = useWalletStore()
 const globalStore = useGlobalStore()
 const chainsStore = useChainsStore()
 const inputStore = useInputStore()
 const toastStore = useToastStore()
 const { t } = useI18n()
-const router = useRouter()
 
 const { gasPriceType } = storeToRefs(globalStore)
-const { isWalletConnected, walletAddress, wallet } = storeToRefs(walletStore)
-const { selectedChain } = storeToRefs(chainsStore)
+const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
+  storeToRefs(walletStore)
+const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
 const {
   initSwapper,
   supportedNetwork,
@@ -206,7 +234,9 @@ const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
 
 const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
-
+const foundNickName = ref('')
+const txProceeding = ref(false) // allows loading button on swap offer modal to be overridden
+const selectedFromChain: Ref<Chain | undefined> = ref(selectedChain.value)
 const setToToken = () => {
   if (!selectedToChain.value) {
     toastStore.addToastMessage({
@@ -305,71 +335,134 @@ const parsedFromTokens = computed(() => {
 })
 // removes the selected to token from the from tokens list
 const parsedToTokens = computed(() => {
+  const sameNetworks =
+    selectedToChain.value?.chainID === selectedChain.value?.chainID
   const fromToken = fromTokenSelected.value as NewTokenInfo
   if (!localToTokens.value) return []
-  return localToTokens?.value.filter(
-    (token: NewTokenInfo) => token.address !== fromToken.address,
-  )
+  const filtered = sameNetworks
+    ? localToTokens?.value.filter(
+        (token: NewTokenInfo) => token.address !== fromToken.address,
+      )
+    : localToTokens?.value
+  return filtered
 })
 
 const validateToAddress = async () => {
   const address = userToAddress.value
-  const validAddress =
-    await toTokenSelected.value?.networkInfo.isAddress(address)
-  if (!address) toAddressError.value = 'address is required'
+  const validAddress = await toTokenSelected.value?.networkInfo.isAddress(
+    address.toLowerCase(),
+  )
+  if (validAddress) {
+    toAddressError.value = ''
+    return
+  }
+  if (!address) {
+    toAddressError.value = 'address is required'
+    return
+  }
   if (!validAddress) toAddressError.value = 'invalid address'
 }
+
+const fromChains = computed(() => {
+  const supportedNetworks = getSupportedNetworks()
+  const toMEWChain = supportedNetworks
+    .map(chain => {
+      const toChainByEnum = enumToChain[chain.id]
+      if (!toChainByEnum) return null
+      const foundInChains = chains.value.find(c => c.name === toChainByEnum)
+      return foundInChains ? foundInChains : null
+    })
+    .filter(chain => chain !== null) as Chain[]
+  return toMEWChain
+})
 
 const proceedWithSwap = async (quoteId: string) => {
   let txPromise
   // Proceed with the swap using the selected quote
-
-  const getSignableTransactions =
-    await wallet.value?.getMultipleSignableTransactions?.({
-      priority: gasPriceType.value as GasPriceType,
-      quoteId: quoteId,
-    })
-
-  if (
-    getSignableTransactions?.serialized.length &&
-    getSignableTransactions?.serialized.length > 0
-  ) {
-    for (let i = 0; i < getSignableTransactions?.serialized.length; i++) {
-      const tx = getSignableTransactions?.serialized[i]
-      const indexAtTheEnd = i === getSignableTransactions?.serialized.length - 1
-      if (tx) {
+  if (isBitcoinChain.value) {
+    await wallet.value
+      ?.getSignableTransaction({
+        priority: gasPriceType.value as GasPriceType,
+        quoteId: quoteId,
+      })
+      .then(async signableTx => {
         try {
           if (
             wallet.value?.getWalletType() === WalletType.WAGMI ||
             wallet.value?.getWalletType() === WalletType.INJECTED
           ) {
             const broadcast = wallet.value?.SendTransaction?.(
-              tx as HexPrefixedString,
+              signableTx.serialized as HexPrefixedString,
             )
-            // only assign txPromise if it's the last transaction
-            if (indexAtTheEnd) {
-              txPromise = broadcast
-            }
-          } else {
-            const signedTx = await wallet.value?.SignTransaction?.(
-              tx as HexPrefixedString,
-            )
-
-            const broadcast = wallet.value?.broadcastTransaction(
-              signedTx?.signed as unknown as HexPrefixedString,
-            )
-            // assign last transaction to txPromise
-            if (indexAtTheEnd) {
-              txPromise = broadcast
-            }
+            txPromise = broadcast
+            return
           }
+          const signedTx = await wallet.value?.SignTransaction?.(
+            signableTx.serialized as HexPrefixedString,
+          )
+          const broadcast = wallet.value?.broadcastTransaction(
+            signedTx?.signed as unknown as HexPrefixedString,
+          )
+          txPromise = broadcast
         } catch {
+          txProceeding.value = false
           toastStore.addToastMessage({
             type: ToastType.Error,
             text: t('swap.toast.tx-sign-failed'),
             duration: 10000,
           })
           return
+        }
+      })
+  } else {
+    const getSignableTransactions =
+      await wallet.value?.getMultipleSignableTransactions?.({
+        priority: gasPriceType.value as GasPriceType,
+        quoteId: quoteId,
+      })
+
+    if (
+      getSignableTransactions?.serialized.length &&
+      getSignableTransactions?.serialized.length > 0
+    ) {
+      for (let i = 0; i < getSignableTransactions?.serialized.length; i++) {
+        const tx = getSignableTransactions?.serialized[i]
+        const indexAtTheEnd =
+          i === getSignableTransactions?.serialized.length - 1
+        if (tx) {
+          try {
+            if (
+              wallet.value?.getWalletType() === WalletType.WAGMI ||
+              wallet.value?.getWalletType() === WalletType.INJECTED
+            ) {
+              const broadcast = wallet.value?.SendTransaction?.(
+                tx as HexPrefixedString,
+              )
+              // only assign txPromise if it's the last transaction
+              if (indexAtTheEnd) {
+                txPromise = broadcast
+              }
+            } else {
+              const signedTx = await wallet.value?.SignTransaction?.(
+                tx as HexPrefixedString,
+              )
+
+              const broadcast = wallet.value?.broadcastTransaction(
+                signedTx?.signed as unknown as HexPrefixedString,
+              )
+              // assign last transaction to txPromise
+              if (indexAtTheEnd) {
+                txPromise = broadcast
+              }
+            }
+          } catch {
+            toastStore.addToastMessage({
+              type: ToastType.Error,
+              text: t('swap.toast.tx-sign-failed'),
+              duration: 10000,
+            })
+            return
+          }
         }
       }
     }
@@ -398,18 +491,39 @@ const proceedWithSwap = async (quoteId: string) => {
     })
 }
 
+const clearValues = () => {
+  clearSwapValues()
+  fromAmount.value = '0'
+  toAmount.value = '0'
+  userToAddress.value = ''
+  foundNickName.value = ''
+  selectedQuote.value = undefined
+  setToToken()
+  setFromToken()
+}
+
 // Reset values when swap initiated closes
 // tx is already broadcasted at this point
 watch(
   () => swapInitiatedOpen.value,
   (value: boolean) => {
     if (!value) {
+      if (foundNickName.value === '') {
+        const newAddress: Address = {
+          address: toAddress.value || '',
+          name: '', // TODO: generate default name like 'Address 1'
+          chainName: selectedToChain.value?.name || '',
+          chainType: selectedToChain.value?.type || '',
+        }
+        addAddress(newAddress, selectedToChain.value?.type || '')
+      }
       txHash.value = '0x'
       providers.value = []
       selectedQuote.value = undefined
       fromAmount.value = '0'
       toAmount.value = '0'
       userToAddress.value = ''
+      foundNickName.value = ''
       setToToken()
       setFromToken()
     }
@@ -453,12 +567,30 @@ const userAddress = computed(() => {
 })
 
 const toAddress = computed(() => {
-  if (selectedToChain.value?.type === 'EVM') {
+  // if the chain is the same as the from chain, return the user address
+  if (selectedToChain.value?.name === selectedChain.value?.name) {
     return userAddress.value
   }
 
-  return userToAddress.value || '0x'
+  if (!isCrossChain.value) {
+    return userAddress.value
+  }
+
+  return userToAddress.value || ''
 })
+
+watch(
+  () => toAddress.value,
+  newval => {
+    foundNickName.value = ''
+    const foundAddress = inAddressBook(
+      newval || '',
+      selectedToChain.value?.type || '',
+    )
+    foundNickName.value = foundAddress ? (foundAddress as Address).name : ''
+  },
+  { immediate: true },
+)
 
 const toLoadingState = computed(() => {
   if (isLoadingQuotes.value) {
@@ -481,6 +613,7 @@ const setToChain = (chain: Chain) => {
   setToToken()
 }
 
+const accessStore = useAccessStore()
 const connectWalletForSwap = () => {
   storeSwapValues({
     fromToken: fromTokenSelected.value as NewTokenInfo,
@@ -488,12 +621,47 @@ const connectWalletForSwap = () => {
     toChain: selectedToChain.value as Chain,
     fromAmount: fromAmount.value as string,
   })
-  router.push({
-    name: ROUTES_ACCESS.ACCESS.NAME,
-  })
+  accessStore.openAccessDialog()
 }
 
-const swapButton = async () => {
+// Split btc swap since this will flow like send tx
+const swapForBtc = async () => {
+  bestSwapLoadingOpen.value = true
+  await debounceFetchQuotes()
+  const transactions = (
+    (swapInfo.value?.transactions as GenericTransaction[]) || []
+  ).map(tx => ({ address: tx.to, amount: tx.value }))
+  const txForm = {
+    fromAddresses: [userAddress.value],
+    consolidationAddress: userAddress.value,
+    outputs: transactions,
+  }
+
+  try {
+    const signableTransaction = await wallet.value?.getBtcGasFee?.(txForm)
+    swapGasFeeQuote.value = (signableTransaction as QuotesResponse) || undefined
+    bestSwapLoadingOpen.value = false
+    bestOfferSelectionOpen.value = true
+  } catch (e) {
+    bestSwapLoadingOpen.value = false
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: (e as Error)?.message || 'Error fetching BTC gas fees',
+      duration: 10000,
+    })
+    return
+  }
+}
+
+const swapButton = () => {
+  if (isBitcoinChain.value) {
+    swapForBtc()
+  } else {
+    swapForEvm()
+  }
+}
+
+const swapForEvm = async () => {
   bestSwapLoadingOpen.value = true
   await debounceFetchQuotes()
   const transactions = (swapInfo.value?.transactions || []).filter(
@@ -527,12 +695,10 @@ const fromAmountError = computed(() => {
   if (fromAmount.value === undefined || fromAmount.value === '')
     return t('swap.error.amount-required') // amount is blank
   if (
-    BigNumber(fromAmount.value).toFixed().length >
+    BigNumber(fromAmount.value).toFixed().split('.')[1]?.length >
     fromTokenSelected.value?.decimals
   ) {
-    return t('swap.error.too-many-decimals', {
-      decimal: fromTokenSelected.value?.decimals,
-    })
+    return t('swap.error.too-many-decimals')
   }
   const baseNetworkBalance = toBase(
     walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
@@ -563,6 +729,11 @@ const fromAmountError = computed(() => {
 
   if (BigInt(baseAmount) < 0)
     return t('swap.error.more-than-zero') // amount less than 0
+  else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
+    return t('swap.error.insufficient-native', {
+      symbol: fromTokenSelected.value.symbol,
+    })
+  // amount greater than selected balance
   else if (
     providers.value.length === 0 &&
     fromAmount.value !== '0' &&
@@ -576,7 +747,7 @@ const fromAmountError = computed(() => {
         BigInt(remainingBalance.toString())
     )
       return t('swap.error.insufficient-balance-for-fees', {
-        symbol: selectedChain.value?.name,
+        symbol: selectedChain.value?.currencyName,
       }) // insufficient native token balance for gas
     if (selectedQuote.value.minMax) {
       if (
@@ -590,14 +761,7 @@ const fromAmountError = computed(() => {
       )
         return t('swap.error.maximum-amount') // amount less than min amount
     }
-  } else if (
-    isWalletConnected.value &&
-    BigInt(baseBalance) < BigInt(baseAmount)
-  )
-    return t('swap.error.insufficient-native', {
-      symbol: fromTokenSelected.value.symbol,
-    })
-  // amount greater than selected balance
+  }
   return ''
 })
 
@@ -627,11 +791,20 @@ const fetchQuotes = async () => {
     // sort quotes by lowest minimum
     providers.value =
       quotes && quotes.length > 0
-        ? quotes.sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
-            const aFees = BigNumber(a.minMax.minimumFrom.toString() || 0)
-            const bFees = BigNumber(b.minMax.minimumFrom.toString() || 0)
-            return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
-          })
+        ? quotes
+            .sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
+              const aFees = BigNumber(a.minMax.minimumFrom.toString() || 0)
+              const bFees = BigNumber(b.minMax.minimumFrom.toString() || 0)
+              return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
+            })
+            .filter((quote: ProviderQuoteResponse) =>
+              BigNumber(quote.minMax.minimumFrom.toString()).lte(
+                toBase(
+                  BigNumber(fromAmount.value).toFixed(),
+                  fromTokenSelected.value?.decimals || 18,
+                ),
+              ),
+            )
         : []
     selectedQuote.value = providers.value[0] || undefined
     isLoadingQuotes.value = false
@@ -667,7 +840,7 @@ watch(
         toTokenSelected.value?.decimals || 18,
       )
       // Set the toTokenSelected based on the first provider's toTokenAmount
-      toAmount.value = `≈ ${value.length > 8 ? BigNumber(value).decimalPlaces(8) : value.toString()}`
+      toAmount.value = `≈ ${formatFloatingPointValue(value).value}`
     }
   },
 )

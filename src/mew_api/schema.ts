@@ -164,6 +164,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/token-price-chart/coins/{coin}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokenPriceChartByCoin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/token-price-chart/chains/{chainName}/contracts/{contract}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokenPriceChartByContract"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/token-info/coins/{coin}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokenInfoPageByCoin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/trending-tokens": {
         parameters: {
             query?: never;
@@ -372,6 +420,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v2/btc/{chainName}/estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionEstimateV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/simple-estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionSimpleEstimate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/btc/{chainName}/quotes": {
         parameters: {
             query?: never;
@@ -382,6 +462,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["GetBtcTransactionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v2/btc/{chainName}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionQuoteV2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -666,7 +762,11 @@ export interface components {
         /** @enum {string} */
         SortDirection: "ASC" | "DESC";
         /** @enum {string} */
+        WebTokenPriceChartInterval: "1D" | "7D" | "1M" | "3M" | "1Y" | "ALL";
+        /** @enum {string} */
         WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
+        /** @enum {string} */
+        WebTokensWatchlistSort: "NONE" | "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
             amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
@@ -729,11 +829,23 @@ export interface components {
             fiatSymbol?: string;
             fiatFeeRate?: string;
         };
+        BtcTransactionSimpleEstimate: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
         BtcTransactionQuotes: {
             ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
             REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
             FAST: components["schemas"]["BtcTransactionFeeQuote"];
             FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
+        BtcTransactionQuotesV2: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR?: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST?: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST?: components["schemas"]["BtcTransactionFeeQuote"];
         };
         GetBtcTransactionFeesResponse: {
             provider?: string;
@@ -753,6 +865,74 @@ export interface components {
             REGULAR: components["schemas"]["EvmGasFeeInfo"];
             FAST: components["schemas"]["EvmGasFeeInfo"];
             FASTEST: components["schemas"]["EvmGasFeeInfo"];
+        };
+        GetWebTokenPriceChartResponse: {
+            /** Format: date-time */
+            from: string;
+            /** Format: date-time */
+            to: string;
+            prices: {
+                timestamp: number;
+                price: number;
+            }[];
+        };
+        GetWebTokenInfoPageResponse: {
+            coinId: string;
+            name: string;
+            symbol: string;
+            currentPrice: null | number;
+            priceChangePercentage24h: null | number;
+            fullyDilutedValuation: null | number;
+            marketCap: null | number;
+            maxSupply: null | number;
+            totalSupply: null | number;
+            circulatingSupply: null | number;
+            totalVolume: null | number;
+            low24h: null | number;
+            high24h: null | number;
+            iconUrl: null | string;
+            chainBalances: {
+                chainName: string;
+                chainNameLong: string;
+                chainType: components["schemas"]["ChainType"];
+                iconUrl: string;
+                result: {
+                    /** @constant */
+                    ok: false;
+                    value: {
+                        reason: string;
+                    };
+                } | {
+                    /** @constant */
+                    ok: true;
+                    value: {
+                        contract: null | string;
+                        decimals: null | number;
+                        balances: ({
+                            /** @constant */
+                            ok: false;
+                            value: {
+                                reason: string;
+                                owner: string;
+                            };
+                        } | {
+                            /** @constant */
+                            ok: true;
+                            value: {
+                                owner: string;
+                                value: string;
+                            };
+                        })[];
+                    };
+                };
+            }[];
+            supportedChains: {
+                chainName: string;
+                chainNameLong: string;
+                chainType: components["schemas"]["ChainType"];
+                contract: null | string;
+                iconUrl: string;
+            }[];
         };
         GetWebTrendingTokensResponse: {
             page: number;
@@ -783,7 +963,9 @@ export interface components {
                 priceChangePercentage7d: number | null;
                 totalVolume: number | null;
                 marketCap: number | null;
-                address: string | null;
+                addresses: {
+                    [key: string]: string;
+                };
                 logoUrl: string | null;
                 sparklineIn7d: null | number[];
             }[];
@@ -798,7 +980,9 @@ export interface components {
             priceChangePercentage7d: number | null;
             totalVolume: number | null;
             marketCap: number | null;
-            address: string | null;
+            addresses: {
+                [key: string]: string;
+            };
             logoUrl: string | null;
             sparklineIn7d: null | number[];
         }[];
@@ -859,6 +1043,7 @@ export interface components {
         }[];
         GetBalancesByChainNameAndAddressResponse: {
             result: {
+                coinId?: string;
                 balance: string;
                 contract: string;
                 decimals?: number;
@@ -866,6 +1051,11 @@ export interface components {
                 name?: string;
                 price?: number;
                 symbol?: string;
+                market_cap?: number;
+                price_change_percentage_24h?: number;
+                is_rwa?: boolean;
+                is_stablecoin?: boolean;
+                sparkline_in_7d?: null | number[];
             }[];
         };
         GetTokenBalancesByChainNamesAndAddressResponse: {
@@ -999,6 +1189,14 @@ export interface components {
             fromAddresses: components["schemas"]["BtcAddressInput"][];
             outputs?: components["schemas"]["BtcOutputInput"][];
         };
+        GetBtcTransactionEstimateRequestV2: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
         GetBtcTransactionQuoteRequest: {
             doNotFilterOutOrdinals?: boolean;
             allowSendingDust?: boolean;
@@ -1007,14 +1205,33 @@ export interface components {
             fromAddresses: components["schemas"]["BtcAddressInput"][];
             outputs?: components["schemas"]["BtcOutputInput"][];
         };
+        GetBtcTransactionQuoteRequestV2: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
         GetBtcTransactionEstimateResponse: {
-            quoteId?: components["schemas"]["UUID"];
             fees: components["schemas"]["BtcTransactionQuotes"];
             ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionEstimateResponseV2: {
+            fees: components["schemas"]["BtcTransactionQuotesV2"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionSimpleEstimateResponse: {
+            fees: components["schemas"]["BtcTransactionSimpleEstimate"];
         };
         GetBtcTransactionQuoteResponse: {
             quoteId: components["schemas"]["UUID"];
             fees: components["schemas"]["BtcTransactionQuotes"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionQuoteResponseV2: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["BtcTransactionQuotesV2"];
             ordinalsFilteredOut: boolean;
         };
         GetUnsignedBtcTransactionResponse: {
@@ -1091,6 +1308,22 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetChainMetadataResponse"];
+            };
+        };
+        GetWebTokenPriceChartSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokenPriceChartResponse"];
+            };
+        };
+        GetWebTokenInfoPageSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokenInfoPageResponse"];
             };
         };
         GetWebTrendingTokensSuccess: {
@@ -1206,6 +1439,24 @@ export interface components {
                 "application/json": components["schemas"]["GetBtcTransactionEstimateResponse"];
             };
         };
+        GetBtcTransactionEstimateSuccessV2: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateResponseV2"];
+            };
+        };
+        GetBtcTransactionSimpleEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionSimpleEstimateResponse"];
+            };
+        };
         GetBtcTransactionQuoteSuccess: {
             headers: {
                 "X-MEW-API-Signature"?: string;
@@ -1213,6 +1464,15 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetBtcTransactionQuoteResponse"];
+            };
+        };
+        GetBtcTransactionQuoteSuccessV2: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteResponseV2"];
             };
         };
         GetUnsignedBtcTransactionSuccess: {
@@ -1343,17 +1603,21 @@ export interface components {
         };
     };
     parameters: {
+        IncludeSparklines: boolean;
+        PathCoinId: string;
         CoinIds: string;
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
-        AddressChain: string;
+        AddressChains: string;
         FilterChain: string;
         Category: string;
         Search: string;
         Page: number;
         PerPage: number;
         SortDirection: components["schemas"]["SortDirection"];
+        WebTokenPriceChartInterval: components["schemas"]["WebTokenPriceChartInterval"];
         WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
+        WebTokensWatchlistSort: components["schemas"]["WebTokensWatchlistSort"];
         ChainNames: string;
         AumAddressType: string;
         AumAddressPlatform: string;
@@ -1361,9 +1625,11 @@ export interface components {
         QuoteId: components["schemas"]["UUID"];
         PriorityId: components["schemas"]["FeePriority"];
         BtcAddress: components["schemas"]["BtcAddressInput"];
+        QueryEvmAddresses: string | string[];
         BtcAddresses: string;
         BtcTransactionId: components["schemas"]["BtcTransactionIdInput"];
         EvmAddress: components["schemas"]["EvmAddressInput"];
+        AnyContractAddress: string;
         EvmContractAddress: components["schemas"]["EvmAddressInput"];
         Address: components["schemas"]["AnyAddressInput"];
     };
@@ -1398,9 +1664,19 @@ export interface components {
                 "application/json": components["schemas"]["GetBtcTransactionEstimateRequest"];
             };
         };
+        GetBtcTransactionEstimateV2: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateRequestV2"];
+            };
+        };
         GetBtcTransactionQuote: {
             content: {
                 "application/json": components["schemas"]["GetBtcTransactionQuoteRequest"];
+            };
+        };
+        GetBtcTransactionQuoteV2: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteRequestV2"];
             };
         };
         BroadcastBtcTransaction: {
@@ -1536,6 +1812,55 @@ export interface operations {
             200: components["responses"]["GetChainMetadataSuccess"];
         };
     };
+    GetWebTokenPriceChartByCoin: {
+        parameters: {
+            query?: {
+                interval?: components["parameters"]["WebTokenPriceChartInterval"];
+            };
+            header?: never;
+            path: {
+                coin: components["parameters"]["PathCoinId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokenPriceChartSuccess"];
+        };
+    };
+    GetWebTokenPriceChartByContract: {
+        parameters: {
+            query?: {
+                interval?: components["parameters"]["WebTokenPriceChartInterval"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                contract: components["parameters"]["AnyContractAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokenPriceChartSuccess"];
+        };
+    };
+    GetWebTokenInfoPageByCoin: {
+        parameters: {
+            query?: {
+                evmAddresses?: components["parameters"]["QueryEvmAddresses"];
+            };
+            header?: never;
+            path: {
+                coin: components["parameters"]["PathCoinId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokenInfoPageSuccess"];
+        };
+    };
     GetWebTrendingTokens: {
         parameters: {
             query?: {
@@ -1555,7 +1880,7 @@ export interface operations {
     GetWebTokensTable: {
         parameters: {
             query?: {
-                addressChain?: components["parameters"]["AddressChain"];
+                addressChains?: components["parameters"]["AddressChains"];
                 filterChain?: components["parameters"]["FilterChain"];
                 category?: components["parameters"]["Category"];
                 search?: components["parameters"]["Search"];
@@ -1575,8 +1900,10 @@ export interface operations {
     GetWebTokensWatchlist: {
         parameters: {
             query?: {
-                addressChain?: components["parameters"]["AddressChain"];
+                addressChains?: components["parameters"]["AddressChains"];
+                filterChain?: components["parameters"]["FilterChain"];
                 coins?: components["parameters"]["CoinIds"];
+                sort?: components["parameters"]["WebTokensWatchlistSort"];
             };
             header?: never;
             path?: never;
@@ -1631,7 +1958,9 @@ export interface operations {
     };
     GetBalancesByChainNameAndAddress: {
         parameters: {
-            query?: never;
+            query?: {
+                sparklines?: components["parameters"]["IncludeSparklines"];
+            };
             header?: never;
             path: {
                 chainName: components["parameters"]["ChainName"];
@@ -1738,6 +2067,34 @@ export interface operations {
             201: components["responses"]["GetBtcTransactionEstimateSuccess"];
         };
     };
+    GetBtcTransactionEstimateV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionEstimateV2"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionEstimateSuccessV2"];
+        };
+    };
+    GetBtcTransactionSimpleEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: components["responses"]["GetBtcTransactionSimpleEstimateSuccess"];
+        };
+    };
     GetBtcTransactionQuote: {
         parameters: {
             query?: never;
@@ -1750,6 +2107,20 @@ export interface operations {
         requestBody: components["requestBodies"]["GetBtcTransactionQuote"];
         responses: {
             201: components["responses"]["GetBtcTransactionQuoteSuccess"];
+        };
+    };
+    GetBtcTransactionQuoteV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionQuoteV2"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionQuoteSuccessV2"];
         };
     };
     GetUnsignedBtcTransaction: {

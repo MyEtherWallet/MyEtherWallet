@@ -1,16 +1,16 @@
 <template>
   <div>
     <div
-      class="static w-full xs:max-w-[478px] flex flex-col items-center justify-items-stretch gap-1"
+      class="static w-full flex flex-col items-center justify-items-stretch gap-1"
     >
-      <div class="relative">
-        <div class="flex items-center justify-between mb-1 mt-4">
-          <p class="font-semibold text-s-24 ml-3">Send</p>
-          <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
-            >Clear</app-btn-text
-          >
-        </div>
-        <div class="p-4 rounded-20 bg-surface-light mb-2">
+      <div class="mb-3">
+        <p class="font-bold text-s-28 ml-5 mb-4">Send</p>
+        <div class="p-4 rounded-20 bg-mewBg mb-2 relative">
+          <div class="absolute -top-8 right-4">
+            <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
+              >Clear all</app-btn-text
+            >
+          </div>
           <div class="mb-[25px]">
             <app-enter-amount
               v-model:amount="amount"
@@ -24,6 +24,7 @@
             :resolved-address="toAddress"
             :address-error-messages="toAddressError"
             :network="selectedChain"
+            :found-nick-name="foundNickName"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
           />
@@ -36,21 +37,21 @@
         </div>
       </div>
       <app-base-button
-        v-if="isWalletConnected"
+        v-if="isWalletConnected && !isWatchOnly"
         :disabled="!validSend"
         :is-loading="isLoadingFees"
         @click="handleSubmit"
-        class="w-full"
+        class="w-[70%]"
       >
         {{ $t('common.send') }}</app-base-button
       >
-      <app-base-button class="w-full capitalize" @click="connectWallet" v-else>
+      <app-base-button class="w-[70%] capitalize" @click="connectWallet" v-else>
         {{ $t('common.connect_wallet') }}</app-base-button
       >
       <app-need-help
         :title="$t('send.need-help')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
-        class="mt-4"
+        class="mt-5"
       />
     </div>
     <!-- TODO: replace network with actual selected network info -->
@@ -66,12 +67,11 @@
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
-      @tx-sent="resetSendModule"
+      @tx-sent="saveToAddressBookAfterSending"
     />
   </div>
 </template>
 <script setup lang="ts">
-import { ROUTES_ACCESS } from '@/router/routeNames'
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei, toHex } from 'web3-utils'
@@ -81,7 +81,11 @@ import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
-import type { QuotesResponse, EstimatesRequestBody } from '@/mew_api/types'
+import type {
+  QuotesResponse,
+  EstimatesRequestBody,
+  GetBtcTransactionEstimateBody,
+} from '@/mew_api/types'
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import { type HexPrefixedString } from '@/providers/types'
@@ -96,15 +100,19 @@ import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { toBase } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 import { useAddressInput } from '@/composables/useAddressInput'
+import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 
-const router = useRouter()
 const { t } = useI18n()
 const walletStore = useWalletStore()
-const { wallet, isWalletConnected, isLoadingBalances, balanceWei } =
-  storeToRefs(walletStore)
+const {
+  wallet,
+  isWalletConnected,
+  isLoadingBalances,
+  balanceWei,
+  isWatchOnly,
+} = storeToRefs(walletStore)
 
 /** ----------------
  * Current Selected Fee
@@ -114,18 +122,22 @@ const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 
 // stored inputs
 import { useInputStore } from '@/stores/inputStore'
+import { useAddressBookStore, type Address } from '@/stores/addressBook'
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
+const { inAddressBook, addAddress } = useAddressBookStore()
 
 const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
 const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
 const data = ref('0x')
-const gasFeeTxEstimate = ref<EstimatesRequestBody | undefined>(undefined)
+const gasFeeTxEstimate = ref<
+  EstimatesRequestBody | GetBtcTransactionEstimateBody | undefined
+>(undefined)
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
 
@@ -134,6 +146,7 @@ const isLoadingFees = ref(false)
 
 const signedTx = ref<HexPrefixedString | string>('')
 const address = ref('')
+const foundNickName = ref('')
 
 /** ----------------
  * Address Input
@@ -190,13 +203,15 @@ const checkAmountForError = () => {
   } else amountError.value = ''
 }
 
+const accessStore = useAccessStore()
+
 const connectWallet = () => {
   storeSendValues({
     toAddress: toAddress.value ?? '',
     amount: amount.value.toString(),
     token: tokenSelectedContract.value,
   })
-  router.push({ name: ROUTES_ACCESS.ACCESS.NAME })
+  accessStore.openAccessDialog()
 }
 
 // Gas Fee for display
@@ -237,8 +252,9 @@ watch(
   () => [selectedFee.value, gasFees.value?.fees],
   () => {
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) return
+    const _fee = gasFees.value.fees[selectedFee.value]
     gasPrice.value = hexToBigInt(
-      gasFees.value.fees[selectedFee.value].nativeValue,
+      _fee.nativeValue ?? _fee.nativeFeeTotal,
     ).toString()
   },
 )
@@ -249,35 +265,51 @@ const amountToHex = computed(() => {
   return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
 })
 
-const getTxRequestBody = (): EstimatesRequestBody | undefined => {
+const getTxRequestBody = ():
+  | EstimatesRequestBody
+  | GetBtcTransactionEstimateBody
+  | undefined => {
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
     toAddress.value !== '' &&
     amount.value !== ''
   ) {
-    const isSendingContractToken =
-      tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
-    if (isSendingContractToken) {
-      const web3Contract = new Contract(abi, tokenSelected.value.contract)
-      data.value = web3Contract.methods
-        .transfer(
-          toAddress.value,
-          toBase(amount.value, tokenSelected.value?.decimals ?? 18),
-        )
-        .encodeABI() //
-    } else {
-      data.value = '0x'
-    }
-    return {
-      to: isSendingContractToken
-        ? tokenSelected.value.contract
-        : (toAddress.value as HexPrefixedString),
-      address:
-        (address.value as HexPrefixedString) ||
-        '0x0000000000000000000000000000000000000000',
-      value: amountToHex.value,
-      data: data.value as HexPrefixedString,
+    if (isEvmChain.value) {
+      const isSendingContractToken =
+        tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
+      if (isSendingContractToken) {
+        const web3Contract = new Contract(abi, tokenSelected.value.contract)
+        data.value = web3Contract.methods
+          .transfer(
+            toAddress.value,
+            toBase(amount.value, tokenSelected.value?.decimals ?? 18),
+          )
+          .encodeABI() //
+      } else {
+        data.value = '0x'
+      }
+      return {
+        to: isSendingContractToken
+          ? tokenSelected.value.contract
+          : (toAddress.value as HexPrefixedString),
+        address:
+          (address.value as HexPrefixedString) ||
+          '0x0000000000000000000000000000000000000000',
+        value: amountToHex.value,
+        data: data.value as HexPrefixedString,
+      }
+    } else if (isBitcoinChain.value) {
+      return {
+        fromAddresses: [address.value],
+        changeAddress: address.value,
+        outputs: [
+          {
+            address: toAddress.value ?? '',
+            amount: toBase(amount.value, 8),
+          },
+        ],
+      }
     }
   }
 }
@@ -287,7 +319,13 @@ watchDebounced(
   () => [tokenSelected.value, amount.value, toAddress.value],
   async () => {
     gasFeeError.value = ''
+    foundNickName.value = ''
     const body = getTxRequestBody()
+    const foundAddress = inAddressBook(
+      toAddress.value || '',
+      selectedChain.value?.type || '',
+    )
+    foundNickName.value = foundAddress ? (foundAddress as Address).name : ''
     if (!body) return
     gasFeeTxEstimate.value = body
   },
@@ -301,6 +339,20 @@ const resetSendModule = () => {
   clearAddressInput()
 }
 
+const saveToAddressBookAfterSending = () => {
+  const name = foundNickName.value // if address not in address book, name will be ''
+  if (name === '') {
+    const newAddress: Address = {
+      address: toAddress.value || '',
+      name: '', // TODO: generate default name like 'Address 1'
+      chainName: selectedChain.value?.name || '',
+      chainType: selectedChain.value?.type || '',
+    }
+    addAddress(newAddress, selectedChain.value?.type || '')
+  }
+  resetSendModule()
+}
+
 // toast store
 const toastStore = useToastStore()
 
@@ -312,14 +364,24 @@ const getGasFeeQuotes = async () => {
     if (!body || !tokenSelected.value || !validSend.value) return
     gasFeeTxEstimate.value = body
     isLoadingFees.value = true
-    gasFees.value = await wallet.value?.getGasFee(gasFeeTxEstimate.value)
+    if (isEvmChain.value) {
+      gasFees.value = await wallet.value?.getGasFee?.(
+        gasFeeTxEstimate.value as EstimatesRequestBody,
+      )
+    } else {
+      gasFees.value = (await wallet.value?.getBtcGasFee?.(
+        gasFeeTxEstimate.value as GetBtcTransactionEstimateBody,
+      )) as QuotesResponse
+    }
     //Check if user has enough balance to cover gas fees
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
+    const btcValue = (body as GetBtcTransactionEstimateBody).outputs?.[0].amount
+    const evmValue = (body as EstimatesRequestBody).value
     const totalBalanceNeeded =
       BigInt(gasFees.value?.fees[selectedFee.value]?.nativeValue || '0') +
-      BigInt(body.value)
+      BigInt(isEvmChain.value ? evmValue : (btcValue ?? 0))
 
     if (BigInt(totalBalanceNeeded) > BigInt(balanceWei.value)) {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
@@ -327,7 +389,6 @@ const getGasFeeQuotes = async () => {
     isLoadingFees.value = false
   } catch (e) {
     isLoadingFees.value = false
-    //TODO: implement error localization
     if (e instanceof Error) {
       if (e.message) {
         gasFeeError.value = e.message.includes('insufficient funds')
@@ -351,31 +412,30 @@ const handleSubmit = async () => {
   })
 
   if (
-    wallet.value?.getWalletType() === WalletType.WAGMI ||
-    wallet.value?.getWalletType() === WalletType.INJECTED
+    wallet.value?.getWalletType() === WalletType.PRIVATE_KEY ||
+    wallet.value?.getWalletType() === WalletType.MNEMONIC
   ) {
-    openTxModal.value = true
-    signedTx.value = signableTx.serialized
+    if (!wallet.value?.SignTransaction) {
+      console.error('SignTransaction not implemented')
+      return
+    }
+    try {
+      const signResponse = await wallet.value?.SignTransaction(
+        signableTx.serialized as HexPrefixedString,
+      )
+
+      signedTx.value = signResponse.signed
+      openTxModal.value = true
+    } catch (e) {
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
+      })
+    }
     return
   }
 
-  // sign transaction
-  if (!wallet.value?.SignTransaction) {
-    console.error('SignTransaction not implemented')
-    return
-  }
-  try {
-    const signResponse = await wallet.value?.SignTransaction(
-      signableTx.serialized as HexPrefixedString,
-    )
-
-    signedTx.value = signResponse.signed
-    openTxModal.value = true
-  } catch (e) {
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
-    })
-  }
+  openTxModal.value = true
+  signedTx.value = signableTx.serialized
 }
 </script>

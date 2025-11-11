@@ -33,9 +33,7 @@
           { 'inset-x-0': props.location === PopupLocation.CENTER },
         ]"
       >
-        <div
-          class="min-w-60 max-w-full bg-white shadow-[0px_8px_16px_-6px_rgba(0,0,0,0.32)] rounded-xl"
-        >
+        <div class="min-w-[160px] max-w-full bg-white shadow-button rounded-xl">
           <slot name="menu-content" :toggleMenu="toggleMenu" />
         </div>
       </div>

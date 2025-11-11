@@ -81,9 +81,7 @@
               <!-- Seacrh not found-->
               <div v-else>
                 <div class="flex justify-center mt-10 h-[400px] text-info">
-                  <p>
-                    {{ $t('derivation_path.not_found') }}: {{ searchInput }}
-                  </p>
+                  <p>{{ $t('derivation_path.not_found') }} {{ searchInput }}</p>
                 </div>
               </div>
             </div>
@@ -130,7 +128,7 @@ import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
-import PATHS from '../common/bip44'
+import Bip44Paths from '../common/bip44'
 import {
   type DerivationPath,
   ethereum as ethereumPath,
@@ -138,6 +136,9 @@ import {
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
+import { useChainsStore } from '@/stores/chainsStore'
+import BitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
+import type { Chain } from '@/mew_api/types'
 
 const { t } = useI18n()
 defineProps({
@@ -147,12 +148,23 @@ defineProps({
   },
 })
 
+const chainStore = useChainsStore()
 const derivationStore = useDerivationStore()
 const { selectedDerivation } = storeToRefs(derivationStore)
 const { setSelectedDerivation: setToStore } = derivationStore
-
-const paths = ref(PATHS[WALLET_TYPES.MNEMONIC])
-const defaultEthereumPath = ethereumPath
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
+// TODO: handle DOT and SOL later on
+const defaultPath = isEvmChain.value
+  ? Bip44Paths[WALLET_TYPES.MNEMONIC]
+  : isBitcoinChain.value
+    ? BitcoinWallet.getSupportedPaths(selectedChain.value?.name ?? 'BITCOIN')
+    : Bip44Paths[WALLET_TYPES.MNEMONIC]
+const paths = ref(defaultPath)
+const initialDefaultPath = isEvmChain.value
+  ? ethereumPath
+  : isBitcoinChain.value
+    ? BitcoinWallet.getSupportedPaths(selectedChain.value?.name ?? 'BITCOIN')[0]
+    : ethereumPath
 
 const selectedPath = defineModel<DerivationPath>('selectedPath', {
   // type: Object as () => DerivationPath,
@@ -166,14 +178,12 @@ const setSelectedPath = (path: DerivationPath) => {
 }
 
 onMounted(() => {
-  if (selectedDerivation.value) {
-    selectedPath.value = selectedDerivation.value
-  }
+  setPaths()
 })
 
 watch(
-  selectedPath,
-  newValue => {
+  () => selectedPath.value,
+  (newValue: DerivationPath | undefined) => {
     if (newValue) {
       setToStore(newValue)
     }
@@ -181,6 +191,45 @@ watch(
   { immediate: true },
 )
 
+watch(
+  () => selectedChain.value,
+  (newValue: Chain | undefined) => {
+    if (newValue) {
+      setPaths()
+      // reset search input
+      searchInput.value = ''
+    }
+  },
+)
+
+const setPaths = () => {
+  if (selectedDerivation.value) {
+    selectedPath.value = selectedDerivation.value
+  }
+
+  // set path automatically if chain type differs from current selected path
+  if (selectedChain.value?.type !== selectedPath.value?.type) {
+    if (isEvmChain.value) {
+      selectedPath.value = ethereumPath
+    } else if (isBitcoinChain.value) {
+      selectedPath.value = BitcoinWallet.getSupportedPaths(
+        selectedChain.value?.name || 'BITCOIN',
+      )[0]
+    } else {
+      selectedPath.value = initialDefaultPath
+    }
+    setToStore(selectedPath.value!)
+  } else {
+    if (isBitcoinChain.value && selectedPath.value) {
+      // ensure selected path is supported by the selected bitcoin chain
+      const supportedPaths = BitcoinWallet.getSupportedPaths(
+        selectedChain.value?.name || 'BITCOIN',
+      )
+      selectedPath.value = supportedPaths[0]
+      setToStore(selectedPath.value!)
+    }
+  }
+}
 /** -------------------------------
  * Dialog
  -------------------------------*/
@@ -198,13 +247,13 @@ const searchResults = computed(() => {
     return paths.value
   }
   const search = searchInput.value.toLowerCase()
-  const beginsWithLabel = paths.value.filter(path => {
+  const beginsWithLabel = paths.value.filter((path: DerivationPath) => {
     return path.label.toLowerCase().startsWith(search)
   })
-  const beginsWithPath = paths.value.filter(path => {
+  const beginsWithPath = paths.value.filter((path: DerivationPath) => {
     return path.path.toLowerCase().startsWith(search)
   })
-  const other = paths.value.filter(path => {
+  const other = paths.value.filter((path: DerivationPath) => {
     return (
       path.label.toLowerCase().includes(search) ||
       path.path.toLowerCase().includes(search)
@@ -212,13 +261,6 @@ const searchResults = computed(() => {
   })
   const unique = new Set([...beginsWithLabel, ...beginsWithPath, ...other])
   return [...unique]
-})
-
-onMounted(() => {
-  //TODO: set default path per chain .IE bitcoin has its own path
-  if (!selectedPath.value) {
-    selectedPath.value = defaultEthereumPath
-  }
 })
 
 /** -------------------------------

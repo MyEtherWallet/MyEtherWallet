@@ -1,7 +1,9 @@
 <template>
   <div
     :class="[
-      { 'bg-surface rounded-2xl md:rounded-32 p-1': variant === 'default' },
+      {
+        'bg-surface rounded-12 md:rounded-32 p-2 md:p-1': variant === 'default',
+      },
       'flex justify-start  gap-1 max-w-fit',
     ]"
   >
@@ -13,9 +15,10 @@
           role="tab"
           :aria-selected="areEqual(selected, btn)"
           :class="[
-            { 'min-h-10 min-w-[110px]': size === 'large' },
-            { 'min-h-8 min-w-[95px]': size === 'medium' },
+            { 'min-h-10 min-w-[110px] px-3': size === 'large' },
+            { 'min-h-8 min-w-[95px] !text-s-15': size === 'medium' },
             { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
+            { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
             {
               'bg-white shadow-container hover:bg-white':
                 variant === 'default' && areEqual(selected, btn),
@@ -46,7 +49,13 @@
       <div
         v-for="n in totalPlaceholders"
         :key="n"
-        class="animate-pulse bg-white rounded-full p-2 gap-1 flex items-center min-w-[110px] min-h-12"
+        class="animate-pulse bg-white rounded-full p-2 gap-1 flex items-center min-w-[110px]"
+        :class="[
+          { 'min-h-10': size === 'large' },
+          { 'min-h-8': size === 'medium' },
+          { 'min-h-7 ': size === 'small' },
+          { 'min-h-6 min-w-[46px]': size === 'xs' },
+        ]"
       ></div>
     </div>
   </div>
@@ -103,7 +112,7 @@ const props = defineProps({
    * @size - The size of the buttons. Can be 'small', 'medium', or 'large'. Default is 'medium'.
    */
   size: {
-    type: String as PropType<'small' | 'medium' | 'large'>,
+    type: String as PropType<'xs' | 'small' | 'medium' | 'large'>,
     default: 'medium',
   },
   /**

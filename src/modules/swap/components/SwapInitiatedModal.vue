@@ -168,7 +168,7 @@ const fromTokenChainImg = computed(() => {
 const openProgress = () => {
   // Logic to view progress can be added here
   window.open(
-    `${props.toChain?.blockExplorerTX.replace('[[txHash]]', props.txHash)}`,
+    `${props.fromChain?.blockExplorerTX.replace('[[txHash]]', props.txHash)}`,
     '_blank',
   )
   close()
