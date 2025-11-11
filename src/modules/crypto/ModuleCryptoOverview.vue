@@ -72,7 +72,7 @@
           class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
         >
           {{
-            data.btcDominancePercentage
+            data.btcDominancePercentage !== undefined
               ? formatPercentageValue(data.btcDominancePercentage).value
               : '-'
           }}
@@ -94,7 +94,7 @@
           class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
         >
           {{
-            data.ethDominancePercentage
+            data.ethDominancePercentage !== undefined
               ? formatPercentageValue(data.ethDominancePercentage).value
               : '-'
           }}
@@ -132,8 +132,8 @@
 
       <div v-if="data && !isLoading" class="flex flex-col gap-2">
         <token-row
-          v-for="token in paginatedNewTokensArray"
-          :key="token.symbol"
+          v-for="(token, index) in paginatedNewTokensArray"
+          :key="token.symbol + index"
           :token="token"
         />
       </div>
@@ -213,7 +213,7 @@ const toastStore = useToastStore()
 
 const newTokens = ref<CryptoOverviewToken[]>([])
 const gainersTokens = ref<CryptoOverviewToken[]>([])
-const fetchUrl = 'https://mew-api-dev.ethvm.dev/v1/web/overview'
+const fetchUrl = '/v1/web/overview'
 const {
   data,
   onFetchResponse,

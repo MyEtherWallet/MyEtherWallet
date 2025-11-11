@@ -33,7 +33,6 @@
       <div
         v-for="token in 3"
         :key="`loading-trending-${token}`"
-        å
         class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[55px]"
       ></div>
     </div>
