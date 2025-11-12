@@ -5,7 +5,7 @@ import { hexToBytes } from '@ethereumjs/util'
 import type { Config, Connector } from '@wagmi/core'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
-import { sendTransaction } from '@wagmi/core'
+import { sendTransaction, signMessage } from '@wagmi/core'
 import { fromHex } from 'viem'
 import { type SendTransactionParameters } from '@wagmi/core'
 
@@ -83,12 +83,21 @@ class WagmiWallet extends BaseEvmWallet {
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  override SignMessage(options: {
+
+  override async SignMessage(options: {
     message: `0x${string}`
     options: unknown
   }): Promise<HexPrefixedString> {
-    throw new Error('Method not implemented.')
+    try {
+      const message = await signMessage(this.config, {
+        connector: this.connector,
+        account: this.address,
+        message: options.message,
+      })
+      return Promise.resolve(message)
+    } catch (e) {
+      return Promise.reject(e)
+    }
   }
   override async getAddress(): Promise<HexPrefixedString> {
     const addressArray = await this.connector?.getAccounts()

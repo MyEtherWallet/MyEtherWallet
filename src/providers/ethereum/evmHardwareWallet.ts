@@ -12,6 +12,7 @@ import type { PathType } from '@/stores/derivationStore'
 import type { NetworkNames } from '@enkryptcom/types'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
+import { chainToEnum } from './chainToEnum'
 
 export default class EvmHardwareWallet extends BaseEvmWallet {
   private address: HexPrefixedString
@@ -98,4 +99,21 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     return this.hwWalletInstance
   }
 
+  override async SignMessage(options: { message: `0x${string}`; options: unknown }): Promise<HexPrefixedString> {
+    try {
+      const walletSigned = await this.hwWalletInstance.signPersonalMessage({
+        message: Buffer.from(options.message),
+        pathIndex: this.index,
+        pathType: {
+          basePath: this.path.basePath ?? '',
+          path: this.path.path,
+        },
+        wallet: this.walletType,
+        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+      })
+      return Promise.resolve(walletSigned as HexPrefixedString)
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
 }

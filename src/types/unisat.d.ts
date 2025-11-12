@@ -9,6 +9,7 @@ declare global {
       getNetwork: () => Promise<string>;
       switchNetwork: (network: string) => Promise<void>;
       on: (event: string, handler: (...args: unknown[]) => void) => void;
+      signMessage: (message: string, type?: string) => Promise<string>;
     }
   }
 }
