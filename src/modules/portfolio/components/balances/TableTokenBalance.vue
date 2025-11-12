@@ -61,7 +61,7 @@
               colspan="2"
             >
               <div
-                class="flex items-center gap-1 ml-11"
+                class="flex items-center gap-1 ml-11 font-semibold"
                 :class="{
                   'text-black': headerSort === SortValueString.NAME,
                 }"
@@ -89,7 +89,7 @@
               class="hidden xs:table-cell w-[60px] md:w-[80px] cursor-pointer px-1 py-2 hover:text-black transition-colors"
             >
               <div
-                class="flex items-center gap-1 justify-end relative"
+                class="flex items-center gap-1 justify-end relative font-semibold"
                 :class="{
                   'text-black': headerSort === SortValueString.PERCENT,
                 }"
@@ -117,7 +117,7 @@
               class="hidden md:table-cell cursor-pointer px-1 py-2 hover:text-black transition-colors"
             >
               <div
-                class="flex items-center gap-1 justify-end relative"
+                class="flex items-center gap-1 justify-end relative font-semibold"
                 :class="{
                   'text-black': headerSort === SortValueString.MARKET_CAP,
                 }"
@@ -145,7 +145,7 @@
               class="cursor-pointer px-1 py-2 hover:text-black transition-colors"
             >
               <div
-                class="flex items-center gap-1 justify-end relative text-right"
+                class="flex items-center gap-1 justify-end relative text-right font-semibold"
                 :class="{
                   'text-black': headerSort === SortValueString.VALUE,
                 }"
@@ -173,7 +173,7 @@
               class="lg:pl-1 lg:pr-3 py-2 text-right w-8 sm:w-16 lg:w-auto"
               :class="isOpenSideMenu ? 'xl:w-[160px] 2xl:w-auto' : ''"
             >
-              <p class="hidden lg:block">Actions</p>
+              <p class="hidden lg:block font-semibold">Actions</p>
             </th>
           </tr>
         </thead>
@@ -267,7 +267,9 @@
             <td class="px-1 py-2 text-right">
               <p>{{ token.fiatBalanceFormatted }}</p>
               <p class="text-info text-s-12">
-                @ ${{ token.price ? formatFiatValue(token.price).value : '-' }}
+                {{
+                  token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
+                }}
               </p>
             </td>
             <!-- Actions -->

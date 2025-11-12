@@ -63,7 +63,7 @@
  * @example
  */
 import AppBtnIconClose from './AppBtnIconClose.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
@@ -125,4 +125,7 @@ const closeDialog = () => {
     router.push({ name: ROUTES_MAIN.HOME.NAME })
   }
 }
+onBeforeUnmount(() => {
+  isOverflowHidden.value = false
+})
 </script>

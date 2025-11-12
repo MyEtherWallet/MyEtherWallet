@@ -36,9 +36,13 @@
     :time-frame="selectedChartFilter.value"
     class="w-full h-[200px] sm:h-[320px]"
   />
-  <div v-else class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg">
+  <div
+    v-else
+    class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg"
+    :class="{ 'animate-pulse': isLoadingFetch }"
+  >
     <div class="flex flex-col items-center h-full justify-center gap-2">
-      <p class="text-s-14 text-info">No data available</p>
+      <p v-if="notAvailable" class="text-s-14 text-info">No data available</p>
     </div>
   </div>
 </template>
