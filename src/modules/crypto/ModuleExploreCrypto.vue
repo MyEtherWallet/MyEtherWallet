@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1 class="text-s-20 lg:text-s-32 2xl:text-s-40 font-bold rounded-32 ml-2">
+    <h1
+      class="text-s-20 lg:text-s-32 2xl:text-s-40 font-bold rounded-32 ml-2 my-2"
+    >
       Explore Crypto Tokens
     </h1>
 
@@ -139,7 +141,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors w-[55%] sm:w-[180px]"
                 >
                   <div
-                    class="flex items-center gap-1 ml-11"
+                    class="flex items-center gap-1 ml-11 font-semibold"
                     :class="{
                       'text-black': headerSort === 'NAME',
                     }"
@@ -161,7 +163,7 @@
                   class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right"
+                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
@@ -187,7 +189,7 @@
                   >
                     <template #select-button="{ toggleSelect }">
                       <button
-                        class="px-1 py-2 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        class="px-1 py-2 text-right !uppercase font-semibold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
                         @click="toggleSelect"
                       >
                         <div class="flex items-center justify-end gap-1">
@@ -205,7 +207,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden xl:min-w-[115px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative"
+                    class="flex items-center gap-1 justify-end relative font-semibold"
                     :class="{
                       'text-black': headerSort === 'TOTAL_VOLUME',
                     }"
@@ -233,7 +235,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden md:table-cell xl:min-w-[115px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right"
+                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
                     :class="{
                       'text-black': headerSort === 'MARKET_CAP',
                     }"
@@ -258,7 +260,7 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block">Actions</p>
+                  <p class="hidden lg:block font-semibold">Actions</p>
                 </th>
               </tr>
             </thead>

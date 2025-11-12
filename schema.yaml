@@ -109,6 +109,16 @@ paths:
         200:
           $ref: '#/components/responses/GetWebTokenInfoPageSuccess'
 
+  /v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection:
+    get:
+      operationId: GetWeb7dBalancesBackProjectionChartByChainAndAddress
+      parameters:
+      - $ref: '#/components/parameters/Address'
+      - $ref: '#/components/parameters/ChainName'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess'
+
   /v1/web/trending-tokens:
     get:
       operationId: GetWebTrendingTokens
@@ -124,7 +134,7 @@ paths:
     get:
       operationId: GetWebTokensTable
       parameters:
-        - $ref: '#/components/parameters/AddressChains'
+        # - $ref: '#/components/parameters/AddressChains'
         - $ref: '#/components/parameters/FilterChain'
         - $ref: '#/components/parameters/Category'
         - $ref: '#/components/parameters/Search'
@@ -139,7 +149,7 @@ paths:
     get:
       operationId: GetWebTokensWatchlist
       parameters:
-        - $ref: '#/components/parameters/AddressChains'
+        # - $ref: '#/components/parameters/AddressChains'
         - $ref: '#/components/parameters/FilterChain'
         - $ref: '#/components/parameters/CoinIds'
         - $ref: '#/components/parameters/WebTokensWatchlistSort'
@@ -157,6 +167,13 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/GetWebTopGainersSuccess'
+
+  /v1/web/overview:
+    get:
+      operationId: GetWebCryptoOverview
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebCryptoOverviewSuccess'
 
   /v1/coingecko/chains/{chainName}/preview:
     get:
@@ -535,11 +552,11 @@ components:
       in: path
       schema:
         type: string
-    AddressChains:
-      name: addressChains
-      in: query
-      schema:
-        type: string
+    # AddressChains:
+    #   name: addressChains
+    #   in: query
+    #   schema:
+    #     type: string
     FilterChain:
       name: filterChain
       in: query
@@ -810,6 +827,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetWebTokenInfoPageResponse'
 
+    GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse'
+
     GetWebTrendingTokensSuccess:
       content:
         application/json:
@@ -833,6 +856,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetWebTopGainersResponse'
+
+    GetWebCryptoOverviewSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebCryptoOverviewResponse'
 
     GetCoinGeckoChainPreviewSuccess:
       content:
@@ -1806,6 +1835,21 @@ components:
               iconUrl:
                 type: string
 
+    GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse:
+      type: object
+      required:
+        - timestamps
+        - prices
+      properties:
+        timestamps:
+          type: array
+          items:
+            type: number
+        prices:
+          type: array
+          items:
+            type: number
+
     GetWebTrendingTokensResponse:
       type: object
       required:
@@ -1984,6 +2028,74 @@ components:
         total:
           type: number
         items:
+          type: array
+          items:
+            type: object
+            required:
+              - coinId
+              - name
+              - symbol
+              - price
+              - priceChangePercentage24h
+              - logoUrl
+            properties:
+              coinId:
+                type: string
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              logoUrl:
+                type: [string, 'null']
+
+    GetWebCryptoOverviewResponse:
+      type: object
+      required:
+        - volume24h
+        - marketCap
+        - marketCapChange24hPercentage
+        - newCoins
+        - rwaTopGainers
+      properties:
+        volume24h:
+          type: number
+        marketCap:
+          type: number
+        marketCapChange24hPercentage:
+          type: number
+        ethDominancePercentage:
+          type: number
+        btcDominancePercentage:
+          type: number
+        newCoins:
+          type: array
+          items:
+            type: object
+            required:
+              - coinId
+              - name
+              - symbol
+              - price
+              - priceChangePercentage24h
+              - logoUrl
+            properties:
+              coinId:
+                type: string
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              logoUrl:
+                type: [string, 'null']
+        rwaTopGainers:
           type: array
           items:
             type: object

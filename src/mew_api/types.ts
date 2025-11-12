@@ -72,6 +72,9 @@ export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']
 export type GetWebTokensWatchlistResponseToken =
   components['schemas']['GetWebTokensWatchlistResponse'][number]
+export type CryptoOverview =
+  components['schemas']['GetWebCryptoOverviewResponse']
+export type CryptoOverviewToken = CryptoOverview['newCoins'][number]
 
 /** --------------------------
  * BTC types

@@ -212,6 +212,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWeb7dBalancesBackProjectionChartByChainAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/trending-tokens": {
         parameters: {
             query?: never;
@@ -268,6 +284,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["GetWebTopGainers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebCryptoOverview"];
         put?: never;
         post?: never;
         delete?: never;
@@ -934,6 +966,10 @@ export interface components {
                 iconUrl: string;
             }[];
         };
+        GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse: {
+            timestamps: number[];
+            prices: number[];
+        };
         GetWebTrendingTokensResponse: {
             page: number;
             pages: number;
@@ -992,6 +1028,29 @@ export interface components {
             perPage: number;
             total: number;
             items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl: string | null;
+            }[];
+        };
+        GetWebCryptoOverviewResponse: {
+            volume24h: number;
+            marketCap: number;
+            marketCapChange24hPercentage: number;
+            ethDominancePercentage?: number;
+            btcDominancePercentage?: number;
+            newCoins: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl: string | null;
+            }[];
+            rwaTopGainers: {
                 coinId: string;
                 name: string;
                 symbol: string;
@@ -1326,6 +1385,14 @@ export interface components {
                 "application/json": components["schemas"]["GetWebTokenInfoPageResponse"];
             };
         };
+        GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse"];
+            };
+        };
         GetWebTrendingTokensSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -1356,6 +1423,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetWebTopGainersResponse"];
+            };
+        };
+        GetWebCryptoOverviewSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebCryptoOverviewResponse"];
             };
         };
         GetCoinGeckoChainPreviewSuccess: {
@@ -1608,7 +1683,6 @@ export interface components {
         CoinIds: string;
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
-        AddressChains: string;
         FilterChain: string;
         Category: string;
         Search: string;
@@ -1861,6 +1935,21 @@ export interface operations {
             200: components["responses"]["GetWebTokenInfoPageSuccess"];
         };
     };
+    GetWeb7dBalancesBackProjectionChartByChainAndAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                address: components["parameters"]["Address"];
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess"];
+        };
+    };
     GetWebTrendingTokens: {
         parameters: {
             query?: {
@@ -1880,7 +1969,6 @@ export interface operations {
     GetWebTokensTable: {
         parameters: {
             query?: {
-                addressChains?: components["parameters"]["AddressChains"];
                 filterChain?: components["parameters"]["FilterChain"];
                 category?: components["parameters"]["Category"];
                 search?: components["parameters"]["Search"];
@@ -1900,7 +1988,6 @@ export interface operations {
     GetWebTokensWatchlist: {
         parameters: {
             query?: {
-                addressChains?: components["parameters"]["AddressChains"];
                 filterChain?: components["parameters"]["FilterChain"];
                 coins?: components["parameters"]["CoinIds"];
                 sort?: components["parameters"]["WebTokensWatchlistSort"];
@@ -1928,6 +2015,18 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebTopGainersSuccess"];
+        };
+    };
+    GetWebCryptoOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebCryptoOverviewSuccess"];
         };
     };
     GetCoinGeckoChainPreview: {

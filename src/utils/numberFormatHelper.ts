@@ -71,7 +71,7 @@ BigNumber.config({ ROUNDING_MODE: 1 }) // equivalent
  */
 
 const formatIntegerToString = (_value: string | number | BigNumber): string => {
-  return new BigNumber(_value).toFormat()
+  return new BigNumber(_value).toFormat(0)
 }
 
 /**
