@@ -106,7 +106,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
 
   override async SignMessage(options: {
     message: string;
-    options: unknown;
+    options?: unknown;
   }): Promise<HexPrefixedString> {
     try {
       const walletSigned = await this.hwWalletInstance.signPersonalMessage({

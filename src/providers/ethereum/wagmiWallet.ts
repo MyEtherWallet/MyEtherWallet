@@ -6,7 +6,7 @@ import type { Config, Connector } from '@wagmi/core'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
 import { sendTransaction, signMessage } from '@wagmi/core'
-import { fromHex } from 'viem'
+import { fromHex, stringToHex } from 'viem'
 import { type SendTransactionParameters } from '@wagmi/core'
 
 class WagmiWallet extends BaseEvmWallet {
@@ -85,14 +85,14 @@ class WagmiWallet extends BaseEvmWallet {
 
 
   override async SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
     try {
       const message = await signMessage(this.config, {
         connector: this.connector,
         account: this.address,
-        message: options.message,
+        message: stringToHex(options.message),
       })
       return Promise.resolve(message)
     } catch (e) {

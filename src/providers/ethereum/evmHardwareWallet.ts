@@ -99,7 +99,7 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     return this.hwWalletInstance
   }
 
-  override async SignMessage(options: { message: `0x${string}`; options: unknown }): Promise<HexPrefixedString> {
+  override async SignMessage(options: { message: string; options?: unknown }): Promise<HexPrefixedString> {
     try {
       const walletSigned = await this.hwWalletInstance.signPersonalMessage({
         message: Buffer.from(options.message),

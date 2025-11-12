@@ -130,8 +130,8 @@ class WatchOnlyWallet implements WalletInterface {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
     throw new Error('Method not implemented: SignMessage')
   }

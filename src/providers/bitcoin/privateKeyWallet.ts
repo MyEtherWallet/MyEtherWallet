@@ -46,7 +46,7 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
     return address!;
   }
 
-  override async SignMessage(options: { message: string; options: unknown; }): Promise<HexPrefixedString> {
+  override async SignMessage(options: { message: string; options?: unknown; }): Promise<HexPrefixedString> {
     const signature = bitcoinMessage.sign(
       options.message,
       this.privateKey,

@@ -74,7 +74,7 @@ class UnisatInjectWallet extends BaseBtcWallet {
 
   override async SignMessage(options: {
     message: string;
-    options: unknown;
+    options?: unknown;
   }): Promise<HexPrefixedString> {
     const provider = this.getProviderInstance();
     const signature = await provider.signMessage(options.message);

@@ -94,8 +94,8 @@ class Web3InjectedWallet extends BaseEvmWallet {
   }
 
   override async SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
     try {
       const signature = await this.provider.provider.request({

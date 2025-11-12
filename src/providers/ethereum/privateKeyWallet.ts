@@ -60,8 +60,8 @@ class PrivateKeyWallet extends BaseEvmWallet {
     return this.walletType
   }
   override SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
     const msgHash = hashPersonalMessage(Buffer.from(options.message, 'utf8'))
     const sig = ecsign(msgHash, this.privKey)

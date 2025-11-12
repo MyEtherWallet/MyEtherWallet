@@ -33,8 +33,8 @@ export interface WalletInterface {
   getGasFee?: (tx: QuotesRequestBody) => Promise<QuotesResponse>
   getBtcGasFee?: (tx: BitcoinQuotesRequestBody) => Promise<BitcoinQuotesResponse>
   SignMessage: (options: {
-    message: `0x${string}`
-    options: unknown
+    message: string
+    options?: unknown
   }) => Promise<HexPrefixedString>
   getAddress: () => Promise<string>
   getWalletType: () => WalletType
