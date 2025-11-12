@@ -11,4 +11,7 @@ export const ALL_CHAINS = ref<Chain>({
   isTestNetwork: false,
   currencyName: '',
   currencyNameLong: '',
+  chainID: '0',
+  price: 0,
+  supportsBalances: false,
 })
