@@ -164,6 +164,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/chains/with-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetChainMetadataListWithPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/token-price-chart/coins/{coin}": {
         parameters: {
             query?: never;
@@ -813,6 +829,7 @@ export interface components {
             isTestNetwork: boolean;
             currencyName: string;
             currencyNameLong: string;
+            supportsBalances: boolean;
             icon: string;
             rpcUrls?: string[];
         };
@@ -841,6 +858,21 @@ export interface components {
         GetChainMetadataResponse: {
             result: components["schemas"]["ChainMetadata"];
         };
+        GetChainMetadataListWithPricesResponse: {
+            name: string;
+            nameLong: string;
+            type: components["schemas"]["ChainType"];
+            blockExplorerTX: string;
+            blockExplorerAddr: string;
+            chainID?: string;
+            isTestNetwork: boolean;
+            currencyName: string;
+            currencyNameLong: string;
+            rpcUrls?: string[];
+            supportsBalances: boolean;
+            icon: string;
+            price: null | number;
+        }[];
         /** @enum {string} */
         EvmTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
         /** @enum {string} */
@@ -1359,6 +1391,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetChainMetadataListResponse"];
+            };
+        };
+        GetChainMetadaListWithPricesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetChainMetadataListWithPricesResponse"];
             };
         };
         GetChainMetadataSuccess: {
@@ -1884,6 +1924,18 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetChainMetadataSuccess"];
+        };
+    };
+    GetChainMetadataListWithPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetChainMetadaListWithPricesSuccess"];
         };
     };
     GetWebTokenPriceChartByCoin: {

@@ -76,6 +76,13 @@ paths:
         200:
           $ref: '#/components/responses/GetChainMetadataSuccess'
 
+  /v1/chains/with-prices:
+    get:
+      operationId: GetChainMetadataListWithPrices
+      responses:
+        200:
+          $ref: '#/components/responses/GetChainMetadaListWithPricesSuccess'
+
   # Tokens
 
   /v1/web/token-price-chart/coins/{coin}:
@@ -103,8 +110,8 @@ paths:
     get:
       operationId: GetWebTokenInfoPageByCoin
       parameters:
-      - $ref: '#/components/parameters/PathCoinId'
-      - $ref: '#/components/parameters/QueryEvmAddresses'
+        - $ref: '#/components/parameters/PathCoinId'
+        - $ref: '#/components/parameters/QueryEvmAddresses'
       responses:
         200:
           $ref: '#/components/responses/GetWebTokenInfoPageSuccess'
@@ -113,8 +120,8 @@ paths:
     get:
       operationId: GetWeb7dBalancesBackProjectionChartByChainAndAddress
       parameters:
-      - $ref: '#/components/parameters/Address'
-      - $ref: '#/components/parameters/ChainName'
+        - $ref: '#/components/parameters/Address'
+        - $ref: '#/components/parameters/ChainName'
       responses:
         200:
           $ref: '#/components/responses/GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess'
@@ -809,6 +816,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetChainMetadataListResponse'
 
+    GetChainMetadaListWithPricesSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetChainMetadataListWithPricesResponse'
+
     GetChainMetadataSuccess:
       content:
         application/json:
@@ -978,13 +991,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/GetUnsignedBtcTransactionResponse"
+            $ref: '#/components/schemas/GetUnsignedBtcTransactionResponse'
 
     BroadcastBtcTransactionSuccess:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/BroadcastBtcTransactionResponse"
+            $ref: '#/components/schemas/BroadcastBtcTransactionResponse'
 
     GetErc20ContractMetadataSuccess:
       content:
@@ -1112,7 +1125,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/GetUnsignedEvmTransactionResponse"
+            $ref: '#/components/schemas/GetUnsignedEvmTransactionResponse'
 
     GetUnsignedEvmMultiTransactionSuccess:
       headers:
@@ -1125,21 +1138,21 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/GetUnsignedEvmMultiTransactionResponse"
+            $ref: '#/components/schemas/GetUnsignedEvmMultiTransactionResponse'
 
     BroadcastEvmTransactionSuccess:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/BroadcastEvmTransactionResponse"
+            $ref: '#/components/schemas/BroadcastEvmTransactionResponse'
 
   schemas:
     # Input primitives
     BigIntInput:
       type: string
       # Patterns:
-        # - 0x[0-9a-fA-F]+
-        # - [0-9]+
+      # - 0x[0-9a-fA-F]+
+      # - [0-9]+
     EvmAddressInput:
       type: string
       pattern: '^((0|\\)[xX])?[0-9a-fA-F]{40}$'
@@ -1366,6 +1379,7 @@ components:
         - isTestNetwork
         - currencyName
         - currencyNameLong
+        - supportsBalances
         - icon
       properties:
         name:
@@ -1386,6 +1400,8 @@ components:
           type: string
         currencyNameLong:
           type: string
+        supportsBalances:
+          type: boolean
         icon:
           type: string
         rpcUrls:
@@ -1466,6 +1482,52 @@ components:
       properties:
         result:
           $ref: '#/components/schemas/ChainMetadata'
+
+    GetChainMetadataListWithPricesResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - name
+          - nameLong
+          - type
+          - blockExplorerTX
+          - blockExplorerAddr
+          - isTestNetwork
+          - currencyName
+          - currencyNameLong
+          - supportsBalances
+          - icon
+          - price
+        properties:
+          name:
+            type: string
+          nameLong:
+            type: string
+          type:
+            $ref: '#/components/schemas/ChainType'
+          blockExplorerTX:
+            type: string
+          blockExplorerAddr:
+            type: string
+          chainID:
+            type: string
+          isTestNetwork:
+            type: boolean
+          currencyName:
+            type: string
+          currencyNameLong:
+            type: string
+          rpcUrls:
+            type: array
+            items:
+              type: string
+          supportsBalances:
+            type: boolean
+          icon:
+            type: string
+          price:
+            type: ['null', number]
 
     # ====================
     # Transaction Statuses
@@ -2008,7 +2070,6 @@ components:
               - type: array
                 items:
                   type: number
-
 
     GetWebTopGainersResponse:
       type: object
@@ -2876,4 +2937,3 @@ components:
       properties:
         txid:
           type: string
-

@@ -88,7 +88,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         logo_url: selectedChain.value.icon,
         name: selectedChain.value.currencyNameLong,
         symbol: selectedChain.value.currencyName,
-        price: 0, // Price will be set later
+        price: selectedChain.value.price ?? 0,
         balance: balance.value,
         balanceWei: balanceWei.value,
       }

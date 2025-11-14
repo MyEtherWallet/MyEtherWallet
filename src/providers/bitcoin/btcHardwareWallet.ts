@@ -1,5 +1,4 @@
 import { bytesToHex } from 'web3-utils';
-
 import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
@@ -103,5 +102,26 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
 
   getWalletInstance(): HWwallet | null {
     return this.hwWalletInstance
+  }
+
+  override async SignMessage(options: {
+    message: string;
+    options?: unknown;
+  }): Promise<HexPrefixedString> {
+    try {
+      const walletSigned = await this.hwWalletInstance.signPersonalMessage({
+        message: Buffer.from(options.message),
+        pathIndex: this.index,
+        pathType: {
+          basePath: this.path.basePath ?? '',
+          path: this.path.path,
+        },
+        wallet: this.walletType,
+        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+      })
+      return walletSigned as HexPrefixedString
+    } catch (e) {
+      return Promise.reject(e)
+    }
   }
 }

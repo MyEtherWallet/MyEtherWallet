@@ -75,13 +75,6 @@ class Web3InjectedWallet extends BaseEvmWallet {
     return txHash as HexPrefixedString
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  override SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
-  }): Promise<HexPrefixedString> {
-    throw new Error('Method not implemented.')
-  }
   override async getAddress(): Promise<HexPrefixedString> {
     return new Promise(resolve => {
       resolve(this.address)
@@ -98,6 +91,21 @@ class Web3InjectedWallet extends BaseEvmWallet {
 
   updateAddress(newAddress: HexPrefixedString): void {
     this.address = newAddress
+  }
+
+  override async SignMessage(options: {
+    message: string
+    options?: unknown
+  }): Promise<HexPrefixedString> {
+    try {
+      const signature = await this.provider.provider.request({
+        method: 'personal_sign',
+        params: [options.message, this.address],
+      })
+      return signature as HexPrefixedString
+    } catch (e) {
+      return Promise.reject(e)
+    }
   }
 }
 

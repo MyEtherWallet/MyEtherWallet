@@ -7,6 +7,7 @@ import { Psbt } from "bitcoinjs-lib";
 import { ECPairFactory } from 'ecpair'
 import * as tinysecp from 'tiny-secp256k1'
 import { INFO_MAP } from "../common/btcInfo";
+import * as bitcoinMessage from 'bitcoinjs-message';
 const ECPair = ECPairFactory(tinysecp)
 
 export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
@@ -43,6 +44,15 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
     const publicKey = priv.publicKey;
     const { address } = INFO_MAP[this.chainName].paymentType({ ...INFO_MAP[this.chainName], pubkey: publicKey },)
     return address!;
+  }
+
+  override async SignMessage(options: { message: string; options?: unknown; }): Promise<HexPrefixedString> {
+    const signature = bitcoinMessage.sign(
+      options.message,
+      this.privateKey,
+      true, // compressed option
+    );
+    return `0x${signature.toString('hex')}`;
   }
 
 }

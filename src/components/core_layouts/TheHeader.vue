@@ -192,12 +192,12 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
     {
-      title: t('verify-message'),
-      routeName: ROUTES_MAIN.VERIFY_MESSAGE.NAME,
-    },
-    {
       title: t('sign-message'),
       routeName: ROUTES_MAIN.SIGN_MESSAGE.NAME,
+    },
+    {
+      title: t('verify-message'),
+      routeName: ROUTES_MAIN.VERIFY_MESSAGE.NAME,
     },
     {
       title: t('deploy-contract'),
