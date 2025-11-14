@@ -4,7 +4,7 @@
       <!-- Blockie -->
       <div class="absolute top-3 left-3 flex items-center pointer-events-none">
         <div
-          v-if="!resolvedAddress"
+          v-if="!adrInput && !resolvedAddress"
           class="rounded-full bg-surface !w-[32px] h-[32px]"
         ></div>
         <img

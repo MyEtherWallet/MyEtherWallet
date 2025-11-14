@@ -1,46 +1,54 @@
 <template>
-  <div class="flex items-center flex-col">
-    <h2 class="mt-10 mb-4 title4 pt-10">{{ $t('sign-message') }}</h2>
-    <app-text-field
-      v-model="message"
-      placeholder="Enter the message to sign"
-      class="w-full max-w-lg"
-    />
+  <div class="flex justify-center w-full">
+    <div class="w-[624px] flex flex-col items-center justify-center">
+      <app-sheet :title="$t('sign-message')">
+        <div class="flex items-center flex-col">
+          <app-text-field
+            v-model="message"
+            placeholder="Enter the message to sign"
+            class="w-full max-w-lg"
+          />
 
-    <app-base-button
-      @click="handleSigner"
-      class="mt-4"
-      :disabled="!cansignMessage"
-    >
-      {{ isWalletConnected ? $t('sign-message') : $t('connect_wallet') }}
-    </app-base-button>
+          <app-base-button
+            @click="handleSigner"
+            class="mt-4"
+            :disabled="!cansignMessage"
+          >
+            {{ isWalletConnected ? $t('sign-message') : $t('connect_wallet') }}
+          </app-base-button>
 
-    <app-dialog
-      v-model:is-open="signedModal"
-      title="Signature"
-      class="sm:max-w-lg sm:mx-auto"
-    >
-      <template #content>
-        <div>
-          <div class="p-4">
-            <h3 class="text-lg font-semibold">Signature:</h3>
-            <p class="mt-2 text-wrap word-break">{{ signature }}</p>
-          </div>
-          <div class="p-4">
-            <h3 class="text-lg font-semibold">Message:</h3>
-            <p class="mt-2">{{ message }}</p>
-          </div>
-          <div class="p-4">
-            <h3 class="text-lg font-semibold">Signing address:</h3>
-            <p class="mt-2">{{ walletAddress }}</p>
-          </div>
+          <app-dialog
+            v-model:is-open="signedModal"
+            title="Signature"
+            class="sm:max-w-lg sm:mx-auto"
+          >
+            <template #content>
+              <div>
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold">Message:</h3>
+                  <p class="mt-2">{{ message }}</p>
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold">Signing address:</h3>
+                  <p class="mt-2">{{ walletAddress }}</p>
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-semibold">Signature:</h3>
+                  <p class="mt-2" style="word-break: break-all">
+                    {{ signature }}
+                  </p>
+                </div>
+              </div>
+            </template>
+          </app-dialog>
         </div>
-      </template>
-    </app-dialog>
+      </app-sheet>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import AppSheet from '@/components/AppSheet.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTextField from '@/components/AppTextField.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
