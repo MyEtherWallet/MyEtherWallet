@@ -667,6 +667,7 @@ export default {
       return this.availableTokens.toTokens.reduce((arr, token) => {
         if (token && localContractToToken.has(token.contract))
           arr.push(localContractToToken.get(token.contract));
+
         return arr;
       }, []);
     },
@@ -677,9 +678,17 @@ export default {
     actualFromTokens() {
       if (this.isLoading) return [];
       let validFromTokens = this.fromTokens.filter(item => {
+        const hasDupe =
+          this.tokensList.findIndex(
+            token =>
+              token.contract.toLowerCase() === item.contract.toLowerCase() ||
+              (token.symbol.toLowerCase() === item.symbol.toLowerCase() &&
+                token.name.toLowerCase() === item.name.toLowerCase())
+          ) > -1;
         if (
           item.contract.toLowerCase() !==
-          this.toTokenType?.contract?.toLowerCase()
+            this.toTokenType?.contract?.toLowerCase() &&
+          !hasDupe
         )
           return item;
       });
