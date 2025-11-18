@@ -338,7 +338,6 @@ class Changelly {
               response.data.result.amountExpectedFrom,
               fromT.decimals
             );
-            // amountBN = toBN(amountBN);
             const erc20contract = new Web3Contract(erc20Abi);
             txObj.data = erc20contract.methods
               .transfer(response.data.result.payinAddress, amountBN)
