@@ -117,7 +117,8 @@ const EXCEPTIONS = [
   '@ensdomains/address-encoder',
   'less',
   '@formatjs/intl-numberformat',
-  '@trezor/connect-web'
+  '@trezor/connect-web',
+  '@web3-name-sdk/core'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
