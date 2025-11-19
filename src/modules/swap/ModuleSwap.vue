@@ -257,15 +257,6 @@
                 :class="isFromNonChain ? '' : 'mt-7'"
                 :selected-provider-id="selectedProviderId"
               />
-              <p v-if="hasGasPriceOption && step >= 1" class="error--text">
-                {{
-                  feeError
-                    ? feeError
-                    : providersErrorMsg
-                    ? providersErrorMsg.subtitle
-                    : ''
-                }}
-              </p>
               <!--
                   =====================================================================================
                   Swap Fee
@@ -1636,6 +1627,7 @@ export default {
     setConfirmInfo() {
       const toPrice = this.toTokenType.price ? this.toTokenType.price : 0;
       const fromPrice = this.fromTokenType.price ? this.fromTokenType.price : 0;
+
       const obj = {
         from: this.address,
         to: this.toAddress,
