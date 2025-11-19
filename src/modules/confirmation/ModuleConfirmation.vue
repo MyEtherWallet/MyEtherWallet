@@ -42,6 +42,11 @@
               rel="noopener noreferrer"
               >Learn more.</a
             >
+            <span v-if="isSwap">
+              <b
+                >{{ ' ' }} This swap is powered by {{ parsedProvider.name }}
+              </b>
+            </span>
           </div>
           <div v-if="!isContractCreation">
             <confirmation-send-transaction-details

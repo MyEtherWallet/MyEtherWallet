@@ -166,9 +166,9 @@ export default {
       headerImg: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
       amount: 0,
       header: {
-        title: 'Ethereum 2.0 staking',
+        title: 'Validator Staking',
         subtext:
-          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community. ',
+          'Stake on Ethereum 2.0 and earn continuous rewards for providing a public good to the community. Powered by Staked. ',
         subtextClass: 'textMedium--text',
         dappLink:
           'https://help.myetherwallet.com/en/articles/5380731-eth-validator-staking-with-mew-portfolio'
