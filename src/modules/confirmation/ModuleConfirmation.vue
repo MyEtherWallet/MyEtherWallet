@@ -235,7 +235,7 @@
             </a>
             and
             <router-link :to="termRoute" target="_blank"
-              >Terms of Service</router-link
+              >MEW Terms of Service</router-link
             >
           </div>
         </v-card-text>

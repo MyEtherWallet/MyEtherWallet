@@ -89,10 +89,13 @@
                 <v-col cols="4">
                   <v-row class="align-center justify-end pr-3">
                     <img
-                      class="pr-2"
+                      class="pr-1"
                       height="20px"
                       :src="providerParser(quote.provider).logo"
                     />
+                    <span class="mew-body pr-1 font-weight-bold">
+                      {{ providerParser(quote.provider).name }}
+                    </span>
 
                     <mew-checkbox :value="active" />
                   </v-row>

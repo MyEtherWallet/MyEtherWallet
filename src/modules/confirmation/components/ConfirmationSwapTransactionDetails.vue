@@ -30,8 +30,13 @@
         </div>
       </template>
       <template #rightColItem2>
-        <div class="mew-body">
-          <img height="20px" :src="providerParser(provider.provider).logo" />
+        <div class="mew-body d-flex align-center justify-end font-weight-bold">
+          <img
+            height="15px"
+            class="mr-1"
+            :src="providerParser(provider.provider).logo"
+          />
+          {{ providerParser(provider.provider).name }}
         </div>
       </template>
     </confirmation-summary-block>
