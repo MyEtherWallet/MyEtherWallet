@@ -8,6 +8,7 @@ const TempView = () => import('@/views/ViewTemp.vue')
 const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
+const ViewStocks = () => import('@/views/ViewStocks.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -83,7 +84,7 @@ const DefaultRoutes = <RouteNameCollection>[
   {
     path: ROUTES_MAIN.STOCKS.PATH,
     name: ROUTES_MAIN.STOCKS.NAME,
-    component: TempView,
+    component: ViewStocks,
     meta: {
       noAuth: true,
     },

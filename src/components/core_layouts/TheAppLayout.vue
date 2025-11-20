@@ -103,7 +103,8 @@ const backgroundClass = computed(() => {
     route.name === ROUTES_MAIN.CRYPTO.NAME ||
     route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
     route.name === TOKEN_INFO_ROUTE_NAMES.home ||
-    route.name === ROUTES_MAIN.HOME.NAME
+    route.name === ROUTES_MAIN.HOME.NAME ||
+    route.name === ROUTES_MAIN.STOCKS.NAME
   ) {
     return ''
   } else {
