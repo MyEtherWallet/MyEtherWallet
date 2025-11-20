@@ -43,9 +43,7 @@
               >Learn more.</a
             >
             <span v-if="isSwap">
-              <b
-                >{{ ' ' }} This swap is powered by {{ parsedProvider.name }}
-              </b>
+              {{ ' ' }} This swap is powered by {{ parsedProvider.name }}
             </span>
           </div>
           <div v-if="!isContractCreation">
