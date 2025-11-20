@@ -593,18 +593,16 @@ export default {
      */
     actualToTokens() {
       if (this.isLoading) return [];
-      let validToTokens = this.toTokens.filter(item => {
+      const validToTokens = this.toTokens.filter(item => {
         if (
           item.contract.toLowerCase() !==
           this.fromTokenType?.contract?.toLowerCase()
         )
           return item;
       });
-      validToTokens = this.formatTokenPrice(validToTokens);
       let filteredTrendingTokens = this.trendingTokens().filter(token => {
         return token.contract !== this.fromTokenType?.contract;
       });
-      filteredTrendingTokens = this.formatTokenPrice(filteredTrendingTokens);
       filteredTrendingTokens = this.removeBalanceFromToken(
         filteredTrendingTokens
       );
@@ -668,7 +666,7 @@ export default {
      */
     actualFromTokens() {
       if (this.isLoading) return [];
-      let validFromTokens = this.fromTokens.filter(item => {
+      const validFromTokens = this.fromTokens.filter(item => {
         const hasDupe =
           this.tokensList.findIndex(
             token =>
@@ -683,7 +681,6 @@ export default {
         )
           return item;
       });
-      validFromTokens = this.formatTokenPrice(validFromTokens);
       const tradebleWalletTokens = this.formatTokensForSelect(this.tokensList);
       const nonChainTokens = this.removeBalanceFromToken(
         this.formatTokensForSelect(validFromTokens)
@@ -727,7 +724,6 @@ export default {
     totalCost() {
       const amount = this.isFromTokenMain ? this.tokenInValue : '0';
       const amountWei = toWei(amount);
-      // if (this.hasGasPriceOption) return BigNumber(amountWei).toString();
       return BigNumber(this.txFee).plus(amountWei).toString();
     },
     totalGasLimit() {
@@ -775,9 +771,6 @@ export default {
         return true;
       }
 
-      // if (this.hasGasPriceOption) {
-      //   return toBN(this.balanceInWei).gte(0);
-      // }
       return toBN(this.balanceInWei).gte(
         toBN(this.localGasPrice).muln(MIN_GAS_LIMIT)
       );
@@ -1042,7 +1035,6 @@ export default {
           return;
         if (token.cgid) {
           const foundToken = this.getCoinGeckoTokenById(token.cgid);
-          foundToken.price = this.getFiatValue(foundToken.pricef);
           const name = token.cgid || foundToken.name;
           foundToken.name = name;
           foundToken.value = foundToken.contract;
@@ -1057,7 +1049,6 @@ export default {
         if (foundToken) {
           const name = foundToken.name || foundToken.subtext;
           foundToken.contract = token.contract;
-          foundToken.price = this.getFiatValue(foundToken.pricef);
           foundToken.isEth = token.isEth;
           foundToken.name = name;
           foundToken.value = foundToken.contract;
@@ -1068,7 +1059,6 @@ export default {
         token.price = '';
         token.subtext = token.symbol || token.subtext;
         token.value = token.contract;
-        // token.name = token.name;
         this.setToLocaContractToToken(token);
       });
     },
@@ -1173,19 +1163,7 @@ export default {
           ? this.getFiatValue(t.usdBalancef)
           : this.getFiatValue('0.00');
         t.tokenBalance = t.hasOwnProperty('balancef') ? t.balancef : '0.00';
-        t.price = t.hasOwnProperty('pricef')
-          ? this.getFiatValue(t.pricef)
-          : this.getFiatValue('0.00');
         t.name = t.hasOwnProperty('symbol') ? t.symbol : '';
-        return t;
-      });
-    },
-    formatTokenPrice(tokens) {
-      if (!Array.isArray(tokens)) return [];
-      return tokens.map(t => {
-        t.price = t.hasOwnProperty('pricef')
-          ? this.getFiatValue(t.pricef)
-          : this.getFiatValue('0.00');
         return t;
       });
     },
