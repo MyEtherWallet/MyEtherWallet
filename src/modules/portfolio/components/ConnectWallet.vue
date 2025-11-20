@@ -30,7 +30,10 @@
           Connect Wallet
         </app-base-button>
         <p>
-          or <app-btn-text class="underline">Create a new wallet</app-btn-text>
+          or
+          <app-btn-text @click="createWallet" class="underline"
+            >Create a new wallet</app-btn-text
+          >
         </p>
       </div>
     </div>
@@ -44,6 +47,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import { useAccessStore } from '@/stores/accessStore'
+import { useCreateStore } from '@/stores/createStore'
 
 const { isDesktopAndUp } = useAppBreakpoints()
 
@@ -51,8 +55,13 @@ const { isDesktopAndUp } = useAppBreakpoints()
  * Connect Wallet
  ------------------------------*/
 const accessStore = useAccessStore()
+const createStore = useCreateStore()
 
 const connectWallet = () => {
   accessStore.openAccessDialog()
+}
+
+const createWallet = () => {
+  createStore.openCreateDialog()
 }
 </script>

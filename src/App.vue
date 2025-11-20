@@ -7,6 +7,7 @@
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
+    <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
+import ModuleCreateWallet from '@/modules/access/ModuleCreateWallet.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
