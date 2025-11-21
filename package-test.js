@@ -115,7 +115,10 @@ const EXCEPTIONS = [
   '@sentry/tracing',
   'follow-redirects',
   '@ensdomains/address-encoder',
-  'less'
+  'less',
+  '@formatjs/intl-numberformat',
+  '@trezor/connect-web',
+  '@web3-name-sdk/core'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

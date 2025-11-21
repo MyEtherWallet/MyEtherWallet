@@ -207,11 +207,11 @@
             >
           </div>
           <div class="d-flex justify-center flex-column align-end">
-            <span>{{ data.item.totalBalance || data.item.price }}</span>
+            <span>{{ data.item.totalBalance || data.item.pricef }}</span>
             <span
               v-if="data.item.totalBalance"
               class="mew-caption font-weight-regular textSecondary--text"
-              >@ {{ data.item.price }}</span
+              >@ {{ data.item.pricef }}</span
             >
           </div>
         </div>

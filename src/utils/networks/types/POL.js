@@ -23,7 +23,7 @@ export default {
   },
   gasPriceMultiplier: 1.7,
   canBuy: true,
-  coingeckoID: 'matic-network',
+  coingeckoID: 'polygon-ecosystem-token',
   balanceApi: 'https://partners.mewapi.io/balances/matic/',
   ensEnkryptType: 'MATIC'
 };
