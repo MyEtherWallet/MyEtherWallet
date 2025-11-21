@@ -7,19 +7,19 @@ import changelly from '../../assets/logo-only/changelly-logo.png';
 export default {
   [MEWPClass.supportedDexes.PARASWAP]: {
     title: 'ParaSwap terms',
-    termsUrl: 'https://paraswap.io/',
+    termsUrl: 'https://www.velora.xyz/terms/terms-of-use',
     logo: paraswap,
     name: 'ParaSwap'
   },
   [MEWPClass.supportedDexes.ONE_INCH]: {
     title: '1inch terms',
-    termsUrl: 'https://1inch.io/',
+    termsUrl: 'https://1inch.com/assets/1inch_com_privacy_policy.pdf',
     logo: oneinch,
     name: '1inch'
   },
   [MEWPClass.supportedDexes.ZERO_X]: {
     title: '0x terms',
-    termsUrl: 'https://0x.org/',
+    termsUrl: 'https://0x.org/legal/api-license-agreement',
     logo: zerox,
     name: '0x'
   },
