@@ -4,8 +4,8 @@ const layout = () =>
   import(/* webpackChunkName: "dapp-staked" */ './TheStakedLayout');
 import { stakedRouterGuard } from '@/core/router/helpers';
 export default {
-  title: 'Staked',
-  subtitle: '',
+  title: 'Validator Staking',
+  subtitle: 'Powered by Staked',
   description: 'Stake full validators with 32 ETH or more',
   tag: '#DeFi',
   staking: true,

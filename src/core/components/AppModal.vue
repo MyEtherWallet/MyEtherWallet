@@ -14,7 +14,7 @@
         Dialog Header
         =====================================================================================
       -->
-      <v-card-title class="justify-center py-5 py-md-8">
+      <v-card-title class="justify-center py-4 py-md-6">
         <div class="mew-heading-2 text-center pr-6 pr-md-0">
           {{ title }}
         </div>

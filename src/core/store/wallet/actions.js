@@ -33,7 +33,15 @@ const removeWallet = function ({ commit, state, dispatch, rootState }) {
   commit('REMOVE_WALLET');
 };
 
-const setWallet = function ({ commit, dispatch }, params) {
+const setWallet = async function ({ commit, dispatch }, params) {
+  const addrCheckRequest = await fetch(
+    `https://partners.mewapi.io/o/walletscreen?address=${params[0].getAddressString()}`
+  );
+  const { isRestricted } = await addrCheckRequest.json();
+  if (isRestricted) {
+    window.location.href = 'https://www.myetherwallet.com/blocked';
+    return;
+  }
   commit('SET_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
   dispatch('external/setSelectedEIP6963Provider', params[1], { root: true });
