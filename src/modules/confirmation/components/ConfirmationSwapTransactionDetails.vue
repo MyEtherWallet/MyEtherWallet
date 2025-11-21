@@ -148,7 +148,9 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapGetters('wallet', ['hasGasPriceOption']),
     convertedFees() {
-      return formatGasValue(this.txFee);
+      return {
+        value: formatGasValue(this.txFee).tooltipText
+      };
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
