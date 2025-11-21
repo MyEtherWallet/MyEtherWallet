@@ -59,14 +59,6 @@ const formatNotification = (obj, network) => {
     toObj: obj.toTxData,
     fromObj: obj.fromTxData
   };
-  if (newObj.toObj && newObj.toObj.amount) {
-    newObj.toObj.amount = formatFloatingPointValue(newObj.toObj.amount).value;
-  }
-  if (newObj.fromObj && newObj.fromObj.amount) {
-    newObj.fromObj.amount = formatFloatingPointValue(
-      newObj.fromObj.amount
-    ).value;
-  }
   obj.notification = newObj;
   return obj;
 };
