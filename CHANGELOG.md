@@ -1,3 +1,9 @@
+### Release v6.9.26
+
+### fix
+
+* swap fixes [#5241](https://github.com/MyEtherWallet/MyEtherWallet/pull/5241)
+
 ### Release v6.9.25-hotfix.4
 
 ### fix
