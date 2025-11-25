@@ -42,6 +42,9 @@
               rel="noopener noreferrer"
               >Learn more.</a
             >
+            <span v-if="isSwap">
+              {{ ' ' }} This swap is powered by {{ parsedProvider.name }}
+            </span>
           </div>
           <div v-if="!isContractCreation">
             <confirmation-send-transaction-details
@@ -223,14 +226,14 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
-          <div v-if="toNonEth" class="pt-4">
-            By clicking 'Proceed with swap', I agree to the
-            <a href="https://changelly.com/aml-kyc" target="_blank">
-              Changelly AML/KYC
+          <div v-if="parsedProvider" class="pt-4">
+            By clicking 'Proceed with swap', I agree to
+            <a :href="parsedProvider.termsUrl" target="_blank">
+              {{ parsedProvider.title }}
             </a>
             and
             <router-link :to="termRoute" target="_blank"
-              >Terms of Service</router-link
+              >MEW Terms of Service</router-link
             >
           </div>
         </v-card-text>
@@ -284,6 +287,7 @@ import handlerAnalytics from '@/modules/analytics-opt-in/handlers/handlerAnalyti
 import { SWAP } from '@/modules/analytics-opt-in/handlers/configs/events.js';
 import { ROUTES_HOME } from '@/core/configs/configRoutes';
 import errorHandler from './handlers/errorHandler';
+import providersDetail from '../swap/handlers/providers/providersDetail';
 
 export default {
   name: 'ModuleConfirmation',
@@ -346,6 +350,9 @@ export default {
     ...mapGetters('wallet', ['hasGasPriceOption']),
     ...mapGetters('article', ['getArticle']),
     ...mapState('addressBook', ['addressBookStore']),
+    parsedProvider() {
+      return providersDetail[this.swapInfo.selectedProvider?.provider];
+    },
     isContractCreation() {
       return !this.txTo;
     },

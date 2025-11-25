@@ -472,7 +472,7 @@ export default {
           await providedProvider.enable();
           const acc = await web3.eth.requestAccounts();
           const wallet = new Web3Wallet(acc[0]);
-          this.setWallet([wallet, providedProvider]);
+          await this.setWallet([wallet, providedProvider]);
           this.trackAccessWalletAmplitude(ACCESS_WALLET.WEB3_ACCESS_SUCCESS, {
             provider: getInjectedName(providedProvider)
           });

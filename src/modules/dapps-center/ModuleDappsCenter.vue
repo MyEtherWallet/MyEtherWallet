@@ -46,7 +46,9 @@
                     <div
                       class="mb-2 d-flex align-center justify-start flex-row"
                     >
-                      <div class="mew-heading-2">{{ dapp.title }}</div>
+                      <div class="mew-heading-2 text-left">
+                        {{ dapp.title }}
+                      </div>
                       <v-icon
                         v-if="checkIfNew(dapp.release)"
                         size="24"

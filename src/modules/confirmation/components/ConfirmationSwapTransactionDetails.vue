@@ -12,7 +12,7 @@
       =====================================================================================
     -->
     <confirmation-summary-block
-      v-if="summaryItems.length <= 2"
+      v-if="summaryItems.length <= 3"
       :items="summaryItems"
     >
       <template #rightColItem0>
@@ -29,9 +29,19 @@
           ~{{ txFeeUSD }}
         </div>
       </template>
+      <template #rightColItem2>
+        <div class="mew-body d-flex align-center justify-end font-weight-bold">
+          <img
+            height="15px"
+            class="mr-1"
+            :src="providerParser(provider.provider).logo"
+          />
+          {{ providerParser(provider.provider).name }}
+        </div>
+      </template>
     </confirmation-summary-block>
     <confirmation-summary-block
-      v-if="summaryItems.length == 3"
+      v-if="summaryItems.length == 4"
       :items="summaryItems"
     >
       <template #rightColItem0>
@@ -62,6 +72,11 @@
           ~{{ txFeeUSD }}
         </div>
       </template>
+      <template #rightColItem3>
+        <div class="mew-body">
+          <img height="10px" :src="providerParser(provider.provider).logo" />
+        </div>
+      </template>
     </confirmation-summary-block>
   </div>
 </template>
@@ -75,6 +90,7 @@ import {
   formatFloatingPointValue,
   formatGasValue
 } from '@/core/helpers/numberFormatHelper';
+import providersDetail from '@/modules/swap/handlers/providers/providersDetail.js';
 
 export default {
   components: {
@@ -148,9 +164,7 @@ export default {
     ...mapGetters('global', ['network', 'getFiatValue']),
     ...mapGetters('wallet', ['hasGasPriceOption']),
     convertedFees() {
-      return {
-        value: formatGasValue(this.txFee).tooltipText
-      };
+      return { value: formatGasValue(this.txFee).tooltipText };
     },
     txFeeUSD() {
       const feeETH = BigNumber(fromWei(this.txFee));
@@ -159,7 +173,8 @@ export default {
     summaryItems() {
       const newArr = [
         'Exchange rate',
-        this.hasGasPriceOption ? 'Estimated fee' : 'Transaction fee'
+        this.hasGasPriceOption ? 'Estimated fee' : 'Transaction fee',
+        'Provider'
       ];
       if (this.isToNonEth) {
         newArr.unshift(`Receive ${this.toCurrency} to`);
@@ -207,6 +222,11 @@ export default {
       return this.toAddress.length > 30
         ? `${this.toAddressStart}... ${this.toAddressEnd}`
         : this.toAddress;
+    }
+  },
+  methods: {
+    providerParser(name) {
+      return providersDetail[name];
     }
   }
 };
