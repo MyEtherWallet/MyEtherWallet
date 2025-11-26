@@ -134,9 +134,9 @@ export default {
       const staking = [];
       if (this.network.type.name === ETH.name) {
         staking.push({
-          title: 'Staked',
+          title: 'Validator Staking Powered by Staked',
           apr: this.currentAprFormatted,
-          description: 'Stake full validators with 32 ETH or more',
+          description: 'Stake full validators with 32 ETH or more.',
           icon: require('@/assets/images/icons/dapps/icon-dapp-stake.svg'),
           routeName: STAKED_ROUTE.STAKED.NAME,
           release: stakedInfo.release

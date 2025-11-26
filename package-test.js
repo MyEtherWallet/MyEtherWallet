@@ -119,7 +119,8 @@ const EXCEPTIONS = [
   '@formatjs/intl-numberformat',
   '@trezor/connect-web',
   '@web3-name-sdk/core',
-  'apollo-link-rest'
+  'apollo-link-rest',
+  'webpack-bundle-analyzer'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

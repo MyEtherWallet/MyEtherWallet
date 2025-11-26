@@ -38,7 +38,7 @@
                   md = 9 / total = 7
                 =====================================================================================
                 -->
-                <v-col cols="10" sm="9">
+                <v-col cols="8" sm="8">
                   <v-container class="pa-2">
                     <v-row
                       class="align-center justify-start pl-5 pr-1 py-3 py-sm-4"
@@ -86,8 +86,17 @@
                   sm = 3 / total = 12
                 =====================================================================================
                 -->
-                <v-col cols="2" sm="3">
+                <v-col cols="4">
                   <v-row class="align-center justify-end pr-3">
+                    <img
+                      class="pr-1"
+                      height="20px"
+                      :src="providerParser(quote.provider).logo"
+                    />
+                    <span class="mew-body pr-1 font-weight-bold">
+                      {{ providerParser(quote.provider).name }}
+                    </span>
+
                     <mew-checkbox :value="active" />
                   </v-row>
                 </v-col>
@@ -129,7 +138,7 @@
 </template>
 <script>
 import { isArray } from 'lodash';
-
+import providersDetail from '../handlers/providers/providersDetail.js';
 import { formatFloatingPointValue } from '@/core/helpers/numberFormatHelper';
 const MAX_PROVIDERS = 3;
 export default {
@@ -215,6 +224,7 @@ export default {
             arr.push({
               rate: formatted.value,
               amount: formattedAmt.value,
+              provider: item.provider,
               tooltip: `${formattedAmt.tooltipText || formattedAmt.value} ${
                 this.toTokenSymbol
               }`
@@ -297,6 +307,11 @@ export default {
           }
         }, 100);
       }
+    }
+  },
+  methods: {
+    providerParser(provider) {
+      return providersDetail[provider] || { logo: '', name: '' };
     }
   }
 };
