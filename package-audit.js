@@ -52,8 +52,7 @@ const AUDIT_EXCEPTIONS = [
   'path-to-regexp',
   'body-parser',
   'secp256k1',
-  'http-proxy-middleware',
-  'webpack-bundle-analyzer'
+  'http-proxy-middleware'
 ];
 const execute = (command, callback) => {
   exec(
