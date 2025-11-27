@@ -7,6 +7,26 @@ export const isAmountValid = (amount, min, max) => {
   return !Number.isNaN(val) && Number.isFinite(val) && val >= min && val <= max;
 };
 
+export const DISPLAY_NAME_SEPARATOR = 'D15PL4Y_N4M3:';
+export const splitCombinedName = name => {
+  const [proposalName, builderName] = name.split(DISPLAY_NAME_SEPARATOR);
+  return { proposalName, builderName };
+};
+
+export const removeBrackets = name => {
+  if (!name) {
+    return '';
+  }
+
+  const bracketIndex = name.indexOf(']');
+
+  if (bracketIndex !== -1) {
+    return name.slice(bracketIndex + 1).trimStart();
+  }
+
+  return name;
+};
+
 export const getTokenPrice = async tokenId => {
   const cacheKey = `dao_rc_${tokenId}`;
   let parsedResponse = null;

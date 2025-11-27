@@ -6,6 +6,10 @@ const ROOTSTOCK_COLLECTIVE_ROUTE = {
   PROPOSALS: {
     NAME: 'Proposals',
     PATH: 'proposals'
+  },
+  REWARDS: {
+    NAME: 'Rewards',
+    PATH: 'Rewards'
   }
 };
 
