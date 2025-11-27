@@ -1,3 +1,7 @@
+### devop
+
+* update terms [#5249](https://github.com/MyEtherWallet/MyEtherWallet/pull/5249)
+
 ### Release v6.9.26
 
 ### fix

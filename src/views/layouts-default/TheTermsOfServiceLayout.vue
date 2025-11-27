@@ -73,21 +73,82 @@
                   parent.$t('termsOfService.services-eligibility-title-2-p-1')
                 }}
               </p>
-
-              <p>
-                {{
-                  parent.$t('termsOfService.services-eligibility-title-2-p-2')
-                }}
-              </p>
+              <i18n
+                path="termsOfService.services-eligibility-title-2-p-2"
+                tag="p"
+              >
+                <template #wallet>
+                  <b>"{{ parent.$t('termsOfService.wallet') }}"</b>
+                </template>
+                <template #credentials>
+                  <b>"{{ parent.$t('termsOfService.credentials') }}"</b>
+                </template>
+              </i18n>
 
               <p>
                 {{
                   parent.$t('termsOfService.services-eligibility-title-2-p-3')
                 }}
               </p>
-
+              <p>
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-4')
+                }}
+              </p>
+              <p>
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-5')
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-6')
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-7')
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-8')
+                }}
+              </p>
               <i18n
-                path="termsOfService.services-eligibility-title-2-p-4"
+                path="termsOfService.services-eligibility-title-2-p-9"
+                tag="p"
+                class="mx-4"
+              >
+                <template #resTerritories>
+                  <b
+                    >"{{
+                      parent.$t('termsOfService.restricted-territories')
+                    }}"</b
+                  >
+                </template>
+              </i18n>
+              <i18n
+                path="termsOfService.services-eligibility-title-2-p-10"
+                tag="p"
+                class="mx-4"
+              >
+                <template #sancPerson>
+                  <b>"{{ parent.$t('termsOfService.sanc-persons') }}"</b>
+                </template>
+              </i18n>
+              <p class="mx-4">
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-11')
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t('termsOfService.services-eligibility-title-2-p-12')
+                }}
+              </p>
+              <i18n
+                path="termsOfService.services-eligibility-title-2-p-13"
                 tag="p"
               >
                 <template #article1>
@@ -188,6 +249,69 @@
               <p>
                 {{
                   parent.$t('termsOfService.rights-and-restrictions-title-3-p')
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-1'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-2'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-3'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-4'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-5'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-6'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-7'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-8'
+                  )
+                }}
+              </p>
+              <p class="mx-4">
+                {{
+                  parent.$t(
+                    'termsOfService.rights-and-restrictions-title-3-p-9'
+                  )
                 }}
               </p>
             </div>
