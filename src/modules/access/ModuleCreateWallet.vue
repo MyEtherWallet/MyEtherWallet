@@ -192,6 +192,76 @@
               </div>
             </a>
           </div>
+          <div class="text-base font-medium leading-6 mt-4 col-span-2">
+            <div
+              class="flex justify-start items-center hoverOpacity cursor-pointer p-2"
+              @click="isOtherMethodsOpen = !isOtherMethodsOpen"
+            >
+              Other methods
+              <chevron-down-icon
+                v-if="!isOtherMethodsOpen"
+                class="w-5 h-5 ml-2"
+              />
+              <chevron-up-icon v-else class="w-5 h-5 ml-2" />
+            </div>
+            <expand-transition>
+              <div
+                v-if="isOtherMethodsOpen"
+                class="grid grid-cols-1 lg:grid-cols-2 gap-10 rounded-3xl bg-[#ededee] p-4 sm:p-6 mt-3"
+              >
+                <div class="">
+                  <img
+                    :src="hardware"
+                    alt="hardware wallet image"
+                    class="rounded-2xl max-w-[300px]"
+                    width="608"
+                    height="384"
+                  /><a
+                    href="https://www.myetherwallet.com/buy-hardware"
+                    target="_blank"
+                    class="border border-black text-lg rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
+                    ><div class="flex items-center">
+                      <p>Buy a hardware wallet</p>
+                      <arrow-right-icon class="w-5 h-5 ml-1" /></div
+                  ></a>
+                  <div class="flex items-center">
+                    <check-circle-icon class="w-5 h-5 mr-1 text-blue" />
+                    <p>The highest standard of security.</p>
+                  </div>
+                  <p class="text-info">
+                    You can order a hardware wallet online, and use it with MEW.
+                    If you need a wallet while you are waiting for your order to
+                    arrive, consider getting our mobile app.
+                  </p>
+                </div>
+                <div>
+                  <img
+                    :src="software"
+                    alt="software wallet image"
+                    class="rounded-2xl max-w-[300px]"
+                    width="608"
+                    height="384"
+                  /><a
+                    href="https://www.myetherwallet.com/wallet/create/overview"
+                    target="_blank"
+                    class="border border-black text-lg rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
+                    ><div class="flex items-center">
+                      <p>Create a software wallet</p>
+                      <arrow-right-icon class="w-5 h-5 ml-1" /></div
+                  ></a>
+                  <div class="flex items-center">
+                    <exclamation-circle-icon class="w-5 h-5 mr-1 text-error" />
+                    <p>Not a secure way to create a wallet.</p>
+                  </div>
+                  <p class="text-info">
+                    Software methods like Keystore File and Mnemonic Phrase
+                    should only be used in offline settings by experienced
+                    users.
+                  </p>
+                </div>
+              </div>
+            </expand-transition>
+          </div>
         </div>
         <module-access-keystore v-else-if="currentView === 'keystore'" />
         <module-access-private-key v-else-if="currentView === 'private_key'" />
@@ -213,7 +283,11 @@ import AppNeedHelp from '@/components/AppNeedHelp.vue'
 // import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ArrowRightIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowRightIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from '@heroicons/vue/24/outline'
 
 import { useCreateStore } from '@/stores/createStore'
 import { storeToRefs } from 'pinia'
@@ -222,7 +296,10 @@ import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
 import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+
+import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
 
 import mewRating from '@/assets/images/create/rating-mobile.webp'
 import mewMobile from '@/assets/images/create/mewweb-logo.svg'
@@ -233,7 +310,8 @@ import IMGGooglePlay from '@/assets/images/create/app-store-google.svg'
 import IMGIOSstore from '@/assets/images/create/app-store-ios.svg'
 import enkryptScreen from '@/assets/images/create/enkrypt-screen.webp'
 import enkryptLogo from '@/assets/images/create/enkrypt-logo.webp'
-
+import hardware from '@/assets/images/create/hardware.webp'
+import software from '@/assets/images/create/software.webp'
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
@@ -244,6 +322,9 @@ const { isOpenCreateDialog, currentView, clickedWalletConnect } =
 const closeCreate = () => {
   createStore.setCurrentView('default')
 }
+
+const isOtherMethodsOpen = ref(false)
+
 /**-------------------------------
  * UI Elements
  -------------------------------*/
