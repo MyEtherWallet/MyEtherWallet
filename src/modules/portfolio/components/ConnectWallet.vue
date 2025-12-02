@@ -46,22 +46,20 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
-import { useAccessStore } from '@/stores/accessStore'
-import { useCreateStore } from '@/stores/createStore'
+import { useRouter } from 'vue-router'
+import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 
 const { isDesktopAndUp } = useAppBreakpoints()
 
+const router = useRouter()
 /** ------------------------------
  * Connect Wallet
  ------------------------------*/
-const accessStore = useAccessStore()
-const createStore = useCreateStore()
-
 const connectWallet = () => {
-  accessStore.openAccessDialog()
+  router.push({ name: ROUTES_ACCESS.ACCESS.NAME })
 }
 
 const createWallet = () => {
-  createStore.openCreateDialog()
+  router.push({ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME })
 }
 </script>

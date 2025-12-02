@@ -18,9 +18,6 @@ const beforeRouteEnter = (
   ) {
     next()
   } else {
-    console.log(
-      'hello there!',
-    )
     next({ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME, query: { type: 'default' } })
   }
 }
