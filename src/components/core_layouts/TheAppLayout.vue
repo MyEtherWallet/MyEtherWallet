@@ -24,11 +24,12 @@
     <div
       :class="[
         isOpenSideMenu ? 'xl:mr-[445px]' : 'xl:mr-[70px]',
-        backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[70px]',
+
+        'flex w-full mr-[60px] xs:mr-[70px] relative',
         isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
       ]"
     >
+      <div :class="['absolute w-full', backgroundClass]"></div>
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
@@ -97,7 +98,7 @@ const route = useRoute()
 
 const backgroundClass = computed(() => {
   if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
-    return 'home-not-connected-background'
+    return 'home-not-connected-background h-[800px] '
   } else if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
     route.name === ROUTES_MAIN.CRYPTO.NAME ||

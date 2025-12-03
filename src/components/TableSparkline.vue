@@ -115,11 +115,10 @@ const chartOptions = computed(() => ({
     x: { display: false },
     y: {
       display: false,
-      suggestedMin: yBounds.value.min,
-      suggestedMax: yBounds.value.max,
+      min: yBounds.value.min,
+      max: yBounds.value.max,
     },
   },
-  elements: { line: { capBezierPoints: true } },
 }))
 </script>
 

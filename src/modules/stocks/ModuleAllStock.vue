@@ -1,18 +1,16 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1 class="text-s-20 lg:text-s-32 2xl:text-s-40 font-bold ml-2 my-2">
-      Explore Crypto Tokens
-    </h1>
+    <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">All Stocks</h1>
 
     <div class="basis-full">
       <div class="flex flex-wrap justify-start items-center gap-2">
-        <!-- Mobile to MD only Categories and Chain Filter-->
+        <!-- Mobile only Categories-->
         <app-select
           v-model:selected="selectedCryptoFilter"
           :options="cryptoFilterOptions"
           position="left-0"
           placeholder="Category Menu"
-          class="w-full xs:w-auto md:hidden"
+          class="w-full xs:hidden"
         >
           <template #select-button="{ toggleSelect }">
             <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
@@ -30,60 +28,37 @@
             </div>
           </template>
         </app-select>
-        <div class="bg-surface rounded-full p-1 md:hidden w-full xs:w-auto">
-          <button
-            class="rounded-full bg-white py-2 px-3 shadow-button h-[42px] w-full xs:min-w-[180px]"
-            @click="openChainDialog = true"
-          >
-            <div class="flex items-center justify-start gap-2">
-              <app-token-logo
-                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                :url="selectedChainFilter?.icon"
-                :symbol="selectedChainFilter?.nameLong"
-                width="w-6"
-                height="h-6"
-              />
-              <span
-                class="text-s-16 font-medium truncate"
-                :class="{
-                  'ml-2': selectedChainFilter?.nameLong === 'All Chains',
-                }"
-              >
-                {{ selectedChainFilter?.nameLong }}</span
-              >
-              <chevron-down-icon class="w-4 h-4 ml-auto" />
-            </div>
-          </button>
-        </div>
-        <!-- Search and Filter Chains-->
+        <!-- Search-->
         <div
           class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:w-auto md:min-w-[400px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
-          <button
-            class="rounded-full hoverNoBG p-2 hidden md:flex"
-            @click="openChainDialog = true"
-          >
-            <div class="flex items-center">
-              <app-token-logo
-                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                :url="selectedChainFilter?.icon"
-                :symbol="selectedChainFilter?.nameLong"
-                width="w-5"
-                height="h-5"
-                class="mr-2"
-              />
-              <span
-                v-if="selectedChainFilter"
-                class="text-s-17 leading-p-140 font-medium"
-                >{{ selectedChainFilter.nameLong }}</span
-              >
-              <chevron-down-icon class="w-4 h-4 ml-1" />
-            </div>
-          </button>
         </div>
         <!--Filter Lists-->
         <div class="">
+          <app-select
+            v-model:selected="selectedCryptoFilter"
+            :options="cryptoFilterOptions"
+            position="left-0"
+            placeholder="Category Menu"
+            class="hidden xs:block md:hidden"
+          >
+            <template #select-button="{ toggleSelect }">
+              <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+                <button
+                  class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
+                  @click="toggleSelect"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="text-s-16 font-medium truncate">
+                      {{ selectedCryptoFilter.label }}</span
+                    >
+                    <chevron-down-icon class="w-4 h-4 ml-1" />
+                  </div>
+                </button>
+              </div>
+            </template>
+          </app-select>
           <app-btn-group
             v-model:selected="selectedCryptoFilter"
             :btn-list="cryptoFilterOptions.slice(0, 4)"
@@ -402,13 +377,6 @@
 
                           <ul>
                             <li
-                              @click.stop="[toggleMenu, buyBtn()]"
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                            >
-                              <icon-buy class="text-primary w-4 h-4 mr-2" />
-                              <p>Buy</p>
-                            </li>
-                            <li
                               @click.stop="[toggleMenu, swapBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -430,13 +398,6 @@
                   <div
                     class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
                   >
-                    <app-base-button
-                      size="small"
-                      @click="buyBtn()"
-                      is-outline
-                      class="hidden 3xl:block"
-                      >Buy</app-base-button
-                    >
                     <app-base-button size="small" @click="swapBtn(token)"
                       >Swap
                     </app-base-button>
@@ -537,7 +498,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import {
@@ -645,9 +605,6 @@ const nextPage = () => {
   tableContainer.value?.scrollTo(0, 0)
 }
 
-const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com', '_blank')
-}
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('bridge')
   if (!isOpenSideMenu.value) {
@@ -683,14 +640,14 @@ const setSelectedChain = (chain: Chain) => {
 }
 
 const cryptoFilterOptions = ref([
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Top Gainers', value: 'topGainers' },
-  { label: 'Top Losers', value: 'topLosers' },
-  { label: 'Watchlist', value: 'watchlist' },
-  { label: 'Stablecoins', value: 'stablecoins' },
-  { label: 'DeFi', value: 'defi-index' },
-  { label: 'MEME', value: 'meme-token' },
-  { label: 'TikTok', value: 'tiktok-meme' },
+  { label: 'All Assets', value: 'all' },
+  { label: 'ETF', value: 'etf' },
+  { label: 'Technology', value: 'technology' },
+  { label: 'Consumer', value: 'consumer' },
+  { label: 'Financials', value: 'financials' },
+  { label: 'Large Cap', value: 'large-cap' },
+  { label: 'Growth', value: 'growth' },
+  { label: 'Value', value: 'value' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])

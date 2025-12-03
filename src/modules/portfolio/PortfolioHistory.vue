@@ -1,6 +1,7 @@
 <template>
   <app-sheet
     v-if="isWalletConnected"
+    :is-elivated="false"
     sheet-class="!px-4 !pt-3 !pb-1 overflow-hidden  w-full"
   >
     <div class="flex items-start justify-between mb-2">

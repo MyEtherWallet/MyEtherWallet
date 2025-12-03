@@ -88,6 +88,7 @@ export default {
         's-64': ['64px', '110%'],
         's-54': ['54px', '120%'],
         's-52': '52px',
+        's-48': '48px',
         's-40': '40px',
         's-32': '32px',
         's-28': '28px',
@@ -127,6 +128,7 @@ export default {
         32: '32px',
         16: '16px',
         12: '12px',
+        8: '8px',
       },
       boxShadow: {
         token: '0px 3px 5px rgba(0, 0, 0, 0.16)',

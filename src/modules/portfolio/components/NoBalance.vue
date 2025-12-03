@@ -1,5 +1,6 @@
 <template>
   <app-sheet
+    :is-elivated="false"
     sheet-class="no-balance-gradient  bg-no-repeat bg-cover !px-4 !md:px-0 2xl:!p-0 "
   >
     <div

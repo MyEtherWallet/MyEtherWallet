@@ -1,47 +1,57 @@
 <template>
-  <div
-    class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_'] -mx-1 w-full"
-    :class="{
-      'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1]  before:pointer-events-none':
-        blurFront,
-      'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none':
-        blurEnd,
-    }"
-  >
+  <div class="static -mx-1 w-full flex flex-col">
     <div
-      class="basis-full w-full flex items-center gap-2 md:gap-4 relative overflow-auto snap-x py-1 px-1 no-scrollbar scroll-m-6"
-      ref="scrollContainer"
+      class="flex flex-wrap overflow-hidden relative before:content-['_'] after:content-['_']"
+      :class="{
+        'before:absolute before:left-0 before:top-0 before:h-full before:w-5 before:bg-gradient-to-r before:from-appBackground before:to-transparent before:z-[1]  before:pointer-events-none':
+          blurFront,
+        'after:absolute after:right-0 after:top-0 after:h-full after:w-5 after:bg-gradient-to-l after:from-appBackground after:to-transparent  after:pointer-events-none  after:z-[1]':
+          blurEnd,
+        'order-2': paginateLocation === 'top',
+      }"
     >
       <div
-        v-for="(item, index) in totalItems"
-        :key="`scroll-item-${index}`"
-        :id="`scroll-item-${index}`"
-        class="snap-start scroll-ml-6 w-[80%]"
+        class="basis-full w-full flex items-center gap-2 md:gap-4 relative overflow-auto snap-x py-1 px-1 no-scrollbar scroll-m-6"
+        ref="scrollContainer"
       >
-        <app-slide-item
-          :item-index="index"
-          @change:item-visible="setVisibility"
+        <div
+          v-for="(item, index) in totalItems"
+          :key="`scroll-item-${index}`"
+          :id="`scroll-item-${index}`"
+          class="snap-start scroll-ml-6 w-[80%]"
         >
-          <slot :name="`item-${index}`" />
-        </app-slide-item>
+          <app-slide-item
+            :item-index="index"
+            @change:item-visible="setVisibility"
+          >
+            <slot :name="`item-${index}`" />
+          </app-slide-item>
+        </div>
       </div>
     </div>
-    <app-btn-icon
-      v-if="!allIsVisible"
-      label="previous page"
-      class="ml-auto"
-      @click="scrollToPreviousGroup"
+    <div
+      class="flex items-center justify-end"
+      :class="[paginateLocation === 'top' ? 'order-1 mb-1' : '']"
     >
-      <ChevronLeftIcon class="w-4 h-4" />
-    </app-btn-icon>
-    <app-btn-icon
-      v-if="!allIsVisible"
-      class=""
-      label="next page"
-      @click="scrollToNextGroup"
-    >
-      <ChevronRightIcon class="w-4 h-4" />
-    </app-btn-icon>
+      <h2 v-if="title" class="text-s-20 font-bold ml-4 mr-auto">{{ title }}</h2>
+
+      <app-btn-icon
+        v-if="!allIsVisible"
+        label="previous page"
+        class="ml-auto"
+        @click="scrollToPreviousGroup"
+      >
+        <ChevronLeftIcon class="w-4 h-4" />
+      </app-btn-icon>
+      <app-btn-icon
+        v-if="!allIsVisible"
+        class="-mr-2"
+        label="next page"
+        @click="scrollToNextGroup"
+      >
+        <ChevronRightIcon class="w-4 h-4" />
+      </app-btn-icon>
+    </div>
   </div>
 </template>
 
@@ -49,13 +59,22 @@
 import AppSlideItem from './AppSlideItem.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, type PropType } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 const props = defineProps({
   totalItems: {
     type: Number,
     required: true,
+  },
+  paginateLocation: {
+    type: String as PropType<'top' | 'bottom'>,
+    required: false,
+    default: 'bottom',
+  },
+  title: {
+    type: String,
+    required: false,
   },
 })
 

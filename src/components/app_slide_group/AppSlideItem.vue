@@ -1,5 +1,5 @@
 <template>
-  <div v-element-visibility="[onElementVisibility, { threshold: 0.9 }]">
+  <div v-element-visibility="[onElementVisibility, { threshold: 1.0 }]">
     <slot />
   </div>
 </template>
