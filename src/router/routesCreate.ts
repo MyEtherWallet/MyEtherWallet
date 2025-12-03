@@ -1,6 +1,6 @@
 import { ROUTES_CREATE_WALLET } from './routeNames'
 import { type RouterOptions } from 'vue-router'
-import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { CREATE_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 const ViewCreateWallet = () => import('@/views/ViewCreateWallet.vue')
@@ -14,7 +14,7 @@ const beforeRouteEnter = (
   if (
     to.query.type &&
     typeof to.query.type === 'string' &&
-    WALLET_VIEWS.includes(to.query.type as (typeof WALLET_VIEWS)[number])
+    CREATE_WALLET_VIEWS.includes(to.query.type as (typeof CREATE_WALLET_VIEWS)[number])
   ) {
     next()
   } else {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
-import { type WalletView } from '@/modules/access/common/walletConfigs'
+import { type CreateWalletView } from '@/modules/access/common/walletConfigs'
 /**
  * Store to manage the state of the access dialog.
  * It provides methods to open and close the dialog.
@@ -21,8 +21,8 @@ export const useCreateStore = defineStore('createStore', () => {
     currentView.value = 'default'
   }
 
-  const currentView = ref<WalletView>('default')
-  const setCurrentView = (view: WalletView) => {
+  const currentView = ref<CreateWalletView>('default')
+  const setCurrentView = (view: CreateWalletView) => {
     currentView.value = view
   }
 

@@ -41,11 +41,12 @@
               <arrow-right-icon class="w-5 h-5 underline ml-1"
             /></a>
           </p>
-          <app-need-help
+          <!-- TODO: figure out if we need this -->
+          <!-- <app-need-help
             v-if="currentView !== 'default'"
             :title="helpLinkText"
             help-link="https://help.myetherwallet.com/en/articles/5377855-how-to-access-your-wallet-with-mew-portfolio"
-          />
+          /> -->
         </div>
       </div>
     </template>
@@ -216,14 +217,16 @@
                     class="rounded-2xl max-w-[300px]"
                     width="608"
                     height="384"
-                  /><a
-                    href="https://www.myetherwallet.com/buy-hardware"
-                    target="_blank"
-                    class="border border-black text-lg rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
-                    ><div class="flex items-center">
+                  />
+                  <div
+                    class="border border-black text-lg rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block cursor-pointer"
+                    @click="setView('buy')"
+                  >
+                    <div class="flex items-center">
                       <p>Buy a hardware wallet</p>
-                      <arrow-right-icon class="w-5 h-5 ml-1" /></div
-                  ></a>
+                      <arrow-right-icon class="w-5 h-5 ml-1" />
+                    </div>
+                  </div>
                   <div class="flex items-center">
                     <check-circle-icon class="w-5 h-5 mr-1 text-blue" />
                     <p>The highest standard of security.</p>
@@ -263,7 +266,38 @@
             </expand-transition>
           </div>
         </div>
-        <module-access-keystore v-else-if="currentView === 'keystore'" />
+        <div
+          v-if="currentView === 'buy'"
+          class="p-10 grid grid-cols-1 md:grid-cols-2 gap-2"
+        >
+          <div
+            class="cursor-pointer flex border border-2 rounded-[12px] border-black text-lg p-6 bg-white m-2 justify-between"
+            @click="openBuyWallet('ledger')"
+          >
+            <div class="flex flex-col height-[100%] justify-around">
+              <img :src="ledgerIcon" width="85px" class="mb-2" />
+              <div>
+                Starting from <br />
+                <span class="font-bold text-s-24">$59.00</span>
+              </div>
+            </div>
+            <img :src="ledgerWallet" width="250" />
+          </div>
+          <div
+            class="cursor-pointer flex border border-2 rounded-[12px] border-black text-lg p-6 bg-white m-2 justify-between"
+            @click="openBuyWallet('trezor')"
+          >
+            <div class="flex flex-col height-[100%] justify-around">
+              <img :src="trezorIcon" width="85px" class="mb-2" />
+              <div>
+                Starting from <br />
+                <span class="font-bold text-s-24">$79.00</span>
+              </div>
+            </div>
+            <img :src="trezorWallet" width="250" />
+          </div>
+        </div>
+        <!-- <module-access-keystore v-else-if="currentView === 'keystore'" />
         <module-access-private-key v-else-if="currentView === 'private_key'" />
         <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
         <module-access-hardware-wallet
@@ -271,7 +305,7 @@
         />
         <module-access-wallet-connect
           v-else-if="currentView === 'wallet_connect'"
-        />
+        /> -->
       </div>
     </template>
   </app-dialog>
@@ -279,7 +313,7 @@
 <script setup lang="ts">
 // import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
 // import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
+// import AppNeedHelp from '@/components/AppNeedHelp.vue'
 // import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
@@ -291,11 +325,11 @@ import {
 
 import { useCreateStore } from '@/stores/createStore'
 import { storeToRefs } from 'pinia'
-import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
-import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
-import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
-import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
-import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
+// import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
+// import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
+// import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
+// import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
+// import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import { computed, ref } from 'vue'
 
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
@@ -312,12 +346,16 @@ import enkryptScreen from '@/assets/images/create/enkrypt-screen.webp'
 import enkryptLogo from '@/assets/images/create/enkrypt-logo.webp'
 import hardware from '@/assets/images/create/hardware.webp'
 import software from '@/assets/images/create/software.webp'
+import { type CreateWalletView } from './common/walletConfigs'
+import ledgerIcon from '@/assets/images/create/buy/ledger-logo.svg'
+import ledgerWallet from '@/assets/images/create/buy/buy-ledger.png'
+import trezorIcon from '@/assets/images/create/buy/trezor-logo.svg'
+import trezorWallet from '@/assets/images/create/buy/buy-trezor.png'
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
 const createStore = useCreateStore()
-const { isOpenCreateDialog, currentView, clickedWalletConnect } =
-  storeToRefs(createStore)
+const { isOpenCreateDialog, currentView } = storeToRefs(createStore)
 
 const closeCreate = () => {
   createStore.setCurrentView('default')
@@ -329,49 +367,40 @@ const isOtherMethodsOpen = ref(false)
  * UI Elements
  -------------------------------*/
 const getTitle = computed(() => {
-  let method = ''
-  switch (currentView.value) {
-    case 'keystore':
-      method = 'keystore'
-      break
-    case 'private_key':
-      method = 'private key'
-      break
-    case 'mnemonic':
-      method = 'mnemonic phrase'
-      break
-    case 'ledger':
-      method = 'Ledger'
-      break
-    case 'trezor':
-      method = 'Trezor'
-      break
-    case 'wallet_connect':
-      method = clickedWalletConnect.value?.walletName || ''
-      break
-    default:
-      method = ''
-      break
-  }
-  return method ? `Create ${method}` : 'Create Wallet'
+  if (currentView.value === 'default') return 'Create Wallet'
+  if (currentView.value === 'buy') return 'Buy a Hardware Wallet'
+  return 'Create Wallet'
 })
 
-const helpLinkText = computed(() => {
-  switch (currentView.value) {
-    case 'keystore':
-      return 'How to connect your keystore wallet'
-    case 'private_key':
-      return 'How to connect with your private key'
-    case 'mnemonic':
-      return 'How to connect with your recovery phrase'
-    case 'ledger':
-      return 'How to connect your Ledger wallet'
-    case 'trezor':
-      return 'How to connect your Trezor wallet'
-    default:
-      return 'Need Help connecting your wallet?'
-  }
-})
+const setView = (view: CreateWalletView) => {
+  isOtherMethodsOpen.value = false
+  createStore.setCurrentView(view)
+}
+
+const openBuyWallet = (type: 'ledger' | 'trezor') => {
+  const url =
+    type === 'ledger'
+      ? 'https://shop.ledger.com/?r=fa4b'
+      : 'https://trezor.io/?offer_id=12&aff_id=2029'
+  window.open(url, '_blank')
+}
+
+// const helpLinkText = computed(() => {
+//   switch (currentView.value) {
+//     case 'keystore':
+//       return 'How to connect your keystore wallet'
+//     case 'private_key':
+//       return 'How to connect with your private key'
+//     case 'mnemonic':
+//       return 'How to connect with your recovery phrase'
+//     case 'ledger':
+//       return 'How to connect your Ledger wallet'
+//     case 'trezor':
+//       return 'How to connect your Trezor wallet'
+//     default:
+//       return 'Need Help connecting your wallet?'
+//   }
+// })
 </script>
 
 <style scoped>
