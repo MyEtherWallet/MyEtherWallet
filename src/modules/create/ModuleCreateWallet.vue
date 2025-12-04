@@ -210,7 +210,7 @@
                 v-if="isOtherMethodsOpen"
                 class="grid grid-cols-1 lg:grid-cols-2 gap-10 rounded-3xl bg-[#ededee] p-4 sm:p-6 mt-3"
               >
-                <div class="">
+                <div>
                   <img
                     :src="hardware"
                     alt="hardware wallet image"
@@ -244,14 +244,16 @@
                     class="rounded-2xl max-w-[300px]"
                     width="608"
                     height="384"
-                  /><a
-                    href="https://www.myetherwallet.com/wallet/create/overview"
-                    target="_blank"
-                    class="border border-black text-lg rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
-                    ><div class="flex items-center">
+                  />
+                  <div
+                    class="border border-black text-lg rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block cursor-pointer"
+                    @click="setView('mnemonic')"
+                  >
+                    <div class="flex items-center">
                       <p>Create a software wallet</p>
-                      <arrow-right-icon class="w-5 h-5 ml-1" /></div
-                  ></a>
+                      <arrow-right-icon class="w-5 h-5 ml-1" />
+                    </div>
+                  </div>
                   <div class="flex items-center">
                     <exclamation-circle-icon class="w-5 h-5 mr-1 text-error" />
                     <p>Not a secure way to create a wallet.</p>
@@ -296,6 +298,10 @@
             </div>
             <img :src="trezorWallet" width="250" />
           </div>
+        </div>
+        <!-- Create Mnemonic -->
+        <div v-if="currentView === 'mnemonic'">
+          <module-create-mnemonic />
         </div>
         <!-- <module-access-keystore v-else-if="currentView === 'keystore'" />
         <module-access-private-key v-else-if="currentView === 'private_key'" />
@@ -346,11 +352,12 @@ import enkryptScreen from '@/assets/images/create/enkrypt-screen.webp'
 import enkryptLogo from '@/assets/images/create/enkrypt-logo.webp'
 import hardware from '@/assets/images/create/hardware.webp'
 import software from '@/assets/images/create/software.webp'
-import { type CreateWalletView } from './common/walletConfigs'
+import { type CreateWalletView } from '../access/common/walletConfigs'
 import ledgerIcon from '@/assets/images/create/buy/ledger-logo.svg'
 import ledgerWallet from '@/assets/images/create/buy/buy-ledger.png'
 import trezorIcon from '@/assets/images/create/buy/trezor-logo.svg'
 import trezorWallet from '@/assets/images/create/buy/buy-trezor.png'
+import ModuleCreateMnemonic from './ModuleCreateMnemonic.vue'
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
@@ -369,6 +376,7 @@ const isOtherMethodsOpen = ref(false)
 const getTitle = computed(() => {
   if (currentView.value === 'default') return 'Create Wallet'
   if (currentView.value === 'buy') return 'Buy a Hardware Wallet'
+  if (currentView.value === 'mnemonic') return 'Create a Mnemonic Wallet'
   return 'Create Wallet'
 })
 

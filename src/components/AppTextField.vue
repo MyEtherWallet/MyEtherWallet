@@ -6,6 +6,7 @@
       v-model="model"
       v-bind="$attrs"
       :placeholder="props.placeholder"
+      :readonly="props.readonly"
       :class="[
         {
           '!border-error border-2': hasError,
@@ -88,6 +89,11 @@ const props = defineProps({
     required: false,
   },
   isRequired: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  readonly: {
     type: Boolean,
     required: false,
     default: false,
