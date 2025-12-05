@@ -33,9 +33,6 @@
           class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:w-auto md:min-w-[400px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
-        </div>
-        <!--Filter Lists-->
-        <div class="">
           <app-select
             v-model:selected="selectedCryptoFilter"
             :options="cryptoFilterOptions"
@@ -44,21 +41,22 @@
             class="hidden xs:block md:hidden"
           >
             <template #select-button="{ toggleSelect }">
-              <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
-                <button
-                  class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
-                  @click="toggleSelect"
-                >
-                  <div class="flex items-center justify-between">
-                    <span class="text-s-16 font-medium truncate">
-                      {{ selectedCryptoFilter.label }}</span
-                    >
-                    <chevron-down-icon class="w-4 h-4 ml-1" />
-                  </div>
-                </button>
-              </div>
+              <button
+                class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
+                @click="toggleSelect"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="text-s-16 font-medium truncate">
+                    {{ selectedCryptoFilter.label }}</span
+                  >
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
             </template>
           </app-select>
+        </div>
+        <!--Filter Lists-->
+        <div class="">
           <app-btn-group
             v-model:selected="selectedCryptoFilter"
             :btn-list="cryptoFilterOptions.slice(0, 4)"

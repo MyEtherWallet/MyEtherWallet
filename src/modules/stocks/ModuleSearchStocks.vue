@@ -15,13 +15,109 @@
       </div>
       <div class="flex items-center justify-center flex-col">
         <div
-          class="flex grow gap-4 justify-between items-center p-[6px] bg-surface !w-full md:w-auto max-w-[500px] rounded-full"
+          class="flex grow gap-4 justify-between items-center p-[6px] bg-surface !w-full md:w-auto max-w-[500px] rounded-full relative"
         >
           <app-search-input
+            ref="focusTarget"
             v-model="searchInput"
             class="grow"
             placeholder="Search stock name or ticker"
           />
+          <transition name="fade" mode="out-in">
+            <div
+              v-if="showDropdown"
+              class="absolute bottom-[-4px] left-[5px] z-10 w-full max-w-[calc(100%-10px)] bg-white rounded-20 shadow-2xl border-surface border-2 px-2 py-4 translate-y-full min-h-[180px] overflow-y-auto"
+            >
+              <p
+                v-if="searchInput && searchInput !== '' && results.length === 0"
+                class="text-s-14 text-info text-center text-wrap break-all font-medium mb-4 mt-1 ml-3 border-b-grey-outline border-b-1 pt-3 pb-6"
+              >
+                <exclamation-circle-icon
+                  class="inline-block w-5 h-5 text-grey-50 mr-1"
+                />
+                No results found for:
+                {{ searchInput }}
+              </p>
+              <div
+                v-if="
+                  !searchInput || searchInput === '' || results.length === 0
+                "
+              >
+                <p class="text-s-12 font-medium text-info ml-3 mb-1">
+                  Recently Viewed
+                </p>
+                <div
+                  class="flex items-center justify-start gap-1 flex-wrap mb-2"
+                >
+                  <button
+                    v-for="(stock, i) in tempTrending"
+                    :key="i"
+                    class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+                  >
+                    <app-token-logo
+                      :symbol="stock.ticker"
+                      :url="stock.logoUrl"
+                      height="w-5"
+                      width="w-5"
+                      class="mr-1"
+                    />
+                    <p class="uppercase text-s-14">{{ stock.ticker }}</p>
+                  </button>
+                </div>
+                <p class="text-s-12 font-medium text-info ml-3 mb-1 mt-5">
+                  Trending
+                </p>
+                <div
+                  class="flex items-center justify-start gap-1 flex-wrap mb-2"
+                >
+                  <button
+                    v-for="(stock, i) in tempTrending"
+                    :key="i"
+                    class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+                  >
+                    <app-token-logo
+                      :symbol="stock.ticker"
+                      :url="stock.logoUrl"
+                      height="w-5"
+                      width="w-5"
+                      class="mr-1"
+                    />
+                    <p class="uppercase text-s-14">{{ stock.ticker }}</p>
+                  </button>
+                </div>
+              </div>
+              <div v-if="results.length" class="flex flex-col">
+                <button
+                  v-for="(stock, i) in results"
+                  :key="stock.ticker"
+                  class="w-full flex items-center gap-3 hoverNoBG rounded-12 py-2 px-3 text-left"
+                  :class="{ 'bg-mewBg': i == 0 }"
+                >
+                  <app-token-logo :symbol="stock.ticker" :url="stock.logoUrl" />
+                  <div class="w-full">
+                    <p class="uppercase text-s-14 font-medium">
+                      {{ stock.ticker }}
+                    </p>
+                    <p class="text-s-12 text-info">{{ stock.name }}</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-s-14">
+                      ${{ formatFiatValue(randomPrice).value }}
+                    </p>
+                    <p
+                      class="text-s-12"
+                      :class="{
+                        'text-error': randomPercentage < 0,
+                        'text-success': randomPercentage >= 0,
+                      }"
+                    >
+                      {{ formatPercentageValue(randomPercentage).value }}
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </transition>
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
           <p class="font-semibold text-s-14">Trending:</p>
@@ -50,40 +146,84 @@
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import { ref } from 'vue'
+import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+import { ref, watch } from 'vue'
+import {
+  formatFiatValue,
+  formatPercentageValue,
+} from '@/utils/numberFormatHelper'
+
+import { useFocusWithin, watchDebounced } from '@vueuse/core'
+
 const searchInput = ref('')
 
 interface TrendingStock {
   ticker: string
   logoUrl: string
+  name: string
 }
 const tempTrending: TrendingStock[] = [
   {
     ticker: 'AAPL',
+    name: 'AAPLon',
     logoUrl:
       'https://coin-images.coingecko.com/coins/images/68623/large/nvdaon_160x160.png?1756130268',
   },
   {
     ticker: 'GOOGL',
+    name: 'GOOGLon',
     logoUrl:
       'https://coin-images.coingecko.com/coins/images/68623/large/nvdaon_160x160.png?1756130268',
   },
   {
     ticker: 'AMZN',
+    name: 'AMZNon',
     logoUrl:
       'https://coin-images.coingecko.com/coins/images/68623/large/nvdaon_160x160.png?1756130268',
   },
   {
     ticker: 'MSFT',
+    name: 'MSFTon',
     logoUrl:
       'https://coin-images.coingecko.com/coins/images/68623/large/nvdaon_160x160.png?1756130268',
   },
   {
     ticker: 'TSLA',
+    name: 'TSLAon',
     logoUrl:
       'https://coin-images.coingecko.com/coins/images/68623/large/nvdaon_160x160.png?1756130268',
   },
 ]
+
+const showDropdown = ref(false)
+
+const focusTarget = ref<HTMLElement | null>(null)
+const { focused } = useFocusWithin(focusTarget)
+
+watchDebounced(
+  focused,
+  () => {
+    showDropdown.value = focused.value
+  },
+  { debounce: 500 },
+)
+
+// TEMP
+const results = ref<TrendingStock[]>([])
+watch(searchInput, newValue => {
+  if (newValue && newValue !== '') {
+    results.value = tempTrending.filter(
+      stock =>
+        stock.ticker.toLowerCase().includes(newValue.toLowerCase()) ||
+        stock.name.toLowerCase().includes(newValue.toLowerCase()),
+    )
+  } else {
+    results.value = []
+  }
+})
+
+const randomPrice = Math.floor(Math.random() * 1000) / 100 + 100
+const randomPercentage = Math.random() * 4 - 2
 </script>
 
 <style scoped>
