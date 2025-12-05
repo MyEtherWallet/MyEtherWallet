@@ -69,7 +69,10 @@
               </div>
             </expand-transition>
             <div class="flex items-center justify-center">
-              <app-base-button class="w-full xs:w-auto xs:min-w-[250px]">
+              <app-base-button
+                class="w-full xs:w-auto xs:min-w-[250px]"
+                @click="nextStep"
+              >
                 {{ $t('common.next') }}
               </app-base-button>
             </div>
@@ -80,6 +83,78 @@
               :description="stepDescription[1]"
               :activeStep="activeStep"
             />
+
+            <div class="pt-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div
+                  v-for="index in indexesToVerify"
+                  :key="index"
+                  class="flex flex-col"
+                >
+                  <app-input
+                    v-model="verifyMnemonicObj[index]"
+                    :placeholder="`Word #${index + 1}`"
+                  />
+                </div>
+              </div>
+              <div v-if="verifyMnemonicError" class="text-error mb-5">
+                Could not verify mnemonic, please check the entered words.
+              </div>
+              <div v-if="extraWord !== ''">
+                <app-input
+                  v-model="verifyExtraWord"
+                  :placeholder="
+                    $t('access_wallet_recovery_phrase.enter_extra_word')
+                  "
+                />
+              </div>
+              <div v-if="verifyExtraWordError" class="text-error">
+                Could not verify extra word.
+              </div>
+              <div class="flex flex-col items-center justify-center mt-2">
+                <app-base-button
+                  class="w-full xs:w-auto xs:min-w-[250px]"
+                  :disabled="!verifyMnemonic"
+                  @click="activeStep = 2"
+                >
+                  {{ $t('common.next') }}
+                </app-base-button>
+                <app-base-button
+                  :is-outline="true"
+                  class="w-full xs:w-auto xs:min-w-[250px] mt-4"
+                  @click="activeStep = 0"
+                >
+                  {{ $t('common.back') }}
+                </app-base-button>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="activeStep === 2">
+            <app-step-description
+              :description="stepDescription[2]"
+              :activeStep="activeStep"
+            />
+
+            <div class="pt-4">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
+              <div class="flex flex-col items-center justify-center mt-2">
+                <app-base-button
+                  class="w-full xs:w-auto xs:min-w-[250px]"
+                  :disabled="!verifyMnemonic"
+                  @click="closeCreateOpenAccess()"
+                >
+                  Access Wallet
+                </app-base-button>
+                <app-base-button
+                  :is-outline="true"
+                  class="w-full xs:w-auto xs:min-w-[250px] mt-4"
+                  @click="activeStep = 0"
+                >
+                  Create another wallet
+                </app-base-button>
+              </div>
+            </div>
           </div>
         </app-stepper>
       </app-sheet>
@@ -103,7 +178,14 @@ import { useI18n } from 'vue-i18n'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
+import BigNumber from 'bignumber.js'
 const { t } = useI18n()
+
+import { useCreateStore } from '@/stores/createStore'
+import { useAccessStore } from '@/stores/accessStore'
+
+const { closeCreateDialog } = useCreateStore()
+const { openAccessDialog } = useAccessStore()
 
 /**------------------------
  * Steps
@@ -127,16 +209,47 @@ const stepDescription: StepDescription[] = [
 
 const backStep = () => {
   activeStep.value = 0
-  mnemonic.value = ''
+  updateMnemonic()
   extraWord.value = ''
   hasExtraWord.value = false
+  verifyExtraWord.value = ''
+  verifyMnemonicObj.value = {}
 }
+
+const nextStep = () => {
+  activeStep.value = 1
+}
+
+const closeCreateOpenAccess = () => {
+  closeCreateDialog()
+  openAccessDialog()
+}
+
+const indexesToVerify = computed(() => {
+  const indexes: number[] = []
+  while (indexes.length < BigNumber(length.value.value).toNumber() / 2) {
+    const randIndex = Math.floor(
+      Math.random() * mnemonic.value.split(' ').length,
+    )
+    if (!indexes.includes(randIndex)) {
+      indexes.push(randIndex)
+    }
+  }
+  return indexes.sort((a, b) => a - b)
+})
 
 /**------------------------
  * Extra Word
  -------------------------*/
 
 const hasExtraWord = ref(false)
+const verifyExtraWordError = computed(() => {
+  if (verifyExtraWord.value === '') {
+    return false
+  }
+  return verifyExtraWord.value === extraWord.value
+})
+const verifyExtraWord = ref('')
 const extraWordToggleString = computed(() =>
   hasExtraWord.value ? t('common.yes') : t('common.no'),
 )
@@ -148,6 +261,33 @@ const extraWord = ref('')
 
 const mnemonic = ref('')
 const length = ref({ label: '12 words', value: '12' })
+const verifyMnemonicObj = ref<Record<number, string>>({})
+const verifyMnemonicError = computed(() => {
+  if (Object.keys(verifyMnemonicObj.value).length === 0) {
+    return false
+  }
+  let error = false
+  indexesToVerify.value.forEach(index => {
+    if (mnemonic.value.split(' ')[index] !== verifyMnemonicObj.value[index]) {
+      error = true
+    }
+  })
+  return error
+})
+const verifyMnemonic = computed(() => {
+  let isValid = true
+  indexesToVerify.value.forEach(index => {
+    if (verifyMnemonicObj.value[index] !== mnemonic.value.split(' ')[index]) {
+      isValid = false
+    }
+  })
+  if (hasExtraWord.value && extraWord.value !== '') {
+    if (verifyExtraWord.value !== extraWord.value) {
+      isValid = false
+    }
+  }
+  return isValid
+})
 
 watch(length, () => {
   updateMnemonic()
