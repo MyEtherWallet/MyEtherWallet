@@ -1,3 +1,4 @@
+import { toHex } from 'viem';
 import BaseBtcWallet from "./baseBitcoinWallet";
 import type { PostSignedTransaction } from "../common/types";
 import { WalletType, type HexPrefixedString } from '../types'
@@ -47,12 +48,15 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
   }
 
   override async SignMessage(options: { message: string; options?: unknown; }): Promise<HexPrefixedString> {
-    const signature = bitcoinMessage.sign(
-      options.message,
+    const signature = await bitcoinMessage.signAsync(
+      toHex(options.message),
       this.privateKey,
-      true, // compressed option
+      true,
+      {
+        segwitType: 'p2wpkh',
+      }
     );
-    return `0x${signature.toString('hex')}`;
+    return signature.toString('base64') as HexPrefixedString;
   }
 
 }

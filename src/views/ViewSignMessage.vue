@@ -8,7 +8,9 @@
             placeholder="Enter the message to sign"
             class="w-full max-w-lg"
           />
-
+          <div v-if="!isWalletConnected" class="text-warning">
+            Please sign in to sign
+          </div>
           <app-base-button
             @click="handleSigner"
             class="mt-4"
@@ -26,7 +28,7 @@
               <div>
                 <div class="p-4">
                   <h3 class="text-lg font-semibold">Message:</h3>
-                  <p class="mt-2">{{ message }}</p>
+                  <p class="mt-2">{{ hexMessage }}</p>
                 </div>
                 <div class="p-4">
                   <h3 class="text-lg font-semibold">Signing address:</h3>
@@ -37,6 +39,9 @@
                   <p class="mt-2" style="word-break: break-all">
                     {{ signature }}
                   </p>
+                  <app-base-button @click="copy" class="mt-4">
+                    Copy Signature
+                  </app-base-button>
                 </div>
               </div>
             </template>
@@ -59,7 +64,7 @@ import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import verifier from '@/utils/verifySignature'
 import type { HexPrefixedString } from '@/providers/types'
-import { stringToHex } from 'viem'
+import { toHex } from 'viem'
 import { useAccessStore } from '@/stores/accessStore'
 const accessDialog = useAccessStore()
 const walletStore = useWalletStore()
@@ -75,6 +80,41 @@ const message = ref('')
 const signedModal = ref(false)
 const signing = ref(false)
 const signature = ref('')
+const hexMessage = computed(() => {
+  return selectedChain.value?.type === 'BITCOIN'
+    ? toHex(message.value)
+    : message.value
+})
+
+const copy = () => {
+  return new Promise((resolve, reject) => {
+    const signObject = {
+      signingAddress: walletAddress.value,
+      message:
+        selectedChain.value?.type === 'BITCOIN'
+          ? toHex(message.value)
+          : message.value,
+      signature: signature.value,
+    }
+    navigator.clipboard
+      .writeText(JSON.stringify(signObject))
+      .then(() => {
+        toastStore.addToastMessage({
+          text: 'Signature copied to clipboard',
+          type: ToastType.Success,
+        })
+        signedModal.value = false
+        resolve(true)
+      })
+      .catch(() => {
+        toastStore.addToastMessage({
+          text: 'Failed to copy signature to clipboard',
+          type: ToastType.Error,
+        })
+        reject(false)
+      })
+  })
+}
 
 const handleSigner = async () => {
   if (!isWalletConnected.value) {
@@ -89,7 +129,7 @@ const signMessage = async () => {
   try {
     wallet.value
       ?.SignMessage({
-        message: stringToHex(message.value) as HexPrefixedString,
+        message: message.value,
       })
       .then((sig: HexPrefixedString) => {
         signature.value = sig

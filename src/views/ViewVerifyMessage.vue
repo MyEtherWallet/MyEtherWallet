@@ -73,6 +73,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { storeToRefs } from 'pinia'
 import verifier from '@/utils/verifySignature'
+import { hexToString } from 'viem'
 
 interface VerifierObj {
   [key: string]: (params: {
@@ -91,8 +92,43 @@ const verifying = ref(false)
 const signature = ref('')
 const verified = ref(false)
 const verifyMessageDesc = ref('')
-
 const { adrInput: signingAddress } = useAddressInput(selectedChain)
+
+const possibleJsonParse = (str: string | object) => {
+  if (typeof str === 'object') return str
+  try {
+    return JSON.parse(str)
+  } catch {
+    return false
+  }
+}
+
+watch(
+  [message, signature, signingAddress],
+  ([newMessage, newSignature, newSigningAddress]) => {
+    verified.value = false
+    verifyMessageDesc.value = ''
+    const _messageJson = possibleJsonParse(newMessage)
+      ? possibleJsonParse(newMessage)
+      : possibleJsonParse(newSignature)
+        ? possibleJsonParse(newSignature)
+        : possibleJsonParse(newSigningAddress)
+          ? possibleJsonParse(newSigningAddress)
+          : null
+    if (!!_messageJson) {
+      if (_messageJson.message || _messageJson.msg) {
+        message.value = _messageJson.message || hexToString(_messageJson.msg)
+      }
+      if (_messageJson.signature || _messageJson.sig) {
+        signature.value = _messageJson.signature || `0x${_messageJson.sig}`
+      }
+      if (_messageJson.signingAddress || _messageJson.address) {
+        signingAddress.value =
+          _messageJson.signingAddress || _messageJson.address.toLowerCase()
+      }
+    }
+  },
+)
 
 const verifyMessage = async () => {
   verifying.value = true
