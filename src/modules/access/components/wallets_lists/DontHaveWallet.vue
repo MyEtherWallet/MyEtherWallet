@@ -23,7 +23,6 @@ const createStore = useCreateStore()
 const accessStore = useAccessStore()
 
 const goToCreateWallet = () => {
-  console.log('goToCreateWallet')
   accessStore.closeAccessDialog()
   createStore.openCreateDialog()
 }
