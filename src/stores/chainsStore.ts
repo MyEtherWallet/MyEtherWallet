@@ -28,6 +28,9 @@ export const useChainsStore = defineStore('chainsStore', () => {
   const isEvmChain = computed(() => {
     return selectedChain.value?.type === 'EVM'
   })
+  const isSolChain = computed(() => {
+    return selectedChain.value?.type === 'SOLANA'
+  })
 
-  return { chains, isLoaded, setChainData, selectedChain, isBitcoinChain, isEvmChain }
+  return { chains, isLoaded, setChainData, selectedChain, isBitcoinChain, isEvmChain, isSolChain }
 })

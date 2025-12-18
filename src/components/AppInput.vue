@@ -7,6 +7,7 @@
       ref="baseInput"
       :type="inputType"
       v-model="model"
+      :disabled="isDisabled"
       :class="[
         {
           '!border-error border-2': hasError,
@@ -99,6 +100,11 @@ const props = defineProps({
     default: 'text',
   },
   isRequired: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  isDisabled: {
     type: Boolean,
     required: false,
     default: false,

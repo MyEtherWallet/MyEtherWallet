@@ -3,31 +3,41 @@
     <div
       class="flex flex-col sm:flex-row sm:items-center justify-between px-2 py-2 mb-4 sm:gap-6"
     >
-      <div
-        class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] order-3 order-2 sm:order-1 gap-1"
-      >
-        <app-search-input v-model="searchInput" class="grow" />
-        <app-select
-          v-model:selected="selectedAllTokensFilter"
-          :options="allTokensFilterOptions"
-          position="-right-1"
-          class="text-s-12"
+      <div class="flex order-3 order-2 sm:order-1 items-center gap-2">
+        <div
+          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] gap-1"
         >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG p-2 xs:min-w-[140px] xs:px-3"
-              @click="toggleSelect"
-            >
-              <div class="flex items-center justify-between">
-                <span class="hidden xs:inline">{{
-                  selectedAllTokensFilter.label
-                }}</span>
-                <span class="inline xs:hidden">Filter</span>
-                <chevron-down-icon class="w-4 h-4 ml-1" />
-              </div>
-            </button>
-          </template>
-        </app-select>
+          <app-search-input v-model="searchInput" class="grow" />
+          <app-select
+            v-model:selected="selectedAllTokensFilter"
+            :options="allTokensFilterOptions"
+            position="-right-1"
+            class="text-s-12"
+          >
+            <template #select-button="{ toggleSelect }">
+              <button
+                class="rounded-full hoverNoBG p-2 xs:min-w-[140px] xs:px-3"
+                @click="toggleSelect"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="hidden xs:inline">{{
+                    selectedAllTokensFilter.label
+                  }}</span>
+                  <span class="inline xs:hidden">Filter</span>
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
+            </template>
+          </app-select>
+        </div>
+        <div v-if="selectedAllTokensFilter.value === 'customTokens'">
+          <app-base-button
+            size="medium"
+            is-outline
+            @click="openCustomTokenDialog"
+            >+ Add Custom Token</app-base-button
+          >
+        </div>
       </div>
       <!-- TOTAL VALUE-->
       <div class="order-1 sm:order-2 mb-3 sm:mb-0 ml-2 sm:ml-0">
@@ -429,6 +439,9 @@
       />
     </div>
   </div>
+  <div>
+    <custom-tokens-dialog />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -475,7 +488,12 @@ import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useTokenInfoStore } from '@/stores/tokenInfoStore'
+import { useCustomTokenStore } from '@/stores/customTokenStore'
+import CustomTokensDialog from './CustomTokensDialog.vue'
+import { useChainsStore } from '@/stores/chainsStore'
 
+const chainStore = useChainsStore()
+const { isEvmChain, isSolChain } = storeToRefs(chainStore)
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -494,14 +512,23 @@ const searchInput = ref('')
  * All Tokens Filter
   -------------------------------*/
 
-const allTokensFilterOptions = ref([
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Custom Tokens', value: 'customTokens' },
-  { label: 'Watchlist', value: 'watchlist' },
-])
+const allTokensFilterOptions = computed(() => {
+  const options = [
+    { label: 'All Tokens', value: 'all' },
+    { label: 'Watchlist', value: 'watchlist' },
+  ]
+
+  if (isEvmChain.value || isSolChain.value) {
+    options.splice(1, 0, { label: 'Custom Tokens', value: 'customTokens' })
+  }
+
+  return options
+})
 
 const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
 
+const openCustomTokenStore = useCustomTokenStore()
+const { openCustomTokenDialog } = openCustomTokenStore
 /** -------------------------------
  * Total Value
 -------------------------------*/
