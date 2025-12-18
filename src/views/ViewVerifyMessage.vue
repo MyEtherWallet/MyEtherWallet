@@ -4,15 +4,13 @@
       <app-sheet :title="$t('verify-message')">
         <div class="flex items-center flex-col">
           <div
-            class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]"
+            class="flex w-full justify-between m-4"
             v-if="!isWalletConnected"
           >
-            <div>
-              <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
-                {{ $t('common.select_network') }}
-              </h2>
-              <select-chain-for-app is-btn-group />
-            </div>
+            <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
+              {{ $t('common.select_network') }}
+            </h2>
+            <select-chain-for-app />
           </div>
           <app-text-field
             v-model="message"
@@ -132,6 +130,7 @@ watch(
 
 const verifyMessage = async () => {
   verifying.value = true
+  verified.value = false
   const chainType = selectedChain.value!.type
   const verifierObj = verifier as VerifierObj
   const verify = chainType in verifierObj ? verifierObj[chainType] : undefined
