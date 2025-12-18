@@ -23,7 +23,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
   const editCustomToken = (chainName: string, tokenAddress: string, updatedTokenInfo: storedTokenInfo) => {
     if (customTokens.value[chainName]) {
       const tokenIndex = customTokens.value[chainName].findIndex(
-        (token) => token.address === tokenAddress
+        (token) => token.address.toLowerCase() === tokenAddress.toLowerCase()
       )
       if (tokenIndex !== -1) {
         customTokens.value[chainName][tokenIndex] = updatedTokenInfo
@@ -35,7 +35,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
   const deleteCustomToken = (chainName: string, tokenAddress: string) => {
     if (customTokens.value[chainName]) {
       customTokens.value[chainName] = customTokens.value[chainName].filter(
-        (token) => token.address !== tokenAddress
+        (token) => token.address.toLowerCase() !== tokenAddress.toLowerCase()
       )
       selectedToken.value = null
     }
@@ -52,7 +52,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
   const isStoredToken = (chainName: string, tokenAddress: string): boolean => {
     if (customTokens.value[chainName]) {
       return customTokens.value[chainName].some(
-        (token) => token.address === tokenAddress
+        (token) => token.address.toLowerCase() === tokenAddress.toLowerCase()
       )
     }
     return false

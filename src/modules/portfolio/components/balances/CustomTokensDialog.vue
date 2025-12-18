@@ -131,6 +131,11 @@ const action = () => {
       decimals: parseInt(tokenDecimals.value),
       symbol: tokenSymbol.value,
     })
+
+    toastStore.addToastMessage({
+      text: 'Custom token added successfully.',
+      type: ToastType.Success,
+    })
   }
   if (currentView.value === 'edit' && selectedToken.value) {
     editCustomToken(
@@ -189,12 +194,15 @@ watch(isOpenCustomTokenDialog, () => {
 })
 
 const disableSubmit = computed(() => {
+  const emptyValues =
+    tokenName.value.trim() === '' ||
+    tokenDecimals.value.trim() === '' ||
+    tokenSymbol.value.trim() === ''
   if (currentView.value === 'add') {
-    return (
-      tokenName.value.trim() === '' ||
-      tokenDecimals.value.trim() === '' ||
-      fetchingDetails.value
-    )
+    return emptyValues || fetchingDetails.value
+  }
+  if (currentView.value === 'edit') {
+    return emptyValues
   }
   return false
 })

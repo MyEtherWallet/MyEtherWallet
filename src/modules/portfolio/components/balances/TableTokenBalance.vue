@@ -486,7 +486,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -538,7 +538,7 @@ import CustomTokensDialog from './CustomTokensDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 
 const chainStore = useChainsStore()
-const { isEvmChain, isSolChain } = storeToRefs(chainStore)
+const { isEvmChain, isSolChain, isBitcoinChain } = storeToRefs(chainStore)
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -568,6 +568,12 @@ const allTokensFilterOptions = computed(() => {
   }
 
   return options
+})
+
+watch(isBitcoinChain, (newVal: boolean) => {
+  if (newVal && selectedAllTokensFilter.value.value === 'customTokens') {
+    selectedAllTokensFilter.value = allTokensFilterOptions.value[0]
+  }
 })
 
 const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
@@ -719,7 +725,7 @@ const tokens = computed<DisplayToken[]>(() => {
         }) || []
   } else if (selectedAllTokensFilter.value.value === 'customTokens') {
     // TODO: figure out balance fetching
-    return chainCustomTokens.value.map(customToken => {
+    tokens = chainCustomTokens.value.map(customToken => {
       const hasTokenBalance = allTokens.value.filter(
         _token =>
           customToken.address.toLowerCase() === _token.contract?.toLowerCase(),
