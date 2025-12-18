@@ -27,6 +27,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
       )
       if (tokenIndex !== -1) {
         customTokens.value[chainName][tokenIndex] = updatedTokenInfo
+        selectedToken.value = null
       }
     }
   }
@@ -36,6 +37,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
       customTokens.value[chainName] = customTokens.value[chainName].filter(
         (token) => token.address !== tokenAddress
       )
+      selectedToken.value = null
     }
   }
   const isOpenCustomTokenDialog = ref(false)

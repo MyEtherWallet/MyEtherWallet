@@ -58,22 +58,30 @@
       <app-btn-icon
         class="absolute top-3 right-11"
         label="clear search"
+        :disabled="isDisabled"
         @click="clearAdrInput"
         :class="[
           adrInput !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
       >
-        <x-circle-icon class="w-6 h-6 text-primary" />
+        <x-circle-icon
+          :class="isDisabled ? '!text-grey-30' : ''"
+          class="w-6 h-6 text-primary"
+        />
       </app-btn-icon>
       <!-- Open Address Book button-->
       <app-btn-icon
         v-if="hasAddressBook"
         class="absolute top-3 right-3"
         label="open address book"
+        :disabled="isDisabled"
         @click="isAddressBookOpen = true"
       >
-        <users-icon class="w-6 h-6 text-primary" />
+        <users-icon
+          :class="isDisabled ? '!text-grey-30' : ''"
+          class="w-6 h-6 text-primary"
+        />
       </app-btn-icon>
     </div>
     <!-- Error Messages OR Resolved Address -->
@@ -194,6 +202,7 @@ const networkChain = computed(() => {
 })
 
 const clearAdrInput = () => {
+  if (props.isDisabled) return
   setInFocusInput()
   nextTick(() => {
     adrInput.value = ''

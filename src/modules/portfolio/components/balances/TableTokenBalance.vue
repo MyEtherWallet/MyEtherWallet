@@ -376,10 +376,20 @@
                   </template>
                 </app-pop-up-menu>
               </div>
-
               <div
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
-                v-if="selectedAllTokensFilter.value === 'customTokens'"
+                v-if="selectedAllTokensFilter.value !== 'customTokens'"
+              >
+                <app-base-button size="small" @click="buyBtn()" is-outline
+                  >Buy</app-base-button
+                >
+                <app-base-button size="small" @click="swapBtn(token)"
+                  >Swap
+                </app-base-button>
+              </div>
+              <div
+                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                v-else
               >
                 <app-base-button
                   size="small"
@@ -390,6 +400,7 @@
                 <app-base-button
                   size="small"
                   theme="error"
+                  is-outline
                   @click="customTokenAction('delete', token)"
                   >Delete
                 </app-base-button>

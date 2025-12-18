@@ -8,7 +8,7 @@
     bg="bg-white"
   >
     <template #content>
-      <div class="p-4">
+      <div class="p-4 max-w-md w-full">
         <div v-if="currentView === 'add'">
           <address-input
             v-model:adr-input="adrInput"
@@ -54,7 +54,25 @@
             :is-disabled="true"
           />
         </div>
-        <div v-if="currentView === 'delete'"></div>
+        <div v-if="currentView === 'delete'">
+          <h3 class="text-lg font-bold mb-4">
+            Are you sure you want to delete the custom token "{{
+              selectedToken?.name
+            }}"?
+          </h3>
+          <div>
+            <strong class="block mb-2">Token Address:</strong>
+            <p class="break-all mb-4">{{ selectedToken?.address }}</p>
+            <strong class="block mb-2">Token Symbol:</strong>
+            <p class="break-all mb-4">{{ selectedToken?.symbol }}</p>
+            <strong class="block mb-2">Token Decimal:</strong>
+            <p class="break-all mb-4">{{ selectedToken?.decimals }}</p>
+          </div>
+          <p>
+            This action cannot be undone. You can re-add the token later if you
+            change your mind.
+          </p>
+        </div>
         <app-base-button
           class="mt-4 w-full"
           :disabled="disableSubmit"
@@ -92,7 +110,8 @@ const tokenDecimals = ref('')
 const customTokenStore = useCustomTokenStore()
 const fetchingDetails = ref(false)
 const fetchedInfoViaAddress = ref(false)
-const { addCustomToken, isStoredToken } = customTokenStore
+const { addCustomToken, isStoredToken, editCustomToken, deleteCustomToken } =
+  customTokenStore
 const { isOpenCustomTokenDialog, currentView, selectedToken } =
   storeToRefs(customTokenStore)
 
@@ -112,14 +131,40 @@ const action = () => {
       decimals: parseInt(tokenDecimals.value),
       symbol: tokenSymbol.value,
     })
-    tokenName.value = ''
-    tokenDecimals.value = ''
-    tokenSymbol.value = ''
-    adrInput.value = ''
-    localAddressError.value = ''
-    fetchedInfoViaAddress.value = false
-    isOpenCustomTokenDialog.value = false
   }
+  if (currentView.value === 'edit' && selectedToken.value) {
+    editCustomToken(
+      selectedChain.value?.name ?? '',
+      selectedToken.value.address,
+      {
+        address: selectedToken.value.address,
+        name: tokenName.value,
+        decimals: selectedToken.value.decimals,
+        symbol: tokenSymbol.value,
+      },
+    )
+    toastStore.addToastMessage({
+      text: 'Custom token updated successfully.',
+      type: ToastType.Success,
+    })
+  }
+  if (currentView.value === 'delete' && selectedToken.value) {
+    deleteCustomToken(
+      selectedChain.value?.name ?? '',
+      selectedToken.value.address,
+    )
+    toastStore.addToastMessage({
+      text: 'Custom token deleted successfully.',
+      type: ToastType.Success,
+    })
+  }
+  tokenName.value = ''
+  tokenDecimals.value = ''
+  tokenSymbol.value = ''
+  adrInput.value = ''
+  localAddressError.value = ''
+  fetchedInfoViaAddress.value = false
+  isOpenCustomTokenDialog.value = false
 }
 
 watch(isOpenCustomTokenDialog, () => {

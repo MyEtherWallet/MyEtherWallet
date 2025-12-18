@@ -1,7 +1,6 @@
 <template>
   <button
     :class="[
-      defaultClass,
       { 'py-1 px-3 text-s-14': size === BtnSize.SMALL },
       { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
       { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
@@ -12,6 +11,15 @@
         : isOutline
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
+      'rounded-full font-medium transition-colors hover:opacity-90 !box-border',
+      // computed breaks error style
+      theme === 'primary'
+        ? isOutline
+          ? 'border border-2 border-primary text-primary bg-transparent'
+          : 'text-white bg-primary'
+        : isOutline
+          ? 'border border-2 border-error text-error bg-transparent'
+          : 'text-white bg-error',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -56,7 +64,7 @@
   </button>
 </template>
 <script setup lang="ts">
-import { type PropType, computed } from 'vue'
+import { type PropType } from 'vue'
 
 enum BtnSize {
   SMALL = 'small',
@@ -96,12 +104,4 @@ const onClick = () => {
     emit('click')
   }
 }
-
-const defaultClass = computed<string>(() => {
-  const shared = `rounded-full font-medium transition-colors hover:opacity-90   !box-border`
-  const _default = `text-white bg-${props.theme}`
-  const _outline = `border border-2 border-${props.theme} text-${props.theme} bg-transparent`
-
-  return props.isOutline ? `${shared} ${_outline}` : `${shared} ${_default}`
-})
 </script>
