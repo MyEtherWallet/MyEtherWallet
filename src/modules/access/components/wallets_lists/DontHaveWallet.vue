@@ -7,7 +7,7 @@
       isOutline
       class="bg-white h-12 !py-0 !px-0 w-full"
       size="medium"
-      @onClick="$router.push({ name: CREATE_WALLET_PATH_NAME })"
+      @click="goToCreateWallet"
     >
       <span> {{ $t('common.create_wallet') }}</span>
     </app-base-button>
@@ -16,7 +16,15 @@
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ROUTES_CREATE_WALLET } from '@/router/routeNames'
+import { useCreateStore } from '@/stores/createStore'
+import { useAccessStore } from '@/stores/accessStore'
 
-const CREATE_WALLET_PATH_NAME = ROUTES_CREATE_WALLET.CREATE_WALLET.NAME
+const createStore = useCreateStore()
+const accessStore = useAccessStore()
+
+const goToCreateWallet = () => {
+  console.log('goToCreateWallet')
+  accessStore.closeAccessDialog()
+  createStore.openCreateDialog()
+}
 </script>
