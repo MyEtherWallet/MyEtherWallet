@@ -31,10 +31,7 @@
           </app-select>
         </div>
         <div v-if="selectedAllTokensFilter.value === 'customTokens'">
-          <app-base-button
-            size="medium"
-            is-outline
-            @click="openCustomTokenDialog"
+          <app-base-button size="medium" is-outline @click="openAddCustom"
             >+ Add Custom Token</app-base-button
           >
         </div>
@@ -328,7 +325,9 @@
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
 
-                      <ul>
+                      <ul
+                        v-if="selectedAllTokensFilter.value !== 'customTokens'"
+                      >
                         <li
                           @click.stop="[buyBtn(), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -351,17 +350,44 @@
                           <p>Bridge</p>
                         </li>
                       </ul>
+                      <ul v-else>
+                        <li
+                          @click.stop="[
+                            customTokenAction('edit', token),
+                            toggleMenu(),
+                          ]"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                        >
+                          <pencil-icon class="text-primary w-4 h-4 mr-2" />
+                          <p>Edit</p>
+                        </li>
+                        <li
+                          @click.stop="[
+                            customTokenAction('delete', token),
+                            toggleMenu(),
+                          ]"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                        >
+                          <minus-circle-icon class="text-error w-4 h-4 mr-2" />
+                          <p>Delete</p>
+                        </li>
+                      </ul>
                     </div>
                   </template>
                 </app-pop-up-menu>
               </div>
 
               <div class="hidden lg:flex flex-row gap-1 justify-end flex-wrap">
-                <app-base-button size="small" @click="buyBtn()" is-outline
-                  >Buy</app-base-button
+                <app-base-button
+                  size="small"
+                  @click="customTokenAction('edit', token)"
+                  is-outline
+                  >Edit</app-base-button
                 >
-                <app-base-button size="small" @click="swapBtn(token)"
-                  >Swap
+                <app-base-button
+                  size="small"
+                  @click="customTokenAction('delete', token)"
+                  >Delete
                 </app-base-button>
               </div>
             </td>
@@ -460,11 +486,15 @@ import {
   ChevronRightIcon,
   EllipsisVerticalIcon,
   ChevronDownIcon,
+  PencilIcon,
 } from '@heroicons/vue/24/solid'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import {
+  StarIcon as StarOutlineIcon,
+  MinusCircleIcon,
+} from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
@@ -526,9 +556,30 @@ const allTokensFilterOptions = computed(() => {
 })
 
 const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
-
+/** -------------------------------
+ * Custom tokens
+  -------------------------------*/
 const openCustomTokenStore = useCustomTokenStore()
-const { openCustomTokenDialog } = openCustomTokenStore
+const { customTokens } = storeToRefs(openCustomTokenStore)
+const { openCustomTokenDialog, setCurrentView } = openCustomTokenStore
+
+const openAddCustom = () => {
+  setCurrentView('add')
+  openCustomTokenDialog()
+}
+const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
+  setCurrentView(action, {
+    name: token.name,
+    symbol: token.symbol || '',
+    address: token.contract || '',
+    decimals: token.decimals || 0,
+  })
+  openCustomTokenDialog()
+}
+
+const chainCustomTokens = computed(() => {
+  return customTokens.value[chainStore.selectedChain?.name || ''] || []
+})
 /** -------------------------------
  * Total Value
 -------------------------------*/
@@ -652,7 +703,32 @@ const tokens = computed<DisplayToken[]>(() => {
           }
         }) || []
   } else if (selectedAllTokensFilter.value.value === 'customTokens') {
-    return tokens
+    // TODO: figure out balance fetching
+    return chainCustomTokens.value.map(customToken => {
+      const hasTokenBalance = allTokens.value.filter(
+        _token =>
+          customToken.address.toLowerCase() === _token.contract?.toLowerCase(),
+      )
+      if (hasTokenBalance.length > 0) {
+        const _token = hasTokenBalance[0]
+        const fiatBalance = getFiatValue(_token)
+        return {
+          ..._token,
+          fiatBalance: fiatBalance.toNumber(),
+          fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+        }
+      }
+      return {
+        name: customToken.name,
+        symbol: customToken.symbol,
+        contract: customToken.address,
+        decimals: customToken.decimals,
+        balanceWei: '0x',
+        balance: '0',
+        fiatBalance: 0,
+        fiatBalanceFormatted: `$0.00`,
+      } as DisplayToken
+    })
   } else {
     tokens = [...allTokens.value].map(token => {
       const fiatBalance = getFiatValue(token)
