@@ -38,11 +38,27 @@
             :is-disabled="fetchingDetails"
           />
         </div>
-        <div v-if="currentView === 'edit'"></div>
+        <div v-if="currentView === 'edit'">
+          <address-input
+            v-model:adr-input="adrInput"
+            label="Token Address"
+            :is-disabled="true"
+            :resolved-address="resolvedAddress"
+            :chain="selectedChain"
+          />
+          <app-input placeholder="Token Name" v-model="tokenName" />
+          <app-input placeholder="Token Symbol" v-model="tokenSymbol" />
+          <app-input
+            placeholder="Token Decimals"
+            v-model="tokenDecimals"
+            :is-disabled="true"
+          />
+        </div>
         <div v-if="currentView === 'delete'"></div>
         <app-base-button
           class="mt-4 w-full"
           :disabled="disableSubmit"
+          :theme="currentView === 'delete' ? 'error' : 'primary'"
           @click="action"
         >
           {{ buttonTitle }}
@@ -77,13 +93,14 @@ const customTokenStore = useCustomTokenStore()
 const fetchingDetails = ref(false)
 const fetchedInfoViaAddress = ref(false)
 const { addCustomToken, isStoredToken } = customTokenStore
-const { isOpenCustomTokenDialog, currentView } = storeToRefs(customTokenStore)
+const { isOpenCustomTokenDialog, currentView, selectedToken } =
+  storeToRefs(customTokenStore)
 
 const title = computed(() => {
   return currentView.value === 'add'
     ? 'Add Custom Token'
     : currentView.value === 'edit'
-      ? 'Edit Custom Tokens'
+      ? 'Edit Custom Token'
       : 'Delete Custom Token'
 })
 
@@ -104,6 +121,27 @@ const action = () => {
     isOpenCustomTokenDialog.value = false
   }
 }
+
+watch(isOpenCustomTokenDialog, () => {
+  if (
+    isOpenCustomTokenDialog.value &&
+    (currentView.value === 'edit' || currentView.value === 'delete') &&
+    selectedToken.value
+  ) {
+    adrInput.value = selectedToken.value.address
+    tokenName.value = selectedToken.value.name
+    tokenSymbol.value = selectedToken.value.symbol
+    tokenDecimals.value = selectedToken.value.decimals.toString()
+  }
+  if (!isOpenCustomTokenDialog.value) {
+    adrInput.value = ''
+    tokenName.value = ''
+    tokenSymbol.value = ''
+    tokenDecimals.value = ''
+    localAddressError.value = ''
+    fetchedInfoViaAddress.value = false
+  }
+})
 
 const disableSubmit = computed(() => {
   if (currentView.value === 'add') {
@@ -139,6 +177,10 @@ watch([adrInput], async () => {
     tokenName.value = ''
     tokenDecimals.value = ''
     fetchedInfoViaAddress.value = false
+    return
+  }
+
+  if (currentView.value !== 'add') {
     return
   }
 

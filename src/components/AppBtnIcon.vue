@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   /**
    * @isWhite - if the button icon should be white
    */
@@ -55,6 +55,7 @@ const emit = defineEmits<{
 }>()
 
 const btnClick = (payload: MouseEvent) => {
+  if (props.disabled) return
   emit('click', payload)
 }
 </script>

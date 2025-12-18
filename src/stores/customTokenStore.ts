@@ -12,7 +12,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
   const customTokens = useLocalStorage<Record<string, Array<storedTokenInfo>>>('customTokens', {}, {
     mergeDefaults: true,
   });
-  const editToken = ref<storedTokenInfo | null>(null)
+  const selectedToken = ref<storedTokenInfo | null>(null)
   const addCustomToken = (chainName: string, tokenInfo: storedTokenInfo) => {
     if (customTokens.value[chainName]) {
       customTokens.value[chainName].push(tokenInfo)
@@ -59,7 +59,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
   const currentView = ref<'add' | 'edit' | 'delete'>('add')
   const setCurrentView = (view: 'add' | 'edit' | 'delete', token?: storedTokenInfo) => {
     currentView.value = view
-    editToken.value = token ?? null
+    selectedToken.value = token ?? null
   }
 
   return {
@@ -72,6 +72,7 @@ export const useCustomTokenStore = defineStore('customTokenStore', () => {
     editCustomToken,
     deleteCustomToken,
     customTokens,
-    isStoredToken
+    isStoredToken,
+    selectedToken,
   }
 })

@@ -52,6 +52,7 @@
         @focus="setInFocusInput()"
         @blur="startOutOfFocusTimeout()"
         autocomplete="off"
+        :disabled="isDisabled"
       />
       <!-- Clear Input  -->
       <app-btn-icon
@@ -164,6 +165,10 @@ const props = defineProps({
   foundNickName: {
     type: String,
     default: '',
+  },
+  isDisabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

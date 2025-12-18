@@ -377,7 +377,10 @@
                 </app-pop-up-menu>
               </div>
 
-              <div class="hidden lg:flex flex-row gap-1 justify-end flex-wrap">
+              <div
+                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                v-if="selectedAllTokensFilter.value === 'customTokens'"
+              >
                 <app-base-button
                   size="small"
                   @click="customTokenAction('edit', token)"
@@ -386,6 +389,7 @@
                 >
                 <app-base-button
                   size="small"
+                  theme="error"
                   @click="customTokenAction('delete', token)"
                   >Delete
                 </app-base-button>
