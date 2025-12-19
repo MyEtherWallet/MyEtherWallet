@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="isOpenCreateDialog"
-    class="!max-w-[1024px] w-full"
+    class="!max-w-[1024px] w-full max-h-[80vh]"
     bg="bg-appBackground"
     @close-dialog="closeCreate()"
   >
@@ -196,7 +196,7 @@
           <div class="text-base font-medium leading-6 mt-4 col-span-2">
             <div
               class="flex justify-start items-center hoverOpacity cursor-pointer p-2"
-              @click="isOtherMethodsOpen = !isOtherMethodsOpen"
+              @click="openOtherMethods"
             >
               Other methods
               <chevron-down-icon
@@ -207,7 +207,7 @@
             </div>
             <expand-transition>
               <div
-                v-if="isOtherMethodsOpen"
+                v-show="isOtherMethodsOpen"
                 class="grid grid-cols-1 lg:grid-cols-2 gap-10 rounded-3xl bg-[#ededee] p-4 sm:p-6 mt-3"
               >
                 <div>
@@ -264,6 +264,7 @@
                     users.
                   </p>
                 </div>
+                <div ref="bottomElement"></div>
               </div>
             </expand-transition>
           </div>
@@ -303,24 +304,11 @@
         <div v-if="currentView === 'mnemonic'">
           <module-create-mnemonic />
         </div>
-        <!-- <module-access-keystore v-else-if="currentView === 'keystore'" />
-        <module-access-private-key v-else-if="currentView === 'private_key'" />
-        <module-access-mnemonic v-else-if="currentView === 'mnemonic'" />
-        <module-access-hardware-wallet
-          v-else-if="currentView === 'ledger' || currentView === 'trezor'"
-        />
-        <module-access-wallet-connect
-          v-else-if="currentView === 'wallet_connect'"
-        /> -->
       </div>
     </template>
   </app-dialog>
 </template>
 <script setup lang="ts">
-// import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
-// import WalletsList from '@/modules/access/components/wallets_lists/WalletsList.vue'
-// import AppNeedHelp from '@/components/AppNeedHelp.vue'
-// import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
@@ -331,11 +319,6 @@ import {
 
 import { useCreateStore } from '@/stores/createStore'
 import { storeToRefs } from 'pinia'
-// import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
-// import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
-// import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
-// import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
-// import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import { computed, ref } from 'vue'
 
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
@@ -368,6 +351,7 @@ const closeCreate = () => {
   createStore.setCurrentView('default')
 }
 
+const bottomElement = ref<HTMLElement | null>(null)
 const isOtherMethodsOpen = ref(false)
 
 /**-------------------------------
@@ -383,6 +367,17 @@ const getTitle = computed(() => {
 const setView = (view: CreateWalletView) => {
   isOtherMethodsOpen.value = false
   createStore.setCurrentView(view)
+}
+
+const openOtherMethods = () => {
+  isOtherMethodsOpen.value = !isOtherMethodsOpen.value
+  if (bottomElement.value && isOtherMethodsOpen.value) {
+    setTimeout(() => {
+      bottomElement.value?.scrollIntoView({
+        behavior: 'smooth',
+      })
+    }, 100)
+  }
 }
 
 const openBuyWallet = (type: 'ledger' | 'trezor') => {
