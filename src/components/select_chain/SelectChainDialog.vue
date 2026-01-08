@@ -7,12 +7,13 @@
     class="xs:max-w-[428px] sm:mx-auto"
     z-index-overlay="z-[200]"
     z-index-container="z-[201]"
+    has-content-gutter
   >
     <template #content>
-      <div class="h-[70vh] sm:h-[500px]">
+      <div class="max-h-[70vh] sm:max-h-[500px] pb-6">
         <!-- Seacrh -->
-        <div class="sticky top-0 bg-white z-10">
-          <div class="px-5 mb-1">
+        <div class="sticky top-0 bg-white z-10 pt-2">
+          <div class="mb-1">
             <app-search-input
               v-model="searchInput"
               class="grow"

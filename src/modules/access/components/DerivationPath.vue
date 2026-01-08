@@ -26,31 +26,20 @@
     <!-- Dialog with chains list -->
     <app-dialog
       v-model:is-open="openDialog"
+      :title="dialogTitle"
       class="xs:max-w-[428px] sm:mx-auto"
+      z-index-overlay="z-[200]"
+      z-index-container="z-[201]"
+      has-content-gutter
     >
-      <template #title>
-        <div class="flex items-center pr-2 pt-4 sm:pt-6 xl:pt-8">
-          <app-btn-icon
-            v-if="showAddPath"
-            :label="$t('common.go_back')"
-            class="-ml-3 mr-3"
-            @click="setShowAddPath(false)"
-          >
-            <ArrowLeftIcon class="w-5 h-5" />
-          </app-btn-icon>
-          <h1 class="text5 font-bold">
-            {{ dialogTitle }}
-          </h1>
-        </div>
-      </template>
       <template #content>
-        <div class="h-[95vh] sm:h-[500px] overflow-y-auto scrollbar-hover">
+        <div class="max-h-[95vh] sm:max-h-[500px] pb-6">
           <transition name="fade" mode="out-in">
             <!--PATH LIST-->
             <div v-if="!showAddPath">
               <!-- Seacrh -->
-              <div class="sticky top-0 bg-white z-10">
-                <div class="px-3 mb-1 flex items-center gap-2">
+              <div class="sticky top-0 bg-white z-10 pt-2">
+                <div class="mb-1 flex items-center gap-2">
                   <app-search-input
                     v-model="searchInput"
                     class="grow"
@@ -122,8 +111,6 @@ import { ref, computed, onMounted, watch } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/solid'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'

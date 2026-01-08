@@ -1,6 +1,9 @@
+const MAXIMUM_BODY_LENGTH = 500
+
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
+    'body-max-line-length': [2, 'always', MAXIMUM_BODY_LENGTH],
     'type-enum': [
       2,
       'always',
@@ -21,8 +24,8 @@ module.exports = {
         'test',
         'translation',
         'sentry',
-        'release'
-      ]
-    ]
-  }
-};
+        'release',
+      ],
+    ],
+  },
+}

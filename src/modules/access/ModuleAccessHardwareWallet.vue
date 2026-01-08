@@ -311,8 +311,8 @@ const loadList = async (page: number = 0) => {
       : hwWalletInstance
     : hwWalletInstance
 
-  for (let i = startIndex; i < startIndex + 5; i++) {
-    try {
+  try {
+    for (let i = startIndex; i < startIndex + 5; i++) {
       const addressResponse = await instance!.getAddress({
         confirmAddress: false,
         networkName: networkName,
@@ -367,16 +367,16 @@ const loadList = async (page: number = 0) => {
           walletInstance: hardwareWalletInstance,
         })
       }
-    } catch (e) {
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: e instanceof Error ? e.message : String(e),
-      })
     }
+  } catch (e) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e instanceof Error ? e.message : String(e),
+    })
+  } finally {
+    selectedIndex.value = walletList.value[0]?.index
+    isLoadingWalletList.value = false
   }
-
-  selectedIndex.value = walletList.value[0]?.index
-  isLoadingWalletList.value = false
 }
 
 watch(
@@ -408,6 +408,7 @@ watch(
 )
 
 const setPage = (isNext: boolean) => {
+  console.log(isLoadingWalletList.value)
   if (!isNext && page.value === 0) return
   page.value = isNext ? page.value + 1 : page.value - 1
   loadList(page.value)

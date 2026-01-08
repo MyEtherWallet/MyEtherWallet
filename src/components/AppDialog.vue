@@ -36,7 +36,7 @@
           <div
             v-if="isOpen"
             :class="[bg, $attrs.class]"
-            class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] flex flex-col max-h-full overflow-hidden"
+            class="cursor-default min-w-[320px] rounded-32 flex flex-col max-h-full overflow-hidden"
             @click.stop
             role="dialog"
             aria-modal="true"

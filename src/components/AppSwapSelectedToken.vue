@@ -38,10 +38,11 @@
     v-model:is-open="showAllTokens"
     :title="$t('select_token.title')"
     class="sm:max-w-[500px] sm:mx-auto"
+    has-content-gutter
   >
     <template #content>
-      <div class="h-[80vh] xs:h-[500px] px-3 sm:px-7" ref="scrollContainer">
-        <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2 xs:pt-0">
+      <div class="max-h-[80vh] xs:max-h-[500px] pb-6" ref="scrollContainer">
+        <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2">
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
           >
