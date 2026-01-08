@@ -222,6 +222,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 /**
 * Hide scrollbar
 */
@@ -230,6 +231,43 @@ input::-webkit-inner-spin-button {
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/**
+* Hide scrollbar by default, show on hover
+*/
+.scrollbar-hover {
+  scrollbar-width: thin;
+  /* Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+.scrollbar-hover::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar-hover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-hover::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
+
+.scrollbar-hover:hover {
+  scrollbar-width: thin;
+  /* Firefox */
+}
+
+.scrollbar-hover:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
 }

@@ -40,7 +40,7 @@
     class="sm:max-w-[500px] sm:mx-auto"
   >
     <template #content>
-      <div class="h-[80vh] xs:h-[500px] !overflow-y-scroll px-3 sm:px-7">
+      <div class="h-[80vh] xs:h-[500px] px-3 sm:px-7">
         <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2 xs:pt-0">
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"

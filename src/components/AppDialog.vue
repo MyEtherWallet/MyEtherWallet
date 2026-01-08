@@ -23,7 +23,7 @@
       <div
         v-if="isOpen"
         :class="zIndexContainer"
-        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-4 xs:p-6 sm:p-9 overscroll-none overflow-y-auto"
+        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-4 xs:p-6 sm:p-9 overscroll-none overflow-hidden"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -36,7 +36,7 @@
           <div
             v-if="isOpen"
             :class="[bg, $attrs.class]"
-            class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] overflow-y-auto overflow-hidden"
+            class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] flex flex-col max-h-full overflow-hidden"
             @click.stop
             role="dialog"
             aria-modal="true"
@@ -44,7 +44,7 @@
             ref="targetDialog"
           >
             <div
-              class="z-10 pb-2 basis-full order-2 sm:order-1 flex sticky top-0"
+              class="z-10 pb-2 flex flex-none"
               :class="[
                 {
                   'justify-between': title || $slots.title,
@@ -70,7 +70,10 @@
                 class="mt-4 mr-4 min-w-[32px]"
               />
             </div>
-            <div :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]">
+            <div
+              :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]"
+              class="overflow-y-auto scrollbar-hover flex-1"
+            >
               <slot name="content" />
             </div>
           </div>

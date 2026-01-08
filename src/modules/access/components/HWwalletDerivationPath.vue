@@ -36,7 +36,7 @@
         </div>
       </template>
       <template #content>
-        <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+        <div class="h-[95vh] sm:h-[500px]">
           <!--PATH LIST-->
           <div>
             <!-- Seacrh -->

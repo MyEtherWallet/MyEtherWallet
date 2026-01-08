@@ -44,7 +44,7 @@
         </div>
       </template>
       <template #content>
-        <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+        <div class="h-[95vh] sm:h-[500px] overflow-y-auto scrollbar-hover">
           <transition name="fade" mode="out-in">
             <!--PATH LIST-->
             <div v-if="!showAddPath">
