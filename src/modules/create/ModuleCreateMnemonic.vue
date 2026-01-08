@@ -3,8 +3,8 @@
     <div
       class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
     >
-      <app-not-recommended />
-      <app-sheet class="mt-1">
+      <app-not-recommended class="mt-0 mb-2" />
+      <app-sheet sheet-class="px-4 sm:px-6 lg:px-14">
         <app-stepper
           :steps="steps"
           :description="stepDescription"
@@ -17,15 +17,7 @@
               :description="stepDescription[0]"
               :activeStep="activeStep"
             />
-            <div class="flex justify-end items-center gap-4 mt-4 xs:mt-7">
-              <!-- TODO: add icon, refresh mnemonic on press -->
-              <div
-                class="cursor-pointer text-primaryActive"
-                @click="updateMnemonic"
-              >
-                <arrow-path-icon class="inline w-5 h-5 mr-1" />
-                Update
-              </div>
+            <div class="flex justify-between items-center gap-4 mt-4 mb-1">
               <div>
                 <app-select
                   v-model:selected="length"
@@ -37,40 +29,40 @@
                   placeholder="Select length"
                 />
               </div>
+              <app-btn-text class="text-primary" @click="updateMnemonic">
+                <arrow-path-icon class="inline w-5 h-5 mr-1" />
+                Update
+              </app-btn-text>
             </div>
-            <app-text-field
-              v-model="mnemonic"
-              placeholder="Your recovery phrase"
-              class="mt-2 xs:mt-4 text-center"
-              :readonly="true"
-            />
             <div
-              class="flex items-center justify-between gap-4 mt-4 xs:mt-7 mb-7 w-full"
+              class="grow border border-1 border-grey-outline text-s-17 rounded-16 p-4 flex justify-center"
             >
-              <p class="font-medium text-s-14 xs:text-s-16 leading-p-130">
-                {{
-                  $t('access_wallet_recovery_phrase.do_you_have_an_extra_word')
-                }}
-              </p>
-              <app-toggle
-                v-model="hasExtraWord"
-                :label="extraWordToggleString"
-              />
-            </div>
-            <!-- Extra Word -->
-            <expand-transition>
-              <div v-if="hasExtraWord">
-                <app-input
-                  v-model="extraWord"
-                  :placeholder="
-                    $t('access_wallet_recovery_phrase.enter_extra_word')
-                  "
-                />
+              <div class="basis-1/2">
+                <div
+                  v-for="(phrase, index) in firstSet"
+                  :key="index"
+                  class="recovery-phrase__item"
+                >
+                  <span class="text-info text-s-12 pr-1">{{ index + 1 }}.</span>
+                  {{ phrase }}
+                </div>
               </div>
-            </expand-transition>
-            <div class="flex items-center justify-center">
+              <div class="basis-1/2">
+                <div
+                  v-for="(phrase, index) in secondSet"
+                  :key="index"
+                  class="recovery-phrase__item"
+                >
+                  <span class="text-info text-s-12 pr-1"
+                    >{{ index + firstSet.length + 1 }}.</span
+                  >
+                  {{ phrase }}
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center mt-6">
               <app-base-button
-                class="w-full xs:w-auto xs:min-w-[250px]"
+                class="w-full xs:w-auto xs:min-w-[150px]"
                 @click="nextStep"
               >
                 {{ $t('common.next') }}
@@ -85,47 +77,83 @@
             />
 
             <div class="pt-4">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div
+                class="grid grid-cols-1 gap-4 lg:gap-6 justify-items-stretch"
+              >
+                <!-- First Sample -->
+                <div v-if="generatedVerifySamples.length">
+                  <p class="text-s-14 mb-2 text-info">
+                    Word #{{ generatedVerifySamples[0].indexToVerify + 1 }}
+                  </p>
+                  <app-btn-group
+                    v-model:selected="sampleOneSelected"
+                    :btn-list="generatedVerifySamples[0].items"
+                    :size="isMobile ? 'small' : 'large'"
+                    has-full-width
+                  >
+                    <template #btn-content="{ data }">
+                      {{ data.label }}
+                    </template>
+                  </app-btn-group>
+                </div>
+                <!-- Second Sample -->
                 <div
-                  v-for="index in indexesToVerify"
-                  :key="index"
-                  class="flex flex-col"
+                  v-if="
+                    generatedVerifySamples.length && generatedVerifySamples[1]
+                  "
                 >
-                  <app-input
-                    v-model="verifyMnemonicObj[index]"
-                    :placeholder="`Word #${index + 1}`"
-                  />
+                  <p class="text-s-14 mb-2 text-info">
+                    Word #{{ generatedVerifySamples[1].indexToVerify + 1 }}
+                  </p>
+                  <app-btn-group
+                    v-model:selected="sampleTwoSelected"
+                    :btn-list="generatedVerifySamples[1].items"
+                    :size="isMobile ? 'small' : 'large'"
+                    has-full-width
+                  >
+                    <template #btn-content="{ data }">
+                      {{ data.label }}
+                    </template>
+                  </app-btn-group>
+                </div>
+                <!-- Third Sample -->
+                <div
+                  v-if="
+                    generatedVerifySamples.length && generatedVerifySamples[2]
+                  "
+                >
+                  <p class="text-s-14 mb-2 text-info">
+                    Word #{{ generatedVerifySamples[2].indexToVerify + 1 }}
+                  </p>
+                  <app-btn-group
+                    v-model:selected="sampleThreeSelected"
+                    :btn-list="generatedVerifySamples[2].items"
+                    :size="isMobile ? 'small' : 'large'"
+                    has-full-width
+                  >
+                    <template #btn-content="{ data }">
+                      {{ data.label }}
+                    </template>
+                  </app-btn-group>
                 </div>
               </div>
-              <div v-if="verifyMnemonicError" class="text-error mb-5">
-                Could not verify mnemonic, please check the entered words.
-              </div>
-              <div v-if="extraWord !== ''">
-                <app-input
-                  v-model="verifyExtraWord"
-                  :placeholder="
-                    $t('access_wallet_recovery_phrase.enter_extra_word')
-                  "
-                />
-              </div>
-              <div v-if="verifyExtraWordError" class="text-error">
-                Could not verify extra word.
-              </div>
-              <div class="flex flex-col items-center justify-center mt-2">
+              <div
+                class="flex flex-col items-center justify-center mt-6 lg:mt-10"
+              >
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[250px]"
+                  class="w-full xs:w-auto xs:min-w-[150px]"
                   :disabled="!verifyMnemonic"
                   @click="activeStep = 2"
                 >
                   {{ $t('common.next') }}
                 </app-base-button>
-                <app-base-button
-                  :is-outline="true"
-                  class="w-full xs:w-auto xs:min-w-[250px] mt-4"
+                <app-btn-text
+                  class="w-full xs:w-auto xs:min-w-[150px] text-primary mt-2"
+                  is-large
                   @click="activeStep = 0"
                 >
                   {{ $t('common.back') }}
-                </app-base-button>
+                </app-btn-text>
               </div>
             </div>
           </div>
@@ -138,21 +166,22 @@
 
             <div class="pt-4">
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
-              <div class="flex flex-col items-center justify-center mt-2">
+              <div class="flex flex-col items-center justify-center mt-8">
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[250px]"
-                  :disabled="!verifyMnemonic"
+                  class="w-full xs:w-auto xs:min-w-[50px]"
                   @click="closeCreateOpenAccess()"
                 >
-                  Access Wallet
+                  Connect wallet
                 </app-base-button>
-                <app-base-button
+                <app-btn-text
                   :is-outline="true"
-                  class="w-full xs:w-auto xs:min-w-[250px] mt-4"
+                  class="w-full xs:w-auto xs:min-w-[150px] mt-4"
+                  is-large
                   @click="activeStep = 0"
                 >
                   Create another wallet
-                </app-base-button>
+                  <arrow-long-right-icon class="inline w-5 h-5 ml-1" />
+                </app-btn-text>
               </div>
             </div>
           </div>
@@ -167,53 +196,47 @@ import { computed, onMounted, ref, watch } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppInput from '@/components/AppInput.vue'
-import AppToggle from '@/components/AppToggle.vue'
-import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
-import AppTextField from '@/components/AppTextField.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import { useI18n } from 'vue-i18n'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
 import { ArrowPathIcon } from '@heroicons/vue/24/outline'
-import BigNumber from 'bignumber.js'
-const { t } = useI18n()
-
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
 const { closeCreateDialog } = useCreateStore()
-const { openAccessDialog } = useAccessStore()
-
+const { openAccessDialog, setCurrentView } = useAccessStore()
+const { isMobile } = useAppBreakpoints()
 /**------------------------
  * Steps
  -------------------------*/
 const activeStep = ref(0)
-const steps = ['Write down the words', 'Verification', 'Well done']
+const steps = ['create', 'verify', ' done']
 const stepDescription: StepDescription[] = [
   {
-    title: 'Write down these words',
+    title: 'Your phrase',
+    description:
+      'Write your recovery phrase on paper and keep it somewhere secure. Do not email it or take screenshots.',
   },
   {
-    title: 'Verification',
+    title: "Let's double check it",
     description: 'Please select correct words based on their numbers.',
   },
   {
     title: 'Well done',
     description:
-      'You are now ready to take advantage of all that Ethereum has to offer! Access with mnemonic phrase should only be used in an offline setting',
+      'You are now ready to take advantage of all that Ethereum has to offer! Access with mnemonic phrase should only be used in an offline setting.',
   },
 ]
 
 const backStep = () => {
   activeStep.value = 0
   updateMnemonic()
-  extraWord.value = ''
-  hasExtraWord.value = false
-  verifyExtraWord.value = ''
-  verifyMnemonicObj.value = {}
 }
 
 const nextStep = () => {
@@ -223,70 +246,104 @@ const nextStep = () => {
 const closeCreateOpenAccess = () => {
   closeCreateDialog()
   openAccessDialog()
+  setCurrentView('mnemonic')
+}
+/**------------------------
+ * Verify Indexes
+ -------------------------*/
+
+const shuffleArray = (array: number[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+  return array
 }
 
-const indexesToVerify = computed(() => {
-  const indexes: number[] = []
-  while (indexes.length < BigNumber(length.value.value).toNumber() / 2) {
-    const randIndex = Math.floor(
-      Math.random() * mnemonic.value.split(' ').length,
+const sampleArray = (array: number[]) => {
+  const shuffled = shuffleArray([...array])
+  return shuffled.slice(0, 3)
+}
+
+interface VerifyItem {
+  originalIndex: number
+  label: string
+}
+interface VerifySample {
+  indexToVerify: number
+  items: VerifyItem[]
+}
+const generatedVerifySamples = computed<VerifySample[]>(() => {
+  const samples: VerifySample[] = []
+  if (!mnemonic.value || activeStep.value === 0) return samples
+  const usedIndexes = new Set<number>()
+  const totalWords = mnemonic.value.split(' ')
+  const shuffledIndexes = shuffleArray(
+    Array.from({ length: totalWords.length }, (_, i) => i),
+  )
+
+  for (let i = 0; i < 3; i++) {
+    const availableIndexes = shuffledIndexes.filter(
+      idx => !usedIndexes.has(idx),
     )
-    if (!indexes.includes(randIndex)) {
-      indexes.push(randIndex)
-    }
+    if (availableIndexes.length < 3) break
+
+    const itemsIndexes = sampleArray(availableIndexes).slice(0, 3)
+    itemsIndexes.forEach(idx => usedIndexes.add(idx))
+    const indexToVerify = itemsIndexes[0]
+    const items = shuffleArray(itemsIndexes).map(idx => ({
+      originalIndex: idx,
+      label: totalWords[idx],
+    }))
+
+    samples.push({
+      indexToVerify,
+      items: items,
+    })
   }
-  return indexes.sort((a, b) => a - b)
+
+  return samples
 })
 
 /**------------------------
- * Extra Word
+ * Selected Options
  -------------------------*/
+const sampleOneSelected = ref<VerifyItem | null>(null)
+const sampleTwoSelected = ref<VerifyItem | null>(null)
+const sampleThreeSelected = ref<VerifyItem | null>(null)
 
-const hasExtraWord = ref(false)
-const verifyExtraWordError = computed(() => {
-  if (verifyExtraWord.value === '') {
-    return false
+const verifyMnemonic = computed(() => {
+  let isValid = false
+  if (
+    sampleOneSelected.value &&
+    sampleTwoSelected.value &&
+    sampleThreeSelected.value
+  ) {
+    isValid =
+      sampleOneSelected.value.originalIndex ===
+        generatedVerifySamples.value[0].indexToVerify &&
+      sampleTwoSelected.value.originalIndex ===
+        generatedVerifySamples.value[1].indexToVerify &&
+      sampleThreeSelected.value.originalIndex ===
+        generatedVerifySamples.value[2].indexToVerify
   }
-  return verifyExtraWord.value === extraWord.value
-})
-const verifyExtraWord = ref('')
-const extraWordToggleString = computed(() =>
-  hasExtraWord.value ? t('common.yes') : t('common.no'),
-)
-const extraWord = ref('')
 
+  return isValid
+})
 /**------------------------
  * Mnemonic phrase
  -------------------------*/
 
 const mnemonic = ref('')
 const length = ref({ label: '12 words', value: '12' })
-const verifyMnemonicObj = ref<Record<number, string>>({})
-const verifyMnemonicError = computed(() => {
-  if (Object.keys(verifyMnemonicObj.value).length === 0) {
-    return false
-  }
-  let error = false
-  indexesToVerify.value.forEach(index => {
-    if (mnemonic.value.split(' ')[index] !== verifyMnemonicObj.value[index]) {
-      error = true
-    }
-  })
-  return error
+
+const firstSet = computed(() => {
+  const copy = mnemonic.value.split(' ')
+  return copy.splice(0, copy.length / 2)
 })
-const verifyMnemonic = computed(() => {
-  let isValid = true
-  indexesToVerify.value.forEach(index => {
-    if (verifyMnemonicObj.value[index] !== mnemonic.value.split(' ')[index]) {
-      isValid = false
-    }
-  })
-  if (hasExtraWord.value && extraWord.value !== '') {
-    if (verifyExtraWord.value !== extraWord.value) {
-      isValid = false
-    }
-  }
-  return isValid
+const secondSet = computed(() => {
+  const copy = mnemonic.value.split(' ')
+  return copy.splice(copy.length / 2)
 })
 
 watch(length, () => {

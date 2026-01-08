@@ -1,6 +1,6 @@
 <template>
-  <div class="pt-3 xs:pt-10">
-    <h2 class="text-info font-semibold uppercase text-sm">
+  <div class="pt-3 sm:pt-5 lg:pt-7">
+    <h2 class="text-info font-semibold uppercase text-sm hidden sm:block">
       Step {{ activeStep + 1 }}
     </h2>
     <p class="!font-bold text6">{{ description.title }}</p>

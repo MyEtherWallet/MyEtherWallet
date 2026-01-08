@@ -1,12 +1,12 @@
 <template>
   <app-dialog
     v-model:is-open="isOpenCreateDialog"
-    class="max-w-[450px] lg:!max-w-[1024px] w-full max-h-[90vh] lg:h-[678px]"
+    class="max-w-[450px] lg:!max-w-[1024px] w-full max-h-[95vh] lg:h-[800px]"
     bg="bg-appBackground"
     @close-dialog="closeCreate()"
   >
     <template #title>
-      <div class="flex w-full flex-col sm:flex-row">
+      <div class="flex w-full flex-col md:flex-row">
         <div class="ml-4 w-8">
           <app-btn-icon
             v-if="currentView !== 'default'"
@@ -15,7 +15,7 @@
             class="!w-10 !h-10 mr-auto mt-4"
             @click="createStore.setCurrentView('default')"
           >
-            <arrow-long-right-icon class="w-5 h-5 rotate-180" />
+            <arrow-left-icon class="w-5 h-5" />
           </app-btn-icon>
         </div>
         <div
@@ -24,11 +24,9 @@
               ? 'ml-5 mt-4  sm:ml-0'
               : 'sm:justify-center pl-4 xs:pl-6 sm:items-center'
           "
-          class="flex flex-col justify-start w-full sm:mt-6 sm:mb-2"
+          class="flex flex-col justify-start w-full md:mt-4 lg:mt-6 lg:mb-2"
         >
-          <h1
-            class="font-bold text-s-28 sm:text-s-32 mb-3 sm:mb-1 leading-p-120"
-          >
+          <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
             {{ getTitle }}
           </h1>
           <p
@@ -48,7 +46,7 @@
       </div>
     </template>
     <template #content>
-      <div class="px-4 xs:px-6 !overflow-y-scroll pb-6">
+      <div class="px-2 xs:px-6 !overflow-y-scroll pb-6">
         <!-- Default View -->
         <div
           v-if="currentView === 'default'"
@@ -71,15 +69,15 @@
                 </div>
               </div>
             </div>
-            <div class="flex flex-wrap lg:flex-nowrap justify-start lg:gap-3">
+            <div class="flex flex-wrap lg:flex-nowrap items-stretch lg:gap-0">
               <div
-                class="order-2 lg:order-1 sm:-mt-2 lg:mt-0 sm:-ml-4 bottomShadowIMGMask flex"
+                class="order-2 lg:order-1 sm:-mt-2 sm:-ml-4 bottomShadowIMGMask flex self-end overflow-visible"
               >
                 <img
                   :src="mewWalletScreen"
                   width="463"
                   height="638"
-                  class="rounded-xl object-contain object-left-top sm:-mt-2 lg:-mt-3 hidden lg:block"
+                  class="rounded-xl object-contain object-left-top sm:-mt-2 lg:mt-0 hidden lg:block"
                 />
                 <img
                   :src="mewWalletScreenSm"
@@ -89,7 +87,7 @@
                 />
               </div>
               <div
-                class="order-1 lg:order-2 flex grow lg:grow-0 items-center flex-col xl:w-[184px] bg-white p-3 sm:p-6 rounded-2xl"
+                class="order-1 lg:order-2 flex grow lg:grow-0 items-center justify-center flex-col xl:w-[184px] bg-white p-3 sm:px-6 rounded-2xl"
               >
                 <p class="text-info text-sm">Scan to download</p>
                 <qr-code-vue
@@ -111,7 +109,7 @@
                     <img
                       :src="IMGGooglePlay"
                       contain
-                      alt="Google Play Store"
+                      alt="Google Play Store download"
                       class="h-10"
                     />
                   </a>
@@ -122,7 +120,7 @@
                   >
                     <img
                       :src="IMGIOSstore"
-                      alt="Apple App Store"
+                      alt="Apple App Store download"
                       class="h-10"
                     />
                   </a>
@@ -184,7 +182,7 @@
             class="basis-full text-s-17 font-medium leading-6 col-span-1 lg:col-span-2"
           >
             <app-btn-text
-              class="flex justify-start items-center"
+              class="flex justify-start items-center mb-3"
               @click="openOtherMethods"
             >
               Other methods
@@ -195,67 +193,70 @@
               <chevron-up-icon v-else class="w-5 h-5 ml-2" />
             </app-btn-text>
             <expand-transition>
-              <div
-                v-show="isOtherMethodsOpen"
-                class="grid grid-cols-1 lg:grid-cols-2 gap-10 rounded-3xl bg-[#ededee] p-4 sm:p-6 mt-3"
-              >
-                <div>
-                  <img
-                    :src="hardware"
-                    alt="hardware wallet image"
-                    class="rounded-16 max-w-[260px]"
-                    width="608"
-                    height="384"
-                  />
-                  <button
-                    class="border border-black text-s-17 rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
-                    @click="setView('buy')"
-                  >
-                    <div class="flex items-center">
-                      <p>Buy a hardware wallet</p>
-                      <arrow-long-right-icon class="w-5 h-5 ml-1" />
+              <div v-show="isOtherMethodsOpen">
+                <div
+                  class="grid grid-cols-1 lg:grid-cols-2 gap-6 rounded-3xl bg-[#ededee] p-4 sm:p-6"
+                >
+                  <div>
+                    <img
+                      :src="hardware"
+                      alt="hardware wallet image"
+                      class="rounded-16 max-w-[260px] object-contain"
+                      width="608"
+                      height="384"
+                    />
+                    <button
+                      class="border border-black text-s-17 rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
+                      @click="setView('buy')"
+                    >
+                      <div class="flex items-center">
+                        <p>Buy a hardware wallet</p>
+                        <arrow-long-right-icon class="w-5 h-5 ml-1" />
+                      </div>
+                    </button>
+                    <div class="flex items-center mb-1">
+                      <check-circle-icon class="w-5 h-5 mr-1 text-blue" />
+                      <p class="text-s-16">The highest standard of security.</p>
                     </div>
-                  </button>
-                  <div class="flex items-center mb-1">
-                    <check-circle-icon class="w-5 h-5 mr-1 text-blue" />
-                    <p class="text-s-16">The highest standard of security.</p>
-                  </div>
-                  <p class="text-info text-s-14">
-                    You can order a hardware wallet online, and use it with MEW.
-                    If you need a wallet while you are waiting for your order to
-                    arrive, consider getting our mobile app.
-                  </p>
-                </div>
-                <div>
-                  <img
-                    :src="software"
-                    alt="software wallet image"
-                    class="rounded-16 max-w-[260px]"
-                    width="608"
-                    height="384"
-                  />
-                  <button
-                    class="border border-black text-s-17 rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
-                    @click="setView('mnemonic')"
-                  >
-                    <div class="flex items-center">
-                      <p>Create a software wallet</p>
-                      <arrow-long-right-icon class="w-5 h-5 ml-1" />
-                    </div>
-                  </button>
-                  <div class="flex items-center mb-1">
-                    <exclamation-circle-icon class="w-5 h-5 mr-1 text-error" />
-                    <p class="text-s-16">
-                      Not a secure way to create a wallet.
+                    <p class="text-info text-s-14">
+                      You can order a hardware wallet online, and use it with
+                      MEW. If you need a wallet while you are waiting for your
+                      order to arrive, consider getting our mobile app.
                     </p>
                   </div>
-                  <p class="text-info text-s-14">
-                    Software methods like Keystore File and Mnemonic Phrase
-                    should only be used in offline settings by experienced
-                    users.
-                  </p>
+                  <div>
+                    <img
+                      :src="software"
+                      alt="software wallet image"
+                      class="rounded-16 max-w-[260px]"
+                      width="608"
+                      height="384"
+                    />
+                    <button
+                      class="border border-black text-s-17 rounded-full px-4 py-[6px] border-2 font-medium my-6 hoverOpacity inline-block"
+                      @click="setView('mnemonic')"
+                    >
+                      <div class="flex items-center">
+                        <p>Create a software wallet</p>
+                        <arrow-long-right-icon class="w-5 h-5 ml-1" />
+                      </div>
+                    </button>
+                    <div class="flex items-center mb-1">
+                      <exclamation-circle-icon
+                        class="w-5 h-5 mr-1 text-error"
+                      />
+                      <p class="text-s-16">
+                        Not a secure way to create a wallet.
+                      </p>
+                    </div>
+                    <p class="text-info text-s-14">
+                      Software methods like Keystore File and Mnemonic Phrase
+                      should only be used in offline settings by experienced
+                      users.
+                    </p>
+                  </div>
+                  <div ref="bottomElement"></div>
                 </div>
-                <div ref="bottomElement"></div>
               </div>
             </expand-transition>
           </div>
@@ -304,6 +305,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import {
+  ArrowLeftIcon,
   ArrowLongRightIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -333,6 +335,7 @@ import ledgerWallet from '@/assets/images/create/buy/buy-ledger.png'
 import trezorIcon from '@/assets/images/create/buy/trezor-logo.svg'
 import trezorWallet from '@/assets/images/create/buy/buy-trezor.png'
 import ModuleCreateMnemonic from './ModuleCreateMnemonic.vue'
+
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
