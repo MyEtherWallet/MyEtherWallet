@@ -4,7 +4,7 @@
       v-if="isWalletConnected"
       v-model:is-open="openDialog"
       :title="isWatchOnly ? $t('watch_only_wallet') : $t('connected_wallet')"
-      class="xs:max-w-[428px] sm:mx-auto"
+      class="xs:max-w-[428px] sm:mx-auto no-scrollbar"
     >
       <template #content>
         <div class="px-5 xs:px-6 pt-2 pb-5">
