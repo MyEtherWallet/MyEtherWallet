@@ -2,75 +2,81 @@
   <app-dialog
     v-if="isWalletConnected && isLoadedChainsData"
     v-model:is-open="openDialog"
-    class="xs:max-w-[400px] sm:mx-auto !min-h-[400px]"
+    class="xs:max-w-[420px] sm:mx-auto !min-h-[400px]"
     z-index-overlay="z-[200]"
     z-index-container="z-[201]"
   >
     <template #title>
-      <div>
+      <div class="px-3 mt-3">
         <app-token-logo
           v-if="selectedChain?.icon"
           :url="selectedChain?.icon"
           :symbol="selectedChain.currencyName"
-          class="mx-6 mt-3"
+          width="w-12"
+          height="h-12"
         ></app-token-logo>
       </div>
     </template>
     <template #content>
-      <div v-if="walletAddress" class="px-7 pb-5">
-        <h1 class="text-s-28 font-bold text-left leading-p-130">
+      <div v-if="walletAddress" class="px-8 pb-8 flex flex-col gap-2">
+        <h1 class="text-s-28 font-bold text-left leading-tight">
           {{
             $t('common.deposit_title', {
               chain: selectedChain?.nameLong || 'Ethereum',
             })
           }}
         </h1>
-        <p class="text-s-15 text-p-130 my-1">
+        <p class="text-s-15 text-grey-60 leading-relaxed max-w-[320px]">
           {{
             $t('common.deposit_description', {
               chain: selectedChain?.nameLong || 'Ethereum',
             })
           }}
         </p>
-        <div class="flex items-center justify-center my-5 sm:my-9">
+        <div class="flex items-center justify-center my-6">
           <div
-            class="rounded-16 p-3 shadow-button shadow-button-elevated h-[174px] w-[174px] flex items-center justify-center"
+            class="rounded-30 p-8 shadow-button-elevated bg-white flex items-center justify-center"
           >
-            <div v-show="!isLoadingQRCode" ref="qrCode"></div>
+            <div
+              v-show="!isLoadingQRCode"
+              ref="qrCode"
+              class="qr-code-container"
+            ></div>
             <!-- Loading QR Placeholder -->
             <div
               v-show="isLoadingQRCode"
               class="h-[150px] w-[150px] animate-pulse bg-grey-10 rounded-xl"
             ></div>
           </div>
-          <!-- QR Code -->
         </div>
-        <div class="flex items-center mb-3">
+        <div class="flex items-center gap-4 mt-2">
           <app-blockie
             :address="walletAddress"
-            :size="9"
+            :size="12"
             class="flex-none rounded-full"
           />
           <div
-            class="ml-4 mr-2 font-medium text-wrap break-all max-w-[300px] tracking-sp-06"
+            class="grow font-medium text-s-17 text-black break-all leading-tight tracking-sp-06"
           >
             {{ walletAddress }}
           </div>
-          <!-- Copy -->
-          <app-btn-copy
-            :copy-value="walletAddress"
-            class="!min-w-8 h-8 text-primary"
-          >
-          </app-btn-copy>
-          <!-- Block Explorer Link -->
-          <a
-            :href="getExplorerLink"
-            :aria-label="$t('view_in_block_explorer')"
-            target="_blank"
-            class="rounded-full !cursor-pointer min-w-8 h-8 flex items-center justify-center hoverNoBG"
-          >
-            <ArrowTopRightOnSquareIcon class="w-5 h-5 text-primary" />
-          </a>
+          <div class="flex items-center gap-1">
+            <!-- Copy -->
+            <app-btn-copy
+              :copy-value="walletAddress"
+              class="!min-w-10 h-10 text-primary"
+            >
+            </app-btn-copy>
+            <!-- Block Explorer Link -->
+            <a
+              :href="getExplorerLink"
+              :aria-label="$t('view_in_block_explorer')"
+              target="_blank"
+              class="rounded-full !cursor-pointer w-10 h-10 flex items-center justify-center hover:bg-primary-light transition-colors"
+            >
+              <ArrowTopRightOnSquareIcon class="w-6 h-6 text-primary" />
+            </a>
+          </div>
         </div>
       </div>
     </template>
@@ -109,7 +115,11 @@ const { qrCode, isLoadingQRCode, setQRCode } = useQR()
 watch(
   () => [walletAddress.value, openDialog.value, qrCode.value],
   () => {
-    if (openDialog.value) setQRCode(walletAddress.value || undefined)
+    if (openDialog.value && walletAddress.value && qrCode.value) {
+      if (qrCode.value.innerHTML === '') {
+        setQRCode(walletAddress.value, 200, 200)
+      }
+    }
   },
 )
 

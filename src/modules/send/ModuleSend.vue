@@ -96,7 +96,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { toBase } from '@/utils/unit'
+import { toBase, fromBase } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useAccessStore } from '@/stores/accessStore'
@@ -218,14 +218,16 @@ const hasGasFees = computed(() => {
 })
 const networkFeeUSD = computed(() => {
   if (!hasGasFees.value) return '0'
-  return gasFees.value?.fees[selectedFee.value]?.fiatValue || '0'
+  const _fee = gasFees.value?.fees[selectedFee.value]
+  return _fee?.fiatValue || _fee?.fiatFeeTotal || '0'
 })
 const networkFeeCrypto = computed(() => {
   if (!hasGasFees.value) return '0'
-  return fromWei(
-    gasFees.value?.fees[selectedFee.value]?.nativeValue || 0,
-    'ether',
-  )
+  const _fee = gasFees.value?.fees[selectedFee.value]
+  const nativeValue = _fee?.nativeValue || _fee?.nativeFeeTotal || '0'
+  return isEvmChain.value
+    ? fromWei(nativeValue, 'ether')
+    : fromBase(nativeValue, 8)
 })
 
 const validSend = computed(() => {
