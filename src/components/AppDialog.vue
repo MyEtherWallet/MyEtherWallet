@@ -66,7 +66,7 @@
               </slot>
               <app-btn-icon-close
                 v-if="!persistent"
-                @click="setIsOpen(false)"
+                @close="setIsOpen(false)"
                 class="mt-4 mr-4 min-w-[32px]"
               />
             </div>

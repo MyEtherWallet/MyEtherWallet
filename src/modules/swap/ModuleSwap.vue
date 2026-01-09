@@ -5,21 +5,19 @@
         'static w-full flex flex-col items-center justify-items-stretch gap-1',
       ]"
     >
-      <div class="mb-3">
-        <p class="font-bold text-s-28 ml-5 mb-4">
-          {{ walletPanel === 'swap' ? 'Swap' : 'Bridge' }}
-        </p>
-        <div class="relative">
-          <div class="absolute -top-8 right-4">
-            <app-btn-text class="text-primary ml-auto" @click="clearValues"
-              >Clear all</app-btn-text
-            >
-          </div>
-          <!-- From Section -->
-          <div
-            class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
+      <div class="w-full max-w-[500px]">
+        <div class="flex items-end justify-between mb-4 px-4">
+          <p class="font-bold text-s-28">
+            {{ walletPanel === 'swap' ? 'Swap' : 'Bridge' }}
+          </p>
+          <app-btn-text class="text-primary text-s-15 pb-1" @click="clearValues"
+            >Clear all</app-btn-text
           >
-            <p class="text-s-12 mb-[2px] font-bold">{{ t('common.from') }}</p>
+        </div>
+        <div class="relative">
+          <!-- From Section -->
+          <div class="bg-mewBg rounded-20 p-5 mx-auto">
+            <p class="text-s-12 mb-2 font-bold">{{ t('common.from') }}</p>
             <select-chain-for-app
               :filter-chain-type="true"
               :can-store="false"
@@ -46,20 +44,18 @@
             />
           </div>
           <div
-            class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg right-[45%]"
+            class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg left-0 right-0 z-10"
             :class="{
-              'top-[calc(50%-67px)]': isCrossChain,
-              'top-[calc(50%-18px)]': !isCrossChain,
+              'top-[calc(50%-100px)]': isCrossChain,
+              'top-[calc(50%-53px)]': !isCrossChain,
             }"
           >
-            <arrows-up-down-icon class="w-5 h-5" />
+            <arrows-up-down-icon class="w-5 h-5 text-primary" />
           </div>
           <div class="pt-2"></div>
           <!-- To Section -->
-          <div
-            class="bg-mewBg rounded-[20px] !px-4 pt-2 pb-4 max-w-[478px] mx-auto"
-          >
-            <p class="text-s-12 mb-2 ml-2 font-bold">You are buying</p>
+          <div class="bg-mewBg rounded-20 p-5 mx-auto mt-2">
+            <p class="text-s-12 mb-2 font-bold">You are buying</p>
             <select-chain-for-app
               :can-store="false"
               :passed-chains="toChains"
@@ -92,7 +88,7 @@
       </div>
 
       <app-base-button
-        class="w-[70%]"
+        class="w-full max-w-[340px]"
         v-if="isWalletConnected && !isWatchOnly"
         :disabled="
           (swapLoaded && !supportedNetwork) ||
@@ -108,7 +104,7 @@
       >
         {{ t('common.swap') }}</app-base-button
       >
-      <div class="mx-auto w-[70%]" v-else>
+      <div class="mx-auto w-full max-w-[340px]" v-else>
         <app-base-button
           class="w-full"
           :disabled="swapLoaded && !supportedNetwork"

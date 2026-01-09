@@ -235,8 +235,10 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const hasBalances = computed(() => {
     return (
-      allTokens.value.length > 1 &&
-      BigNumber(safeMainTokenBalance.value?.balanceWei || 0).isGreaterThan(0)
+      allTokens.value.length > 0 &&
+      allTokens.value.some(token =>
+        BigNumber(token.balanceWei || 0).isGreaterThan(0),
+      )
     )
   })
 

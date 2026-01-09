@@ -3,51 +3,73 @@
   <app-dialog
     v-if="isLoadedChains"
     v-model:is-open="openDialog"
-    title="Select Chain"
-    class="xs:max-w-[428px] sm:mx-auto"
+    class="w-full sm:w-[460px] sm:mx-auto"
     z-index-overlay="z-[200]"
     z-index-container="z-[201]"
     has-content-gutter
+    persistent
   >
+    <template #title>
+      <div
+        class="relative w-full pt-10 pb-0 flex justify-center bg-white z-[21]"
+      >
+        <h1 class="text-s-28 font-bold text-black text-center" id="dialogTitle">
+          Select Chain
+        </h1>
+        <app-btn-icon-close
+          @close="setOpenDialog(false)"
+          class="absolute top-4 right-0"
+        />
+      </div>
+    </template>
     <template #content>
-      <div class="max-h-[70vh] sm:max-h-[500px] pb-6">
-        <!-- Seacrh -->
-        <div class="sticky top-0 bg-white z-10 pt-2">
-          <div class="mb-1">
+      <div class="max-h-[70vh] sm:max-h-[500px] mb-6">
+        <!-- Search -->
+        <div class="sticky -top-2 bg-white z-20 pt-4 pb-1">
+          <div class="flex items-center mb-4 bg-[#EFF4FF] rounded-full p-1">
             <app-search-input
               v-model="searchInput"
               class="grow"
               placeholder="Search by Name"
+              bg-class="bg-transparent"
             />
           </div>
-          <hr class="h-px bg-grey-outline border-0 w-full" />
+          <div class="h-px bg-grey-outline w-full mb-4"></div>
         </div>
-        <!-- Seacrh Result-->
-        <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
+        <!-- Search Result-->
+        <div v-if="searchResults.length" class="flex flex-col gap-1 px-1">
           <button
             v-for="chain in searchResults"
             :key="chain.name"
-            class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-12 box-border"
-            :class="{ 'bg-grey-5': chain.name === selectedChain?.name }"
+            class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 box-border transition-colors animate-fade-in"
+            :class="[
+              chain.name === selectedChain?.name
+                ? 'bg-[#EFF4FF]'
+                : 'bg-transparent hover:bg-mewBg',
+            ]"
             @click="setSelectedChain(chain)"
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <img
-                  v-if="chain.icon"
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden shadow-token"
-                  :src="chain.icon"
-                  alt="token icon"
-                />
-                <div
-                  v-else
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden bg-surface shadow-token"
-                ></div>
-                <span>{{ chain.nameLong }}</span>
+                <div class="relative mr-4 overflow-visible">
+                  <img
+                    v-if="chain.icon"
+                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                    :src="chain.icon"
+                    alt="token icon"
+                  />
+                  <div
+                    v-else
+                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                  ></div>
+                </div>
+                <span class="font-bold text-s-17 text-black">{{
+                  chain.nameLong
+                }}</span>
               </div>
               <check-icon
                 v-if="chain.name === selectedChain?.name"
-                class="w-6 h-6 text-primary"
+                class="w-6 h-6 text-[#2F80ED]"
               />
             </div>
           </button>
@@ -90,6 +112,7 @@ import { type Chain } from '@/mew_api/types'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { ALL_CHAINS } from './helpers'
 const prop = defineProps({
   filterChainType: {
