@@ -101,7 +101,7 @@ amplitude.init(__TMP_HASHED_VERSION__, {
 
 app.use(createPinia())
 app.use(router)
-app.use(i18n)
+app.use(i18n as any)
 app.directive('ripple', rippleDirective)
 /**
  * Usage:

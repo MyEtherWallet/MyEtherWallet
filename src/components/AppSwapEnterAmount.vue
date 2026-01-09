@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { defineProps, ref, computed, type PropType } from 'vue'
+import { ref, computed, type PropType } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'

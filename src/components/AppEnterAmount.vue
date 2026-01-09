@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { type TokenBalance } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
-import { defineProps, watch, ref, computed, type PropType } from 'vue'
+import { watch, ref, computed, type PropType } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'

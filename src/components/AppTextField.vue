@@ -46,7 +46,6 @@
 
 <script setup lang="ts">
 import { ref, nextTick, computed, watch } from 'vue'
-import { defineProps } from 'vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 /**
  * Text Field component

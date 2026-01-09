@@ -38,7 +38,6 @@ import { ref, nextTick } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
-import { defineProps } from 'vue'
 
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.

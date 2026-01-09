@@ -46,6 +46,7 @@ export default [
       'check-file': checkFile,
     },
     rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
       'check-file/filename-naming-convention': [
         'error',
         {
