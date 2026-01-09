@@ -17,6 +17,10 @@ export default async function useBalanceHandler(
     const btcBalances: TokenBalancesRaw['result'][0] = {
       ...BTCRawBalance,
       contract: MAIN_TOKEN_CONTRACT,
+      logo_url: BTCRawBalance.logoUrl || selectedChain.value?.icon,
+      market_cap: BTCRawBalance.marketCap,
+      price_change_percentage_24h: BTCRawBalance.priceChangePercentage24h,
+      sparkline_in_7d: BTCRawBalance.sparklineIn7d,
     }
     setter([btcBalances])
   }

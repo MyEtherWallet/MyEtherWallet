@@ -16,13 +16,11 @@
       class="flex flex-nowrap items-center"
     >
       <div
-        class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
+        class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
       >
         <img
-          class="w-7 h-7 rounded-full"
+          class="w-full h-full object-cover"
           :src="imageReplacer(selectedToken)"
-          width="28"
-          height="28"
           alt=""
         />
       </div>
@@ -116,11 +114,15 @@
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <img
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden"
-                  :src="imageReplacer(token)"
-                  alt="token icon"
-                />
+                <div
+                  class="mr-4 w-7 h-7 shrink-0 rounded-full overflow-hidden flex items-center justify-center"
+                >
+                  <img
+                    class="w-full h-full object-cover"
+                    :src="imageReplacer(token)"
+                    alt="token icon"
+                  />
+                </div>
                 <div class="text-left">
                   <h2>{{ token.name }}</h2>
                   <p class="text-info text-sm">

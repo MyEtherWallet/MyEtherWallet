@@ -229,13 +229,17 @@ const tokenData = computed(() => {
   if (fetchedTokenData.value) {
     return fetchedTokenData.value
   }
-  const isInStore = tokenInfo.value?.symbol === props.tokenId
+  const isInStore =
+    tokenInfo.value?.symbol === props.tokenId ||
+    tokenInfo.value?.coinId === props.tokenId
   const _tokenInfo = tokenInfo.value as TokenBalanceRaw & DisplayToken
   const parsedTokenInfo: {
     name: string
     symbol: string
+    coinId: string
+    contract: string
     iconUrl: string
-    currentPrice: string
+    currentPrice: string | number
     balance: string
     balanceWei: string
     decimals: string | number
@@ -260,6 +264,7 @@ const tokenData = computed(() => {
     }>
     supportedChains?: Array<{
       chainName: string
+      chainNameLong: string
       chainType: string
       contract: string
       iconUrl: string
@@ -269,8 +274,10 @@ const tokenData = computed(() => {
       ? _tokenInfo?.name || ''
       : `${props.tokenId} token not found`,
     symbol: isInStore ? _tokenInfo?.symbol || '' : 'N/A',
-    iconUrl: '',
-    currentPrice: 'N/A',
+    coinId: isInStore ? _tokenInfo?.coinId || props.tokenId : props.tokenId,
+    contract: isInStore ? _tokenInfo?.contract || '' : '',
+    iconUrl: isInStore ? _tokenInfo?.logo_url || '' : '',
+    currentPrice: isInStore ? _tokenInfo?.price || 0 : 0,
     balance: isInStore ? _tokenInfo?.balance || '0' : 'N/A',
     balanceWei: isInStore ? _tokenInfo?.balanceWei || '0' : 'N/A',
     decimals: isInStore ? _tokenInfo?.decimals || 18 : 'N/A',
@@ -302,6 +309,7 @@ const tokenData = computed(() => {
     parsedTokenInfo['supportedChains'] = [
       {
         chainName: selectedChain.value?.name || '',
+        chainNameLong: selectedChain.value?.name || '',
         chainType: selectedChain.value?.type || '',
         contract: _tokenInfo?.contract || '',
         iconUrl: selectedChain.value?.icon || '',

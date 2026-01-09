@@ -114,9 +114,9 @@ import { storeToRefs } from 'pinia'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { type GetWebTokenInfo } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
-import { fromBase } from '@/utils/unit'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BigNumber from 'bignumber.js'
+import { formatUnits } from 'viem'
 
 const props = defineProps({
   isLoading: {
@@ -184,18 +184,41 @@ const getBalanceForChain = (_chainName: string) => {
       const _okBalances = chainData.result.value.balances.filter(
         balance => balance.ok,
       )
-      const _rawBalance = _okBalances.filter(
+      const _rawBalance = _okBalances.find(
         balance =>
           balance.value.owner.toLowerCase() ===
           walletAddress.value?.toLowerCase(),
       )
-      if (_rawBalance && _rawBalance.length > 0 && _decimals) {
-        const _balance = fromBase(
-          BigInt(_rawBalance[0].value.value).toString(),
-          _decimals,
-        )
+      if (_rawBalance && _decimals) {
+        const _balance = formatUnits(BigInt(_rawBalance.value.value), _decimals)
         return formatFloatingPointValue(_balance).value
       }
+    }
+  }
+
+  // Fallback to walletStore if it's the current chain
+  if (_chainName === selectedChain.value?.name && isWalletConnected.value) {
+    const tokenInWallet = walletStore.allTokens.find(t => {
+      const matchCoinId =
+        t.coinId &&
+        props.tokenData?.coinId &&
+        t.coinId.toLowerCase() === props.tokenData.coinId.toLowerCase()
+      const matchSymbol =
+        t.symbol &&
+        props.tokenData?.symbol &&
+        t.symbol.toLowerCase() === props.tokenData.symbol.toLowerCase()
+      const matchContract =
+        t.contract &&
+        props.tokenData?.supportedChains?.some(
+          c =>
+            c.contract &&
+            c.contract.toLowerCase() === t.contract.toLowerCase() &&
+            c.chainName === _chainName,
+        )
+      return matchCoinId || matchSymbol || matchContract
+    })
+    if (tokenInWallet) {
+      return formatFloatingPointValue(tokenInWallet.balance).value
     }
   }
   return 'N/A'
