@@ -4,12 +4,13 @@
       class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
     >
       <div
-        class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[400px] order-3 order-2 sm:order-1 gap-1 border border-transparent focus-within:border-primary transition-colors"
+        class="flex grow justify-between items-center bg-grey-white rounded-full p-1 max-w-[400px] order-3 order-2 sm:order-1 gap-1 border border-grey-5 focus-within:border-primary transition-colors hover:border-grey-10"
       >
         <app-search-input
           v-model="searchInput"
           class="grow"
           bg-class="bg-transparent"
+          placeholder="Search"
         />
         <div class="h-6 w-px bg-grey-10 mx-1 hidden xs:block"></div>
         <app-select
@@ -24,10 +25,10 @@
               @click="toggleSelect"
             >
               <div class="flex items-center justify-between">
-                <span class="font-medium">{{
+                <span class="font-bold text-black">{{
                   selectedAllTokensFilter.label
                 }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1 text-info" />
+                <chevron-down-icon class="w-4 h-4 ml-1 text-grey-3" />
               </div>
             </button>
           </template>
@@ -37,18 +38,20 @@
       <div
         class="order-1 sm:order-2 mb-6 sm:mb-0 ml-2 sm:ml-0 flex flex-col items-end"
       >
-        <p class="font-bold text-info uppercase tracking-sp-06 text-s-11 mb-1">
+        <p
+          class="font-bold text-grey-3 uppercase tracking-sp-06 text-s-11 mb-1"
+        >
           Total Value
         </p>
         <p
           v-if="!isLoading"
-          class="text-s-24 font-bold rounded-12 leading-none"
+          class="text-s-24 font-bold rounded-12 leading-none text-black"
         >
           {{ totalValue }}
         </p>
         <div
           v-else
-          class="bg-grey-10 animate-pulse w-[100px] h-6 rounded-lg"
+          class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
         ></div>
       </div>
     </div>
@@ -59,10 +62,10 @@
         <!-- Header-->
         <thead class="bg-white sticky top-0 z-10">
           <tr
-            class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5"
+            class="text-left text-s-11 uppercase text-grey-3 tracking-sp-06 border-b border-grey-5 font-bold"
           >
             <!-- Watchlist -->
-            <th class="hidden xs:table-cell xs:w-10 pb-4"></th>
+            <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
             <!-- Name & Balance -->
             <th
               class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
@@ -75,15 +78,15 @@
                 }"
                 @click="setHeaderSort(SortValueString.NAME)"
               >
-                Token
-                <arrow-long-up-icon
+                TOKEN
+                <arrow-long-down-icon
                   class="w-3.5 h-3.5"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-down-icon
+                <arrow-long-up-icon
                   class="w-3.5 h-3.5"
                   v-if="
                     headerSort === SortValueString.NAME &&
@@ -103,15 +106,15 @@
                 }"
                 @click="setHeaderSort(SortValueString.PERCENT)"
               >
-                24h
-                <arrow-long-up-icon
+                24H
+                <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-down-icon
+                <arrow-long-up-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
@@ -131,15 +134,15 @@
                 }"
                 @click="setHeaderSort(SortValueString.MARKET_CAP)"
               >
-                Market Cap
-                <arrow-long-up-icon
+                MARKET CAP
+                <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-down-icon
+                <arrow-long-up-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
@@ -150,7 +153,7 @@
             </th>
             <!-- Value and Price -->
             <th
-              class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -159,15 +162,15 @@
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
-                Value
-                <arrow-long-up-icon
+                VALUE
+                <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'desc'
                   "
                 />
-                <arrow-long-down-icon
+                <arrow-long-up-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
@@ -177,11 +180,8 @@
               </div>
             </th>
             <!-- Actions -->
-            <th
-              class="lg:pl-1 lg:pr-3 pb-4 text-right w-8 sm:w-16 lg:w-auto"
-              :class="isOpenSideMenu ? 'xl:w-[160px] 2xl:w-auto' : ''"
-            >
-              <p class="hidden lg:block font-bold">Actions</p>
+            <th class="lg:pl-6 lg:pr-4 pb-4 text-right w-10 xs:w-[170px]">
+              <p class="hidden lg:block font-bold">ACTIONS</p>
             </th>
           </tr>
         </thead>
@@ -200,7 +200,7 @@
             @click="goToTokenPage(token)"
           >
             <!-- Watchlist -->
-            <td class="hidden xs:table-cell xs:pr-2 rounded-l-12">
+            <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
               <button
                 v-if="token.coinId"
                 @click.stop="setWatchlistToken(token.coinId)"
@@ -225,20 +225,20 @@
                 <div class="truncate">
                   <app-tooltip :text="token.name" v-if="token.name.length > 20">
                     <p
-                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px]"
+                      class="truncate font-bold text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ token.name }}
                     </p>
                   </app-tooltip>
                   <p
                     v-else
-                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px]"
+                    class="truncate font-bold text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                   >
                     {{ token.name }}
                   </p>
-                  <p class="text-info text-s-12">
+                  <p class="text-grey-3 text-s-12 mt-0.5">
                     {{ formatFloatingPointValue(token.balance).value }}
-                    <span class="uppercase">{{
+                    <span class="uppercase font-medium text-grey-1">{{
                       truncate(token.symbol, 7)
                     }}</span>
                   </p>
@@ -247,9 +247,9 @@
             </td>
             <!-- 24h % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
-              <div class="flex flex-col items-end justify-center py-2">
+              <div class="flex flex-col items-end justify-center py-2 pr-2">
                 <p
-                  class="text-s-13 font-medium mb-1"
+                  class="text-s-13 font-bold mb-1"
                   :class="[
                     token.price_change_percentage_24h
                       ? parsePercent(
@@ -271,16 +271,16 @@
                     token.sparkline_in_7d && token.sparkline_in_7d.length > 0
                   "
                   :points="token.sparkline_in_7d"
-                  :width="80"
-                  :height="30"
+                  :width="70"
+                  :height="24"
                   fill
                   :percent-change="token.price_change_percentage_24h"
                 />
               </div>
             </td>
-            <!-- MarketCap -->
+            <!-- Market Cap -->
             <td
-              class="hidden md:table-cell px-1 py-2 text-right font-medium text-s-14"
+              class="hidden md:table-cell px-1 py-1 text-right font-bold text-s-14 text-black"
             >
               {{
                 token.market_cap
@@ -289,18 +289,18 @@
               }}
             </td>
             <!-- Value -->
-            <td class="px-1 py-2 text-right">
-              <p class="font-medium text-s-15">
+            <td class="pl-1 pr-6 py-1 text-right">
+              <p class="font-bold text-s-15 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-info text-s-12">
+              <p class="text-grey-3 text-s-12 mt-0.5">
                 {{
                   token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
                 }}
               </p>
             </td>
             <!-- Actions -->
-            <td class="lg:pl-1 lg:pr-2 py-2 rounded-r-12 relative">
+            <td class="lg:pl-6 lg:pr-4 py-1 rounded-r-12 relative text-right">
               <div
                 class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
               >
@@ -378,13 +378,13 @@
                   size="small"
                   @click.stop="buyBtn()"
                   is-outline
-                  class="min-w-[70px] !rounded-full font-bold"
+                  class="min-w-[70px] !rounded-full font-bold !text-s-12 !py-2"
                   >Buy</app-base-button
                 >
                 <app-base-button
                   size="small"
                   @click.stop="swapBtn(token)"
-                  class="min-w-[70px] !rounded-full font-bold"
+                  class="min-w-[70px] !rounded-full font-bold !text-s-12 !py-2"
                   >Swap
                 </app-base-button>
               </div>

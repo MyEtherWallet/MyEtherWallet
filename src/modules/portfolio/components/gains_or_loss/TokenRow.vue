@@ -9,7 +9,7 @@
     class="flex"
   >
     <div
-      class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-14 px-3 transition-colors duration-200"
+      class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-3 transition-colors duration-200"
     >
       <div class="grid grid-cols-4 w-full items-center justify-between gap-2">
         <div class="col-span-2 flex items-center gap-3">

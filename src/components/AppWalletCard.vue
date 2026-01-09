@@ -1,16 +1,16 @@
 <template>
-  <div>
-    <div v-if="isWalletConnected && walletAddress" class="">
+  <div class="h-full">
+    <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-[205px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[205px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
       >
         <img
           ref="mewCard"
           :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
           alt="MEW Card"
-          width="670"
+          width="500"
           height="424"
-          class="rounded-16 drop-shadow absolute z-0 h-[205px] w-full"
+          class="rounded-16 drop-shadow absolute z-0 h-full w-full object-cover"
           @load="animateMewCard"
         />
         <!-- wallet address, wallet menu, link to explorer-->
