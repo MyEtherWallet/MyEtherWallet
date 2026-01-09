@@ -1,4 +1,4 @@
-import abi from 'web3-eth-abi'
+import Eth from 'web3-eth'
 import { type EvmTransactionAction } from '@/mew_api/types'
 
 const ACTIONS: Record<string, EvmTransactionAction> = {
@@ -16,9 +16,12 @@ const signatures = {
     to?: string
     value?: string | number
   }): EvmTransactionAction => {
-    const params = abi.decodeParameters(['address', 'uint256'], data.slice(10))
+    const params = new Eth().abi.decodeParameters(
+      ['address', 'uint256'],
+      data.slice(10),
+    )
 
-    const value = BigInt(params[1] as bigint)
+    const value = BigInt(params[1])
     if (value <= 0n) return ACTIONS.approval
     return ACTIONS.approval
   },
