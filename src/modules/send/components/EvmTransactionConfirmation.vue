@@ -239,7 +239,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import type { TokenBalanceRaw } from '@/mew_api/types'

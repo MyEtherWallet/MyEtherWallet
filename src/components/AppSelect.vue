@@ -94,7 +94,7 @@
  *
  */
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'

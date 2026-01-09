@@ -153,8 +153,8 @@ export default {
       this.currencyCopy = network
         ? network.assets
         : newVal
-        ? newVal.assets
-        : [];
+          ? newVal.assets
+          : [];
       const mainToken = this.currencyCopy.find(
         token => token.contract_address === MAIN_TOKEN_ADDRESS
       );

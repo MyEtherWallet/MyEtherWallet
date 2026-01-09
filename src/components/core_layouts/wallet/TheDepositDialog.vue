@@ -87,7 +87,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
-import { defineModel, watch, computed } from 'vue'
+import { watch, computed } from 'vue'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)

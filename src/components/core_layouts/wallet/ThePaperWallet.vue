@@ -118,7 +118,7 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
-import { defineModel, watch, nextTick } from 'vue'
+import { watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
 import {

@@ -19,7 +19,7 @@ export const useFetchMewApi = (
   const url = ref('')
   const delay = ref(1000)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   type ExecuteFunction = (throwOnFailed?: boolean) => Promise<any>
   const execute = ref<ExecuteFunction | null>(null)
 

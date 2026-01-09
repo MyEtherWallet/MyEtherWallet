@@ -263,7 +263,7 @@ const unlockWallet = async () => {
     await hwWalletInstance!
       .isConnected({
         wallet: selectedHwWalletType.value as HWwalletType,
-        networkName: networkName,
+        networkName: networkName as any,
       })
       .then(() => {
         return new Promise(r => setTimeout(r, 1000))
@@ -272,7 +272,7 @@ const unlockWallet = async () => {
   activeStep.value = 1
   paths.value = (await hwWalletInstance!.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: networkName,
+    networkName: networkName as any,
   })) as PathType[]
 
   // if path is empty, set a path
@@ -315,7 +315,7 @@ const loadList = async (page: number = 0) => {
     try {
       const addressResponse = await instance!.getAddress({
         confirmAddress: false,
-        networkName: networkName,
+        networkName: networkName as any,
         pathType: selectedDerivation.value as PathType,
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
