@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center w-full">
-    <div class="max-w-[624px] flex flex-col items-center justify-center">
+    <div class="max-w-[640px] w-full flex flex-col items-center justify-center">
       <app-sheet class="mt-6">
         <div>
           <app-stepper
@@ -111,16 +111,14 @@ import type { PathType } from '@/stores/derivationStore'
 import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
 import EvmHardwareWallet from '@/providers/ethereum/evmHardwareWallet'
 import type { HexPrefixedString } from '@/providers/types'
-import { fromWei } from 'web3-utils'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
-import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
-import { fromBase } from '@/utils/unit'
-
 import { useAccessStore } from '@/stores/accessStore'
+import { formatUnits } from 'viem'
+import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
 const derivationStore = useDerivationStore()
@@ -313,6 +311,7 @@ const loadList = async (page: number = 0) => {
 
   try {
     for (let i = startIndex; i < startIndex + 5; i++) {
+      if (selectedDerivation.value?.basePath === '') return
       const addressResponse = await instance!.getAddress({
         confirmAddress: false,
         networkName: networkName as any,
@@ -320,6 +319,7 @@ const loadList = async (page: number = 0) => {
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
       })
+
       const hardwareWalletInstance = isEvmChain.value
         ? new EvmHardwareWallet(
             chainId,
@@ -340,41 +340,28 @@ const loadList = async (page: number = 0) => {
           )
       const fetchBalance = await hardwareWalletInstance.getBalance()
 
-      if (Array.isArray((fetchBalance as TokenBalancesRaw).result)) {
-        const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
-          token => token.contract === MAIN_TOKEN_CONTRACT,
-        )
+      const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
+        token => token.contract === MAIN_TOKEN_CONTRACT,
+      )
 
-        walletList.value.push({
-          address: addressResponse.address,
-          index: i,
-          balance: fromWei(
-            (mainToken?.balance || '0x0') as HexPrefixedString,
-            'ether',
-          ).toString(),
-          walletInstance: hardwareWalletInstance as EvmHardwareWallet,
-        })
-      } else {
-        // TODO: change this once api changes are made to return consistent data
-        // for all networks
-        const newFetchBalance = fetchBalance as unknown as {
-          balance: { nativeValue: string }
-        }
-        walletList.value.push({
-          address: await hardwareWalletInstance.getAddress(),
-          index: i,
-          balance: fromBase(newFetchBalance.balance.nativeValue || '0', 8),
-          walletInstance: hardwareWalletInstance,
-        })
+      walletList.value.push({
+        address: await hardwareWalletInstance.getAddress(),
+        index: i,
+        balance: formatUnits(BigInt(mainToken!.balance), mainToken!.decimals!),
+        walletInstance: hardwareWalletInstance,
+      })
+      if (walletList.value.length === 1) {
+        selectedIndex.value = walletList.value[0].index
+        isLoadingWalletList.value = false
       }
     }
   } catch (e) {
+    console.log(e)
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: e instanceof Error ? e.message : String(e),
     })
   } finally {
-    selectedIndex.value = walletList.value[0]?.index
     isLoadingWalletList.value = false
   }
 }
@@ -408,7 +395,6 @@ watch(
 )
 
 const setPage = (isNext: boolean) => {
-  console.log(isLoadingWalletList.value)
   if (!isNext && page.value === 0) return
   page.value = isNext ? page.value + 1 : page.value - 1
   loadList(page.value)

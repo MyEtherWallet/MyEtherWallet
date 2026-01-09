@@ -1,49 +1,41 @@
 <template>
-  <div class="min-h-[76px]">
+  <div>
     <button
-      class="hoverNoBG rounded-16 bg-white shadow-button shadow-button-elevated border-solid px-4 py-3 flex justify-between items-center text-sm w-full"
+      class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
       :class="{
-        '!border-error border-2':
+        'ring-2 ring-error':
           isWalletConnected && gasFeeError && gasFeeError !== '',
       }"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
     >
-      <div class="flex items-center">
-        <p>{{ $t('common.fee') }}:</p>
+      <div class="flex items-center gap-2">
+        <p class="text-grey-3 font-medium">{{ $t('common.fee') }}:</p>
         <div
-          :class="[
-            { '!bg-grey-10 rounded-2xl animate-pulse min-w-[150px]': !hasFees },
-            ' ml-2 h-5 ',
-          ]"
-        >
-          <p v-if="hasFees">
-            {{ selectedFeeFiat }}
-          </p>
-        </div>
+          v-if="!hasFees"
+          class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
+        ></div>
+        <p v-else class="font-bold text-black">{{ selectedFeeFiat }}</p>
       </div>
-      <div
-        :class="[
-          {
-            '!bg-grey-10 rounded-2xl animate-pulse !w-full max-w-[100px]':
-              !hasFees,
-          },
-          ' h-5',
-        ]"
-      >
-        <div v-if="hasFees" class="flex items-center cursor-pointer">
-          <span class="text-info pr-2">
+
+      <div class="flex items-center gap-2">
+        <div
+          v-if="!hasFees"
+          class="bg-grey-10 rounded-full animate-pulse w-24 h-4"
+        ></div>
+        <template v-else>
+          <span class="text-grey-1 font-medium">
             {{ selectedFeeNative }}
           </span>
-          <chevron-down-icon class="w-4 h-4" />
-        </div>
+          <chevron-down-icon class="w-4 h-4 text-grey-3" />
+        </template>
       </div>
     </button>
-    <div :class="{ 'min-h-6 mt-1': gasFeeError && gasFeeError !== '' }">
+    <div class="min-h-6 flex items-center px-4 mt-1">
       <transition name="fade" mode="out-in">
         <div
           v-if="isWalletConnected && gasFeeError && gasFeeError !== ''"
-          class="text-error text-[10px] xs:text-s-12 leading-[23px] px-5"
+          class="text-error text-s-12 leading-tight"
         >
           <!-- TODO Add PROPER LINK -->
           <p v-if="isNotEnoughBalance">

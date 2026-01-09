@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center w-full">
     <div
-      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
+      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-1"
     >
       <app-not-recommended />
       <app-sheet class="mt-1">
@@ -315,11 +315,14 @@ const loadList = async (page: number = 0) => {
             ).toString(),
           })
         }
+        if (walletList.value.length === 1) {
+          selectedIndex.value = walletList.value[0].index
+          isLoadingWalletList.value = false
+        }
       }
     })
   }
   //TODO: Load balance
-  selectedIndex.value = walletList.value[0].index
   isLoadingWalletList.value = false
 }
 

@@ -1,33 +1,36 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 box-border shadow-button shadow-button-elevated bg-white p-[18px] transition-colors min-h-[108px]"
+    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'border-primary border-2 !p-4': inFocusInput && !error,
-      '!border-error border-2 !p-4': !!error,
+      'ring-2 ring-primary': inFocusInput && !error,
+      'ring-2 ring-error': !!error,
     }"
     @click="setInFocusInput"
   >
-    <div class="flex justify-between items-center w-full">
+    <div class="flex justify-between items-center w-full gap-2">
       <input
-        class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none -ml-3"
+        class="grow py-1 text-3xl font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
         :class="{ 'text-error': !!error }"
         name="amount-input"
         type="text"
         autoComplete="off"
-        placeholder="0.0"
+        placeholder="0"
         v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
       <app-token-select v-model:selected-token-contract="selectedToken" />
     </div>
-    <div :class="{ 'animate-pulse': isLoading }">
+    <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
       <transition name="fade" mode="out-in">
-        <div v-if="isLoading" class="h-5 flex bg-grey-10 rounded-full"></div>
-        <div v-else class="flex justify-between">
+        <div
+          v-if="isLoading"
+          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+        ></div>
+        <div v-else class="flex justify-between items-end">
           <div
-            class="text-sm"
+            class="text-sm font-medium"
             :class="{
               'text-error': !!error,
               'text-info': !error,
@@ -37,12 +40,10 @@
           </div>
           <div
             v-if="isWalletConnected"
-            :class="[
-              'text-sm text-info transition-colors',
-              { 'text-primary': inFocusInput },
-            ]"
+            class="text-s-12 text-grey-1 font-medium"
           >
-            {{ $t('common.balance') }}: {{ balance }}
+            {{ $t('common.balance') }}:
+            <span class="text-black">{{ balance }}</span>
           </div>
         </div>
       </transition>

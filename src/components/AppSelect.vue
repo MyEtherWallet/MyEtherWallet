@@ -27,7 +27,7 @@
         :class="position"
       >
         <div
-          class="p-1 min-w-[160px] max-w-full bg-white shadow-button rounded-12 border border-grey-10 overflow-hidden"
+          class="p-1 min-w-[160px] max-w-full bg-white shadow-popover-elevated rounded-20 border border-grey-10 overflow-hidden"
         >
           <div v-if="!useVueRouter" class="grid grid-cols-1 gap-0.5">
             <button

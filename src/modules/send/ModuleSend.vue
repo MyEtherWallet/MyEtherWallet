@@ -1,24 +1,22 @@
 <template>
   <div>
-    <div
-      class="static w-full flex flex-col items-center justify-items-stretch gap-1"
-    >
-      <div class="mb-3">
-        <p class="font-bold text-s-28 ml-5 mb-4">Send</p>
-        <div class="p-4 rounded-20 bg-mewBg mb-2 relative">
-          <div class="absolute -top-8 right-4">
-            <app-btn-text class="text-primary ml-auto" @click="resetSendModule"
-              >Clear all</app-btn-text
-            >
-          </div>
-          <div class="mb-[25px]">
-            <app-enter-amount
-              v-model:amount="amount"
-              v-model:selected-token="tokenSelectedContract"
-              v-model:error="amountError"
-              :validate-input="checkAmountForError"
-            />
-          </div>
+    <div class="static w-full flex flex-col items-center justify-items-stretch">
+      <div class="w-full max-w-[500px]">
+        <div class="flex items-end justify-between mb-4 px-4">
+          <p class="font-bold text-s-28">Send</p>
+          <app-btn-text
+            class="text-primary text-s-15 pb-1"
+            @click="resetSendModule"
+            >Clear all</app-btn-text
+          >
+        </div>
+        <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
+          <app-enter-amount
+            v-model:amount="amount"
+            v-model:selected-token="tokenSelectedContract"
+            v-model:error="amountError"
+            :validate-input="checkAmountForError"
+          />
           <address-input
             v-model:adr-input="adrInput"
             :resolved-address="toAddress"
@@ -41,7 +39,7 @@
         :disabled="!validSend"
         :is-loading="isLoadingFees"
         @click="handleSubmit"
-        class="w-[70%]"
+        class="w-full max-w-[340px]"
       >
         {{ $t('common.send') }}</app-base-button
       >
