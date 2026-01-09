@@ -58,7 +58,7 @@
       <h3 class="text-s-20 font-bold mb-1">
         {{ tokenData.symbol.toUpperCase() }} balance on other chains:
       </h3>
-      <div class="max-h-[420px] overflow-y-auto pr-2 scrollbar-hover">
+      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
         <div
           v-for="(i, index) in otherChains"
           :key="index"

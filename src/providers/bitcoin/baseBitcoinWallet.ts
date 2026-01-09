@@ -14,7 +14,6 @@ import type {
   GetEvmMultiTransactionEstimateRequest,
   GetUnsignedEvmMultiTransactionResponse,
   QuotesResponse,
-  TokenBalanceBTCRaw,
   TokenBalancesRaw,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
@@ -99,10 +98,10 @@ class BaseBtcWallet implements WalletInterface {
     return selectedChain.value?.name || 'BITCOIN'
   }
 
-  async getBalance(): Promise<TokenBalanceBTCRaw | TokenBalancesRaw> {
+  async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/v1/btc/${this.getProvider()}/addresses/${address}/balance?noInjectErrors=false`
-    return fetchWithRetry<TokenBalanceBTCRaw>(balanceEndpoint)
+    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
+    return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
 
   async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {

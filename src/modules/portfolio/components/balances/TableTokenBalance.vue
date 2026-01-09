@@ -94,7 +94,7 @@
             </th>
             <!-- 24h % -->
             <th
-              class="hidden xs:table-cell w-[60px] md:w-[80px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden xs:table-cell w-[100px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
@@ -223,7 +223,19 @@
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
-                  <p class="truncate font-medium text-s-15">{{ token.name }}</p>
+                  <app-tooltip :text="token.name" v-if="token.name.length > 20">
+                    <p
+                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px]"
+                    >
+                      {{ token.name }}
+                    </p>
+                  </app-tooltip>
+                  <p
+                    v-else
+                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px]"
+                  >
+                    {{ token.name }}
+                  </p>
                   <p class="text-info text-s-12">
                     {{ formatFloatingPointValue(token.balance).value }}
                     <span class="uppercase">{{
@@ -234,25 +246,37 @@
               </div>
             </td>
             <!-- 24h % -->
-            <td
-              class="hidden xs:table-cell w-[80px] px-1 py-1 text-right text-s-13 font-medium"
-              :class="[
-                token.price_change_percentage_24h
-                  ? parsePercent(token.price_change_percentage_24h).includes(
-                      '-',
-                    )
-                    ? 'text-error'
-                    : 'text-success'
-                  : 'text-black',
-              ]"
-            >
-              <p>
-                {{
-                  token.price_change_percentage_24h
-                    ? parsePercent(token.price_change_percentage_24h)
-                    : '-'
-                }}
-              </p>
+            <td class="hidden xs:table-cell px-1 py-1 text-right">
+              <div class="flex flex-col items-end justify-center py-2">
+                <p
+                  class="text-s-13 font-medium mb-1"
+                  :class="[
+                    token.price_change_percentage_24h
+                      ? parsePercent(
+                          token.price_change_percentage_24h,
+                        ).includes('-')
+                        ? 'text-error'
+                        : 'text-success'
+                      : 'text-black',
+                  ]"
+                >
+                  {{
+                    token.price_change_percentage_24h
+                      ? parsePercent(token.price_change_percentage_24h)
+                      : '-'
+                  }}
+                </p>
+                <table-sparkline
+                  v-if="
+                    token.sparkline_in_7d && token.sparkline_in_7d.length > 0
+                  "
+                  :points="token.sparkline_in_7d"
+                  :width="80"
+                  :height="30"
+                  fill
+                  :percent-change="token.price_change_percentage_24h"
+                />
+              </div>
             </td>
             <!-- MarketCap -->
             <td
@@ -460,6 +484,8 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
+import TableSparkline from '@/components/TableSparkline.vue'
 import {
   StarIcon as StarSolidIcon,
   ArrowLongDownIcon,
@@ -506,6 +532,8 @@ const {
   isLoadingBalances,
   allTokens,
 } = storeToRefs(walletStore)
+
+console.log(allTokens)
 
 const tableContainer = ref<HTMLElement | null>(null)
 const searchInput = ref('')

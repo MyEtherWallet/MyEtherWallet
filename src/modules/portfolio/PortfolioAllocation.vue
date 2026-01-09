@@ -1,25 +1,31 @@
 <template>
   <app-sheet
     v-if="isWalletConnected"
-    sheet-class=" !px-4 !pt-3 pb-2 overflow-hidden "
+    sheet-class=" !px-5 !pt-4 !pb-5 overflow-hidden h-full flex flex-col justify-between"
   >
-    <div class="flex items-center w-full justify-between">
-      <h2 class="text-s-20 font-bold mb-1">{{ $t('common.allocation') }}</h2>
+    <div class="flex items-center w-full justify-between mb-2">
+      <h2 class="text-s-20 font-bold leading-tight">
+        {{ $t('common.allocation') }}
+      </h2>
       <allocation-dialog v-if="!isLoadingBalances" :tokens="topTokens" />
     </div>
 
     <div
       v-if="!isLoadingBalances && topTokens.length"
-      class="flex flex-col xs:flex-row items-center sm:justify-between gap-4 w-full"
+      class="flex flex-row items-center justify-between gap-4 w-full h-full"
     >
-      <AllocationChart
-        :tokens="topTokens.slice(0, 5)"
-        :isLoading="isLoadingBalances"
-      />
-      <AllocationTokens
-        :tokens="topTokens.slice(0, 5)"
-        :isLoading="isLoadingBalances"
-      />
+      <div class="w-1/2 flex justify-center">
+        <AllocationChart
+          :tokens="topTokens.slice(0, 5)"
+          :isLoading="isLoadingBalances"
+        />
+      </div>
+      <div class="w-1/2 pr-1">
+        <AllocationTokens
+          :tokens="topTokens.slice(0, 5)"
+          :isLoading="isLoadingBalances"
+        />
+      </div>
     </div>
     <div
       v-else-if="isLoadingBalances"

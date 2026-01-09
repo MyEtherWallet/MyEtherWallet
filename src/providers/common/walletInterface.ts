@@ -14,7 +14,6 @@ import type {
   BitcoinQuotesRequestBody,
   BitcoinQuotesResponse,
   BitcoinSignableTransactionResponse,
-  TokenBalanceBTCRaw,
 } from '@/mew_api/types'
 
 import type { Provider as Eip6963Provider } from '@/stores/providerStore.ts'
@@ -44,7 +43,7 @@ export interface WalletInterface {
   getAddress: () => Promise<string>
   getWalletType: () => WalletType
   getProvider: () => string
-  getBalance: () => Promise<TokenBalancesRaw | TokenBalanceBTCRaw>
+  getBalance: () => Promise<TokenBalancesRaw>
   broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
   // multiple tx handler
   getMultipleGasFees?: (

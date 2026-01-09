@@ -258,6 +258,8 @@ paths:
         - $ref: '#/components/parameters/ChainName'
         - $ref: '#/components/parameters/Address'
         - $ref: '#/components/parameters/IncludeSparklines'
+        - $ref: '#/components/parameters/AumAddressType'
+        - $ref: '#/components/parameters/AumAddressPlatform'
       responses:
         200:
           $ref: '#/components/responses/GetBalancesByChainNameAndAddressSuccess'
@@ -2724,8 +2726,6 @@ components:
                 type: string
               market_cap:
                 type: number
-              # price_change_24h:
-              #   type: number
               price_change_percentage_24h:
                 type: number
               is_rwa:

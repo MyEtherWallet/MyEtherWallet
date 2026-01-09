@@ -260,50 +260,58 @@ input::-webkit-inner-spin-button {
 }
 
 /**
-* Hide scrollbar
+* Globally hide scrollbars if they are forced by browser
 */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  display: none !important;
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
+body,
+html {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/**
+* Hide scrollbar
+*/
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;
+}
+
+.no-scrollbar,
+.scrollbar-hide {
+  -ms-overflow-style: none !important;
   /* IE and Edge */
-  scrollbar-width: none;
+  scrollbar-width: none !important;
   /* Firefox */
 }
 
 /**
-* Hide scrollbar by default, show on hover
+* MEW Custom scrollbar
 */
-.scrollbar-hover {
-  scrollbar-width: thin;
+.mew-scrollbar {
+  scrollbar-width: thin !important;
   /* Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-  -ms-overflow-style: none;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent !important;
+  -ms-overflow-style: auto !important;
   /* IE and Edge */
 }
 
-.scrollbar-hover::-webkit-scrollbar {
-  width: 12px;
+.mew-scrollbar::-webkit-scrollbar {
+  width: 12px !important;
+  display: block !important;
 }
 
-.scrollbar-hover::-webkit-scrollbar-track {
-  background: transparent;
+.mew-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
 }
 
-.scrollbar-hover::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 10px;
-  border: 4px solid transparent;
-  background-clip: content-box;
-}
-
-.scrollbar-hover:hover {
-  scrollbar-width: thin;
-  /* Firefox */
-}
-
-.scrollbar-hover:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
+.mew-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 10px !important;
+  border: 4px solid transparent !important;
+  background-clip: content-box !important;
 }

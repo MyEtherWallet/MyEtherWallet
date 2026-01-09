@@ -10,7 +10,7 @@
     >
       <template #content>
         <div
-          class="h-[80vh] xs:h-[500px] overflow-y-auto scrollbar-hover px-3 sm:px-4"
+          class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
         >
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"

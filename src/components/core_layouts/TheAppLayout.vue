@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen relative flex overflow-y-auto">
+  <div class="h-screen relative flex overflow-hidden">
     <the-header class="basis-full" />
 
     <!-- Background -->
@@ -26,7 +26,9 @@
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
         'flex w-full mr-[72px] xs:mr-[80px]',
-        isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
+        isOverflowHidden
+          ? 'overflow-hidden'
+          : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
     >
       <div

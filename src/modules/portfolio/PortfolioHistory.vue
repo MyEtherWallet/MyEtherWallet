@@ -1,33 +1,36 @@
 <template>
   <app-sheet
     v-if="isWalletConnected"
-    sheet-class="!px-4 !pt-3 !pb-1 overflow-hidden  w-full"
+    sheet-class="!px-5 !pt-4 !pb-5 overflow-hidden w-full h-full flex flex-col"
   >
-    <div class="flex items-start justify-between mb-2">
-      <div class="flex items-end gap-1">
-        <h2 class="text-s-20 font-bold">History</h2>
+    <div class="flex items-start justify-between mb-4">
+      <div class="flex items-center gap-1.5 pt-0.5">
+        <h2 class="text-s-20 font-bold leading-none">History</h2>
         <app-tooltip
           text="Approximate values based on current token holdings."
         />
       </div>
       <div class="text-right">
-        <p class="font-bold text-s-11 tracking-sp-06 uppercase leading-p-160">
+        <p
+          class="font-bold text-[10px] tracking-sp-06 uppercase text-info opacity-60 leading-none mb-1"
+        >
           Last 24h
         </p>
         <p
-          class="text-s-16 text-success leading-p-160 font-medium"
+          class="text-s-20 text-success leading-none font-bold"
           :class="{ '!text-error': lastTwentyFourHours.isLessThan(0) }"
         >
-          <span
-            v-if="lastTwentyFourHours.isLessThan(0)"
-            class="inline-block ml-1"
-            >-</span
-          >
-          ${{ formatFiatValue(lastTwentyFourHours.abs()).value }}
+          {{ lastTwentyFourHours.isLessThan(0) ? '-' : '+' }}${{
+            formatFiatValue(lastTwentyFourHours.abs()).value
+          }}
         </p>
       </div>
     </div>
-    <p class="text-info text-center text-s-12 my-10">Chart is coming soon</p>
+    <div class="flex-1 flex flex-col items-center justify-center opacity-40">
+      <p class="text-info text-center text-s-13 font-medium">
+        Chart is coming soon
+      </p>
+    </div>
     <!-- <history-chart :data="tempData" /> -->
   </app-sheet>
 </template>

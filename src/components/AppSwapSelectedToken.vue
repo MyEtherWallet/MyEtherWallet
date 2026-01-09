@@ -40,7 +40,7 @@
   >
     <template #content>
       <div
-        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] pb-6 overflow-y-auto scrollbar-hover px-1"
+        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] pb-6 overflow-y-auto mew-scrollbar px-1"
         ref="scrollContainer"
       >
         <div class="sticky top-0 bg-white z-10 pt-2">

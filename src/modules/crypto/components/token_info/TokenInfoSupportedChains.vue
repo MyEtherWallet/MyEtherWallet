@@ -10,7 +10,7 @@
       class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5"
     >
       <h3 class="text-s-20 font-bold mb-2">Supported Chains</h3>
-      <div class="max-h-[420px] overflow-y-auto pr-2 scrollbar-hover">
+      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
         <div
           v-for="i in tokenData.supportedChains"
           :key="i.chainName"

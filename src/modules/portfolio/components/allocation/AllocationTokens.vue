@@ -1,29 +1,33 @@
 <template>
-  <div class="w-[180px]">
+  <div class="flex-1 min-w-[140px]">
     <div
       v-for="(i, index) in tokens"
       :key="i.symbol"
-      class="flex items-center gap-2 last:mb-0 w-full justify-between text-s-14"
+      class="flex items-center last:mb-0 w-full justify-between py-1.5"
     >
-      <div class="flex items-center gap-2 text-s-14 uppercase">
+      <div class="flex items-center gap-2 uppercase overflow-hidden">
         <div
-          class="h-3 w-3 rounded-full"
+          class="h-2.5 w-2.5 rounded-full shrink-0"
           :style="{ backgroundColor: getBGColor(index) }"
         ></div>
-        <router-link
-          v-if="i.id"
-          :to="{
-            name: TOKEN_INFO_ROUTE_NAMES.home,
-            params: { tokenId: i.id || i.symbol },
-          }"
-          class="p-1"
-          >{{ truncate(i.symbol, 7) }}</router-link
-        >
-        <p v-else class="p-1">
-          {{ truncate(i.symbol, 7) }}
-        </p>
+        <app-tooltip :text="i.name">
+          <router-link
+            v-if="i.id"
+            :to="{
+              name: TOKEN_INFO_ROUTE_NAMES.home,
+              params: { tokenId: i.id || i.symbol },
+            }"
+            class="text-s-14 font-medium truncate hover:text-primary transition-colors block max-w-[80px]"
+            >{{ truncate(i.symbol, 10) }}</router-link
+          >
+          <p v-else class="text-s-14 font-medium truncate block max-w-[80px]">
+            {{ truncate(i.symbol, 10) }}
+          </p>
+        </app-tooltip>
       </div>
-      <p class="px-2 leading-p-160 text-s-12 rounded-full bg-mewBg">
+      <p
+        class="px-2.5 py-0.5 leading-tight text-s-11 font-bold rounded-full bg-grey-5 text-info"
+      >
         {{ i.formattedPercentage }}
       </p>
     </div>
@@ -32,6 +36,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { truncate } from '@/utils/filters'
+import AppTooltip from '@/components/AppTooltip.vue'
 import {
   type TokenAllocation,
   ALLOCATION_COLORS,

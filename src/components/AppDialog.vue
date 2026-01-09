@@ -72,7 +72,7 @@
             </div>
             <div
               :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]"
-              class="overflow-y-auto scrollbar-hover flex-1"
+              class="overflow-y-auto mew-scrollbar flex-1"
             >
               <slot name="content" />
             </div>

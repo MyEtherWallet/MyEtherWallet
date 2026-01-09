@@ -3,8 +3,6 @@ import { type components } from './schema'
 /** --------------------------
  * GET Balances
  --------------------------*/
-export type TokenBalanceBTCRaw =
-  components['schemas']['GetBtcBalanceByChainNameAndAddress2Response']
 export type TokenBalancesRaw =
   components['schemas']['GetBalancesByChainNameAndAddressResponse']
 export type TokenBalanceRaw =

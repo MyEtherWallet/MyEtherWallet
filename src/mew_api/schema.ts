@@ -2415,6 +2415,8 @@ export interface operations {
         parameters: {
             query?: {
                 sparklines?: components["parameters"]["IncludeSparklines"];
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
             };
             header?: never;
             path: {

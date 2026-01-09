@@ -18,7 +18,6 @@ import type {
   Chain,
   BitcoinQuotesRequestBody,
   BitcoinQuotesResponse,
-  TokenBalanceBTCRaw,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 import type { Provider } from '@/stores/providerStore'
@@ -151,13 +150,10 @@ class WatchOnlyWallet implements WalletInterface {
     return selectedChain.value?.name || 'ETHEREUM'
   }
 
-  async getBalance(): Promise<TokenBalancesRaw | TokenBalanceBTCRaw> {
+  async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const btcEndpoint = `/v1/btc/${this.getProvider()}/addresses/${address}/balance?noInjectErrors=false`
-    const evmEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
-    if (this.chain.type === 'BITCOIN')
-      return fetchWithRetry<TokenBalanceBTCRaw>(btcEndpoint)
-    return fetchWithRetry<TokenBalancesRaw>(evmEndpoint)
+    const Endpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
+    return fetchWithRetry<TokenBalancesRaw>(Endpoint)
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {
