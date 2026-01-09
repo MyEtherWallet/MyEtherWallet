@@ -18,6 +18,7 @@ import type {
   Chain,
   BitcoinQuotesRequestBody,
   BitcoinQuotesResponse,
+  TokenBalanceBTCRaw,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 import type { Provider } from '@/stores/providerStore'
@@ -32,15 +33,19 @@ class WatchOnlyWallet implements WalletInterface {
     this.chain = chain
     this.walletType = walletType
   }
-  updateChainId: (chainId: string) => void = () => { }
+  updateChainId: (chainId: string) => void = () => {}
   getWalletInstance?: (() => HWwalletManager | null) | undefined
-  getProviderInstance?: (() => Provider | NonNullable<typeof window.unisat> | null) | undefined
+  getProviderInstance?:
+    | (() => Provider | NonNullable<typeof window.unisat> | null)
+    | undefined
   /**
-    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
-    * @param tx  - Transaction details
-    * @returns Promise resolving to QuotesResponse containing gas fee information
-    */
-  getBtcGasFee = (tx: BitcoinQuotesRequestBody): Promise<BitcoinQuotesResponse> => {
+   * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
+   * @param tx  - Transaction details
+   * @returns Promise resolving to QuotesResponse containing gas fee information
+   */
+  getBtcGasFee = (
+    tx: BitcoinQuotesRequestBody,
+  ): Promise<BitcoinQuotesResponse> => {
     return fetchWithRetry<BitcoinQuotesResponse>(
       `/v2/btc/${this.getProvider()}/quotes?noInjectErrors=false`,
       {
@@ -49,7 +54,6 @@ class WatchOnlyWallet implements WalletInterface {
       },
     )
   }
-
 
   /**
    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
@@ -147,13 +151,13 @@ class WatchOnlyWallet implements WalletInterface {
     return selectedChain.value?.name || 'ETHEREUM'
   }
 
-  async getBalance(): Promise<TokenBalancesRaw> {
+  async getBalance(): Promise<TokenBalancesRaw | TokenBalanceBTCRaw> {
     const address = await this.getAddress()
-    const btcEndpoint = `/v1/btc/${this.getProvider()}/balances/${address}/?noInjectErrors=false`
+    const btcEndpoint = `/v1/btc/${this.getProvider()}/addresses/${address}/balance?noInjectErrors=false`
     const evmEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
-    // TODO: add DOT and SOL support
-    const balanceEndpoint = this.chain.type === 'BITCOIN' ? btcEndpoint : evmEndpoint
-    return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
+    if (this.chain.type === 'BITCOIN')
+      return fetchWithRetry<TokenBalanceBTCRaw>(btcEndpoint)
+    return fetchWithRetry<TokenBalancesRaw>(evmEndpoint)
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {

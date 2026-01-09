@@ -76,7 +76,59 @@ paths:
         200:
           $ref: '#/components/responses/GetChainMetadataSuccess'
 
-  # Tokens
+  /v1/chains/with-prices:
+    get:
+      operationId: GetChainMetadataListWithPrices
+      responses:
+        200:
+          $ref: '#/components/responses/GetChainMetadaListWithPricesSuccess'
+
+  # ===============
+  # Web stocks page
+  # ===============
+
+  /v1/web/pages/stocks/overview:
+    get:
+      operationId: GetWebStocksOverview
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksOverviewSuccess'
+
+  /v1/web/pages/stocks/table:
+    get:
+      operationId: GetWebStocksTable
+      parameters:
+        - $ref: '#/components/parameters/WebStocksTableCategory'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/WebStocksTableSort'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksTableSuccess'
+
+  /v1/web/pages/stocks/search:
+    get:
+      operationId: GetWebStocksSearch
+      parameters:
+        - $ref: '#/components/parameters/Query'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksSearchSuccess'
+
+  # Pass-through to Ondo
+  /v1/web/pages/stocks/assets:
+    get:
+      operationId: GetWebStockAssets
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStockAssetsSuccess'
+
+  # ==========
+  # Web Tokens
+  # ==========
 
   /v1/web/token-price-chart/coins/{coin}:
     get:
@@ -103,18 +155,22 @@ paths:
     get:
       operationId: GetWebTokenInfoPageByCoin
       parameters:
-      - $ref: '#/components/parameters/PathCoinId'
-      - $ref: '#/components/parameters/QueryEvmAddresses'
+        - $ref: '#/components/parameters/PathCoinId'
+        - $ref: '#/components/parameters/QueryEvmAddresses'
       responses:
         200:
           $ref: '#/components/responses/GetWebTokenInfoPageSuccess'
+
+  # ===============
+  # Web Crypto page
+  # ===============
 
   /v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection:
     get:
       operationId: GetWeb7dBalancesBackProjectionChartByChainAndAddress
       parameters:
-      - $ref: '#/components/parameters/Address'
-      - $ref: '#/components/parameters/ChainName'
+        - $ref: '#/components/parameters/Address'
+        - $ref: '#/components/parameters/ChainName'
       responses:
         200:
           $ref: '#/components/responses/GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess'
@@ -231,6 +287,19 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/GetBtcBalanceByChainNameAndAddressSuccess'
+
+  /v1/btc/{chainName}/addresses/{address}/balance:
+    get:
+      operationId: GetBtcBalanceByChainNameAndAddress2
+      parameters:
+        - $ref: '#/components/parameters/ChainName'
+        - $ref: '#/components/parameters/BtcAddress'
+        - $ref: '#/components/parameters/AumAddressType'
+        - $ref: '#/components/parameters/AumAddressPlatform'
+        - $ref: '#/components/parameters/IncludeSparkline'
+      responses:
+        200:
+          $ref: '#/components/responses/GetBtcBalanceByChainNameAndAddress2Success'
 
   # Bitcoin Transaction fees
 
@@ -519,6 +588,7 @@ paths:
       operationId: BroadcastEvmTransaction
       parameters:
         - $ref: '#/components/parameters/ChainId'
+        - $ref: '#/components/parameters/MewPlatform'
       requestBody:
         $ref: '#/components/requestBodies/BroadcastEvmTransaction'
       responses:
@@ -527,6 +597,11 @@ paths:
 
 components:
   parameters:
+    IncludeSparkline:
+      name: sparkline
+      in: query
+      schema:
+        type: boolean
     IncludeSparklines:
       name: sparklines
       in: query
@@ -572,6 +647,11 @@ components:
       in: query
       schema:
         type: string
+    Query:
+      name: query
+      in: query
+      schema:
+        type: string
     Page:
       name: page
       in: query
@@ -597,6 +677,16 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/WebTokensTableSort'
+    WebStocksTableSort:
+      name: sort
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebStocksTableSort'
+    WebStocksTableCategory:
+      name: category
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebStocksTableCategory'
     WebTokensWatchlistSort:
       name: sort
       in: query
@@ -613,6 +703,11 @@ components:
       schema:
         type: string
     AumAddressPlatform:
+      name: platform
+      in: query
+      schema:
+        type: string
+    MewPlatform:
       name: platform
       in: query
       schema:
@@ -809,6 +904,36 @@ components:
           schema:
             $ref: '#/components/schemas/GetChainMetadataListResponse'
 
+    GetChainMetadaListWithPricesSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetChainMetadataListWithPricesResponse'
+
+    GetWebStocksOverviewSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksOverviewResponse'
+
+    GetWebStocksTableSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksTableResponse'
+
+    GetWebStocksSearchSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksSearchResponse'
+
+    GetWebStockAssetsSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStockAssetsResponse'
+
     GetChainMetadataSuccess:
       content:
         application/json:
@@ -911,6 +1036,12 @@ components:
           schema:
             $ref: '#/components/schemas/GetBtcBalanceByChainNameAndAddressResponse'
 
+    GetBtcBalanceByChainNameAndAddress2Success:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetBtcBalanceByChainNameAndAddress2Response'
+
     GetBtcTransactionFeesSuccess:
       content:
         application/json:
@@ -978,13 +1109,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/GetUnsignedBtcTransactionResponse"
+            $ref: '#/components/schemas/GetUnsignedBtcTransactionResponse'
 
     BroadcastBtcTransactionSuccess:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/BroadcastBtcTransactionResponse"
+            $ref: '#/components/schemas/BroadcastBtcTransactionResponse'
 
     GetErc20ContractMetadataSuccess:
       content:
@@ -1112,7 +1243,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/GetUnsignedEvmTransactionResponse"
+            $ref: '#/components/schemas/GetUnsignedEvmTransactionResponse'
 
     GetUnsignedEvmMultiTransactionSuccess:
       headers:
@@ -1125,21 +1256,21 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/GetUnsignedEvmMultiTransactionResponse"
+            $ref: '#/components/schemas/GetUnsignedEvmMultiTransactionResponse'
 
     BroadcastEvmTransactionSuccess:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/BroadcastEvmTransactionResponse"
+            $ref: '#/components/schemas/BroadcastEvmTransactionResponse'
 
   schemas:
     # Input primitives
     BigIntInput:
       type: string
       # Patterns:
-        # - 0x[0-9a-fA-F]+
-        # - [0-9]+
+      # - 0x[0-9a-fA-F]+
+      # - [0-9]+
     EvmAddressInput:
       type: string
       pattern: '^((0|\\)[xX])?[0-9a-fA-F]{40}$'
@@ -1280,6 +1411,31 @@ components:
         - TOTAL_VOLUME_ASC
         - TOTAL_VOLUME_DESC
 
+    WebStocksTableSort:
+      type: string
+      enum:
+        - NAME_ASC
+        - NAME_DESC
+        - SYMBOL_ASC
+        - SYMBOL_DESC
+        - PRICE_ASC
+        - PRICE_DESC
+        - PRICE_CHANGE_PERCENTAGE_24H_ASC
+        - PRICE_CHANGE_PERCENTAGE_24H_DESC
+        - MARKET_CAP_ASC
+        - MARKET_CAP_DESC
+        - VOLUME_24H_ASC
+        - VOLUME_24H_DESC
+
+    WebStocksTableCategory:
+      type: string
+      enum:
+        - COMMODITIES
+        - EQUITIES
+        - FIXED_INCOME
+        - STOCK
+        - ETF
+
     WebTokensWatchlistSort:
       type: string
       enum:
@@ -1366,6 +1522,7 @@ components:
         - isTestNetwork
         - currencyName
         - currencyNameLong
+        - supportsBalances
         - icon
       properties:
         name:
@@ -1386,6 +1543,8 @@ components:
           type: string
         currencyNameLong:
           type: string
+        supportsBalances:
+          type: boolean
         icon:
           type: string
         rpcUrls:
@@ -1466,6 +1625,325 @@ components:
       properties:
         result:
           $ref: '#/components/schemas/ChainMetadata'
+
+    GetChainMetadataListWithPricesResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - name
+          - nameLong
+          - type
+          - blockExplorerTX
+          - blockExplorerAddr
+          - isTestNetwork
+          - currencyName
+          - currencyNameLong
+          - supportsBalances
+          - icon
+          - price
+        properties:
+          name:
+            type: string
+          nameLong:
+            type: string
+          type:
+            $ref: '#/components/schemas/ChainType'
+          blockExplorerTX:
+            type: string
+          blockExplorerAddr:
+            type: string
+          chainID:
+            type: string
+          isTestNetwork:
+            type: boolean
+          currencyName:
+            type: string
+          currencyNameLong:
+            type: string
+          rpcUrls:
+            type: array
+            items:
+              type: string
+          supportsBalances:
+            type: boolean
+          icon:
+            type: string
+          price:
+            type: ['null', number]
+
+    GetWebStocksOverviewResponse:
+      type: object
+      required:
+        - banner
+        - topMovers
+        - newlyAdded
+        - trending
+        - recentNews
+      properties:
+        newlyAdded:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              sparkline24h:
+                type: array
+                items:
+                  type: number
+        recentNews:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              thumbnailUrl:
+                type: string
+              articleUrl:
+                type: string
+              timestamp:
+                type: number
+              tickers:
+                type: array
+                items:
+                  type: string
+        trending:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              sparkline24h:
+                type: array
+                items:
+                  type: number
+        topMovers:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              priceHistory24h:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: number
+                    price:
+                      type: number
+        banner:
+          type: array
+          items:
+            type: object
+            properties:
+              symbol:
+                type: string
+              priceChangePercentage24h:
+                type: number
+              sparkline24h:
+                type: array
+                items:
+                  type: number
+
+    GetWebStocksTableResponse:
+      type: object
+      required:
+        - page
+        - pages
+        - perPage
+        - total
+        - items
+      properties:
+        page:
+          type: number
+        pages:
+          type: number
+        perPage:
+          type: number
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - symbol
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+              volume24h:
+                type: number
+              marketCap:
+                type: number
+              sparkline24h:
+                type: array
+                items:
+                  type: number
+
+    GetWebStocksSearchResponse:
+      type: object
+      required:
+        - page
+        - pages
+        - perPage
+        - total
+        - items
+      properties:
+        page:
+          type: number
+        pages:
+          type: number
+        perPage:
+          type: number
+        total:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - symbol
+            properties:
+              name:
+                type: string
+              symbol:
+                type: string
+              price:
+                type: number
+              priceChangePercentage24h:
+                type: number
+
+    GetWebStockAssetsResponse:
+      type: object
+      properties:
+        # Example "2025-12-09T13:16:23.994Z"
+        lastUpdatedAt:
+          type: string
+        assets:
+          type: array
+          items:
+            type: object
+            properties:
+              symbol:
+                type: string
+              ticker:
+                type: string
+              assetName:
+                type: string
+              iconSrc:
+                type: string
+              # Unix epoch MS
+              createdAt:
+                type: number
+              primaryMarket:
+                type: object
+                properties:
+                  symbol:
+                    type: string
+                  # Example "312.488476203181654385"
+                  price:
+                    type: string
+                  # Example "-8.509216875627243512",
+                  priceChange24h:
+                    type: string
+                  # Example "-2.650865429596132855"
+                  priceChangePct24h:
+                    type: string
+                  # Example: 806
+                  totalHolders:
+                    type: number
+                  # Example: "1.001084338309087472"
+                  sharesMultiplier:
+                    type: string
+                    # Example: ["premarket", "regular", "postmarket", "overnight"]
+                  tradableSessions:
+                    type: array
+                    items:
+                      type: string
+                  priceHistory24h:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        # Unix epoch MS. Example: 1765206000000
+                        timestamp:
+                          type: number
+                        # Example: "318.667669281394496806"
+                        price:
+                          type: string
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        categoryLayer:
+                          type: number
+                        categorySlug:
+                          type: number
+                        categoryLabel:
+                          type: number
+                        tagSlug:
+                          type: number
+                        tagLabel:
+                          type: number
+              underlyingMarket:
+                type: object
+                properties:
+                  # Example: "GOOGL"
+                  ticket:
+                    type: string
+                  # Example: "Alphabet Inc. Class A Common Stock"
+                  name:
+                    type: string
+                  # Example: "328.83"
+                  priceHigh52w:
+                    type: string
+                  # Example: "140.53"
+                  priceLow52w:
+                    type: string
+                  # Example: "33880411"
+                  volume:
+                    type: string
+                  # Example: "36499844"
+                  averageVolume:
+                    type: string
+                  # Example: "5818000000"
+                  sharesOutstanding:
+                    type: string
+                  # Example: "3785659240000"
+                  marketCap:
+                    type: string
 
     # ====================
     # Transaction Statuses
@@ -2009,7 +2487,6 @@ components:
                 items:
                   type: number
 
-
     GetWebTopGainersResponse:
       type: object
       required:
@@ -2340,6 +2817,40 @@ components:
 
     GetBtcBalanceByChainNameAndAddressResponse:
       $ref: '#/components/schemas/BtcAddressWithBalance'
+
+    GetBtcBalanceByChainNameAndAddress2Response:
+      type: object
+      required:
+        - balance
+      properties:
+        coinId:
+          type: string
+        balance:
+          type: string
+        decimals:
+          type: number
+        logoUrl:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        symbol:
+          type: string
+        marketCap:
+          type: number
+        priceChangePercentage24h:
+          type: number
+        # isRwa:
+        #   type: boolean
+        # isStablecoin:
+        #   type: boolean
+        sparklineIn7d:
+          oneOf:
+            - type: 'null'
+            - type: array
+              items:
+                type: number
 
     # ===========================================
     # EVM (Ethereum Virtual Machine) Swaps
@@ -2876,4 +3387,3 @@ components:
       properties:
         txid:
           type: string
-

@@ -108,7 +108,7 @@ import HWwallet from '@enkryptcom/hw-wallets'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import type { PathType } from '@/stores/derivationStore'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
 import EvmHardwareWallet from '@/providers/ethereum/evmHardwareWallet'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
@@ -340,8 +340,8 @@ const loadList = async (page: number = 0) => {
           )
       const fetchBalance = await hardwareWalletInstance.getBalance()
 
-      if (Array.isArray(fetchBalance.result)) {
-        const mainToken = fetchBalance.result.find(
+      if (Array.isArray((fetchBalance as TokenBalancesRaw).result)) {
+        const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
           token => token.contract === MAIN_TOKEN_CONTRACT,
         )
 

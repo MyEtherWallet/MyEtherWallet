@@ -2,7 +2,7 @@
   <div>
     <div v-if="isWalletConnected && walletAddress" class="">
       <div
-        class="relative bg-grey-50 rounded-16 h-[205px] grid grid-rows-3 px-5 py-4 content-between text-white shadow-button"
+        class="relative bg-grey-50 rounded-16 overflow-hidden h-[205px] grid grid-rows-3 px-5 py-4 content-between text-white shadow-button"
       >
         <img
           ref="mewCard"

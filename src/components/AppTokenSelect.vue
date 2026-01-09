@@ -37,39 +37,42 @@
   <app-dialog
     v-model:is-open="showAllTokens"
     :title="$t('select_token.title')"
-    class="sm:max-w-[500px] sm:mx-auto"
+    class="w-full sm:w-[460px] sm:mx-auto"
     has-content-gutter
   >
     <template #content>
-      <div class="max-h-[80vh] xs:max-h-[500px] pb-6">
-        <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2">
+      <div
+        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] pb-6 overflow-y-auto scrollbar-hover px-1"
+      >
+        <div class="sticky top-0 bg-white z-10 pt-2">
           <div
-            class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-4 bg-surface rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
               class="grow"
+              bg-class="bg-transparent"
               :placeholder="$t('select_token.search')"
             />
             <!--SORT-->
             <app-pop-up-menu :placeholder="$t('common.sort')">
               <template #menu-button="{ toggleMenu }">
                 <button
-                  class="flex items-center px-2 py-2 text-s-15 font-medium hoverNoBG rounded-full"
+                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[120px] justify-center"
                   @click="toggleMenu"
                 >
                   <span class="mr-2 ml-1">{{ activeSortValue }}</span>
                   <ArrowUpIcon
                     v-if="activeSortDirection === SortDirection.DESC"
-                    class="w-4 h-4"
+                    class="w-4 h-4 shrink-0"
                   />
-                  <ArrowDownIcon v-else class="w-4 h-4" />
+                  <ArrowDownIcon v-else class="w-4 h-4 shrink-0" />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
-                <div class="py-4 flex flex-col">
+                <div class="py-4 flex flex-col w-[200px] gap-1">
                   <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3">
+                    <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
                       {{ $t('common.sort_by') }}
                     </p>
                     <app-btn-icon-close @click="toggleMenu" />
@@ -80,7 +83,7 @@
                     :key="option.value"
                     :class="[
                       option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium',
+                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -88,7 +91,7 @@
                     <p class="capitalize">{{ option.label }}</p>
                     <div
                       v-if="activeSortValue === option.value"
-                      class="ml-auto"
+                      class="ml-auto pl-2"
                     >
                       <ArrowUpIcon
                         v-if="activeSortDirection === SortDirection.DESC"

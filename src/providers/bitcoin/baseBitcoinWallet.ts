@@ -14,6 +14,7 @@ import type {
   GetEvmMultiTransactionEstimateRequest,
   GetUnsignedEvmMultiTransactionResponse,
   QuotesResponse,
+  TokenBalanceBTCRaw,
   TokenBalancesRaw,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
@@ -23,15 +24,23 @@ class BaseBtcWallet implements WalletInterface {
   constructor(chainName: string) {
     this.chainName = chainName // refers to chain in enkrypt library not chain object from the api
   }
-  getMultipleGasFees?: ((txs: GetEvmMultiTransactionEstimateRequest) => Promise<QuotesResponse>) | undefined
-  getMultipleSignableTransactions?: ((feeObj: SignableTransactionParams) => Promise<GetUnsignedEvmMultiTransactionResponse>) | undefined
+  getMultipleGasFees?:
+    | ((txs: GetEvmMultiTransactionEstimateRequest) => Promise<QuotesResponse>)
+    | undefined
+  getMultipleSignableTransactions?:
+    | ((
+        feeObj: SignableTransactionParams,
+      ) => Promise<GetUnsignedEvmMultiTransactionResponse>)
+    | undefined
 
   /**
    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
    * @param tx  - Transaction details
    * @returns Promise resolving to QuotesResponse containing gas fee information
    */
-  getBtcGasFee = (tx: BitcoinQuotesRequestBody): Promise<BitcoinQuotesResponse> => {
+  getBtcGasFee = (
+    tx: BitcoinQuotesRequestBody,
+  ): Promise<BitcoinQuotesResponse> => {
     return fetchWithRetry<BitcoinQuotesResponse>(
       `/v2/btc/${this.getProvider()}/quotes?noInjectErrors=false`,
       {
@@ -90,10 +99,10 @@ class BaseBtcWallet implements WalletInterface {
     return selectedChain.value?.name || 'BITCOIN'
   }
 
-  async getBalance(): Promise<TokenBalancesRaw> {
+  async getBalance(): Promise<TokenBalanceBTCRaw | TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/v1/btc/${this.getProvider()}/balances/${address}/?noInjectErrors=false`
-    return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
+    const balanceEndpoint = `/v1/btc/${this.getProvider()}/addresses/${address}/balance?noInjectErrors=false`
+    return fetchWithRetry<TokenBalanceBTCRaw>(balanceEndpoint)
   }
 
   async broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {

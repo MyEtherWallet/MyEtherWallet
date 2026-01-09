@@ -14,6 +14,7 @@ import type {
   BitcoinQuotesRequestBody,
   BitcoinQuotesResponse,
   BitcoinSignableTransactionResponse,
+  TokenBalanceBTCRaw,
 } from '@/mew_api/types'
 
 import type { Provider as Eip6963Provider } from '@/stores/providerStore.ts'
@@ -29,9 +30,13 @@ export interface WalletInterface {
   disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: SignableTransactionParams,
-  ) => Promise<EthereumSignableTransactionResponse | BitcoinSignableTransactionResponse>
+  ) => Promise<
+    EthereumSignableTransactionResponse | BitcoinSignableTransactionResponse
+  >
   getGasFee?: (tx: QuotesRequestBody) => Promise<QuotesResponse>
-  getBtcGasFee?: (tx: BitcoinQuotesRequestBody) => Promise<BitcoinQuotesResponse>
+  getBtcGasFee?: (
+    tx: BitcoinQuotesRequestBody,
+  ) => Promise<BitcoinQuotesResponse>
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown
@@ -39,7 +44,7 @@ export interface WalletInterface {
   getAddress: () => Promise<string>
   getWalletType: () => WalletType
   getProvider: () => string
-  getBalance: () => Promise<TokenBalancesRaw>
+  getBalance: () => Promise<TokenBalancesRaw | TokenBalanceBTCRaw>
   broadcastTransaction: (signedTx: HexPrefixedString) => Promise<string>
   // multiple tx handler
   getMultipleGasFees?: (
@@ -50,5 +55,8 @@ export interface WalletInterface {
   ) => Promise<GetUnsignedEvmMultiTransactionResponse>
   updateChainId: (chainId: string) => void
   getWalletInstance?: () => HWwallet | null
-  getProviderInstance?: () => Eip6963Provider | NonNullable<typeof window.unisat> | null
+  getProviderInstance?: () =>
+    | Eip6963Provider
+    | NonNullable<typeof window.unisat>
+    | null
 }
