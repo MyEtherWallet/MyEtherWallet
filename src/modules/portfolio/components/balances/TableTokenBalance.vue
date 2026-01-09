@@ -1,12 +1,17 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col sm:flex-row sm:items-center justify-between px-2 py-2 mb-4 sm:gap-6"
+      class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
     >
       <div
-        class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] order-3 order-2 sm:order-1 gap-1"
+        class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[400px] order-3 order-2 sm:order-1 gap-1 border border-transparent focus-within:border-primary transition-colors"
       >
-        <app-search-input v-model="searchInput" class="grow" />
+        <app-search-input
+          v-model="searchInput"
+          class="grow"
+          bg-class="bg-transparent"
+        />
+        <div class="h-6 w-px bg-grey-10 mx-1 hidden xs:block"></div>
         <app-select
           v-model:selected="selectedAllTokensFilter"
           :options="allTokensFilterOptions"
@@ -15,53 +20,56 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="rounded-full hoverNoBG p-2 xs:min-w-[140px] xs:px-3"
+              class="rounded-full hoverNoBG py-2 px-3 xs:min-w-[120px]"
               @click="toggleSelect"
             >
               <div class="flex items-center justify-between">
-                <span class="hidden xs:inline">{{
+                <span class="font-medium">{{
                   selectedAllTokensFilter.label
                 }}</span>
-                <span class="inline xs:hidden">Filter</span>
-                <chevron-down-icon class="w-4 h-4 ml-1" />
+                <chevron-down-icon class="w-4 h-4 ml-1 text-info" />
               </div>
             </button>
           </template>
         </app-select>
       </div>
       <!-- TOTAL VALUE-->
-      <div class="order-1 sm:order-2 mb-3 sm:mb-0 ml-2 sm:ml-0">
-        <p
-          class="font-bold text-info uppercase tracking-sp-06 text-s-14 sm:text-right"
-        >
+      <div
+        class="order-1 sm:order-2 mb-6 sm:mb-0 ml-2 sm:ml-0 flex flex-col items-end"
+      >
+        <p class="font-bold text-info uppercase tracking-sp-06 text-s-11 mb-1">
           Total Value
         </p>
         <p
           v-if="!isLoading"
-          class="text-s-20 font-bold sm:text-right rounded-12"
+          class="text-s-24 font-bold rounded-12 leading-none"
         >
           {{ totalValue }}
         </p>
         <div
           v-else
-          class="bg-grey-10 animate-pulse min-w-[120px] h-[30px]"
+          class="bg-grey-10 animate-pulse w-[100px] h-6 rounded-lg"
         ></div>
       </div>
     </div>
     <div :class="['static', getTableHeight]" ref="tableContainer">
-      <table class="w-full text-sm table-fixed">
+      <table
+        class="w-full text-sm table-fixed border-separate border-spacing-y-0"
+      >
         <!-- Header-->
-        <thead class="bg-white">
-          <tr class="text-left text-s-11 uppercase text-info tracking-sp-06">
+        <thead class="bg-white sticky top-0 z-10">
+          <tr
+            class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5"
+          >
             <!-- Watchlist -->
-            <th class="hidden xs:table-cell xs:w-10"></th>
+            <th class="hidden xs:table-cell xs:w-10 pb-4"></th>
             <!-- Name & Balance -->
             <th
-              class="cursor-pointer px-1 py-2 hover:text-black transition-colors"
+              class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
               colspan="2"
             >
               <div
-                class="flex items-center gap-1 ml-11 font-semibold"
+                class="flex items-center gap-1 ml-11 font-bold"
                 :class="{
                   'text-black': headerSort === SortValueString.NAME,
                 }"
@@ -69,14 +77,14 @@
               >
                 Token
                 <arrow-long-up-icon
-                  class="w-3 h-3"
+                  class="w-3.5 h-3.5"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
-                  class="w-3 h-3"
+                  class="w-3.5 h-3.5"
                   v-if="
                     headerSort === SortValueString.NAME &&
                     tableDirection === 'asc'
@@ -86,10 +94,10 @@
             </th>
             <!-- 24h % -->
             <th
-              class="hidden xs:table-cell w-[60px] md:w-[80px] cursor-pointer px-1 py-2 hover:text-black transition-colors"
+              class="hidden xs:table-cell w-[60px] md:w-[80px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
-                class="flex items-center gap-1 justify-end relative font-semibold"
+                class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
                   'text-black': headerSort === SortValueString.PERCENT,
                 }"
@@ -97,14 +105,14 @@
               >
                 24h
                 <arrow-long-up-icon
-                  class="w-3 h-3 absolute -right-4"
+                  class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
-                  class="w-3 h-3 absolute -right-4"
+                  class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.PERCENT &&
                     tableDirection === 'asc'
@@ -114,10 +122,10 @@
             </th>
             <!-- Market Cap -->
             <th
-              class="hidden md:table-cell cursor-pointer px-1 py-2 hover:text-black transition-colors"
+              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
-                class="flex items-center gap-1 justify-end relative font-semibold"
+                class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
                   'text-black': headerSort === SortValueString.MARKET_CAP,
                 }"
@@ -125,14 +133,14 @@
               >
                 Market Cap
                 <arrow-long-up-icon
-                  class="w-3 h-3 absolute -right-4"
+                  class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
-                  class="w-3 h-3 absolute -right-4"
+                  class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.MARKET_CAP &&
                     tableDirection === 'asc'
@@ -142,10 +150,10 @@
             </th>
             <!-- Value and Price -->
             <th
-              class="cursor-pointer px-1 py-2 hover:text-black transition-colors"
+              class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
-                class="flex items-center gap-1 justify-end relative text-right font-semibold"
+                class="flex items-center gap-1 justify-end relative text-right font-bold"
                 :class="{
                   'text-black': headerSort === SortValueString.VALUE,
                 }"
@@ -153,14 +161,14 @@
               >
                 Value
                 <arrow-long-up-icon
-                  class="w-3 h-3 absolute -right-4"
+                  class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'desc'
                   "
                 />
                 <arrow-long-down-icon
-                  class="w-3 h-3 absolute -right-4"
+                  class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
                     headerSort === SortValueString.VALUE &&
                     tableDirection === 'asc'
@@ -170,10 +178,10 @@
             </th>
             <!-- Actions -->
             <th
-              class="lg:pl-1 lg:pr-3 py-2 text-right w-8 sm:w-16 lg:w-auto"
+              class="lg:pl-1 lg:pr-3 pb-4 text-right w-8 sm:w-16 lg:w-auto"
               :class="isOpenSideMenu ? 'xl:w-[160px] 2xl:w-auto' : ''"
             >
-              <p class="hidden lg:block font-semibold">Actions</p>
+              <p class="hidden lg:block font-bold">Actions</p>
             </th>
           </tr>
         </thead>
@@ -207,7 +215,7 @@
               </button>
             </td>
             <!-- Name & Balance -->
-            <td class="px-1 py-2 rounded-l-12 xs:rounded-none" colspan="2">
+            <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
               <div class="flex items-center gap-3">
                 <app-token-logo
                   :url="token.logo_url"
@@ -215,17 +223,19 @@
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
-                  <p class="truncate">{{ token.name }}</p>
-                  <p class="text-info text-s-12 uppercase">
+                  <p class="truncate font-medium text-s-15">{{ token.name }}</p>
+                  <p class="text-info text-s-12">
                     {{ formatFloatingPointValue(token.balance).value }}
-                    {{ truncate(token.symbol, 7) }}
+                    <span class="uppercase">{{
+                      truncate(token.symbol, 7)
+                    }}</span>
                   </p>
                 </div>
               </div>
             </td>
             <!-- 24h % -->
             <td
-              class="hidden xs:table-cell w-[80px] px-1 py-1 text-right text-s-11 leading-p-100"
+              class="hidden xs:table-cell w-[80px] px-1 py-1 text-right text-s-13 font-medium"
               :class="[
                 token.price_change_percentage_24h
                   ? parsePercent(token.price_change_percentage_24h).includes(
@@ -236,27 +246,18 @@
                   : 'text-black',
               ]"
             >
-              <div>
-                <p>
-                  {{
-                    token.price_change_percentage_24h
-                      ? parsePercent(token.price_change_percentage_24h)
-                      : '-'
-                  }}
-                </p>
-                <div v-if="getSparkLinePoints(token).length === 0"></div>
-                <table-sparkline
-                  v-else
-                  :points="getSparkLinePoints(token)"
-                  :width="50"
-                  :height="35"
-                  :max-points="35"
-                  :percent-change="token.price_change_percentage_24h"
-                />
-              </div>
+              <p>
+                {{
+                  token.price_change_percentage_24h
+                    ? parsePercent(token.price_change_percentage_24h)
+                    : '-'
+                }}
+              </p>
             </td>
             <!-- MarketCap -->
-            <td class="hidden md:table-cell px-1 py-2 text-right">
+            <td
+              class="hidden md:table-cell px-1 py-2 text-right font-medium text-s-14"
+            >
               {{
                 token.market_cap
                   ? `$${formatFiatValue(token.market_cap).value}`
@@ -265,7 +266,9 @@
             </td>
             <!-- Value -->
             <td class="px-1 py-2 text-right">
-              <p>{{ token.fiatBalanceFormatted }}</p>
+              <p class="font-medium text-s-15">
+                {{ token.fiatBalanceFormatted }}
+              </p>
               <p class="text-info text-s-12">
                 {{
                   token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
@@ -346,11 +349,18 @@
                 </app-pop-up-menu>
               </div>
 
-              <div class="hidden lg:flex flex-row gap-1 justify-end flex-wrap">
-                <app-base-button size="small" @click="buyBtn()" is-outline
+              <div class="hidden lg:flex flex-row gap-2 justify-end">
+                <app-base-button
+                  size="small"
+                  @click.stop="buyBtn()"
+                  is-outline
+                  class="min-w-[70px] !rounded-full font-bold"
                   >Buy</app-base-button
                 >
-                <app-base-button size="small" @click="swapBtn(token)"
+                <app-base-button
+                  size="small"
+                  @click.stop="swapBtn(token)"
+                  class="min-w-[70px] !rounded-full font-bold"
                   >Swap
                 </app-base-button>
               </div>
@@ -393,40 +403,51 @@
     </div>
 
     <div
-      class="flex flex-col xs:flex-row items-center justify-center justify-between text-s-12 mt-2"
+      class="flex flex-col xs:flex-row items-center justify-between text-s-13 font-medium mt-4 border-t border-grey-5 pt-4 px-2"
     >
-      <small
-        v-if="!isLoading"
-        class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"
-        >{{ getCurrentViewableItemsIndex }} of
-        {{ tokens.length }} results</small
-      >
-      <div class="flex items-center gap-2 order-2 xs:order-2">
+      <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
+        {{ getCurrentViewableItemsIndex }} of {{ tokens.length }} results
+      </div>
+      <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
           label="previous page"
-          @click="prevPage"
+          @click.stop="prevPage"
         >
-          <ChevronLeftIcon class="w-4 h-4" />
+          <chevron-left-icon class="w-4 h-4" />
         </app-btn-icon>
-
-        <span class="px-2">{{ currentPage + 1 }} of {{ totalPages }}</span>
+        <div class="flex items-center gap-2">
+          <span class="text-black">{{ currentPage + 1 }}</span>
+          <span class="text-info">of</span>
+          <span class="text-info">{{ totalPages }}</span>
+        </div>
         <app-btn-icon
-          class=""
           :disabled="!isLoading && currentPage + 1 >= totalPages"
           label="next page"
-          @click="nextPage"
+          @click.stop="nextPage"
         >
-          <ChevronRightIcon class="w-4 h-4" />
+          <chevron-right-icon class="w-4 h-4" />
         </app-btn-icon>
       </div>
-      <app-select
-        v-model:selected="activeShownItems"
-        :options="shownItemsOptions"
-        placeholder="Items per page"
-        class="text-black !text-s-14 order-1 xs:order-3 ml-auto xs:ml-0"
-        position="-right-1"
-      />
+
+      <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
+        <app-select
+          v-model:selected="activeShownItems"
+          :options="shownItemsOptions"
+          position="top-[-160px]"
+          class="min-w-[70px]"
+        >
+          <template #select-button="{ toggleSelect }">
+            <button
+              class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+              @click="toggleSelect"
+            >
+              <span>{{ activeShownItems.label }}</span>
+              <chevron-down-icon class="w-4 h-4 text-info" />
+            </button>
+          </template>
+        </app-select>
+      </div>
     </div>
   </div>
 </template>
@@ -452,7 +473,6 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import TableSparkline from '@/components/TableSparkline.vue'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
 import type { TokenBalance } from '@/mew_api/types'
@@ -742,15 +762,6 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
 const parsePercent = (val: number | null): string => {
   if (val === null || val === undefined) return ''
   return formatPercentageValue(val ?? 0).value
-}
-
-const getSparkLinePoints = (token: DisplayToken) => {
-  if (token.sparkline_in_7d && token.sparkline_in_7d.length > 0) {
-    const totalPoints = token.sparkline_in_7d.length / 7
-    const lastDay = token.sparkline_in_7d.slice(-totalPoints)
-    return lastDay
-  }
-  return []
 }
 
 /**-------------------------------
