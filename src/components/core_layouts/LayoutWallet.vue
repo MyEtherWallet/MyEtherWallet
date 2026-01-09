@@ -6,7 +6,7 @@
           ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
           : '!border-grey-10',
         'border-white',
-        '  w-[60px] xs:w-[70px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-scroll',
+        '  w-[72px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-scroll',
       ]"
     >
       <div>
@@ -15,7 +15,7 @@
           <div class="mt-1 px-1 w-full">
             <button
               @click="walletMenu.setIsOpenSideMenu(!isOpenSideMenu)"
-              class="py-4 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
+              class="py-4 px-2 mb-1 xs:mb-2 rounded-12 hoverNoBG w-full flex items-center justify-center"
             >
               <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
               <ChevronDoubleRightIcon v-else class="w-5 h-5" />
@@ -27,7 +27,7 @@
                 walletPanel === 'swap' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
-                'pt-2 pb-2 mb-2 rounded-12  flex flex-col items-center justify-center w-full',
+                'pt-2 pb-2 px-2 mb-2 rounded-12  flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-swap :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
@@ -46,7 +46,7 @@
                 walletPanel === 'bridge' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
-                'pt-2 pb-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-bridge
@@ -64,7 +64,7 @@
             <button
               v-if="isWalletConnected"
               :class="[
-                'pt-2 pb-2 mb-2 rounded-12 flex flex-col items-center justify-center hoverNoBG w-full',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center hoverNoBG w-full',
               ]"
               @click="openDepositDialog = true"
             >
@@ -86,7 +86,7 @@
                 walletPanel === 'send' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
-                'pt-2 pb-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
             >
               <icon-send
@@ -106,7 +106,7 @@
                 walletPanel === 'buy' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
-                'pt-2 pb-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
               @click="openPanel('buy')"
             >
@@ -126,7 +126,7 @@
                 walletPanel === 'sell' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
-                'pt-2 pb-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
               @click="openPanel('sell')"
             >
@@ -160,7 +160,7 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-grey-10 border-l-1',
         ]"
-        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[70px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-scroll"
+        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-scroll"
       >
         <app-btn-icon
           label="close side menu"

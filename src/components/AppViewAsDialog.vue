@@ -22,7 +22,7 @@
     <div
       v-if="isOpen"
       :class="[
-        isOpenSideMenu ? 'mr-[445px]' : 'mr-[60px] xs:mr-[70px]',
+        isOpenSideMenu ? 'mr-[455px]' : 'mr-[72px] xs:mr-[80px]',
         zIndexContainer,
       ]"
       class="cursor-pointer fixed inset-0 flex items-center justify-end pl-3 ls:pl-6 overscroll-none !overflow-y-scroll mt-[69px] sm:mt-[77px]"

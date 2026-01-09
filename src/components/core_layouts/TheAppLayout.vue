@@ -23,9 +23,9 @@
     </teleport>
     <div
       :class="[
-        isOpenSideMenu ? 'xl:mr-[445px]' : 'xl:mr-[70px]',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[70px]',
+        'flex w-full mr-[72px] xs:mr-[80px]',
         isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
       ]"
     >

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col mb-10">
     <div
-      class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[60px]"
+      class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px]"
     >
       <!--TODO: add link-->
       <app-btn-icon label="Share" :disabled="isLoading">

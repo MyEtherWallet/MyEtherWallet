@@ -61,43 +61,40 @@
       <div
         v-for="(i, index) in otherChains"
         :key="index"
-        class="flex items-center justify-between py-2 w-full gap-4"
+        class="flex items-center justify-between py-3 border-b border-grey-5 last:border-0 w-full"
       >
-        <div class="flex w-full items-center justify-between xs:max-w-[300px]">
-          <div class="relative mr-4">
+        <div class="flex items-center grow">
+          <div class="relative mr-4 shrink-0">
             <app-token-logo
               :url="tokenData.iconUrl"
               :symbol="tokenData.symbol"
+              width="w-10"
+              height="h-10"
             />
             <app-token-logo
-              v-if="selectedChain"
               :url="getChainIcon(i.chainName)"
               :symbol="i.chainName"
-              width="w-4"
-              height="h-4"
-              class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+              width="w-5"
+              height="h-5"
+              class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-2 border-white rounded-full bg-white"
             />
           </div>
-          <div>
-            <p class="text-s-16 font-medium">
-              {{ getBalanceForChain(i.chainName) }}
+          <div class="flex flex-col min-w-0">
+            <h4 class="text-s-16 font-bold truncate">
+              {{ i.balance }}
               {{ tokenData.symbol.toUpperCase() }}
-            </p>
-            <p class="text-info text-s-12 leading-p-110 capitalize">
-              on {{ i.chainName.toLowerCase() }}
+            </h4>
+            <p class="text-info text-s-12 capitalize truncate">
+              on {{ i.chainNameLong || i.chainName.toLowerCase() }}
             </p>
           </div>
-
-          <p class="text-right ml-auto text-info text-s-14 leading-p-110">
-            ${{
-              getFormattedFiatValueForChain(getBalanceForChain(i.chainName))
-            }}
-          </p>
+          <div class="ml-auto mr-4 text-right">
+            <p class="text-info text-s-14 font-medium">${{ i.fiatValue }}</p>
+          </div>
         </div>
-
-        <app-base-button size="small" class="hidden xs:block ml-auto">
-          Bridge</app-base-button
-        >
+        <app-base-button size="small" class="shrink-0">
+          Bridge
+        </app-base-button>
       </div>
     </div>
   </div>
@@ -158,11 +155,25 @@ const otherChains = computed(() => {
     props.tokenData.supportedChains &&
     selectedChain.value
   ) {
-    return props.tokenData.supportedChains.filter(
-      chain =>
-        chain.chainName !== selectedChain.value?.name &&
-        selectedChain.value?.type === chain.chainType,
-    )
+    const chains = props.tokenData.supportedChains
+      .filter(
+        chain =>
+          chain.chainName !== selectedChain.value?.name &&
+          selectedChain.value?.type === chain.chainType,
+      )
+      .map(chain => {
+        const balance = getBalanceForChain(chain.chainName)
+        const fiatValue = getFormattedFiatValueForChain(balance)
+        return {
+          ...chain,
+          balance,
+          fiatValue,
+          numericBalance:
+            balance === 'N/A' ? -1 : parseFloat(balance.replace(/,/g, '')),
+        }
+      })
+
+    return chains.sort((a, b) => b.numericBalance - a.numericBalance)
   }
   return []
 })
