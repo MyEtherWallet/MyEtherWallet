@@ -3,34 +3,15 @@
     <div
       class="flex flex-col sm:flex-row sm:items-center justify-between px-2 py-2 mb-4 sm:gap-6"
     >
-      <div class="flex order-3 order-2 sm:order-1 items-center gap-2">
+      <div
+        class="flex grow flex-wrap order-3 order-2 sm:order-1 items-center gap-2"
+      >
         <div
-          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] gap-1"
+          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] w-full gap-1"
         >
           <app-search-input v-model="searchInput" class="grow" />
-          <app-select
-            v-model:selected="selectedAllTokensFilter"
-            :options="allTokensFilterOptions"
-            position="-right-1"
-            class="text-s-12"
-          >
-            <template #select-button="{ toggleSelect }">
-              <button
-                class="rounded-full hoverNoBG p-2 xs:min-w-[140px] xs:px-3"
-                @click="toggleSelect"
-              >
-                <div class="flex items-center justify-between">
-                  <span class="hidden xs:inline">{{
-                    selectedAllTokensFilter.label
-                  }}</span>
-                  <span class="inline xs:hidden">Filter</span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
-                </div>
-              </button>
-            </template>
-          </app-select>
         </div>
-        <div v-if="selectedAllTokensFilter.value === 'customTokens'">
+        <div v-if="props.view === 'custom'" class="ml-5">
           <app-base-button size="medium" is-outline @click="openAddCustom"
             >+ Add Custom Token</app-base-button
           >
@@ -325,9 +306,7 @@
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
 
-                      <ul
-                        v-if="selectedAllTokensFilter.value !== 'customTokens'"
-                      >
+                      <ul v-if="props.view !== 'custom'">
                         <li
                           @click.stop="[buyBtn(), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -378,7 +357,7 @@
               </div>
               <div
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
-                v-if="selectedAllTokensFilter.value !== 'customTokens'"
+                v-if="props.view !== 'custom'"
               >
                 <app-base-button size="small" @click="buyBtn()" is-outline
                   >Buy</app-base-button
@@ -413,7 +392,7 @@
         v-if="
           searchInput.length === 0 &&
           paginatedArray.length === 0 &&
-          selectedAllTokensFilter.value === 'watchlist'
+          props.view === 'watchlist'
         "
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
@@ -486,7 +465,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -500,7 +479,6 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisVerticalIcon,
-  ChevronDownIcon,
   PencilIcon,
 } from '@heroicons/vue/24/solid'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
@@ -536,9 +514,9 @@ import { useTokenInfoStore } from '@/stores/tokenInfoStore'
 import { useCustomTokenStore } from '@/stores/customTokenStore'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
+import { type BalanceFilter } from '../../helpers/index'
 
 const chainStore = useChainsStore()
-const { isEvmChain, isSolChain, isBitcoinChain } = storeToRefs(chainStore)
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -550,33 +528,12 @@ const {
   allTokens,
 } = storeToRefs(walletStore)
 
-const tableContainer = ref<HTMLElement | null>(null)
 const searchInput = ref('')
 
-/** -------------------------------
- * All Tokens Filter
-  -------------------------------*/
+const props = defineProps<{
+  view: BalanceFilter
+}>()
 
-const allTokensFilterOptions = computed(() => {
-  const options = [
-    { label: 'All Tokens', value: 'all' },
-    { label: 'Watchlist', value: 'watchlist' },
-  ]
-
-  if (isEvmChain.value || isSolChain.value) {
-    options.splice(1, 0, { label: 'Custom Tokens', value: 'customTokens' })
-  }
-
-  return options
-})
-
-watch(isBitcoinChain, (newVal: boolean) => {
-  if (newVal && selectedAllTokensFilter.value.value === 'customTokens') {
-    selectedAllTokensFilter.value = allTokensFilterOptions.value[0]
-  }
-})
-
-const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
 /** -------------------------------
  * Custom tokens
   -------------------------------*/
@@ -605,9 +562,8 @@ const chainCustomTokens = computed(() => {
  * Total Value
 -------------------------------*/
 const totalValue = computed(() => {
-  if (selectedAllTokensFilter.value.value === 'all')
-    return formattedTotalFiatPortfolioValue.value
-  else if (selectedAllTokensFilter.value.value === 'watchlist') {
+  if (props.view === 'all') return formattedTotalFiatPortfolioValue.value
+  else if (props.view === 'watchlist') {
     const sum = tokens.value.reduce((acc, token) => {
       const fiatValue = BigNumber(token.fiatBalance || 0)
       return acc.plus(fiatValue)
@@ -678,7 +634,7 @@ const {
   .json<GetWebTokensWatchlistResponse>()
 
 const isLoading = computed<boolean>(() => {
-  return selectedAllTokensFilter.value.value === 'watchlist'
+  return props.view === 'watchlist'
     ? isLoadingBalances.value || isLoadingWatchlist.value
     : isLoadingBalances.value
 })
@@ -692,7 +648,7 @@ export interface DisplayToken extends TokenBalance {
 
 const tokens = computed<DisplayToken[]>(() => {
   let tokens: DisplayToken[] = []
-  if (selectedAllTokensFilter.value.value === 'watchlist') {
+  if (props.view === 'watchlist') {
     tokens =
       [...(wachListMarketData.value || [])]
         .filter(token => watchListedTokens.value.includes(token.coinId))
@@ -723,7 +679,7 @@ const tokens = computed<DisplayToken[]>(() => {
             logo_url: token.logoUrl || '',
           }
         }) || []
-  } else if (selectedAllTokensFilter.value.value === 'customTokens') {
+  } else if (props.view === 'custom') {
     // TODO: figure out balance fetching
     tokens = chainCustomTokens.value.map(customToken => {
       const hasTokenBalance = allTokens.value.filter(

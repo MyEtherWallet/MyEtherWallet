@@ -12,7 +12,7 @@
       <div class="hidden lg:flex lg:items-center">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
-          :btn-list="cryptoFilterOptions"
+          :btn-list="allTokensFilterOptions"
           size="large"
           class="flex-wrap"
         >
@@ -23,7 +23,7 @@
       </div>
       <app-select
         v-model:selected="selectedCryptoFilter"
-        :options="cryptoFilterOptions"
+        :options="allTokensFilterOptions"
         position="right-0"
         placeholder="Balance Menu"
         class="lg:hidden"
@@ -48,8 +48,8 @@
 
     <app-sheet sheet-class="py-4 !px-2 min-h-[200px] ">
       <table-token-balance
-        v-if="selectedCryptoFilter.value === 'all'"
-        view="all"
+        v-if="showTableTokens"
+        :view="selectedCryptoFilter.value"
       />
       <div v-else class="text-center my-10">Coming soon</div>
     </app-sheet>
@@ -59,21 +59,45 @@
 <script lang="ts" setup>
 import TableTokenBalance from './components/balances/TableTokenBalance.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { BALANCE_FILTER, type BalanceFilterOption } from './helpers/index'
+import { useChainsStore } from '@/stores/chainsStore'
 
+const chainStore = useChainsStore()
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
-const cryptoFilterOptions = ref([
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Stocks', value: 'stocks' },
-  { label: 'Earning Interest', value: 'earning' },
-  { label: 'NFTS', value: 'nfts' },
-])
+const { isBitcoinChain } = storeToRefs(chainStore)
 
-const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+const allTokensFilterOptions = computed(() => {
+  const filter = BALANCE_FILTER
+  //remove custom option for bitcoin chain
+  if (isBitcoinChain.value) {
+    return filter.filter(option => option.value !== 'custom')
+  }
+
+  return filter
+})
+
+const selectedCryptoFilter = ref<BalanceFilterOption>(
+  allTokensFilterOptions.value[0],
+)
+
+const showTableTokens = computed(() => {
+  return (
+    selectedCryptoFilter.value.value === 'all' ||
+    selectedCryptoFilter.value.value === 'watchlist' ||
+    selectedCryptoFilter.value.value === 'custom'
+  )
+})
+
+watch(isBitcoinChain, (newVal: boolean) => {
+  if (newVal && selectedCryptoFilter.value.value === 'custom') {
+    selectedCryptoFilter.value = allTokensFilterOptions.value[0]
+  }
+})
 </script>

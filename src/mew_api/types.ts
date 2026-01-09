@@ -79,24 +79,32 @@ export type CryptoOverviewToken = CryptoOverview['newCoins'][number]
 /** --------------------------
  * BTC types
  --------------------------*/
-export type BitcoinQuotesResponse = components['schemas']['GetBtcTransactionQuoteResponse']
-export type BitcoinQuotesRequestBody = components['schemas']['GetBtcTransactionQuoteRequest']
-export type BitcoinSignableTransactionResponse = components['schemas']['GetUnsignedBtcTransactionResponse']
-export type BitcoinTxResponse = components['schemas']['BroadcastBtcTransactionResponse']
-export type BitcoinBalanceResponse = components['schemas']['GetBtcBalanceByChainNameAndAddressResponse']
+export type BitcoinQuotesResponse =
+  components['schemas']['GetBtcTransactionQuoteResponse']
+export type BitcoinQuotesRequestBody =
+  components['schemas']['GetBtcTransactionQuoteRequest']
+export type BitcoinSignableTransactionResponse =
+  components['schemas']['GetUnsignedBtcTransactionResponse']
+export type BitcoinTxResponse =
+  components['schemas']['BroadcastBtcTransactionResponse']
+export type BitcoinBalanceResponse =
+  components['schemas']['GetBtcBalanceByChainNameAndAddressResponse']
 
-export type GetBtcTransactionEstimateBody = components['schemas']['GetBtcTransactionEstimateRequest']
-export type GetBtcTransactionEstimateResponse = components['schemas']['GetBtcTransactionEstimateResponse']
+export type GetBtcTransactionEstimateBody =
+  components['schemas']['GetBtcTransactionEstimateRequest']
+export type GetBtcTransactionEstimateResponse =
+  components['schemas']['GetBtcTransactionEstimateResponse']
 export type BtcGasFeesQuote = components['schemas']['BtcTransactionQuotes']
 export type BtcGasFees = components['schemas']['BtcTransactionFeeQuote']
-
 
 /**
  * Custom types. Usually to merge similar types or add extra fields
  */
 
-export type FeeOption = BtcGasFeesQuote & EvmGasFees;
-export type QuotesResponse = BitcoinQuotesResponse & GetEvmTransactionQuoteResponse;
+export type FeeOption = BtcGasFeesQuote & EvmGasFees
+export type QuotesResponse = BitcoinQuotesResponse &
+  GetEvmTransactionQuoteResponse
+
 //Tokens Page
 export type GetWebTokenInfo =
   components['schemas']['GetWebTokenInfoPageResponse']
