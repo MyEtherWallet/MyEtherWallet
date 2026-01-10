@@ -140,7 +140,17 @@
                   />
                 </div>
                 <div class="text-left">
-                  <h2 class="font-bold text-s-17 text-black">
+                  <app-tooltip v-if="token.name.length > 10" :text="token.name">
+                    <h2
+                      class="font-bold text-s-17 text-black whitespace-nowrap"
+                    >
+                      {{ truncate(token.name, 10) }}
+                    </h2>
+                  </app-tooltip>
+                  <h2
+                    v-else
+                    class="font-bold text-s-17 text-black whitespace-nowrap"
+                  >
                     {{ token.name }}
                   </h2>
                   <p class="text-secondary text-sm font-medium">
@@ -194,6 +204,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,

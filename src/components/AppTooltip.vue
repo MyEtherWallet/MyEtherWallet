@@ -13,7 +13,7 @@
           ref="tooltipRef"
           role="tooltip"
           v-show="show"
-          class="fixed bg-white rounded-16 p-3 text-s-12 shadow-button w-max max-w-[200px] z-10"
+          class="fixed bg-white rounded-16 p-3 text-s-12 shadow-button w-max max-w-[300px] z-[2101]"
           :class="{
             'right-top': isTopRight,
             'left-top': isTopLeft,
