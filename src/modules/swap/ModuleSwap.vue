@@ -43,18 +43,19 @@
               class="mt-3"
             />
           </div>
-          <div
-            class="bg-white border border-solid border-grey-10 rounded-[12px] h-[36px] w-[36px] mx-auto flex justify-center items-center absolute shadow-lg left-0 right-0 z-10"
-            :class="{
-              'top-[calc(50%-100px)]': isCrossChain,
-              'top-[calc(50%-53px)]': !isCrossChain,
-            }"
-          >
-            <arrows-up-down-icon class="w-5 h-5 text-primary" />
+
+          <!-- Arrow Button -->
+          <div class="relative h-0 z-10 flex justify-center items-center">
+            <button
+              class="bg-white border border-solid border-grey-10 rounded-xl h-10 w-10 flex justify-center items-center shadow-sm hoverNoBG transition-transform active:scale-95"
+              @click="reverseSwap"
+            >
+              <arrows-up-down-icon class="w-5 h-5 text-primary" />
+            </button>
           </div>
-          <div class="pt-2"></div>
+
           <!-- To Section -->
-          <div class="bg-mewBg rounded-20 p-5 mx-auto mt-2">
+          <div class="bg-mewBg rounded-20 p-5 mx-auto mt-1">
             <p class="text-s-12 mb-2 font-bold">You are buying</p>
             <select-chain-for-app
               :can-store="false"
@@ -496,6 +497,21 @@ const clearValues = () => {
   selectedQuote.value = undefined
   setToToken()
   setFromToken()
+}
+
+const reverseSwap = () => {
+  const tempToken = fromTokenSelected.value
+  const tempToToken = toTokenSelected.value
+  if (tempToToken) {
+    fromTokenSelected.value = tempToToken
+    toTokenSelected.value = tempToken
+  }
+
+  if (isCrossChain.value) {
+    const tempChain = selectedFromChain.value
+    selectedFromChain.value = selectedToChain.value
+    selectedToChain.value = tempChain
+  }
 }
 
 // Reset values when swap initiated closes
