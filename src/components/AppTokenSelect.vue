@@ -291,20 +291,25 @@ enum SortDirection {
   DESC = 'desc',
 }
 
-const activeSortValue = ref<SortValueString>(SortValueString.NAME)
+const activeSortValue = ref<SortValueString>(SortValueString.USD)
 const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
-    // Toggle direction if the same sort value is clicked
     activeSortDirection.value =
       activeSortDirection.value === SortDirection.ASC
         ? SortDirection.DESC
         : SortDirection.ASC
   } else {
-    // Set new sort value and default to ascending direction
     activeSortValue.value = value
-    activeSortDirection.value = SortDirection.ASC
+    const isNumericSort = [
+      SortValueString.PRICE,
+      SortValueString.USD,
+      SortValueString.BALANCE,
+    ].includes(value)
+    activeSortDirection.value = isNumericSort
+      ? SortDirection.DESC
+      : SortDirection.ASC
   }
 }
 
@@ -318,34 +323,33 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     ).toNumber()
     return {
       ...token,
-      usd_balance: usdBalance, // Add usd_balance to each token
-      price: token.price || 0, // Ensure price is defined
+      usd_balance: usdBalance,
+      price: token.price || 0,
     }
   })
 
-  if (!searchInput.value) {
-    if (activeSortValue.value === SortValueString.NAME) {
-      return sortObjectArrayString(items, 'name', activeSortDirection.value)
-    }
-    if (activeSortValue.value === SortValueString.SYMBOL) {
-      return sortObjectArrayString(items, 'symbol', activeSortDirection.value)
-    }
-    if (activeSortValue.value === SortValueString.PRICE) {
-      return sortObjectArrayNumber(items, 'price', activeSortDirection.value)
-    }
-    if (activeSortValue.value === SortValueString.USD) {
-      return sortObjectArrayNumber(
-        items,
-        'usd_balance',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.BALANCE) {
-      return sortObjectArrayNumber(items, 'balance', activeSortDirection.value)
-    }
-    return items
+  const sortKeyMap: Record<
+    SortValueString,
+    { key: keyof TokenBalanceWithUsd; type: 'string' | 'number' }
+  > = {
+    [SortValueString.NAME]: { key: 'name', type: 'string' },
+    [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
+    [SortValueString.PRICE]: { key: 'price', type: 'number' },
+    [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
+    [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
   }
-  return searchArrayByKeysStr(items, ['name', 'symbol'], searchInput.value)
+
+  const { key, type } = sortKeyMap[activeSortValue.value]
+  const sorted =
+    type === 'string'
+      ? sortObjectArrayString(items, key, activeSortDirection.value)
+      : sortObjectArrayNumber(items, key, activeSortDirection.value)
+
+  if (searchInput.value) {
+    return searchArrayByKeysStr(sorted, ['name', 'symbol'], searchInput.value)
+  }
+
+  return sorted
 })
 
 const setSelectedToken = (token: TokenBalance) => {

@@ -148,54 +148,54 @@
           </button>
           <expand-transition>
             <div v-if="showMoreDetails && txDataFormatted !== null">
-              <div class="my-2 flex flex-col gap-2 bg-grey-5 py-4 rounded-20">
+              <div class="my-2 flex flex-col gap-4 bg-mewBg py-6 rounded-20">
                 <!-- Nonce-->
-                <div class="px-5 flex items-start justify-between">
+                <div class="px-5 flex items-center justify-between">
                   <p
-                    class="basis-3/12 text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
                   >
                     {{ $t('common.nonce') }}
                   </p>
-                  <p class="text-right basis-9/12 text-s-14 font-medium">
+                  <p class="text-right text-s-14 font-medium text-black">
                     {{ txDataFormatted.nonce }}
                   </p>
                 </div>
                 <!-- Gas Limit -->
-                <div class="px-5 flex items-start justify-between">
+                <div class="px-5 flex items-center justify-between">
                   <p
-                    class="basis-3/12 text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
                   >
-                    {{ $t('common.gas_limit') }}
+                    {{ $t('gas.limit') }}
                   </p>
-                  <p class="text-right basis-9/12 text-s-14 font-medium">
+                  <p class="text-right text-s-14 font-medium text-black">
                     {{ txDataFormatted.gasLimit }}
                   </p>
                 </div>
                 <!-- Max fee per gas -->
                 <div
                   v-if="txDataFormatted.maxFeePerGas"
-                  class="px-5 flex items-start justify-between"
+                  class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="basis-3/12 text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
                   >
                     {{ $t('gas.max_fee') }}
                   </p>
-                  <p class="text-right basis-9/12 text-s-14 font-medium">
+                  <p class="text-right text-s-14 font-medium text-black">
                     {{ txDataFormatted.maxFeePerGas }} Gwei
                   </p>
                 </div>
-                <!-- Max fee per gas -->
+                <!-- Max Priority fee per gas -->
                 <div
                   v-if="txDataFormatted.maxPriorityFeePerGas"
-                  class="px-5 flex items-start justify-between"
+                  class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="basis-4/12 text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
                   >
                     {{ $t('gas.max_priority') }}
                   </p>
-                  <p class="text-right basis-8/12 text-s-14 font-medium">
+                  <p class="text-right text-s-14 font-medium text-black">
                     {{ txDataFormatted.maxPriorityFeePerGas }} Gwei
                   </p>
                 </div>
@@ -203,29 +203,31 @@
 
                 <div
                   v-if="txDataFormatted.gasPrice"
-                  class="px-5 flex items-start justify-between"
+                  class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="basis-3/12 text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
                   >
                     {{ $t('gas.price') }}
                   </p>
-                  <p class="text-right basis-9/12 text-s-14 font-medium">
+                  <p class="text-right text-s-14 font-medium text-black">
                     {{ txDataFormatted.gasPrice }} Gwei
                   </p>
                 </div>
                 <!-- Data -->
                 <div class="px-5 flex items-start justify-between">
                   <p
-                    class="basis-3/12 text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3 pt-2"
                   >
                     {{ $t('common.data') }}
                   </p>
-                  <p
-                    class="text-right basis-9/12 text-s-12 break-all font-mono bg-white p-2 rounded-lg mt-1 mx-5"
-                  >
-                    {{ txDataFormatted.data }}
-                  </p>
+                  <div class="flex justify-end max-w-[70%]">
+                    <p
+                      class="text-right text-s-12 break-all font-mono bg-white px-3 py-2 rounded-lg text-black"
+                    >
+                      {{ txDataFormatted.data }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -334,20 +334,25 @@ enum SortDirection {
   DESC = 'desc',
 }
 
-const activeSortValue = ref<SortValueString>(SortValueString.NAME)
+const activeSortValue = ref<SortValueString>(SortValueString.USD)
 const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
-    // Toggle direction if the same sort value is clicked
     activeSortDirection.value =
       activeSortDirection.value === SortDirection.ASC
         ? SortDirection.DESC
         : SortDirection.ASC
   } else {
-    // Set new sort value and default to ascending direction
     activeSortValue.value = value
-    activeSortDirection.value = SortDirection.ASC
+    const isNumericSort = [
+      SortValueString.PRICE,
+      SortValueString.USD,
+      SortValueString.BALANCE,
+    ].includes(value)
+    activeSortDirection.value = isNumericSort
+      ? SortDirection.DESC
+      : SortDirection.ASC
   }
 }
 
@@ -355,10 +360,6 @@ interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
 }
 
-/**
- * if searchInput is empty, sort the paginatedItems based on the activeSortValue and activeSortDirection
- * else return search results from all of the tokens
- */
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   const allItems = tokens.value.map(token => {
     const usdBalance = BigNumber(
@@ -366,61 +367,33 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     ).toNumber()
     return {
       ...token,
-      usd_balance: usdBalance, // Add usd_balance to each token
-      price: token.price || 0, // Ensure price is defined
+      usd_balance: usdBalance,
+      price: token.price || 0,
     }
   })
 
-  const paginatedItems = paginatedTokens.value.map(token => {
-    const usdBalance = BigNumber(
-      BigNumber(token.price || 0).times(BigNumber(token.balance ?? '0')),
-    ).toNumber()
-    return {
-      ...token,
-      usd_balance: usdBalance, // Add usd_balance to each token
-      price: token.price || 0, // Ensure price is defined
-    }
-  })
-
-  if (!searchInput.value) {
-    if (activeSortValue.value === SortValueString.NAME) {
-      return sortObjectArrayString(
-        paginatedItems,
-        'name',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.SYMBOL) {
-      return sortObjectArrayString(
-        paginatedItems,
-        'symbol',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.PRICE) {
-      return sortObjectArrayNumber(
-        paginatedItems,
-        'price',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.USD) {
-      return sortObjectArrayNumber(
-        paginatedItems,
-        'usd_balance',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.BALANCE) {
-      return sortObjectArrayNumber(
-        paginatedItems,
-        'balance',
-        activeSortDirection.value,
-      )
-    }
-    return paginatedItems
+  const sortKeyMap: Record<
+    SortValueString,
+    { key: keyof TokenBalanceWithUsd; type: 'string' | 'number' }
+  > = {
+    [SortValueString.NAME]: { key: 'name', type: 'string' },
+    [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
+    [SortValueString.PRICE]: { key: 'price', type: 'number' },
+    [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
+    [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
   }
-  return searchArrayByKeysStr(allItems, ['name', 'symbol'], searchInput.value)
+
+  const { key, type } = sortKeyMap[activeSortValue.value]
+  const sorted =
+    type === 'string'
+      ? sortObjectArrayString(allItems, key, activeSortDirection.value)
+      : sortObjectArrayNumber(allItems, key, activeSortDirection.value)
+
+  if (searchInput.value) {
+    return searchArrayByKeysStr(sorted, ['name', 'symbol'], searchInput.value)
+  }
+
+  return sorted.slice(0, endingPagination.value)
 })
 
 const loadMoreItems = () => {
