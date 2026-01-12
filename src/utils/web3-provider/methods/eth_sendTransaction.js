@@ -50,7 +50,7 @@ export default async ({ payload, store, requestManager }, res, next) => {
     if (tx.gasLimit) {
       tx.gas = tx.gasLimit;
     }
-    tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
+    tx.gas = !tx.gas || tx.gas === '0x0' ? await ethCalls.estimateGas(localTx) : tx.gas;
     tx.gasLimit = tx.gas;
   } catch (e) {
     res(e);
