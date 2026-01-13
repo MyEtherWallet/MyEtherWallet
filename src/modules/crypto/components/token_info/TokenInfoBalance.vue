@@ -18,8 +18,8 @@
           <app-token-logo
             :url="tokenData.iconUrl"
             :symbol="tokenData.symbol"
-            width="w-9 xs:w-8"
-            height="h-9 xs:h-8"
+            width="w-9"
+            height="h-9"
           />
           <app-token-logo
             v-if="selectedChain"
@@ -27,7 +27,7 @@
             :symbol="selectedChain.name"
             width="w-4"
             height="h-4"
-            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white"
           />
         </div>
         <div class="flex flex-col xs:flex-row xs:items-center ml-3 xs:ml-2">
@@ -79,7 +79,7 @@
                 :symbol="i.chainName"
                 width="w-5"
                 height="h-5"
-                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-2 border-white rounded-full bg-white"
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
               />
             </div>
             <div class="flex flex-col">

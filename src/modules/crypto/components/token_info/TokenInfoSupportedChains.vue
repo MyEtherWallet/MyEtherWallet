@@ -29,7 +29,7 @@
                 :symbol="tokenData.symbol"
                 width="w-5"
                 height="h-5"
-                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-2 border-white rounded-full bg-white"
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
               />
             </div>
             <div class="flex flex-col min-w-0">
