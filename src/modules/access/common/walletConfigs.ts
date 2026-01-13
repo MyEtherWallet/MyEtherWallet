@@ -90,7 +90,11 @@ const keystoreSupportNetwork = (chain?: Chain): boolean => {
 
 const enkryptSupportNetwork = (chain?: Chain): boolean => {
   if (!chain) return false
-  return chain.type === 'EVM' || ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') && !!window.unisat)
+  return (
+    chain.type === 'EVM' ||
+    ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') &&
+      !!window.unisat)
+  )
 }
 
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {

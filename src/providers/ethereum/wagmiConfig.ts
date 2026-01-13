@@ -13,7 +13,7 @@ const connectorsLocal = connectorsForWallets(
   [
     {
       groupName: 'MEW',
-      wallets: allRainbowWallets,
+      wallets: allRainbowWallets as any[],
     },
   ],
   {

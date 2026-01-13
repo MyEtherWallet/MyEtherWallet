@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center w-full">
     <div
-      class="max-w-[624px] flex flex-col items-center justify-center py-6 sm:py-10"
+      class="max-w-[640px] w-full flex flex-col items-center justify-center py-6 sm:py-10"
     >
       <app-sheet>
         <p v-if="clickedWalletConnect" class="mb-2 text-center">

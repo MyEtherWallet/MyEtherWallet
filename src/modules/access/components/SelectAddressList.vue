@@ -1,9 +1,11 @@
 <template>
   <div class="grid grid-cols-1">
-    <div class="border border-grey-outline rounded-2xl p-1 xs:p-4">
+    <div
+      class="border border-grey-outline rounded-2xl p-1 xs:p-4 flex flex-col gap-1"
+    >
       <div v-for="i in 5" :key="i">
         <button
-          v-if="!isLoading"
+          v-if="!isLoading && walletList[i - 1]"
           :class="[
             walletList[i - 1].index === model ? 'bg-grey-5' : 'hoverNoBG',
             'flex px-2 xs:px-4 py-2 items-center gap-1 xs:gap-2 xs:gap-5 w-full rounded-2xl  min-h-12',
@@ -139,6 +141,6 @@ const blockExplorerUrl = (address: string) => {
 }
 
 const isDisabled = computed(() => {
-  return props.isLoading ? true : props.walletList[0].index === 0
+  return props.isLoading ? true : props.walletList[0]?.index === 0
 })
 </script>

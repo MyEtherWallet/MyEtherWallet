@@ -26,22 +26,19 @@
     <!-- Dialog with chains list -->
     <app-dialog
       v-model:is-open="openDialog"
+      :title="$t('derivation_path.select_path')"
       class="xs:max-w-[428px] sm:mx-auto"
+      z-index-overlay="z-[200]"
+      z-index-container="z-[201]"
+      has-content-gutter
     >
-      <template #title>
-        <div class="flex items-center pr-2 pt-4 sm:pt-6 xl:pt-8">
-          <h1 class="text5 font-bold">
-            {{ $t('derivation_path.select_path') }}
-          </h1>
-        </div>
-      </template>
       <template #content>
-        <div class="h-[95vh] sm:h-[500px] !overflow-y-scroll">
+        <div class="max-h-[95vh] sm:max-h-[500px] pb-6">
           <!--PATH LIST-->
           <div>
             <!-- Seacrh -->
-            <div class="sticky top-0 bg-white z-10">
-              <div class="px-3 mb-1 flex items-center gap-2">
+            <div class="sticky top-0 bg-white z-10 pt-2">
+              <div class="mb-1 flex items-center gap-2">
                 <app-search-input
                   v-model="searchInput"
                   class="grow"

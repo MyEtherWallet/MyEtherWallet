@@ -139,7 +139,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors w-[55%] sm:w-[180px]"
                 >
                   <div
-                    class="flex items-center gap-1 ml-11 font-semibold"
+                    class="flex items-center gap-1 ml-11 font-bold"
                     :class="{
                       'text-black': headerSort === 'NAME',
                     }"
@@ -161,7 +161,7 @@
                   class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
+                    class="flex items-center gap-1 justify-end relative text-right font-bold"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
@@ -187,7 +187,7 @@
                   >
                     <template #select-button="{ toggleSelect }">
                       <button
-                        class="px-1 py-2 text-right !uppercase font-semibold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        class="px-1 py-2 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
                         @click="toggleSelect"
                       >
                         <div class="flex items-center justify-end gap-1">
@@ -205,7 +205,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden xl:min-w-[115px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative font-semibold"
+                    class="flex items-center gap-1 justify-end relative font-bold"
                     :class="{
                       'text-black': headerSort === 'TOTAL_VOLUME',
                     }"
@@ -233,7 +233,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden md:table-cell xl:min-w-[115px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
+                    class="flex items-center gap-1 justify-end relative text-right font-bold"
                     :class="{
                       'text-black': headerSort === 'MARKET_CAP',
                     }"
@@ -258,7 +258,7 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-semibold">Actions</p>
+                  <p class="hidden lg:block font-bold">Actions</p>
                 </th>
               </tr>
             </thead>
@@ -300,8 +300,12 @@
                       :symbol="token.symbol"
                     />
                     <div class="truncate">
-                      <p class="truncate">{{ token.name }}</p>
-                      <p class="text-info text-s-12 uppercase">
+                      <p class="truncate text-s-15 font-medium leading-tight">
+                        {{ token.name }}
+                      </p>
+                      <p
+                        class="text-info text-s-12 uppercase font-normal mt-0.5"
+                      >
                         {{ truncate(token.symbol, 7) }}
                       </p>
                     </div>
@@ -333,7 +337,8 @@
                       :points="getSparkLinePoints(token)"
                       :width="50"
                       :height="35"
-                      :max-points="35"
+                      :max-points="34"
+                      fill
                       :percent-change="getActivePercent(token) || undefined"
                     />
                   </div>
@@ -695,11 +700,10 @@ const cryptoFilterOptions = ref([
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
 
-interface DisplayToken
-  extends Omit<
-    GetWebTokensTableResponseToken,
-    'price' | 'marketCap' | 'totalVolume'
-  > {
+interface DisplayToken extends Omit<
+  GetWebTokensTableResponseToken,
+  'price' | 'marketCap' | 'totalVolume'
+> {
   price: string
   marketCap: string
   totalVolume: string

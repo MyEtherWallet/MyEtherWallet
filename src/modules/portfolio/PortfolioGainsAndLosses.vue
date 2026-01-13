@@ -1,26 +1,27 @@
 <template>
   <div class="w-full" v-if="isWalletConnected">
-    <div class="flex flex-wrap items-center w-full justify-between mb-2">
-      <h2 class="text-s-18 font-bold ml-2 xs:ml-4">{{ title }}</h2>
-      <div
-        class="flex items-center justify-center gap-2 order-2 xs:order-2 ml-auto"
-      >
+    <div class="flex flex-wrap items-center w-full justify-between mb-3 px-1">
+      <h2 class="text-s-18 font-bold">{{ title }}</h2>
+      <div class="flex items-center justify-center gap-1 order-2 ml-auto">
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
           label="previous page"
           @click="prevPage"
+          height="h-8"
+          width="w-8"
         >
           <ChevronLeftIcon class="w-4 h-4" />
         </app-btn-icon>
 
-        <span class="px-2 text-s-12"
+        <span class="px-2 text-s-12 text-info font-medium"
           >{{ currentPage + 1 }} of {{ totalPages }}</span
         >
         <app-btn-icon
-          class=""
           :disabled="!isLoading && currentPage + 1 >= totalPages"
           label="next page"
           @click="nextPage"
+          height="h-8"
+          width="w-8"
         >
           <ChevronRightIcon class="w-4 h-4" />
         </app-btn-icon>
@@ -28,14 +29,14 @@
     </div>
     <app-sheet
       :is-elivated="false"
-      sheet-class="!pt-4 !pb-2 !px-2 overflow-hidden "
+      sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
     >
       <div
-        class="grid grid-cols-4 w-full justify-between text-s-9 uppercase text-info tracking-sp-06 mb-3 items-end px-3 font-semibold"
+        class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
       >
         <p class="col-span-2">Token</p>
         <p class="col-span-1">Price / 24h</p>
-        <p class="text-right col-span-1">Portfolio Gain / Loss</p>
+        <p class="text-right col-span-1">Gain / Loss</p>
       </div>
       <div v-if="!isLoading" class="min-h-[181px]">
         <TokenRow
@@ -48,7 +49,7 @@
         <div v-if="!hasBalances" class="text-center"></div>
       </div>
     </app-sheet>
-    <div class="flex justify-end my-1 items-center">
+    <div class="flex justify-end mt-2 mb-1 items-center">
       <router-link
         :to="{
           name:
@@ -56,10 +57,10 @@
               ? ROUTES_MAIN.STOCKS.NAME
               : ROUTES_MAIN.CRYPTO.NAME,
         }"
-        class="font-bold text-s-14 transition-[background] duration-300 hoverNoBG rounded-full px-3 py-1"
+        class="font-bold text-s-14 transition-colors duration-300 hover:text-primary flex items-center px-1"
       >
         {{ buttonText }}
-        <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex ml-1"
+        <arrow-long-up-icon class="rotate-90 w-4 h-4 ml-1.5"
       /></router-link>
     </div>
   </div>

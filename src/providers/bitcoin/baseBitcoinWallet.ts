@@ -23,15 +23,23 @@ class BaseBtcWallet implements WalletInterface {
   constructor(chainName: string) {
     this.chainName = chainName // refers to chain in enkrypt library not chain object from the api
   }
-  getMultipleGasFees?: ((txs: GetEvmMultiTransactionEstimateRequest) => Promise<QuotesResponse>) | undefined
-  getMultipleSignableTransactions?: ((feeObj: SignableTransactionParams) => Promise<GetUnsignedEvmMultiTransactionResponse>) | undefined
+  getMultipleGasFees?:
+    | ((txs: GetEvmMultiTransactionEstimateRequest) => Promise<QuotesResponse>)
+    | undefined
+  getMultipleSignableTransactions?:
+    | ((
+        feeObj: SignableTransactionParams,
+      ) => Promise<GetUnsignedEvmMultiTransactionResponse>)
+    | undefined
 
   /**
    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
    * @param tx  - Transaction details
    * @returns Promise resolving to QuotesResponse containing gas fee information
    */
-  getBtcGasFee = (tx: BitcoinQuotesRequestBody): Promise<BitcoinQuotesResponse> => {
+  getBtcGasFee = (
+    tx: BitcoinQuotesRequestBody,
+  ): Promise<BitcoinQuotesResponse> => {
     return fetchWithRetry<BitcoinQuotesResponse>(
       `/v2/btc/${this.getProvider()}/quotes?noInjectErrors=false`,
       {
@@ -92,7 +100,7 @@ class BaseBtcWallet implements WalletInterface {
 
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const balanceEndpoint = `/v1/btc/${this.getProvider()}/balances/${address}/?noInjectErrors=false`
+    const balanceEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
     return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
   }
 

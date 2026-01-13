@@ -1,23 +1,19 @@
 <template>
   <div v-if="isWalletConnected" class="flex flex-col w-full">
     <div
-      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-2 mt-6 mb-4"
+      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      <h1
-        class="text-s-24 xs:text-s-32 font-bold rounded-32 sm:ml-4 px-2 xs:px-4 text-left"
-      >
-        Your Balances
-      </h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">Your Balances</h1>
       <!--Filter Lists-->
-      <div class="hidden lg:flex lg:items-center">
+      <div class="hidden lg:flex lg:items-center bg-grey-5 p-1 rounded-full">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions"
-          size="large"
-          class="flex-wrap"
+          size="medium"
+          class="flex-nowrap"
         >
           <template #btn-content="{ data }">
-            {{ data.label }}
+            <span class="px-2">{{ data.label }}</span>
           </template>
         </app-btn-group>
       </div>

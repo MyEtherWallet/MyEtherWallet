@@ -23,7 +23,7 @@
       <div
         v-if="isOpen"
         :class="zIndexContainer"
-        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-4 xs:p-6 sm:p-9 overscroll-none !overflow-y-scroll"
+        class="cursor-pointer fixed inset-0 h-full w-screen flex items-center justify-center p-4 xs:p-6 sm:p-9 overscroll-none overflow-hidden"
         @click="!persistent ? setIsOpen(false) : () => {}"
       >
         <transition
@@ -35,7 +35,7 @@
         >
           <div
             v-if="isOpen"
-            class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+            class="cursor-default min-w-[320px] rounded-32 flex flex-col max-h-full overflow-hidden"
             :class="[bg, $attrs.class]"
             @click.stop
             role="dialog"
@@ -44,7 +44,7 @@
             ref="targetDialog"
           >
             <div
-              class="z-10 pb-2 basis-full order-2 sm:order-1 flex sticky top-0"
+              class="z-10 pb-2 flex flex-none relative"
               :class="[
                 {
                   'justify-between': title || $slots.title,
@@ -58,7 +58,7 @@
               <slot name="title">
                 <h1
                   v-if="title && !$slots.title"
-                  class="text-s-28 font-bold pr-2 pt-4 sm:pt-7 pl-6 capitalize"
+                  class="text-s-28 font-bold px-4 pt-4 sm:pt-5 text-center capitalize w-full"
                   id="dialogTitle"
                 >
                   {{ title }}
@@ -66,11 +66,14 @@
               </slot>
               <app-btn-icon-close
                 v-if="!persistent"
-                @click="setIsOpen(false)"
-                class="mt-4 mr-4 min-w-[32px]"
+                @close="setIsOpen(false)"
+                class="absolute top-4 right-4 min-w-[32px]"
               />
             </div>
-            <div :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]">
+            <div
+              :class="[{ ' px-4 xs:px-6 sm:px-8': hasContentGutter }]"
+              class="overflow-y-auto mew-scrollbar flex-1"
+            >
               <slot name="content" />
             </div>
           </div>

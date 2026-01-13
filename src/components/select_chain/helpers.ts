@@ -11,4 +11,5 @@ export const ALL_CHAINS = ref<Chain>({
   isTestNetwork: false,
   currencyName: '',
   currencyNameLong: '',
+  supportsBalances: false,
 })

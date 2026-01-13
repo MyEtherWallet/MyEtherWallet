@@ -97,7 +97,7 @@
   "refresh_balance": "Refresh Balance",
   "select_token": {
     "title": "Select Token",
-    "search": "Search by name or symbol",
+    "search": "Search",
     "no_tokens_match": "No tokens match your search",
     "no_tokens_available": "No tokens available"
   },

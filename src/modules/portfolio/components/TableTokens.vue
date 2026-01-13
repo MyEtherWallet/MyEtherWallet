@@ -18,8 +18,8 @@
               alt="token icon"
             />
             <div class="text-left max-w-[120px]">
-              <p class="truncate text-s-14 font-medium">{{ token.name }}</p>
-              <p class="text-info text-s-12">
+              <p class="truncate text-s-15 font-medium">{{ token.name }}</p>
+              <p class="text-info text-s-12 font-normal">
                 {{ getBalance(token.balance) }}
                 <span class="uppercase text-s-12">
                   {{ truncate(token.symbol, 7) }}</span
@@ -28,7 +28,7 @@
             </div>
           </div>
           <div v-if="token.price !== 0" class="text-right">
-            <p class="text-s-14 text-medium">
+            <p class="text-s-14 font-normal">
               $ {{ formatUsdBalance(token.usd_balance) }}
             </p>
             <p class="text-info text-s-12">

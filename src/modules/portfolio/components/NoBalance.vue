@@ -1,55 +1,48 @@
 <template>
   <app-sheet
+    sheet-class="no-balance-gradient bg-no-repeat bg-cover !p-0 overflow-hidden"
     :is-elivated="false"
-    sheet-class="no-balance-gradient  bg-no-repeat bg-cover !px-4 !md:px-0 2xl:!p-0 "
   >
-    <div
-      class="flex place-content-center h-full items-center justify-center 2xl:justify-between"
-    >
+    <div class="flex h-full items-center justify-between relative">
       <img
         :src="ImgEthLeft"
-        class="hidden 2xl:flex contain max-w-[15%] max-h-[200px]"
+        class="hidden lg:flex contain max-w-[20%] max-h-[160px] ml-[-2%]"
         width=""
       />
 
       <div
-        class="flex flex-col place-content-center justify-center gap-3 lg:gap-4 2xl:gap-6 text-center"
+        class="flex flex-col flex-1 px-6 py-12 place-content-center justify-center gap-4 lg:gap-6 text-center z-10"
       >
-        <div>
-          <p class="text-s-17 lg:text-s-20 font-bold mb-2">
-            You dont have any crypto
+        <div class="max-w-[540px] mx-auto">
+          <p class="text-s-20 lg:text-s-24 font-bold mb-2">
+            You don't have any crypto
           </p>
 
-          <p class="text-s-14 lg:text-s-16 text-info">
-            To start trading and managing your digital asstes, you will need
+          <p class="text-s-15 lg:text-s-17 text-info leading-relaxed">
+            To start trading and managing your digital assets, you will need
             some
             {{ selectedChain?.currencyName }} in your portfolio.
           </p>
         </div>
         <div
-          class="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-2 lg:gap-4 items-stretch"
+          class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4"
         >
-          <app-base-button
-            class="min-w-[190px]"
-            :size="isDesktopAndUp ? 'large' : 'medium'"
-            @click="buyBtn"
-          >
+          <app-base-button class="min-w-[180px]" @click="buyBtn">
             <div class="flex gap-2 items-center justify-center">
               <icon-buy
-                class="w-5 h-5 md:w-7 md:h-7 text-white"
+                class="w-6 h-6 text-white"
                 dollar-icon-color="rgb(0,90,229,1)"
               />
               <p>Buy {{ selectedChain?.currencyName }}</p>
             </div>
           </app-base-button>
           <app-base-button
-            class="min-w-[190px]"
+            class="min-w-[180px]"
             is-outline
-            :size="isDesktopAndUp ? 'large' : 'medium'"
             @click="openDepositDialog = true"
           >
             <div class="flex gap-2 items-center justify-center">
-              <QrCodeIcon class="w-4 h-4 md:w-6 md:h-6 text-primary" />
+              <QrCodeIcon class="w-5 h-5 text-primary" />
               <p>Deposit {{ selectedChain?.currencyName }}</p>
             </div>
           </app-base-button>
@@ -57,7 +50,7 @@
       </div>
       <img
         :src="ImgEthRight"
-        class="hidden 2xl:flex contain max-w-[15%] place-self-end max-h-[200px]"
+        class="hidden lg:flex contain max-w-[20%] place-self-end max-h-[160px] mr-[-2%] mb-[-2%]"
       />
     </div>
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
@@ -70,7 +63,6 @@ import { QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
@@ -79,8 +71,6 @@ import { ref } from 'vue'
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
-
-const { isDesktopAndUp } = useAppBreakpoints()
 
 const buyBtn = () => {
   window.open(

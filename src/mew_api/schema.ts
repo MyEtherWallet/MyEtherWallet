@@ -164,6 +164,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/chains/with-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetChainMetadataListWithPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksTable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksSearch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStockAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/token-price-chart/coins/{coin}": {
         parameters: {
             query?: never;
@@ -380,6 +460,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["GetBtcBalanceByChainNameAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/addresses/{address}/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcBalanceByChainNameAndAddress2"];
         put?: never;
         post?: never;
         delete?: never;
@@ -798,6 +894,10 @@ export interface components {
         /** @enum {string} */
         WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         /** @enum {string} */
+        WebStocksTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "VOLUME_24H_ASC" | "VOLUME_24H_DESC";
+        /** @enum {string} */
+        WebStocksTableCategory: "COMMODITIES" | "EQUITIES" | "FIXED_INCOME" | "STOCK" | "ETF";
+        /** @enum {string} */
         WebTokensWatchlistSort: "NONE" | "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         BtcOutputInput: {
             address: components["schemas"]["BtcAddressInput"];
@@ -813,6 +913,7 @@ export interface components {
             isTestNetwork: boolean;
             currencyName: string;
             currencyNameLong: string;
+            supportsBalances: boolean;
             icon: string;
             rpcUrls?: string[];
         };
@@ -840,6 +941,126 @@ export interface components {
         };
         GetChainMetadataResponse: {
             result: components["schemas"]["ChainMetadata"];
+        };
+        GetChainMetadataListWithPricesResponse: {
+            name: string;
+            nameLong: string;
+            type: components["schemas"]["ChainType"];
+            blockExplorerTX: string;
+            blockExplorerAddr: string;
+            chainID?: string;
+            isTestNetwork: boolean;
+            currencyName: string;
+            currencyNameLong: string;
+            rpcUrls?: string[];
+            supportsBalances: boolean;
+            icon: string;
+            price: null | number;
+        }[];
+        GetWebStocksOverviewResponse: {
+            newlyAdded: {
+                name?: string;
+                symbol?: string;
+                price?: number;
+                priceChangePercentage24h?: number;
+                sparkline24h?: number[];
+            }[];
+            recentNews: {
+                title?: string;
+                thumbnailUrl?: string;
+                articleUrl?: string;
+                timestamp?: number;
+                tickers?: string[];
+            }[];
+            trending: {
+                name?: string;
+                symbol?: string;
+                price?: number;
+                priceChangePercentage24h?: number;
+                sparkline24h?: number[];
+            }[];
+            topMovers: {
+                name?: string;
+                symbol?: string;
+                price?: number;
+                priceChangePercentage24h?: number;
+                priceHistory24h?: {
+                    timestamp?: number;
+                    price?: number;
+                }[];
+            }[];
+            banner: {
+                symbol?: string;
+                priceChangePercentage24h?: number;
+                sparkline24h?: number[];
+            }[];
+        };
+        GetWebStocksTableResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                name: string;
+                symbol: string;
+                price?: number;
+                priceChangePercentage24h?: number;
+                volume24h?: number;
+                marketCap?: number;
+                sparkline24h?: number[];
+            }[];
+        };
+        GetWebStocksSearchResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                name: string;
+                symbol: string;
+                price?: number;
+                priceChangePercentage24h?: number;
+            }[];
+        };
+        GetWebStockAssetsResponse: {
+            lastUpdatedAt?: string;
+            assets?: {
+                symbol?: string;
+                ticker?: string;
+                assetName?: string;
+                iconSrc?: string;
+                createdAt?: number;
+                primaryMarket?: {
+                    symbol?: string;
+                    price?: string;
+                    priceChange24h?: string;
+                    priceChangePct24h?: string;
+                    totalHolders?: number;
+                    sharesMultiplier?: string;
+                    tradableSessions?: string[];
+                    priceHistory24h?: {
+                        timestamp?: number;
+                        price?: string;
+                    }[];
+                    tags?: {
+                        categoryLayer?: number;
+                        categorySlug?: number;
+                        categoryLabel?: number;
+                        tagSlug?: number;
+                        tagLabel?: number;
+                    }[];
+                };
+                underlyingMarket?: {
+                    ticket?: string;
+                    name?: string;
+                    priceHigh52w?: string;
+                    priceLow52w?: string;
+                    volume?: string;
+                    averageVolume?: string;
+                    sharesOutstanding?: string;
+                    marketCap?: string;
+                };
+            }[];
         };
         /** @enum {string} */
         EvmTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
@@ -1145,6 +1366,18 @@ export interface components {
         };
         GetBtcBalanceByChainNameAndAddressesResponse: components["schemas"]["BtcAddressWithBalance"][];
         GetBtcBalanceByChainNameAndAddressResponse: components["schemas"]["BtcAddressWithBalance"];
+        GetBtcBalanceByChainNameAndAddress2Response: {
+            coinId?: string;
+            balance: string;
+            decimals?: number;
+            logoUrl?: string;
+            name?: string;
+            price?: number;
+            symbol?: string;
+            marketCap?: number;
+            priceChangePercentage24h?: number;
+            sparklineIn7d?: null | number[];
+        };
         GetEvmTransactionEstimateRequest: {
             address: components["schemas"]["EvmAddressInput"];
             to: components["schemas"]["EvmAddressInput"] | null;
@@ -1361,6 +1594,46 @@ export interface components {
                 "application/json": components["schemas"]["GetChainMetadataListResponse"];
             };
         };
+        GetChainMetadaListWithPricesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetChainMetadataListWithPricesResponse"];
+            };
+        };
+        GetWebStocksOverviewSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksOverviewResponse"];
+            };
+        };
+        GetWebStocksTableSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksTableResponse"];
+            };
+        };
+        GetWebStocksSearchSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksSearchResponse"];
+            };
+        };
+        GetWebStockAssetsSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStockAssetsResponse"];
+            };
+        };
         GetChainMetadataSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -1495,6 +1768,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddressResponse"];
+            };
+        };
+        GetBtcBalanceByChainNameAndAddress2Success: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddress2Response"];
             };
         };
         GetBtcTransactionFeesSuccess: {
@@ -1678,6 +1959,7 @@ export interface components {
         };
     };
     parameters: {
+        IncludeSparkline: boolean;
         IncludeSparklines: boolean;
         PathCoinId: string;
         CoinIds: string;
@@ -1686,15 +1968,19 @@ export interface components {
         FilterChain: string;
         Category: string;
         Search: string;
+        Query: string;
         Page: number;
         PerPage: number;
         SortDirection: components["schemas"]["SortDirection"];
         WebTokenPriceChartInterval: components["schemas"]["WebTokenPriceChartInterval"];
         WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
+        WebStocksTableSort: components["schemas"]["WebStocksTableSort"];
+        WebStocksTableCategory: components["schemas"]["WebStocksTableCategory"];
         WebTokensWatchlistSort: components["schemas"]["WebTokensWatchlistSort"];
         ChainNames: string;
         AumAddressType: string;
         AumAddressPlatform: string;
+        MewPlatform: string;
         EvmHash: components["schemas"]["EvmHashInput"];
         QuoteId: components["schemas"]["UUID"];
         PriorityId: components["schemas"]["FeePriority"];
@@ -1886,6 +2172,76 @@ export interface operations {
             200: components["responses"]["GetChainMetadataSuccess"];
         };
     };
+    GetChainMetadataListWithPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetChainMetadaListWithPricesSuccess"];
+        };
+    };
+    GetWebStocksOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksOverviewSuccess"];
+        };
+    };
+    GetWebStocksTable: {
+        parameters: {
+            query?: {
+                category?: components["parameters"]["WebStocksTableCategory"];
+                search?: components["parameters"]["Search"];
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["WebStocksTableSort"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksTableSuccess"];
+        };
+    };
+    GetWebStocksSearch: {
+        parameters: {
+            query?: {
+                query?: components["parameters"]["Query"];
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksSearchSuccess"];
+        };
+    };
+    GetWebStockAssets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStockAssetsSuccess"];
+        };
+    };
     GetWebTokenPriceChartByCoin: {
         parameters: {
             query?: {
@@ -2059,6 +2415,8 @@ export interface operations {
         parameters: {
             query?: {
                 sparklines?: components["parameters"]["IncludeSparklines"];
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
             };
             header?: never;
             path: {
@@ -2106,6 +2464,25 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetBtcBalanceByChainNameAndAddressSuccess"];
+        };
+    };
+    GetBtcBalanceByChainNameAndAddress2: {
+        parameters: {
+            query?: {
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
+                sparkline?: components["parameters"]["IncludeSparkline"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                btcAddress: components["parameters"]["BtcAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcBalanceByChainNameAndAddress2Success"];
         };
     };
     GetBtcTransactionFees: {
@@ -2437,7 +2814,9 @@ export interface operations {
     };
     BroadcastEvmTransaction: {
         parameters: {
-            query?: never;
+            query?: {
+                platform?: components["parameters"]["MewPlatform"];
+            };
             header?: never;
             path: {
                 chainId: components["parameters"]["ChainId"];

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen relative flex overflow-y-auto">
+  <div class="h-screen relative flex overflow-hidden">
     <the-header class="basis-full" />
 
     <!-- Background -->
@@ -23,10 +23,12 @@
     </teleport>
     <div
       :class="[
-        isOpenSideMenu ? 'xl:mr-[445px]' : 'xl:mr-[70px]',
-
-        'flex w-full mr-[60px] xs:mr-[70px] relative',
-        isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
+        backgroundClass,
+        'flex w-full mr-[72px] xs:mr-[80px]',
+        isOverflowHidden
+          ? 'overflow-hidden'
+          : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
     >
       <div :class="['absolute w-full', backgroundClass]"></div>

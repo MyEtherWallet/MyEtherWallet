@@ -9,7 +9,9 @@
       class="w-full xs:max-w-[428px] sm:mx-auto"
     >
       <template #content>
-        <div class="h-[80vh] xs:h-[500px] !overflow-y-scroll px-3 sm:px-4">
+        <div
+          class="h-[80vh] xs:h-[500px] overflow-y-auto mew-scrollbar px-3 sm:px-4"
+        >
           <div
             class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
           >

@@ -20,7 +20,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const mainTokenBalance = ref<TokenBalance | null>(null)
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
-  const isWatchOnly = ref(false);
+  const isWatchOnly = ref(false)
   const hasMissingBalances = ref(false)
 
   /** -------------------------------
@@ -28,9 +28,9 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setWallet = (newWallet: WalletInterface) => {
     if (newWallet instanceof WatchOnlyWallet) {
-      isWatchOnly.value = true;
+      isWatchOnly.value = true
     } else {
-      isWatchOnly.value = false;
+      isWatchOnly.value = false
     }
     wallet.value = newWallet
     setAddress()
@@ -39,13 +39,17 @@ export const useWalletStore = defineStore('walletStore', () => {
   const removeWallet = () => {
     const { selectedChain } = storeToRefs(useChainsStore())
     if (!(wallet.value instanceof WatchOnlyWallet)) {
-      isWatchOnly.value = true;
+      isWatchOnly.value = true
       wallet.value?.disconnect()
-      const address = walletAddress.value;
-      const walletType = wallet.value?.getWalletType();
+      const address = walletAddress.value
+      const walletType = wallet.value?.getWalletType()
       wallet.value = null
       walletAddress.value = null
-      const watchOnlyWallet = new WatchOnlyWallet(address as string, selectedChain.value!, walletType!)
+      const watchOnlyWallet = new WatchOnlyWallet(
+        address as string,
+        selectedChain.value!,
+        walletType!,
+      )
       setWallet(watchOnlyWallet)
     } else {
       wallet.value = null
@@ -63,10 +67,14 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
-      const { addWallet: _addWallet } = useRecentAddressStore();
+      const { addWallet: _addWallet } = useRecentAddressStore()
       const { selectedChain } = storeToRefs(useChainsStore())
       walletAddress.value = await wallet.value.getAddress()
-      _addWallet(walletAddress.value, selectedChain.value!, wallet.value.getWalletType());
+      _addWallet(
+        walletAddress.value,
+        selectedChain.value!,
+        wallet.value.getWalletType(),
+      )
     }
   }
 
@@ -103,7 +111,10 @@ export const useWalletStore = defineStore('walletStore', () => {
     hasMissingBalances.value = false
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
-        const _balance = fromBase(BigNumber(token.balance).toString(), token.decimals || 18);
+        const _balance = fromBase(
+          BigNumber(token.balance).toString(),
+          token.decimals || 18,
+        )
         mainTokenBalance.value = {
           ...token,
           name:
@@ -224,8 +235,10 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const hasBalances = computed(() => {
     return (
-      allTokens.value.length > 1 &&
-      BigNumber(safeMainTokenBalance.value?.balanceWei || 0).isGreaterThan(0)
+      allTokens.value.length > 0 &&
+      allTokens.value.some(token =>
+        BigNumber(token.balanceWei || 0).isGreaterThan(0),
+      )
     )
   })
 
