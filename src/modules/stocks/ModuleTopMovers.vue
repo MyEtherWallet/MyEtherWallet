@@ -2,7 +2,7 @@
   <div class="grid grid-cols-12 w-full items-stretch">
     <div class="col-span-12 gap-4">
       <div
-        class="snap-x flex items-stretch justify-start gap-4 overflow-scroll py-1 px-1"
+        class="snap-x flex items-stretch justify-start gap-4 overflow-scroll-auto py-1 px-1"
       >
         <app-slide-group
           :totalItems="stockIndexes.length"
