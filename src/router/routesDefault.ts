@@ -1,6 +1,7 @@
 import { ROUTES_MAIN } from './routeNames'
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { ACCESS_ROUTES } from './routesAccess'
+import { CREATE_ROUTES } from './routesCreate'
 import { TOKEN_INFO_ROUTE_NAMES } from './routeNames'
 import { type RouterOptions } from 'vue-router'
 
@@ -21,6 +22,7 @@ const DefaultRoutes = <RouteNameCollection>[
       noAuth: true,
     },
     children: [
+      CREATE_ROUTES,
       ACCESS_ROUTES,
       {
         name: TOKEN_INFO_ROUTE_NAMES.home,

@@ -172,7 +172,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { type WalletPanel, useWalletMenuStore } from '@/stores/walletMenuStore'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
-import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { useRecentAddressStore } from '@/stores/recentAddressStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import { truncateAddress } from '@/utils/filters'
@@ -240,7 +240,7 @@ const openAccess = () => {
 const accessStore = useAccessStore()
 const { setCurrentView, openAccessDialog } = accessStore
 const switchAddress = () => {
-  // Map wallet types to their corresponding WALLET_VIEWS index
+  // Map wallet types to their corresponding ACCESS_WALLET_VIEWS index
   const currentWalletType = wallet.value?.getWalletType()
   const viewIndexByType: Partial<Record<WalletType, number>> = {
     [WalletType.LEDGER]: 1,
@@ -254,7 +254,7 @@ const switchAddress = () => {
       ? (viewIndexByType[currentWalletType] as number)
       : 0
 
-  setCurrentView(WALLET_VIEWS[index])
+  setCurrentView(ACCESS_WALLET_VIEWS[index])
   closeDialog()
   openAccessDialog()
 }

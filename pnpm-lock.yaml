@@ -122,6 +122,9 @@ importers:
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
+      qrcode.vue:
+        specifier: ^3.6.0
+        version: 3.6.0(vue@3.5.26(typescript@5.9.3))
       tiny-secp256k1:
         specifier: ^2.2.4
         version: 2.2.4
@@ -12608,6 +12611,11 @@ packages:
   qrcode-terminal@0.11.0:
     resolution: {integrity: sha512-Uu7ii+FQy4Qf82G4xu7ShHhjhGahEpCWc3x8UavY3CTcWV+ufmmCtwkr7ZKsX42jdL0kr1B5FKUeqJvAn51jzQ==}
     hasBin: true
+
+  qrcode.vue@3.6.0:
+    resolution: {integrity: sha512-vQcl2fyHYHMjDO1GguCldJxepq2izQjBkDEEu9NENgfVKP6mv/e2SU62WbqYHGwTgWXLhxZ1NCD1dAZKHQq1fg==}
+    peerDependencies:
+      vue: ^3.0.0
 
   qrcode@1.5.3:
     resolution: {integrity: sha512-puyri6ApkEHYiVl4CFzo1tDkAZ+ATcnbJrJ6RiBM1Fhctdn/ix9MTE3hRph33omisEbC/2fcfemsseiKgBPKZg==}
@@ -34445,6 +34453,10 @@ snapshots:
 
   qrcode-terminal@0.11.0:
     optional: true
+
+  qrcode.vue@3.6.0(vue@3.5.26(typescript@5.9.3)):
+    dependencies:
+      vue: 3.5.26(typescript@5.9.3)
 
   qrcode@1.5.3:
     dependencies:

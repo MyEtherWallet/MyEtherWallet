@@ -30,7 +30,10 @@
           Connect Wallet
         </app-base-button>
         <p>
-          or <app-btn-text class="underline">Create a new wallet</app-btn-text>
+          or
+          <app-btn-text @click="createWallet" class="underline"
+            >Create a new wallet</app-btn-text
+          >
         </p>
       </div>
     </div>
@@ -43,16 +46,20 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
-import { useAccessStore } from '@/stores/accessStore'
+import { useRouter } from 'vue-router'
+import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 
 const { isDesktopAndUp } = useAppBreakpoints()
 
+const router = useRouter()
 /** ------------------------------
  * Connect Wallet
  ------------------------------*/
-const accessStore = useAccessStore()
-
 const connectWallet = () => {
-  accessStore.openAccessDialog()
+  router.push({ name: ROUTES_ACCESS.ACCESS.NAME })
+}
+
+const createWallet = () => {
+  router.push({ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME })
 }
 </script>

@@ -1,6 +1,6 @@
 import { ROUTES_ACCESS } from './routeNames'
 import { type RouterOptions } from 'vue-router'
-import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 const ViewAccessWallet = () => import('@/views/ViewAccessWallet.vue')
 
@@ -13,7 +13,7 @@ const beforeRouteEnter = (
   if (
     to.query.type &&
     typeof to.query.type === 'string' &&
-    WALLET_VIEWS.includes(to.query.type as (typeof WALLET_VIEWS)[number])
+    ACCESS_WALLET_VIEWS.includes(to.query.type as (typeof ACCESS_WALLET_VIEWS)[number])
   ) {
     next()
   } else {

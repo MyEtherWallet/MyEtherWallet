@@ -62,6 +62,7 @@
     "pinia": "^3.0.4",
     "qr-code-styling": "^1.9.2",
     "qrcode": "^1.5.4",
+    "qrcode.vue": "^3.6.0",
     "tiny-secp256k1": "^2.2.4",
     "viem": "^2.44.0",
     "vite-plugin-node-polyfills": "^0.24.0",
