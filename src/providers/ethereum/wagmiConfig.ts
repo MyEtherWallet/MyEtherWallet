@@ -1,6 +1,6 @@
 import { mainnet } from '@wagmi/core/chains'
 import * as allChains from '@wagmi/core/chains'
-import { createConfig, http, type Config } from '@wagmi/core'
+import { createConfig, http, mock, type Config } from '@wagmi/core'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
 import Configs from '@/configs'
@@ -43,9 +43,20 @@ export const generateConfig = (chainsFromApi: Chain[]): Config => {
     },
     {} as Record<number, ReturnType<typeof http>>,
   )
+  const allConnectors = [...connectorsLocal]
+  if (import.meta.env.DEV) {
+    const testAddress = import.meta.env.VITE_TEST_ADDRESS as string | undefined
+    if (testAddress) {
+      const mConnector = mock({
+        accounts: [testAddress as `0x${string}`],
+      })
+      allConnectors.push(mConnector)
+    }
+  }
+
   return createConfig({
     chains: chains as [wChain, ...wChain[]],
     transports: transports,
-    connectors: connectorsLocal,
+    connectors: allConnectors,
   })
 }
