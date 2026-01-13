@@ -2,32 +2,32 @@
   <div class="flex justify-center w-full">
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('verify-message')">
-        <div class="flex items-center flex-col">
+        <div class="flex flex-col gap-6 pt-6">
           <div
-            class="flex w-full justify-between m-4"
+            class="flex items-center justify-between bg-grey-5 p-4 rounded-20 border border-grey-10"
             v-if="!isWalletConnected"
           >
-            <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
+            <p class="text-s-17 font-medium">
               {{ $t('common.select_network') }}
-            </h2>
+            </p>
             <select-chain-for-app />
           </div>
           <app-text-field
             v-model="message"
             placeholder="Enter the message to verify"
-            class="w-full max-w-lg"
+            class="w-full"
           />
           <address-input
             v-model:adr-input="signingAddress"
             :network="selectedChain"
             label="Signing Address"
-            class="w-full max-w-lg mt-1"
+            class="w-full"
           />
 
           <app-text-field
             v-model="signature"
             placeholder="Enter the signature to verify"
-            class="w-full max-w-lg"
+            class="w-full"
           />
 
           <div
@@ -37,23 +37,33 @@
               signature !== '' &&
               verifyMessageDesc !== ''
             "
-            class="mt-4 p-4 border rounded-lg w-full max-w-lg"
+            class="p-5 rounded-20 border text-s-14 transition-all"
             :class="
               verified
-                ? 'border-mew-green-text text-mew-green-text bg-mew-green-10'
-                : 'border-error text-error bg-error-10'
+                ? 'border-mew-green-text/20 text-t-default bg-success/5'
+                : 'border-error/20 text-error bg-error/5'
             "
           >
-            {{ verifyMessageDesc }}
+            <div class="flex items-center gap-3">
+              <div
+                class="w-2 h-2 rounded-full shrink-0"
+                :class="verified ? 'bg-success' : 'bg-error'"
+              ></div>
+              <p class="font-medium leading-relaxed">
+                {{ verifyMessageDesc }}
+              </p>
+            </div>
           </div>
 
-          <app-base-button
-            @click="verifyMessage"
-            class="mt-4"
-            :disabled="!canVerifyMessage"
-          >
-            {{ $t('verify-message') }}
-          </app-base-button>
+          <div class="flex justify-center">
+            <app-base-button
+              @click="verifyMessage"
+              class="w-full sm:w-auto min-w-[240px]"
+              :disabled="!canVerifyMessage"
+            >
+              {{ $t('verify-message') }}
+            </app-base-button>
+          </div>
         </div>
       </app-sheet>
     </div>

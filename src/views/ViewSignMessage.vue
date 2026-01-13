@@ -2,18 +2,21 @@
   <div class="flex justify-center w-full">
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('sign-message')">
-        <div class="flex items-center flex-col">
+        <div class="flex items-center flex-col gap-6 pt-6">
           <app-text-field
             v-model="message"
             placeholder="Enter the message to sign"
-            class="w-full max-w-lg"
+            class="w-full"
           />
-          <div v-if="!isWalletConnected" class="text-warning">
-            Please sign in to sign
+          <div
+            v-if="!isWalletConnected"
+            class="text-warning bg-warning-10 px-4 py-2 rounded-lg text-s-14 w-full text-center"
+          >
+            Please connect your wallet to sign message.
           </div>
           <app-base-button
             @click="handleSigner"
-            class="mt-4"
+            class="w-full sm:w-auto min-w-[240px]"
             :disabled="!cansignMessage"
           >
             {{ isWalletConnected ? $t('sign-message') : $t('connect_wallet') }}
@@ -22,27 +25,44 @@
           <app-dialog
             v-model:is-open="signedModal"
             title="Signature"
-            class="sm:max-w-lg sm:mx-auto"
+            class="sm:max-w-xl sm:mx-auto"
+            has-content-gutter
           >
             <template #content>
-              <div>
-                <div class="p-4">
-                  <h3 class="text-lg font-semibold">Message:</h3>
-                  <p class="mt-2">{{ hexMessage }}</p>
+              <div class="flex flex-col gap-6 pb-6 pt-2">
+                <div>
+                  <h3 class="text-s-14 font-medium text-grey-50 mb-1">
+                    Message:
+                  </h3>
+                  <div
+                    class="bg-grey-5 rounded-xl p-4 text-s-14 break-all border border-grey-10 text-grey-70"
+                  >
+                    {{ hexMessage }}
+                  </div>
                 </div>
-                <div class="p-4">
-                  <h3 class="text-lg font-semibold">Signing address:</h3>
-                  <p class="mt-2">{{ walletAddress }}</p>
+                <div>
+                  <h3 class="text-s-14 font-medium text-grey-50 mb-1">
+                    Signing address:
+                  </h3>
+                  <div
+                    class="bg-grey-5 rounded-xl p-4 text-s-14 break-all border border-grey-10 text-grey-70"
+                  >
+                    {{ walletAddress }}
+                  </div>
                 </div>
-                <div class="p-4">
-                  <h3 class="text-lg font-semibold">Signature:</h3>
-                  <p class="mt-2" style="word-break: break-all">
+                <div>
+                  <h3 class="text-s-14 font-medium text-grey-50 mb-1">
+                    Signature:
+                  </h3>
+                  <div
+                    class="bg-grey-5 rounded-xl p-4 text-s-12 break-all border border-grey-10 text-grey-70 font-mono"
+                  >
                     {{ signature }}
-                  </p>
-                  <app-base-button @click="copy" class="mt-4">
-                    Copy Signature
-                  </app-base-button>
+                  </div>
                 </div>
+                <app-base-button @click="copy" class="w-full">
+                  Copy Signature
+                </app-base-button>
               </div>
             </template>
           </app-dialog>
