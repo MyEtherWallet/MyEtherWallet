@@ -54,10 +54,13 @@
       <div class="px-4 xs:px-6 pb-10">
         <!-- Default View -->
         <div v-if="currentView === 'default'" class="flex flex-col gap-10">
-          <div class="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6 pt-2">
             <!-- Mobile-->
             <div
-              class="rounded-3xl bg-[rgba(53,94,236,0.1)] pt-6 px-6 sm:px-8 border border-transparent hover:border-primary/20 transition-colors group"
+              tabindex="0"
+              role="region"
+              aria-label="MEW Mobile App"
+              class="rounded-3xl bg-[rgba(53,94,236,0.1)] pt-6 px-6 sm:px-8 border border-transparent focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all group outline-none overflow-hidden"
             >
               <div class="flex gap-4 lg:gap-6 items-center mb-6">
                 <img
@@ -146,7 +149,10 @@
             </div>
             <!-- Enkrypt -->
             <div
-              class="rounded-3xl bg-enkryptBg p-6 sm:p-8 flex flex-col border border-transparent hover:border-violet/20 transition-colors group"
+              tabindex="0"
+              role="region"
+              aria-label="Enkrypt Browser Wallet"
+              class="rounded-3xl bg-enkryptBg p-6 sm:p-8 flex flex-col border border-transparent focus-within:ring-2 focus-within:ring-violet focus-within:border-violet transition-all group outline-none h-full w-full"
             >
               <div class="flex gap-4 lg:gap-6 items-center mb-6">
                 <img
@@ -205,15 +211,16 @@
             </div>
           </div>
 
-          <!-- Other Methods Section (Cleaned up) -->
+          <!-- Other Methods Section -->
           <div>
             <h3 class="text-s-20 font-bold mb-6 px-1">
               Other creation methods
             </h3>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-2 pt-2">
               <!-- Hardware -->
-              <div
-                class="flex flex-col sm:flex-row gap-6 p-6 rounded-3xl bg-white border border-grey-outline hover:shadow-button transition-all cursor-pointer group"
+              <button
+                type="button"
+                class="flex flex-col sm:flex-row text-left gap-6 p-6 rounded-3xl bg-white border border-grey-outline hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('buy')"
               >
                 <div class="sm:w-1/3">
@@ -240,11 +247,12 @@
                     />
                   </div>
                 </div>
-              </div>
+              </button>
 
               <!-- Software -->
-              <div
-                class="flex flex-col sm:flex-row gap-6 p-6 rounded-3xl bg-white border border-grey-outline hover:shadow-button transition-all cursor-pointer group"
+              <button
+                type="button"
+                class="flex flex-col sm:flex-row text-left gap-6 p-6 rounded-3xl bg-white border border-grey-outline hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >
                 <div class="sm:w-1/3 shrink-0">
@@ -279,7 +287,7 @@
                     />
                   </div>
                 </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -287,8 +295,9 @@
           v-if="currentView === 'buy'"
           class="px-2 xs:px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <div
-            class="cursor-pointer flex border border-grey-outline rounded-24 p-8 bg-white justify-between hover:shadow-button transition-shadow group overflow-hidden relative"
+          <button
+            type="button"
+            class="cursor-pointer flex border border-grey-outline rounded-24 p-8 bg-white justify-between hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-shadow group overflow-hidden relative outline-none text-left w-full h-full"
             @click="openBuyWallet('ledger')"
           >
             <div class="flex flex-col justify-between relative z-10">
@@ -307,9 +316,10 @@
               width="280"
               class="object-contain transform transition-transform group-hover:scale-105"
             />
-          </div>
-          <div
-            class="cursor-pointer flex border border-grey-outline rounded-24 p-8 bg-white justify-between hover:shadow-button transition-shadow group overflow-hidden relative"
+          </button>
+          <button
+            type="button"
+            class="cursor-pointer flex border border-grey-outline rounded-24 p-8 bg-white justify-between hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-shadow group overflow-hidden relative outline-none text-left w-full h-full"
             @click="openBuyWallet('trezor')"
           >
             <div class="flex flex-col justify-between relative z-10">
@@ -328,7 +338,7 @@
               width="280"
               class="object-contain transform transition-transform group-hover:scale-105"
             />
-          </div>
+          </button>
         </div>
         <!-- Create Mnemonic -->
         <div v-if="currentView === 'mnemonic'">
