@@ -15,17 +15,64 @@
         />
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between z-1 relative">
-          <div class="pl-2">
-            <button
-              class="p-1 text-s-12 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
-              @click="setOpenDialog(true)"
-            >
-              <!-- TODO: add ens resolution-->
-              <p>my wallet</p>
-              <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
-            </button>
-            <p class="text-[10px] leading-p-110 pl-1">
-              {{ truncateAddress(walletAddress) }}
+          <div class="">
+            <app-pop-up-menu :placeholder="$t('common.sort')" location="left">
+              <template #menu-button="{ toggleMenu }">
+                <button
+                  class="p-1 text-s-11 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
+                  @click="toggleMenu"
+                >
+                  <!-- TODO: add ens resolution-->
+                  <p v-if="!isWatchOnly">My wallet</p>
+                  <p v-else>
+                    <IconWatchOnly class="inline-block w-[12px] h-[12px]" />
+                    Watch only
+                  </p>
+                  <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
+                </button>
+              </template>
+              <template #menu-content>
+                <div class="py-4 min-w-[260px]">
+                  <ul class="px-2 text-s-14">
+                    <li
+                      @click="setOpenPaperWalletDialog(true)"
+                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                    >
+                      <QrCodeIcon
+                        class="w-5 h-5 inline-block mr-2 text-primary"
+                      />
+                      {{ $t('view_paper_wallet') }}
+                    </li>
+                    <li
+                      v-if="canSwitchAddress"
+                      @click="switchAddress()"
+                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                    >
+                      <UserGroupIcon
+                        class="w-5 h-5 inline-block mr-2 text-primary"
+                      />
+                      {{ $t('switch_connected_address') }}
+                    </li>
+                  </ul>
+                  <hr class="h-px bg-grey-outline border-0 w-full my-2" />
+                  <ul class="px-2 text-s-14">
+                    <li
+                      @click="deleteWallet"
+                      class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center"
+                    >
+                      <TrashIcon class="w-5 h-5 inline-block mr-2 text-error" />
+                      {{
+                        isWatchOnly
+                          ? $t('delete_watch_only_wallet')
+                          : `${$t('disconnect_and_delete_wallet')}`
+                      }}
+                    </li>
+                  </ul>
+                </div>
+              </template>
+            </app-pop-up-menu>
+            <p class="text-[11px] leading-p-110 pl-1">
+              {{ truncateAddress(walletAddress, 12) }}
             </p>
           </div>
           <div class="flex items-center ml-2 gap-2">
@@ -62,11 +109,18 @@
             v-else
             class="h-8 w-32 bg-white/15 rounded-12 animate-pulse"
           ></div>
+          <!-- Refresh balance button -->
+          <button
+            v-if="!isLoadingBalances"
+            :aria-label="$t('refresh_balance')"
+            class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            @click="fetchBalances"
+          >
+            <ArrowPathIcon class="w-5 h-5" />
+          </button>
         </div>
         <!-- Token balances -->
-        <div
-          class="self-end pl-3 flex items-center justify-between z-1 relative"
-        >
+        <div class="self-end flex items-center justify-between z-1 relative">
           <div v-if="!isLoadingBalances">
             <p class="text-s-14 leading-p-140">
               {{ formattedBalance }} {{ safeMainTokenBalance?.symbol || '' }}
@@ -79,41 +133,48 @@
             v-else
             class="h-[38px] w-24 bg-white/15 rounded-12 animate-pulse"
           ></div>
-          <!-- Refresh balance button -->
           <button
-            :aria-label="$t('refresh_balance')"
-            class="rounded-full !cursor-pointer p-2 flex items-center justify-center bg-white/[0.06] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
-            @click="fetchBalances"
+            class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-[6px] px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
+            @click="isWatchOnly ? openAccess() : disconnectWallet()"
           >
-            <ArrowPathIcon class="w-5 h-5" />
+            {{ isWatchOnly ? 'connect' : 'disconnect' }}
           </button>
         </div>
       </div>
     </div>
-    <the-address-menu-dialog v-model:open-dialog="openDialog" />
-    <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
+    <the-paper-wallet v-model:is-open="openPaperWalletDialog" />
   </div>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import TheAddressMenuDialog from '@/components/core_layouts/wallet/TheAddressMenuDialog.vue'
-import TheDepositDialog from './core_layouts/wallet/TheDepositDialog.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import { truncateAddress } from '@/utils/filters'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon, QrCodeIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import {
   ClipboardDocumentIcon,
   ArrowPathIcon,
   ArrowTopRightOnSquareIcon,
+  UserGroupIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 import { animate } from 'animejs'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 import { useChainsStore } from '@/stores/chainsStore'
 import useBalanceHandler from '@/utils/balanceHandler'
+import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
+import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
+import { WalletType } from '@/providers/types'
+import { useAccessStore } from '@/stores/accessStore'
+import { useRecentAddressStore } from '@/stores/recentAddressStore'
+import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 
 const { t } = useI18n()
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 const toastStore = useToastStore()
 const walletStore = useWalletStore()
 const {
@@ -126,7 +187,9 @@ const {
   safeMainTokenBalance,
   isLoadingBalances,
   walletCardWasAnimated,
+  isWatchOnly,
 } = storeToRefs(walletStore)
+
 const { setTokens, setIsLoadingBalances } = walletStore
 
 const chainsStore = useChainsStore()
@@ -162,12 +225,11 @@ const copyClick = () => {
 /** -------------------------------
  * Dialogs
  -------------------------------*/
-const openDepositDialog = ref(false) //deposit dialog
-const openDialog = ref(false) // address menu dialog
-const setOpenDialog = (value: boolean) => {
-  openDialog.value = value
-}
+const openPaperWalletDialog = ref(false) //paper wallet dialog
 
+const setOpenPaperWalletDialog = (value: boolean) => {
+  openPaperWalletDialog.value = value
+}
 /**
  * Animates wallet card
  */
@@ -190,6 +252,68 @@ const getExplorerLink = computed(() => {
     walletAddress.value || '',
   )
 })
+
+/** -------------------------------
+ * Connect / Disconnect Wallet
+ -------------------------------*/
+
+const accessStore = useAccessStore()
+const { setCurrentView, openAccessDialog } = accessStore
+
+const openAccess = () => {
+  openAccessDialog()
+  emit('close')
+}
+
+const disconnectWallet = () => {
+  walletStore.removeWallet()
+  emit('close')
+}
+
+const deleteWallet = () => {
+  const recentAddressStore = useRecentAddressStore()
+  recentAddressStore.removeWallet(
+    walletAddress.value as string,
+    selectedChain.value!,
+  )
+  if (!isWatchOnly.value) {
+    disconnectWallet()
+  }
+}
+
+/** -------------------------------
+ * Address Switching
+ -------------------------------*/
+const canSwitchAddress = computed(() => {
+  // only show switch address if wallet type is NOT private key AND NOT injected
+  const type = wallet.value?.getWalletType()
+  return (
+    !!type &&
+    type !== WalletType.PRIVATE_KEY &&
+    type !== WalletType.INJECTED &&
+    type !== WalletType.WAGMI
+  )
+})
+
+const switchAddress = () => {
+  // Map wallet types to their corresponding WALLET_VIEWS index
+  const currentWalletType = wallet.value?.getWalletType()
+  const viewIndexByType: Partial<Record<WalletType, number>> = {
+    [WalletType.LEDGER]: 1,
+    [WalletType.TREZOR]: 2,
+    [WalletType.MNEMONIC]: 4,
+  }
+
+  const index =
+    currentWalletType !== undefined &&
+    viewIndexByType[currentWalletType] !== undefined
+      ? (viewIndexByType[currentWalletType] as number)
+      : 0
+
+  setCurrentView(WALLET_VIEWS[index])
+  emit('close')
+  openAccessDialog()
+}
 </script>
 <style scoped>
 .drop-shadow {

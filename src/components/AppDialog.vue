@@ -35,8 +35,8 @@
         >
           <div
             v-if="isOpen"
-            :class="[bg, $attrs.class]"
             class="cursor-default min-w-[320px] rounded-32 sm:min-h-[512px] !overflow-y-scroll overflow-hidden"
+            :class="[bg, $attrs.class]"
             @click.stop
             role="dialog"
             aria-modal="true"
