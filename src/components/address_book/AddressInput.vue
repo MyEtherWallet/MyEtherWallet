@@ -2,15 +2,17 @@
   <div>
     <div class="relative">
       <!-- Blockie -->
-      <div class="absolute top-3 left-3 flex items-center pointer-events-none">
+      <div
+        class="absolute top-[13px] left-[13px] flex items-center pointer-events-none"
+      >
         <div
           v-if="!resolvedAddress"
-          class="rounded-full bg-surface w-8 h-8"
+          class="rounded-full bg-grey-5 w-8 h-8 border border-grey-10"
         ></div>
         <img
           v-else
           :src="addressBlockie"
-          class="rounded-full w-8 h-8"
+          class="rounded-full w-8 h-8 border border-grey-10"
           height="32"
           width="32"
         />
@@ -24,10 +26,10 @@
             ? hasError
               ? 'text-error'
               : 'text-primary'
-            : 'text-info',
+            : 'text-grey-50',
           inFocusInput || adrInput !== ''
             ? 'top-2 text-s-11'
-            : 'top-[18px] text-sm',
+            : 'top-[18px] text-sm font-medium',
         ]"
       >
         {{ label }}
@@ -46,7 +48,7 @@
           {
             '!border-primary !border-2': inFocusInput && !hasError,
           },
-          'grow focus:outline-none focus:ring-0 bg-white shadow-button shadow-button-elevated text-normal rounded-16 h-[58px] w-full pl-14 pr-24 pt-4 pb-0 text-sm transition-colors font-medium',
+          'grow focus:outline-none focus:ring-0 bg-white border border-grey-10 text-normal rounded-20 h-[58px] w-full pl-14 pr-24 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
         :aria-label="label"
         @focus="setInFocusInput()"

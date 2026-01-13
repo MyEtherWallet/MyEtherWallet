@@ -3,9 +3,6 @@ import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
 import {
   bytesToHex,
-  hashPersonalMessage,
-  ecsign,
-  toRpcSig,
   privateToAddress,
   toChecksumAddress,
   hexToBytes,
@@ -13,6 +10,8 @@ import {
 import BaseEvmWallet from './baseEvmWallet'
 import { type PostSignedTransaction } from '../common/types'
 import { WalletType, type HexPrefixedString } from '../types'
+import { privateKeyToAccount } from 'viem/accounts'
+import { toHex } from 'viem'
 
 class PrivateKeyWallet extends BaseEvmWallet {
   private privKey: Uint8Array
@@ -59,13 +58,14 @@ class PrivateKeyWallet extends BaseEvmWallet {
   override getWalletType(): WalletType {
     return this.walletType
   }
-  override SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
+  override async SignMessage(options: {
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
-    const msgHash = hashPersonalMessage(Buffer.from(options.message, 'utf8'))
-    const sig = ecsign(msgHash, this.privKey)
-    return Promise.resolve(toRpcSig(sig.v, sig.r, sig.s) as HexPrefixedString)
+    const account = privateKeyToAccount(bytesToHex(this.privKey))
+    const sig = await account.signMessage({ message: { raw: toHex(options.message) as HexPrefixedString } })
+
+    return Promise.resolve(sig)
   }
   override getAddress(): Promise<string> {
     return Promise.resolve(

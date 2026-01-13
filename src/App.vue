@@ -89,12 +89,14 @@ const { addProvider } = providerStore
 const { setChainData } = chainStore
 
 const { useMEWFetch } = useFetchMewApi()
-const { data, onFetchResponse } = useMEWFetch('/chains').get().json<ChainsRaw>()
+const { data, onFetchResponse } = useMEWFetch('/v1/chains/with-prices')
+  .get()
+  .json<ChainsRaw>()
 
 onFetchResponse(() => {
-  setChainData(data.value?.result || [])
+  setChainData(data.value ?? [])
   isLoadingComplete.value = true
-  return data.value?.result || []
+  return data.value ?? []
 })
 
 watch(

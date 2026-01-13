@@ -1,3 +1,4 @@
+import { toHex } from 'viem';
 import BaseBtcWallet from "./baseBitcoinWallet";
 import type { PostSignedTransaction } from "../common/types";
 import { WalletType, type HexPrefixedString } from '../types'
@@ -7,6 +8,7 @@ import { Psbt } from "bitcoinjs-lib";
 import { ECPairFactory } from 'ecpair'
 import * as tinysecp from 'tiny-secp256k1'
 import { INFO_MAP } from "../common/btcInfo";
+import * as bitcoinMessage from 'bitcoinjs-message';
 const ECPair = ECPairFactory(tinysecp)
 
 export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
@@ -43,6 +45,18 @@ export default class BitcoinPrivateKeyWallet extends BaseBtcWallet {
     const publicKey = priv.publicKey;
     const { address } = INFO_MAP[this.chainName].paymentType({ ...INFO_MAP[this.chainName], pubkey: publicKey },)
     return address!;
+  }
+
+  override async SignMessage(options: { message: string; options?: unknown; }): Promise<HexPrefixedString> {
+    const signature = await bitcoinMessage.signAsync(
+      toHex(options.message),
+      this.privateKey,
+      true,
+      {
+        segwitType: 'p2wpkh',
+      }
+    );
+    return signature.toString('base64') as HexPrefixedString;
   }
 
 }

@@ -1,3 +1,4 @@
+import { toHex } from 'viem';
 import { WalletType, type HexPrefixedString } from '../types'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { Psbt } from 'bitcoinjs-lib'
@@ -54,13 +55,6 @@ class UnisatInjectWallet extends BaseBtcWallet {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  override SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
-  }): Promise<HexPrefixedString> {
-    throw new Error('Method not implemented.')
-  }
   override async getAddress(): Promise<string> {
     return new Promise(resolve => {
       resolve(this.address)
@@ -77,6 +71,15 @@ class UnisatInjectWallet extends BaseBtcWallet {
 
   getProviderInstance(): NonNullable<typeof window.unisat> {
     return this.unisat
+  }
+
+  override async SignMessage(options: {
+    message: string;
+    options?: unknown;
+  }): Promise<HexPrefixedString> {
+    const provider = this.getProviderInstance();
+    const signature = await provider.signMessage(toHex(options.message));
+    return signature as HexPrefixedString;
   }
 }
 
