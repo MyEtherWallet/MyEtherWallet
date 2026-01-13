@@ -1,3 +1,4 @@
+import { toHex } from 'viem';
 import { WalletType, type HexPrefixedString } from '../types'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { Psbt } from 'bitcoinjs-lib'
@@ -77,7 +78,7 @@ class UnisatInjectWallet extends BaseBtcWallet {
     options?: unknown;
   }): Promise<HexPrefixedString> {
     const provider = this.getProviderInstance();
-    const signature = await provider.signMessage(options.message);
+    const signature = await provider.signMessage(toHex(options.message));
     return signature as HexPrefixedString;
   }
 }

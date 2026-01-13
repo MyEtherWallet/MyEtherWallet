@@ -81,9 +81,9 @@ export const useSwap = (): {
       swapInstance.value = new Swapper({
         network: supportedSwapEnums[
           (selectedChain.value?.name as string) ||
-          (selectedNetwork.value as string)
+            (selectedNetwork.value as string)
         ] as SupportedNetworkName,
-        api: new Web3Eth(rpc),
+        api: new Web3Eth(rpc) as any,
         walletIdentifier: WalletIdentifier.mew,
         evmOptions: {
           infiniteApproval: true,

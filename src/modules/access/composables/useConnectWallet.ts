@@ -57,9 +57,12 @@ export const useConnectWallet = () => {
         toastStore.addToastMessage({
           text: `Unisat injection not detected. Please enable unisat in the ${wallet.name} extension.`,
         })
-        return;
+        return
       }
-      const unisatWallet = new UnisatInjectWallet(window.unisat, selectedChain.value?.name ?? "BITCOIN")
+      const unisatWallet = new UnisatInjectWallet(
+        window.unisat,
+        selectedChain.value?.name ?? 'BITCOIN',
+      )
       unisatWallet
         .connect()
         .then(res => {
@@ -89,7 +92,7 @@ export const useConnectWallet = () => {
             type: _type,
           })
         })
-      return;
+      return
     }
     const providerInjected = Eip6963Providers.value.find(
       p =>
@@ -182,7 +185,6 @@ export const useConnectWallet = () => {
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
-
     wagWallet
       .connect()
       .then(res => {
@@ -225,7 +227,6 @@ export const useConnectWallet = () => {
       _connectWeb3(wallet)
       return
     }
-
     _connectWagmi(wallet)
   }
 

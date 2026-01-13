@@ -14,7 +14,7 @@
         {
           '!border-primary !border-2': inFocusInput && !hasError,
         },
-        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline  text-sm rounded-16 h-[160px] w-full px-7 pt-[24px] pb-[10px] text-xl transition-colors',
+        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-10 text-s-17 rounded-20 h-[160px] w-full px-6 pt-5 pb-4 transition-colors placeholder:text-grey-30',
       ]"
       :aria-label="placeholder"
       @focus="setInFocusInput()"
@@ -22,22 +22,20 @@
       @input="onInput"
       autocomplete="off"
     />
-    <div class="flex gap-4">
-      <p
-        v-if="errorMessage"
-        class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
-      >
+    <div class="flex items-center min-h-[32px] mt-1">
+      <p v-if="errorMessage" class="pl-4 text-error text-s-12 leading-tight">
         {{ errorMessage }}
       </p>
       <p
         v-else-if="hasRequiredError"
-        class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
+        class="pl-4 text-error text-s-12 leading-tight"
       >
         {{ $t('common.required') }}
       </p>
       <button
+        v-if="model && model !== ''"
         @click="clearInputValue"
-        class="rounded-full px-3 text-sm text-primary hoverOpacity ml-auto h-6"
+        class="text-s-14 font-medium text-primary hoverOpacity ml-auto px-2"
       >
         {{ $t('common.clear') }}
       </button>
@@ -47,7 +45,6 @@
 
 <script setup lang="ts">
 import { ref, nextTick, computed, watch } from 'vue'
-import { defineProps } from 'vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 /**
  * Text Field component

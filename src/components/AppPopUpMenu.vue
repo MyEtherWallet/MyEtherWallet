@@ -27,13 +27,15 @@
         aria-label="Select an option"
         v-show="openSelect"
         :class="[
-          'absolute focus:outline-none z-10',
+          'absolute focus:outline-none z-10 pt-2',
           { 'left-0': props.location === PopupLocation.LEFT },
           { 'right-0': props.location === PopupLocation.RIGHT },
           { 'inset-x-0': props.location === PopupLocation.CENTER },
         ]"
       >
-        <div class="min-w-[160px] max-w-full bg-white shadow-button rounded-xl">
+        <div
+          class="min-w-[180px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
+        >
           <slot name="menu-content" :toggleMenu="toggleMenu" />
         </div>
       </div>
@@ -68,7 +70,7 @@
  *  * </app-pop-up-menu>
  */
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import { defineProps, ref, type PropType } from 'vue'
+import { ref, type PropType } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 enum PopupLocation {
   LEFT = 'left',

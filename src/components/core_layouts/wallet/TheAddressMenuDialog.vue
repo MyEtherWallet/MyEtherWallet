@@ -7,54 +7,58 @@
       class="xs:max-w-[428px] sm:mx-auto"
     >
       <template #content>
-        <div class="px-5 xs:px-6 pt-2 pb-5">
+        <div class="px-6 pt-2 pb-6">
           <div v-if="walletAddress" class="flex items-center">
             <app-blockie
               :address="walletAddress"
-              :size="9"
+              :size="10"
               class="flex-none rounded-full"
             />
-            <div
-              class="ml-4 mr-2 font-medium text-wrap break-all max-w-[300px] tracking-sp-06"
-            >
-              {{ walletAddress }}
+            <div class="ml-4 flex-1 flex items-center justify-between min-w-0">
+              <p class="font-bold text-s-20 truncate mr-2">
+                {{ truncateAddress(walletAddress, 10, 10) }}
+              </p>
+              <div class="flex items-center -mr-2">
+                <!-- Copy -->
+                <app-btn-copy
+                  :copy-value="walletAddress"
+                  class="!min-w-10 h-10 text-primary"
+                >
+                </app-btn-copy>
+                <!-- Block Explorer Link -->
+                <a
+                  :href="getExplorerLink"
+                  :aria-label="$t('view_in_block_explorer')"
+                  target="_blank"
+                  class="rounded-full !cursor-pointer min-w-10 h-10 flex items-center justify-center hoverNoBG"
+                >
+                  <ArrowTopRightOnSquareIcon class="w-5 h-5 text-primary" />
+                </a>
+              </div>
             </div>
-            <!-- Copy -->
-            <app-btn-copy
-              :copy-value="walletAddress"
-              class="!min-w-8 h-8 text-primary"
-            >
-            </app-btn-copy>
-            <!-- Block Explorer Link -->
-            <a
-              :href="getExplorerLink"
-              :aria-label="$t('view_in_block_explorer')"
-              target="_blank"
-              class="rounded-full !cursor-pointer min-w-8 h-8 flex items-center justify-center hoverNoBG"
-            >
-              <ArrowTopRightOnSquareIcon class="w-5 h-5 text-primary" />
-            </a>
           </div>
-          <div class="mt-4">
-            <p
+          <div class="mt-6">
+            <div
               v-if="!isLoadingBalances"
-              class="font-semibold text-s-32 h-[42px]"
+              class="flex items-center gap-1 min-h-[48px]"
             >
-              {{ formattedTotalFiatPortfolioValue }}
+              <p class="font-bold text-s-40 leading-none">
+                {{ formattedTotalFiatPortfolioValue }}
+              </p>
               <!-- Update balances -->
               <app-btn-icon
                 :label="$t('refresh_balance')"
                 class="!inline"
                 @click="fetchBalances"
               >
-                <ArrowPathIcon class="text-primary" />
+                <ArrowPathIcon class="w-6 h-6 text-primary" />
               </app-btn-icon>
-            </p>
+            </div>
             <div
               v-else
-              class="animate-pulse bg-grey-10 rounded-full w-[150px] min-h-[39px] mb-[3px]"
+              class="animate-pulse bg-grey-10 rounded-full w-[150px] min-h-[48px] mb-1"
             ></div>
-            <p v-if="!isLoadingBalances" class="text-info">
+            <p v-if="!isLoadingBalances" class="text-info text-s-16">
               {{ formattedBalance }} {{ mainTokenBalance?.symbol || '' }}
               {{ $t('common.and') }} {{ tokensCount }}
             </p>
@@ -64,58 +68,60 @@
             ></div>
           </div>
           <!-- Actions -->
-          <div class="mt-4 grid grid-cols-5 gap-1">
+          <div class="mt-6 grid grid-cols-5 gap-1.5 focus:outline-none">
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center min-h-[72px] hoverNoBG"
               @click="openDeposit"
             >
               <QrCodeIcon class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('deposit') }}</p>
+              <p class="text-s-12 font-medium">{{ $t('deposit') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center hoverNoBG"
               @click.stop.prevent="openWalletMenu('buy')"
             >
               <icon-buy class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('buy') }}</p>
+              <p class="text-s-12 font-medium">{{ $t('buy') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
               @click.stop.prevent="openWalletMenu('sell')"
             >
-              <icon-buy class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('sell') }}</p>
+              <icon-sell class="w-7 h-7 text-primary mb-1" />
+              <p class="text-s-12 font-medium">{{ $t('sell') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
               @click.stop.prevent="openWalletMenu('send')"
             >
               <icon-send class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('common.send') }}</p>
+              <p class="text-s-12 font-medium">{{ $t('common.send') }}</p>
             </button>
             <button
               class="rounded-16 bg-mewBg flex flex-col items-center justify-center p-2 hoverNoBG"
               @click.stop.prevent="openWalletMenu('swap')"
             >
               <icon-swap class="w-7 h-7 text-primary mb-1" />
-              <p class="text-s-12">{{ $t('common.swap') }}</p>
+              <p class="text-s-12 font-medium">{{ $t('common.swap') }}</p>
             </button>
           </div>
           <button
-            class="shadow-button shadow-button-elevated rounded-16 p-3 mt-6 hoverNoBG w-full"
+            class="shadow-button shadow-button-elevated rounded-16 p-4 mt-6 hoverNoBG w-full"
             @click="openPaperWalletDialog = true"
           >
-            <p class="text-s-14">{{ $t('view_paper_wallet') }}</p>
+            <p class="text-s-16 font-medium">{{ $t('view_paper_wallet') }}</p>
           </button>
           <button
             v-if="canSwitchAddress"
-            class="shadow-button shadow-button-elevated rounded-16 p-3 mt-3 hoverNoBG w-full"
+            class="shadow-button shadow-button-elevated rounded-16 p-4 mt-3 hoverNoBG w-full"
             @click="switchAddress"
           >
-            <p class="text-s-14">{{ $t('switch_connected_address') }}</p>
+            <p class="text-s-16 font-medium">
+              {{ $t('switch_connected_address') }}
+            </p>
           </button>
-          <div class="flex items-center justify-center mt-3" v-if="isWatchOnly">
-            <app-base-button is-outline size="medium" @click="openAccess">
+          <div class="flex items-center justify-center mt-6" v-if="isWatchOnly">
+            <app-base-button is-outline size="large" @click="openAccess">
               {{ $t('connect_wallet') }}</app-base-button
             >
           </div>
@@ -123,7 +129,7 @@
             <app-base-button
               theme="error"
               is-outline
-              size="medium"
+              size="large"
               @click="disconnectWallet"
             >
               {{
@@ -148,6 +154,7 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
+import IconSell from '@/assets/icons/core_menu/icon-sell.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
@@ -168,6 +175,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { useRecentAddressStore } from '@/stores/recentAddressStore'
 import useBalanceHandler from '@/utils/balanceHandler'
+import { truncateAddress } from '@/utils/filters'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

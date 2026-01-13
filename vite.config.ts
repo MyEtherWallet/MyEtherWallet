@@ -7,6 +7,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import wasm from 'vite-plugin-wasm'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,6 +15,7 @@ export default defineConfig({
     port: 8080,
   },
   plugins: [
+    tailwindcss(),
     vue(),
     viteCommonjs({ skipPreBuild: true }),
     nightwatchPlugin(),
@@ -49,7 +51,7 @@ export default defineConfig({
     target: 'esnext',
   },
   optimizeDeps: {
-    include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets']
+    include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets'],
   },
   resolve: {
     alias: {

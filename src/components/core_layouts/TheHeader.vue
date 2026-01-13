@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:pl-10 md-header:pr-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32);]"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:pl-10 md-header:pr-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -61,9 +61,10 @@
           use-vue-router
           has-on-Hover
         >
-          <template #select-button="{ toggleSelect }">
+          <template #select-button="{ toggleSelect, openSelect }">
             <button
               class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
+              :class="{ 'bg-grey-5': openSelect }"
               @click="toggleSelect"
             >
               {{ $t('common.more') }}

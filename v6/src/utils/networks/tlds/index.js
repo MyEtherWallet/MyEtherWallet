@@ -1,5 +1,0 @@
-import ETH from './ETH.js';
-import HOLESKY from './HOLESKY';
-import ROOTSTOCK from './ROOTSTOCK';
-import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET';
-export { ETH, HOLESKY, ROOTSTOCK, ROOTSTOCKTESTNET };

@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center w-full">
     <div
-      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
+      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-1"
     >
       <app-not-recommended />
       <app-sheet class="mt-1">
@@ -149,7 +149,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
 import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 
 const { t } = useI18n()
@@ -288,8 +288,8 @@ const loadList = async (page: number = 0) => {
     await wallet.value?.getWallet(i).then(async wallet => {
       if (wallet) {
         const fetchBalance = await wallet.getBalance()
-        if (Array.isArray(fetchBalance.result)) {
-          const mainToken = fetchBalance.result.find(
+        if (Array.isArray((fetchBalance as TokenBalancesRaw).result)) {
+          const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
             token => token.contract === MAIN_TOKEN_CONTRACT,
           )
           walletList.value.push({
@@ -315,11 +315,14 @@ const loadList = async (page: number = 0) => {
             ).toString(),
           })
         }
+        if (walletList.value.length === 1) {
+          selectedIndex.value = walletList.value[0].index
+          isLoadingWalletList.value = false
+        }
       }
     })
   }
   //TODO: Load balance
-  selectedIndex.value = walletList.value[0].index
   isLoadingWalletList.value = false
 }
 

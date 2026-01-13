@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center w-full">
-    <div class="max-w-[624px] flex flex-col items-center justify-center">
+    <div class="max-w-[640px] w-full flex flex-col items-center justify-center">
       <app-sheet class="mt-6">
         <div>
           <app-stepper
@@ -108,19 +108,17 @@ import HWwallet from '@enkryptcom/hw-wallets'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import type { PathType } from '@/stores/derivationStore'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
 import EvmHardwareWallet from '@/providers/ethereum/evmHardwareWallet'
 import type { HexPrefixedString } from '@/providers/types'
-import { fromWei } from 'web3-utils'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
-import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
-import { fromBase } from '@/utils/unit'
-
 import { useAccessStore } from '@/stores/accessStore'
+import { formatUnits } from 'viem'
+import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
 const derivationStore = useDerivationStore()
@@ -263,7 +261,7 @@ const unlockWallet = async () => {
     await hwWalletInstance!
       .isConnected({
         wallet: selectedHwWalletType.value as HWwalletType,
-        networkName: networkName,
+        networkName: networkName as any,
       })
       .then(() => {
         return new Promise(r => setTimeout(r, 1000))
@@ -272,7 +270,7 @@ const unlockWallet = async () => {
   activeStep.value = 1
   paths.value = (await hwWalletInstance!.getSupportedPaths({
     wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: networkName,
+    networkName: networkName as any,
   })) as PathType[]
 
   // if path is empty, set a path
@@ -311,15 +309,17 @@ const loadList = async (page: number = 0) => {
       : hwWalletInstance
     : hwWalletInstance
 
-  for (let i = startIndex; i < startIndex + 5; i++) {
-    try {
+  try {
+    for (let i = startIndex; i < startIndex + 5; i++) {
+      if (selectedDerivation.value?.basePath === '') return
       const addressResponse = await instance!.getAddress({
         confirmAddress: false,
-        networkName: networkName,
+        networkName: networkName as any,
         pathType: selectedDerivation.value as PathType,
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
       })
+
       const hardwareWalletInstance = isEvmChain.value
         ? new EvmHardwareWallet(
             chainId,
@@ -340,43 +340,30 @@ const loadList = async (page: number = 0) => {
           )
       const fetchBalance = await hardwareWalletInstance.getBalance()
 
-      if (Array.isArray(fetchBalance.result)) {
-        const mainToken = fetchBalance.result.find(
-          token => token.contract === MAIN_TOKEN_CONTRACT,
-        )
+      const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
+        token => token.contract === MAIN_TOKEN_CONTRACT,
+      )
 
-        walletList.value.push({
-          address: addressResponse.address,
-          index: i,
-          balance: fromWei(
-            (mainToken?.balance || '0x0') as HexPrefixedString,
-            'ether',
-          ).toString(),
-          walletInstance: hardwareWalletInstance as EvmHardwareWallet,
-        })
-      } else {
-        // TODO: change this once api changes are made to return consistent data
-        // for all networks
-        const newFetchBalance = fetchBalance as unknown as {
-          balance: { nativeValue: string }
-        }
-        walletList.value.push({
-          address: await hardwareWalletInstance.getAddress(),
-          index: i,
-          balance: fromBase(newFetchBalance.balance.nativeValue || '0', 8),
-          walletInstance: hardwareWalletInstance,
-        })
-      }
-    } catch (e) {
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: e instanceof Error ? e.message : String(e),
+      walletList.value.push({
+        address: await hardwareWalletInstance.getAddress(),
+        index: i,
+        balance: formatUnits(BigInt(mainToken!.balance), mainToken!.decimals!),
+        walletInstance: hardwareWalletInstance,
       })
+      if (walletList.value.length === 1) {
+        selectedIndex.value = walletList.value[0].index
+        isLoadingWalletList.value = false
+      }
     }
+  } catch (e) {
+    console.log(e)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e instanceof Error ? e.message : String(e),
+    })
+  } finally {
+    isLoadingWalletList.value = false
   }
-
-  selectedIndex.value = walletList.value[0]?.index
-  isLoadingWalletList.value = false
 }
 
 watch(
