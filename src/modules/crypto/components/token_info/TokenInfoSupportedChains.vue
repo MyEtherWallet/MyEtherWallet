@@ -7,10 +7,10 @@
     <!-- Supported Chains -->
     <div
       v-if="!isLoading && tokenData?.supportedChains?.length"
-      class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5"
+      class="px-2 xs:px-5 md:px-3 lg:px-9 mb-5"
     >
-      <h3 class="text-s-20 font-bold mb-2">Supported Chains</h3>
-      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
+      <h3 class="text-s-20 font-bold mb-2 px-1">Supported Chains</h3>
+      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar px-1">
         <div
           v-for="i in tokenData.supportedChains"
           :key="i.chainName"
@@ -19,14 +19,14 @@
           <div class="flex items-center">
             <div class="relative mr-4 shrink-0">
               <app-token-logo
-                :url="tokenData.iconUrl"
-                :symbol="tokenData.symbol"
+                :url="i.iconUrl"
+                :symbol="i.chainName"
                 width="w-10"
                 height="h-10"
               />
               <app-token-logo
-                :url="i.iconUrl"
-                :symbol="i.chainName"
+                :url="tokenData.iconUrl"
+                :symbol="tokenData.symbol"
                 width="w-5"
                 height="h-5"
                 class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-2 border-white rounded-full bg-white"

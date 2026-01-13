@@ -6,7 +6,7 @@
       v-if="
         isWalletConnected && !isLoading && existsOnCurrentChain && tokenData
       "
-      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 gap-2"
+      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 lg:px-10 gap-2"
     >
       <h2
         class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150"
@@ -53,18 +53,20 @@
       v-if="
         isWalletConnected && !isLoading && tokenData && otherChains.length > 0
       "
-      class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+      class=""
     >
-      <h3 class="text-s-20 font-bold mb-1">
+      <h3 class="text-s-20 font-bold mb-1 px-3 xs:px-6 md:px-4 lg:px-10">
         {{ tokenData.symbol.toUpperCase() }} balance on other chains:
       </h3>
-      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
+      <div
+        class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar px-3 xs:px-6 md:px-4 lg:px-10"
+      >
         <div
           v-for="(i, index) in otherChains"
           :key="index"
           class="flex items-center justify-between py-3 border-b border-grey-5 last:border-0 w-full"
         >
-          <div class="flex items-center grow">
+          <div class="flex items-center grow max-w-[360px]">
             <div class="relative mr-4 shrink-0">
               <app-token-logo
                 :url="tokenData.iconUrl"
@@ -80,7 +82,7 @@
                 class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-2 border-white rounded-full bg-white"
               />
             </div>
-            <div class="flex flex-col min-w-0">
+            <div class="flex flex-col">
               <h4 class="text-s-16 font-bold truncate">
                 {{ i.balance }}
                 {{ tokenData.symbol.toUpperCase() }}
@@ -89,11 +91,11 @@
                 on {{ i.chainNameLong || i.chainName.toLowerCase() }}
               </p>
             </div>
-            <div class="ml-auto mr-4 text-right">
+            <div class="ml-auto sm:mr-10 text-right">
               <p class="text-info text-s-14 font-medium">${{ i.fiatValue }}</p>
             </div>
           </div>
-          <app-base-button size="small" class="shrink-0">
+          <app-base-button size="small" class="shrink-0 hidden sm:block">
             Bridge
           </app-base-button>
         </div>
