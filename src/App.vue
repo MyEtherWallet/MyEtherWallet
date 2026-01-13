@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative h-screen overflow-hidden">
     <welcome-dialog
       v-if="!isDevMode"
       @close-welcome-dialog="showFeedbackToast"

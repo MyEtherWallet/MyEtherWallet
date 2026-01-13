@@ -8,50 +8,68 @@
     }"
     class="flex"
   >
-    <div class="w-full mb-2 py-1 hoverBGWhite cursor-pointer rounded-12 px-2">
-      <div class="grid grid-cols-4 w-full items-center justify-between gap-1">
-        <div class="col-span-2 flex items-center gap-2">
-          <app-token-logo :url="token.logo_url" :alt="token.symbol" />
-          <div>
-            <p class="hidden xs:block text-s-14 font-medium text-wrap">
+    <div
+      class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-3 transition-colors duration-200"
+    >
+      <div class="grid grid-cols-4 w-full items-center justify-between gap-2">
+        <div class="col-span-2 flex items-center gap-3">
+          <app-token-logo
+            :url="token.logo_url"
+            :alt="token.symbol"
+            class="w-8 h-8 rounded-full shadow-sm"
+          />
+          <div class="flex flex-col overflow-hidden">
+            <app-tooltip :text="token.name" v-if="token.name.length > 20">
+              <p
+                class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+              >
+                {{ token.name }}
+              </p>
+            </app-tooltip>
+            <p
+              v-else
+              class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+            >
               {{ token.name }}
             </p>
-            <p
-              class="text-s-14 font-medium xs:text-s-12 xs:text-info xs:font-normal"
-            >
-              {{ truncate(token.symbol, 6) }}
+            <p class="text-s-12 font-normal text-info uppercase tracking-tight">
+              {{ truncate(token.symbol, 10) }}
             </p>
           </div>
         </div>
-        <div class="col-span-1 text-s-14">
-          <p>${{ formatFiatValue(token.price).value }}</p>
-          <p
-            class="text-s-11 flex items-center gap-[2px]"
+        <div class="col-span-1 flex flex-col items-start">
+          <p class="text-s-14 font-normal">
+            ${{ formatFiatValue(token.price).value }}
+          </p>
+          <div
+            class="text-s-11 font-normal flex items-center gap-[2px]"
             :class="{
               'text-error': token.percentChange < 0,
               'text-success': token.percentChange >= 0,
             }"
           >
-            {{ formatPercentageValue(token.percentChange).value }}
             <span
-              ><ArrowTrendingDownIcon
-                v-if="token.percentChange < 0"
-                class="text-error h-3 w-3" /><ArrowTrendingUpIcon
-                v-else
-                class="text-success h-3 w-3"
-            /></span>
-          </p>
+              >{{ token.percentChange >= 0 ? '+' : ''
+              }}{{ formatPercentageValue(token.percentChange).value }}</span
+            >
+            <ArrowTrendingDownIcon
+              v-if="token.percentChange < 0"
+              class="h-2.5 w-2.5"
+            />
+            <ArrowTrendingUpIcon v-else class="h-2.5 w-2.5" />
+          </div>
         </div>
-        <div class="text-right col-span-1">
+        <div
+          class="text-right col-span-1 flex flex-col items-end justify-center"
+        >
           <p
-            class="text-s-14 text-info"
+            class="text-s-14 font-normal tracking-tight"
             :class="{
               'text-error': token.gainOrLoss.isLessThan(0),
               'text-success': token.gainOrLoss.isGreaterThan(0),
             }"
           >
-            <span v-if="token.gainOrLoss.isLessThan(0)"> -</span>
-            <span v-else> +</span>${{
+            {{ token.gainOrLoss.isLessThan(0) ? '-' : '+' }}${{
               formatFiatValue(token.gainOrLoss.abs()).value
             }}
           </p>
@@ -62,6 +80,7 @@
 </template>
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import { truncate } from '@/utils/filters'
 import {
   formatPercentageValue,

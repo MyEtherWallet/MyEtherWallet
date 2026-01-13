@@ -1,33 +1,33 @@
 <template>
-  <div class="min-h-[82px]">
+  <div>
     <div class="relative">
       <!-- Blockie -->
       <div class="absolute top-3 left-3 flex items-center pointer-events-none">
         <div
-          v-if="!adrInput && !resolvedAddress"
-          class="rounded-full bg-surface !w-[32px] h-[32px]"
+          v-if="!resolvedAddress"
+          class="rounded-full bg-surface w-8 h-8"
         ></div>
         <img
           v-else
           :src="addressBlockie"
-          class="rounded-full w-[32px] h-[32px]"
-          height="30"
-          width="30"
+          class="rounded-full w-8 h-8"
+          height="32"
+          width="32"
         />
       </div>
       <!-- Label -->
       <label
         for="address-input"
         :class="[
-          'pointer-events-none absolute top-[17px] left-11 bottom-auto transition-all pl-2 aria-hidden',
+          'pointer-events-none absolute left-14 transition-all aria-hidden',
           inFocusInput
             ? hasError
               ? 'text-error'
               : 'text-primary'
             : 'text-info',
-          {
-            'text-[10px] translate-y-[-70%]': inFocusInput || adrInput !== '',
-          },
+          inFocusInput || adrInput !== ''
+            ? 'top-2 text-s-11'
+            : 'top-[18px] text-sm',
         ]"
       >
         {{ label }}
@@ -46,48 +46,48 @@
           {
             '!border-primary !border-2': inFocusInput && !hasError,
           },
-          'grow focus:outline-none focus:ring-0 bg-white shadow-button shadow-button-elevated  text-sm text-normal rounded-16 h-[58px] w-full pl-[50px] pr-[70px] pt-[24px] pb-[12px]  transition-colors',
+          'grow focus:outline-none focus:ring-0 bg-white shadow-button shadow-button-elevated text-normal rounded-16 h-[58px] w-full pl-14 pr-24 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
         :aria-label="label"
         @focus="setInFocusInput()"
         @blur="startOutOfFocusTimeout()"
         autocomplete="off"
       />
-      <!-- Clear Input  -->
-      <app-btn-icon
-        class="absolute top-3 right-11"
-        label="clear search"
-        @click="clearAdrInput"
-        :class="[
-          adrInput !== '' ? 'opacity-100' : 'hidden',
-          'transition-opacity opacity-0',
-        ]"
-      >
-        <x-circle-icon class="w-6 h-6 text-primary" />
-      </app-btn-icon>
-      <!-- Open Address Book button-->
-      <app-btn-icon
-        v-if="hasAddressBook"
-        class="absolute top-3 right-3"
-        label="open address book"
-        @click="isAddressBookOpen = true"
-      >
-        <users-icon class="w-6 h-6 text-primary" />
-      </app-btn-icon>
+      <!-- Action Buttons  -->
+      <div class="absolute top-3 right-3 flex items-center gap-1">
+        <app-btn-icon
+          label="clear search"
+          @click="clearAdrInput"
+          v-if="adrInput !== ''"
+          class="text-primary"
+        >
+          <x-circle-icon class="w-6 h-6" />
+        </app-btn-icon>
+        <app-btn-icon
+          v-if="hasAddressBook"
+          label="open address book"
+          @click="isAddressBookOpen = true"
+          class="text-primary"
+        >
+          <users-icon class="w-6 h-6" />
+        </app-btn-icon>
+      </div>
     </div>
     <!-- Error Messages OR Resolved Address -->
-    <transition name="fade" mode="out-in">
-      <p
-        v-if="addressErrorMessages !== '' || resolvedAddress !== ''"
-        :class="{
-          'text-error': addressErrorMessages,
-          'text-info': resolvedAddress,
-        }"
-        class="text-[10px] xs:text-s-12 leading-[23px] pl-5"
-      >
-        {{ addressErrorMessages || foundNickName || resolvedAddress }}
-      </p>
-    </transition>
+    <div class="min-h-6 flex items-center px-4">
+      <transition name="fade" mode="out-in">
+        <p
+          v-if="addressErrorMessages !== '' || resolvedAddress !== ''"
+          :class="{
+            'text-error': addressErrorMessages,
+            'text-info': resolvedAddress,
+          }"
+          class="text-s-12 truncate"
+        >
+          {{ addressErrorMessages || foundNickName || resolvedAddress }}
+        </p>
+      </transition>
+    </div>
 
     <address-book-dialog
       v-if="hasAddressBook"

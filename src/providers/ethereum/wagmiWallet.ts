@@ -100,8 +100,7 @@ class WagmiWallet extends BaseEvmWallet {
     }
   }
   override async getAddress(): Promise<HexPrefixedString> {
-    const addressArray = await this.connector?.getAccounts()
-    return addressArray[0]
+    return this.address
   }
 
   override getWalletType(): WalletType {

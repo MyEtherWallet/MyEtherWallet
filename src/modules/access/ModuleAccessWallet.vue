@@ -36,7 +36,7 @@
       </div>
     </template>
     <template #content>
-      <div class="px-4 xs:px-6 !overflow-y-scroll pb-6">
+      <div class="px-4 xs:px-6 pb-6">
         <div v-if="currentView === 'default'">
           <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
             <div>

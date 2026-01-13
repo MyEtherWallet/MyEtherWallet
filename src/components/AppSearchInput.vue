@@ -12,7 +12,10 @@
       ref="searchInput"
       type="text"
       v-model="model"
-      class="grow focus:outline-none focus:ring-0 bg-white border-none text-sm text-normal rounded-full h-10 w-full pl-[46px] py-1 text-[17px] transition-colors"
+      :class="[
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full pl-[46px] py-1 text-[17px] transition-colors',
+        bgClass,
+      ]"
       :aria-label="placeholder"
       :placeholder="placeholder"
       @focus="inFocusInput = true"
@@ -38,7 +41,6 @@ import { ref, nextTick } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
-import { defineProps } from 'vue'
 
 /**
  * @description AppSearchInput component, used to display a search input field with a clear button.
@@ -54,6 +56,13 @@ defineProps({
   placeholder: {
     type: String,
     default: 'Search',
+  },
+  /**
+   * @bgClass The background color of the input field.
+   */
+  bgClass: {
+    type: String,
+    default: 'bg-white',
   },
 })
 

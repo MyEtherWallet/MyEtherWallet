@@ -73,6 +73,46 @@ const colors = {
   tooltipBg: 'rgba(0,0,0,0.7)',
 }
 
+/** Simple bucket-average downsampling (fast + good enough for display-only) */
+function downsample(values: number[], target: number): number[] {
+  const n = values.length
+  if (n <= target) return values.slice()
+  const bucketSize = n / target
+  const out: number[] = []
+  for (let i = 0; i < target; i++) {
+    const start = Math.floor(i * bucketSize)
+    const end = Math.floor((i + 1) * bucketSize)
+    const slice = values.slice(start, end)
+    if (slice.length > 0) {
+      const avg = slice.reduce((s, v) => s + v, 0) / slice.length
+      out.push(avg)
+    }
+  }
+  return out
+}
+
+/** Sample labels by taking the middle or first timestamp in each bucket */
+function downsampleLabels(values: number[], target: number): number[] {
+  const n = values.length
+  if (n <= target) return values.slice()
+  const bucketSize = n / target
+  const out: number[] = []
+  for (let i = 0; i < target; i++) {
+    const start = Math.floor(i * bucketSize)
+    const index = Math.min(Math.floor(start + bucketSize / 2), n - 1)
+    out.push(values[index])
+  }
+  return out
+}
+
+const displayPoints = computed(() =>
+  downsample(props.points, Math.max(8, props.maxPoints)),
+)
+
+const displayLabels = computed(() =>
+  downsampleLabels(props.labels, Math.max(8, props.maxPoints)),
+)
+
 const isRising = computed(() => {
   const first = props.points?.[0] ?? 0
   const last = props.points?.[props.points.length - 1] ?? 0
@@ -89,17 +129,17 @@ const backgroundColor = computed(() => {
 
 const chartData = computed<ChartData<'line'>>(() => {
   return {
-    labels: props.labels,
+    labels: displayLabels.value,
     datasets: [
       {
-        data: props.points,
+        data: displayPoints.value,
         borderColor: lineColor.value,
         borderWidth: 1.5,
         pointRadius: 0,
         tension: 0.5, // low smoothing to keep detail
       },
       {
-        data: Array(props.points.length).fill(props.points[0]),
+        data: Array(displayPoints.value.length).fill(displayPoints.value[0]),
         borderWidth: 0,
         pointRadius: 0,
         hoverRadius: 0,
@@ -114,7 +154,7 @@ const chartData = computed<ChartData<'line'>>(() => {
   }
 })
 const yBounds = computed(() => {
-  const arr = props.points
+  const arr = displayPoints.value
   if (arr.length === 0) {
     return { min: 0, max: 1 }
   }
@@ -188,7 +228,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
           if (context.length === 0) {
             return ''
           }
-          const date = new Date(props.labels[context[0].dataIndex] || '')
+          const date = new Date(displayLabels.value[context[0].dataIndex] || '')
           return date.toLocaleDateString('en-US', {
             minute: 'numeric',
             hour: 'numeric',
@@ -209,7 +249,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         align: 'start',
         color: 'rgba(0, 0, 0, 0.65)',
         callback: function (value) {
-          const date = new Date(props.labels[value as number])
+          const date = new Date(displayLabels.value[value as number])
           const format = getFormat()
           return props.timeFrame === '1D'
             ? date.toLocaleTimeString('en-US', format)

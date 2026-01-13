@@ -28,6 +28,7 @@ export enum WalletConfigType {
   SOFTWARE = 'software',
   DESKTOP = 'desktop',
   EXTENSION = 'extension',
+  MOCK = 'mock',
 }
 
 export const WALLET_TYPES = {
@@ -50,6 +51,7 @@ export type defaultWalletId =
   | 'privateKey'
   | 'keystore'
   | 'mnemonic'
+  | 'mock'
 
 type downloadUrls = {
   android?: string
@@ -90,7 +92,11 @@ const keystoreSupportNetwork = (chain?: Chain): boolean => {
 
 const enkryptSupportNetwork = (chain?: Chain): boolean => {
   if (!chain) return false
-  return chain.type === 'EVM' || ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') && !!window.unisat)
+  return (
+    chain.type === 'EVM' ||
+    ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') &&
+      !!window.unisat)
+  )
 }
 
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
@@ -153,9 +159,21 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     canSupport: enkryptSupportNetwork,
     isDefault: true,
     isOfficial: true,
-    isWC: true,
+    isWC: false,
     downloadUrls: {
       browserExtension: 'https://enkrypt.com',
+    },
+  },
+  mock: {
+    id: 'mock',
+    name: 'Mock Wallet',
+    icon: MewLogo,
+    type: [WalletConfigType.MOCK],
+    isDefault: false,
+    isOfficial: false,
+    isWC: false,
+    downloadUrls: {
+      browserExtension: '',
     },
   },
 }
