@@ -1,7 +1,7 @@
 <template>
   <app-sheet
     :is-elivated="false"
-    sheet-class="bg-no-repeat bg-cover flex items-center justify-center !lg:p-0 !relative bg-[url('@/assets/images/backgrounds/eth-left.webp'),_url('@/assets/images/backgrounds/eth-right.webp'),_radial-gradient(circle_500px_at_50%_100%,_rgba(255,255,255,0.5)_60%,transparent_100%),_linear-gradient(to_bottom,transparent,rgba(255,255,255,0.6)_90px,rgba(255,255,255,1)_190px),linear-gradient(to_right,rgba(90,197,210,1)_0%,rgba(149,206,253,1)_50%,rgba(126,138,250,1)_100%)] bg-[length:20%,_20%,_100%,_100%,_100%] xl:bg-[length:230px,_230px,_100%,_100%,_100%] bg-[position:_left_10px_top_10px,_right_10px_bottom_0px,_center_center,_center_center,_center_center]
+    sheet-class="bg-no-repeat xl:bg-contain flex items-center justify-center !lg:p-0 !relative bg-[url('@/assets/images/backgrounds/eth-left.webp'),_url('@/assets/images/backgrounds/eth-right.webp'),_radial-gradient(circle_500px_at_50%_100%,_rgba(255,255,255,0.5)_60%,transparent_100%),_linear-gradient(to_bottom,transparent,rgba(255,255,255,0.6)_90px,rgba(255,255,255,1)_190px),linear-gradient(to_right,rgba(90,197,210,1)_0%,rgba(149,206,253,1)_50%,rgba(126,138,250,1)_100%)] bg-[size:0px,_0px,_100%,_100%,_100%] lg:bg-[size:190px,_190px,_100%,_100%,_100%] xl:bg-[size:230px,_230px,_100%,_100%,_100%] bg-[position:_left_10px_top_10px,_right_10px_bottom_0px,_center_center,_center_center,_center_center]
 "
   >
     <div class="w-full flex flex-col gap-6 lg:gap-10 lg:py-8">
@@ -227,7 +227,7 @@ const randomPercentage = Math.random() * 4 - 2
 </script>
 
 <style scoped>
-.no-balance-gradient {
+/* .no-balance-gradient {
   background:
     radial-gradient(
       circle 500px at 50% 100%,
@@ -246,5 +246,5 @@ const randomPercentage = Math.random() * 4 - 2
       rgba(149, 206, 253, 1) 50%,
       rgba(126, 138, 250, 1) 100%
     );
-}
+} */
 </style>
