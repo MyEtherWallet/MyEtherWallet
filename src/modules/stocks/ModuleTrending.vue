@@ -7,15 +7,15 @@
       <div class="flex">
         <app-btn-icon
           class=""
-          :disabled="isLoading || page === 1"
+          :disabled="isLoading || currentPage === 0"
           label="previous page"
-          @click="previousPage"
+          @click="prevPage"
         >
           <ChevronLeftIcon class="w-4 h-4" />
         </app-btn-icon>
         <app-btn-icon
           class=""
-          :disabled="isLoading || page >= totalPages"
+          :disabled="isLoading || currentPage >= totalPages - 1"
           label="next page"
           @click="nextPage"
         >
@@ -25,7 +25,7 @@
     </div>
 
     <div class="grid grid-cols-1 gap-2" v-if="!isLoading">
-      <div v-for="token in currentTrendingTokens" :key="token.symbol">
+      <div v-for="token in paginatedArray" :key="token.symbol">
         <token-row :token="token" />
       </div>
     </div>
@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
-import { computed, ref } from 'vue'
-import BigNumber from 'bignumber.js'
+import { ref } from 'vue'
+import { usePaginate } from '@/composables/usePaginate'
 import TokenRow from './components/TokenRow.vue'
 import { useStocksStore } from '@/stores/stocksStore'
 import { storeToRefs } from 'pinia'
@@ -56,29 +56,7 @@ const { isLoadingOverview: isLoading, trending: trendingTokens } =
  * Pagination
  --------------------------*/
 const itemsPerPage = ref(4)
-const page = ref(1)
 
-const totalPages = computed(() =>
-  new BigNumber(trendingTokens.value.length)
-    .div(itemsPerPage.value)
-    .integerValue(BigNumber.ROUND_CEIL)
-    .toNumber(),
-)
-
-const currentTrendingTokens = computed(() => {
-  const startIndex = (page.value - 1) * itemsPerPage.value
-  const endIndex = page.value * itemsPerPage.value
-  return trendingTokens.value.slice(startIndex, endIndex)
-})
-
-const nextPage = () => {
-  if (page.value < totalPages.value) {
-    page.value += 1
-  }
-}
-const previousPage = () => {
-  if (page.value > 1) {
-    page.value -= 1
-  }
-}
+const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
+  usePaginate(trendingTokens, itemsPerPage)
 </script>
