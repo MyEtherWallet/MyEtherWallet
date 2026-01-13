@@ -33,7 +33,7 @@
               />
             </div>
             <div class="flex flex-col min-w-0">
-              <h4 class="text-s-16 font-bold truncate">
+              <h4 class="text-s-16 font-medium truncate">
                 {{ i.chainNameLong || i.chainName }}
               </h4>
               <div class="flex items-center gap-1.5 min-w-0">

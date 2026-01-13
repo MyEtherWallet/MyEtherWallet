@@ -2,7 +2,7 @@
   <button
     :class="[
       defaultClass,
-      { 'py-1 px-3 text-s-14': size === BtnSize.SMALL },
+      { 'py-1 px-3 text-s-13': size === BtnSize.SMALL },
       { 'py-2 px-5 min-h-11': size === BtnSize.MEDIUM },
       { 'py-3  px-6 md:px-7': size === BtnSize.LARGE },
       disabled

@@ -44,7 +44,7 @@
             ref="targetDialog"
           >
             <div
-              class="z-10 pb-2 flex flex-none"
+              class="z-10 pb-2 flex flex-none relative"
               :class="[
                 {
                   'justify-between': title || $slots.title,
@@ -58,7 +58,7 @@
               <slot name="title">
                 <h1
                   v-if="title && !$slots.title"
-                  class="text-s-28 font-bold pr-2 pt-4 sm:pt-7 pl-6 capitalize"
+                  class="text-s-28 font-bold px-4 pt-4 sm:pt-5 text-center capitalize w-full"
                   id="dialogTitle"
                 >
                   {{ title }}
@@ -67,11 +67,11 @@
               <app-btn-icon-close
                 v-if="!persistent"
                 @close="setIsOpen(false)"
-                class="mt-4 mr-4 min-w-[32px]"
+                class="absolute top-4 right-4 min-w-[32px]"
               />
             </div>
             <div
-              :class="[{ 'pt-2 px-4 xs:px-6 sm:px-8': hasContentGutter }]"
+              :class="[{ ' px-4 xs:px-6 sm:px-8': hasContentGutter }]"
               class="overflow-y-auto mew-scrollbar flex-1"
             >
               <slot name="content" />

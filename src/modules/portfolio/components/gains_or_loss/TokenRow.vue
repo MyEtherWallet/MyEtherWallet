@@ -21,30 +21,28 @@
           <div class="flex flex-col overflow-hidden">
             <app-tooltip :text="token.name" v-if="token.name.length > 20">
               <p
-                class="hidden xs:block text-s-15 font-bold truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+                class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
               >
                 {{ token.name }}
               </p>
             </app-tooltip>
             <p
               v-else
-              class="hidden xs:block text-s-15 font-bold truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+              class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
             >
               {{ token.name }}
             </p>
-            <p
-              class="text-s-13 font-medium text-info xs:font-normal uppercase tracking-tight"
-            >
+            <p class="text-s-12 font-normal text-info uppercase tracking-tight">
               {{ truncate(token.symbol, 10) }}
             </p>
           </div>
         </div>
         <div class="col-span-1 flex flex-col items-start">
-          <p class="text-s-14 font-medium">
+          <p class="text-s-14 font-normal">
             ${{ formatFiatValue(token.price).value }}
           </p>
           <div
-            class="text-s-11 font-bold flex items-center gap-[2px]"
+            class="text-s-11 font-normal flex items-center gap-[2px]"
             :class="{
               'text-error': token.percentChange < 0,
               'text-success': token.percentChange >= 0,
@@ -65,7 +63,7 @@
           class="text-right col-span-1 flex flex-col items-end justify-center"
         >
           <p
-            class="text-s-15 font-bold tracking-tight"
+            class="text-s-14 font-normal tracking-tight"
             :class="{
               'text-error': token.gainOrLoss.isLessThan(0),
               'text-success': token.gainOrLoss.isGreaterThan(0),

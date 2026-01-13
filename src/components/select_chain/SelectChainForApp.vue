@@ -41,10 +41,10 @@
       </app-btn-group>
       <button
         v-else
-        class="bg-white hoverNoBG py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
+        class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
         @click="setOpenDialog(true)"
       >
-        <div v-if="selectedChain" class="flex items-center min-h-[44px]">
+        <div v-if="selectedChain" class="flex items-center min-h-[36px]">
           <img
             v-if="selectedChain.icon"
             :src="selectedChain.icon"
@@ -54,20 +54,16 @@
             width="32"
           />
           <div class="ml-1 pr-1 min-w-[30px]">
-            <p
-              class="text-secondary text-left text-s-12 leading-[16px] capitalize font-medium"
-            >
+            <p class="text-info text-left text-s-12 leading-[16px] capitalize">
               {{ $t('common.network') }}
             </p>
             <p
-              class="text-ellipsis truncate font-bold text-sm overflow-hidden text-left"
+              class="text-ellipsis truncate font-medium text-sm overflow-hidden text-left"
             >
               {{ selectedChain.nameLong }}
             </p>
           </div>
-          <chevron-down-icon
-            class="flex-none w-5 h-5 ml-auto text-info opacity-50"
-          />
+          <chevron-down-icon class="flex-none w-4 h-4 ml-auto" />
         </div>
       </button>
     </slot>

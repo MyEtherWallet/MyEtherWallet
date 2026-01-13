@@ -35,28 +35,17 @@
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
+    :title="$t('select_token.title')"
     has-content-gutter
-    persistent
   >
-    <template #title>
-      <div class="relative w-full pt-10 pb-2 flex justify-center z-[21]">
-        <h1 class="text-s-28 font-bold text-black text-center" id="dialogTitle">
-          {{ $t('select_token.title') }}
-        </h1>
-        <app-btn-icon-close
-          @close="showAllTokens = false"
-          class="absolute top-4 right-0"
-        />
-      </div>
-    </template>
     <template #content>
       <div
-        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] mb-6 overflow-y-auto mew-scrollbar px-1"
+        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] pb-6 overflow-y-auto mew-scrollbar"
         ref="scrollContainer"
       >
-        <div class="sticky -top-2 bg-white z-20 pt-4">
+        <div class="sticky top-0 bg-white z-20 pt-2">
           <div
-            class="flex gap-2 justify-between items-center mb-4 bg-[#EFF4FF] rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
@@ -68,7 +57,7 @@
             <app-pop-up-menu :placeholder="$t('common.sort')">
               <template #menu-button="{ toggleMenu }">
                 <button
-                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
+                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortValue }}</span>
@@ -114,59 +103,56 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-grey-outline w-full mb-4"></div>
+          <div class="h-px bg-grey-outline w-full mb-2"></div>
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
           <button
             v-for="token in searchResults"
             :key="token.address"
-            class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
+            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="[
               token.address === selectedToken?.address
-                ? 'bg-[#EFF4FF]'
-                : 'bg-transparent hover:bg-mewBg',
+                ? '!bg-mewBg'
+                : 'bg-transparent hoverBGWhite',
             ]"
             @click="setSelectedToken(token)"
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <div
-                  class="mr-4 w-9 h-9 shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-button"
-                >
-                  <img
-                    class="w-full h-full object-cover"
-                    :src="imageReplacer(token)"
-                    alt="token icon"
-                  />
-                </div>
+                <app-token-logo
+                  :url="token.logoURI"
+                  :symbol="token.symbol"
+                  class="shrink-0 mr-4"
+                />
+
                 <div class="text-left">
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
                     <h2
-                      class="font-bold text-s-17 text-black whitespace-nowrap"
+                      class="font-medium text-s-17 text-black whitespace-nowrap"
                     >
                       {{ truncate(token.name, 10) }}
                     </h2>
                   </app-tooltip>
                   <h2
                     v-else
-                    class="font-bold text-s-17 text-black whitespace-nowrap"
+                    class="font-medium text-s-17 text-black whitespace-nowrap"
                   >
                     {{ token.name }}
                   </h2>
-                  <p class="text-secondary text-sm font-medium">
+                  <p class="text-s-14">
                     {{ getBalance(token?.balance || '0') }}
-                    <span class="uppercase text-xs opacity-60">
+                    <span class="uppercase text-s-12 text-info">
                       {{ truncate(token.symbol, 7) }}</span
                     >
                   </p>
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
-                <p class="font-bold text-s-17 text-black">
+                <p class="font-medium text-black">
                   $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
-                <p class="text-secondary text-sm font-medium">
+                <p class="text-info text-s-12">
                   @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>
@@ -248,6 +234,7 @@ import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 import { useScroll } from '@vueuse/core'
+import AppTokenLogo from './AppTokenLogo.vue'
 
 const props = defineProps({
   selectedToken: {

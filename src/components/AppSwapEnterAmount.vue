@@ -10,15 +10,15 @@
   >
     <div class="flex justify-between items-center w-full gap-2">
       <input
-        class="grow py-1 text-3xl font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
+        class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
         :class="{
           'text-error': hasError,
           'animate-pulse text-info': isLoading,
-          'text-s-24':
+          '!text-s-24':
             amount &&
-            amount.toString().length > 9 &&
-            amount.toString().length <= 14,
-          'text-s-16': amount && amount.toString().length > 14,
+            amount.toString().length > 7 &&
+            amount.toString().length <= 10,
+          '!text-s-16': amount && amount.toString().length > 10,
         }"
         name="amount-input"
         type="text"
@@ -44,7 +44,7 @@
         ></div>
         <div v-else class="flex justify-between items-end">
           <div
-            class="text-sm font-medium"
+            class="text-sm"
             :class="{
               'text-error': hasError,
               'text-info': !hasError,
@@ -54,7 +54,7 @@
           </div>
           <div
             v-if="showBalance"
-            class="text-s-12 text-grey-1 font-medium transition-colors"
+            class="text-s-12 text-info transition-colors"
             :class="{ 'text-primary': inFocusInput && !hasError }"
           >
             {{ $t('common.balance') }}:

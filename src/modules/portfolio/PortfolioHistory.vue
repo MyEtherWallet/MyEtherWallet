@@ -12,12 +12,12 @@
       </div>
       <div class="text-right">
         <p
-          class="font-bold text-[10px] tracking-sp-06 uppercase text-info opacity-60 leading-none mb-1"
+          class="font-bold text-s-11 tracking-sp-06 uppercase text-info leading-none mb-1"
         >
           Last 24h
         </p>
         <p
-          class="text-s-20 text-success leading-none font-bold"
+          class="text-s-20 text-success leading-none font-medium"
           :class="{ '!text-error': lastTwentyFourHours.isLessThan(0) }"
         >
           {{ lastTwentyFourHours.isLessThan(0) ? '-' : '+' }}${{

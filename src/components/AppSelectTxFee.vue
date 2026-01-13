@@ -15,7 +15,7 @@
           v-if="!hasFees"
           class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
         ></div>
-        <p v-else class="font-bold text-black">{{ selectedFeeFiat }}</p>
+        <p v-else class="font-medium text-black">{{ selectedFeeFiat }}</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -24,7 +24,7 @@
           class="bg-grey-10 rounded-full animate-pulse w-24 h-4"
         ></div>
         <template v-else>
-          <span class="text-grey-1 font-medium">
+          <span class="text-info font-medium">
             {{ selectedFeeNative }}
           </span>
           <chevron-down-icon class="w-4 h-4 text-grey-3" />

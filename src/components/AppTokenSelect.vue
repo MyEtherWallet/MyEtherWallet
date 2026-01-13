@@ -35,27 +35,16 @@
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
+    :title="$t('select_token.title')"
     has-content-gutter
-    persistent
   >
-    <template #title>
-      <div class="relative w-full pt-10 pb-2 flex justify-center">
-        <h1 class="text-s-28 font-bold text-black text-center" id="dialogTitle">
-          {{ $t('select_token.title') }}
-        </h1>
-        <app-btn-icon-close
-          @close="showAllTokens = false"
-          class="absolute top-4 right-0"
-        />
-      </div>
-    </template>
     <template #content>
       <div
         class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] mb-6 overflow-y-auto mew-scrollbar px-1"
       >
-        <div class="sticky -top-2 bg-white z-20 pt-4">
+        <div class="sticky top-0 bg-white z-20 pt-4">
           <div
-            class="flex gap-2 justify-between items-center mb-4 bg-[#EFF4FF] rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
@@ -113,7 +102,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-grey-outline w-full mb-4"></div>
+          <div class="h-px bg-grey-outline w-full mb-2"></div>
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
@@ -123,8 +112,8 @@
             class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="[
               token.contract === selectedTokenContract
-                ? 'bg-[#EFF4FF]'
-                : 'bg-transparent hover:bg-mewBg',
+                ? 'bg-mewBg'
+                : 'bg-transparent hoverBGWhite',
             ]"
             @click="setSelectedToken(token)"
           >
@@ -142,30 +131,30 @@
                 <div class="text-left">
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
                     <h2
-                      class="font-bold text-s-17 text-black whitespace-nowrap"
+                      class="font-medium text-s-15 text-black whitespace-nowrap"
                     >
                       {{ truncate(token.name, 10) }}
                     </h2>
                   </app-tooltip>
                   <h2
                     v-else
-                    class="font-bold text-s-17 text-black whitespace-nowrap"
+                    class="font-medium text-s-15 text-black whitespace-nowrap"
                   >
                     {{ token.name }}
                   </h2>
-                  <p class="text-secondary text-sm font-medium">
+                  <p class="text-secondary text-s-12 font-normal">
                     {{ getBalance(token.balance) }}
-                    <span class="uppercase text-xs opacity-60">
+                    <span class="uppercase text-s-12 opacity-60">
                       {{ truncate(token.symbol, 7) }}</span
                     >
                   </p>
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
-                <p class="font-bold text-s-17 text-black">
+                <p class="font-normal text-s-14 text-black">
                   $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
-                <p class="text-secondary text-sm font-medium">
+                <p class="text-secondary text-s-12 font-normal">
                   @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>

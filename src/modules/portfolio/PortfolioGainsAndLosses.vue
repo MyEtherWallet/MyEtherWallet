@@ -29,11 +29,11 @@
     </div>
     <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden ">
       <div
-        class="grid grid-cols-4 w-full justify-between text-[10px] uppercase text-info tracking-sp-06 mb-4 items-end px-4 font-bold opacity-60"
+        class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
       >
         <p class="col-span-2">Token</p>
         <p class="col-span-1">Price / 24h</p>
-        <p class="text-right col-span-1">Portfolio Gain / Loss</p>
+        <p class="text-right col-span-1">Gain / Loss</p>
       </div>
       <div v-if="!isLoading" class="min-h-[181px]">
         <TokenRow

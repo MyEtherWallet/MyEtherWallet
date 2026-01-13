@@ -38,10 +38,7 @@
           >
             {{ balanceFiatOrError }}
           </div>
-          <div
-            v-if="isWalletConnected"
-            class="text-s-12 text-grey-1 font-medium"
-          >
+          <div v-if="isWalletConnected" class="text-s-12 text-info font-medium">
             {{ $t('common.balance') }}:
             <span class="text-black">{{ balance }}</span>
           </div>

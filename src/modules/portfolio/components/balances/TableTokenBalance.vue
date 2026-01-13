@@ -38,9 +38,7 @@
       <div
         class="order-1 sm:order-2 mb-6 sm:mb-0 ml-2 sm:ml-0 flex flex-col items-end"
       >
-        <p
-          class="font-bold text-grey-3 uppercase tracking-sp-06 text-s-11 mb-1"
-        >
+        <p class="font-bold text-info uppercase tracking-sp-06 text-s-11 mb-1">
           Total Value
         </p>
         <p
@@ -60,9 +58,9 @@
         class="w-full text-sm table-fixed border-separate border-spacing-y-0"
       >
         <!-- Header-->
-        <thead class="bg-white sticky top-0 z-10">
+        <thead class="bg-white">
           <tr
-            class="text-left text-s-11 uppercase text-grey-3 tracking-sp-06 border-b border-grey-5 font-bold"
+            class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
           >
             <!-- Watchlist -->
             <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
@@ -225,31 +223,31 @@
                 <div class="truncate">
                   <app-tooltip :text="token.name" v-if="token.name.length > 20">
                     <p
-                      class="truncate font-bold text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ token.name }}
                     </p>
                   </app-tooltip>
                   <p
                     v-else
-                    class="truncate font-bold text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                   >
                     {{ token.name }}
                   </p>
                   <p class="text-grey-3 text-s-12 mt-0.5">
                     {{ formatFloatingPointValue(token.balance).value }}
-                    <span class="uppercase font-medium text-grey-1">{{
+                    <span class="uppercase font-normal text-info">{{
                       truncate(token.symbol, 7)
                     }}</span>
                   </p>
                 </div>
               </div>
             </td>
-            <!-- 24h % -->
+            <!-- 24H % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
               <div class="flex flex-col items-end justify-center py-2 pr-2">
                 <p
-                  class="text-s-13 font-bold mb-1"
+                  class="text-s-13 font-normal mb-1"
                   :class="[
                     token.price_change_percentage_24h
                       ? parsePercent(
@@ -273,6 +271,7 @@
                   :points="token.sparkline_in_7d"
                   :width="70"
                   :height="24"
+                  :max-points="34"
                   fill
                   :percent-change="token.price_change_percentage_24h"
                 />
@@ -280,7 +279,7 @@
             </td>
             <!-- Market Cap -->
             <td
-              class="hidden md:table-cell px-1 py-1 text-right font-bold text-s-14 text-black"
+              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
             >
               {{
                 token.market_cap
@@ -290,7 +289,7 @@
             </td>
             <!-- Value -->
             <td class="pl-1 pr-6 py-1 text-right">
-              <p class="font-bold text-s-15 text-black">
+              <p class="font-normal text-s-14 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
               <p class="text-grey-3 text-s-12 mt-0.5">
@@ -378,13 +377,13 @@
                   size="small"
                   @click.stop="buyBtn()"
                   is-outline
-                  class="min-w-[70px] !rounded-full font-bold !text-s-12 !py-2"
+                  class="min-w-[70px]"
                   >Buy</app-base-button
                 >
                 <app-base-button
                   size="small"
                   @click.stop="swapBtn(token)"
-                  class="min-w-[70px] !rounded-full font-bold !text-s-12 !py-2"
+                  class="min-w-[70px]"
                   >Swap
                 </app-base-button>
               </div>
@@ -427,7 +426,7 @@
     </div>
 
     <div
-      class="flex flex-col xs:flex-row items-center justify-between text-s-13 font-medium mt-4 border-t border-grey-5 pt-4 px-2"
+      class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
     >
       <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
         {{ getCurrentViewableItemsIndex }} of {{ tokens.length }} results
@@ -458,7 +457,7 @@
         <app-select
           v-model:selected="activeShownItems"
           :options="shownItemsOptions"
-          position="top-[-160px]"
+          position="top-[-160px] right-0"
           class="min-w-[70px]"
         >
           <template #select-button="{ toggleSelect }">

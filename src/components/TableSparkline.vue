@@ -98,7 +98,7 @@ const chartData = computed(() => ({
     {
       data: displayPoints.value,
       borderColor: lineColor.value,
-      borderWidth: 2,
+      borderWidth: 1.5,
       pointRadius: 0,
       tension: 0.4,
       fill: props.fill ? 'start' : false,

@@ -1,7 +1,7 @@
 <template>
   <app-sheet
     v-if="isWalletConnected"
-    sheet-class=" !px-5 !pt-4 !pb-5 overflow-hidden h-full flex flex-col justify-between"
+    sheet-class=" !px-4 sm:!px-5 !pt-4 !pb-5 h-full flex flex-col justify-between overflow-y-auto sm:overflow-hidden"
   >
     <div class="flex items-center w-full justify-between mb-2">
       <h2 class="text-s-20 font-bold leading-tight">
@@ -12,15 +12,15 @@
 
     <div
       v-if="!isLoadingBalances && topTokens.length"
-      class="flex flex-row items-center justify-between gap-4 w-full h-full"
+      class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-4 w-full h-full pb-1"
     >
-      <div class="w-1/2 flex justify-center">
+      <div class="w-full sm:w-auto shrink flex justify-center shrink-0">
         <AllocationChart
           :tokens="topTokens.slice(0, 5)"
           :isLoading="isLoadingBalances"
         />
       </div>
-      <div class="w-1/2 pr-1">
+      <div class="w-full sm:flex-1 pr-1 max-w-[200px]">
         <AllocationTokens
           :tokens="topTokens.slice(0, 5)"
           :isLoading="isLoadingBalances"
