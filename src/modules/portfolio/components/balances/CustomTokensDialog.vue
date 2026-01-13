@@ -2,14 +2,13 @@
   <app-dialog
     v-model:is-open="isOpenCustomTokenDialog"
     :title="title"
-    :persistent="false"
     z-index-overlay="z-[150]"
     z-index-container="z-[151]"
-    bg="bg-white"
+    :class="{ '!min-h-[300px]': currentView === 'delete' }"
   >
     <template #content>
-      <div class="p-4 max-w-md w-full">
-        <div v-if="currentView === 'add'">
+      <div class="p-4 lg:p-6 w-full flex flex-col items-center">
+        <div v-if="currentView === 'add'" class="flex flex-col gap-1 md:gap-3">
           <address-input
             v-model:adr-input="adrInput"
             label="Token Address"
@@ -37,8 +36,9 @@
             v-model="tokenDecimals"
             :is-disabled="fetchingDetails"
           />
+          <div v-if="fetchingDetails"></div>
         </div>
-        <div v-if="currentView === 'edit'">
+        <div v-if="currentView === 'edit'" class="flex flex-col gap-1 md:gap-3">
           <address-input
             v-model:adr-input="adrInput"
             label="Token Address"
@@ -54,27 +54,14 @@
             :is-disabled="true"
           />
         </div>
-        <div v-if="currentView === 'delete'">
-          <h3 class="text-lg font-bold mb-4">
-            Are you sure you want to delete the custom token "{{
-              selectedToken?.name
-            }}"?
+        <div v-if="currentView === 'delete'" class="max-w-[350px]">
+          <h3 class="text-s-16 mb-4">
+            Are you sure you want to delete "{{ selectedToken?.name }}"? You can
+            re-add this token if you change your mind.
           </h3>
-          <div>
-            <strong class="block mb-2">Token Address:</strong>
-            <p class="break-all mb-4">{{ selectedToken?.address }}</p>
-            <strong class="block mb-2">Token Symbol:</strong>
-            <p class="break-all mb-4">{{ selectedToken?.symbol }}</p>
-            <strong class="block mb-2">Token Decimal:</strong>
-            <p class="break-all mb-4">{{ selectedToken?.decimals }}</p>
-          </div>
-          <p>
-            This action cannot be undone. You can re-add the token later if you
-            change your mind.
-          </p>
         </div>
         <app-base-button
-          class="mt-4 w-full"
+          class="mt-4 mx-auto w-full xs:w-auto"
           :disabled="disableSubmit"
           :theme="currentView === 'delete' ? 'error' : 'primary'"
           @click="action"

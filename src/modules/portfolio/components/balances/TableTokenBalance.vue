@@ -1,32 +1,35 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col sm:flex-row sm:items-center justify-between px-2 py-2 mb-4 sm:gap-6"
+      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 py-2 mb-4 lg:gap-6"
     >
       <div
-        class="flex grow flex-wrap order-3 order-2 sm:order-1 items-center gap-2"
+        class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-2"
       >
         <div
-          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] w-full gap-1"
+          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] min-w-[200px] gap-3 lg:gap-5"
         >
           <app-search-input v-model="searchInput" class="grow" />
         </div>
-        <div v-if="props.view === 'custom'" class="ml-5">
-          <app-base-button size="medium" is-outline @click="openAddCustom"
+        <div
+          v-if="paginatedArray.length && props.view === 'custom'"
+          class="flex-none"
+        >
+          <app-base-button size="medium" @click="openAddCustom"
             >+ Add Custom Token</app-base-button
           >
         </div>
       </div>
       <!-- TOTAL VALUE-->
-      <div class="order-1 sm:order-2 mb-3 sm:mb-0 ml-2 sm:ml-0">
+      <div class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0">
         <p
-          class="font-bold text-info uppercase tracking-sp-06 text-s-14 sm:text-right"
+          class="font-bold text-info uppercase tracking-sp-06 text-s-14 lg:text-right"
         >
           Total Value
         </p>
         <p
           v-if="!isLoading"
-          class="text-s-20 font-bold sm:text-right rounded-12"
+          class="text-s-20 font-bold lg:text-right rounded-12"
         >
           {{ totalValue }}
         </p>
@@ -331,10 +334,7 @@
                       </ul>
                       <ul v-else>
                         <li
-                          @click.stop="[
-                            customTokenAction('edit', token),
-                            toggleMenu(),
-                          ]"
+                          @click.stop=""
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="text-primary w-4 h-4 mr-2" />
@@ -370,19 +370,18 @@
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
                 v-else
               >
-                <app-base-button
-                  size="small"
-                  @click="customTokenAction('edit', token)"
-                  is-outline
-                  >Edit</app-base-button
+                <app-btn-icon
+                  label="edit"
+                  @click.stop="customTokenAction('edit', token)"
                 >
-                <app-base-button
-                  size="small"
-                  theme="error"
-                  is-outline
-                  @click="customTokenAction('delete', token)"
-                  >Delete
-                </app-base-button>
+                  <pencil-icon class="w-4 h-4" />
+                </app-btn-icon>
+                <app-btn-icon
+                  label="delete"
+                  @click.stop="customTokenAction('delete', token)"
+                >
+                  <trash-icon class="w-5 h-5" />
+                </app-btn-icon>
               </div>
             </td>
           </tr>
@@ -401,6 +400,19 @@
           >Discover more tokens
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
+      </div>
+      <div
+        v-if="paginatedArray.length === 0 && props.view === 'custom'"
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-6 lg:mt-10">You dont have any custom tokens.</p>
+        <app-base-button size="medium" @click="openAddCustom"
+          >+ Add Custom Token</app-base-button
+        >
+        <!-- <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
+          >Discover more tokens
+          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+        </router-link> -->
       </div>
       <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
@@ -480,6 +492,7 @@ import {
   ChevronRightIcon,
   EllipsisVerticalIcon,
   PencilIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/solid'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
