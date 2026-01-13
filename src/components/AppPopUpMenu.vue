@@ -68,7 +68,7 @@
  *  * </app-pop-up-menu>
  */
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import { defineProps, ref, type PropType } from 'vue'
+import { ref, type PropType } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 enum PopupLocation {
   LEFT = 'left',

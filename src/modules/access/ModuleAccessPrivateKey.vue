@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center w-full">
     <div
-      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-3"
+      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-3"
     >
       <app-not-recommended />
       <app-sheet class="mt-1">

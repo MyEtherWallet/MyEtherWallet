@@ -29,9 +29,13 @@ export interface WalletInterface {
   disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: SignableTransactionParams,
-  ) => Promise<EthereumSignableTransactionResponse | BitcoinSignableTransactionResponse>
+  ) => Promise<
+    EthereumSignableTransactionResponse | BitcoinSignableTransactionResponse
+  >
   getGasFee?: (tx: QuotesRequestBody) => Promise<QuotesResponse>
-  getBtcGasFee?: (tx: BitcoinQuotesRequestBody) => Promise<BitcoinQuotesResponse>
+  getBtcGasFee?: (
+    tx: BitcoinQuotesRequestBody,
+  ) => Promise<BitcoinQuotesResponse>
   SignMessage: (options: {
     message: `0x${string}`
     options: unknown
@@ -50,5 +54,8 @@ export interface WalletInterface {
   ) => Promise<GetUnsignedEvmMultiTransactionResponse>
   updateChainId: (chainId: string) => void
   getWalletInstance?: () => HWwallet | null
-  getProviderInstance?: () => Eip6963Provider | NonNullable<typeof window.unisat> | null
+  getProviderInstance?: () =>
+    | Eip6963Provider
+    | NonNullable<typeof window.unisat>
+    | null
 }

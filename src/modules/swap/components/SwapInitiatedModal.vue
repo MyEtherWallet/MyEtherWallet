@@ -1,9 +1,5 @@
 <template>
-  <app-dialog
-    v-model:is-open="model"
-    class="sm:max-w-[400px] sm:mx-auto"
-    persistent
-  >
+  <app-dialog v-model:is-open="model" class="sm:max-w-[400px] sm:mx-auto">
     <template #content>
       <div class="p-4 flex flex-col items-center pt-8 mb-8">
         <div

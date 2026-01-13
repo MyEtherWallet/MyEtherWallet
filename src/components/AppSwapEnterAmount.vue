@@ -1,24 +1,24 @@
 <template>
   <div
     ref="target"
-    class="w-full rounded-16 bg-white pt-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
+    class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      '!border-primary': inFocusInput && !hasError && !readonly,
-      '!border-error': hasError,
+      'ring-2 ring-primary': inFocusInput && !hasError && !readonly,
+      'ring-2 ring-error': hasError,
     }"
     @click="setInFocusInput"
   >
-    <div class="flex justify-between items-center w-full pr-2">
+    <div class="flex justify-between items-center w-full gap-2">
       <input
-        class="pl-3 py-2 w-full text-3xl focus:outline-none focus:ring-0 !border-transparent !appearance-none"
+        class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
         :class="{
           'text-error': hasError,
           'animate-pulse text-info': isLoading,
-          'text-s-24':
+          '!text-s-24':
             amount &&
-            amount.toString().length > 9 &&
-            amount.toString().length <= 14,
-          'text-s-16': amount && amount.toString().length > 14,
+            amount.toString().length > 7 &&
+            amount.toString().length <= 10,
+          '!text-s-16': amount && amount.toString().length > 10,
         }"
         name="amount-input"
         type="text"
@@ -36,41 +36,47 @@
         :chain-tokens="tokens || []"
       />
     </div>
-    <div :class="{ 'animate-pulse': isLoading }" class="pr-2 pl-3">
+    <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
       <transition name="fade" mode="out-in">
-        <div v-if="isLoading" class="h-5 flex bg-grey-10 rounded-full"></div>
-        <div v-else class="flex flex-wrap justify-between">
-          <div class="basis-1/2 text-s-14 text-info">
+        <div
+          v-if="isLoading"
+          class="h-5 flex bg-grey-10 rounded-full w-1/2"
+        ></div>
+        <div v-else class="flex justify-between items-end">
+          <div
+            class="text-sm"
+            :class="{
+              'text-error': hasError,
+              'text-info': !hasError,
+            }"
+          >
             {{ balanceFiatOrError }}
           </div>
           <div
-            :class="[
-              'basis-1/2 text-s-14 text-info transition-colors text-right',
-              { 'text-primary': inFocusInput && !hasError },
-            ]"
             v-if="showBalance"
+            class="text-s-12 text-info transition-colors"
+            :class="{ 'text-primary': inFocusInput && !hasError }"
           >
-            {{ $t('common.balance') }}: {{ balance }}
+            {{ $t('common.balance') }}:
+            <span class="text-black">{{ balance }}</span>
           </div>
         </div>
       </transition>
-      <div class="my-1 min-h-[16px]">
-        <transition name="fade" mode="out-in">
-          <p
-            v-if="hasError && !isLoading"
-            class="basis-full text-error text-s-12 leading-p-130"
-          >
-            {{ errorMessage }}
-          </p>
-        </transition>
-      </div>
+      <transition name="fade" mode="out-in">
+        <p
+          v-if="hasError && !isLoading"
+          class="text-error text-s-12 leading-p-130"
+        >
+          {{ errorMessage }}
+        </p>
+      </transition>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { defineProps, ref, computed, type PropType } from 'vue'
+import { ref, computed, type PropType } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'

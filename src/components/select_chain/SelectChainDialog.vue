@@ -3,50 +3,58 @@
   <app-dialog
     v-if="isLoadedChains"
     v-model:is-open="openDialog"
-    title="Select Chain"
-    class="xs:max-w-[428px] sm:mx-auto"
+    class="w-full sm:w-[460px] sm:mx-auto"
     z-index-overlay="z-[200]"
     z-index-container="z-[201]"
+    has-content-gutter
+    title="Select Chain"
   >
     <template #content>
-      <div class="h-[70vh] sm:h-[500px] !overflow-y-scroll">
-        <!-- Seacrh -->
-        <div class="sticky top-0 bg-white z-10">
-          <div class="px-5 mb-1">
+      <div class="realtive max-h-[70vh] sm:max-h-[500px] pb-6">
+        <!-- Search -->
+        <div class="sticky top-0 bg-white z-20 pt-2">
+          <div class="flex items-center mb-2 bg-mewBg rounded-full p-1">
             <app-search-input
               v-model="searchInput"
               class="grow"
               placeholder="Search by Name"
+              bg-class="bg-transparent"
             />
           </div>
-          <hr class="h-px bg-grey-outline border-0 w-full" />
+          <div class="h-px bg-grey-outline w-full mb-2"></div>
         </div>
-        <!-- Seacrh Result-->
-        <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">
+        <!-- Search Result-->
+        <div v-if="searchResults.length" class="flex flex-col gap-1">
           <button
             v-for="chain in searchResults"
             :key="chain.name"
-            class="flex items-center justify-between px-5 py-3 cursor-pointer hoverNoBG rounded-12 box-border"
-            :class="{ 'bg-grey-5': chain.name === selectedChain?.name }"
+            class="flex items-center justify-between px-4 py-3 cursor-pointer hoverNoBG rounded-20 box-border transition-colors animate-fade-in"
+            :class="[
+              chain.name === selectedChain?.name
+                ? 'bg-mewBg'
+                : 'bg-transparent hoverBGWhite',
+            ]"
             @click="setSelectedChain(chain)"
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <img
-                  v-if="chain.icon"
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden shadow-token"
-                  :src="chain.icon"
-                  alt="token icon"
-                />
-                <div
-                  v-else
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden bg-surface shadow-token"
-                ></div>
-                <span>{{ chain.nameLong }}</span>
+                <div class="relative mr-4 overflow-visible">
+                  <img
+                    v-if="chain.icon"
+                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                    :src="chain.icon"
+                    alt="token icon"
+                  />
+                  <div
+                    v-else
+                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                  ></div>
+                </div>
+                <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
               </div>
               <check-icon
                 v-if="chain.name === selectedChain?.name"
-                class="w-6 h-6 text-primary"
+                class="w-6 h-6 text-[#2F80ED]"
               />
             </div>
           </button>

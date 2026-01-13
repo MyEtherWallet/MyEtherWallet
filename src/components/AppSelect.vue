@@ -23,19 +23,22 @@
         role="listbox"
         aria-label="Select an option"
         v-show="openSelect"
-        class="absolute focus:outline-none z-10"
+        class="absolute top-full focus:outline-none z-[100] mt-1"
         :class="position"
       >
         <div
-          class="px-2 py-3 min-w-60 max-w-full bg-white shadow-button rounded-xl"
+          class="p-1 min-w-[160px] max-w-full bg-white shadow-popover-elevated rounded-20 border border-grey-10 overflow-hidden"
         >
-          <div v-if="!useVueRouter" class="grid grid-cols-1">
+          <div v-if="!useVueRouter" class="grid grid-cols-1 gap-0.5">
             <button
               v-for="option in options"
               :key="option.value"
               :class="[
-                { 'bg-grey-5': selected && option.value === selected.value },
-                'flex items-center p-3 hoverNoBG rounded-lg',
+                {
+                  'bg-grey-5 text-primary':
+                    selected && option.value === selected.value,
+                },
+                'flex items-center px-3 h-10 hover:bg-grey-5 rounded-lg text-s-12 font-medium text-grey-60 transition-colors',
               ]"
               role="option"
               :id="option.value"
@@ -44,16 +47,16 @@
               {{ option.label }}
               <check-icon
                 v-if="selected && option.value === selected.value"
-                class="ml-auto w-5 h-5 text-primary"
+                class="ml-auto w-4 h-4 text-primary"
               />
             </button>
           </div>
-          <div v-else class="grid grid-cols-1">
+          <div v-else class="grid grid-cols-1 gap-0.5">
             <router-link
               v-for="option in options"
               :key="option.value"
-              class="flex items-center p-3 hoverNoBG rounded-lg"
-              active-class="bg-grey-5"
+              class="flex items-center px-3 h-10 hover:bg-grey-5 rounded-lg text-s-12 font-medium text-grey-60 transition-colors"
+              active-class="bg-grey-5 !text-primary"
               role="option"
               :id="option.value"
               :to="{ name: option.value }"
@@ -94,7 +97,7 @@
  *
  */
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'

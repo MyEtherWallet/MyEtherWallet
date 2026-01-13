@@ -11,7 +11,7 @@
     >
       <div
         v-if="isOpen"
-        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none !overflow-y-scroll z-[102] fixed"
+        class="paper-wallet bg-black/40 print:bg-white cursor-pointer fixed inset-0 h-full flex items-center justify-center p-9 overscroll-none overflow-y-auto mew-scrollbar z-[102] fixed"
       >
         <div
           class="bg-white print:border-1 print:border-outline rounded-16 max-h-[95%] w-[95%] max-w-[600px] mx-auto bg-white rounded-32 sm:min-h-[512px] px-3 sm:px-5"
@@ -118,7 +118,7 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
-import { defineModel, watch, nextTick } from 'vue'
+import { watch, nextTick } from 'vue'
 import { useQR } from '@/composables/useQR'
 import { storeToRefs } from 'pinia'
 import {
