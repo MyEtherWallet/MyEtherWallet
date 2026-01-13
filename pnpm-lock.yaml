@@ -124,7 +124,7 @@ importers:
         version: 1.5.4
       qrcode.vue:
         specifier: ^3.6.0
-        version: 3.6.0(vue@3.5.22(typescript@5.6.3))
+        version: 3.6.0(vue@3.5.26(typescript@5.9.3))
       tiny-secp256k1:
         specifier: ^2.2.4
         version: 2.2.4
@@ -34454,9 +34454,9 @@ snapshots:
   qrcode-terminal@0.11.0:
     optional: true
 
-  qrcode.vue@3.6.0(vue@3.5.22(typescript@5.6.3)):
+  qrcode.vue@3.6.0(vue@3.5.26(typescript@5.9.3)):
     dependencies:
-      vue: 3.5.22(typescript@5.6.3)
+      vue: 3.5.26(typescript@5.9.3)
 
   qrcode@1.5.3:
     dependencies:

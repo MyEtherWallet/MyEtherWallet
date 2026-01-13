@@ -1,10 +1,10 @@
 <template>
   <div class="flex justify-center w-full">
     <div
-      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
+      class="max-w-[624px] w-full flex flex-col items-center justify-center sm:pt-1"
     >
-      <app-not-recommended class="mt-0 mb-2" />
-      <app-sheet sheet-class="px-4 sm:px-6 lg:px-14">
+      <app-not-recommended class="mb-4 w-full" />
+      <app-sheet sheet-class="px-4 sm:px-6 lg:px-10">
         <app-stepper
           :steps="steps"
           :description="stepDescription"
@@ -17,7 +17,7 @@
               :description="stepDescription[0]"
               :activeStep="activeStep"
             />
-            <div class="flex justify-between items-center gap-4 mt-4 mb-1">
+            <div class="flex justify-between items-center gap-4 mt-6 mb-4">
               <div>
                 <app-select
                   v-model:selected="length"
@@ -29,40 +29,35 @@
                   placeholder="Select length"
                 />
               </div>
-              <app-btn-text class="text-primary" @click="updateMnemonic">
+              <app-btn-text
+                class="text-primary hoverOpacity"
+                @click="updateMnemonic"
+              >
                 <arrow-path-icon class="inline w-5 h-5 mr-1" />
                 Update
               </app-btn-text>
             </div>
             <div
-              class="grow border border-1 border-grey-outline text-s-17 rounded-16 p-4 flex justify-center"
+              class="grow border border-grey-outline text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
             >
-              <div class="basis-1/2">
+              <div
+                class="grid grid-cols-2 gap-x-4 gap-y-3 w-full max-w-[500px]"
+              >
                 <div
-                  v-for="(phrase, index) in firstSet"
+                  v-for="(phrase, index) in mnemonic.split(' ')"
                   :key="index"
-                  class="recovery-phrase__item"
+                  class="flex items-center bg-white/80 px-4 py-2 rounded-12 shadow-sm"
                 >
-                  <span class="text-info text-s-12 pr-1">{{ index + 1 }}.</span>
-                  {{ phrase }}
-                </div>
-              </div>
-              <div class="basis-1/2">
-                <div
-                  v-for="(phrase, index) in secondSet"
-                  :key="index"
-                  class="recovery-phrase__item"
-                >
-                  <span class="text-info text-s-12 pr-1"
-                    >{{ index + firstSet.length + 1 }}.</span
+                  <span class="text-info text-s-12 w-6 shrink-0"
+                    >{{ index + 1 }}.</span
                   >
-                  {{ phrase }}
+                  <span class="font-medium text-s-17">{{ phrase }}</span>
                 </div>
               </div>
             </div>
-            <div class="flex items-center justify-center mt-6">
+            <div class="flex items-center justify-center mt-8">
               <app-base-button
-                class="w-full xs:w-auto xs:min-w-[150px]"
+                class="w-full xs:w-auto xs:min-w-[200px]"
                 @click="nextStep"
               >
                 {{ $t('common.next') }}
@@ -76,19 +71,21 @@
               :activeStep="activeStep"
             />
 
-            <div class="pt-4">
-              <div
-                class="grid grid-cols-1 gap-4 lg:gap-6 justify-items-stretch"
-              >
+            <div class="pt-8">
+              <div class="flex flex-col gap-8">
                 <!-- First Sample -->
                 <div v-if="generatedVerifySamples.length">
-                  <p class="text-s-14 mb-2 text-info">
-                    Word #{{ generatedVerifySamples[0].indexToVerify + 1 }}
+                  <p
+                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                  >
+                    Select Word #{{
+                      generatedVerifySamples[0].indexToVerify + 1
+                    }}
                   </p>
                   <app-btn-group
                     v-model:selected="sampleOneSelected"
                     :btn-list="generatedVerifySamples[0].items"
-                    :size="isMobile ? 'small' : 'large'"
+                    :size="isMobile ? 'medium' : 'large'"
                     has-full-width
                   >
                     <template #btn-content="{ data }">
@@ -102,13 +99,17 @@
                     generatedVerifySamples.length && generatedVerifySamples[1]
                   "
                 >
-                  <p class="text-s-14 mb-2 text-info">
-                    Word #{{ generatedVerifySamples[1].indexToVerify + 1 }}
+                  <p
+                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                  >
+                    Select Word #{{
+                      generatedVerifySamples[1].indexToVerify + 1
+                    }}
                   </p>
                   <app-btn-group
                     v-model:selected="sampleTwoSelected"
                     :btn-list="generatedVerifySamples[1].items"
-                    :size="isMobile ? 'small' : 'large'"
+                    :size="isMobile ? 'medium' : 'large'"
                     has-full-width
                   >
                     <template #btn-content="{ data }">
@@ -122,13 +123,17 @@
                     generatedVerifySamples.length && generatedVerifySamples[2]
                   "
                 >
-                  <p class="text-s-14 mb-2 text-info">
-                    Word #{{ generatedVerifySamples[2].indexToVerify + 1 }}
+                  <p
+                    class="text-s-12 mb-2 text-info font-bold uppercase tracking-wider px-1"
+                  >
+                    Select Word #{{
+                      generatedVerifySamples[2].indexToVerify + 1
+                    }}
                   </p>
                   <app-btn-group
                     v-model:selected="sampleThreeSelected"
                     :btn-list="generatedVerifySamples[2].items"
-                    :size="isMobile ? 'small' : 'large'"
+                    :size="isMobile ? 'medium' : 'large'"
                     has-full-width
                   >
                     <template #btn-content="{ data }">
@@ -138,49 +143,56 @@
                 </div>
               </div>
               <div
-                class="flex flex-col items-center justify-center mt-6 lg:mt-10"
+                class="flex flex-col sm:flex-row-reverse items-center justify-center gap-3 mt-10 lg:mt-14"
               >
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[150px]"
+                  class="w-full xs:w-auto xs:min-w-[180px]"
                   :disabled="!verifyMnemonic"
                   @click="activeStep = 2"
                 >
                   {{ $t('common.next') }}
                 </app-base-button>
-                <app-btn-text
-                  class="w-full xs:w-auto xs:min-w-[150px] text-primary mt-2"
-                  is-large
+                <app-base-button
+                  :is-outline="true"
+                  class="w-full xs:w-auto xs:min-w-[180px]"
                   @click="activeStep = 0"
                 >
                   {{ $t('common.back') }}
-                </app-btn-text>
+                </app-base-button>
               </div>
             </div>
           </div>
 
           <div v-if="activeStep === 2">
-            <app-step-description
-              :description="stepDescription[2]"
-              :activeStep="activeStep"
-            />
+            <div class="flex flex-col items-center justify-center pt-8 pb-4">
+              <div
+                class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-6"
+              >
+                <check-icon class="w-10 h-10 text-green-500 stroke-[3px]" />
+              </div>
+              <app-step-description
+                class="!pt-0 text-center"
+                :description="stepDescription[2]"
+                :activeStep="activeStep"
+              />
+            </div>
 
-            <div class="pt-4">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4"></div>
-              <div class="flex flex-col items-center justify-center mt-8">
+            <div class="pt-4 pb-2">
+              <div class="flex flex-col items-center justify-center gap-4">
                 <app-base-button
-                  class="w-full xs:w-auto xs:min-w-[50px]"
+                  class="w-full xs:w-auto xs:min-w-[240px]"
                   @click="closeCreateOpenAccess()"
                 >
                   Connect wallet
                 </app-base-button>
                 <app-btn-text
-                  :is-outline="true"
-                  class="w-full xs:w-auto xs:min-w-[150px] mt-4"
-                  is-large
+                  class="w-full xs:w-auto xs:min-w-[240px] text-primary hoverOpacity flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
                   Create another wallet
-                  <arrow-long-right-icon class="inline w-5 h-5 ml-1" />
+                  <arrow-long-right-icon
+                    class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
+                  />
                 </app-btn-text>
               </div>
             </div>
@@ -203,7 +215,7 @@ import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { english, generateMnemonic } from 'viem/accounts'
-import { ArrowPathIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
@@ -336,15 +348,6 @@ const verifyMnemonic = computed(() => {
 
 const mnemonic = ref('')
 const length = ref({ label: '12 words', value: '12' })
-
-const firstSet = computed(() => {
-  const copy = mnemonic.value.split(' ')
-  return copy.splice(0, copy.length / 2)
-})
-const secondSet = computed(() => {
-  const copy = mnemonic.value.split(' ')
-  return copy.splice(copy.length / 2)
-})
 
 watch(length, () => {
   updateMnemonic()

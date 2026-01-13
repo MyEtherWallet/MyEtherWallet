@@ -1,13 +1,18 @@
 <template>
   <app-dialog
     v-model:is-open="isOpenCreateDialog"
-    class="max-w-[450px] lg:!max-w-[1024px] w-full max-h-[95vh] lg:h-[800px]"
+    :class="[
+      'w-full max-h-[95vh]',
+      currentView === 'mnemonic'
+        ? 'max-w-[800px] lg:h-auto'
+        : 'max-w-[450px] lg:!max-w-[1024px] lg:h-[800px]',
+    ]"
     bg="bg-appBackground"
     @close-dialog="closeCreate()"
   >
     <template #title>
-      <div class="flex w-full flex-col md:flex-row">
-        <div class="ml-4 w-8">
+      <div class="flex w-full flex-col md:flex-row px-4 xs:px-6">
+        <div class="w-8 ml-[-12px]">
           <app-btn-icon
             v-if="currentView !== 'default'"
             icon="icon-arrow-left"
@@ -21,8 +26,8 @@
         <div
           :class="
             currentView === 'default'
-              ? 'ml-5 mt-4  sm:ml-0'
-              : 'sm:justify-center pl-4 xs:pl-6 sm:items-center'
+              ? 'mt-4'
+              : 'sm:justify-center sm:items-center'
           "
           class="flex flex-col justify-start w-full md:mt-4 lg:mt-6 lg:mb-2"
         >
@@ -39,14 +44,14 @@
               target="_blank"
               class="underline inline-flex items-center ml-1 hoverOpacity"
               >Creating a wallet guide
-              <arrow-long-right-icon class="w-5 h-5 underline ml-1"
+              <arrow-long-right-icon class="w-5 h-5 ml-1"
             /></a>
           </p>
         </div>
       </div>
     </template>
     <template #content>
-      <div class="px-2 xs:px-6 !overflow-y-scroll pb-6">
+      <div class="px-4 xs:px-6 pb-6">
         <!-- Default View -->
         <div
           v-if="currentView === 'default'"
@@ -65,7 +70,7 @@
                 </h2>
                 <div class="flex items-center gap-1 md:gap-3 opacity-70">
                   <img class="h-[14px] md:h-[16px]" :src="mewRating" />
-                  <p class="text-s-12 md:text-s-14 mt-">13k+ ratings</p>
+                  <p class="text-s-12 md:text-s-14 mt-1">13k+ ratings</p>
                 </div>
               </div>
             </div>
@@ -154,7 +159,7 @@
                 </div>
               </div>
             </div>
-            <div class="flex max-h-[274px] -ml-4 sm:-ml-3">
+            <div class="flex max-h-[274px] -ml-4 sm:-ml-6 overflow-hidden">
               <img
                 :src="enkryptScreen"
                 contain=""
@@ -182,7 +187,7 @@
             class="basis-full text-s-17 font-medium leading-6 col-span-1 lg:col-span-2"
           >
             <app-btn-text
-              class="flex justify-start items-center mb-3"
+              class="-ml-3 flex justify-start items-center mb-3 text-info"
               @click="openOtherMethods"
             >
               Other methods

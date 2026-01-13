@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 sm:p-6 my-5 bg-error-7 border-1 border-error-10 rounded-16">
+  <div class="p-4 sm:p-6 bg-error-7 border-1 border-error-10 rounded-16">
     <div class="flex items-center">
       <!-- icon container -->
       <exclamation-triangle-icon class="w-6 h-6 mr-2 text-error" />
