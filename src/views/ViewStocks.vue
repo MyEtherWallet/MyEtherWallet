@@ -25,4 +25,8 @@ import ModuleNewlyAdded from '@/modules/stocks/ModuleNewlyAdded.vue'
 import ModuleTrending from '@/modules/stocks/ModuleTrending.vue'
 import ModuleNews from '@/modules/stocks/ModuleNews.vue'
 import ModuleAllStock from '@/modules/stocks/ModuleAllStock.vue'
+import { useStocksStore } from '@/stores/stocksStore'
+
+const stocksStore = useStocksStore()
+stocksStore.fetchStockOverview()
 </script>

@@ -4,37 +4,57 @@
     :to="{
       name: TOKEN_INFO_ROUTE_NAMES.crypto,
       params: {
-        tokenId: token.coinId,
+        tokenId: token.symbol,
       },
     }"
   >
-    <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
+    <app-token-logo :url="undefined" :symbol="token.symbol" />
     <div class="truncate">
-      <p class="truncate text-s-14">{{ token.name }}</p>
-      <p class="text-info text-s-12 uppercase">
-        {{ truncate(token.symbol, 7) }}
+      <app-tooltip
+        :text="token.name"
+        v-if="token.name && token.name.length > 12"
+      >
+        <p
+          class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
+        >
+          {{ token.name }}
+        </p>
+      </app-tooltip>
+      <p v-else class="truncate text-s-15 font-medium">
+        {{ token.name || '' }}
+      </p>
+      <p
+        class="xs:text-info font-medium xs:font-normal text-s-15 xs:text-s-12 uppercase"
+      >
+        {{ truncate(token.symbol || '', 7) }}
       </p>
     </div>
     <table-sparkline
-      class="ml-auto mr-2"
-      :points="tempPriceData"
-      :width="50"
-      :height="35"
-      :max-points="35"
+      class="ml-auto mx-3"
+      :points="token.sparkline24h || []"
+      :width="40"
+      :height="30"
+      :max-points="34"
+      fill
       :percent-change="token.priceChangePercentage24h"
     />
     <div>
-      <p class="text-s-14 text-right">
-        ${{ formatFiatValue(token.price).value }}
+      <p class="text-s-14 text-right font-medium">
+        {{ getPrice }}
       </p>
       <p
         class="text-s-12 text-right"
         :class="{
-          'text-error': token.priceChangePercentage24h < 0,
-          'text-success': token.priceChangePercentage24h >= 0,
+          'text-black': !token.priceChangePercentage24h,
+          'text-error':
+            token.priceChangePercentage24h &&
+            token.priceChangePercentage24h < 0,
+          'text-success':
+            token.priceChangePercentage24h &&
+            token.priceChangePercentage24h >= 0,
         }"
       >
-        {{ formatPercentageValue(token.priceChangePercentage24h).value }}
+        {{ getPriceChange }}
       </p>
     </div>
   </router-link>
@@ -46,57 +66,24 @@ import {
   formatPercentageValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
-import type { CryptoOverviewToken } from '@/mew_api/types'
+import AppTooltip from '@/components/AppTooltip.vue'
+import type { StockOverviewItem } from '@/mew_api/types'
 import { truncate } from '@/utils/filters'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import TableSparkline from '@/components/TableSparkline.vue'
-defineProps<{
-  token: CryptoOverviewToken
+import { computed } from 'vue'
+const props = defineProps<{
+  token: StockOverviewItem
 }>()
 
-const tempPriceData = [
-  3131.4855968151487, 3162.487887198581, 3139.697480970735, 3122.7586849566983,
-  3098.0587401819935, 3123.3913966527234, 3117.2225871583155, 3097.752112115808,
-  3101.855738469311, 3119.615265300656, 3072.827434552648, 3048.335141341613,
-  3009.763573557755, 3038.295717076611, 3082.87760053518, 3078.3076822025387,
-  3084.95605378235, 3088.5014216548193, 3080.591151490817, 3095.6988849101085,
-  3062.6552949266747, 3049.181934437644, 2969.2018150567937, 2950.9311711340547,
-  2913.5267540430004, 2886.8583723311804, 2886.018510835792, 2942.586755366143,
-  2988.206786726496, 2980.6420780192166, 3020.935787720369, 3019.3641530892837,
-  3038.3222314420514, 3042.61445082786, 3037.6765799807463, 3038.257293045771,
-  3033.720628802291, 3010.0406839168786, 3036.606112107908, 3030.265991212814,
-  3008.5754290754467, 3010.219395843009, 3021.0105669271293, 3025.9613635675423,
-  2997.148015487145, 2999.7437023743555, 2971.3585516185367, 2850.517577354722,
-  2821.4364545801886, 2812.1348223619857, 2842.430806773909, 2834.27651021503,
-  2884.5335983051395, 2877.728839269373, 2832.068358334293, 2861.406794552637,
-  2858.4286212959005, 2785.570588649896, 2808.524457298072, 2816.75091471108,
-  2807.930770857841, 2791.655984928427, 2711.6021180054527, 2734.9274286309533,
-  2680.4846080049047, 2697.639533510155, 2684.937495394968, 2731.0606545130863,
-  2736.2842938630233, 2754.1412910168647, 2700.916542901162, 2757.5354019780398,
-  2785.5067679446443, 2780.3610888384483, 2741.89983020972, 2740.8265675370885,
-  2764.939901133831, 2720.484925997626, 2769.1247764991845, 2760.808474640882,
-  2773.921706553721, 2750.342090561589, 2751.132002794273, 2745.0147099387555,
-  2739.7343585472304, 2761.1451401955746, 2755.8533687955937,
-  2730.6568608138673, 2724.9983191277374, 2707.433083850003, 2735.6885985835634,
-  2718.189231888626, 2721.0359150066306, 2745.137969763756, 2731.163503709042,
-  2752.1995542436493, 2747.438975639772, 2749.644252886619, 2750.022875456,
-  2739.2748422542177, 2746.6743983110805, 2788.48006356448, 2768.1536567521325,
-  2769.896974700169, 2805.9795718198548, 2821.095990764593, 2824.7153155455976,
-  2826.1810286320797, 2821.891492960178, 2807.878333483976, 2789.27248646839,
-  2810.506117880726, 2814.1131319840547, 2808.145931424207, 2813.595367426639,
-  2833.2025306216055, 2844.3348984454524, 2813.9352911580036,
-  2838.2656924791477, 2820.221980405566, 2798.9263777934857, 2804.660711567495,
-  2821.3633941616995, 2826.0712724414907, 2838.540838173405, 2833.3733643412866,
-  2799.8149340924633, 2795.561666997617, 2804.2821223447877, 2840.467359297817,
-  2853.6275655469994, 2823.628480128831, 2864.5832080861683, 2835.2522090401076,
-  2833.0004377729397, 2829.7510220885924, 2796.5993892964775, 2798.011900973332,
-  2800.012849894453, 2801.8604818756708, 2820.7754528971113, 2828.6379415527053,
-  2845.5122941595837, 2859.6167728750675, 2940.886893265146, 2953.8352293690127,
-  2959.551034112809, 2979.1940739173087, 2956.4640214007636, 2954.6540400671456,
-  2952.334906852989, 2944.4844329749926, 2926.100045453785, 2926.745303529564,
-  2911.2360803190536, 2938.983212052411, 2931.6000411614395, 2918.0135361036473,
-  2903.12390370383, 2883.780388855892, 2886.287542870822, 2894.1398260083283,
-  2892.531947762183, 2926.848628586485, 2902.0828665785602, 2874.1006617093535,
-  2894.0410308072196, 2928.4552539508004,
-]
+const getPrice = computed(() => {
+  return props.token.price
+    ? `$${formatFiatValue(props.token.price).value}`
+    : '-'
+})
+const getPriceChange = computed(() => {
+  return props.token.priceChangePercentage24h
+    ? formatPercentageValue(props.token.priceChangePercentage24h).value
+    : '-'
+})
 </script>

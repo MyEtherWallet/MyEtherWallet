@@ -24,7 +24,7 @@
     </div>
 
     <div class="grid grid-cols-1 gap-2" v-if="!isLoading">
-      <div v-for="token in currentTrendingTokens" :key="token.symbol">
+      <div v-for="token in currentNewlyAddedTokens" :key="token.symbol">
         <token-row :token="token" />
       </div>
     </div>
@@ -41,61 +41,15 @@
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { useToastStore } from '@/stores/toastStore'
-import { computed, onMounted, ref, type Ref } from 'vue'
-import type {
-  GetWebTrendingTokensResponse,
-  GetWebTrendingTokensResponseToken,
-} from '@/mew_api/types'
+import { computed, ref } from 'vue'
 import BigNumber from 'bignumber.js'
 import TokenRow from './components/TokenRow.vue'
+import { useStocksStore } from '@/stores/stocksStore'
+import { storeToRefs } from 'pinia'
 
-const { useMEWFetch } = useFetchMewApi()
-const toastStore = useToastStore()
-const isLoading = ref(true)
-const trendingTokens: Ref<GetWebTrendingTokensResponseToken[]> = ref([])
-
-const apiPage = ref(1)
-const apiTotalItems = ref(1)
-
-const url = computed(() => {
-  return `https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`
-})
-const fetchUrl = url
-const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
-  immediate: false,
-})
-  .get()
-  .json<GetWebTrendingTokensResponse>()
-
-onMounted(() => {
-  isLoading.value = true
-  execute()
-})
-
-onFetchResponse(() => {
-  if (data.value && data.value.items) {
-    apiTotalItems.value = data.value.total
-    trendingTokens.value = [
-      ...trendingTokens.value,
-      ...data.value.items.map((token: GetWebTrendingTokensResponseToken) => {
-        return {
-          ...token,
-          symbol: token.symbol.toUpperCase(),
-        }
-      }),
-    ]
-  }
-  isLoading.value = false
-})
-
-onFetchError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: err,
-  })
-})
+const stocksStore = useStocksStore()
+const { isLoadingOverview: isLoading, newlyAdded: newlyAddedTokens } =
+  storeToRefs(stocksStore)
 
 /** --------------------------
  * Pagination
@@ -104,38 +58,21 @@ const itemsPerPage = ref(4)
 const page = ref(1)
 
 const totalPages = computed(() =>
-  new BigNumber(apiTotalItems.value)
+  new BigNumber(newlyAddedTokens.value.length)
     .div(itemsPerPage.value)
     .integerValue(BigNumber.ROUND_CEIL)
     .toNumber(),
 )
 
-const paginateArray = (page: number) => {
-  const startIndex = (page - 1) * itemsPerPage.value
-  const endIndex = page * itemsPerPage.value
-  return trendingTokens.value.slice(startIndex, endIndex)
-}
-
-const currentTrendingTokens = computed(() => {
-  return paginateArray(page.value)
+const currentNewlyAddedTokens = computed(() => {
+  const startIndex = (page.value - 1) * itemsPerPage.value
+  const endIndex = page.value * itemsPerPage.value
+  return newlyAddedTokens.value.slice(startIndex, endIndex)
 })
 
 const nextPage = () => {
   if (page.value < totalPages.value) {
-    const nextPage = page.value + 1
-    const nextItems = paginateArray(nextPage)
-    if (
-      nextItems.length === itemsPerPage.value ||
-      nextPage === totalPages.value
-    ) {
-      page.value += 1
-    } else {
-      isLoading.value = true
-      apiPage.value += 1
-      execute().then(() => {
-        page.value += 1
-      })
-    }
+    page.value += 1
   }
 }
 const previousPage = () => {
