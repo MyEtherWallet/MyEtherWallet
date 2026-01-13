@@ -61,9 +61,10 @@
           use-vue-router
           has-on-Hover
         >
-          <template #select-button="{ toggleSelect }">
+          <template #select-button="{ toggleSelect, openSelect }">
             <button
               class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
+              :class="{ 'bg-grey-5': openSelect }"
               @click="toggleSelect"
             >
               {{ $t('common.more') }}
