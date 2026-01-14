@@ -27,13 +27,15 @@
         aria-label="Select an option"
         v-show="openSelect"
         :class="[
-          'absolute focus:outline-none z-10',
+          'absolute top-full focus:outline-none z-[100] mt-1',
           { 'left-0': props.location === PopupLocation.LEFT },
           { 'right-0': props.location === PopupLocation.RIGHT },
           { 'inset-x-0': props.location === PopupLocation.CENTER },
         ]"
       >
-        <div class="min-w-[160px] max-w-full bg-white shadow-button rounded-xl">
+        <div
+          class="min-w-[160px] max-w-full bg-white shadow-popover-elevated rounded-20 border border-grey-10"
+        >
           <slot name="menu-content" :toggleMenu="toggleMenu" />
         </div>
       </div>

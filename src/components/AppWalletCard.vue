@@ -14,9 +14,9 @@
           @load="animateMewCard"
         />
         <!-- wallet address, wallet menu, link to explorer-->
-        <div class="flex items-start justify-between z-1 relative">
+        <div class="flex items-start justify-between z-30 relative">
           <div class="">
-            <app-pop-up-menu :placeholder="$t('common.sort')" location="left">
+            <app-pop-up-menu placeholder="wallet menu" location="left">
               <template #menu-button="{ toggleMenu }">
                 <button
                   class="p-1 text-s-11 font-bold leading-p-100 rounded-full hover:bg-white/15 transition-all duration-300 flex items-center"
@@ -97,7 +97,7 @@
         </div>
         <!-- Portfolio value-->
         <div
-          class="flex flex-row justify-start items-center z-1 relative gap-3"
+          class="flex flex-row justify-start items-center z-20 relative gap-3"
         >
           <p
             v-if="!isLoadingBalances"
@@ -120,7 +120,7 @@
           </button>
         </div>
         <!-- Token balances -->
-        <div class="self-end flex items-center justify-between z-1 relative">
+        <div class="self-end flex items-center justify-between z-10 relative">
           <div v-if="!isLoadingBalances">
             <p class="text-s-14 leading-p-140">
               {{ formattedBalance }} {{ safeMainTokenBalance?.symbol || '' }}
