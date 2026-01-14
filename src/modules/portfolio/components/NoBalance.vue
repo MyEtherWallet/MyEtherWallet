@@ -26,7 +26,11 @@
         <div
           class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4"
         >
-          <app-base-button class="min-w-[180px]" @click="buyBtn">
+          <app-base-button
+            v-if="isNativeBuyable"
+            class="min-w-[180px]"
+            @click="buyBtn"
+          >
             <div class="flex gap-2 items-center justify-center">
               <icon-buy
                 class="w-6 h-6 text-white"
@@ -61,19 +65,29 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 import { storeToRefs } from 'pinia'
 import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
 import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
+const purchaseStore = usePurchaseStore()
 const { selectedChain } = storeToRefs(chainsStore)
+
+const isNativeBuyable = computed(() => {
+  return purchaseStore.purchaseInfo?.assets.some(
+    asset =>
+      asset.name.toLowerCase() ===
+      selectedChain.value?.currencyName.toLowerCase(),
+  )
+})
 
 const buyBtn = () => {
   window.open(
-    'https://ccswap.myetherwallet.com',
+    'https://ccswap.myetherwallet.com/',
     '_blank',
     'noopener,noreferrer',
   )

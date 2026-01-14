@@ -1,144 +1,121 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1
-      class="text-s-20 lg:text-s-32 2xl:text-s-40 font-bold rounded-32 ml-2 my-2"
+    <div
+      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      Explore Crypto Tokens
-    </h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">Explore Crypto Tokens</h1>
 
-    <div class="basis-full">
-      <div class="flex flex-wrap justify-start items-center gap-2">
-        <!-- Mobile to MD only Categories and Chain Filter-->
-        <app-select
+      <div class="hidden lg:flex lg:items-center bg-grey-5 p-1 rounded-full">
+        <app-btn-group
           v-model:selected="selectedCryptoFilter"
-          :options="cryptoFilterOptions"
-          position="left-0"
-          placeholder="Category Menu"
-          class="w-full xs:w-auto md:hidden"
+          :btn-list="cryptoFilterOptions.slice(0, 4)"
+          size="medium"
+          class="flex-nowrap"
         >
-          <template #select-button="{ toggleSelect }">
-            <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
-              <button
-                class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
-                @click="toggleSelect"
-              >
-                <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium truncate">
-                    {{ selectedCryptoFilter.label }}</span
-                  >
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
-                </div>
-              </button>
-            </div>
+          <template #btn-content="{ data }">
+            <span class="px-2">{{ data.label }}</span>
           </template>
-        </app-select>
-        <div class="bg-surface rounded-full p-1 md:hidden w-full xs:w-auto">
-          <button
-            class="rounded-full bg-white py-2 px-3 shadow-button h-[42px] w-full xs:min-w-[180px]"
-            @click="openChainDialog = true"
-          >
-            <div class="flex items-center justify-start gap-2">
-              <app-token-logo
-                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                :url="selectedChainFilter?.icon"
-                :symbol="selectedChainFilter?.nameLong"
-                width="w-6"
-                height="h-6"
-              />
-              <span
-                class="text-s-16 font-medium truncate"
-                :class="{
-                  'ml-2': selectedChainFilter?.nameLong === 'All Chains',
-                }"
-              >
-                {{ selectedChainFilter?.nameLong }}</span
-              >
-              <chevron-down-icon class="w-4 h-4 ml-auto" />
-            </div>
-          </button>
-        </div>
-        <!-- Search and Filter Chains-->
-        <div
-          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:w-auto md:min-w-[400px]"
-        >
-          <app-search-input v-model="searchInput" class="grow" />
-          <button
-            class="rounded-full hoverNoBG p-2 hidden md:flex"
-            @click="openChainDialog = true"
-          >
-            <div class="flex items-center">
-              <app-token-logo
-                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                :url="selectedChainFilter?.icon"
-                :symbol="selectedChainFilter?.nameLong"
-                width="w-5"
-                height="h-5"
-                class="mr-2"
-              />
-              <span
-                v-if="selectedChainFilter"
-                class="text-s-17 leading-p-140 font-medium"
-                >{{ selectedChainFilter.nameLong }}</span
-              >
-              <chevron-down-icon class="w-4 h-4 ml-1" />
-            </div>
-          </button>
-        </div>
-        <!--Filter Lists-->
-        <div class="">
-          <app-btn-group
-            v-model:selected="selectedCryptoFilter"
-            :btn-list="cryptoFilterOptions.slice(0, 4)"
-            size="large"
-            class="hidden md:flex"
-          >
-            <template #btn-content="{ data }">
-              {{ data.label }}
-            </template>
-            <template #custom>
-              <app-select
-                v-model:selected="selectedCryptoFilter"
-                :options="
-                  cryptoFilterOptions.slice(4, cryptoFilterOptions.length)
-                "
-                position="-right-1"
-                class="text-s-12"
-              >
-                <template #select-button="{ toggleSelect }">
-                  <button
-                    class="rounded-full hoverNoBG px-3 py-2"
-                    @click="toggleSelect"
-                  >
-                    <div class="flex items-center text-s-17 leading-p-140">
-                      <span>More</span>
-                      <chevron-down-icon class="w-4 h-4 ml-1" />
-                    </div>
-                  </button>
-                </template>
-              </app-select>
-            </template>
-          </app-btn-group>
-        </div>
+          <template #custom>
+            <app-select
+              v-model:selected="selectedCryptoFilter"
+              :options="
+                cryptoFilterOptions.slice(4, cryptoFilterOptions.length)
+              "
+              position="-right-1"
+              class="text-s-12"
+            >
+              <template #select-button="{ toggleSelect }">
+                <button
+                  class="rounded-full hoverNoBG px-3 py-2 flex items-center gap-1"
+                  @click="toggleSelect"
+                >
+                  <span class="font-medium">More</span>
+                  <chevron-down-icon class="w-4 h-4" />
+                </button>
+              </template>
+            </app-select>
+          </template>
+        </app-btn-group>
       </div>
 
-      <div class="mt-3 bg-white rounded-16 shadow-button py-4 px-2">
+      <app-select
+        v-model:selected="selectedCryptoFilter"
+        :options="cryptoFilterOptions"
+        position="right-0"
+        placeholder="Category Menu"
+        class="lg:hidden"
+      >
+        <template #select-button="{ toggleSelect }">
+          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <button
+              class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+              @click="toggleSelect"
+            >
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-s-16 font-medium truncate">
+                  {{ selectedCryptoFilter.label }}</span
+                >
+                <chevron-down-icon class="w-4 h-4" />
+              </div>
+            </button>
+          </div>
+        </template>
+      </app-select>
+    </div>
+
+    <div class="basis-full">
+      <div class="bg-white rounded-16 shadow-button py-4 px-2">
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
+        >
+          <div
+            class="flex grow justify-between items-center bg-grey-white rounded-full p-1 max-w-[400px] order-2 sm:order-1 gap-1 border border-grey-5 focus-within:border-primary transition-colors hover:border-grey-10"
+          >
+            <app-search-input
+              v-model="searchInput"
+              class="grow"
+              bg-class="bg-transparent"
+              placeholder="Search"
+            />
+            <div class="h-6 w-px bg-grey-10 mx-1 hidden xs:block"></div>
+            <button
+              class="rounded-full hoverNoBG py-2 px-3 xs:min-w-[120px]"
+              @click="openChainDialog = true"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <app-token-logo
+                    v-if="selectedChainFilter?.nameLong !== 'All Chains'"
+                    :url="selectedChainFilter?.icon"
+                    :symbol="selectedChainFilter?.nameLong"
+                    width="w-5"
+                    height="h-5"
+                  />
+                  <span class="font-bold text-black truncate">{{
+                    selectedChainFilter?.nameLong
+                  }}</span>
+                </div>
+                <chevron-down-icon class="w-4 h-4 ml-1 text-grey-3" />
+              </div>
+            </button>
+          </div>
+        </div>
+
         <div class="static" ref="tableContainer">
-          <table class="w-full text-sm table-fixed">
+          <table
+            class="w-full text-sm table-fixed border-separate border-spacing-y-0"
+          >
             <!-- Header-->
             <thead class="bg-white">
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06"
+                class="text-left text-s-11 uppercase text-info tracking-sp-06 border-b border-grey-5 font-bold"
               >
                 <!-- Watchlist -->
-                <th class="w-8 sm:w-9 3xl:w-10 hidden sm:table-cell"></th>
+                <th class="hidden xs:table-cell xs:w-10 pb-4 text-center"></th>
                 <!-- Name -->
                 <th
-                  :class="
-                    isOpenSideMenu
-                      ? 'xl:w-[140px] 3xl:w-[180px]'
-                      : 'xl:w-[180px]'
-                  "
-                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors w-[55%] sm:w-[180px]"
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+                  colspan="2"
                 >
                   <div
                     class="flex items-center gap-1 ml-11 font-bold"
@@ -147,49 +124,28 @@
                     }"
                     @click="setHeaderSort('NAME')"
                   >
-                    Name
+                    TOKEN
                     <arrow-long-up-icon
-                      class="w-3 h-3"
+                      class="w-3.5 h-3.5"
                       v-if="headerSort === 'NAME' && tableDirection === 'asc'"
                     />
                     <arrow-long-down-icon
-                      class="w-3 h-3"
+                      class="w-3.5 h-3.5"
                       v-if="headerSort === 'NAME' && tableDirection === 'desc'"
                     />
                   </div>
                 </th>
-                <!-- Price -->
-                <th
-                  class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors"
-                >
-                  <div
-                    class="flex items-center gap-1 justify-end relative text-right font-bold"
-                    :class="{
-                      'text-black': headerSort === 'PRICE',
-                    }"
-                    @click="setHeaderSort('PRICE')"
-                  >
-                    Price
-                    <arrow-long-up-icon
-                      class="w-3 h-3 absolute -right-4"
-                      v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
-                    />
-                    <arrow-long-down-icon
-                      class="w-3 h-3 absolute -right-4"
-                      v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
-                    />
-                  </div>
-                </th>
                 <!-- 24h % -->
-                <th class="hidden sm:table-cell">
+                <th class="hidden xs:table-cell pb-4">
                   <app-select
                     v-model:selected="activePercent"
                     :options="percentOptions"
                     class="text-black !text-s-14"
+                    position="right-0"
                   >
                     <template #select-button="{ toggleSelect }">
                       <button
-                        class="px-1 py-2 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        class="px-1 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
                         @click="toggleSelect"
                       >
                         <div class="flex items-center justify-end gap-1">
@@ -200,39 +156,9 @@
                     </template>
                   </app-select>
                 </th>
-                <th
-                  :class="
-                    isOpenSideMenu ? 'hidden 2xl:table-cell' : 'xl:table-cell'
-                  "
-                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden xl:min-w-[115px]"
-                >
-                  <div
-                    class="flex items-center gap-1 justify-end relative font-bold"
-                    :class="{
-                      'text-black': headerSort === 'TOTAL_VOLUME',
-                    }"
-                    @click="setHeaderSort('TOTAL_VOLUME')"
-                  >
-                    24h Volume
-                    <arrow-long-up-icon
-                      class="w-3 h-3 absolute -right-4"
-                      v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'asc'
-                      "
-                    />
-                    <arrow-long-down-icon
-                      class="w-3 h-3 absolute -right-4"
-                      v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'desc'
-                      "
-                    />
-                  </div>
-                </th>
                 <!-- Market Cap -->
                 <th
-                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden md:table-cell xl:min-w-[115px]"
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell"
                 >
                   <div
                     class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -241,26 +167,48 @@
                     }"
                     @click="setHeaderSort('MARKET_CAP')"
                   >
-                    Market Cap
+                    MARKET CAP
                     <arrow-long-up-icon
-                      class="w-3 h-3 absolute -right-4"
+                      class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'asc'
                       "
                     />
                     <arrow-long-down-icon
-                      class="w-3 h-3 absolute -right-4"
+                      class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
                         headerSort === 'MARKET_CAP' && tableDirection === 'desc'
                       "
                     />
                   </div>
                 </th>
+                <!-- Price / Volume -->
+                <th
+                  class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
+                >
+                  <div
+                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    :class="{
+                      'text-black': headerSort === 'PRICE',
+                    }"
+                    @click="setHeaderSort('PRICE')"
+                  >
+                    VALUE
+                    <arrow-long-up-icon
+                      class="w-3.5 h-3.5 absolute -right-4"
+                      v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
+                    />
+                    <arrow-long-down-icon
+                      class="w-3.5 h-3.5 absolute -right-4"
+                      v-if="headerSort === 'PRICE' && tableDirection === 'desc'"
+                    />
+                  </div>
+                </th>
                 <!-- Actions -->
                 <th
-                  class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
+                  class="pl-1 pr-3 pb-4 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-bold">Actions</p>
+                  <p class="hidden lg:block font-bold">ACTIONS</p>
                 </th>
               </tr>
             </thead>
@@ -269,11 +217,13 @@
               <tr
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
-                class="h-14 hoverBGWhite cursor-pointer"
+                class="h-14 cursor-pointer hoverBGWhite"
                 @click="goToTokenPage(token)"
               >
                 <!-- Watchlist -->
-                <td class="sm:pr-1 hidden sm:table-cell rounded-l-12">
+                <td
+                  class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center"
+                >
                   <button
                     @click.stop="setWatchlistToken(token.coinId)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
@@ -286,80 +236,67 @@
                     <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
                   </button>
                 </td>
-                <!-- Name -->
-                <td class="px-1 py-2 rounded-l-12 sm:rounded-none">
-                  <router-link
-                    :to="{
-                      name: TOKEN_INFO_ROUTE_NAMES.crypto,
-                      params: {
-                        tokenId: token.coinId,
-                      },
-                    }"
-                    class="flex items-center gap-3"
-                  >
+                <!-- Name & Symbol -->
+                <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
+                  <div class="flex items-center gap-3">
                     <app-token-logo
                       :url="token.logoUrl"
                       :symbol="token.symbol"
+                      class="inline-block rounded-full shadow-token"
                     />
                     <div class="truncate">
-                      <p class="truncate text-s-15 font-medium leading-tight">
+                      <p
+                        class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      >
                         {{ token.name }}
                       </p>
-                      <p
-                        class="text-info text-s-12 uppercase font-normal mt-0.5"
-                      >
-                        {{ truncate(token.symbol, 7) }}
+                      <p class="text-grey-3 text-s-12 mt-0.5">
+                        <span class="uppercase font-normal text-info">{{
+                          truncate(token.symbol, 7)
+                        }}</span>
                       </p>
                     </div>
-                  </router-link>
+                  </div>
                 </td>
-                <!-- Price -->
-                <!-- TODO: change with currency parser -->
-                <td class="px-1 py-2 text-right">
-                  <p class="text-right">
-                    {{ token.price }}
-                  </p>
-                  <p
-                    class="text-right sm:hidden text-s-12"
-                    :class="getPercentClass(getActivePercent(token))"
-                  >
-                    {{ parsePercent(getActivePercent(token)) }}
-                  </p>
-                </td>
-                <!-- 24h % -->
-                <td
-                  class="px-1 py-1 text-right hidden sm:table-cell text-s-11 leading-p-100"
-                  :class="getPercentClass(getActivePercent(token))"
-                >
-                  <div>
-                    <p>{{ parsePercent(getActivePercent(token)) }}</p>
-                    <div v-if="getSparkLinePoints(token).length === 0"></div>
+                <!-- 24H % -->
+                <td class="hidden xs:table-cell px-1 py-1 text-right">
+                  <div class="flex flex-col items-end justify-center py-2 pr-2">
+                    <p
+                      class="text-s-13 font-normal mb-1"
+                      :class="getPercentClass(getActivePercent(token))"
+                    >
+                      {{ parsePercent(getActivePercent(token)) }}
+                    </p>
                     <table-sparkline
-                      v-else
+                      v-if="getSparkLinePoints(token).length > 0"
                       :points="getSparkLinePoints(token)"
-                      :width="50"
-                      :height="35"
+                      :width="70"
+                      :height="24"
                       :max-points="34"
                       fill
                       :percent-change="getActivePercent(token) || undefined"
                     />
                   </div>
                 </td>
-                <!-- 24h Volume -->
-                <td
-                  :class="
-                    isOpenSideMenu ? 'hidden 2xl:table-cell' : 'xl:table-cell'
-                  "
-                  class="px-1 py-2 text-right hidden"
-                >
-                  {{ token.totalVolume }}
-                </td>
                 <!-- Market Cap -->
-                <td class="px-1 py-2 text-right hidden md:table-cell">
+                <td
+                  class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+                >
                   {{ token.marketCap }}
                 </td>
+                <!-- Price / Volume -->
+                <td class="pl-1 pr-6 py-1 text-right">
+                  <p class="font-normal text-s-14 text-black">
+                    {{ token.price }}
+                  </p>
+                  <p class="text-grey-3 text-s-12 mt-0.5 whitespace-nowrap">
+                    Vol: {{ token.totalVolume }}
+                  </p>
+                </td>
                 <!-- Actions -->
-                <td class="pl-1 pr-2 py-2 rounded-r-12 relative">
+                <td
+                  class="lg:pl-6 lg:pr-4 py-1 rounded-r-12 relative text-right"
+                >
                   <div
                     class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
                   >
@@ -383,7 +320,7 @@
                         >
                           <div
                             v-if="token.coinId"
-                            class="sm:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                            class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
                             @click.stop="[
                               setWatchlistToken(token.coinId),
                               toggleMenu(),
@@ -404,7 +341,7 @@
                             }}</span>
                           </div>
                           <hr
-                            class="h-px bg-grey-outline border-0 w-full my-2 sm:hidden"
+                            class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                           />
 
                           <ul>
@@ -435,18 +372,19 @@
                       </template>
                     </app-pop-up-menu>
                   </div>
-                  <div
-                    class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
-                  >
+                  <div class="hidden lg:flex flex-row gap-2 justify-end">
                     <app-base-button
                       v-if="isBuyable(token.coinId)"
                       size="small"
                       @click="buyBtn()"
                       is-outline
-                      class="hidden 3xl:block"
+                      class="min-w-[70px]"
                       >Buy</app-base-button
                     >
-                    <app-base-button size="small" @click="swapBtn(token)"
+                    <app-base-button
+                      size="small"
+                      @click="swapBtn(token)"
+                      class="min-w-[70px]"
                       >Swap
                     </app-base-button>
                   </div>
@@ -659,7 +597,11 @@ const nextPage = () => {
 }
 
 const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com/', '_blank')
+  window.open(
+    'https://ccswap.myetherwallet.com/',
+    '_blank',
+    'noopener,noreferrer',
+  )
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('bridge')

@@ -770,7 +770,11 @@ const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
   usePaginate<DisplayToken>(tokens, shownItems)
 
 const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com', '_blank')
+  window.open(
+    'https://ccswap.myetherwallet.com/',
+    '_blank',
+    'noopener,noreferrer',
+  )
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('bridge')
