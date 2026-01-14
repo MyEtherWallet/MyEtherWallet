@@ -201,8 +201,14 @@ const toastStore = useToastStore()
 const { t } = useI18n()
 
 const { gasPriceType } = storeToRefs(globalStore)
-const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
-  storeToRefs(walletStore)
+const {
+  isWalletConnected,
+  walletAddress,
+  wallet,
+  isWatchOnly,
+  tokens,
+  balanceWei,
+} = storeToRefs(walletStore)
 const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
 const {
   initSwapper,
@@ -254,10 +260,31 @@ const setToToken = () => {
   }
   const allToTokens =
     toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all]
-  localToTokens.value = allToTokens?.map((token: TokenType) => ({
-    ...token,
-    balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
-  })) as NewTokenInfo[]
+  localToTokens.value = allToTokens?.map((token: TokenType) => {
+    let tokenBalance = '0'
+    let tokenPrice = token.price
+    const sameNetworks =
+      selectedToChain.value?.chainID === selectedChain.value?.chainID
+    if (sameNetworks && (tokens.value.length > 0 || balanceWei.value !== '0')) {
+      if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
+        tokenBalance = balanceWei.value
+        tokenPrice = tokenPrice || selectedChain.value?.price || 0
+      } else {
+        const found = tokens.value.find(
+          t => t.contract.toLowerCase() === token.address.toLowerCase(),
+        )
+        if (found) {
+          tokenBalance = found.balanceWei
+          tokenPrice = tokenPrice || (found as any).price || 0
+        }
+      }
+    }
+    return {
+      ...token,
+      balance: tokenBalance,
+      price: tokenPrice,
+    }
+  }) as NewTokenInfo[]
   if (!hasSwapValues.value) {
     if (toTokens.value && allToTokens && allToTokens.length > 0) {
       const allToTrending =
