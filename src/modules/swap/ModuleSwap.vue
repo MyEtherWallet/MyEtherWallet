@@ -330,7 +330,8 @@ const setToToken = () => {
       )
       .find(
         (token: NewTokenInfo) =>
-          token.address === swapValues.value.toToken.address,
+          token.address.toLowerCase() ===
+          swapValues.value.toToken.address.toLowerCase(),
       )
     if (toToken) {
       toTokenSelected.value = toToken
@@ -586,7 +587,8 @@ const setFromToken = () => {
     // check if swapValue from token is in fromTokens
     const fromToken = fromTokens.value?.find(
       (token: NewTokenInfo) =>
-        token.address === swapValues.value.fromToken.address,
+        token.address.toLowerCase() ===
+        swapValues.value.fromToken.address?.toLowerCase(),
     )
     if (fromToken) {
       fromTokenSelected.value = fromToken
@@ -645,10 +647,10 @@ const fromLoadingState = computed(() => {
 const setToChain = (chain: Chain) => {
   if (hasSwapValues.value) {
     selectedToChain.value = swapValues.value.toChain
-    return
+  } else {
+    // Logic to set the selected chain for the "To" section
+    selectedToChain.value = chain
   }
-  // Logic to set the selected chain for the "To" section
-  selectedToChain.value = chain
   setToToken()
 }
 
@@ -858,6 +860,22 @@ const fetchQuotes = async () => {
 
 const debounceFetchQuotes = useDebounceFn(fetchQuotes, 750)
 
+// Watch for changes in swapValues to update the UI when the component is already mounted
+watch(
+  () => swapValues.value,
+  async newVal => {
+    if (hasSwapValues.value) {
+      selectedToChain.value = newVal.toChain
+      await nextTick()
+      setToToken()
+      setFromToken()
+      fromAmount.value = newVal.fromAmount
+      clearSwapValues()
+    }
+  },
+  { deep: true },
+)
+
 // Watch for changes in selectedQuote and update swapInfo
 watch(
   () => selectedQuote.value,
@@ -920,6 +938,9 @@ watch(
 )
 
 onBeforeMount(async () => {
+  if (hasSwapValues.value) {
+    selectedToChain.value = swapValues.value.toChain
+  }
   await initSwapper()
 
   await nextTick()

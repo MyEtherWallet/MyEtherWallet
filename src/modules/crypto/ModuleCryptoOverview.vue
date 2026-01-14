@@ -1,26 +1,28 @@
 <template>
   <div class="grid grid-cols-12 w-full gap-5 2xl:gap-10 items-stretch mb-4">
     <div
-      class="col-span-12 grid grid-cols-4 lg:grid-cols-[140px_1fr_1fr_1fr_1fr] items-stretch justify-between gap-4 lg:gap-10 mb-5"
+      class="col-span-12 grid grid-cols-4 lg:grid-cols-[140px_1fr_1fr_1fr_1fr] items-center justify-between gap-4 lg:gap-8 mb-8 mt-2"
     >
       <h2
-        class="col-span-4 lg:col-span-1 text-s-16 md:text-s-20 font-bold md:ml-2 leading-p-120 min-w-[140px]"
+        class="col-span-4 lg:col-span-1 text-s-18 md:text-s-24 font-bold md:ml-2 leading-p-120 min-w-[140px]"
       >
         Crypto Today
       </h2>
-      <div class="border-l-1 border-grey-10 md:pl-2">
+      <div
+        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+      >
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
+          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
           Total Market Cap
         </p>
         <p
           v-if="data && !isLoading"
-          class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
+          class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
           ${{ formatFiatValue(data.marketCap).value }}
           <span
-            class="text-s-8 md:text-s-12 font-semibold leading-p-150 text-nowrap"
+            class="text-s-10 md:text-s-13 font-bold leading-p-150 ml-1"
             :class="{
               'text-error': data.marketCapChange24hPercentage < 0,
               'text-success': data.marketCapChange24hPercentage >= 0,
@@ -28,12 +30,12 @@
           >
             {{
               BigNumber(data.marketCapChange24hPercentage).isLessThan(0)
-                ? '-'
-                : ''
+                ? ''
+                : '+'
             }}
             {{
               formatPercentageValue(
-                BigNumber(data.marketCapChange24hPercentage).abs(),
+                BigNumber(data.marketCapChange24hPercentage),
               ).value
             }}
           </span>
@@ -41,35 +43,39 @@
 
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
+          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
         ></div>
       </div>
-      <div class="border-l-1 border-grey-10 md:pl-2">
+      <div
+        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+      >
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
+          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
           24h Trading Volume
         </p>
         <p
           v-if="data && !isLoading"
-          class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
+          class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
           ${{ formatFiatValue(data.volume24h).value }}
         </p>
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
+          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
         ></div>
       </div>
-      <div class="border-l-1 border-grey-10 md:pl-2">
+      <div
+        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+      >
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
+          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
           BTC Dominance
         </p>
         <p
           v-if="data && !isLoading"
-          class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
+          class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
           {{
             data.btcDominancePercentage !== undefined
@@ -80,18 +86,20 @@
 
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
+          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
         ></div>
       </div>
-      <div class="border-l-1 border-grey-10 md:pl-2">
+      <div
+        class="border-l border-grey-10 pl-4 md:pl-6 h-full flex flex-col justify-center"
+      >
         <p
-          class="text-s-8 md:text-s-11 text-info ml-2 uppercase tracking-sp-06 font-semibold mb-[2px]"
+          class="text-s-8 md:text-s-10 text-info uppercase tracking-sp-06 font-bold mb-1"
         >
           ETH Dominance
         </p>
         <p
           v-if="data && !isLoading"
-          class="text-s-12 md:text-s-16 font-semibold ml-2 leading-p-150"
+          class="text-s-14 md:text-s-18 font-bold leading-p-150"
         >
           {{
             data.ethDominancePercentage !== undefined
@@ -102,7 +110,7 @@
 
         <div
           v-else
-          class="animate-pulse bg-grey-10 rounded-full h-9 w-3/4"
+          class="animate-pulse bg-grey-10 rounded-full h-6 w-3/4"
         ></div>
       </div>
     </div>
@@ -130,20 +138,31 @@
         </div>
       </div>
 
-      <div v-if="data && !isLoading" class="flex flex-col gap-2">
-        <token-row
-          v-for="(token, index) in paginatedNewTokensArray"
-          :key="token.symbol + index"
-          :token="token"
-        />
-      </div>
-      <div v-else class="flex flex-col gap-2">
+      <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden">
         <div
-          v-for="n in 3"
-          :key="n"
-          class="h-[55px] animate-pulse bg-grey-10 rounded-16"
-        ></div>
-      </div>
+          class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
+        >
+          <p class="col-span-2">Token</p>
+          <p class="text-right col-span-1">Price / 24h</p>
+        </div>
+        <div
+          v-if="data && !isLoading"
+          class="flex flex-col gap-2 min-h-[181px]"
+        >
+          <token-row
+            v-for="(token, index) in paginatedNewTokensArray"
+            :key="token.symbol + index"
+            :token="token"
+          />
+        </div>
+        <div v-else class="flex flex-col gap-2">
+          <div
+            v-for="n in 3"
+            :key="n"
+            class="h-[55px] animate-pulse bg-grey-10 rounded-16"
+          ></div>
+        </div>
+      </app-sheet>
     </div>
     <div class="w-full flex items-stretch flex-col col-span-12 lg:col-span-4">
       <module-trending />
@@ -174,20 +193,31 @@
             </app-btn-icon>
           </div>
         </div>
-        <div v-if="data && !isLoading" class="flex flex-col gap-2">
-          <token-row
-            v-for="token in paginatedGainersTokensArray"
-            :key="token.symbol"
-            :token="token"
-          />
-        </div>
-        <div v-else class="flex flex-col gap-2">
+        <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden">
           <div
-            v-for="n in 3"
-            :key="n"
-            class="h-[55px] animate-pulse bg-grey-10 rounded-16"
-          ></div>
-        </div>
+            class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
+          >
+            <p class="col-span-2">Token</p>
+            <p class="text-right col-span-1">Price / 24h</p>
+          </div>
+          <div
+            v-if="data && !isLoading"
+            class="flex flex-col gap-2 min-h-[181px]"
+          >
+            <token-row
+              v-for="token in paginatedGainersTokensArray"
+              :key="token.symbol"
+              :token="token"
+            />
+          </div>
+          <div v-else class="flex flex-col gap-2">
+            <div
+              v-for="n in 3"
+              :key="n"
+              class="h-[55px] animate-pulse bg-grey-10 rounded-16"
+            ></div>
+          </div>
+        </app-sheet>
       </div>
     </div>
   </div>
@@ -195,6 +225,7 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppSheet from '@/components/AppSheet.vue'
 import TokenRow from './components/overview/TokenRow.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'

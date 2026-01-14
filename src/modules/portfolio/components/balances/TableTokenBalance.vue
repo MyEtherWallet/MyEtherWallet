@@ -502,7 +502,7 @@ import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
-import type { TokenBalance } from '@/mew_api/types'
+import type { Chain, TokenBalance } from '@/mew_api/types'
 import {
   formatFiatValue,
   formatFloatingPointValue,
@@ -514,6 +514,9 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useRouter } from 'vue-router'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useInputStore } from '@/stores/inputStore'
+import { type NewTokenInfo } from '@/composables/useSwap'
 import BigNumber from 'bignumber.js'
 import { usePaginate } from '@/composables/usePaginate'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
@@ -528,6 +531,8 @@ const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const walletStore = useWalletStore()
+const chainsStore = useChainsStore()
+const inputStore = useInputStore()
 const purchaseStore = usePurchaseStore()
 const { isBuyable } = purchaseStore
 const {
@@ -536,6 +541,8 @@ const {
   isLoadingBalances,
   allTokens,
 } = storeToRefs(walletStore)
+const { selectedChain } = storeToRefs(chainsStore)
+const { storeSwapValues } = inputStore
 
 console.log(allTokens)
 
@@ -786,6 +793,17 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 const swapBtn = (token: DisplayToken, isMobile = false) => {
+  storeSwapValues({
+    fromToken: {} as NewTokenInfo,
+    toToken: {
+      address: token.contract,
+      symbol: token.symbol,
+      decimals: token.decimals,
+      name: token.name,
+    } as NewTokenInfo,
+    fromAmount: '',
+    toChain: selectedChain.value as Chain,
+  })
   setWalletPanel('swap')
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)

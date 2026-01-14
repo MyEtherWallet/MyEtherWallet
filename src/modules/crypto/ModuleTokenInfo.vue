@@ -151,6 +151,9 @@ import { useWalletStore } from '@/stores/walletStore'
 import TokenInfoBalance from './components/token_info/TokenInfoBalance.vue'
 import { useTokenInfoStore } from '@/stores/tokenInfoStore'
 import type { DisplayToken } from '../portfolio/components/balances/TableTokenBalance.vue'
+import { useInputStore } from '@/stores/inputStore'
+import type { Chain } from '@/mew_api/types'
+import type { NewTokenInfo } from '@/composables/useSwap'
 const props = defineProps({
   tokenId: {
     type: String,
@@ -164,6 +167,12 @@ const { walletAddress, isWalletConnected } = storeToRefs(walletStore)
  * Wallet Menu Buttons
  --------------------*/
 const walletMenu = useWalletMenuStore()
+
+/** --------------------
+ * Input Store
+ --------------------*/
+const inputStore = useInputStore()
+const { storeSwapValues } = inputStore
 
 /** --------------------
  * Fetch Data
@@ -195,6 +204,23 @@ onFetchResponse(() => {
   if (fetchedTokenData.value === null) {
     return
   }
+  const currentChainToken = fetchedTokenData.value.supportedChains.find(
+    chain => chain.chainName === selectedChain.value?.name,
+  )
+  if (currentChainToken) {
+    storeSwapValues({
+      fromToken: {} as NewTokenInfo,
+      toToken: {
+        address: currentChainToken.contract,
+        symbol: fetchedTokenData.value.symbol,
+        decimals: 18,
+        name: fetchedTokenData.value.name,
+      } as NewTokenInfo,
+      fromAmount: '',
+      toChain: selectedChain.value as Chain,
+    })
+  }
+
   if (!existsOnCurrentChain.value) {
     walletMenu.setWalletPanel('bridge')
   } else {

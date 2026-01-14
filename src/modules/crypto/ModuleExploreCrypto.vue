@@ -429,13 +429,15 @@
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-center justify-between text-s-12 mt-2"
+          class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
         >
-          <small
-            class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"
-            >{{ tokens.length * page }} of {{ totalTokenCount }} results</small
+          <div
+            v-if="!isLoading"
+            class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
           >
-          <div class="flex items-center gap-2 order-2 xs:order-2">
+            {{ getCurrentViewableItemsIndex }} of {{ totalTokenCount }} results
+          </div>
+          <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
             <app-btn-icon
               :disabled="!isLoading && page === 1"
               label="previous page"
@@ -444,9 +446,12 @@
               <ChevronLeftIcon class="w-4 h-4" />
             </app-btn-icon>
 
-            <span class="px-2">{{ page }} of {{ totalPages }}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-black">{{ page }}</span>
+              <span class="text-info">of</span>
+              <span class="text-info">{{ totalPages }}</span>
+            </div>
             <app-btn-icon
-              class=""
               :disabled="!isLoading && page >= totalPages"
               label="next page"
               @click="nextPage"
@@ -454,13 +459,24 @@
               <ChevronRightIcon class="w-4 h-4" />
             </app-btn-icon>
           </div>
-          <app-select
-            v-model:selected="activeShownItems"
-            :options="shownItemsOptions"
-            placeholder="Items per page"
-            class="text-black !text-s-14 order-1 xs:order-3 ml-auto xs:ml-0"
-            position="-right-1"
-          />
+          <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
+            <app-select
+              v-model:selected="activeShownItems"
+              :options="shownItemsOptions"
+              position="top-[-160px] right-0"
+              class="min-w-[70px]"
+            >
+              <template #select-button="{ toggleSelect }">
+                <button
+                  class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+                  @click="toggleSelect"
+                >
+                  <span>{{ activeShownItems.label }}</span>
+                  <ChevronDownIcon class="w-4 h-4 text-info" />
+                </button>
+              </template>
+            </app-select>
+          </div>
         </div>
         <select-chain-dialog
           v-if="isLoadedChains"
@@ -523,13 +539,17 @@ import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { usePurchaseStore } from '@/stores/purchaseStore'
+// import type { NewTokenInfo } from '@/composables/useSwap'
+// import { useInputStore } from '@/stores/inputStore'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
+// const inputStore = useInputStore()
 const { isBuyable } = purchaseStore
+// const { storeSwapValues } = inputStore
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -613,13 +633,28 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 const swapBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('swap')
-  if (!isOpenSideMenu.value) {
-    walletMenu.setIsOpenSideMenu(true)
-  }
-  if (!isMobile) {
-    goToTokenPage(token)
-  }
+  console.log(token, isMobile)
+  // storeSwapValues({
+  //   fromToken: {} as NewTokenInfo,
+  //   toToken: {
+  //     address: token.address,
+  //     symbol: token.symbol,
+  //     decimals: token.decimals,
+  //     name: token.name,
+  //   } as NewTokenInfo,
+  //   fromAmount: '',
+  //   toChain: (selectedChainFilter.value &&
+  //   selectedChainFilter.value.name !== 'all'
+  //     ? selectedChainFilter.value
+  //     : selectedChainStore.value) as Chain,
+  // })
+  // setWalletPanel('swap')
+  // if (!isOpenSideMenu.value) {
+  //   walletMenu.setIsOpenSideMenu(true)
+  // }
+  // if (!isMobile) {
+  //   goToTokenPage(token)
+  // }
 }
 
 const setHeaderSort = (key: string) => {
@@ -661,6 +696,13 @@ interface DisplayToken extends Omit<
 const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
 const totalPages = ref<number>(1)
+const getCurrentViewableItemsIndex = computed<number>(() => {
+  const viewing = Number(activeShownItems.value.value) * page.value
+  if (viewing > totalTokenCount.value) {
+    return totalTokenCount.value
+  }
+  return viewing
+})
 
 const { useMEWFetch } = useFetchMewApi()
 
