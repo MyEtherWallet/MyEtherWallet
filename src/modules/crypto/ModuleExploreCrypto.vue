@@ -409,6 +409,7 @@
 
                           <ul>
                             <li
+                              v-if="isBuyable(token.coinId)"
                               @click.stop="[toggleMenu, buyBtn()]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -438,6 +439,7 @@
                     class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
                   >
                     <app-base-button
+                      v-if="isBuyable(token.coinId)"
                       size="small"
                       @click="buyBtn()"
                       is-outline
@@ -582,10 +584,14 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
+
+const purchaseStore = usePurchaseStore()
+const { isBuyable } = purchaseStore
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -653,7 +659,7 @@ const nextPage = () => {
 }
 
 const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com', '_blank')
+  window.open('https://ccswap.myetherwallet.com/', '_blank')
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('bridge')

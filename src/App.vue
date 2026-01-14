@@ -30,11 +30,15 @@ import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 
 import useBalanceHandler from './utils/balanceHandler'
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
+
+const purchaseStore = usePurchaseStore()
+const { fetchPurchaseInfo } = purchaseStore
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
@@ -138,6 +142,7 @@ const showFeedbackToast = () => {
   }, 4000)
 }
 onMounted(() => {
+  fetchPurchaseInfo()
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
     const customEvent = event as CustomEvent
     const provider = customEvent.detail

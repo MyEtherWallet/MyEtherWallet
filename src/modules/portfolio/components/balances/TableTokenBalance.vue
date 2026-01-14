@@ -346,6 +346,7 @@
 
                       <ul>
                         <li
+                          v-if="isBuyable(token.coinId)"
                           @click.stop="[buyBtn(), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
@@ -374,15 +375,16 @@
 
               <div class="hidden lg:flex flex-row gap-2 justify-end">
                 <app-base-button
+                  v-if="isBuyable(token.coinId)"
                   size="small"
-                  @click.stop="buyBtn()"
+                  @click="buyBtn"
                   is-outline
                   class="min-w-[70px]"
                   >Buy</app-base-button
                 >
                 <app-base-button
                   size="small"
-                  @click.stop="swapBtn(token)"
+                  @click="swapBtn(token)"
                   class="min-w-[70px]"
                   >Swap
                 </app-base-button>
@@ -520,11 +522,14 @@ import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useTokenInfoStore } from '@/stores/tokenInfoStore'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const walletStore = useWalletStore()
+const purchaseStore = usePurchaseStore()
+const { isBuyable } = purchaseStore
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
