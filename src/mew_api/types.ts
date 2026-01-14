@@ -122,3 +122,7 @@ export type StockOverviewItem = StocksOverviewResponse['newlyAdded'][number]
 export type StockNewsItem = StocksOverviewResponse['recentNews'][number]
 export type StockTopMoverItem = StocksOverviewResponse['topMovers'][number]
 export type StockBannerItem = StocksOverviewResponse['banner'][number]
+
+export type StocksSearchResponse =
+  components['schemas']['GetWebStocksSearchResponse']
+export type StockSearchItem = StocksSearchResponse['items'][number]
