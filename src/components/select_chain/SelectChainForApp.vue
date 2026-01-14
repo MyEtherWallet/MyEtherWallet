@@ -165,8 +165,9 @@ watch(
       const preselected = displayedChains.value.find(
         chain => chain.name === prop.preselectedChain?.name,
       )
-      selectedChain.value = preselected ?? defaultChains.value[0] ?? null
-      if (!prop.canStore) {
+      selectedChain.value =
+        preselected ?? prop.preselectedChain ?? defaultChains.value[0] ?? null
+      if (!prop.canStore && selectedChain.value) {
         emits('update:selectedChain', selectedChain.value)
       }
     }
@@ -184,7 +185,7 @@ onMounted(() => {
     if (prop.canStore) {
       setSelectedChainStore(selectedChain.value?.name || '')
     } else {
-      emits('update:selectedChain', preselected)
+      emits('update:selectedChain', selectedChain.value)
     }
   } else {
     selectedChain.value = storedSelectedChain.value ?? null
@@ -233,5 +234,18 @@ watch(
       if (chain) setSelectedChain(chain)
     }
   },
+)
+
+watch(
+  () => prop.preselectedChain,
+  newVal => {
+    if (newVal) {
+      const preselected = displayedChains.value.find(
+        chain => chain.name === newVal.name,
+      )
+      selectedChain.value = preselected ?? (newVal as Chain)
+    }
+  },
+  { deep: true },
 )
 </script>

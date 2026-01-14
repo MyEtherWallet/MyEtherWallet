@@ -539,17 +539,17 @@ import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { usePurchaseStore } from '@/stores/purchaseStore'
-// import type { NewTokenInfo } from '@/composables/useSwap'
-// import { useInputStore } from '@/stores/inputStore'
+import type { NewTokenInfo } from '@/composables/useSwap'
+import { useInputStore } from '@/stores/inputStore'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
-// const inputStore = useInputStore()
+const inputStore = useInputStore()
 const { isBuyable } = purchaseStore
-// const { storeSwapValues } = inputStore
+const { storeSwapValues } = inputStore
 
 const tableContainer = ref<HTMLElement | null>(null)
 
@@ -633,28 +633,38 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 const swapBtn = (token: DisplayToken, isMobile = false) => {
-  console.log(token, isMobile)
-  // storeSwapValues({
-  //   fromToken: {} as NewTokenInfo,
-  //   toToken: {
-  //     address: token.address,
-  //     symbol: token.symbol,
-  //     decimals: token.decimals,
-  //     name: token.name,
-  //   } as NewTokenInfo,
-  //   fromAmount: '',
-  //   toChain: (selectedChainFilter.value &&
-  //   selectedChainFilter.value.name !== 'all'
-  //     ? selectedChainFilter.value
-  //     : selectedChainStore.value) as Chain,
-  // })
-  // setWalletPanel('swap')
-  // if (!isOpenSideMenu.value) {
-  //   walletMenu.setIsOpenSideMenu(true)
-  // }
-  // if (!isMobile) {
-  //   goToTokenPage(token)
-  // }
+  const selectedChain = (
+    selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
+      ? selectedChainFilter.value
+      : selectedChainStore.value
+  ) as Chain
+
+  const tokenOnChain =
+    token.chains.find(c => c.chainName === selectedChain?.name) ||
+    token.chains[0]
+
+  const targetToChain =
+    chainsStore.chains.find(c => c.name === tokenOnChain.chainName) ||
+    selectedChain
+
+  storeSwapValues({
+    fromToken: {} as NewTokenInfo,
+    toToken: {
+      address: tokenOnChain?.address || '',
+      symbol: token.symbol,
+      decimals: tokenOnChain?.decimals || 18,
+      name: token.name,
+    } as NewTokenInfo,
+    fromAmount: '',
+    toChain: targetToChain as Chain,
+  })
+  setWalletPanel('swap')
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
 }
 
 const setHeaderSort = (key: string) => {
@@ -809,7 +819,8 @@ onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(item => formatToken(item)) || []
+    tokens.value =
+      fetchWatchlistData.value.map(item => formatToken(item as any)) || []
   }
   isLoading.value = false
 })
