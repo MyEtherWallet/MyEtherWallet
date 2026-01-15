@@ -211,8 +211,16 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   /** -------------------------------
+  * Stock Values
+  -------------------------------*/
+  const allStocks = computed<Array<TokenBalance>>(() => {
+    return tokens.value.filter(token => token.is_rwa === true)
+  })
+
+  /** -------------------------------
   * Formatted Values
   -------------------------------*/
+
   //TODO: add proper formatting for fiat values
 
   /**
@@ -272,5 +280,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     allTokens,
     hasMissingBalances,
     hasBalances,
+    allStocks,
   }
 })

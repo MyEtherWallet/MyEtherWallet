@@ -115,6 +115,7 @@ const {
   allTokens,
   isLoadingBalances: isLoading,
   hasBalances,
+  allStocks,
 } = storeToRefs(walletStore)
 
 /**
@@ -141,7 +142,8 @@ const getGainOrLoss = (percent: number, contract: string) => {
 }
 
 const topTokens = computed<TokenGainOrLoss[]>(() => {
-  const _tokens = allTokens.value
+  const sourceArray = props.type === 'stock' ? allStocks.value : allTokens.value
+  const _tokens = sourceArray
     .filter(
       token =>
         token.price !== undefined &&
