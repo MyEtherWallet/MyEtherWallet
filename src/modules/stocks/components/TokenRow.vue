@@ -4,39 +4,45 @@
     :to="{
       name: TOKEN_INFO_ROUTE_NAMES.crypto,
       params: {
-        tokenId: token.symbol,
+        tokenId: token.primaryMarket.symbol,
       },
     }"
   >
-    <app-token-logo :url="undefined" :symbol="token.symbol" />
+    <app-token-logo
+      :url="token.iconPngUrl || token.iconSvgUrl"
+      :symbol="token.primaryMarket.symbol"
+    />
     <div class="truncate">
+      <p class="uppercase font-medium truncate text-s-15">
+        {{ truncate(token.primaryMarket.symbol || '', 7) }}
+      </p>
       <app-tooltip
-        :text="token.name"
-        v-if="token.name && token.name.length > 12"
+        :text="token.underlyingMarket.name"
+        v-if="
+          token.underlyingMarket.name && token.underlyingMarket.name.length > 12
+        "
       >
         <p
-          class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
+          class="hidden xs:block text-s-12 text-info truncate leading-tight max-w-[120px] xs:max-w-full lg:max-w-[200px]"
         >
-          {{ token.name }}
+          {{ token.underlyingMarket.name }}
         </p>
       </app-tooltip>
-      <p v-else class="truncate text-s-15 font-medium">
-        {{ token.name || '' }}
-      </p>
       <p
-        class="xs:text-info font-medium xs:font-normal text-s-15 xs:text-s-12 uppercase"
+        v-else
+        class="truncate text-s-12 text-info max-w-[120px] xs:max-w-full"
       >
-        {{ truncate(token.symbol || '', 7) }}
+        {{ token.underlyingMarket.name || '' }}
       </p>
     </div>
     <table-sparkline
       class="ml-auto mx-3"
-      :points="token.sparkline24h || []"
+      :points="token.primaryMarket.sparkline24h"
       :width="40"
       :height="30"
       :max-points="34"
       fill
-      :percent-change="token.priceChangePercentage24h"
+      :percent-change="parseFloat(token.primaryMarket.priceChangePercentage24h)"
     />
     <div>
       <p class="text-s-14 text-right font-medium">
@@ -45,13 +51,13 @@
       <p
         class="text-s-12 text-right"
         :class="{
-          'text-black': !token.priceChangePercentage24h,
+          'text-black': !token.primaryMarket.priceChangePercentage24h,
           'text-error':
-            token.priceChangePercentage24h &&
-            token.priceChangePercentage24h < 0,
+            token.primaryMarket.priceChangePercentage24h &&
+            parseFloat(token.primaryMarket.priceChangePercentage24h) < 0,
           'text-success':
-            token.priceChangePercentage24h &&
-            token.priceChangePercentage24h >= 0,
+            token.primaryMarket.priceChangePercentage24h &&
+            parseFloat(token.primaryMarket.priceChangePercentage24h) >= 0,
         }"
       >
         {{ getPriceChange }}
@@ -77,13 +83,15 @@ const props = defineProps<{
 }>()
 
 const getPrice = computed(() => {
-  return props.token.price
-    ? `$${formatFiatValue(props.token.price).value}`
+  return props.token.primaryMarket.price
+    ? `$${formatFiatValue(props.token.primaryMarket.price).value}`
     : '-'
 })
 const getPriceChange = computed(() => {
-  return props.token.priceChangePercentage24h
-    ? formatPercentageValue(props.token.priceChangePercentage24h).value
+  return props.token.primaryMarket.priceChangePercentage24h
+    ? formatPercentageValue(
+        parseFloat(props.token.primaryMarket.priceChangePercentage24h),
+      ).value
     : '-'
 })
 </script>

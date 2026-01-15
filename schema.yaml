@@ -107,24 +107,34 @@ paths:
         200:
           $ref: '#/components/responses/GetWebStocksTableSuccess'
 
-  /v1/web/pages/stocks/search:
-    get:
-      operationId: GetWebStocksSearch
-      parameters:
-        - $ref: '#/components/parameters/Query'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-      responses:
-        200:
-          $ref: '#/components/responses/GetWebStocksSearchSuccess'
+  # TODO: Remove
+  # /v1/web/pages/stocks/search:
+  #   get:
+  #     operationId: GetWebStocksSearch
+  #     parameters:
+  #       - $ref: '#/components/parameters/Query'
+  #       - $ref: '#/components/parameters/Page'
+  #       - $ref: '#/components/parameters/PerPage'
+  #     responses:
+  #       200:
+  #         $ref: '#/components/responses/GetWebStocksSearchSuccess'
 
-  # Pass-through to Ondo
-  /v1/web/pages/stocks/assets:
+  /v1/web/pages/stocks/summary:
     get:
-      operationId: GetWebStockAssets
+      operationId: GetWebStocksSummary
       responses:
         200:
-          $ref: '#/components/responses/GetWebStockAssetsSuccess'
+          $ref: '#/components/responses/GetWebStocksSummarySuccess'
+
+  # TODO: Remove
+  # Pass-through to Ondo
+  # Deprecated
+  # /v1/web/pages/stocks/assets:
+  #   get:
+  #     operationId: GetWebStockAssets
+  #     responses:
+  #       200:
+  #         $ref: '#/components/responses/GetWebStockAssetsSuccess'
 
   # ==========
   # Web Tokens
@@ -924,17 +934,25 @@ components:
           schema:
             $ref: '#/components/schemas/GetWebStocksTableResponse'
 
-    GetWebStocksSearchSuccess:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetWebStocksSearchResponse'
+    # TODO: Remove
+    # GetWebStocksSearchSuccess:
+    #   content:
+    #     application/json:
+    #       schema:
+    #         $ref: '#/components/schemas/GetWebStocksSearchResponse'
 
-    GetWebStockAssetsSuccess:
+    GetWebStocksSummarySuccess:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetWebStockAssetsResponse'
+            $ref: '#/components/schemas/GetWebStocksSummaryResponse'
+
+    # TODO: Remove
+    # GetWebStockAssetsSuccess:
+    #   content:
+    #     application/json:
+    #       schema:
+    #         $ref: '#/components/schemas/GetWebStockAssetsResponse'
 
     GetChainMetadataSuccess:
       content:
@@ -1687,19 +1705,47 @@ components:
           type: array
           items:
             type: object
+            required:
+              - primaryMarket
+              - underlyingMarket
             properties:
-              name:
+              stockAlias:
                 type: string
-              symbol:
+              iconPngUrl:
                 type: string
-              price:
-                type: number
-              priceChangePercentage24h:
-                type: number
-              sparkline24h:
-                type: array
-                items:
-                  type: number
+              iconSvgUrl:
+                type: string
+              primaryMarket:
+                type: object
+                required:
+                  - symbol
+                  - price
+                  - priceChangePercentage24h
+                  - sparkline24h
+                properties:
+                  symbol:
+                    type: string
+                  price:
+                    type: string
+                  priceChangePercentage24h:
+                    type: string
+                  sparkline24h:
+                    type: array
+                    items:
+                      type: number
+              underlyingMarket:
+                type: object
+                required:
+                  - name
+                  - volume24h
+                  - marketCap
+                properties:
+                  name:
+                    type: string
+                  volume24h:
+                    type: string
+                  marketCap:
+                    type: string
         recentNews:
           type: array
           items:
@@ -1721,41 +1767,97 @@ components:
           type: array
           items:
             type: object
+            required:
+              - primaryMarket
+              - underlyingMarket
             properties:
-              name:
+              stockAlias:
                 type: string
-              symbol:
+              iconPngUrl:
                 type: string
-              price:
-                type: number
-              priceChangePercentage24h:
-                type: number
-              sparkline24h:
-                type: array
-                items:
-                  type: number
+              iconSvgUrl:
+                type: string
+              primaryMarket:
+                type: object
+                required:
+                  - symbol
+                  - price
+                  - priceChangePercentage24h
+                  - sparkline24h
+                properties:
+                  symbol:
+                    type: string
+                  price:
+                    type: string
+                  priceChangePercentage24h:
+                    type: string
+                  sparkline24h:
+                    type: array
+                    items:
+                      type: number
+              underlyingMarket:
+                type: object
+                required:
+                  - name
+                  - volume24h
+                  - marketCap
+                properties:
+                  name:
+                    type: string
+                  volume24h:
+                    type: string
+                  marketCap:
+                    type: string
         topMovers:
           type: array
           items:
             type: object
+            required:
+              - primaryMarket
+              - underlyingMarket
             properties:
-              name:
+              stockAlias:
                 type: string
-              symbol:
+              iconPngUrl:
                 type: string
-              price:
-                type: number
-              priceChangePercentage24h:
-                type: number
-              priceHistory24h:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    timestamp:
-                      type: number
-                    price:
-                      type: number
+              iconSvgUrl:
+                type: string
+              primaryMarket:
+                type: object
+                required:
+                  - symbol
+                  - price
+                  - priceChangePercentage24h
+                  - priceHistory24h
+                properties:
+                  symbol:
+                    type: string
+                  price:
+                    type: string
+                  priceChangePercentage24h:
+                    type: string
+                  priceHistory24h:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        timestamp:
+                          type: number
+                        price:
+                          type: string
+              underlyingMarket:
+                type: object
+                required:
+                  - name
+                  - volume24h
+                  - marketCap
+                properties:
+                  name:
+                    type: string
+                  volume24h:
+                    type: string
+                  marketCap:
+                    type: string
         banner:
           type: array
           items:
@@ -1769,7 +1871,6 @@ components:
                 type: array
                 items:
                   type: number
-
 
     GetWebStocksTableResponse:
       type: object
@@ -1793,160 +1894,219 @@ components:
           items:
             type: object
             required:
-              - name
-              - symbol
+              - primaryMarket
+              - underlyingMarket
             properties:
-              name:
+              stockAlias:
                 type: string
-              symbol:
+              iconPngUrl:
                 type: string
-              price:
-                type: number
-              priceChangePercentage24h:
-                type: number
-              volume24h:
-                type: number
-              marketCap:
-                type: number
-              sparkline24h:
-                type: array
-                items:
-                  type: number
-
-    GetWebStocksSearchResponse:
-      type: object
-      required:
-        - page
-        - pages
-        - perPage
-        - total
-        - items
-      properties:
-        page:
-          type: number
-        pages:
-          type: number
-        perPage:
-          type: number
-        total:
-          type: number
-        items:
-          type: array
-          items:
-            type: object
-            required:
-              - name
-              - symbol
-            properties:
-              name:
+              iconSvgUrl:
                 type: string
-              symbol:
-                type: string
-              price:
-                type: number
-              priceChangePercentage24h:
-                type: number
-
-    GetWebStockAssetsResponse:
-      type: object
-      properties:
-        # Example "2025-12-09T13:16:23.994Z"
-        lastUpdatedAt:
-          type: string
-        assets:
-          type: array
-          items:
-            type: object
-            properties:
-              symbol:
-                type: string
-              ticker:
-                type: string
-              assetName:
-                type: string
-              iconSrc:
-                type: string
-              # Unix epoch MS
-              createdAt:
-                type: number
               primaryMarket:
                 type: object
+                required:
+                  - symbol
+                  - price
+                  - priceChangePercentage24h
+                  - sparkline24h
                 properties:
                   symbol:
                     type: string
-                  # Example "312.488476203181654385"
                   price:
                     type: string
-                  # Example "-8.509216875627243512",
-                  priceChange24h:
+                  priceChangePercentage24h:
                     type: string
-                  # Example "-2.650865429596132855"
-                  priceChangePct24h:
-                    type: string
-                  # Example: 806
-                  totalHolders:
-                    type: number
-                  # Example: "1.001084338309087472"
-                  sharesMultiplier:
-                    type: string
-                    # Example: ["premarket", "regular", "postmarket", "overnight"]
-                  tradableSessions:
+                  sparkline24h:
                     type: array
                     items:
-                      type: string
-                  priceHistory24h:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        # Unix epoch MS. Example: 1765206000000
-                        timestamp:
-                          type: number
-                        # Example: "318.667669281394496806"
-                        price:
-                          type: string
-                  tags:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        categoryLayer:
-                          type: number
-                        categorySlug:
-                          type: number
-                        categoryLabel:
-                          type: number
-                        tagSlug:
-                          type: number
-                        tagLabel:
-                          type: number
+                      type: number
               underlyingMarket:
-                type: object
+                required:
+                  - name
+                  - volume24h
+                  - marketCap
                 properties:
-                  # Example: "GOOGL"
-                  ticket:
-                    type: string
-                  # Example: "Alphabet Inc. Class A Common Stock"
                   name:
                     type: string
-                  # Example: "328.83"
-                  priceHigh52w:
+                  volume24h:
                     type: string
-                  # Example: "140.53"
-                  priceLow52w:
-                    type: string
-                  # Example: "33880411"
-                  volume:
-                    type: string
-                  # Example: "36499844"
-                  averageVolume:
-                    type: string
-                  # Example: "5818000000"
-                  sharesOutstanding:
-                    type: string
-                  # Example: "3785659240000"
                   marketCap:
                     type: string
+
+    # TODO: Remove
+    # GetWebStocksSearchResponse:
+    #   type: object
+    #   required:
+    #     - page
+    #     - pages
+    #     - perPage
+    #     - total
+    #     - items
+    #   properties:
+    #     page:
+    #       type: number
+    #     pages:
+    #       type: number
+    #     perPage:
+    #       type: number
+    #     total:
+    #       type: number
+    #     items:
+    #       type: array
+    #       items:
+    #         type: object
+    #         required:
+    #           - name
+    #           - symbol
+    #         properties:
+    #           name:
+    #             type: string
+    #           displayName:
+    #             type: string
+    #           symbol:
+    #             type: string
+    #           price:
+    #             type: number
+    #           priceChangePercentage24h:
+    #             type: number
+
+    GetWebStocksSummaryResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - primaryMarket
+          - underlyingMarket
+        properties:
+          stockAlias:
+            type: string
+          iconPngUrl:
+            type: string
+          iconSvgUrl:
+            type: string
+          primaryMarket:
+            type: object
+            required:
+              - symbol
+              - price
+              - priceChangePercentage24h
+            properties:
+              symbol:
+                type: string
+              price:
+                type: string
+              priceChangePercentage24h:
+                type: string
+          underlyingMarket:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+
+    # TODO: Remove
+    # GetWebStockAssetsResponse:
+    #   type: object
+    #   properties:
+    #     # Example "2025-12-09T13:16:23.994Z"
+    #     lastUpdatedAt:
+    #       type: string
+    #     assets:
+    #       type: array
+    #       items:
+    #         type: object
+    #         properties:
+    #           symbol:
+    #             type: string
+    #           ticker:
+    #             type: string
+    #           assetName:
+    #             type: string
+    #           iconSrc:
+    #             type: string
+    #           # Unix epoch MS
+    #           createdAt:
+    #             type: number
+    #           primaryMarket:
+    #             type: object
+    #             properties:
+    #               symbol:
+    #                 type: string
+    #               # Example "312.488476203181654385"
+    #               price:
+    #                 type: string
+    #               # Example "-8.509216875627243512",
+    #               priceChange24h:
+    #                 type: string
+    #               # Example "-2.650865429596132855"
+    #               priceChangePct24h:
+    #                 type: string
+    #               # Example: 806
+    #               totalHolders:
+    #                 type: number
+    #               # Example: "1.001084338309087472"
+    #               sharesMultiplier:
+    #                 type: string
+    #                 # Example: ["premarket", "regular", "postmarket", "overnight"]
+    #               tradableSessions:
+    #                 type: array
+    #                 items:
+    #                   type: string
+    #               priceHistory24h:
+    #                 type: array
+    #                 items:
+    #                   type: object
+    #                   properties:
+    #                     # Unix epoch MS. Example: 1765206000000
+    #                     timestamp:
+    #                       type: number
+    #                     # Example: "318.667669281394496806"
+    #                     price:
+    #                       type: string
+    #               tags:
+    #                 type: array
+    #                 items:
+    #                   type: object
+    #                   properties:
+    #                     categoryLayer:
+    #                       type: number
+    #                     categorySlug:
+    #                       type: number
+    #                     categoryLabel:
+    #                       type: number
+    #                     tagSlug:
+    #                       type: number
+    #                     tagLabel:
+    #                       type: number
+    #           underlyingMarket:
+    #             type: object
+    #             properties:
+    #               # Example: "GOOGL"
+    #               ticket:
+    #                 type: string
+    #               # Example: "Alphabet Inc. Class A Common Stock"
+    #               name:
+    #                 type: string
+    #               # Example: "328.83"
+    #               priceHigh52w:
+    #                 type: string
+    #               # Example: "140.53"
+    #               priceLow52w:
+    #                 type: string
+    #               # Example: "33880411"
+    #               volume:
+    #                 type: string
+    #               # Example: "36499844"
+    #               averageVolume:
+    #                 type: string
+    #               # Example: "5818000000"
+    #               sharesOutstanding:
+    #                 type: string
+    #               # Example: "3785659240000"
+    #               marketCap:
+    #                 type: string
 
     # ====================
     # Transaction Statuses

@@ -25,7 +25,7 @@
     </div>
 
     <div class="grid grid-cols-1 gap-2" v-if="!isLoading">
-      <div v-for="token in paginatedArray" :key="token.symbol">
+      <div v-for="token in paginatedArray" :key="token.primaryMarket.symbol">
         <token-row :token="token" />
       </div>
     </div>

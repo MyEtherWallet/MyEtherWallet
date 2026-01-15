@@ -153,23 +153,11 @@
                 </th>
                 <!-- 24h % -->
                 <th class="hidden sm:table-cell">
-                  <app-select
-                    v-model:selected="activePercent"
-                    :options="percentOptions"
-                    class="text-black !text-s-14"
+                  <div
+                    class="px-1 py-2 text-right uppercase font-semibold text-s-11 text-info tracking-sp-06 transition-colors w-full"
                   >
-                    <template #select-button="{ toggleSelect }">
-                      <button
-                        class="px-1 py-2 text-right !uppercase font-semibold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
-                        @click="toggleSelect"
-                      >
-                        <div class="flex items-center justify-end gap-1">
-                          <p>{{ activePercent.label }}</p>
-                          <chevron-down-icon class="w-3 h-3" />
-                        </div>
-                      </button>
-                    </template>
-                  </app-select>
+                    24h %
+                  </div>
                 </th>
                 <th
                   :class="
@@ -180,23 +168,21 @@
                   <div
                     class="flex items-center gap-1 justify-end relative font-semibold"
                     :class="{
-                      'text-black': headerSort === 'TOTAL_VOLUME',
+                      'text-black': headerSort === 'VOLUME_24H',
                     }"
-                    @click="setHeaderSort('TOTAL_VOLUME')"
+                    @click="setHeaderSort('VOLUME_24H')"
                   >
                     24h Volume
                     <arrow-long-up-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'asc'
+                        headerSort === 'VOLUME_24H' && tableDirection === 'asc'
                       "
                     />
                     <arrow-long-down-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'desc'
+                        headerSort === 'VOLUME_24H' && tableDirection === 'desc'
                       "
                     />
                   </div>
@@ -269,13 +255,23 @@
                     class="flex items-center gap-3"
                   >
                     <app-token-logo
-                      :url="token.logoUrl"
+                      :url="token.iconPngUrl || token.iconSvgUrl"
                       :symbol="token.symbol"
                     />
                     <div class="truncate">
-                      <p class="truncate">{{ token.name }}</p>
-                      <p class="text-info text-s-12 uppercase">
+                      <p class="uppercase font-medium truncate">
                         {{ truncate(token.symbol, 7) }}
+                      </p>
+                      <app-tooltip
+                        :text="token.name"
+                        v-if="token.name.length > 12"
+                      >
+                        <p class="text-info text-s-12 truncate">
+                          {{ token.name }}
+                        </p>
+                      </app-tooltip>
+                      <p v-else class="text-info text-s-12 truncate">
+                        {{ token.name }}
                       </p>
                     </div>
                   </router-link>
@@ -509,14 +505,16 @@ import {
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
+import configs from '@/configs'
 import type {
   Chain,
-  GetWebTokensTableResponse,
-  GetWebTokensTableResponseToken,
+  GetWebStocksTableResponse,
+  GetWebStocksTableResponseItem,
   GetWebTokensWatchlistResponse,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -639,25 +637,26 @@ const setSelectedChain = (chain: Chain) => {
 
 const cryptoFilterOptions = ref([
   { label: 'All Assets', value: 'all' },
-  { label: 'ETF', value: 'etf' },
-  { label: 'Technology', value: 'technology' },
-  { label: 'Consumer', value: 'consumer' },
-  { label: 'Financials', value: 'financials' },
-  { label: 'Large Cap', value: 'large-cap' },
-  { label: 'Growth', value: 'growth' },
-  { label: 'Value', value: 'value' },
+  { label: 'ETF', value: 'ETF' },
+  { label: 'Stock', value: 'STOCK' },
+  { label: 'Equities', value: 'EQUITIES' },
+  { label: 'Commodities', value: 'COMMODITIES' },
+  { label: 'Fixed Income', value: 'FIXED_INCOME' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
 
-interface DisplayToken
-  extends Omit<
-    GetWebTokensTableResponseToken,
-    'price' | 'marketCap' | 'totalVolume'
-  > {
+interface DisplayToken {
+  symbol: string
+  name: string
   price: string
   marketCap: string
   totalVolume: string
+  priceChangePercentage24h: number
+  sparklineIn7d?: number[]
+  coinId: string
+  iconPngUrl?: string
+  iconSvgUrl?: string
 }
 const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
@@ -666,7 +665,7 @@ const totalPages = ref<number>(1)
 const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
+  const baseUrl = `${configs.MEW_API_URL}/v1/web/tokens-watchlist`
   const defaultChain =
     !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
       ? ''
@@ -675,23 +674,35 @@ const fetchWatchListUrl = computed(() => {
 })
 
 const fetchGainersUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
-  const defaultChain =
-    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
-      ? ''
-      : `filterChain=${selectedChainFilter.value.name}`
+  const url = new URL(`${configs.MEW_API_URL}/v1/web/pages/stocks/table`)
   const direction =
     selectedCryptoFilter.value.value !== 'topGainers' ? 'ASC' : 'DESC'
-  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
+  url.searchParams.set('page', String(page.value))
+  url.searchParams.set('perPage', String(shownItems.value))
+  url.searchParams.set('sort', `PRICE_CHANGE_PERCENTAGE_24H_${direction}`)
+  if (searchInput.value) {
+    url.searchParams.set('search', searchInput.value)
+  }
+  return url.toString()
 })
 
 const fetchTableUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
-  const defaultChain =
-    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
-      ? ''
-      : `filterChain=${selectedChainFilter.value.name}`
-  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
+  const url = new URL(`${configs.MEW_API_URL}/v1/web/pages/stocks/table`)
+  url.searchParams.set('page', String(page.value))
+  url.searchParams.set('perPage', String(shownItems.value))
+
+  if (searchInput.value) {
+    url.searchParams.set('search', searchInput.value)
+  }
+
+  if (selectedCryptoFilter.value.value !== 'all') {
+    url.searchParams.set('category', selectedCryptoFilter.value.value)
+  }
+
+  const sort = `${headerSort.value}_${tableDirection.value.toUpperCase()}`
+  url.searchParams.set('sort', sort)
+
+  return url.toString()
 })
 
 const {
@@ -703,7 +714,7 @@ const {
   immediate: false,
 })
   .get()
-  .json<GetWebTokensTableResponse>()
+  .json<GetWebStocksTableResponse>()
 
 const {
   data: fetchWatchlistData,
@@ -725,7 +736,7 @@ const {
   immediate: false,
 })
   .get()
-  .json<GetWebTokensTableResponse>()
+  .json<GetWebStocksTableResponse>()
 
 const debounceFetchTokens = useDebounceFn(() => {
   fetchTokenTable()
@@ -751,24 +762,57 @@ onMounted(() => {
   }
 })
 
-const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
+const formatToken = (item: GetWebStocksTableResponseItem): DisplayToken => {
+  const tableItem = item as GetWebStocksTableResponseItem
   return {
-    ...item,
-    // TODO: update this to convert price to user selected currency
-    price: item.price ? `$${formatFiatValue(item.price).value}` : '-',
-    marketCap: item.marketCap
-      ? `$${formatIntegerValue(item.marketCap).value}`
+    symbol: tableItem.primaryMarket.symbol,
+    name: tableItem.underlyingMarket.name,
+    price: tableItem.primaryMarket.price
+      ? `$${formatFiatValue(tableItem.primaryMarket.price).value}`
       : '-',
-    totalVolume: item.totalVolume
-      ? `$${formatIntegerValue(item.totalVolume).value}`
+    marketCap: tableItem.underlyingMarket.marketCap
+      ? `$${formatIntegerValue(tableItem.underlyingMarket.marketCap).value}`
       : '-',
+    totalVolume: tableItem.underlyingMarket.volume24h
+      ? `$${formatIntegerValue(tableItem.underlyingMarket.volume24h).value}`
+      : '-',
+    sparklineIn7d: tableItem.primaryMarket.sparkline24h,
+    coinId: tableItem.primaryMarket.symbol,
+    priceChangePercentage24h: tableItem.primaryMarket.priceChangePercentage24h
+      ? parseFloat(tableItem.primaryMarket.priceChangePercentage24h)
+      : 0,
+    iconPngUrl: tableItem.iconPngUrl,
+    iconSvgUrl: tableItem.iconSvgUrl,
   }
 }
+
+// // Fallback for flat structure (e.g. Watchlist)
+// const watchlistItem = item as GetWebTokensWatchlistResponse[number]
+// return {
+//   symbol: watchlistItem.symbol || '',
+//   name: watchlistItem.name || '',
+//   price: watchlistItem.price
+//     ? `$${formatFiatValue(watchlistItem.price).value}`
+//     : '-',
+//   marketCap: watchlistItem.marketCap
+//     ? `$${formatIntegerValue(watchlistItem.marketCap).value}`
+//     : '-',
+//   totalVolume: watchlistItem.totalVolume
+//     ? `$${formatIntegerValue(watchlistItem.totalVolume).value}`
+//     : '-',
+//   sparklineIn7d: watchlistItem.sparkline24h || watchlistItem.sparklineIn7d,
+//   coinId: watchlistItem.coinId || watchlistItem.symbol,
+//   priceChangePercentage24h: watchlistItem.priceChangePercentage24h || 0,
+//   iconPngUrl: watchlistItem.logoUrl || watchlistItem.iconPngUrl,
+//   iconSvgUrl: watchlistItem.iconSvgUrl,
+// }
+
 onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(item => formatToken(item)) || []
+    tokens.value =
+      fetchWatchlistData.value.map((item: any) => formatToken(item)) || []
   }
   isLoading.value = false
 })
@@ -872,61 +916,12 @@ watch(
   },
 )
 
-/**-------------------------------
- * Active percent change options
- --------------------------------*/
-enum activePercentChange {
-  ONE_HOUR = '1h',
-  TWENTY_FOUR_HOURS = '24h',
-  SEVEN_DAYS = '7d',
-}
-
-const percentOptions = <AppSelectOption[]>[
-  { label: '1h', value: activePercentChange.ONE_HOUR },
-  { label: '24h', value: activePercentChange.TWENTY_FOUR_HOURS },
-  { label: '7d', value: activePercentChange.SEVEN_DAYS },
-]
-
-const activePercent = ref<AppSelectOption>(percentOptions[1])
-
 const getActivePercent = (token: DisplayToken) => {
-  switch (activePercent.value.value) {
-    case activePercentChange.ONE_HOUR:
-      return token.priceChangePercentage1h
-    case activePercentChange.TWENTY_FOUR_HOURS:
-      return token.priceChangePercentage24h
-    case activePercentChange.SEVEN_DAYS:
-      return token.priceChangePercentage7d
-    default:
-      return token.priceChangePercentage24h
-  }
+  return token.priceChangePercentage24h || 0
 }
-
-watch(
-  () => selectedCryptoFilter.value,
-  () => {
-    if (
-      selectedCryptoFilter.value.value === 'topGainers' ||
-      selectedCryptoFilter.value.value === 'topLosers'
-    ) {
-      activePercent.value = percentOptions[1]
-    }
-  },
-)
 
 const getSparkLinePoints = (token: DisplayToken) => {
-  if (
-    token.sparklineIn7d &&
-    token.sparklineIn7d.length > 0 &&
-    activePercent.value.value !== '1h'
-  ) {
-    if (activePercent.value.value === '7d') {
-      return token.sparklineIn7d
-    }
-    const totalPoints = token.sparklineIn7d.length / 7
-    return token.sparklineIn7d.slice(-totalPoints)
-  }
-  return []
+  return token.sparklineIn7d || []
 }
 
 /**-------------------------------

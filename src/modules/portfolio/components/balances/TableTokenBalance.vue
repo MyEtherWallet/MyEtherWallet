@@ -28,7 +28,7 @@
                 <span class="font-bold text-black">{{
                   selectedAllTokensFilter.label
                 }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1 text-grey-3" />
+                <chevron-down-icon class="w-4 h-4 ml-1 text-info" />
               </div>
             </button>
           </template>
@@ -234,7 +234,7 @@
                   >
                     {{ token.name }}
                   </p>
-                  <p class="text-grey-3 text-s-12 mt-0.5">
+                  <p class="text-info text-s-12 mt-0.5">
                     {{ formatFloatingPointValue(token.balance).value }}
                     <span class="uppercase font-normal text-info">{{
                       truncate(token.symbol, 7)
@@ -292,7 +292,7 @@
               <p class="font-normal text-s-14 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-grey-3 text-s-12 mt-0.5">
+              <p class="text-info text-s-12 mt-0.5">
                 {{
                   token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
                 }}

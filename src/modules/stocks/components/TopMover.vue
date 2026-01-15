@@ -4,24 +4,27 @@
   >
     <div class="flex items-center justify-start gap-3 my-2 mx-2 w-full">
       <app-token-logo
-        :url="undefined"
-        :symbol="stock.symbol"
+        :url="stock.iconPngUrl || stock.iconSvgUrl"
+        :symbol="stock.primaryMarket.symbol"
         class="flex-none"
       />
       <div class="min-w-0">
+        <p class="text-s-15 font-medium uppercase truncate pr-2">
+          {{ stock.primaryMarket.symbol }}
+        </p>
         <app-tooltip
-          :text="stock.name"
-          v-if="stock.name && stock.name.length > 12"
+          :text="stock.underlyingMarket.name"
+          v-if="
+            stock.underlyingMarket.name &&
+            stock.underlyingMarket.name.length > 12
+          "
         >
-          <p class="text-s-15 font-medium truncate leading-tight max-w-[120px]">
-            {{ stock.name }}
+          <p class="text-s-12 text-info truncate leading-tight max-w-[120px]">
+            {{ stock.underlyingMarket.name }}
           </p>
         </app-tooltip>
-        <p v-else class="text-s-15 font-medium truncate pr-2">
-          {{ stock.name }}
-        </p>
-        <p class="text-s-12 text-info uppercase truncate">
-          {{ stock.symbol }}
+        <p v-else class="text-s-12 text-info truncate pr-2">
+          {{ stock.underlyingMarket.name }}
         </p>
       </div>
     </div>
@@ -32,17 +35,21 @@
       <p
         class="text-s-9 md:text-s-11 font-semibold leading-p-150 text-nowrap ml-6 mb-2"
         :class="{
-          'text-black': !stock.priceChangePercentage24h,
+          'text-black': !stock.primaryMarket.priceChangePercentage24h,
           'text-error':
-            stock.priceChangePercentage24h &&
-            stock.priceChangePercentage24h < 0,
+            stock.primaryMarket.priceChangePercentage24h &&
+            parseFloat(stock.primaryMarket.priceChangePercentage24h) < 0,
           'text-success':
-            stock.priceChangePercentage24h &&
-            stock.priceChangePercentage24h >= 0,
+            stock.primaryMarket.priceChangePercentage24h &&
+            parseFloat(stock.primaryMarket.priceChangePercentage24h) >= 0,
         }"
       >
-        <span v-if="stock.priceChangePercentage24h">
-          {{ stock.priceChangePercentage24h < 0 ? '' : '+' }}
+        <span v-if="stock.primaryMarket.priceChangePercentage24h">
+          {{
+            parseFloat(stock.primaryMarket.priceChangePercentage24h) < 0
+              ? ''
+              : '+'
+          }}
         </span>
         {{ getPriceChange }}
       </p>
@@ -65,13 +72,15 @@ import { computed } from 'vue'
 const props = defineProps<{ stock: StockTopMoverItem }>()
 
 const getPrice = computed(() => {
-  return props.stock.price
-    ? `$${formatFiatValue(props.stock.price).value}`
+  return props.stock.primaryMarket.price
+    ? `$${formatFiatValue(props.stock.primaryMarket.price).value}`
     : '-'
 })
 const getPriceChange = computed(() => {
-  return props.stock.priceChangePercentage24h
-    ? formatPercentageValue(props.stock.priceChangePercentage24h).value
+  return props.stock.primaryMarket.priceChangePercentage24h
+    ? formatPercentageValue(
+        parseFloat(props.stock.primaryMarket.priceChangePercentage24h),
+      ).value
     : '-'
 })
 
@@ -80,11 +89,16 @@ interface StockSparkline {
   price: number
 }
 const sparkLine = computed<StockSparkline[]>(() => {
-  return props.stock.priceHistory24h
-    ? props.stock.priceHistory24h.filter(
-        (stock): stock is StockSparkline =>
-          stock.price !== undefined && stock.timestamp !== undefined,
-      )
+  return props.stock.primaryMarket.priceHistory24h
+    ? props.stock.primaryMarket.priceHistory24h
+        .filter(
+          (stock): stock is { timestamp: number; price: string } =>
+            stock.price !== undefined && stock.timestamp !== undefined,
+        )
+        .map(stock => ({
+          timestamp: stock.timestamp,
+          price: parseFloat(stock.price),
+        }))
     : []
 })
 </script>
