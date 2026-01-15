@@ -465,10 +465,13 @@
     <div
       class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
     >
-      <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
+      <div
+        v-if="!isLoading"
+        class="!text-s-12 xs:!text-s-14 text-info order-2 xs:order-1 mb-4 xs:mb-0"
+      >
         {{ getCurrentViewableItemsIndex }} of {{ tokens.length }} results
       </div>
-      <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
+      <div class="flex items-center gap-4 order-1 xs:order-2 mb-2 xs:mb-0">
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
           label="previous page"
@@ -490,7 +493,7 @@
         </app-btn-icon>
       </div>
 
-      <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
+      <div class="flex items-center gap-2 order-3 xs:order-3 mb-4 xs:mb-0">
         <app-select
           v-model:selected="activeShownItems"
           :options="shownItemsOptions"
@@ -529,6 +532,7 @@ import {
   StarIcon as StarSolidIcon,
   ArrowLongDownIcon,
   ArrowLongUpIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisVerticalIcon,
@@ -574,8 +578,10 @@ const walletStore = useWalletStore()
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
+  formattedStockFiatPortfolioValue,
   isLoadingBalances,
   allTokens,
+  allStocks,
 } = storeToRefs(walletStore)
 
 const searchInput = ref('')
@@ -613,6 +619,8 @@ const chainCustomTokens = computed(() => {
 -------------------------------*/
 const totalValue = computed(() => {
   if (props.view === 'all') return formattedTotalFiatPortfolioValue.value
+  else if (props.view === 'stocks')
+    return formattedStockFiatPortfolioValue.value
   else if (props.view === 'watchlist') {
     const sum = tokens.value.reduce((acc, token) => {
       const fiatValue = BigNumber(token.fiatBalance || 0)
@@ -755,6 +763,15 @@ const tokens = computed<DisplayToken[]>(() => {
         fiatBalance: 0,
         fiatBalanceFormatted: `$0.00`,
       } as DisplayToken
+    })
+  } else if (props.view === 'stocks') {
+    tokens = [...allStocks.value].map(token => {
+      const fiatBalance = getFiatValue(token)
+      return {
+        ...token,
+        fiatBalance: fiatBalance.toNumber(),
+        fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+      }
     })
   } else {
     tokens = [...allTokens.value].map(token => {

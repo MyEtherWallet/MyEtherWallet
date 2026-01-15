@@ -487,38 +487,54 @@
         </div>
 
         <div
-          class="flex flex-col xs:flex-row items-center justify-center justify-between text-s-12 mt-2"
+          class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
         >
-          <small
-            class="text-info ml-4 order-3 xs:order-1 flex-none text-center xs:text-left"
-            >{{ tokens.length * page }} of {{ totalTokenCount }} results</small
+          <div
+            v-if="!isLoading"
+            class="!text-s-12 xs:!text-s-14 text-info order-2 xs:order-1 mb-4 xs:mb-0"
           >
-          <div class="flex items-center gap-2 order-2 xs:order-2">
+            {{ getCurrentViewableItemsIndex }} of {{ totalTokenCount }} results
+          </div>
+          <div class="flex items-center gap-4 order-1 xs:order-2 mb-2 xs:mb-0">
             <app-btn-icon
               :disabled="!isLoading && page === 1"
               label="previous page"
-              @click="previousPage"
+              @click.stop="previousPage"
             >
-              <ChevronLeftIcon class="w-4 h-4" />
+              <chevron-left-icon class="w-4 h-4" />
             </app-btn-icon>
-
-            <span class="px-2">{{ page }} of {{ totalPages }}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-black">{{ page }}</span>
+              <span class="text-info">of</span>
+              <span class="text-info">{{ totalPages }}</span>
+            </div>
             <app-btn-icon
-              class=""
               :disabled="!isLoading && page >= totalPages"
               label="next page"
-              @click="nextPage"
+              @click.stop="nextPage"
             >
-              <ChevronRightIcon class="w-4 h-4" />
+              <chevron-right-icon class="w-4 h-4" />
             </app-btn-icon>
           </div>
-          <app-select
-            v-model:selected="activeShownItems"
-            :options="shownItemsOptions"
-            placeholder="Items per page"
-            class="text-black !text-s-14 order-1 xs:order-3 ml-auto xs:ml-0"
-            position="-right-1"
-          />
+
+          <div class="flex items-center gap-2 order-3 xs:order-3 mb-4 xs:mb-0">
+            <app-select
+              v-model:selected="activeShownItems"
+              :options="shownItemsOptions"
+              position="top-[-160px] right-0"
+              class="min-w-[70px]"
+            >
+              <template #select-button="{ toggleSelect }">
+                <button
+                  class="flex items-center justify-between gap-1 px-3 py-1.5 rounded-lg border border-grey-10 hover:border-grey-30 transition-colors"
+                  @click="toggleSelect"
+                >
+                  <span>{{ activeShownItems.label }}</span>
+                  <chevron-down-icon class="w-4 h-4 text-info" />
+                </button>
+              </template>
+            </app-select>
+          </div>
         </div>
         <select-chain-dialog
           v-if="isLoadedChains"
@@ -631,6 +647,14 @@ const activeShownItems = ref<AppSelectOption>(shownItemsOptions[1])
 
 const shownItems = computed<number>(() => {
   return Number(activeShownItems.value.value)
+})
+
+const getCurrentViewableItemsIndex = computed<number>(() => {
+  const viewing = shownItems.value * page.value
+  if (viewing > totalTokenCount.value) {
+    return totalTokenCount.value
+  }
+  return viewing
 })
 
 /** -------------------------------

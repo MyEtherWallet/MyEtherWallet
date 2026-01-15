@@ -217,6 +217,21 @@ export const useWalletStore = defineStore('walletStore', () => {
     return tokens.value.filter(token => token.is_rwa === true)
   })
 
+  /**
+   * @totalStockBalanceFiatBN the total balance of all stocks in fiat in BigNumber.
+   */
+  const totalStockBalanceFiatBN = computed<BigNumber>(() => {
+    if (isWalletConnected.value === false || allStocks.value.length === 0) {
+      return BigNumber(0)
+    }
+    return allStocks.value.reduce((total, token) => {
+      const tokenBalance = new BigNumber(token.balance || 0)
+      const tokenFiatValue = new BigNumber(token.price || 0)
+      const tokenValue = tokenBalance.multipliedBy(tokenFiatValue)
+      return total.plus(tokenValue)
+    }, new BigNumber(0))
+  })
+
   /** -------------------------------
   * Formatted Values
   -------------------------------*/
@@ -228,6 +243,13 @@ export const useWalletStore = defineStore('walletStore', () => {
    */
   const formattedTotalFiatPortfolioValue = computed<string>(() => {
     return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+  })
+
+  /**
+   * @formattedStockFiatPortfolioValue - the total stock portfolio value in fiat, formatted .
+   */
+  const formattedStockFiatPortfolioValue = computed<string>(() => {
+    return `$${totalStockBalanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   /**
@@ -270,10 +292,12 @@ export const useWalletStore = defineStore('walletStore', () => {
     // BigNumber total values
     isWalletConnected,
     totalTokensBalanceFiatBN,
+    totalStockBalanceFiatBN,
     balanceFiatBN,
     totalFiatPortfolioValueBN,
     // Formatted values
     formattedTotalFiatPortfolioValue,
+    formattedStockFiatPortfolioValue,
     formattedBalance,
     formattedBalanceFiat,
     isWatchOnly,
