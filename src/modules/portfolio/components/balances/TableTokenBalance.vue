@@ -358,7 +358,7 @@
                           @click.stop=""
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <pencil-icon class="text-primary w-4 h-4 mr-2" />
+                          <pencil-icon class="w-4 h-4 mr-2" />
                           <p>Edit</p>
                         </li>
                         <li
@@ -368,7 +368,7 @@
                           ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
-                          <minus-circle-icon class="text-error w-4 h-4 mr-2" />
+                          <trash-icon class="w-4 h-4 mr-2" />
                           <p>Delete</p>
                         </li>
                       </ul>
@@ -538,10 +538,7 @@ import {
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import {
-  StarIcon as StarOutlineIcon,
-  MinusCircleIcon,
-} from '@heroicons/vue/24/outline'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
 import type { TokenBalance } from '@/mew_api/types'
