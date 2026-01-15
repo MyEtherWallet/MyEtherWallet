@@ -10,7 +10,7 @@ import { NetworkNames } from '@enkryptcom/types'
 import type { Chain } from '@/mew_api/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 
-export const WALLET_VIEWS = [
+export const ACCESS_WALLET_VIEWS = [
   'default',
   'ledger',
   'trezor',
@@ -20,7 +20,15 @@ export const WALLET_VIEWS = [
   'wallet_connect',
 ] as const
 
-export type WalletView = (typeof WALLET_VIEWS)[number]
+export const CREATE_WALLET_VIEWS = [
+  'default',
+  'buy',
+  'mnemonic',
+] as const
+
+export type CreateWalletView = (typeof CREATE_WALLET_VIEWS)[number]
+
+export type WalletView = (typeof ACCESS_WALLET_VIEWS)[number]
 
 export enum WalletConfigType {
   MOBILE = 'mobile',
@@ -28,6 +36,7 @@ export enum WalletConfigType {
   SOFTWARE = 'software',
   DESKTOP = 'desktop',
   EXTENSION = 'extension',
+  MOCK = 'mock',
 }
 
 export const WALLET_TYPES = {
@@ -50,6 +59,7 @@ export type defaultWalletId =
   | 'privateKey'
   | 'keystore'
   | 'mnemonic'
+  | 'mock'
 
 type downloadUrls = {
   android?: string
@@ -157,9 +167,21 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     canSupport: enkryptSupportNetwork,
     isDefault: true,
     isOfficial: true,
-    isWC: true,
+    isWC: false,
     downloadUrls: {
       browserExtension: 'https://enkrypt.com',
+    },
+  },
+  mock: {
+    id: 'mock',
+    name: 'Mock Wallet',
+    icon: MewLogo,
+    type: [WalletConfigType.MOCK],
+    isDefault: false,
+    isOfficial: false,
+    isWC: false,
+    downloadUrls: {
+      browserExtension: '',
     },
   },
 }

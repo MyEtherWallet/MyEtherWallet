@@ -35,12 +35,13 @@
         >
           <div
             v-if="isOpen"
-            class="cursor-default min-w-[320px] rounded-32 flex flex-col max-h-full overflow-hidden"
+            class="cursor-default min-w-[320px] rounded-32 flex flex-col max-h-full overflow-hidden outline-none"
             :class="[bg, $attrs.class]"
             @click.stop
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialogTitle"
+            tabindex="-1"
             ref="targetDialog"
           >
             <div

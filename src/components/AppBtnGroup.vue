@@ -2,47 +2,53 @@
   <div
     :class="[
       {
-        'bg-surface rounded-12 md:rounded-32 p-2 md:p-1': variant === 'default',
+        'bg-surface rounded-32 p-1': variant === 'default',
       },
-      'flex justify-start  gap-1 max-w-fit',
+      { 'max-w-fit': !hasFullWidth },
+      'flex  gap-1',
     ]"
   >
-    <div v-if="isLoaded">
-      <div class="flex flex-row gap-1 flex-wrap">
-        <button
-          v-for="(btn, index) in btnList"
-          :key="index"
-          role="tab"
-          :aria-selected="areEqual(selected, btn)"
-          :class="[
-            { 'min-h-10 min-w-[110px] px-3': size === 'large' },
-            { 'min-h-8 min-w-[95px] !text-s-15': size === 'medium' },
-            { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
-            { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
-            {
-              'bg-white shadow-container hover:bg-white':
-                variant === 'default' && areEqual(selected, btn),
-            },
-            {
-              'border border-grey-outline ':
-                variant === 'outline' && !areEqual(selected, btn),
-            },
-            {
-              'border-2 border-primary !bg-primary text-white':
-                variant === 'outline' && areEqual(selected, btn),
-            },
-            'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium hoverNoBG ',
+    <div
+      v-if="isLoaded"
+      class="flex flex-row gap-1"
+      :class="
+        hasFullWidth ? 'justify-stretch  w-full' : 'flex-wrap justify-start'
+      "
+    >
+      <button
+        v-for="(btn, index) in btnList"
+        :key="index"
+        role="tab"
+        :aria-selected="areEqual(selected, btn)"
+        :class="[
+          { 'min-h-10 min-w-[110px] px-3': size === 'large' },
+          { 'min-h-8 min-w-[95px] !text-s-15': size === 'medium' },
+          { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
+          { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
+          {
+            'bg-white shadow-container hover:bg-white':
+              variant === 'default' && areEqual(selected, btn),
+          },
+          {
+            'border border-grey-outline ':
+              variant === 'outline' && !areEqual(selected, btn),
+          },
+          {
+            'border-2 border-primary !bg-primary text-white':
+              variant === 'outline' && areEqual(selected, btn),
+          },
+          { 'w-full': hasFullWidth },
+          'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium hoverNoBG ',
 
-            variant === 'outline' ? '' : '',
-          ]"
-          @click="setSelected(btn)"
-        >
-          <slot name="btn-content" :data="btn">
-            {{ index }}
-          </slot>
-        </button>
-        <slot name="custom" />
-      </div>
+          variant === 'outline' ? '' : '',
+        ]"
+        @click="setSelected(btn)"
+      >
+        <slot name="btn-content" :data="btn">
+          {{ index }}
+        </slot>
+      </button>
+      <slot name="custom" />
     </div>
     <!-- Loading -->
     <div v-else class="flex flex-row gap-1">
@@ -121,6 +127,10 @@ const props = defineProps({
   variant: {
     type: String as PropType<'default' | 'outline'>,
     default: 'default',
+  },
+  hasFullWidth: {
+    type: Boolean,
+    default: false,
   },
 })
 const emit = defineEmits<{

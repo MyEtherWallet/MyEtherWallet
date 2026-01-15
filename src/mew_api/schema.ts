@@ -4,2841 +4,2783 @@
  */
 
 export interface paths {
-  '/get': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetRoot']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/health': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetHealth']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/version': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetVersion']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/schema': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetSchema']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/schema.json': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetSchemaJSON']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/schema.yml': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetSchemaYML']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/schema.yaml': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetSchemaYAML']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/pubkey': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetPubkey']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/chains': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetChainMetadataList']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/chains/{chainName}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetChainMetadata']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/chains/with-prices': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetChainMetadataListWithPrices']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/pages/stocks/overview': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebStocksOverview']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/pages/stocks/table': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebStocksTable']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/pages/stocks/summary': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebStocksSummary']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/token-price-chart/coins/{coin}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTokenPriceChartByCoin']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/token-price-chart/chains/{chainName}/contracts/{contract}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTokenPriceChartByContract']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/pages/token-info/coins/{coin}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTokenInfoPageByCoin']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWeb7dBalancesBackProjectionChartByChainAndAddress']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/trending-tokens': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTrendingTokens']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/tokens-table': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTokensTable']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/tokens-watchlist': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTokensWatchlist']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/top-gainers': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebTopGainers']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/web/overview': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetWebCryptoOverview']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/coingecko/chains/{chainName}/preview': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetCoinGeckoChainPreview']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/coingecko/market-data': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetCoinGeckoAllMarketData']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/balances/{chainName}/{address}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBalancesByChainNameAndAddress']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/balances': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcBalanceByChainNameAndAddresses']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/balances/{address}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcBalanceByChainNameAndAddress']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/addresses/{address}/balance': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcBalanceByChainNameAndAddress2']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/fees': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcTransactionFees']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/transactions/{transactionId}/status': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcTransactionStatus']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/transactions/{transactionId}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcTransaction']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/estimates': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetBtcTransactionEstimate']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v2/btc/{chainName}/estimates': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetBtcTransactionEstimateV2']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/simple-estimates': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetBtcTransactionSimpleEstimate']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/quotes': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetBtcTransactionQuote']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v2/btc/{chainName}/quotes': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetBtcTransactionQuoteV2']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/quotes/{quoteId}/unsigned': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetUnsignedBtcTransaction']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/btc/{chainName}/broadcasts': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['BroadcastBtcTransaction']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/addresses/{address}/token-balances': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetTokenBalancesByChainNamesAndAddress']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/erc20/{contract}/metadata': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetErc20ContractMetadata']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/erc20/{contract}/addresses/{address}/balance': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetErc20AddressBalance']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/erc721/{contract}/metadata': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetErc721ContractMetadata']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/transactions/{txHash}/status': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetEvmTransactionStatus']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/transactions/{txHash}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetEvmTransaction']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/estimates': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetEvmTransactionEstimate']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/multi-estimates': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetEvmMultiTransactionEstimate']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/quotes': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetEvmTransactionQuote']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/quotes/{quoteId}/unsigned': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetUnsignedEvmTransaction']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/multi-quotes': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['GetEvmMultiTransactionQuote']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/multi-quotes/{quoteId}/unsigned': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['GetUnsignedEvmMultiTransaction']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/v1/evm/chains/{chainId}/broadcasts': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['BroadcastEvmTransaction']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
+    "/get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetRoot"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/version": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/schema": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetSchema"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/schema.json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetSchemaJSON"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/schema.yml": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetSchemaYML"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/schema.yaml": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetSchemaYAML"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/pubkey": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetPubkey"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/chains": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetChainMetadataList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/chains/{chainName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetChainMetadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/chains/with-prices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetChainMetadataListWithPrices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksTable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/token-price-chart/coins/{coin}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokenPriceChartByCoin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/token-price-chart/chains/{chainName}/contracts/{contract}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokenPriceChartByContract"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/token-info/coins/{coin}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokenInfoPageByCoin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/chains/{chainName}/addresses/{address}/7d-balances-back-projection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWeb7dBalancesBackProjectionChartByChainAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/trending-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTrendingTokens"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/tokens-table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokensTable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/tokens-watchlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTokensWatchlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/top-gainers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebTopGainers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebCryptoOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/coingecko/chains/{chainName}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCoinGeckoChainPreview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/coingecko/market-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCoinGeckoAllMarketData"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/balances/{chainName}/{address}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBalancesByChainNameAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/balances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcBalanceByChainNameAndAddresses"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/balances/{address}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcBalanceByChainNameAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/addresses/{address}/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcBalanceByChainNameAndAddress2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/fees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionFees"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/transactions/{transactionId}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/transactions/{transactionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionEstimate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v2/btc/{chainName}/estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionEstimateV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/simple-estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetBtcTransactionSimpleEstimate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v2/btc/{chainName}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetBtcTransactionQuoteV2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/quotes/{quoteId}/unsigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetUnsignedBtcTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/btc/{chainName}/broadcasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BroadcastBtcTransaction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/addresses/{address}/token-balances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetTokenBalancesByChainNamesAndAddress"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/erc20/{contract}/metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetErc20ContractMetadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/erc20/{contract}/addresses/{address}/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetErc20AddressBalance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/erc721/{contract}/metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetErc721ContractMetadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/transactions/{txHash}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetEvmTransactionStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/transactions/{txHash}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetEvmTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetEvmTransactionEstimate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/multi-estimates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetEvmMultiTransactionEstimate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetEvmTransactionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/quotes/{quoteId}/unsigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetUnsignedEvmTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/multi-quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetEvmMultiTransactionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/multi-quotes/{quoteId}/unsigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetUnsignedEvmMultiTransaction"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/evm/chains/{chainId}/broadcasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["BroadcastEvmTransaction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
-export type webhooks = Record<string, never>
+export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    BigIntInput: string
-    EvmAddressInput: string
-    EvmHashInput: string
-    BtcAddressInput: string
-    BtcTransactionIdInput: string
-    AnyAddressInput: string
-    ByteStringInput: string
-    StringDecimalUintInput: string
-    StringDecimalUint64Input: string
-    HexUintInput: string
-    HexUint16Input: string
-    HexUint32Input: string
-    HexUint64Input: string
-    HexUint256Input: string
-    UUIDInput: string
-    EvmAddress: string
-    EvmHash: string
-    BtcAddress: string
-    ByteString: string
-    HexUint: string
-    HexUint16: string
-    HexUint32: string
-    HexUint64: string
-    HexUint256: string
-    Hex: string
-    UUID: string
-    ISO8601: string
-    /** @enum {string} */
-    ChainType: 'BITCOIN' | 'EVM' | 'POLKADOT' | 'KADENA' | 'SOLANA'
-    /** @enum {string} */
-    EvmTransactionAction: 'TOKEN_SWAP' | 'TOKEN_APPROVAL' | 'TOKEN_TRANSFER'
-    /** @enum {string} */
-    SortDirection: 'ASC' | 'DESC'
-    /** @enum {string} */
-    WebTokenPriceChartInterval: '1D' | '7D' | '1M' | '3M' | '1Y' | 'ALL'
-    /** @enum {string} */
-    WebTokensTableSort:
-      | 'NAME_ASC'
-      | 'NAME_DESC'
-      | 'SYMBOL_ASC'
-      | 'SYMBOL_DESC'
-      | 'PRICE_ASC'
-      | 'PRICE_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_1H_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_1H_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_24H_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_24H_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_7D_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_7D_DESC'
-      | 'MARKET_CAP_ASC'
-      | 'MARKET_CAP_DESC'
-      | 'TOTAL_VOLUME_ASC'
-      | 'TOTAL_VOLUME_DESC'
-    /** @enum {string} */
-    WebStocksTableSort:
-      | 'NAME_ASC'
-      | 'NAME_DESC'
-      | 'SYMBOL_ASC'
-      | 'SYMBOL_DESC'
-      | 'PRICE_ASC'
-      | 'PRICE_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_24H_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_24H_DESC'
-      | 'MARKET_CAP_ASC'
-      | 'MARKET_CAP_DESC'
-      | 'VOLUME_24H_ASC'
-      | 'VOLUME_24H_DESC'
-    /** @enum {string} */
-    WebStocksTableCategory:
-      | 'COMMODITIES'
-      | 'EQUITIES'
-      | 'FIXED_INCOME'
-      | 'STOCK'
-      | 'ETF'
-    /** @enum {string} */
-    WebTokensWatchlistSort:
-      | 'NONE'
-      | 'NAME_ASC'
-      | 'NAME_DESC'
-      | 'SYMBOL_ASC'
-      | 'SYMBOL_DESC'
-      | 'PRICE_ASC'
-      | 'PRICE_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_1H_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_1H_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_24H_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_24H_DESC'
-      | 'PRICE_CHANGE_PERCENTAGE_7D_ASC'
-      | 'PRICE_CHANGE_PERCENTAGE_7D_DESC'
-      | 'MARKET_CAP_ASC'
-      | 'MARKET_CAP_DESC'
-      | 'TOTAL_VOLUME_ASC'
-      | 'TOTAL_VOLUME_DESC'
-    BtcOutputInput: {
-      address: components['schemas']['BtcAddressInput']
-      amount:
-        | number
-        | components['schemas']['StringDecimalUint64Input']
-        | components['schemas']['HexUint64Input']
-    }
-    ChainMetadata: {
-      name: string
-      nameLong: string
-      type: components['schemas']['ChainType']
-      blockExplorerTX: string
-      blockExplorerAddr: string
-      chainID?: string
-      isTestNetwork: boolean
-      currencyName: string
-      currencyNameLong: string
-      supportsBalances: boolean
-      icon: string
-      rpcUrls?: string[]
-    }
-    AccessTuple: {
-      address: components['schemas']['EvmAddress']
-      storageKeys: components['schemas']['EvmAddress'][]
-    }
-    AccessList: components['schemas']['AccessTuple'][]
-    GetRootResponse: {
-      message: string
-    }
-    GetHealthResponse: {
-      message: string
-    }
-    GetVersionResponse: {
-      version: string
-    }
-    GetSchemaYAMLResponse: string
-    GetSchemaJSONResponse: {
-      [key: string]: unknown
-    }
-    GetPubkeyResponse: string
-    GetChainMetadataListResponse: {
-      result: components['schemas']['ChainMetadata'][]
-    }
-    GetChainMetadataResponse: {
-      result: components['schemas']['ChainMetadata']
-    }
-    GetChainMetadataListWithPricesResponse: {
-      name: string
-      nameLong: string
-      type: components['schemas']['ChainType']
-      blockExplorerTX: string
-      blockExplorerAddr: string
-      chainID?: string
-      isTestNetwork: boolean
-      currencyName: string
-      currencyNameLong: string
-      rpcUrls?: string[]
-      supportsBalances: boolean
-      icon: string
-      price: null | number
-    }[]
-    GetWebStocksOverviewResponse: {
-      newlyAdded: {
-        stockAlias?: string
-        iconPngUrl?: string
-        iconSvgUrl?: string
-        primaryMarket: {
-          symbol: string
-          price: string
-          priceChangePercentage24h: string
-          sparkline24h: number[]
-        }
-        underlyingMarket: {
-          name: string
-          volume24h: string
-          marketCap: string
-        }
-      }[]
-      recentNews: {
-        title?: string
-        thumbnailUrl?: string
-        articleUrl?: string
-        timestamp?: number
-        tickers?: string[]
-      }[]
-      trending: {
-        stockAlias?: string
-        iconPngUrl?: string
-        iconSvgUrl?: string
-        primaryMarket: {
-          symbol: string
-          price: string
-          priceChangePercentage24h: string
-          sparkline24h: number[]
-        }
-        underlyingMarket: {
-          name: string
-          volume24h: string
-          marketCap: string
-        }
-      }[]
-      topMovers: {
-        stockAlias?: string
-        iconPngUrl?: string
-        iconSvgUrl?: string
-        primaryMarket: {
-          symbol: string
-          price: string
-          priceChangePercentage24h: string
-          priceHistory24h: {
-            timestamp?: number
-            price?: string
-          }[]
-        }
-        underlyingMarket: {
-          name: string
-          volume24h: string
-          marketCap: string
-        }
-      }[]
-      banner: {
-        symbol?: string
-        priceChangePercentage24h?: number
-        sparkline24h?: number[]
-      }[]
-    }
-    GetWebStocksTableResponse: {
-      page: number
-      pages: number
-      perPage: number
-      total: number
-      items: {
-        stockAlias?: string
-        iconPngUrl?: string
-        iconSvgUrl?: string
-        primaryMarket: {
-          symbol: string
-          price: string
-          priceChangePercentage24h: string
-          sparkline24h: number[]
-        }
-        underlyingMarket: {
-          name: string
-          volume24h: string
-          marketCap: string
-        }
-      }[]
-    }
-    GetWebStocksSummaryResponse: {
-      stockAlias?: string
-      iconPngUrl?: string
-      iconSvgUrl?: string
-      primaryMarket: {
-        symbol: string
-        price: string
-        priceChangePercentage24h: string
-      }
-      underlyingMarket: {
-        name: string
-      }
-    }[]
-    /** @enum {string} */
-    EvmTransactionStatus: 'NOT_FOUND' | 'PENDING' | 'SUCCESS' | 'FAIL'
-    /** @enum {string} */
-    BtcTransactionStatus: 'NOT_FOUND' | 'PENDING' | 'SUCCESS' | 'FAIL'
-    /** @enum {string} */
-    FeePriority: 'ECONOMY' | 'REGULAR' | 'FAST' | 'FASTEST'
-    BtcTransactionFeeQuote: {
-      nativeSymbol: string
-      nativeFeeRate?: string
-      nativeFeeTotal?: string
-      fiatSymbol?: string
-      fiatFeeRate?: string
-      fiatFeeTotal?: string
-    }
-    BtcTransactionFeeEstimate: {
-      nativeSymbol: string
-      nativeFeeRate?: string
-      fiatSymbol?: string
-      fiatFeeRate?: string
-    }
-    BtcTransactionSimpleEstimate: {
-      ECONOMY: components['schemas']['BtcTransactionFeeQuote']
-      REGULAR: components['schemas']['BtcTransactionFeeQuote']
-      FAST: components['schemas']['BtcTransactionFeeQuote']
-      FASTEST: components['schemas']['BtcTransactionFeeQuote']
-    }
-    BtcTransactionQuotes: {
-      ECONOMY: components['schemas']['BtcTransactionFeeQuote']
-      REGULAR: components['schemas']['BtcTransactionFeeQuote']
-      FAST: components['schemas']['BtcTransactionFeeQuote']
-      FASTEST: components['schemas']['BtcTransactionFeeQuote']
-    }
-    BtcTransactionQuotesV2: {
-      ECONOMY: components['schemas']['BtcTransactionFeeQuote']
-      REGULAR?: components['schemas']['BtcTransactionFeeQuote']
-      FAST?: components['schemas']['BtcTransactionFeeQuote']
-      FASTEST?: components['schemas']['BtcTransactionFeeQuote']
-    }
-    GetBtcTransactionFeesResponse: {
-      provider?: string
-      ECONOMY: components['schemas']['BtcTransactionFeeEstimate']
-      REGULAR: components['schemas']['BtcTransactionFeeEstimate']
-      FAST: components['schemas']['BtcTransactionFeeEstimate']
-      FASTEST: components['schemas']['BtcTransactionFeeEstimate']
-    }
-    EvmGasFeeInfo: {
-      nativeValue: components['schemas']['HexUint']
-      fiatValue?: components['schemas']['HexUint']
-      nativeSymbol?: string
-      fiatSymbol?: string
-    }
-    EvmGasFees: {
-      ECONOMY: components['schemas']['EvmGasFeeInfo']
-      REGULAR: components['schemas']['EvmGasFeeInfo']
-      FAST: components['schemas']['EvmGasFeeInfo']
-      FASTEST: components['schemas']['EvmGasFeeInfo']
-    }
-    GetWebTokenPriceChartResponse: {
-      /** Format: date-time */
-      from: string
-      /** Format: date-time */
-      to: string
-      prices: {
-        timestamp: number
-        price: number
-      }[]
-    }
-    GetWebTokenInfoPageResponse: {
-      coinId: string
-      name: string
-      symbol: string
-      currentPrice: null | number
-      priceChangePercentage24h: null | number
-      fullyDilutedValuation: null | number
-      marketCap: null | number
-      maxSupply: null | number
-      totalSupply: null | number
-      circulatingSupply: null | number
-      totalVolume: null | number
-      low24h: null | number
-      high24h: null | number
-      iconUrl: null | string
-      chainBalances: {
-        chainName: string
-        chainNameLong: string
-        chainType: components['schemas']['ChainType']
-        iconUrl: string
-        result:
-          | {
-              /** @constant */
-              ok: false
-              value: {
-                reason: string
-              }
-            }
-          | {
-              /** @constant */
-              ok: true
-              value: {
-                contract: null | string
-                decimals: null | number
-                balances: (
-                  | {
-                      /** @constant */
-                      ok: false
-                      value: {
-                        reason: string
-                        owner: string
-                      }
-                    }
-                  | {
-                      /** @constant */
-                      ok: true
-                      value: {
-                        owner: string
-                        value: string
-                      }
-                    }
-                )[]
-              }
-            }
-      }[]
-      supportedChains: {
-        chainName: string
-        chainNameLong: string
-        chainType: components['schemas']['ChainType']
-        contract: null | string
-        iconUrl: string
-      }[]
-    }
-    GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse: {
-      timestamps: number[]
-      prices: number[]
-    }
-    GetWebTrendingTokensResponse: {
-      page: number
-      pages: number
-      perPage: number
-      total: number
-      items: {
-        coinId: string
-        name: string
-        symbol: string
-        price: number
-        priceChangePercentage24h: number
-        logoUrl: string | null
-      }[]
-    }
-    GetWebTokensTableResponse: {
-      page: number
-      pages: number
-      perPage: number
-      total: number
-      items: {
-        coinId: string
-        name: string
-        symbol: string
-        price: number | null
-        priceChangePercentage1h: number | null
-        priceChangePercentage24h: number | null
-        priceChangePercentage7d: number | null
-        totalVolume: number | null
-        marketCap: number | null
-        addresses: {
-          [key: string]: string
-        }
-        logoUrl: string | null
-        sparklineIn7d: null | number[]
-      }[]
-    }
-    GetWebTokensWatchlistResponse: {
-      coinId: string
-      name: string
-      symbol: string
-      price: number | null
-      priceChangePercentage1h: number | null
-      priceChangePercentage24h: number | null
-      priceChangePercentage7d: number | null
-      totalVolume: number | null
-      marketCap: number | null
-      addresses: {
-        [key: string]: string
-      }
-      logoUrl: string | null
-      sparklineIn7d: null | number[]
-    }[]
-    GetWebTopGainersResponse: {
-      page: number
-      pages: number
-      perPage: number
-      total: number
-      items: {
-        coinId: string
-        name: string
-        symbol: string
-        price: number
-        priceChangePercentage24h: number
-        logoUrl: string | null
-      }[]
-    }
-    GetWebCryptoOverviewResponse: {
-      volume24h: number
-      marketCap: number
-      marketCapChange24hPercentage: number
-      ethDominancePercentage?: number
-      btcDominancePercentage?: number
-      newCoins: {
-        coinId: string
-        name: string
-        symbol: string
-        price: number
-        priceChangePercentage24h: number
-        logoUrl: string | null
-      }[]
-      rwaTopGainers: {
-        coinId: string
-        name: string
-        symbol: string
-        price: number
-        priceChangePercentage24h: number
-        logoUrl: string | null
-      }[]
-    }
-    GetCoinGeckoChainPreviewResponse: {
-      name?: string
-      symbol?: string
-      fiatPrice?: number
-      fiatSymbol?: string
-    }[]
-    GetCoinGeckoAllMarketDataResponse: {
-      coinId: string
-      currentPrice?: number
-      marketCap?: number
-      marketCapRank?: number
-      fullyDilutedValuation?: number
-      totalVolume?: number
-      high24h?: number
-      low24h?: number
-      priceChange24h?: number
-      priceChangePercentage24h?: number
-      marketCapChange24h?: number
-      marketCapChangePercentage24h?: number
-      circulatingSupply?: number
-      totalSupply?: number
-      maxSupply?: number
-      ath?: number
-      athChangePercentage?: number
-      athDate?: components['schemas']['ISO8601']
-      atl?: number
-      atlChangePercentage?: number
-      atlDate?: components['schemas']['ISO8601']
-      roiTimes?: number
-      roiCurrency?: string
-      roiPercentage?: number
-      lastUpdated?: components['schemas']['ISO8601']
-      priceChangePercentage14dInCurrency?: number
-      priceChangePercentage1hInCurrency?: number
-      priceChangePercentage1yInCurrency?: number
-      priceChangePercentage200dInCurrency?: number
-      priceChangePercentage24hInCurrency?: number
-      priceChangePercentage7dInCurrency?: number
-      priceChangePercentage30dInCurrency?: number
-      sparklineIn7d?: number[]
-    }[]
-    GetBalancesByChainNameAndAddressResponse: {
-      result: {
-        coinId?: string
-        balance: string
-        contract: string
-        decimals?: number
-        logo_url?: string
-        name?: string
-        price?: number
-        symbol?: string
-        market_cap?: number
-        price_change_percentage_24h?: number
-        is_rwa?: boolean
-        is_stablecoin?: boolean
-        sparkline_in_7d?: null | number[]
-      }[]
-    }
-    GetTokenBalancesByChainNamesAndAddressResponse: {
-      chainId: components['schemas']['HexUint']
-      chainName: string
-      includesTokens: boolean
-      balances: {
-        contract: string
-        name?: string
-        decimals?: number
-        priceFiatPerNative?: number
-        logoUrl?: string
-        nativeSymbol?: string
-        nativeValue: components['schemas']['HexUint']
-        fiatSymbol?: string
-        fiatValue?: number
-      }[]
-    }[]
-    BtcBalance: {
-      nativeValue: string
-      fiatValue?: string
-      nativeSymbol: string
-      fiatSymbol?: string
-    }
-    BtcAddressWithBalance: {
-      address: components['schemas']['BtcAddress']
-      balance: components['schemas']['BtcBalance']
-    }
-    GetBtcBalanceByChainNameAndAddressesResponse: components['schemas']['BtcAddressWithBalance'][]
-    GetBtcBalanceByChainNameAndAddressResponse: components['schemas']['BtcAddressWithBalance']
-    GetBtcBalanceByChainNameAndAddress2Response: {
-      coinId?: string
-      balance: string
-      decimals?: number
-      logoUrl?: string
-      name?: string
-      price?: number
-      symbol?: string
-      marketCap?: number
-      priceChangePercentage24h?: number
-      sparklineIn7d?: null | number[]
-    }
-    GetEvmTransactionEstimateRequest: {
-      address: components['schemas']['EvmAddressInput']
-      to: components['schemas']['EvmAddressInput'] | null
-      value: components['schemas']['HexUintInput']
-      data: components['schemas']['ByteStringInput']
-      accessList?: components['schemas']['AccessList']
-    }
-    GetEvmMultiTransactionEstimateRequest: {
-      action: components['schemas']['EvmTransactionAction']
-      address: components['schemas']['EvmAddressInput']
-      to: components['schemas']['EvmAddressInput'] | null
-      value: components['schemas']['HexUintInput']
-      data: components['schemas']['ByteStringInput']
-      accessList?: components['schemas']['AccessList']
-    }[]
-    GetEvmTransactionQuoteRequest: {
-      address: components['schemas']['EvmAddressInput']
-      to: components['schemas']['EvmAddressInput'] | null
-      value: components['schemas']['HexUintInput']
-      data: components['schemas']['ByteStringInput']
-      accessList?: components['schemas']['AccessList']
-    }
-    GetEvmMultiTransactionQuoteRequest: {
-      action: components['schemas']['EvmTransactionAction']
-      address: components['schemas']['EvmAddressInput']
-      to: components['schemas']['EvmAddressInput'] | null
-      value: components['schemas']['HexUintInput']
-      data: components['schemas']['ByteStringInput']
-      accessList?: components['schemas']['AccessList']
-    }[]
-    GetErc20ContractMetadataResponse: {
-      name: string
-      symbol: string
-      decimals: number
-    }
-    GetErc20AddressBalanceResponse: {
-      name?: string
-      decimals?: number
-      priceFiatPerNative?: number
-      nativeSymbol?: string
-      nativeValue: components['schemas']['HexUint']
-      fiatSymbol?: string
-      fiatValue?: number
-    }
-    GetErc721ContractMetadataResponse: {
-      name: string
-      symbol: string
-    }
-    GetEvmTransactionStatusResponse: {
-      status: components['schemas']['EvmTransactionStatus']
-    }
-    GetEvmTransactionResponse: {
-      TODO?: string
-    }
-    GetEvmTransactionEstimateResponse: {
-      fees: components['schemas']['EvmGasFees']
-    }
-    GetEvmMultiTransactionEstimateResponse: {
-      fees: components['schemas']['EvmGasFees']
-    }
-    GetEvmTransactionQuoteResponse: {
-      quoteId: components['schemas']['UUID']
-      fees: components['schemas']['EvmGasFees']
-    }
-    GetEvmMultiTransactionQuoteResponse: {
-      quoteId: components['schemas']['UUID']
-      fees: components['schemas']['EvmGasFees']
-    }
-    GetUnsignedEvmTransactionResponse: {
-      serialized: components['schemas']['ByteString']
-    }
-    GetUnsignedEvmMultiTransactionResponse: {
-      serialized: components['schemas']['ByteString'][]
-    }
-    BroadcastEvmTransactionRequest: {
-      signedTransaction: components['schemas']['ByteStringInput']
-    }
-    BroadcastEvmTransactionResponse: {
-      txHash: string
-    }
-    GetBtcTransactionStatusResponse: {
-      status: components['schemas']['BtcTransactionStatus']
-    }
-    BtcOutput2: {
-      scriptPubkey: string
-      value: string
-    }
-    GetBtcTransactionResponse: {
-      txid: string
-      fee: string
-      outputs: components['schemas']['BtcOutput2'][]
-      block?: {
-        height?: string
-      }
-    }
-    GetBtcTransactionEstimateRequest: {
-      doNotFilterOutOrdinals?: boolean
-      allowSendingDust?: boolean
-      changeAddress?: components['schemas']['BtcAddressInput']
-      consolidationAddress?: components['schemas']['BtcAddressInput']
-      fromAddresses: components['schemas']['BtcAddressInput'][]
-      outputs?: components['schemas']['BtcOutputInput'][]
-    }
-    GetBtcTransactionEstimateRequestV2: {
-      doNotFilterOutOrdinals?: boolean
-      allowSendingDust?: boolean
-      changeAddress?: components['schemas']['BtcAddressInput']
-      consolidationAddress?: components['schemas']['BtcAddressInput']
-      fromAddresses: components['schemas']['BtcAddressInput'][]
-      outputs?: components['schemas']['BtcOutputInput'][]
-    }
-    GetBtcTransactionQuoteRequest: {
-      doNotFilterOutOrdinals?: boolean
-      allowSendingDust?: boolean
-      changeAddress?: components['schemas']['BtcAddressInput']
-      consolidationAddress?: components['schemas']['BtcAddressInput']
-      fromAddresses: components['schemas']['BtcAddressInput'][]
-      outputs?: components['schemas']['BtcOutputInput'][]
-    }
-    GetBtcTransactionQuoteRequestV2: {
-      doNotFilterOutOrdinals?: boolean
-      allowSendingDust?: boolean
-      changeAddress?: components['schemas']['BtcAddressInput']
-      consolidationAddress?: components['schemas']['BtcAddressInput']
-      fromAddresses: components['schemas']['BtcAddressInput'][]
-      outputs?: components['schemas']['BtcOutputInput'][]
-    }
-    GetBtcTransactionEstimateResponse: {
-      fees: components['schemas']['BtcTransactionQuotes']
-      ordinalsFilteredOut: boolean
-    }
-    GetBtcTransactionEstimateResponseV2: {
-      fees: components['schemas']['BtcTransactionQuotesV2']
-      ordinalsFilteredOut: boolean
-    }
-    GetBtcTransactionSimpleEstimateResponse: {
-      fees: components['schemas']['BtcTransactionSimpleEstimate']
-    }
-    GetBtcTransactionQuoteResponse: {
-      quoteId: components['schemas']['UUID']
-      fees: components['schemas']['BtcTransactionQuotes']
-      ordinalsFilteredOut: boolean
-    }
-    GetBtcTransactionQuoteResponseV2: {
-      quoteId: components['schemas']['UUID']
-      fees: components['schemas']['BtcTransactionQuotesV2']
-      ordinalsFilteredOut: boolean
-    }
-    GetUnsignedBtcTransactionResponse: {
-      serialized: components['schemas']['ByteString']
-      ordinalsFilteredOut: boolean
-    }
-    BroadcastBtcTransactionRequest: {
-      signedTransaction: components['schemas']['ByteString']
-    }
-    BroadcastBtcTransactionResponse: {
-      txid: string
-    }
-  }
-  responses: {
-    GetRootSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetRootResponse']
-      }
-    }
-    GetHealthSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetHealthResponse']
-      }
-    }
-    GetVersionSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetVersionResponse']
-      }
-    }
-    GetSchemaYAMLSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/yaml': components['schemas']['GetSchemaYAMLResponse']
-      }
-    }
-    GetSchemaJSONSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetSchemaJSONResponse']
-      }
-    }
-    GetPubkeySuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'text/plain': components['schemas']['GetPubkeyResponse']
-      }
-    }
-    GetChainMetadaListSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetChainMetadataListResponse']
-      }
-    }
-    GetChainMetadaListWithPricesSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetChainMetadataListWithPricesResponse']
-      }
-    }
-    GetWebStocksOverviewSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebStocksOverviewResponse']
-      }
-    }
-    GetWebStocksTableSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebStocksTableResponse']
-      }
-    }
-    GetWebStocksSummarySuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebStocksSummaryResponse']
-      }
-    }
-    GetChainMetadataSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetChainMetadataResponse']
-      }
-    }
-    GetWebTokenPriceChartSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebTokenPriceChartResponse']
-      }
-    }
-    GetWebTokenInfoPageSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebTokenInfoPageResponse']
-      }
-    }
-    GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse']
-      }
-    }
-    GetWebTrendingTokensSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebTrendingTokensResponse']
-      }
-    }
-    GetWebTokensTableSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebTokensTableResponse']
-      }
-    }
-    GetWebTokensWatchlistSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebTokensWatchlistResponse']
-      }
-    }
-    GetWebTopGainersSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebTopGainersResponse']
-      }
-    }
-    GetWebCryptoOverviewSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetWebCryptoOverviewResponse']
-      }
-    }
-    GetCoinGeckoChainPreviewSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetCoinGeckoChainPreviewResponse']
-      }
-    }
-    GetCoinGeckoAllMarketDataSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetCoinGeckoAllMarketDataResponse']
-      }
-    }
-    GetBalancesByChainNameAndAddressSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBalancesByChainNameAndAddressResponse']
-      }
-    }
-    GetTokenBalancesByChainNamesAndAddressSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetTokenBalancesByChainNamesAndAddressResponse']
-      }
-    }
-    GetBtcTransactionStatusSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionStatusResponse']
-      }
-    }
-    GetBtcTransactionSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionResponse']
-      }
-    }
-    GetBtcBalanceByChainNameAndAddressesSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcBalanceByChainNameAndAddressesResponse']
-      }
-    }
-    GetBtcBalanceByChainNameAndAddressSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcBalanceByChainNameAndAddressResponse']
-      }
-    }
-    GetBtcBalanceByChainNameAndAddress2Success: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcBalanceByChainNameAndAddress2Response']
-      }
-    }
-    GetBtcTransactionFeesSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionFeesResponse']
-      }
-    }
-    GetBtcTransactionEstimateSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionEstimateResponse']
-      }
-    }
-    GetBtcTransactionEstimateSuccessV2: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionEstimateResponseV2']
-      }
-    }
-    GetBtcTransactionSimpleEstimateSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionSimpleEstimateResponse']
-      }
-    }
-    GetBtcTransactionQuoteSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionQuoteResponse']
-      }
-    }
-    GetBtcTransactionQuoteSuccessV2: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionQuoteResponseV2']
-      }
-    }
-    GetUnsignedBtcTransactionSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetUnsignedBtcTransactionResponse']
-      }
-    }
-    BroadcastBtcTransactionSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['BroadcastBtcTransactionResponse']
-      }
-    }
-    GetErc20ContractMetadataSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetErc20ContractMetadataResponse']
-      }
-    }
-    GetErc20AddressBalanceSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetErc20AddressBalanceResponse']
-      }
-    }
-    GetErc721ContractMetadataSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetErc721ContractMetadataResponse']
-      }
-    }
-    GetEvmTransactionStatusSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetEvmTransactionStatusResponse']
-      }
-    }
-    GetEvmTransactionSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetEvmTransactionResponse']
-      }
-    }
-    GetEvmTransactionEstimateSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetEvmTransactionEstimateResponse']
-      }
-    }
-    GetEvmMultiTransactionEstimateSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetEvmMultiTransactionEstimateResponse']
-      }
-    }
-    GetEvmTransactionQuoteSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetEvmTransactionQuoteResponse']
-      }
-    }
-    GetEvmMultiTransactionQuoteSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetEvmMultiTransactionQuoteResponse']
-      }
-    }
-    GetUnsignedEvmTransactionSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetUnsignedEvmTransactionResponse']
-      }
-    }
-    GetUnsignedEvmMultiTransactionSuccess: {
-      headers: {
-        'X-MEW-API-Signature'?: string
-        'X-MEW-API-Timestamp'?: components['schemas']['ISO8601']
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['GetUnsignedEvmMultiTransactionResponse']
-      }
-    }
-    BroadcastEvmTransactionSuccess: {
-      headers: {
-        [name: string]: unknown
-      }
-      content: {
-        'application/json': components['schemas']['BroadcastEvmTransactionResponse']
-      }
-    }
-  }
-  parameters: {
-    IncludeSparkline: boolean
-    IncludeSparklines: boolean
-    PathCoinId: string
-    CoinIds: string
-    ChainId: components['schemas']['BigIntInput']
-    ChainName: string
-    FilterChain: string
-    Category: string
-    Search: string
-    Query: string
-    Page: number
-    PerPage: number
-    SortDirection: components['schemas']['SortDirection']
-    WebTokenPriceChartInterval: components['schemas']['WebTokenPriceChartInterval']
-    WebTokensTableSort: components['schemas']['WebTokensTableSort']
-    WebStocksTableSort: components['schemas']['WebStocksTableSort']
-    WebStocksTableCategory: components['schemas']['WebStocksTableCategory']
-    WebTokensWatchlistSort: components['schemas']['WebTokensWatchlistSort']
-    ChainNames: string
-    AumAddressType: string
-    AumAddressPlatform: string
-    MewPlatform: string
-    EvmHash: components['schemas']['EvmHashInput']
-    QuoteId: components['schemas']['UUID']
-    PriorityId: components['schemas']['FeePriority']
-    BtcAddress: components['schemas']['BtcAddressInput']
-    QueryEvmAddresses: string | string[]
-    BtcAddresses: string
-    BtcTransactionId: components['schemas']['BtcTransactionIdInput']
-    EvmAddress: components['schemas']['EvmAddressInput']
-    AnyContractAddress: string
-    EvmContractAddress: components['schemas']['EvmAddressInput']
-    Address: components['schemas']['AnyAddressInput']
-  }
-  requestBodies: {
-    GetEvmTransactionEstimate: {
-      content: {
-        'application/json': components['schemas']['GetEvmTransactionEstimateRequest']
-      }
-    }
-    GetEvmMultiTransactionEstimate: {
-      content: {
-        'application/json': components['schemas']['GetEvmMultiTransactionEstimateRequest']
-      }
-    }
-    GetEvmTransactionQuote: {
-      content: {
-        'application/json': components['schemas']['GetEvmTransactionQuoteRequest']
-      }
-    }
-    GetEvmMultiTransactionQuote: {
-      content: {
-        'application/json': components['schemas']['GetEvmMultiTransactionQuoteRequest']
-      }
-    }
-    BroadcastEvmTransaction: {
-      content: {
-        'application/json': components['schemas']['BroadcastEvmTransactionRequest']
-      }
-    }
-    GetBtcTransactionEstimate: {
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionEstimateRequest']
-      }
-    }
-    GetBtcTransactionEstimateV2: {
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionEstimateRequestV2']
-      }
-    }
-    GetBtcTransactionQuote: {
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionQuoteRequest']
-      }
-    }
-    GetBtcTransactionQuoteV2: {
-      content: {
-        'application/json': components['schemas']['GetBtcTransactionQuoteRequestV2']
-      }
-    }
-    BroadcastBtcTransaction: {
-      content: {
-        'application/json': components['schemas']['BroadcastBtcTransactionRequest']
-      }
-    }
-  }
-  headers: never
-  pathItems: never
+    schemas: {
+        BigIntInput: string;
+        EvmAddressInput: string;
+        EvmHashInput: string;
+        BtcAddressInput: string;
+        BtcTransactionIdInput: string;
+        AnyAddressInput: string;
+        ByteStringInput: string;
+        StringDecimalUintInput: string;
+        StringDecimalUint64Input: string;
+        HexUintInput: string;
+        HexUint16Input: string;
+        HexUint32Input: string;
+        HexUint64Input: string;
+        HexUint256Input: string;
+        UUIDInput: string;
+        EvmAddress: string;
+        EvmHash: string;
+        BtcAddress: string;
+        ByteString: string;
+        HexUint: string;
+        HexUint16: string;
+        HexUint32: string;
+        HexUint64: string;
+        HexUint256: string;
+        Hex: string;
+        UUID: string;
+        ISO8601: string;
+        /** @enum {string} */
+        ChainType: "BITCOIN" | "EVM" | "POLKADOT" | "KADENA" | "SOLANA";
+        /** @enum {string} */
+        EvmTransactionAction: "TOKEN_SWAP" | "TOKEN_APPROVAL" | "TOKEN_TRANSFER";
+        /** @enum {string} */
+        SortDirection: "ASC" | "DESC";
+        /** @enum {string} */
+        WebTokenPriceChartInterval: "1D" | "7D" | "1M" | "3M" | "1Y" | "ALL";
+        /** @enum {string} */
+        WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
+        /** @enum {string} */
+        WebStocksTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "VOLUME_24H_ASC" | "VOLUME_24H_DESC";
+        /** @enum {string} */
+        WebStocksTableCategory: "COMMODITIES" | "EQUITIES" | "FIXED_INCOME" | "STOCK" | "ETF";
+        /** @enum {string} */
+        WebTokensWatchlistSort: "NONE" | "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
+        BtcOutputInput: {
+            address: components["schemas"]["BtcAddressInput"];
+            amount: number | components["schemas"]["StringDecimalUint64Input"] | components["schemas"]["HexUint64Input"];
+        };
+        ChainMetadata: {
+            name: string;
+            nameLong: string;
+            type: components["schemas"]["ChainType"];
+            blockExplorerTX: string;
+            blockExplorerAddr: string;
+            chainID?: string;
+            isTestNetwork: boolean;
+            currencyName: string;
+            currencyNameLong: string;
+            supportsBalances: boolean;
+            icon: string;
+            rpcUrls?: string[];
+        };
+        AccessTuple: {
+            address: components["schemas"]["EvmAddress"];
+            storageKeys: components["schemas"]["EvmAddress"][];
+        };
+        AccessList: components["schemas"]["AccessTuple"][];
+        GetRootResponse: {
+            message: string;
+        };
+        GetHealthResponse: {
+            message: string;
+        };
+        GetVersionResponse: {
+            version: string;
+        };
+        GetSchemaYAMLResponse: string;
+        GetSchemaJSONResponse: {
+            [key: string]: unknown;
+        };
+        GetPubkeyResponse: string;
+        GetChainMetadataListResponse: {
+            result: components["schemas"]["ChainMetadata"][];
+        };
+        GetChainMetadataResponse: {
+            result: components["schemas"]["ChainMetadata"];
+        };
+        GetChainMetadataListWithPricesResponse: {
+            name: string;
+            nameLong: string;
+            type: components["schemas"]["ChainType"];
+            blockExplorerTX: string;
+            blockExplorerAddr: string;
+            chainID?: string;
+            isTestNetwork: boolean;
+            currencyName: string;
+            currencyNameLong: string;
+            rpcUrls?: string[];
+            supportsBalances: boolean;
+            icon: string;
+            price: null | number;
+        }[];
+        GetWebStocksOverviewResponse: {
+            newlyAdded: {
+                stockAlias?: string;
+                iconPngUrl?: string;
+                iconSvgUrl?: string;
+                primaryMarket: {
+                    symbol: string;
+                    price: string;
+                    priceChangePercentage24h: string;
+                    sparkline24h: number[];
+                };
+                underlyingMarket: {
+                    name: string;
+                    volume24h: string;
+                    marketCap: string;
+                };
+            }[];
+            recentNews: {
+                title?: string;
+                thumbnailUrl?: string;
+                articleUrl?: string;
+                timestamp?: number;
+                tickers?: string[];
+            }[];
+            trending: {
+                stockAlias?: string;
+                iconPngUrl?: string;
+                iconSvgUrl?: string;
+                primaryMarket: {
+                    symbol: string;
+                    price: string;
+                    priceChangePercentage24h: string;
+                    sparkline24h: number[];
+                };
+                underlyingMarket: {
+                    name: string;
+                    volume24h: string;
+                    marketCap: string;
+                };
+            }[];
+            topMovers: {
+                stockAlias?: string;
+                iconPngUrl?: string;
+                iconSvgUrl?: string;
+                primaryMarket: {
+                    symbol: string;
+                    price: string;
+                    priceChangePercentage24h: string;
+                    priceHistory24h: {
+                        timestamp?: number;
+                        price?: string;
+                    }[];
+                };
+                underlyingMarket: {
+                    name: string;
+                    volume24h: string;
+                    marketCap: string;
+                };
+            }[];
+            banner: {
+                symbol?: string;
+                priceChangePercentage24h?: number;
+                sparkline24h?: number[];
+            }[];
+        };
+        GetWebStocksTableResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                stockAlias?: string;
+                iconPngUrl?: string;
+                iconSvgUrl?: string;
+                primaryMarket: {
+                    symbol: string;
+                    price: string;
+                    priceChangePercentage24h: string;
+                    sparkline24h: number[];
+                };
+                underlyingMarket: {
+                    name: string;
+                    volume24h: string;
+                    marketCap: string;
+                };
+            }[];
+        };
+        GetWebStocksSummaryResponse: {
+            stockAlias?: string;
+            iconPngUrl?: string;
+            iconSvgUrl?: string;
+            primaryMarket: {
+                symbol: string;
+                price: string;
+                priceChangePercentage24h: string;
+            };
+            underlyingMarket: {
+                name: string;
+            };
+        }[];
+        /** @enum {string} */
+        EvmTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
+        /** @enum {string} */
+        BtcTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
+        /** @enum {string} */
+        FeePriority: "ECONOMY" | "REGULAR" | "FAST" | "FASTEST";
+        BtcTransactionFeeQuote: {
+            nativeSymbol: string;
+            nativeFeeRate?: string;
+            nativeFeeTotal?: string;
+            fiatSymbol?: string;
+            fiatFeeRate?: string;
+            fiatFeeTotal?: string;
+        };
+        BtcTransactionFeeEstimate: {
+            nativeSymbol: string;
+            nativeFeeRate?: string;
+            fiatSymbol?: string;
+            fiatFeeRate?: string;
+        };
+        BtcTransactionSimpleEstimate: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
+        BtcTransactionQuotes: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST: components["schemas"]["BtcTransactionFeeQuote"];
+        };
+        BtcTransactionQuotesV2: {
+            ECONOMY: components["schemas"]["BtcTransactionFeeQuote"];
+            REGULAR?: components["schemas"]["BtcTransactionFeeQuote"];
+            FAST?: components["schemas"]["BtcTransactionFeeQuote"];
+            FASTEST?: components["schemas"]["BtcTransactionFeeQuote"];
+        };
+        GetBtcTransactionFeesResponse: {
+            provider?: string;
+            ECONOMY: components["schemas"]["BtcTransactionFeeEstimate"];
+            REGULAR: components["schemas"]["BtcTransactionFeeEstimate"];
+            FAST: components["schemas"]["BtcTransactionFeeEstimate"];
+            FASTEST: components["schemas"]["BtcTransactionFeeEstimate"];
+        };
+        EvmGasFeeInfo: {
+            nativeValue: components["schemas"]["HexUint"];
+            fiatValue?: components["schemas"]["HexUint"];
+            nativeSymbol?: string;
+            fiatSymbol?: string;
+        };
+        EvmGasFees: {
+            ECONOMY: components["schemas"]["EvmGasFeeInfo"];
+            REGULAR: components["schemas"]["EvmGasFeeInfo"];
+            FAST: components["schemas"]["EvmGasFeeInfo"];
+            FASTEST: components["schemas"]["EvmGasFeeInfo"];
+        };
+        GetWebTokenPriceChartResponse: {
+            /** Format: date-time */
+            from: string;
+            /** Format: date-time */
+            to: string;
+            prices: {
+                timestamp: number;
+                price: number;
+            }[];
+        };
+        GetWebTokenInfoPageResponse: {
+            coinId: string;
+            name: string;
+            symbol: string;
+            currentPrice: null | number;
+            priceChangePercentage24h: null | number;
+            fullyDilutedValuation: null | number;
+            marketCap: null | number;
+            maxSupply: null | number;
+            totalSupply: null | number;
+            circulatingSupply: null | number;
+            totalVolume: null | number;
+            low24h: null | number;
+            high24h: null | number;
+            iconUrl: null | string;
+            chainBalances: {
+                chainName: string;
+                chainNameLong: string;
+                chainType: components["schemas"]["ChainType"];
+                iconUrl: string;
+                result: {
+                    /** @constant */
+                    ok: false;
+                    value: {
+                        reason: string;
+                    };
+                } | {
+                    /** @constant */
+                    ok: true;
+                    value: {
+                        contract: null | string;
+                        decimals: null | number;
+                        balances: ({
+                            /** @constant */
+                            ok: false;
+                            value: {
+                                reason: string;
+                                owner: string;
+                            };
+                        } | {
+                            /** @constant */
+                            ok: true;
+                            value: {
+                                owner: string;
+                                value: string;
+                            };
+                        })[];
+                    };
+                };
+            }[];
+            supportedChains: {
+                chainName: string;
+                chainNameLong: string;
+                chainType: components["schemas"]["ChainType"];
+                contract: null | string;
+                iconUrl: string;
+            }[];
+        };
+        GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse: {
+            timestamps: number[];
+            prices: number[];
+        };
+        GetWebTrendingTokensResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl: string | null;
+            }[];
+        };
+        GetWebTokensTableResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number | null;
+                priceChangePercentage1h: number | null;
+                priceChangePercentage24h: number | null;
+                priceChangePercentage7d: number | null;
+                totalVolume: number | null;
+                marketCap: number | null;
+                addresses: {
+                    [key: string]: string;
+                };
+                logoUrl: string | null;
+                sparklineIn7d: null | number[];
+            }[];
+        };
+        GetWebTokensWatchlistResponse: {
+            coinId: string;
+            name: string;
+            symbol: string;
+            price: number | null;
+            priceChangePercentage1h: number | null;
+            priceChangePercentage24h: number | null;
+            priceChangePercentage7d: number | null;
+            totalVolume: number | null;
+            marketCap: number | null;
+            addresses: {
+                [key: string]: string;
+            };
+            logoUrl: string | null;
+            sparklineIn7d: null | number[];
+        }[];
+        GetWebTopGainersResponse: {
+            page: number;
+            pages: number;
+            perPage: number;
+            total: number;
+            items: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl: string | null;
+            }[];
+        };
+        GetWebCryptoOverviewResponse: {
+            volume24h: number;
+            marketCap: number;
+            marketCapChange24hPercentage: number;
+            ethDominancePercentage?: number;
+            btcDominancePercentage?: number;
+            newCoins: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl: string | null;
+            }[];
+            rwaTopGainers: {
+                coinId: string;
+                name: string;
+                symbol: string;
+                price: number;
+                priceChangePercentage24h: number;
+                logoUrl: string | null;
+            }[];
+        };
+        GetCoinGeckoChainPreviewResponse: {
+            name?: string;
+            symbol?: string;
+            fiatPrice?: number;
+            fiatSymbol?: string;
+        }[];
+        GetCoinGeckoAllMarketDataResponse: {
+            coinId: string;
+            currentPrice?: number;
+            marketCap?: number;
+            marketCapRank?: number;
+            fullyDilutedValuation?: number;
+            totalVolume?: number;
+            high24h?: number;
+            low24h?: number;
+            priceChange24h?: number;
+            priceChangePercentage24h?: number;
+            marketCapChange24h?: number;
+            marketCapChangePercentage24h?: number;
+            circulatingSupply?: number;
+            totalSupply?: number;
+            maxSupply?: number;
+            ath?: number;
+            athChangePercentage?: number;
+            athDate?: components["schemas"]["ISO8601"];
+            atl?: number;
+            atlChangePercentage?: number;
+            atlDate?: components["schemas"]["ISO8601"];
+            roiTimes?: number;
+            roiCurrency?: string;
+            roiPercentage?: number;
+            lastUpdated?: components["schemas"]["ISO8601"];
+            priceChangePercentage14dInCurrency?: number;
+            priceChangePercentage1hInCurrency?: number;
+            priceChangePercentage1yInCurrency?: number;
+            priceChangePercentage200dInCurrency?: number;
+            priceChangePercentage24hInCurrency?: number;
+            priceChangePercentage7dInCurrency?: number;
+            priceChangePercentage30dInCurrency?: number;
+            sparklineIn7d?: number[];
+        }[];
+        GetBalancesByChainNameAndAddressResponse: {
+            result: {
+                coinId?: string;
+                balance: string;
+                contract: string;
+                decimals?: number;
+                logo_url?: string;
+                name?: string;
+                price?: number;
+                symbol?: string;
+                market_cap?: number;
+                price_change_percentage_24h?: number;
+                is_rwa?: boolean;
+                is_stablecoin?: boolean;
+                sparkline_in_7d?: null | number[];
+            }[];
+        };
+        GetTokenBalancesByChainNamesAndAddressResponse: {
+            chainId: components["schemas"]["HexUint"];
+            chainName: string;
+            includesTokens: boolean;
+            balances: {
+                contract: string;
+                name?: string;
+                decimals?: number;
+                priceFiatPerNative?: number;
+                logoUrl?: string;
+                nativeSymbol?: string;
+                nativeValue: components["schemas"]["HexUint"];
+                fiatSymbol?: string;
+                fiatValue?: number;
+            }[];
+        }[];
+        BtcBalance: {
+            nativeValue: string;
+            fiatValue?: string;
+            nativeSymbol: string;
+            fiatSymbol?: string;
+        };
+        BtcAddressWithBalance: {
+            address: components["schemas"]["BtcAddress"];
+            balance: components["schemas"]["BtcBalance"];
+        };
+        GetBtcBalanceByChainNameAndAddressesResponse: components["schemas"]["BtcAddressWithBalance"][];
+        GetBtcBalanceByChainNameAndAddressResponse: components["schemas"]["BtcAddressWithBalance"];
+        GetBtcBalanceByChainNameAndAddress2Response: {
+            coinId?: string;
+            balance: string;
+            decimals?: number;
+            logoUrl?: string;
+            name?: string;
+            price?: number;
+            symbol?: string;
+            marketCap?: number;
+            priceChangePercentage24h?: number;
+            sparklineIn7d?: null | number[];
+        };
+        GetEvmTransactionEstimateRequest: {
+            address: components["schemas"]["EvmAddressInput"];
+            to: components["schemas"]["EvmAddressInput"] | null;
+            value: components["schemas"]["HexUintInput"];
+            data: components["schemas"]["ByteStringInput"];
+            accessList?: components["schemas"]["AccessList"];
+        };
+        GetEvmMultiTransactionEstimateRequest: {
+            action: components["schemas"]["EvmTransactionAction"];
+            address: components["schemas"]["EvmAddressInput"];
+            to: components["schemas"]["EvmAddressInput"] | null;
+            value: components["schemas"]["HexUintInput"];
+            data: components["schemas"]["ByteStringInput"];
+            accessList?: components["schemas"]["AccessList"];
+        }[];
+        GetEvmTransactionQuoteRequest: {
+            address: components["schemas"]["EvmAddressInput"];
+            to: components["schemas"]["EvmAddressInput"] | null;
+            value: components["schemas"]["HexUintInput"];
+            data: components["schemas"]["ByteStringInput"];
+            accessList?: components["schemas"]["AccessList"];
+        };
+        GetEvmMultiTransactionQuoteRequest: {
+            action: components["schemas"]["EvmTransactionAction"];
+            address: components["schemas"]["EvmAddressInput"];
+            to: components["schemas"]["EvmAddressInput"] | null;
+            value: components["schemas"]["HexUintInput"];
+            data: components["schemas"]["ByteStringInput"];
+            accessList?: components["schemas"]["AccessList"];
+        }[];
+        GetErc20ContractMetadataResponse: {
+            name: string;
+            symbol: string;
+            decimals: number;
+        };
+        GetErc20AddressBalanceResponse: {
+            name?: string;
+            decimals?: number;
+            priceFiatPerNative?: number;
+            nativeSymbol?: string;
+            nativeValue: components["schemas"]["HexUint"];
+            fiatSymbol?: string;
+            fiatValue?: number;
+        };
+        GetErc721ContractMetadataResponse: {
+            name: string;
+            symbol: string;
+        };
+        GetEvmTransactionStatusResponse: {
+            status: components["schemas"]["EvmTransactionStatus"];
+        };
+        GetEvmTransactionResponse: {
+            TODO?: string;
+        };
+        GetEvmTransactionEstimateResponse: {
+            fees: components["schemas"]["EvmGasFees"];
+        };
+        GetEvmMultiTransactionEstimateResponse: {
+            fees: components["schemas"]["EvmGasFees"];
+        };
+        GetEvmTransactionQuoteResponse: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["EvmGasFees"];
+        };
+        GetEvmMultiTransactionQuoteResponse: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["EvmGasFees"];
+        };
+        GetUnsignedEvmTransactionResponse: {
+            serialized: components["schemas"]["ByteString"];
+        };
+        GetUnsignedEvmMultiTransactionResponse: {
+            serialized: components["schemas"]["ByteString"][];
+        };
+        BroadcastEvmTransactionRequest: {
+            signedTransaction: components["schemas"]["ByteStringInput"];
+        };
+        BroadcastEvmTransactionResponse: {
+            txHash: string;
+        };
+        GetBtcTransactionStatusResponse: {
+            status: components["schemas"]["BtcTransactionStatus"];
+        };
+        BtcOutput2: {
+            scriptPubkey: string;
+            value: string;
+        };
+        GetBtcTransactionResponse: {
+            txid: string;
+            fee: string;
+            outputs: components["schemas"]["BtcOutput2"][];
+            block?: {
+                height?: string;
+            };
+        };
+        GetBtcTransactionEstimateRequest: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
+        GetBtcTransactionEstimateRequestV2: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
+        GetBtcTransactionQuoteRequest: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
+        GetBtcTransactionQuoteRequestV2: {
+            doNotFilterOutOrdinals?: boolean;
+            allowSendingDust?: boolean;
+            changeAddress?: components["schemas"]["BtcAddressInput"];
+            consolidationAddress?: components["schemas"]["BtcAddressInput"];
+            fromAddresses: components["schemas"]["BtcAddressInput"][];
+            outputs?: components["schemas"]["BtcOutputInput"][];
+        };
+        GetBtcTransactionEstimateResponse: {
+            fees: components["schemas"]["BtcTransactionQuotes"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionEstimateResponseV2: {
+            fees: components["schemas"]["BtcTransactionQuotesV2"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionSimpleEstimateResponse: {
+            fees: components["schemas"]["BtcTransactionSimpleEstimate"];
+        };
+        GetBtcTransactionQuoteResponse: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["BtcTransactionQuotes"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetBtcTransactionQuoteResponseV2: {
+            quoteId: components["schemas"]["UUID"];
+            fees: components["schemas"]["BtcTransactionQuotesV2"];
+            ordinalsFilteredOut: boolean;
+        };
+        GetUnsignedBtcTransactionResponse: {
+            serialized: components["schemas"]["ByteString"];
+            ordinalsFilteredOut: boolean;
+        };
+        BroadcastBtcTransactionRequest: {
+            signedTransaction: components["schemas"]["ByteString"];
+        };
+        BroadcastBtcTransactionResponse: {
+            txid: string;
+        };
+    };
+    responses: {
+        GetRootSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetRootResponse"];
+            };
+        };
+        GetHealthSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetHealthResponse"];
+            };
+        };
+        GetVersionSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetVersionResponse"];
+            };
+        };
+        GetSchemaYAMLSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/yaml": components["schemas"]["GetSchemaYAMLResponse"];
+            };
+        };
+        GetSchemaJSONSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetSchemaJSONResponse"];
+            };
+        };
+        GetPubkeySuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "text/plain": components["schemas"]["GetPubkeyResponse"];
+            };
+        };
+        GetChainMetadaListSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetChainMetadataListResponse"];
+            };
+        };
+        GetChainMetadaListWithPricesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetChainMetadataListWithPricesResponse"];
+            };
+        };
+        GetWebStocksOverviewSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksOverviewResponse"];
+            };
+        };
+        GetWebStocksTableSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksTableResponse"];
+            };
+        };
+        GetWebStocksSummarySuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksSummaryResponse"];
+            };
+        };
+        GetChainMetadataSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetChainMetadataResponse"];
+            };
+        };
+        GetWebTokenPriceChartSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokenPriceChartResponse"];
+            };
+        };
+        GetWebTokenInfoPageSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokenInfoPageResponse"];
+            };
+        };
+        GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse"];
+            };
+        };
+        GetWebTrendingTokensSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTrendingTokensResponse"];
+            };
+        };
+        GetWebTokensTableSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokensTableResponse"];
+            };
+        };
+        GetWebTokensWatchlistSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTokensWatchlistResponse"];
+            };
+        };
+        GetWebTopGainersSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebTopGainersResponse"];
+            };
+        };
+        GetWebCryptoOverviewSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebCryptoOverviewResponse"];
+            };
+        };
+        GetCoinGeckoChainPreviewSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetCoinGeckoChainPreviewResponse"];
+            };
+        };
+        GetCoinGeckoAllMarketDataSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetCoinGeckoAllMarketDataResponse"];
+            };
+        };
+        GetBalancesByChainNameAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBalancesByChainNameAndAddressResponse"];
+            };
+        };
+        GetTokenBalancesByChainNamesAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetTokenBalancesByChainNamesAndAddressResponse"];
+            };
+        };
+        GetBtcTransactionStatusSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionStatusResponse"];
+            };
+        };
+        GetBtcTransactionSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionResponse"];
+            };
+        };
+        GetBtcBalanceByChainNameAndAddressesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddressesResponse"];
+            };
+        };
+        GetBtcBalanceByChainNameAndAddressSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddressResponse"];
+            };
+        };
+        GetBtcBalanceByChainNameAndAddress2Success: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcBalanceByChainNameAndAddress2Response"];
+            };
+        };
+        GetBtcTransactionFeesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionFeesResponse"];
+            };
+        };
+        GetBtcTransactionEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateResponse"];
+            };
+        };
+        GetBtcTransactionEstimateSuccessV2: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateResponseV2"];
+            };
+        };
+        GetBtcTransactionSimpleEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionSimpleEstimateResponse"];
+            };
+        };
+        GetBtcTransactionQuoteSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteResponse"];
+            };
+        };
+        GetBtcTransactionQuoteSuccessV2: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteResponseV2"];
+            };
+        };
+        GetUnsignedBtcTransactionSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetUnsignedBtcTransactionResponse"];
+            };
+        };
+        BroadcastBtcTransactionSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["BroadcastBtcTransactionResponse"];
+            };
+        };
+        GetErc20ContractMetadataSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetErc20ContractMetadataResponse"];
+            };
+        };
+        GetErc20AddressBalanceSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetErc20AddressBalanceResponse"];
+            };
+        };
+        GetErc721ContractMetadataSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetErc721ContractMetadataResponse"];
+            };
+        };
+        GetEvmTransactionStatusSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionStatusResponse"];
+            };
+        };
+        GetEvmTransactionSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionResponse"];
+            };
+        };
+        GetEvmTransactionEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionEstimateResponse"];
+            };
+        };
+        GetEvmMultiTransactionEstimateSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionEstimateResponse"];
+            };
+        };
+        GetEvmTransactionQuoteSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionQuoteResponse"];
+            };
+        };
+        GetEvmMultiTransactionQuoteSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionQuoteResponse"];
+            };
+        };
+        GetUnsignedEvmTransactionSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetUnsignedEvmTransactionResponse"];
+            };
+        };
+        GetUnsignedEvmMultiTransactionSuccess: {
+            headers: {
+                "X-MEW-API-Signature"?: string;
+                "X-MEW-API-Timestamp"?: components["schemas"]["ISO8601"];
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetUnsignedEvmMultiTransactionResponse"];
+            };
+        };
+        BroadcastEvmTransactionSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["BroadcastEvmTransactionResponse"];
+            };
+        };
+    };
+    parameters: {
+        IncludeSparkline: boolean;
+        IncludeSparklines: boolean;
+        PathCoinId: string;
+        CoinIds: string;
+        ChainId: components["schemas"]["BigIntInput"];
+        ChainName: string;
+        FilterChain: string;
+        Category: string;
+        Search: string;
+        Query: string;
+        Page: number;
+        PerPage: number;
+        SortDirection: components["schemas"]["SortDirection"];
+        WebTokenPriceChartInterval: components["schemas"]["WebTokenPriceChartInterval"];
+        WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
+        WebStocksTableSort: components["schemas"]["WebStocksTableSort"];
+        WebStocksTableCategory: components["schemas"]["WebStocksTableCategory"];
+        WebTokensWatchlistSort: components["schemas"]["WebTokensWatchlistSort"];
+        ChainNames: string;
+        AumAddressType: string;
+        AumAddressPlatform: string;
+        MewPlatform: string;
+        EvmHash: components["schemas"]["EvmHashInput"];
+        QuoteId: components["schemas"]["UUID"];
+        PriorityId: components["schemas"]["FeePriority"];
+        BtcAddress: components["schemas"]["BtcAddressInput"];
+        QueryEvmAddresses: string | string[];
+        BtcAddresses: string;
+        BtcTransactionId: components["schemas"]["BtcTransactionIdInput"];
+        EvmAddress: components["schemas"]["EvmAddressInput"];
+        AnyContractAddress: string;
+        EvmContractAddress: components["schemas"]["EvmAddressInput"];
+        Address: components["schemas"]["AnyAddressInput"];
+    };
+    requestBodies: {
+        GetEvmTransactionEstimate: {
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionEstimateRequest"];
+            };
+        };
+        GetEvmMultiTransactionEstimate: {
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionEstimateRequest"];
+            };
+        };
+        GetEvmTransactionQuote: {
+            content: {
+                "application/json": components["schemas"]["GetEvmTransactionQuoteRequest"];
+            };
+        };
+        GetEvmMultiTransactionQuote: {
+            content: {
+                "application/json": components["schemas"]["GetEvmMultiTransactionQuoteRequest"];
+            };
+        };
+        BroadcastEvmTransaction: {
+            content: {
+                "application/json": components["schemas"]["BroadcastEvmTransactionRequest"];
+            };
+        };
+        GetBtcTransactionEstimate: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateRequest"];
+            };
+        };
+        GetBtcTransactionEstimateV2: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionEstimateRequestV2"];
+            };
+        };
+        GetBtcTransactionQuote: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteRequest"];
+            };
+        };
+        GetBtcTransactionQuoteV2: {
+            content: {
+                "application/json": components["schemas"]["GetBtcTransactionQuoteRequestV2"];
+            };
+        };
+        BroadcastBtcTransaction: {
+            content: {
+                "application/json": components["schemas"]["BroadcastBtcTransactionRequest"];
+            };
+        };
+    };
+    headers: never;
+    pathItems: never;
 }
-export type $defs = Record<string, never>
+export type $defs = Record<string, never>;
 export interface operations {
-  GetRoot: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetRootSuccess']
-    }
-  }
-  GetHealth: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetHealthSuccess']
-    }
-  }
-  GetVersion: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetVersionSuccess']
-    }
-  }
-  GetSchema: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetSchemaJSONSuccess']
-    }
-  }
-  GetSchemaJSON: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetSchemaJSONSuccess']
-    }
-  }
-  GetSchemaYML: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetSchemaYAMLSuccess']
-    }
-  }
-  GetSchemaYAML: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetSchemaYAMLSuccess']
-    }
-  }
-  GetPubkey: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetPubkeySuccess']
-    }
-  }
-  GetChainMetadataList: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetChainMetadaListSuccess']
-    }
-  }
-  GetChainMetadata: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetChainMetadataSuccess']
-    }
-  }
-  GetChainMetadataListWithPrices: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetChainMetadaListWithPricesSuccess']
-    }
-  }
-  GetWebStocksOverview: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebStocksOverviewSuccess']
-    }
-  }
-  GetWebStocksTable: {
-    parameters: {
-      query?: {
-        category?: components['parameters']['WebStocksTableCategory']
-        search?: components['parameters']['Search']
-        page?: components['parameters']['Page']
-        perPage?: components['parameters']['PerPage']
-        sort?: components['parameters']['WebStocksTableSort']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebStocksTableSuccess']
-    }
-  }
-  GetWebStocksSummary: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebStocksSummarySuccess']
-    }
-  }
-  GetWebTokenPriceChartByCoin: {
-    parameters: {
-      query?: {
-        interval?: components['parameters']['WebTokenPriceChartInterval']
-      }
-      header?: never
-      path: {
-        coin: components['parameters']['PathCoinId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTokenPriceChartSuccess']
-    }
-  }
-  GetWebTokenPriceChartByContract: {
-    parameters: {
-      query?: {
-        interval?: components['parameters']['WebTokenPriceChartInterval']
-      }
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        contract: components['parameters']['AnyContractAddress']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTokenPriceChartSuccess']
-    }
-  }
-  GetWebTokenInfoPageByCoin: {
-    parameters: {
-      query?: {
-        evmAddresses?: components['parameters']['QueryEvmAddresses']
-      }
-      header?: never
-      path: {
-        coin: components['parameters']['PathCoinId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTokenInfoPageSuccess']
-    }
-  }
-  GetWeb7dBalancesBackProjectionChartByChainAndAddress: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        address: components['parameters']['Address']
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess']
-    }
-  }
-  GetWebTrendingTokens: {
-    parameters: {
-      query?: {
-        page?: components['parameters']['Page']
-        perPage?: components['parameters']['PerPage']
-        sort?: components['parameters']['SortDirection']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTrendingTokensSuccess']
-    }
-  }
-  GetWebTokensTable: {
-    parameters: {
-      query?: {
-        filterChain?: components['parameters']['FilterChain']
-        category?: components['parameters']['Category']
-        search?: components['parameters']['Search']
-        page?: components['parameters']['Page']
-        perPage?: components['parameters']['PerPage']
-        sort?: components['parameters']['WebTokensTableSort']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTokensTableSuccess']
-    }
-  }
-  GetWebTokensWatchlist: {
-    parameters: {
-      query?: {
-        filterChain?: components['parameters']['FilterChain']
-        coins?: components['parameters']['CoinIds']
-        sort?: components['parameters']['WebTokensWatchlistSort']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTokensWatchlistSuccess']
-    }
-  }
-  GetWebTopGainers: {
-    parameters: {
-      query?: {
-        page?: components['parameters']['Page']
-        perPage?: components['parameters']['PerPage']
-        sort?: components['parameters']['SortDirection']
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebTopGainersSuccess']
-    }
-  }
-  GetWebCryptoOverview: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetWebCryptoOverviewSuccess']
-    }
-  }
-  GetCoinGeckoChainPreview: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetCoinGeckoChainPreviewSuccess']
-    }
-  }
-  GetCoinGeckoAllMarketData: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetCoinGeckoAllMarketDataSuccess']
-    }
-  }
-  GetBalancesByChainNameAndAddress: {
-    parameters: {
-      query?: {
-        sparklines?: components['parameters']['IncludeSparklines']
-        type?: components['parameters']['AumAddressType']
-        platform?: components['parameters']['AumAddressPlatform']
-      }
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        address: components['parameters']['Address']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBalancesByChainNameAndAddressSuccess']
-    }
-  }
-  GetBtcBalanceByChainNameAndAddresses: {
-    parameters: {
-      query?: {
-        addresses?: components['parameters']['BtcAddresses']
-        type?: components['parameters']['AumAddressType']
-        platform?: components['parameters']['AumAddressPlatform']
-      }
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBtcBalanceByChainNameAndAddressesSuccess']
-    }
-  }
-  GetBtcBalanceByChainNameAndAddress: {
-    parameters: {
-      query?: {
-        type?: components['parameters']['AumAddressType']
-        platform?: components['parameters']['AumAddressPlatform']
-      }
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        btcAddress: components['parameters']['BtcAddress']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBtcBalanceByChainNameAndAddressSuccess']
-    }
-  }
-  GetBtcBalanceByChainNameAndAddress2: {
-    parameters: {
-      query?: {
-        type?: components['parameters']['AumAddressType']
-        platform?: components['parameters']['AumAddressPlatform']
-        sparkline?: components['parameters']['IncludeSparkline']
-      }
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        btcAddress: components['parameters']['BtcAddress']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBtcBalanceByChainNameAndAddress2Success']
-    }
-  }
-  GetBtcTransactionFees: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBtcTransactionFeesSuccess']
-    }
-  }
-  GetBtcTransactionStatus: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        txid: components['parameters']['BtcTransactionId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBtcTransactionStatusSuccess']
-    }
-  }
-  GetBtcTransaction: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        txid: components['parameters']['BtcTransactionId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetBtcTransactionSuccess']
-    }
-  }
-  GetBtcTransactionEstimate: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetBtcTransactionEstimate']
-    responses: {
-      201: components['responses']['GetBtcTransactionEstimateSuccess']
-    }
-  }
-  GetBtcTransactionEstimateV2: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetBtcTransactionEstimateV2']
-    responses: {
-      201: components['responses']['GetBtcTransactionEstimateSuccessV2']
-    }
-  }
-  GetBtcTransactionSimpleEstimate: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      201: components['responses']['GetBtcTransactionSimpleEstimateSuccess']
-    }
-  }
-  GetBtcTransactionQuote: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetBtcTransactionQuote']
-    responses: {
-      201: components['responses']['GetBtcTransactionQuoteSuccess']
-    }
-  }
-  GetBtcTransactionQuoteV2: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetBtcTransactionQuoteV2']
-    responses: {
-      201: components['responses']['GetBtcTransactionQuoteSuccessV2']
-    }
-  }
-  GetUnsignedBtcTransaction: {
-    parameters: {
-      query?: {
-        priority?: components['parameters']['PriorityId']
-      }
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-        quoteId: components['parameters']['QuoteId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetUnsignedBtcTransactionSuccess']
-    }
-  }
-  BroadcastBtcTransaction: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainName: components['parameters']['ChainName']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['BroadcastBtcTransaction']
-    responses: {
-      201: components['responses']['BroadcastBtcTransactionSuccess']
-    }
-  }
-  GetTokenBalancesByChainNamesAndAddress: {
-    parameters: {
-      query?: {
-        chains?: components['parameters']['ChainNames']
-      }
-      header?: never
-      path: {
-        address: components['parameters']['Address']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetTokenBalancesByChainNamesAndAddressSuccess']
-    }
-  }
-  GetErc20ContractMetadata: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        contract: components['parameters']['EvmContractAddress']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetErc20ContractMetadataSuccess']
-    }
-  }
-  GetErc20AddressBalance: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        contract: components['parameters']['EvmContractAddress']
-        address: components['parameters']['EvmAddress']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetErc20AddressBalanceSuccess']
-    }
-  }
-  GetErc721ContractMetadata: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        contract: components['parameters']['EvmContractAddress']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetErc721ContractMetadataSuccess']
-    }
-  }
-  GetEvmTransactionStatus: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        txHash: components['parameters']['EvmHash']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetEvmTransactionStatusSuccess']
-    }
-  }
-  GetEvmTransaction: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        txHash: components['parameters']['EvmHash']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetEvmTransactionSuccess']
-    }
-  }
-  GetEvmTransactionEstimate: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetEvmTransactionEstimate']
-    responses: {
-      201: components['responses']['GetEvmTransactionEstimateSuccess']
-    }
-  }
-  GetEvmMultiTransactionEstimate: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetEvmMultiTransactionEstimate']
-    responses: {
-      201: components['responses']['GetEvmMultiTransactionEstimateSuccess']
-    }
-  }
-  GetEvmTransactionQuote: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetEvmTransactionQuote']
-    responses: {
-      201: components['responses']['GetEvmTransactionQuoteSuccess']
-    }
-  }
-  GetUnsignedEvmTransaction: {
-    parameters: {
-      query?: {
-        priority?: components['parameters']['PriorityId']
-      }
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        quoteId: components['parameters']['QuoteId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetUnsignedEvmTransactionSuccess']
-    }
-  }
-  GetEvmMultiTransactionQuote: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['GetEvmMultiTransactionQuote']
-    responses: {
-      201: components['responses']['GetEvmMultiTransactionQuoteSuccess']
-    }
-  }
-  GetUnsignedEvmMultiTransaction: {
-    parameters: {
-      query?: {
-        priority?: components['parameters']['PriorityId']
-      }
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-        quoteId: components['parameters']['QuoteId']
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      200: components['responses']['GetUnsignedEvmMultiTransactionSuccess']
-    }
-  }
-  BroadcastEvmTransaction: {
-    parameters: {
-      query?: {
-        platform?: components['parameters']['MewPlatform']
-      }
-      header?: never
-      path: {
-        chainId: components['parameters']['ChainId']
-      }
-      cookie?: never
-    }
-    requestBody: components['requestBodies']['BroadcastEvmTransaction']
-    responses: {
-      201: components['responses']['BroadcastEvmTransactionSuccess']
-    }
-  }
+    GetRoot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetRootSuccess"];
+        };
+    };
+    GetHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetHealthSuccess"];
+        };
+    };
+    GetVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetVersionSuccess"];
+        };
+    };
+    GetSchema: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetSchemaJSONSuccess"];
+        };
+    };
+    GetSchemaJSON: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetSchemaJSONSuccess"];
+        };
+    };
+    GetSchemaYML: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetSchemaYAMLSuccess"];
+        };
+    };
+    GetSchemaYAML: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetSchemaYAMLSuccess"];
+        };
+    };
+    GetPubkey: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetPubkeySuccess"];
+        };
+    };
+    GetChainMetadataList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetChainMetadaListSuccess"];
+        };
+    };
+    GetChainMetadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetChainMetadataSuccess"];
+        };
+    };
+    GetChainMetadataListWithPrices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetChainMetadaListWithPricesSuccess"];
+        };
+    };
+    GetWebStocksOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksOverviewSuccess"];
+        };
+    };
+    GetWebStocksTable: {
+        parameters: {
+            query?: {
+                category?: components["parameters"]["WebStocksTableCategory"];
+                search?: components["parameters"]["Search"];
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["WebStocksTableSort"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksTableSuccess"];
+        };
+    };
+    GetWebStocksSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksSummarySuccess"];
+        };
+    };
+    GetWebTokenPriceChartByCoin: {
+        parameters: {
+            query?: {
+                interval?: components["parameters"]["WebTokenPriceChartInterval"];
+            };
+            header?: never;
+            path: {
+                coin: components["parameters"]["PathCoinId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokenPriceChartSuccess"];
+        };
+    };
+    GetWebTokenPriceChartByContract: {
+        parameters: {
+            query?: {
+                interval?: components["parameters"]["WebTokenPriceChartInterval"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                contract: components["parameters"]["AnyContractAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokenPriceChartSuccess"];
+        };
+    };
+    GetWebTokenInfoPageByCoin: {
+        parameters: {
+            query?: {
+                evmAddresses?: components["parameters"]["QueryEvmAddresses"];
+            };
+            header?: never;
+            path: {
+                coin: components["parameters"]["PathCoinId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokenInfoPageSuccess"];
+        };
+    };
+    GetWeb7dBalancesBackProjectionChartByChainAndAddress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                address: components["parameters"]["Address"];
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWeb7dBalancesBackProjectionChartByChainAndAddressSuccess"];
+        };
+    };
+    GetWebTrendingTokens: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["SortDirection"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTrendingTokensSuccess"];
+        };
+    };
+    GetWebTokensTable: {
+        parameters: {
+            query?: {
+                filterChain?: components["parameters"]["FilterChain"];
+                category?: components["parameters"]["Category"];
+                search?: components["parameters"]["Search"];
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["WebTokensTableSort"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokensTableSuccess"];
+        };
+    };
+    GetWebTokensWatchlist: {
+        parameters: {
+            query?: {
+                filterChain?: components["parameters"]["FilterChain"];
+                coins?: components["parameters"]["CoinIds"];
+                sort?: components["parameters"]["WebTokensWatchlistSort"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTokensWatchlistSuccess"];
+        };
+    };
+    GetWebTopGainers: {
+        parameters: {
+            query?: {
+                page?: components["parameters"]["Page"];
+                perPage?: components["parameters"]["PerPage"];
+                sort?: components["parameters"]["SortDirection"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebTopGainersSuccess"];
+        };
+    };
+    GetWebCryptoOverview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebCryptoOverviewSuccess"];
+        };
+    };
+    GetCoinGeckoChainPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetCoinGeckoChainPreviewSuccess"];
+        };
+    };
+    GetCoinGeckoAllMarketData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetCoinGeckoAllMarketDataSuccess"];
+        };
+    };
+    GetBalancesByChainNameAndAddress: {
+        parameters: {
+            query?: {
+                sparklines?: components["parameters"]["IncludeSparklines"];
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                address: components["parameters"]["Address"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBalancesByChainNameAndAddressSuccess"];
+        };
+    };
+    GetBtcBalanceByChainNameAndAddresses: {
+        parameters: {
+            query?: {
+                addresses?: components["parameters"]["BtcAddresses"];
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcBalanceByChainNameAndAddressesSuccess"];
+        };
+    };
+    GetBtcBalanceByChainNameAndAddress: {
+        parameters: {
+            query?: {
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                btcAddress: components["parameters"]["BtcAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcBalanceByChainNameAndAddressSuccess"];
+        };
+    };
+    GetBtcBalanceByChainNameAndAddress2: {
+        parameters: {
+            query?: {
+                type?: components["parameters"]["AumAddressType"];
+                platform?: components["parameters"]["AumAddressPlatform"];
+                sparkline?: components["parameters"]["IncludeSparkline"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                btcAddress: components["parameters"]["BtcAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcBalanceByChainNameAndAddress2Success"];
+        };
+    };
+    GetBtcTransactionFees: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcTransactionFeesSuccess"];
+        };
+    };
+    GetBtcTransactionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                txid: components["parameters"]["BtcTransactionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcTransactionStatusSuccess"];
+        };
+    };
+    GetBtcTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                txid: components["parameters"]["BtcTransactionId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetBtcTransactionSuccess"];
+        };
+    };
+    GetBtcTransactionEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionEstimate"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionEstimateSuccess"];
+        };
+    };
+    GetBtcTransactionEstimateV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionEstimateV2"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionEstimateSuccessV2"];
+        };
+    };
+    GetBtcTransactionSimpleEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: components["responses"]["GetBtcTransactionSimpleEstimateSuccess"];
+        };
+    };
+    GetBtcTransactionQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionQuote"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionQuoteSuccess"];
+        };
+    };
+    GetBtcTransactionQuoteV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetBtcTransactionQuoteV2"];
+        responses: {
+            201: components["responses"]["GetBtcTransactionQuoteSuccessV2"];
+        };
+    };
+    GetUnsignedBtcTransaction: {
+        parameters: {
+            query?: {
+                priority?: components["parameters"]["PriorityId"];
+            };
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+                quoteId: components["parameters"]["QuoteId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetUnsignedBtcTransactionSuccess"];
+        };
+    };
+    BroadcastBtcTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainName: components["parameters"]["ChainName"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["BroadcastBtcTransaction"];
+        responses: {
+            201: components["responses"]["BroadcastBtcTransactionSuccess"];
+        };
+    };
+    GetTokenBalancesByChainNamesAndAddress: {
+        parameters: {
+            query?: {
+                chains?: components["parameters"]["ChainNames"];
+            };
+            header?: never;
+            path: {
+                address: components["parameters"]["Address"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetTokenBalancesByChainNamesAndAddressSuccess"];
+        };
+    };
+    GetErc20ContractMetadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                contract: components["parameters"]["EvmContractAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetErc20ContractMetadataSuccess"];
+        };
+    };
+    GetErc20AddressBalance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                contract: components["parameters"]["EvmContractAddress"];
+                address: components["parameters"]["EvmAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetErc20AddressBalanceSuccess"];
+        };
+    };
+    GetErc721ContractMetadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                contract: components["parameters"]["EvmContractAddress"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetErc721ContractMetadataSuccess"];
+        };
+    };
+    GetEvmTransactionStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                txHash: components["parameters"]["EvmHash"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetEvmTransactionStatusSuccess"];
+        };
+    };
+    GetEvmTransaction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                txHash: components["parameters"]["EvmHash"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetEvmTransactionSuccess"];
+        };
+    };
+    GetEvmTransactionEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetEvmTransactionEstimate"];
+        responses: {
+            201: components["responses"]["GetEvmTransactionEstimateSuccess"];
+        };
+    };
+    GetEvmMultiTransactionEstimate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetEvmMultiTransactionEstimate"];
+        responses: {
+            201: components["responses"]["GetEvmMultiTransactionEstimateSuccess"];
+        };
+    };
+    GetEvmTransactionQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetEvmTransactionQuote"];
+        responses: {
+            201: components["responses"]["GetEvmTransactionQuoteSuccess"];
+        };
+    };
+    GetUnsignedEvmTransaction: {
+        parameters: {
+            query?: {
+                priority?: components["parameters"]["PriorityId"];
+            };
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                quoteId: components["parameters"]["QuoteId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetUnsignedEvmTransactionSuccess"];
+        };
+    };
+    GetEvmMultiTransactionQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetEvmMultiTransactionQuote"];
+        responses: {
+            201: components["responses"]["GetEvmMultiTransactionQuoteSuccess"];
+        };
+    };
+    GetUnsignedEvmMultiTransaction: {
+        parameters: {
+            query?: {
+                priority?: components["parameters"]["PriorityId"];
+            };
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+                quoteId: components["parameters"]["QuoteId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetUnsignedEvmMultiTransactionSuccess"];
+        };
+    };
+    BroadcastEvmTransaction: {
+        parameters: {
+            query?: {
+                platform?: components["parameters"]["MewPlatform"];
+            };
+            header?: never;
+            path: {
+                chainId: components["parameters"]["ChainId"];
+            };
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["BroadcastEvmTransaction"];
+        responses: {
+            201: components["responses"]["BroadcastEvmTransactionSuccess"];
+        };
+    };
 }

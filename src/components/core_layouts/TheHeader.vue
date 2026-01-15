@@ -61,9 +61,10 @@
           use-vue-router
           has-on-Hover
         >
-          <template #select-button="{ toggleSelect }">
+          <template #select-button="{ toggleSelect, openSelect }">
             <button
               class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
+              :class="{ 'bg-grey-5': openSelect }"
               @click="toggleSelect"
             >
               {{ $t('common.more') }}
@@ -77,14 +78,14 @@
         <!-- Create wallet button -->
         <router-link
           v-if="!isWalletConnected && isAccessPage"
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
           class="px-4 bg-black text-white h-8 sm:h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('common.create_wallet') }}
         </router-link>
         <router-link
           v-if="!isXS && !isWalletConnected && !isAccessPage"
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
           class="px-4 py-2 border-1 border-black text-black h-8 sm:h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
         >
           {{ $t('common.create_wallet') }}
@@ -131,7 +132,11 @@ import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
+import {
+  ROUTES_MAIN,
+  ROUTES_ACCESS,
+  ROUTES_CREATE_WALLET,
+} from '@/router/routeNames'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
@@ -192,12 +197,12 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
     {
-      title: t('verify-message'),
-      routeName: ROUTES_MAIN.VERIFY_MESSAGE.NAME,
-    },
-    {
       title: t('sign-message'),
       routeName: ROUTES_MAIN.SIGN_MESSAGE.NAME,
+    },
+    {
+      title: t('verify-message'),
+      routeName: ROUTES_MAIN.VERIFY_MESSAGE.NAME,
     },
     {
       title: t('deploy-contract'),

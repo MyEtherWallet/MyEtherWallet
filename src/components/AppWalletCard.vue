@@ -169,7 +169,7 @@ import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useRecentAddressStore } from '@/stores/recentAddressStore'
-import { WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
+import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 
 const { t } = useI18n()
 const emit = defineEmits<{
@@ -272,6 +272,7 @@ const disconnectWallet = () => {
 
 const deleteWallet = () => {
   const recentAddressStore = useRecentAddressStore()
+
   recentAddressStore.removeWallet(
     walletAddress.value as string,
     selectedChain.value!,
@@ -279,6 +280,7 @@ const deleteWallet = () => {
   if (!isWatchOnly.value) {
     disconnectWallet()
   }
+  emit('close')
 }
 
 /** -------------------------------
@@ -310,7 +312,7 @@ const switchAddress = () => {
       ? (viewIndexByType[currentWalletType] as number)
       : 0
 
-  setCurrentView(WALLET_VIEWS[index])
+  setCurrentView(ACCESS_WALLET_VIEWS[index])
   emit('close')
   openAccessDialog()
 }
