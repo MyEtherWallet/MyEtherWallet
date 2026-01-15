@@ -1,54 +1,56 @@
-import { toChecksumAddress as toChecksumAddressWeb3 } from 'web3-utils'
-import { isAddress as isAddressLib, isHexStrict } from 'web3-validator'
-import {
-  toChecksumAddress as toChecksumAddr,
-  isValidChecksumAddress,
-} from '@ethereumjs/util'
 import { useGlobalStore } from '@/stores/globalStore'
-import { storeToRefs } from 'pinia'
+import { isAddress as isAddressLib, checksumAddress, type Address } from 'viem'
 
+/**
+ * Validates if the given string is a valid Ethereum address.
+ * Includes special handling for Rootstock (RSK) checksummed addresses (EIP-1191).
+ */
 const isAddress = (address: string): boolean => {
   if (!address) return false
-  const store = useGlobalStore()
-  const { selectedNetwork } = storeToRefs(store)
 
-  // TODO: change to global definition instead of hardcoding
-  if (selectedNetwork.value === 'ROOTSTOCK') {
-    // check if it has the basic requirements of an address
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-      return false
-      // If it's ALL lowercase or ALL upppercase
-    } else if (
-      /^(0x|0X)?[0-9a-f]{40}$/.test(address) ||
-      /^(0x|0X)?[0-9A-F]{40}$/.test(address)
+  const { selectedNetwork } = useGlobalStore()
+
+  if (selectedNetwork === 'ROOTSTOCK') {
+    // Basic hex requirement for 20-byte address
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) return false
+
+    // If it's ALL lowercase or ALL uppercase, it's valid as a non-checksummed address
+    const stripped = address.replace(/^0x/i, '')
+    if (
+      stripped === stripped.toLowerCase() ||
+      stripped === stripped.toUpperCase()
     ) {
       return true
-      // Otherwise check each case
     }
 
-    return isValidChecksumAddress(address, 30)
+    // Perform RSK specific checksum verification (ChainID 30)
+    try {
+      return (
+        checksumAddress(`0x${stripped.toLowerCase()}` as Address, 30) ===
+        address
+      )
+    } catch {
+      return false
+    }
   }
-  return (
-    address !== '' &&
-    isHexStrict(address) &&
-    isAddressLib(toChecksumAddr(address))
-  )
+
+  return isAddressLib(address)
 }
 
+/**
+ * Returns the checksummed version of the given address.
+ * Automatically detects if Rootstock checksumming (ChainID 30) should be applied.
+ */
 const toChecksumAddress = (address: string): string => {
-  const store = useGlobalStore()
-  const { selectedNetwork } = storeToRefs(store)
+  if (!address) return ''
+  const { selectedNetwork } = useGlobalStore()
+  const chainId = selectedNetwork === 'ROOTSTOCK' ? 30 : undefined
 
-  /**
-   * ethereumjs/util works differently than web3-utils
-   * because of the chainID parameter being added to the checksum function
-   *
-   */
-  // TODO: change to global definition instead of hardcoding
-  if (selectedNetwork.value === 'ROOTSTOCK') {
-    return toChecksumAddr(address, 30)
+  try {
+    return checksumAddress(address as Address, chainId)
+  } catch {
+    return address
   }
-  return toChecksumAddressWeb3(address)
 }
 
 export { isAddress, toChecksumAddress }

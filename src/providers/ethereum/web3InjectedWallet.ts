@@ -1,10 +1,9 @@
 import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { WalletType, type HexPrefixedString } from '../types'
-import { hexToBytes } from '@ethereumjs/util'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
-import { fromHex, toHex } from 'viem'
+import { fromHex, hexToBytes, toHex } from 'viem'
 import type { Provider as Eip6963Provider } from '@/stores/providerStore.ts'
 
 class Web3InjectedWallet extends BaseEvmWallet {

@@ -153,7 +153,7 @@ const eip1559Params = (
 }
 
 const calculateChainIdFromV = (v: string) => {
-  const sigV = hexToBigInt(v)
+  const sigV = hexToBigInt(v as `0x${string}`)
   const chainId = Math.floor(Number((sigV - BigInt(35)) / BigInt(2)))
   if (chainId < 0) return 0
   return chainId

@@ -2,17 +2,15 @@ import { bytesToHex } from 'web3-utils'
 import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
-import { fromRpcSig, hexToBytes } from '@ethereumjs/util'
 import { type PostSignedTransaction } from '../common/types'
-
 import BaseEvmWallet from './baseEvmWallet'
 import { WalletType, type HexPrefixedString } from '../types'
-
 import type { PathType } from '@/stores/derivationStore'
 import type { NetworkNames } from '@enkryptcom/types'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import { chainToEnum } from './chainToEnum'
+import { hexToBytes, parseSignature } from 'viem'
 
 export default class EvmHardwareWallet extends BaseEvmWallet {
   private address: HexPrefixedString
@@ -65,11 +63,11 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
         },
         wallet: this.walletType,
       })) as HexPrefixedString
-      const rpcSig = fromRpcSig(walletSig)
+      const rpcSig = parseSignature(walletSig)
       const signedTx = tx.addSignature(
-        BigInt(rpcSig.v),
-        rpcSig.r,
-        rpcSig.s,
+        rpcSig.v!,
+        hexToBytes(rpcSig.r),
+        hexToBytes(rpcSig.s),
         true,
       )
       return Promise.resolve({
@@ -99,7 +97,10 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     return this.hwWalletInstance
   }
 
-  override async SignMessage(options: { message: string; options?: unknown }): Promise<HexPrefixedString> {
+  override async SignMessage(options: {
+    message: string
+    options?: unknown
+  }): Promise<HexPrefixedString> {
     try {
       const walletSigned = await this.hwWalletInstance.signPersonalMessage({
         message: Buffer.from(options.message),
@@ -109,7 +110,8 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
           path: this.path.path,
         },
         wallet: this.walletType,
-        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+        networkName: (chainToEnum[this.getProvider()] ??
+          'BTC') as unknown as NetworkNames,
       })
       return Promise.resolve(walletSigned as HexPrefixedString)
     } catch (e) {

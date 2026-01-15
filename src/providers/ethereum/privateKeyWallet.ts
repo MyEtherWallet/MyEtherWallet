@@ -1,23 +1,21 @@
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { Hardfork } from '@ethereumjs/common'
-import {
-  bytesToHex,
-  privateToAddress,
-  toChecksumAddress,
-  hexToBytes,
-} from '@ethereumjs/util'
 import BaseEvmWallet from './baseEvmWallet'
 import { type PostSignedTransaction } from '../common/types'
 import { WalletType, type HexPrefixedString } from '../types'
+import { bytesToHex, hexToBytes, toHex } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { toHex } from 'viem'
 
 class PrivateKeyWallet extends BaseEvmWallet {
   private privKey: Uint8Array
   private walletType: WalletType
 
-  constructor(privateKey: Uint8Array, chainId: string, walletType?: WalletType) {
+  constructor(
+    privateKey: Uint8Array,
+    chainId: string,
+    walletType?: WalletType,
+  ) {
     super(chainId)
     this.privKey = privateKey
     this.walletType = walletType || WalletType.PRIVATE_KEY
@@ -63,13 +61,15 @@ class PrivateKeyWallet extends BaseEvmWallet {
     options?: unknown
   }): Promise<HexPrefixedString> {
     const account = privateKeyToAccount(bytesToHex(this.privKey))
-    const sig = await account.signMessage({ message: { raw: toHex(options.message) as HexPrefixedString } })
+    const sig = await account.signMessage({
+      message: { raw: toHex(options.message) as HexPrefixedString },
+    })
 
     return Promise.resolve(sig)
   }
   override getAddress(): Promise<string> {
     return Promise.resolve(
-      toChecksumAddress(bytesToHex(privateToAddress(this.privKey))),
+      privateKeyToAccount(bytesToHex(this.privKey)).address,
     )
   }
 }

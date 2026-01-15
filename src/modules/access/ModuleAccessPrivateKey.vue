@@ -54,7 +54,6 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { isPrivateKey } from '@/modules/access/common/helpers'
 import AppInput from '@/components/AppInput.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
-import { hexToBytes } from '@ethereumjs/util'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { decode } from 'wif'
@@ -63,6 +62,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useAccessStore } from '@/stores/accessStore'
+import { hexToBytes } from 'viem'
 
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore

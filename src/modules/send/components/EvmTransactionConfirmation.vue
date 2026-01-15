@@ -271,9 +271,9 @@ import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import { FeeMarketEIP1559Transaction, LegacyTransaction } from '@ethereumjs/tx'
 import { commonGenerator } from '@/providers/ethereum/utils'
 import { Hardfork } from '@ethereumjs/common'
-import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
+import { bytesToHex, hexToBytes } from 'viem'
 
 interface EvmTxType {
   toAddress: string
@@ -416,7 +416,7 @@ const getDetails = () => {
     try {
       const common = commonGenerator(BigInt(chainId), Hardfork.London)
       const tx = FeeMarketEIP1559Transaction.fromSerializedTx(
-        hexToBytes(serializedTx),
+        hexToBytes(serializedTx as `0x${string}`),
         { common },
       )
       return tx
@@ -424,9 +424,12 @@ const getDetails = () => {
       // on fail, assume legacy tx
     } catch {
       const common = commonGenerator(BigInt(chainId), Hardfork.Berlin)
-      const tx = LegacyTransaction.fromSerializedTx(hexToBytes(serializedTx), {
-        common,
-      })
+      const tx = LegacyTransaction.fromSerializedTx(
+        hexToBytes(serializedTx as `0x${string}`),
+        {
+          common,
+        },
+      )
       return tx
     }
   }

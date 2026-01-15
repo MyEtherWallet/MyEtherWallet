@@ -87,7 +87,6 @@ import type {
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { abi } from './tokenAbi'
 import { type HexPrefixedString } from '@/providers/types'
-import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -121,6 +120,7 @@ const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 // stored inputs
 import { useInputStore } from '@/stores/inputStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
+import { hexToBigInt } from 'viem'
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
@@ -254,7 +254,7 @@ watch(
     if (!gasFees.value?.fees || !gasFees.value.fees[selectedFee.value]) return
     const _fee = gasFees.value.fees[selectedFee.value]
     gasPrice.value = hexToBigInt(
-      _fee.nativeValue ?? _fee.nativeFeeTotal,
+      (_fee.nativeValue as `0x${string}`) ?? _fee.nativeFeeTotal,
     ).toString()
   },
 )

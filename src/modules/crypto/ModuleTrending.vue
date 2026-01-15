@@ -51,6 +51,7 @@ import type {
 } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 import TokenRow from './components/overview/TokenRow.vue'
+import { getAPIPath } from '@/utils/constructAPIPath'
 
 const { useMEWFetch } = useFetchMewApi()
 const toastStore = useToastStore()
@@ -61,7 +62,9 @@ const apiPage = ref(1)
 const apiTotalItems = ref(1)
 
 const url = computed(() => {
-  return `https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`
+  return getAPIPath(
+    `/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`,
+  )
 })
 const fetchUrl = url
 const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {

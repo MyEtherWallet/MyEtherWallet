@@ -1,12 +1,11 @@
 import { FeeMarketEIP1559Transaction } from '@ethereumjs/tx'
 import { commonGenerator } from './utils'
 import { WalletType, type HexPrefixedString } from '../types'
-import { hexToBytes } from '@ethereumjs/util'
 import type { Config, Connector } from '@wagmi/core'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
 import { sendTransaction, signMessage } from '@wagmi/core'
-import { fromHex, stringToHex } from 'viem'
+import { fromHex, hexToBytes, stringToHex } from 'viem'
 import { type SendTransactionParameters } from '@wagmi/core'
 
 class WagmiWallet extends BaseEvmWallet {
@@ -82,7 +81,6 @@ class WagmiWallet extends BaseEvmWallet {
       return res
     })
   }
-
 
   override async SignMessage(options: {
     message: string
