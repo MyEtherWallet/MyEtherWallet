@@ -74,8 +74,8 @@ const displayPoints = computed(() =>
 
 const lineColor = computed(() => {
   if (props.percentChange && props.percentChange !== 0)
-    return props.percentChange < 0 ? 'rgba(228,12,91,1)' : 'rgba(5,192,165,1)'
-  return 'rgb(0,90,229,1)'
+    return props.percentChange < 0 ? '#E40C5B' : '#05C0A5'
+  return '#005AE5'
 })
 
 const yBounds = computed(() => {
@@ -87,8 +87,8 @@ const yBounds = computed(() => {
   const max = Math.max(...arr)
   const span = Math.max(max - min, 1e-9)
   return {
-    min: props.yMin ?? min - span * 0.05,
-    max: props.yMax ?? max + span * 0.05,
+    min: props.yMin ?? min - span * 0.1,
+    max: props.yMax ?? max + span * 0.1,
   }
 })
 
@@ -100,9 +100,22 @@ const chartData = computed(() => ({
       borderColor: lineColor.value,
       borderWidth: 1.5,
       pointRadius: 0,
-      tension: 0.5, // low smoothing to keep detail
+      tension: 0.4,
       fill: props.fill ? 'start' : false,
-      backgroundColor: props.fill ? lineColor.value + '22' : 'transparent',
+      backgroundColor: (context: any) => {
+        const chart = context.chart
+        const { ctx, chartArea } = chart
+        if (!chartArea || !props.fill) return 'transparent'
+        const gradient = ctx.createLinearGradient(
+          0,
+          chartArea.top,
+          0,
+          chartArea.bottom,
+        )
+        gradient.addColorStop(0, lineColor.value + '40') // 25% opacity
+        gradient.addColorStop(1, lineColor.value + '00') // 0% opacity
+        return gradient
+      },
     },
   ],
 }))
@@ -115,11 +128,10 @@ const chartOptions = computed(() => ({
     x: { display: false },
     y: {
       display: false,
-      suggestedMin: yBounds.value.min,
-      suggestedMax: yBounds.value.max,
+      min: yBounds.value.min,
+      max: yBounds.value.max,
     },
   },
-  elements: { line: { capBezierPoints: true } },
 }))
 </script>
 

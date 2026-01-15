@@ -1,10 +1,15 @@
 <template>
-  <div class="pt-3 xs:pt-10">
-    <h2 class="text-info font-semibold uppercase text-sm">
+  <div class="pt-3 sm:pt-5 lg:pt-7">
+    <h2 class="text-info font-bold uppercase text-s-12 mb-1">
       Step {{ activeStep + 1 }}
     </h2>
-    <p class="!font-bold text6">{{ description.title }}</p>
-    <p v-if="description.description" class="text-sm">
+    <h3 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120">
+      {{ description.title }}
+    </h3>
+    <p
+      v-if="description.description"
+      class="text-s-14 sm:text-s-16 text-info leading-p-150"
+    >
       {{ description.description }}
     </p>
   </div>

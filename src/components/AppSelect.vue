@@ -3,7 +3,11 @@
     <label for="select" class="sr-only">
       {{ props.placeholder }}
     </label>
-    <slot name="select-button" :toggleSelect="toggleSelect">
+    <slot
+      name="select-button"
+      :toggleSelect="toggleSelect"
+      :openSelect="openSelect"
+    >
       <button class="rounded-full hoverNoBG p-2" @click="toggleSelect">
         <div class="flex items-center">
           <span>{{ selected ? selected.label : '' }}</span>
@@ -23,19 +27,22 @@
         role="listbox"
         aria-label="Select an option"
         v-show="openSelect"
-        class="absolute focus:outline-none z-10"
+        class="absolute top-full focus:outline-none z-[100] pt-2"
         :class="position"
       >
         <div
-          class="px-2 py-3 min-w-60 max-w-full bg-white shadow-button rounded-xl"
+          class="p-1.5 min-w-[200px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
         >
-          <div v-if="!useVueRouter" class="grid grid-cols-1">
+          <div v-if="!useVueRouter" class="grid grid-cols-1 gap-1">
             <button
               v-for="option in options"
               :key="option.value"
               :class="[
-                { 'bg-grey-5': selected && option.value === selected.value },
-                'flex items-center p-3 hoverNoBG rounded-lg',
+                {
+                  'bg-grey-5 text-primary':
+                    selected && option.value === selected.value,
+                },
+                'flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors',
               ]"
               role="option"
               :id="option.value"
@@ -44,16 +51,16 @@
               {{ option.label }}
               <check-icon
                 v-if="selected && option.value === selected.value"
-                class="ml-auto w-5 h-5 text-primary"
+                class="ml-auto w-4 h-4 text-primary"
               />
             </button>
           </div>
-          <div v-else class="grid grid-cols-1">
+          <div v-else class="grid grid-cols-1 gap-1">
             <router-link
               v-for="option in options"
               :key="option.value"
-              class="flex items-center p-3 hoverNoBG rounded-lg"
-              active-class="bg-grey-5"
+              class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+              active-class="bg-grey-5 !text-primary"
               role="option"
               :id="option.value"
               :to="{ name: option.value }"
@@ -94,7 +101,7 @@
  *
  */
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/solid'
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { watch, onBeforeUnmount } from 'vue'
 import { onClickOutside, useElementHover } from '@vueuse/core'
@@ -166,6 +173,10 @@ const toggleSelect = () => {
     targetValue.value = target.value
   } else {
     targetValue.value = null
+    if (timeout.value) {
+      clearTimeout(timeout.value)
+      timeout.value = null
+    }
   }
 }
 
@@ -175,6 +186,10 @@ const toggleSelect = () => {
 onClickOutside(targetValue, () => {
   targetValue.value = null
   openSelect.value = false
+  if (timeout.value) {
+    clearTimeout(timeout.value)
+    timeout.value = null
+  }
 })
 
 /**
@@ -199,10 +214,16 @@ const timeout = ref<NodeJS.Timeout | null>(null)
 watch(isHovered, isHovering => {
   if (props.hasOnHover) {
     if (isHovering) {
+      if (timeout.value) {
+        clearTimeout(timeout.value)
+        timeout.value = null
+      }
       openSelect.value = true
+      targetValue.value = target.value
     } else {
       timeout.value = setTimeout(() => {
         openSelect.value = false
+        targetValue.value = null
       }, 600)
     }
   }

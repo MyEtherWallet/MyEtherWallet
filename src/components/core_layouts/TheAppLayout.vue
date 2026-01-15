@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen relative flex overflow-y-auto">
+  <div class="h-screen relative flex overflow-hidden">
     <the-header class="basis-full" />
 
     <!-- Background -->
@@ -23,12 +23,15 @@
     </teleport>
     <div
       :class="[
-        isOpenSideMenu ? 'xl:mr-[445px]' : 'xl:mr-[70px]',
+        isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
-        'flex w-full mr-[60px] xs:mr-[70px]',
-        isOverflowHidden ? 'overflow-hidden' : 'overflow-y-auto',
+        'flex w-full mr-[72px] xs:mr-[80px]',
+        isOverflowHidden
+          ? 'overflow-hidden'
+          : 'overflow-y-auto no-scrollbar scrollbar-hide',
       ]"
     >
+      <div :class="['absolute w-full', backgroundClass]"></div>
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
@@ -97,13 +100,14 @@ const route = useRoute()
 
 const backgroundClass = computed(() => {
   if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
-    return 'home-not-connected-background'
+    return 'home-not-connected-background h-[800px] '
   } else if (
     route.name === ROUTES_ACCESS.ACCESS.NAME ||
     route.name === ROUTES_MAIN.CRYPTO.NAME ||
     route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
     route.name === TOKEN_INFO_ROUTE_NAMES.home ||
-    route.name === ROUTES_MAIN.HOME.NAME
+    route.name === ROUTES_MAIN.HOME.NAME ||
+    route.name === ROUTES_MAIN.STOCKS.NAME
   ) {
     return ''
   } else {

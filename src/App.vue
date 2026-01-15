@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative h-screen overflow-hidden">
     <welcome-dialog
       v-if="!isDevMode"
       @close-welcome-dialog="showFeedbackToast"
@@ -7,6 +7,7 @@
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
+    <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
   </div>
 </template>
 
@@ -20,15 +21,14 @@ import { useProviderStore } from '@/stores/providerStore'
 import { onMounted, watch, ref } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
+import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
-
 import useBalanceHandler from './utils/balanceHandler'
 
 const dialogStore = useDialogStore()
@@ -89,12 +89,14 @@ const { addProvider } = providerStore
 const { setChainData } = chainStore
 
 const { useMEWFetch } = useFetchMewApi()
-const { data, onFetchResponse } = useMEWFetch('/chains').get().json<ChainsRaw>()
+const { data, onFetchResponse } = useMEWFetch('/v1/chains/with-prices')
+  .get()
+  .json<ChainsRaw>()
 
 onFetchResponse(() => {
-  setChainData(data.value?.result || [])
+  setChainData(data.value ?? [])
   isLoadingComplete.value = true
-  return data.value?.result || []
+  return data.value ?? []
 })
 
 watch(

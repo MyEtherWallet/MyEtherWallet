@@ -16,13 +16,11 @@
       class="flex flex-nowrap items-center"
     >
       <div
-        class="min-w-7 h-7 box-border rounded-full border border-1 border-grey-outline mr-2 overflow-hidden"
+        class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
       >
         <img
-          class="w-7 h-7 rounded-full"
+          class="w-full h-full object-cover"
           :src="imageReplacer(selectedToken)"
-          width="28"
-          height="28"
           alt=""
         />
       </div>
@@ -36,45 +34,47 @@
   </button>
   <app-dialog
     v-model:is-open="showAllTokens"
+    class="w-full sm:w-[460px] sm:mx-auto"
     :title="$t('select_token.title')"
-    class="sm:max-w-[500px] sm:mx-auto"
+    has-content-gutter
   >
     <template #content>
       <div
-        class="h-[80vh] xs:h-[500px] !overflow-y-scroll px-3 sm:px-7"
+        class="min-h-[500px] max-h-[80vh] xs:max-h-[500px] pb-6 overflow-y-auto mew-scrollbar"
         ref="scrollContainer"
       >
-        <div class="sticky top-0 bg-white z-10 rounded-b-4xl pt-2 xs:pt-0">
+        <div class="sticky top-0 bg-white z-20 pt-2">
           <div
-            class="flex gap-4 justify-between items-center mb-4 bg-surface rounded-full p-1"
+            class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
           >
             <app-search-input
               v-model="searchInput"
               class="grow"
+              bg-class="bg-transparent"
               :placeholder="$t('select_token.search')"
             />
             <!--SORT-->
             <app-pop-up-menu :placeholder="$t('common.sort')">
               <template #menu-button="{ toggleMenu }">
                 <button
-                  class="flex items-center px-2 py-2 text-s-15 font-medium hoverNoBG rounded-full"
+                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
                   @click="toggleMenu"
                 >
-                  <span class="mr-2 ml-1">{{ activeSortValue }}</span>
+                  <span class="mr-2">{{ activeSortValue }}</span>
                   <ArrowUpIcon
                     v-if="activeSortDirection === SortDirection.DESC"
-                    class="w-4 h-4"
+                    class="w-4 h-4 shrink-0"
                   />
-                  <ArrowDownIcon v-else class="w-4 h-4" />
+                  <ArrowDownIcon v-else class="w-4 h-4 shrink-0" />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
-                <div class="py-4 flex flex-col">
+                <div class="py-4 flex flex-col w-[200px] gap-1">
                   <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3">
+                    <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
                       {{ $t('common.sort_by') }}
                     </p>
-                    <app-btn-icon-close @click="toggleMenu" />
+                    <app-btn-icon-close @close="toggleMenu" />
                   </div>
                   <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
                   <button
@@ -82,7 +82,7 @@
                     :key="option.value"
                     :class="[
                       option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium',
+                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
                     ]"
                     :id="option.value"
                     @click="setActiveSort(option.value)"
@@ -90,7 +90,7 @@
                     <p class="capitalize">{{ option.label }}</p>
                     <div
                       v-if="activeSortValue === option.value"
-                      class="ml-auto"
+                      class="ml-auto pl-2"
                     >
                       <ArrowUpIcon
                         v-if="activeSortDirection === SortDirection.DESC"
@@ -103,37 +103,56 @@
               </template>
             </app-pop-up-menu>
           </div>
+          <div class="h-px bg-grey-outline w-full mb-2"></div>
         </div>
 
-        <div v-if="searchResults.length" class="flex flex-col">
+        <div v-if="searchResults.length" class="flex flex-col gap-1">
           <button
             v-for="token in searchResults"
             :key="token.address"
-            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-16"
+            class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
+            :class="[
+              token.address === selectedToken?.address
+                ? '!bg-mewBg'
+                : 'bg-transparent hoverBGWhite',
+            ]"
             @click="setSelectedToken(token)"
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <img
-                  class="mr-4 w-7 h-7 rounded-full overflow-hidden"
-                  :src="imageReplacer(token)"
-                  alt="token icon"
+                <app-token-logo
+                  :url="token.logoURI"
+                  :symbol="token.symbol"
+                  class="shrink-0 mr-4"
                 />
+
                 <div class="text-left">
-                  <h2>{{ token.name }}</h2>
-                  <p class="text-info text-sm">
+                  <app-tooltip v-if="token.name.length > 10" :text="token.name">
+                    <h2
+                      class="font-medium text-s-17 text-black whitespace-nowrap"
+                    >
+                      {{ truncate(token.name, 10) }}
+                    </h2>
+                  </app-tooltip>
+                  <h2
+                    v-else
+                    class="font-medium text-s-17 text-black whitespace-nowrap"
+                  >
+                    {{ token.name }}
+                  </h2>
+                  <p class="text-s-14">
                     {{ getBalance(token?.balance || '0') }}
-                    <span class="uppercase text-xs">
+                    <span class="uppercase text-s-12 text-info">
                       {{ truncate(token.symbol, 7) }}</span
                     >
                   </p>
                 </div>
               </div>
-              <div v-if="token.price !== 0">
-                <p class="text-medium">
+              <div v-if="token.price !== 0" class="text-right">
+                <p class="font-medium text-black">
                   $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
-                <p class="text-info text-xs">
+                <p class="text-info text-s-12">
                   @ ${{ formatFiatValue(token.price || 0).value }}
                 </p>
               </div>
@@ -205,6 +224,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,
@@ -214,6 +234,7 @@ import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 import { useScroll } from '@vueuse/core'
+import AppTokenLogo from './AppTokenLogo.vue'
 
 const props = defineProps({
   selectedToken: {
@@ -311,20 +332,25 @@ enum SortDirection {
   DESC = 'desc',
 }
 
-const activeSortValue = ref<SortValueString>(SortValueString.NAME)
+const activeSortValue = ref<SortValueString>(SortValueString.USD)
 const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
-    // Toggle direction if the same sort value is clicked
     activeSortDirection.value =
       activeSortDirection.value === SortDirection.ASC
         ? SortDirection.DESC
         : SortDirection.ASC
   } else {
-    // Set new sort value and default to ascending direction
     activeSortValue.value = value
-    activeSortDirection.value = SortDirection.ASC
+    const isNumericSort = [
+      SortValueString.PRICE,
+      SortValueString.USD,
+      SortValueString.BALANCE,
+    ].includes(value)
+    activeSortDirection.value = isNumericSort
+      ? SortDirection.DESC
+      : SortDirection.ASC
   }
 }
 
@@ -332,10 +358,6 @@ interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
 }
 
-/**
- * if searchInput is empty, sort the paginatedItems based on the activeSortValue and activeSortDirection
- * else return search results from all of the tokens
- */
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   const allItems = tokens.value.map(token => {
     const usdBalance = BigNumber(
@@ -343,61 +365,33 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     ).toNumber()
     return {
       ...token,
-      usd_balance: usdBalance, // Add usd_balance to each token
-      price: token.price || 0, // Ensure price is defined
+      usd_balance: usdBalance,
+      price: token.price || 0,
     }
   })
 
-  const paginatedItems = paginatedTokens.value.map(token => {
-    const usdBalance = BigNumber(
-      BigNumber(token.price || 0).times(BigNumber(token.balance ?? '0')),
-    ).toNumber()
-    return {
-      ...token,
-      usd_balance: usdBalance, // Add usd_balance to each token
-      price: token.price || 0, // Ensure price is defined
-    }
-  })
-
-  if (!searchInput.value) {
-    if (activeSortValue.value === SortValueString.NAME) {
-      return sortObjectArrayString(
-        paginatedItems,
-        'name',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.SYMBOL) {
-      return sortObjectArrayString(
-        paginatedItems,
-        'symbol',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.PRICE) {
-      return sortObjectArrayNumber(
-        paginatedItems,
-        'price',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.USD) {
-      return sortObjectArrayNumber(
-        paginatedItems,
-        'usd_balance',
-        activeSortDirection.value,
-      )
-    }
-    if (activeSortValue.value === SortValueString.BALANCE) {
-      return sortObjectArrayNumber(
-        paginatedItems,
-        'balance',
-        activeSortDirection.value,
-      )
-    }
-    return paginatedItems
+  const sortKeyMap: Record<
+    SortValueString,
+    { key: keyof TokenBalanceWithUsd; type: 'string' | 'number' }
+  > = {
+    [SortValueString.NAME]: { key: 'name', type: 'string' },
+    [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
+    [SortValueString.PRICE]: { key: 'price', type: 'number' },
+    [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
+    [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
   }
-  return searchArrayByKeysStr(allItems, ['name', 'symbol'], searchInput.value)
+
+  const { key, type } = sortKeyMap[activeSortValue.value]
+  const sorted =
+    type === 'string'
+      ? sortObjectArrayString(allItems, key, activeSortDirection.value)
+      : sortObjectArrayNumber(allItems, key, activeSortDirection.value)
+
+  if (searchInput.value) {
+    return searchArrayByKeysStr(sorted, ['name', 'symbol'], searchInput.value)
+  }
+
+  return sorted.slice(0, endingPagination.value)
 })
 
 const loadMoreItems = () => {

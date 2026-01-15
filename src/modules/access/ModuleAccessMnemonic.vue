@@ -1,10 +1,10 @@
 <template>
   <div class="flex justify-center w-full">
     <div
-      class="max-w-[624px] flex flex-col items-center justify-center sm:pt-1"
+      class="max-w-[640px] w-full flex flex-col items-center justify-center sm:pt-1"
     >
-      <app-not-recommended />
-      <app-sheet class="mt-1">
+      <app-not-recommended class="mb-4 w-full" />
+      <app-sheet sheet-class="px-4 sm:px-6 lg:px-10">
         <app-stepper
           :steps="steps"
           :description="stepDescription"
@@ -20,7 +20,7 @@
             <app-text-field
               v-model="mnemonic"
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
-              class="mt-2 xs:mt-4 text-center"
+              class="mt-4"
               is-required
               :error-message="
                 hasMnemonicError
@@ -29,13 +29,20 @@
               "
             />
             <div
-              class="flex items-center justify-between gap-4 mt-4 xs:mt-7 mb-7 w-full"
+              class="flex items-center justify-between gap-4 mt-8 mb-8 w-full px-1"
             >
-              <p class="font-medium text-s-14 xs:text-s-16 leading-p-130">
-                {{
-                  $t('access_wallet_recovery_phrase.do_you_have_an_extra_word')
-                }}
-              </p>
+              <div>
+                <p class="font-bold text-s-16 tracking-tight leading-none mb-1">
+                  {{
+                    $t(
+                      'access_wallet_recovery_phrase.do_you_have_an_extra_word',
+                    )
+                  }}
+                </p>
+                <p class="text-s-14 text-info italic">
+                  Also known as "Passphrase" or "13th/25th word"
+                </p>
+              </div>
               <app-toggle
                 v-model="hasExtraWord"
                 :label="extraWordToggleString"
@@ -43,7 +50,7 @@
             </div>
             <!-- Extra Word -->
             <expand-transition>
-              <div v-if="hasExtraWord">
+              <div v-if="hasExtraWord" class="mb-8">
                 <app-input
                   v-model="extraWord"
                   :placeholder="
@@ -82,35 +89,35 @@
               @nextpage="setPage(true)"
               @prevpage="setPage(false)"
             />
-            <div class="flex items-center flex-col justify-center">
+            <div
+              class="flex flex-col sm:flex-row-reverse items-center justify-center gap-3 mt-10 lg:mt-14"
+            >
               <app-base-button
                 @click="access"
                 :disabled="!isValid"
-                class="mt-10"
+                class="w-full xs:w-auto xs:min-w-[180px]"
                 :is-loading="isUnlockingWallet"
               >
                 {{ $t('common.access_wallet') }}
               </app-base-button>
-              <app-btn-text
+              <app-base-button
+                :is-outline="true"
+                class="w-full xs:w-auto xs:min-w-[180px]"
                 @click="backStep"
-                is-large
-                class="mt-2 text-primary"
               >
                 {{ $t('common.back') }}
-              </app-btn-text>
+              </app-base-button>
             </div>
           </div>
         </app-stepper>
       </app-sheet>
-      <!-- TODO: add link-->
       <div
-        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
+        class="mt-8 flex items-center justify-center text-info text-s-14 sm:text-s-16 leading-p-150"
       >
-        {{ $t('wc_dialog.no_wallet') }}
-        <span class="underline">
-          {{ $t('wc_dialog.get_wallet') }}
-          <span class="text-sm"> →</span></span
-        >
+        <p class="mr-1">{{ $t('wc_dialog.no_wallet') }}</p>
+        <button class="text-primary font-bold hoverOpacity" @click="openCreate">
+          {{ $t('wc_dialog.get_wallet') }} →
+        </button>
       </div>
     </div>
   </div>
@@ -121,7 +128,6 @@ import { computed, ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppTextField from '@/components/AppTextField.vue'
 import AppToggle from '@/components/AppToggle.vue'
@@ -146,10 +152,11 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useCreateStore } from '@/stores/createStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
 import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 
 const { t } = useI18n()
@@ -288,8 +295,8 @@ const loadList = async (page: number = 0) => {
     await wallet.value?.getWallet(i).then(async wallet => {
       if (wallet) {
         const fetchBalance = await wallet.getBalance()
-        if (Array.isArray(fetchBalance.result)) {
-          const mainToken = fetchBalance.result.find(
+        if (Array.isArray((fetchBalance as TokenBalancesRaw).result)) {
+          const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
             token => token.contract === MAIN_TOKEN_CONTRACT,
           )
           walletList.value.push({
@@ -315,11 +322,14 @@ const loadList = async (page: number = 0) => {
             ).toString(),
           })
         }
+        if (walletList.value.length === 1) {
+          selectedIndex.value = walletList.value[0].index
+          isLoadingWalletList.value = false
+        }
       }
     })
   }
   //TODO: Load balance
-  selectedIndex.value = walletList.value[0].index
   isLoadingWalletList.value = false
 }
 
@@ -339,6 +349,12 @@ const walletStore = useWalletStore()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const accessStore = useAccessStore()
+const { openCreateDialog } = useCreateStore()
+
+const openCreate = () => {
+  accessStore.closeAccessDialog()
+  openCreateDialog()
+}
 
 const access = async () => {
   isUnlockingWallet.value = true

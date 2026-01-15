@@ -7,43 +7,62 @@
     <!-- Supported Chains -->
     <div
       v-if="!isLoading && tokenData?.supportedChains?.length"
-      class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 mb-5"
+      class="px-2 xs:px-5 md:px-3 lg:px-9 mb-5"
     >
-      <h3 class="text-s-20 font-bold mb-2">Supported Chains</h3>
-      <div
-        v-for="i in tokenData.supportedChains"
-        :key="i.chainName"
-        class="flex items-center justify-start py-2 max-w-[360px]"
-      >
-        <div class="relative mr-4">
-          <app-blockie :address="i.contract || ''" :scale="8" class="" />
-          <app-token-logo
-            v-if="selectedChain"
-            :url="selectedChain.icon"
-            :symbol="i.chainName"
-            width="w-4"
-            height="h-4"
-            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
-          />
-        </div>
-        <div>
-          <p class="text-s-16 font-medium leading-p-100 capitalize">
-            {{ i.chainName.toLowerCase() }}
-          </p>
-          <div class="flex items-center gap-[2px]">
-            <p class="text-info text-s-12 tracking-sp-06 truncate w-[170px]">
-              {{ truncateAddress(i.contract || '', 16) }}
-            </p>
-            <app-btn-copy
-              :text="i.contract || ''"
-              class="ml-2"
-              width="w-7"
-              height="h-7"
-              icon-class="w-4 h-4"
-            />
+      <h3 class="text-s-20 font-bold mb-2 px-1">Supported Chains</h3>
+      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar px-1">
+        <div
+          v-for="i in tokenData.supportedChains"
+          :key="i.chainName"
+          class="flex items-center justify-between py-3 border-b border-grey-5 last:border-0"
+        >
+          <div class="flex items-center">
+            <div class="relative mr-4 shrink-0">
+              <app-token-logo
+                :url="i.iconUrl"
+                :symbol="i.chainName"
+                width="w-10"
+                height="h-10"
+              />
+              <app-token-logo
+                :url="tokenData.iconUrl"
+                :symbol="tokenData.symbol"
+                width="w-5"
+                height="h-5"
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
+              />
+            </div>
+            <div class="flex flex-col min-w-0">
+              <h4 class="text-s-16 font-medium truncate">
+                {{ i.chainNameLong || i.chainName }}
+              </h4>
+              <div class="flex items-center gap-1.5 min-w-0">
+                <p
+                  v-if="i.contract && i.contract !== 'N/A'"
+                  class="text-info text-s-12 tracking-sp-06 truncate max-w-[120px] xs:max-w-[200px]"
+                >
+                  {{ truncateAddress(i.contract, 8) }}
+                </p>
+                <p v-else class="text-info text-s-12 tracking-sp-06 italic">
+                  Native Token
+                </p>
+                <app-btn-copy
+                  v-if="i.contract && i.contract !== 'N/A'"
+                  :copy-value="i.contract"
+                  width="w-6"
+                  height="h-6"
+                  icon-class="w-3.5 h-3.5"
+                  class="hoverNoBG"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            v-if="selectedChain?.name === i.chainName"
+            class="shrink-0 flex items-center bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20"
+          >
             <span
-              v-if="selectedChain?.name === i.chainName"
-              class="uppercase text-s-8 text-primary"
+              class="uppercase text-[10px] font-bold text-primary leading-none"
             >
               current chain
             </span>
@@ -56,7 +75,6 @@
 
 <script setup lang="ts">
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
 import { type PropType } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'

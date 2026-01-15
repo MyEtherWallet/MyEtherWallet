@@ -6,7 +6,7 @@
       v-if="
         isWalletConnected && !isLoading && existsOnCurrentChain && tokenData
       "
-      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 gap-2"
+      class="flex flex-wrap items-center px-3 xs:px-6 md:px-4 lg:px-10 gap-2"
     >
       <h2
         class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150"
@@ -18,8 +18,8 @@
           <app-token-logo
             :url="tokenData.iconUrl"
             :symbol="tokenData.symbol"
-            width="w-9 xs:w-8"
-            height="h-9 xs:h-8"
+            width="w-9"
+            height="h-9"
           />
           <app-token-logo
             v-if="selectedChain"
@@ -27,7 +27,7 @@
             :symbol="selectedChain.name"
             width="w-4"
             height="h-4"
-            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white"
           />
         </div>
         <div class="flex flex-col xs:flex-row xs:items-center ml-3 xs:ml-2">
@@ -53,51 +53,52 @@
       v-if="
         isWalletConnected && !isLoading && tokenData && otherChains.length > 0
       "
-      class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10"
+      class=""
     >
-      <h3 class="text-s-20 font-bold mb-1">
+      <h3 class="text-s-20 font-bold mb-1 px-3 xs:px-6 md:px-4 lg:px-10">
         {{ tokenData.symbol.toUpperCase() }} balance on other chains:
       </h3>
       <div
-        v-for="(i, index) in otherChains"
-        :key="index"
-        class="flex items-center justify-between py-2 w-full gap-4"
+        class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar px-3 xs:px-6 md:px-4 lg:px-10"
       >
-        <div class="flex w-full items-center justify-between xs:max-w-[300px]">
-          <div class="relative mr-4">
-            <app-token-logo
-              :url="tokenData.iconUrl"
-              :symbol="tokenData.symbol"
-            />
-            <app-token-logo
-              v-if="selectedChain"
-              :url="getChainIcon(i.chainName)"
-              :symbol="i.chainName"
-              width="w-4"
-              height="h-4"
-              class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
-            />
-          </div>
-          <div>
-            <p class="text-s-16 font-medium">
-              {{ getBalanceForChain(i.chainName) }}
-              {{ tokenData.symbol.toUpperCase() }}
-            </p>
-            <p class="text-info text-s-12 leading-p-110 capitalize">
-              on {{ i.chainName.toLowerCase() }}
-            </p>
-          </div>
-
-          <p class="text-right ml-auto text-info text-s-14 leading-p-110">
-            ${{
-              getFormattedFiatValueForChain(getBalanceForChain(i.chainName))
-            }}
-          </p>
-        </div>
-
-        <app-base-button size="small" class="hidden xs:block ml-auto">
-          Bridge</app-base-button
+        <div
+          v-for="(i, index) in otherChains"
+          :key="index"
+          class="flex items-center justify-between py-3 border-b border-grey-5 last:border-0 w-full"
         >
+          <div class="flex items-center grow max-w-[360px]">
+            <div class="relative mr-4 shrink-0">
+              <app-token-logo
+                :url="tokenData.iconUrl"
+                :symbol="tokenData.symbol"
+                width="w-10"
+                height="h-10"
+              />
+              <app-token-logo
+                :url="getChainIcon(i.chainName)"
+                :symbol="i.chainName"
+                width="w-5"
+                height="h-5"
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
+              />
+            </div>
+            <div class="flex flex-col">
+              <h4 class="text-s-16 font-bold truncate">
+                {{ i.balance }}
+                {{ tokenData.symbol.toUpperCase() }}
+              </h4>
+              <p class="text-info text-s-12 capitalize truncate">
+                on {{ i.chainNameLong || i.chainName.toLowerCase() }}
+              </p>
+            </div>
+            <div class="ml-auto sm:mr-10 text-right">
+              <p class="text-info text-s-14 font-medium">${{ i.fiatValue }}</p>
+            </div>
+          </div>
+          <app-base-button size="small" class="shrink-0 hidden sm:block">
+            Bridge
+          </app-base-button>
+        </div>
       </div>
     </div>
   </div>
@@ -114,9 +115,9 @@ import { storeToRefs } from 'pinia'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { type GetWebTokenInfo } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
-import { fromBase } from '@/utils/unit'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BigNumber from 'bignumber.js'
+import { formatUnits } from 'viem'
 
 const props = defineProps({
   isLoading: {
@@ -158,11 +159,26 @@ const otherChains = computed(() => {
     props.tokenData.supportedChains &&
     selectedChain.value
   ) {
-    return props.tokenData.supportedChains.filter(
-      chain =>
-        chain.chainName !== selectedChain.value?.name &&
-        selectedChain.value?.type === chain.chainType,
-    )
+    const chains = props.tokenData.supportedChains
+      .filter(
+        chain =>
+          chain.chainName !== selectedChain.value?.name &&
+          selectedChain.value?.type === chain.chainType,
+      )
+      .map(chain => {
+        const balance = getBalanceForChain(chain.chainName)
+        const fiatValue = getFormattedFiatValueForChain(balance)
+        return {
+          ...chain,
+          balance,
+          fiatValue,
+          numericBalance:
+            balance === 'N/A' ? -1 : parseFloat(balance.replace(/,/g, '')),
+        }
+      })
+      .filter(chain => chain.numericBalance > 0)
+
+    return chains.sort((a, b) => b.numericBalance - a.numericBalance)
   }
   return []
 })
@@ -184,18 +200,41 @@ const getBalanceForChain = (_chainName: string) => {
       const _okBalances = chainData.result.value.balances.filter(
         balance => balance.ok,
       )
-      const _rawBalance = _okBalances.filter(
+      const _rawBalance = _okBalances.find(
         balance =>
           balance.value.owner.toLowerCase() ===
           walletAddress.value?.toLowerCase(),
       )
-      if (_rawBalance && _rawBalance.length > 0 && _decimals) {
-        const _balance = fromBase(
-          BigInt(_rawBalance[0].value.value).toString(),
-          _decimals,
-        )
+      if (_rawBalance && _decimals) {
+        const _balance = formatUnits(BigInt(_rawBalance.value.value), _decimals)
         return formatFloatingPointValue(_balance).value
       }
+    }
+  }
+
+  // Fallback to walletStore if it's the current chain
+  if (_chainName === selectedChain.value?.name && isWalletConnected.value) {
+    const tokenInWallet = walletStore.allTokens.find(t => {
+      const matchCoinId =
+        t.coinId &&
+        props.tokenData?.coinId &&
+        t.coinId.toLowerCase() === props.tokenData.coinId.toLowerCase()
+      const matchSymbol =
+        t.symbol &&
+        props.tokenData?.symbol &&
+        t.symbol.toLowerCase() === props.tokenData.symbol.toLowerCase()
+      const matchContract =
+        t.contract &&
+        props.tokenData?.supportedChains?.some(
+          c =>
+            c.contract &&
+            c.contract.toLowerCase() === t.contract.toLowerCase() &&
+            c.chainName === _chainName,
+        )
+      return matchCoinId || matchSymbol || matchContract
+    })
+    if (tokenInWallet) {
+      return formatFloatingPointValue(tokenInWallet.balance).value
     }
   }
   return 'N/A'

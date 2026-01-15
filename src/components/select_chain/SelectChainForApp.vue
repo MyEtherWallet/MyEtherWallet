@@ -41,15 +41,15 @@
       </app-btn-group>
       <button
         v-else
-        class="bg-white hoverNoBG py-2 px-3 rounded-16 w-full shadow-button shadow-button-elevated"
+        class="bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
         @click="setOpenDialog(true)"
       >
-        <div v-if="selectedChain" class="flex items-center">
+        <div v-if="selectedChain" class="flex items-center min-h-[36px]">
           <img
             v-if="selectedChain.icon"
             :src="selectedChain.icon"
             alt=""
-            class="w-8 h-8 mr-2 rounded-full object-contain flex-none"
+            class="w-8 h-8 mr-2 rounded-full object-contain flex-none bg-mewBg"
             height="32"
             width="32"
           />
@@ -63,7 +63,7 @@
               {{ selectedChain.nameLong }}
             </p>
           </div>
-          <chevron-down-icon class="flex-none w-4 h-4 ml-auto mr-1" />
+          <chevron-down-icon class="flex-none w-4 h-4 ml-auto" />
         </div>
       </button>
     </slot>

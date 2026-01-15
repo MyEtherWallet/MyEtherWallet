@@ -58,6 +58,17 @@ const reversedRecentWallets = recentWallets.value.slice().reverse()
 
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 
+const isMockAvailable = newWalletList.value.find(nw => nw.id === 'mock')
+
+const defaultWallets = keys
+  .filter(key => {
+    if (isMockAvailable && walletConfigs[key].id === 'mock') return true
+    return walletConfigs[key].isDefault === true
+  })
+  .map(key => {
+    return walletConfigs[key]
+  })
+
 const detectedWalletsToConfigs: WalletConfig[] = newWalletList.value.filter(
   wallet => {
     const inProviders = providers.value.find(
@@ -66,19 +77,12 @@ const detectedWalletsToConfigs: WalletConfig[] = newWalletList.value.filter(
     const inRecent = recentWallets.value.find(
       recent => recent.name === wallet.name,
     )
-    if (inProviders && !inRecent) {
+    const inDefault = defaultWallets.find(recent => recent.name === wallet.name)
+    if (inProviders && !inRecent && !inDefault) {
       return wallet
     }
   },
 )
-
-const defaultWallets = keys
-  .filter(key => {
-    return walletConfigs[key].isDefault === true
-  })
-  .map(key => {
-    return walletConfigs[key]
-  })
 
 const clickDefaultWallet = (wallet: WalletConfig) => {
   connect(wallet)

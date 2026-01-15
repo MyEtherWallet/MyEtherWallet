@@ -1,13 +1,17 @@
 import { ROUTES_MAIN } from './routeNames'
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { ACCESS_ROUTES } from './routesAccess'
+import { CREATE_ROUTES } from './routesCreate'
 import { TOKEN_INFO_ROUTE_NAMES } from './routeNames'
 import { type RouterOptions } from 'vue-router'
 
 const TempView = () => import('@/views/ViewTemp.vue')
+const SignMessageView = () => import('@/views/ViewSignMessage.vue')
+const VerifyMessageView = () => import('@/views/ViewVerifyMessage.vue')
 const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
+const ViewStocks = () => import('@/views/ViewStocks.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -19,6 +23,7 @@ const DefaultRoutes = <RouteNameCollection>[
       noAuth: true,
     },
     children: [
+      CREATE_ROUTES,
       ACCESS_ROUTES,
       {
         name: TOKEN_INFO_ROUTE_NAMES.home,
@@ -51,7 +56,7 @@ const DefaultRoutes = <RouteNameCollection>[
   {
     path: ROUTES_MAIN.VERIFY_MESSAGE.PATH,
     name: ROUTES_MAIN.VERIFY_MESSAGE.NAME,
-    component: TempView,
+    component: VerifyMessageView,
     meta: {
       noAuth: true,
     },
@@ -59,7 +64,7 @@ const DefaultRoutes = <RouteNameCollection>[
   {
     path: ROUTES_MAIN.SIGN_MESSAGE.PATH,
     name: ROUTES_MAIN.SIGN_MESSAGE.NAME,
-    component: TempView,
+    component: SignMessageView,
     meta: {
       noAuth: true,
     },
@@ -83,7 +88,7 @@ const DefaultRoutes = <RouteNameCollection>[
   {
     path: ROUTES_MAIN.STOCKS.PATH,
     name: ROUTES_MAIN.STOCKS.NAME,
-    component: TempView,
+    component: ViewStocks,
     meta: {
       noAuth: true,
     },

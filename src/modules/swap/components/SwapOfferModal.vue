@@ -2,64 +2,69 @@
   <app-dialog
     v-model:is-open="model"
     title="Swap"
-    class="sm:max-w-[460px] sm:mx-auto h-[600px]"
+    class="sm:max-w-[460px] sm:mx-auto lg:h-[650px]"
   >
     <template #content>
       <div class="mx-4 mb-2">
         <div
           class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
         >
-          <h3 class="font-bold text-s-20 ml-2">
+          <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
             {{ t('swap.swap-offer.best-offer-from') }}
             {{ providerName }}
           </h3>
           <p
-            class="font-normal text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
+            class="font-normal text-s-17 lg:text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
           >
             {{ t('swap.for') }}
-            <span
-              class="w-[32px] h-[32px] rounded-[50%] inline-flex items-center justify-center overflow-hidden shadow-token"
-            >
-              <img
-                :src="fromToken?.logoURI"
-                :alt="fromToken?.symbol"
-                class="inline-block w-full h-[100%]"
-              />
-            </span>
+            <app-token-logo
+              :url="fromToken?.logoURI"
+              :symbol="fromToken?.symbol"
+              width="w-6 lg:w-8"
+              height="h-6 lg:h-8"
+            />
             <span class="font-bold">
               {{ amount }}
               {{ fromToken?.symbol }}</span
             >
             {{ t('swap.swap-offer.you-will-get') }}:
           </p>
-          <div class="flex bg-surface-light rounded-20 p-4 my-2">
-            <div class="relative h-[64px] overflow-visible">
-              <div
-                class="w-[64px] h-[64px] rounded-[50%] inline-flex items-center justify-center overflow-hidden bg-white shadow-token"
-              >
-                <img
-                  :src="toToken?.logoURI"
-                  alt="ETH"
-                  class="inline-block w-[64px]"
-                />
-              </div>
-              <div
-                class="w-[24px] h-[24px] bg-white shadow-token rounded-[50%] inline-flex items-center justify-center absolute bottom-[-3px] right-[-6px] overflow-hidden"
-              >
-                <img
-                  :src="toChain?.icon"
-                  alt="ETH"
-                  class="inline-block w-[24px] h-[24px]"
-                />
-              </div>
+          <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
+            <div class="relative flex-none overflow-visible">
+              <app-token-logo
+                :url="toToken?.logoURI"
+                :symbol="toToken?.symbol"
+                width="w-8 lg:w-[64px]"
+                height="h-8 lg:h-[64px]"
+              />
+              <app-token-logo
+                :url="toChain?.icon"
+                symbol=""
+                width="w-4 lg:w-6"
+                height="h-4 lg:h-6"
+                class="absolute bottom-[-3px] right-[-6px]"
+              />
             </div>
-            <div>
-              <div class="font-bold text-s-24 ml-5">
-                ≈ {{ toAmount }} {{ toToken?.symbol }}
+            <div class="ml-5 min-w-0">
+              <div
+                class="font-bold text-s-20 lg:text-s-24 flex items-center gap-1 min-w-0"
+              >
+                <span class="flex-none">≈</span>
+                <app-tooltip
+                  v-if="toAmountFormatted.hasMore"
+                  :text="toAmountFormatted.full"
+                  class="truncate"
+                >
+                  <span class="cursor-pointer truncate">{{
+                    toAmountFormatted.truncated
+                  }}</span>
+                </app-tooltip>
+                <span v-else class="truncate">{{
+                  toAmountFormatted.truncated
+                }}</span>
+                <span class="flex-none">{{ toToken?.symbol }}</span>
               </div>
-              <div class="text-s-12 text-grey-30 ml-5">
-                ≈ ${{ toAmountFiat }}
-              </div>
+              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
             </div>
           </div>
           <app-pop-up-menu
@@ -68,39 +73,101 @@
             v-if="quotes.length > 1"
           >
             <template #menu-content="{ toggleMenu }">
-              <div class="px-4 pt-4 pb-2">
-                <div
-                  class="cursor-pointer"
+              <div class="p-2">
+                <button
                   v-for="(item, idx) in quotes"
                   :key="idx + item.quote.provider + item.toTokenAmount"
-                  :class="{ 'pb-4': idx < quotes.length - 1 }"
+                  class="w-full text-left p-3 rounded-12 mb-2 hoverBGWhite"
+                  :class="{
+                    'bg-mewBg': item.quote.provider === selectedQuote?.provider,
+                  }"
                   @click="
                     () => {
                       setItem(item, toggleMenu)
                     }
                   "
                 >
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <p class="text-info text-s-14">
-                        {{ t('swap.offer') }} {{ idx + 1 }}
-                      </p>
-                      <p class="font-bold text-s-14">
-                        ~{{
-                          parseAmount(
-                            item.toTokenAmount,
-                            item.quote.options.toToken.decimals,
-                          )
-                        }}
-                        {{ item.quote.options.toToken.symbol }}
-                      </p>
+                  <div class="flex items-center justify-between w-full">
+                    <div class="grow min-w-0">
+                      <div class="flex items-center gap-2">
+                        <p
+                          class="text-info text-s-12 font-medium truncate uppercase tracking-sp-06 leading-p-160"
+                        >
+                          {{
+                            t('swap.swap-offer.offer_from', {
+                              provider: getProviderDisplayName(
+                                item.quote.provider,
+                              ),
+                            })
+                          }}
+                        </p>
+                        <p
+                          v-if="idx === 0"
+                          class="bg-primary text-white rounded-full px-2 py-0.5 !text-[8px] font-bold uppercase tracking-sp-06 whitespace-nowrap ml-1"
+                        >
+                          best rate
+                        </p>
+                      </div>
+                      <div
+                        class="font-semibold text-s-14 flex items-center gap-1"
+                      >
+                        <span>~</span>
+                        <app-tooltip
+                          v-if="
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).hasMore
+                          "
+                          :text="
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).full
+                          "
+                        >
+                          <span class="cursor-pointer">
+                            {{
+                              getAmountData(
+                                item.toTokenAmount,
+                                item.quote?.options?.toToken?.decimals,
+                              ).truncated
+                            }}
+                          </span>
+                        </app-tooltip>
+                        <span v-else>
+                          {{
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).truncated
+                          }}
+                        </span>
+                        <span class="truncate">{{
+                          item.quote?.options?.toToken?.symbol
+                        }}</span>
+                      </div>
                     </div>
-                    <check-icon
-                      v-if="item.quote.provider === selectedQuote?.provider"
-                      class="w-8 h-8 text-primary ml-2"
-                    />
+                    <div class="flex items-center gap-2 flex-none ml-auto">
+                      <span
+                        v-if="idx > 0"
+                        class="text-error text-s-12 whitespace-nowrap text-right mr-2"
+                      >
+                        ({{
+                          getPercentageDiff(
+                            item.toTokenAmount,
+                            item.quote?.options?.toToken?.decimals,
+                          )
+                        }}%)
+                      </span>
+                      <CheckIcon
+                        v-if="item.quote.provider === selectedQuote?.provider"
+                        class="w-5 h-5 text-primary"
+                      />
+                      <div v-else class="w-4 h-4" />
+                    </div>
                   </div>
-                </div>
+                </button>
               </div>
             </template>
           </app-pop-up-menu>
@@ -135,7 +202,7 @@
           {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
         <app-base-button
-          class="w-full mt-5"
+          class="w-full mt-4"
           :is-outline="true"
           theme="error"
           @click="declineSwap"
@@ -149,9 +216,11 @@
 
 <script lang="ts" setup>
 import AppDialog from '@/components/AppDialog.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import { computed, watch } from 'vue'
 import {
   type ProviderQuoteResponse,
@@ -227,7 +296,11 @@ const props = defineProps({
 const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 
 const providerName = computed(() => {
-  switch (selectedQuote.value?.provider) {
+  return getProviderDisplayName(selectedQuote.value?.provider || '')
+})
+
+const getProviderDisplayName = (name: string) => {
+  switch (name) {
     case ProviderName.oneInch:
       return DisplayProviderName.oneInch
     case ProviderName.paraswap:
@@ -243,7 +316,7 @@ const providerName = computed(() => {
     default:
       return t('swap.swap-offer.unknown-provider')
   }
-})
+}
 
 const setItem = (item: ProviderQuoteResponse, close: () => void) => {
   selectedQuote.value = item
@@ -264,7 +337,19 @@ const toAmount = computed(() => {
       selectedQuote.value?.toTokenAmount.toString() || '0',
       toToken.value?.decimals ?? 18,
     ),
-  ).decimalPlaces(8)
+  ).decimalPlaces(4)
+})
+
+const toAmountFormatted = computed(() => {
+  const full = fromBase(
+    selectedQuote.value?.toTokenAmount.toString() || '0',
+    toToken.value?.decimals ?? 18,
+  )
+  const bn = BigNumber(full)
+  const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
+  const decimalPlaces = bn.decimalPlaces()
+  const hasMore = decimalPlaces !== null && decimalPlaces > 4
+  return { full, truncated, hasMore }
 })
 
 const toAmountFiat = computed(() => {
@@ -275,8 +360,30 @@ const toAmountFiat = computed(() => {
     .toString()
 })
 
-const parseAmount = (amount: BN, decimal: number) => {
-  return fromBase(amount.toString(), decimal)
+const getAmountData = (amount: BN, decimals: number) => {
+  if (!amount) return { full: '0', truncated: '0', hasMore: false }
+  const full = fromBase(amount.toString(), decimals || 18)
+  const bn = BigNumber(full)
+  const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
+  const decimalPlaces = bn.decimalPlaces()
+  const hasMore = decimalPlaces !== null && decimalPlaces > 4
+  return { full, truncated, hasMore }
+}
+
+const getPercentageDiff = (amount: BN, decimals: number) => {
+  if (!props.quotes || !props.quotes.length) return '0'
+  const bestQuote = props.quotes[0]
+  if (!bestQuote?.quote?.options?.toToken) return '0'
+  const bestAmount = BigNumber(
+    fromBase(
+      bestQuote.toTokenAmount.toString(),
+      bestQuote.quote.options.toToken.decimals || 18,
+    ),
+  )
+  const currentAmount = BigNumber(fromBase(amount.toString(), decimals || 18))
+  if (bestAmount.isZero()) return '0'
+  const diff = currentAmount.div(bestAmount).minus(1).multipliedBy(100)
+  return diff.toFormat(2)
 }
 
 const exchangeRate = computed(() => {
@@ -284,7 +391,7 @@ const exchangeRate = computed(() => {
   const fromTokenPrice = fromToken.value.price || '0'
   const toTokenPrice = toToken.value.price || '0'
   if (BigNumber(toTokenPrice).isZero()) return '0'
-  return BigNumber(fromTokenPrice).div(toTokenPrice).toFixed(2)
+  return BigNumber(fromTokenPrice).div(toTokenPrice).toFormat(2)
 })
 
 watch(

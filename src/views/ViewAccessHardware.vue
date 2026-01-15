@@ -2,7 +2,7 @@
   <main class="flex justify-center w-full">
     <app-sheet
       :title="$t(`${hardwareDetails.title}`)"
-      :sheet-class="'max-w-[624px]'"
+      :sheet-class="'max-w-[640px] w-full'"
       :title-class="'text-center'"
     >
       <!-- TODO add proper link arrow icon?-->

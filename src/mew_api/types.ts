@@ -15,8 +15,10 @@ export interface TokenBalance extends TokenBalanceRaw {
 /** --------------------------
  * GET Chains
  --------------------------*/
-export type ChainsRaw = components['schemas']['GetChainMetadataListResponse']
-export type Chain = components['schemas']['ChainMetadata']
+export type ChainsRaw =
+  components['schemas']['GetChainMetadataListWithPricesResponse']
+export type Chain =
+  components['schemas']['GetChainMetadataListWithPricesResponse'][number]
 
 /** --------------------------
  * POST Tx
@@ -87,8 +89,6 @@ export type BitcoinSignableTransactionResponse =
   components['schemas']['GetUnsignedBtcTransactionResponse']
 export type BitcoinTxResponse =
   components['schemas']['BroadcastBtcTransactionResponse']
-export type BitcoinBalanceResponse =
-  components['schemas']['GetBtcBalanceByChainNameAndAddressResponse']
 
 export type GetBtcTransactionEstimateBody =
   components['schemas']['GetBtcTransactionEstimateRequest']
@@ -104,7 +104,6 @@ export type BtcGasFees = components['schemas']['BtcTransactionFeeQuote']
 export type FeeOption = BtcGasFeesQuote & EvmGasFees
 export type QuotesResponse = BitcoinQuotesResponse &
   GetEvmTransactionQuoteResponse
-
 //Tokens Page
 export type GetWebTokenInfo =
   components['schemas']['GetWebTokenInfoPageResponse']
@@ -115,3 +114,23 @@ export type GetWebTokenPriceChartPoint =
   GetWebTokenPriceChartByCoinResponse['prices'][number]
 export type WebTokenPriceChartInterval =
   components['schemas']['WebTokenPriceChartInterval']
+
+/** --------------------------
+ * Stocks Page
+ --------------------------*/
+export type StocksOverviewResponse =
+  components['schemas']['GetWebStocksOverviewResponse']
+export type StockOverviewItem = StocksOverviewResponse['newlyAdded'][number]
+export type StockNewsItem = StocksOverviewResponse['recentNews'][number]
+export type StockTopMoverItem = StocksOverviewResponse['topMovers'][number]
+export type StockBannerItem = StocksOverviewResponse['banner'][number]
+
+export type GetWebStocksTableResponse =
+  components['schemas']['GetWebStocksTableResponse']
+export type GetWebStocksTableResponseItem =
+  GetWebStocksTableResponse['items'][number]
+
+export type GetWebStocksSummaryResponse =
+  components['schemas']['GetWebStocksSummaryResponse']
+export type GetWebStocksSummaryResponseItem =
+  GetWebStocksSummaryResponse[number]

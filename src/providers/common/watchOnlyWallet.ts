@@ -32,15 +32,19 @@ class WatchOnlyWallet implements WalletInterface {
     this.chain = chain
     this.walletType = walletType
   }
-  updateChainId: (chainId: string) => void = () => { }
+  updateChainId: (chainId: string) => void = () => {}
   getWalletInstance?: (() => HWwalletManager | null) | undefined
-  getProviderInstance?: (() => Provider | NonNullable<typeof window.unisat> | null) | undefined
+  getProviderInstance?:
+    | (() => Provider | NonNullable<typeof window.unisat> | null)
+    | undefined
   /**
-    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
-    * @param tx  - Transaction details
-    * @returns Promise resolving to QuotesResponse containing gas fee information
-    */
-  getBtcGasFee = (tx: BitcoinQuotesRequestBody): Promise<BitcoinQuotesResponse> => {
+   * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
+   * @param tx  - Transaction details
+   * @returns Promise resolving to QuotesResponse containing gas fee information
+   */
+  getBtcGasFee = (
+    tx: BitcoinQuotesRequestBody,
+  ): Promise<BitcoinQuotesResponse> => {
     return fetchWithRetry<BitcoinQuotesResponse>(
       `/v2/btc/${this.getProvider()}/quotes?noInjectErrors=false`,
       {
@@ -49,7 +53,6 @@ class WatchOnlyWallet implements WalletInterface {
       },
     )
   }
-
 
   /**
    * Get gas fee for a transaction. Wraps the request to the MEW API. Wrap in try catch to handle errors.
@@ -130,8 +133,8 @@ class WatchOnlyWallet implements WalletInterface {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SignMessage(options: {
-    message: `0x${string}`
-    options: unknown
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
     throw new Error('Method not implemented: SignMessage')
   }
@@ -149,11 +152,8 @@ class WatchOnlyWallet implements WalletInterface {
 
   async getBalance(): Promise<TokenBalancesRaw> {
     const address = await this.getAddress()
-    const btcEndpoint = `/v1/btc/${this.getProvider()}/balances/${address}/?noInjectErrors=false`
-    const evmEndpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false`
-    // TODO: add DOT and SOL support
-    const balanceEndpoint = this.chain.type === 'BITCOIN' ? btcEndpoint : evmEndpoint
-    return fetchWithRetry<TokenBalancesRaw>(balanceEndpoint)
+    const Endpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
+    return fetchWithRetry<TokenBalancesRaw>(Endpoint)
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {

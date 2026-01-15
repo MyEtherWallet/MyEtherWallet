@@ -1,14 +1,21 @@
 <template>
   <app-dialog
     v-model:is-open="isOpenAccessDialog"
-    class="!max-w-[900px] h-[100%] w-full"
+    :class="[
+      'w-full max-h-[95vh]',
+      currentView === 'mnemonic' ||
+      currentView === 'keystore' ||
+      currentView === 'private_key'
+        ? 'max-w-[800px]'
+        : '!max-w-[900px]',
+    ]"
     bg="bg-appBackground"
     has-title-underline
     @close-dialog="closeAccess()"
   >
     <template #title>
-      <div class="flex w-full flex-col sm:flex-row">
-        <div class="ml-4 w-8">
+      <div class="flex w-full flex-col sm:flex-row px-4 xs:px-6">
+        <div class="w-8 sm:ml-[-12px]">
           <app-btn-icon
             v-if="currentView !== 'default'"
             icon="icon-arrow-left"
@@ -20,12 +27,14 @@
           </app-btn-icon>
         </div>
         <div
-          :class="currentView === 'default' ? 'ml-4 mt-4  sm:ml-0' : ''"
-          class="flex flex-col sm:items-center justify-start sm:justify-center pl-4 xs:pl-6 w-full sm:mt-6 sm:mb-2"
+          :class="
+            currentView === 'default'
+              ? 'mt-4 sm:items-center justify-center'
+              : 'sm:items-center justify-center'
+          "
+          class="flex flex-col w-full sm:mt-6 sm:mb-2"
         >
-          <h1
-            class="font-bold text-s-28 sm:text-s-32 mb-3 sm:mb-1 leading-p-120"
-          >
+          <h1 class="font-bold text-s-28 sm:text-s-32 mb-1 leading-p-120">
             {{ getTitle }}
           </h1>
           <app-need-help
@@ -36,7 +45,7 @@
       </div>
     </template>
     <template #content>
-      <div class="px-4 xs:px-6 !overflow-y-scroll pb-6">
+      <div class="px-4 xs:px-6 pb-6">
         <div v-if="currentView === 'default'">
           <div class="flex flex-row flex-wrap my-5 gap-y-5 gap-x-[54px]">
             <div>
