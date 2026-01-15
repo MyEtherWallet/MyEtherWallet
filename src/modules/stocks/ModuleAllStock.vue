@@ -152,11 +152,32 @@
                   </div>
                 </th>
                 <!-- 24h % -->
-                <th class="hidden sm:table-cell">
+                <th
+                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden sm:table-cell"
+                >
                   <div
-                    class="px-1 py-2 text-right uppercase font-semibold text-s-11 text-info tracking-sp-06 transition-colors w-full"
+                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
+                    :class="{
+                      'text-black':
+                        headerSort === 'PRICE_CHANGE_PERCENTAGE_24H',
+                    }"
+                    @click="setHeaderSort('PRICE_CHANGE_PERCENTAGE_24H')"
                   >
-                    24h %
+                    24h
+                    <arrow-long-up-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'PRICE_CHANGE_PERCENTAGE_24H' &&
+                        tableDirection === 'asc'
+                      "
+                    />
+                    <arrow-long-down-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'PRICE_CHANGE_PERCENTAGE_24H' &&
+                        tableDirection === 'desc'
+                      "
+                    />
                   </div>
                 </th>
                 <th
