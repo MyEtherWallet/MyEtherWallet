@@ -42,7 +42,7 @@
       </app-select>
     </div>
 
-    <app-sheet sheet-class="py-4 !px-2 min-h-[200px] ">
+    <app-sheet :is-elivated="false" sheet-class="py-4 !px-2 min-h-[200px] ">
       <table-token-balance
         v-if="selectedCryptoFilter.value === 'all'"
         view="all"

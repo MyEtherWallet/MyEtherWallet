@@ -1,18 +1,16 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1 class="text-s-20 lg:text-s-32 2xl:text-s-40 font-bold ml-2 my-2">
-      Explore Crypto Tokens
-    </h1>
+    <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">All Stocks</h1>
 
     <div class="basis-full">
       <div class="flex flex-wrap justify-start items-center gap-2">
-        <!-- Mobile to MD only Categories and Chain Filter-->
+        <!-- Mobile only Categories-->
         <app-select
           v-model:selected="selectedCryptoFilter"
           :options="cryptoFilterOptions"
           position="left-0"
           placeholder="Category Menu"
-          class="w-full xs:w-auto md:hidden"
+          class="w-full xs:hidden"
         >
           <template #select-button="{ toggleSelect }">
             <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
@@ -30,57 +28,32 @@
             </div>
           </template>
         </app-select>
-        <div class="bg-surface rounded-full p-1 md:hidden w-full xs:w-auto">
-          <button
-            class="rounded-full bg-white py-2 px-3 shadow-button h-[42px] w-full xs:min-w-[180px]"
-            @click="openChainDialog = true"
-          >
-            <div class="flex items-center justify-start gap-2">
-              <app-token-logo
-                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                :url="selectedChainFilter?.icon"
-                :symbol="selectedChainFilter?.nameLong"
-                width="w-6"
-                height="h-6"
-              />
-              <span
-                class="text-s-16 font-medium truncate"
-                :class="{
-                  'ml-2': selectedChainFilter?.nameLong === 'All Chains',
-                }"
-              >
-                {{ selectedChainFilter?.nameLong }}</span
-              >
-              <chevron-down-icon class="w-4 h-4 ml-auto" />
-            </div>
-          </button>
-        </div>
-        <!-- Search and Filter Chains-->
+        <!-- Search-->
         <div
           class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:w-auto md:min-w-[400px]"
         >
           <app-search-input v-model="searchInput" class="grow" />
-          <button
-            class="rounded-full hoverNoBG p-2 hidden md:flex"
-            @click="openChainDialog = true"
+          <app-select
+            v-model:selected="selectedCryptoFilter"
+            :options="cryptoFilterOptions"
+            position="left-0"
+            placeholder="Category Menu"
+            class="hidden xs:block md:hidden"
           >
-            <div class="flex items-center">
-              <app-token-logo
-                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                :url="selectedChainFilter?.icon"
-                :symbol="selectedChainFilter?.nameLong"
-                width="w-5"
-                height="h-5"
-                class="mr-2"
-              />
-              <span
-                v-if="selectedChainFilter"
-                class="text-s-17 leading-p-140 font-medium"
-                >{{ selectedChainFilter.nameLong }}</span
+            <template #select-button="{ toggleSelect }">
+              <button
+                class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
+                @click="toggleSelect"
               >
-              <chevron-down-icon class="w-4 h-4 ml-1" />
-            </div>
-          </button>
+                <div class="flex items-center justify-between">
+                  <span class="text-s-16 font-medium truncate">
+                    {{ selectedCryptoFilter.label }}</span
+                  >
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
+            </template>
+          </app-select>
         </div>
         <!--Filter Lists-->
         <div class="">
@@ -139,7 +112,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors w-[55%] sm:w-[180px]"
                 >
                   <div
-                    class="flex items-center gap-1 ml-11 font-bold"
+                    class="flex items-center gap-1 ml-11 font-semibold"
                     :class="{
                       'text-black': headerSort === 'NAME',
                     }"
@@ -161,7 +134,7 @@
                   class="cursor-pointer pl-1 pr-4 xs:px-1 py-2 hover:text-black transition-colors"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
                     :class="{
                       'text-black': headerSort === 'PRICE',
                     }"
@@ -179,24 +152,33 @@
                   </div>
                 </th>
                 <!-- 24h % -->
-                <th class="hidden sm:table-cell">
-                  <app-select
-                    v-model:selected="activePercent"
-                    :options="percentOptions"
-                    class="text-black !text-s-14"
+                <th
+                  class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden sm:table-cell"
+                >
+                  <div
+                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
+                    :class="{
+                      'text-black':
+                        headerSort === 'PRICE_CHANGE_PERCENTAGE_24H',
+                    }"
+                    @click="setHeaderSort('PRICE_CHANGE_PERCENTAGE_24H')"
                   >
-                    <template #select-button="{ toggleSelect }">
-                      <button
-                        class="px-1 py-2 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
-                        @click="toggleSelect"
-                      >
-                        <div class="flex items-center justify-end gap-1">
-                          <p>{{ activePercent.label }}</p>
-                          <chevron-down-icon class="w-3 h-3" />
-                        </div>
-                      </button>
-                    </template>
-                  </app-select>
+                    24h
+                    <arrow-long-up-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'PRICE_CHANGE_PERCENTAGE_24H' &&
+                        tableDirection === 'asc'
+                      "
+                    />
+                    <arrow-long-down-icon
+                      class="w-3 h-3 absolute -right-4"
+                      v-if="
+                        headerSort === 'PRICE_CHANGE_PERCENTAGE_24H' &&
+                        tableDirection === 'desc'
+                      "
+                    />
+                  </div>
                 </th>
                 <th
                   :class="
@@ -205,25 +187,23 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden xl:min-w-[115px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative font-bold"
+                    class="flex items-center gap-1 justify-end relative font-semibold"
                     :class="{
-                      'text-black': headerSort === 'TOTAL_VOLUME',
+                      'text-black': headerSort === 'VOLUME_24H',
                     }"
-                    @click="setHeaderSort('TOTAL_VOLUME')"
+                    @click="setHeaderSort('VOLUME_24H')"
                   >
                     24h Volume
                     <arrow-long-up-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'asc'
+                        headerSort === 'VOLUME_24H' && tableDirection === 'asc'
                       "
                     />
                     <arrow-long-down-icon
                       class="w-3 h-3 absolute -right-4"
                       v-if="
-                        headerSort === 'TOTAL_VOLUME' &&
-                        tableDirection === 'desc'
+                        headerSort === 'VOLUME_24H' && tableDirection === 'desc'
                       "
                     />
                   </div>
@@ -233,7 +213,7 @@
                   class="cursor-pointer px-1 py-2 hover:text-black transition-colors hidden md:table-cell xl:min-w-[115px]"
                 >
                   <div
-                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    class="flex items-center gap-1 justify-end relative text-right font-semibold"
                     :class="{
                       'text-black': headerSort === 'MARKET_CAP',
                     }"
@@ -258,7 +238,7 @@
                 <th
                   class="pl-1 pr-3 py-2 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
                 >
-                  <p class="hidden lg:block font-bold">Actions</p>
+                  <p class="hidden lg:block font-semibold">Actions</p>
                 </th>
               </tr>
             </thead>
@@ -296,17 +276,23 @@
                     class="flex items-center gap-3"
                   >
                     <app-token-logo
-                      :url="token.logoUrl"
+                      :url="token.iconPngUrl || token.iconSvgUrl"
                       :symbol="token.symbol"
                     />
                     <div class="truncate">
-                      <p class="truncate text-s-15 font-medium leading-tight">
-                        {{ token.name }}
-                      </p>
-                      <p
-                        class="text-info text-s-12 uppercase font-normal mt-0.5"
-                      >
+                      <p class="uppercase font-medium truncate">
                         {{ truncate(token.symbol, 7) }}
+                      </p>
+                      <app-tooltip
+                        :text="token.name"
+                        v-if="token.name.length > 12"
+                      >
+                        <p class="text-info text-s-12 truncate">
+                          {{ token.name }}
+                        </p>
+                      </app-tooltip>
+                      <p v-else class="text-info text-s-12 truncate">
+                        {{ token.name }}
                       </p>
                     </div>
                   </router-link>
@@ -337,8 +323,7 @@
                       :points="getSparkLinePoints(token)"
                       :width="50"
                       :height="35"
-                      :max-points="34"
-                      fill
+                      :max-points="35"
                       :percent-change="getActivePercent(token) || undefined"
                     />
                   </div>
@@ -407,13 +392,6 @@
 
                           <ul>
                             <li
-                              @click.stop="[toggleMenu, buyBtn()]"
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                            >
-                              <icon-buy class="text-primary w-4 h-4 mr-2" />
-                              <p>Buy</p>
-                            </li>
-                            <li
                               @click.stop="[toggleMenu, swapBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -435,13 +413,6 @@
                   <div
                     class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
                   >
-                    <app-base-button
-                      size="small"
-                      @click="buyBtn()"
-                      is-outline
-                      class="hidden 3xl:block"
-                      >Buy</app-base-button
-                    >
                     <app-base-button size="small" @click="swapBtn(token)"
                       >Swap
                     </app-base-button>
@@ -542,7 +513,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import {
@@ -556,14 +526,16 @@ import {
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
+import configs from '@/configs'
 import type {
   Chain,
-  GetWebTokensTableResponse,
-  GetWebTokensTableResponseToken,
+  GetWebStocksTableResponse,
+  GetWebStocksTableResponseItem,
   GetWebTokensWatchlistResponse,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
@@ -650,9 +622,6 @@ const nextPage = () => {
   tableContainer.value?.scrollTo(0, 0)
 }
 
-const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com', '_blank')
-}
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('bridge')
   if (!isOpenSideMenu.value) {
@@ -688,25 +657,27 @@ const setSelectedChain = (chain: Chain) => {
 }
 
 const cryptoFilterOptions = ref([
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Top Gainers', value: 'topGainers' },
-  { label: 'Top Losers', value: 'topLosers' },
-  { label: 'Watchlist', value: 'watchlist' },
-  { label: 'Stablecoins', value: 'stablecoins' },
-  { label: 'DeFi', value: 'defi-index' },
-  { label: 'MEME', value: 'meme-token' },
-  { label: 'TikTok', value: 'tiktok-meme' },
+  { label: 'All Assets', value: 'all' },
+  { label: 'ETF', value: 'ETF' },
+  { label: 'Stock', value: 'STOCK' },
+  { label: 'Equities', value: 'EQUITIES' },
+  { label: 'Commodities', value: 'COMMODITIES' },
+  { label: 'Fixed Income', value: 'FIXED_INCOME' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
 
-interface DisplayToken extends Omit<
-  GetWebTokensTableResponseToken,
-  'price' | 'marketCap' | 'totalVolume'
-> {
+interface DisplayToken {
+  symbol: string
+  name: string
   price: string
   marketCap: string
   totalVolume: string
+  priceChangePercentage24h: number
+  sparklineIn7d?: number[]
+  coinId: string
+  iconPngUrl?: string
+  iconSvgUrl?: string
 }
 const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
@@ -715,7 +686,7 @@ const totalPages = ref<number>(1)
 const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
+  const baseUrl = `${configs.MEW_API_URL}/v1/web/tokens-watchlist`
   const defaultChain =
     !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
       ? ''
@@ -724,23 +695,35 @@ const fetchWatchListUrl = computed(() => {
 })
 
 const fetchGainersUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
-  const defaultChain =
-    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
-      ? ''
-      : `filterChain=${selectedChainFilter.value.name}`
+  const url = new URL(`${configs.MEW_API_URL}/v1/web/pages/stocks/table`)
   const direction =
     selectedCryptoFilter.value.value !== 'topGainers' ? 'ASC' : 'DESC'
-  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=PRICE_CHANGE_PERCENTAGE_24H_${direction}&search=${searchInput.value}`
+  url.searchParams.set('page', String(page.value))
+  url.searchParams.set('perPage', String(shownItems.value))
+  url.searchParams.set('sort', `PRICE_CHANGE_PERCENTAGE_24H_${direction}`)
+  if (searchInput.value) {
+    url.searchParams.set('search', searchInput.value)
+  }
+  return url.toString()
 })
 
 const fetchTableUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
-  const defaultChain =
-    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
-      ? ''
-      : `filterChain=${selectedChainFilter.value.name}`
-  return `${baseUrl}?${defaultChain}&page=${page.value}&perPage=${shownItems.value}&sort=${headerSort.value}_${tableDirection.value.toUpperCase()}&search=${searchInput.value}${selectedCryptoFilter.value.value !== 'all' ? '&category=' + selectedCryptoFilter.value.value : ''}`
+  const url = new URL(`${configs.MEW_API_URL}/v1/web/pages/stocks/table`)
+  url.searchParams.set('page', String(page.value))
+  url.searchParams.set('perPage', String(shownItems.value))
+
+  if (searchInput.value) {
+    url.searchParams.set('search', searchInput.value)
+  }
+
+  if (selectedCryptoFilter.value.value !== 'all') {
+    url.searchParams.set('category', selectedCryptoFilter.value.value)
+  }
+
+  const sort = `${headerSort.value}_${tableDirection.value.toUpperCase()}`
+  url.searchParams.set('sort', sort)
+
+  return url.toString()
 })
 
 const {
@@ -752,7 +735,7 @@ const {
   immediate: false,
 })
   .get()
-  .json<GetWebTokensTableResponse>()
+  .json<GetWebStocksTableResponse>()
 
 const {
   data: fetchWatchlistData,
@@ -774,7 +757,7 @@ const {
   immediate: false,
 })
   .get()
-  .json<GetWebTokensTableResponse>()
+  .json<GetWebStocksTableResponse>()
 
 const debounceFetchTokens = useDebounceFn(() => {
   fetchTokenTable()
@@ -800,24 +783,57 @@ onMounted(() => {
   }
 })
 
-const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
+const formatToken = (item: GetWebStocksTableResponseItem): DisplayToken => {
+  const tableItem = item as GetWebStocksTableResponseItem
   return {
-    ...item,
-    // TODO: update this to convert price to user selected currency
-    price: item.price ? `$${formatFiatValue(item.price).value}` : '-',
-    marketCap: item.marketCap
-      ? `$${formatIntegerValue(item.marketCap).value}`
+    symbol: tableItem.primaryMarket.symbol,
+    name: tableItem.underlyingMarket.name,
+    price: tableItem.primaryMarket.price
+      ? `$${formatFiatValue(tableItem.primaryMarket.price).value}`
       : '-',
-    totalVolume: item.totalVolume
-      ? `$${formatIntegerValue(item.totalVolume).value}`
+    marketCap: tableItem.underlyingMarket.marketCap
+      ? `$${formatIntegerValue(tableItem.underlyingMarket.marketCap).value}`
       : '-',
+    totalVolume: tableItem.underlyingMarket.volume24h
+      ? `$${formatIntegerValue(tableItem.underlyingMarket.volume24h).value}`
+      : '-',
+    sparklineIn7d: tableItem.primaryMarket.sparkline24h,
+    coinId: tableItem.primaryMarket.symbol,
+    priceChangePercentage24h: tableItem.primaryMarket.priceChangePercentage24h
+      ? parseFloat(tableItem.primaryMarket.priceChangePercentage24h)
+      : 0,
+    iconPngUrl: tableItem.iconPngUrl,
+    iconSvgUrl: tableItem.iconSvgUrl,
   }
 }
+
+// // Fallback for flat structure (e.g. Watchlist)
+// const watchlistItem = item as GetWebTokensWatchlistResponse[number]
+// return {
+//   symbol: watchlistItem.symbol || '',
+//   name: watchlistItem.name || '',
+//   price: watchlistItem.price
+//     ? `$${formatFiatValue(watchlistItem.price).value}`
+//     : '-',
+//   marketCap: watchlistItem.marketCap
+//     ? `$${formatIntegerValue(watchlistItem.marketCap).value}`
+//     : '-',
+//   totalVolume: watchlistItem.totalVolume
+//     ? `$${formatIntegerValue(watchlistItem.totalVolume).value}`
+//     : '-',
+//   sparklineIn7d: watchlistItem.sparkline24h || watchlistItem.sparklineIn7d,
+//   coinId: watchlistItem.coinId || watchlistItem.symbol,
+//   priceChangePercentage24h: watchlistItem.priceChangePercentage24h || 0,
+//   iconPngUrl: watchlistItem.logoUrl || watchlistItem.iconPngUrl,
+//   iconSvgUrl: watchlistItem.iconSvgUrl,
+// }
+
 onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(item => formatToken(item)) || []
+    tokens.value =
+      fetchWatchlistData.value.map((item: any) => formatToken(item)) || []
   }
   isLoading.value = false
 })
@@ -921,61 +937,12 @@ watch(
   },
 )
 
-/**-------------------------------
- * Active percent change options
- --------------------------------*/
-enum activePercentChange {
-  ONE_HOUR = '1h',
-  TWENTY_FOUR_HOURS = '24h',
-  SEVEN_DAYS = '7d',
-}
-
-const percentOptions = <AppSelectOption[]>[
-  { label: '1h', value: activePercentChange.ONE_HOUR },
-  { label: '24h', value: activePercentChange.TWENTY_FOUR_HOURS },
-  { label: '7d', value: activePercentChange.SEVEN_DAYS },
-]
-
-const activePercent = ref<AppSelectOption>(percentOptions[1])
-
 const getActivePercent = (token: DisplayToken) => {
-  switch (activePercent.value.value) {
-    case activePercentChange.ONE_HOUR:
-      return token.priceChangePercentage1h
-    case activePercentChange.TWENTY_FOUR_HOURS:
-      return token.priceChangePercentage24h
-    case activePercentChange.SEVEN_DAYS:
-      return token.priceChangePercentage7d
-    default:
-      return token.priceChangePercentage24h
-  }
+  return token.priceChangePercentage24h || 0
 }
-
-watch(
-  () => selectedCryptoFilter.value,
-  () => {
-    if (
-      selectedCryptoFilter.value.value === 'topGainers' ||
-      selectedCryptoFilter.value.value === 'topLosers'
-    ) {
-      activePercent.value = percentOptions[1]
-    }
-  },
-)
 
 const getSparkLinePoints = (token: DisplayToken) => {
-  if (
-    token.sparklineIn7d &&
-    token.sparklineIn7d.length > 0 &&
-    activePercent.value.value !== '1h'
-  ) {
-    if (activePercent.value.value === '7d') {
-      return token.sparklineIn7d
-    }
-    const totalPoints = token.sparklineIn7d.length / 7
-    return token.sparklineIn7d.slice(-totalPoints)
-  }
-  return []
+  return token.sparklineIn7d || []
 }
 
 /**-------------------------------

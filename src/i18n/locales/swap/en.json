@@ -40,7 +40,8 @@
       "proceed": "Proceed With Swap",
       "decline": "Decline Swap",
       "unknown-provider": "Unknown provider",
-      "offers": "{count} other offer | {count} other offers"
+      "offers": "Offer | {count} other offers",
+      "offer_from": "Offer from { provider }"
     },
     "on": "on",
     "for": "for",

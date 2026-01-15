@@ -33,7 +33,7 @@
             />
             <div>
               <p
-                class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-grey-3"
+                class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info"
               >
                 {{ $t('common.network') }}
               </p>
@@ -47,7 +47,7 @@
             class="bg-mewBg border-none rounded-20 px-5 py-4 flex flex-col gap-1"
           >
             <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-grey-3 ml-14"
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info ml-14"
             >
               {{ $t('common.from') }}
             </p>
@@ -70,7 +70,7 @@
             class="bg-mewBg border-none rounded-20 px-5 py-4 flex flex-col gap-1"
           >
             <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-grey-3 ml-14"
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info ml-14"
             >
               {{ $t('common.amount') }}
             </p>
@@ -83,11 +83,9 @@
               <div class="grow">
                 <p class="text-s-20 font-bold text-black leading-tight">
                   {{ toAmount }}
-                  <span class="text-s-14 text-grey-3">{{
-                    toToken.symbol
-                  }}</span>
+                  <span class="text-s-14 text-info">{{ toToken.symbol }}</span>
                 </p>
-                <p class="text-grey-3 text-s-14 font-medium">
+                <p class="text-info text-s-14 font-medium">
                   ${{ toAmountFiat }}
                 </p>
               </div>
@@ -98,7 +96,7 @@
             class="bg-mewBg border-none rounded-20 px-5 py-4 flex flex-col gap-1"
           >
             <p
-              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-grey-3 ml-14"
+              class="text-s-11 font-bold uppercase leading-tight tracking-sp-06 text-info ml-14"
             >
               {{ $t('common.to') }}
             </p>
@@ -120,7 +118,7 @@
           <!-- Network fee -->
           <div class="px-5 py-2 flex items-start justify-between mt-1">
             <p
-              class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3 py-1"
+              class="text-s-11 font-bold uppercase tracking-sp-06 text-info py-1"
             >
               {{ $t('common.network_fee') }}
             </p>
@@ -128,14 +126,14 @@
               <p class="font-bold text-s-15 text-black">
                 {{ formatFee }} {{ network?.currencyName }}
               </p>
-              <p class="text-s-12 font-medium text-grey-3 mt-0.5">
+              <p class="text-s-12 font-medium text-info mt-0.5">
                 ${{ networkFeeUSD }}
               </p>
             </div>
           </div>
           <button
             v-if="txDataFormatted"
-            class="rounded-full hoverNoBG py-2 px-4 flex items-center justify-center max-w-fit mr-auto -mt-1 text-primary text-s-12 font-bold"
+            class="rounded-full hoverNoBG py-2 px-4 flex items-center justify-center max-w-fit mr-auto -mt-1 text-s-14 font-medium"
             @click="showMoreDetails = !showMoreDetails"
           >
             {{ $t('common.more_details') }}
@@ -152,7 +150,7 @@
                 <!-- Nonce-->
                 <div class="px-5 flex items-center justify-between">
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
                   >
                     {{ $t('common.nonce') }}
                   </p>
@@ -163,7 +161,7 @@
                 <!-- Gas Limit -->
                 <div class="px-5 flex items-center justify-between">
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
                   >
                     {{ $t('gas.limit') }}
                   </p>
@@ -177,7 +175,7 @@
                   class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
                   >
                     {{ $t('gas.max_fee') }}
                   </p>
@@ -191,7 +189,7 @@
                   class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
                   >
                     {{ $t('gas.max_priority') }}
                   </p>
@@ -206,7 +204,7 @@
                   class="px-5 flex items-center justify-between"
                 >
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info"
                   >
                     {{ $t('gas.price') }}
                   </p>
@@ -217,7 +215,7 @@
                 <!-- Data -->
                 <div class="px-5 flex items-start justify-between">
                   <p
-                    class="text-s-11 font-bold uppercase tracking-sp-06 text-grey-3 pt-2"
+                    class="text-s-11 font-bold uppercase tracking-sp-06 text-info pt-2"
                   >
                     {{ $t('common.data') }}
                   </p>

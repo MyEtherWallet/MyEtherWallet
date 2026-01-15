@@ -162,7 +162,7 @@
           </button>
         </div>
         <div v-else>
-          <div class="flex justify-center items-center h-[400px] text-grey-30">
+          <div class="flex justify-center items-center h-[400px] text-info">
             <p v-if="searchInput !== ''">
               {{ $t('select_token.no_tokens_match') }}
             </p>

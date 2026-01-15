@@ -112,3 +112,23 @@ export type GetWebTokenPriceChartPoint =
   GetWebTokenPriceChartByCoinResponse['prices'][number]
 export type WebTokenPriceChartInterval =
   components['schemas']['WebTokenPriceChartInterval']
+
+/** --------------------------
+ * Stocks Page
+ --------------------------*/
+export type StocksOverviewResponse =
+  components['schemas']['GetWebStocksOverviewResponse']
+export type StockOverviewItem = StocksOverviewResponse['newlyAdded'][number]
+export type StockNewsItem = StocksOverviewResponse['recentNews'][number]
+export type StockTopMoverItem = StocksOverviewResponse['topMovers'][number]
+export type StockBannerItem = StocksOverviewResponse['banner'][number]
+
+export type GetWebStocksTableResponse =
+  components['schemas']['GetWebStocksTableResponse']
+export type GetWebStocksTableResponseItem =
+  GetWebStocksTableResponse['items'][number]
+
+export type GetWebStocksSummaryResponse =
+  components['schemas']['GetWebStocksSummaryResponse']
+export type GetWebStocksSummaryResponseItem =
+  GetWebStocksSummaryResponse[number]

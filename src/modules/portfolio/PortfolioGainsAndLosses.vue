@@ -27,7 +27,10 @@
         </app-btn-icon>
       </div>
     </div>
-    <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden ">
+    <app-sheet
+      :is-elivated="false"
+      sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
+    >
       <div
         class="grid grid-cols-4 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
       >

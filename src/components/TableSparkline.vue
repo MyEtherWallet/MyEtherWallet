@@ -132,7 +132,6 @@ const chartOptions = computed(() => ({
       max: yBounds.value.max,
     },
   },
-  elements: { line: { capBezierPoints: true } },
 }))
 </script>
 

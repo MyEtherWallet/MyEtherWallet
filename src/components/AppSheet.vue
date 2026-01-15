@@ -1,8 +1,9 @@
 <template>
   <div
     :class="[
-      'relative p-6 sm:px-10 lg:px-14  bg-white rounded-16 shadow-button w-full ',
+      'relative p-6 sm:px-10 lg:px-14  bg-white rounded-16 w-full ',
       sheetClass,
+      { 'shadow-button': isElivated },
     ]"
   >
     <div>
@@ -28,6 +29,10 @@ defineProps({
   titleClass: {
     default: '',
     type: String,
+  },
+  isElivated: {
+    default: true,
+    type: Boolean,
   },
 })
 </script>

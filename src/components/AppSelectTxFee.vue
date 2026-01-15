@@ -10,7 +10,7 @@
       :disabled="!hasFees"
     >
       <div class="flex items-center gap-2">
-        <p class="text-grey-3 font-medium">{{ $t('common.fee') }}:</p>
+        <p class="text-info font-medium">{{ $t('common.fee') }}:</p>
         <div
           v-if="!hasFees"
           class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
@@ -27,7 +27,7 @@
           <span class="text-info font-medium">
             {{ selectedFeeNative }}
           </span>
-          <chevron-down-icon class="w-4 h-4 text-grey-3" />
+          <chevron-down-icon class="w-4 h-4 text-info" />
         </template>
       </div>
     </button>
