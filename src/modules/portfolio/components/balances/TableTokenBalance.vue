@@ -355,7 +355,7 @@
                       </ul>
                       <ul v-else>
                         <li
-                          @click.stop=""
+                          @click.stop="customTokenAction('edit', token)"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="w-4 h-4 mr-2" />
