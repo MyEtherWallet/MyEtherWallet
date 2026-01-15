@@ -1,44 +1,30 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
+      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 py-2 mb-4 lg:gap-6"
     >
       <div
-        class="flex grow justify-between items-center bg-grey-white rounded-full p-1 max-w-[400px] order-3 order-2 sm:order-1 gap-1 border border-grey-5 focus-within:border-primary transition-colors hover:border-grey-10"
+        class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-2"
       >
-        <app-search-input
-          v-model="searchInput"
-          class="grow"
-          bg-class="bg-transparent"
-          placeholder="Search"
-        />
-        <div class="h-6 w-px bg-grey-10 mx-1 hidden xs:block"></div>
-        <app-select
-          v-model:selected="selectedAllTokensFilter"
-          :options="allTokensFilterOptions"
-          position="-right-1"
-          class="text-s-12"
+        <div
+          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] min-w-[200px] gap-3 lg:gap-5"
         >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG py-2 px-3 xs:min-w-[120px]"
-              @click="toggleSelect"
-            >
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-black">{{
-                  selectedAllTokensFilter.label
-                }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1 text-info" />
-              </div>
-            </button>
-          </template>
-        </app-select>
+          <app-search-input v-model="searchInput" class="grow" />
+        </div>
+        <div
+          v-if="paginatedArray.length && props.view === 'custom'"
+          class="flex-none"
+        >
+          <app-base-button size="medium" @click="openAddCustom"
+            >+ Add Custom Token</app-base-button
+          >
+        </div>
       </div>
       <!-- TOTAL VALUE-->
-      <div
-        class="order-1 sm:order-2 mb-6 sm:mb-0 ml-2 sm:ml-0 flex flex-col items-end"
-      >
-        <p class="font-bold text-info uppercase tracking-sp-06 text-s-11 mb-1">
+      <div class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0">
+        <p
+          class="font-bold text-info uppercase tracking-sp-06 text-s-14 lg:text-right"
+        >
           Total Value
         </p>
         <p
@@ -344,7 +330,7 @@
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
 
-                      <ul>
+                      <ul v-if="props.view !== 'custom'">
                         <li
                           @click.stop="[buyBtn(), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -367,15 +353,36 @@
                           <p>Bridge</p>
                         </li>
                       </ul>
+                      <ul v-else>
+                        <li
+                          @click.stop="customTokenAction('edit', token)"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                        >
+                          <pencil-icon class="w-4 h-4 mr-2" />
+                          <p>Edit</p>
+                        </li>
+                        <li
+                          @click.stop="[
+                            customTokenAction('delete', token),
+                            toggleMenu(),
+                          ]"
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                        >
+                          <trash-icon class="w-4 h-4 mr-2" />
+                          <p>Delete</p>
+                        </li>
+                      </ul>
                     </div>
                   </template>
                 </app-pop-up-menu>
               </div>
-
-              <div class="hidden lg:flex flex-row gap-2 justify-end">
+              <div
+                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                v-if="props.view !== 'custom'"
+              >
                 <app-base-button
                   size="small"
-                  @click.stop="buyBtn()"
+                  @click="buyBtn()"
                   is-outline
                   class="min-w-[70px]"
                   >Buy</app-base-button
@@ -387,6 +394,23 @@
                   >Swap
                 </app-base-button>
               </div>
+              <div
+                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                v-else
+              >
+                <app-btn-icon
+                  label="edit"
+                  @click.stop="customTokenAction('edit', token)"
+                >
+                  <pencil-icon class="w-4 h-4" />
+                </app-btn-icon>
+                <app-btn-icon
+                  label="delete"
+                  @click.stop="customTokenAction('delete', token)"
+                >
+                  <trash-icon class="w-5 h-5" />
+                </app-btn-icon>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -395,7 +419,7 @@
         v-if="
           searchInput.length === 0 &&
           paginatedArray.length === 0 &&
-          selectedAllTokensFilter.value === 'watchlist'
+          props.view === 'watchlist'
         "
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
@@ -404,6 +428,19 @@
           >Discover more tokens
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
+      </div>
+      <div
+        v-if="paginatedArray.length === 0 && props.view === 'custom'"
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-6 lg:mt-10">You dont have any custom tokens.</p>
+        <app-base-button size="medium" @click="openAddCustom"
+          >+ Add Custom Token</app-base-button
+        >
+        <!-- <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
+          >Discover more tokens
+          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+        </router-link> -->
       </div>
       <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
@@ -473,6 +510,9 @@
       </div>
     </div>
   </div>
+  <div>
+    <custom-tokens-dialog />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -492,7 +532,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisVerticalIcon,
-  ChevronDownIcon,
+  PencilIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/solid'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
@@ -520,7 +561,12 @@ import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useTokenInfoStore } from '@/stores/tokenInfoStore'
+import { useCustomTokenStore } from '@/stores/customTokenStore'
+import CustomTokensDialog from './CustomTokensDialog.vue'
+import { useChainsStore } from '@/stores/chainsStore'
+import { type BalanceFilter } from '../../helpers/index'
 
+const chainStore = useChainsStore()
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -532,30 +578,42 @@ const {
   allTokens,
 } = storeToRefs(walletStore)
 
-console.log(allTokens)
-
-const tableContainer = ref<HTMLElement | null>(null)
 const searchInput = ref('')
 
+const props = defineProps<{
+  view: BalanceFilter
+}>()
+
 /** -------------------------------
- * All Tokens Filter
+ * Custom tokens
   -------------------------------*/
+const openCustomTokenStore = useCustomTokenStore()
+const { customTokens } = storeToRefs(openCustomTokenStore)
+const { openCustomTokenDialog, setCurrentView } = openCustomTokenStore
 
-const allTokensFilterOptions = ref([
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Custom Tokens', value: 'customTokens' },
-  { label: 'Watchlist', value: 'watchlist' },
-])
+const openAddCustom = () => {
+  setCurrentView('add')
+  openCustomTokenDialog()
+}
+const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
+  setCurrentView(action, {
+    name: token.name,
+    symbol: token.symbol || '',
+    address: token.contract || '',
+    decimals: token.decimals || 0,
+  })
+  openCustomTokenDialog()
+}
 
-const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
-
+const chainCustomTokens = computed(() => {
+  return customTokens.value[chainStore.selectedChain?.name || ''] || []
+})
 /** -------------------------------
  * Total Value
 -------------------------------*/
 const totalValue = computed(() => {
-  if (selectedAllTokensFilter.value.value === 'all')
-    return formattedTotalFiatPortfolioValue.value
-  else if (selectedAllTokensFilter.value.value === 'watchlist') {
+  if (props.view === 'all') return formattedTotalFiatPortfolioValue.value
+  else if (props.view === 'watchlist') {
     const sum = tokens.value.reduce((acc, token) => {
       const fiatValue = BigNumber(token.fiatBalance || 0)
       return acc.plus(fiatValue)
@@ -626,7 +684,7 @@ const {
   .json<GetWebTokensWatchlistResponse>()
 
 const isLoading = computed<boolean>(() => {
-  return selectedAllTokensFilter.value.value === 'watchlist'
+  return props.view === 'watchlist'
     ? isLoadingBalances.value || isLoadingWatchlist.value
     : isLoadingBalances.value
 })
@@ -640,7 +698,7 @@ export interface DisplayToken extends TokenBalance {
 
 const tokens = computed<DisplayToken[]>(() => {
   let tokens: DisplayToken[] = []
-  if (selectedAllTokensFilter.value.value === 'watchlist') {
+  if (props.view === 'watchlist') {
     tokens =
       [...(wachListMarketData.value || [])]
         .filter(token => watchListedTokens.value.includes(token.coinId))
@@ -671,8 +729,33 @@ const tokens = computed<DisplayToken[]>(() => {
             logo_url: token.logoUrl || '',
           }
         }) || []
-  } else if (selectedAllTokensFilter.value.value === 'customTokens') {
-    return tokens
+  } else if (props.view === 'custom') {
+    // TODO: figure out balance fetching
+    tokens = chainCustomTokens.value.map(customToken => {
+      const hasTokenBalance = allTokens.value.filter(
+        _token =>
+          customToken.address.toLowerCase() === _token.contract?.toLowerCase(),
+      )
+      if (hasTokenBalance.length > 0) {
+        const _token = hasTokenBalance[0]
+        const fiatBalance = getFiatValue(_token)
+        return {
+          ..._token,
+          fiatBalance: fiatBalance.toNumber(),
+          fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+        }
+      }
+      return {
+        name: customToken.name,
+        symbol: customToken.symbol,
+        contract: customToken.address,
+        decimals: customToken.decimals,
+        balanceWei: '0x',
+        balance: '0',
+        fiatBalance: 0,
+        fiatBalanceFormatted: `$0.00`,
+      } as DisplayToken
+    })
   } else {
     tokens = [...allTokens.value].map(token => {
       const fiatBalance = getFiatValue(token)

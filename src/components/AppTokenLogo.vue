@@ -3,20 +3,25 @@
     :class="[
       width,
       height,
-      { 'bg-white': image && !isLoading },
+      'rounded-full overflow-hidden flex-none relative border border-grey-10 box-border transition-colors duration-300 ease-in-out',
       {
-        'border bg-surface border-1 border-grey-10 box-border flex items-center justify-center':
-          !image || isLoading,
+        'bg-white shadow-token flex items-center justify-center':
+          image && !isLoading,
       },
-      isLoading ? 'animate-pulse' : 'shadow-token',
+      { 'bg-surface': !image || isLoading },
+      { 'animate-pulse': isLoading },
     ]"
-    class="rounded-full overflow-hidden flex-none"
   >
-    <p v-if="!image" class="text-info font-medium text-center uppercase">
-      {{ getSymbol() }}
-    </p>
+    <div
+      v-if="!image && !isLoading"
+      class="absolute inset-0 flex items-center justify-center"
+    >
+      <span class="text-info font-medium uppercase leading-none">
+        {{ getSymbol() }}
+      </span>
+    </div>
     <img
-      v-else
+      v-else-if="image && !isLoading"
       class="object-contain w-full h-full"
       :src="image"
       width="28"
