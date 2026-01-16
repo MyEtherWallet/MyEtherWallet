@@ -6,7 +6,7 @@
           ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
           : '!border-grey-10',
         'border-white',
-        '  w-[72px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
+        '  w-[60px] xs:w-[80px] bg-white fixed h-[calc(100vh-69px)] sm:h-[calc(100vh-77px)] right-0 top-[69px] sm:top-[77px] z-[50] border-l-1 overflow-y-hidden no-scrollbar scrollbar-hide',
       ]"
     >
       <div>

@@ -260,7 +260,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   const formattedBalanceFiat = computed<string>(() => {
-    return `$${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    return `${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   const hasBalances = computed(() => {

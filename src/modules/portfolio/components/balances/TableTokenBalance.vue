@@ -53,7 +53,6 @@
             <!-- Name & Balance -->
             <th
               class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-              colspan="2"
             >
               <div
                 class="flex items-center gap-1 ml-11 font-bold"
@@ -79,37 +78,9 @@
                 />
               </div>
             </th>
-            <!-- 24h % -->
-            <th
-              class="hidden xs:table-cell w-[100px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.PERCENT,
-                }"
-                @click="setHeaderSort(SortValueString.PERCENT)"
-              >
-                24H
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'desc'
-                  "
-                />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'asc'
-                  "
-                />
-              </div>
-            </th>
             <!-- Market Cap -->
             <th
-              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden lg:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
@@ -135,9 +106,66 @@
                 />
               </div>
             </th>
-            <!-- Value and Price -->
+            <!-- Price -->
             <th
-              class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
+              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.MARKET_CAP,
+                }"
+                @click="setHeaderSort(SortValueString.MARKET_CAP)"
+              >
+                Price
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.MARKET_CAP &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.MARKET_CAP &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+            <!-- 24h % -->
+            <th
+              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.PERCENT,
+                }"
+                @click="setHeaderSort(SortValueString.PERCENT)"
+              >
+                24H
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+
+            <!-- Value and Balance -->
+            <th
+              class="cursor-pointer pl-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -146,7 +174,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
-                VALUE
+                Balance
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -164,8 +192,10 @@
               </div>
             </th>
             <!-- Actions -->
-            <th class="lg:pl-6 lg:pr-4 pb-4 text-right w-10 xs:w-[170px]">
-              <p class="hidden lg:block font-bold">ACTIONS</p>
+            <th
+              class="sm:pl-6 sm:pr-4 pb-4 text-right w-[36px] xs:w-[60px] sm:w-[80px] xl:w-auto"
+            >
+              <p class="hidden xl:block font-bold">ACTIONS</p>
             </th>
           </tr>
         </thead>
@@ -199,7 +229,7 @@
               </button>
             </td>
             <!-- Name & Balance -->
-            <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
+            <td class="px-1 py-1 rounded-l-12 xs:rounded-none">
               <div class="flex items-center gap-3">
                 <app-token-logo
                   :url="token.logo_url"
@@ -207,31 +237,58 @@
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
-                  <app-tooltip :text="token.name" v-if="token.name.length > 20">
+                  <p
+                    class="truncate font-medium text-s-14 xs:text-s-15 uppercase text-black leading-tight"
+                  >
+                    <span class="text-s-14">
+                      {{ truncate(token.symbol, 7) }}</span
+                    >
+                  </p>
+                  <div
+                    class="flex items-center gap-1 text-info text-s-12 mt-0.5"
+                  >
+                    <app-tooltip
+                      :text="token.name"
+                      v-if="token.name.length > 20"
+                    >
+                      <p
+                        class="truncate max-w-[100px] md:max-w-[150px] lg:max-w-[200px]"
+                      >
+                        {{ token.name }}
+                      </p>
+                    </app-tooltip>
                     <p
-                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      v-else
+                      class="truncate max-w-[100px] md:max-w-[150px] lg:max-w-[200px]"
                     >
                       {{ token.name }}
                     </p>
-                  </app-tooltip>
-                  <p
-                    v-else
-                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                  >
-                    {{ token.name }}
-                  </p>
-                  <p class="text-info text-s-12 mt-0.5">
-                    {{ formatFloatingPointValue(token.balance).value }}
-                    <span class="uppercase font-normal text-info">{{
-                      truncate(token.symbol, 7)
-                    }}</span>
-                  </p>
+                  </div>
                 </div>
               </div>
             </td>
+            <!-- Market Cap -->
+            <td
+              class="hidden lg:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+            >
+              {{
+                token.market_cap
+                  ? `$${formatFiatValue(token.market_cap).value}`
+                  : '-'
+              }}
+            </td>
+            <!-- Price -->
+            <td class="hidden md:table-cell pl-1 py-1 text-right">
+              <p class="font-normal text-s-15 text-black">
+                {{
+                  token.price ? ` $${formatFiatValue(token.price).value}` : '-'
+                }}
+              </p>
+            </td>
             <!-- 24H % -->
+
             <td class="hidden xs:table-cell px-1 py-1 text-right">
-              <div class="flex flex-col items-end justify-center py-2 pr-2">
+              <div class="flex flex-col items-end justify-center py-2">
                 <p
                   class="text-s-13 font-normal mb-1"
                   :class="[
@@ -263,32 +320,22 @@
                 />
               </div>
             </td>
-            <!-- Market Cap -->
-            <td
-              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
-            >
-              {{
-                token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
-                  : '-'
-              }}
-            </td>
+
             <!-- Value -->
-            <td class="pl-1 pr-6 py-1 text-right">
-              <p class="font-normal text-s-14 text-black">
+            <td class="pl-1 py-1 text-right">
+              <p class="font-normal text-s-14 xs:text-s-15 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-info text-s-12 mt-0.5">
-                {{
-                  token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
-                }}
+              <p class="text-info text-s-12 xs:text-[13px] mt-0.5">
+                {{ formatFloatingPointValue(token.balance).value }}
+                {{ truncate(token.symbol, 7) }}
               </p>
             </td>
             <!-- Actions -->
-            <td class="lg:pl-6 lg:pr-4 py-1 rounded-r-12 relative text-right">
-              <div
-                class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
-              >
+            <td
+              class="xs:px-2 xl:pl-6 xl:pr-4 py-1 rounded-r-12 relative text-right"
+            >
+              <div class="flex items-center justify-end xl:hidden md:mr-0">
                 <app-pop-up-menu placeholder="actions menu" location="right">
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
@@ -377,7 +424,7 @@
                 </app-pop-up-menu>
               </div>
               <div
-                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                class="hidden xl:flex flex-row flex-nowrap gap-1 justify-end"
                 v-if="props.view !== 'custom'"
               >
                 <app-base-button

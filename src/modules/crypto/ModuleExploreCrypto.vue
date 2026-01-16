@@ -300,13 +300,13 @@
                       :symbol="token.symbol"
                     />
                     <div class="truncate">
-                      <p class="truncate text-s-15 font-medium leading-tight">
-                        {{ token.name }}
-                      </p>
                       <p
-                        class="text-info text-s-12 uppercase font-normal mt-0.5"
+                        class="truncate text-s-15 font-medium leading-tight uppercase"
                       >
                         {{ truncate(token.symbol, 7) }}
+                      </p>
+                      <p class="text-info text-s-12 font-normal mt-0.5">
+                        {{ token.name }}
                       </p>
                     </div>
                   </router-link>

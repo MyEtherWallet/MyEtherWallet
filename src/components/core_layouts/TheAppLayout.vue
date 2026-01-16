@@ -25,7 +25,7 @@
       :class="[
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
-        'flex w-full mr-[72px] xs:mr-[80px]',
+        'flex w-full mr-[60px] xs:mr-[80px]',
         isOverflowHidden
           ? 'overflow-hidden'
           : 'overflow-y-auto no-scrollbar scrollbar-hide',

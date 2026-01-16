@@ -10,9 +10,11 @@
   >
     <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
     <div class="truncate">
-      <p class="truncate text-s-14">{{ token.name }}</p>
-      <p class="text-info text-s-12 uppercase">
+      <p class="truncate text-s-14 font-medium uppercase leading-tight">
         {{ truncate(token.symbol, 7) }}
+      </p>
+      <p class="text-info text-s-12 mt-0.5">
+        {{ token.name }}
       </p>
     </div>
     <div class="ml-auto">
