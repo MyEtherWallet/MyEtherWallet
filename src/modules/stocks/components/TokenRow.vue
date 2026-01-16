@@ -1,6 +1,6 @@
 <template>
   <router-link
-    class="flex gap-3 rounded-16 hoverBGWhite shadow-button py-2 px-3 items-center bg-white"
+    class="flex gap-3 rounded-16 hoverBGWhite py-2 px-3 items-center bg-white"
     :to="{
       name: TOKEN_INFO_ROUTE_NAMES.crypto,
       params: {
