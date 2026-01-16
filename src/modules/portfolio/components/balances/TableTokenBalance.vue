@@ -15,8 +15,11 @@
           v-if="paginatedArray.length && props.view === 'custom'"
           class="flex-none"
         >
-          <app-base-button size="medium" @click="openAddCustom"
-            >+ Add Custom Token</app-base-button
+          <app-base-button
+            size="medium"
+            @click="openAddCustom"
+            class="sm:min-w-[120px] sm:ml-4"
+            >+ Add</app-base-button
           >
         </div>
       </div>
@@ -442,7 +445,7 @@
                 </app-base-button>
               </div>
               <div
-                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                class="hidden xl:flex flex-row gap-1 justify-end flex-wrap"
                 v-else
               >
                 <app-btn-icon
@@ -702,10 +705,6 @@ const extraCustomBalances = ref<Record<string, GetErc20AddressBalanceResponse>>(
   {},
 )
 
-const chainCustomTokens = computed(() => {
-  const chainName = chainStore.selectedChain?.name || ''
-  return customTokens.value[chainName] || []
-})
 /** -------------------------------
  * Total Value
 -------------------------------*/
@@ -728,7 +727,10 @@ const totalValue = computed(() => {
 /** -------------------------------
  * Computed Values
  -------------------------------*/
-
+const chainCustomTokens = computed(() => {
+  const chainName = chainStore.selectedChain?.name || ''
+  return customTokens.value[chainName] || []
+})
 const isLoading = computed(() =>
   props.view === 'watchlist'
     ? isLoadingBalances.value || isLoadingWatchlist.value

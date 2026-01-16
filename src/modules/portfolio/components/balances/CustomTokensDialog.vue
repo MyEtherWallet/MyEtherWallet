@@ -306,6 +306,13 @@ watch(isOpenCustomTokenDialog, isOpen => {
     tokenName.value = selectedToken.value.name
     tokenSymbol.value = selectedToken.value.symbol
     tokenDecimals.value = selectedToken.value.decimals.toString()
+
+    console.log(
+      'Initialized form for edit/delete',
+      tokenName.value,
+      tokenSymbol.value,
+      tokenDecimals.value,
+    )
   } else if (!isOpen) {
     resetForm()
   }
@@ -315,9 +322,12 @@ watch(isOpenCustomTokenDialog, isOpen => {
 watch(adrInput, async () => {
   localAddressError.value = ''
 
-  if (!validateAddressInput() || currentView.value !== 'add') {
+  if (currentView.value !== 'add') return
+
+  if (!validateAddressInput()) {
     tokenName.value = ''
     tokenDecimals.value = ''
+    tokenSymbol.value = ''
     fetchedInfoViaAddress.value = false
     return
   }
