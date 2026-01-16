@@ -19,7 +19,7 @@
         class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
       >
         <img
-          class="w-full h-full object-cover"
+          class="w-full h-full object-contain"
           :src="imageReplacer(selectedToken)"
           alt=""
         />
