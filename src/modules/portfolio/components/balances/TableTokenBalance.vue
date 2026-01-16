@@ -424,7 +424,7 @@
                 </app-pop-up-menu>
               </div>
               <div
-                class="hidden xl:flex flex-row flex-nowrap gap-1 justify-end"
+                class="hidden xl:flex flex-row flex-wrap gap-1 justify-end"
                 v-if="props.view !== 'custom'"
               >
                 <app-base-button
@@ -473,6 +473,20 @@
         <p class="mb-1 lg:mt-10">You dont have any watchlisted tokens.</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >Discover more tokens
+          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+        </router-link>
+      </div>
+      <div
+        v-if="
+          searchInput.length === 0 &&
+          paginatedArray.length === 0 &&
+          props.view === 'stocks'
+        "
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-1 lg:mt-10">You dont have any stocks.</p>
+        <router-link :to="{ name: ROUTES_MAIN.STOCKS.NAME }" class="underline"
+          >Discover stocks
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
       </div>
