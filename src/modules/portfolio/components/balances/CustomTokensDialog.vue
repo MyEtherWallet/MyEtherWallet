@@ -306,13 +306,6 @@ watch(isOpenCustomTokenDialog, isOpen => {
     tokenName.value = selectedToken.value.name
     tokenSymbol.value = selectedToken.value.symbol
     tokenDecimals.value = selectedToken.value.decimals.toString()
-
-    console.log(
-      'Initialized form for edit/delete',
-      tokenName.value,
-      tokenSymbol.value,
-      tokenDecimals.value,
-    )
   } else if (!isOpen) {
     resetForm()
   }

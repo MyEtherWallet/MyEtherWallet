@@ -116,22 +116,22 @@
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.MARKET_CAP,
+                  'text-black': headerSort === SortValueString.PRICE,
                 }"
-                @click="setHeaderSort(SortValueString.MARKET_CAP)"
+                @click="setHeaderSort(SortValueString.PRICE)"
               >
                 Price
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
+                    headerSort === SortValueString.PRICE &&
                     tableDirection === 'desc'
                   "
                 />
                 <arrow-long-up-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
+                    headerSort === SortValueString.PRICE &&
                     tableDirection === 'asc'
                   "
                 />
@@ -405,7 +405,10 @@
                       </ul>
                       <ul v-else>
                         <li
-                          @click.stop="customTokenAction('edit', token)"
+                          @click.stop="[
+                            customTokenAction('edit', token),
+                            toggleMenu(),
+                          ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="w-4 h-4 mr-2" />
@@ -695,6 +698,7 @@ enum SortValueString {
   PERCENT = '24h',
   MARKET_CAP = 'Market_Cap',
   VALUE = 'USD_Balance',
+  PRICE = 'Price',
 }
 
 // Local State
@@ -903,7 +907,7 @@ const tokens = computed<DisplayToken[]>(() => {
   // Sorting logic
   const sortMap: Record<SortValueString, () => DisplayToken[]> = {
     [SortValueString.NAME]: () =>
-      sortObjectArrayString(list, 'name', tableDirection.value),
+      sortObjectArrayString(list, 'symbol', tableDirection.value),
     [SortValueString.PERCENT]: () =>
       sortObjectArrayNumber(
         list,
@@ -914,6 +918,8 @@ const tokens = computed<DisplayToken[]>(() => {
       sortObjectArrayNumber(list, 'market_cap', tableDirection.value),
     [SortValueString.VALUE]: () =>
       sortObjectArrayNumber(list, 'fiatBalance', tableDirection.value),
+    [SortValueString.PRICE]: () =>
+      sortObjectArrayNumber(list, 'price', tableDirection.value),
   }
 
   return sortMap[headerSort.value] ? sortMap[headerSort.value]() : list
