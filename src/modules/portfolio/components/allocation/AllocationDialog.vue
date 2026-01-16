@@ -83,6 +83,7 @@
                       :url="token.icon"
                       :symbol="token.symbol"
                       class="mr-4"
+                      :is-stock="token.is_stock"
                     />
                     <div class="text-left">
                       <h2 class="uppercase font-medium text-s-16 leading-tight">

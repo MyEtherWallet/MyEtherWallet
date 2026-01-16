@@ -68,6 +68,7 @@
                       <app-token-logo
                         :symbol="stock.primaryMarket.symbol"
                         :url="stock.iconPngUrl || stock.iconSvgUrl"
+                        :is-stock="true"
                       />
                       <div class="grow min-w-0">
                         <p class="uppercase text-s-14 font-medium truncate">
@@ -170,9 +171,10 @@
                           <app-token-logo
                             :symbol="stock.primaryMarket.symbol"
                             :url="stock.iconPngUrl || stock.iconSvgUrl"
-                            height="w-5"
-                            width="w-5"
+                            height="w-6"
+                            width="w-6"
                             class="mr-1 text-s-12"
+                            :is-stock="true"
                           />
                           <p class="uppercase text-s-14 font-medium">
                             {{ stock.primaryMarket.symbol }}
@@ -196,9 +198,10 @@
             <app-token-logo
               :symbol="stock.primaryMarket.symbol"
               :url="stock.iconPngUrl || stock.iconSvgUrl"
-              height="h-5"
-              width="w-5"
+              height="h-6"
+              width="w-6"
               class="mr-1 text-s-12"
+              :is-stock="true"
             />
             <p class="uppercase text-s-14 font-medium">
               {{ stock.primaryMarket.symbol }}

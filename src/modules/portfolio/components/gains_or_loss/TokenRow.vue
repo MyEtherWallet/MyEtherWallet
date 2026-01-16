@@ -16,6 +16,7 @@
           <app-token-logo
             :url="token.logo_url"
             :alt="token.symbol"
+            :is-stock="token.is_stock"
             class="w-8 h-8 rounded-full shadow-sm"
           />
           <div class="flex flex-col overflow-hidden">

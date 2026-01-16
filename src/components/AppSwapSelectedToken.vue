@@ -15,15 +15,13 @@
       v-if="!isLoading && selectedToken"
       class="flex flex-nowrap items-center"
     >
-      <div
-        class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
-      >
-        <img
-          class="w-full h-full object-cover"
-          :src="imageReplacer(selectedToken)"
-          alt=""
-        />
-      </div>
+      <app-token-logo
+        :url="selectedToken.logoURI"
+        :symbol="selectedToken.symbol"
+        width="w-7"
+        height="h-7"
+        class="mr-2"
+      />
       <p v-if="!isLoading" class="font-medium text-nowrap">
         {{ truncate(selectedToken.symbol, 7) }}
       </p>
@@ -224,7 +222,6 @@ import {
 } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
-import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
@@ -286,10 +283,6 @@ const searchInput = ref('')
 const loadingMoreItems = ref(false)
 const scrollContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(scrollContainer)
-
-const defaultImg = computed(() => {
-  return eth
-})
 
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
@@ -425,17 +418,6 @@ const loadMoreItems = () => {
 const setSelectedToken = (token: NewTokenInfo) => {
   emit('update:selectedToken', token)
   showAllTokens.value = false
-}
-
-const imageReplacer = (token: NewTokenInfo) => {
-  if (
-    !token.logoURI ||
-    token.logoURI.includes('null') ||
-    token.logoURI.includes('undefined')
-  ) {
-    return defaultImg.value
-  }
-  return token.logoURI
 }
 
 const formatUsdBalance = (_value: number) => {

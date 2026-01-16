@@ -278,6 +278,7 @@
                     <app-token-logo
                       :url="token.iconPngUrl || token.iconSvgUrl"
                       :symbol="token.symbol"
+                      :is-stock="true"
                     />
                     <div class="truncate">
                       <p class="uppercase font-medium truncate">

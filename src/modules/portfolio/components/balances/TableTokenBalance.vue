@@ -234,6 +234,7 @@
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
+                  :is-stock="!!token.is_rwa"
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">

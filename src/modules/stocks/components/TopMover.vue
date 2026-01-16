@@ -7,6 +7,7 @@
         :url="stock.iconPngUrl || stock.iconSvgUrl"
         :symbol="stock.primaryMarket.symbol"
         class="flex-none"
+        :is-stock="true"
       />
       <div class="min-w-0">
         <p class="text-s-15 font-medium uppercase truncate pr-2">

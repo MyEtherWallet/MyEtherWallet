@@ -15,15 +15,14 @@
       v-if="!isLoading && selectedToken"
       class="flex flex-nowrap items-center"
     >
-      <div
-        class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
-      >
-        <img
-          class="w-full h-full object-contain"
-          :src="imageReplacer(selectedToken)"
-          alt=""
-        />
-      </div>
+      <app-token-logo
+        :url="selectedToken.logo_url"
+        :alt="selectedToken.symbol"
+        width="w-7"
+        height="h-7"
+        class="mr-2"
+        :is-stock="selectedToken.is_rwa"
+      />
       <p v-if="!isLoading" class="font-medium text-nowrap">
         {{ truncate(selectedToken.symbol, 7) }}
       </p>
@@ -120,7 +119,7 @@
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
                 <app-token-logo
-                  :url="imageReplacer(token)"
+                  :url="token.logo_url"
                   :alt="token.symbol"
                   class="mr-4"
                 />
@@ -178,7 +177,6 @@ import {
 } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
-import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
@@ -233,10 +231,6 @@ const selectedToken = computed<TokenBalance | null>(() => {
 
 const showAllTokens = ref(false)
 const searchInput = ref('')
-
-const defaultImg = computed(() => {
-  return safeMainTokenBalance.value?.logo_url || eth
-})
 
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
@@ -340,16 +334,6 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
 const setSelectedToken = (token: TokenBalance) => {
   selectedTokenContract.value = token.contract
   showAllTokens.value = false
-}
-
-const imageReplacer = (token: TokenBalance) => {
-  if (
-    !token.logo_url ||
-    token.logo_url === 'https://img.mewapi.io/?image=null'
-  ) {
-    return defaultImg.value
-  }
-  return token.logo_url
 }
 
 const formatUsdBalance = (_value: number) => {

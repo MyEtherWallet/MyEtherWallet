@@ -98,6 +98,7 @@ const topTokens = computed<TokenAllocation[]>(() => {
       percentageNumber: percentage.toNumber(),
       id: token.coinId,
       usdBalanceFormatted: formatFiatValue(tokenBalanceFiatBN).value,
+      is_stock: token.is_rwa,
     }
   })
 
