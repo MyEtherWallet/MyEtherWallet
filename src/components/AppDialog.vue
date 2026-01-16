@@ -59,7 +59,7 @@
               <slot name="title">
                 <h1
                   v-if="title && !$slots.title"
-                  class="text-s-28 font-bold px-4 pt-4 sm:pt-5 text-center capitalize w-full"
+                  class="text-s-28 font-bold px-4 pt-4 sm:pt-5 text-center first-letter:capitalize w-full"
                   id="dialogTitle"
                 >
                   {{ title }}

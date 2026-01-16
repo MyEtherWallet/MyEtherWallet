@@ -19,21 +19,23 @@
             class="w-8 h-8 rounded-full shadow-sm"
           />
           <div class="flex flex-col overflow-hidden">
+            <p
+              class="text-s-15 font-medium uppercase leading-tight truncate max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+            >
+              {{ truncate(token.symbol, 10) }}
+            </p>
             <app-tooltip :text="token.name" v-if="token.name.length > 20">
               <p
-                class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+                class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
               >
                 {{ token.name }}
               </p>
             </app-tooltip>
             <p
               v-else
-              class="hidden xs:block text-s-15 font-medium truncate leading-tight max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+              class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
             >
               {{ token.name }}
-            </p>
-            <p class="text-s-12 font-normal text-info uppercase tracking-tight">
-              {{ truncate(token.symbol, 10) }}
             </p>
           </div>
         </div>

@@ -35,7 +35,9 @@
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
-    :title="$t('select_token.title')"
+    :title="
+      isFromView ? $t('select_token.swap_from') : $t('select_token.swap_to')
+    "
     has-content-gutter
   >
     <template #content>
@@ -125,36 +127,43 @@
                   :symbol="token.symbol"
                   class="shrink-0 mr-4"
                 />
-
+                <!--  -->
                 <div class="text-left">
-                  <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2
-                      class="font-medium text-s-17 text-black whitespace-nowrap"
-                    >
-                      {{ truncate(token.name, 10) }}
-                    </h2>
-                  </app-tooltip>
-                  <h2
-                    v-else
-                    class="font-medium text-s-17 text-black whitespace-nowrap"
-                  >
-                    {{ token.name }}
-                  </h2>
                   <p class="text-s-14">
-                    {{ getBalance(token?.balance || '0') }}
-                    <span class="uppercase text-s-12 text-info">
+                    <span
+                      class="uppercase font-medium text-s-17 text-black whitespace-nowrap"
+                    >
                       {{ truncate(token.symbol, 7) }}</span
                     >
                   </p>
+                  <app-tooltip v-if="token.name.length > 10" :text="token.name">
+                    <h2 class="text-s-12 text-info">
+                      {{ truncate(token.name, 20) }}
+                    </h2>
+                  </app-tooltip>
+                  <h2 v-else class="text-s-12 text-info">
+                    {{ token.name }}
+                  </h2>
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
-                <p class="font-medium text-black">
-                  $ {{ formatUsdBalance(token.usd_balance) }}
-                </p>
-                <p class="text-info text-s-12">
-                  @ ${{ formatFiatValue(token.price || 0).value }}
-                </p>
+                <div v-if="isFromView">
+                  <p class="font-medium text-black">
+                    $ {{ formatUsdBalance(token.usd_balance) }}
+                  </p>
+                  <p class="text-info text-s-12">
+                    {{ getBalance(token?.balance || '0') }}
+                    {{ truncate(token.symbol, 7) }}
+                  </p>
+                </div>
+                <div v-else>
+                  <p class="font-medium text-black">
+                    $
+                    {{
+                      token.price ? formatFiatValue(token.price).value : '0.00'
+                    }}
+                  </p>
+                </div>
               </div>
             </div>
           </button>
@@ -247,6 +256,10 @@ const props = defineProps({
   chainTokens: {
     type: Array as () => NewTokenInfo[],
     default: () => [],
+  },
+  isFromView: {
+    type: Boolean,
+    default: true,
   },
 })
 
