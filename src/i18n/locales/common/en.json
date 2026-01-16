@@ -97,6 +97,8 @@
   "refresh_balance": "Refresh Balance",
   "select_token": {
     "title": "Select Token",
+    "swap_from": "Select token to sell",
+    "swap_to": "Select token to buy",
     "search": "Search",
     "no_tokens_match": "No tokens match your search",
     "no_tokens_available": "No tokens available"

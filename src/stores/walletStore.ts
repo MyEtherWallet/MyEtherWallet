@@ -211,8 +211,31 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
 
   /** -------------------------------
+  * Stock Values
+  -------------------------------*/
+  const allStocks = computed<Array<TokenBalance>>(() => {
+    return tokens.value.filter(token => token.is_rwa === true)
+  })
+
+  /**
+   * @totalStockBalanceFiatBN the total balance of all stocks in fiat in BigNumber.
+   */
+  const totalStockBalanceFiatBN = computed<BigNumber>(() => {
+    if (isWalletConnected.value === false || allStocks.value.length === 0) {
+      return BigNumber(0)
+    }
+    return allStocks.value.reduce((total, token) => {
+      const tokenBalance = new BigNumber(token.balance || 0)
+      const tokenFiatValue = new BigNumber(token.price || 0)
+      const tokenValue = tokenBalance.multipliedBy(tokenFiatValue)
+      return total.plus(tokenValue)
+    }, new BigNumber(0))
+  })
+
+  /** -------------------------------
   * Formatted Values
   -------------------------------*/
+
   //TODO: add proper formatting for fiat values
 
   /**
@@ -223,6 +246,13 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   /**
+   * @formattedStockFiatPortfolioValue - the total stock portfolio value in fiat, formatted .
+   */
+  const formattedStockFiatPortfolioValue = computed<string>(() => {
+    return `$${totalStockBalanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+  })
+
+  /**
    * @formattedBalance - the balance of the main token in fiat, formatted.
    */
   const formattedBalance = computed<string>(() => {
@@ -230,7 +260,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   const formattedBalanceFiat = computed<string>(() => {
-    return `$${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    return `${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   const hasBalances = computed(() => {
@@ -262,15 +292,18 @@ export const useWalletStore = defineStore('walletStore', () => {
     // BigNumber total values
     isWalletConnected,
     totalTokensBalanceFiatBN,
+    totalStockBalanceFiatBN,
     balanceFiatBN,
     totalFiatPortfolioValueBN,
     // Formatted values
     formattedTotalFiatPortfolioValue,
+    formattedStockFiatPortfolioValue,
     formattedBalance,
     formattedBalanceFiat,
     isWatchOnly,
     allTokens,
     hasMissingBalances,
     hasBalances,
+    allStocks,
   }
 })

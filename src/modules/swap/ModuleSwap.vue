@@ -72,6 +72,7 @@
               :tokens="parsedToTokens"
               :readonly="true"
               :is-estimate="true"
+              :is-from-view="false"
               class="mt-4"
             />
             <div class="pt-4" v-if="isCrossChain"></div>

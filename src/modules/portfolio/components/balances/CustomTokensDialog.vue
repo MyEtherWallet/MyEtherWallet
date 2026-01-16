@@ -315,9 +315,12 @@ watch(isOpenCustomTokenDialog, isOpen => {
 watch(adrInput, async () => {
   localAddressError.value = ''
 
-  if (!validateAddressInput() || currentView.value !== 'add') {
+  if (currentView.value !== 'add') return
+
+  if (!validateAddressInput()) {
     tokenName.value = ''
     tokenDecimals.value = ''
+    tokenSymbol.value = ''
     fetchedInfoViaAddress.value = false
     return
   }

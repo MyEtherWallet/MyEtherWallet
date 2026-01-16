@@ -46,7 +46,25 @@
           :token="token"
         >
         </TokenRow>
-        <div v-if="!hasBalances" class="text-center"></div>
+        <div
+          v-if="type === 'stock' && allStocks.length === 0"
+          class="flex flex-col items-center justify-center p-6 text-center"
+        >
+          <p class="text-s-14 text-info mb-4">You don't have any stock</p>
+          <app-base-button
+            @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
+          >
+            Buy Stock
+          </app-base-button>
+        </div>
+        <div v-if="!hasBalances && type !== 'stock'" class="text-center"></div>
+      </div>
+      <div v-else class="flex flex-col gap-3 w-full min-h-[181px]">
+        <div
+          v-for="token in 3"
+          :key="`loading-gains-and-losses-${token}`"
+          class="bg-grey-10 animate-pulse flex items-end justify-between rounded-16 w-full h-[51px]"
+        ></div>
       </div>
     </app-sheet>
     <div class="flex justify-end mt-2 mb-1 items-center">
@@ -69,6 +87,7 @@
 import { storeToRefs } from 'pinia'
 import AppSheet from '@/components/AppSheet.vue'
 import TokenRow from './components/gains_or_loss/TokenRow.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
@@ -115,6 +134,7 @@ const {
   allTokens,
   isLoadingBalances: isLoading,
   hasBalances,
+  allStocks,
 } = storeToRefs(walletStore)
 
 /**
@@ -141,7 +161,8 @@ const getGainOrLoss = (percent: number, contract: string) => {
 }
 
 const topTokens = computed<TokenGainOrLoss[]>(() => {
-  const _tokens = allTokens.value
+  const sourceArray = props.type === 'stock' ? allStocks.value : allTokens.value
+  const _tokens = sourceArray
     .filter(
       token =>
         token.price !== undefined &&

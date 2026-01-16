@@ -85,11 +85,11 @@
                       class="mr-4"
                     />
                     <div class="text-left">
-                      <h2>{{ token.name }}</h2>
-                      <p class="text-info text-sm">
-                        <span class="uppercase text-xs">
-                          {{ truncate(token.symbol, 7) }}</span
-                        >
+                      <h2 class="uppercase font-medium text-s-16 leading-tight">
+                        {{ truncate(token.symbol, 7) }}
+                      </h2>
+                      <p class="text-info text-sm mt-0.5">
+                        {{ token.name }}
                       </p>
                     </div>
                   </div>

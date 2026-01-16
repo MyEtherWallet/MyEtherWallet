@@ -15,8 +15,11 @@
           v-if="paginatedArray.length && props.view === 'custom'"
           class="flex-none"
         >
-          <app-base-button size="medium" @click="openAddCustom"
-            >+ Add Custom Token</app-base-button
+          <app-base-button
+            size="medium"
+            @click="openAddCustom"
+            class="sm:min-w-[120px] sm:ml-4"
+            >+ Add</app-base-button
           >
         </div>
       </div>
@@ -53,7 +56,6 @@
             <!-- Name & Balance -->
             <th
               class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-              colspan="2"
             >
               <div
                 class="flex items-center gap-1 ml-11 font-bold"
@@ -79,37 +81,9 @@
                 />
               </div>
             </th>
-            <!-- 24h % -->
-            <th
-              class="hidden xs:table-cell w-[100px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.PERCENT,
-                }"
-                @click="setHeaderSort(SortValueString.PERCENT)"
-              >
-                24H
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'desc'
-                  "
-                />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'asc'
-                  "
-                />
-              </div>
-            </th>
             <!-- Market Cap -->
             <th
-              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden lg:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
@@ -135,9 +109,66 @@
                 />
               </div>
             </th>
-            <!-- Value and Price -->
+            <!-- Price -->
             <th
-              class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
+              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.PRICE,
+                }"
+                @click="setHeaderSort(SortValueString.PRICE)"
+              >
+                Price
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PRICE &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PRICE &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+            <!-- 24h % -->
+            <th
+              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.PERCENT,
+                }"
+                @click="setHeaderSort(SortValueString.PERCENT)"
+              >
+                24H
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+
+            <!-- Value and Balance -->
+            <th
+              class="cursor-pointer pl-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -146,7 +177,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
-                VALUE
+                Balance
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -164,8 +195,10 @@
               </div>
             </th>
             <!-- Actions -->
-            <th class="lg:pl-6 lg:pr-4 pb-4 text-right w-10 xs:w-[170px]">
-              <p class="hidden lg:block font-bold">ACTIONS</p>
+            <th
+              class="sm:pl-6 sm:pr-4 pb-4 text-right w-[36px] xs:w-[60px] sm:w-[80px] xl:w-auto"
+            >
+              <p class="hidden xl:block font-bold">ACTIONS</p>
             </th>
           </tr>
         </thead>
@@ -199,7 +232,7 @@
               </button>
             </td>
             <!-- Name & Balance -->
-            <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
+            <td class="px-1 py-1 rounded-l-12 xs:rounded-none">
               <div class="flex items-center gap-3">
                 <app-token-logo
                   :url="token.logo_url"
@@ -207,31 +240,58 @@
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
-                  <app-tooltip :text="token.name" v-if="token.name.length > 20">
+                  <p
+                    class="truncate font-medium text-s-14 xs:text-s-15 uppercase text-black leading-tight"
+                  >
+                    <span class="text-s-14">
+                      {{ truncate(token.symbol, 7) }}</span
+                    >
+                  </p>
+                  <div
+                    class="flex items-center gap-1 text-info text-s-12 mt-0.5"
+                  >
+                    <app-tooltip
+                      :text="token.name"
+                      v-if="token.name.length > 20"
+                    >
+                      <p
+                        class="truncate max-w-[100px] md:max-w-[150px] lg:max-w-[200px]"
+                      >
+                        {{ token.name }}
+                      </p>
+                    </app-tooltip>
                     <p
-                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      v-else
+                      class="truncate max-w-[100px] md:max-w-[150px] lg:max-w-[200px]"
                     >
                       {{ token.name }}
                     </p>
-                  </app-tooltip>
-                  <p
-                    v-else
-                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
-                  >
-                    {{ token.name }}
-                  </p>
-                  <p class="text-info text-s-12 mt-0.5">
-                    {{ formatFloatingPointValue(token.balance).value }}
-                    <span class="uppercase font-normal text-info">{{
-                      truncate(token.symbol, 7)
-                    }}</span>
-                  </p>
+                  </div>
                 </div>
               </div>
             </td>
+            <!-- Market Cap -->
+            <td
+              class="hidden lg:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+            >
+              {{
+                token.market_cap
+                  ? `$${formatFiatValue(token.market_cap).value}`
+                  : '-'
+              }}
+            </td>
+            <!-- Price -->
+            <td class="hidden md:table-cell pl-1 py-1 text-right">
+              <p class="font-normal text-s-15 text-black">
+                {{
+                  token.price ? ` $${formatFiatValue(token.price).value}` : '-'
+                }}
+              </p>
+            </td>
             <!-- 24H % -->
+
             <td class="hidden xs:table-cell px-1 py-1 text-right">
-              <div class="flex flex-col items-end justify-center py-2 pr-2">
+              <div class="flex flex-col items-end justify-center py-2">
                 <p
                   class="text-s-13 font-normal mb-1"
                   :class="[
@@ -263,32 +323,22 @@
                 />
               </div>
             </td>
-            <!-- Market Cap -->
-            <td
-              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
-            >
-              {{
-                token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
-                  : '-'
-              }}
-            </td>
+
             <!-- Value -->
-            <td class="pl-1 pr-6 py-1 text-right">
-              <p class="font-normal text-s-14 text-black">
+            <td class="pl-1 py-1 text-right">
+              <p class="font-normal text-s-14 xs:text-s-15 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-info text-s-12 mt-0.5">
-                {{
-                  token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
-                }}
+              <p class="text-info text-s-12 xs:text-[13px] mt-0.5">
+                {{ formatFloatingPointValue(token.balance).value }}
+                {{ truncate(token.symbol, 7) }}
               </p>
             </td>
             <!-- Actions -->
-            <td class="lg:pl-6 lg:pr-4 py-1 rounded-r-12 relative text-right">
-              <div
-                class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
-              >
+            <td
+              class="xs:px-2 xl:pl-6 xl:pr-4 py-1 rounded-r-12 relative text-right"
+            >
+              <div class="flex items-center justify-end xl:hidden md:mr-0">
                 <app-pop-up-menu placeholder="actions menu" location="right">
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
@@ -355,7 +405,10 @@
                       </ul>
                       <ul v-else>
                         <li
-                          @click.stop="customTokenAction('edit', token)"
+                          @click.stop="[
+                            customTokenAction('edit', token),
+                            toggleMenu(),
+                          ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="w-4 h-4 mr-2" />
@@ -377,7 +430,7 @@
                 </app-pop-up-menu>
               </div>
               <div
-                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                class="hidden xl:flex flex-row flex-wrap gap-1 justify-end"
                 v-if="props.view !== 'custom'"
               >
                 <app-base-button
@@ -395,7 +448,7 @@
                 </app-base-button>
               </div>
               <div
-                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                class="hidden xl:flex flex-row gap-1 justify-end flex-wrap"
                 v-else
               >
                 <app-btn-icon
@@ -426,6 +479,20 @@
         <p class="mb-1 lg:mt-10">You dont have any watchlisted tokens.</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >Discover more tokens
+          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+        </router-link>
+      </div>
+      <div
+        v-if="
+          searchInput.length === 0 &&
+          paginatedArray.length === 0 &&
+          props.view === 'stocks'
+        "
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-1 lg:mt-10">You dont have any stocks.</p>
+        <router-link :to="{ name: ROUTES_MAIN.STOCKS.NAME }" class="underline"
+          >Discover stocks
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
       </div>
@@ -465,10 +532,13 @@
     <div
       class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
     >
-      <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
+      <div
+        v-if="!isLoading"
+        class="!text-s-12 xs:!text-s-14 text-info order-2 xs:order-1 mb-4 xs:mb-0"
+      >
         {{ getCurrentViewableItemsIndex }} of {{ tokens.length }} results
       </div>
-      <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
+      <div class="flex items-center gap-4 order-1 xs:order-2 mb-2 xs:mb-0">
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
           label="previous page"
@@ -490,7 +560,7 @@
         </app-btn-icon>
       </div>
 
-      <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
+      <div class="flex items-center gap-2 order-3 xs:order-3 mb-4 xs:mb-0">
         <app-select
           v-model:selected="activeShownItems"
           :options="shownItemsOptions"
@@ -538,12 +608,12 @@ import {
   StarIcon as StarSolidIcon,
   ArrowLongDownIcon,
   ArrowLongUpIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisVerticalIcon,
   PencilIcon,
   TrashIcon,
-  ChevronDownIcon,
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
@@ -572,8 +642,6 @@ import type {
 import type { AppSelectOption } from '@/types/components/appSelect'
 import { ROUTES_MAIN, TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { type BalanceFilter } from '../../helpers/index'
-
-// Stores
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -588,14 +656,6 @@ export interface DisplayToken extends TokenBalance {
   fiatBalance?: number
   fiatBalanceFormatted?: string
 }
-
-enum SortValueString {
-  NAME = 'Name',
-  PERCENT = '24h',
-  MARKET_CAP = 'Market_Cap',
-  VALUE = 'USD_Balance',
-}
-
 /** -------------------------------
  * Store & State Setup
  -------------------------------*/
@@ -603,30 +663,43 @@ const props = defineProps<{
   view: BalanceFilter
 }>()
 
-const router = useRouter()
 const chainStore = useChainsStore()
-const walletStore = useWalletStore()
 const walletMenu = useWalletMenuStore()
-const watchListStore = useWatchlistStore()
-const customTokenStore = useCustomTokenStore()
-const tokenInfoStore = useTokenInfoStore()
-
-const { selectedChain } = storeToRefs(chainStore)
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
+const walletStore = useWalletStore()
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
+  formattedStockFiatPortfolioValue,
   isLoadingBalances,
   allTokens,
+  allStocks,
   walletAddress,
 } = storeToRefs(walletStore)
+
+const router = useRouter()
+const watchListStore = useWatchlistStore()
+const customTokenStore = useCustomTokenStore()
+const tokenInfoStore = useTokenInfoStore()
+const { selectedChain } = storeToRefs(chainStore)
 
 const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
   watchListStore
 const { watchListedTokens } = storeToRefs(watchListStore)
 const { customTokens } = storeToRefs(customTokenStore)
 const { openCustomTokenDialog, setCurrentView } = customTokenStore
+
+/** -------------------------------
+ * Sorting
+-------------------------------*/
+enum SortValueString {
+  NAME = 'Name',
+  PERCENT = '24h',
+  MARKET_CAP = 'Market_Cap',
+  VALUE = 'USD_Balance',
+  PRICE = 'Price',
+}
 
 // Local State
 const searchInput = ref('')
@@ -637,13 +710,31 @@ const extraCustomBalances = ref<Record<string, GetErc20AddressBalanceResponse>>(
 )
 
 /** -------------------------------
+ * Total Value
+-------------------------------*/
+const totalValue = computed(() => {
+  if (props.view === 'all') return formattedTotalFiatPortfolioValue.value
+  else if (props.view === 'stocks')
+    return formattedStockFiatPortfolioValue.value
+  else if (props.view === 'watchlist') {
+    const sum = tokens.value.reduce((acc, token) => {
+      const fiatValue = BigNumber(token.fiatBalance || 0)
+      return acc.plus(fiatValue)
+    }, new BigNumber(0))
+
+    return `$${formatFiatValue(sum).value}`
+  } else {
+    return `$0.00`
+  }
+})
+
+/** -------------------------------
  * Computed Values
  -------------------------------*/
 const chainCustomTokens = computed(() => {
   const chainName = chainStore.selectedChain?.name || ''
   return customTokens.value[chainName] || []
 })
-
 const isLoading = computed(() =>
   props.view === 'watchlist'
     ? isLoadingBalances.value || isLoadingWatchlist.value
@@ -803,6 +894,8 @@ const tokens = computed<DisplayToken[]>(() => {
         fiatBalanceFormatted: '$0.00',
       } as DisplayToken
     })
+  } else if (props.view === 'stocks') {
+    list = allStocks.value.map(mapToDisplay)
   } else {
     list = allTokens.value.map(mapToDisplay)
   }
@@ -814,7 +907,7 @@ const tokens = computed<DisplayToken[]>(() => {
   // Sorting logic
   const sortMap: Record<SortValueString, () => DisplayToken[]> = {
     [SortValueString.NAME]: () =>
-      sortObjectArrayString(list, 'name', tableDirection.value),
+      sortObjectArrayString(list, 'symbol', tableDirection.value),
     [SortValueString.PERCENT]: () =>
       sortObjectArrayNumber(
         list,
@@ -825,18 +918,11 @@ const tokens = computed<DisplayToken[]>(() => {
       sortObjectArrayNumber(list, 'market_cap', tableDirection.value),
     [SortValueString.VALUE]: () =>
       sortObjectArrayNumber(list, 'fiatBalance', tableDirection.value),
+    [SortValueString.PRICE]: () =>
+      sortObjectArrayNumber(list, 'price', tableDirection.value),
   }
 
   return sortMap[headerSort.value] ? sortMap[headerSort.value]() : list
-})
-
-const totalValue = computed(() => {
-  if (props.view === 'all') return formattedTotalFiatPortfolioValue.value
-  const sum = tokens.value.reduce(
-    (acc, t) => acc.plus(t.fiatBalance || 0),
-    new BigNumber(0),
-  )
-  return `$${formatFiatValue(sum).value}`
 })
 
 /** -------------------------------

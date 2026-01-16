@@ -5,7 +5,7 @@
     >
       <h1 class="text-s-24 xs:text-s-32 font-bold">Your Balances</h1>
       <!--Filter Lists-->
-      <div class="hidden lg:flex lg:items-center bg-grey-5 p-1 rounded-full">
+      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="allTokensFilterOptions"
@@ -87,7 +87,8 @@ const showTableTokens = computed(() => {
   return (
     selectedCryptoFilter.value.value === 'all' ||
     selectedCryptoFilter.value.value === 'watchlist' ||
-    selectedCryptoFilter.value.value === 'custom'
+    selectedCryptoFilter.value.value === 'custom' ||
+    selectedCryptoFilter.value.value === 'stocks'
   )
 })
 
