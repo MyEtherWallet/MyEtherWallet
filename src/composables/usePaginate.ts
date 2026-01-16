@@ -9,7 +9,8 @@ export const usePaginate = <T>(
   const totalPages = computed(() => {
     const paginate = unref(arrayToPaginate)
     const _perPage = unref(perPage)
-    return Math.ceil(paginate.length / _perPage)
+    const calculated = Math.ceil(paginate.length / _perPage)
+    return calculated === 0 ? 1 : calculated
   })
   const paginatedArray = computed<T[]>(() => {
     const _perPage = unref(perPage)
