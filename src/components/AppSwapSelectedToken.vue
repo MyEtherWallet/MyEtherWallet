@@ -127,21 +127,18 @@
                   :symbol="token.symbol"
                   class="shrink-0 mr-4"
                 />
-                <!--  -->
                 <div class="text-left">
                   <p class="text-s-14">
-                    <span
-                      class="uppercase font-medium text-s-17 text-black whitespace-nowrap"
-                    >
+                    <span class="uppercase font-medium text-s-17 text-black">
                       {{ truncate(token.symbol, 7) }}</span
                     >
                   </p>
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2 class="text-s-12 text-info">
+                    <h2 class="text-s-12 text-info whitespace-nowrap">
                       {{ truncate(token.name, 20) }}
                     </h2>
                   </app-tooltip>
-                  <h2 v-else class="text-s-12 text-info">
+                  <h2 v-else class="text-s-12 text-info whitespace-nowrap">
                     {{ token.name }}
                   </h2>
                 </div>
@@ -316,7 +313,7 @@ enum SortValueString {
 }
 
 const sortOptions = computed(() => {
-  return [
+  const shared = [
     {
       value: SortValueString.NAME,
       label: t('common.name'),
@@ -325,17 +322,25 @@ const sortOptions = computed(() => {
       value: SortValueString.SYMBOL,
       label: t('common.symbol'),
     },
+  ]
+  if (props.isFromView) {
+    return [
+      ...shared,
+      {
+        value: SortValueString.USD,
+        label: t('common.usd_balance'),
+      },
+      {
+        value: SortValueString.BALANCE,
+        label: t('common.balance'),
+      },
+    ]
+  }
+  return [
+    ...shared,
     {
       value: SortValueString.PRICE,
       label: t('common.price'),
-    },
-    {
-      value: SortValueString.USD,
-      label: t('common.usd_balance'),
-    },
-    {
-      value: SortValueString.BALANCE,
-      label: t('common.balance'),
     },
   ]
 })

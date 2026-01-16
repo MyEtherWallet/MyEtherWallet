@@ -119,43 +119,34 @@
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <div
-                  class="mr-4 w-9 h-9 shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-button"
-                >
-                  <img
-                    class="w-full h-full object-cover"
-                    :src="imageReplacer(token)"
-                    alt="token icon"
-                  />
-                </div>
+                <app-token-logo
+                  :url="imageReplacer(token)"
+                  :alt="token.symbol"
+                  class="mr-4"
+                />
                 <div class="text-left">
+                  <p
+                    class="uppercase font-medium text-s-15 text-black text-s-12"
+                  >
+                    {{ truncate(token.symbol, 7) }}
+                  </p>
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2
-                      class="font-medium text-s-15 text-black whitespace-nowrap"
-                    >
+                    <h2 class="text-s-12 text-info whitespace-nowrap">
                       {{ truncate(token.name, 10) }}
                     </h2>
                   </app-tooltip>
-                  <h2
-                    v-else
-                    class="font-medium text-s-15 text-black whitespace-nowrap"
-                  >
+                  <h2 v-else class="text-s-12 text-info whitespace-nowrap">
                     {{ token.name }}
                   </h2>
-                  <p class="text-secondary text-s-12 font-normal">
-                    {{ getBalance(token.balance) }}
-                    <span class="uppercase text-s-12 opacity-60">
-                      {{ truncate(token.symbol, 7) }}</span
-                    >
-                  </p>
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-normal text-s-14 text-black">
                   $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
-                <p class="text-secondary text-s-12 font-normal">
-                  @ ${{ formatFiatValue(token.price || 0).value }}
+                <p class="text-info text-s-12 font-normal">
+                  {{ getBalance(token.balance) }}
+                  {{ truncate(token.symbol, 7) }}
                 </p>
               </div>
             </div>
@@ -194,6 +185,7 @@ import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
+import AppTokenLogo from './AppTokenLogo.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,
@@ -256,7 +248,6 @@ onMounted(() => {
 enum SortValueString {
   NAME = 'Name',
   SYMBOL = 'Symbol',
-  PRICE = 'Price',
   USD = 'USD Balance',
   BALANCE = 'Balance',
 }
@@ -270,10 +261,6 @@ const sortOptions = computed(() => {
     {
       value: SortValueString.SYMBOL,
       label: t('common.symbol'),
-    },
-    {
-      value: SortValueString.PRICE,
-      label: t('common.price'),
     },
     {
       value: SortValueString.USD,
@@ -303,7 +290,6 @@ const setActiveSort = (value: SortValueString) => {
   } else {
     activeSortValue.value = value
     const isNumericSort = [
-      SortValueString.PRICE,
       SortValueString.USD,
       SortValueString.BALANCE,
     ].includes(value)
@@ -334,7 +320,6 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   > = {
     [SortValueString.NAME]: { key: 'name', type: 'string' },
     [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
-    [SortValueString.PRICE]: { key: 'price', type: 'number' },
     [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
     [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
   }
