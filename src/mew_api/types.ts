@@ -134,3 +134,9 @@ export type GetWebStocksSummaryResponse =
   components['schemas']['GetWebStocksSummaryResponse']
 export type GetWebStocksSummaryResponseItem =
   GetWebStocksSummaryResponse[number]
+
+export type GetErc20ContractMetadataResponse =
+  components['schemas']['GetErc20ContractMetadataResponse']
+
+export type GetErc20AddressBalanceResponse =
+  components['schemas']['GetErc20AddressBalanceResponse']

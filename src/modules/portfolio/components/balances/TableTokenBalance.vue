@@ -15,8 +15,11 @@
           v-if="paginatedArray.length && props.view === 'custom'"
           class="flex-none"
         >
-          <app-base-button size="medium" @click="openAddCustom"
-            >+ Add Custom Token</app-base-button
+          <app-base-button
+            size="medium"
+            @click="openAddCustom"
+            class="sm:min-w-[120px] sm:ml-4"
+            >+ Add</app-base-button
           >
         </div>
       </div>
@@ -113,22 +116,22 @@
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
                 :class="{
-                  'text-black': headerSort === SortValueString.MARKET_CAP,
+                  'text-black': headerSort === SortValueString.PRICE,
                 }"
-                @click="setHeaderSort(SortValueString.MARKET_CAP)"
+                @click="setHeaderSort(SortValueString.PRICE)"
               >
                 Price
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
+                    headerSort === SortValueString.PRICE &&
                     tableDirection === 'desc'
                   "
                 />
                 <arrow-long-up-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
+                    headerSort === SortValueString.PRICE &&
                     tableDirection === 'asc'
                   "
                 />
@@ -403,7 +406,10 @@
                       </ul>
                       <ul v-else>
                         <li
-                          @click.stop="customTokenAction('edit', token)"
+                          @click.stop="[
+                            customTokenAction('edit', token),
+                            toggleMenu(),
+                          ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="w-4 h-4 mr-2" />
@@ -443,7 +449,7 @@
                 </app-base-button>
               </div>
               <div
-                class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
+                class="hidden xl:flex flex-row gap-1 justify-end flex-wrap"
                 v-else
               >
                 <app-btn-icon
@@ -581,7 +587,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import BigNumber from 'bignumber.js'
+import { formatUnits } from 'viem'
+
+// Components
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -590,6 +602,9 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
+import CustomTokensDialog from './CustomTokensDialog.vue'
+
+// Icons
 import {
   StarIcon as StarSolidIcon,
   ArrowLongDownIcon,
@@ -601,36 +616,53 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/vue/24/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import { storeToRefs } from 'pinia'
+
+// Composables & Utils
+import { usePaginate } from '@/composables/usePaginate'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
+import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
-import type { TokenBalance } from '@/mew_api/types'
+import { getAPIPath } from '@/utils/constructAPIPath'
 import {
   formatFiatValue,
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+
+// Types & Routes
+import type {
+  GetErc20AddressBalanceResponse,
+  TokenBalance,
+  GetWebTokensWatchlistResponse,
+} from '@/mew_api/types'
+import type { AppSelectOption } from '@/types/components/appSelect'
+import { ROUTES_MAIN, TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { type BalanceFilter } from '../../helpers/index'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
-import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { useRouter } from 'vue-router'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
-import BigNumber from 'bignumber.js'
-import { usePaginate } from '@/composables/usePaginate'
-import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
-import { searchArrayByKeysStr } from '@/utils/searchArray'
-import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { ROUTES_MAIN } from '@/router/routeNames'
 import { useTokenInfoStore } from '@/stores/tokenInfoStore'
 import { useCustomTokenStore } from '@/stores/customTokenStore'
-import CustomTokensDialog from './CustomTokensDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
-import { type BalanceFilter } from '../../helpers/index'
+
+/** -------------------------------
+ * Constants & Types
+ -------------------------------*/
+export interface DisplayToken extends TokenBalance {
+  fiatBalance?: number
+  fiatBalanceFormatted?: string
+}
+/** -------------------------------
+ * Store & State Setup
+ -------------------------------*/
+const props = defineProps<{
+  view: BalanceFilter
+}>()
 
 const chainStore = useChainsStore()
 const walletMenu = useWalletMenuStore()
@@ -644,38 +676,40 @@ const {
   isLoadingBalances,
   allTokens,
   allStocks,
+  walletAddress,
 } = storeToRefs(walletStore)
 
-const searchInput = ref('')
+const router = useRouter()
+const watchListStore = useWatchlistStore()
+const customTokenStore = useCustomTokenStore()
+const tokenInfoStore = useTokenInfoStore()
+const { selectedChain } = storeToRefs(chainStore)
 
-const props = defineProps<{
-  view: BalanceFilter
-}>()
+const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
+  watchListStore
+const { watchListedTokens } = storeToRefs(watchListStore)
+const { customTokens } = storeToRefs(customTokenStore)
+const { openCustomTokenDialog, setCurrentView } = customTokenStore
 
 /** -------------------------------
- * Custom tokens
-  -------------------------------*/
-const openCustomTokenStore = useCustomTokenStore()
-const { customTokens } = storeToRefs(openCustomTokenStore)
-const { openCustomTokenDialog, setCurrentView } = openCustomTokenStore
-
-const openAddCustom = () => {
-  setCurrentView('add')
-  openCustomTokenDialog()
-}
-const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
-  setCurrentView(action, {
-    name: token.name,
-    symbol: token.symbol || '',
-    address: token.contract || '',
-    decimals: token.decimals || 0,
-  })
-  openCustomTokenDialog()
+ * Sorting
+-------------------------------*/
+enum SortValueString {
+  NAME = 'Name',
+  PERCENT = '24h',
+  MARKET_CAP = 'Market_Cap',
+  VALUE = 'USD_Balance',
+  PRICE = 'Price',
 }
 
-const chainCustomTokens = computed(() => {
-  return customTokens.value[chainStore.selectedChain?.name || ''] || []
-})
+// Local State
+const searchInput = ref('')
+const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
+const tableDirection = ref<'asc' | 'desc'>('asc')
+const extraCustomBalances = ref<Record<string, GetErc20AddressBalanceResponse>>(
+  {},
+)
+
 /** -------------------------------
  * Total Value
 -------------------------------*/
@@ -696,48 +730,21 @@ const totalValue = computed(() => {
 })
 
 /** -------------------------------
- * Sorting
--------------------------------*/
-enum SortValueString {
-  NAME = 'Name',
-  PERCENT = '24h',
-  MARKET_CAP = 'Market_Cap',
-  VALUE = 'USD_Balance',
-}
-const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
-const tableDirection = ref<'asc' | 'desc'>('asc')
+ * Computed Values
+ -------------------------------*/
+const chainCustomTokens = computed(() => {
+  const chainName = chainStore.selectedChain?.name || ''
+  return customTokens.value[chainName] || []
+})
+const isLoading = computed(() =>
+  props.view === 'watchlist'
+    ? isLoadingBalances.value || isLoadingWatchlist.value
+    : isLoadingBalances.value,
+)
 
-const setHeaderSort = (key: SortValueString) => {
-  if (headerSort.value === key) {
-    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    tableDirection.value = 'desc'
-  }
-  headerSort.value = key
-}
 /** -------------------------------
- * Watchlist
--------------------------------*/
-
-const watchListStore = useWatchlistStore()
-const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  watchListStore
-const { watchListedTokens } = storeToRefs(watchListStore)
-
-const setWatchlistToken = (tokenId: string) => {
-  if (!tokenId) return
-  if (isWatchListed(tokenId)) {
-    removeTokenWatchList(tokenId)
-  } else {
-    addTokenToWatchList(tokenId)
-    fetchWatchlistTable()
-  }
-}
-
-/**-------------------------------
- * Watchlist Fetch URL
--------------------------------*/
-
+ * Fetching & Watchers
+ -------------------------------*/
 const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
@@ -753,42 +760,90 @@ const {
   .get()
   .json<GetWebTokensWatchlistResponse>()
 
-const isLoading = computed<boolean>(() => {
-  return props.view === 'watchlist'
-    ? isLoadingBalances.value || isLoadingWatchlist.value
-    : isLoadingBalances.value
-})
-/**-------------------------------
- * Balances Table Data
--------------------------------*/
-export interface DisplayToken extends TokenBalance {
-  fiatBalance?: number
-  fiatBalanceFormatted?: string
+const getCustomTokenBalance = async (
+  contractAddress: string,
+): Promise<GetErc20AddressBalanceResponse> => {
+  const path = getAPIPath(
+    `/v1/evm/chains/${selectedChain.value?.chainID}/erc20/${contractAddress}/addresses/${walletAddress.value}/balance`,
+  )
+  const response = await fetch(path)
+  if (!response.ok) throw new Error('Failed to fetch balance')
+  return response.json()
+}
+
+watch(selectedChain, () => (extraCustomBalances.value = {}))
+
+watch(
+  [chainCustomTokens, walletAddress],
+  async () => {
+    if (props.view !== 'custom') return
+
+    const existingAddresses = new Set(
+      allTokens.value.map(t => t.contract?.toLowerCase()),
+    )
+
+    for (const token of chainCustomTokens.value) {
+      const addr = token.address.toLowerCase()
+      if (!existingAddresses.has(addr) && !extraCustomBalances.value[addr]) {
+        try {
+          extraCustomBalances.value[addr] = await getCustomTokenBalance(
+            token.address,
+          )
+        } catch (e) {
+          console.error('Error fetching custom token balance:', e)
+        }
+      }
+    }
+  },
+  { immediate: true },
+)
+
+/** -------------------------------
+ * Table Logic
+ -------------------------------*/
+const setHeaderSort = (key: SortValueString) => {
+  if (headerSort.value === key) {
+    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    tableDirection.value = 'desc'
+    headerSort.value = key
+  }
+}
+
+const getFiatValue = (token: TokenBalance): BigNumber => {
+  return BigNumber(token.price || 0).multipliedBy(token.balance)
+}
+
+const mapToDisplay = (token: TokenBalance): DisplayToken => {
+  const fiat = getFiatValue(token)
+  return {
+    ...token,
+    fiatBalance: fiat.toNumber(),
+    fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+  }
 }
 
 const tokens = computed<DisplayToken[]>(() => {
-  let tokens: DisplayToken[] = []
+  let list: DisplayToken[] = []
+
+  // Create lookups for faster access
+  const balanceMap = new Map(
+    allTokens.value.map(t => [t.contract?.toLowerCase(), t]),
+  )
+  const coinIdMap = new Map(allTokens.value.map(t => [t.coinId, t]))
+
   if (props.view === 'watchlist') {
-    tokens =
-      [...(wachListMarketData.value || [])]
+    list =
+      (wachListMarketData.value || [])
         .filter(token => watchListedTokens.value.includes(token.coinId))
         .map(token => {
-          const hasTokenBalance = allTokens.value.filter(
-            _token => token.coinId === _token.coinId,
-          )
-          if (hasTokenBalance.length > 0) {
-            const _token = hasTokenBalance[0]
-            const fiatBalance = getFiatValue(_token)
-            return {
-              ..._token,
-              fiatBalance: fiatBalance.toNumber(),
-              fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
-            }
-          }
+          const balanceToken = coinIdMap.get(token.coinId)
+          if (balanceToken) return mapToDisplay(balanceToken)
+
           return {
             ...token,
             fiatBalance: 0,
-            fiatBalanceFormatted: `$0.00`,
+            fiatBalanceFormatted: '$0.00',
             balanceWei: '0x',
             balance: '0',
             contract: '',
@@ -797,24 +852,38 @@ const tokens = computed<DisplayToken[]>(() => {
             price_change_percentage_24h: token.priceChangePercentage24h || 0,
             sparkline_in_7d: token.sparklineIn7d || [],
             logo_url: token.logoUrl || '',
-          }
+          } as DisplayToken
         }) || []
   } else if (props.view === 'custom') {
-    // TODO: figure out balance fetching
-    tokens = chainCustomTokens.value.map(customToken => {
-      const hasTokenBalance = allTokens.value.filter(
-        _token =>
-          customToken.address.toLowerCase() === _token.contract?.toLowerCase(),
-      )
-      if (hasTokenBalance.length > 0) {
-        const _token = hasTokenBalance[0]
-        const fiatBalance = getFiatValue(_token)
+    list = chainCustomTokens.value.map(customToken => {
+      const balanceToken = balanceMap.get(customToken.address.toLowerCase())
+      if (balanceToken) {
         return {
-          ..._token,
-          fiatBalance: fiatBalance.toNumber(),
-          fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+          ...mapToDisplay(balanceToken),
+          symbol: customToken.symbol,
         }
       }
+
+      const extra = extraCustomBalances.value[customToken.address.toLowerCase()]
+      if (extra) {
+        const balance = formatUnits(
+          BigInt(extra.nativeValue),
+          customToken.decimals,
+        )
+        const fiat = BigNumber(extra.fiatValue || 0)
+        return {
+          name: customToken.name,
+          symbol: customToken.symbol,
+          contract: customToken.address,
+          decimals: customToken.decimals,
+          balanceWei: extra.nativeValue,
+          balance,
+          fiatBalance: fiat.toNumber(),
+          fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
+          price: extra.priceFiatPerNative || 0,
+        } as DisplayToken
+      }
+
       return {
         name: customToken.name,
         symbol: customToken.symbol,
@@ -823,146 +892,115 @@ const tokens = computed<DisplayToken[]>(() => {
         balanceWei: '0x',
         balance: '0',
         fiatBalance: 0,
-        fiatBalanceFormatted: `$0.00`,
+        fiatBalanceFormatted: '$0.00',
       } as DisplayToken
     })
   } else if (props.view === 'stocks') {
-    tokens = [...allStocks.value].map(token => {
-      const fiatBalance = getFiatValue(token)
-      return {
-        ...token,
-        fiatBalance: fiatBalance.toNumber(),
-        fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
-      }
-    })
+    list = allStocks.value.map(mapToDisplay)
   } else {
-    tokens = [...allTokens.value].map(token => {
-      const fiatBalance = getFiatValue(token)
-      return {
-        ...token,
-        fiatBalance: fiatBalance.toNumber(),
-        fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
-      }
-    })
+    list = allTokens.value.map(mapToDisplay)
   }
 
-  //Search
-  if (searchInput.value && searchInput.value.length > 0) {
-    return searchArrayByKeysStr(tokens, ['name', 'symbol'], searchInput.value)
+  if (searchInput.value) {
+    list = searchArrayByKeysStr(list, ['name', 'symbol'], searchInput.value)
   }
-  //Sorting
-  if (headerSort.value === SortValueString.NAME) {
-    return sortObjectArrayString(tokens, 'name', tableDirection.value)
+
+  // Sorting logic
+  const sortMap: Record<SortValueString, () => DisplayToken[]> = {
+    [SortValueString.NAME]: () =>
+      sortObjectArrayString(list, 'symbol', tableDirection.value),
+    [SortValueString.PERCENT]: () =>
+      sortObjectArrayNumber(
+        list,
+        'price_change_percentage_24h',
+        tableDirection.value,
+      ),
+    [SortValueString.MARKET_CAP]: () =>
+      sortObjectArrayNumber(list, 'market_cap', tableDirection.value),
+    [SortValueString.VALUE]: () =>
+      sortObjectArrayNumber(list, 'fiatBalance', tableDirection.value),
+    [SortValueString.PRICE]: () =>
+      sortObjectArrayNumber(list, 'price', tableDirection.value),
   }
-  if (headerSort.value === SortValueString.PERCENT) {
-    return sortObjectArrayNumber(
-      tokens,
-      'price_change_percentage_24h',
-      tableDirection.value,
-    )
-  }
-  if (headerSort.value === SortValueString.MARKET_CAP) {
-    return sortObjectArrayNumber(tokens, 'market_cap', tableDirection.value)
-  }
-  if (headerSort.value === SortValueString.VALUE) {
-    return sortObjectArrayNumber(tokens, 'fiatBalance', tableDirection.value)
-  }
-  return tokens
+
+  return sortMap[headerSort.value] ? sortMap[headerSort.value]() : list
 })
 
-const getFiatValue = (token: TokenBalance): BigNumber => {
-  return BigNumber(token.price || 0).multipliedBy(token.balance)
-}
-
 /** -------------------------------
- * Custom Token
-  -------------------------------*/
-
-// const customTokensMenu = ref([
-//   { label: 'Add Custom Token', value: 'add-custom' },
-//   { label: 'Edit Custom Token', value: 'edit-custom' },
-// ])
-
-// const openCustomTokenMenu = () => {
-//   //TODO: implement custom token functionality
-//   toastStore.addToastMessage({
-//     text: 'The custom token feature is coming soon!',
-//   })
-// }
-
-/** -------------------------------
- * Number of items shown in the table
--------------------------------*/
-const shownItemsOptions = <AppSelectOption[]>[
+ * Pagination Logic
+ -------------------------------*/
+const shownItemsOptions: AppSelectOption[] = [
   { label: '5', value: '5' },
   { label: '10', value: '10' },
   { label: '50', value: '50' },
   { label: '100', value: '100' },
 ]
-
-const shownItems = computed<number>(() => {
-  return Number(activeShownItems.value.value)
-})
-
-const getTableHeight = computed<string>(() => {
-  if (shownItems.value === 5) {
-    return 'min-h-[320px]'
-  }
-  return 'min-h-[596px]'
-})
-/** -------------------------------
- * Pagination
--------------------------------*/
 const activeShownItems = ref<AppSelectOption>(shownItemsOptions[1])
-
-const getCurrentViewableItemsIndex = computed<number>(() => {
-  const viewing = shownItems.value * (currentPage.value + 1)
-  if (viewing > tokens.value.length) {
-    return tokens.value.length
-  }
-  return viewing
-})
+const shownItems = computed(() => Number(activeShownItems.value.value))
 
 const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
   usePaginate<DisplayToken>(tokens, shownItems)
 
-const buyBtn = () => {
-  window.open('https://ccswap.myetherwallet.com', '_blank')
-}
-const bridgeBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('bridge')
-  if (!isOpenSideMenu.value) {
-    walletMenu.setIsOpenSideMenu(true)
-  }
-  if (!isMobile) {
-    goToTokenPage(token)
-  }
-}
-const swapBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('swap')
-  if (!isOpenSideMenu.value) {
-    walletMenu.setIsOpenSideMenu(true)
-  }
-  if (!isMobile) {
-    goToTokenPage(token)
-  }
-}
+const getTableHeight = computed(() =>
+  shownItems.value === 5 ? 'min-h-[320px]' : 'min-h-[596px]',
+)
 
-const parsePercent = (val: number | null): string => {
-  if (val === null || val === undefined) return ''
-  return formatPercentageValue(val ?? 0).value
-}
+const getCurrentViewableItemsIndex = computed(() =>
+  Math.min(shownItems.value * (currentPage.value + 1), tokens.value.length),
+)
 
-/**-------------------------------
- * Token Link
- --------------------------------*/
-const router = useRouter()
+/** -------------------------------
+ * Navigation & Handlers
+ -------------------------------*/
+const buyBtn = () => window.open('https://ccswap.myetherwallet.com', '_blank')
 
 const goToTokenPage = (token: DisplayToken) => {
-  useTokenInfoStore().setTokenInfo(token)
+  tokenInfoStore.setTokenInfo(token)
   router.push({
     name: TOKEN_INFO_ROUTE_NAMES.home,
     params: { tokenId: token.coinId || token.symbol },
   })
+}
+
+const setWatchlistToken = (tokenId: string) => {
+  if (!tokenId) return
+  if (isWatchListed(tokenId)) {
+    removeTokenWatchList(tokenId)
+  } else {
+    addTokenToWatchList(tokenId)
+    fetchWatchlistTable()
+  }
+}
+
+const openAddCustom = () => {
+  setCurrentView('add')
+  openCustomTokenDialog()
+}
+
+const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
+  setCurrentView(action, {
+    name: token.name,
+    symbol: token.symbol || '',
+    address: token.contract || '',
+    decimals: token.decimals || 0,
+  })
+  openCustomTokenDialog()
+}
+
+const swapBtn = (token: DisplayToken, isMobile = false) => {
+  setWalletPanel('swap')
+  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
+  if (!isMobile) goToTokenPage(token)
+}
+
+const bridgeBtn = (token: DisplayToken, isMobile = false) => {
+  setWalletPanel('bridge')
+  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
+  if (!isMobile) goToTokenPage(token)
+}
+
+const parsePercent = (val: number | null): string => {
+  if (val === null || val === undefined) return ''
+  return formatPercentageValue(val).value
 }
 </script>

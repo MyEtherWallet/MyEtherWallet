@@ -124,9 +124,7 @@
                   class="mr-4"
                 />
                 <div class="text-left">
-                  <p
-                    class="uppercase font-medium text-s-15 text-black text-s-12"
-                  >
+                  <p class="uppercase font-medium text-s-15 text-black">
                     {{ truncate(token.symbol, 7) }}
                   </p>
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">

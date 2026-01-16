@@ -22,7 +22,7 @@ export const sortObjectArrayNumber = <T>(
       return 0 // If either value is not a number, do not change their order
     }
 
-    if (order === 'desc') {
+    if (order === 'asc') {
       return valueA - valueB
     } else {
       return valueB - valueA
@@ -53,7 +53,7 @@ export const sortObjectArrayString = <T>(
     const valueA = String(a[key]).toLowerCase()
     const valueB = String(b[key]).toLowerCase()
 
-    if (order === 'asc') {
+    if (order === 'desc') {
       return valueA.localeCompare(valueB)
     } else {
       return valueB.localeCompare(valueA)
