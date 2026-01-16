@@ -23,9 +23,10 @@
         class="mr-2"
         :is-stock="selectedToken.is_rwa"
       />
-      <p v-if="!isLoading" class="font-medium text-nowrap">
-        {{ truncate(selectedToken.symbol, 7) }}
-      </p>
+      <app-token-symbol
+        :symbol="selectedToken.symbol"
+        :is-stock="selectedToken.is_rwa"
+      />
       <div class="ml-1 min-w-4 h-4">
         <chevron-down-icon v-if="!isLoading" class="text-info" />
       </div>
@@ -121,12 +122,14 @@
                 <app-token-logo
                   :url="token.logo_url"
                   :alt="token.symbol"
+                  :is-stock="token.is_rwa"
                   class="mr-4"
                 />
                 <div class="text-left">
-                  <p class="uppercase font-medium text-s-15 text-black">
-                    {{ truncate(token.symbol, 7) }}
-                  </p>
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :is-stock="token.is_rwa"
+                  />
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
                     <h2 class="text-s-12 text-info whitespace-nowrap">
                       {{ truncate(token.name, 10) }}
@@ -141,10 +144,17 @@
                 <p class="font-normal text-s-14 text-black">
                   $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
-                <p class="text-info text-s-12 font-normal">
-                  {{ getBalance(token.balance) }}
-                  {{ truncate(token.symbol, 7) }}
-                </p>
+                <div class="flex item-center justify-end gap-1">
+                  <p class="text-info text-s-12 font-normal">
+                    {{ getBalance(token.balance) }}
+                  </p>
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :is-stock="token.is_rwa"
+                    :has-gradient="false"
+                    class="text-info !text-s-12 font-normal"
+                  />
+                </div>
               </div>
             </div>
           </button>
@@ -182,6 +192,7 @@ import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from './AppTokenLogo.vue'
+import AppTokenSymbol from './AppTokenSymbol.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,

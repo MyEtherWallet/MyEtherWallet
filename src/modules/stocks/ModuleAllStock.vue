@@ -281,9 +281,10 @@
                       :is-stock="true"
                     />
                     <div class="truncate">
-                      <p class="uppercase font-medium truncate">
-                        {{ truncate(token.symbol, 7) }}
-                      </p>
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :is-stock="true"
+                      />
                       <app-tooltip
                         :text="token.name"
                         v-if="token.name.length > 12"
@@ -529,6 +530,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -547,7 +549,6 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { truncate } from '@/utils/filters'
 import configs from '@/configs'
 import type {
   Chain,

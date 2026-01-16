@@ -86,9 +86,10 @@
                       :is-stock="token.is_stock"
                     />
                     <div class="text-left">
-                      <h2 class="uppercase font-medium text-s-16 leading-tight">
-                        {{ truncate(token.symbol, 7) }}
-                      </h2>
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :is-stock="token.is_stock"
+                      />
                       <p class="text-info text-sm mt-0.5">
                         {{ token.name }}
                       </p>
@@ -116,8 +117,8 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/vue/24/solid'
-import { truncate } from '@/utils/filters'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'

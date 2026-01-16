@@ -182,7 +182,7 @@ const topTokens = computed<TokenGainOrLoss[]>(() => {
         ),
         id: token.coinId,
         contract: token.contract,
-        is_stock: props.type === 'stock',
+        is_stock: token.is_rwa,
       }
     }) as TokenGainOrLoss[]
   _tokens.sort((a, b) => b.gainOrLoss.abs().comparedTo(a.gainOrLoss.abs()) || 0)

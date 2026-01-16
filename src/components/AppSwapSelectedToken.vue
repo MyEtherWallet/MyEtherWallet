@@ -22,9 +22,7 @@
         height="h-7"
         class="mr-2"
       />
-      <p v-if="!isLoading" class="font-medium text-nowrap">
-        {{ truncate(selectedToken.symbol, 7) }}
-      </p>
+      <app-token-symbol v-if="!isLoading" :symbol="selectedToken.symbol" />
       <div class="ml-1 min-w-4 h-4">
         <chevron-down-icon v-if="!isLoading" class="text-info" />
       </div>
@@ -126,11 +124,7 @@
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
-                  <p class="text-s-14">
-                    <span class="uppercase font-medium text-s-17 text-black">
-                      {{ truncate(token.symbol, 7) }}</span
-                    >
-                  </p>
+                  <app-token-symbol :symbol="token.symbol" />
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
                     <h2 class="text-s-12 text-info whitespace-nowrap">
                       {{ truncate(token.name, 20) }}
@@ -238,6 +232,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 import { useScroll } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
+import AppTokenSymbol from './AppTokenSymbol.vue'
 
 const props = defineProps({
   selectedToken: {
