@@ -7,11 +7,13 @@
         :url="stock.iconPngUrl || stock.iconSvgUrl"
         :symbol="stock.primaryMarket.symbol"
         class="flex-none"
+        :is-stock="true"
       />
       <div class="min-w-0">
-        <p class="text-s-15 font-medium uppercase truncate pr-2">
-          {{ stock.primaryMarket.symbol }}
-        </p>
+        <app-token-symbol
+          :symbol="stock.primaryMarket.symbol"
+          :is-stock="true"
+        />
         <app-tooltip
           :text="stock.underlyingMarket.name"
           v-if="
@@ -60,6 +62,7 @@
 
 <script setup lang="ts">
 import AppTooltip from '@/components/AppTooltip.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import TopMoverHistoryChart from './TopMoverHistoryChart.vue'
 import {
   formatPercentageValue,

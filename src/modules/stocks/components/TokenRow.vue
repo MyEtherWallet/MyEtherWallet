@@ -1,6 +1,6 @@
 <template>
   <router-link
-    class="flex gap-3 rounded-16 hoverBGWhite shadow-button py-2 px-3 items-center bg-white"
+    class="flex gap-3 rounded-16 hoverBGWhite py-2 px-3 items-center bg-white"
     :to="{
       name: TOKEN_INFO_ROUTE_NAMES.crypto,
       params: {
@@ -11,11 +11,10 @@
     <app-token-logo
       :url="token.iconPngUrl || token.iconSvgUrl"
       :symbol="token.primaryMarket.symbol"
+      :is-stock="true"
     />
     <div class="truncate">
-      <p class="uppercase font-medium truncate text-s-15">
-        {{ truncate(token.primaryMarket.symbol || '', 7) }}
-      </p>
+      <app-token-symbol :symbol="token.primaryMarket.symbol" :is-stock="true" />
       <app-tooltip
         :text="token.underlyingMarket.name"
         v-if="
@@ -68,13 +67,13 @@
 
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import {
   formatPercentageValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import AppTooltip from '@/components/AppTooltip.vue'
 import type { StockOverviewItem } from '@/mew_api/types'
-import { truncate } from '@/utils/filters'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import TableSparkline from '@/components/TableSparkline.vue'
 import { computed } from 'vue'

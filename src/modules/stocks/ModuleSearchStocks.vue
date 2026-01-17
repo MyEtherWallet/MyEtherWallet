@@ -68,11 +68,13 @@
                       <app-token-logo
                         :symbol="stock.primaryMarket.symbol"
                         :url="stock.iconPngUrl || stock.iconSvgUrl"
+                        :is-stock="true"
                       />
                       <div class="grow min-w-0">
-                        <p class="uppercase text-s-14 font-medium truncate">
-                          {{ stock.primaryMarket.symbol }}
-                        </p>
+                        <app-token-symbol
+                          :symbol="stock.primaryMarket.symbol"
+                          :is-stock="true"
+                        />
                         <app-tooltip
                           :text="stock.underlyingMarket.name"
                           v-if="stock.underlyingMarket.name.length > 12"
@@ -170,13 +172,15 @@
                           <app-token-logo
                             :symbol="stock.primaryMarket.symbol"
                             :url="stock.iconPngUrl || stock.iconSvgUrl"
-                            height="w-5"
-                            width="w-5"
+                            height="w-6"
+                            width="w-6"
                             class="mr-1 text-s-12"
+                            :is-stock="true"
                           />
-                          <p class="uppercase text-s-14 font-medium">
-                            {{ stock.primaryMarket.symbol }}
-                          </p>
+                          <app-token-symbol
+                            :symbol="stock.primaryMarket.symbol"
+                            :is-stock="true"
+                          />
                         </button>
                       </div>
                     </div>
@@ -196,13 +200,15 @@
             <app-token-logo
               :symbol="stock.primaryMarket.symbol"
               :url="stock.iconPngUrl || stock.iconSvgUrl"
-              height="h-5"
-              width="w-5"
+              height="h-6"
+              width="w-6"
               class="mr-1 text-s-12"
+              :is-stock="true"
             />
-            <p class="uppercase text-s-14 font-medium">
-              {{ stock.primaryMarket.symbol }}
-            </p>
+            <app-token-symbol
+              :symbol="stock.primaryMarket.symbol"
+              :is-stock="true"
+            />
           </button>
         </div>
       </div>
@@ -213,6 +219,7 @@
 <script setup lang="ts">
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'

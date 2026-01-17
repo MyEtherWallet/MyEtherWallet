@@ -300,11 +300,7 @@
                       :symbol="token.symbol"
                     />
                     <div class="truncate">
-                      <p
-                        class="truncate text-s-15 font-medium leading-tight uppercase"
-                      >
-                        {{ truncate(token.symbol, 7) }}
-                      </p>
+                      <app-token-symbol :symbol="token.symbol" />
                       <p class="text-info text-s-12 font-normal mt-0.5">
                         {{ token.name }}
                       </p>
@@ -557,6 +553,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
@@ -575,7 +572,6 @@ import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { truncate } from '@/utils/filters'
 import type {
   Chain,
   GetWebTokensTableResponse,

@@ -22,7 +22,7 @@
         </app-btn-icon>
       </div>
     </div>
-    <app-sheet :is-elivated="false" class="!px-4 !py-3 lg:min-h-[244px] flex">
+    <app-sheet :is-elivated="false" class="!px-4 !py-4 lg:min-h-[258px] flex">
       <div v-if="!isLoading" class="flex flex-col gap-4 justify-center h-full">
         <a
           :href="article.articleUrl"
@@ -35,7 +35,7 @@
           <img
             :src="article.thumbnailUrl"
             alt="Article Image"
-            class="flex-none w-[60px] h-[60px] object-cover rounded-8"
+            class="flex-none w-[64px] h-[64px] object-cover rounded-12"
           />
           <div class="flex flex-col gap-1 w-full h-full justify-between">
             <p class="text-s-14 line-clamp-2">

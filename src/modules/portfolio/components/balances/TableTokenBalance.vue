@@ -237,16 +237,14 @@
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
+                  :is-stock="!!token.is_rwa"
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
-                  <p
-                    class="truncate font-medium text-s-14 xs:text-s-15 uppercase text-black leading-tight"
-                  >
-                    <span class="text-s-14">
-                      {{ truncate(token.symbol, 7) }}</span
-                    >
-                  </p>
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :is-stock="!!token.is_rwa"
+                  />
                   <div
                     class="flex items-center gap-1 text-info text-s-12 mt-0.5"
                   >
@@ -329,10 +327,18 @@
               <p class="font-normal text-s-14 xs:text-s-15 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-info text-s-12 xs:text-[13px] mt-0.5">
-                {{ formatFloatingPointValue(token.balance).value }}
-                {{ truncate(token.symbol, 7) }}
-              </p>
+              <div class="flex justify-end gap-1 items-center mt-0.5">
+                <p class="text-info text-s-12 xs:text-[13px] font-normal">
+                  {{ formatFloatingPointValue(token.balance).value }}
+                </p>
+                <app-token-symbol
+                  class="text-info text-s-12 xs:text-[13px] font-normal"
+                  :symbol="token.symbol"
+                  :is-stock="!!token.is_rwa"
+                  :has-gradient="false"
+                >
+                </app-token-symbol>
+              </div>
             </td>
             <!-- Actions -->
             <td
@@ -598,6 +604,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
@@ -625,7 +632,6 @@ import { usePaginate } from '@/composables/usePaginate'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
-import { truncate } from '@/utils/filters'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import {
   formatFiatValue,

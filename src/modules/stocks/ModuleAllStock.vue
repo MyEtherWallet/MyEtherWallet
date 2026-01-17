@@ -1,21 +1,23 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
-    <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">All Stocks</h1>
-
     <div class="basis-full">
-      <div class="flex flex-wrap justify-start items-center gap-2">
+      <div
+        class="flex flex-wrap justify-start md:justify-between items-center gap-2 mb-6"
+      >
+        <h1 class="text-s-20 lg:text-s-32 font-bold ml-2">All Stocks</h1>
+
         <!-- Mobile only Categories-->
         <app-select
           v-model:selected="selectedCryptoFilter"
           :options="cryptoFilterOptions"
           position="left-0"
           placeholder="Category Menu"
-          class="w-full xs:hidden"
+          class="w-full md:hidden"
         >
           <template #select-button="{ toggleSelect }">
-            <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <div class="bg-surface rounded-full p-1 w-full">
               <button
-                class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
+                class="rounded-full bg-white py-3 w-full xs:min-w-[180px] px-5 shadow-button"
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
@@ -28,71 +30,50 @@
             </div>
           </template>
         </app-select>
-        <!-- Search-->
-        <div
-          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:w-auto md:min-w-[400px]"
+
+        <app-btn-group
+          v-model:selected="selectedCryptoFilter"
+          :btn-list="cryptoFilterOptions.slice(0, 4)"
+          size="large"
+          class="hidden md:flex"
         >
-          <app-search-input v-model="searchInput" class="grow" />
-          <app-select
-            v-model:selected="selectedCryptoFilter"
-            :options="cryptoFilterOptions"
-            position="left-0"
-            placeholder="Category Menu"
-            class="hidden xs:block md:hidden"
-          >
-            <template #select-button="{ toggleSelect }">
-              <button
-                class="rounded-full bg-white py-3 w-full xs:w-auto xs:min-w-[180px] px-5 shadow-button"
-                @click="toggleSelect"
-              >
-                <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium truncate">
-                    {{ selectedCryptoFilter.label }}</span
-                  >
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
-                </div>
-              </button>
-            </template>
-          </app-select>
-        </div>
-        <!--Filter Lists-->
-        <div class="">
-          <app-btn-group
-            v-model:selected="selectedCryptoFilter"
-            :btn-list="cryptoFilterOptions.slice(0, 4)"
-            size="large"
-            class="hidden md:flex"
-          >
-            <template #btn-content="{ data }">
-              {{ data.label }}
-            </template>
-            <template #custom>
-              <app-select
-                v-model:selected="selectedCryptoFilter"
-                :options="
-                  cryptoFilterOptions.slice(4, cryptoFilterOptions.length)
-                "
-                position="-right-1"
-                class="text-s-12"
-              >
-                <template #select-button="{ toggleSelect }">
-                  <button
-                    class="rounded-full hoverNoBG px-3 py-2"
-                    @click="toggleSelect"
-                  >
-                    <div class="flex items-center text-s-17 leading-p-140">
-                      <span>More</span>
-                      <chevron-down-icon class="w-4 h-4 ml-1" />
-                    </div>
-                  </button>
-                </template>
-              </app-select>
-            </template>
-          </app-btn-group>
-        </div>
+          <template #btn-content="{ data }">
+            {{ data.label }}
+          </template>
+          <template #custom>
+            <app-select
+              v-model:selected="selectedCryptoFilter"
+              :options="
+                cryptoFilterOptions.slice(4, cryptoFilterOptions.length)
+              "
+              position="-right-1"
+              class="text-s-12"
+            >
+              <template #select-button="{ toggleSelect }">
+                <button
+                  class="rounded-full hoverNoBG px-3 py-2"
+                  @click="toggleSelect"
+                >
+                  <div class="flex items-center text-s-17 leading-p-140">
+                    <span>More</span>
+                    <chevron-down-icon class="w-4 h-4 ml-1" />
+                  </div>
+                </button>
+              </template>
+            </app-select>
+          </template>
+        </app-btn-group>
       </div>
 
       <div class="mt-3 bg-white rounded-16 py-4 px-2">
+        <div class="px-2 py-2 mb-4">
+          <div
+            class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:max-w-[500px]"
+          >
+            <app-search-input v-model="searchInput" class="grow" />
+          </div>
+        </div>
+
         <div class="static" ref="tableContainer">
           <table class="w-full text-sm table-fixed">
             <!-- Header-->
@@ -101,7 +82,7 @@
                 class="text-left text-s-11 uppercase text-info tracking-sp-06"
               >
                 <!-- Watchlist -->
-                <th class="w-8 sm:w-9 3xl:w-10 hidden sm:table-cell"></th>
+                <th class="sm:w-10 hidden sm:table-cell"></th>
                 <!-- Name -->
                 <th
                   :class="
@@ -251,7 +232,7 @@
                 @click="goToTokenPage(token)"
               >
                 <!-- Watchlist -->
-                <td class="sm:pr-1 hidden sm:table-cell rounded-l-12">
+                <td class="sm:w-10 hidden sm:table-cell rounded-l-12 pl-1">
                   <button
                     @click.stop="setWatchlistToken(token.coinId)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
@@ -278,11 +259,13 @@
                     <app-token-logo
                       :url="token.iconPngUrl || token.iconSvgUrl"
                       :symbol="token.symbol"
+                      :is-stock="true"
                     />
                     <div class="truncate">
-                      <p class="uppercase font-medium truncate">
-                        {{ truncate(token.symbol, 7) }}
-                      </p>
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :is-stock="true"
+                      />
                       <app-tooltip
                         :text="token.name"
                         v-if="token.name.length > 12"
@@ -325,6 +308,7 @@
                       :height="35"
                       :max-points="35"
                       :percent-change="getActivePercent(token) || undefined"
+                      fill
                     />
                   </div>
                 </td>
@@ -528,6 +512,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -546,7 +531,6 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { truncate } from '@/utils/filters'
 import configs from '@/configs'
 import type {
   Chain,

@@ -10,9 +10,7 @@
   >
     <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
     <div class="truncate">
-      <p class="truncate text-s-14 font-medium uppercase leading-tight">
-        {{ truncate(token.symbol, 7) }}
-      </p>
+      <app-token-symbol :symbol="token.symbol" />
       <p class="text-info text-s-12 mt-0.5">
         {{ token.name }}
       </p>
@@ -36,12 +34,12 @@
 
 <script setup lang="ts">
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import {
   formatPercentageValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import type { CryptoOverviewToken } from '@/mew_api/types'
-import { truncate } from '@/utils/filters'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 defineProps<{
