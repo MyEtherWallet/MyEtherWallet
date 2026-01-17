@@ -59,11 +59,11 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortValue }}</span>
-                  <ArrowUpIcon
-                    v-if="activeSortDirection === SortDirection.DESC"
+                  <ArrowLongUpIcon
+                    v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
                   />
-                  <ArrowDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -90,11 +90,11 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowUpIcon
-                        v-if="activeSortDirection === SortDirection.DESC"
+                      <ArrowLongUpIcon
+                        v-if="activeSortDirection === SortDirection.ASC"
                         class="w-5 h-5 text-primary"
                       />
-                      <ArrowDownIcon v-else class="w-5 h-5 text-primary" />
+                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
                     </div>
                   </button>
                 </div>
@@ -211,8 +211,8 @@ import { type NewTokenInfo } from '@/composables/useSwap'
 import { type Ref, ref, computed, onMounted } from 'vue'
 import {
   ChevronDownIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
+  ArrowLongDownIcon,
+  ArrowLongUpIcon,
 } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
@@ -339,7 +339,7 @@ enum SortDirection {
 }
 
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
-const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
+const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
