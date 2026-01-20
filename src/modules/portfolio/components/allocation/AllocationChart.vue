@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-[145px] mx-auto max-h-[145px] overflow-visible">
+  <div class="h-full w-full max-h-[145px] max-w-[145px] mx-auto">
     <doughnut v-if="!isLoading" :data="chartData" :options="chartOptions" />
   </div>
 </template>

@@ -70,21 +70,14 @@
         </div>
       </app-sheet>
       <!-- TODO: add link-->
-      <div
-        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
-      >
-        {{ $t('wc_dialog.no_wallet') }}
-        <span class="underline">
-          {{ $t('wc_dialog.get_wallet') }}
-          <span class="text-sm"> →</span></span
-        >
-      </div>
+      <ButtonNoWallet class="mt-5" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
+import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import { ref, watch, markRaw, computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'

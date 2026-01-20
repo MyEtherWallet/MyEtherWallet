@@ -27,21 +27,14 @@
         </div>
       </app-sheet>
       <!-- TODO: add link-->
-      <div
-        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
-      >
-        {{ $t('wc_dialog.no_wallet') }}
-        <span class="underline">
-          {{ $t('wc_dialog.get_wallet') }}
-          <span class="text-sm"> →</span></span
-        >
-      </div>
+      <ButtonNoWallet class="mt-5" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { isValidPrivate } from '@ethereumjs/util'
+import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'

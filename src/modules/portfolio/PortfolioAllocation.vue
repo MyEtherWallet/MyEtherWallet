@@ -13,20 +13,17 @@
 
     <div
       v-if="!isLoadingBalances && topTokens.length"
-      class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-4 w-full h-full pb-1"
+      class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 sm:gap-4 w-full h-full pb-1 overflow-hidden"
     >
-      <div class="w-full sm:w-auto shrink flex justify-center shrink-0">
-        <AllocationChart
-          :tokens="topTokens.slice(0, 5)"
-          :isLoading="isLoadingBalances"
-        />
-      </div>
-      <div class="w-full sm:flex-1 pr-1 max-w-[200px]">
-        <AllocationTokens
-          :tokens="topTokens.slice(0, 5)"
-          :isLoading="isLoadingBalances"
-        />
-      </div>
+      <AllocationChart
+        :tokens="topTokens.slice(0, 5)"
+        :isLoading="isLoadingBalances"
+        class="flex-1 min-w-0"
+      />
+      <AllocationTokens
+        :tokens="topTokens.slice(0, 5)"
+        :isLoading="isLoadingBalances"
+      />
     </div>
     <div
       v-else-if="isLoadingBalances"

@@ -87,21 +87,14 @@
         </app-stepper>
       </app-sheet>
       <!-- TODO: add link-->
-      <div
-        class="mt-5 block text-info text-s-14 sm:text-s-17 leading-p-150 hoverOpacity"
-      >
-        {{ $t('wc_dialog.no_wallet') }}
-        <span class="underline">
-          {{ $t('wc_dialog.get_wallet') }}
-          <span class="text-sm"> →</span></span
-        >
-      </div>
+      <ButtonNoWallet class="mt-5" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import { storeToRefs } from 'pinia'
 import { watchDebounced } from '@vueuse/core'
 import { useWalletStore } from '@/stores/walletStore'
