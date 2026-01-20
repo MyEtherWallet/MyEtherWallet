@@ -11,7 +11,7 @@
       />
 
       <div
-        class="flex flex-col flex-1 px-6 py-12 place-content-center justify-center gap-4 lg:gap-6 text-center z-10"
+        class="flex flex-col flex-1 px-6 py-12 place-content-center justify-center gap-4 lg:gap-6 text-center z-4"
       >
         <div class="max-w-[540px] mx-auto">
           <p class="text-s-20 lg:text-s-24 font-bold mb-2">
