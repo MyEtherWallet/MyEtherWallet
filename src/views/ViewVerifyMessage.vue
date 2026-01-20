@@ -19,7 +19,11 @@
           />
           <address-input
             v-model:adr-input="signingAddress"
+            :resolved-address="resolvedAddress"
             :network="selectedChain"
+            :address-error-messages="adrError"
+            @validate:address="validateAddressInput"
+            @immediate-update:resolved-address="onInput"
             label="Signing Address"
             class="w-full"
           />
@@ -100,7 +104,13 @@ const verifying = ref(false)
 const signature = ref('')
 const verified = ref(false)
 const verifyMessageDesc = ref('')
-const { adrInput: signingAddress } = useAddressInput(selectedChain)
+const {
+  adrInput: signingAddress,
+  resolvedAddress,
+  onInput,
+  validateAddressInput,
+  adrError,
+} = useAddressInput(selectedChain)
 
 const possibleJsonParse = (str: string | object) => {
   if (typeof str === 'object') return str
@@ -167,6 +177,7 @@ const canVerifyMessage = computed(() => {
     message.value !== '' &&
     signingAddress.value !== '' &&
     signature.value !== '' &&
+    (adrError.value === undefined || adrError.value === '') &&
     !!Object.keys(verifier).find(key => key === selectedChain.value?.type)
   )
 })
