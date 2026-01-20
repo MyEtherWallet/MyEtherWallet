@@ -2,22 +2,16 @@
   <div class="flex justify-center w-full">
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('sign-message')">
-        <div class="flex items-center flex-col gap-6 pt-6">
+        <div class="flex items-center flex-col gap-1 pt-6">
           <app-text-field
             v-model="message"
             placeholder="Enter the message to sign"
             class="w-full"
           />
-          <div
-            v-if="!isWalletConnected"
-            class="text-warning bg-warning-10 px-4 py-2 rounded-lg text-s-14 w-full text-center"
-          >
-            Please connect your wallet to sign message.
-          </div>
           <app-base-button
             @click="handleSigner"
-            class="w-full sm:w-auto min-w-[240px]"
-            :disabled="!cansignMessage"
+            class="w-full sm:w-auto"
+            :disabled="isWalletConnected ? !cansignMessage : false"
           >
             {{ isWalletConnected ? $t('sign-message') : $t('connect_wallet') }}
           </app-base-button>
@@ -60,7 +54,7 @@
                     {{ signature }}
                   </div>
                 </div>
-                <app-base-button @click="copy" class="w-full">
+                <app-base-button @click="copy" class="xs:mx-auto xs:w-auto">
                   Copy Signature
                 </app-base-button>
               </div>

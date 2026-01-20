@@ -1,31 +1,25 @@
 <template>
   <app-sheet
-    sheet-class="no-balance-gradient bg-no-repeat bg-cover !p-0 overflow-hidden"
+    sheet-class="!p-0 bg-no-repeat  flex items-center justify-center !lg:p-0 !relative bg-[url('@/assets/images/backgrounds/eth-left.webp'),_url('@/assets/images/backgrounds/eth-right.webp'),_radial-gradient(circle_500px_at_50%_100%,_rgba(255,255,255,0.5)_60%,transparent_100%),_linear-gradient(to_bottom,transparent,rgba(255,255,255,0.6)_90px,rgba(255,255,255,1)_190px),linear-gradient(to_right,rgba(90,197,210,1)_0%,rgba(149,206,253,1)_50%,rgba(126,138,250,1)_100%)] bg-[size:0px,_0px,_100%,_100%,_100%] xs:bg-[size:90px,_90px,_100%,_100%,_100%]  2xl:bg-[size:150px,_150px,_100%,_100%,_100%] bg-[position:_left_10px_top_10px,_right_10px_bottom_0px,_center_center,_center_center,_center_center]"
     :is-elivated="false"
   >
     <div class="flex h-full items-center justify-between relative">
-      <img
-        :src="ImgEthLeft"
-        class="hidden lg:flex contain max-w-[20%] max-h-[160px] ml-[-2%]"
-        width=""
-      />
-
       <div
-        class="flex flex-col flex-1 px-6 py-12 place-content-center justify-center gap-4 lg:gap-6 text-center z-10"
+        class="flex flex-col flex-1 p-4 xl:p-6 place-content-center justify-center gap-4 xl:gap-6 text-center z-4"
       >
         <div class="max-w-[540px] mx-auto">
-          <p class="text-s-20 lg:text-s-24 font-bold mb-2">
+          <p class="text-s-20 xl:text-s-24 font-bold mb-2">
             You don't have any crypto
           </p>
 
-          <p class="text-s-15 lg:text-s-17 text-info leading-relaxed">
+          <p class="text-s-15 xl:text-s-17 text-info leading-relaxed">
             To start trading and managing your digital assets, you will need
             some
             {{ selectedChain?.currencyName }} in your portfolio.
           </p>
         </div>
         <div
-          class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4"
+          class="flex flex-col xs:flex-row items-center justify-center gap-3 md:gap-4 flex-wrap"
         >
           <app-base-button
             v-if="isNativeBuyable"
@@ -34,28 +28,25 @@
           >
             <div class="flex gap-2 items-center justify-center">
               <icon-buy
-                class="w-6 h-6 text-white"
+                class="w-5 h-5 xl:w-6 xl:h-6 text-white"
                 dollar-icon-color="rgb(0,90,229,1)"
               />
               <p>Buy {{ selectedChain?.currencyName }}</p>
             </div>
           </app-base-button>
           <app-base-button
-            class="min-w-[180px]"
+            class="min-w-[165px] xl:min-w-[180px]"
             is-outline
             @click="openDepositDialog = true"
+            :size="isXLAndUp ? 'large' : 'medium'"
           >
             <div class="flex gap-2 items-center justify-center">
-              <QrCodeIcon class="w-5 h-5 text-primary" />
+              <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-primary" />
               <p>Deposit {{ selectedChain?.currencyName }}</p>
             </div>
           </app-base-button>
         </div>
       </div>
-      <img
-        :src="ImgEthRight"
-        class="hidden lg:flex contain max-w-[20%] place-self-end max-h-[160px] mr-[-2%] mb-[-2%]"
-      />
     </div>
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />
   </app-sheet>
@@ -68,11 +59,11 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { storeToRefs } from 'pinia'
-import ImgEthLeft from '@/assets/images/backgrounds/eth-left.webp'
-import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
 import { ref, computed } from 'vue'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
+const { isXLAndUp } = useAppBreakpoints()
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
 const purchaseStore = usePurchaseStore()
