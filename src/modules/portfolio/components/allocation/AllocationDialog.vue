@@ -28,11 +28,11 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2 ml-1">{{ activeSortValue }}</span>
-                  <ArrowUpIcon
-                    v-if="activeSortDirection === SortDirection.DESC"
+                  <ArrowLongUpIcon
+                    v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4"
                   />
-                  <ArrowDownIcon v-else class="w-4 h-4" />
+                  <ArrowLongDownIcon v-else class="w-4 h-4" />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -59,11 +59,11 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto"
                     >
-                      <ArrowUpIcon
-                        v-if="activeSortDirection === SortDirection.DESC"
+                      <ArrowLongUpIcon
+                        v-if="activeSortDirection === SortDirection.ASC"
                         class="w-5 h-5 text-primary"
                       />
-                      <ArrowDownIcon v-else class="w-5 h-5 text-primary" />
+                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
                     </div>
                   </button>
                 </div>
@@ -83,13 +83,15 @@
                       :url="token.icon"
                       :symbol="token.symbol"
                       class="mr-4"
+                      :is-stock="token.is_stock"
                     />
                     <div class="text-left">
-                      <h2>{{ token.name }}</h2>
-                      <p class="text-info text-sm">
-                        <span class="uppercase text-xs">
-                          {{ truncate(token.symbol, 7) }}</span
-                        >
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :is-stock="token.is_stock"
+                      />
+                      <p class="text-info text-sm mt-0.5">
+                        {{ token.name }}
                       </p>
                     </div>
                   </div>
@@ -115,8 +117,8 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/vue/24/solid'
-import { truncate } from '@/utils/filters'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import { ArrowLongDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
@@ -173,7 +175,7 @@ enum SortDirection {
 }
 
 const activeSortValue = ref<SortValueString>(SortValueString.ALLOCATION)
-const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
+const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {

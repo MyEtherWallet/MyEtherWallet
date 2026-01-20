@@ -35,8 +35,8 @@
         >
           <div
             v-if="isOpen"
-            :class="[bg, $attrs.class]"
             class="cursor-default min-w-[320px] rounded-32 flex flex-col max-h-full overflow-hidden outline-none"
+            :class="[bg, $attrs.class]"
             @click.stop
             role="dialog"
             aria-modal="true"
@@ -59,7 +59,7 @@
               <slot name="title">
                 <h1
                   v-if="title && !$slots.title"
-                  class="text-s-28 font-bold px-4 pt-4 sm:pt-5 text-center capitalize w-full"
+                  class="text-s-28 font-bold px-4 pt-4 sm:pt-5 text-center first-letter:capitalize w-full"
                   id="dialogTitle"
                 >
                   {{ title }}

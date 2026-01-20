@@ -1,6 +1,7 @@
 <template>
   <app-sheet
     v-if="isWalletConnected"
+    :is-elivated="false"
     sheet-class=" !px-4 sm:!px-5 !pt-4 !pb-5 h-full flex flex-col justify-between overflow-y-auto sm:overflow-hidden"
   >
     <div class="flex items-center w-full justify-between mb-2">
@@ -97,6 +98,7 @@ const topTokens = computed<TokenAllocation[]>(() => {
       percentageNumber: percentage.toNumber(),
       id: token.coinId,
       usdBalanceFormatted: formatFiatValue(tokenBalanceFiatBN).value,
+      is_stock: token.is_rwa,
     }
   })
 

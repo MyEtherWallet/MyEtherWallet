@@ -1,6 +1,7 @@
 <template>
   <app-sheet
     sheet-class="no-balance-gradient bg-no-repeat bg-cover !p-0 overflow-hidden"
+    :is-elivated="false"
   >
     <div class="flex h-full items-center justify-between relative">
       <img

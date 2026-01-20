@@ -149,6 +149,21 @@
   .text7 {
     @apply text-xl leading-p-150;
   }
+
+  /* Chrome, Safari, Edge, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Firefox */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  /* IE and Edge */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+  }
 }
 
 /*FADE Transition*/
@@ -252,6 +267,10 @@ span.ripple {
 
 :focus-visible {
   outline-offset: 5px;
+}
+
+button {
+  cursor: pointer;
 }
 
 input::-webkit-outer-spin-button,

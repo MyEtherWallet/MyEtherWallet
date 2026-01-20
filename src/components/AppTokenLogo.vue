@@ -3,26 +3,37 @@
     :class="[
       width,
       height,
-      { 'bg-white': image && !isLoading },
-      {
-        'border bg-surface border-1 border-grey-10 box-border flex items-center justify-center':
-          !image || isLoading,
-      },
-      isLoading ? 'animate-pulse' : 'shadow-token',
+      'rounded-full flex-none relative box-border transition-colors duration-300 ease-in-out',
+      isStock ? 'p-[1.2px]  bg-stock-gradient' : 'border border-grey-10',
     ]"
-    class="rounded-full overflow-hidden flex-none"
   >
-    <p v-if="!image" class="text-info font-medium text-center uppercase">
-      {{ getSymbol() }}
-    </p>
-    <img
-      v-else
-      class="object-contain w-full h-full"
-      :src="image"
-      width="28"
-      height="28"
-      alt=""
-    />
+    <div
+      class="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center"
+      :class="[
+        {
+          'bg-white shadow-token': image && !isLoading,
+        },
+        { 'bg-surface': !image || isLoading },
+        { 'animate-pulse': isLoading },
+      ]"
+    >
+      <div
+        v-if="!image && !isLoading"
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <span class="text-info font-medium uppercase leading-none">
+          {{ getSymbol() }}
+        </span>
+      </div>
+      <img
+        v-else-if="image && !isLoading"
+        class="object-contain w-full h-full"
+        :src="image"
+        width="28"
+        height="28"
+        alt=""
+      />
+    </div>
   </div>
 </template>
 
@@ -44,6 +55,10 @@ const props = defineProps({
   height: {
     type: String,
     default: 'h-6 xs:h-8',
+  },
+  isStock: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -1019,6 +1019,8 @@ export interface components {
             iconSvgUrl?: string;
             primaryMarket: {
                 symbol: string;
+                price: string;
+                priceChangePercentage24h: string;
             };
             underlyingMarket: {
                 name: string;
@@ -1176,6 +1178,7 @@ export interface components {
                 coinId: string;
                 name: string;
                 symbol: string;
+                logoUrl: string | null;
                 price: number | null;
                 priceChangePercentage1h: number | null;
                 priceChangePercentage24h: number | null;
@@ -1194,7 +1197,17 @@ export interface components {
                     chainName: string;
                     decimals: number | null;
                 }[];
-                logoUrl: string | null;
+                ondo: null | {
+                    stockAlias?: string;
+                    iconPngUrl?: string;
+                    iconSvgUrl?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                    underlyingMarket: {
+                        name?: string;
+                    };
+                };
                 sparklineIn7d: null | number[];
             }[];
         };
@@ -1202,6 +1215,7 @@ export interface components {
             coinId: string;
             name: string;
             symbol: string;
+            logoUrl: string | null;
             price: number | null;
             priceChangePercentage1h: number | null;
             priceChangePercentage24h: number | null;
@@ -1211,7 +1225,26 @@ export interface components {
             addresses: {
                 [key: string]: string;
             };
-            logoUrl: string | null;
+            nativeChains: {
+                chainName: string;
+                decimals: number | null;
+            }[];
+            chains: {
+                address: string;
+                chainName: string;
+                decimals: number | null;
+            }[];
+            ondo?: null | {
+                stockAlias?: string;
+                iconPngUrl?: string;
+                iconSvgUrl?: string;
+                primaryMarket: {
+                    symbol: string;
+                };
+                underlyingMarket: {
+                    name?: string;
+                };
+            };
             sparklineIn7d: null | number[];
         }[];
         GetWebTopGainersResponse: {
@@ -1306,6 +1339,17 @@ export interface components {
                 price_change_percentage_24h?: number;
                 is_rwa?: boolean;
                 is_stablecoin?: boolean;
+                ondo?: {
+                    stockAlias?: string;
+                    iconPngUrl?: string;
+                    iconSvgUrl?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                    underlyingMarket: {
+                        name?: string;
+                    };
+                };
                 sparkline_in_7d?: null | number[];
             }[];
         };

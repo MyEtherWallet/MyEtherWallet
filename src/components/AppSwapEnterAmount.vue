@@ -34,6 +34,7 @@
         v-model:selected-token="selectedToken"
         :external-loading="isLoading"
         :chain-tokens="tokens || []"
+        :is-from-view="isFromView"
       />
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
@@ -112,6 +113,10 @@ const props = defineProps({
   isEstimate: {
     type: Boolean,
     default: false,
+  },
+  isFromView: {
+    type: Boolean,
+    default: true,
   },
 })
 

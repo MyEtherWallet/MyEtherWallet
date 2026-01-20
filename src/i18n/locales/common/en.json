@@ -79,7 +79,7 @@
   "settings": "Settings",
   "notifications": "Notifications",
   "help-center": "Help Center",
-  "view_paper_wallet": "View Paper Wallet",
+  "view_paper_wallet": "View paper wallet",
   "switch_connected_address": "Switch Connected Address",
   "menu": {
     "open-settings": "Open Settings",
@@ -90,12 +90,15 @@
   "connect_wallet": "Connect wallet",
   "disconnect_wallet": "Disconnect wallet",
   "delete_watch_only_wallet": "Delete Watch Only Wallet",
+  "disconnect_and_delete_wallet": "Disconnect and Delete Wallet",
   "connected_wallet": "Connected Wallet",
-  "watch_only_wallet": "Watch Only Wallet",
+  "watch_only_wallet": "Watch only wallet",
   "view_in_block_explorer": "View in block explorer",
   "refresh_balance": "Refresh Balance",
   "select_token": {
     "title": "Select Token",
+    "swap_from": "Select token to sell",
+    "swap_to": "Select token to buy",
     "search": "Search",
     "no_tokens_match": "No tokens match your search",
     "no_tokens_available": "No tokens available"

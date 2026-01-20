@@ -15,18 +15,14 @@
       v-if="!isLoading && selectedToken"
       class="flex flex-nowrap items-center"
     >
-      <div
-        class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
-      >
-        <img
-          class="w-full h-full object-cover"
-          :src="imageReplacer(selectedToken)"
-          alt=""
-        />
-      </div>
-      <p v-if="!isLoading" class="font-medium text-nowrap">
-        {{ truncate(selectedToken.symbol, 7) }}
-      </p>
+      <app-token-logo
+        :url="selectedToken.logoURI"
+        :symbol="selectedToken.symbol"
+        width="w-7"
+        height="h-7"
+        class="mr-2"
+      />
+      <app-token-symbol v-if="!isLoading" :symbol="selectedToken.symbol" />
       <div class="ml-1 min-w-4 h-4">
         <chevron-down-icon v-if="!isLoading" class="text-info" />
       </div>
@@ -35,7 +31,9 @@
   <app-dialog
     v-model:is-open="showAllTokens"
     class="w-full sm:w-[460px] sm:mx-auto"
-    :title="$t('select_token.title')"
+    :title="
+      isFromView ? $t('select_token.swap_from') : $t('select_token.swap_to')
+    "
     has-content-gutter
   >
     <template #content>
@@ -61,11 +59,11 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortValue }}</span>
-                  <ArrowUpIcon
-                    v-if="activeSortDirection === SortDirection.DESC"
+                  <ArrowLongUpIcon
+                    v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
                   />
-                  <ArrowDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -92,11 +90,11 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowUpIcon
-                        v-if="activeSortDirection === SortDirection.DESC"
+                      <ArrowLongUpIcon
+                        v-if="activeSortDirection === SortDirection.ASC"
                         class="w-5 h-5 text-primary"
                       />
-                      <ArrowDownIcon v-else class="w-5 h-5 text-primary" />
+                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
                     </div>
                   </button>
                 </div>
@@ -125,36 +123,36 @@
                   :symbol="token.symbol"
                   class="shrink-0 mr-4"
                 />
-
                 <div class="text-left">
+                  <app-token-symbol :symbol="token.symbol" />
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2
-                      class="font-medium text-s-17 text-black whitespace-nowrap"
-                    >
-                      {{ truncate(token.name, 10) }}
+                    <h2 class="text-s-12 text-info whitespace-nowrap">
+                      {{ truncate(token.name, 20) }}
                     </h2>
                   </app-tooltip>
-                  <h2
-                    v-else
-                    class="font-medium text-s-17 text-black whitespace-nowrap"
-                  >
+                  <h2 v-else class="text-s-12 text-info whitespace-nowrap">
                     {{ token.name }}
                   </h2>
-                  <p class="text-s-14">
-                    {{ getBalance(token?.balance || '0', token.decimals) }}
-                    <span class="uppercase text-s-12 text-info">
-                      {{ truncate(token.symbol, 7) }}</span
-                    >
-                  </p>
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
-                <p class="font-medium text-black">
-                  $ {{ formatUsdBalance(token.usd_balance) }}
-                </p>
-                <p class="text-info text-s-12">
-                  @ ${{ formatFiatValue(token.price || 0).value }}
-                </p>
+                <div v-if="isFromView">
+                  <p class="font-medium text-black">
+                    $ {{ formatUsdBalance(token.usd_balance) }}
+                  </p>
+                  <p class="text-info text-s-12">
+                    {{ getBalance(token?.balance || '0', token.decimals) }}
+                    {{ truncate(token.symbol, 7) }}
+                  </p>
+                </div>
+                <div v-else>
+                  <p class="font-medium text-black">
+                    $
+                    {{
+                      token.price ? formatFiatValue(token.price).value : '0.00'
+                    }}
+                  </p>
+                </div>
               </div>
             </div>
           </button>
@@ -213,12 +211,11 @@ import { type NewTokenInfo } from '@/composables/useSwap'
 import { type Ref, ref, computed, onMounted } from 'vue'
 import {
   ChevronDownIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
+  ArrowLongDownIcon,
+  ArrowLongUpIcon,
 } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
-import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
@@ -236,6 +233,7 @@ import { useI18n } from 'vue-i18n'
 import { useScroll } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
 import { formatUnits } from 'viem'
+import AppTokenSymbol from './AppTokenSymbol.vue'
 
 const props = defineProps({
   selectedToken: {
@@ -248,6 +246,10 @@ const props = defineProps({
   chainTokens: {
     type: Array as () => NewTokenInfo[],
     default: () => [],
+  },
+  isFromView: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -278,10 +280,6 @@ const loadingMoreItems = ref(false)
 const scrollContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(scrollContainer)
 
-const defaultImg = computed(() => {
-  return eth
-})
-
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
 })
@@ -304,7 +302,7 @@ enum SortValueString {
 }
 
 const sortOptions = computed(() => {
-  return [
+  const shared = [
     {
       value: SortValueString.NAME,
       label: t('common.name'),
@@ -313,17 +311,25 @@ const sortOptions = computed(() => {
       value: SortValueString.SYMBOL,
       label: t('common.symbol'),
     },
+  ]
+  if (props.isFromView) {
+    return [
+      ...shared,
+      {
+        value: SortValueString.USD,
+        label: t('common.usd_balance'),
+      },
+      {
+        value: SortValueString.BALANCE,
+        label: t('common.balance'),
+      },
+    ]
+  }
+  return [
+    ...shared,
     {
       value: SortValueString.PRICE,
       label: t('common.price'),
-    },
-    {
-      value: SortValueString.USD,
-      label: t('common.usd_balance'),
-    },
-    {
-      value: SortValueString.BALANCE,
-      label: t('common.balance'),
     },
   ]
 })
@@ -334,7 +340,7 @@ enum SortDirection {
 }
 
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
-const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
+const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
@@ -414,17 +420,6 @@ const loadMoreItems = () => {
 const setSelectedToken = (token: NewTokenInfo) => {
   emit('update:selectedToken', token)
   showAllTokens.value = false
-}
-
-const imageReplacer = (token: NewTokenInfo) => {
-  if (
-    !token.logoURI ||
-    token.logoURI.includes('null') ||
-    token.logoURI.includes('undefined')
-  ) {
-    return defaultImg.value
-  }
-  return token.logoURI
 }
 
 const formatUsdBalance = (_value: number) => {

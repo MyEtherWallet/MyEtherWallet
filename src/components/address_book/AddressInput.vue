@@ -54,6 +54,7 @@
         @focus="setInFocusInput()"
         @blur="startOutOfFocusTimeout()"
         autocomplete="off"
+        :disabled="isDisabled"
       />
       <!-- Action Buttons  -->
       <div class="absolute top-3 right-3 flex items-center gap-1">
@@ -167,6 +168,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  isDisabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits([
@@ -191,6 +196,7 @@ const networkChain = computed(() => {
 })
 
 const clearAdrInput = () => {
+  if (props.isDisabled) return
   setInFocusInput()
   nextTick(() => {
     adrInput.value = ''

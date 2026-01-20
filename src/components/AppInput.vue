@@ -7,6 +7,7 @@
       ref="baseInput"
       :type="inputType"
       v-model="model"
+      :disabled="isDisabled"
       :class="[
         {
           '!border-error border-2': hasError,
@@ -36,18 +37,20 @@
     <div class="absolute top-3 right-3 flex align-center">
       <app-btn-icon
         @click="clearInputValue"
+        :disabled="isDisabled"
         :label="$t('common.clear_icon')"
         :class="[
           model !== '' ? 'opacity-100' : 'hidden',
           'transition-opacity opacity-0',
         ]"
       >
-        <x-circle-icon class="text-primary"
+        <x-circle-icon :class="isDisabled ? 'text-grey-30' : 'text-primary'"
       /></app-btn-icon>
       <app-btn-icon
         v-if="type === 'password'"
         @click="togglePasswordVisibility"
         :label="!showPassword ? 'Show Password' : 'Hide Password'"
+        :disabled="isDisabled"
       >
         <component
           :is="!showPassword ? EyeSlashIcon : EyeIcon"
@@ -99,6 +102,11 @@ const props = defineProps({
     default: 'text',
   },
   isRequired: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  isDisabled: {
     type: Boolean,
     required: false,
     default: false,

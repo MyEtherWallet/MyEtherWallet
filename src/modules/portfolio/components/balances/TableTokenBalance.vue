@@ -667,7 +667,7 @@ const tokens = computed<DisplayToken[]>(() => {
               ..._token,
               fiatBalance: fiatBalance.toNumber(),
               fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
-            }
+            } as DisplayToken
           }
           return {
             ...token,
@@ -681,7 +681,7 @@ const tokens = computed<DisplayToken[]>(() => {
             price_change_percentage_24h: token.priceChangePercentage24h || 0,
             sparkline_in_7d: token.sparklineIn7d || [],
             logo_url: token.logoUrl || '',
-          }
+          } as DisplayToken
         }) || []
   } else if (selectedAllTokensFilter.value.value === 'customTokens') {
     return tokens

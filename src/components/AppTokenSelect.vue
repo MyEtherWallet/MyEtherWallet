@@ -15,18 +15,18 @@
       v-if="!isLoading && selectedToken"
       class="flex flex-nowrap items-center"
     >
-      <div
-        class="w-7 h-7 shrink-0 rounded-full border border-grey-outline mr-2 overflow-hidden flex items-center justify-center"
-      >
-        <img
-          class="w-full h-full object-cover"
-          :src="imageReplacer(selectedToken)"
-          alt=""
-        />
-      </div>
-      <p v-if="!isLoading" class="font-medium text-nowrap">
-        {{ truncate(selectedToken.symbol, 7) }}
-      </p>
+      <app-token-logo
+        :url="selectedToken.logo_url"
+        :alt="selectedToken.symbol"
+        width="w-7"
+        height="h-7"
+        class="mr-2"
+        :is-stock="selectedToken.is_rwa"
+      />
+      <app-token-symbol
+        :symbol="selectedToken.symbol"
+        :is-stock="selectedToken.is_rwa"
+      />
       <div class="ml-1 min-w-4 h-4">
         <chevron-down-icon v-if="!isLoading" class="text-info" />
       </div>
@@ -60,11 +60,11 @@
                   @click="toggleMenu"
                 >
                   <span class="mr-2">{{ activeSortValue }}</span>
-                  <ArrowUpIcon
-                    v-if="activeSortDirection === SortDirection.DESC"
+                  <ArrowLongUpIcon
+                    v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
                   />
-                  <ArrowDownIcon v-else class="w-4 h-4 shrink-0" />
+                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
                 </button>
               </template>
               <template #menu-content="{ toggleMenu }">
@@ -91,11 +91,11 @@
                       v-if="activeSortValue === option.value"
                       class="ml-auto pl-2"
                     >
-                      <ArrowUpIcon
-                        v-if="activeSortDirection === SortDirection.DESC"
+                      <ArrowLongUpIcon
+                        v-if="activeSortDirection === SortDirection.ASC"
                         class="w-5 h-5 text-primary"
                       />
-                      <ArrowDownIcon v-else class="w-5 h-5 text-primary" />
+                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
                     </div>
                   </button>
                 </div>
@@ -119,50 +119,48 @@
           >
             <div class="flex justify-between items-center w-full">
               <div class="flex items-center">
-                <div
-                  class="mr-4 w-9 h-9 shrink-0 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-button"
-                >
-                  <img
-                    class="w-full h-full object-cover"
-                    :src="imageReplacer(token)"
-                    alt="token icon"
-                  />
-                </div>
+                <app-token-logo
+                  :url="token.logo_url"
+                  :alt="token.symbol"
+                  :is-stock="token.is_rwa"
+                  class="mr-4"
+                />
                 <div class="text-left">
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :is-stock="token.is_rwa"
+                  />
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
-                    <h2
-                      class="font-medium text-s-15 text-black whitespace-nowrap"
-                    >
+                    <h2 class="text-s-12 text-info whitespace-nowrap">
                       {{ truncate(token.name, 10) }}
                     </h2>
                   </app-tooltip>
-                  <h2
-                    v-else
-                    class="font-medium text-s-15 text-black whitespace-nowrap"
-                  >
+                  <h2 v-else class="text-s-12 text-info whitespace-nowrap">
                     {{ token.name }}
                   </h2>
-                  <p class="text-secondary text-s-12 font-normal">
-                    {{ getBalance(token.balance) }}
-                    <span class="uppercase text-s-12 opacity-60">
-                      {{ truncate(token.symbol, 7) }}</span
-                    >
-                  </p>
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-normal text-s-14 text-black">
                   $ {{ formatUsdBalance(token.usd_balance) }}
                 </p>
-                <p class="text-secondary text-s-12 font-normal">
-                  @ ${{ formatFiatValue(token.price || 0).value }}
-                </p>
+                <div class="flex item-center justify-end gap-1">
+                  <p class="text-info text-s-12 font-normal">
+                    {{ getBalance(token.balance) }}
+                  </p>
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :is-stock="token.is_rwa"
+                    :has-gradient="false"
+                    class="text-info !text-s-12 font-normal"
+                  />
+                </div>
               </div>
             </div>
           </button>
         </div>
         <div v-else>
-          <div class="flex justify-center items-center h-[400px] text-grey-30">
+          <div class="flex justify-center items-center h-[400px] text-info">
             <p v-if="searchInput !== ''">
               {{ $t('select_token.no_tokens_match') }}
             </p>
@@ -182,18 +180,19 @@ import { type TokenBalance } from '@/mew_api/types'
 import { ref, computed, onMounted } from 'vue'
 import {
   ChevronDownIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
+  ArrowLongDownIcon,
+  ArrowLongUpIcon,
 } from '@heroicons/vue/24/solid'
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
-import eth from '@/assets/icons/tokens/eth.svg'
 import { truncate } from '@/utils/filters'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
+import AppTokenLogo from './AppTokenLogo.vue'
+import AppTokenSymbol from './AppTokenSymbol.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,
@@ -242,10 +241,6 @@ const selectedToken = computed<TokenBalance | null>(() => {
 const showAllTokens = ref(false)
 const searchInput = ref('')
 
-const defaultImg = computed(() => {
-  return safeMainTokenBalance.value?.logo_url || eth
-})
-
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
 })
@@ -256,7 +251,6 @@ onMounted(() => {
 enum SortValueString {
   NAME = 'Name',
   SYMBOL = 'Symbol',
-  PRICE = 'Price',
   USD = 'USD Balance',
   BALANCE = 'Balance',
 }
@@ -270,10 +264,6 @@ const sortOptions = computed(() => {
     {
       value: SortValueString.SYMBOL,
       label: t('common.symbol'),
-    },
-    {
-      value: SortValueString.PRICE,
-      label: t('common.price'),
     },
     {
       value: SortValueString.USD,
@@ -292,7 +282,7 @@ enum SortDirection {
 }
 
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
-const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
+const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
@@ -303,7 +293,6 @@ const setActiveSort = (value: SortValueString) => {
   } else {
     activeSortValue.value = value
     const isNumericSort = [
-      SortValueString.PRICE,
       SortValueString.USD,
       SortValueString.BALANCE,
     ].includes(value)
@@ -334,7 +323,6 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   > = {
     [SortValueString.NAME]: { key: 'name', type: 'string' },
     [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
-    [SortValueString.PRICE]: { key: 'price', type: 'number' },
     [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
     [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
   }
@@ -355,16 +343,6 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
 const setSelectedToken = (token: TokenBalance) => {
   selectedTokenContract.value = token.contract
   showAllTokens.value = false
-}
-
-const imageReplacer = (token: TokenBalance) => {
-  if (
-    !token.logo_url ||
-    token.logo_url === 'https://img.mewapi.io/?image=null'
-  ) {
-    return defaultImg.value
-  }
-  return token.logo_url
 }
 
 const formatUsdBalance = (_value: number) => {

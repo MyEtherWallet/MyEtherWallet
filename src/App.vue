@@ -21,7 +21,6 @@ import { useProviderStore } from '@/stores/providerStore'
 import { onMounted, watch, ref } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
@@ -31,7 +30,6 @@ import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
 import { usePurchaseStore } from '@/stores/purchaseStore'
-
 import useBalanceHandler from './utils/balanceHandler'
 
 const dialogStore = useDialogStore()

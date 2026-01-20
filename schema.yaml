@@ -2494,8 +2494,14 @@
                       'primaryMarket':
                         {
                           'type': 'object',
-                          'required': ['symbol'],
-                          'properties': { 'symbol': { 'type': 'string' } },
+                          'required':
+                            ['symbol', 'price', 'priceChangePercentage24h'],
+                          'properties':
+                            {
+                              'symbol': { 'type': 'string' },
+                              'price': { 'type': 'string' },
+                              'priceChangePercentage24h': { 'type': 'string' },
+                            },
                         },
                       'underlyingMarket':
                         {
@@ -2962,6 +2968,7 @@
                               'coinId',
                               'name',
                               'symbol',
+                              'logoUrl',
                               'price',
                               'priceChangePercentage1h',
                               'priceChangePercentage24h',
@@ -2971,7 +2978,7 @@
                               'addresses',
                               'nativeChains',
                               'chains',
-                              'logoUrl',
+                              'ondo',
                               'sparklineIn7d',
                             ],
                           'properties':
@@ -2979,6 +2986,7 @@
                               'coinId': { 'type': 'string' },
                               'name': { 'type': 'string' },
                               'symbol': { 'type': 'string' },
+                              'logoUrl': { 'type': ['string', 'null'] },
                               'price': { 'type': ['number', 'null'] },
                               'priceChangePercentage1h':
                                 { 'type': ['number', 'null'] },
@@ -3025,7 +3033,43 @@
                                         },
                                     },
                                 },
-                              'logoUrl': { 'type': ['string', 'null'] },
+                              'ondo':
+                                {
+                                  'oneOf':
+                                    [
+                                      { 'type': 'null' },
+                                      {
+                                        'type': 'object',
+                                        'required':
+                                          ['primaryMarket', 'underlyingMarket'],
+                                        'properties':
+                                          {
+                                            'stockAlias': { 'type': 'string' },
+                                            'iconPngUrl': { 'type': 'string' },
+                                            'iconSvgUrl': { 'type': 'string' },
+                                            'primaryMarket':
+                                              {
+                                                'type': 'object',
+                                                'required': ['symbol'],
+                                                'properties':
+                                                  {
+                                                    'symbol':
+                                                      { 'type': 'string' },
+                                                  },
+                                              },
+                                            'underlyingMarket':
+                                              {
+                                                'type': 'object',
+                                                'properties':
+                                                  {
+                                                    'name':
+                                                      { 'type': 'string' },
+                                                  },
+                                              },
+                                          },
+                                      },
+                                    ],
+                                },
                               'sparklineIn7d':
                                 {
                                   'oneOf':
@@ -3054,13 +3098,15 @@
                       'name',
                       'symbol',
                       'price',
+                      'logoUrl',
                       'priceChangePercentage1h',
                       'priceChangePercentage24h',
                       'priceChangePercentage7d',
                       'totalVolume',
                       'marketCap',
                       'addresses',
-                      'logoUrl',
+                      'nativeChains',
+                      'chains',
                       'sparklineIn7d',
                     ],
                   'properties':
@@ -3068,6 +3114,7 @@
                       'coinId': { 'type': 'string' },
                       'name': { 'type': 'string' },
                       'symbol': { 'type': 'string' },
+                      'logoUrl': { 'type': ['string', 'null'] },
                       'price': { 'type': ['number', 'null'] },
                       'priceChangePercentage1h': { 'type': ['number', 'null'] },
                       'priceChangePercentage24h':
@@ -3080,7 +3127,66 @@
                           'type': 'object',
                           'additionalProperties': { 'type': 'string' },
                         },
-                      'logoUrl': { 'type': ['string', 'null'] },
+                      'nativeChains':
+                        {
+                          'type': 'array',
+                          'items':
+                            {
+                              'type': 'object',
+                              'required': ['chainName', 'decimals'],
+                              'properties':
+                                {
+                                  'chainName': { 'type': 'string' },
+                                  'decimals': { 'type': ['number', 'null'] },
+                                },
+                            },
+                        },
+                      'chains':
+                        {
+                          'type': 'array',
+                          'items':
+                            {
+                              'type': 'object',
+                              'required': ['chainName', 'address', 'decimals'],
+                              'properties':
+                                {
+                                  'address': { 'type': 'string' },
+                                  'chainName': { 'type': 'string' },
+                                  'decimals': { 'type': ['number', 'null'] },
+                                },
+                            },
+                        },
+                      'ondo':
+                        {
+                          'oneOf':
+                            [
+                              { 'type': 'null' },
+                              {
+                                'type': 'object',
+                                'required':
+                                  ['primaryMarket', 'underlyingMarket'],
+                                'properties':
+                                  {
+                                    'stockAlias': { 'type': 'string' },
+                                    'iconPngUrl': { 'type': 'string' },
+                                    'iconSvgUrl': { 'type': 'string' },
+                                    'primaryMarket':
+                                      {
+                                        'type': 'object',
+                                        'required': ['symbol'],
+                                        'properties':
+                                          { 'symbol': { 'type': 'string' } },
+                                      },
+                                    'underlyingMarket':
+                                      {
+                                        'type': 'object',
+                                        'properties':
+                                          { 'name': { 'type': 'string' } },
+                                      },
+                                  },
+                              },
+                            ],
+                        },
                       'sparklineIn7d':
                         {
                           'oneOf':
@@ -3298,6 +3404,31 @@
                                 { 'type': 'number' },
                               'is_rwa': { 'type': 'boolean' },
                               'is_stablecoin': { 'type': 'boolean' },
+                              'ondo':
+                                {
+                                  'type': 'object',
+                                  'required':
+                                    ['primaryMarket', 'underlyingMarket'],
+                                  'properties':
+                                    {
+                                      'stockAlias': { 'type': 'string' },
+                                      'iconPngUrl': { 'type': 'string' },
+                                      'iconSvgUrl': { 'type': 'string' },
+                                      'primaryMarket':
+                                        {
+                                          'type': 'object',
+                                          'required': ['symbol'],
+                                          'properties':
+                                            { 'symbol': { 'type': 'string' } },
+                                        },
+                                      'underlyingMarket':
+                                        {
+                                          'type': 'object',
+                                          'properties':
+                                            { 'name': { 'type': 'string' } },
+                                        },
+                                    },
+                                },
                               'sparkline_in_7d':
                                 {
                                   'oneOf':

@@ -89,6 +89,7 @@ export default {
         's-64': ['64px', '110%'],
         's-54': ['54px', '120%'],
         's-52': '52px',
+        's-48': '48px',
         's-40': '40px',
         's-32': '32px',
         's-28': '28px',
@@ -128,6 +129,7 @@ export default {
         32: '32px',
         16: '16px',
         12: '12px',
+        8: '8px',
       },
       boxShadow: {
         token: '0px 3px 5px rgba(0, 0, 0, 0.16)',
@@ -135,6 +137,11 @@ export default {
         container: '0px 1.5px 6px 0px rgba(0,0,0,0.1)',
         'button-elevated':
           '0px 1px 4px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.25)',
+      },
+      backgroundImage: {
+        // This adds the gradient as a reusable background utility
+        'stock-gradient':
+          'linear-gradient(270deg, #40E0D0 0%, #55DAA2 6.6%, #7ED06D 16.83%, #AAC137 25%, #D5AB00 35.58%, #FF8C00 43.75%, #FF8C00 55.77%, #FF7526 77.4%, #FF5D3D 100%)',
       },
     },
   },

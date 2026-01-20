@@ -9,6 +9,7 @@ export interface TokenAllocation {
   percentageNumber: number
   usdBalanceFormatted: string
   id?: string
+  is_stock?: boolean
 }
 
 export const ALLOCATION_COLORS = [
@@ -28,4 +29,5 @@ export interface TokenGainOrLoss {
   price: number
   id: string
   contract?: string
+  is_stock?: boolean
 }
