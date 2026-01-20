@@ -64,7 +64,6 @@ export const useWalletList = () => {
           icon: walletGetIcon(wallet),
           type: _types,
         })
-        console.log(newConArr)
       } else if (wallet.id === 'ledger') {
         newConArr.push({
           ...wallet,
