@@ -19,6 +19,7 @@ export const useWalletList = () => {
   interface RkConnector extends Connector<CreateConnectorFn> {
     rkDetails: {
       iconUrl: () => Promise<string>
+      name: string
     }
   }
   const walletGetIcon = (wallet: RkConnector) => {
@@ -26,6 +27,11 @@ export const useWalletList = () => {
     if (wallet.rkDetails && wallet.rkDetails.iconUrl)
       return wallet.rkDetails.iconUrl
     return ''
+  }
+
+  const walletGetName = (wallet: RkConnector) => {
+    if (wallet.rkDetails && wallet.rkDetails.name) return wallet.rkDetails.name
+    return wallet.name
   }
   /** -------------------
    * Wallets
@@ -54,10 +60,11 @@ export const useWalletList = () => {
         newConArr.push({
           ...wallet,
           id: wallet.id,
-          name: wallet.name,
+          name: walletGetName(wallet),
           icon: walletGetIcon(wallet),
           type: _types,
         })
+        console.log(newConArr)
       } else if (wallet.id === 'ledger') {
         newConArr.push({
           ...wallet,
