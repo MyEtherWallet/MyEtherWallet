@@ -2,16 +2,8 @@
   <div class="flex justify-center w-full">
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('verify-message')">
-        <div class="flex flex-col gap-6 pt-6">
-          <div
-            class="flex items-center justify-between bg-grey-5 p-4 rounded-20 border border-grey-10"
-            v-if="!isWalletConnected"
-          >
-            <p class="text-s-17 font-medium">
-              {{ $t('common.select_network') }}
-            </p>
-            <select-chain-for-app />
-          </div>
+        <div class="flex flex-col gap-1 pt-6">
+          <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
           <app-text-field
             v-model="message"
             placeholder="Enter the message to verify"
@@ -25,7 +17,7 @@
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
             label="Signing Address"
-            class="w-full"
+            class="w-full mb-4"
           />
 
           <app-text-field
@@ -62,7 +54,7 @@
           <div class="flex justify-center">
             <app-base-button
               @click="verifyMessage"
-              class="w-full sm:w-auto min-w-[240px]"
+              class="w-full xs:w-auto"
               :disabled="!canVerifyMessage"
             >
               {{ $t('verify-message') }}
