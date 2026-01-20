@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 min-w-[140px]">
+  <div class="flex-1 min-w-[140px] max-w-[200px]">
     <div
       v-for="(i, index) in tokens"
       :key="i.symbol"
