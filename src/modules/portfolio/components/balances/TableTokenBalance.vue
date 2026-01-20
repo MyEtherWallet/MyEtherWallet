@@ -4,7 +4,7 @@
       class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
     >
       <div
-        class="flex grow justify-between items-center bg-grey-white rounded-full p-1 max-w-[400px] order-3 order-2 sm:order-1 gap-1 border border-grey-5 focus-within:border-primary transition-colors hover:border-grey-10"
+        class="flex grow items-center bg-white rounded-full max-w-[400px] order-2 sm:order-1 border border-grey-outline focus-within:border-primary transition-colors hover:border-grey-30"
       >
         <app-search-input
           v-model="searchInput"
@@ -12,27 +12,6 @@
           bg-class="bg-transparent"
           placeholder="Search"
         />
-        <div class="h-6 w-px bg-grey-10 mx-1 hidden xs:block"></div>
-        <app-select
-          v-model:selected="selectedAllTokensFilter"
-          :options="allTokensFilterOptions"
-          position="-right-1"
-          class="text-s-12"
-        >
-          <template #select-button="{ toggleSelect }">
-            <button
-              class="rounded-full hoverNoBG py-2 px-3 xs:min-w-[120px]"
-              @click="toggleSelect"
-            >
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-black">{{
-                  selectedAllTokensFilter.label
-                }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1 text-grey-3" />
-              </div>
-            </button>
-          </template>
-        </app-select>
       </div>
       <!-- TOTAL VALUE-->
       <div

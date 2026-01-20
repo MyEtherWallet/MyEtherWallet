@@ -69,7 +69,7 @@
           class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
         >
           <div
-            class="flex grow justify-between items-center bg-grey-white rounded-full p-1 max-w-[400px] order-2 sm:order-1 gap-1 border border-grey-5 focus-within:border-primary transition-colors hover:border-grey-10"
+            class="flex grow items-center bg-white rounded-full max-w-[400px] order-2 sm:order-1 border border-grey-outline focus-within:border-primary transition-colors hover:border-grey-30"
           >
             <app-search-input
               v-model="searchInput"
@@ -77,27 +77,6 @@
               bg-class="bg-transparent"
               placeholder="Search"
             />
-            <div class="h-6 w-px bg-grey-10 mx-1 hidden xs:block"></div>
-            <button
-              class="rounded-full hoverNoBG py-2 px-3 xs:min-w-[120px]"
-              @click="openChainDialog = true"
-            >
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <app-token-logo
-                    v-if="selectedChainFilter?.nameLong !== 'All Chains'"
-                    :url="selectedChainFilter?.icon"
-                    :symbol="selectedChainFilter?.nameLong"
-                    width="w-5"
-                    height="h-5"
-                  />
-                  <span class="font-bold text-black truncate">{{
-                    selectedChainFilter?.nameLong
-                  }}</span>
-                </div>
-                <chevron-down-icon class="w-4 h-4 ml-1 text-grey-3" />
-              </div>
-            </button>
           </div>
         </div>
 

@@ -143,7 +143,7 @@
           class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
         >
           <p class="col-span-2">Token</p>
-          <p class="text-right col-span-1">Price / 24h</p>
+          <p class="text-right col-span-1"></p>
         </div>
         <div
           v-if="data && !isLoading"
@@ -198,7 +198,7 @@
             class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
           >
             <p class="col-span-2">Token</p>
-            <p class="text-right col-span-1">Price / 24h</p>
+            <p class="text-right col-span-1"></p>
           </div>
           <div
             v-if="data && !isLoading"
