@@ -295,18 +295,20 @@
                 </td>
                 <!-- 24h % -->
                 <td
-                  class="px-1 py-1 text-right hidden sm:table-cell text-s-11 leading-p-100"
+                  class="px-1 py-2 text-right hidden sm:table-cell text-s-13 leading-p-100"
                   :class="getPercentClass(getActivePercent(token))"
                 >
                   <div>
-                    <p>{{ parsePercent(getActivePercent(token)) }}</p>
+                    <p class="mb-1">
+                      {{ parsePercent(getActivePercent(token)) }}
+                    </p>
                     <div v-if="getSparkLinePoints(token).length === 0"></div>
                     <table-sparkline
                       v-else
                       :points="getSparkLinePoints(token)"
-                      :width="50"
-                      :height="35"
-                      :max-points="35"
+                      :width="70"
+                      :height="24"
+                      :max-points="34"
                       :percent-change="getActivePercent(token) || undefined"
                       fill
                     />

@@ -223,7 +223,7 @@
             </td>
             <!-- 24H % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
-              <div class="flex flex-col items-end justify-center py-2 pr-2">
+              <div class="flex flex-col items-end justify-center py-2">
                 <p
                   class="text-s-13 font-normal mb-1"
                   :class="[
