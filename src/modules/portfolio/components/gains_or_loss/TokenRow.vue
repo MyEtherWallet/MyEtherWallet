@@ -54,11 +54,6 @@
               >{{ token.percentChange >= 0 ? '+' : ''
               }}{{ formatPercentageValue(token.percentChange).value }}</span
             >
-            <ArrowTrendingDownIcon
-              v-if="token.percentChange < 0"
-              class="h-2.5 w-2.5"
-            />
-            <ArrowTrendingUpIcon v-else class="h-2.5 w-2.5" />
           </div>
         </div>
         <div
@@ -89,10 +84,6 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-} from '@heroicons/vue/24/solid'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 defineProps<{
