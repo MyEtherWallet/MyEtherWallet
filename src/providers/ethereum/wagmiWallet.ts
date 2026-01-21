@@ -39,8 +39,6 @@ class WagmiWallet extends BaseEvmWallet {
           await this.connector.switchChain!({
             chainId: Number(this.chainId),
           })
-            .then(console.log)
-            .catch(console.error)
         }
         this.address = conn.accounts[0]
         return true
