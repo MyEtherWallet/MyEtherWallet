@@ -38,7 +38,6 @@ const isLoading = ref(true)
 const trendingTokens: Ref<GetWebTrendingTokensResponseToken[]> = ref([])
 
 const apiPage = ref(1)
-const apiTotalItems = ref(1)
 
 const url = computed(() => {
   return `https://mew-api-dev.ethvm.dev/v1/web/trending-tokens?page=${apiPage.value}&sort=desc&perPage=10`
@@ -57,7 +56,6 @@ onMounted(() => {
 
 onFetchResponse(() => {
   if (data.value && data.value.items) {
-    apiTotalItems.value = data.value.pages
     trendingTokens.value = [
       ...trendingTokens.value,
       ...data.value.items.map((token: GetWebTrendingTokensResponseToken) => {
