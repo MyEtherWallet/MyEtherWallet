@@ -34,7 +34,6 @@ class WagmiWallet extends BaseEvmWallet {
   override async connect(): Promise<boolean> {
     try {
       const conn = await this.connector.connect()
-      console.log(conn)
       if (conn.accounts.length > 0) {
         if (BigInt(conn.chainId) !== BigInt(this.chainId)) {
           await this.connector.switchChain!({
