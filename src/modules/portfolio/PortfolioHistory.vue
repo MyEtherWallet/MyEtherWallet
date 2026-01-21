@@ -47,13 +47,12 @@
       v-if="isFetching && !chartData.length"
       class="flex-1 bg-grey-10 rounded-xl animate-pulse mx-4 min-h-[150px]"
     ></div>
-    <div
-      v-else-if="!chartData.length"
-      class="flex-1 flex flex-col items-center justify-center opacity-40"
-    >
-      <p class="text-info text-center text-s-13 font-medium">
-        No chart data available
-      </p>
+    <div v-else-if="!chartData.length" class="p-4">
+      <div
+        class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[150px] w-full"
+      >
+        <p class="text-info text-center text-s-13">No chart data available</p>
+      </div>
     </div>
     <history-chart v-else :data="chartData" class="-ml-[3px]" />
   </app-sheet>
