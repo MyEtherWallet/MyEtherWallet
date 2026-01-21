@@ -1,6 +1,6 @@
 <template>
   <router-link
-    class="flex gap-3 rounded-16 hoverBGWhite shadow-button py-2 px-3 items-center bg-white"
+    class="flex w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-3 transition-colors duration-200 gap-3"
     :to="{
       name: TOKEN_INFO_ROUTE_NAMES.crypto,
       params: {
@@ -11,7 +11,17 @@
     <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
     <div class="truncate">
       <app-token-symbol :symbol="token.symbol" />
-      <p class="text-info text-s-12 mt-0.5">
+      <app-tooltip :text="token.name" v-if="token.name.length > 20">
+        <p
+          class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+        >
+          {{ token.name }}
+        </p>
+      </app-tooltip>
+      <p
+        v-else
+        class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
+      >
         {{ token.name }}
       </p>
     </div>
@@ -33,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import {

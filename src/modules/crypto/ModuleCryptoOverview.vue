@@ -138,17 +138,11 @@
         </div>
       </div>
 
-      <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden">
-        <div
-          class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
-        >
-          <p class="col-span-2">Token</p>
-          <p class="text-right col-span-1"></p>
-        </div>
-        <div
-          v-if="data && !isLoading"
-          class="flex flex-col gap-2 min-h-[181px]"
-        >
+      <app-sheet
+        sheet-class="!pt-5 !pb-2 !px-2  overflow-hidden"
+        :is-elivated="false"
+      >
+        <div v-if="data && !isLoading" class="flex flex-col min-h-[181px]">
           <token-row
             v-for="(token, index) in paginatedNewTokensArray"
             :key="token.symbol + index"
@@ -193,17 +187,11 @@
             </app-btn-icon>
           </div>
         </div>
-        <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden">
-          <div
-            class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
-          >
-            <p class="col-span-2">Token</p>
-            <p class="text-right col-span-1"></p>
-          </div>
-          <div
-            v-if="data && !isLoading"
-            class="flex flex-col gap-2 min-h-[181px]"
-          >
+        <app-sheet
+          :is-elivated="false"
+          sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
+        >
+          <div v-if="data && !isLoading" class="flex flex-col min-h-[181px]">
             <token-row
               v-for="token in paginatedGainersTokensArray"
               :key="token.symbol"

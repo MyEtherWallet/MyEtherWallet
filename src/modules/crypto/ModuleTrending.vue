@@ -24,14 +24,11 @@
       </div>
     </div>
 
-    <app-sheet sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden">
-      <div
-        class="grid grid-cols-3 w-full justify-between text-s-11 uppercase text-info tracking-sp-06 mb-4 items-end pl-4 pr-3 font-bold"
-      >
-        <p class="col-span-2">Token</p>
-        <p class="text-right col-span-1"></p>
-      </div>
-      <div class="grid grid-cols-1 gap-2 min-h-[181px]" v-if="!isLoading">
+    <app-sheet
+      :is-elivated="false"
+      sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
+    >
+      <div class="grid grid-cols-1 min-h-[181px]" v-if="!isLoading">
         <div v-for="token in currentTrendingTokens" :key="token.symbol">
           <token-row :token="token" />
         </div>
