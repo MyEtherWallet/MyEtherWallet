@@ -47,9 +47,9 @@
       v-if="isFetching && !chartData.length"
       class="flex-1 bg-grey-10 rounded-xl animate-pulse mx-4 min-h-[150px]"
     ></div>
-    <div v-else-if="!chartData.length" class="p-4">
+    <div v-else-if="!chartData.length" class="px-4 pb-3">
       <div
-        class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[150px] w-full"
+        class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[140px] w-full"
       >
         <p class="text-info text-center text-s-13">No chart data available</p>
       </div>
