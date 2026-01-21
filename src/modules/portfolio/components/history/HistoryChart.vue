@@ -22,7 +22,7 @@ import { formatFiatValue } from '@/utils/numberFormatHelper'
 
 interface DataPoint {
   timestamp: number
-  price: number
+  value: number
 }
 const props = defineProps<{
   /** 7 days * 24 hours = 168 values (oldest -> newest) */
@@ -50,7 +50,7 @@ const colors = {
   tooltipBg: 'rgba(0,0,0,0.7)',
 }
 
-const points = computed(() => props.data.map(d => d.price))
+const points = computed(() => props.data.map(d => d.value))
 const labels = computed(() => props.data.map(d => d.timestamp))
 
 const chartWidth = ref<number>(0)

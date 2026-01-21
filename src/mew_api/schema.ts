@@ -1080,6 +1080,49 @@ export interface components {
                 averageVolume: string;
                 sharesOutstanding: string;
             };
+            chainBalances: {
+                chainName: null | string;
+                chainNameLong: null | string;
+                chainType: components["schemas"]["ChainType"] | null;
+                ondoGmNetworkChainId: null | string;
+                result: {
+                    /** @constant */
+                    ok: false;
+                    value: {
+                        reason: string;
+                    };
+                } | {
+                    /** @constant */
+                    ok: true;
+                    value: {
+                        contract: string;
+                        decimals: number;
+                        balances: ({
+                            /** @constant */
+                            ok: false;
+                            value: {
+                                reason: string;
+                                owner: string;
+                            };
+                        } | {
+                            /** @constant */
+                            ok: true;
+                            value: {
+                                owner: string;
+                                value: string;
+                            };
+                        })[];
+                    };
+                };
+            }[];
+            supportedChains: {
+                chainName: string;
+                chainNameLong: string;
+                chainType: components["schemas"]["ChainType"];
+                ondoGmNetworkChainId: string;
+                contract: null | string;
+                iconUrl: string;
+            }[];
         };
         GetWebStocksInfoPrimaryPriceChartResponse: {
             range: string;
@@ -1218,7 +1261,7 @@ export interface components {
         };
         GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse: {
             timestamps: number[];
-            prices: number[];
+            values: number[];
         };
         GetWebTrendingTokensResponse: {
             page: number;

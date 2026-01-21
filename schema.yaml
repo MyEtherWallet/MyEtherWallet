@@ -1994,6 +1994,9 @@ components:
 
     GetWebStocksInfoSummaryResponse:
       type: object
+      required:
+        - chainBalances
+        - supportedChains
       properties:
         stockAlias:
           type: string
@@ -2041,6 +2044,126 @@ components:
               type: string
             sharesOutstanding:
               type: string
+        chainBalances:
+          type: array
+          items:
+            type: object
+            required:
+              - chainName
+              - chainNameLong
+              - chainType
+              - ondoGmNetworkChainId
+              - result
+            properties:
+              chainName:
+                type: ['null', string]
+              chainNameLong:
+                type: ['null', string]
+              chainType:
+                oneOf:
+                  - $ref: '#/components/schemas/ChainType'
+                  - type: 'null'
+              ondoGmNetworkChainId:
+                type: ['null', string]
+              result:
+                oneOf:
+                  - type: object
+                    required:
+                      - ok
+                      - value
+                    properties:
+                      ok:
+                        const: false
+                      value:
+                        type: object
+                        required:
+                          - reason
+                        properties:
+                          reason:
+                            type: string
+                  - type: object
+                    required:
+                      - ok
+                      - value
+                    properties:
+                      ok:
+                        const: true
+                      value:
+                        type: object
+                        required:
+                          - contract
+                          - decimals
+                          - balances
+                        properties:
+                          contract:
+                            type: string
+                          decimals:
+                            type: number
+                          balances:
+                            type: array
+                            items:
+                              oneOf:
+                                - type: object
+                                  required:
+                                    - ok
+                                    - value
+                                  properties:
+                                    ok:
+                                      const: false
+                                    value:
+                                      type: object
+                                      required:
+                                        - reason
+                                        - owner
+                                      properties:
+                                        reason:
+                                          type: string
+                                        owner:
+                                          type: string
+                                - type: object
+                                  required:
+                                    - ok
+                                    - value
+                                  properties:
+                                    ok:
+                                      const: true
+                                    value:
+                                      type: object
+                                      required:
+                                        - owner
+                                        - value
+                                      properties:
+                                        owner:
+                                          type: string
+                                        value:
+                                          type: string
+        supportedChains:
+          type: array
+          items:
+            type: object
+            required:
+              - chainName
+              - chainNameLong
+              - chainType
+              - ondoGmNetworkChainId
+              - contract
+              # - decimals
+              - iconUrl
+            properties:
+              chainName:
+                type: string
+              chainNameLong:
+                type: string
+              chainType:
+                $ref: '#/components/schemas/ChainType'
+              ondoGmNetworkChainId:
+                type: string
+              contract:
+                type: ['null', string]
+              iconUrl:
+                type: string
+              # decimals:
+              #   type: number
 
     GetWebStocksInfoPrimaryPriceChartResponse:
       type: object
@@ -2442,13 +2565,13 @@ components:
       type: object
       required:
         - timestamps
-        - prices
+        - values
       properties:
         timestamps:
           type: array
           items:
             type: number
-        prices:
+        values:
           type: array
           items:
             type: number

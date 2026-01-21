@@ -141,10 +141,10 @@ const { data: dataPrices, isFetching } = useMEWFetch(fetchUrl, {
 
 const chartData = computed(() => {
   if (!dataPrices.value) return []
-  const { timestamps, prices } = dataPrices.value
+  const { timestamps, values } = dataPrices.value
   return timestamps.map((timestamp, index) => ({
     timestamp,
-    price: prices[index],
+    value: values[index],
   }))
 })
 </script>
