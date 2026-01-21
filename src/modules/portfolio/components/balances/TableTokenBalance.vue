@@ -4,12 +4,11 @@
       class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
     >
       <div
-        class="flex grow items-center bg-white rounded-full max-w-[400px] order-2 sm:order-1 border border-grey-outline focus-within:border-primary transition-colors hover:border-grey-30"
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[500px]"
       >
         <app-search-input
           v-model="searchInput"
           class="grow"
-          bg-class="bg-transparent"
           placeholder="Search"
         />
       </div>
@@ -130,7 +129,7 @@
             </th>
             <!-- Value and Price -->
             <th
-              class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
+              class="cursor-pointer pl-1 pr-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -157,9 +156,9 @@
               </div>
             </th>
             <!-- Actions -->
-            <th class="lg:pl-6 lg:pr-4 pb-4 text-right w-10 xs:w-[170px]">
-              <p class="hidden lg:block font-bold">ACTIONS</p>
-            </th>
+            <th
+              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[180px] xl:w-[188px] 2xl:w-[200px]"
+            ></th>
           </tr>
         </thead>
         <!-- Body-->
@@ -213,7 +212,7 @@
                   >
                     {{ token.name }}
                   </p>
-                  <p class="text-grey-3 text-s-12 mt-0.5">
+                  <p class="text-info text-s-12 mt-0.5">
                     {{ formatFloatingPointValue(token.balance).value }}
                     <span class="uppercase font-normal text-info">{{
                       truncate(token.symbol, 7)
@@ -267,25 +266,27 @@
               }}
             </td>
             <!-- Value -->
-            <td class="pl-1 pr-6 py-1 text-right">
+            <td class="pl-1 pr-1 py-1 text-right">
               <p class="font-normal text-s-14 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <p class="text-grey-3 text-s-12 mt-0.5">
+              <p class="text-info text-s-12 mt-0.5">
                 {{
                   token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
                 }}
               </p>
             </td>
             <!-- Actions -->
-            <td class="lg:pl-6 lg:pr-4 py-1 rounded-r-12 relative text-right">
+            <td
+              class="lg:pl-6 xl:pl-8 2xl:pl-10 lg:pr-2 py-1 rounded-r-12 relative text-right"
+            >
               <div
-                class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
+                class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
               >
                 <app-pop-up-menu placeholder="actions menu" location="right">
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
-                      label="action menu"
+                      label="actions menu"
                       @click.stop="toggleMenu"
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
@@ -352,7 +353,13 @@
                 </app-pop-up-menu>
               </div>
 
-              <div class="hidden lg:flex flex-row gap-2 justify-end">
+              <div class="hidden lg:flex flex-row gap-2 justify-start">
+                <app-base-button
+                  size="small"
+                  @click="swapBtn(token)"
+                  class="min-w-[70px]"
+                  >Swap
+                </app-base-button>
                 <app-base-button
                   v-if="isBuyable(token.coinId)"
                   size="small"
@@ -361,12 +368,6 @@
                   class="min-w-[70px]"
                   >Buy</app-base-button
                 >
-                <app-base-button
-                  size="small"
-                  @click="swapBtn(token)"
-                  class="min-w-[70px]"
-                  >Swap
-                </app-base-button>
               </div>
             </td>
           </tr>

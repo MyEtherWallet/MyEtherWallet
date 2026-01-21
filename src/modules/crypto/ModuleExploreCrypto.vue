@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col gap-2 xl:gap-3 w-full">
     <div
-      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
+      class="flex flex-col sm:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-3 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">Explore Crypto Tokens</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">Explore Tokens</h1>
 
-      <div class="hidden lg:flex lg:items-center bg-grey-5 p-1 rounded-full">
+      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
           v-model:selected="selectedCryptoFilter"
           :btn-list="cryptoFilterOptions.slice(0, 4)"
-          size="medium"
+          size="large"
           class="flex-nowrap"
         >
           <template #btn-content="{ data }">
@@ -22,14 +22,13 @@
                 cryptoFilterOptions.slice(4, cryptoFilterOptions.length)
               "
               position="-right-1"
-              class="text-s-12"
             >
               <template #select-button="{ toggleSelect }">
                 <button
-                  class="rounded-full hoverNoBG px-3 py-2 flex items-center gap-1"
+                  class="min-h-10 rounded-full hoverNoBG px-3 flex items-center gap-1"
                   @click="toggleSelect"
                 >
-                  <span class="font-medium">More</span>
+                  <span class="font-medium text-s-17">More</span>
                   <chevron-down-icon class="w-4 h-4" />
                 </button>
               </template>
@@ -46,9 +45,9 @@
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
-          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+          <div class="bg-surface rounded-full p-1 w-full sm:w-auto">
             <button
-              class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+              class="rounded-full bg-white py-3 w-full min-w-[180px] px-5 shadow-button"
               @click="toggleSelect"
             >
               <div class="flex items-center justify-between gap-1">
@@ -64,19 +63,60 @@
     </div>
 
     <div class="basis-full">
-      <div class="bg-white rounded-16 shadow-button py-4 px-2">
+      <div class="bg-white rounded-16 py-4 px-2">
         <div
-          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
+          class="flex flex-col sm:flex-row sm:items-center justify-between px-2 sm:pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
         >
+          <button
+            class="xs:hidden mb-3 bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all"
+            @click="openChainDialog = true"
+          >
+            <div class="flex items-center">
+              <app-token-logo
+                v-if="selectedChainFilter?.nameLong !== 'All Chains'"
+                :url="selectedChainFilter?.icon"
+                :symbol="selectedChainFilter?.nameLong"
+                width="w-6"
+                height="h-6"
+                class="mr-2"
+              />
+              <span
+                v-if="selectedChainFilter"
+                class="text-s-14 leading-p-140 font-medium"
+                >{{ selectedChainFilter.nameLong }}</span
+              >
+              <chevron-down-icon class="ml-auto w-4 h-4 ml-2" />
+            </div>
+          </button>
           <div
-            class="flex grow items-center bg-white rounded-full max-w-[400px] order-2 sm:order-1 border border-grey-outline focus-within:border-primary transition-colors hover:border-grey-30"
+            class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[600px]"
           >
             <app-search-input
               v-model="searchInput"
               class="grow"
-              bg-class="bg-transparent"
               placeholder="Search"
             />
+            <button
+              class="hidden xs:block rounded-full hoverNoBG p-2 flex h-10"
+              @click="openChainDialog = true"
+            >
+              <div class="flex items-center">
+                <app-token-logo
+                  v-if="selectedChainFilter?.nameLong !== 'All Chains'"
+                  :url="selectedChainFilter?.icon"
+                  :symbol="selectedChainFilter?.nameLong"
+                  width="w-5"
+                  height="h-5"
+                  class="mr-2"
+                />
+                <span
+                  v-if="selectedChainFilter"
+                  class="text-s-14 leading-p-140 font-medium text-nowrap"
+                  >{{ selectedChainFilter.nameLong }}</span
+                >
+                <chevron-down-icon class="w-4 h-4 ml-2" />
+              </div>
+            </button>
           </div>
         </div>
 
@@ -172,7 +212,7 @@
                     }"
                     @click="setHeaderSort('PRICE')"
                   >
-                    VALUE
+                    Price
                     <arrow-long-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
@@ -185,10 +225,8 @@
                 </th>
                 <!-- Actions -->
                 <th
-                  class="pl-1 pr-3 pb-4 text-right w-10 xs:w-12 sm:w-16 md:w-20 lg:w-auto 3xl:w-[180px]"
-                >
-                  <p class="hidden lg:block font-bold">ACTIONS</p>
-                </th>
+                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[180px] xl:w-[188px] 2xl:w-[200px]"
+                ></th>
               </tr>
             </thead>
             <!-- Body-->
@@ -225,11 +263,11 @@
                     />
                     <div class="truncate">
                       <p
-                        class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        class="truncate font-medium text-s-15 max-w-[100px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
                         {{ token.name }}
                       </p>
-                      <p class="text-grey-3 text-s-12 mt-0.5">
+                      <p class="text-info text-s-12 mt-0.5">
                         <span class="uppercase font-normal text-info">{{
                           truncate(token.symbol, 7)
                         }}</span>
@@ -264,20 +302,23 @@
                   {{ token.marketCap }}
                 </td>
                 <!-- Price / Volume -->
-                <td class="pl-1 pr-6 py-1 text-right">
+                <td class="pl-1 pr-1 py-1 text-right">
                   <p class="font-normal text-s-14 text-black">
                     {{ token.price }}
                   </p>
-                  <p class="text-grey-3 text-s-12 mt-0.5 whitespace-nowrap">
+                  <p
+                    v-if="token.totalVolume !== '-'"
+                    class="text-info text-s-12 mt-0.5 whitespace-nowrap"
+                  >
                     Vol: {{ token.totalVolume }}
                   </p>
                 </td>
                 <!-- Actions -->
                 <td
-                  class="lg:pl-6 lg:pr-4 py-1 rounded-r-12 relative text-right"
+                  class="lg:pl-6 xl:pl-8 2xl:pl-10 lg:pr-2 py-1 rounded-r-12 relative text-right"
                 >
                   <div
-                    class="flex items-center justify-end lg:hidden -mr-1 md:mr-0"
+                    class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
                   >
                     <app-pop-up-menu
                       placeholder="actions menu"
@@ -351,7 +392,13 @@
                       </template>
                     </app-pop-up-menu>
                   </div>
-                  <div class="hidden lg:flex flex-row gap-2 justify-end">
+                  <div class="hidden lg:flex flex-row gap-2 justify-start">
+                    <app-base-button
+                      size="small"
+                      @click="swapBtn(token)"
+                      class="min-w-[70px]"
+                      >Swap
+                    </app-base-button>
                     <app-base-button
                       v-if="isBuyable(token.coinId)"
                       size="small"
@@ -360,12 +407,6 @@
                       class="min-w-[70px]"
                       >Buy</app-base-button
                     >
-                    <app-base-button
-                      size="small"
-                      @click="swapBtn(token)"
-                      class="min-w-[70px]"
-                      >Swap
-                    </app-base-button>
                   </div>
                 </td>
               </tr>
