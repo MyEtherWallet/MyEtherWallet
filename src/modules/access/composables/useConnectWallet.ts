@@ -165,7 +165,8 @@ export const useConnectWallet = () => {
         typeof wallet.icon === 'string' ? wallet.icon : '' /* async */,
     })
     // open Wallet Connect View
-    accessStore.setCurrentView('wallet_connect')
+    if (wallet.id === 'walletConnect')
+      accessStore.setCurrentView('wallet_connect')
 
     // find connector by id
     // some connectors have different ids in our config vs wagmi (e.g. rabby)
