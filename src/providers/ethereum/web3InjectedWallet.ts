@@ -19,40 +19,31 @@ class Web3InjectedWallet extends BaseEvmWallet {
   }
 
   override async connect(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const providerChain = (await this.provider.provider.request({
-          method: 'eth_chainId',
-        })) as HexPrefixedString
+    try {
+      const providerChain = (await this.provider.provider.request({
+        method: 'eth_chainId',
+      })) as HexPrefixedString
 
-        const account = await this.provider.provider.request({
-          method: 'eth_requestAccounts',
-        })
+      const account = (await this.provider.provider.request({
+        method: 'eth_requestAccounts',
+      })) as HexPrefixedString[]
 
-        if (account.length > 0) {
-          // Check if the current chainId matches the provider's chainId
-          // If not, switch the chain
-          if (fromHex(providerChain, 'number') !== Number(this.chainId)) {
-            this.provider.provider
-              .request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: toHex(Number(this.chainId)) }],
-              })
-              .then(() => {
-                this.address = account[0] as HexPrefixedString
-                resolve(true)
-              })
-          } else {
-            this.address = account[0] as HexPrefixedString
-            resolve(true)
-          }
-        } else {
-          resolve(false)
+      if (account.length > 0) {
+        // Check if the current chainId matches the provider's chainId
+        // If not, switch the chain
+        if (fromHex(providerChain, 'number') !== Number(this.chainId)) {
+          await this.provider.provider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: toHex(Number(this.chainId)) }],
+          })
         }
-      } catch (err) {
-        reject(err)
+        this.address = account[0]
+        return true
       }
-    })
+      return false
+    } catch (err) {
+      throw err
+    }
   }
 
   override async SendTransaction(
@@ -76,9 +67,7 @@ class Web3InjectedWallet extends BaseEvmWallet {
   }
 
   override async getAddress(): Promise<HexPrefixedString> {
-    return new Promise(resolve => {
-      resolve(this.address)
-    })
+    return this.address
   }
 
   override getWalletType(): WalletType {
@@ -97,15 +86,11 @@ class Web3InjectedWallet extends BaseEvmWallet {
     message: string
     options?: unknown
   }): Promise<HexPrefixedString> {
-    try {
-      const signature = await this.provider.provider.request({
-        method: 'personal_sign',
-        params: [options.message, this.address],
-      })
-      return signature as HexPrefixedString
-    } catch (e) {
-      return Promise.reject(e)
-    }
+    const signature = await this.provider.provider.request({
+      method: 'personal_sign',
+      params: [options.message, this.address],
+    })
+    return signature as HexPrefixedString
   }
 }
 

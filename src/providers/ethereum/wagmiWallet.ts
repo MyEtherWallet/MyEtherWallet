@@ -20,6 +20,7 @@ class WagmiWallet extends BaseEvmWallet {
     this.config = config
     this.address = '0x'
   }
+
   override disconnect(): Promise<boolean> {
     return this.connector
       .disconnect()
@@ -29,19 +30,26 @@ class WagmiWallet extends BaseEvmWallet {
       })
       .catch(() => false)
   }
-  override connect(): Promise<boolean> {
-    return this.connector
-      .connect()
-      .then(res => {
-        if (res.accounts.length > 0) {
-          this.address = res.accounts[0]
-          return true
+
+  override async connect(): Promise<boolean> {
+    try {
+      const conn = await this.connector.connect()
+      console.log(conn)
+      if (conn.accounts.length > 0) {
+        if (BigInt(conn.chainId) !== BigInt(this.chainId)) {
+          await this.connector.switchChain!({
+            chainId: Number(this.chainId),
+          })
+            .then(console.log)
+            .catch(console.error)
         }
-        return false
-      })
-      .catch(err => {
-        throw new Error(err)
-      })
+        this.address = conn.accounts[0]
+        return true
+      }
+      return false
+    } catch (err) {
+      throw err
+    }
   }
 
   override async SendTransaction(
@@ -75,6 +83,7 @@ class WagmiWallet extends BaseEvmWallet {
       account: from,
       ...parseTx,
     } as SendTransactionParameters
+
     return sendTransaction(
       this.config,
       params as SendTransactionParameters<typeof this.config>,
@@ -82,7 +91,6 @@ class WagmiWallet extends BaseEvmWallet {
       return res
     })
   }
-
 
   override async SignMessage(options: {
     message: string
