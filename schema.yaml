@@ -114,6 +114,30 @@ paths:
         200:
           $ref: '#/components/responses/GetWebStocksSummarySuccess'
 
+  # ====================
+  # Web stocks info page
+  # ====================
+
+  /v1/web/pages/stocks-info/stocks/{symbol}/summary:
+    get:
+      operationId: GetWebStocksInfoSummary
+      parameters:
+        - $ref: '#/components/parameters/PathSymbol'
+        - $ref: '#/components/parameters/QueryEvmAddresses'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksInfoSummarySuccess'
+
+  /v1/web/pages/stocks-info/stocks/{symbol}/primary-price-chart:
+    get:
+      operationId: GetWebStocksInfoPrimaryPriceChart
+      parameters:
+        - $ref: '#/components/parameters/PathSymbol'
+        - $ref: '#/components/parameters/WebStocksInfoPriceChartInterval'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksInfoPrimaryPriceChartSuccess'
+
   # ==========
   # Web Tokens
   # ==========
@@ -597,6 +621,11 @@ components:
       in: query
       schema:
         type: boolean
+    PathSymbol:
+      name: symbol
+      in: path
+      schema:
+        type: string
     PathCoinId:
       name: coin
       in: path
@@ -662,6 +691,11 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/WebTokenPriceChartInterval'
+    WebStocksInfoPriceChartInterval:
+      name: interval
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebStocksInfoPriceChartInterval'
     WebTokensTableSort:
       name: sort
       in: query
@@ -917,6 +951,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetWebStocksSummaryResponse'
+
+    GetWebStocksInfoSummarySuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksInfoSummaryResponse'
+
+    GetWebStocksInfoPrimaryPriceChartSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksInfoPrimaryPriceChartResponse'
 
     GetChainMetadataSuccess:
       content:
@@ -1366,6 +1412,16 @@ components:
         - DESC
 
     WebTokenPriceChartInterval:
+      type: string
+      enum:
+        - '1D'
+        - '7D'
+        - '1M'
+        - '3M'
+        - '1Y'
+        - 'ALL'
+
+    WebStocksInfoPriceChartInterval:
       type: string
       enum:
         - '1D'
@@ -1936,6 +1992,84 @@ components:
               name:
                 type: string
 
+    GetWebStocksInfoSummaryResponse:
+      type: object
+      properties:
+        stockAlias:
+          type: string
+        description:
+          type: string
+        iconPngUrl:
+          type: string
+        iconSvgUrl:
+          type: string
+        primaryMarket:
+          type: object
+          required:
+            - symbol
+            - price
+            - priceChangePercentage24h
+          properties:
+            symbol:
+              type: string
+            price:
+              type: string
+            priceChange24h:
+              type: string
+            priceChangePercentage24h:
+              type: string
+            totalHolders:
+              type: number
+            sharesMultiplier:
+              type: string
+        underlyingMarket:
+          type: object
+          required:
+            - name
+            - priceHigh52w
+            - priceLow52w
+            - averageVolume
+            - sharesOutstanding
+          properties:
+            name:
+              type: string
+            priceHigh52w:
+              type: string
+            priceLow52w:
+              type: string
+            averageVolume:
+              type: string
+            sharesOutstanding:
+              type: string
+
+    GetWebStocksInfoPrimaryPriceChartResponse:
+      type: object
+      required:
+        - range
+        - interval
+        - prices
+        - lowerbound
+      properties:
+        range:
+          type: string
+        interval:
+          type: string
+        lowerbound:
+          type: string
+          format: date-time
+        prices:
+          type: array
+          items:
+            type: object
+            required:
+              - timestamp
+              - price
+            properties:
+              timestamp:
+                type: number
+              price:
+                type: number
+
     # ====================
     # Transaction Statuses
     # ====================
@@ -2505,6 +2639,7 @@ components:
           - addresses
           - nativeChains
           - chains
+          - ondo
           - sparklineIn7d
         properties:
           coinId:

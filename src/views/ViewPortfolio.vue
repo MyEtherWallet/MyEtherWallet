@@ -4,9 +4,9 @@
       v-if="isWalletConnected"
       :class="[
         isOpenSideMenu
-          ? 'md:grid-cols-2 lg-max:grid-cols-[300px_1fr] 2xl:grid-cols-[360px_1fr_1fr]'
-          : 'md:grid-cols-2 lg-max:grid-cols-[300px_1fr_1fr] 2xl:grid-cols-[360px_1fr_1fr]',
-        'grid grid-cols-1 gap-4 items-stretch',
+          ? 'lg-max:grid-cols-[300px_1fr] 2xl:grid-cols-[360px_1fr_1fr]'
+          : 'lg-max:grid-cols-[300px_1fr_1fr] 2xl:grid-cols-[360px_1fr_1fr]',
+        'grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch basis-full',
       ]"
     >
       <app-wallet-card class="h-full" />
@@ -26,7 +26,7 @@
         v-if="!isLoadingBalances && !hasBalances"
         :class="[
           isOpenSideMenu ? 'lg-max:col-span-1' : 'lg-max:col-span-2',
-          'col-span-12 md:col-span-7 2xl:col-span-2 ',
+          ' md:col-span-1  2xl:col-span-2 ',
         ]"
       />
     </div>

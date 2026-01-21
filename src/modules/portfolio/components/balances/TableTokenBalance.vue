@@ -1,33 +1,22 @@
 <template>
   <div v-if="isWalletConnected">
     <div
-      class="flex flex-col lg:flex-row lg:items-center justify-between px-2 py-2 mb-4 lg:gap-6"
+      class="flex flex-col sm:flex-row sm:items-center justify-between px-2 pt-2 pb-6 mb-4 sm:gap-6 border-b border-grey-5"
     >
       <div
-        class="flex grow flex-wrap order-3 order-2 lg:order-1 items-center gap-2"
+        class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full xs:max-w-[500px]"
       >
-        <div
-          class="flex grow justify-between items-center bg-surface rounded-full p-1 max-w-[500px] min-w-[200px] gap-3 lg:gap-5"
-        >
-          <app-search-input v-model="searchInput" class="grow" />
-        </div>
-        <div
-          v-if="paginatedArray.length && props.view === 'custom'"
-          class="flex-none"
-        >
-          <app-base-button
-            size="medium"
-            @click="openAddCustom"
-            class="sm:min-w-[120px] sm:ml-4"
-            >+ Add</app-base-button
-          >
-        </div>
+        <app-search-input
+          v-model="searchInput"
+          class="grow"
+          placeholder="Search"
+        />
       </div>
       <!-- TOTAL VALUE-->
-      <div class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0">
-        <p
-          class="font-bold text-info uppercase tracking-sp-06 text-s-14 lg:text-right"
-        >
+      <div
+        class="order-1 sm:order-2 mb-6 sm:mb-0 ml-2 sm:ml-0 flex flex-col items-end"
+      >
+        <p class="font-bold text-info uppercase tracking-sp-06 text-s-11 mb-1">
           Total Value
         </p>
         <p
@@ -56,6 +45,7 @@
             <!-- Name & Balance -->
             <th
               class="cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              colspan="2"
             >
               <div
                 class="flex items-center gap-1 ml-11 font-bold"
@@ -81,65 +71,9 @@
                 />
               </div>
             </th>
-            <!-- Market Cap -->
-            <th
-              class="hidden lg:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.MARKET_CAP,
-                }"
-                @click="setHeaderSort(SortValueString.MARKET_CAP)"
-              >
-                MARKET CAP
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'desc'
-                  "
-                />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.MARKET_CAP &&
-                    tableDirection === 'asc'
-                  "
-                />
-              </div>
-            </th>
-            <!-- Price -->
-            <th
-              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.PRICE,
-                }"
-                @click="setHeaderSort(SortValueString.PRICE)"
-              >
-                Price
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PRICE &&
-                    tableDirection === 'desc'
-                  "
-                />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PRICE &&
-                    tableDirection === 'asc'
-                  "
-                />
-              </div>
-            </th>
             <!-- 24h % -->
             <th
-              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden xs:table-cell w-[100px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
@@ -165,10 +99,37 @@
                 />
               </div>
             </th>
-
-            <!-- Value and Balance -->
+            <!-- Market Cap -->
             <th
-              class="cursor-pointer pl-1 pb-4 hover:text-black transition-colors"
+              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.MARKET_CAP,
+                }"
+                @click="setHeaderSort(SortValueString.MARKET_CAP)"
+              >
+                MARKET CAP
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.MARKET_CAP &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.MARKET_CAP &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+            <!-- Value and Price -->
+            <th
+              class="cursor-pointer pl-1 pr-1 pb-4 hover:text-black transition-colors"
             >
               <div
                 class="flex items-center gap-1 justify-end relative text-right font-bold"
@@ -177,7 +138,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
-                Balance
+                VALUE
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -196,10 +157,8 @@
             </th>
             <!-- Actions -->
             <th
-              class="sm:pl-6 sm:pr-4 pb-4 text-right w-[36px] xs:w-[60px] sm:w-[80px] xl:w-auto"
-            >
-              <p class="hidden xl:block font-bold">ACTIONS</p>
-            </th>
+              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[180px] xl:w-[188px] 2xl:w-[200px]"
+            ></th>
           </tr>
         </thead>
         <!-- Body-->
@@ -232,64 +191,39 @@
               </button>
             </td>
             <!-- Name & Balance -->
-            <td class="px-1 py-1 rounded-l-12 xs:rounded-none">
+            <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
               <div class="flex items-center gap-3">
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
-                  :is-stock="!!token.is_rwa"
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
-                  <app-token-symbol
-                    :symbol="token.symbol"
-                    :is-stock="!!token.is_rwa"
-                  />
-                  <div
-                    class="flex items-center gap-1 text-info text-s-12 mt-0.5"
-                  >
-                    <app-tooltip
-                      :text="token.name"
-                      v-if="token.name.length > 20"
-                    >
-                      <p
-                        class="truncate max-w-[100px] md:max-w-[150px] lg:max-w-[200px]"
-                      >
-                        {{ token.name }}
-                      </p>
-                    </app-tooltip>
+                  <app-tooltip :text="token.name" v-if="token.name.length > 20">
                     <p
-                      v-else
-                      class="truncate max-w-[100px] md:max-w-[150px] lg:max-w-[200px]"
+                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ token.name }}
                     </p>
-                  </div>
+                  </app-tooltip>
+                  <p
+                    v-else
+                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                  >
+                    {{ token.name }}
+                  </p>
+                  <p class="text-info text-s-12 mt-0.5">
+                    {{ formatFloatingPointValue(token.balance).value }}
+                    <span class="uppercase font-normal text-info">{{
+                      truncate(token.symbol, 7)
+                    }}</span>
+                  </p>
                 </div>
               </div>
             </td>
-            <!-- Market Cap -->
-            <td
-              class="hidden lg:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
-            >
-              {{
-                token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
-                  : '-'
-              }}
-            </td>
-            <!-- Price -->
-            <td class="hidden md:table-cell pl-1 py-1 text-right">
-              <p class="font-normal text-s-15 text-black">
-                {{
-                  token.price ? ` $${formatFiatValue(token.price).value}` : '-'
-                }}
-              </p>
-            </td>
             <!-- 24H % -->
-
             <td class="hidden xs:table-cell px-1 py-1 text-right">
-              <div class="flex flex-col items-end justify-center py-2">
+              <div class="flex flex-col items-end justify-center py-2 pr-2">
                 <p
                   class="text-s-13 font-normal mb-1"
                   :class="[
@@ -321,34 +255,38 @@
                 />
               </div>
             </td>
-
+            <!-- Market Cap -->
+            <td
+              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+            >
+              {{
+                token.market_cap
+                  ? `$${formatFiatValue(token.market_cap).value}`
+                  : '-'
+              }}
+            </td>
             <!-- Value -->
-            <td class="pl-1 py-1 text-right">
-              <p class="font-normal text-s-14 xs:text-s-15 text-black">
+            <td class="pl-1 pr-1 py-1 text-right">
+              <p class="font-normal text-s-14 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
-              <div class="flex justify-end gap-1 items-center mt-0.5">
-                <p class="text-info text-s-12 xs:text-[13px] font-normal">
-                  {{ formatFloatingPointValue(token.balance).value }}
-                </p>
-                <app-token-symbol
-                  class="text-info text-s-12 xs:text-[13px] font-normal"
-                  :symbol="token.symbol"
-                  :is-stock="!!token.is_rwa"
-                  :has-gradient="false"
-                >
-                </app-token-symbol>
-              </div>
+              <p class="text-info text-s-12 mt-0.5">
+                {{
+                  token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
+                }}
+              </p>
             </td>
             <!-- Actions -->
             <td
-              class="xs:px-2 xl:pl-6 xl:pr-4 py-1 rounded-r-12 relative text-right"
+              class="lg:pl-6 xl:pl-8 2xl:pl-10 lg:pr-2 py-1 rounded-r-12 relative text-right"
             >
-              <div class="flex items-center justify-end xl:hidden md:mr-0">
+              <div
+                class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
+              >
                 <app-pop-up-menu placeholder="actions menu" location="right">
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
-                      label="action menu"
+                      label="actions menu"
                       @click.stop="toggleMenu"
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
@@ -386,8 +324,9 @@
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
 
-                      <ul v-if="props.view !== 'custom'">
+                      <ul>
                         <li
+                          v-if="isBuyable(token.coinId)"
                           @click.stop="[buyBtn(), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
@@ -409,66 +348,26 @@
                           <p>Bridge</p>
                         </li>
                       </ul>
-                      <ul v-else>
-                        <li
-                          @click.stop="[
-                            customTokenAction('edit', token),
-                            toggleMenu(),
-                          ]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <pencil-icon class="w-4 h-4 mr-2" />
-                          <p>Edit</p>
-                        </li>
-                        <li
-                          @click.stop="[
-                            customTokenAction('delete', token),
-                            toggleMenu(),
-                          ]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <trash-icon class="w-4 h-4 mr-2" />
-                          <p>Delete</p>
-                        </li>
-                      </ul>
                     </div>
                   </template>
                 </app-pop-up-menu>
               </div>
-              <div
-                class="hidden xl:flex flex-row flex-wrap gap-1 justify-end"
-                v-if="props.view !== 'custom'"
-              >
+
+              <div class="hidden lg:flex flex-row gap-2 justify-start">
                 <app-base-button
                   size="small"
-                  @click="buyBtn()"
+                  @click="swapBtn(token)"
+                  class="min-w-[70px]"
+                  >Swap
+                </app-base-button>
+                <app-base-button
+                  v-if="isBuyable(token.coinId)"
+                  size="small"
+                  @click="buyBtn"
                   is-outline
                   class="min-w-[70px]"
                   >Buy</app-base-button
                 >
-                <app-base-button
-                  size="small"
-                  @click.stop="swapBtn(token)"
-                  class="min-w-[70px]"
-                  >Swap
-                </app-base-button>
-              </div>
-              <div
-                class="hidden xl:flex flex-row gap-1 justify-end flex-wrap"
-                v-else
-              >
-                <app-btn-icon
-                  label="edit"
-                  @click.stop="customTokenAction('edit', token)"
-                >
-                  <pencil-icon class="w-4 h-4" />
-                </app-btn-icon>
-                <app-btn-icon
-                  label="delete"
-                  @click.stop="customTokenAction('delete', token)"
-                >
-                  <trash-icon class="w-5 h-5" />
-                </app-btn-icon>
               </div>
             </td>
           </tr>
@@ -478,7 +377,7 @@
         v-if="
           searchInput.length === 0 &&
           paginatedArray.length === 0 &&
-          props.view === 'watchlist'
+          selectedAllTokensFilter.value === 'watchlist'
         "
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
@@ -487,33 +386,6 @@
           >Discover more tokens
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
-      </div>
-      <div
-        v-if="
-          searchInput.length === 0 &&
-          paginatedArray.length === 0 &&
-          props.view === 'stocks'
-        "
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
-      >
-        <p class="mb-1 lg:mt-10">You dont have any stocks.</p>
-        <router-link :to="{ name: ROUTES_MAIN.STOCKS.NAME }" class="underline"
-          >Discover stocks
-          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
-        </router-link>
-      </div>
-      <div
-        v-if="paginatedArray.length === 0 && props.view === 'custom'"
-        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
-      >
-        <p class="mb-6 lg:mt-10">You dont have any custom tokens.</p>
-        <app-base-button size="medium" @click="openAddCustom"
-          >+ Add Custom Token</app-base-button
-        >
-        <!-- <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
-          >Discover more tokens
-          <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
-        </router-link> -->
       </div>
       <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
@@ -538,13 +410,10 @@
     <div
       class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
     >
-      <div
-        v-if="!isLoading"
-        class="!text-s-12 xs:!text-s-14 text-info order-2 xs:order-1 mb-4 xs:mb-0"
-      >
+      <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
         {{ getCurrentViewableItemsIndex }} of {{ tokens.length }} results
       </div>
-      <div class="flex items-center gap-4 order-1 xs:order-2 mb-2 xs:mb-0">
+      <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
           label="previous page"
@@ -566,7 +435,7 @@
         </app-btn-icon>
       </div>
 
-      <div class="flex items-center gap-2 order-3 xs:order-3 mb-4 xs:mb-0">
+      <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
         <app-select
           v-model:selected="activeShownItems"
           :options="shownItemsOptions"
@@ -586,143 +455,99 @@
       </div>
     </div>
   </div>
-  <div>
-    <custom-tokens-dialog />
-  </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import BigNumber from 'bignumber.js'
-import { formatUnits } from 'viem'
-
-// Components
+import { computed, ref } from 'vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
-import CustomTokensDialog from './CustomTokensDialog.vue'
-
-// Icons
 import {
   StarIcon as StarSolidIcon,
   ArrowLongDownIcon,
   ArrowLongUpIcon,
-  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EllipsisVerticalIcon,
-  PencilIcon,
-  TrashIcon,
+  ChevronDownIcon,
 } from '@heroicons/vue/24/solid'
-import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-
-// Composables & Utils
-import { usePaginate } from '@/composables/usePaginate'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
-import { searchArrayByKeysStr } from '@/utils/searchArray'
-import { getAPIPath } from '@/utils/constructAPIPath'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import { storeToRefs } from 'pinia'
+import { truncate } from '@/utils/filters'
+import type { Chain, TokenBalance } from '@/mew_api/types'
 import {
   formatFiatValue,
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
-
-// Types & Routes
-import type {
-  GetErc20AddressBalanceResponse,
-  TokenBalance,
-  GetWebTokensWatchlistResponse,
-} from '@/mew_api/types'
-import type { AppSelectOption } from '@/types/components/appSelect'
-import { ROUTES_MAIN, TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
-import { type BalanceFilter } from '../../helpers/index'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useRouter } from 'vue-router'
+import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { useWalletStore } from '@/stores/walletStore'
-import { useTokenInfoStore } from '@/stores/tokenInfoStore'
-import { useCustomTokenStore } from '@/stores/customTokenStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useInputStore } from '@/stores/inputStore'
+import { type NewTokenInfo } from '@/composables/useSwap'
+import BigNumber from 'bignumber.js'
+import { usePaginate } from '@/composables/usePaginate'
+import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
+import { searchArrayByKeysStr } from '@/utils/searchArray'
+import type { GetWebTokensWatchlistResponse } from '@/mew_api/types'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { ROUTES_MAIN } from '@/router/routeNames'
+import { useTokenInfoStore } from '@/stores/tokenInfoStore'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 
-/** -------------------------------
- * Constants & Types
- -------------------------------*/
-export interface DisplayToken extends TokenBalance {
-  fiatBalance?: number
-  fiatBalanceFormatted?: string
-}
-/** -------------------------------
- * Store & State Setup
- -------------------------------*/
-const props = defineProps<{
-  view: BalanceFilter
-}>()
-
-const chainStore = useChainsStore()
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const walletStore = useWalletStore()
+const chainsStore = useChainsStore()
+const inputStore = useInputStore()
+const purchaseStore = usePurchaseStore()
+const { isBuyable } = purchaseStore
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
-  formattedStockFiatPortfolioValue,
   isLoadingBalances,
   allTokens,
-  allStocks,
-  walletAddress,
 } = storeToRefs(walletStore)
+const { selectedChain } = storeToRefs(chainsStore)
+const { storeSwapValues } = inputStore
 
-const router = useRouter()
-const watchListStore = useWatchlistStore()
-const customTokenStore = useCustomTokenStore()
-const tokenInfoStore = useTokenInfoStore()
-const { selectedChain } = storeToRefs(chainStore)
+console.log(allTokens)
 
-const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  watchListStore
-const { watchListedTokens } = storeToRefs(watchListStore)
-const { customTokens } = storeToRefs(customTokenStore)
-const { openCustomTokenDialog, setCurrentView } = customTokenStore
+const tableContainer = ref<HTMLElement | null>(null)
+const searchInput = ref('')
 
 /** -------------------------------
- * Sorting
--------------------------------*/
-enum SortValueString {
-  NAME = 'Name',
-  PERCENT = '24h',
-  MARKET_CAP = 'Market_Cap',
-  VALUE = 'USD_Balance',
-  PRICE = 'Price',
-}
+ * All Tokens Filter
+  -------------------------------*/
 
-// Local State
-const searchInput = ref('')
-const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
-const tableDirection = ref<'asc' | 'desc'>('asc')
-const extraCustomBalances = ref<Record<string, GetErc20AddressBalanceResponse>>(
-  {},
-)
+const allTokensFilterOptions = ref([
+  { label: 'All Tokens', value: 'all' },
+  { label: 'Custom Tokens', value: 'customTokens' },
+  { label: 'Watchlist', value: 'watchlist' },
+])
+
+const selectedAllTokensFilter = ref(allTokensFilterOptions.value[0])
 
 /** -------------------------------
  * Total Value
 -------------------------------*/
 const totalValue = computed(() => {
-  if (props.view === 'all') return formattedTotalFiatPortfolioValue.value
-  else if (props.view === 'stocks')
-    return formattedStockFiatPortfolioValue.value
-  else if (props.view === 'watchlist') {
+  if (selectedAllTokensFilter.value.value === 'all')
+    return formattedTotalFiatPortfolioValue.value
+  else if (selectedAllTokensFilter.value.value === 'watchlist') {
     const sum = tokens.value.reduce((acc, token) => {
       const fiatValue = BigNumber(token.fiatBalance || 0)
       return acc.plus(fiatValue)
@@ -735,21 +560,48 @@ const totalValue = computed(() => {
 })
 
 /** -------------------------------
- * Computed Values
- -------------------------------*/
-const chainCustomTokens = computed(() => {
-  const chainName = chainStore.selectedChain?.name || ''
-  return customTokens.value[chainName] || []
-})
-const isLoading = computed(() =>
-  props.view === 'watchlist'
-    ? isLoadingBalances.value || isLoadingWatchlist.value
-    : isLoadingBalances.value,
-)
+ * Sorting
+-------------------------------*/
+enum SortValueString {
+  NAME = 'Name',
+  PERCENT = '24h',
+  MARKET_CAP = 'Market_Cap',
+  VALUE = 'USD_Balance',
+}
+const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
+const tableDirection = ref<'asc' | 'desc'>('asc')
 
+const setHeaderSort = (key: SortValueString) => {
+  if (headerSort.value === key) {
+    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    tableDirection.value = 'desc'
+  }
+  headerSort.value = key
+}
 /** -------------------------------
- * Fetching & Watchers
- -------------------------------*/
+ * Watchlist
+-------------------------------*/
+
+const watchListStore = useWatchlistStore()
+const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
+  watchListStore
+const { watchListedTokens } = storeToRefs(watchListStore)
+
+const setWatchlistToken = (tokenId: string) => {
+  if (!tokenId) return
+  if (isWatchListed(tokenId)) {
+    removeTokenWatchList(tokenId)
+  } else {
+    addTokenToWatchList(tokenId)
+    fetchWatchlistTable()
+  }
+}
+
+/**-------------------------------
+ * Watchlist Fetch URL
+-------------------------------*/
+
 const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
@@ -765,90 +617,42 @@ const {
   .get()
   .json<GetWebTokensWatchlistResponse>()
 
-const getCustomTokenBalance = async (
-  contractAddress: string,
-): Promise<GetErc20AddressBalanceResponse> => {
-  const path = getAPIPath(
-    `/v1/evm/chains/${selectedChain.value?.chainID}/erc20/${contractAddress}/addresses/${walletAddress.value}/balance`,
-  )
-  const response = await fetch(path)
-  if (!response.ok) throw new Error('Failed to fetch balance')
-  return response.json()
-}
-
-watch(selectedChain, () => (extraCustomBalances.value = {}))
-
-watch(
-  [chainCustomTokens, walletAddress],
-  async () => {
-    if (props.view !== 'custom') return
-
-    const existingAddresses = new Set(
-      allTokens.value.map(t => t.contract?.toLowerCase()),
-    )
-
-    for (const token of chainCustomTokens.value) {
-      const addr = token.address.toLowerCase()
-      if (!existingAddresses.has(addr) && !extraCustomBalances.value[addr]) {
-        try {
-          extraCustomBalances.value[addr] = await getCustomTokenBalance(
-            token.address,
-          )
-        } catch (e) {
-          console.error('Error fetching custom token balance:', e)
-        }
-      }
-    }
-  },
-  { immediate: true },
-)
-
-/** -------------------------------
- * Table Logic
- -------------------------------*/
-const setHeaderSort = (key: SortValueString) => {
-  if (headerSort.value === key) {
-    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    tableDirection.value = 'desc'
-    headerSort.value = key
-  }
-}
-
-const getFiatValue = (token: TokenBalance): BigNumber => {
-  return BigNumber(token.price || 0).multipliedBy(token.balance)
-}
-
-const mapToDisplay = (token: TokenBalance): DisplayToken => {
-  const fiat = getFiatValue(token)
-  return {
-    ...token,
-    fiatBalance: fiat.toNumber(),
-    fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
-  }
+const isLoading = computed<boolean>(() => {
+  return selectedAllTokensFilter.value.value === 'watchlist'
+    ? isLoadingBalances.value || isLoadingWatchlist.value
+    : isLoadingBalances.value
+})
+/**-------------------------------
+ * Balances Table Data
+-------------------------------*/
+export interface DisplayToken extends TokenBalance {
+  fiatBalance?: number
+  fiatBalanceFormatted?: string
 }
 
 const tokens = computed<DisplayToken[]>(() => {
-  let list: DisplayToken[] = []
-
-  // Create lookups for faster access
-  const balanceMap = new Map(
-    allTokens.value.map(t => [t.contract?.toLowerCase(), t]),
-  )
-  const coinIdMap = new Map(allTokens.value.map(t => [t.coinId, t]))
-
-  if (props.view === 'watchlist') {
-    list =
-      (wachListMarketData.value || [])
+  let tokens: DisplayToken[] = []
+  if (selectedAllTokensFilter.value.value === 'watchlist') {
+    tokens =
+      [...(wachListMarketData.value || [])]
         .filter(token => watchListedTokens.value.includes(token.coinId))
         .map(token => {
-          const balanceToken = coinIdMap.get(token.coinId)
-          if (balanceToken) return mapToDisplay(balanceToken)
-
+          const hasTokenBalance = allTokens.value.filter(
+            _token => token.coinId === _token.coinId,
+          )
+          if (hasTokenBalance.length > 0) {
+            const _token = hasTokenBalance[0]
+            const fiatBalance = getFiatValue(_token)
+            return {
+              ..._token,
+              fiatBalance: fiatBalance.toNumber(),
+              fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+            } as DisplayToken
+          }
           return {
             ...token,
             fiatBalance: 0,
-            fiatBalanceFormatted: '$0.00',
+            fiatBalanceFormatted: `$0.00`,
             balanceWei: '0x',
             balance: '0',
             contract: '',
@@ -859,153 +663,151 @@ const tokens = computed<DisplayToken[]>(() => {
             logo_url: token.logoUrl || '',
           } as DisplayToken
         }) || []
-  } else if (props.view === 'custom') {
-    list = chainCustomTokens.value.map(customToken => {
-      const balanceToken = balanceMap.get(customToken.address.toLowerCase())
-      if (balanceToken) {
-        return {
-          ...mapToDisplay(balanceToken),
-          symbol: customToken.symbol,
-        }
-      }
-
-      const extra = extraCustomBalances.value[customToken.address.toLowerCase()]
-      if (extra) {
-        const balance = formatUnits(
-          BigInt(extra.nativeValue),
-          customToken.decimals,
-        )
-        const fiat = BigNumber(extra.fiatValue || 0)
-        return {
-          name: customToken.name,
-          symbol: customToken.symbol,
-          contract: customToken.address,
-          decimals: customToken.decimals,
-          balanceWei: extra.nativeValue,
-          balance,
-          fiatBalance: fiat.toNumber(),
-          fiatBalanceFormatted: `$${formatFiatValue(fiat).value}`,
-          price: extra.priceFiatPerNative || 0,
-        } as DisplayToken
-      }
-
-      return {
-        name: customToken.name,
-        symbol: customToken.symbol,
-        contract: customToken.address,
-        decimals: customToken.decimals,
-        balanceWei: '0x',
-        balance: '0',
-        fiatBalance: 0,
-        fiatBalanceFormatted: '$0.00',
-      } as DisplayToken
-    })
-  } else if (props.view === 'stocks') {
-    list = allStocks.value.map(mapToDisplay)
+  } else if (selectedAllTokensFilter.value.value === 'customTokens') {
+    return tokens
   } else {
-    list = allTokens.value.map(mapToDisplay)
+    tokens = [...allTokens.value].map(token => {
+      const fiatBalance = getFiatValue(token)
+      return {
+        ...token,
+        fiatBalance: fiatBalance.toNumber(),
+        fiatBalanceFormatted: `$${formatFiatValue(fiatBalance).value}`,
+      }
+    })
   }
 
-  if (searchInput.value) {
-    list = searchArrayByKeysStr(list, ['name', 'symbol'], searchInput.value)
+  //Search
+  if (searchInput.value && searchInput.value.length > 0) {
+    return searchArrayByKeysStr(tokens, ['name', 'symbol'], searchInput.value)
   }
-
-  // Sorting logic
-  const sortMap: Record<SortValueString, () => DisplayToken[]> = {
-    [SortValueString.NAME]: () =>
-      sortObjectArrayString(list, 'symbol', tableDirection.value),
-    [SortValueString.PERCENT]: () =>
-      sortObjectArrayNumber(
-        list,
-        'price_change_percentage_24h',
-        tableDirection.value,
-      ),
-    [SortValueString.MARKET_CAP]: () =>
-      sortObjectArrayNumber(list, 'market_cap', tableDirection.value),
-    [SortValueString.VALUE]: () =>
-      sortObjectArrayNumber(list, 'fiatBalance', tableDirection.value),
-    [SortValueString.PRICE]: () =>
-      sortObjectArrayNumber(list, 'price', tableDirection.value),
+  //Sorting
+  if (headerSort.value === SortValueString.NAME) {
+    return sortObjectArrayString(tokens, 'name', tableDirection.value)
   }
-
-  return sortMap[headerSort.value] ? sortMap[headerSort.value]() : list
+  if (headerSort.value === SortValueString.PERCENT) {
+    return sortObjectArrayNumber(
+      tokens,
+      'price_change_percentage_24h',
+      tableDirection.value,
+    )
+  }
+  if (headerSort.value === SortValueString.MARKET_CAP) {
+    return sortObjectArrayNumber(tokens, 'market_cap', tableDirection.value)
+  }
+  if (headerSort.value === SortValueString.VALUE) {
+    return sortObjectArrayNumber(tokens, 'fiatBalance', tableDirection.value)
+  }
+  return tokens
 })
 
+const getFiatValue = (token: TokenBalance): BigNumber => {
+  return BigNumber(token.price || 0).multipliedBy(token.balance)
+}
+
 /** -------------------------------
- * Pagination Logic
- -------------------------------*/
-const shownItemsOptions: AppSelectOption[] = [
+ * Custom Token
+  -------------------------------*/
+
+// const customTokensMenu = ref([
+//   { label: 'Add Custom Token', value: 'add-custom' },
+//   { label: 'Edit Custom Token', value: 'edit-custom' },
+// ])
+
+// const openCustomTokenMenu = () => {
+//   //TODO: implement custom token functionality
+//   toastStore.addToastMessage({
+//     text: 'The custom token feature is coming soon!',
+//   })
+// }
+
+/** -------------------------------
+ * Number of items shown in the table
+-------------------------------*/
+const shownItemsOptions = <AppSelectOption[]>[
   { label: '5', value: '5' },
   { label: '10', value: '10' },
   { label: '50', value: '50' },
   { label: '100', value: '100' },
 ]
+
+const shownItems = computed<number>(() => {
+  return Number(activeShownItems.value.value)
+})
+
+const getTableHeight = computed<string>(() => {
+  if (shownItems.value === 5) {
+    return 'min-h-[320px]'
+  }
+  return 'min-h-[596px]'
+})
+/** -------------------------------
+ * Pagination
+-------------------------------*/
 const activeShownItems = ref<AppSelectOption>(shownItemsOptions[1])
-const shownItems = computed(() => Number(activeShownItems.value.value))
+
+const getCurrentViewableItemsIndex = computed<number>(() => {
+  const viewing = shownItems.value * (currentPage.value + 1)
+  if (viewing > tokens.value.length) {
+    return tokens.value.length
+  }
+  return viewing
+})
 
 const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
   usePaginate<DisplayToken>(tokens, shownItems)
 
-const getTableHeight = computed(() =>
-  shownItems.value === 5 ? 'min-h-[320px]' : 'min-h-[596px]',
-)
-
-const getCurrentViewableItemsIndex = computed(() =>
-  Math.min(shownItems.value * (currentPage.value + 1), tokens.value.length),
-)
-
-/** -------------------------------
- * Navigation & Handlers
- -------------------------------*/
-const buyBtn = () => window.open('https://ccswap.myetherwallet.com', '_blank')
-
-const goToTokenPage = (token: DisplayToken) => {
-  tokenInfoStore.setTokenInfo(token)
-  router.push({
-    name: TOKEN_INFO_ROUTE_NAMES.home,
-    params: { tokenId: token.coinId || token.symbol },
-  })
+const buyBtn = () => {
+  window.open(
+    'https://ccswap.myetherwallet.com/',
+    '_blank',
+    'noopener,noreferrer',
+  )
 }
-
-const setWatchlistToken = (tokenId: string) => {
-  if (!tokenId) return
-  if (isWatchListed(tokenId)) {
-    removeTokenWatchList(tokenId)
-  } else {
-    addTokenToWatchList(tokenId)
-    fetchWatchlistTable()
-  }
-}
-
-const openAddCustom = () => {
-  setCurrentView('add')
-  openCustomTokenDialog()
-}
-
-const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
-  setCurrentView(action, {
-    name: token.name,
-    symbol: token.symbol || '',
-    address: token.contract || '',
-    decimals: token.decimals || 0,
-  })
-  openCustomTokenDialog()
-}
-
-const swapBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('swap')
-  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
-  if (!isMobile) goToTokenPage(token)
-}
-
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('bridge')
-  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
-  if (!isMobile) goToTokenPage(token)
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
+}
+const swapBtn = (token: DisplayToken, isMobile = false) => {
+  storeSwapValues({
+    fromToken: {} as NewTokenInfo,
+    toToken: {
+      address: token.contract,
+      symbol: token.symbol,
+      decimals: token.decimals,
+      name: token.name,
+    } as NewTokenInfo,
+    fromAmount: '',
+    toChain: selectedChain.value as Chain,
+  })
+  setWalletPanel('swap')
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
 }
 
 const parsePercent = (val: number | null): string => {
   if (val === null || val === undefined) return ''
-  return formatPercentageValue(val).value
+  return formatPercentageValue(val ?? 0).value
+}
+
+/**-------------------------------
+ * Token Link
+ --------------------------------*/
+const router = useRouter()
+
+const goToTokenPage = (token: DisplayToken) => {
+  useTokenInfoStore().setTokenInfo(token)
+  router.push({
+    name: TOKEN_INFO_ROUTE_NAMES.home,
+    params: { tokenId: token.coinId || token.symbol },
+  })
 }
 </script>

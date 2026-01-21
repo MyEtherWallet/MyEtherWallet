@@ -141,7 +141,7 @@
                     $ {{ formatUsdBalance(token.usd_balance) }}
                   </p>
                   <p class="text-info text-s-12">
-                    {{ getBalance(token?.balance || '0') }}
+                    {{ getBalance(token?.balance || '0', token.decimals) }}
                     {{ truncate(token.symbol, 7) }}
                   </p>
                 </div>
@@ -232,6 +232,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 import { useScroll } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
+import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 
 const props = defineProps({
@@ -367,7 +368,13 @@ interface TokenBalanceWithUsd extends NewTokenInfo {
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
   const allItems = tokens.value.map(token => {
     const usdBalance = BigNumber(
-      BigNumber(token.price || 0).times(BigNumber(token.balance ?? '0')),
+      BigNumber(token.price || 0).times(
+        BigNumber(
+          token.balance
+            ? formatUnits(BigInt(token.balance!), token.decimals)
+            : '0',
+        ),
+      ),
     ).toNumber()
     return {
       ...token,
@@ -419,7 +426,7 @@ const formatUsdBalance = (_value: number) => {
   return formatFiatValue(_value).value
 }
 
-const getBalance = (_value: string) => {
-  return formatFloatingPointValue(_value).value
+const getBalance = (value: string, decimals: number) => {
+  return formatFloatingPointValue(formatUnits(BigInt(value), decimals)).value
 }
 </script>

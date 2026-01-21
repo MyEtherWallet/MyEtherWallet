@@ -14,5 +14,5 @@ export const ALL_CHAINS = ref<Chain>({
   chainID: '0',
   price: 0,
   supportsBalances: false,
-  coinId: null,
+  coinId: '',
 })

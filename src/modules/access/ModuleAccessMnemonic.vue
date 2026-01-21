@@ -111,14 +111,7 @@
           </div>
         </app-stepper>
       </app-sheet>
-      <div
-        class="mt-8 flex items-center justify-center text-info text-s-14 sm:text-s-16 leading-p-150"
-      >
-        <p class="mr-1">{{ $t('wc_dialog.no_wallet') }}</p>
-        <button class="text-primary font-bold hoverOpacity" @click="openCreate">
-          {{ $t('wc_dialog.get_wallet') }} →
-        </button>
-      </div>
+      <ButtonNoWallet class="mt-5" />
     </div>
   </div>
 </template>
@@ -135,6 +128,7 @@ import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import ButtonNoWallet from './components/ButtonNoWallet.vue'
 
 import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
@@ -152,7 +146,6 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { useCreateStore } from '@/stores/createStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
@@ -349,12 +342,6 @@ const walletStore = useWalletStore()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
 const accessStore = useAccessStore()
-const { openCreateDialog } = useCreateStore()
-
-const openCreate = () => {
-  accessStore.closeAccessDialog()
-  openCreateDialog()
-}
 
 const access = async () => {
   isUnlockingWallet.value = true
