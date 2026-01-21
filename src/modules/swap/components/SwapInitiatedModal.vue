@@ -1,87 +1,105 @@
 <template>
-  <app-dialog v-model:is-open="model" class="sm:max-w-[400px] sm:mx-auto">
+  <app-dialog v-model:is-open="model" class="sm:max-w-[420px] sm:mx-auto">
     <template #content>
-      <div class="p-4 flex flex-col items-center pt-8 mb-8">
-        <div
-          class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
-        >
-          <img :src="swapInitiatedIcon" alt="Swap Initiated Icon" />
-        </div>
-        <h3 class="text-s-24 font-bold mb-2 text-p-120">
-          {{ t('swap.initiated.swap-initiated') }}
-        </h3>
-        <p class="text-center text-s-14 text-grey-50">
-          {{ t('swap.initiated.completed-note', { symbol: toTokenSymbol }) }}
-        </p>
-      </div>
-      <div class="flex-col justify-start px-8">
-        <div class="flex gap-2 items-center">
-          <div class="relative">
-            <div
-              class="w-[36px] h-[36px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center"
-            >
-              <img
-                :src="fromTokenIcon"
-                alt="From Token Icon"
-                class="inline-block w-full"
-              />
-            </div>
-            <div
-              class="w-[16px] h-[16px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-2 right-1 translate-x-1/2 translate-y-1/2"
-            >
-              <img
-                :src="fromTokenChainImg"
-                alt="From Token Chain"
-                class="inline-block w-full"
-              />
-            </div>
+      <div class="px-6 pb-8 pt-4">
+        <div class="flex flex-col items-center pt-8 mb-10 text-center">
+          <div
+            class="w-16 h-16 bg-[#e6f6f4] rounded-full flex items-center justify-center mb-6"
+          >
+            <img
+              :src="swapInitiatedIcon"
+              alt="Swap Initiated Icon"
+              class="w-8 h-8"
+            />
           </div>
-          <div class="text-s-20 font-bold leading-[15px]">
-            {{ fromTokenAmount }} {{ fromTokenSymbol }} <br />
-            <span class="text-s-14 font-normal text-grey-70"
-              >{{ t('swap.on') }} {{ fromTokenChain }}</span
-            >
-          </div>
+          <h3 class="text-s-24 font-bold mb-3 text-p-120">
+            {{ t('swap.initiated.swap-initiated') }}
+          </h3>
+          <p class="text-s-16 text-grey-50 px-4 leading-relaxed">
+            {{ t('swap.initiated.completed-note', { symbol: toTokenSymbol }) }}
+          </p>
         </div>
-        <div>
-          <arrow-down-icon class="w-5 h-5 m-2" />
-        </div>
-        <div class="flex gap-2 items-center">
-          <div class="relative">
-            <div
-              class="w-[36px] h-[36px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center overflow-hidden"
-            >
-              <img
-                :src="toTokenIcon"
-                alt="Token Symbol"
-                class="inline-block max-w-[50px] w-[50px]"
+
+        <div class="flex flex-col gap-0 px-4">
+          <!-- From Row -->
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <app-token-logo
+                :url="fromTokenIcon"
+                :symbol="fromTokenSymbol"
+                width="w-12"
+                height="h-12"
               />
+              <div
+                class="w-5 h-5 p-0.5 bg-white border border-grey-10 rounded-full flex items-center justify-center absolute -bottom-1 -right-1 overflow-hidden"
+              >
+                <img
+                  :src="fromTokenChainImg"
+                  alt=""
+                  class="w-full h-full object-contain rounded-full"
+                />
+              </div>
             </div>
-            <div
-              class="w-[16px] h-[16px] p-1 bg-grey-8 rounded-[50%] inline-flex items-center justify-center absolute bottom-2 right-1 translate-x-1/2 translate-y-1/2 overflow-hidden"
-            >
-              <img
-                :src="toTokenChainImg"
-                alt="To Token Network"
-                class="inline-block max-w-[50px] w-[50px]"
-              />
+            <div class="flex flex-col">
+              <div class="text-s-20 font-bold leading-tight">
+                {{ fromTokenAmount }} {{ fromTokenSymbol }}
+              </div>
+              <div class="text-s-12 font-medium text-grey-50 uppercase">
+                {{ t('swap.on') }} {{ fromTokenChain }}
+              </div>
             </div>
           </div>
-          <div class="text-s-20 font-bold leading-[15px]">
-            {{ toTokenAmount }} {{ toTokenSymbol }} <br />
-            <span class="text-s-14 font-normal text-grey-70"
-              >{{ t('swap.on') }} {{ toTokenChain }}</span
-            >
+
+          <!-- Divider Arrow -->
+          <div class="flex justify-start ml-[22px] my-1">
+            <arrow-down-icon class="w-4 h-4 text-grey-40" />
+          </div>
+
+          <!-- To Row -->
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <app-token-logo
+                :url="toTokenIcon"
+                :symbol="toTokenSymbol"
+                width="w-12"
+                height="h-12"
+              />
+              <div
+                class="w-5 h-5 p-0.5 bg-white border border-grey-10 rounded-full flex items-center justify-center absolute -bottom-1 -right-1 overflow-hidden"
+              >
+                <img
+                  :src="toTokenChainImg"
+                  alt=""
+                  class="w-full h-full object-contain rounded-full"
+                />
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <div class="text-s-20 font-bold leading-tight">
+                {{ toTokenAmount }} {{ toTokenSymbol }}
+              </div>
+              <div class="text-s-12 font-medium text-grey-50 uppercase">
+                {{ t('swap.on') }} {{ toTokenChain }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="px-8 flex mt-10 gap-2">
-        <app-base-button class="w-full" @click="openProgress">
-          {{ t('swap.initiated.view-progress') }}
-        </app-base-button>
-        <app-base-button class="w-full capitalize" @click="close">
-          {{ t('common.close') }}
-        </app-base-button>
+
+        <div class="flex flex-col sm:flex-row mt-10 gap-3">
+          <app-base-button
+            class="flex-1 order-2 sm:order-1"
+            @click="openProgress"
+          >
+            {{ t('swap.initiated.view-progress') }}
+          </app-base-button>
+          <app-base-button
+            class="flex-1 order-1 sm:order-2"
+            :is-outline="true"
+            @click="close"
+          >
+            {{ t('common.close') }}
+          </app-base-button>
+        </div>
       </div>
     </template>
   </app-dialog>
@@ -91,8 +109,9 @@
 import { computed } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import swapInitiatedIcon from '@/assets/icons/swap-initiated-icon.svg'
-import ethSvg from '@/assets/icons/tokens/eth.svg' // Placeholder for token icon
+import ethSvg from '@/assets/icons/tokens/eth.svg'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 import { type Chain } from '@/mew_api/types'
 import { type ProviderQuoteResponse } from '@enkryptcom/swap'

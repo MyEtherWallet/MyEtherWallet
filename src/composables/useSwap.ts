@@ -65,7 +65,7 @@ export const useSwap = (): {
   const swapInstance: Ref<Swapper | null> = ref(null)
   const { selectedChain, chains } = storeToRefs(chainsStore)
   const { selectedNetwork } = storeToRefs(globalStore)
-  const { tokens, balance, isWalletConnected } = storeToRefs(walletStore)
+  const { tokens, balanceWei, isWalletConnected } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(false)
   const toChains = ref<Chain[]>([])
   const toTokens = ref<ToTokenType | null>(null)
@@ -104,20 +104,26 @@ export const useSwap = (): {
         .filter((chain): chain is Chain => chain !== undefined)
       const allFromTokensWithBalance = allFromTokens.all.map(token => {
         let tokenBalance = '0'
-        if (tokens.value.length > 0) {
+        let tokenPrice = token.price
+        if (tokens.value.length > 0 || balanceWei.value !== '0') {
           if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
-            tokenBalance = balance.value
+            tokenBalance = balanceWei.value
+            tokenPrice = tokenPrice || selectedChain.value?.price || 0
           } else {
             const found = tokens.value.find(
               t => t.contract.toLowerCase() === token.address.toLowerCase(),
             )
-            tokenBalance = found?.balance || '0'
+            if (found) {
+              tokenBalance = found.balanceWei
+              tokenPrice = tokenPrice || (found as any).price || 0
+            }
           }
         }
 
         return Object.freeze({
           ...token,
           balance: tokenBalance,
+          price: tokenPrice,
         }) as NewTokenInfo
       })
 

@@ -35,7 +35,7 @@
             <app-swap-enter-amount
               v-else
               v-model:amount="fromAmount"
-              v-model:selected-token="fromTokenSelected"
+              v-model:selected-token="fromTokenSelected!"
               v-model:error="fromAmountError"
               :external-loading="fromLoadingState"
               :tokens="parsedFromTokens"
@@ -65,7 +65,7 @@
             />
             <app-swap-enter-amount
               v-model:amount="toAmount"
-              v-model:selected-token="toTokenSelected"
+              v-model:selected-token="toTokenSelected!"
               v-model:error="toAmountError"
               :external-loading="toLoadingState"
               :show-balance="false"
@@ -92,16 +92,7 @@
       <app-base-button
         class="w-full max-w-[340px]"
         v-if="isWalletConnected && !isWatchOnly"
-        :disabled="
-          (swapLoaded && !supportedNetwork) ||
-          !(
-            fromAmount !== '' &&
-            fromAmount !== '0' &&
-            fromAmountError === '' &&
-            toAmount !== '0'
-          ) ||
-          (isCrossChain && toAddressError !== '')
-        "
+        :disabled="isSwapDisabled"
         @click="swapButton"
       >
         {{ t('common.swap') }}</app-base-button
@@ -147,27 +138,46 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, type Ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid' // Importing the arrowsUpDown icon from Heroicons
+import BigNumber from 'bignumber.js'
+import { useI18n } from 'vue-i18n'
+import { useDebounceFn } from '@vueuse/core'
+import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
+
+// Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import BestOfferModal from './components/BestOfferModal.vue'
 import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
+import AddressInput from '@/components/address_book/AddressInput.vue'
+
+// Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
-import { useSwap } from '@/composables/useSwap'
-import { type Chain } from '@/mew_api/types'
+import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useInputStore } from '@/stores/inputStore'
+import { useToastStore } from '@/stores/toastStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { useAddressBookStore, type Address } from '@/stores/addressBook'
+
+// Utils and Types
 import {
   enumToChain,
   supportedSwapEnums,
 } from '@/providers/ethereum/chainToEnum'
-import { useChainsStore } from '@/stores/chainsStore'
-import { useGlobalStore } from '@/stores/globalStore'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
-import BigNumber from 'bignumber.js'
-import { type NewTokenInfo } from '@/composables/useSwap'
-import type { EvmTransactionAction, QuotesResponse } from '@/mew_api/types'
+import { fromBase, toBase } from '@/utils/unit'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import dataTxAction from '@/utils/dataTxAction'
+import {
+  type Chain,
+  type EvmTransactionAction,
+  type QuotesResponse,
+} from '@/mew_api/types'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -176,21 +186,14 @@ import {
   type GenericTransaction,
   getSupportedNetworks,
 } from '@enkryptcom/swap'
-import { fromBase } from '@/utils/unit'
-import { useInputStore } from '@/stores/inputStore'
-import { toBase } from '@/utils/unit'
-import { GasPriceType } from '@/providers/types'
-import { WalletType, type HexPrefixedString } from '@/providers/types'
-import { useToastStore } from '@/stores/toastStore'
+import {
+  GasPriceType,
+  WalletType,
+  type HexPrefixedString,
+} from '@/providers/types'
 import { ToastType } from '@/types/notification'
-import { useI18n } from 'vue-i18n'
-import { useDebounceFn } from '@vueuse/core'
-import dataTxAction from '@/utils/dataTxAction'
-import AddressInput from '@/components/address_book/AddressInput.vue'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { useAccessStore } from '@/stores/accessStore'
-import { useAddressBookStore, type Address } from '@/stores/addressBook'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+
+// --- Stores ---
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
 const { inAddressBook, addAddress } = useAddressBookStore()
@@ -199,12 +202,24 @@ const globalStore = useGlobalStore()
 const chainsStore = useChainsStore()
 const inputStore = useInputStore()
 const toastStore = useToastStore()
+const accessStore = useAccessStore()
 const { t } = useI18n()
 
+// --- Refs from Stores ---
 const { gasPriceType } = storeToRefs(globalStore)
-const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
-  storeToRefs(walletStore)
+const {
+  isWalletConnected,
+  walletAddress,
+  wallet,
+  isWatchOnly,
+  tokens,
+  balanceWei,
+} = storeToRefs(walletStore)
 const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
+const { hasSwapValues, swapValues } = storeToRefs(inputStore)
+const { storeSwapValues, clearSwapValues } = inputStore
+
+// --- Use Swap Composable ---
 const {
   initSwapper,
   supportedNetwork,
@@ -215,278 +230,196 @@ const {
   getQuote,
   getSwap,
 } = useSwap()
-const { hasSwapValues, swapValues } = storeToRefs(inputStore)
-const { storeSwapValues, clearSwapValues } = inputStore
 
-const toAddressError = ref<string>('')
-const userToAddress = ref<string>('')
+// --- Local State ---
+
+// Modals
 const bestSwapLoadingOpen = ref(false)
 const bestOfferSelectionOpen = ref(false)
 const swapInitiatedOpen = ref(false)
+const txProceeding = ref(false)
+
+// UI Loading States
+const isLoadingQuotes = ref(false)
+
+// Data Models
+const fromAmount = ref<string>('0')
+const toAmount = ref<string>('0')
+const userToAddress = ref<string>('')
+const toAddressError = ref<string>('')
+const foundNickName = ref<string>('')
+
+// Selections
+const selectedFromChain: Ref<Chain | undefined> = ref(selectedChain.value)
 const selectedToChain: Ref<Chain | undefined> = ref(undefined)
+const fromTokenSelected = ref<NewTokenInfo | null>(null)
+const toTokenSelected = ref<NewTokenInfo | null>(null)
+
+// Computed Data
 const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
-const isLoadingQuotes = ref(false)
-const txHash = ref<HexPrefixedString>('0x')
-const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
-
-const swapInfo: Ref<ProviderSwapResponse | null> = ref(null)
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
-const foundNickName = ref('')
-const txProceeding = ref(false) // allows loading button on swap offer modal to be overridden
-const selectedFromChain: Ref<Chain | undefined> = ref(selectedChain.value)
-const setToToken = () => {
-  if (!selectedToChain.value) {
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.toast.select-chain'),
-      duration: 5000,
-    })
-    return
-  }
-  const enkryptEnum = supportedSwapEnums[selectedToChain.value?.name]
-  if (!enkryptEnum) {
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.toast.unsupported-chain'),
-      duration: 5000,
-    })
-    return
-  }
-  const allToTokens =
-    toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all]
-  localToTokens.value = allToTokens?.map((token: TokenType) => ({
-    ...token,
-    balance: fromBase(token?.balance?.toString() ?? '0', token.decimals),
-  })) as NewTokenInfo[]
-  if (!hasSwapValues.value) {
-    if (toTokens.value && allToTokens && allToTokens.length > 0) {
-      const allToTrending =
-        toTokens.value?.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
+const swapInfo = ref<ProviderSwapResponse | null>(null)
+const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
+const txHash = ref<HexPrefixedString>('0x')
 
-      const trendingOrAllToTokens =
-        allToTrending && allToTrending.length > 0 ? allToTrending : allToTokens
+// --- Computed Helpers ---
 
-      const sameNetworks =
-        selectedToChain.value?.chainID === selectedChain.value?.chainID
+const isCrossChain = computed(
+  () => selectedChain.value?.type !== selectedToChain.value?.type,
+)
 
-      // Find a token from the network that is not the selected fromToken
-      const tokenFromNetwork = sameNetworks
-        ? trendingOrAllToTokens.find(
-            (token: TokenType) =>
-              token.address.toLowerCase() !==
-              fromTokenSelected.value?.address.toLowerCase(),
-          )
-        : trendingOrAllToTokens[0]
-      const defaultToken = {
-        ...tokenFromNetwork,
-        balance: fromBase(
-          tokenFromNetwork?.balance?.toString() ?? '0',
-          tokenFromNetwork?.decimals ?? 18,
-        ),
-      } as NewTokenInfo
-      toTokenSelected.value = defaultToken
-    }
-  } else {
-    // check if swapValue to token is in toTokens
-    const toToken = allToTokens
-      ?.map(
-        (token: TokenType) =>
-          ({
-            ...token,
-            balance: fromBase(
-              token?.balance?.toString() ?? '0',
-              token.decimals,
-            ),
-          }) as NewTokenInfo,
-      )
-      .find(
-        (token: NewTokenInfo) =>
-          token.address === swapValues.value.toToken.address,
-      )
-    if (toToken) {
-      toTokenSelected.value = toToken
-    } else {
-      // If not found, default to the first token
-      toTokenSelected.value = (
-        allToTokens && allToTokens?.length > 0
-          ? {
-              ...allToTokens[0],
-              balance: fromBase(
-                allToTokens[0]?.balance?.toString() ?? '0',
-                allToTokens[0]?.decimals,
-              ),
-            }
-          : undefined
-      ) as NewTokenInfo
-    }
-  }
-}
-// removes the selected to token from the from tokens list
-const parsedFromTokens = computed(() => {
-  const toToken = toTokenSelected.value as NewTokenInfo
-  return fromTokens.value?.filter(
-    (token: NewTokenInfo) => token.address !== toToken?.address,
-  )
-})
-// removes the selected to token from the from tokens list
-const parsedToTokens = computed(() => {
-  const sameNetworks =
-    selectedToChain.value?.chainID === selectedChain.value?.chainID
-  const fromToken = fromTokenSelected.value as NewTokenInfo
-  if (!localToTokens.value) return []
-  const filtered = sameNetworks
-    ? localToTokens?.value.filter(
-        (token: NewTokenInfo) => token.address !== fromToken.address,
-      )
-    : localToTokens?.value
-  return filtered
-})
-
-const validateToAddress = async () => {
-  const address = userToAddress.value
-  const validAddress = await toTokenSelected.value?.networkInfo.isAddress(
-    address.toLowerCase(),
-  )
-  if (validAddress) {
-    toAddressError.value = ''
-    return
-  }
-  if (!address) {
-    toAddressError.value = 'address is required'
-    return
-  }
-  if (!validAddress) toAddressError.value = 'invalid address'
-}
+const userAddress = computed(() => walletAddress.value || '')
 
 const fromChains = computed(() => {
   const supportedNetworks = getSupportedNetworks()
-  const toMEWChain = supportedNetworks
+  return supportedNetworks
     .map(chain => {
       const toChainByEnum = enumToChain[chain.id]
       if (!toChainByEnum) return null
-      const foundInChains = chains.value.find(c => c.name === toChainByEnum)
-      return foundInChains ? foundInChains : null
+      return chains.value.find(c => c.name === toChainByEnum) || null
     })
-    .filter(chain => chain !== null) as Chain[]
-  return toMEWChain
+    .filter((chain): chain is Chain => chain !== null)
 })
 
-const proceedWithSwap = async (quoteId: string) => {
-  let txPromise
-  // Proceed with the swap using the selected quote
-  if (isBitcoinChain.value) {
-    await wallet.value
-      ?.getSignableTransaction({
-        priority: gasPriceType.value as GasPriceType,
-        quoteId: quoteId,
-      })
-      .then(async signableTx => {
-        try {
-          if (
-            wallet.value?.getWalletType() === WalletType.WAGMI ||
-            wallet.value?.getWalletType() === WalletType.INJECTED
-          ) {
-            const broadcast = wallet.value?.SendTransaction?.(
-              signableTx.serialized as HexPrefixedString,
-            )
-            txPromise = broadcast
-            return
-          }
-          const signedTx = await wallet.value?.SignTransaction?.(
-            signableTx.serialized as HexPrefixedString,
-          )
-          const broadcast = wallet.value?.broadcastTransaction(
-            signedTx?.signed as unknown as HexPrefixedString,
-          )
-          txPromise = broadcast
-        } catch {
-          txProceeding.value = false
-          toastStore.addToastMessage({
-            type: ToastType.Error,
-            text: t('swap.toast.tx-sign-failed'),
-            duration: 10000,
-          })
-          return
-        }
-      })
-  } else {
-    const getSignableTransactions =
-      await wallet.value?.getMultipleSignableTransactions?.({
-        priority: gasPriceType.value as GasPriceType,
-        quoteId: quoteId,
-      })
+const toAddress = computed(() => {
+  if (selectedToChain.value?.name === selectedChain.value?.name)
+    return userAddress.value
+  if (!isCrossChain.value) return userAddress.value
+  return userToAddress.value || ''
+})
 
-    if (
-      getSignableTransactions?.serialized.length &&
-      getSignableTransactions?.serialized.length > 0
-    ) {
-      for (let i = 0; i < getSignableTransactions?.serialized.length; i++) {
-        const tx = getSignableTransactions?.serialized[i]
-        const indexAtTheEnd =
-          i === getSignableTransactions?.serialized.length - 1
-        if (tx) {
-          try {
-            if (
-              wallet.value?.getWalletType() === WalletType.WAGMI ||
-              wallet.value?.getWalletType() === WalletType.INJECTED
-            ) {
-              const broadcast = wallet.value?.SendTransaction?.(
-                tx as HexPrefixedString,
-              )
-              // only assign txPromise if it's the last transaction
-              if (indexAtTheEnd) {
-                txPromise = broadcast
-              }
-            } else {
-              const signedTx = await wallet.value?.SignTransaction?.(
-                tx as HexPrefixedString,
-              )
+const toLoadingState = computed(
+  () => isLoadingQuotes.value || (!swapLoaded.value && supportedNetwork.value),
+)
+const fromLoadingState = computed(
+  () => !swapLoaded.value && supportedNetwork.value,
+)
 
-              const broadcast = wallet.value?.broadcastTransaction(
-                signedTx?.signed as unknown as HexPrefixedString,
-              )
-              // assign last transaction to txPromise
-              if (indexAtTheEnd) {
-                txPromise = broadcast
-              }
-            }
-          } catch {
-            toastStore.addToastMessage({
-              type: ToastType.Error,
-              text: t('swap.toast.tx-sign-failed'),
-              duration: 10000,
-            })
-            return
-          }
-        }
-      }
-    }
+// Parsed Tokens
+const parsedFromTokens = computed(() => {
+  if (!fromTokens.value) return []
+  return fromTokens.value.filter(
+    (token: NewTokenInfo) => token.address !== toTokenSelected.value?.address,
+  )
+})
+
+const parsedToTokens = computed(() => {
+  if (!localToTokens.value) return []
+  const sameNetworks =
+    selectedToChain.value?.chainID === selectedChain.value?.chainID
+  if (sameNetworks && fromTokenSelected.value) {
+    return localToTokens.value.filter(
+      (token: NewTokenInfo) =>
+        token.address !== fromTokenSelected.value?.address,
+    )
+  }
+  return localToTokens.value
+})
+
+const toAmountError = computed(() => '') // Placeholder
+
+const fromAmountError = computed(() => {
+  if (!fromAmount.value || fromAmount.value === '0')
+    return t('swap.error.amount-required')
+
+  if (!fromTokenSelected.value) return ''
+
+  // Validate Decimals
+  const decimals = fromTokenSelected.value.decimals
+  if (
+    BigNumber(fromAmount.value).toFixed().split('.')[1]?.length >
+    (decimals || 18)
+  ) {
+    return t('swap.error.too-many-decimals')
   }
 
-  await txPromise
-    ?.then(hash => {
-      txHash.value = hash as HexPrefixedString
-      bestOfferSelectionOpen.value = false
-      swapInitiatedOpen.value = true
-      toastStore.addToastMessage({
-        type: ToastType.Success,
-        text: t('swap.toast.tx-send-success'),
-        duration: 10000,
-      })
+  // Ensure > 0
+  const amountBN = BigNumber(fromAmount.value)
+  if (amountBN.lt(0)) return t('swap.error.more-than-zero')
+
+  // Calculate Base Units
+  const baseAmount = BigInt(toBase(amountBN.toFixed(), decimals || 18))
+
+  // Balance Check
+  const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+  const remainingBalance = BigInt(tokenParams.totalBalance) - baseAmount
+
+  // Insufficient Balance Error
+  if (isWalletConnected.value && BigInt(tokenParams.baseBalance) < baseAmount) {
+    return t('swap.error.insufficient-native', {
+      symbol: fromTokenSelected.value.symbol,
     })
-    .catch(e => {
-      const errorMsg =
-        e?.message || t('swap.toast.tx-sign-failed') || 'Transaction failed'
-      bestOfferSelectionOpen.value = false
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: errorMsg,
-        duration: 10000,
+  }
+
+  // Quote Specific Checks
+  if (
+    providers.value.length === 0 &&
+    fromAmount.value !== '0' &&
+    !isLoadingQuotes.value
+  ) {
+    return t('swap.error.no-quotes')
+  }
+
+  if (selectedQuote.value) {
+    // Fee Check
+    const fees = BigInt(
+      selectedQuote.value.additionalNativeFees?.toString() || '0',
+    )
+    if (isWalletConnected.value && fees > remainingBalance) {
+      return t('swap.error.insufficient-balance-for-fees', {
+        symbol: selectedChain.value?.currencyName,
       })
-    })
+    }
+
+    // Min/Max Check
+    const min = BigInt(
+      selectedQuote.value.minMax?.minimumFrom.toString() || '0',
+    )
+    const max = BigInt(
+      selectedQuote.value.minMax?.maximumFrom.toString() || '0',
+    )
+    if (baseAmount < min) return t('swap.error.minimum-amount')
+    if (baseAmount > max) return t('swap.error.maximum-amount')
+  }
+
+  return ''
+})
+
+const isSwapDisabled = computed(
+  () =>
+    (swapLoaded.value && !supportedNetwork.value) ||
+    !(
+      fromAmount.value !== '' &&
+      fromAmount.value !== '0' &&
+      fromAmountError.value === '' &&
+      toAmount.value !== '0'
+    ) ||
+    (isCrossChain.value && toAddressError.value !== ''),
+)
+
+// --- Helper Methods ---
+
+const getTokenBalanceParams = (token: NewTokenInfo) => {
+  const isMainToken = token.address === MAIN_TOKEN_CONTRACT
+  const baseNetworkBalance = toBase(
+    walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
+    18,
+  )
+
+  const balance = token.balance || '0'
+  const decimals = token.decimals || 18
+  const baseBalance = isMainToken
+    ? baseNetworkBalance
+    : toBase(balance, decimals)
+
+  // For calculating remaining balance (native logic)
+  const totalBalance =
+    isMainToken && isWalletConnected.value
+      ? baseNetworkBalance
+      : toBase(balance, decimals)
+
+  return { baseBalance, totalBalance, baseNetworkBalance }
 }
 
 const clearValues = () => {
@@ -503,10 +436,8 @@ const clearValues = () => {
 const reverseSwap = () => {
   const tempToken = fromTokenSelected.value
   const tempToToken = toTokenSelected.value
-  if (tempToToken) {
-    fromTokenSelected.value = tempToToken
-    toTokenSelected.value = tempToken
-  }
+  if (tempToToken) fromTokenSelected.value = tempToToken
+  if (tempToken) toTokenSelected.value = tempToken
 
   if (isCrossChain.value) {
     const tempChain = selectedFromChain.value
@@ -515,21 +446,408 @@ const reverseSwap = () => {
   }
 }
 
-// Reset values when swap initiated closes
-// tx is already broadcasted at this point
+const validateToAddress = async () => {
+  if (!userToAddress.value) {
+    toAddressError.value = 'address is required'
+    return
+  }
+  const valid = await toTokenSelected.value?.networkInfo.isAddress(
+    userToAddress.value.toLowerCase(),
+  )
+  toAddressError.value = valid ? '' : 'invalid address'
+}
+
+// --- Swap Logic & Transactions ---
+
+const handleBitcoinTransaction = async (quoteId: string) => {
+  const txCtx = wallet.value
+  if (!txCtx) return
+
+  const signableTx = await txCtx.getSignableTransaction({
+    priority: gasPriceType.value as GasPriceType,
+    quoteId: quoteId,
+  })
+
+  const isHardware =
+    txCtx.getWalletType() !== WalletType.WAGMI &&
+    txCtx.getWalletType() !== WalletType.INJECTED
+
+  if (!isHardware) {
+    return txCtx.SendTransaction?.(signableTx.serialized as HexPrefixedString)
+  } else {
+    const signedTx = await txCtx.SignTransaction?.(
+      signableTx.serialized as HexPrefixedString,
+    )
+    return txCtx.broadcastTransaction(
+      signedTx?.signed as unknown as HexPrefixedString,
+    )
+  }
+}
+
+const handleEvmTransaction = async (quoteId: string) => {
+  const txCtx = wallet.value
+  if (!txCtx) return
+
+  const txs = await txCtx.getMultipleSignableTransactions?.({
+    priority: gasPriceType.value as GasPriceType,
+    quoteId: quoteId,
+  })
+
+  if (!txs?.serialized?.length) return
+
+  let lastTxPromise
+  const isHardware =
+    txCtx.getWalletType() !== WalletType.WAGMI &&
+    txCtx.getWalletType() !== WalletType.INJECTED
+
+  for (const [index, tx] of txs.serialized.entries()) {
+    const isLast = index === txs.serialized.length - 1
+    if (!tx) continue
+
+    if (!isHardware) {
+      const broadcast = txCtx.SendTransaction?.(tx as HexPrefixedString)
+      if (isLast) lastTxPromise = broadcast
+    } else {
+      const signedTx = await txCtx.SignTransaction?.(tx as HexPrefixedString)
+      const broadcast = txCtx.broadcastTransaction(
+        signedTx?.signed as unknown as HexPrefixedString,
+      )
+      if (isLast) lastTxPromise = broadcast
+    }
+  }
+  return lastTxPromise
+}
+
+const proceedWithSwap = async (quoteId: string) => {
+  let txPromise: string | undefined
+
+  try {
+    if (isBitcoinChain.value) {
+      txPromise = await handleBitcoinTransaction(quoteId)
+    } else {
+      txPromise = await handleEvmTransaction(quoteId)
+    }
+
+    if (txPromise) {
+      const hash = await txPromise
+      txHash.value = hash as HexPrefixedString
+      bestOfferSelectionOpen.value = false
+      swapInitiatedOpen.value = true
+      toastStore.addToastMessage({
+        type: ToastType.Success,
+        text: t('swap.toast.tx-send-success'),
+        duration: 10000,
+      })
+    }
+  } catch (e: any) {
+    txProceeding.value = false
+    const errorMsg =
+      e?.message || t('swap.toast.tx-sign-failed') || 'Transaction failed'
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: errorMsg,
+      duration: 10000,
+    })
+  }
+}
+
+// --- Pre-Swap & Quotes ---
+
+const swapForBtc = async () => {
+  bestSwapLoadingOpen.value = true
+  await debounceFetchQuotes()
+
+  const transactions = (
+    (swapInfo.value?.transactions as GenericTransaction[]) || []
+  ).map(tx => ({ address: tx.to, amount: tx.value }))
+
+  const txForm = {
+    fromAddresses: [userAddress.value],
+    consolidationAddress: userAddress.value,
+    outputs: transactions,
+  }
+
+  try {
+    const res = await wallet.value?.getBtcGasFee?.(txForm)
+    swapGasFeeQuote.value = (res as QuotesResponse) || undefined
+    bestSwapLoadingOpen.value = false
+    bestOfferSelectionOpen.value = true
+  } catch (e: any) {
+    bestSwapLoadingOpen.value = false
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: e?.message || 'Error fetching BTC gas fees',
+      duration: 10000,
+    })
+  }
+}
+
+const swapForEvm = async () => {
+  bestSwapLoadingOpen.value = true
+  await debounceFetchQuotes()
+
+  // Filter for EVM Transactions
+  const transactions = (swapInfo.value?.transactions || []).filter(
+    (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+  )
+
+  const parsedTransactions = transactions.map(tx => ({
+    address: tx.from,
+    to: tx.to,
+    data: tx.data,
+    value: tx.value || '0x0',
+    action: dataTxAction(tx) as EvmTransactionAction,
+  }))
+
+  try {
+    const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
+    swapGasFeeQuote.value = res || undefined
+    bestSwapLoadingOpen.value = false
+    bestOfferSelectionOpen.value = true
+  } catch {
+    bestSwapLoadingOpen.value = false
+    // Error handling implied by UI state, but could add toast here if needed
+  }
+}
+
+const swapButton = () => {
+  return isBitcoinChain.value ? swapForBtc() : swapForEvm()
+}
+
+const fetchQuotes = async () => {
+  if (!fromTokenSelected.value || !toTokenSelected.value) return
+
+  providers.value = []
+  selectedQuote.value = undefined
+  isLoadingQuotes.value = true
+  toAmount.value = '0'
+
+  try {
+    const quotes = await getQuote({
+      fromToken: fromTokenSelected.value,
+      toToken: toTokenSelected.value,
+      amount: BigNumber(fromAmount.value).toFixed(),
+      fromAddress: userAddress.value,
+      toAddress: toAddress.value,
+    })
+
+    if (quotes && quotes.length > 0) {
+      const fromAmountBN = BigNumber(fromAmount.value)
+      const fromDecimals = fromTokenSelected.value?.decimals || 18
+      const fromAmountBase = BigNumber(
+        toBase(fromAmountBN.toFixed(), fromDecimals),
+      )
+
+      providers.value = quotes
+        .sort((a, b) => {
+          const aFees = BigNumber(a.minMax.minimumFrom.toString())
+          const bFees = BigNumber(b.minMax.minimumFrom.toString())
+          return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
+        })
+        .filter(quote =>
+          BigNumber(quote.minMax.minimumFrom.toString()).lte(fromAmountBase),
+        )
+
+      selectedQuote.value = providers.value[0] || undefined
+    } else {
+      providers.value = []
+    }
+  } catch {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.error.fetching-quotes'),
+    })
+  } finally {
+    isLoadingQuotes.value = false
+  }
+}
+
+const debounceFetchQuotes = useDebounceFn(fetchQuotes, 750)
+
+// --- Token Setup Methods ---
+
+const setToChain = (chain: Chain) => {
+  if (hasSwapValues.value) {
+    selectedToChain.value = swapValues.value.toChain
+  } else if (chain) {
+    selectedToChain.value = chain
+  }
+  setToToken()
+}
+
+const setToToken = () => {
+  const currentToChain = selectedToChain.value
+  if (!currentToChain) {
+    if (!hasSwapValues.value) return // Don't error on init if nothing selected
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.toast.select-chain'),
+      duration: 5000,
+    })
+    return
+  }
+
+  const enkryptEnum = supportedSwapEnums[currentToChain.name]
+  if (!enkryptEnum) {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.toast.unsupported-chain'),
+      duration: 5000,
+    })
+    return
+  }
+
+  // 1. Prepare Local To Tokens
+  const allToTokensRaw =
+    toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all] || []
+
+  localToTokens.value = allToTokensRaw.map((token: TokenType) => {
+    // Enrich with balance if on same network
+    let tokenBalance = '0'
+    let tokenPrice = token.price
+    const sameNetworks = currentToChain.chainID === selectedChain.value?.chainID
+
+    if (sameNetworks && (tokens.value.length > 0 || balanceWei.value !== '0')) {
+      if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
+        tokenBalance = balanceWei.value
+        tokenPrice = tokenPrice || selectedChain.value?.price || 0
+      } else {
+        const found = tokens.value.find(
+          t => t.contract.toLowerCase() === token.address.toLowerCase(),
+        )
+        if (found) {
+          tokenBalance = found.balanceWei
+          tokenPrice = tokenPrice || (found as any).price || 0
+        }
+      }
+    }
+    return {
+      ...token,
+      balance: tokenBalance,
+      price: tokenPrice,
+    } as NewTokenInfo
+  })
+
+  // 2. Select Token Logic
+  if (!hasSwapValues.value) {
+    if (toTokens.value && allToTokensRaw.length > 0) {
+      // Find default trending or random token
+      const allToTrending =
+        toTokens.value.trending[
+          enkryptEnum as keyof typeof toTokens.value.trending
+        ]
+      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const sameNetworks =
+        currentToChain.chainID === selectedChain.value?.chainID
+
+      // Avoid selecting the same token as "From"
+      const defaultToken = sameNetworks
+        ? candidates.find(
+            t =>
+              t.address.toLowerCase() !==
+              fromTokenSelected.value?.address.toLowerCase(),
+          )
+        : candidates[0]
+
+      if (defaultToken) {
+        toTokenSelected.value = {
+          ...defaultToken,
+          balance: fromBase(
+            defaultToken.balance?.toString() ?? '0',
+            defaultToken.decimals ?? 18,
+          ),
+        } as NewTokenInfo
+      }
+    }
+  } else {
+    // Has Swap Values (Deeplink)
+    const match = localToTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        swapValues.value.toToken.address.toLowerCase(),
+    )
+    if (match) {
+      toTokenSelected.value = match
+    } else if (localToTokens.value.length > 0) {
+      // Fallback
+      const fallback = localToTokens.value[0]
+      toTokenSelected.value = {
+        ...fallback,
+        balance: fromBase(
+          fallback.balance?.toString() ?? '0',
+          fallback.decimals ?? 18,
+        ),
+      } as NewTokenInfo
+    }
+  }
+}
+
+const setFromToken = () => {
+  if (!fromTokens.value?.length) return
+
+  if (!hasSwapValues.value) {
+    const mewToken = fromTokens.value.find(
+      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
+    )
+    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
+  } else {
+    // Deep link match
+    const match = fromTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        swapValues.value.fromToken.address?.toLowerCase(),
+    )
+    fromTokenSelected.value = (match || fromTokens.value[0]) as NewTokenInfo
+  }
+}
+
+const connectWalletForSwap = () => {
+  storeSwapValues({
+    fromToken: fromTokenSelected.value!,
+    toToken: toTokenSelected.value!,
+    toChain: selectedToChain.value!,
+    fromAmount: fromAmount.value,
+  })
+  accessStore.openAccessDialog()
+}
+
+// --- Watchers ---
+
+// Deep Link / Swap Values Watcher
+watch(
+  () => swapValues.value,
+  async newVal => {
+    if (hasSwapValues.value) {
+      selectedToChain.value = newVal.toChain
+      await nextTick()
+      setToToken()
+      setFromToken()
+      fromAmount.value = newVal.fromAmount
+      setTimeout(() => clearSwapValues(), 1000)
+    }
+  },
+  { deep: true },
+)
+
+// Reset state on Swap Success Dialog close
 watch(
   () => swapInitiatedOpen.value,
-  (value: boolean) => {
-    if (!value) {
-      if (foundNickName.value === '') {
-        const newAddress: Address = {
-          address: toAddress.value || '',
-          name: '', // TODO: generate default name like 'Address 1'
-          chainName: selectedToChain.value?.name || '',
-          chainType: selectedToChain.value?.type || '',
-        }
-        addAddress(newAddress, selectedToChain.value?.type || '')
+  isOpen => {
+    if (!isOpen) {
+      // Add address to book if new
+      if (!foundNickName.value && toAddress.value) {
+        addAddress(
+          {
+            address: toAddress.value,
+            name: '',
+            chainName: selectedToChain.value?.name || '',
+            chainType: selectedToChain.value?.type || '',
+          },
+          selectedToChain.value?.type || '',
+        )
       }
+
+      // Cleanup
       txHash.value = '0x'
       providers.value = []
       selectedQuote.value = undefined
@@ -543,322 +861,7 @@ watch(
   },
 )
 
-const setFromToken = () => {
-  if (!hasSwapValues.value) {
-    if (fromTokens.value && fromTokens.value.length > 0) {
-      const findFirstToken = fromTokens.value.find(
-        (token: NewTokenInfo) =>
-          token.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
-      )
-      if (findFirstToken) {
-        fromTokenSelected.value = findFirstToken // Default to MEW token if available
-      } else {
-        fromTokenSelected.value = fromTokens.value[0] // Default to first token
-      }
-    }
-  } else {
-    // check if swapValue from token is in fromTokens
-    const fromToken = fromTokens.value?.find(
-      (token: NewTokenInfo) =>
-        token.address === swapValues.value.fromToken.address,
-    )
-    if (fromToken) {
-      fromTokenSelected.value = fromToken
-    } else {
-      // If not found, default to the first token
-      fromTokenSelected.value = fromTokens.value?.[0] as NewTokenInfo
-    }
-  }
-}
-
-const isCrossChain = computed(() => {
-  return selectedChain.value?.type !== selectedToChain.value?.type
-})
-
-const userAddress = computed(() => {
-  return walletAddress.value || '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
-})
-
-const toAddress = computed(() => {
-  // if the chain is the same as the from chain, return the user address
-  if (selectedToChain.value?.name === selectedChain.value?.name) {
-    return userAddress.value
-  }
-
-  if (!isCrossChain.value) {
-    return userAddress.value
-  }
-
-  return userToAddress.value || ''
-})
-
-watch(
-  () => toAddress.value,
-  newval => {
-    foundNickName.value = ''
-    const foundAddress = inAddressBook(
-      newval || '',
-      selectedToChain.value?.type || '',
-    )
-    foundNickName.value = foundAddress ? (foundAddress as Address).name : ''
-  },
-  { immediate: true },
-)
-
-const toLoadingState = computed(() => {
-  if (isLoadingQuotes.value) {
-    return true
-  }
-  return !swapLoaded.value && supportedNetwork.value
-})
-
-const fromLoadingState = computed(() => {
-  return !swapLoaded.value && supportedNetwork.value
-})
-
-const setToChain = (chain: Chain) => {
-  if (hasSwapValues.value) {
-    selectedToChain.value = swapValues.value.toChain
-    return
-  }
-  // Logic to set the selected chain for the "To" section
-  selectedToChain.value = chain
-  setToToken()
-}
-
-const accessStore = useAccessStore()
-const connectWalletForSwap = () => {
-  storeSwapValues({
-    fromToken: fromTokenSelected.value as NewTokenInfo,
-    toToken: toTokenSelected.value as NewTokenInfo,
-    toChain: selectedToChain.value as Chain,
-    fromAmount: fromAmount.value as string,
-  })
-  accessStore.openAccessDialog()
-}
-
-// Split btc swap since this will flow like send tx
-const swapForBtc = async () => {
-  bestSwapLoadingOpen.value = true
-  await debounceFetchQuotes()
-  const transactions = (
-    (swapInfo.value?.transactions as GenericTransaction[]) || []
-  ).map(tx => ({ address: tx.to, amount: tx.value }))
-  const txForm = {
-    fromAddresses: [userAddress.value],
-    consolidationAddress: userAddress.value,
-    outputs: transactions,
-  }
-
-  try {
-    const signableTransaction = await wallet.value?.getBtcGasFee?.(txForm)
-    swapGasFeeQuote.value = (signableTransaction as QuotesResponse) || undefined
-    bestSwapLoadingOpen.value = false
-    bestOfferSelectionOpen.value = true
-  } catch (e) {
-    bestSwapLoadingOpen.value = false
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: (e as Error)?.message || 'Error fetching BTC gas fees',
-      duration: 10000,
-    })
-    return
-  }
-}
-
-const swapButton = () => {
-  if (isBitcoinChain.value) {
-    swapForBtc()
-  } else {
-    swapForEvm()
-  }
-}
-
-const swapForEvm = async () => {
-  bestSwapLoadingOpen.value = true
-  await debounceFetchQuotes()
-  const transactions = (swapInfo.value?.transactions || []).filter(
-    (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
-  )
-
-  // format transactions to match api
-  const parsedTransactions = transactions.map(tx => {
-    const action = dataTxAction(tx) as EvmTransactionAction
-    return {
-      address: tx.from,
-      to: tx.to,
-      data: tx.data,
-      value: tx.value || '0x0',
-      action: action,
-    }
-  })
-
-  const signableTransaction =
-    await wallet.value?.getMultipleGasFees?.(parsedTransactions)
-  swapGasFeeQuote.value = signableTransaction || undefined
-  bestSwapLoadingOpen.value = false
-  bestOfferSelectionOpen.value = true
-}
-
-// From tokens models
-const fromAmount = ref<number | string>('0')
-const fromTokenSelected: Ref<NewTokenInfo> = ref({} as NewTokenInfo) // TODO: Implement token selection
-
-const fromAmountError = computed(() => {
-  if (fromAmount.value === undefined || fromAmount.value === '')
-    return t('swap.error.amount-required') // amount is blank
-  if (
-    BigNumber(fromAmount.value).toFixed().split('.')[1]?.length >
-    fromTokenSelected.value?.decimals
-  ) {
-    return t('swap.error.too-many-decimals')
-  }
-  const baseNetworkBalance = toBase(
-    walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-    18,
-  )
-  const baseBalance =
-    fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT
-      ? baseNetworkBalance
-      : toBase(
-          fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
-        )
-  const baseAmount = fromAmount.value
-    ? toBase(
-        BigNumber(fromAmount.value).toFixed(),
-        fromTokenSelected.value?.decimals || 18,
-      )
-    : 0
-  const remainingBalance = BigNumber(
-    fromTokenSelected.value?.address === MAIN_TOKEN_CONTRACT &&
-      isWalletConnected.value
-      ? baseNetworkBalance
-      : toBase(
-          fromTokenSelected.value?.balance || '0',
-          fromTokenSelected.value?.decimals || 18,
-        ),
-  ).minus(baseAmount)
-
-  if (BigInt(baseAmount) < 0)
-    return t('swap.error.more-than-zero') // amount less than 0
-  else if (isWalletConnected.value && BigInt(baseBalance) < BigInt(baseAmount))
-    return t('swap.error.insufficient-native', {
-      symbol: fromTokenSelected.value.symbol,
-    })
-  // amount greater than selected balance
-  else if (
-    providers.value.length === 0 &&
-    fromAmount.value !== '0' &&
-    !isLoadingQuotes.value
-  ) {
-    return t('swap.error.no-quotes')
-  } else if (selectedQuote.value) {
-    if (
-      isWalletConnected.value &&
-      BigInt(selectedQuote.value?.additionalNativeFees?.toString()) >
-        BigInt(remainingBalance.toString())
-    )
-      return t('swap.error.insufficient-balance-for-fees', {
-        symbol: selectedChain.value?.currencyName,
-      }) // insufficient native token balance for gas
-    if (selectedQuote.value.minMax) {
-      if (
-        BigInt(baseAmount) <
-        BigInt(selectedQuote.value.minMax.minimumFrom.toString())
-      )
-        return t('swap.error.minimum-amount') // amount less than min amount
-      if (
-        BigInt(baseAmount) >
-        BigInt(selectedQuote.value.minMax.maximumFrom.toString())
-      )
-        return t('swap.error.maximum-amount') // amount less than min amount
-    }
-  }
-  return ''
-})
-
-// To Token models
-const toAmount = ref<number | string>('0')
-const toTokenSelected: Ref<NewTokenInfo | undefined> = ref(undefined)
-
-const toAmountError = computed(() => {
-  return ''
-})
-
-const fetchQuotes = async () => {
-  providers.value = []
-  selectedQuote.value = undefined
-  isLoadingQuotes.value = true
-  toAmount.value = '0'
-  // fetch quotes only if fromTokenSelected.value is defined
-  try {
-    const quotes = await getQuote({
-      fromToken: fromTokenSelected.value,
-      toToken: toTokenSelected.value as NewTokenInfo,
-      amount: BigNumber(fromAmount.value).toFixed(),
-      fromAddress: userAddress.value,
-      toAddress: toAddress.value,
-    })
-
-    // sort quotes by lowest minimum
-    providers.value =
-      quotes && quotes.length > 0
-        ? quotes
-            .sort((a: ProviderQuoteResponse, b: ProviderQuoteResponse) => {
-              const aFees = BigNumber(a.minMax.minimumFrom.toString() || 0)
-              const bFees = BigNumber(b.minMax.minimumFrom.toString() || 0)
-              return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
-            })
-            .filter((quote: ProviderQuoteResponse) =>
-              BigNumber(quote.minMax.minimumFrom.toString()).lte(
-                toBase(
-                  BigNumber(fromAmount.value).toFixed(),
-                  fromTokenSelected.value?.decimals || 18,
-                ),
-              ),
-            )
-        : []
-    selectedQuote.value = providers.value[0] || undefined
-    isLoadingQuotes.value = false
-  } catch {
-    // TODO: add sentry to catch actual error
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.error.fetching-quotes'),
-    })
-  }
-}
-
-const debounceFetchQuotes = useDebounceFn(fetchQuotes, 750)
-
-// Watch for changes in selectedQuote and update swapInfo
-watch(
-  () => selectedQuote.value,
-  async (provider: ProviderQuoteResponse | undefined) => {
-    if (provider) {
-      swapInfo.value = await getSwap(provider)
-    }
-  },
-  { deep: true },
-)
-
-// set to values
-watch(
-  () => providers.value,
-  () => {
-    if (providers.value.length > 0 && fromAmountError.value === '') {
-      const value = fromBase(
-        providers.value[0].toTokenAmount.toString(),
-        toTokenSelected.value?.decimals || 18,
-      )
-      // Set the toTokenSelected based on the first provider's toTokenAmount
-      toAmount.value = `≈ ${formatFloatingPointValue(value).value}`
-    }
-  },
-)
-
-// Watch for changes in fromAmount, fromTokenSelected, userAddress, and toAddress
+// Fetch Quote Trigger
 watch(
   () => [
     fromAmount.value,
@@ -867,42 +870,90 @@ watch(
     toAddress.value,
     toTokenSelected.value,
   ],
-  async () => {
-    if (
-      fromTokenSelected.value.address === toTokenSelected.value?.address &&
+  () => {
+    const isSameChain =
       selectedChain.value?.chainID === selectedToChain.value?.chainID
-    ) {
+    const isSameToken =
+      fromTokenSelected.value?.address === toTokenSelected.value?.address
+
+    // Auto-switch token if duplicate selected on same chain
+    if (fromTokenSelected.value && isSameToken && isSameChain) {
       setToToken()
     }
+
     if (
       !BigNumber(fromAmount.value).isNaN() &&
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      if (isCrossChain.value && toAddress.value === '') return
+      if (isCrossChain.value && !toAddress.value) return
       debounceFetchQuotes()
     }
   },
 )
 
+// Update SwapInfo when Quote Selected
 watch(
-  () => fromTokens.value,
-  () => {
-    setFromToken()
+  () => selectedQuote.value,
+  async provider => {
+    if (provider) {
+      swapInfo.value = await getSwap(provider)
+    }
   },
   { deep: true },
 )
 
-onBeforeMount(async () => {
-  await initSwapper()
+// Update To Amount Estimate
+watch(
+  () => providers.value,
+  () => {
+    if (providers.value.length > 0 && !fromAmountError.value) {
+      const best = providers.value[0]
+      const val = fromBase(
+        best.toTokenAmount.toString(),
+        toTokenSelected.value?.decimals || 18,
+      )
+      toAmount.value = `≈ ${formatFloatingPointValue(val).value}`
+    }
+  },
+)
 
+// Watch Chain Name for Nickname lookup
+watch(
+  () => toAddress.value,
+  addr => {
+    foundNickName.value = ''
+    if (!addr) return
+    const found = inAddressBook(addr, selectedToChain.value?.type || '')
+    if (found) foundNickName.value = (found as Address).name
+  },
+  { immediate: true },
+)
+
+// Handle From Tokens Updates
+watch(
+  () => fromTokens.value,
+  () => setFromToken(),
+  { deep: true },
+)
+
+// --- Lifecycle ---
+
+onBeforeMount(async () => {
+  if (hasSwapValues.value) {
+    selectedToChain.value = swapValues.value.toChain
+  }
+
+  await initSwapper()
   await nextTick()
+
   setToToken()
   setFromToken()
 
   if (hasSwapValues.value) {
     fromAmount.value = swapValues.value.fromAmount
   }
-  clearSwapValues()
+
+  setTimeout(() => clearSwapValues(), 1000)
 })
 </script>

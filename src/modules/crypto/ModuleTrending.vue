@@ -24,23 +24,29 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-2" v-if="!isLoading">
-      <div v-for="token in currentTrendingTokens" :key="token.symbol">
-        <token-row :token="token" />
+    <app-sheet
+      :is-elivated="false"
+      sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
+    >
+      <div class="grid grid-cols-1 min-h-[181px]" v-if="!isLoading">
+        <div v-for="token in currentTrendingTokens" :key="token.symbol">
+          <token-row :token="token" />
+        </div>
       </div>
-    </div>
-    <div class="grid grid-cols-1 gap-2 animate-pulse" v-else>
-      <div
-        v-for="token in 3"
-        :key="`loading-trending-${token}`"
-        class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[55px]"
-      ></div>
-    </div>
+      <div class="grid grid-cols-1 gap-2 animate-pulse" v-else>
+        <div
+          v-for="token in 3"
+          :key="`loading-trending-${token}`"
+          class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[55px]"
+        ></div>
+      </div>
+    </app-sheet>
   </div>
 </template>
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppSheet from '@/components/AppSheet.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useToastStore } from '@/stores/toastStore'
