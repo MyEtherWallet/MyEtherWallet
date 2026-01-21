@@ -388,22 +388,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/coingecko/market-data": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetCoinGeckoAllMarketData"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/balances/{chainName}/{address}": {
         parameters: {
             query?: never;
@@ -933,6 +917,7 @@ export interface components {
             blockExplorerTX: string;
             blockExplorerAddr: string;
             chainID?: string;
+            coinId: null | string;
             isTestNetwork: boolean;
             currencyName: string;
             currencyNameLong: string;
@@ -1193,6 +1178,7 @@ export interface components {
                 coinId: string;
                 name: string;
                 symbol: string;
+                logoUrl: string | null;
                 price: number | null;
                 priceChangePercentage1h: number | null;
                 priceChangePercentage24h: number | null;
@@ -1202,7 +1188,26 @@ export interface components {
                 addresses: {
                     [key: string]: string;
                 };
-                logoUrl: string | null;
+                nativeChains: {
+                    chainName: string;
+                    decimals: number | null;
+                }[];
+                chains: {
+                    address: string;
+                    chainName: string;
+                    decimals: number | null;
+                }[];
+                ondo: null | {
+                    stockAlias?: string;
+                    iconPngUrl?: string;
+                    iconSvgUrl?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                    underlyingMarket: {
+                        name?: string;
+                    };
+                };
                 sparklineIn7d: null | number[];
             }[];
         };
@@ -1210,6 +1215,7 @@ export interface components {
             coinId: string;
             name: string;
             symbol: string;
+            logoUrl: string | null;
             price: number | null;
             priceChangePercentage1h: number | null;
             priceChangePercentage24h: number | null;
@@ -1219,7 +1225,26 @@ export interface components {
             addresses: {
                 [key: string]: string;
             };
-            logoUrl: string | null;
+            nativeChains: {
+                chainName: string;
+                decimals: number | null;
+            }[];
+            chains: {
+                address: string;
+                chainName: string;
+                decimals: number | null;
+            }[];
+            ondo?: null | {
+                stockAlias?: string;
+                iconPngUrl?: string;
+                iconSvgUrl?: string;
+                primaryMarket: {
+                    symbol: string;
+                };
+                underlyingMarket: {
+                    name?: string;
+                };
+            };
             sparklineIn7d: null | number[];
         }[];
         GetWebTopGainersResponse: {
@@ -1314,6 +1339,17 @@ export interface components {
                 price_change_percentage_24h?: number;
                 is_rwa?: boolean;
                 is_stablecoin?: boolean;
+                ondo?: {
+                    stockAlias?: string;
+                    iconPngUrl?: string;
+                    iconSvgUrl?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                    underlyingMarket: {
+                        name?: string;
+                    };
+                };
                 sparkline_in_7d?: null | number[];
             }[];
         };
@@ -2352,18 +2388,6 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetCoinGeckoChainPreviewSuccess"];
-        };
-    };
-    GetCoinGeckoAllMarketData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: components["responses"]["GetCoinGeckoAllMarketDataSuccess"];
         };
     };
     GetBalancesByChainNameAndAddress: {

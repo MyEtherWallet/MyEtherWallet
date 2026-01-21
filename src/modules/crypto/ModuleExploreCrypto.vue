@@ -837,7 +837,13 @@ onFetchWatchlistResponse(() => {
   totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
   totalPages.value = 1
   if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(item => formatToken(item)) || []
+    tokens.value = fetchWatchlistData.value.map(item => {
+      const token = item
+      if (token.ondo === undefined) {
+        token.ondo = null
+      }
+      return formatToken(item as GetWebTokensTableResponseToken) || []
+    })
   }
   isLoading.value = false
 })

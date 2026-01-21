@@ -1,5 +1,5 @@
 <template>
-  <div class="flex mx-auto max-h-[138px]">
+  <div class="flex">
     <Line ref="historyChart" :data="chartData" :options="chartOptions" />
   </div>
 </template>
@@ -177,13 +177,14 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         type: 'time',
         align: 'start',
         color: 'rgba(0, 0, 0, 0.65)',
-        callback: function (value) {
+        callback: function (value, index) {
           const date = new Date(labels.value[value as number])
-
-          return date.toLocaleDateString('en-US', {
+          const display = date.toLocaleDateString('en-US', {
             day: 'numeric',
             month: 'short',
           })
+          if (index === 0) return `  ${display}`
+          return display
         },
       },
       grid: {

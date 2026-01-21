@@ -6,12 +6,12 @@
       { 'shadow-button': isElivated },
     ]"
   >
-    <div>
+    <slot v-if="$slots.title || title !== ''" name="title">
       <h1 v-if="title !== ''" :class="['pt-3 pb-1 title5 ', titleClass]">
         {{ title }}
       </h1>
       <slot name="description" />
-    </div>
+    </slot>
     <slot />
   </div>
 </template>
