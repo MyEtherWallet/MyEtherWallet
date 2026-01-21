@@ -1,53 +1,28 @@
 <template>
   <!-- Top: Trending -->
-  <div>
-    <div class="flex items-center justify-between mb-2">
-      <h2 class="text-s-20 font-bold ml-2">Trending</h2>
-
-      <div class="flex">
-        <app-btn-icon
-          class=""
-          :disabled="isLoading || page === 1"
-          label="previous page"
-          @click="previousPage"
-        >
-          <ChevronLeftIcon class="w-4 h-4" />
-        </app-btn-icon>
-        <app-btn-icon
-          class=""
-          :disabled="isLoading || page >= totalPages"
-          label="next page"
-          @click="nextPage"
-        >
-          <ChevronRightIcon class="w-4 h-4" />
-        </app-btn-icon>
+  <OverviewContainer
+    title="Trending"
+    :current-page="page"
+    :total-pages="totalPages"
+    :is-loading="isLoading"
+    @nextPage="nextPage"
+    @previousPage="previousPage"
+    class="col-span-12 lg:col-span-4"
+  >
+    <template #tokens>
+      <div v-if="data && !isLoading" class="flex flex-col">
+        <token-row
+          v-for="(token, index) in currentTrendingTokens"
+          :key="token.symbol + index"
+          :token="token"
+        />
       </div>
-    </div>
-
-    <app-sheet
-      :is-elivated="false"
-      sheet-class="!pt-5 !pb-2 !px-2 overflow-hidden"
-    >
-      <div class="grid grid-cols-1 min-h-[181px]" v-if="!isLoading">
-        <div v-for="token in currentTrendingTokens" :key="token.symbol">
-          <token-row :token="token" />
-        </div>
-      </div>
-      <div class="grid grid-cols-1 gap-2 animate-pulse" v-else>
-        <div
-          v-for="token in 3"
-          :key="`loading-trending-${token}`"
-          class="basis-full bg-grey-10 flex items-end justify-between rounded-16 w-full h-[55px]"
-        ></div>
-      </div>
-    </app-sheet>
-  </div>
+    </template>
+  </OverviewContainer>
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSheet from '@/components/AppSheet.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import OverviewContainer from './components/overview/OverviewContainer.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useToastStore } from '@/stores/toastStore'
 import { computed, onMounted, ref, type Ref } from 'vue'
@@ -55,7 +30,6 @@ import type {
   GetWebTrendingTokensResponse,
   GetWebTrendingTokensResponseToken,
 } from '@/mew_api/types'
-import BigNumber from 'bignumber.js'
 import TokenRow from './components/overview/TokenRow.vue'
 
 const { useMEWFetch } = useFetchMewApi()
@@ -83,7 +57,7 @@ onMounted(() => {
 
 onFetchResponse(() => {
   if (data.value && data.value.items) {
-    apiTotalItems.value = data.value.total
+    apiTotalItems.value = data.value.pages
     trendingTokens.value = [
       ...trendingTokens.value,
       ...data.value.items.map((token: GetWebTrendingTokensResponseToken) => {
@@ -108,18 +82,15 @@ onFetchError(err => {
  * Pagination
  --------------------------*/
 const itemsPerPage = ref(3)
-const page = ref(1)
+const page = ref(0)
 
-const totalPages = computed(() =>
-  new BigNumber(apiTotalItems.value)
-    .div(itemsPerPage.value)
-    .integerValue(BigNumber.ROUND_CEIL)
-    .toNumber(),
-)
+const totalPages = computed(() => {
+  return Math.ceil((data.value?.total || 0) / itemsPerPage.value)
+})
 
 const paginateArray = (page: number) => {
-  const startIndex = (page - 1) * itemsPerPage.value
-  const endIndex = page * itemsPerPage.value
+  const startIndex = page * itemsPerPage.value
+  const endIndex = (page + 1) * itemsPerPage.value
   return trendingTokens.value.slice(startIndex, endIndex)
 }
 
@@ -128,7 +99,7 @@ const currentTrendingTokens = computed(() => {
 })
 
 const nextPage = () => {
-  if (page.value < totalPages.value) {
+  if (page.value + 1 < totalPages.value) {
     const nextPage = page.value + 1
     const nextItems = paginateArray(nextPage)
     if (
@@ -146,7 +117,7 @@ const nextPage = () => {
   }
 }
 const previousPage = () => {
-  if (page.value > 1) {
+  if (page.value > 0) {
     page.value -= 1
   }
 }

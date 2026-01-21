@@ -1,6 +1,6 @@
 <template>
   <router-link
-    class="flex w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-3 transition-colors duration-200 gap-3"
+    class="flex items-center w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-1 xs:px-3 transition-colors duration-200 gap-3"
     :to="{
       name: TOKEN_INFO_ROUTE_NAMES.crypto,
       params: {

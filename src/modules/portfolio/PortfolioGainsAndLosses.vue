@@ -4,7 +4,7 @@
       <h2 class="text-s-18 font-bold">{{ title }}</h2>
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">
         <app-btn-icon
-          :disabled="!isLoading && currentPage === 0"
+          :disabled="isLoading || currentPage === 0"
           label="previous page"
           @click="prevPage"
           height="h-8"
@@ -17,7 +17,7 @@
           >{{ currentPage + 1 }} of {{ totalPages }}</span
         >
         <app-btn-icon
-          :disabled="!isLoading && currentPage + 1 >= totalPages"
+          :disabled="isLoading || currentPage + 1 >= totalPages"
           label="next page"
           @click="nextPage"
           height="h-8"

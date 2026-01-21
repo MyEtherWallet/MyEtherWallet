@@ -9,7 +9,7 @@
     class="flex"
   >
     <div
-      class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-3 transition-colors duration-200"
+      class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-1 xs:px-3 transition-colors duration-200"
     >
       <div class="grid grid-cols-4 w-full items-center justify-between gap-2">
         <div class="col-span-2 flex items-center gap-3">
@@ -17,7 +17,6 @@
             :url="token.logo_url"
             :alt="token.symbol"
             :is-stock="token.is_stock"
-            class="w-8 h-8 rounded-full shadow-sm"
           />
           <div class="flex flex-col overflow-hidden">
             <app-token-symbol
