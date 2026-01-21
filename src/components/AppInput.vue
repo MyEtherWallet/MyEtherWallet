@@ -34,7 +34,7 @@
     >
       {{ placeholder }}
     </span>
-    <div class="absolute top-3 right-3 flex align-center">
+    <div v-if="!isDisabled" class="absolute top-3 right-3 flex align-center">
       <app-btn-icon
         @click="clearInputValue"
         :disabled="isDisabled"
