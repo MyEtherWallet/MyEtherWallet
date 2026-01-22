@@ -8,21 +8,36 @@
       },
     }"
   >
-    <app-token-logo :url="token.logoUrl" :symbol="token.symbol" />
+    <app-token-logo
+      :url="token.logoUrl"
+      :symbol="token.symbol"
+      :is-stock="token.ondo !== null"
+    />
     <div class="truncate">
-      <app-token-symbol :symbol="token.symbol" />
+      <app-token-symbol
+        :symbol="token.symbol"
+        :is-stock="token.ondo !== null"
+      />
       <app-tooltip :text="token.name" v-if="token.name.length > 20">
         <p
           class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
         >
-          {{ token.name }}
+          {{
+            token.ondo !== null && token.ondo.stockAlias
+              ? token.ondo.stockAlias
+              : token.name
+          }}
         </p>
       </app-tooltip>
       <p
         v-else
         class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
       >
-        {{ token.name }}
+        {{
+          token.ondo !== null && token.ondo.stockAlias
+            ? token.ondo.stockAlias
+            : token.name
+        }}
       </p>
     </div>
     <div class="ml-auto">

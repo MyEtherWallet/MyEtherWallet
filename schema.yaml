@@ -83,6 +83,28 @@ paths:
         200:
           $ref: '#/components/responses/GetChainMetadaListWithPricesSuccess'
 
+  # ======
+  # Mobile
+  # ======
+
+  /v1/mobile/ondo/assets:
+    get:
+      operationId: GetMobileAllOndoAssets
+      responses:
+        200:
+          $ref: '#/components/responses/GetMobileAllOndoAssetsSuccess'
+
+  # ==================
+  # Web stocks general
+  # ==================
+
+  /v1/web/stocks/addresses:
+    get:
+      operationId: GetWebStocksAddresses
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksAddressesSuccess'
+
   # ===============
   # Web stocks page
   # ===============
@@ -106,6 +128,17 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/GetWebStocksTableSuccess'
+
+  /v1/web/pages/stocks/watchlist:
+    get:
+      operationId: GetWebStocksWatchlist
+      parameters:
+        - $ref: '#/components/parameters/QuerySymbols'
+        # - $ref: '#/components/parameters/FilterChain'
+        - $ref: '#/components/parameters/WebStocksWatchlistSort'
+      responses:
+        200:
+          $ref: '#/components/responses/GetWebStocksWatchlistSuccess'
 
   /v1/web/pages/stocks/summary:
     get:
@@ -217,7 +250,6 @@ paths:
     get:
       operationId: GetWebTokensWatchlist
       parameters:
-        # - $ref: '#/components/parameters/AddressChains'
         - $ref: '#/components/parameters/FilterChain'
         - $ref: '#/components/parameters/CoinIds'
         - $ref: '#/components/parameters/WebTokensWatchlistSort'
@@ -636,6 +668,11 @@ components:
       in: query
       schema:
         type: string
+    QuerySymbols:
+      name: symbols
+      in: query
+      schema:
+        type: string
     ChainId:
       name: chainId
       in: path
@@ -706,6 +743,11 @@ components:
       in: query
       schema:
         $ref: '#/components/schemas/WebStocksTableSort'
+    WebStocksWatchlistSort:
+      name: sort
+      in: query
+      schema:
+        $ref: '#/components/schemas/WebStocksWatchlistSort'
     WebStocksTableCategory:
       name: category
       in: query
@@ -928,11 +970,23 @@ components:
           schema:
             $ref: '#/components/schemas/GetChainMetadataListResponse'
 
+    GetMobileAllOndoAssetsSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetMobileAllOndoAssetsResponse'
+
     GetChainMetadaListWithPricesSuccess:
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/GetChainMetadataListWithPricesResponse'
+
+    GetWebStocksAddressesSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksAddressesResponse'
 
     GetWebStocksOverviewSuccess:
       content:
@@ -945,6 +999,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/GetWebStocksTableResponse'
+
+    GetWebStocksWatchlistSuccess:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetWebStocksWatchlistResponse'
 
     GetWebStocksSummarySuccess:
       content:
@@ -1467,6 +1527,22 @@ components:
         - VOLUME_24H_ASC
         - VOLUME_24H_DESC
 
+    WebStocksWatchlistSort:
+      type: string
+      enum:
+        - NAME_ASC
+        - NAME_DESC
+        - SYMBOL_ASC
+        - SYMBOL_DESC
+        - PRICE_ASC
+        - PRICE_DESC
+        - PRICE_CHANGE_PERCENTAGE_24H_ASC
+        - PRICE_CHANGE_PERCENTAGE_24H_DESC
+        - MARKET_CAP_ASC
+        - MARKET_CAP_DESC
+        - VOLUME_24H_ASC
+        - VOLUME_24H_DESC
+
     WebStocksTableCategory:
       type: string
       enum:
@@ -1645,6 +1721,80 @@ components:
       type: string
 
     # ================
+    # Mobile:
+    # ================
+
+    GetMobileAllOndoAssetsResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - stockAlias
+          - iconPngUrl
+          # - iconSvgUrl
+          - primaryMarket
+          - underlyingMarket
+          - addresses
+        properties:
+          stockAlias:
+            type: ['null', string]
+          iconPngUrl:
+            type: ['null', string]
+          # iconSvgUrl:
+          #   type: ['null', string]
+          primaryMarket:
+            type: object
+            required:
+              - symbol
+              - price
+              - priceChangePercentage24h
+              # - totalHolders
+              - sharesMultiplier
+            properties:
+              symbol:
+                type: string
+              price:
+                type: string
+              priceChangePercentage24h:
+                type: string
+              # totalHolders:
+              #   type: number
+              sharesMultiplier:
+                type: string
+          underlyingMarket:
+            type: object
+            required:
+              - name
+              - ticker
+              - volume24h
+              - marketCap
+            properties:
+              name:
+                type: string
+              ticker:
+                type: string
+              volume24h:
+                type: string
+              marketCap:
+                type: string
+          addresses:
+            type: array
+            items:
+              type: object
+              required:
+                - ondoGmNetworkChainId
+                - address
+                - decimals
+              properties:
+                ondoGmNetworkChainId:
+                  type: string
+                address:
+                  type: string
+                decimals:
+                  type: number
+
+
+    # ================
     # Supported chains
     # ================
 
@@ -1714,6 +1864,44 @@ components:
             type: string
           price:
             type: ['null', number]
+
+    GetWebStocksAddressesResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - symbol
+          - addresses
+        properties:
+          symbol:
+            type: string
+          addresses:
+            type: array
+            items:
+              type: object
+              required:
+                - chainName
+                - chainNameLong
+                - chainType
+                - chainIconUrl
+                - ondoGmNetworkChainId
+                - address
+                - decimals
+              properties:
+                chainName:
+                  type: ['null', string]
+                chainNameLong:
+                  type: ['null', string]
+                chainType:
+                  type: ['null', string]
+                chainIconUrl:
+                  type: ['null', string]
+                ondoGmNetworkChainId:
+                  type: string
+                address:
+                  type: string
+                decimals:
+                  type: number
 
     GetWebStocksOverviewResponse:
       type: object
@@ -1957,6 +2145,51 @@ components:
                   marketCap:
                     type: string
 
+    GetWebStocksWatchlistResponse:
+      type: array
+      items:
+        type: object
+        required:
+          - primaryMarket
+          - underlyingMarket
+        properties:
+          stockAlias:
+            type: string
+          iconPngUrl:
+            type: string
+          iconSvgUrl:
+            type: string
+          primaryMarket:
+            type: object
+            required:
+              - symbol
+              - price
+              - priceChangePercentage24h
+              - sparkline24h
+            properties:
+              symbol:
+                type: string
+              price:
+                type: string
+              priceChangePercentage24h:
+                type: string
+              sparkline24h:
+                type: array
+                items:
+                  type: number
+          underlyingMarket:
+            required:
+              - name
+              - volume24h
+              - marketCap
+            properties:
+              name:
+                type: string
+              volume24h:
+                type: string
+              marketCap:
+                type: string
+
     GetWebStocksSummaryResponse:
       type: array
       items:
@@ -2147,7 +2380,6 @@ components:
               - chainType
               - ondoGmNetworkChainId
               - contract
-              # - decimals
               - iconUrl
             properties:
               chainName:
@@ -2162,8 +2394,6 @@ components:
                 type: ['null', string]
               iconUrl:
                 type: string
-              # decimals:
-              #   type: number
 
     GetWebStocksInfoPrimaryPriceChartResponse:
       type: object
@@ -2604,6 +2834,7 @@ components:
               - price
               - priceChangePercentage24h
               - logoUrl
+              - ondo
             properties:
               coinId:
                 type: string
@@ -2617,6 +2848,22 @@ components:
                 type: number
               logoUrl:
                 type: [string, 'null']
+              ondo:
+                oneOf:
+                  - type: 'null'
+                  - type: object
+                    required:
+                      - primaryMarket
+                    properties:
+                      stockAlias:
+                        type: string
+                      primaryMarket:
+                        type: object
+                        required:
+                          - symbol
+                        properties:
+                          symbol:
+                            type: string
 
     GetWebTokensTableResponse:
       type: object
@@ -2880,6 +3127,7 @@ components:
               - price
               - priceChangePercentage24h
               - logoUrl
+              - ondo
             properties:
               coinId:
                 type: string
@@ -2893,6 +3141,22 @@ components:
                 type: number
               logoUrl:
                 type: [string, 'null']
+              ondo:
+                oneOf:
+                  - type: 'null'
+                  - type: object
+                    required:
+                      - primaryMarket
+                    properties:
+                      stockAlias:
+                        type: string
+                      primaryMarket:
+                        type: object
+                        required:
+                          - symbol
+                        properties:
+                          symbol:
+                            type: string
 
     GetWebCryptoOverviewResponse:
       type: object
@@ -2924,6 +3188,7 @@ components:
               - price
               - priceChangePercentage24h
               - logoUrl
+              - ondo
             properties:
               coinId:
                 type: string
@@ -2937,6 +3202,22 @@ components:
                 type: number
               logoUrl:
                 type: [string, 'null']
+              ondo:
+                oneOf:
+                  - type: 'null'
+                  - type: object
+                    required:
+                      - primaryMarket
+                    properties:
+                      stockAlias:
+                        type: string
+                      primaryMarket:
+                        type: object
+                        required:
+                          - symbol
+                        properties:
+                          symbol:
+                            type: string
         rwaTopGainers:
           type: array
           items:
@@ -2948,6 +3229,7 @@ components:
               - price
               - priceChangePercentage24h
               - logoUrl
+              - ondo
             properties:
               coinId:
                 type: string
@@ -2961,6 +3243,22 @@ components:
                 type: number
               logoUrl:
                 type: [string, 'null']
+              ondo:
+                oneOf:
+                  - type: 'null'
+                  - type: object
+                    required:
+                      - primaryMarket
+                    properties:
+                      stockAlias:
+                        type: string
+                      primaryMarket:
+                        type: object
+                        required:
+                          - symbol
+                        properties:
+                          symbol:
+                            type: string
 
     # CoinGecko
 
