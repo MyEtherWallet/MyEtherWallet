@@ -305,7 +305,11 @@
                         <p
                           class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                         >
-                          {{ token.name }}
+                          {{
+                            token.ondo?.stockAlias
+                              ? token.ondo.stockAlias
+                              : token.name
+                          }}
                         </p>
                       </app-tooltip>
                       <p

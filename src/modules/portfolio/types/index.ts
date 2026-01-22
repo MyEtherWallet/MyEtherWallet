@@ -10,6 +10,7 @@ export interface TokenAllocation {
   usdBalanceFormatted: string
   id?: string
   is_stock?: boolean
+  stock_alias?: string
 }
 
 export const ALLOCATION_COLORS = [
@@ -30,4 +31,5 @@ export interface TokenGainOrLoss {
   id: string
   contract?: string
   is_stock?: boolean
+  stock_alias?: string
 }

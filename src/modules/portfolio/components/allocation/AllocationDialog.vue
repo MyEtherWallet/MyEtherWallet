@@ -91,7 +91,7 @@
                         :is-stock="token.is_stock"
                       />
                       <p class="text-info text-sm mt-0.5">
-                        {{ token.name }}
+                        {{ token.stock_alias || token.name }}
                       </p>
                     </div>
                   </div>

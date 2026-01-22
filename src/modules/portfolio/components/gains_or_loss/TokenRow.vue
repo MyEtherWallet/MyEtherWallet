@@ -27,7 +27,7 @@
               <p
                 class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
               >
-                {{ token.name }}
+                {{ token.stock_alias || token.name }}
               </p>
             </app-tooltip>
             <p

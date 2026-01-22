@@ -242,18 +242,21 @@
                     :symbol="token.symbol"
                     :is-stock="token.ondo !== undefined"
                   />
-                  <app-tooltip :text="token.name" v-if="token.name.length > 20">
+                  <app-tooltip
+                    :text="getTokenName(token)"
+                    v-if="getTokenName(token).length > 20"
+                  >
                     <p
                       class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
-                      {{ token.name }}
+                      {{ getTokenName(token) }}
                     </p>
                   </app-tooltip>
                   <p
                     v-else
                     class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                   >
-                    {{ token.name }}
+                    {{ getTokenName(token) }}
                   </p>
                 </div>
               </div>
@@ -756,6 +759,9 @@ const setHeaderSort = (key: SortValueString) => {
     tableDirection.value = 'desc'
     headerSort.value = key
   }
+}
+const getTokenName = (token: DisplayToken): string => {
+  return token.ondo?.stockAlias || token.name
 }
 
 const getFiatValue = (token: TokenBalance): BigNumber => {
