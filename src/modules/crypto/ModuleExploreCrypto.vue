@@ -290,18 +290,29 @@
                     <app-token-logo
                       :url="token.logoUrl"
                       :symbol="token.symbol"
+                      :is-stock="token.ondo !== null"
                       class="inline-block rounded-full shadow-token"
                     />
                     <div class="truncate">
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :is-stock="token.ondo !== null"
+                      />
+                      <app-tooltip
+                        :text="token.name"
+                        v-if="token.name.length > 20"
+                      >
+                        <p
+                          class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        >
+                          {{ token.name }}
+                        </p>
+                      </app-tooltip>
                       <p
-                        class="truncate font-medium text-s-15 max-w-[100px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        v-else
+                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
                         {{ token.name }}
-                      </p>
-                      <p class="text-info text-s-12 mt-0.5">
-                        <span class="uppercase font-normal text-info">{{
-                          truncate(token.symbol, 7)
-                        }}</span>
                       </p>
                     </div>
                   </div>
@@ -550,7 +561,9 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -568,7 +581,6 @@ import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { truncate } from '@/utils/filters'
 import type {
   Chain,
   GetWebTokensTableResponse,
