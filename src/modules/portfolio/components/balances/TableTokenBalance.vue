@@ -15,7 +15,7 @@
           v-if="paginatedArray.length && props.view === 'custom'"
           class="flex-none"
         >
-          <app-base-button size="medium" @click="openAddCustom" class
+          <app-base-button size="medium" @click="openAddCustom"
             >+ Add
           </app-base-button>
         </div>
@@ -397,7 +397,10 @@
                       </ul>
                       <ul v-else>
                         <li
-                          @click.stop="customTokenAction('edit', token)"
+                          @click.stop="[
+                            customTokenAction('edit', token),
+                            toggleMenu(),
+                          ]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="w-4 h-4 mr-2" />
@@ -467,7 +470,7 @@
         "
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
-        <p class="mb-1 lg:mt-10">You dont have any watchlisted tokens.</p>
+        <p class="mb-1 lg:mt-10">You don't have any watchlisted tokens.</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
           >Discover more tokens
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
@@ -477,7 +480,7 @@
         v-if="paginatedArray.length === 0 && props.view === 'custom'"
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
-        <p class="mb-6 lg:mt-10">You dont have any custom tokens.</p>
+        <p class="mb-6 lg:mt-10">You don't have any custom tokens.</p>
         <app-base-button size="medium" @click="openAddCustom"
           >+ Add Custom Token</app-base-button
         >
