@@ -21,14 +21,17 @@
             width="w-9"
             height="h-9"
           />
-          <app-token-logo
-            v-if="selectedChain"
-            :url="selectedChain.icon"
-            :symbol="selectedChain.name"
-            width="w-4"
-            height="h-4"
-            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white"
-          />
+          <div
+            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+          >
+            <app-token-logo
+              v-if="selectedChain"
+              :url="selectedChain.icon"
+              :symbol="selectedChain.name"
+              width="w-4"
+              height="h-4"
+            />
+          </div>
         </div>
         <div class="flex flex-col xs:flex-row xs:items-center ml-3 xs:ml-2">
           <p class="text-s-17 xs:text-s-24 font-bold leading-p-110">
@@ -74,13 +77,16 @@
                 width="w-10"
                 height="h-10"
               />
-              <app-token-logo
-                :url="getChainIcon(i.chainName)"
-                :symbol="i.chainName"
-                width="w-5"
-                height="h-5"
-                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
-              />
+              <div
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1"
+              >
+                <app-token-logo
+                  :url="getChainIcon(i.chainName)"
+                  :symbol="i.chainName"
+                  width="w-5"
+                  height="h-5"
+                />
+              </div>
             </div>
             <div class="flex flex-col">
               <h4 class="text-s-16 font-bold truncate">

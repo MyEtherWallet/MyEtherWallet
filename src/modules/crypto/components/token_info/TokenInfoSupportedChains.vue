@@ -24,13 +24,16 @@
                 width="w-10"
                 height="h-10"
               />
-              <app-token-logo
-                :url="tokenData.iconUrl"
-                :symbol="tokenData.symbol"
-                width="w-5"
-                height="h-5"
-                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
-              />
+              <div
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+              >
+                <app-token-logo
+                  :url="tokenData.iconUrl"
+                  :symbol="tokenData.symbol"
+                  width="w-5"
+                  height="h-5"
+                />
+              </div>
             </div>
             <div class="flex flex-col min-w-0">
               <h4 class="text-s-16 font-medium truncate">

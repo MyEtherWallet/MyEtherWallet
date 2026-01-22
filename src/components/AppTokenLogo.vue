@@ -4,7 +4,7 @@
       width,
       height,
       'rounded-full flex-none relative box-border transition-colors duration-300 ease-in-out',
-      isStock ? 'p-[1.2px]  bg-stock-gradient' : 'border border-grey-10',
+      isStock ? 'p-[1.2px]  bg-stock-gradient' : 'border border-grey-5',
     ]"
   >
     <div

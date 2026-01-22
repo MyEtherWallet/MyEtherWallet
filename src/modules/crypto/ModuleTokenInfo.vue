@@ -25,19 +25,23 @@
           width="w-10 xs:w-[56px]"
           height="h-10 xs:h-[56px]"
         />
-        <app-token-logo
-          v-if="selectedChain && existsOnCurrentChain"
-          :url="selectedChain.icon"
-          :symbol="selectedChain.name"
-          width="w-5"
-          height="h-5"
-          class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
-        />
+        <div class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4">
+          <app-token-logo
+            v-if="selectedChain && existsOnCurrentChain"
+            :url="selectedChain.icon"
+            :symbol="selectedChain.name"
+            width="w-5"
+            height="h-5"
+          />
+        </div>
       </div>
 
       <div class="flex flex-col">
         <h1 class="text-s-20 xs:text-s-24 leading-p-110 font-bold">
-          {{ tokenData.name }} ({{ tokenData.symbol.toUpperCase() }})
+          {{ tokenData.symbol.toUpperCase() }}
+          <span class="text-s-17 xs:text-s-20 mr-1"
+            >({{ tokenData.name }})</span
+          >
           <span
             v-if="existsOnCurrentChain"
             class="text-s-17 hidden lg:inline-block font-medium uppercase text-info mr-1 tracking-sp-06"
