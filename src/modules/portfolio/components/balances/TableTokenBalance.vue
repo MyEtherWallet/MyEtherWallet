@@ -568,8 +568,8 @@ enum SortValueString {
   MARKET_CAP = 'Market_Cap',
   VALUE = 'USD_Balance',
 }
-const headerSort = ref<SortValueString>(SortValueString.MARKET_CAP)
-const tableDirection = ref<'asc' | 'desc'>('asc')
+const headerSort = ref<SortValueString>(SortValueString.VALUE)
+const tableDirection = ref<'asc' | 'desc'>('desc')
 
 const setHeaderSort = (key: SortValueString) => {
   if (headerSort.value === key) {
