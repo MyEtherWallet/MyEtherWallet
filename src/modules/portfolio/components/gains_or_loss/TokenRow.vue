@@ -1,13 +1,5 @@
 <template>
-  <router-link
-    :to="{
-      name: TOKEN_INFO_ROUTE_NAMES.home,
-      params: {
-        tokenId: token.id,
-      },
-    }"
-    class="flex"
-  >
+  <router-link :to="routeParams" class="flex">
     <div
       class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-1 xs:px-3 transition-colors duration-200"
     >
@@ -83,7 +75,10 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import {
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 import { computed } from 'vue'
 const props = defineProps<{
   token: TokenGainOrLoss
@@ -91,5 +86,18 @@ const props = defineProps<{
 
 const name = computed(() => {
   return props.token.stock_alias ? props.token.stock_alias : props.token.name
+})
+
+const routeParams = computed(() => {
+  if (props.token.stock_route) {
+    return {
+      name: STOCK_INFO_ROUTE_NAMES.home,
+      params: { symbol: props.token.stock_route },
+    }
+  }
+  return {
+    name: TOKEN_INFO_ROUTE_NAMES.home,
+    params: { tokenId: props.token.id },
+  }
 })
 </script>

@@ -66,11 +66,7 @@ import { Provider } from '@/providers'
 import { usePopupStore } from '@/stores/popup'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
-import {
-  ROUTES_ACCESS,
-  ROUTES_MAIN,
-  TOKEN_INFO_ROUTE_NAMES,
-} from '@/router/routeNames'
+import { ROUTES_MAIN } from '@/router/routeNames'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
@@ -101,17 +97,10 @@ const route = useRoute()
 const backgroundClass = computed(() => {
   if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
     return 'home-not-connected-background h-[800px] '
-  } else if (
-    route.name === ROUTES_ACCESS.ACCESS.NAME ||
-    route.name === ROUTES_MAIN.CRYPTO.NAME ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.crypto ||
-    route.name === TOKEN_INFO_ROUTE_NAMES.home ||
-    route.name === ROUTES_MAIN.HOME.NAME ||
-    route.name === ROUTES_MAIN.STOCKS.NAME
-  ) {
-    return ''
-  } else {
+  } else if (route.name === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
+  } else {
+    return ''
   }
 })
 

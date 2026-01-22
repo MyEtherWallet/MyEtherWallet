@@ -184,6 +184,7 @@ const topTokens = computed<TokenGainOrLoss[]>(() => {
         contract: token.contract,
         is_stock: token.ondo !== undefined,
         stock_alias: token.ondo?.stockAlias || undefined,
+        stock_route: token.ondo?.primaryMarket.symbol || undefined,
       }
     }) as TokenGainOrLoss[]
   _tokens.sort((a, b) => b.gainOrLoss.abs().comparedTo(a.gainOrLoss.abs()) || 0)

@@ -1,12 +1,7 @@
 <template>
   <router-link
     class="flex items-center w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-1 xs:px-3 transition-colors duration-200 gap-3"
-    :to="{
-      name: TOKEN_INFO_ROUTE_NAMES.crypto,
-      params: {
-        tokenId: token.coinId,
-      },
-    }"
+    :to="getRouteParams"
   >
     <app-token-logo
       :url="token.logoUrl"
@@ -58,7 +53,10 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import type { CryptoOverviewToken } from '@/mew_api/types'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import {
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -69,5 +67,19 @@ const name = computed(() => {
   return props.token.ondo !== null && props.token.ondo.stockAlias
     ? props.token.ondo.stockAlias
     : props.token.name
+})
+
+const getRouteParams = computed(() => {
+  if (props.token.ondo !== null) {
+    return {
+      name: STOCK_INFO_ROUTE_NAMES.crypto,
+      params: { symbol: props.token.ondo.primaryMarket.symbol },
+    }
+  } else {
+    return {
+      name: TOKEN_INFO_ROUTE_NAMES.crypto,
+      params: { tokenId: props.token.coinId },
+    }
+  }
 })
 </script>

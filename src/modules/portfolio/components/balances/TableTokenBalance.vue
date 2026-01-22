@@ -611,7 +611,11 @@ import type {
   GetWebTokensWatchlistResponse,
 } from '@/mew_api/types'
 import type { AppSelectOption } from '@/types/components/appSelect'
-import { ROUTES_MAIN, TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import {
+  ROUTES_MAIN,
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 import { type BalanceFilter } from '../../helpers/index'
 
 // Stores
@@ -921,6 +925,13 @@ const getCurrentViewableItemsIndex = computed(() =>
 const buyBtn = () => window.open('https://ccswap.myetherwallet.com', '_blank')
 
 const goToTokenPage = (token: DisplayToken) => {
+  if (token.ondo !== undefined) {
+    router.push({
+      name: STOCK_INFO_ROUTE_NAMES.home,
+      params: { symbol: token.ondo.primaryMarket.symbol },
+    })
+    return
+  }
   tokenInfoStore.setTokenInfo(token)
   router.push({
     name: TOKEN_INFO_ROUTE_NAMES.home,
