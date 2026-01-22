@@ -154,27 +154,7 @@
                     />
                   </div>
                 </th>
-                <!-- 24h % -->
-                <th class="hidden xs:table-cell pb-4">
-                  <app-select
-                    v-model:selected="activePercent"
-                    :options="percentOptions"
-                    class="text-black !text-s-14"
-                    position="right-0"
-                  >
-                    <template #select-button="{ toggleSelect }">
-                      <button
-                        class="px-1 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
-                        @click="toggleSelect"
-                      >
-                        <div class="flex items-center justify-end gap-1">
-                          <p>{{ activePercent.label }}</p>
-                          <chevron-down-icon class="w-3 h-3" />
-                        </div>
-                      </button>
-                    </template>
-                  </app-select>
-                </th>
+
                 <!-- Market Cap -->
                 <th
                   class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden md:table-cell"
@@ -201,7 +181,57 @@
                     />
                   </div>
                 </th>
-                <!-- Price / Volume -->
+
+                <!-- Volume -->
+                <th
+                  class="cursor-pointer px-1 pb-4 hover:text-black transition-colors hidden 2xl:table-cell"
+                >
+                  <div
+                    class="flex items-center gap-1 justify-end relative text-right font-bold"
+                    :class="{
+                      'text-black': headerSort === 'TOTAL_VOLUME',
+                    }"
+                    @click="setHeaderSort('TOTAL_VOLUME')"
+                  >
+                    Volume
+                    <arrow-long-up-icon
+                      class="w-3.5 h-3.5 absolute -right-4"
+                      v-if="
+                        headerSort === 'TOTAL_VOLUME' &&
+                        tableDirection === 'asc'
+                      "
+                    />
+                    <arrow-long-down-icon
+                      class="w-3.5 h-3.5 absolute -right-4"
+                      v-if="
+                        headerSort === 'TOTAL_VOLUME' &&
+                        tableDirection === 'desc'
+                      "
+                    />
+                  </div>
+                </th>
+                <!-- 24h % -->
+                <th class="hidden xs:table-cell pb-4">
+                  <app-select
+                    v-model:selected="activePercent"
+                    :options="percentOptions"
+                    class="text-black !text-s-14"
+                    position="right-0"
+                  >
+                    <template #select-button="{ toggleSelect }">
+                      <button
+                        class="px-1 text-right !uppercase font-bold text-s-11 text-info tracking-sp-06 hover:text-black transition-colors capitalize w-full"
+                        @click="toggleSelect"
+                      >
+                        <div class="flex items-center justify-end gap-1">
+                          <p>{{ activePercent.label }}</p>
+                          <chevron-down-icon class="w-3 h-3" />
+                        </div>
+                      </button>
+                    </template>
+                  </app-select>
+                </th>
+                <!-- Price -->
                 <th
                   class="cursor-pointer pl-1 pr-6 pb-4 hover:text-black transition-colors"
                 >
@@ -223,9 +253,10 @@
                     />
                   </div>
                 </th>
+
                 <!-- Actions -->
                 <th
-                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[180px] xl:w-[188px] 2xl:w-[200px]"
+                  class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[160px] xl:w-[180px] 2xl:w-[200px]"
                 ></th>
               </tr>
             </thead>
@@ -259,21 +290,48 @@
                     <app-token-logo
                       :url="token.logoUrl"
                       :symbol="token.symbol"
+                      :is-stock="token.ondo !== null"
                       class="inline-block rounded-full shadow-token"
                     />
                     <div class="truncate">
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :is-stock="token.ondo !== null"
+                      />
+                      <app-tooltip
+                        :text="token.name"
+                        v-if="token.name.length > 20"
+                      >
+                        <p
+                          class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        >
+                          {{
+                            token.ondo?.stockAlias
+                              ? token.ondo.stockAlias
+                              : token.name
+                          }}
+                        </p>
+                      </app-tooltip>
                       <p
-                        class="truncate font-medium text-s-15 max-w-[100px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                        v-else
+                        class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                       >
                         {{ token.name }}
                       </p>
-                      <p class="text-info text-s-12 mt-0.5">
-                        <span class="uppercase font-normal text-info">{{
-                          truncate(token.symbol, 7)
-                        }}</span>
-                      </p>
                     </div>
                   </div>
+                </td>
+                <!-- Market Cap -->
+                <td
+                  class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+                >
+                  {{ token.marketCap }}
+                </td>
+                <!-- Volume -->
+                <td
+                  class="hidden 2xl:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+                >
+                  {{ token.totalVolume }}
                 </td>
                 <!-- 24H % -->
                 <td class="hidden xs:table-cell px-1 py-1 text-right">
@@ -295,28 +353,15 @@
                     />
                   </div>
                 </td>
-                <!-- Market Cap -->
-                <td
-                  class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
-                >
-                  {{ token.marketCap }}
-                </td>
                 <!-- Price / Volume -->
                 <td class="pl-1 pr-1 py-1 text-right">
                   <p class="font-normal text-s-14 text-black">
                     {{ token.price }}
                   </p>
-                  <p
-                    v-if="token.totalVolume !== '-'"
-                    class="text-info text-s-12 mt-0.5 whitespace-nowrap"
-                  >
-                    Vol: {{ token.totalVolume }}
-                  </p>
                 </td>
                 <!-- Actions -->
-                <td
-                  class="lg:pl-6 xl:pl-8 2xl:pl-10 lg:pr-2 py-1 rounded-r-12 relative text-right"
-                >
+
+                <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
                   <div
                     class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
                   >
@@ -392,11 +437,11 @@
                       </template>
                     </app-pop-up-menu>
                   </div>
-                  <div class="hidden lg:flex flex-row gap-2 justify-start">
+                  <div class="hidden lg:flex flex-row gap-2 justify-end">
                     <app-base-button
                       size="small"
                       @click="swapBtn(token)"
-                      class="min-w-[70px]"
+                      class="min-w-[60px]"
                       >Swap
                     </app-base-button>
                     <app-base-button
@@ -404,9 +449,10 @@
                       size="small"
                       @click="buyBtn()"
                       is-outline
-                      class="min-w-[70px]"
+                      class="min-w-[60px]"
                       >Buy</app-base-button
                     >
+                    <div v-else class="w-[60px]"></div>
                   </div>
                 </td>
               </tr>
@@ -519,7 +565,9 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
@@ -537,7 +585,6 @@ import TableSparkline from '@/components/TableSparkline.vue'
 import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import { truncate } from '@/utils/filters'
 import type {
   Chain,
   GetWebTokensTableResponse,
