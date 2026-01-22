@@ -79,37 +79,10 @@
                 />
               </div>
             </th>
-            <!-- 24h % -->
-            <th
-              class="hidden xs:table-cell w-[100px] cursor-pointer px-1 pb-4 hover:text-black transition-colors"
-            >
-              <div
-                class="flex items-center gap-1 justify-end relative font-bold"
-                :class="{
-                  'text-black': headerSort === SortValueString.PERCENT,
-                }"
-                @click="setHeaderSort(SortValueString.PERCENT)"
-              >
-                24H
-                <arrow-long-down-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'desc'
-                  "
-                />
-                <arrow-long-up-icon
-                  class="w-3.5 h-3.5 absolute -right-4"
-                  v-if="
-                    headerSort === SortValueString.PERCENT &&
-                    tableDirection === 'asc'
-                  "
-                />
-              </div>
-            </th>
             <!-- Market Cap -->
             <th
-              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              class="hidden cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+              :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
             >
               <div
                 class="flex items-center gap-1 justify-end relative font-bold"
@@ -135,7 +108,64 @@
                 />
               </div>
             </th>
-            <!-- Value and Price -->
+            <!-- Price -->
+            <th
+              class="hidden md:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.PRICE,
+                }"
+                @click="setHeaderSort(SortValueString.PRICE)"
+              >
+                Price
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PRICE &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PRICE &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+            <!-- 24h % -->
+            <th
+              class="hidden xs:table-cell cursor-pointer px-1 pb-4 hover:text-black transition-colors"
+            >
+              <div
+                class="flex items-center gap-1 justify-end relative font-bold"
+                :class="{
+                  'text-black': headerSort === SortValueString.PERCENT,
+                }"
+                @click="setHeaderSort(SortValueString.PERCENT)"
+              >
+                24H
+                <arrow-long-down-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'desc'
+                  "
+                />
+                <arrow-long-up-icon
+                  class="w-3.5 h-3.5 absolute -right-4"
+                  v-if="
+                    headerSort === SortValueString.PERCENT &&
+                    tableDirection === 'asc'
+                  "
+                />
+              </div>
+            </th>
+
+            <!--Balance -->
             <th
               class="cursor-pointer pl-1 pr-1 pb-4 hover:text-black transition-colors"
             >
@@ -146,7 +176,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
-                VALUE
+                Balance
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -165,7 +195,7 @@
             </th>
             <!-- Actions -->
             <th
-              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[180px] xl:w-[188px] 2xl:w-[200px]"
+              class="lg:pl-6 lg:pr-4 pb-4 text-right w-7 xs:w-10 md:w-12 lg:w-[160px] xl:w-[180px] 2xl:w-[200px]"
             ></th>
           </tr>
         </thead>
@@ -198,36 +228,52 @@
                 <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
               </button>
             </td>
-            <!-- Name & Balance -->
+            <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
               <div class="flex items-center gap-3">
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
+                  :is-stock="token.ondo !== undefined"
                   class="inline-block rounded-full shadow-token"
                 />
                 <div class="truncate">
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :is-stock="token.ondo !== undefined"
+                  />
                   <app-tooltip :text="token.name" v-if="token.name.length > 20">
                     <p
-                      class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                      class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                     >
                       {{ token.name }}
                     </p>
                   </app-tooltip>
                   <p
                     v-else
-                    class="truncate font-medium text-s-15 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
+                    class="truncate text-info text-s-12 max-w-[150px] md:max-w-[200px] lg:max-w-[300px] text-black"
                   >
                     {{ token.name }}
                   </p>
-                  <p class="text-info text-s-12 mt-0.5">
-                    {{ formatFloatingPointValue(token.balance).value }}
-                    <span class="uppercase font-normal text-info">{{
-                      truncate(token.symbol, 7)
-                    }}</span>
-                  </p>
                 </div>
               </div>
+            </td>
+            <!-- Market Cap -->
+            <td
+              class="hidden px-1 py-1 text-right font-normal text-s-14 text-black"
+              :class="isOpenSideMenu ? '2xl:table-cell' : 'xl:table-cell'"
+            >
+              {{
+                token.market_cap
+                  ? `$${formatFiatValue(token.market_cap).value}`
+                  : '-'
+              }}
+            </td>
+            <!-- Price -->
+            <td
+              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
+            >
+              {{ token.price ? `$${formatFiatValue(token.price).value}` : '-' }}
             </td>
             <!-- 24H % -->
             <td class="hidden xs:table-cell px-1 py-1 text-right">
@@ -263,31 +309,21 @@
                 />
               </div>
             </td>
-            <!-- Market Cap -->
-            <td
-              class="hidden md:table-cell px-1 py-1 text-right font-normal text-s-14 text-black"
-            >
-              {{
-                token.market_cap
-                  ? `$${formatFiatValue(token.market_cap).value}`
-                  : '-'
-              }}
-            </td>
-            <!-- Value -->
+
+            <!-- Balance -->
             <td class="pl-1 pr-1 py-1 text-right">
               <p class="font-normal text-s-14 text-black">
                 {{ token.fiatBalanceFormatted }}
               </p>
               <p class="text-info text-s-12 mt-0.5">
-                {{
-                  token.price ? `@ $${formatFiatValue(token.price).value}` : '-'
-                }}
+                {{ formatFloatingPointValue(token.balance).value }}
+                <span class="uppercase font-normal text-info">{{
+                  truncate(token.symbol, 7)
+                }}</span>
               </p>
             </td>
             <!-- Actions -->
-            <td
-              class="lg:pl-6 xl:pl-8 2xl:pl-10 lg:pr-2 py-1 rounded-r-12 relative text-right"
-            >
+            <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
               <div
                 class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
               >
@@ -381,12 +417,12 @@
               </div>
               <div
                 v-if="props.view !== 'custom'"
-                class="hidden lg:flex flex-row gap-2 justify-start"
+                class="hidden lg:flex flex-row gap-2 justify-end"
               >
                 <app-base-button
                   size="small"
                   @click="swapBtn(token)"
-                  class="min-w-[70px]"
+                  class="min-w-[60px]"
                   >Swap
                 </app-base-button>
                 <app-base-button
@@ -394,9 +430,10 @@
                   size="small"
                   @click="buyBtn"
                   is-outline
-                  class="min-w-[70px]"
+                  class="min-w-[60px]"
                   >Buy
                 </app-base-button>
+                <div v-else class="w-[60px]"></div>
               </div>
               <div
                 class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
@@ -526,11 +563,11 @@ import AppSelect from '@/components/AppSelect.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
-
 // Icons
 import {
   StarIcon as StarSolidIcon,
@@ -593,6 +630,7 @@ enum SortValueString {
   PERCENT = '24h',
   MARKET_CAP = 'Market_Cap',
   VALUE = 'USD_Balance',
+  PRICE = 'Price',
 }
 
 /** -------------------------------
@@ -829,6 +867,8 @@ const tokens = computed<DisplayToken[]>(() => {
       sortObjectArrayNumber(list, 'market_cap', tableDirection.value),
     [SortValueString.VALUE]: () =>
       sortObjectArrayNumber(list, 'fiatBalance', tableDirection.value),
+    [SortValueString.PRICE]: () =>
+      sortObjectArrayNumber(list, 'price', tableDirection.value),
   }
 
   return sortMap[headerSort.value] ? sortMap[headerSort.value]() : list
