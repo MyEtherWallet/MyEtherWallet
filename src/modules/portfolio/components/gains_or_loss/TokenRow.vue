@@ -23,18 +23,18 @@
               :symbol="token.symbol"
               :is-stock="token.is_stock"
             />
-            <app-tooltip :text="token.name" v-if="token.name.length > 20">
+            <app-tooltip :text="name" v-if="name.length > 20">
               <p
                 class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
               >
-                {{ token.stock_alias || token.name }}
+                {{ name }}
               </p>
             </app-tooltip>
             <p
               v-else
               class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
             >
-              {{ token.name }}
+              {{ name }}
             </p>
           </div>
         </div>
@@ -84,8 +84,12 @@ import {
 } from '@/utils/numberFormatHelper'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
-
-defineProps<{
+import { computed } from 'vue'
+const props = defineProps<{
   token: TokenGainOrLoss
 }>()
+
+const name = computed(() => {
+  return props.token.stock_alias ? props.token.stock_alias : props.token.name
+})
 </script>

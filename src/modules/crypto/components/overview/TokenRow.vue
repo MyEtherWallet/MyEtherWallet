@@ -16,28 +16,20 @@
     <div class="truncate">
       <app-token-symbol
         :symbol="token.symbol"
-        :is-stock="token.ondo !== null"
+        :is-stock="props.token.ondo !== null"
       />
-      <app-tooltip :text="token.name" v-if="token.name.length > 20">
+      <app-tooltip :text="name" v-if="name.length > 20">
         <p
           class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
         >
-          {{
-            token.ondo !== null && token.ondo.stockAlias
-              ? token.ondo.stockAlias
-              : token.name
-          }}
+          {{ name }}
         </p>
       </app-tooltip>
       <p
         v-else
         class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
       >
-        {{
-          token.ondo !== null && token.ondo.stockAlias
-            ? token.ondo.stockAlias
-            : token.name
-        }}
+        {{ name }}
       </p>
     </div>
     <div class="ml-auto">
@@ -67,8 +59,15 @@ import {
 } from '@/utils/numberFormatHelper'
 import type { CryptoOverviewToken } from '@/mew_api/types'
 import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   token: CryptoOverviewToken
 }>()
+
+const name = computed(() => {
+  return props.token.ondo !== null && props.token.ondo.stockAlias
+    ? props.token.ondo.stockAlias
+    : props.token.name
+})
 </script>
