@@ -143,3 +143,12 @@ export type GetErc20AddressBalanceResponse =
 
 export type PortfolioHistoryResponse =
   components['schemas']['GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse']
+
+/** --------------------------
+ * Stock Info Page
+ --------------------------*/
+export type GetWebStocksInfoSummaryResponse =
+  components['schemas']['GetWebStocksInfoSummaryResponse']
+
+export type GetWebStocksInfoPrimaryPriceChartResponse =
+  components['schemas']['GetWebStocksInfoPrimaryPriceChartResponse']

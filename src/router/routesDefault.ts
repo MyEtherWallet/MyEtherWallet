@@ -1,8 +1,12 @@
-import { ROUTES_MAIN } from './routeNames'
+import {
+  ROUTES_MAIN,
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from './routeNames'
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
+import { STOCK_INFO_ROUTE } from './routeStockInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
-import { TOKEN_INFO_ROUTE_NAMES } from './routeNames'
 import { type RouterOptions } from 'vue-router'
 
 const TempView = () => import('@/views/ViewTemp.vue')
@@ -29,6 +33,10 @@ const DefaultRoutes = <RouteNameCollection>[
         name: TOKEN_INFO_ROUTE_NAMES.home,
         ...TOKEN_INFO_ROUTE,
       },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.home,
+        ...STOCK_INFO_ROUTE,
+      },
     ],
   },
   {
@@ -42,6 +50,10 @@ const DefaultRoutes = <RouteNameCollection>[
       {
         name: TOKEN_INFO_ROUTE_NAMES.crypto,
         ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.crypto,
+        ...STOCK_INFO_ROUTE,
       },
     ],
   },
@@ -92,6 +104,12 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: STOCK_INFO_ROUTE_NAMES.stocks,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     path: '/:pathMatch(.*)*',
