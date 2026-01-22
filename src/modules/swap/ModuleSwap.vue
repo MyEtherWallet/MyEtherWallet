@@ -25,7 +25,7 @@
               :preselected-chain="selectedFromChain"
             />
             <div
-              v-if="swapLoaded && !supportedNetwork"
+              v-if="swapLoaded && !isLoading && !supportedNetwork"
               class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
             >
               <p class="text-error text-center text-s-12">
@@ -46,12 +46,11 @@
 
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
-            <button
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center shadow-button shadow-button-elevated hoverBGWhite transition-transform active:scale-95"
-              @click="reverseSwap"
+            <div
+              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
               <arrows-up-down-icon class="w-5 h-5 text-primary" />
-            </button>
+            </div>
           </div>
 
           <!-- To Section -->
@@ -87,6 +86,16 @@
             />
           </div>
         </div>
+      </div>
+
+      <!-- Error Display -->
+      <div
+        v-if="!isLoading && generalError"
+        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
+      >
+        <p class="text-error text-s-14 text-center">
+          {{ generalError }}
+        </p>
       </div>
 
       <app-base-button
@@ -136,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, type Ref, computed, watch, nextTick } from 'vue'
+import { ref, onBeforeMount, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
@@ -170,7 +179,7 @@ import {
   enumToChain,
   supportedSwapEnums,
 } from '@/providers/ethereum/chainToEnum'
-import { fromBase, toBase } from '@/utils/unit'
+import { formatUnits, parseUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import dataTxAction from '@/utils/dataTxAction'
 import {
@@ -233,35 +242,34 @@ const {
 
 // --- Local State ---
 
-// Modals
-const bestSwapLoadingOpen = ref(false)
-const bestOfferSelectionOpen = ref(false)
-const swapInitiatedOpen = ref(false)
-const txProceeding = ref(false)
+// Selections
+const selectedFromChain = ref<Chain>()
+const selectedToChain = ref<Chain>()
+const fromTokenSelected = ref<NewTokenInfo | null>(null)
+const toTokenSelected = ref<NewTokenInfo | null>(null)
 
-// UI Loading States
-const isLoadingQuotes = ref(false)
+// Error State
+const toAddressError = ref<string>('')
+const generalError = ref<string>('')
 
 // Data Models
 const fromAmount = ref<string>('0')
 const toAmount = ref<string>('0')
 const userToAddress = ref<string>('')
-const toAddressError = ref<string>('')
 const foundNickName = ref<string>('')
-
-// Selections
-const selectedFromChain: Ref<Chain | undefined> = ref(selectedChain.value)
-const selectedToChain: Ref<Chain | undefined> = ref(undefined)
-const fromTokenSelected = ref<NewTokenInfo | null>(null)
-const toTokenSelected = ref<NewTokenInfo | null>(null)
-
-// Computed Data
-const localToTokens = ref<NewTokenInfo[] | null>(null)
 const providers = ref<ProviderQuoteResponse[]>([])
 const selectedQuote = ref<ProviderQuoteResponse | undefined>(undefined)
 const swapInfo = ref<ProviderSwapResponse | null>(null)
 const swapGasFeeQuote = ref<QuotesResponse | undefined>(undefined)
 const txHash = ref<HexPrefixedString>('0x')
+const localToTokens = ref<NewTokenInfo[]>([])
+
+// UI Loading States
+const isLoadingQuotes = ref(false)
+const bestSwapLoadingOpen = ref(false)
+const bestOfferSelectionOpen = ref(false)
+const swapInitiatedOpen = ref(false)
+const txProceeding = ref(false)
 
 // --- Computed Helpers ---
 
@@ -269,7 +277,12 @@ const isCrossChain = computed(
   () => selectedChain.value?.type !== selectedToChain.value?.type,
 )
 
+const parsedFromTokens = computed(() => fromTokens.value as NewTokenInfo[])
+const parsedToTokens = computed(() => localToTokens.value)
+
 const userAddress = computed(() => walletAddress.value || '')
+
+const isLoading = computed(() => !swapLoaded.value || isLoadingQuotes.value)
 
 const fromChains = computed(() => {
   const supportedNetworks = getSupportedNetworks()
@@ -289,35 +302,8 @@ const toAddress = computed(() => {
   return userToAddress.value || ''
 })
 
-const toLoadingState = computed(
-  () => isLoadingQuotes.value || (!swapLoaded.value && supportedNetwork.value),
-)
-const fromLoadingState = computed(
-  () => !swapLoaded.value && supportedNetwork.value,
-)
-
-// Parsed Tokens
-const parsedFromTokens = computed(() => {
-  if (!fromTokens.value) return []
-  return fromTokens.value.filter(
-    (token: NewTokenInfo) => token.address !== toTokenSelected.value?.address,
-  )
-})
-
-const parsedToTokens = computed(() => {
-  if (!localToTokens.value) return []
-  const sameNetworks =
-    selectedToChain.value?.chainID === selectedChain.value?.chainID
-  if (sameNetworks && fromTokenSelected.value) {
-    return localToTokens.value.filter(
-      (token: NewTokenInfo) =>
-        token.address !== fromTokenSelected.value?.address,
-    )
-  }
-  return localToTokens.value
-})
-
-const toAmountError = computed(() => '') // Placeholder
+const toLoadingState = computed(() => isLoading.value)
+const fromLoadingState = computed(() => !swapLoaded.value)
 
 const fromAmountError = computed(() => {
   if (!fromAmount.value || fromAmount.value === '0')
@@ -326,39 +312,27 @@ const fromAmountError = computed(() => {
   if (!fromTokenSelected.value) return ''
 
   // Validate Decimals
-  const decimals = fromTokenSelected.value.decimals
-  if (
-    BigNumber(fromAmount.value).toFixed().split('.')[1]?.length >
-    (decimals || 18)
-  ) {
+  const decimals = fromTokenSelected.value.decimals || 18
+  if (BigNumber(fromAmount.value).toFixed().split('.')[1]?.length > decimals) {
     return t('swap.error.too-many-decimals')
   }
 
   // Ensure > 0
   const amountBN = BigNumber(fromAmount.value)
-  if (amountBN.lt(0)) return t('swap.error.more-than-zero')
+  if (amountBN.lte(0)) return t('swap.error.more-than-zero')
 
   // Calculate Base Units
-  const baseAmount = BigInt(toBase(amountBN.toFixed(), decimals || 18))
+  const baseAmount = parseUnits(amountBN.toFixed(), decimals)
 
   // Balance Check
   const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-  const remainingBalance = BigInt(tokenParams.totalBalance) - baseAmount
+  const remainingBalance = tokenParams.totalBalance - baseAmount
 
   // Insufficient Balance Error
-  if (isWalletConnected.value && BigInt(tokenParams.baseBalance) < baseAmount) {
+  if (isWalletConnected.value && tokenParams.baseBalance < baseAmount) {
     return t('swap.error.insufficient-native', {
       symbol: fromTokenSelected.value.symbol,
     })
-  }
-
-  // Quote Specific Checks
-  if (
-    providers.value.length === 0 &&
-    fromAmount.value !== '0' &&
-    !isLoadingQuotes.value
-  ) {
-    return t('swap.error.no-quotes')
   }
 
   if (selectedQuote.value) {
@@ -386,6 +360,18 @@ const fromAmountError = computed(() => {
   return ''
 })
 
+const toAmountError = computed(() => {
+  if (
+    !isLoading.value &&
+    providers.value.length === 0 &&
+    fromAmount.value !== '0' &&
+    fromAmountError.value === ''
+  ) {
+    return t('swap.error.no-quotes')
+  }
+  return ''
+})
+
 const isSwapDisabled = computed(
   () =>
     (swapLoaded.value && !supportedNetwork.value) ||
@@ -395,29 +381,31 @@ const isSwapDisabled = computed(
       fromAmountError.value === '' &&
       toAmount.value !== '0'
     ) ||
-    (isCrossChain.value && toAddressError.value !== ''),
+    (isCrossChain.value && toAddressError.value !== '') ||
+    isLoadingQuotes.value,
 )
 
 // --- Helper Methods ---
 
 const getTokenBalanceParams = (token: NewTokenInfo) => {
   const isMainToken = token.address === MAIN_TOKEN_CONTRACT
-  const baseNetworkBalance = toBase(
+  const balance = token.balance || '0'
+  const decimals = token.decimals || 18
+
+  const baseNetworkBalance = parseUnits(
     walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
     18,
   )
 
-  const balance = token.balance || '0'
-  const decimals = token.decimals || 18
   const baseBalance = isMainToken
     ? baseNetworkBalance
-    : toBase(balance, decimals)
+    : parseUnits(balance, decimals)
 
   // For calculating remaining balance (native logic)
   const totalBalance =
     isMainToken && isWalletConnected.value
       ? baseNetworkBalance
-      : toBase(balance, decimals)
+      : parseUnits(balance, decimals)
 
   return { baseBalance, totalBalance, baseNetworkBalance }
 }
@@ -431,19 +419,6 @@ const clearValues = () => {
   selectedQuote.value = undefined
   setToToken()
   setFromToken()
-}
-
-const reverseSwap = () => {
-  const tempToken = fromTokenSelected.value
-  const tempToToken = toTokenSelected.value
-  if (tempToToken) fromTokenSelected.value = tempToToken
-  if (tempToken) toTokenSelected.value = tempToken
-
-  if (isCrossChain.value) {
-    const tempChain = selectedFromChain.value
-    selectedFromChain.value = selectedToChain.value
-    selectedToChain.value = tempChain
-  }
 }
 
 const validateToAddress = async () => {
@@ -519,13 +494,17 @@ const handleEvmTransaction = async (quoteId: string) => {
 }
 
 const proceedWithSwap = async (quoteId: string) => {
-  let txPromise: string | undefined
-
+  txProceeding.value = true
+  generalError.value = ''
   try {
+    let txPromise: Promise<string> | undefined
+
     if (isBitcoinChain.value) {
-      txPromise = await handleBitcoinTransaction(quoteId)
+      txPromise = handleBitcoinTransaction(
+        quoteId,
+      ) as unknown as Promise<string>
     } else {
-      txPromise = await handleEvmTransaction(quoteId)
+      txPromise = handleEvmTransaction(quoteId) as unknown as Promise<string>
     }
 
     if (txPromise) {
@@ -540,14 +519,16 @@ const proceedWithSwap = async (quoteId: string) => {
       })
     }
   } catch (e: any) {
-    txProceeding.value = false
     const errorMsg =
       e?.message || t('swap.toast.tx-sign-failed') || 'Transaction failed'
+    generalError.value = errorMsg
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: errorMsg,
       duration: 10000,
     })
+  } finally {
+    txProceeding.value = false
   }
 }
 
@@ -555,58 +536,56 @@ const proceedWithSwap = async (quoteId: string) => {
 
 const swapForBtc = async () => {
   bestSwapLoadingOpen.value = true
-  await debounceFetchQuotes()
-
-  const transactions = (
-    (swapInfo.value?.transactions as GenericTransaction[]) || []
-  ).map(tx => ({ address: tx.to, amount: tx.value }))
-
-  const txForm = {
-    fromAddresses: [userAddress.value],
-    consolidationAddress: userAddress.value,
-    outputs: transactions,
-  }
-
+  generalError.value = ''
   try {
+    await debounceFetchQuotes()
+
+    const transactions = (
+      (swapInfo.value?.transactions as GenericTransaction[]) || []
+    ).map(tx => ({ address: tx.to, amount: tx.value }))
+
+    const txForm = {
+      fromAddresses: [userAddress.value],
+      consolidationAddress: userAddress.value,
+      outputs: transactions,
+    }
+
     const res = await wallet.value?.getBtcGasFee?.(txForm)
     swapGasFeeQuote.value = (res as QuotesResponse) || undefined
-    bestSwapLoadingOpen.value = false
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
+    generalError.value = e?.message || 'Error fetching BTC gas fees'
+  } finally {
     bestSwapLoadingOpen.value = false
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: e?.message || 'Error fetching BTC gas fees',
-      duration: 10000,
-    })
   }
 }
 
 const swapForEvm = async () => {
   bestSwapLoadingOpen.value = true
-  await debounceFetchQuotes()
-
-  // Filter for EVM Transactions
-  const transactions = (swapInfo.value?.transactions || []).filter(
-    (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
-  )
-
-  const parsedTransactions = transactions.map(tx => ({
-    address: tx.from,
-    to: tx.to,
-    data: tx.data,
-    value: tx.value || '0x0',
-    action: dataTxAction(tx) as EvmTransactionAction,
-  }))
-
+  generalError.value = ''
   try {
+    await debounceFetchQuotes()
+
+    // Filter for EVM Transactions
+    const transactions = (swapInfo.value?.transactions || []).filter(
+      (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+    )
+
+    const parsedTransactions = transactions.map(tx => ({
+      address: tx.from,
+      to: tx.to,
+      data: tx.data,
+      value: tx.value || '0x0',
+      action: dataTxAction(tx) as EvmTransactionAction,
+    }))
+
     const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
     swapGasFeeQuote.value = res || undefined
-    bestSwapLoadingOpen.value = false
     bestOfferSelectionOpen.value = true
-  } catch {
+  } catch (e: any) {
+    generalError.value = e?.message || 'Error fetching gas fees'
+  } finally {
     bestSwapLoadingOpen.value = false
-    // Error handling implied by UI state, but could add toast here if needed
   }
 }
 
@@ -620,43 +599,43 @@ const fetchQuotes = async () => {
   providers.value = []
   selectedQuote.value = undefined
   isLoadingQuotes.value = true
+  generalError.value = ''
   toAmount.value = '0'
 
   try {
     const quotes = await getQuote({
       fromToken: fromTokenSelected.value,
       toToken: toTokenSelected.value,
-      amount: BigNumber(fromAmount.value).toFixed(),
+      amount: fromAmount.value,
       fromAddress: userAddress.value,
       toAddress: toAddress.value,
     })
 
     if (quotes && quotes.length > 0) {
-      const fromAmountBN = BigNumber(fromAmount.value)
       const fromDecimals = fromTokenSelected.value?.decimals || 18
-      const fromAmountBase = BigNumber(
-        toBase(fromAmountBN.toFixed(), fromDecimals),
-      )
+      const fromAmountBase = parseUnits(fromAmount.value, fromDecimals)
 
       providers.value = quotes
         .sort((a, b) => {
-          const aFees = BigNumber(a.minMax.minimumFrom.toString())
-          const bFees = BigNumber(b.minMax.minimumFrom.toString())
-          return aFees.gt(bFees) ? 1 : bFees.gt(aFees) ? -1 : 0
+          const aMin = BigInt(a.minMax.minimumFrom.toString())
+          const bMin = BigInt(b.minMax.minimumFrom.toString())
+          return aMin > bMin ? 1 : bMin > aMin ? -1 : 0
         })
-        .filter(quote =>
-          BigNumber(quote.minMax.minimumFrom.toString()).lte(fromAmountBase),
+        .filter(
+          quote =>
+            BigInt(quote.minMax.minimumFrom.toString()) <= fromAmountBase,
         )
 
       selectedQuote.value = providers.value[0] || undefined
+      if (providers.value.length === 0) {
+        generalError.value = t('swap.error.no-quotes')
+      }
     } else {
-      providers.value = []
+      generalError.value = t('swap.error.no-quotes')
     }
-  } catch {
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.error.fetching-quotes'),
-    })
+  } catch (err: any) {
+    generalError.value = t('swap.error.fetching-quotes')
+    console.error('Swap: fetchQuotes failed', err)
   } finally {
     isLoadingQuotes.value = false
   }
@@ -678,22 +657,14 @@ const setToChain = (chain: Chain) => {
 const setToToken = () => {
   const currentToChain = selectedToChain.value
   if (!currentToChain) {
-    if (!hasSwapValues.value) return // Don't error on init if nothing selected
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.toast.select-chain'),
-      duration: 5000,
-    })
+    if (!hasSwapValues.value) return
+    generalError.value = t('swap.toast.select-chain')
     return
   }
 
   const enkryptEnum = supportedSwapEnums[currentToChain.name]
   if (!enkryptEnum) {
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.toast.unsupported-chain'),
-      duration: 5000,
-    })
+    generalError.value = t('swap.toast.unsupported-chain')
     return
   }
 
@@ -702,7 +673,6 @@ const setToToken = () => {
     toTokens.value?.all[enkryptEnum as keyof typeof toTokens.value.all] || []
 
   localToTokens.value = allToTokensRaw.map((token: TokenType) => {
-    // Enrich with balance if on same network
     let tokenBalance = '0'
     let tokenPrice = token.price
     const sameNetworks = currentToChain.chainID === selectedChain.value?.chainID
@@ -731,7 +701,6 @@ const setToToken = () => {
   // 2. Select Token Logic
   if (!hasSwapValues.value) {
     if (toTokens.value && allToTokensRaw.length > 0) {
-      // Find default trending or random token
       const allToTrending =
         toTokens.value.trending[
           enkryptEnum as keyof typeof toTokens.value.trending
@@ -740,7 +709,6 @@ const setToToken = () => {
       const sameNetworks =
         currentToChain.chainID === selectedChain.value?.chainID
 
-      // Avoid selecting the same token as "From"
       const defaultToken = sameNetworks
         ? candidates.find(
             t =>
@@ -752,15 +720,14 @@ const setToToken = () => {
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
-          balance: fromBase(
-            defaultToken.balance?.toString() ?? '0',
+          balance: formatUnits(
+            BigInt(defaultToken.balance?.toString() ?? '0'),
             defaultToken.decimals ?? 18,
           ),
         } as NewTokenInfo
       }
     }
   } else {
-    // Has Swap Values (Deeplink)
     const match = localToTokens.value.find(
       t =>
         t.address.toLowerCase() ===
@@ -769,12 +736,11 @@ const setToToken = () => {
     if (match) {
       toTokenSelected.value = match
     } else if (localToTokens.value.length > 0) {
-      // Fallback
       const fallback = localToTokens.value[0]
       toTokenSelected.value = {
         ...fallback,
-        balance: fromBase(
-          fallback.balance?.toString() ?? '0',
+        balance: formatUnits(
+          BigInt(fallback.balance?.toString() ?? '0'),
           fallback.decimals ?? 18,
         ),
       } as NewTokenInfo
@@ -871,6 +837,7 @@ watch(
     toTokenSelected.value,
   ],
   () => {
+    generalError.value = ''
     const isSameChain =
       selectedChain.value?.chainID === selectedToChain.value?.chainID
     const isSameToken =
@@ -909,8 +876,8 @@ watch(
   () => {
     if (providers.value.length > 0 && !fromAmountError.value) {
       const best = providers.value[0]
-      const val = fromBase(
-        best.toTokenAmount.toString(),
+      const val = formatUnits(
+        BigInt(best.toTokenAmount.toString()),
         toTokenSelected.value?.decimals || 18,
       )
       toAmount.value = `≈ ${formatFloatingPointValue(val).value}`
@@ -944,8 +911,8 @@ onBeforeMount(async () => {
     selectedToChain.value = swapValues.value.toChain
   }
 
-  await initSwapper()
   await nextTick()
+  await initSwapper()
 
   setToToken()
   setFromToken()
