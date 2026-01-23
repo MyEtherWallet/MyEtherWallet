@@ -20,6 +20,7 @@ export const useWalletList = () => {
     rkDetails: {
       iconUrl: () => Promise<string>
       name: string
+      isRainbowKitConnector: boolean
     }
   }
   const walletGetIcon = (wallet: RkConnector) => {
@@ -50,7 +51,7 @@ export const useWalletList = () => {
         if (wallet.extension || wallet.installed) {
           _types.push(WalletConfigType.EXTENSION)
         }
-        if (wallet.mobile || wallet.qrCode) {
+        if (wallet.rkDetails.isRainbowKitConnector) {
           _types.push(WalletConfigType.MOBILE)
         }
         if (wallet.desktop) {

@@ -2,7 +2,7 @@
   <div>
     <div class="flex justify-between items-center gap-4 mb-3">
       <h3 class="text-s-14 font-bold leading-p-150 sm:ml-3">
-        {{ $t('access_wallet.all_wallets.title') }}
+        {{ $t('access_wallet.all_wallets.title') }}hkj
         <span class="hidden sm:inline-block font-normal">
           • {{ $t('access_wallet.all_wallets.description') }}</span
         >
