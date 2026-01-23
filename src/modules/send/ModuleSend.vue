@@ -131,7 +131,7 @@ const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
-const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
+const gasPrice = ref('0x0')
 const data = ref('0x')
 const gasFeeTxEstimate = ref<
   EstimatesRequestBody | GetBtcTransactionEstimateBody | undefined
