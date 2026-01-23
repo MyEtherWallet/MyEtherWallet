@@ -23,7 +23,6 @@ export const useRecentWalletsStore = defineStore(
       },
     )
     const addWallet = (passedWallet: WalletConfig) => {
-      console.log(passedWallet)
       const passedWalletExists =
         recentWallets.value.find(wallet => wallet.id === passedWallet.id) !==
         undefined

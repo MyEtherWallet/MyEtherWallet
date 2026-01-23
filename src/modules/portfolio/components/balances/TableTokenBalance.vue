@@ -524,9 +524,6 @@ const {
 const { selectedChain } = storeToRefs(chainsStore)
 const { storeSwapValues } = inputStore
 
-console.log(allTokens)
-
-const tableContainer = ref<HTMLElement | null>(null)
 const searchInput = ref('')
 
 /** -------------------------------
