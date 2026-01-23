@@ -51,7 +51,7 @@ export const useWalletList = () => {
         if (wallet.extension || wallet.installed) {
           _types.push(WalletConfigType.EXTENSION)
         }
-        if (wallet.rkDetails.isRainbowKitConnector) {
+        if (wallet.rkDetails && wallet.rkDetails.isRainbowKitConnector) {
           _types.push(WalletConfigType.MOBILE)
         }
         if (wallet.desktop) {
