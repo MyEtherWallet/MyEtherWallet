@@ -4,7 +4,7 @@
     :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
   >
     <div
-      class="grid grid-cols-1 lg:grid-cols-4 lg:divide-x divide-grey-10 justify-start items-start gap-y-6"
+      class="grid grid-cols-1 lg:grid-cols-4 lg:divide-x divide-grey-10 gap-y-6"
     >
       <div
         class="py-1 lg:py-2"
@@ -30,7 +30,7 @@
         </p>
       </div>
       <div
-        class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-6 !justify-start !items-start lg:px-6 py-1 lg:py-2 mt-6 lg:mt-0"
+        class="col-span-1 grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-6 !justify-start !items-start lg:px-6 lg:py-2 mt-6 lg:mt-0"
         :class="
           isOpenSideMenu ? 'lg:col-span-2 2xl:col-span-1' : 'lg:col-span-1'
         "
