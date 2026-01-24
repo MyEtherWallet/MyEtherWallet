@@ -2239,12 +2239,38 @@ components:
           type: string
         iconSvgUrl:
           type: string
+        metadata:
+          type: object
+          properties:
+            assetClass:
+              type: string
+            instrumentType:
+              type: string
+        dividend:
+          type: object
+          required:
+            - dividendYield
+            - payoutFrequency
+            - lastCashAmount
+            - lastPaymentDate
+          properties:
+            dividendYield:
+              type: string
+            payoutFrequency:
+              type: string
+            lastCashAmount:
+              type: string
+            lastPaymentDate:
+              type: string
         primaryMarket:
           type: object
           required:
             - symbol
             - price
             - priceChangePercentage24h
+            - totalHolders
+            - sharesMultiplier
+            - prices24h
           properties:
             symbol:
               type: string
@@ -2258,16 +2284,39 @@ components:
               type: number
             sharesMultiplier:
               type: string
+            open24h:
+              type: string
+            high24h:
+              type: string
+            low24h:
+              type: string
+            priceChart24h:
+              type: array
+              items:
+                type: object
+                required:
+                  - timestamp
+                  - price
+                properties:
+                  timestamp:
+                    type: number
+                  price:
+                    type: string
         underlyingMarket:
           type: object
           required:
             - name
+            - ticker
             - priceHigh52w
             - priceLow52w
             - averageVolume
+            - volume24h
+            - marketCap
             - sharesOutstanding
           properties:
             name:
+              type: string
+            ticker:
               type: string
             priceHigh52w:
               type: string
@@ -2275,7 +2324,17 @@ components:
               type: string
             averageVolume:
               type: string
+            volume24h:
+              type: string
+            marketCap:
+              type: string
             sharesOutstanding:
+              type: string
+            open24h:
+              type: string
+            high24h:
+              type: string
+            low24h:
               type: string
         chainBalances:
           type: array

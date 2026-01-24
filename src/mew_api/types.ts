@@ -152,3 +152,11 @@ export type GetWebStocksInfoSummaryResponse =
 
 export type GetWebStocksInfoPrimaryPriceChartResponse =
   components['schemas']['GetWebStocksInfoPrimaryPriceChartResponse']
+export type StockUnderlyingAsset =
+  GetWebStocksInfoSummaryResponse['underlyingMarket']
+export type StockDividends = GetWebStocksInfoSummaryResponse['dividend']
+
+export type StockPriceChartInterval =
+  components['parameters']['WebStocksInfoPriceChartInterval']
+export type StockChartPoint =
+  GetWebStocksInfoPrimaryPriceChartResponse['prices'][number]

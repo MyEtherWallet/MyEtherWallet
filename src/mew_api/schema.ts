@@ -1164,20 +1164,43 @@ export interface components {
             description?: string;
             iconPngUrl?: string;
             iconSvgUrl?: string;
+            metadata?: {
+                assetClass?: string;
+                instrumentType?: string;
+            };
+            dividend?: {
+                dividendYield: string;
+                payoutFrequency: string;
+                lastCashAmount: string;
+                lastPaymentDate: string;
+            };
             primaryMarket?: {
                 symbol: string;
                 price: string;
                 priceChange24h?: string;
                 priceChangePercentage24h: string;
-                totalHolders?: number;
-                sharesMultiplier?: string;
+                totalHolders: number;
+                sharesMultiplier: string;
+                open24h?: string;
+                high24h?: string;
+                low24h?: string;
+                priceChart24h?: {
+                    timestamp: number;
+                    price: string;
+                }[];
             };
             underlyingMarket?: {
                 name: string;
+                ticker: string;
                 priceHigh52w: string;
                 priceLow52w: string;
                 averageVolume: string;
+                volume24h: string;
+                marketCap: string;
                 sharesOutstanding: string;
+                open24h?: string;
+                high24h?: string;
+                low24h?: string;
             };
             chainBalances: {
                 chainName: null | string;
