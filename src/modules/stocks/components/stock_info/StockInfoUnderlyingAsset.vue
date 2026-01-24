@@ -36,11 +36,11 @@
         <div
           class="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-6 py-6 lg:py-2 lg:px-6"
         >
-          <h2
+          <h3
             class="xs:col-span-2 lg:hidden basis-full xs:basis-auto font-bold text-s-17 leading-p-150"
           >
             Historical Price
-          </h2>
+          </h3>
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
               52W High
@@ -66,11 +66,11 @@
       class="grid grid-cols-1 lg:grid-cols-2 lg:divide-x divide-y lg:divide-y-0 divide-grey-10 gap-y-6"
     >
       <div class="lg:py-2 pr-6 pb-6 lg:pb-0">
-        <h2
+        <h3
           class="basis-full xs:basis-auto font-bold text-s-17 leading-p-150 mb-6"
         >
           Statistics
-        </h2>
+        </h3>
         <div class="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-6">
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">
@@ -107,11 +107,11 @@
         </div>
       </div>
       <div class="lg:py-2 pr-6 lg:px-6 lg:mt-0 lg:pb-0">
-        <h2
+        <h3
           class="basis-full xs:basis-auto font-bold text-s-17 leading-p-150 mb-6"
         >
           Dividends
-        </h2>
+        </h3>
         <div class="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-6">
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">

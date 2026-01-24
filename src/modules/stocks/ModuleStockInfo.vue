@@ -93,7 +93,8 @@
         <ModuleStockInfoChart :symbol="symbol" />
       </div>
     </div>
-
+    <!-- Price Stats -->
+    <stock-info-price v-if="stockData" :data="stockData" />
     <!-- About -->
     <stock-info-about v-if="stockData" :data="stockData" />
 
@@ -117,6 +118,7 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
 import StockUnderlyingAsset from './components/stock_info/StockInfoUnderlyingAsset.vue'
 import StockInfoAbout from './components/stock_info/StockInfoAbout.vue'
+import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
 import {
   ShareIcon,
   StarIcon,

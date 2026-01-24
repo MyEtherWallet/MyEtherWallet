@@ -17,7 +17,7 @@
         <h2
           class="basis-full xs:basis-auto font-bold text-s-20 leading-p-150 mb-4 flex items-center"
         >
-          About:
+          About
           <app-token-symbol
             v-if="data.primaryMarket"
             :symbol="data.primaryMarket?.symbol"
