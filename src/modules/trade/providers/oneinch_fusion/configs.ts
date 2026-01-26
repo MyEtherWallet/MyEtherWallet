@@ -6,6 +6,11 @@ const BLOCK_EXPLORERS = {
   [bsc.id]: 'https://bscscan.com/',
 }
 
+const NODE_URLS = {
+  [mainnet.id]: 'https://nodes.mewapi.io/rpc/eth',
+  [bsc.id]: 'https://nodes.mewapi.io/rpc/bsc',
+}
+
 const NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 const ONEINCH_APPROVAL_ADDRESS = '0x111111125421ca6dc452d289314280a0f8842a65'
@@ -17,4 +22,5 @@ export {
   ONEINCH_APPROVAL_ADDRESS,
   NATIVE_ADDRESS,
   COW_APPROVAL_ADDRESS,
+  NODE_URLS,
 }

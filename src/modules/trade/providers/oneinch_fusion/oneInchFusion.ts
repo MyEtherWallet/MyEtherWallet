@@ -14,17 +14,22 @@ import type {
 } from './oneInchTypes'
 import {
   createPublicClient,
-  createWalletClient,
-  custom,
   erc20Abi,
-  type WalletClient,
   type PublicClient,
   type Chain,
+  http,
+  serializeTransaction,
 } from 'viem'
-import { NATIVE_ADDRESS, ONEINCH_APPROVAL_ADDRESS } from './configs'
+import {
+  NATIVE_ADDRESS,
+  NODE_URLS,
+  ONEINCH_APPROVAL_ADDRESS,
+  SUPPORTED_CHAINS,
+} from './configs'
 import { bsc, mainnet } from 'viem/chains'
-import { type EthereumProvider, Web3ProviderConnector } from './oneInchProvider'
+import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
+import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
@@ -42,22 +47,23 @@ const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
 class OneInchFusion {
   private web3Provider: Web3ProviderConnector
   private sdk: FusionSDK
-  private walletClient: WalletClient
   private publicClient: PublicClient
   private chain: Chain
-  constructor(provider: unknown, chainId: number) {
-    this.web3Provider = new Web3ProviderConnector(provider as EthereumProvider)
+  private wallet: BaseEvmWallet
+  constructor(wallet: BaseEvmWallet, chainId: number) {
+    const supportedChainIds = SUPPORTED_CHAINS.map(c => c.id)
+    if (!supportedChainIds.includes(chainId))
+      throw new Error('Fusion: network not supported')
+    this.wallet = wallet
+    this.publicClient = createPublicClient({
+      transport: http(NODE_URLS[chainId as keyof typeof NODE_URLS]),
+    })
+    this.web3Provider = new Web3ProviderConnector(wallet, this.publicClient)
     this.chain = chainId === 1 ? mainnet : bsc
     this.sdk = new FusionSDK({
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
       url: 'https://fusion.1inch.io',
       blockchainProvider: this.web3Provider,
-    })
-    this.walletClient = createWalletClient({
-      transport: custom(provider as EthereumProvider),
-    })
-    this.publicClient = createPublicClient({
-      transport: custom(provider as EthereumProvider),
     })
   }
 
@@ -133,7 +139,8 @@ class OneInchFusion {
           value: call.value,
           chain: this.chain,
         }
-        const hash = await this.walletClient.sendTransaction(tx)
+        const serialized = serializeTransaction(tx)
+        const hash = await this.wallet.SendTransaction(serialized)
         return this.publicClient
           .waitForTransactionReceipt({ hash })
           .then(res => {
