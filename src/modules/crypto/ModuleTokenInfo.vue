@@ -19,7 +19,7 @@
       <!-- Token logo, name, price, price change -->
       <div
         v-if="isLoading || tokenData === null"
-        class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[64px] xs:h-[80px] lg:h-[65px] animate-pulse bg-surface rounded-12 w-[60%]"
+        class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[64px] xs:h-[80px] animate-pulse bg-surface rounded-12 w-[60%]"
       ></div>
       <div
         v-else
@@ -100,11 +100,11 @@
       </div>
     </div>
     <!-- Chart and balance -->
-    <div class="flex flex-col gap-3 sm:gap-4" v-if="tokenId">
+    <div class="flex flex-col py-6" v-if="tokenId">
       <div
         :class="[
           isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10',
-          'px-4 py-6 w-full',
+          'px-4  w-full',
         ]"
       >
         <token-info-chart :token-id="tokenId" />
@@ -122,6 +122,7 @@
     <token-info-market-data :is-loading="isLoading" :token-data="tokenData" />
     <!-- Supported Chains -->
     <token-info-supported-chains
+      v-if="!isLoading"
       :is-loading="isLoading"
       :token-icon-url="tokenData?.iconUrl || undefined"
       :token-symbol="tokenData?.symbol || undefined"

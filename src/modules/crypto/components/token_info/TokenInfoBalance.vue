@@ -12,7 +12,7 @@
     <div
       v-if="isWalletConnected && existsOnCurrentChain"
       class="flex flex-wrap items-center gap-2"
-      :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
+      :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 pt-6']"
     >
       <h2
         class="basis-full sm:basis-auto font-bold text-s-20 xs:text-s-28 leading-p-150"
@@ -57,14 +57,17 @@
         </div>
       </div>
     </div>
-    <hr v-if="otherChains.length > 0" class="h-px bg-grey-10 border-0 w-full" />
+    <hr
+      v-if="otherChains.length > 0"
+      class="h-px bg-grey-10 border-0 w-full mt-6"
+    />
 
     <!-- Balance on other chains -->
     <div
       v-if="otherChains.length > 0"
       :class="[
         isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10',
-        'px-4 py-6 max-w-[600px]',
+        'px-4 pt-6 max-w-[600px]',
       ]"
     >
       <div class="flex items-center gap-1">

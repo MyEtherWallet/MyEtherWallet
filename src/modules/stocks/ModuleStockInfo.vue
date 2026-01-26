@@ -111,8 +111,8 @@
     </div>
 
     <!-- Chart -->
-    <div class="flex flex-col gap-3 sm:gap-4">
-      <div class="w-full px-3 xs:px-6 md:px-4 lg:px-10 py-3 xs:py-5">
+    <div class="flex flex-col py-6">
+      <div class="w-full px-3 xs:px-6 md:px-4 lg:px-10">
         <ModuleStockInfoChart :symbol="symbol" />
       </div>
       <token-info-balance
@@ -147,6 +147,13 @@
       :token-symbol="stockData.stockAlias || symbol"
       :supported-chains="stockData.supportedChains"
     />
+    <div
+      v-if="isLoading"
+      :class="[
+        isOpenSideMenu ? 'lg:mx-6 2xl:mx-10' : 'lg:mx-10',
+        'mx-4 my-6 h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-[90%]',
+      ]"
+    ></div>
   </div>
 </template>
 

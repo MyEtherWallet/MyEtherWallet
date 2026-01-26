@@ -3,7 +3,10 @@
     <!-- Market Data -->
     <div
       v-if="isLoading"
-      class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-[60%]"
+      :class="[
+        isOpenSideMenu ? 'lg:mx-6 2xl:mx-10' : 'lg:mx-10',
+        'mx-4 my-6 h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-[90%]',
+      ]"
     ></div>
     <div
       v-else
