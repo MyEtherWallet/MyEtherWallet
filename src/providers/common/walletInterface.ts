@@ -17,6 +17,7 @@ import type {
 } from '@/mew_api/types'
 
 import type { Provider as Eip6963Provider } from '@/stores/providerStore.ts'
+import { type EIP712TypedData } from '@1inch/limit-order-sdk'
 
 export interface WalletInterface {
   connect?: () => Promise<boolean>
@@ -26,6 +27,8 @@ export interface WalletInterface {
   SendTransaction?: (
     serializedTx: HexPrefixedString,
   ) => Promise<HexPrefixedString> // Transaction hash
+  SignTypedMessage?: (typedData: EIP712TypedData) => Promise<HexPrefixedString> // Transaction hash
+
   disconnect: () => Promise<boolean> // handles disconnecting or logging out from wallet
   getSignableTransaction: (
     tx: SignableTransactionParams,

@@ -24,6 +24,8 @@
     "update-api-schema": "npx openapi-typescript schema.yaml -o src/mew_api/schema.ts"
   },
   "dependencies": {
+    "@1inch/fusion-sdk": "^2.4.5",
+    "@1inch/limit-order-sdk": "^5.2.3",
     "@amplitude/analytics-browser": "^2.33.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@enkryptcom/hw-wallets": "^0.0.13",
@@ -49,6 +51,7 @@
     "@wagmi/core": "^3.1.0",
     "@web3-name-sdk/core": "^0.4.2",
     "animejs": "^4.2.2",
+    "axios": "^1.13.3",
     "bignumber.js": "^9.3.1",
     "bip39": "^3.1.0",
     "bitcoinjs-lib": "^6.1.7",
