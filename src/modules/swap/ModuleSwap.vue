@@ -201,6 +201,7 @@ import {
   type HexPrefixedString,
 } from '@/providers/types'
 import { ToastType } from '@/types/notification'
+import configs from '@/configs'
 
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
@@ -280,7 +281,7 @@ const isCrossChain = computed(
 const parsedFromTokens = computed(() => fromTokens.value as NewTokenInfo[])
 const parsedToTokens = computed(() => localToTokens.value)
 
-const userAddress = computed(() => walletAddress.value || '')
+const userAddress = computed(() => walletAddress.value || configs.MEW_DONATION_ADDRESS)
 
 const isLoading = computed(() => !swapLoaded.value || isLoadingQuotes.value)
 
