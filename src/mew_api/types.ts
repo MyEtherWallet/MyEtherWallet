@@ -140,3 +140,6 @@ export type GetErc20ContractMetadataResponse =
 
 export type GetErc20AddressBalanceResponse =
   components['schemas']['GetErc20AddressBalanceResponse']
+
+export type PortfolioHistoryResponse =
+  components['schemas']['GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse']

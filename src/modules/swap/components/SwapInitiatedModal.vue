@@ -116,7 +116,7 @@ import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 import { type Chain } from '@/mew_api/types'
 import { type ProviderQuoteResponse } from '@enkryptcom/swap'
 import { type HexPrefixedString } from '@/providers/types'
-import { fromBase } from '@/utils/unit'
+import { formatUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -142,8 +142,8 @@ const toTokenSymbol = computed(() => {
 })
 
 const toTokenAmount = computed(() => {
-  return fromBase(
-    props.selectedQuote?.toTokenAmount.toString() || '0',
+  return formatUnits(
+    BigInt(props.selectedQuote?.toTokenAmount.toString() || '0'),
     props.selectedQuote?.quote.options.toToken.decimals ?? 18,
   )
 })
@@ -164,8 +164,8 @@ const fromTokenSymbol = computed(() => {
   return props.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
 })
 const fromTokenAmount = computed(() => {
-  return fromBase(
-    props.selectedQuote?.fromTokenAmount.toString() || '0',
+  return formatUnits(
+    BigInt(props.selectedQuote?.fromTokenAmount.toString() || '0'),
     props.selectedQuote?.quote.options.fromToken.decimals ?? 18,
   )
 })

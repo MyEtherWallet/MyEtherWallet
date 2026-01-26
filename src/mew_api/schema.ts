@@ -228,6 +228,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/pages/stocks-info/stocks/{symbol}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksInfoSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks-info/stocks/{symbol}/primary-price-chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksInfoPrimaryPriceChart"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/token-price-chart/coins/{coin}": {
         parameters: {
             query?: never;
@@ -860,6 +892,8 @@ export interface components {
         /** @enum {string} */
         WebTokenPriceChartInterval: "1D" | "7D" | "1M" | "3M" | "1Y" | "ALL";
         /** @enum {string} */
+        WebStocksInfoPriceChartInterval: "1D" | "7D" | "1M" | "3M" | "1Y" | "ALL";
+        /** @enum {string} */
         WebTokensTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
         /** @enum {string} */
         WebStocksTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "VOLUME_24H_ASC" | "VOLUME_24H_DESC";
@@ -1026,6 +1060,80 @@ export interface components {
                 name: string;
             };
         }[];
+        GetWebStocksInfoSummaryResponse: {
+            stockAlias?: string;
+            description?: string;
+            iconPngUrl?: string;
+            iconSvgUrl?: string;
+            primaryMarket?: {
+                symbol: string;
+                price: string;
+                priceChange24h?: string;
+                priceChangePercentage24h: string;
+                totalHolders?: number;
+                sharesMultiplier?: string;
+            };
+            underlyingMarket?: {
+                name: string;
+                priceHigh52w: string;
+                priceLow52w: string;
+                averageVolume: string;
+                sharesOutstanding: string;
+            };
+            chainBalances: {
+                chainName: null | string;
+                chainNameLong: null | string;
+                chainType: components["schemas"]["ChainType"] | null;
+                ondoGmNetworkChainId: null | string;
+                result: {
+                    /** @constant */
+                    ok: false;
+                    value: {
+                        reason: string;
+                    };
+                } | {
+                    /** @constant */
+                    ok: true;
+                    value: {
+                        contract: string;
+                        decimals: number;
+                        balances: ({
+                            /** @constant */
+                            ok: false;
+                            value: {
+                                reason: string;
+                                owner: string;
+                            };
+                        } | {
+                            /** @constant */
+                            ok: true;
+                            value: {
+                                owner: string;
+                                value: string;
+                            };
+                        })[];
+                    };
+                };
+            }[];
+            supportedChains: {
+                chainName: string;
+                chainNameLong: string;
+                chainType: components["schemas"]["ChainType"];
+                ondoGmNetworkChainId: string;
+                contract: null | string;
+                iconUrl: string;
+            }[];
+        };
+        GetWebStocksInfoPrimaryPriceChartResponse: {
+            range: string;
+            interval: string;
+            /** Format: date-time */
+            lowerbound: string;
+            prices: {
+                timestamp: number;
+                price: number;
+            }[];
+        };
         /** @enum {string} */
         EvmTransactionStatus: "NOT_FOUND" | "PENDING" | "SUCCESS" | "FAIL";
         /** @enum {string} */
@@ -1153,7 +1261,7 @@ export interface components {
         };
         GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse: {
             timestamps: number[];
-            prices: number[];
+            values: number[];
         };
         GetWebTrendingTokensResponse: {
             page: number;
@@ -1234,7 +1342,7 @@ export interface components {
                 chainName: string;
                 decimals: number | null;
             }[];
-            ondo?: null | {
+            ondo: null | {
                 stockAlias?: string;
                 iconPngUrl?: string;
                 iconSvgUrl?: string;
@@ -1641,6 +1749,22 @@ export interface components {
                 "application/json": components["schemas"]["GetWebStocksSummaryResponse"];
             };
         };
+        GetWebStocksInfoSummarySuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksInfoSummaryResponse"];
+            };
+        };
+        GetWebStocksInfoPrimaryPriceChartSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksInfoPrimaryPriceChartResponse"];
+            };
+        };
         GetChainMetadataSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -1968,6 +2092,7 @@ export interface components {
     parameters: {
         IncludeSparkline: boolean;
         IncludeSparklines: boolean;
+        PathSymbol: string;
         PathCoinId: string;
         CoinIds: string;
         ChainId: components["schemas"]["BigIntInput"];
@@ -1980,6 +2105,7 @@ export interface components {
         PerPage: number;
         SortDirection: components["schemas"]["SortDirection"];
         WebTokenPriceChartInterval: components["schemas"]["WebTokenPriceChartInterval"];
+        WebStocksInfoPriceChartInterval: components["schemas"]["WebStocksInfoPriceChartInterval"];
         WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
         WebStocksTableSort: components["schemas"]["WebStocksTableSort"];
         WebStocksTableCategory: components["schemas"]["WebStocksTableCategory"];
@@ -2231,6 +2357,38 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebStocksSummarySuccess"];
+        };
+    };
+    GetWebStocksInfoSummary: {
+        parameters: {
+            query?: {
+                evmAddresses?: components["parameters"]["QueryEvmAddresses"];
+            };
+            header?: never;
+            path: {
+                symbol: components["parameters"]["PathSymbol"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksInfoSummarySuccess"];
+        };
+    };
+    GetWebStocksInfoPrimaryPriceChart: {
+        parameters: {
+            query?: {
+                interval?: components["parameters"]["WebStocksInfoPriceChartInterval"];
+            };
+            header?: never;
+            path: {
+                symbol: components["parameters"]["PathSymbol"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksInfoPrimaryPriceChartSuccess"];
         };
     };
     GetWebTokenPriceChartByCoin: {

@@ -21,11 +21,11 @@
         width="w-7"
         height="h-7"
         class="mr-2"
-        :is-stock="selectedToken.is_rwa"
+        :is-stock="selectedToken.ondo !== undefined"
       />
       <app-token-symbol
         :symbol="selectedToken.symbol"
-        :is-stock="selectedToken.is_rwa"
+        :is-stock="selectedToken.ondo !== undefined"
       />
       <div class="ml-1 min-w-4 h-4">
         <chevron-down-icon v-if="!isLoading" class="text-info" />
@@ -122,21 +122,24 @@
                 <app-token-logo
                   :url="token.logo_url"
                   :alt="token.symbol"
-                  :is-stock="token.is_rwa"
+                  :is-stock="token.ondo !== undefined"
                   class="mr-4"
                 />
                 <div class="text-left">
                   <app-token-symbol
                     :symbol="token.symbol"
-                    :is-stock="token.is_rwa"
+                    :is-stock="token.ondo !== undefined"
                   />
-                  <app-tooltip v-if="token.name.length > 10" :text="token.name">
+                  <app-tooltip
+                    v-if="getName(token).length > 10"
+                    :text="getName(token)"
+                  >
                     <h2 class="text-s-12 text-info whitespace-nowrap">
-                      {{ truncate(token.name, 10) }}
+                      {{ truncate(getName(token), 10) }}
                     </h2>
                   </app-tooltip>
                   <h2 v-else class="text-s-12 text-info whitespace-nowrap">
-                    {{ token.name }}
+                    {{ getName(token) }}
                   </h2>
                 </div>
               </div>
@@ -150,7 +153,7 @@
                   </p>
                   <app-token-symbol
                     :symbol="token.symbol"
-                    :is-stock="token.is_rwa"
+                    :is-stock="token.ondo !== undefined"
                     :has-gradient="false"
                     class="text-info !text-s-12 font-normal"
                   />
@@ -351,5 +354,9 @@ const formatUsdBalance = (_value: number) => {
 
 const getBalance = (_value: string) => {
   return formatFloatingPointValue(_value).value
+}
+
+const getName = (token: TokenBalance): string => {
+  return token.ondo?.stockAlias ? token.ondo.stockAlias : token.name
 }
 </script>

@@ -24,7 +24,7 @@
         type="text"
         autoComplete="off"
         placeholder="0.0"
-        v-model.number="amount"
+        v-model="amount"
         :readonly="readonly"
         @input="validateAmount"
         @focus="setInFocusInput"
@@ -122,7 +122,7 @@ const props = defineProps({
 
 //String will be returned when input is cleared --> ''
 const amount = defineModel('amount', {
-  type: [String, Number] as PropType<string | number>,
+  type: String as PropType<string>,
   required: true,
 })
 
