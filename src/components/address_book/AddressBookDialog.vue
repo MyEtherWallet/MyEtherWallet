@@ -1,25 +1,27 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    class="max-w-[500px] mx-auto min-h-[500px]"
+    class="w-full max-w-[460px] mx-auto min-h-[600px]"
   >
     <template #title>
-      <div class="flex items-center pr-2 pt-4 sm:pt-6 xl:pt-8">
-        <app-btn-icon
-          v-if="showAddAddress"
-          :label="$t('common.go_back')"
-          class="-ml-3 mr-3"
-          @click="closeAddEdit"
-        >
-          <ArrowLeftIcon class="w-5 h-5" />
-        </app-btn-icon>
-        <h1 class="text5 font-bold">
-          {{ dialogTitle }}
-        </h1>
+      <div class="px-4 sm:px-6 pt-4 sm:pt-6">
+        <div class="flex items-center">
+          <app-btn-icon
+            v-if="showAddAddress"
+            :label="$t('common.go_back')"
+            class="-ml-3 mr-3"
+            @click="closeAddEdit"
+          >
+            <ArrowLeftIcon class="w-5 h-5" />
+          </app-btn-icon>
+          <h1 class="text-s-28 font-bold">
+            {{ dialogTitle }}
+          </h1>
+        </div>
       </div>
     </template>
     <template #content>
-      <div class="mb-10">
+      <div class="pb-10">
         <transition name="fade" mode="out-in">
           <div v-if="showAddAddress" class="px-4 sm:px-6">
             <add-address
@@ -31,42 +33,48 @@
 
           <div v-else>
             <!-- Search -->
-            <div class="sticky top-0 bg-white z-10">
-              <div class="px-2 sm:px-5 mb-1 flex">
+            <div class="sticky top-0 bg-white z-10 pt-2">
+              <div class="px-4 sm:px-6 flex items-center gap-3">
                 <app-search-input
                   v-model="searchInput"
                   class="grow"
                   placeholder="Search by Name"
+                  bg-class="bg-surface"
                 />
                 <app-base-button
                   size="medium"
-                  class="ml-auto !px-5"
+                  class="!px-5 !min-h-[40px] !text-s-15"
                   @click="showAddAddress = true"
                 >
                   Add
                 </app-base-button>
               </div>
-              <hr class="h-px bg-grey-outline border-0 w-full mb-1" />
             </div>
+
             <!-- Filters -->
             <app-btn-group
               v-model:selected="selectedListItem"
               :btn-list="addressList"
-              class="my-2 mx-3 sm:mx-6"
-              size="small"
+              class="mt-6 mb-4 px-4 sm:px-6"
+              size="medium"
               variant="outline"
             >
               <template #btn-content="{ data }">
                 {{ data.name }}
               </template>
             </app-btn-group>
-            <div class="mx-3">
+            <div class="px-3 sm:px-5">
               <!-- Compatible -->
               <p
                 v-if="currentChainOnlyAdrs.length"
-                class="font-medium text-s-17 mb-2 mx-5 mt-5"
+                class="font-medium text-s-17 mb-2 px-2"
               >
-                {{ network?.nameLong || selectedChain?.nameLong }} Addresses
+                {{
+                  selectedListItem.id === 'recent'
+                    ? 'Recent Transactions'
+                    : (network?.nameLong || selectedChain?.nameLong) +
+                      ' Addresses'
+                }}
               </p>
               <address-book-item
                 v-for="adr in currentChainOnlyAdrs"
@@ -80,7 +88,7 @@
               />
               <p
                 v-if="otherChainsAdrs.length"
-                class="font-medium text-s-17 mb-2 mx-5 mt-10"
+                class="font-medium text-s-17 mb-2 px-2 mt-6"
               >
                 Non-{{ network?.nameLong || selectedChain?.nameLong }}
                 Compatible Addresses
@@ -98,7 +106,7 @@
               />
               <p
                 v-if="!otherChainsAdrs.length && !currentChainOnlyAdrs.length"
-                class="text-s-17 mb-2 mx-5 mt-10 text-info text-center"
+                class="text-s-17 mb-2 px-2 mt-6 text-info text-center"
               >
                 You do not have any saved addresses that are compatible with
                 this network.
@@ -106,7 +114,7 @@
 
               <p
                 v-if="otherAddressBook.length"
-                class="font-medium text-s-17 mb-2 mx-5 mt-10"
+                class="font-medium text-s-17 mb-2 px-2 mt-6"
               >
                 Incompatible Addresses
               </p>
@@ -187,8 +195,8 @@ interface AddressListItem {
 }
 
 const addressList = ref<AddressListItem[]>([
-  { name: 'Saved', id: 'addresses' },
   { name: 'Recent', id: 'recent' },
+  { name: 'Saved', id: 'addresses' },
 ])
 
 const selectedListItem = ref<AddressListItem>(addressList.value[0])
@@ -201,25 +209,53 @@ const adrBook = useAddressBookStore()
 const { addressBook } = storeToRefs(adrBook)
 
 const deleteAddress = (adr: Address) => {
-  adrBook.removeAddress(adr, adr.chainType)
+  if (selectedListItem.value.id === 'recent') {
+    adrBook.removeRecentAddress(adr, _chain.value?.name)
+  } else {
+    adrBook.removeAddress(adr, adr.chainType)
+  }
 }
 
 const _chain = computed(() => {
   return props.network || selectedChain.value
 })
 
+const deduplicate = (list: Address[]) => {
+  const seen = new Set()
+  return list.filter(item => {
+    const adr = item.address.toLowerCase()
+    if (seen.has(adr)) return false
+    seen.add(adr)
+    return true
+  })
+}
+
 const currentAddressBook = computed<Address[]>(() => {
-  return _chain.value?.type && addressBook.value[_chain.value.type]
-    ? addressBook.value[_chain.value?.type]
-    : []
+  let list: Address[] = []
+  if (selectedListItem.value.id === 'recent') {
+    list = addressBook.value.recent[_chain.value?.name || ''] || []
+    list = list.map(adr => {
+      const saved = adrBook.inAddressBook(adr.address, _chain.value?.type || '')
+      return typeof saved === 'object' ? saved : adr
+    })
+  } else {
+    list =
+      _chain.value?.type && addressBook.value.saved[_chain.value.type]
+        ? addressBook.value.saved[_chain.value.type].filter(item => !!item.name)
+        : []
+  }
+  return deduplicate(list)
 })
 
 const otherAddressBook = computed(() => {
-  const keys = Object.keys(addressBook.value).filter(
+  if (selectedListItem.value.id === 'recent') return []
+
+  const keys = Object.keys(addressBook.value.saved).filter(
     key => key !== _chain.value?.type,
   )
 
-  return keys.flatMap(key => addressBook.value[key])
+  const list = keys.flatMap(key => addressBook.value.saved[key])
+  return deduplicate(list)
 })
 
 /** -------------------------------

@@ -1,18 +1,23 @@
 <template>
   <div
     :class="[
-      { 'hover:bg-grey-5 cursor-pointer': isSelectable },
-      'flex items-center gap-3 px-4 py-2  rounded-16',
-      { 'bg-grey-5': isSelected },
+      { 'hover:bg-grey-10 cursor-pointer transition-colors': isSelectable },
+      'flex items-center gap-3 px-5 py-4 rounded-xl mb-2 border-2 border-transparent',
+      isSelected ? '!bg-primary/5 !border-primary' : 'bg-surface',
     ]"
     @click="setItem(adr)"
   >
     <app-blockie :address="adr.address" :size="9" />
-    <div>
-      <p class="font-medium">
+    <div class="flex flex-col">
+      <p v-if="adr.name" class="font-bold text-s-17 leading-none mb-1">
         {{ adr.name }}
       </p>
-      <p class="text-s-14 tracking-sp-06 text-info">
+      <p
+        :class="[
+          'tracking-sp-06',
+          adr.name ? 'text-s-14 text-info' : 'text-s-17 font-medium',
+        ]"
+      >
         {{ truncateAddress(adr.address, 10) }}
         <span v-if="showChain" class="text-info text-s-12">
           - {{ getChainName(adr.chainName) }}</span
@@ -24,18 +29,18 @@
       <app-btn-icon
         v-if="!isSelectable"
         :label="$t('common.edit')"
-        class="text-primary"
+        class="text-primary hover:bg-primary/10"
         @click="editAddress(adr)"
       >
-        <PencilIcon />
+        <PencilIcon class="w-5 h-5" />
       </app-btn-icon>
       <app-btn-icon
         v-if="!isSelectable"
         :label="$t('common.delete')"
-        class="text-primary"
+        class="text-primary hover:bg-primary/10"
         @click="deleteAddress(adr)"
       >
-        <TrashIcon />
+        <TrashIcon class="w-5 h-5" />
       </app-btn-icon>
       <CheckIcon v-if="isSelected" class="text-primary w-6 h-6" />
     </div>

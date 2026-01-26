@@ -9,7 +9,7 @@ import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
 import { formatUnits } from 'viem'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
-import { useRecentAddressStore } from './recentAddressStore'
+import { useWatchOnlyStore } from './watchOnlyStore'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -67,7 +67,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
-      const { addWallet: _addWallet } = useRecentAddressStore()
+      const { addWallet: _addWallet } = useWatchOnlyStore()
       const { selectedChain } = storeToRefs(useChainsStore())
       walletAddress.value = await wallet.value.getAddress()
       _addWallet(

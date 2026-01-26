@@ -124,14 +124,14 @@ import { useAddressBookStore, type Address } from '@/stores/addressBook'
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
-const { inAddressBook, addAddress } = useAddressBookStore()
+const { inAddressBook, addRecentAddress } = useAddressBookStore()
 
 const chainsStore = useChainsStore()
 const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
-const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
+const gasPrice = ref('0x0')
 const data = ref('0x')
 const gasFeeTxEstimate = ref<
   EstimatesRequestBody | GetBtcTransactionEstimateBody | undefined
@@ -342,15 +342,14 @@ const resetSendModule = () => {
 }
 
 const saveToAddressBookAfterSending = () => {
-  const name = foundNickName.value // if address not in address book, name will be ''
-  if (name === '') {
+  if (toAddress.value) {
     const newAddress: Address = {
       address: toAddress.value || '',
-      name: '', // TODO: generate default name like 'Address 1'
+      name: '',
       chainName: selectedChain.value?.name || '',
       chainType: selectedChain.value?.type || '',
     }
-    addAddress(newAddress, selectedChain.value?.type || '')
+    addRecentAddress(newAddress, selectedChain.value?.name)
   }
   resetSendModule()
 }

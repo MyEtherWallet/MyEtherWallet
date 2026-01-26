@@ -61,7 +61,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { BALANCE_FILTER, type BalanceFilterOption } from './helpers/index'
+import { BALANCE_FILTER, type BalanceFilterOption } from './helpers'
 import { useChainsStore } from '@/stores/chainsStore'
 
 const chainStore = useChainsStore()
