@@ -214,7 +214,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   * Stock Values
   -------------------------------*/
   const allStocks = computed<Array<TokenBalance>>(() => {
-    return tokens.value.filter(token => token.is_rwa === true)
+    return tokens.value.filter(token => token.ondo !== undefined)
   })
 
   /**

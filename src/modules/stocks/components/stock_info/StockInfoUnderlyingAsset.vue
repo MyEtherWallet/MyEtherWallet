@@ -4,7 +4,7 @@
     :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
   >
     <h2
-      class="basis-full xs:basis-auto font-bold text-s-20 leading-p-150 mb-6 flex items-center"
+      class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-6 flex items-center"
     >
       Underlying Asset
     </h2>

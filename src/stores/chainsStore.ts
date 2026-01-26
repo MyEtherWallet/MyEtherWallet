@@ -21,6 +21,11 @@ export const useChainsStore = defineStore('chainsStore', () => {
     }
   }
 
+  const getChainIcon = (chainName: string): string | undefined => {
+    const chain = chains.value.find(chain => chain.name === chainName)
+    return chain?.icon
+  }
+
   const isBitcoinChain = computed(() => {
     return selectedChain.value?.type === 'BITCOIN'
   })
@@ -32,5 +37,14 @@ export const useChainsStore = defineStore('chainsStore', () => {
     return selectedChain.value?.type === 'SOLANA'
   })
 
-  return { chains, isLoaded, setChainData, selectedChain, isBitcoinChain, isEvmChain, isSolChain }
+  return {
+    chains,
+    isLoaded,
+    setChainData,
+    getChainIcon,
+    selectedChain,
+    isBitcoinChain,
+    isEvmChain,
+    isSolChain,
+  }
 })

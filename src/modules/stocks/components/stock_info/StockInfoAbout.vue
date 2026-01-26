@@ -15,14 +15,14 @@
         "
       >
         <h2
-          class="basis-full xs:basis-auto font-bold text-s-20 leading-p-150 mb-4 flex items-center"
+          class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-4 flex items-center"
         >
           About
           <app-token-symbol
             v-if="data.primaryMarket"
             :symbol="data.primaryMarket?.symbol"
             is-stock
-            class="!font-bold !text-s-20 leading-p-150 ml-1"
+            class="!font-bold !text-s-20 xs:!text-s-24 leading-p-150 ml-1"
           />
         </h2>
         <p class="text-s-14 text-info leading-p-150">

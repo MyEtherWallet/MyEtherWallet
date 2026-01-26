@@ -7,15 +7,28 @@
     ></div>
     <div
       v-else
-      class="px-3 xs:px-6 md:px-4 md:px-4 lg:px-10 grid grid-cols-2 xs:grid-cols-3 gap-4 max-w-[700px]"
+      :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
     >
-      <div
-        v-for="(item, index) in marketData"
-        :key="index"
-        class="flex flex-col py-2"
+      <h2
+        class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-6 flex items-center"
       >
-        <p class="text-s-14 text-info mb-1">{{ item.label }}</p>
-        <p class="text-s-16 font-medium">{{ item.value }}</p>
+        Statistics
+      </h2>
+      <div
+        class="grid grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6"
+      >
+        <div
+          v-for="(item, index) in marketData"
+          :key="index"
+          class="flex flex-col gap-1"
+        >
+          <p
+            class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-2"
+          >
+            {{ item.label }}
+          </p>
+          <p class="text-s-16 font-medium">{{ item.value }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -25,6 +38,11 @@
 import { computed, type PropType } from 'vue'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 import { type GetWebTokenInfo } from '@/mew_api/types'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { storeToRefs } from 'pinia'
+
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const props = defineProps({
   isLoading: {

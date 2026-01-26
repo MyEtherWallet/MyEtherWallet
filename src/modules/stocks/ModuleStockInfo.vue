@@ -20,7 +20,13 @@
         v-if="isLoading || !stockData"
         class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[64px] xs:h-[80px] lg:h-[65px] animate-pulse bg-surface rounded-12 w-[60%]"
       ></div>
-      <div v-else class="flex items-center gap-4 px-3 xs:px-6 md:px-4 lg:px-10">
+      <div
+        v-else
+        :class="[
+          isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10',
+          'px-4 py-0 flex items-start gap-4',
+        ]"
+      >
         <div class="relative">
           <app-token-logo
             :url="stockData.iconPngUrl || stockData.iconSvgUrl"
@@ -29,16 +35,27 @@
             width="w-10 xs:w-[56px]"
             height="h-10 xs:h-[56px]"
           />
+          <div
+            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+          >
+            <app-token-logo
+              v-if="selectedChain && existsOnCurrentChain"
+              :url="selectedChain.icon"
+              :symbol="selectedChain.name"
+              width="w-5"
+              height="h-5"
+            />
+          </div>
         </div>
 
         <div class="flex flex-col">
-          <div class="flex flex row items-end gap-1">
+          <div class="flex flex-row flex-wrap items-end gap-2">
             <AppTokenSymbol
               :symbol="symbol"
               :is-stock="true"
-              class="text-s-20 xs:text-s-24 !font-bold !leading-p-110"
+              class="text-s-20 xs:text-s-24 xl:text-s-28 !font-bold !leading-p-110"
             />
-            <h1 class="text-s-17 xs:text-s-20 leading-p-110 font-bold">
+            <h1 class="text-s-17 xs:text-s-20 leading-p-110 font-semibold">
               ({{ stockData.stockAlias }})
             </h1>
           </div>
@@ -83,15 +100,32 @@
               </span>
             </div>
           </div>
+          <p
+            v-if="!isLoading && existsOnCurrentChain"
+            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+          >
+            on {{ selectedChain?.name }}
+          </p>
         </div>
       </div>
     </div>
 
     <!-- Chart -->
-    <div class="flex flex-col px-3 xs:px-6 md:px-4 lg:px-10 py-3 xs:py-5">
-      <div class="w-full">
+    <div class="flex flex-col gap-3 sm:gap-4">
+      <div class="w-full px-3 xs:px-6 md:px-4 lg:px-10 py-3 xs:py-5">
         <ModuleStockInfoChart :symbol="symbol" />
       </div>
+      <token-info-balance
+        :is-loading="isLoading"
+        :chain-balances="stockData?.chainBalances"
+        :token-icon-url="
+          stockData?.iconPngUrl || stockData?.iconSvgUrl || undefined
+        "
+        :token-symbol="symbol"
+        :supported-chains="stockData?.supportedChains"
+        :current-price="stockData?.primaryMarket?.price || undefined"
+        :is-stock="true"
+      />
     </div>
     <!-- Price Stats -->
     <stock-info-price v-if="stockData" :data="stockData" />
@@ -106,6 +140,13 @@
       :ticker="stockData.stockAlias"
       :dividends="stockData.dividend"
     />
+    <token-info-supported-chains
+      v-if="stockData"
+      :is-loading="isLoading"
+      :token-icon-url="stockData.iconPngUrl || stockData.iconSvgUrl"
+      :token-symbol="stockData.stockAlias || symbol"
+      :supported-chains="stockData.supportedChains"
+    />
   </div>
 </template>
 
@@ -119,6 +160,8 @@ import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
 import StockUnderlyingAsset from './components/stock_info/StockInfoUnderlyingAsset.vue'
 import StockInfoAbout from './components/stock_info/StockInfoAbout.vue'
 import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
+import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoSupportedChains.vue'
+import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
 import {
   ShareIcon,
   StarIcon,
@@ -130,6 +173,10 @@ import {
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
   symbol: {
@@ -139,18 +186,42 @@ const props = defineProps({
 })
 
 const { useMEWFetch } = useFetchMewApi()
-
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 /**--------------------
  * Fetch Stock Summary Data
  ---------------------*/
 
-const fetchUrl = computed(
-  () => `/v1/web/pages/stocks-info/stocks/${props.symbol}/summary`,
-)
+const walletStore = useWalletStore()
+const { walletAddress } = storeToRefs(walletStore)
+
+const fetchUrl = computed(() => {
+  const base = `/v1/web/pages/stocks-info/stocks/${props.symbol}/summary`
+  if (walletAddress.value) {
+    return `${base}?evmAddresses=${walletAddress.value}`
+  }
+  return base
+})
 
 const { data: stockData, isFetching: isLoading } = useMEWFetch(fetchUrl, {
   refetch: true,
 })
   .get()
   .json<GetWebStocksInfoSummaryResponse>()
+
+const chainsStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainsStore)
+
+const existsOnCurrentChain = computed(() => {
+  if (
+    stockData.value &&
+    stockData.value.supportedChains &&
+    selectedChain.value
+  ) {
+    return stockData.value.supportedChains.some(
+      chain => chain.chainName === selectedChain.value?.name,
+    )
+  }
+  return false
+})
 </script>

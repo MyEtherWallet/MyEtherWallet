@@ -8,13 +8,13 @@
     >
       <div class="lg:py-2 pr-6 pb-6 lg:pb-0">
         <h2
-          class="basis-full xs:basis-auto font-bold text-s-20 leading-p-150 mb-4 flex items-center"
+          class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-4 flex items-center"
         >
           <app-token-symbol
             v-if="data.primaryMarket?.symbol"
             :symbol="data.primaryMarket.symbol"
             is-stock
-            class="text-s-20 leading-p-150 mr-1 !font-bold"
+            class="text-s-20 xs:text-s-24 leading-p-150 mr-1 !font-bold"
           />
           Price
         </h2>
