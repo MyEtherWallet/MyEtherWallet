@@ -29,20 +29,22 @@
       </app-select>
     </template>
   </app-btn-group>
-  <chart-price
-    v-if="!isLoadingFetch && !notAvailable"
-    :labels="labels"
-    :points="points"
-    :time-frame="selectedChartFilter.value"
-    class="w-full h-[200px] sm:h-[320px]"
-  />
-  <div
-    v-else
-    class="w-full bg-surface h-[200px] sm:h-[320px] rounded-lg"
-    :class="{ 'animate-pulse': isLoadingFetch }"
-  >
-    <div class="flex flex-col items-center h-full justify-center gap-2">
-      <p v-if="notAvailable" class="text-s-14 text-info">No data available</p>
+  <div class="h-[200px] sm:h-[320px]">
+    <chart-price
+      v-if="!isLoadingFetch && !notAvailable"
+      :labels="labels"
+      :points="points"
+      :time-frame="selectedChartFilter.value"
+      class="w-full h-full"
+    />
+    <div
+      v-else
+      class="w-full bg-surface h-full rounded-lg"
+      :class="{ 'animate-pulse': isLoadingFetch }"
+    >
+      <div class="flex flex-col items-center h-full justify-center gap-2">
+        <p v-if="notAvailable" class="text-s-14 text-info">No data available</p>
+      </div>
     </div>
   </div>
 </template>

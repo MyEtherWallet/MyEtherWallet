@@ -149,11 +149,12 @@
     />
     <div
       v-if="isLoading"
-      :class="[
-        isOpenSideMenu ? 'lg:mx-6 2xl:mx-10' : 'lg:mx-10',
-        'mx-4 my-6 h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-[90%]',
-      ]"
-    ></div>
+      :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6 ']"
+    >
+      <div
+        class="h-[308px] xs:h-[227px] animate-pulse bg-surface rounded-12 w-full"
+      ></div>
+    </div>
   </div>
 </template>
 
