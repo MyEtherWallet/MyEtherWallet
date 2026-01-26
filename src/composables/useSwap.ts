@@ -19,7 +19,7 @@ import type {
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
 import BN from 'bn.js'
-import { toBase } from '@/utils/unit'
+import { parseUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -66,7 +66,7 @@ export const useSwap = (): {
   const { selectedChain, chains } = storeToRefs(chainsStore)
   const { selectedNetwork } = storeToRefs(globalStore)
   const { tokens, balanceWei, isWalletConnected } = storeToRefs(walletStore)
-  const supportedNetwork = ref<boolean>(false)
+  const supportedNetwork = ref<boolean>(true)
   const toChains = ref<Chain[]>([])
   const toTokens = ref<ToTokenType | null>(null)
   const fromTokens = ref<NewTokenInfo[] | null>(null)
@@ -164,7 +164,10 @@ export const useSwap = (): {
       return undefined
     }
 
-    const rawAmount = toBase(params.amount, params.fromToken.decimals ?? 18) // Default to 18 decimals if not specified);
+    const rawAmount = parseUnits(
+      params.amount.toString(),
+      params.fromToken.decimals ?? 18,
+    ).toString() // Default to 18 decimals if not specified);
     return swapInstance.value.getQuotes({
       fromAddress: params.fromAddress,
       toAddress: params.toAddress,

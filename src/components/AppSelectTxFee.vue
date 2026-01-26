@@ -155,7 +155,7 @@ import type {
   GetBtcTransactionEstimateBody,
 } from '@/mew_api/types'
 import { useI18n } from 'vue-i18n'
-import { fromBase } from '@/utils/unit'
+import { formatUnits } from 'viem'
 import { P2WPKH_DUST } from '@/providers/common/btcInfo'
 
 /** ----------------
@@ -379,7 +379,7 @@ const selectedFeeFiat = computed(() => {
 const formatFee = (fee: GasFeeInfo | BtcGasFees) => {
   const converted = isEvmChain.value
     ? fromWei((fee as GasFeeInfo).nativeValue || '0', 'ether')
-    : fromBase((fee as BtcGasFees).nativeFeeTotal || '0', 8)
+    : formatUnits(BigInt((fee as BtcGasFees).nativeFeeTotal || '0'), 8)
   return `${formatFloatingPointValue(converted).value} ${fee.nativeSymbol}`
 }
 

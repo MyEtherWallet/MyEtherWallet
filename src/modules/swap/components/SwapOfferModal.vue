@@ -226,7 +226,7 @@ import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
 } from '@enkryptcom/swap'
-import { fromBase } from '@/utils/unit'
+import { formatUnits } from 'viem'
 import BigNumber from 'bignumber.js'
 import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
@@ -333,16 +333,16 @@ const toToken = computed(() => {
 
 const toAmount = computed(() => {
   return BigNumber(
-    fromBase(
-      selectedQuote.value?.toTokenAmount.toString() || '0',
+    formatUnits(
+      BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
       toToken.value?.decimals ?? 18,
     ),
   ).decimalPlaces(4)
 })
 
 const toAmountFormatted = computed(() => {
-  const full = fromBase(
-    selectedQuote.value?.toTokenAmount.toString() || '0',
+  const full = formatUnits(
+    BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
     toToken.value?.decimals ?? 18,
   )
   const bn = BigNumber(full)
@@ -362,7 +362,7 @@ const toAmountFiat = computed(() => {
 
 const getAmountData = (amount: BN, decimals: number) => {
   if (!amount) return { full: '0', truncated: '0', hasMore: false }
-  const full = fromBase(amount.toString(), decimals || 18)
+  const full = formatUnits(BigInt(amount.toString()), decimals || 18)
   const bn = BigNumber(full)
   const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
   const decimalPlaces = bn.decimalPlaces()
@@ -375,12 +375,14 @@ const getPercentageDiff = (amount: BN, decimals: number) => {
   const bestQuote = props.quotes[0]
   if (!bestQuote?.quote?.options?.toToken) return '0'
   const bestAmount = BigNumber(
-    fromBase(
-      bestQuote.toTokenAmount.toString(),
+    formatUnits(
+      BigInt(bestQuote.toTokenAmount.toString()),
       bestQuote.quote.options.toToken.decimals || 18,
     ),
   )
-  const currentAmount = BigNumber(fromBase(amount.toString(), decimals || 18))
+  const currentAmount = BigNumber(
+    formatUnits(BigInt(amount.toString()), decimals || 18),
+  )
   if (bestAmount.isZero()) return '0'
   const diff = currentAmount.div(bestAmount).minus(1).multipliedBy(100)
   return diff.toFormat(2)
