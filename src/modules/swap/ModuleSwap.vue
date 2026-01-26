@@ -281,7 +281,9 @@ const isCrossChain = computed(
 const parsedFromTokens = computed(() => fromTokens.value as NewTokenInfo[])
 const parsedToTokens = computed(() => localToTokens.value)
 
-const userAddress = computed(() => walletAddress.value || configs.MEW_DONATION_ADDRESS)
+const userAddress = computed(
+  () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
+)
 
 const isLoading = computed(() => !swapLoaded.value || isLoadingQuotes.value)
 
@@ -391,22 +393,19 @@ const isSwapDisabled = computed(
 const getTokenBalanceParams = (token: NewTokenInfo) => {
   const isMainToken = token.address === MAIN_TOKEN_CONTRACT
   const balance = token.balance || '0'
-  const decimals = token.decimals || 18
 
   const baseNetworkBalance = parseUnits(
     walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
     18,
   )
 
-  const baseBalance = isMainToken
-    ? baseNetworkBalance
-    : parseUnits(balance, decimals)
+  const baseBalance = isMainToken ? baseNetworkBalance : BigInt(balance)
 
   // For calculating remaining balance (native logic)
   const totalBalance =
     isMainToken && isWalletConnected.value
       ? baseNetworkBalance
-      : parseUnits(balance, decimals)
+      : BigInt(balance)
 
   return { baseBalance, totalBalance, baseNetworkBalance }
 }
@@ -473,15 +472,14 @@ const handleEvmTransaction = async (quoteId: string) => {
 
   let lastTxPromise
   const isHardware =
-    txCtx.getWalletType() !== WalletType.WAGMI &&
-    txCtx.getWalletType() !== WalletType.INJECTED
-
+    txCtx.getWalletType() === WalletType.TREZOR ||
+    txCtx.getWalletType() === WalletType.LEDGER
   for (const [index, tx] of txs.serialized.entries()) {
     const isLast = index === txs.serialized.length - 1
     if (!tx) continue
 
     if (!isHardware) {
-      const broadcast = txCtx.SendTransaction?.(tx as HexPrefixedString)
+      const broadcast = await txCtx.SendTransaction?.(tx as HexPrefixedString)
       if (isLast) lastTxPromise = broadcast
     } else {
       const signedTx = await txCtx.SignTransaction?.(tx as HexPrefixedString)

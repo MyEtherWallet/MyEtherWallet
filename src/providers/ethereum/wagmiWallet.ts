@@ -83,7 +83,6 @@ class WagmiWallet extends BaseEvmWallet {
     })
   }
 
-
   override async SignMessage(options: {
     message: string
     options?: unknown
