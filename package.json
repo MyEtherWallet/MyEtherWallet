@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "engines": {
-    "pnpm": ">=9.14.4",
+    "pnpm": ">=10.28.2",
     "node": ">=v22.11.0"
   },
-  "packageManager": "pnpm@9.14.4",
+  "packageManager": "pnpm@10.28.2",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build:only {@}\" --",

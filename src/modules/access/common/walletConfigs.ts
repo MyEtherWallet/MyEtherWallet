@@ -20,11 +20,7 @@ export const ACCESS_WALLET_VIEWS = [
   'wallet_connect',
 ] as const
 
-export const CREATE_WALLET_VIEWS = [
-  'default',
-  'buy',
-  'mnemonic',
-] as const
+export const CREATE_WALLET_VIEWS = ['default', 'buy', 'mnemonic'] as const
 
 export type CreateWalletView = (typeof CREATE_WALLET_VIEWS)[number]
 

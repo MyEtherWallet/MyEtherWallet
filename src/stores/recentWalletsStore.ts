@@ -1,13 +1,27 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import type { WalletConfig } from '@/modules/access/common/walletConfigs'
+import {
+  WalletConfigType,
+  type WalletConfig,
+} from '@/modules/access/common/walletConfigs'
+
+interface SavedWalletType {
+  id: string
+  name: string
+  icon: string
+  type: WalletConfigType[]
+}
 
 export const useRecentWalletsStore = defineStore(
   'useRecentWalletsStore',
   () => {
-    const recentWallets = useLocalStorage<WalletConfig[]>('recentWallets', [], {
-      mergeDefaults: true,
-    })
+    const recentWallets = useLocalStorage<SavedWalletType[]>(
+      'recentWallets',
+      [],
+      {
+        mergeDefaults: true,
+      },
+    )
     const addWallet = (passedWallet: WalletConfig) => {
       const passedWalletExists =
         recentWallets.value.find(wallet => wallet.id === passedWallet.id) !==
@@ -17,11 +31,17 @@ export const useRecentWalletsStore = defineStore(
       if (passedWalletExists || isOfficial) {
         return
       }
+      const walletToSave: SavedWalletType = {
+        id: passedWallet.id,
+        name: passedWallet.name,
+        icon: passedWallet.icon as string,
+        type: passedWallet.type,
+      }
       if (recentWallets.value.length < 2) {
-        recentWallets.value.push(passedWallet)
+        recentWallets.value.push(walletToSave)
       } else {
         recentWallets.value.splice(0, 1) // remove the first element
-        recentWallets.value.push(passedWallet)
+        recentWallets.value.push(walletToSave)
       }
     }
 

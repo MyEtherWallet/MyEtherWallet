@@ -1,4 +1,3 @@
-import { computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { useGlobalStore } from './globalStore'
@@ -11,19 +10,16 @@ export interface Address {
 }
 // This interface represents the structure of the address book, where each key is a network type and the value is an array of addresses associated with that network.
 interface AddressBook {
-  [key: string]: Address[]
+  saved: { [key: string]: Address[] }
+  recent: { [key: string]: Address[] }
 }
-// This interface represents the structure of the  recent addresses, where each key is a network identifier and the value is an array of addresses associated with that network.
-interface RecentAddress {
-  [key: string]: string[]
-}
-
 export const useAddressBookStore = defineStore('addressBookStore', () => {
   const globalStore = useGlobalStore()
   const { selectedNetwork: currentNetworkName } = storeToRefs(globalStore)
-  const storeAdrObject: Record<string, Address[]> = {}
-  const storeObject: Record<string, string[]> = {}
-  storeObject[currentNetworkName.value] = []
+  const storeAdrObject: AddressBook = {
+    saved: {},
+    recent: {},
+  }
 
   const addressBook = useLocalStorage<AddressBook>(
     'addressBook',
@@ -33,114 +29,98 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     },
   )
 
-  const recentAddresses = useLocalStorage<RecentAddress>(
-    'RecentAddress',
-    storeObject,
-    { mergeDefaults: true },
-  )
-
-  const recentLength = computed(
-    () => recentAddresses.value[currentNetworkName.value]?.length || 0,
-  )
-
   const isAdrAdded = (address: string, chainType: string) => {
     return (
-      addressBook.value[chainType]?.some(entry => entry.address === address) ||
-      false
+      addressBook.value.saved[chainType]?.some(
+        entry => entry.address === address,
+      ) || false
     )
   }
 
   const isNameAdded = (name: string, chainType: string) => {
     return (
-      addressBook.value[chainType]?.some(entry => entry.name === name) || false
+      addressBook.value.saved[chainType]?.some(entry => entry.name === name) ||
+      false
     )
   }
 
-  // const currentAddressBook = computed<Address[]>(() => {
-  //   return selectedChain.value?.type &&
-  //     addressBook.value[selectedChain.value.type]
-  //     ? addressBook.value[selectedChain.value?.type]
-  //     : []
-  // })
-
-  // const otherAddressBook = computed(() => {
-  //   const keys = Object.keys(addressBook.value).filter(
-  //     key => key !== selectedChain.value?.type,
-  //   )
-
-  //   return keys.flatMap(key => addressBook.value[key])
-  // })
-
   const addAddress = (address: Address, chainType: string) => {
-    if (
-      addressBook.value[chainType] &&
-      addressBook.value[chainType].length > 0
-    ) {
-      const index = addressBook.value[chainType].findIndex(
-        (_address: Address) => _address.address === address.address,
-      )
-      if (index === -1) {
-        const currentArray = addressBook.value[chainType]
-        currentArray.push(address)
-        addressBook.value[chainType] = currentArray
-      }
+    if (!addressBook.value.saved[chainType]) {
+      addressBook.value.saved[chainType] = []
+    }
+
+    const index = addressBook.value.saved[chainType].findIndex(
+      (_address: Address) => _address.address === address.address,
+    )
+    if (index === -1) {
+      addressBook.value.saved[chainType].push(address)
     } else {
-      addressBook.value[chainType] = [address]
+      addressBook.value.saved[chainType][index] = address
     }
   }
 
   const removeAddress = (adr: Address, chainType: string) => {
-    if (!addressBook.value[chainType]) return
-    const index = addressBook.value[chainType].findIndex(
+    if (!addressBook.value.saved[chainType]) return
+    const index = addressBook.value.saved[chainType].findIndex(
       (_address: Address) => _address.address === adr.address,
     )
     if (index !== -1) {
-      addressBook.value[chainType].splice(index, 1)
+      addressBook.value.saved[chainType].splice(index, 1)
     }
   }
 
   const editAddress = (address: Address, chainType: string) => {
-    if (!addressBook.value[chainType]) return
-    const index = addressBook.value[chainType].findIndex(
-      (_address: Address) => _address.address === address.address,
+    addAddress(address, chainType)
+  }
+
+  const addRecentAddress = (adr: Address, networkName?: string) => {
+    const netName = networkName || currentNetworkName.value
+    if (!addressBook.value.recent[netName]) {
+      addressBook.value.recent[netName] = []
+    }
+
+    const index = addressBook.value.recent[netName].findIndex(
+      item => item.address.toLowerCase() === adr.address.toLowerCase(),
+    )
+    //not found
+    if (index === -1) {
+      addressBook.value.recent[netName].unshift(adr)
+    } else {
+      //if found, remove it from the array
+      addressBook.value.recent[netName].splice(index, 1)
+      //and add it to the beginning of the array
+      addressBook.value.recent[netName].unshift(adr)
+    }
+
+    // Optional: limit to 20 recent addresses
+    if (addressBook.value.recent[netName].length > 20) {
+      addressBook.value.recent[netName].pop()
+    }
+  }
+
+  const removeRecentAddress = (adr: Address, networkName?: string) => {
+    const netName = networkName || currentNetworkName.value
+    if (!addressBook.value.recent[netName]) return
+    const index = addressBook.value.recent[netName].findIndex(
+      item => item.address.toLowerCase() === adr.address.toLowerCase(),
     )
     if (index !== -1) {
-      addressBook.value[chainType][index] = address
+      addressBook.value.recent[netName].splice(index, 1)
     }
   }
 
-  const addRecentAddress = (address: string) => {
-    if (recentLength.value > 0) {
-      const index =
-        recentAddresses.value[currentNetworkName.value].indexOf(address)
-      //not found
-      if (index === -1) {
-        recentAddresses.value[currentNetworkName.value].unshift(address)
-      } else {
-        //if found, remove it from the array
-        recentAddresses.value[currentNetworkName.value].splice(index, 1)
-        //and add it to the beginning of the array
-        recentAddresses.value[currentNetworkName.value].unshift(address)
-      }
-    } else {
-      recentAddresses.value[currentNetworkName.value] = [address]
-    }
-  }
-  const removeRecentAddress = (index: number) => {
-    recentAddresses.value[currentNetworkName.value].splice(index, 1)
-  }
-
-  const inAddressBook = (address: string, chainType: string): Address | string => {
-    const found = addressBook.value[chainType]?.find(entry => entry.address === address)
-    return (
-      found || ''
+  const inAddressBook = (
+    address: string,
+    chainType: string,
+  ): Address | string => {
+    const found = addressBook.value.saved[chainType]?.find(
+      entry => entry.address === address,
     )
+    return found || ''
   }
   return {
     /** AddressBook */
     addressBook,
-    // currentAddressBook,
-    // otherAddressBook,
     isAdrAdded,
     isNameAdded,
     addAddress,
@@ -148,7 +128,6 @@ export const useAddressBookStore = defineStore('addressBookStore', () => {
     editAddress,
     inAddressBook,
     /** RecentAddress */
-    recentAddresses,
     addRecentAddress,
     removeRecentAddress,
   }

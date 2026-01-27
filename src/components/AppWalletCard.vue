@@ -166,7 +166,7 @@ import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
-import { useRecentAddressStore } from '@/stores/recentAddressStore'
+import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 
 const { t } = useI18n()
@@ -269,7 +269,7 @@ const disconnectWallet = () => {
 }
 
 const deleteWallet = () => {
-  const recentAddressStore = useRecentAddressStore()
+  const recentAddressStore = useWatchOnlyStore()
 
   recentAddressStore.removeWallet(
     walletAddress.value as string,

@@ -7,9 +7,9 @@ export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
-import { fromBase } from '@/utils/unit'
+import { formatUnits } from 'viem'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
-import { useRecentAddressStore } from './recentAddressStore'
+import { useWatchOnlyStore } from './watchOnlyStore'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -67,7 +67,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   -------------------------------*/
   const setAddress = async () => {
     if (wallet.value) {
-      const { addWallet: _addWallet } = useRecentAddressStore()
+      const { addWallet: _addWallet } = useWatchOnlyStore()
       const { selectedChain } = storeToRefs(useChainsStore())
       walletAddress.value = await wallet.value.getAddress()
       _addWallet(
@@ -111,8 +111,8 @@ export const useWalletStore = defineStore('walletStore', () => {
     hasMissingBalances.value = false
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
-        const _balance = fromBase(
-          BigNumber(token.balance).toString(),
+        const _balance = formatUnits(
+          BigInt(token.balance),
           token.decimals || 18,
         )
         mainTokenBalance.value = {
@@ -133,10 +133,7 @@ export const useWalletStore = defineStore('walletStore', () => {
             name: token.name ?? 'Unknown',
             symbol: token.symbol ?? 'UNK',
             balanceWei: token.balance,
-            balance: fromBase(
-              BigNumber(token.balance).toFixed(),
-              token.decimals,
-            ),
+            balance: formatUnits(BigInt(token.balance), token.decimals),
           })
         } else {
           hasMissingBalances.value = true

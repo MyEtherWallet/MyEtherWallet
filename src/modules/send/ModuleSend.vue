@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { fromWei, toHex } from 'web3-utils'
+import { fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
@@ -96,7 +96,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { toBase, fromBase } from '@/utils/unit'
+import { parseUnits, formatUnits } from 'viem'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useAccessStore } from '@/stores/accessStore'
@@ -124,14 +124,14 @@ import { useAddressBookStore, type Address } from '@/stores/addressBook'
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
-const { inAddressBook, addAddress } = useAddressBookStore()
+const { inAddressBook, addRecentAddress } = useAddressBookStore()
 
 const chainsStore = useChainsStore()
 const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 const amount = ref<number | string>('0')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
-const gasPrice = ref('30000000000') // TODO: Implement gas price once api is ready
+const gasPrice = ref('0x0')
 const data = ref('0x')
 const gasFeeTxEstimate = ref<
   EstimatesRequestBody | GetBtcTransactionEstimateBody | undefined
@@ -183,14 +183,12 @@ const tokenSelected = computed(() => {
 const checkAmountForError = () => {
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
 
-  const baseTokenBalance = BigInt(
-    toBase(
-      tokenSelected.value?.balance || '0',
-      tokenSelected.value?.decimals ?? 18,
-    ),
+  const baseTokenBalance = parseUnits(
+    tokenSelected.value?.balance || '0',
+    tokenSelected.value?.decimals ?? 18,
   )
   const baseAmount = amount.value
-    ? BigInt(toBase(amount.value, tokenSelected.value?.decimals ?? 18))
+    ? parseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -227,7 +225,7 @@ const networkFeeCrypto = computed(() => {
   const nativeValue = _fee?.nativeValue || _fee?.nativeFeeTotal || '0'
   return isEvmChain.value
     ? fromWei(nativeValue, 'ether')
-    : fromBase(nativeValue, 8)
+    : formatUnits(BigInt(nativeValue), 8)
 })
 
 const validSend = computed(() => {
@@ -259,10 +257,11 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  const amountBase = BigInt(
-    toBase(Number(amount.value), tokenSelected.value?.decimals ?? 18),
+  const amountBase = parseUnits(
+    amount.value.toString(),
+    tokenSelected.value?.decimals ?? 18,
   )
-  return data.value === '0x' ? (toHex(amountBase) as HexPrefixedString) : '0x0'
+  return data.value === '0x' ? `0x${amountBase.toString(16)}` : '0x0'
 })
 
 const getTxRequestBody = ():
@@ -283,7 +282,10 @@ const getTxRequestBody = ():
         data.value = web3Contract.methods
           .transfer(
             toAddress.value,
-            toBase(amount.value, tokenSelected.value?.decimals ?? 18),
+            parseUnits(
+              amount.value.toString(),
+              tokenSelected.value?.decimals ?? 18,
+            ).toString(),
           )
           .encodeABI() //
       } else {
@@ -306,7 +308,7 @@ const getTxRequestBody = ():
         outputs: [
           {
             address: toAddress.value ?? '',
-            amount: toBase(amount.value, 8),
+            amount: parseUnits(amount.value.toString(), 8).toString(),
           },
         ],
       }
@@ -340,15 +342,14 @@ const resetSendModule = () => {
 }
 
 const saveToAddressBookAfterSending = () => {
-  const name = foundNickName.value // if address not in address book, name will be ''
-  if (name === '') {
+  if (toAddress.value) {
     const newAddress: Address = {
       address: toAddress.value || '',
-      name: '', // TODO: generate default name like 'Address 1'
+      name: '',
       chainName: selectedChain.value?.name || '',
       chainType: selectedChain.value?.type || '',
     }
-    addAddress(newAddress, selectedChain.value?.type || '')
+    addRecentAddress(newAddress, selectedChain.value?.name)
   }
   resetSendModule()
 }

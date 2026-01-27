@@ -325,6 +325,12 @@ const goBack = () => {
 const toastStore = useToastStore()
 const { t } = useI18n()
 
+const sanitizeErrorMessage = (e: string) => {
+  if (e.toLowerCase().includes('rejected'))
+    return 'User rejected the transaction'
+  return e
+}
+
 const confirmTransaction = async () => {
   try {
     //TO: show message that wallet is not connected
@@ -373,9 +379,9 @@ const confirmTransaction = async () => {
           type: ToastType.Error,
           text:
             e instanceof Error
-              ? e.message
+              ? sanitizeErrorMessage(e.message)
               : typeof e === 'string'
-                ? e
+                ? sanitizeErrorMessage(e)
                 : t('send.toast.tx-send-failed'),
         })
       })
