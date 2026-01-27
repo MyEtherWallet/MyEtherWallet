@@ -183,7 +183,7 @@ class OneInchFusion {
     return false
   }
 
-  async setPermit2Approval(fromAddress: string, tokenAddress: string) {
+  async setApproval(fromAddress: string, tokenAddress: string) {
     const tx = await prepareTransactionRequest(this.publicClient, {
       data: encodeFunctionData({
         abi: erc20Abi,
