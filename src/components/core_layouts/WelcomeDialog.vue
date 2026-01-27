@@ -9,12 +9,15 @@
         <div class="flex flex-row mb-4">
           <div class="xs:min-w-[320px] max-w-[400px]">
             <p class="text-s-16 max-w-[600px] text-info">
-              You are among the first to explore our Alpha version of the
-              platform. Please keep in mind that this is an early version—some
-              features may be incomplete or not working as expected. We are
-              constantly improving.
+              Welcome to the Beta version of our platform, featuring stock
+              trading and exciting new capabilities.
             </p>
-            <p class="text-s-16 mt-1 mb-6 text-info">Stay tuned for updates!</p>
+            <p class="text-s-16 max-w-[600px] text-info mt-2">
+              You are getting early access to what we are building, and while
+              some features are still being refined, we are actively enhancing
+              the experience to bring you powerful, reliable tools.
+            </p>
+            <p class="text-s-16 mt-2 mb-6 text-info">Stay tuned for updates!</p>
           </div>
           <div class="max-w-[156px] rounded-16 flex items-center justify-end">
             <img
