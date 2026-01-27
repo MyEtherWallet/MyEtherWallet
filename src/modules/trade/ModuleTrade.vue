@@ -123,6 +123,9 @@
       :order-hash="orderHash"
       :from-chain="selectedFromChain"
     />
+
+    <!-- Floating Order Status -->
+    <trade-order-status ref="orderStatusRef" />
   </div>
 </template>
 
@@ -140,6 +143,7 @@ import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
+import TradeOrderStatus from './components/TradeOrderStatus.vue'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -191,6 +195,7 @@ const quoteModalOpen = ref(false)
 const tradeInitiatedOpen = ref(false)
 const txProceeding = ref(false)
 const orderHash = ref<string>('')
+const orderStatusRef = ref<InstanceType<typeof TradeOrderStatus> | null>(null)
 
 const currentQuote = ref<{
   startAmount: bigint
@@ -220,6 +225,15 @@ const toTokens = computed(() => {
   if (!tradableAssets.value || !selectedFromChain.value)
     return [] as NewTokenInfo[]
   const chainName = selectedFromChain.value.name.toUpperCase()
+
+  // Create a lookup map from fromTokens by address (lowercase for comparison)
+  const fromTokensMap = new Map<string, NewTokenInfo>()
+  for (const token of fromTokens.value) {
+    if (token.address) {
+      fromTokensMap.set(token.address.toLowerCase(), token)
+    }
+  }
+
   return tradableAssets.value
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
@@ -228,20 +242,27 @@ const toTokens = computed(() => {
       const addressInfo = asset.addresses.find(
         addr => addr.chainName?.toUpperCase() === chainName,
       )
+      const tokenAddress = addressInfo?.address || ''
+
+      // Check if this token exists in fromTokens to get enriched data
+      const matchingFromToken = tokenAddress
+        ? fromTokensMap.get(tokenAddress.toLowerCase())
+        : undefined
+      console.log(matchingFromToken)
       return {
         name: asset.stockAlias || asset.symbol,
         symbol: asset.symbol,
         decimals: addressInfo?.decimals || 18,
-        address: addressInfo?.address || '',
+        address: tokenAddress,
         logoURI: asset.iconPngUrl || asset.iconSvgUrl || '',
-        cgId: '',
+        cgId: matchingFromToken?.cgId || '',
         type: 'erc20',
-        rank: 0,
-        balance: '0',
-        price: 0,
+        rank: matchingFromToken?.rank || 0,
+        balance: matchingFromToken?.balance || '0',
+        price: matchingFromToken?.price || 0,
         networkInfo: {
           name: chainName.toLowerCase(),
-          isAddress: addressInfo?.address || '',
+          isAddress: tokenAddress,
         },
       }
     }) as unknown as NewTokenInfo[]
@@ -368,6 +389,40 @@ const confirmTrade = async () => {
     orderHash.value = result.hash
     quoteModalOpen.value = false
     tradeInitiatedOpen.value = true
+
+    // Add order to floating status tracker
+    if (orderStatusRef.value) {
+      const toDecimals = toTokenSelected.value.decimals || 18
+      const expectedToAmount = formatFloatingPointValue(
+        formatUnits(
+          currentQuote.value?.avgAmount ||
+            currentQuote.value?.startAmount ||
+            0n,
+          toDecimals,
+        ),
+      ).value
+
+      orderStatusRef.value.addOrder({
+        hash: result.hash,
+        status: 'pending',
+        fromAmount: fromAmount.value,
+        fromSymbol: fromTokenSelected.value.symbol,
+        fromDecimals: fromTokenSelected.value.decimals || 18,
+        expectedToAmount,
+        toSymbol: toTokenSelected.value.symbol,
+        toDecimals: toTokenSelected.value.decimals || 18,
+        createdAt: Math.floor(Date.now() / 1000),
+        duration: 180, // Default 3 minutes, will be updated from status
+        fills: [],
+        usdValue: fromTokenSelected.value.price
+          ? (
+              parseFloat(fromAmount.value) * fromTokenSelected.value.price
+            ).toFixed(2)
+          : undefined,
+        chainId,
+        fromAddress: walletAddress.value!,
+      })
+    }
 
     toastStore.addToastMessage({
       text: 'Trade order submitted successfully!',

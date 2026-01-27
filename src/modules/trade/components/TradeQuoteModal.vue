@@ -5,7 +5,7 @@
     class="sm:max-w-[460px] sm:mx-auto"
   >
     <template #content>
-      <div class="mx-4 mb-2">
+      <div class="mx-4 mb-4 pb-2">
         <div
           class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
         >
