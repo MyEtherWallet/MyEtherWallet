@@ -109,13 +109,13 @@
           <bell-icon class="w-6 h-6" />
         </app-btn-icon>
         <!-- Settings Button -->
-        <app-btn-icon
+        <!-- <app-btn-icon
           v-if="!showMobileMenu"
           :label="$t('menu.open-settings')"
           @click="btnClick"
         >
           <cog-icon class="w-6 h-6" />
-        </app-btn-icon>
+        </app-btn-icon> -->
       </div>
     </div>
   </div>
@@ -127,7 +127,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
-import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { BellIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
