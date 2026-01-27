@@ -13,10 +13,7 @@
         <app-tooltip :text="i.name">
           <router-link
             v-if="i.id"
-            :to="{
-              name: TOKEN_INFO_ROUTE_NAMES.home,
-              params: { tokenId: i.id || i.symbol },
-            }"
+            :to="getTokenRouteParams(i)"
             class="text-s-14 font-medium truncate hover:text-primary transition-colors block max-w-[80px]"
             >{{ truncate(i.symbol, 10) }}</router-link
           >
@@ -41,7 +38,10 @@ import {
   type TokenAllocation,
   ALLOCATION_COLORS,
 } from '@/modules/portfolio/types'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import {
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 defineProps({
   /**
    * @title The title of the dialog, not required
@@ -61,5 +61,18 @@ const getBGColor = (index: number) => {
   return index > ALLOCATION_COLORS.length - 1
     ? ALLOCATION_COLORS[ALLOCATION_COLORS.length - 1]
     : ALLOCATION_COLORS[index]
+}
+
+const getTokenRouteParams = (token: TokenAllocation) => {
+  if (token.stock_route) {
+    return {
+      name: STOCK_INFO_ROUTE_NAMES.home,
+      params: { symbol: token.stock_route },
+    }
+  }
+  return {
+    name: TOKEN_INFO_ROUTE_NAMES.home,
+    params: { tokenId: token.id || token.symbol },
+  }
 }
 </script>

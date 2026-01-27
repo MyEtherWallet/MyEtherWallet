@@ -1,36 +1,35 @@
 <template>
   <div>
-    <hr
-      v-if="!isLoading && tokenData?.supportedChains?.length"
-      class="h-px bg-grey-10 border-0 w-full my-5"
-    />
     <!-- Supported Chains -->
     <div
-      v-if="!isLoading && tokenData?.supportedChains?.length"
-      class="px-2 xs:px-5 md:px-3 lg:px-9 mb-5"
+      v-if="!isLoading && supportedChains?.length"
+      :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
     >
-      <h3 class="text-s-20 font-bold mb-2 px-1">Supported Chains</h3>
-      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar px-1">
+      <h3 class="text-s-20 xs:text-s-24 font-bold mb-2">Supported Chains</h3>
+      <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
         <div
-          v-for="i in tokenData.supportedChains"
+          v-for="i in supportedChains"
           :key="i.chainName"
-          class="flex items-center justify-between py-3 border-b border-grey-5 last:border-0"
+          class="flex items-center justify-start py-3 -ml-1 pl-1 gap-5"
         >
           <div class="flex items-center">
             <div class="relative mr-4 shrink-0">
               <app-token-logo
                 :url="i.iconUrl"
                 :symbol="i.chainName"
-                width="w-10"
-                height="h-10"
+                width="w-7 xl:w-9"
+                height="h-7 xl:h-9"
               />
-              <app-token-logo
-                :url="tokenData.iconUrl"
-                :symbol="tokenData.symbol"
-                width="w-5"
-                height="h-5"
-                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 border-1 border-white rounded-full bg-white"
-              />
+              <div
+                class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
+              >
+                <app-token-logo
+                  :url="tokenIconUrl"
+                  :symbol="tokenSymbol"
+                  width="w-4 xl:w-5"
+                  height="h-4 xl:h-5"
+                />
+              </div>
             </div>
             <div class="flex flex-col min-w-0">
               <h4 class="text-s-16 font-medium truncate">
@@ -59,10 +58,10 @@
           </div>
           <div
             v-if="selectedChain?.name === i.chainName"
-            class="shrink-0 flex items-center bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20"
+            class="shrink-0 flex items-center bg-primary/10 px-[6px] py-1 rounded-full border border-primary/20"
           >
             <span
-              class="uppercase text-[10px] font-bold text-primary leading-none"
+              class="uppercase text-[8px] font-bold text-primary leading-none tracking-sp-06"
             >
               current chain
             </span>
@@ -80,7 +79,10 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { truncateAddress } from '@/utils/filters'
-import { type GetWebTokenInfo } from '@/mew_api/types'
+import { type TokenSupportedChain } from '@/mew_api/types'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 defineProps({
   isLoading: {
@@ -88,9 +90,15 @@ defineProps({
     required: true,
     default: true,
   },
-  tokenData: {
-    type: Object as PropType<GetWebTokenInfo | null>,
+  supportedChains: {
+    type: Array as PropType<TokenSupportedChain[] | undefined>,
     required: false,
+  },
+  tokenSymbol: {
+    type: String,
+  },
+  tokenIconUrl: {
+    type: String,
   },
 })
 

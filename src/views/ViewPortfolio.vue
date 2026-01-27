@@ -18,8 +18,10 @@
       <portfolio-history
         v-if="isLoadingBalances || hasBalances"
         :class="[
-          isOpenSideMenu ? '2xl:col-span-1' : '',
-          'col-span-1 md:col-span-2 lg-max:col-span-1 lg-max:order-2 h-full',
+          isOpenSideMenu
+            ? '2xl:col-span-1 lg-max:col-span-2'
+            : 'lg-max:col-span-1',
+          'col-span-1 md:col-span-2  lg-max:order-2 h-full',
         ]"
       />
       <no-balance

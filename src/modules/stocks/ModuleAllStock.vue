@@ -249,9 +249,9 @@
                 <td class="px-1 py-2 rounded-l-12 sm:rounded-none">
                   <router-link
                     :to="{
-                      name: TOKEN_INFO_ROUTE_NAMES.crypto,
+                      name: STOCK_INFO_ROUTE_NAMES.stocks,
                       params: {
-                        tokenId: token.coinId,
+                        symbol: token.symbol,
                       },
                     }"
                     class="flex items-center gap-3"
@@ -553,7 +553,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
@@ -962,8 +962,8 @@ const router = useRouter()
 
 const goToTokenPage = (token: DisplayToken) => {
   router.push({
-    name: TOKEN_INFO_ROUTE_NAMES.crypto,
-    params: { tokenId: token.coinId },
+    name: STOCK_INFO_ROUTE_NAMES.stocks,
+    params: { symbol: token.symbol },
   })
 }
 </script>

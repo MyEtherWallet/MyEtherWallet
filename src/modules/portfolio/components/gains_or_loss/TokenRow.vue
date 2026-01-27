@@ -1,13 +1,5 @@
 <template>
-  <router-link
-    :to="{
-      name: TOKEN_INFO_ROUTE_NAMES.home,
-      params: {
-        tokenId: token.id,
-      },
-    }"
-    class="flex"
-  >
+  <router-link :to="routeParams" class="flex">
     <div
       class="w-full mb-1 py-1.5 hoverBGWhite cursor-pointer rounded-12 px-1 xs:px-3 transition-colors duration-200"
     >
@@ -23,18 +15,18 @@
               :symbol="token.symbol"
               :is-stock="token.is_stock"
             />
-            <app-tooltip :text="token.name" v-if="token.name.length > 20">
+            <app-tooltip :text="name" v-if="name.length > 20">
               <p
                 class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
               >
-                {{ token.stock_alias || token.name }}
+                {{ name }}
               </p>
             </app-tooltip>
             <p
               v-else
               class="hidden xs:block text-s-12 text-info truncate mt-0.5 max-w-[120px] md:max-w-[150px] lg:max-w-[200px]"
             >
-              {{ token.name }}
+              {{ name }}
             </p>
           </div>
         </div>
@@ -83,9 +75,29 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { type TokenGainOrLoss } from '@/modules/portfolio/types'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
-
-defineProps<{
+import {
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
+import { computed } from 'vue'
+const props = defineProps<{
   token: TokenGainOrLoss
 }>()
+
+const name = computed(() => {
+  return props.token.stock_alias ? props.token.stock_alias : props.token.name
+})
+
+const routeParams = computed(() => {
+  if (props.token.stock_route) {
+    return {
+      name: STOCK_INFO_ROUTE_NAMES.home,
+      params: { symbol: props.token.stock_route },
+    }
+  }
+  return {
+    name: TOKEN_INFO_ROUTE_NAMES.home,
+    params: { tokenId: props.token.id },
+  }
+})
 </script>

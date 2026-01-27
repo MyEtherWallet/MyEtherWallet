@@ -76,6 +76,7 @@
                 v-for="token in searchResults"
                 :key="token.symbol + token.id"
                 class="w-full flex items-center justify-between p-2 rounded-16 hover:bg-grey-5"
+                @click="routeToToken(token)"
               >
                 <div class="flex justify-between items-center w-full">
                   <div class="flex items-center">
@@ -127,6 +128,11 @@ import { computed, ref } from 'vue'
 import { type TokenAllocation } from '@/modules/portfolio/types'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
+import { useRouter } from 'vue-router'
+import {
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 
 const props = defineProps<{
   /**
@@ -224,4 +230,23 @@ const searchResults = computed<TokenAllocation[]>(() => {
     searchInput.value,
   )
 })
+
+/**
+ * Route to Token
+ */
+const router = useRouter()
+const routeToToken = (token: TokenAllocation) => {
+  openDialog.value = false
+  if (token.stock_route) {
+    router.push({
+      name: STOCK_INFO_ROUTE_NAMES.home,
+      params: { symbol: token.stock_route },
+    })
+  } else {
+    router.push({
+      name: TOKEN_INFO_ROUTE_NAMES.home,
+      params: { tokenId: token.id || token.symbol },
+    })
+  }
+}
 </script>

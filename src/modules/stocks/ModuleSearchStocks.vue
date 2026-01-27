@@ -15,17 +15,18 @@
       </div>
       <div class="flex items-center justify-center flex-col">
         <div
+          ref="focusTarget"
           class="flex grow gap-4 justify-between items-center p-[6px] bg-surface !w-full md:w-auto max-w-[500px] rounded-full relative"
         >
           <app-search-input
-            ref="focusTarget"
             v-model="searchInput"
             class="grow"
             placeholder="Search stock name or ticker"
+            @keyup.enter="handleEnter"
           />
           <transition name="fade" mode="out-in">
             <div
-              v-if="focused"
+              v-if="showDropdown"
               class="absolute bottom-[-4px] left-[5px] z-10 w-full max-w-[calc(100%-10px)] bg-white rounded-20 shadow-2xl border-surface border-1 px-2 py-4 translate-y-full overflow-y-auto max-h-[300px] overflow-y-auto"
             >
               <transition name="fade" mode="out-in">
@@ -59,7 +60,11 @@
                     v-if="results.length && searchInput !== ''"
                     class="flex flex-col gap-1"
                   >
-                    <button
+                    <router-link
+                      :to="{
+                        name: STOCK_INFO_ROUTE_NAMES.stocks,
+                        params: { symbol: stock.primaryMarket.symbol },
+                      }"
                       v-for="(stock, i) in results"
                       :key="stock.primaryMarket.symbol"
                       class="w-full flex items-center gap-3 hoverNoBG rounded-12 py-2 px-3 text-left"
@@ -110,7 +115,7 @@
                           }}
                         </p>
                       </div>
-                    </button>
+                    </router-link>
                   </div>
                   <p
                     v-if="showNoDataMessage"
@@ -164,24 +169,31 @@
                       <div
                         class="flex items-center justify-start gap-1 flex-wrap mb-2"
                       >
-                        <button
+                        <div
                           v-for="(stock, i) in trendingTokens.slice(0, 4)"
                           :key="i"
-                          class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
                         >
-                          <app-token-logo
-                            :symbol="stock.primaryMarket.symbol"
-                            :url="stock.iconPngUrl || stock.iconSvgUrl"
-                            height="w-6"
-                            width="w-6"
-                            class="mr-1 text-s-12"
-                            :is-stock="true"
-                          />
-                          <app-token-symbol
-                            :symbol="stock.primaryMarket.symbol"
-                            :is-stock="true"
-                          />
-                        </button>
+                          <router-link
+                            :to="{
+                              name: STOCK_INFO_ROUTE_NAMES.stocks,
+                              params: { symbol: stock.primaryMarket.symbol },
+                            }"
+                            class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+                          >
+                            <app-token-logo
+                              :symbol="stock.primaryMarket.symbol"
+                              :url="stock.iconPngUrl || stock.iconSvgUrl"
+                              height="w-6"
+                              width="w-6"
+                              class="mr-1 text-s-12"
+                              :is-stock="true"
+                            />
+                            <app-token-symbol
+                              :symbol="stock.primaryMarket.symbol"
+                              :is-stock="true"
+                            />
+                          </router-link>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -192,24 +204,28 @@
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
           <p class="font-semibold text-s-14">Trending:</p>
-          <button
-            v-for="(stock, i) in trendingTokens.slice(0, 4)"
-            :key="i"
-            class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
-          >
-            <app-token-logo
-              :symbol="stock.primaryMarket.symbol"
-              :url="stock.iconPngUrl || stock.iconSvgUrl"
-              height="h-6"
-              width="w-6"
-              class="mr-1 text-s-12"
-              :is-stock="true"
-            />
-            <app-token-symbol
-              :symbol="stock.primaryMarket.symbol"
-              :is-stock="true"
-            />
-          </button>
+          <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
+            <router-link
+              :to="{
+                name: STOCK_INFO_ROUTE_NAMES.stocks,
+                params: { symbol: stock.primaryMarket.symbol },
+              }"
+              class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+            >
+              <app-token-logo
+                :symbol="stock.primaryMarket.symbol"
+                :url="stock.iconPngUrl || stock.iconSvgUrl"
+                height="h-6"
+                width="w-6"
+                class="mr-1 text-s-12"
+                :is-stock="true"
+              />
+              <app-token-symbol
+                :symbol="stock.primaryMarket.symbol"
+                :is-stock="true"
+              />
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -224,6 +240,7 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   formatFiatValue,
   formatPercentageValue,
@@ -233,7 +250,7 @@ import { useStocksStore } from '@/stores/stocksStore'
 import { storeToRefs } from 'pinia'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
-
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)
 
@@ -290,4 +307,18 @@ watchDebounced(
   },
   { debounce: 500 },
 )
+/**-----------------
+ * Route to Stock Info
+ ------------------*/
+
+const router = useRouter()
+const handleEnter = () => {
+  if (results.value.length > 0) {
+    router.push({
+      name: STOCK_INFO_ROUTE_NAMES.stocks,
+      params: { symbol: results.value[0].primaryMarket.symbol },
+    })
+    searchInput.value = ''
+  }
+}
 </script>

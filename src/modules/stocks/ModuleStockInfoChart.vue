@@ -58,14 +58,14 @@ import ChartPrice from '@/components/ChartPrice.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type {
-  GetWebTokenPriceChartByCoinResponse,
-  GetWebTokenPriceChartPoint,
-  WebTokenPriceChartInterval,
+  GetWebStocksInfoPrimaryPriceChartResponse,
+  StockChartPoint,
+  StockPriceChartInterval,
 } from '@/mew_api/types'
 import { useIntervalFn } from '@vueuse/core'
 
 const props = defineProps({
-  tokenId: {
+  symbol: {
     type: String,
     required: true,
   },
@@ -78,7 +78,7 @@ const { isXS } = useAppBreakpoints()
 
 interface Item {
   label: string
-  value: WebTokenPriceChartInterval
+  value: StockPriceChartInterval
 }
 const chartFilterOptions = ref<Item[]>([
   { label: '1d', value: '1D' },
@@ -95,9 +95,9 @@ const selectedChartFilter = ref(chartFilterOptions.value[0])
  * FetchData
  --------------------*/
 
-const storeData = ref<
-  Map<WebTokenPriceChartInterval, GetWebTokenPriceChartPoint[]>
->(new Map())
+const storeData = ref<Map<StockPriceChartInterval, StockChartPoint[]>>(
+  new Map(),
+)
 
 /**
  * Clear cache every 5 minutes
@@ -128,10 +128,10 @@ const labels = computed<number[]>(() => {
   )
 })
 
-const endpoint = computed(() => {
-  return `/v1/web/token-price-chart/coins/${props.tokenId}?interval=${selectedChartFilter.value.value}`
-})
-
+const endpoint = computed(
+  () =>
+    `/v1/web/pages/stocks-info/stocks/${props.symbol}/primary-price-chart/?interval=${selectedChartFilter.value.value}`,
+)
 const refetch = computed(() => {
   return !storeData.value.has(selectedChartFilter.value.value)
 })
@@ -146,7 +146,7 @@ const {
   onFetchError,
 } = useMEWFetch(endpoint, { refetch: refetch })
   .get()
-  .json<GetWebTokenPriceChartByCoinResponse>()
+  .json<GetWebStocksInfoPrimaryPriceChartResponse>()
 
 onFetchError(() => {
   notAvailable.value = true

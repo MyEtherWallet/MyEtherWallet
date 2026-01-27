@@ -604,7 +604,10 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import {
+  TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO_ROUTE_NAMES,
+} from '@/router/routeNames'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useInputStore } from '@/stores/inputStore'
@@ -1053,9 +1056,17 @@ const getSparkLinePoints = (token: DisplayToken) => {
 const router = useRouter()
 
 const goToTokenPage = (token: DisplayToken) => {
-  router.push({
-    name: TOKEN_INFO_ROUTE_NAMES.crypto,
-    params: { tokenId: token.coinId },
-  })
+  if (token.ondo !== null && token.ondo.primaryMarket.symbol) {
+    router.push({
+      name: STOCK_INFO_ROUTE_NAMES.crypto,
+      params: { symbol: token.ondo.primaryMarket.symbol },
+    })
+    return
+  } else {
+    router.push({
+      name: TOKEN_INFO_ROUTE_NAMES.crypto,
+      params: { tokenId: token.coinId },
+    })
+  }
 }
 </script>
