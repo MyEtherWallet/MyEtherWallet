@@ -1,12 +1,5 @@
 <template>
-  <div
-    v-if="
-      isWalletConnected &&
-      tokenSymbol &&
-      !isLoading &&
-      chainBalances !== undefined
-    "
-  >
+  <div v-if="isWalletConnected && tokenSymbol && chainBalances !== undefined">
     <!--Current Chain balance -->
 
     <div
@@ -19,7 +12,7 @@
       >
         Your Balance:
       </h2>
-      <div class="flex mt-1 xs:items-center">
+      <div v-if="!isLoading" class="flex mt-1 xs:items-center">
         <div class="relative">
           <app-token-logo
             :url="tokenIconUrl"
@@ -56,6 +49,10 @@
           </p>
         </div>
       </div>
+      <div
+        v-else
+        class="h-[42px] animate-pulse bg-surface rounded-xl w-[200px]"
+      ></div>
     </div>
     <hr
       v-if="otherChains.length > 0"
@@ -64,7 +61,7 @@
 
     <!-- Balance on other chains -->
     <div
-      v-if="otherChains.length > 0"
+      v-if="otherChains.length > 0 && !isLoading"
       :class="[
         isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10',
         'px-4 pt-6 max-w-[600px]',

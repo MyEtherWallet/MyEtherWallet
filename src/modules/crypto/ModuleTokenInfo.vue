@@ -121,7 +121,7 @@
     <!-- Supported Chains -->
     <token-info-supported-chains
       v-if="!isLoading"
-      :is-loading="isLoading"
+      :is-loading="isFetching"
       :token-icon-url="tokenData?.iconUrl || undefined"
       :token-symbol="tokenData?.symbol || undefined"
       :supported-chains="tokenData?.supportedChains"
@@ -181,6 +181,11 @@ const { storeSwapValues } = inputStore
 /** --------------------
  * Fetch Data
  --------------------*/
+/**
+ * Used to store fetched token data locally when switching between addresses
+ */
+const tokenLocalStore = ref<GetWebTokenInfo | undefined>(undefined)
+
 const endpoint = computed(() => {
   const wallet =
     isWalletConnected.value && walletAddress.value
@@ -193,9 +198,10 @@ const isLoadedData = ref(false)
 const { useMEWFetch } = useFetchMewApi()
 const {
   data: fetchedTokenData,
+  isFetching,
   onFetchResponse,
   onFetchError,
-} = useMEWFetch(endpoint).get().json<GetWebTokenInfo>()
+} = useMEWFetch(endpoint, { refetch: true }).get().json<GetWebTokenInfo>()
 
 onFetchError(() => {
   isLoadedData.value = true
@@ -230,6 +236,7 @@ onFetchResponse(() => {
   } else {
     walletMenu.setWalletPanel('swap')
   }
+  tokenLocalStore.value = fetchedTokenData.value
   isLoadedData.value = true
 })
 
@@ -255,9 +262,9 @@ const existsOnCurrentChain = computed(() => {
 const tokenData = computed(() => {
   const store = useTokenInfoStore()
   const { tokenInfo } = storeToRefs(store)
-  if (!fetchedTokenData.value && !tokenInfo.value) return null
-  if (fetchedTokenData.value) {
-    return fetchedTokenData.value
+  if (!tokenLocalStore.value && !tokenInfo.value) return null
+  if (tokenLocalStore.value) {
+    return tokenLocalStore.value
   }
   const isInStore =
     tokenInfo.value?.symbol === props.tokenId ||

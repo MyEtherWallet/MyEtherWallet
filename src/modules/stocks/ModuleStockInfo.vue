@@ -114,7 +114,8 @@
         <ModuleStockInfoChart :symbol="symbol" />
       </div>
       <token-info-balance
-        :is-loading="isLoading"
+        v-if="!isLoading"
+        :is-loading="isFetching"
         :chain-balances="stockData?.chainBalances"
         :token-icon-url="
           stockData?.iconPngUrl || stockData?.iconSvgUrl || undefined
@@ -157,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -197,6 +198,10 @@ const { isOpenSideMenu } = storeToRefs(walletMenu)
 /**--------------------
  * Fetch Stock Summary Data
  ---------------------*/
+/**
+ * Used to store fetched token data locally when switching between addresses
+ */
+const stockData = ref<GetWebStocksInfoSummaryResponse | undefined>(undefined)
 
 const walletStore = useWalletStore()
 const { walletAddress } = storeToRefs(walletStore)
@@ -209,12 +214,30 @@ const fetchUrl = computed(() => {
   return base
 })
 
-const { data: stockData, isFetching: isLoading } = useMEWFetch(fetchUrl, {
-  refetch: true,
-})
+const isLoadedData = ref(false)
+const { data, isFetching, onFetchError, onFetchResponse } = useMEWFetch(
+  fetchUrl,
+  {
+    refetch: true,
+  },
+)
   .get()
   .json<GetWebStocksInfoSummaryResponse>()
 
+onFetchResponse(() => {
+  if (data.value) {
+    isLoadedData.value = true
+    stockData.value = data.value
+  }
+})
+
+onFetchError(() => {
+  isLoadedData.value = true
+})
+
+const isLoading = computed(() => {
+  return !isLoadedData.value
+})
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
