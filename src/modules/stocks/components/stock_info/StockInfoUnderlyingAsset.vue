@@ -180,7 +180,7 @@ const sharesOutstandingFormatted = computed(() => {
     const shares = new BigNumber(props.asset?.sharesOutstanding).toFixed(0)
     return formatIntegerValue(new BigNumber(shares)).value
   }
-  return ''
+  return '-'
 })
 
 const dividendYieldFormatted = computed(() => {

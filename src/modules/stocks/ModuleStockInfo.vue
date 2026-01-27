@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex flex-col mb-10 grid grid-cols-1 w-full divide-y divide-grey-10"
-  >
+  <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
     <div class="pb-3 xs:pb-5">
       <!-- Header: Share and Watchlist (Placeholders) -->
       <div
@@ -18,7 +16,7 @@
       <!-- Stock info: Logo, Name, Price -->
       <div
         v-if="isLoading || !stockData"
-        class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[64px] xs:h-[80px] lg:h-[65px] animate-pulse bg-surface rounded-12 w-[60%]"
+        class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface rounded-12 w-[60%]"
       ></div>
       <div
         v-else

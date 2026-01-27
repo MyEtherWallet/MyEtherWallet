@@ -66,7 +66,7 @@
           Underlying Asset
         </h3>
         <div
-          class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6 2xl: pb-6"
+          class="grid grid-cols-1 xs:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-6"
         >
           <div class="flex flex-col gap-1">
             <p class="text-s-11 text-info uppercase tracking-sp-06 font-bold">

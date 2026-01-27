@@ -63,7 +63,7 @@
           </div>
           <p v-else>-</p>
         </div>
-        <div class="xcol-span-1">
+        <div class="col-span-1">
           <p
             class="text-s-11 text-info uppercase tracking-sp-06 font-bold mb-1"
           >

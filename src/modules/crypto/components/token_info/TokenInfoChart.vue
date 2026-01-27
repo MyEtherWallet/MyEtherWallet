@@ -107,7 +107,7 @@ const { pause, isActive } = useIntervalFn(() => {
 }, 300000) // 5 min
 
 onBeforeUnmount(() => {
-  if (isActive) {
+  if (isActive.value) {
     pause()
   }
 })

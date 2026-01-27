@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="flex flex-col xs:flex-row xs:items-center ml-3 xs:ml-2">
-          <div class="flex item-center">
+          <div class="flex items-center">
             <p class="text-s-17 xs:text-s-24 font-bold leading-p-110">
               {{ currentBalance }}
             </p>
