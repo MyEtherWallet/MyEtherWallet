@@ -61,7 +61,7 @@
               {{ data.metadata.instrumentType }}
             </div>
           </div>
-          <p v-else>-</p>
+          <p v-else class="text-s-16 font-medium">-</p>
         </div>
         <div class="col-span-1">
           <p
@@ -80,6 +80,7 @@
             }}
             {{ data.stockAlias }}
           </p>
+          <p v-else class="text-s-16 font-medium">-</p>
         </div>
         <div>
           <p
