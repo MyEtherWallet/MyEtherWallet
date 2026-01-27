@@ -1,15 +1,24 @@
 import { mainnet, bsc, type Chain } from 'viem/chains'
 
-const SUPPORTED_CHAINS: Chain[] = [mainnet, bsc]
-const BLOCK_EXPLORERS = {
-  [mainnet.id]: 'https://etherscan.io/',
-  [bsc.id]: 'https://bscscan.com/',
-}
-
-const NODE_URLS = {
-  [mainnet.id]: 'https://nodes.mewapi.io/rpc/eth',
-  [bsc.id]: 'https://nodes.mewapi.io/rpc/bsc',
-}
+const SUPPORTED_CHAINS: {
+  chain: Chain
+  node: string
+  chainId: number
+  chainName: string
+}[] = [
+  {
+    chain: mainnet,
+    chainId: mainnet.id,
+    node: 'https://nodes.mewapi.io/rpc/eth',
+    chainName: 'ETHEREUM',
+  },
+  {
+    chain: bsc,
+    chainId: bsc.id,
+    node: 'https://nodes.mewapi.io/rpc/bsc',
+    chainName: 'BSC',
+  },
+]
 
 const NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
@@ -18,9 +27,7 @@ const COW_APPROVAL_ADDRESS = '0xC92E8bdf79f0507f65a392b0ab4667716BFE0110'
 
 export {
   SUPPORTED_CHAINS,
-  BLOCK_EXPLORERS,
   ONEINCH_APPROVAL_ADDRESS,
   NATIVE_ADDRESS,
   COW_APPROVAL_ADDRESS,
-  NODE_URLS,
 }

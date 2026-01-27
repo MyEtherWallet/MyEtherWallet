@@ -22,14 +22,13 @@ import {
 } from 'viem'
 import {
   NATIVE_ADDRESS,
-  NODE_URLS,
   ONEINCH_APPROVAL_ADDRESS,
   SUPPORTED_CHAINS,
 } from './configs'
-import { bsc, mainnet } from 'viem/chains'
 import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
+import type { GetTradableAssetsResponse } from '@/mew_api/types'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
@@ -50,16 +49,26 @@ class OneInchFusion {
   private publicClient: PublicClient
   private chain: Chain
   private wallet: BaseEvmWallet
+
+  public static getSupportedChainNames() {
+    return SUPPORTED_CHAINS.map(sc => sc.chainName)
+  }
+
+  public static async getTradableAssets(): Promise<GetTradableAssetsResponse> {
+    return fetch(`https://mew-api-dev.ethvm.dev/v1/web/stocks/addresses`).then(
+      res => res.json() as Promise<GetTradableAssetsResponse>,
+    )
+  }
+
   constructor(wallet: BaseEvmWallet, chainId: number) {
-    const supportedChainIds = SUPPORTED_CHAINS.map(c => c.id)
-    if (!supportedChainIds.includes(chainId))
-      throw new Error('Fusion: network not supported')
+    const chainConfig = SUPPORTED_CHAINS.find(c => c.chainId === chainId)
+    if (!chainConfig) throw new Error('Fusion: network not supported')
     this.wallet = wallet
     this.publicClient = createPublicClient({
-      transport: http(NODE_URLS[chainId as keyof typeof NODE_URLS]),
+      transport: http(chainConfig.node),
     })
     this.web3Provider = new Web3ProviderConnector(wallet, this.publicClient)
-    this.chain = chainId === 1 ? mainnet : bsc
+    this.chain = chainConfig.chain
     this.sdk = new FusionSDK({
       network: chainId === 1 ? NetworkEnum.ETHEREUM : NetworkEnum.BINANCE,
       url: 'https://fusion.1inch.io',
