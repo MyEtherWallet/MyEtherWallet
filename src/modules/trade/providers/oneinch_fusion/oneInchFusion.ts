@@ -19,6 +19,7 @@ import {
   type Chain,
   http,
   serializeTransaction,
+  encodeFunctionData,
 } from 'viem'
 import {
   NATIVE_ADDRESS,
@@ -29,6 +30,7 @@ import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { GetTradableAssetsResponse } from '@/mew_api/types'
+import { prepareTransactionRequest } from 'viem/actions'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
@@ -141,14 +143,14 @@ class OneInchFusion {
           new Address(config.fromAddress),
           preparedOrder.order.build(),
         )
-        const tx = {
+        const tx = await prepareTransactionRequest(this.publicClient, {
           data: call.data as `0x${string}`,
           to: call.to.toString() as `0x${string}`,
           account: config.fromAddress as `0x${string}`,
           value: call.value,
           chain: this.chain,
-        }
-        const serialized = serializeTransaction(tx)
+        })
+        const serialized = serializeTransaction(tx as any)
         const hash = await this.wallet.SendTransaction(serialized)
         return this.publicClient
           .waitForTransactionReceipt({ hash })
@@ -179,6 +181,32 @@ class OneInchFusion {
     })) as bigint
     if (tokeAllowanceData < amount) return true
     return false
+  }
+
+  async setPermit2Approval(fromAddress: string, tokenAddress: string) {
+    const tx = await prepareTransactionRequest(this.publicClient, {
+      data: encodeFunctionData({
+        abi: erc20Abi,
+        functionName: 'approve',
+        args: [
+          ONEINCH_APPROVAL_ADDRESS,
+          BigInt(
+            '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+          ),
+        ],
+      }) as `0x${string}`,
+      to: tokenAddress as `0x${string}`,
+      account: fromAddress as `0x${string}`,
+      chain: this.chain,
+    })
+    const serialized = serializeTransaction(tx as any)
+    const hash = await this.wallet.SendTransaction(serialized)
+    return this.publicClient.waitForTransactionReceipt({ hash }).then(res => {
+      console.log(
+        `Transaction mined:  ${res.transactionHash} status: ${res.status}`,
+      )
+      return res.transactionHash
+    })
   }
 }
 

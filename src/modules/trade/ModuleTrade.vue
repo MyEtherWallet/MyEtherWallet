@@ -248,7 +248,6 @@ const toTokens = computed(() => {
       const matchingFromToken = tokenAddress
         ? fromTokensMap.get(tokenAddress.toLowerCase())
         : undefined
-      console.log(matchingFromToken)
       return {
         name: asset.stockAlias || asset.symbol,
         symbol: asset.symbol,
