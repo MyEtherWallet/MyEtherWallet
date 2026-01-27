@@ -18,8 +18,6 @@ const ROUTES_MAIN: RouteNameCollection = {
   HOME: { NAME: 'Home', PATH: '/' },
   //A-Z
   BUY: { NAME: 'Buy', PATH: '/buy-and-sell' },
-  DEPLOY_CONTRACT: { NAME: 'DeployContract', PATH: '/deploy' },
-  INTERACT_WITH_CONTRACT: { NAME: 'InteractWithContract', PATH: '/interact' },
   PRINT: { NAME: 'PrintPaperWallet', PATH: '/print-wallet' },
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: '/sign' },
   SETTINGS: { NAME: 'Settings', PATH: '/settings' },

@@ -199,14 +199,6 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
       title: t('sign-message'),
       routeName: ROUTES_MAIN.SIGN_MESSAGE.NAME,
     },
-    {
-      title: t('deploy-contract'),
-      routeName: ROUTES_MAIN.DEPLOY_CONTRACT.NAME,
-    },
-    {
-      title: t('interact-contract'),
-      routeName: ROUTES_MAIN.INTERACT_WITH_CONTRACT.NAME,
-    },
   ]
 })
 
