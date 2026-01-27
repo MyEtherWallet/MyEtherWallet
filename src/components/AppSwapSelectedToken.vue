@@ -169,7 +169,7 @@
         </div>
         <div>
           <div
-            v-show="tokens.length > paginatedTokens.length"
+            v-show="tokens.length > paginatedTokens.length && !searchInput"
             class="h-[44px] w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-grey-5 rounded-full mt-1 mb-5"
             :class="{
               'cursor-pointer': !loadingMoreItems,

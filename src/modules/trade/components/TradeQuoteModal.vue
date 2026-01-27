@@ -1,0 +1,174 @@
+<template>
+  <app-dialog
+    v-model:is-open="model"
+    title="Trade Quote"
+    class="sm:max-w-[460px] sm:mx-auto"
+  >
+    <template #content>
+      <div class="mx-4 mb-2">
+        <div
+          class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
+        >
+          <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
+            Trade Quote from 1inch Fusion
+          </h3>
+          <p
+            class="font-normal text-s-17 lg:text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
+          >
+            For
+            <app-token-logo
+              :url="fromToken?.logoURI"
+              :symbol="fromToken?.symbol"
+              width="w-6 lg:w-8"
+              height="h-6 lg:h-8"
+            />
+            <span class="font-bold">
+              {{ fromAmount }}
+              {{ fromToken?.symbol }}</span
+            >
+            you will get:
+          </p>
+          <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
+            <div class="relative flex-none overflow-visible">
+              <app-token-logo
+                :url="toToken?.logoURI"
+                :symbol="toToken?.symbol"
+                width="w-8 lg:w-[64px]"
+                height="h-8 lg:h-[64px]"
+              />
+            </div>
+            <div class="ml-5 min-w-0">
+              <div
+                class="font-bold text-s-20 lg:text-s-24 flex items-center gap-1 min-w-0"
+              >
+                <span class="flex-none">≈</span>
+                <span class="truncate">{{ toAmountFormatted }}</span>
+                <span class="flex-none">{{ toToken?.symbol }}</span>
+              </div>
+              <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
+            </div>
+          </div>
+
+          <!-- Quote Details -->
+          <div class="mt-4 space-y-2 px-2">
+            <div class="flex justify-between text-s-14">
+              <span class="text-info">Estimated Amount</span>
+              <span class="font-medium"
+                >{{ toAmountFormatted }} {{ toToken?.symbol }}</span
+              >
+            </div>
+            <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
+              <span class="text-info">Min Amount</span>
+              <span class="font-medium"
+                >{{ minAmountFormatted }} {{ toToken?.symbol }}</span
+              >
+            </div>
+          </div>
+
+          <!-- Warning -->
+          <div class="mt-4 p-3 bg-warning-10 rounded-12 text-s-12 text-warning">
+            <p>
+              This is a limit order trade. The final amount may vary slightly
+              based on market conditions.
+            </p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-3 mt-4">
+          <app-base-button
+            class="flex-1"
+            :disabled="loading"
+            @click="$emit('confirm')"
+          >
+            <span v-if="loading" class="flex items-center gap-2">
+              <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  fill="none"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Processing...
+            </span>
+            <span v-else>Confirm Trade</span>
+          </app-base-button>
+          <app-base-button
+            class="flex-1"
+            :is-outline="true"
+            :disabled="loading"
+            @click="$emit('cancel')"
+          >
+            Cancel
+          </app-base-button>
+        </div>
+      </div>
+    </template>
+  </app-dialog>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import AppDialog from '@/components/AppDialog.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import { formatUnits } from 'viem'
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
+import type { NewTokenInfo } from '@/composables/useSwap'
+
+const model = defineModel<boolean>('isOpen', { default: false })
+
+const props = defineProps<{
+  quote: {
+    startAmount: bigint
+    endAmount?: bigint
+    avgAmount?: bigint
+  } | null
+  fromToken: NewTokenInfo | null
+  toToken: NewTokenInfo | null
+  fromAmount: string
+  loading?: boolean
+}>()
+
+defineEmits<{
+  confirm: []
+  cancel: []
+}>()
+
+const toAmountFormatted = computed(() => {
+  if (!props.quote || !props.toToken) return '0'
+  const amount = props.quote.avgAmount || props.quote.startAmount
+  const formatted = formatUnits(amount, props.toToken.decimals || 18)
+  return formatFloatingPointValue(formatted).value
+})
+
+const minAmountFormatted = computed(() => {
+  if (!props.quote?.endAmount || !props.toToken) return '0'
+  const formatted = formatUnits(
+    props.quote.endAmount,
+    props.toToken.decimals || 18,
+  )
+  return formatFloatingPointValue(formatted).value
+})
+
+const toAmountFiat = computed(() => {
+  if (!props.quote || !props.toToken) return '0.00'
+  const amount = props.quote.avgAmount || props.quote.startAmount
+  const formatted = formatUnits(amount, props.toToken.decimals || 18)
+  const price = props.toToken.price || 0
+  const fiat = parseFloat(formatted) * price
+  return formatFiatValue(fiat.toString()).value
+})
+</script>

@@ -20,6 +20,27 @@
               <ChevronDoubleLeftIcon v-if="!isOpenSideMenu" class="w-5 h-5" />
               <ChevronDoubleRightIcon v-else class="w-5 h-5" />
             </button>
+            <!-- Trade button -->
+            <button
+              @click="openPanel('trade')"
+              :class="[
+                walletPanel === 'trade' && isOpenSideMenu
+                  ? 'bg-mewBg'
+                  : 'hoverNoBG',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+              ]"
+            >
+              <icon-trade
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+              />
+              <p
+                :class="[
+                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                ]"
+              >
+                Trade
+              </p>
+            </button>
             <!-- Swap button -->
             <button
               @click="openPanel('swap')"
@@ -170,7 +191,8 @@
           <ChevronDoubleRightIcon class="w-5 h-5" />
         </app-btn-icon>
         <transition name="fade" mode="out-in">
-          <ModuleSend v-if="walletPanel === 'send'" key="send" />
+          <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
+          <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
           <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
           <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
           <div v-else key="coming-soon" class="mt-6 text-center font-medium">
@@ -192,8 +214,10 @@ import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconSell from '@/assets/icons/core_menu/icon-sell.vue'
+import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
+import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   QrCodeIcon,
