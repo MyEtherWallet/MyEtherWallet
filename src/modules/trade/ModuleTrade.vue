@@ -187,6 +187,7 @@ const toastStore = useToastStore()
 const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
   storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
+const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
 // --- Use Trade Composable ---
 const { supportedChainNames, tradableAssets, isLoading, loadTradableAssets } =
@@ -522,6 +523,22 @@ watch(selectedChain, newChain => {
   }
 })
 
+// Watch for selected trade token from store (set from stocks view)
+watch(
+  [selectedTradeTokenSymbol, toTokens],
+  ([symbol, tokens]) => {
+    if (symbol && tokens.length > 0) {
+      const matchingToken = tokens.find(
+        t => t.symbol.toUpperCase() === symbol.toUpperCase(),
+      )
+      if (matchingToken) {
+        toTokenSelected.value = matchingToken
+      }
+    }
+  },
+  { immediate: true },
+)
+
 // --- Lifecycle ---
 onBeforeMount(async () => {
   // Initialize swap to get fromTokens
@@ -546,8 +563,19 @@ onBeforeMount(async () => {
       null
   }
 
-  // Set initial to token
-  if (toTokens.value.length > 0) {
+  // Set initial to token - check if there's a selected token from store first
+  if (selectedTradeTokenSymbol.value && toTokens.value.length > 0) {
+    const matchingToken = toTokens.value.find(
+      t =>
+        t.symbol.toUpperCase() ===
+        selectedTradeTokenSymbol.value!.toUpperCase(),
+    )
+    if (matchingToken) {
+      toTokenSelected.value = matchingToken
+    } else if (toTokens.value.length > 0) {
+      toTokenSelected.value = toTokens.value[0] || null
+    }
+  } else if (toTokens.value.length > 0) {
     toTokenSelected.value = toTokens.value[0] || null
   }
 })
