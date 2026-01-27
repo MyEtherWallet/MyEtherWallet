@@ -39,13 +39,13 @@
             class="text-s-14 sm:text-s-17 leading-p-150 mb-2 text-info"
           >
             MEW is available on mobile and on desktop in your browser.
-            <a
+            <!-- <a
               href="https://help.myetherwallet.com/en/articles/5979837-how-to-create-an-ethereum-wallet-with-mew"
               target="_blank"
               class="underline inline-flex items-center ml-1 hoverOpacity"
               >Creating a wallet guide
               <arrow-long-right-icon class="w-5 h-5 ml-1"
-            /></a>
+            /></a> -->
           </p>
         </div>
       </div>
