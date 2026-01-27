@@ -31,6 +31,7 @@ import type { AxiosError } from 'axios'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { GetTradableAssetsResponse } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
+import { WalletType } from '@/providers/types'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
@@ -151,9 +152,20 @@ class OneInchFusion {
           chain: this.chain,
         })
         const serialized = serializeTransaction(tx as any)
-        const hash = await this.wallet.SendTransaction(serialized)
+        let hash = ''
+        if (
+          this.wallet.getWalletType() === WalletType.LEDGER ||
+          this.wallet.getWalletType() === WalletType.TREZOR
+        ) {
+          const signedTx = await this.wallet.SignTransaction(serialized)
+          hash = await this.publicClient.sendRawTransaction({
+            serializedTransaction: signedTx.signed,
+          })
+        } else {
+          hash = await this.wallet.SendTransaction(serialized)
+        }
         return this.publicClient
-          .waitForTransactionReceipt({ hash })
+          .waitForTransactionReceipt({ hash: hash as `0x${string}` })
           .then(res => {
             if (res.status === 'success')
               return {
@@ -200,13 +212,26 @@ class OneInchFusion {
       chain: this.chain,
     })
     const serialized = serializeTransaction(tx as any)
-    const hash = await this.wallet.SendTransaction(serialized)
-    return this.publicClient.waitForTransactionReceipt({ hash }).then(res => {
-      console.log(
-        `Transaction mined:  ${res.transactionHash} status: ${res.status}`,
-      )
-      return res.transactionHash
-    })
+    let hash = ''
+    if (
+      this.wallet.getWalletType() === WalletType.LEDGER ||
+      this.wallet.getWalletType() === WalletType.TREZOR
+    ) {
+      const signedTx = await this.wallet.SignTransaction(serialized)
+      hash = await this.publicClient.sendRawTransaction({
+        serializedTransaction: signedTx.signed,
+      })
+    } else {
+      hash = await this.wallet.SendTransaction(serialized)
+    }
+    return this.publicClient
+      .waitForTransactionReceipt({ hash: hash as `0x${string}` })
+      .then(res => {
+        console.log(
+          `Transaction mined:  ${res.transactionHash} status: ${res.status}`,
+        )
+        return res.transactionHash
+      })
   }
 }
 

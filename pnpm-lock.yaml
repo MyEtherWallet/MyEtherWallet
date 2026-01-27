@@ -21,8 +21,8 @@ importers:
         specifier: ^20.3.1
         version: 20.3.1
       '@enkryptcom/hw-wallets':
-        specifier: ^0.0.13
-        version: 0.0.13(8bde7a78cf20088fea71e91f6b581a79)
+        specifier: ^0.0.15
+        version: 0.0.15(8bde7a78cf20088fea71e91f6b581a79)
       '@enkryptcom/name-resolution':
         specifier: ^0.0.8
         version: 0.0.8(@siddomains/sid-contracts@0.1.31(@nomiclabs/hardhat-web3@2.1.0(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)))(bufferutil@4.1.0)(ethers@5.8.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(web3-core-helpers@1.10.4)(web3-core-promievent@1.10.4)(web3-eth-abi@4.4.1(typescript@5.9.3)(zod@3.25.76))(web3-utils@4.3.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -1647,8 +1647,8 @@ packages:
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0':
     resolution: {integrity: sha512-Bz1zLGEqBQ0BVkqt1OgMxdBOE3BdUWUd7Ly9Ecr/aUwkA8AV1w1XzBMe4xblmJHnB1XXNlPH4SraXCvO+q0Mig==}
 
-  '@enkryptcom/hw-wallets@0.0.13':
-    resolution: {integrity: sha512-7+G/6AjNmJ8dTDroff3+Kh6tIgJ6MnnvMp1l1GAsZVP6qZV8io326Q+VJuPw9h4vB3J2dzNR41nSTldU3QzkaQ==}
+  '@enkryptcom/hw-wallets@0.0.15':
+    resolution: {integrity: sha512-kdwHdBeUCxgjpkMUuOBhUqhc69IivhzuHhm8PZeFrSrAO8e0KKJh4NqfUajQHLRzHn2w8kV4fAzcp1euFFuZNQ==}
     engines: {node: '>=14.15.0'}
 
   '@enkryptcom/name-resolution@0.0.8':
@@ -2606,6 +2606,9 @@ packages:
   '@ledgerhq/client-ids@0.2.1':
     resolution: {integrity: sha512-IjXJuqoGv2lfTB8QgSMpRDt+C2iOFmvIBxZDHs5XAEEPm1yNsgIB5m+HuzECk/Qll7FyB9My13ueayn7dBZxUQ==}
 
+  '@ledgerhq/client-ids@0.4.1':
+    resolution: {integrity: sha512-DtHihOe1QALwv90sOzNfvSKqgUFYJhajMEeaOMkTEBzW3B5Vwe8AUn22atryjH+5Zop/cdjFcrDOAepfMQzHOQ==}
+
   '@ledgerhq/coin-algorand@0.7.9':
     resolution: {integrity: sha512-yhSW6q653J05dt3geLStqxp1TxzBHACz6Eewi5NYP/qWz9OFqCoSnt6S3T5JX+t6DFB/RUYeEILgHcGXay5GPg==}
 
@@ -2734,6 +2737,9 @@ packages:
   '@ledgerhq/devices@6.27.1':
     resolution: {integrity: sha512-jX++oy89jtv7Dp2X6gwt3MMkoajel80JFWcdc0HCouwDsV1mVJ3SQdwl/bQU0zd8HI6KebvUP95QTwbQLLK/RQ==}
 
+  '@ledgerhq/devices@8.10.0':
+    resolution: {integrity: sha512-ytT66KI8MizFX6dGJKthOzPDw5uNRmmg+RaMta62jbFePKYqfXtYTp6Wc0ErTXaL8nFS3IujHENwKthPmsj6jw==}
+
   '@ledgerhq/devices@8.4.4':
     resolution: {integrity: sha512-sz/ryhe/R687RHtevIE9RlKaV8kkKykUV4k29e7GAVwzHX1gqG+O75cu1NCJUHLbp3eABV5FdvZejqRUlLis9A==}
 
@@ -2755,6 +2761,9 @@ packages:
   '@ledgerhq/domain-service@1.5.1':
     resolution: {integrity: sha512-FlFQ9S49qHRdTTVQAvNtOb9Tn7l1Mz3EQO1oYa6DB5iRSi1kv1i2au0vIEIaQrXdSaxkyuTBh4lyIMkI1r0K1g==}
 
+  '@ledgerhq/domain-service@1.6.1':
+    resolution: {integrity: sha512-tQ/WhMkWKgC77CHQ6W4AuizyOm2mNagHkvx8g3AF68WXehfXRed6g9+5HTDwl0XBGqixPSPHrYkm5ZanbAyOjg==}
+
   '@ledgerhq/errors@5.50.0':
     resolution: {integrity: sha512-gu6aJ/BHuRlpU7kgVpy2vcYk6atjB4iauP2ymF7Gk0ez0Y/6VSMVSJvubeEQN+IV60+OBK0JgeIZG7OiHaw8ow==}
 
@@ -2763,6 +2772,12 @@ packages:
 
   '@ledgerhq/errors@6.28.0':
     resolution: {integrity: sha512-Rx6GN801GP/3gCfVmmiXFVZWmiaEGMuXVwjM6WOCX0dzw4v7KcB1nj4vrNC1plDI/xkPt/clYJPG7LgSt0mxlw==}
+
+  '@ledgerhq/errors@6.29.0':
+    resolution: {integrity: sha512-mmDsGN662zd0XGKyjzSKkg+5o1/l9pvV1HkVHtbzaydvHAtRypghmVoWMY9XAQDLXiUBXGIsLal84NgmGeuKWA==}
+
+  '@ledgerhq/evm-tools@1.10.1':
+    resolution: {integrity: sha512-siPK4gpyjJ4hvdEvSjnZFF9zcheuUVTONIBEPei2A+Zd71Nzd1NjNv6aSsIhpdvsFHw7vVN97qIyszlNwIBeTg==}
 
   '@ledgerhq/evm-tools@1.9.0':
     resolution: {integrity: sha512-5UjdmnH4DGia8eJE4f5szVLYzBwFIvZyf+xoHKWLaJh8rCEXeEENmvPwbTUDuQ/LRPgfOF6+WVR8pS9LlcTRNw==}
@@ -2773,8 +2788,8 @@ packages:
   '@ledgerhq/hw-app-aptos@6.34.11':
     resolution: {integrity: sha512-9Qgg4EMgEsd9YKExgSyEV7bnKahcC5otdeG+n0r9C0ABn4uaVJjt5eMbn64k6+qRFlD+nGw63S7YQ7sbDtQRrw==}
 
-  '@ledgerhq/hw-app-btc@10.14.0':
-    resolution: {integrity: sha512-LB0WU4mUklWS+IsgvmlMwPRgevrGE5yRPXn9Aq6jPzVUyt/CBEqkxH8USktz481lKwz8zC9RU/9Jy6+L2CcpkQ==}
+  '@ledgerhq/hw-app-btc@10.17.0':
+    resolution: {integrity: sha512-zJMp7lQ5UfV2ZoWCx3Jt1kPGVKI0IQQBnXpOd0Cx354S420I9WXsaNMz2Fn7C7kkYbpE3n1ZeQwccKjRWvFWgQ==}
 
   '@ledgerhq/hw-app-cosmos@6.32.11':
     resolution: {integrity: sha512-wZutC6pJa7KVHbeBuXLvtBkKCsrUb4adNO9GLdW5MoRFGxsNdsqi/VHvPbPfaMIhwYPX832K0Nwxob20JhCyAQ==}
@@ -2784,6 +2799,9 @@ packages:
 
   '@ledgerhq/hw-app-eth@6.47.1':
     resolution: {integrity: sha512-uTgXZwiEBuXoouZOzd/wi06FGyUdP8THDkzPcHfbt4hcIwiPMfRc/vrOXJtCq/LaM8nVEuf8xk+H1sAgJzPCkw==}
+
+  '@ledgerhq/hw-app-eth@7.3.1':
+    resolution: {integrity: sha512-vkvZJXPg/xz3Nx86h6xngOstpR0yPXSnn1JsW9NAzS86VTFRYeDvt5qjLZddQedxx1Cs/ispsyhuwJI27ipjdQ==}
 
   '@ledgerhq/hw-app-exchange@0.7.0':
     resolution: {integrity: sha512-AbbeL5DZ1Vmm8DvYJt8w/2uR93NVqXb1awA1Mpxb0L7BA7Uu0yPzhdcWqgwXm7kWDtXH6cnWHIif8pQB7HmMew==}
@@ -2800,8 +2818,8 @@ packages:
   '@ledgerhq/hw-app-polkadot@6.34.11':
     resolution: {integrity: sha512-zjfUTX04dbuAdjsW1uc5rGsjqRjk6ERiwdRcOS+Y4BkDvy8kpZQTBkTgE7i25yHTCxImLPCNxkAoTFrXvdRFLw==}
 
-  '@ledgerhq/hw-app-solana@7.6.2':
-    resolution: {integrity: sha512-wRGTP5SnOVbX6g6g3BfgI901yE117MxpU2xjtCcvykBfal++n0QQmWOkmjhxNLzN30xQ04qDfB7sB8JLED5PbA==}
+  '@ledgerhq/hw-app-solana@7.7.0':
+    resolution: {integrity: sha512-aeVno3LwhIraMxxxGcogujUFboscItti51MxVM8eSoCOBBACSA3lI06qbcnm+viEksIaHN5oObh44IT0GVf4dA==}
 
   '@ledgerhq/hw-app-str@7.3.0':
     resolution: {integrity: sha512-Se+RG4bVm3QbgTHRXcGkNZntjAO2kp46bJTDTUopOhPf5pUNTajLd37pvs3MNfqHXlOZMsX8ownyB8qAR+nZWg==}
@@ -2830,6 +2848,15 @@ packages:
   '@ledgerhq/hw-transport-mocker@6.30.0':
     resolution: {integrity: sha512-WsnjNMpDah+JtUhAKOUT480ljN//3OJ+yxPSyg1Ue6QfcD3S5TQiXaCY/bTyCStoQXOYQN3qehXD1NFuw7gfYQ==}
 
+  '@ledgerhq/hw-transport-mocker@6.31.0':
+    resolution: {integrity: sha512-mgLH9I3V8BQHkxw+I0shin7C175NPkR3fF8bZyfxQKznfx4aju6hGKgsUnLYA975eW81DhoyPepwJLAMvNsSnw==}
+
+  '@ledgerhq/hw-transport-node-hid-noevents@6.31.0':
+    resolution: {integrity: sha512-81VnmEg/+sHtORYvwhxDibKaXeRIQiKeHj6piW6ii8WR4PoB9gXvJkEohLU5mfirpjAMbp7Br5qZ4ximyJV3nA==}
+
+  '@ledgerhq/hw-transport-node-hid@6.30.0':
+    resolution: {integrity: sha512-HYaBEnb/LY/YFKVQz+DMmUKIZRUIRHvY94JhBIulXVXlPB3I0MmZBtccVVspz+RzCt1KPe61NMJSc1ebeWcOyw==}
+
   '@ledgerhq/hw-transport-node-speculos-http@6.29.4':
     resolution: {integrity: sha512-UTIqSxf1jH2aVGsg6VnQXDj9fpzn/q/cf9eNwg87QSTNvJ8wbomNBy+x+fgjXt4pZpv9lbFzIyGhE6qsh9QvMQ==}
 
@@ -2840,8 +2867,8 @@ packages:
     resolution: {integrity: sha512-T/+mGHIiUK/ZQATad6DMDmobCMZ1mVST952009jKzhaE1Et2Uy2secU+QhRkx3BfEAkvwa0zSRSYCL9d20Iqjg==}
     deprecated: '@ledgerhq/hw-transport-u2f is deprecated. Please use @ledgerhq/hw-transport-webusb or @ledgerhq/hw-transport-webhid. https://github.com/LedgerHQ/ledgerjs/blob/master/docs/migrate_webusb.md'
 
-  '@ledgerhq/hw-transport-webusb@6.29.15':
-    resolution: {integrity: sha512-HYei8oFHACXOigJLPEOsmVDRkGu7J0QPS/3QFMhBRHT4+0N6YDRXum6vSjOH+CoOJZ8zbTmmRh6dF/c5WEsUaQ==}
+  '@ledgerhq/hw-transport-webusb@6.30.0':
+    resolution: {integrity: sha512-GX5OJvNl0cRZyadxQjS+cnAxiD2irw4Cponp46r50WmirXOLR7hJYKfd1plmGlZOAgT6ayggOZkzahunYerPXw==}
 
   '@ledgerhq/hw-transport@5.51.1':
     resolution: {integrity: sha512-6wDYdbWrw9VwHIcoDnqWBaDFyviyjZWv6H9vz9Vyhe4Qd7TIFmbTl/eWs6hZvtZBza9K8y7zD8ChHwRI4s9tSw==}
@@ -2872,6 +2899,9 @@ packages:
 
   '@ledgerhq/hw-transport@6.31.9':
     resolution: {integrity: sha512-HqB2Whl2qbrzyvs9gC/GmLhIy8RO4CWzjqHS4k0bPWDZRqKa8m6H32vjrbXGO//pUL1Mlu87UwvxvLyuICdjwg==}
+
+  '@ledgerhq/hw-transport@6.32.0':
+    resolution: {integrity: sha512-bf2nxzDQ21DV/bsmExfWI0tatoVeoqhu/ePWalD/nPgPnTn/ZIDq7VBU+TY5p0JZaE87NQwmRUAjm6C1Exe61A==}
 
   '@ledgerhq/ledger-cal-service@0.2.0':
     resolution: {integrity: sha512-Khyz1dXiRegRyv1DEPLDa2cuhN3VhkF3MzyIj2YjDx4jg3sQmlpB5YEqBnw4xZoabRpF3HeIjeZN7r04n8njjg==}
@@ -2932,6 +2962,9 @@ packages:
   '@ledgerhq/live-env@2.23.0':
     resolution: {integrity: sha512-NOEaeMRas+AVf/JCWWb2v6Uf02aUHZHA/LkNPSdqb/qTuGcXlxTmExDZzZrI615glLaZtSxUoSaFiQ5yUmCtAQ==}
 
+  '@ledgerhq/live-env@2.26.0':
+    resolution: {integrity: sha512-KGAeS+31wy8OJmaqiYYuAh7EPBWc0nyo+t01MQYjtzAOA60Ua6trTjauNZAQ0wjXszwnqvmMpWt/wN4aHBqRMw==}
+
   '@ledgerhq/live-env@2.5.0':
     resolution: {integrity: sha512-iE/xSWL6Mc/cSGex6UKNnNd/nWuhj3/3gFZmfIXm5APDZ2+FJ3DOQEcMt+XryNuoKUd+ky03/DyQbexfMkissg==}
 
@@ -2979,6 +3012,12 @@ packages:
   '@ledgerhq/logs@6.13.0':
     resolution: {integrity: sha512-4+qRW2Pc8V+btL0QEmdB2X+uyx0kOWMWE1/LWsq5sZy3Q5tpi4eItJS6mB0XL3wGW59RQ+8bchNQQ1OW/va8Og==}
 
+  '@ledgerhq/logs@6.14.0':
+    resolution: {integrity: sha512-kJFu1+asWQmU9XlfR1RM3lYR76wuEoPyZvkI/CNjpft78BQr3+MMf3Nu77ABzcKFnhIcmAkOLlDQ6B8L6hDXHA==}
+
+  '@ledgerhq/psbtv2@0.1.0':
+    resolution: {integrity: sha512-1NWThlGMGDwzmrB5UHNY2E/shIQ/n1yWo+CXdbwDDIWHFkKIU/mhgwv/A1cly0FfCn1m+zEbw4NU0TgvGqaEWQ==}
+
   '@ledgerhq/speculos-transport@0.1.10':
     resolution: {integrity: sha512-SyuH6cunHbOuVRtvA1n1r4xmcs/4JVAXbgRO4arGaOFiiNpEK4lRITCHONZluh5qTIb1n4MC/AwLpoxHvBxeew==}
 
@@ -3014,6 +3053,9 @@ packages:
 
   '@ledgerhq/types-live@6.91.1':
     resolution: {integrity: sha512-Bp1m286STiDErEv/OF5BgBVniH+EoTzPxIFmmlKfH8c0RUg/5sd/yYkh+Y/t9qT5DmmUbg8jE3w2Q8rjTNZ1xQ==}
+
+  '@ledgerhq/types-live@6.94.0':
+    resolution: {integrity: sha512-Hwe3WY8OaH7JVphkRK6+j/4F0KyxtoPZ1CBEAjp7basEMK5hc58qbJyeQCExl1t1+7LTc/5gz154YfJp+Q3K5A==}
 
   '@ledgerhq/wallet-api-acre-module@0.1.0':
     resolution: {integrity: sha512-zRfTDetX4Tbwust4mq0NeIp6lIanzfWmBclyWmLpxd9j0WMgxZmz2aXAR95tPVe8fWSDJwR2nqOqhSu2etVxIQ==}
@@ -3056,9 +3098,17 @@ packages:
   '@lottiefiles/dotlottie-web@0.30.3':
     resolution: {integrity: sha512-GjjMiTLEGIqMZa6mJ6/imNpTPnfRA316og2njru6Cs0p28b7NDAjwpcQlmBIRbL4Hy28W35DQcJGlSy0adZZkw==}
 
+  '@metamask/abi-utils@3.0.0':
+    resolution: {integrity: sha512-a/l0DiSIr7+CBYVpHygUa3ztSlYLFCQMsklLna+t6qmNY9+eIO5TedNxhyIyvaJ+4cN7TLy0NQFbp9FV3X2ktg==}
+    engines: {node: ^18.18 || ^20.14 || >=22}
+
   '@metamask/eth-json-rpc-provider@1.0.1':
     resolution: {integrity: sha512-whiUMPlAOrVGmX8aKYVPvlKyG4CpQXiNNyt74vE1xb5sPvmx5oA7B/kOi/JdBvhGQq97U1/AVdXEdk2zkP8qyA==}
     engines: {node: '>=14.0.0'}
+
+  '@metamask/eth-sig-util@8.2.0':
+    resolution: {integrity: sha512-LZDglIh4gYGw9Myp+2aIwKrj6lIJpMC4e0m7wKJU+BxLLBFcrTgKrjdjstXGVWvuYG3kutlh9J+uNBRPJqffWQ==}
+    engines: {node: ^18.18 || ^20.14 || >=22}
 
   '@metamask/json-rpc-engine@7.3.3':
     resolution: {integrity: sha512-dwZPq8wx9yV3IX2caLi9q9xZBw2XeIoYqdyihDDDpuHVCEiqadJLwqM3zy+uwf6F1QYQ65A8aOMQg1Uw7LMLNg==}
@@ -5035,6 +5085,12 @@ packages:
     peerDependencies:
       tslib: ^2.6.2
 
+  '@trezor/connect-plugin-ethereum@9.1.5':
+    resolution: {integrity: sha512-PaJrtyvqU5C2vBFbI3JhjJcFwVxsM7nd5upOT0ecIF3ePkSND2/cj2S2086YmQn170jfsMbJDVLv2Y2rkgeBHg==}
+    peerDependencies:
+      '@metamask/eth-sig-util': ^8.2.0
+      tslib: ^2.6.2
+
   '@trezor/connect-web@9.7.1':
     resolution: {integrity: sha512-L9rv8R4bOwXoZlbWr8NnsdR2bYjehNY+eEog7fhOPzcRqW30+P06Ari1ZzOMeg469s4GlwvkVA34wqSGxLeelQ==}
     peerDependencies:
@@ -6166,8 +6222,8 @@ packages:
   '@zondax/ledger-substrate@0.44.7':
     resolution: {integrity: sha512-yCcm7HfUt6DvWK88c2oWYwJ1MKVXkijfKtFT/aGtbhk0yinLR/QlmKdSzweMq63Dd6Y31vBjIb7C8nj0zi2QNA==}
 
-  '@zondax/ledger-substrate@1.1.2':
-    resolution: {integrity: sha512-O6DUhAYXNKuEdng0ih/6Gka6CKvDekfjtuaNAHzxv9Eq89vjRxCK8JE6Zh2qUb7DFxmyx8kdJ8um/dzs3t5Q+A==}
+  '@zondax/ledger-substrate@2.1.2':
+    resolution: {integrity: sha512-g+jwyFKXOR+Wg09cRF/SdRAsLsuMFwHDjWA4YZvDjRfwjgMdw+buaAyW9pNmh8Q0qGPFq8Y/ND6IlvlpNp1TIw==}
 
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -6540,6 +6596,9 @@ packages:
 
   axios@1.12.2:
     resolution: {integrity: sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==}
+
+  axios@1.13.2:
+    resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
 
   axios@1.13.3:
     resolution: {integrity: sha512-ERT8kdX7DZjtUm7IitEyV7InTHAF42iJuMArIiDIV5YtPanJkgw4hw5Dyg9fh0mihdWNn1GKaeIWErfe56UQ1g==}
@@ -9051,6 +9110,10 @@ packages:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
     engines: {node: '>=10'}
 
+  expand-template@2.0.3:
+    resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
+    engines: {node: '>=6'}
+
   expect-type@1.3.0:
     resolution: {integrity: sha512-knvyeauYhqjOYvQ66MznSMs83wmHrCycNEN6Ao+2AeYEfxUIkuiVxdEa1qlGEPK+We3n0THiDciYSsCcgW/DoA==}
     engines: {node: '>=12.0.0'}
@@ -9531,6 +9594,9 @@ packages:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
     hasBin: true
+
+  github-from-package@0.0.0:
+    resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -10750,9 +10816,10 @@ packages:
     resolution: {integrity: sha512-YiGkH6EnGrDGqLMITnGjXtGmNtjoXw9SVUzcaos8RBi7Ps0VBylkq+vOcY9QE5poLasPCR849ucFUkl0UzUyOw==}
     engines: {node: '>=0.10.0'}
 
-  ledger-bitcoin@0.2.3:
-    resolution: {integrity: sha512-sWdvMTR5CkebNlM0Mam9ROdpsD7Y4087kj4cbIaCCq8IXShCQ44vE3j0wTmt+sHp13eETgY63OWN1rkuIfMfuQ==}
+  ledger-bitcoin@0.3.0:
+    resolution: {integrity: sha512-gaTCdvnqFMvK6i6112MCcsNC+DDhUx1EKPDgqYoLswgwWLyb+EoZjXI0VxxkW9m7VszQdpOv210xNdohmQ6knw==}
     engines: {node: '>=14'}
+    deprecated: Please use @ledgerhq/ledger-bitcoin
 
   leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
@@ -11382,6 +11449,9 @@ packages:
   mitt@3.0.1:
     resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
 
+  mkdirp-classic@0.5.3:
+    resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
+
   mkdirp-promise@5.0.1:
     resolution: {integrity: sha512-Hepn5kb1lJPtVW84RFT40YG1OddBNTOVUZR2bzQUHc+Z03en8/3uX0+060JDhcEzyO08HmipsN9DcnFMxhIL9w==}
     engines: {node: '>=4'}
@@ -11530,6 +11600,9 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
 
+  napi-build-utils@2.0.0:
+    resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
+
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -11599,6 +11672,10 @@ packages:
     resolution: {integrity: sha512-o2zOYiCpzRqSzPj0Zt/dQ/DqZeYoaQ7TUonc/xUPjCGl9WeHpNbxgVvOquXYAaJzI0M9BXV3HTzG0p8IUAbBTQ==}
     engines: {node: '>= 10.13'}
 
+  node-abi@3.87.0:
+    resolution: {integrity: sha512-+CGM1L1CgmtheLcBuleyYOn7NWPVu0s0EJH2C4puxgEZb9h8QpR9G2dBfZJOAUhi7VQxuBPMd0hiISWcTyiYyQ==}
+    engines: {node: '>=10'}
+
   node-addon-api@2.0.2:
     resolution: {integrity: sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==}
 
@@ -11607,6 +11684,9 @@ packages:
 
   node-addon-api@5.1.0:
     resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
+
+  node-addon-api@6.1.0:
+    resolution: {integrity: sha512-+eawOlIgy680F0kBzPUNFhMZGtJ1YmqM6l4+Crf4IkImjYrO/mqPwRMh352g23uIaQKFItcQ64I7KMaJxHgAVA==}
 
   node-addon-api@8.5.0:
     resolution: {integrity: sha512-/bRZty2mXUIFY/xU5HLvveNHlswNJej+RnxBjOMkidWfwZzgTbPG1E3K5TOxRLOR+5hX7bSofy8yf1hZevMS8A==}
@@ -11657,6 +11737,11 @@ packages:
 
   node-gyp-build@4.8.4:
     resolution: {integrity: sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ==}
+    hasBin: true
+
+  node-hid@2.1.2:
+    resolution: {integrity: sha512-qhCyQqrPpP93F/6Wc/xUR7L8mAJW0Z6R7HMQV8jCHHksAxNDe/4z4Un/H9CpLOT+5K39OPyt9tIQlavxWES3lg==}
+    engines: {node: '>=10'}
     hasBin: true
 
   node-int64@0.4.0:
@@ -12508,6 +12593,11 @@ packages:
 
   preact@10.28.2:
     resolution: {integrity: sha512-lbteaWGzGHdlIuiJ0l2Jq454m6kcpI1zNje6d8MlGAFlYvP2GO4ibnat7P74Esfz4sPTdM6UxtTwh/d3pwM9JA==}
+
+  prebuild-install@7.1.3:
+    resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
+    engines: {node: '>=10'}
+    hasBin: true
 
   prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
@@ -13461,6 +13551,9 @@ packages:
   simple-get@2.8.2:
     resolution: {integrity: sha512-Ijd/rV5o+mSBBs4F/x9oDPtTx9Zb6X9brmnXvMW4J7IR15ngi9q5xxqWBKU744jTZiaXtxaPL7uHG6vtN8kUkw==}
 
+  simple-get@4.0.1:
+    resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
+
   simple-plist@1.3.1:
     resolution: {integrity: sha512-iMSw5i0XseMnrhtIzRb7XpQEXepa9xhWxGUojHBL43SIpQuDQkh3Wpy67ZbDzZVr6EKxvwVChnVpdl8hEVLDiw==}
 
@@ -13888,6 +13981,9 @@ packages:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
 
+  tar-fs@2.1.4:
+    resolution: {integrity: sha512-mDAjwmZdh7LTT6pNleZ05Yt65HC3E+NiQzl672vQG38jIrehtJk/J3mNwIg+vShQPcLF/LV7CMnDW6vjj6sfYQ==}
+
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
     engines: {node: '>=6'}
@@ -13895,6 +13991,7 @@ packages:
   tar@4.4.19:
     resolution: {integrity: sha512-a20gEsvHnWe0ygBY8JbxoM4w3SJdhc7ZAuxkLqh+nvNQN2IOt0B5lLgM490X5Hl8FF0dl0tOf2ewFYAlIFgzVA==}
     engines: {node: '>=4.5'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
@@ -14544,6 +14641,10 @@ packages:
   usb@2.16.0:
     resolution: {integrity: sha512-jD88fvzDViMDH5KmmNJgzMBDj/95bDTt6+kBNaNxP4G98xUTnDMiLUY2CYmToba6JAFhM9VkcaQuxCNRLGR7zg==}
     engines: {node: '>=12.22.0 <13.0 || >=14.17.0'}
+
+  usb@2.9.0:
+    resolution: {integrity: sha512-G0I/fPgfHUzWH8xo2KkDxTTFruUWfppgSFJ+bQxz/kVY2x15EQ/XDB7dqD1G432G4gBG4jYQuF3U7j/orSs5nw==}
+    engines: {node: '>=10.20.0 <11.x || >=12.17.0 <13.0 || >=14.0.0'}
 
   use-callback-ref@1.3.3:
     resolution: {integrity: sha512-jQL3lRnocaFtu3V00JToYz/4QkNWswxijDaCVNZRiRTO3HQDLsdu1ZtmIUvV4yPp+rvWm5j0y0TG/S61cuijTg==}
@@ -16961,7 +17062,7 @@ snapshots:
 
   '@bazel/runfiles@6.5.0': {}
 
-  '@bitcoinerlab/descriptors@1.1.1(ledger-bitcoin@0.2.3)':
+  '@bitcoinerlab/descriptors@1.1.1(ledger-bitcoin@0.3.0)':
     dependencies:
       '@bitcoinerlab/miniscript': 1.4.3
       '@bitcoinerlab/secp256k1': 1.2.0
@@ -16969,7 +17070,7 @@ snapshots:
       bitcoinjs-lib: 6.1.7
       ecpair: 2.1.0
     optionalDependencies:
-      ledger-bitcoin: 0.2.3
+      ledger-bitcoin: 0.3.0
 
   '@bitcoinerlab/miniscript@1.4.3':
     dependencies:
@@ -17023,7 +17124,7 @@ snapshots:
 
   '@cardano-foundation/ledgerjs-hw-app-cardano@7.1.4':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       base-x: 3.0.11
       bech32: 1.1.4
       int64-buffer: 1.1.0
@@ -17090,7 +17191,7 @@ snapshots:
       '@ledgerhq/domain-service': 1.5.1(debug@4.4.3)
       '@ledgerhq/errors': 6.28.0
       '@ledgerhq/evm-tools': 1.9.0(debug@4.4.3)
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/hw-transport-mocker': 6.30.0
       '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-live': 6.91.1(react@18.3.1)
@@ -17167,7 +17268,7 @@ snapshots:
       '@celo/wallet-remote': 6.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))
       '@ethereumjs/util': 8.0.5
       '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       debug: 4.4.3(supports-color@10.2.2)
       semver: 7.7.3
     transitivePeerDependencies:
@@ -18005,29 +18106,31 @@ snapshots:
 
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0': {}
 
-  '@enkryptcom/hw-wallets@0.0.13(8bde7a78cf20088fea71e91f6b581a79)':
+  '@enkryptcom/hw-wallets@0.0.15(8bde7a78cf20088fea71e91f6b581a79)':
     dependencies:
       '@enkryptcom/types': 0.0.5
-      '@enkryptcom/utils': 0.0.5(@polkadot/util@13.5.9)
+      '@enkryptcom/utils': 0.0.5(@polkadot/util@14.0.1)
       '@ethereumjs/rlp': 5.0.2
       '@ethereumjs/tx': 5.4.0
       '@ethereumjs/util': 9.1.0
-      '@ledgerhq/hw-app-btc': 10.14.0
-      '@ledgerhq/hw-app-eth': 6.47.1(debug@4.4.1)(react@18.3.1)
-      '@ledgerhq/hw-app-solana': 7.6.2
-      '@ledgerhq/hw-transport': 6.31.15
-      '@ledgerhq/hw-transport-webusb': 6.29.15
+      '@ledgerhq/hw-app-btc': 10.17.0
+      '@ledgerhq/hw-app-eth': 7.3.1(debug@4.4.1)(react@18.3.1)
+      '@ledgerhq/hw-app-solana': 7.7.0
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/hw-transport-webusb': 6.30.0
       '@ledgerhq/live-common': 34.20.0(@babel/core@7.28.5)(@babel/template@7.27.2)(@tanstack/react-query@5.90.2(react@18.3.1))(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(bare-url@2.2.2)(bn.js@5.2.2)(bufferutil@4.1.0)(debug@4.4.1)(ejs@3.1.10)(eslint@9.39.2(jiti@2.6.1))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react-native-svg@15.14.0(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(styled-components@6.1.19(react-dom@19.2.0(react@18.3.1))(react@18.3.1))(styled-system@5.1.5)(typescript@5.9.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(webpack-sources@3.3.3)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
+      '@metamask/eth-sig-util': 8.2.0
       '@polkadot/types': 16.5.4
-      '@polkadot/util': 13.5.9
+      '@polkadot/util': 14.0.1
       '@trezor/connect': 9.7.1(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(debug@4.4.1)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.28.5)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
+      '@trezor/connect-plugin-ethereum': 9.1.5(@metamask/eth-sig-util@8.2.0)(tslib@2.8.1)
       '@trezor/connect-web': 9.7.1(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(debug@4.4.1)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.28.5)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
       '@trezor/connect-webextension': 9.7.1(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(debug@4.4.1)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.28.5)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
-      '@zondax/ledger-substrate': 1.1.2(debug@4.4.1)
+      '@zondax/ledger-substrate': 2.1.2(debug@4.4.1)
       bitcoinjs-lib: 6.1.7
       bs58: 6.0.0
       hdkey: 2.1.0
-      ledger-bitcoin: 0.2.3
+      ledger-bitcoin: 0.3.0
       webextension-polyfill: 0.12.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -18179,11 +18282,11 @@ snapshots:
 
   '@enkryptcom/types@0.0.6': {}
 
-  '@enkryptcom/utils@0.0.5(@polkadot/util@13.5.9)':
+  '@enkryptcom/utils@0.0.5(@polkadot/util@14.0.1)':
     dependencies:
       '@enkryptcom/types': 0.0.4
       '@ethereumjs/util': 9.1.0
-      '@polkadot/util-crypto': 12.6.2(@polkadot/util@13.5.9)
+      '@polkadot/util-crypto': 12.6.2(@polkadot/util@14.0.1)
       bip39: 3.1.0
       chai: 4.5.0
       ethereum-cryptography: 2.2.1
@@ -19159,7 +19262,7 @@ snapshots:
   '@grpc/proto-loader@0.7.15':
     dependencies:
       lodash.camelcase: 4.3.0
-      long: 5.3.1
+      long: 5.3.2
       protobufjs: 7.5.4
       yargs: 17.7.2
 
@@ -19611,6 +19714,15 @@ snapshots:
   '@ledgerhq/client-ids@0.2.1(react@18.3.1)':
     dependencies:
       '@ledgerhq/live-env': 2.23.0
+      '@reduxjs/toolkit': 2.8.2(react@18.3.1)
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - react
+      - react-redux
+
+  '@ledgerhq/client-ids@0.4.1(react@18.3.1)':
+    dependencies:
+      '@ledgerhq/live-env': 2.26.0
       '@reduxjs/toolkit': 2.8.2(react@18.3.1)
       uuid: 9.0.1
     transitivePeerDependencies:
@@ -20426,7 +20538,7 @@ snapshots:
     dependencies:
       '@ledgerhq/devices': 8.4.7
       '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/live-network': 2.1.4(debug@4.4.1)
       '@ledgerhq/logs': 6.13.0
       '@ledgerhq/types-live': 6.91.1(react@18.3.1)
@@ -20449,6 +20561,13 @@ snapshots:
       '@ledgerhq/errors': 6.28.0
       '@ledgerhq/logs': 6.13.0
       rxjs: 6.6.7
+      semver: 7.7.3
+
+  '@ledgerhq/devices@8.10.0':
+    dependencies:
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/logs': 6.14.0
+      rxjs: 7.8.2
       semver: 7.7.3
 
   '@ledgerhq/devices@8.4.4':
@@ -20519,11 +20638,36 @@ snapshots:
       - debug
       - react-redux
 
+  '@ledgerhq/domain-service@1.6.1(debug@4.4.1)':
+    dependencies:
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/logs': 6.14.0
+      '@ledgerhq/types-live': 6.94.0(react@18.3.1)
+      axios: 1.13.2(debug@4.4.1)
+      eip55: 2.1.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - debug
+      - react-redux
+
   '@ledgerhq/errors@5.50.0': {}
 
   '@ledgerhq/errors@6.19.1': {}
 
   '@ledgerhq/errors@6.28.0': {}
+
+  '@ledgerhq/errors@6.29.0': {}
+
+  '@ledgerhq/evm-tools@1.10.1(debug@4.4.1)':
+    dependencies:
+      '@ethersproject/constants': 5.8.0
+      '@ethersproject/hash': 5.8.0
+      '@ledgerhq/live-env': 2.26.0
+      axios: 1.13.2(debug@4.4.1)
+      crypto-js: 4.2.0
+    transitivePeerDependencies:
+      - debug
 
   '@ledgerhq/evm-tools@1.9.0(debug@4.4.1)':
     dependencies:
@@ -20561,10 +20705,11 @@ snapshots:
       '@noble/hashes': 1.8.0
       bip32-path: 0.4.2
 
-  '@ledgerhq/hw-app-btc@10.14.0':
+  '@ledgerhq/hw-app-btc@10.17.0':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
-      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/logs': 6.14.0
+      '@ledgerhq/psbtv2': 0.1.0
       '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       bip32-path: 0.4.2
@@ -20573,7 +20718,6 @@ snapshots:
       bs58check: 2.1.2
       invariant: 2.2.4
       semver: 7.7.3
-      varuint-bitcoin: 1.1.2
 
   '@ledgerhq/hw-app-cosmos@6.32.11':
     dependencies:
@@ -20583,7 +20727,7 @@ snapshots:
 
   '@ledgerhq/hw-app-elrond@6.21.1(debug@4.4.1)':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@multiversx/sdk-core': 13.17.2(bignumber.js@9.3.1)(debug@4.4.1)(protobufjs@7.5.4)
       bignumber.js: 9.3.1
       bip32-path: 0.4.2
@@ -20612,10 +20756,30 @@ snapshots:
       - react
       - react-redux
 
+  '@ledgerhq/hw-app-eth@7.3.1(debug@4.4.1)(react@18.3.1)':
+    dependencies:
+      '@ethersproject/abi': 5.8.0
+      '@ethersproject/rlp': 5.8.0
+      '@ethersproject/transactions': 5.8.0
+      '@ledgerhq/domain-service': 1.6.1(debug@4.4.1)
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/evm-tools': 1.10.1(debug@4.4.1)
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/hw-transport-mocker': 6.31.0
+      '@ledgerhq/logs': 6.14.0
+      '@ledgerhq/types-live': 6.94.0(react@18.3.1)
+      axios: 1.13.2(debug@4.4.1)
+      bignumber.js: 9.3.1
+      semver: 7.7.3
+    transitivePeerDependencies:
+      - debug
+      - react
+      - react-redux
+
   '@ledgerhq/hw-app-exchange@0.7.0':
     dependencies:
       '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       bignumber.js: 9.3.1
       invariant: 2.2.4
       protobufjs: 7.2.5
@@ -20649,10 +20813,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@ledgerhq/hw-app-solana@7.6.2':
+  '@ledgerhq/hw-app-solana@7.7.0':
     dependencies:
-      '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/hw-transport': 6.32.0
       bip32-path: 0.4.2
 
   '@ledgerhq/hw-app-str@7.3.0':
@@ -20676,7 +20840,7 @@ snapshots:
     dependencies:
       '@ledgerhq/cryptoassets': 13.35.1(react@18.3.1)
       '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/hw-transport-mocker': 6.30.0
       '@ledgerhq/logs': 6.13.0
       thor-devkit: 2.1.1
@@ -20705,7 +20869,7 @@ snapshots:
 
   '@ledgerhq/hw-transport-mocker@6.29.4':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
 
@@ -20715,10 +20879,37 @@ snapshots:
       '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
 
+  '@ledgerhq/hw-transport-mocker@6.31.0':
+    dependencies:
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/logs': 6.14.0
+      rxjs: 7.8.2
+
+  '@ledgerhq/hw-transport-node-hid-noevents@6.31.0':
+    dependencies:
+      '@ledgerhq/devices': 8.10.0
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/logs': 6.14.0
+      node-hid: 2.1.2
+    optional: true
+
+  '@ledgerhq/hw-transport-node-hid@6.30.0':
+    dependencies:
+      '@ledgerhq/devices': 8.10.0
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/hw-transport-node-hid-noevents': 6.31.0
+      '@ledgerhq/logs': 6.14.0
+      lodash: 4.17.21
+      node-hid: 2.1.2
+      usb: 2.9.0
+    optional: true
+
   '@ledgerhq/hw-transport-node-speculos-http@6.29.4(debug@4.4.1)':
     dependencies:
       '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/logs': 6.13.0
       axios: 1.7.7(debug@4.4.1)
       rxjs: 7.8.2
@@ -20728,7 +20919,7 @@ snapshots:
   '@ledgerhq/hw-transport-node-speculos@6.29.4':
     dependencies:
       '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/logs': 6.13.0
       rxjs: 7.8.2
 
@@ -20739,12 +20930,12 @@ snapshots:
       '@ledgerhq/logs': 5.50.0
       u2f-api: 0.2.7
 
-  '@ledgerhq/hw-transport-webusb@6.29.15':
+  '@ledgerhq/hw-transport-webusb@6.30.0':
     dependencies:
-      '@ledgerhq/devices': 8.8.0
-      '@ledgerhq/errors': 6.28.0
-      '@ledgerhq/hw-transport': 6.31.15
-      '@ledgerhq/logs': 6.13.0
+      '@ledgerhq/devices': 8.10.0
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/hw-transport': 6.32.0
+      '@ledgerhq/logs': 6.14.0
 
   '@ledgerhq/hw-transport@5.51.1':
     dependencies:
@@ -20811,6 +21002,13 @@ snapshots:
       '@ledgerhq/devices': 8.5.0
       '@ledgerhq/errors': 6.28.0
       '@ledgerhq/logs': 6.13.0
+      events: 3.3.0
+
+  '@ledgerhq/hw-transport@6.32.0':
+    dependencies:
+      '@ledgerhq/devices': 8.10.0
+      '@ledgerhq/errors': 6.29.0
+      '@ledgerhq/logs': 6.14.0
       events: 3.3.0
 
   '@ledgerhq/ledger-cal-service@0.2.0(debug@4.4.1)':
@@ -20893,7 +21091,7 @@ snapshots:
       '@ledgerhq/errors': 6.28.0
       '@ledgerhq/hw-app-algorand': 6.31.11
       '@ledgerhq/hw-app-aptos': 6.34.11
-      '@ledgerhq/hw-app-btc': 10.14.0
+      '@ledgerhq/hw-app-btc': 10.17.0
       '@ledgerhq/hw-app-cosmos': 6.32.11
       '@ledgerhq/hw-app-elrond': 6.21.1(debug@4.4.1)
       '@ledgerhq/hw-app-eth': 6.47.1(debug@4.4.1)(react@18.3.1)
@@ -20902,14 +21100,14 @@ snapshots:
       '@ledgerhq/hw-app-icon': 1.3.11
       '@ledgerhq/hw-app-near': 6.31.11
       '@ledgerhq/hw-app-polkadot': 6.34.11(debug@4.4.1)
-      '@ledgerhq/hw-app-solana': 7.6.2
+      '@ledgerhq/hw-app-solana': 7.7.0
       '@ledgerhq/hw-app-str': 7.3.0
       '@ledgerhq/hw-app-tezos': 6.31.11
       '@ledgerhq/hw-app-trx': 6.31.11
       '@ledgerhq/hw-app-vet': 0.2.16(react@18.3.1)
       '@ledgerhq/hw-app-xrp': 6.32.9
       '@ledgerhq/hw-bolos': 6.32.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/hw-transport-mocker': 6.30.0
       '@ledgerhq/ledger-cal-service': 0.2.0(debug@4.4.1)
       '@ledgerhq/ledger-trust-service': 0.2.0(debug@4.4.1)
@@ -21156,6 +21354,11 @@ snapshots:
       rxjs: 7.8.2
       utility-types: 3.11.0
 
+  '@ledgerhq/live-env@2.26.0':
+    dependencies:
+      rxjs: 7.8.2
+      utility-types: 3.11.0
+
   '@ledgerhq/live-env@2.5.0':
     dependencies:
       rxjs: 7.8.2
@@ -21275,6 +21478,13 @@ snapshots:
 
   '@ledgerhq/logs@6.13.0': {}
 
+  '@ledgerhq/logs@6.14.0': {}
+
+  '@ledgerhq/psbtv2@0.1.0':
+    dependencies:
+      bitcoinjs-lib: 5.2.0
+      varuint-bitcoin: 1.1.2
+
   '@ledgerhq/speculos-transport@0.1.10(debug@4.4.1)':
     dependencies:
       '@ledgerhq/devices': 8.4.4
@@ -21336,6 +21546,15 @@ snapshots:
       - react
       - react-redux
 
+  '@ledgerhq/types-live@6.94.0(react@18.3.1)':
+    dependencies:
+      '@ledgerhq/client-ids': 0.4.1(react@18.3.1)
+      bignumber.js: 9.3.1
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - react
+      - react-redux
+
   '@ledgerhq/wallet-api-acre-module@0.1.0(@ton/crypto@3.3.0)':
     dependencies:
       '@ledgerhq/wallet-api-client': 1.12.6(@ton/crypto@3.3.0)
@@ -21346,7 +21565,7 @@ snapshots:
 
   '@ledgerhq/wallet-api-client@1.12.6(@ton/crypto@3.3.0)':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/wallet-api-core': 1.27.0(@ton/crypto@3.3.0)
       bignumber.js: 9.3.1
     transitivePeerDependencies:
@@ -21412,11 +21631,30 @@ snapshots:
 
   '@lottiefiles/dotlottie-web@0.30.3': {}
 
+  '@metamask/abi-utils@3.0.0':
+    dependencies:
+      '@metamask/superstruct': 3.2.1
+      '@metamask/utils': 11.9.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@metamask/eth-json-rpc-provider@1.0.1':
     dependencies:
       '@metamask/json-rpc-engine': 7.3.3
       '@metamask/safe-event-emitter': 3.1.2
       '@metamask/utils': 5.0.2
+    transitivePeerDependencies:
+      - supports-color
+
+  '@metamask/eth-sig-util@8.2.0':
+    dependencies:
+      '@ethereumjs/rlp': 4.0.1
+      '@ethereumjs/util': 8.1.0
+      '@metamask/abi-utils': 3.0.0
+      '@metamask/utils': 11.9.0
+      '@scure/base': 1.1.9
+      ethereum-cryptography: 2.2.1
+      tweetnacl: 1.0.3
     transitivePeerDependencies:
       - supports-color
 
@@ -22393,16 +22631,16 @@ snapshots:
       '@scure/base': 1.2.6
       tslib: 2.8.1
 
-  '@polkadot/util-crypto@12.6.2(@polkadot/util@13.5.9)':
+  '@polkadot/util-crypto@12.6.2(@polkadot/util@14.0.1)':
     dependencies:
       '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@polkadot/networks': 12.6.2
-      '@polkadot/util': 13.5.9
-      '@polkadot/wasm-crypto': 7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
-      '@polkadot/wasm-util': 7.5.4(@polkadot/util@13.5.9)
+      '@polkadot/util': 14.0.1
+      '@polkadot/wasm-crypto': 7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
+      '@polkadot/wasm-util': 7.5.4(@polkadot/util@14.0.1)
       '@polkadot/x-bigint': 12.6.2
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       '@scure/base': 1.2.6
       tslib: 2.8.1
 
@@ -22470,11 +22708,11 @@ snapshots:
       '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-bridge@7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
+  '@polkadot/wasm-bridge@7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
     dependencies:
-      '@polkadot/util': 13.5.9
-      '@polkadot/wasm-util': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
+      '@polkadot/util': 14.0.1
+      '@polkadot/wasm-util': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       tslib: 2.8.1
 
   '@polkadot/wasm-bridge@7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@13.5.9(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
@@ -22496,11 +22734,6 @@ snapshots:
       '@polkadot/util': 12.6.2
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-asmjs@7.5.4(@polkadot/util@13.5.9)':
-    dependencies:
-      '@polkadot/util': 13.5.9
-      tslib: 2.8.1
-
   '@polkadot/wasm-crypto-asmjs@7.5.4(@polkadot/util@14.0.1)':
     dependencies:
       '@polkadot/util': 14.0.1
@@ -22516,14 +22749,14 @@ snapshots:
       '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-init@7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
+  '@polkadot/wasm-crypto-init@7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
     dependencies:
-      '@polkadot/util': 13.5.9
-      '@polkadot/wasm-bridge': 7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
-      '@polkadot/wasm-crypto-asmjs': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/wasm-crypto-wasm': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/wasm-util': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
+      '@polkadot/util': 14.0.1
+      '@polkadot/wasm-bridge': 7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
+      '@polkadot/wasm-crypto-asmjs': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/wasm-crypto-wasm': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/wasm-util': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       tslib: 2.8.1
 
   '@polkadot/wasm-crypto-init@7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@13.5.9(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
@@ -22552,12 +22785,6 @@ snapshots:
       '@polkadot/wasm-util': 7.5.4(@polkadot/util@12.6.2)
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto-wasm@7.5.4(@polkadot/util@13.5.9)':
-    dependencies:
-      '@polkadot/util': 13.5.9
-      '@polkadot/wasm-util': 7.5.4(@polkadot/util@13.5.9)
-      tslib: 2.8.1
-
   '@polkadot/wasm-crypto-wasm@7.5.4(@polkadot/util@14.0.1)':
     dependencies:
       '@polkadot/util': 14.0.1
@@ -22575,15 +22802,15 @@ snapshots:
       '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@12.6.2)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       tslib: 2.8.1
 
-  '@polkadot/wasm-crypto@7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
+  '@polkadot/wasm-crypto@7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
     dependencies:
-      '@polkadot/util': 13.5.9
-      '@polkadot/wasm-bridge': 7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
-      '@polkadot/wasm-crypto-asmjs': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/wasm-crypto-init': 7.5.4(@polkadot/util@13.5.9)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
-      '@polkadot/wasm-crypto-wasm': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/wasm-util': 7.5.4(@polkadot/util@13.5.9)
-      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
+      '@polkadot/util': 14.0.1
+      '@polkadot/wasm-bridge': 7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
+      '@polkadot/wasm-crypto-asmjs': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/wasm-crypto-init': 7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))
+      '@polkadot/wasm-crypto-wasm': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/wasm-util': 7.5.4(@polkadot/util@14.0.1)
+      '@polkadot/x-randomvalues': 12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))
       tslib: 2.8.1
 
   '@polkadot/wasm-crypto@7.5.4(@polkadot/util@14.0.1)(@polkadot/x-randomvalues@13.5.9(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)))':
@@ -22611,11 +22838,6 @@ snapshots:
   '@polkadot/wasm-util@7.5.4(@polkadot/util@12.6.2)':
     dependencies:
       '@polkadot/util': 12.6.2
-      tslib: 2.8.1
-
-  '@polkadot/wasm-util@7.5.4(@polkadot/util@13.5.9)':
-    dependencies:
-      '@polkadot/util': 13.5.9
       tslib: 2.8.1
 
   '@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1)':
@@ -22663,9 +22885,9 @@ snapshots:
       '@polkadot/x-global': 12.6.2
       tslib: 2.8.1
 
-  '@polkadot/x-randomvalues@12.6.2(@polkadot/util@13.5.9)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))':
+  '@polkadot/x-randomvalues@12.6.2(@polkadot/util@14.0.1)(@polkadot/wasm-util@7.5.4(@polkadot/util@14.0.1))':
     dependencies:
-      '@polkadot/util': 13.5.9
+      '@polkadot/util': 14.0.1
       '@polkadot/wasm-util': 7.5.4(@polkadot/util@14.0.1)
       '@polkadot/x-global': 12.6.2
       tslib: 2.8.1
@@ -23250,7 +23472,7 @@ snapshots:
   '@scure/bip32@1.1.5':
     dependencies:
       '@noble/hashes': 1.2.0
-      '@noble/secp256k1': 1.7.1
+      '@noble/secp256k1': 1.7.2
       '@scure/base': 1.1.9
 
   '@scure/bip32@1.4.0':
@@ -24495,7 +24717,7 @@ snapshots:
 
   '@taquito/ledger-signer@20.1.2':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@stablelib/blake2b': 1.0.1
       '@taquito/core': 20.1.2
       '@taquito/taquito': 20.1.2
@@ -24564,7 +24786,7 @@ snapshots:
 
   '@ton-community/ton-ledger@7.3.0(@ton/core@0.56.3(@ton/crypto@3.3.0))':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       '@ton/core': 0.56.3(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
       teslabot: 1.5.0
@@ -24689,6 +24911,11 @@ snapshots:
       - expo-constants
       - expo-localization
       - react-native
+
+  '@trezor/connect-plugin-ethereum@9.1.5(@metamask/eth-sig-util@8.2.0)(tslib@2.8.1)':
+    dependencies:
+      '@metamask/eth-sig-util': 8.2.0
+      tslib: 2.8.1
 
   '@trezor/connect-web@9.7.1(@solana/sysvars@2.3.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3))(bufferutil@4.1.0)(debug@4.4.1)(expo-constants@13.1.1(expo@45.0.8(@babel/core@7.28.5)))(fastestsmallesttextencoderdecoder@1.0.22)(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))(tslib@2.8.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))':
     dependencies:
@@ -26953,11 +27180,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@zondax/ledger-substrate@1.1.2(debug@4.4.1)':
+  '@zondax/ledger-substrate@2.1.2(debug@4.4.1)':
     dependencies:
-      '@ledgerhq/hw-transport': 6.31.4
+      '@ledgerhq/hw-transport': 6.31.15
       '@zondax/ledger-js': 1.3.1
       axios: 1.13.3(debug@4.4.1)
+      buffer: 6.0.3
+    optionalDependencies:
+      '@ledgerhq/hw-transport-node-hid': 6.30.0
     transitivePeerDependencies:
       - debug
 
@@ -27360,6 +27590,14 @@ snapshots:
   axios@1.12.2(debug@4.4.3):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
+      form-data: 4.0.5
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
+  axios@1.13.2(debug@4.4.1):
+    dependencies:
+      follow-redirects: 1.15.11(debug@4.4.1)
       form-data: 4.0.5
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -29416,7 +29654,7 @@ snapshots:
     dependencies:
       bn.js: 4.12.2
       brorand: 1.1.0
-      hash.js: 1.1.3
+      hash.js: 1.1.7
       hmac-drbg: 1.0.1
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
@@ -30288,6 +30526,9 @@ snapshots:
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
 
+  expand-template@2.0.3:
+    optional: true
+
   expect-type@1.3.0: {}
 
   expect@27.5.1:
@@ -30910,6 +31151,9 @@ snapshots:
       dargs: 8.1.0
       meow: 12.1.1
       split2: 4.2.0
+
+  github-from-package@0.0.0:
+    optional: true
 
   glob-parent@5.1.2:
     dependencies:
@@ -31804,7 +32048,7 @@ snapshots:
 
   isomorphic-fetch@3.0.0:
     dependencies:
-      node-fetch: 2.6.13
+      node-fetch: 2.7.0
       whatwg-fetch: 3.6.20
     transitivePeerDependencies:
       - encoding
@@ -32339,11 +32583,11 @@ snapshots:
     dependencies:
       invert-kv: 1.0.0
 
-  ledger-bitcoin@0.2.3:
+  ledger-bitcoin@0.3.0:
     dependencies:
-      '@bitcoinerlab/descriptors': 1.1.1(ledger-bitcoin@0.2.3)
+      '@bitcoinerlab/descriptors': 1.1.1(ledger-bitcoin@0.3.0)
       '@bitcoinerlab/secp256k1': 1.2.0
-      '@ledgerhq/hw-transport': 6.31.15
+      '@ledgerhq/hw-transport': 6.32.0
       bip32-path: 0.4.2
       bitcoinjs-lib: 6.1.7
 
@@ -33074,6 +33318,9 @@ snapshots:
 
   mitt@3.0.1: {}
 
+  mkdirp-classic@0.5.3:
+    optional: true
+
   mkdirp-promise@5.0.1:
     dependencies:
       mkdirp: 3.0.1
@@ -33227,6 +33474,9 @@ snapshots:
 
   nanoid@5.1.6: {}
 
+  napi-build-utils@2.0.0:
+    optional: true
+
   natural-compare@1.4.0: {}
 
   ncp@2.0.0:
@@ -33350,11 +33600,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  node-abi@3.87.0:
+    dependencies:
+      semver: 7.7.3
+    optional: true
+
   node-addon-api@2.0.2: {}
 
   node-addon-api@3.2.1: {}
 
   node-addon-api@5.1.0: {}
+
+  node-addon-api@6.1.0:
+    optional: true
 
   node-addon-api@8.5.0: {}
 
@@ -33383,6 +33641,13 @@ snapshots:
   node-forge@1.3.3: {}
 
   node-gyp-build@4.8.4: {}
+
+  node-hid@2.1.2:
+    dependencies:
+      bindings: 1.5.0
+      node-addon-api: 3.2.1
+      prebuild-install: 7.1.3
+    optional: true
 
   node-int64@0.4.0: {}
 
@@ -34334,6 +34599,22 @@ snapshots:
 
   preact@10.28.2: {}
 
+  prebuild-install@7.1.3:
+    dependencies:
+      detect-libc: 2.1.2
+      expand-template: 2.0.3
+      github-from-package: 0.0.0
+      minimist: 1.2.8
+      mkdirp-classic: 0.5.3
+      napi-build-utils: 2.0.0
+      node-abi: 3.87.0
+      pump: 3.0.3
+      rc: 1.2.8
+      simple-get: 4.0.1
+      tar-fs: 2.1.4
+      tunnel-agent: 0.6.0
+    optional: true
+
   prelude-ls@1.1.2: {}
 
   prelude-ls@1.2.1: {}
@@ -34511,7 +34792,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/node': 25.0.3
-      long: 5.2.5
+      long: 5.3.2
 
   protobufjs@7.5.4:
     dependencies:
@@ -35554,6 +35835,13 @@ snapshots:
       once: 1.4.0
       simple-concat: 1.0.1
 
+  simple-get@4.0.1:
+    dependencies:
+      decompress-response: 6.0.0
+      once: 1.4.0
+      simple-concat: 1.0.1
+    optional: true
+
   simple-plist@1.3.1:
     dependencies:
       bplist-creator: 0.1.0
@@ -36086,6 +36374,14 @@ snapshots:
   tapable@1.1.3: {}
 
   tapable@2.3.0: {}
+
+  tar-fs@2.1.4:
+    dependencies:
+      chownr: 1.1.4
+      mkdirp-classic: 0.5.3
+      pump: 3.0.3
+      tar-stream: 2.2.0
+    optional: true
 
   tar-stream@2.2.0:
     dependencies:
@@ -36719,6 +37015,13 @@ snapshots:
       '@types/w3c-web-usb': 1.0.13
       node-addon-api: 8.5.0
       node-gyp-build: 4.8.4
+
+  usb@2.9.0:
+    dependencies:
+      '@types/w3c-web-usb': 1.0.13
+      node-addon-api: 6.1.0
+      node-gyp-build: 4.8.4
+    optional: true
 
   use-callback-ref@1.3.3(react@18.3.1):
     dependencies:

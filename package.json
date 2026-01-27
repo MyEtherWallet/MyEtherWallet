@@ -28,7 +28,7 @@
     "@1inch/limit-order-sdk": "^5.2.3",
     "@amplitude/analytics-browser": "^2.33.1",
     "@commitlint/config-conventional": "^20.3.1",
-    "@enkryptcom/hw-wallets": "^0.0.13",
+    "@enkryptcom/hw-wallets": "^0.0.15",
     "@enkryptcom/name-resolution": "^0.0.8",
     "@enkryptcom/swap": "^0.0.5",
     "@enkryptcom/types": "^0.0.5",
