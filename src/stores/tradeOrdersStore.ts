@@ -19,6 +19,7 @@ export interface SavedTradeOrder {
   usdValue?: string
   chainId: number
   fromAddress: string
+  seen?: boolean
 }
 
 interface TradeOrdersByAddress {
@@ -131,6 +132,45 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     return orders.filter(o => o.status === 'pending')
   }
 
+  // Get unseen orders count for an address
+  const getUnseenOrdersCount = (address: string): number => {
+    const normalizedAddress = address.toLowerCase()
+    const orders = tradeOrders.value[normalizedAddress] || []
+    return orders.filter(o => !o.seen).length
+  }
+
+  // Check if there are any unseen orders for an address
+  const hasUnseenOrders = (address: string): boolean => {
+    return getUnseenOrdersCount(address) > 0
+  }
+
+  // Mark all orders as seen for an address
+  const markAllOrdersAsSeen = (address: string) => {
+    const normalizedAddress = address.toLowerCase()
+    const orders = tradeOrders.value[normalizedAddress]
+    if (!orders) return
+
+    tradeOrders.value[normalizedAddress] = orders.map(order => ({
+      ...order,
+      seen: true,
+    }))
+  }
+
+  // Mark a specific order as seen
+  const markOrderAsSeen = (address: string, hash: string) => {
+    const normalizedAddress = address.toLowerCase()
+    const orders = tradeOrders.value[normalizedAddress]
+    if (!orders) return
+
+    const orderIndex = orders.findIndex(o => o.hash === hash)
+    if (orderIndex >= 0) {
+      tradeOrders.value[normalizedAddress][orderIndex] = {
+        ...orders[orderIndex],
+        seen: true,
+      }
+    }
+  }
+
   return {
     tradeOrders,
     getOrdersByAddress,
@@ -141,5 +181,9 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     clearOrdersForAddress,
     clearAllOrders,
     getPendingOrders,
+    getUnseenOrdersCount,
+    hasUnseenOrders,
+    markAllOrdersAsSeen,
+    markOrderAsSeen,
   }
 })

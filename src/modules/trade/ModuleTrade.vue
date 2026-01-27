@@ -123,9 +123,6 @@
       :order-hash="orderHash"
       :from-chain="selectedFromChain"
     />
-
-    <!-- Floating Order Status -->
-    <trade-order-status ref="orderStatusRef" />
   </div>
 </template>
 
@@ -143,7 +140,6 @@ import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
-import TradeOrderStatus from './components/TradeOrderStatus.vue'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -151,6 +147,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useToastStore } from '@/stores/toastStore'
+import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { useTrade } from './useTrade'
 import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
 
@@ -195,7 +192,7 @@ const quoteModalOpen = ref(false)
 const tradeInitiatedOpen = ref(false)
 const txProceeding = ref(false)
 const orderHash = ref<string>('')
-const orderStatusRef = ref<InstanceType<typeof TradeOrderStatus> | null>(null)
+const tradeOrdersStore = useTradeOrdersStore()
 
 const currentQuote = ref<{
   startAmount: bigint
@@ -389,39 +386,36 @@ const confirmTrade = async () => {
     quoteModalOpen.value = false
     tradeInitiatedOpen.value = true
 
-    // Add order to floating status tracker
-    if (orderStatusRef.value) {
-      const toDecimals = toTokenSelected.value.decimals || 18
-      const expectedToAmount = formatFloatingPointValue(
-        formatUnits(
-          currentQuote.value?.avgAmount ||
-            currentQuote.value?.startAmount ||
-            0n,
-          toDecimals,
-        ),
-      ).value
+    // Add order to store (will appear in notifications)
+    const toDecimals = toTokenSelected.value.decimals || 18
+    const expectedToAmount = formatFloatingPointValue(
+      formatUnits(
+        currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n,
+        toDecimals,
+      ),
+    ).value
 
-      orderStatusRef.value.addOrder({
-        hash: result.hash,
-        status: 'pending',
-        fromAmount: fromAmount.value,
-        fromSymbol: fromTokenSelected.value.symbol,
-        fromDecimals: fromTokenSelected.value.decimals || 18,
-        expectedToAmount,
-        toSymbol: toTokenSelected.value.symbol,
-        toDecimals: toTokenSelected.value.decimals || 18,
-        createdAt: Math.floor(Date.now() / 1000),
-        duration: 180, // Default 3 minutes, will be updated from status
-        fills: [],
-        usdValue: fromTokenSelected.value.price
-          ? (
-              parseFloat(fromAmount.value) * fromTokenSelected.value.price
-            ).toFixed(2)
-          : undefined,
-        chainId,
-        fromAddress: walletAddress.value!,
-      })
-    }
+    tradeOrdersStore.addOrder({
+      hash: result.hash,
+      status: 'pending',
+      fromAmount: fromAmount.value,
+      fromSymbol: fromTokenSelected.value.symbol,
+      fromDecimals: fromTokenSelected.value.decimals || 18,
+      expectedToAmount,
+      toSymbol: toTokenSelected.value.symbol,
+      toDecimals: toTokenSelected.value.decimals || 18,
+      createdAt: Math.floor(Date.now() / 1000),
+      duration: 180, // Default 3 minutes, will be updated from status
+      fills: [],
+      usdValue: fromTokenSelected.value.price
+        ? (
+            parseFloat(fromAmount.value) * fromTokenSelected.value.price
+          ).toFixed(2)
+        : undefined,
+      chainId,
+      fromAddress: walletAddress.value!,
+      seen: false, // New order is unseen
+    })
 
     toastStore.addToastMessage({
       text: 'Trade order submitted successfully!',
