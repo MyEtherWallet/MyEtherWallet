@@ -54,7 +54,7 @@
           <app-base-button
             @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
           >
-            Buy Stock
+            Get Stock
           </app-base-button>
         </div>
         <div v-if="!hasBalances && type !== 'stock'" class="text-center"></div>

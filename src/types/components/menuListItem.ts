@@ -1,5 +1,4 @@
 export enum ICON_IDS {
-  'BUY' = 'buy',
   'SWAP' = 'swap',
   'SEND' = 'send',
   'STAKE' = 'stake',
