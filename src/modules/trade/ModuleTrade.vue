@@ -84,10 +84,29 @@
       <app-base-button
         class="w-full max-w-[340px]"
         v-if="isWalletConnected && !isWatchOnly"
-        :disabled="isTradeDisabled"
-        @click="tradeButton"
+        :disabled="isTradeDisabled || isApproving"
+        @click="needsApproval ? handleApprove() : tradeButton()"
       >
-        Trade
+        <span v-if="isApproving" class="flex items-center justify-center gap-2">
+          <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+              fill="none"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Approving...
+        </span>
+        <span v-else>{{ needsApproval ? 'Approve' : 'Trade' }}</span>
       </app-base-button>
       <div class="mx-auto w-full max-w-[340px]" v-else>
         <app-base-button
@@ -194,6 +213,10 @@ const txProceeding = ref(false)
 const orderHash = ref<string>('')
 const tradeOrdersStore = useTradeOrdersStore()
 
+// Approval state
+const needsApproval = ref(false)
+const isApproving = ref(false)
+
 const currentQuote = ref<{
   startAmount: bigint
   endAmount?: bigint
@@ -283,9 +306,19 @@ const clearValues = () => {
   fromAmountError.value = ''
   toAmountError.value = ''
   generalError.value = ''
-  fromTokenSelected.value = null
-  toTokenSelected.value = null
   currentQuote.value = null
+  needsApproval.value = false
+
+  // Reset to default tokens
+  if (fromTokens.value.length > 0) {
+    fromTokenSelected.value =
+      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
+      fromTokens.value[0] ||
+      null
+  }
+  if (toTokens.value.length > 0) {
+    toTokenSelected.value = toTokens.value[0] || null
+  }
 }
 
 const setFromChain = (chain: Chain) => {
@@ -337,6 +370,14 @@ const fetchQuote = useDebounceFn(async () => {
     toAmount.value = formatFloatingPointValue(
       formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
     ).value
+
+    // Check if approval is required
+    const approvalRequired = await fusion.isApprovalRequired(
+      walletAddress.value,
+      fromTokenSelected.value.address,
+      BigInt(amountInBaseUnits),
+    )
+    needsApproval.value = approvalRequired
   } catch (e) {
     generalError.value = (e as Error).message || 'Failed to fetch quote'
     toAmount.value = '0'
@@ -344,6 +385,42 @@ const fetchQuote = useDebounceFn(async () => {
     isLoadingQuote.value = false
   }
 }, 500)
+
+const handleApprove = async () => {
+  if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
+    return
+  }
+
+  isApproving.value = true
+
+  try {
+    const { default: OneInchFusion } =
+      await import('./providers/oneinch_fusion/oneInchFusion')
+
+    const chainId = parseInt(selectedFromChain.value?.chainID || '1')
+    const fusion = new OneInchFusion(wallet.value as any, chainId)
+
+    await fusion.setApproval(
+      walletAddress.value,
+      fromTokenSelected.value.address,
+    )
+
+    // Approval successful, update state
+    needsApproval.value = false
+
+    toastStore.addToastMessage({
+      text: 'Approval successful! You can now trade.',
+      type: ToastType.Success,
+    })
+  } catch (e) {
+    toastStore.addToastMessage({
+      text: (e as Error).message || 'Failed to approve token',
+      type: ToastType.Error,
+    })
+  } finally {
+    isApproving.value = false
+  }
+}
 
 const tradeButton = () => {
   if (!currentQuote.value) {

@@ -9,13 +9,13 @@ const SUPPORTED_CHAINS: {
   {
     chain: mainnet,
     chainId: mainnet.id,
-    node: 'https://nodes.mewapi.io/rpc/eth',
+    node: 'wss://nodes.mewapi.io/ws/eth',
     chainName: 'ETHEREUM',
   },
   {
     chain: bsc,
     chainId: bsc.id,
-    node: 'https://nodes.mewapi.io/rpc/bsc',
+    node: 'wss://nodes.mewapi.io/ws/bsc',
     chainName: 'BSC',
   },
 ]

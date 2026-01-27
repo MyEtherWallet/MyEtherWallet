@@ -23,7 +23,7 @@
     >
       <div
         v-if="isOpen"
-        class="fixed right-20 top-20 z-[1000] w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-lg border border-grey-10"
+        class="fixed right-4 sm:right-24 top-20 z-[9999] w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-lg border border-grey-10"
       >
         <!-- Header -->
         <div
@@ -188,6 +188,7 @@ import {
   type SavedTradeOrder,
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { onClickOutside } from '@vueuse/core'
 
@@ -199,6 +200,7 @@ interface TradeOrder extends SavedTradeOrder {
 // Store and wallet
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
+const walletMenuStore = useWalletMenuStore()
 const { walletAddress } = storeToRefs(walletStore)
 
 // Container ref for click outside
@@ -238,9 +240,14 @@ const orders = computed<TradeOrder[]>(() => {
 // Toggle popup
 const togglePopup = () => {
   isOpen.value = !isOpen.value
-  if (isOpen.value && walletAddress.value) {
-    // Mark all orders as seen when opening
-    tradeOrdersStore.markAllOrdersAsSeen(walletAddress.value)
+  if (isOpen.value) {
+    // Close side menu when opening notifications
+    walletMenuStore.setIsOpenSideMenu(false)
+
+    if (walletAddress.value) {
+      // Mark all orders as seen when opening
+      tradeOrdersStore.markAllOrdersAsSeen(walletAddress.value)
+    }
   }
 }
 

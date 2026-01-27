@@ -17,7 +17,7 @@ import {
   erc20Abi,
   type PublicClient,
   type Chain,
-  http,
+  webSocket,
   serializeTransaction,
   encodeFunctionData,
 } from 'viem'
@@ -67,7 +67,7 @@ class OneInchFusion {
     if (!chainConfig) throw new Error('Fusion: network not supported')
     this.wallet = wallet
     this.publicClient = createPublicClient({
-      transport: http(chainConfig.node),
+      transport: webSocket(chainConfig.node),
     })
     this.web3Provider = new Web3ProviderConnector(wallet, this.publicClient)
     this.chain = chainConfig.chain
