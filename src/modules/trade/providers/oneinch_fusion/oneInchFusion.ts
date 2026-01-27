@@ -31,7 +31,7 @@ import type { AxiosError } from 'axios'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { GetTradableAssetsResponse } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
-import { WalletType } from '@/providers/types'
+import { isHardWareWallet } from '@/utils/walletUtils'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
@@ -153,10 +153,7 @@ class OneInchFusion {
         })
         const serialized = serializeTransaction(tx as any)
         let hash = ''
-        if (
-          this.wallet.getWalletType() === WalletType.LEDGER ||
-          this.wallet.getWalletType() === WalletType.TREZOR
-        ) {
+        if (isHardWareWallet(this.wallet)) {
           const signedTx = await this.wallet.SignTransaction(serialized)
           hash = await this.publicClient.sendRawTransaction({
             serializedTransaction: signedTx.signed,
@@ -213,10 +210,7 @@ class OneInchFusion {
     })
     const serialized = serializeTransaction(tx as any)
     let hash = ''
-    if (
-      this.wallet.getWalletType() === WalletType.LEDGER ||
-      this.wallet.getWalletType() === WalletType.TREZOR
-    ) {
+    if (isHardWareWallet(this.wallet)) {
       const signedTx = await this.wallet.SignTransaction(serialized)
       hash = await this.publicClient.sendRawTransaction({
         serializedTransaction: signedTx.signed,

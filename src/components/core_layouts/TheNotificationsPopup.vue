@@ -277,28 +277,6 @@ const stopCountdown = () => {
   }
 }
 
-// Add a new order to track
-const addOrder = (
-  order: Omit<SavedTradeOrder, 'fromAddress'> & { fromAddress?: string },
-) => {
-  const address = order.fromAddress || walletAddress.value
-  if (!address) return
-
-  const savedOrder: SavedTradeOrder = {
-    ...order,
-    fromAddress: address,
-    seen: false, // New orders are unseen
-  }
-
-  tradeOrdersStore.addOrder(savedOrder)
-
-  // Initialize remaining time
-  remainingTimes.value[order.hash] = order.duration
-
-  startCountdown()
-  startPolling(order.hash, order.chainId)
-}
-
 // Update order status
 const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
   if (!walletAddress.value) return
@@ -466,6 +444,25 @@ watch(
   },
 )
 
+// Helper to start polling for all pending orders
+const startPollingForPendingOrders = (address: string) => {
+  const pendingOrders = tradeOrdersStore.getPendingOrders(address)
+  if (pendingOrders.length > 0) {
+    pendingOrders.forEach(order => {
+      // Calculate remaining time based on creation time and duration
+      const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
+      const remaining = Math.max(0, order.duration - elapsed)
+      remainingTimes.value[order.hash] = remaining
+
+      // Only start polling if not already polling this order
+      if (!pollIntervals[order.hash]) {
+        startPolling(order.hash, order.chainId)
+      }
+    })
+    startCountdown()
+  }
+}
+
 // Watch for wallet address changes to resume polling
 watch(
   walletAddress,
@@ -477,27 +474,43 @@ watch(
 
     if (newAddress) {
       // Resume polling for pending orders
-      const pendingOrders = tradeOrdersStore.getPendingOrders(newAddress)
-      if (pendingOrders.length > 0) {
-        pendingOrders.forEach(order => {
-          // Calculate remaining time based on creation time and duration
-          const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
-          const remaining = Math.max(0, order.duration - elapsed)
-          remainingTimes.value[order.hash] = remaining
-          startPolling(order.hash, order.chainId)
-        })
-        startCountdown()
-      }
+      startPollingForPendingOrders(newAddress)
     }
   },
   { immediate: true },
 )
 
-// Expose methods for external use (e.g., from ModuleTrade)
-defineExpose({
-  addOrder,
-  updateOrderStatus,
-  removeOrder,
-  clearAllOrders,
-})
+// Watch for new orders added to the store
+watch(
+  () =>
+    walletAddress.value
+      ? tradeOrdersStore.getOrdersByAddress(walletAddress.value)
+      : [],
+  (newOrders, oldOrders) => {
+    if (!walletAddress.value) return
+
+    // Find newly added orders (orders in new list but not in old list)
+    const oldHashes = new Set((oldOrders || []).map(o => o.hash))
+    const newlyAdded = newOrders.filter(o => !oldHashes.has(o.hash))
+
+    // Start polling for new orders
+    newlyAdded.forEach(order => {
+      if (order.status === 'pending') {
+        // Initialize remaining time
+        const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
+        const remaining = Math.max(0, order.duration - elapsed)
+        remainingTimes.value[order.hash] = remaining
+
+        if (!pollIntervals[order.hash]) {
+          startPolling(order.hash, order.chainId)
+        }
+        startCountdown()
+      }
+    })
+
+    // Also check for any pending orders that aren't being polled
+    startPollingForPendingOrders(walletAddress.value)
+  },
+  { deep: true },
+)
 </script>
