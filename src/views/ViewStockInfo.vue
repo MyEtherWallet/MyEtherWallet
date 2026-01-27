@@ -29,6 +29,7 @@ const walletMenu = useWalletMenuStore()
 
 onMounted(() => {
   if (isMDAndUp.value) {
+    walletMenu.setWalletPanel('trade')
     walletMenu.setIsOpenSideMenu(true)
   } else {
     walletMenu.setIsOpenSideMenu(false)

@@ -189,8 +189,10 @@ import {
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { onClickOutside } from '@vueuse/core'
+import { useRoute, useRouter } from 'vue-router'
 
 // Extended TradeOrder with runtime-only remainingTime
 interface TradeOrder extends SavedTradeOrder {
@@ -201,7 +203,13 @@ interface TradeOrder extends SavedTradeOrder {
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
 const walletMenuStore = useWalletMenuStore()
+const appLayoutStore = useAppLayoutStore()
 const { walletAddress } = storeToRefs(walletStore)
+const { isOverflowHidden } = storeToRefs(appLayoutStore)
+
+// Router for closing AppViewAsDialog
+const route = useRoute()
+const router = useRouter()
 
 // Container ref for click outside
 const containerRef = ref<HTMLElement | null>(null)
@@ -243,6 +251,14 @@ const togglePopup = () => {
   if (isOpen.value) {
     // Close side menu when opening notifications
     walletMenuStore.setIsOpenSideMenu(false)
+
+    // Close AppViewAsDialog if open (detected by nested routes)
+    if (route.matched.length > 1) {
+      // Navigate to parent route to close the dialog
+      const parentRouteName = route.matched[route.matched.length - 2].name
+      isOverflowHidden.value = false
+      router.push({ name: parentRouteName })
+    }
 
     if (walletAddress.value) {
       // Mark all orders as seen when opening
