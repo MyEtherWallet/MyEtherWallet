@@ -104,7 +104,9 @@ export type BtcGasFees = components['schemas']['BtcTransactionFeeQuote']
 export type FeeOption = BtcGasFeesQuote & EvmGasFees
 export type QuotesResponse = BitcoinQuotesResponse &
   GetEvmTransactionQuoteResponse
-//Tokens Page
+/** --------------------------
+ * Token Info
+ --------------------------*/
 export type GetWebTokenInfo =
   components['schemas']['GetWebTokenInfoPageResponse']
 
@@ -114,6 +116,8 @@ export type GetWebTokenPriceChartPoint =
   GetWebTokenPriceChartByCoinResponse['prices'][number]
 export type WebTokenPriceChartInterval =
   components['schemas']['WebTokenPriceChartInterval']
+export type TokenSupportedChain = GetWebTokenInfo['supportedChains'][number]
+export type TokenChainBalance = GetWebTokenInfo['chainBalances'][number]
 
 /** --------------------------
  * Stocks Page
@@ -143,3 +147,24 @@ export type GetErc20AddressBalanceResponse =
 
 export type PortfolioHistoryResponse =
   components['schemas']['GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse']
+
+/** --------------------------
+ * Stock Info Page
+ --------------------------*/
+export type GetWebStocksInfoSummaryResponse =
+  components['schemas']['GetWebStocksInfoSummaryResponse']
+
+export type GetWebStocksInfoPrimaryPriceChartResponse =
+  components['schemas']['GetWebStocksInfoPrimaryPriceChartResponse']
+export type StockUnderlyingAsset =
+  GetWebStocksInfoSummaryResponse['underlyingMarket']
+export type StockDividends = GetWebStocksInfoSummaryResponse['dividend']
+
+export type StockPriceChartInterval =
+  components['parameters']['WebStocksInfoPriceChartInterval']
+export type StockChartPoint =
+  GetWebStocksInfoPrimaryPriceChartResponse['prices'][number]
+export type StockChainBalance =
+  GetWebStocksInfoSummaryResponse['chainBalances'][number]
+
+export type ChainBalance = StockChainBalance | TokenChainBalance

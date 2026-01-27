@@ -180,6 +180,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/mobile/ondo/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetMobileAllOndoAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/stocks/addresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksAddresses"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/pages/stocks/overview": {
         parameters: {
             query?: never;
@@ -204,6 +236,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["GetWebStocksTable"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/pages/stocks/watchlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebStocksWatchlist"];
         put?: never;
         post?: never;
         delete?: never;
@@ -898,6 +946,8 @@ export interface components {
         /** @enum {string} */
         WebStocksTableSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "VOLUME_24H_ASC" | "VOLUME_24H_DESC";
         /** @enum {string} */
+        WebStocksWatchlistSort: "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "VOLUME_24H_ASC" | "VOLUME_24H_DESC";
+        /** @enum {string} */
         WebStocksTableCategory: "COMMODITIES" | "EQUITIES" | "FIXED_INCOME" | "STOCK" | "ETF";
         /** @enum {string} */
         WebTokensWatchlistSort: "NONE" | "NAME_ASC" | "NAME_DESC" | "SYMBOL_ASC" | "SYMBOL_DESC" | "PRICE_ASC" | "PRICE_DESC" | "PRICE_CHANGE_PERCENTAGE_1H_ASC" | "PRICE_CHANGE_PERCENTAGE_1H_DESC" | "PRICE_CHANGE_PERCENTAGE_24H_ASC" | "PRICE_CHANGE_PERCENTAGE_24H_DESC" | "PRICE_CHANGE_PERCENTAGE_7D_ASC" | "PRICE_CHANGE_PERCENTAGE_7D_DESC" | "MARKET_CAP_ASC" | "MARKET_CAP_DESC" | "TOTAL_VOLUME_ASC" | "TOTAL_VOLUME_DESC";
@@ -938,6 +988,27 @@ export interface components {
             [key: string]: unknown;
         };
         GetPubkeyResponse: string;
+        GetMobileAllOndoAssetsResponse: {
+            stockAlias: null | string;
+            iconPngUrl: null | string;
+            primaryMarket: {
+                symbol: string;
+                price: string;
+                priceChangePercentage24h: string;
+                sharesMultiplier: string;
+            };
+            underlyingMarket: {
+                name: string;
+                ticker: string;
+                volume24h: string;
+                marketCap: string;
+            };
+            addresses: {
+                ondoGmNetworkChainId: string;
+                address: string;
+                decimals: number;
+            }[];
+        }[];
         GetChainMetadataListResponse: {
             result: components["schemas"]["ChainMetadata"][];
         };
@@ -959,6 +1030,18 @@ export interface components {
             supportsBalances: boolean;
             icon: string;
             price: null | number;
+        }[];
+        GetWebStocksAddressesResponse: {
+            symbol: string;
+            addresses: {
+                chainName: null | string;
+                chainNameLong: null | string;
+                chainType: null | string;
+                chainIconUrl: null | string;
+                ondoGmNetworkChainId: string;
+                address: string;
+                decimals: number;
+            }[];
         }[];
         GetWebStocksOverviewResponse: {
             newlyAdded: {
@@ -1047,6 +1130,22 @@ export interface components {
                 };
             }[];
         };
+        GetWebStocksWatchlistResponse: {
+            stockAlias?: string;
+            iconPngUrl?: string;
+            iconSvgUrl?: string;
+            primaryMarket: {
+                symbol: string;
+                price: string;
+                priceChangePercentage24h: string;
+                sparkline24h: number[];
+            };
+            underlyingMarket: {
+                name: string;
+                volume24h: string;
+                marketCap: string;
+            };
+        }[];
         GetWebStocksSummaryResponse: {
             stockAlias?: string;
             iconPngUrl?: string;
@@ -1065,20 +1164,43 @@ export interface components {
             description?: string;
             iconPngUrl?: string;
             iconSvgUrl?: string;
+            metadata?: {
+                assetClass?: string;
+                instrumentType?: string;
+            };
+            dividend?: {
+                dividendYield: string;
+                payoutFrequency: string;
+                lastCashAmount: string;
+                lastPaymentDate: string;
+            };
             primaryMarket?: {
                 symbol: string;
                 price: string;
                 priceChange24h?: string;
                 priceChangePercentage24h: string;
-                totalHolders?: number;
-                sharesMultiplier?: string;
+                totalHolders: number;
+                sharesMultiplier: string;
+                open24h?: string;
+                high24h?: string;
+                low24h?: string;
+                priceChart24h?: {
+                    timestamp: number;
+                    price: string;
+                }[];
             };
             underlyingMarket?: {
                 name: string;
+                ticker: string;
                 priceHigh52w: string;
                 priceLow52w: string;
                 averageVolume: string;
+                volume24h: string;
+                marketCap: string;
                 sharesOutstanding: string;
+                open24h?: string;
+                high24h?: string;
+                low24h?: string;
             };
             chainBalances: {
                 chainName: null | string;
@@ -1275,6 +1397,12 @@ export interface components {
                 price: number;
                 priceChangePercentage24h: number;
                 logoUrl: string | null;
+                ondo: null | {
+                    stockAlias?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                };
             }[];
         };
         GetWebTokensTableResponse: {
@@ -1367,6 +1495,12 @@ export interface components {
                 price: number;
                 priceChangePercentage24h: number;
                 logoUrl: string | null;
+                ondo: null | {
+                    stockAlias?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                };
             }[];
         };
         GetWebCryptoOverviewResponse: {
@@ -1382,6 +1516,12 @@ export interface components {
                 price: number;
                 priceChangePercentage24h: number;
                 logoUrl: string | null;
+                ondo: null | {
+                    stockAlias?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                };
             }[];
             rwaTopGainers: {
                 coinId: string;
@@ -1390,6 +1530,12 @@ export interface components {
                 price: number;
                 priceChangePercentage24h: number;
                 logoUrl: string | null;
+                ondo: null | {
+                    stockAlias?: string;
+                    primaryMarket: {
+                        symbol: string;
+                    };
+                };
             }[];
         };
         GetCoinGeckoChainPreviewResponse: {
@@ -1717,12 +1863,28 @@ export interface components {
                 "application/json": components["schemas"]["GetChainMetadataListResponse"];
             };
         };
+        GetMobileAllOndoAssetsSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetMobileAllOndoAssetsResponse"];
+            };
+        };
         GetChainMetadaListWithPricesSuccess: {
             headers: {
                 [name: string]: unknown;
             };
             content: {
                 "application/json": components["schemas"]["GetChainMetadataListWithPricesResponse"];
+            };
+        };
+        GetWebStocksAddressesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksAddressesResponse"];
             };
         };
         GetWebStocksOverviewSuccess: {
@@ -1739,6 +1901,14 @@ export interface components {
             };
             content: {
                 "application/json": components["schemas"]["GetWebStocksTableResponse"];
+            };
+        };
+        GetWebStocksWatchlistSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebStocksWatchlistResponse"];
             };
         };
         GetWebStocksSummarySuccess: {
@@ -2095,6 +2265,7 @@ export interface components {
         PathSymbol: string;
         PathCoinId: string;
         CoinIds: string;
+        QuerySymbols: string;
         ChainId: components["schemas"]["BigIntInput"];
         ChainName: string;
         FilterChain: string;
@@ -2108,6 +2279,7 @@ export interface components {
         WebStocksInfoPriceChartInterval: components["schemas"]["WebStocksInfoPriceChartInterval"];
         WebTokensTableSort: components["schemas"]["WebTokensTableSort"];
         WebStocksTableSort: components["schemas"]["WebStocksTableSort"];
+        WebStocksWatchlistSort: components["schemas"]["WebStocksWatchlistSort"];
         WebStocksTableCategory: components["schemas"]["WebStocksTableCategory"];
         WebTokensWatchlistSort: components["schemas"]["WebTokensWatchlistSort"];
         ChainNames: string;
@@ -2317,6 +2489,30 @@ export interface operations {
             200: components["responses"]["GetChainMetadaListWithPricesSuccess"];
         };
     };
+    GetMobileAllOndoAssets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetMobileAllOndoAssetsSuccess"];
+        };
+    };
+    GetWebStocksAddresses: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksAddressesSuccess"];
+        };
+    };
     GetWebStocksOverview: {
         parameters: {
             query?: never;
@@ -2345,6 +2541,21 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebStocksTableSuccess"];
+        };
+    };
+    GetWebStocksWatchlist: {
+        parameters: {
+            query?: {
+                symbols?: components["parameters"]["QuerySymbols"];
+                sort?: components["parameters"]["WebStocksWatchlistSort"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebStocksWatchlistSuccess"];
         };
     };
     GetWebStocksSummary: {

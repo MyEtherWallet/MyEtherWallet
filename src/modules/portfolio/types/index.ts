@@ -11,6 +11,7 @@ export interface TokenAllocation {
   id?: string
   is_stock?: boolean
   stock_alias?: string
+  stock_route?: string
 }
 
 export const ALLOCATION_COLORS = [
@@ -32,4 +33,5 @@ export interface TokenGainOrLoss {
   contract?: string
   is_stock?: boolean
   stock_alias?: string
+  stock_route?: string
 }

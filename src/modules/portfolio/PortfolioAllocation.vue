@@ -97,6 +97,7 @@ const topTokens = computed<TokenAllocation[]>(() => {
       usdBalanceFormatted: formatFiatValue(tokenBalanceFiatBN).value,
       is_stock: token.ondo !== undefined,
       stock_alias: token.ondo?.stockAlias || undefined,
+      stock_route: token.ondo?.primaryMarket.symbol || undefined,
     }
   })
 

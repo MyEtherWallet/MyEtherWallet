@@ -1,6 +1,6 @@
 <template>
   <div class="inline-block">
-    <Line :data="chartData" :options="chartOptions" />
+    <Line :data="chartData" :options="chartOptions" :plugins="plugins" />
   </div>
 </template>
 
@@ -188,9 +188,36 @@ const getFormat = (): Intl.DateTimeFormatOptions => {
       }
   }
 }
+const plugins = [
+  {
+    id: 'verticalLine',
+    afterDraw: (chart: any) => {
+      if (chart.tooltip?.opacity > 0) {
+        const x = chart.tooltip.caretX
+        const ctx = chart.ctx
+        const topY = chart.chartArea.top
+        const bottomY = chart.chartArea.bottom
+
+        ctx.save()
+        ctx.setLineDash([5, 5])
+        ctx.beginPath()
+        ctx.moveTo(x, topY)
+        ctx.lineTo(x, bottomY)
+        ctx.lineWidth = 1
+        ctx.strokeStyle = 'rgb(0,90,229,0.65)'
+        ctx.stroke()
+        ctx.restore()
+      }
+    },
+  },
+]
 const chartOptions = computed<ChartOptions<'line'>>(() => ({
   responsive: true,
   maintainAspectRatio: false,
+  interaction: {
+    mode: 'index',
+    intersect: false,
+  },
   plugins: {
     tooltip: {
       filter: function (tooltipItem) {
@@ -255,6 +282,9 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
             ? date.toLocaleTimeString('en-US', format)
             : date.toLocaleDateString('en-US', format)
         },
+      },
+      border: {
+        display: false, // This removes the main x-axis line
       },
       grid: {
         display: false, // Set display to false to remove vertical grid lines

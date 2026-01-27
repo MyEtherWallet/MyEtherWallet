@@ -1,5 +1,11 @@
 <template>
-  <div
+  <router-link
+    :to="{
+      name: STOCK_INFO_ROUTE_NAMES.stocks,
+      params: {
+        symbol: stock.primaryMarket.symbol,
+      },
+    }"
     class="rounded-16 bg-white shadow-button p-2 w-[200px] flex flex-col items-start"
   >
     <div class="flex items-center justify-start gap-3 my-2 mx-2 w-full">
@@ -57,7 +63,7 @@
       </p>
       <top-mover-history-chart :data="sparkLine" class="max-h-[70px]" />
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup lang="ts">
@@ -71,6 +77,7 @@ import {
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { type StockTopMoverItem } from '@/mew_api/types'
 import { computed } from 'vue'
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const props = defineProps<{ stock: StockTopMoverItem }>()
 

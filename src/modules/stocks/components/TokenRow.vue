@@ -2,9 +2,9 @@
   <router-link
     class="flex gap-3 rounded-16 hoverBGWhite py-2 px-3 items-center bg-white"
     :to="{
-      name: TOKEN_INFO_ROUTE_NAMES.crypto,
+      name: STOCK_INFO_ROUTE_NAMES.stocks,
       params: {
-        tokenId: token.primaryMarket.symbol,
+        symbol: token.primaryMarket.symbol,
       },
     }"
   >
@@ -74,7 +74,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import AppTooltip from '@/components/AppTooltip.vue'
 import type { StockOverviewItem } from '@/mew_api/types'
-import { TOKEN_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import TableSparkline from '@/components/TableSparkline.vue'
 import { computed } from 'vue'
 const props = defineProps<{

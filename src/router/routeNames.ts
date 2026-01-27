@@ -35,6 +35,12 @@ const TOKEN_INFO_ROUTE_NAMES = {
   crypto: 'token-info-crypto',
   home: 'token-info-home',
 }
+const STOCK_INFO = { PATH: 'stock/:symbol' }
+const STOCK_INFO_ROUTE_NAMES = {
+  home: 'home-stock-info',
+  crypto: 'crypto-stock-info',
+  stocks: 'stocks-stock-info',
+}
 
 const ROUTES_SEND: RouteNameCollection = {
   SEND: { NAME: 'WalletSend', PATH: '/send' },
@@ -52,4 +58,6 @@ export {
   ROUTES_ACCESS,
   TOKEN_INFO,
   TOKEN_INFO_ROUTE_NAMES,
+  STOCK_INFO,
+  STOCK_INFO_ROUTE_NAMES,
 }

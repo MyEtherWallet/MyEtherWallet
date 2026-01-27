@@ -1,7 +1,7 @@
 /**
 * TAILWIND
 */
-@import "tailwindcss";
+@import 'tailwindcss';
 @config "../../tailwind.config.js";
 
 @theme {
@@ -43,7 +43,6 @@
   --color-grey-outline: rgba(188, 200, 204, 1);
   --color-mew-bg: rgba(53, 94, 236, 0.1);
 }
-
 
 /**
  * VARIABLES
