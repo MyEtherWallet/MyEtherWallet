@@ -74,9 +74,9 @@
       <!-- Error Display -->
       <div
         v-if="!isLoading && generalError"
-        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
+        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
-        <p class="text-error text-s-14 text-center">
+        <p class="text-error text-s-14 text-center break-words">
           {{ generalError }}
         </p>
       </div>
@@ -301,9 +301,9 @@ const getTokenBalanceParams = (token: NewTokenInfo) => {
   )
 
   const decimals = token.decimals || 18
-  const baseBalance = isMainToken
-    ? baseNetworkBalance
-    : parseUnits(balance, decimals)
+  // For ERC20 tokens, balance is already in base units (wei)
+  // For main token, we parse from formatted balance
+  const baseBalance = isMainToken ? baseNetworkBalance : BigInt(balance)
 
   return { baseBalance, decimals }
 }
@@ -335,7 +335,9 @@ const hasPreQuoteError = computed(() => {
   // Minimum $1 value check
   const tokenPrice = fromTokenSelected.value.price || 0
   if (tokenPrice > 0) {
-    const usdValue = amountBN.times(tokenPrice)
+    const usdValue = amountBN
+      .times(tokenPrice)
+      .integerValue(BigNumber.ROUND_CEIL)
     if (usdValue.lt(1)) {
       return true
     }
@@ -377,7 +379,9 @@ const fromAmountError = computed(() => {
   // Minimum $1 value check
   const tokenPrice = fromTokenSelected.value.price || 0
   if (tokenPrice > 0) {
-    const usdValue = amountBN.times(tokenPrice)
+    const usdValue = amountBN
+      .times(tokenPrice)
+      .integerValue(BigNumber.ROUND_CEIL)
     if (usdValue.lt(1)) {
       return 'Minimum trade value is $1.00'
     }
@@ -529,7 +533,8 @@ const handleApprove = async () => {
     })
   } catch (e) {
     toastStore.addToastMessage({
-      text: (e as Error).message || 'Failed to approve token',
+      text:
+        (e as any).details || (e as Error).message || 'Failed to approve token',
       type: ToastType.Error,
     })
   } finally {
@@ -615,7 +620,10 @@ const confirmTrade = async () => {
     })
   } catch (e) {
     toastStore.addToastMessage({
-      text: (e as Error).message || 'Failed to submit trade order',
+      text:
+        (e as any).details ||
+        (e as Error).message ||
+        'Failed to submit trade order',
       type: ToastType.Error,
     })
   } finally {
