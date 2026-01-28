@@ -94,6 +94,10 @@ const keystoreSupportNetwork = (chain?: Chain): boolean => {
   return chain.type === 'EVM'
 }
 
+const privateKeySupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  return chain.type === 'EVM'
+}
 const enkryptSupportNetwork = (chain?: Chain): boolean => {
   if (!chain) return false
   return (
@@ -142,7 +146,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     icon: PrivateKeyLogo,
     type: [WalletConfigType.SOFTWARE],
     walletViewType: 'private_key',
-    canSupport: () => true,
+    canSupport: privateKeySupportNetwork,
   },
   mew: {
     id: 'mew',

@@ -122,14 +122,15 @@
               </p>
             </button>
             <!-- Buy button -->
-            <button
+            <a
+              href="https://ccswap.myetherwallet.com/"
+              target="_blank"
               :class="[
                 walletPanel === 'buy' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
-              @click="openPanel('buy')"
             >
               <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
@@ -139,17 +140,17 @@
               >
                 {{ $t('buy') }}
               </p>
-            </button>
+            </a>
             <!--sell button-->
-            <button
-              :to="{ name: ROUTES_MAIN.BUY.NAME }"
+            <a
+              href="https://ccswap.myetherwallet.com/"
+              target="_blank"
               :class="[
                 walletPanel === 'sell' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
-              @click="openPanel('sell')"
             >
               <icon-sell :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
@@ -159,7 +160,7 @@
               >
                 {{ $t('sell') }}
               </p>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -225,7 +226,6 @@ import {
   ChevronDoubleRightIcon,
 } from '@heroicons/vue/24/outline'
 import {
-  ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'

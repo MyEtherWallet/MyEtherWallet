@@ -11,11 +11,7 @@
     v-ripple
   >
     <div v-if="hasIcon" :class="['mr-3', { 'opacity-80': !isCurrentRoute }]">
-      <icon-buy v-if="listItem.iconID === ICON_IDS.BUY" class="w-5 h-5" />
-      <icon-send
-        v-else-if="listItem.iconID === ICON_IDS.SEND"
-        class="w-5 h-5"
-      />
+      <icon-send v-if="listItem.iconID === ICON_IDS.SEND" class="w-5 h-5" />
       <icon-swap
         v-else-if="listItem.iconID === ICON_IDS.SWAP"
         class="w-5 h-5"
@@ -68,7 +64,6 @@
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type PropType, computed } from 'vue'
 import IconSend from '@/assets/icons/core_menu/icon-send.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
 import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'

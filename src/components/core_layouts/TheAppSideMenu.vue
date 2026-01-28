@@ -169,10 +169,10 @@ const toolsMenuItem = computed<AppMenuListItem>(() => {
 })
 const otherMenuList = computed<AppMenuListItem[]>(() => {
   return [
-    {
-      title: t('settings'),
-      iconID: ICON_IDS.SETTINGS,
-    },
+    // {
+    //   title: t('settings'),
+    //   iconID: ICON_IDS.SETTINGS,
+    // },
     {
       title: t('notifications'),
       iconID: ICON_IDS.NOTIFICATIONS,
