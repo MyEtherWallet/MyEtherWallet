@@ -190,7 +190,7 @@ const {
 } = useMEWFetch(fetchUrl).get().json<CryptoOverview>()
 
 onFetchResponse(() => {
-  if (data.value && data.value) {
+  if (data.value) {
     newTokens.value = data.value.newCoins
     gainersTokens.value = data.value.ondoTopGainers.map(
       (gainer): CryptoOverviewToken => {
