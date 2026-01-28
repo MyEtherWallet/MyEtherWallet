@@ -611,6 +611,7 @@ import {
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useInputStore } from '@/stores/inputStore'
+import { getAPIPath } from '@/utils/constructAPIPath'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel } = walletMenu
@@ -787,7 +788,7 @@ const getCurrentViewableItemsIndex = computed<number>(() => {
 const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
+  const baseUrl = getAPIPath('/v1/web/tokens-watchlist')
   const defaultChain =
     !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
       ? ''
@@ -796,7 +797,7 @@ const fetchWatchListUrl = computed(() => {
 })
 
 const fetchGainersUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+  const baseUrl = getAPIPath('/v1/web/tokens-table')
   const defaultChain =
     !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
       ? ''
@@ -807,7 +808,7 @@ const fetchGainersUrl = computed(() => {
 })
 
 const fetchTableUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-table'
+  const baseUrl = getAPIPath('/v1/web/tokens-table')
   const defaultChain =
     !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
       ? ''

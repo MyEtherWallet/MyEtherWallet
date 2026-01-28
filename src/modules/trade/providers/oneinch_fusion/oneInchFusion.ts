@@ -32,6 +32,7 @@ import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { GetTradableAssetsResponse } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isHardWareWallet } from '@/utils/walletUtils'
+import { getAPIPath } from '@/utils/constructAPIPath'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
@@ -58,7 +59,7 @@ class OneInchFusion {
   }
 
   public static async getTradableAssets(): Promise<GetTradableAssetsResponse> {
-    return fetch(`https://mew-api-dev.ethvm.dev/v1/web/stocks/addresses`).then(
+    return fetch(getAPIPath(`/v1/web/stocks/addresses`)).then(
       res => res.json() as Promise<GetTradableAssetsResponse>,
     )
   }
