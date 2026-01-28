@@ -152,7 +152,7 @@
         <div v-if="data && !isLoading" class="flex flex-col">
           <token-row
             v-for="(token, index) in paginatedGainersTokensArray"
-            :key="token.symbol + index"
+            :key="token.name + index"
             :token="token"
           />
         </div>
@@ -190,9 +190,26 @@ const {
 } = useMEWFetch(fetchUrl).get().json<CryptoOverview>()
 
 onFetchResponse(() => {
-  if (data.value && data.value) {
+  if (data.value) {
     newTokens.value = data.value.newCoins
-    gainersTokens.value = data.value.rwaTopGainers
+    gainersTokens.value = data.value.ondoTopGainers.map(
+      (gainer): CryptoOverviewToken => {
+        return {
+          coinId: 'ondo-' + gainer.primaryMarket.symbol,
+          name: gainer.stockAlias || '',
+          symbol: gainer.primaryMarket.symbol,
+          logoUrl: gainer.iconPngUrl || null,
+          price: new BigNumber(gainer.primaryMarket.price).toNumber(),
+          priceChangePercentage24h: new BigNumber(
+            gainer.primaryMarket.priceChangePercentage24h,
+          ).toNumber(),
+          ondo: {
+            stockAlias: gainer.stockAlias,
+            primaryMarket: gainer.primaryMarket,
+          },
+        }
+      },
+    )
   }
 })
 

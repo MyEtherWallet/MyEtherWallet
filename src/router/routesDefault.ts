@@ -82,22 +82,6 @@ const DefaultRoutes = <RouteNameCollection>[
     },
   },
   {
-    path: ROUTES_MAIN.INTERACT_WITH_CONTRACT.PATH,
-    name: ROUTES_MAIN.INTERACT_WITH_CONTRACT.NAME,
-    component: TempView,
-    meta: {
-      noAuth: true,
-    },
-  },
-  {
-    path: ROUTES_MAIN.DEPLOY_CONTRACT.PATH,
-    name: ROUTES_MAIN.DEPLOY_CONTRACT.NAME,
-    component: TempView,
-    meta: {
-      noAuth: true,
-    },
-  },
-  {
     path: ROUTES_MAIN.STOCKS.PATH,
     name: ROUTES_MAIN.STOCKS.NAME,
     component: ViewStocks,

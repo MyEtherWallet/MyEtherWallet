@@ -21,7 +21,7 @@
     "format": "prettier --write src/",
     "prepare": "husky",
     "zip": "cd dist; zip -r release.zip *;",
-    "update-api-schema": "npx openapi-typescript schema.yaml -o src/mew_api/schema.ts"
+    "update-api-schema": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema.yaml -o src/mew_api/schema.ts"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.33.1",

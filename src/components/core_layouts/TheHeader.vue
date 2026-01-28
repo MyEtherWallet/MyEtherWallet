@@ -4,7 +4,16 @@
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 relative">
+        <div
+          class="py-[1px] sm:py-[2px] rounded-full flex items-center justify-center bg-white px-[6px] absolute top-0 left-0 translate-y-[-40%] translate-x-3 sm:translate-x-5 shadow-button shadow-button-elevated border-2 border-portfolio"
+        >
+          <p
+            class="text-portfolio text-[8px] sm:text-s-11 uppercase font-bold tracking-sp-06"
+          >
+            BETA
+          </p>
+        </div>
         <router-link
           :to="{ name: ROUTES_MAIN.HOME.NAME }"
           class="cursor-pointer mr-1 sm:mr-4 xl:mr-10"
@@ -108,14 +117,15 @@
         >
           <bell-icon class="w-6 h-6" />
         </app-btn-icon>
+
         <!-- Settings Button -->
-        <app-btn-icon
+        <!-- <app-btn-icon
           v-if="!showMobileMenu"
           :label="$t('menu.open-settings')"
           @click="btnClick"
         >
           <cog-icon class="w-6 h-6" />
-        </app-btn-icon>
+        </app-btn-icon> -->
       </div>
     </div>
   </div>
@@ -127,7 +137,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
-import { BellIcon, CogIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { BellIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -198,14 +208,6 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     {
       title: t('sign-message'),
       routeName: ROUTES_MAIN.SIGN_MESSAGE.NAME,
-    },
-    {
-      title: t('deploy-contract'),
-      routeName: ROUTES_MAIN.DEPLOY_CONTRACT.NAME,
-    },
-    {
-      title: t('interact-contract'),
-      routeName: ROUTES_MAIN.INTERACT_WITH_CONTRACT.NAME,
     },
   ]
 })

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isDevMode">
     <a
       :href="helpLink"
       target="_blank"
@@ -15,6 +15,9 @@
 
 <script setup lang="ts">
 import { QuestionMarkCircleIcon } from '@heroicons/vue/24/solid'
+
+//Remove HelpLinks from Beta builds
+const isDevMode = import.meta.env.DEV
 
 //TODO: add Amplitude event with link + route location
 
