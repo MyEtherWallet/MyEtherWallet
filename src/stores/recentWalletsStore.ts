@@ -3,6 +3,7 @@ import { useLocalStorage } from '@vueuse/core'
 import {
   WalletConfigType,
   type WalletConfig,
+  type WalletView,
 } from '@/modules/access/common/walletConfigs'
 
 interface SavedWalletType {
@@ -10,6 +11,7 @@ interface SavedWalletType {
   name: string
   icon: string
   type: WalletConfigType[]
+  walletViewType?: WalletView
 }
 
 export const useRecentWalletsStore = defineStore(
@@ -36,6 +38,7 @@ export const useRecentWalletsStore = defineStore(
         name: passedWallet.name,
         icon: passedWallet.icon as string,
         type: passedWallet.type,
+        walletViewType: passedWallet.walletViewType,
       }
       if (recentWallets.value.length < 2) {
         recentWallets.value.push(walletToSave)
