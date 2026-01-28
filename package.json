@@ -21,7 +21,8 @@
     "format": "prettier --write src/",
     "prepare": "husky",
     "zip": "cd dist; zip -r release.zip *;",
-    "update-api-schema": "npx openapi-typescript schema.yaml -o src/mew_api/schema.ts"
+    "update-api-schema": "npx openapi-typescript schema.yaml -o src/mew_api/schema.ts",
+    "update-api-schema:dev": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema -o src/mew_api/schema.ts"
   },
   "dependencies": {
     "@1inch/fusion-sdk": "^2.4.5",
@@ -30,7 +31,7 @@
     "@commitlint/config-conventional": "^20.3.1",
     "@enkryptcom/hw-wallets": "^0.0.16",
     "@enkryptcom/name-resolution": "^0.0.8",
-    "@enkryptcom/swap": "^0.0.5",
+    "@enkryptcom/swap": "^0.0.8",
     "@enkryptcom/types": "^0.0.5",
     "@ethereumjs/common": "^4.4.0",
     "@ethereumjs/tx": "^5.4.0",

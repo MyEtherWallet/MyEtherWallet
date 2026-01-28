@@ -164,6 +164,48 @@
                 },
             },
         },
+      '/v1/web/swap/ondo/assets':
+        {
+          'get':
+            {
+              'operationId': 'GetWebSwapOndoAssets',
+              'responses':
+                {
+                  '200':
+                    {
+                      '$ref': '#/components/responses/GetWebSwapOndoAssetsSuccess',
+                    },
+                },
+            },
+        },
+      '/v1/web/swap/ondo/supporting-assets':
+        {
+          'get':
+            {
+              'operationId': 'GetWebSwapOndoSupportingAssets',
+              'responses':
+                {
+                  '200':
+                    {
+                      '$ref': '#/components/responses/GetWebSwapOndoSupportingAssetsSuccess',
+                    },
+                },
+            },
+        },
+      '/v1/web/swap/ondo/status/market':
+        {
+          'get':
+            {
+              'operationId': 'GetWebSwapOndoMarketStatus',
+              'responses':
+                {
+                  '200':
+                    {
+                      '$ref': '#/components/responses/GetWebSwapOndoMarketStatusSuccess',
+                    },
+                },
+            },
+        },
       '/v1/web/pages/stocks/overview':
         {
           'get':
@@ -1467,6 +1509,45 @@
                     },
                 },
             },
+          'GetWebSwapOndoAssetsSuccess':
+            {
+              'content':
+                {
+                  'application/json':
+                    {
+                      'schema':
+                        {
+                          '$ref': '#/components/schemas/GetWebSwapOndoAssetsResponse',
+                        },
+                    },
+                },
+            },
+          'GetWebSwapOndoSupportingAssetsSuccess':
+            {
+              'content':
+                {
+                  'application/json':
+                    {
+                      'schema':
+                        {
+                          '$ref': '#/components/schemas/GetWebSwapOndoSupportingAssetsResponse',
+                        },
+                    },
+                },
+            },
+          'GetWebSwapOndoMarketStatusSuccess':
+            {
+              'content':
+                {
+                  'application/json':
+                    {
+                      'schema':
+                        {
+                          '$ref': '#/components/schemas/GetWebSwapOndoMarketStatusResponse',
+                        },
+                    },
+                },
+            },
           'GetWebStocksOverviewSuccess':
             {
               'content':
@@ -2520,6 +2601,201 @@
                                 },
                             },
                         },
+                    },
+                },
+            },
+          'GetWebSwapOndoAssetsResponse':
+            {
+              'type': 'array',
+              'items':
+                {
+                  'type': 'object',
+                  'required':
+                    [
+                      'symbol',
+                      'addresses',
+                      'tradeable',
+                      'pause',
+                      'primaryMarket',
+                      'underlyingMarket',
+                    ],
+                  'properties':
+                    {
+                      'stockAlias': { 'type': 'string' },
+                      'iconPngUrl': { 'type': 'string' },
+                      'iconSvgUrl': { 'type': 'string' },
+                      'symbol': { 'type': 'string' },
+                      'tradeable': { 'type': 'boolean' },
+                      'pause':
+                        {
+                          'oneOf':
+                            [
+                              { 'type': 'null' },
+                              {
+                                'type': 'object',
+                                'required':
+                                  ['status', 'type', 'reason', 'start', 'end'],
+                                'properties':
+                                  {
+                                    'status': { 'type': 'string' },
+                                    'type': { 'type': 'string' },
+                                    'reason':
+                                      {
+                                        'type': 'object',
+                                        'required': ['code', 'message'],
+                                        'properties':
+                                          {
+                                            'code': { 'type': 'string' },
+                                            'message': { 'type': 'string' },
+                                          },
+                                      },
+                                    'start':
+                                      {
+                                        'oneOf':
+                                          [
+                                            { 'type': 'null' },
+                                            {
+                                              'type': 'string',
+                                              'format': 'date-time',
+                                            },
+                                          ],
+                                      },
+                                    'end':
+                                      {
+                                        'oneOf':
+                                          [
+                                            { 'type': 'null' },
+                                            {
+                                              'type': 'string',
+                                              'format': 'date-time',
+                                            },
+                                          ],
+                                      },
+                                  },
+                              },
+                            ],
+                        },
+                      'primaryMarket':
+                        {
+                          'type': 'object',
+                          'required': ['price', 'sharesMultiplier'],
+                          'properties':
+                            {
+                              'price': { 'type': 'string' },
+                              'sharesMultiplier': { 'type': 'string' },
+                            },
+                        },
+                      'underlyingMarket':
+                        {
+                          'type': 'object',
+                          'required': ['name', 'price'],
+                          'properties':
+                            {
+                              'name': { 'type': 'string' },
+                              'price': { 'type': 'string' },
+                            },
+                        },
+                      'addresses':
+                        {
+                          'type': 'array',
+                          'items':
+                            {
+                              'type': 'object',
+                              'required':
+                                [
+                                  'chainName',
+                                  'ondoGmNetworkChainId',
+                                  'address',
+                                  'decimals',
+                                ],
+                              'properties':
+                                {
+                                  'chainName': { 'type': ['null', 'string'] },
+                                  'ondoGmNetworkChainId': { 'type': 'string' },
+                                  'address': { 'type': 'string' },
+                                  'decimals': { 'type': 'number' },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+          'GetWebSwapOndoSupportingAssetsResponse':
+            {
+              'type': 'array',
+              'items':
+                {
+                  'type': 'object',
+                  'required':
+                    ['coinId', 'name', 'symbol', 'price', 'addresses'],
+                  'properties':
+                    {
+                      'coinId': { 'type': 'string' },
+                      'name': { 'type': 'string' },
+                      'symbol': { 'type': 'string' },
+                      'price': { 'type': 'number' },
+                      'addresses':
+                        {
+                          'type': 'array',
+                          'items':
+                            {
+                              'type': 'object',
+                              'required':
+                                [
+                                  'chainName',
+                                  'tokenLogoUrl',
+                                  'address',
+                                  'decimals',
+                                ],
+                              'properties':
+                                {
+                                  'chainName': { 'type': ['null', 'string'] },
+                                  'tokenLogoUrl':
+                                    { 'type': ['null', 'string'] },
+                                  'address': { 'type': 'string' },
+                                  'decimals': { 'type': ['null', 'number'] },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+          'GetWebSwapOndoMarketStatusResponse':
+            {
+              'type': 'object',
+              'required':
+                [
+                  'timestamp',
+                  'isOpen',
+                  'marketStatus',
+                  'nextOpenSession',
+                  'nextOpen',
+                  'nextClose',
+                  'reason',
+                ],
+              'properties':
+                {
+                  'timestamp': { 'type': 'string', 'format': 'date-time' },
+                  'isOpen': { 'type': 'boolean' },
+                  'marketStatus': { 'type': 'string' },
+                  'nextOpenSession': { 'type': 'string' },
+                  'nextOpen': { 'type': 'string' },
+                  'nextClose': { 'type': 'string' },
+                  'reason':
+                    {
+                      'oneOf':
+                        [
+                          { 'type': 'null' },
+                          {
+                            'type': 'object',
+                            'required': ['code', 'message'],
+                            'properties':
+                              {
+                                'code': { 'type': 'string' },
+                                'message': { 'type': 'string' },
+                              },
+                          },
+                        ],
                     },
                 },
             },
@@ -3980,7 +4256,7 @@
                   'marketCap',
                   'marketCapChange24hPercentage',
                   'newCoins',
-                  'rwaTopGainers',
+                  'ondoTopGainers',
                 ],
               'properties':
                 {
@@ -4041,54 +4317,43 @@
                             },
                         },
                     },
-                  'rwaTopGainers':
+                  'ondoTopGainers':
                     {
                       'type': 'array',
                       'items':
                         {
                           'type': 'object',
-                          'required':
-                            [
-                              'coinId',
-                              'name',
-                              'symbol',
-                              'price',
-                              'priceChangePercentage24h',
-                              'logoUrl',
-                              'ondo',
-                            ],
+                          'required': ['primaryMarket', 'underlyingMarket'],
                           'properties':
                             {
-                              'coinId': { 'type': 'string' },
-                              'name': { 'type': 'string' },
-                              'symbol': { 'type': 'string' },
-                              'price': { 'type': 'number' },
-                              'priceChangePercentage24h': { 'type': 'number' },
-                              'logoUrl': { 'type': ['string', 'null'] },
-                              'ondo':
+                              'stockAlias': { 'type': 'string' },
+                              'iconPngUrl': { 'type': 'string' },
+                              'iconSvgUrl': { 'type': 'string' },
+                              'primaryMarket':
                                 {
-                                  'oneOf':
+                                  'type': 'object',
+                                  'required':
                                     [
-                                      { 'type': 'null' },
-                                      {
-                                        'type': 'object',
-                                        'required': ['primaryMarket'],
-                                        'properties':
-                                          {
-                                            'stockAlias': { 'type': 'string' },
-                                            'primaryMarket':
-                                              {
-                                                'type': 'object',
-                                                'required': ['symbol'],
-                                                'properties':
-                                                  {
-                                                    'symbol':
-                                                      { 'type': 'string' },
-                                                  },
-                                              },
-                                          },
-                                      },
+                                      'symbol',
+                                      'price',
+                                      'priceChangePercentage24h',
+                                      'sharesMultiplier',
                                     ],
+                                  'properties':
+                                    {
+                                      'symbol': { 'type': 'string' },
+                                      'price': { 'type': 'string' },
+                                      'priceChangePercentage24h':
+                                        { 'type': 'string' },
+                                      'sharesMultiplier': { 'type': 'string' },
+                                    },
+                                },
+                              'underlyingMarket':
+                                {
+                                  'type': 'object',
+                                  'required': ['name'],
+                                  'properties':
+                                    { 'name': { 'type': 'string' } },
                                 },
                             },
                         },

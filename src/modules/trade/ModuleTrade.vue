@@ -271,9 +271,14 @@ const toTokens = computed(() => {
       const matchingFromToken = tokenAddress
         ? fromTokensMap.get(tokenAddress.toLowerCase())
         : undefined
+
+      // Use price from wallet tokens, or fall back to primaryMarket price from API
+      const tokenPrice =
+        parseFloat(asset.primaryMarket.price) || matchingFromToken?.price || 0
+
       return {
         name: asset.stockAlias || asset.symbol,
-        symbol: asset.symbol,
+        symbol: asset.symbol.toUpperCase(),
         decimals: addressInfo?.decimals || 18,
         address: tokenAddress,
         logoURI: asset.iconPngUrl || asset.iconSvgUrl || '',
@@ -281,7 +286,7 @@ const toTokens = computed(() => {
         type: 'erc20',
         rank: matchingFromToken?.rank || 0,
         balance: matchingFromToken?.balance || '0',
-        price: matchingFromToken?.price || 0,
+        price: tokenPrice,
         networkInfo: {
           name: chainName.toLowerCase(),
           isAddress: tokenAddress,

@@ -152,6 +152,17 @@
                       token.price ? formatFiatValue(token.price).value : '0.00'
                     }}
                   </p>
+                  <p
+                    v-if="
+                      isWalletConnected &&
+                      token.balance &&
+                      token.usd_balance > 0
+                    "
+                    class="text-info text-s-12"
+                  >
+                    {{ getBalance(token?.balance || '0', token.decimals) }}
+                    {{ truncate(token.symbol, 7) }}
+                  </p>
                 </div>
               </div>
             </div>

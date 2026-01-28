@@ -1,4 +1,4 @@
-import type { GetTradableAssetsResponse } from '@/mew_api/types'
+import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 
 export interface TradableAsset {
   symbol: string
@@ -35,4 +35,4 @@ export interface TradeOrderStatus {
   finalToAmount?: bigint
 }
 
-export type { GetTradableAssetsResponse }
+export type { GetWebSwapOndoAssetsResponse }

@@ -9,12 +9,12 @@ import {
   enumToChain,
 } from '@/providers/ethereum/chainToEnum'
 import Swapper, { WalletIdentifier } from '@enkryptcom/swap'
-import type {
-  TokenType,
-  TokenTypeTo,
-  SupportedNetworkName,
-  ProviderQuoteResponse,
-  ProviderSwapResponse,
+import {
+  type TokenType,
+  type TokenTypeTo,
+  type SupportedNetworkName,
+  type ProviderQuoteResponse,
+  type ProviderSwapResponse,
 } from '@enkryptcom/swap'
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
@@ -102,6 +102,7 @@ export const useSwap = (): {
           if (chain) return chain
         })
         .filter((chain): chain is Chain => chain !== undefined)
+
       const allFromTokensWithBalance = allFromTokens.all.map(token => {
         let tokenBalance = '0'
         let tokenPrice = token.price
@@ -119,7 +120,6 @@ export const useSwap = (): {
             }
           }
         }
-
         return Object.freeze({
           ...token,
           balance: tokenBalance,
@@ -168,13 +168,14 @@ export const useSwap = (): {
       params.amount.toString(),
       params.fromToken.decimals ?? 18,
     ).toString() // Default to 18 decimals if not specified);
-    return swapInstance.value.getQuotes({
+    const quotes = await swapInstance.value.getQuotes({
       fromAddress: params.fromAddress,
       toAddress: params.toAddress,
       amount: new BN(rawAmount),
       fromToken: params.fromToken as TokenType,
       toToken: params.toToken as TokenTypeTo,
     })
+    return quotes.filter(q => q.provider !== 'oneInchFusion') // disable fusion swaps for now
   }
 
   const getSwap = async (
