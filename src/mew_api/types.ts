@@ -176,3 +176,6 @@ export type GetWebSwapOndoAssetsResponse =
 
 export type GetWebSwapOndoSupportingAssetsResponse =
   components['schemas']['GetWebSwapOndoSupportingAssetsResponse']
+
+export type GetWebSwapOndoMarketStatusResponse =
+  components['schemas']['GetWebSwapOndoMarketStatusResponse']

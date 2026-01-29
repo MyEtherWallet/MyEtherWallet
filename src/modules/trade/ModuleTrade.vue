@@ -5,14 +5,22 @@
         'static w-full flex flex-col items-center justify-items-stretch gap-3',
       ]"
     >
-      <div class="w-full max-w-[500px]">
+      <div class="w-full max-w-[500px] relative">
         <div class="flex items-end justify-between mb-2 px-4">
           <p class="font-bold text-s-28">Trade</p>
-          <app-btn-text class="text-primary text-s-14 pb-1" @click="clearValues"
+          <app-btn-text
+            v-if="isMarketOpen"
+            class="text-primary text-s-14 pb-1"
+            @click="clearValues"
             >Clear all</app-btn-text
           >
         </div>
-        <div class="relative">
+        <div
+          :class="[
+            'relative transition-all duration-300',
+            !isMarketOpen ? 'blur-sm pointer-events-none opacity-60' : '',
+          ]"
+        >
           <!-- From Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
             <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
@@ -69,6 +77,35 @@
             />
           </div>
         </div>
+
+        <!-- Market Closed Banner - Centered Overlay -->
+        <div
+          v-if="!isLoading && marketStatus && !isMarketOpen"
+          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+        >
+          <div
+            class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 shadow-lg pointer-events-auto"
+          >
+            <div class="flex items-center gap-2 justify-center mb-1">
+              <div class="w-2 h-2 bg-warning rounded-full"></div>
+              <p class="text-warning font-bold text-s-14">Market Closed</p>
+            </div>
+            <p class="text-grey-70 text-s-12 text-center">
+              {{ marketStatus.reason?.message }}
+            </p>
+            <div class="mt-2 text-center">
+              <p
+                v-if="countdownText"
+                class="text-primary font-bold text-s-16 tabular-nums"
+              >
+                Opens in {{ countdownText }}
+              </p>
+              <p class="text-grey-50 text-s-11 mt-1">
+                {{ formatNextOpen(marketStatus.nextOpen) }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Error Display -->
@@ -81,35 +118,44 @@
         </p>
       </div>
 
-      <app-base-button
-        class="w-full max-w-[340px]"
-        v-if="isWalletConnected && !isWatchOnly"
-        :disabled="isTradeDisabled || isApproving"
-        @click="needsApproval ? handleApprove() : tradeButton()"
+      <div
+        :class="[
+          'w-full max-w-[340px] transition-all duration-300',
+          !isMarketOpen ? 'blur-sm pointer-events-none opacity-60' : '',
+        ]"
       >
-        <span v-if="isApproving" class="flex items-center justify-center gap-2">
-          <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-              fill="none"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          Approving...
-        </span>
-        <span v-else>{{ needsApproval ? 'Approve' : 'Trade' }}</span>
-      </app-base-button>
-      <div class="mx-auto w-full max-w-[340px]" v-else>
         <app-base-button
+          class="w-full"
+          v-if="isWalletConnected && !isWatchOnly"
+          :disabled="isTradeDisabled || isApproving"
+          @click="needsApproval ? handleApprove() : tradeButton()"
+        >
+          <span
+            v-if="isApproving"
+            class="flex items-center justify-center gap-2"
+          >
+            <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+                fill="none"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Approving...
+          </span>
+          <span v-else>{{ needsApproval ? 'Approve' : 'Trade' }}</span>
+        </app-base-button>
+        <app-base-button
+          v-else
           class="w-full"
           :disabled="!supportedNetwork"
           @click="connectWalletForTrade"
@@ -146,7 +192,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, watch } from 'vue'
+import { ref, onBeforeMount, onUnmounted, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useDebounceFn } from '@vueuse/core'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
@@ -173,10 +219,11 @@ import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
 // Utils and Types
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import { ToastType } from '@/types/notification'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
+import { getMarketStatus } from './providers/ondoHelpers'
 
 // --- Stores ---
 const { t } = useI18n()
@@ -224,6 +271,60 @@ const tradeOrdersStore = useTradeOrdersStore()
 // Approval state
 const needsApproval = ref(false)
 const isApproving = ref(false)
+
+// Market status
+const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
+const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
+const countdownText = ref<string>('')
+let countdownInterval: ReturnType<typeof setInterval> | null = null
+
+const updateCountdown = () => {
+  if (!marketStatus.value?.nextOpen || isMarketOpen.value) {
+    countdownText.value = ''
+    return
+  }
+
+  const now = Date.now()
+  const nextOpen = new Date(marketStatus.value.nextOpen).getTime()
+  const diff = nextOpen - now
+
+  if (diff <= 0) {
+    countdownText.value = 'Opening soon...'
+    // Refresh market status when countdown reaches zero
+    getMarketStatus()
+      .then(status => {
+        marketStatus.value = status
+      })
+      .catch(() => {})
+    return
+  }
+
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+
+  if (hours > 0) {
+    countdownText.value = `${hours}h ${minutes}m ${seconds}s`
+  } else if (minutes > 0) {
+    countdownText.value = `${minutes}m ${seconds}s`
+  } else {
+    countdownText.value = `${seconds}s`
+  }
+}
+
+const startCountdown = () => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+  }
+  updateCountdown()
+  countdownInterval = setInterval(updateCountdown, 1000)
+}
+
+onUnmounted(() => {
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+  }
+})
 
 const currentQuote = ref<{
   startAmount: bigint
@@ -481,6 +582,7 @@ const fromAmountError = computed(() => {
 const isTradeDisabled = computed(
   () =>
     !supportedNetwork.value ||
+    !isMarketOpen.value ||
     !(
       fromAmount.value !== '' &&
       fromAmount.value !== '0' &&
@@ -489,6 +591,23 @@ const isTradeDisabled = computed(
     ) ||
     isLoadingQuote.value,
 )
+
+// --- Helper Functions ---
+const formatNextOpen = (dateString: string) => {
+  try {
+    const date = new Date(dateString)
+    return date.toLocaleString(undefined, {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short',
+    })
+  } catch {
+    return dateString
+  }
+}
 
 // --- Methods ---
 const clearValues = () => {
@@ -521,6 +640,12 @@ const connectWalletForTrade = () => {
 }
 
 const fetchQuote = useDebounceFn(async () => {
+  // Don't fetch quotes when market is closed
+  if (!isMarketOpen.value) {
+    toAmount.value = '0'
+    return
+  }
+
   if (
     !fromTokenSelected.value ||
     !toTokenSelected.value ||
@@ -735,9 +860,18 @@ watch(
 
 // --- Lifecycle ---
 onBeforeMount(async () => {
-  // Initialize swap to get fromTokens
-  await initSwapper()
-  await loadTradableAssets()
+  // Initialize swap to get fromTokens and fetch market status
+  await Promise.all([initSwapper(), loadTradableAssets()])
+
+  // Fetch market status
+  try {
+    marketStatus.value = await getMarketStatus()
+    if (!marketStatus.value.isOpen) {
+      startCountdown()
+    }
+  } catch (e) {
+    console.error('Failed to fetch market status:', e)
+  }
 
   // Set initial chain
   if (

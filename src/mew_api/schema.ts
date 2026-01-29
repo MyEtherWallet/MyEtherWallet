@@ -1099,7 +1099,7 @@ export interface components {
             iconPngUrl?: string;
             iconSvgUrl?: string;
             symbol: string;
-            tradeable: boolean;
+            tradable: boolean;
             pause: null | {
                 status: string;
                 type: string;
