@@ -101,28 +101,22 @@ export const useWalletStore = defineStore('walletStore', () => {
   const { selectedChain, isEvmChain } = storeToRefs(chainStore)
 
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
-  watch(selectedChain, async newChain => {
+  watch(selectedChain, async (newChain, oldChain) => {
+    if (newChain && newChain.type !== oldChain?.type) {
+      setWatchOnlyIfExist()
+    }
     if (newChain && isEvmChain.value && wallet.value && !isWatchOnly.value) {
-      try {
-        if ((wallet.value as BaseEvmWallet).changeNetwork) {
-          const networkChangeStatus = await (
-            wallet.value as BaseEvmWallet
-          ).changeNetwork(Number(newChain.chainID))
-          if (!networkChangeStatus) {
-            const toastStore = useToastStore()
-            toastStore.addToastMessage({
-              text: 'Network change failed. Most likely this network is not supported by connected wallet',
-              type: ToastType.Error,
-            })
-          }
+      if ((wallet.value as BaseEvmWallet).changeNetwork) {
+        const networkChangeStatus = await (
+          wallet.value as BaseEvmWallet
+        ).changeNetwork(Number(newChain.chainID))
+        if (!networkChangeStatus) {
+          const toastStore = useToastStore()
+          toastStore.addToastMessage({
+            text: 'Network change failed. Most likely this network is not supported by connected wallet',
+            type: ToastType.Error,
+          })
         }
-      } catch (e) {
-        console.error('Failed to switch network on wallet:', e)
-        const toastStore = useToastStore()
-        toastStore.addToastMessage({
-          text: 'Network change failed',
-          type: ToastType.Error,
-        })
       }
     }
   })
