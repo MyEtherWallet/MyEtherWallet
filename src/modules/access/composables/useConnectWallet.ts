@@ -53,14 +53,21 @@ export const useConnectWallet = () => {
   const _connectWeb3 = async (wallet: WalletConfig) => {
     // skip everything else as wagmi doesn't support btc
     if (isBitcoinChain.value) {
-      if (!window.unisat) {
+      const unisatInjection = window.unisat
+      const enkryptInjection = window.enkrypt?.providers?.bitcoin
+      if (wallet.id === 'unisat' && !unisatInjection) {
         toastStore.addToastMessage({
-          text: `Unisat injection not detected. Please enable unisat in the ${wallet.name} extension.`,
+          text: `Unisat not detected. Please install ${wallet.name} extension.`,
+        })
+        return
+      } else if (wallet.id === 'enkrypt' && !enkryptInjection) {
+        toastStore.addToastMessage({
+          text: `Enkrypt not detected. Please install ${wallet.name} extension.`,
         })
         return
       }
       const unisatWallet = new UnisatInjectWallet(
-        window.unisat,
+        wallet.id === 'unisat' ? unisatInjection! : enkryptInjection!,
         selectedChain.value?.name ?? 'BITCOIN',
       )
       unisatWallet

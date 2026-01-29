@@ -65,8 +65,10 @@ const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 const isMockAvailable = newWalletList.value.find(nw => nw.id === 'mock')
 
 const defaultWallets = computed(() => {
+  const recentIds = reversedRecentWallets.map(r => r.name)
   return keys
     .filter(key => {
+      if (recentIds.includes(walletConfigs[key].name)) return false
       if (isMockAvailable && walletConfigs[key].id === 'mock') return true
       return (
         walletConfigs[key].isDefault === true &&
