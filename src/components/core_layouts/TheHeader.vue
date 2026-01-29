@@ -40,6 +40,7 @@
           v-if="showMobileMenu"
           :core-menu-list="coreMenuList"
           :tools-menu-list="toolsMenuList"
+          @open-notifications="openMobileNotifications"
         />
         <!--Desktop Menu -->
         <div v-if="!showMobileMenu" class="flex items-center gap-1 xl:gap-2">
@@ -109,9 +110,10 @@
         <the-current-network v-if="isWalletConnected && !isAccessPage" />
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected && !isAccessPage" />
-        <!-- Notifications Button -->
+        <!-- Notifications Button (desktop only, but popup is always available) -->
         <the-notifications-popup
-          v-if="!showMobileMenu && isWalletConnected"
+          v-if="isWalletConnected"
+          :hide-button="showMobileMenu"
           ref="notificationsRef"
         />
 
@@ -167,6 +169,11 @@ const { watchOnlyAddresses } = storeToRefs(recentAddressStore)
 const notificationsRef = ref<InstanceType<typeof TheNotificationsPopup> | null>(
   null,
 )
+
+// Open notifications from mobile menu
+const openMobileNotifications = () => {
+  notificationsRef.value?.openPopup()
+}
 
 /** ------------------------------
  * Breakpoints determine menu visibility

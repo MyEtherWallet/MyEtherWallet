@@ -1,7 +1,11 @@
 <template>
   <div ref="containerRef" class="relative">
-    <!-- Notification Button -->
-    <app-btn-icon :label="$t('menu.open-notifications')" @click="togglePopup">
+    <!-- Notification Button (hidden on mobile, shown on desktop) -->
+    <app-btn-icon
+      v-show="!hideButton"
+      :label="$t('menu.open-notifications')"
+      @click="togglePopup"
+    >
       <div class="relative">
         <bell-icon class="w-6 h-6" />
         <!-- Red dot indicator for unseen orders -->
@@ -23,7 +27,7 @@
     >
       <div
         v-if="isOpen"
-        class="fixed right-4 sm:right-24 top-20 z-[9999] w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-lg border border-grey-10"
+        class="fixed left-4 right-auto sm:left-auto sm:right-24 top-20 bottom-4 sm:bottom-auto z-[9999] w-[calc(100vw-80px)] sm:w-[360px] sm:max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-lg border border-grey-10 flex flex-col"
       >
         <!-- Header -->
         <div
@@ -38,19 +42,27 @@
               {{ orders.length }}
             </span>
           </div>
-          <button
-            v-if="orders.length > 0"
-            @click="clearAllOrders"
-            class="text-primary text-s-14 font-medium hover:underline"
-          >
-            Clear all
-          </button>
+          <div class="flex items-center gap-2">
+            <button
+              v-if="orders.length > 0"
+              @click="clearAllOrders"
+              class="text-primary text-s-14 font-medium hover:underline"
+            >
+              Clear all
+            </button>
+            <button
+              @click="isOpen = false"
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
+            >
+              <x-mark-icon class="w-5 h-5 text-info" />
+            </button>
+          </div>
         </div>
 
         <!-- Orders List -->
         <div
           v-if="orders.length > 0"
-          class="p-3 space-y-3 max-h-[500px] overflow-y-auto"
+          class="p-3 space-y-3 flex-1 overflow-y-auto"
         >
           <div
             v-for="order in orders"
@@ -194,6 +206,11 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { onClickOutside } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 
+// Props
+defineProps<{
+  hideButton?: boolean
+}>()
+
 // Extended TradeOrder with runtime-only remainingTime
 interface TradeOrder extends SavedTradeOrder {
   remainingTime: number
@@ -266,6 +283,18 @@ const togglePopup = () => {
     }
   }
 }
+
+// Open popup (for programmatic access from parent)
+const openPopup = () => {
+  if (!isOpen.value) {
+    togglePopup()
+  }
+}
+
+// Expose openPopup for parent component access
+defineExpose({
+  openPopup,
+})
 
 // Start countdown timer
 const startCountdown = () => {
