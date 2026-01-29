@@ -118,6 +118,18 @@
         </p>
       </div>
 
+      <!-- Asset Not Tradeable Warning -->
+      <div
+        v-if="
+          !isLoading && !isSelectedAssetTradeable && nonTradeableAssetMessage
+        "
+        class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
+      >
+        <p class="text-warning text-s-14 text-center">
+          {{ nonTradeableAssetMessage }}
+        </p>
+      </div>
+
       <div
         :class="[
           'w-full max-w-[340px] transition-all duration-300',
@@ -361,6 +373,60 @@ const isSellingTradableAsset = computed(() => {
   )
 })
 
+// Get the tradable asset info for the selected from token (if it's a stock)
+const selectedFromAssetInfo = computed(() => {
+  if (!fromTokenSelected.value || !tradableAssets.value) return null
+  const fromAddress = fromTokenSelected.value.address?.toLowerCase()
+  if (!fromAddress) return null
+
+  return tradableAssets.value.find(asset =>
+    asset.addresses.some(addr => addr.address?.toLowerCase() === fromAddress),
+  )
+})
+
+// Get the tradable asset info for the selected to token (if it's a stock)
+const selectedToAssetInfo = computed(() => {
+  if (!toTokenSelected.value || !tradableAssets.value) return null
+  const toAddress = toTokenSelected.value.address?.toLowerCase()
+  if (!toAddress) return null
+
+  return tradableAssets.value.find(asset =>
+    asset.addresses.some(addr => addr.address?.toLowerCase() === toAddress),
+  )
+})
+
+// Check if the selected assets are tradeable (not paused)
+const isSelectedAssetTradeable = computed(() => {
+  // Check from token if it's a tradable asset
+  if (selectedFromAssetInfo.value && !selectedFromAssetInfo.value.tradable) {
+    return false
+  }
+  // Check to token if it's a tradable asset
+  if (selectedToAssetInfo.value && !selectedToAssetInfo.value.tradable) {
+    return false
+  }
+  return true
+})
+
+// Get the pause message for non-tradeable assets
+const nonTradeableAssetMessage = computed(() => {
+  if (selectedFromAssetInfo.value && !selectedFromAssetInfo.value.tradable) {
+    const pauseReason = selectedFromAssetInfo.value.pause?.reason?.message
+    return (
+      pauseReason ||
+      `${fromTokenSelected.value?.symbol} is currently not available for trading`
+    )
+  }
+  if (selectedToAssetInfo.value && !selectedToAssetInfo.value.tradable) {
+    const pauseReason = selectedToAssetInfo.value.pause?.reason?.message
+    return (
+      pauseReason ||
+      `${toTokenSelected.value?.symbol} is currently not available for trading`
+    )
+  }
+  return ''
+})
+
 const toTokens = computed(() => {
   if (!tradableAssets.value || !selectedFromChain.value)
     return [] as NewTokenInfo[]
@@ -583,6 +649,7 @@ const isTradeDisabled = computed(
   () =>
     !supportedNetwork.value ||
     !isMarketOpen.value ||
+    !isSelectedAssetTradeable.value ||
     !(
       fromAmount.value !== '' &&
       fromAmount.value !== '0' &&
@@ -642,6 +709,12 @@ const connectWalletForTrade = () => {
 const fetchQuote = useDebounceFn(async () => {
   // Don't fetch quotes when market is closed
   if (!isMarketOpen.value) {
+    toAmount.value = '0'
+    return
+  }
+
+  // Don't fetch quotes when selected asset is not tradeable (paused)
+  if (!isSelectedAssetTradeable.value) {
     toAmount.value = '0'
     return
   }
