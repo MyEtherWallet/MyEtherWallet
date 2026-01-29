@@ -2,10 +2,17 @@ import { ref, computed, onUnmounted } from 'vue'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import { getMarketStatus } from '../providers/ondoHelpers'
 
-export function useMarketStatus() {
+interface UseMarketStatusOptions {
+  onMarketOpen?: () => void | Promise<void>
+}
+
+export function useMarketStatus(options: UseMarketStatusOptions = {}) {
+  const { onMarketOpen } = options
+
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
+  let wasMarketClosed = false
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
 
@@ -57,10 +64,17 @@ export function useMarketStatus() {
   const fetchMarketStatus = async () => {
     try {
       marketStatus.value = await getMarketStatus()
+
       if (!marketStatus.value.isOpen) {
+        wasMarketClosed = true
         startCountdown()
       } else {
         stopCountdown()
+        // Market just opened - call the callback if market was previously closed
+        if (wasMarketClosed && onMarketOpen) {
+          wasMarketClosed = false
+          await onMarketOpen()
+        }
       }
     } catch (e) {
       console.error('Failed to fetch market status:', e)

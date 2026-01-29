@@ -338,6 +338,9 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 const startPolling = async (hash: string, chainId: number) => {
   if (pollIntervals[hash]) return
 
+  // Set a placeholder immediately to prevent duplicate calls during async operation
+  pollIntervals[hash] = -1
+
   const pollStatus = async () => {
     try {
       const { default: OneInchFusion } =
@@ -353,8 +356,11 @@ const startPolling = async (hash: string, chainId: number) => {
   // Initial poll
   await pollStatus()
 
-  // Poll every 5 seconds
-  pollIntervals[hash] = window.setInterval(pollStatus, 5000)
+  // Poll every 5 seconds (replace placeholder with actual interval)
+  // Only set interval if the order is still pending (might have been filled/expired during initial poll)
+  if (pollIntervals[hash] === -1) {
+    pollIntervals[hash] = window.setInterval(pollStatus, 5000)
+  }
 }
 
 // Stop polling for a specific order

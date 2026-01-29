@@ -9,7 +9,7 @@
         <div class="flex items-end justify-between mb-2 px-4">
           <p class="font-bold text-s-28">Trade</p>
           <app-btn-text
-            v-if="isMarketOpen"
+            v-if="isMarketOpen && isCurrentNetworkSupported"
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
             >Clear all</app-btn-text
@@ -18,7 +18,9 @@
         <div
           :class="[
             'relative transition-all duration-300',
-            !isMarketOpen ? 'blur-sm pointer-events-none opacity-60' : '',
+            !isMarketOpen || !isCurrentNetworkSupported
+              ? 'blur-sm pointer-events-none opacity-60'
+              : '',
           ]"
         >
           <!-- From Section -->
@@ -80,7 +82,12 @@
 
         <!-- Market Closed Banner - Centered Overlay -->
         <div
-          v-if="!isLoading && marketStatus && !isMarketOpen"
+          v-if="
+            !isLoading &&
+            marketStatus &&
+            !isMarketOpen &&
+            isCurrentNetworkSupported
+          "
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
@@ -106,6 +113,44 @@
             </div>
           </div>
         </div>
+
+        <!-- Network Not Supported Banner - Centered Overlay -->
+        <div
+          v-if="!isLoading && !isCurrentNetworkSupported"
+          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+        >
+          <div
+            class="w-full max-w-[380px] p-5 bg-white border border-grey-20 rounded-16 shadow-lg pointer-events-auto"
+          >
+            <div class="flex items-center gap-2 justify-center mb-2">
+              <div class="w-2 h-2 bg-error rounded-full"></div>
+              <p class="text-error font-bold text-s-16">
+                Network Not Supported
+              </p>
+            </div>
+            <p class="text-grey-70 text-s-13 text-center mb-4">
+              Trading is not available on
+              {{ selectedChain?.nameLong || selectedChain?.name }}. Please
+              switch to a supported network.
+            </p>
+            <div class="flex flex-wrap gap-2 justify-center">
+              <button
+                v-for="chain in supportedChainsList"
+                :key="chain.name"
+                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 text-primary font-medium text-s-14 rounded-12 transition-colors"
+                @click="switchToNetwork(chain)"
+              >
+                <img
+                  v-if="chain.icon"
+                  :src="chain.icon"
+                  :alt="chain.name"
+                  class="w-5 h-5 rounded-full"
+                />
+                <span>{{ chain.nameLong || chain.name }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Error Display -->
@@ -118,10 +163,13 @@
         </p>
       </div>
 
-      <!-- Asset Not Tradeable Warning -->
+      <!-- Asset Not Tradeable Warning (only show when market is open) -->
       <div
         v-if="
-          !isLoading && !isSelectedAssetTradeable && nonTradeableAssetMessage
+          !isLoading &&
+          isMarketOpen &&
+          !isSelectedAssetTradeable &&
+          nonTradeableAssetMessage
         "
         class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
       >
@@ -133,7 +181,9 @@
       <div
         :class="[
           'w-full max-w-[340px] transition-all duration-300',
-          !isMarketOpen ? 'blur-sm pointer-events-none opacity-60' : '',
+          !isMarketOpen || !isCurrentNetworkSupported
+            ? 'blur-sm pointer-events-none opacity-60'
+            : '',
         ]"
       >
         <app-base-button
@@ -222,6 +272,7 @@ import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useGlobalStore } from '@/stores/globalStore'
 
 // Composables
 import { useTrade } from './useTrade'
@@ -242,6 +293,7 @@ const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
 const accessStore = useAccessStore()
+const globalStore = useGlobalStore()
 
 // --- Refs from Stores ---
 const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
@@ -262,7 +314,8 @@ const {
 const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
 
 // --- Local State ---
-const selectedFromChain = ref<Chain>()
+// Initialize selectedFromChain immediately from the store to prevent defaulting to Ethereum
+const selectedFromChain = ref<Chain | undefined>(chainsStore.selectedChain)
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
 const toTokenSelected = ref<NewTokenInfo | null>(null)
 const fromAmount = ref<string>('0')
@@ -277,13 +330,33 @@ const {
   countdownText,
   fetchMarketStatus,
   formatNextOpen,
-} = useMarketStatus()
+} = useMarketStatus({
+  onMarketOpen: async () => {
+    // Refresh tradable assets when market opens
+    await loadTradableAssets()
+  },
+})
 
 // --- Computed ---
 const supportedNetwork = computed(() => {
   if (!selectedFromChain.value) return false
   return supportedChainNames.value.includes(
     selectedFromChain.value.name.toUpperCase(),
+  )
+})
+
+// Check if current global network is supported for trading
+const isCurrentNetworkSupported = computed(() => {
+  if (!selectedChain.value) return false
+  return supportedChainNames.value.includes(
+    selectedChain.value.name.toUpperCase(),
+  )
+})
+
+// Get list of supported chains for the unsupported network message
+const supportedChainsList = computed(() => {
+  return chains.value.filter(chain =>
+    supportedChainNames.value.includes(chain.name.toUpperCase()),
   )
 })
 
@@ -384,6 +457,17 @@ const clearValues = () => {
 
 const setFromChain = (chain: Chain) => {
   selectedFromChain.value = chain
+  // Update the global network - useSwap has a watcher that will reinitialize
+  globalStore.setSelectedNetwork(chain.name)
+  // Clear current selections - they'll be repopulated when swapLoaded becomes true
+  fromTokenSelected.value = null
+  toTokenSelected.value = null
+  fromAmount.value = '0'
+  toAmount.value = '0'
+}
+
+const switchToNetwork = (chain: Chain) => {
+  setFromChain(chain)
 }
 
 const connectWalletForTrade = () => {
@@ -402,6 +486,23 @@ watch(selectedChain, newChain => {
     supportedChainNames.value.includes(newChain.name.toUpperCase())
   ) {
     selectedFromChain.value = newChain
+    fromTokenSelected.value = null
+    toTokenSelected.value = null
+    fromAmount.value = '0'
+    toAmount.value = '0'
+  }
+})
+
+// Watch for swap loaded to set default tokens after chain change
+watch(swapLoaded, loaded => {
+  if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
+    fromTokenSelected.value =
+      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
+      fromTokens.value[0] ||
+      null
+  }
+  if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
+    toTokenSelected.value = toTokens.value[0] || null
   }
 })
 
@@ -429,38 +530,31 @@ onBeforeMount(async () => {
   // Fetch market status
   await fetchMarketStatus()
 
-  // Set initial chain
-  if (
-    selectedChain.value &&
-    supportedChainNames.value.includes(selectedChain.value.name.toUpperCase())
-  ) {
-    selectedFromChain.value = selectedChain.value
-  } else if (fromChains.value.length > 0) {
-    selectedFromChain.value = fromChains.value[0]
-  }
+  // Only set tokens if the network is supported
+  if (isCurrentNetworkSupported.value) {
+    // Set initial from token if connected
+    if (isWalletConnected.value && fromTokens.value.length > 0) {
+      fromTokenSelected.value =
+        fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
+        fromTokens.value[0] ||
+        null
+    }
 
-  // Set initial from token if connected
-  if (isWalletConnected.value && fromTokens.value.length > 0) {
-    fromTokenSelected.value =
-      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-      fromTokens.value[0] ||
-      null
-  }
-
-  // Set initial to token
-  if (selectedTradeTokenSymbol.value && toTokens.value.length > 0) {
-    const matchingToken = toTokens.value.find(
-      (t: NewTokenInfo) =>
-        t.symbol.toUpperCase() ===
-        selectedTradeTokenSymbol.value!.toUpperCase(),
-    )
-    if (matchingToken) {
-      toTokenSelected.value = matchingToken
+    // Set initial to token
+    if (selectedTradeTokenSymbol.value && toTokens.value.length > 0) {
+      const matchingToken = toTokens.value.find(
+        (t: NewTokenInfo) =>
+          t.symbol.toUpperCase() ===
+          selectedTradeTokenSymbol.value!.toUpperCase(),
+      )
+      if (matchingToken) {
+        toTokenSelected.value = matchingToken
+      } else if (toTokens.value.length > 0) {
+        toTokenSelected.value = toTokens.value[0] || null
+      }
     } else if (toTokens.value.length > 0) {
       toTokenSelected.value = toTokens.value[0] || null
     }
-  } else if (toTokens.value.length > 0) {
-    toTokenSelected.value = toTokens.value[0] || null
   }
 })
 </script>
