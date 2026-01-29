@@ -153,7 +153,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'MEW Mobile',
     icon: MewLogo,
     type: [WalletConfigType.MOBILE],
-    canSupport: keystoreSupportNetwork, // TODO: replace with actual mew wallet support once we confirm DOT and SOL diverges from this
+    canSupport: keystoreSupportNetwork,
     isDefault: true,
     isOfficial: true,
     isWC: true,

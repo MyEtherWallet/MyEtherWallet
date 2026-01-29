@@ -44,7 +44,9 @@ import BtnWallet from './BtnWallet.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletList } from '@/composables/useWalletList'
+import { computed } from 'vue'
 
 const { connect } = useConnectWallet()
 
@@ -53,6 +55,8 @@ const recentWalletsStore = useRecentWalletsStore()
 const providerStore = useProviderStore()
 const { recentWallets } = storeToRefs(recentWalletsStore)
 const { providers } = storeToRefs(providerStore)
+const chainStore = useChainsStore()
+const { selectedChain } = storeToRefs(chainStore)
 
 const reversedRecentWallets = recentWallets.value.slice().reverse()
 
@@ -60,14 +64,19 @@ const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 
 const isMockAvailable = newWalletList.value.find(nw => nw.id === 'mock')
 
-const defaultWallets = keys
-  .filter(key => {
-    if (isMockAvailable && walletConfigs[key].id === 'mock') return true
-    return walletConfigs[key].isDefault === true
-  })
-  .map(key => {
-    return walletConfigs[key]
-  })
+const defaultWallets = computed(() => {
+  return keys
+    .filter(key => {
+      if (isMockAvailable && walletConfigs[key].id === 'mock') return true
+      return (
+        walletConfigs[key].isDefault === true &&
+        walletConfigs[key].canSupport!(selectedChain.value)
+      )
+    })
+    .map(key => {
+      return walletConfigs[key]
+    })
+})
 
 const detectedWalletsToConfigs: WalletConfig[] = newWalletList.value.filter(
   wallet => {
@@ -77,7 +86,9 @@ const detectedWalletsToConfigs: WalletConfig[] = newWalletList.value.filter(
     const inRecent = recentWallets.value.find(
       recent => recent.name === wallet.name,
     )
-    const inDefault = defaultWallets.find(recent => recent.name === wallet.name)
+    const inDefault = defaultWallets.value.find(
+      recent => recent.name === wallet.name,
+    )
     if (inProviders && !inRecent && !inDefault) {
       return wallet
     }
