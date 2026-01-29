@@ -287,6 +287,7 @@ import {
 
 // Types
 import type { Chain } from '@/mew_api/types'
+import configs from '@/configs'
 
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
@@ -370,6 +371,11 @@ const fromTokens = computed(() => {
   return (swapFromTokens.value || []) as NewTokenInfo[]
 })
 
+// Use wallet address or fallback to donation address for quotes
+const userAddress = computed(
+  () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
+)
+
 // --- Trade Tokens ---
 const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
   useTradeTokens({
@@ -404,7 +410,7 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   toTokenSelected,
   fromAmount,
   toAmount,
-  walletAddress,
+  walletAddress: userAddress,
   wallet,
   selectedFromChain,
   isMarketOpen,
@@ -532,8 +538,8 @@ onBeforeMount(async () => {
 
   // Only set tokens if the network is supported
   if (isCurrentNetworkSupported.value) {
-    // Set initial from token if connected
-    if (isWalletConnected.value && fromTokens.value.length > 0) {
+    // Set initial from token (works with or without wallet connected)
+    if (fromTokens.value.length > 0) {
       fromTokenSelected.value =
         fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
         fromTokens.value[0] ||
