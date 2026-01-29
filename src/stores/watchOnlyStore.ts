@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, ChainType } from '@/mew_api/types'
 
 interface AddressKeyValue {
   address: string
   walletName: string
   chain: Chain
+  type: ChainType
 }
 
 interface RecentAddress {
@@ -25,8 +26,13 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   )
   // Takes address to store, chain type to store under, and wallet name
   // to allow easy opening for the popup
-  const addWallet = (address: string, chain: Chain, walletName: string) => {
-    const addressKeyMap: AddressKeyValue = { walletName, chain, address }
+  const addWallet = (
+    address: string,
+    chain: Chain,
+    walletName: string,
+    type: ChainType,
+  ) => {
+    const addressKeyMap: AddressKeyValue = { walletName, chain, address, type }
 
     if (watchOnlyAddresses.value[chain.type]) {
       // Check if address already exists

@@ -72,7 +72,6 @@
       v-if="isLoadedChains"
       v-model:is-open="openDialog"
       :selected-chain="selectedChain"
-      :filter-chain-type="filterChainType ? filterChainType : isBtnGroup"
       :passed-chains="passedChains"
       @update:chain="setSelectedChain"
     />
@@ -101,10 +100,6 @@ const prop = defineProps({
   canStore: {
     type: Boolean,
     default: true,
-  },
-  filterChainType: {
-    type: Boolean,
-    default: false,
   },
   preselectedChain: {
     type: Object as () => Chain | null,

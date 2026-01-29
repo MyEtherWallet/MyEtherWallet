@@ -50,6 +50,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         currentRecentAddressList[currentRecentAddressList.length - 1].chain,
         currentRecentAddressList[currentRecentAddressList.length - 1]
           .walletName as WalletType,
+        currentRecentAddressList[currentRecentAddressList.length - 1].type,
       )
       wallet.value = null
       walletAddress.value = null
@@ -85,6 +86,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         walletAddress.value,
         selectedChain.value!,
         wallet.value.getWalletType(),
+        selectedChain.value!.type,
       )
     }
   }

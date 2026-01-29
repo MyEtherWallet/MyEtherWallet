@@ -27,7 +27,6 @@
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
             <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
             <select-chain-for-app
-              :filter-chain-type="true"
               :can-store="false"
               :passed-chains="fromChains"
               :preselected-chain="selectedFromChain"
@@ -174,6 +173,7 @@
         class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
       >
         <p class="text-warning text-s-14 text-center">
+          {{ toTokenSelected?.symbol }} not currently tradable due to
           {{ nonTradeableAssetMessage }}
         </p>
       </div>

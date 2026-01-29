@@ -76,7 +76,6 @@
  *
  *   <select-chain-dialog
  *     v-model:chain="selectedChain"
- *     :filter-chain-type="false"
  *     :has-all="true"
  *   />
  * @example: with all chains option
@@ -85,7 +84,6 @@
  *
  * <select-chain-dialog
  *  v-model:chain="selectedChain"
- * :filter-chain-type="false"
  * :has-all="true"
  * />
  *
@@ -101,10 +99,6 @@ import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
 const prop = defineProps({
-  filterChainType: {
-    type: Boolean,
-    default: false,
-  },
   selectedChain: {
     type: Object as () => Chain | null,
     default: null,
@@ -190,10 +184,11 @@ const searchResults = computed<Chain[]>(() => {
   const locChain =
     prop.passedChains.length > 0 ? prop.passedChains : chains.value
   const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
-  const chainsToSearch = prop.filterChainType
-    ? _chains.filter(chain => {
-        return chain.type === storeSelectedChain.value?.type
-      })
+  // Always filter by the selected chain's type
+  const currentChainType =
+    prop.selectedChain?.type ?? storeSelectedChain.value?.type
+  const chainsToSearch = currentChainType
+    ? _chains.filter(chain => chain.type === currentChainType)
     : _chains
 
   if (!searchInput.value || searchInput.value === '') {

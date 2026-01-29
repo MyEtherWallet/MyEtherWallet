@@ -548,7 +548,6 @@
           v-if="isLoadedChains"
           v-model:is-open="openChainDialog"
           :selected-chain="selectedChainFilter"
-          :filter-chain-type="true"
           has-all
           @update:chain="setSelectedChain"
         />
