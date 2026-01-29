@@ -137,10 +137,10 @@
         ]"
       >
         <app-base-button
-          class="w-full"
           v-if="isWalletConnected && !isWatchOnly"
+          class="w-full"
           :disabled="isTradeDisabled || isApproving"
-          @click="needsApproval ? handleApprove() : tradeButton()"
+          @click="needsApproval ? handleApprove() : openTradeModal()"
         >
           <span
             v-if="isApproving"
@@ -204,9 +204,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, onUnmounted, computed, watch } from 'vue'
+import { ref, onBeforeMount, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useDebounceFn } from '@vueuse/core'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
 
 // Components
@@ -218,32 +217,31 @@ import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
 
-// Stores and Composables
+// Stores
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { useToastStore } from '@/stores/toastStore'
-import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
+
+// Composables
 import { useTrade } from './useTrade'
 import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
+import {
+  useMarketStatus,
+  useTradeTokens,
+  useTradeValidation,
+  useTradeQuote,
+  useTradeExecution,
+} from './composables'
 
-// Utils and Types
-import { parseUnits, formatUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
-import type { Chain, GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
-import { ToastType } from '@/types/notification'
-import BigNumber from 'bignumber.js'
-import { useI18n } from 'vue-i18n'
-import { getMarketStatus } from './providers/ondoHelpers'
+// Types
+import type { Chain } from '@/mew_api/types'
 
 // --- Stores ---
-const { t } = useI18n()
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
 const accessStore = useAccessStore()
-const toastStore = useToastStore()
 
 // --- Refs from Stores ---
 const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
@@ -267,82 +265,19 @@ const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
 const selectedFromChain = ref<Chain>()
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
 const toTokenSelected = ref<NewTokenInfo | null>(null)
-
 const fromAmount = ref<string>('0')
 const toAmount = ref<string>('0')
 const generalError = ref<string>('')
 const toAmountError = ref<string>('')
 
-const isLoadingQuote = ref(false)
-const quoteModalOpen = ref(false)
-const tradeInitiatedOpen = ref(false)
-const txProceeding = ref(false)
-const orderHash = ref<string>('')
-const tradeOrdersStore = useTradeOrdersStore()
-
-// Approval state
-const needsApproval = ref(false)
-const isApproving = ref(false)
-
-// Market status
-const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
-const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
-const countdownText = ref<string>('')
-let countdownInterval: ReturnType<typeof setInterval> | null = null
-
-const updateCountdown = () => {
-  if (!marketStatus.value?.nextOpen || isMarketOpen.value) {
-    countdownText.value = ''
-    return
-  }
-
-  const now = Date.now()
-  const nextOpen = new Date(marketStatus.value.nextOpen).getTime()
-  const diff = nextOpen - now
-
-  if (diff <= 0) {
-    countdownText.value = 'Opening soon...'
-    // Refresh market status when countdown reaches zero
-    getMarketStatus()
-      .then(status => {
-        marketStatus.value = status
-      })
-      .catch(() => {})
-    return
-  }
-
-  const hours = Math.floor(diff / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-  if (hours > 0) {
-    countdownText.value = `${hours}h ${minutes}m ${seconds}s`
-  } else if (minutes > 0) {
-    countdownText.value = `${minutes}m ${seconds}s`
-  } else {
-    countdownText.value = `${seconds}s`
-  }
-}
-
-const startCountdown = () => {
-  if (countdownInterval) {
-    clearInterval(countdownInterval)
-  }
-  updateCountdown()
-  countdownInterval = setInterval(updateCountdown, 1000)
-}
-
-onUnmounted(() => {
-  if (countdownInterval) {
-    clearInterval(countdownInterval)
-  }
-})
-
-const currentQuote = ref<{
-  startAmount: bigint
-  endAmount?: bigint
-  avgAmount?: bigint
-} | null>(null)
+// --- Market Status ---
+const {
+  marketStatus,
+  isMarketOpen,
+  countdownText,
+  fetchMarketStatus,
+  formatNextOpen,
+} = useMarketStatus()
 
 // --- Computed ---
 const supportedNetwork = computed(() => {
@@ -362,319 +297,70 @@ const fromTokens = computed(() => {
   return (swapFromTokens.value || []) as NewTokenInfo[]
 })
 
-// Check if selected from token is a tradable asset (stock token)
-const isSellingTradableAsset = computed(() => {
-  if (!fromTokenSelected.value || !tradableAssets.value) return false
-  const fromAddress = fromTokenSelected.value.address?.toLowerCase()
-  if (!fromAddress) return false
+// --- Trade Tokens ---
+const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
+  useTradeTokens({
+    selectedFromChain,
+    fromTokens,
+    fromTokenSelected,
+    toTokenSelected,
+    tradableAssets,
+    additionalBuyAssets,
+  })
 
-  return tradableAssets.value.some(asset =>
-    asset.addresses.some(addr => addr.address?.toLowerCase() === fromAddress),
-  )
+// --- Trade Quote ---
+// Note: We need to create isLoadingQuote first before using it in validation
+const isLoadingQuote = ref(false)
+
+// --- Trade Validation ---
+const { hasPreQuoteError, fromAmountError, isTradeDisabled } =
+  useTradeValidation({
+    fromTokenSelected,
+    fromAmount,
+    toAmount,
+    isWalletConnected,
+    isMarketOpen,
+    isSelectedAssetTradeable,
+    supportedNetwork,
+    isLoadingQuote,
+  })
+
+// --- Trade Quote ---
+const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
+  fromTokenSelected,
+  toTokenSelected,
+  fromAmount,
+  toAmount,
+  walletAddress,
+  wallet,
+  selectedFromChain,
+  isMarketOpen,
+  isSelectedAssetTradeable,
+  hasPreQuoteError,
+  generalError,
+  isLoadingQuote,
 })
 
-// Get the tradable asset info for the selected from token (if it's a stock)
-const selectedFromAssetInfo = computed(() => {
-  if (!fromTokenSelected.value || !tradableAssets.value) return null
-  const fromAddress = fromTokenSelected.value.address?.toLowerCase()
-  if (!fromAddress) return null
-
-  return tradableAssets.value.find(asset =>
-    asset.addresses.some(addr => addr.address?.toLowerCase() === fromAddress),
-  )
+// --- Trade Execution ---
+const {
+  isApproving,
+  txProceeding,
+  quoteModalOpen,
+  tradeInitiatedOpen,
+  orderHash,
+  handleApprove,
+  openTradeModal,
+  confirmTrade,
+} = useTradeExecution({
+  fromTokenSelected,
+  toTokenSelected,
+  fromAmount,
+  walletAddress,
+  wallet,
+  selectedFromChain,
+  currentQuote,
+  needsApproval,
 })
-
-// Get the tradable asset info for the selected to token (if it's a stock)
-const selectedToAssetInfo = computed(() => {
-  if (!toTokenSelected.value || !tradableAssets.value) return null
-  const toAddress = toTokenSelected.value.address?.toLowerCase()
-  if (!toAddress) return null
-
-  return tradableAssets.value.find(asset =>
-    asset.addresses.some(addr => addr.address?.toLowerCase() === toAddress),
-  )
-})
-
-// Check if the selected assets are tradeable (not paused)
-const isSelectedAssetTradeable = computed(() => {
-  // Check from token if it's a tradable asset
-  if (selectedFromAssetInfo.value && !selectedFromAssetInfo.value.tradable) {
-    return false
-  }
-  // Check to token if it's a tradable asset
-  if (selectedToAssetInfo.value && !selectedToAssetInfo.value.tradable) {
-    return false
-  }
-  return true
-})
-
-// Get the pause message for non-tradeable assets
-const nonTradeableAssetMessage = computed(() => {
-  if (selectedFromAssetInfo.value && !selectedFromAssetInfo.value.tradable) {
-    const pauseReason = selectedFromAssetInfo.value.pause?.reason?.message
-    return (
-      pauseReason ||
-      `${fromTokenSelected.value?.symbol} is currently not available for trading`
-    )
-  }
-  if (selectedToAssetInfo.value && !selectedToAssetInfo.value.tradable) {
-    const pauseReason = selectedToAssetInfo.value.pause?.reason?.message
-    return (
-      pauseReason ||
-      `${toTokenSelected.value?.symbol} is currently not available for trading`
-    )
-  }
-  return ''
-})
-
-const toTokens = computed(() => {
-  if (!tradableAssets.value || !selectedFromChain.value)
-    return [] as NewTokenInfo[]
-  const chainName = selectedFromChain.value.name.toUpperCase()
-
-  // Create a lookup map from fromTokens by address (lowercase for comparison)
-  const fromTokensMap = new Map<string, NewTokenInfo>()
-  for (const token of fromTokens.value) {
-    if (token.address) {
-      fromTokensMap.set(token.address.toLowerCase(), token)
-    }
-  }
-
-  // Map tradable assets to NewTokenInfo format
-  const tradableTokens = tradableAssets.value
-    .filter(asset =>
-      asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
-    )
-    .map(asset => {
-      const addressInfo = asset.addresses.find(
-        addr => addr.chainName?.toUpperCase() === chainName,
-      )
-      const tokenAddress = addressInfo?.address || ''
-
-      // Check if this token exists in fromTokens to get enriched data
-      const matchingFromToken = tokenAddress
-        ? fromTokensMap.get(tokenAddress.toLowerCase())
-        : undefined
-
-      // Use price from wallet tokens, or fall back to primaryMarket price from API
-      const tokenPrice =
-        parseFloat(asset.primaryMarket.price) || matchingFromToken?.price || 0
-
-      return {
-        name: asset.stockAlias || asset.symbol,
-        symbol: asset.symbol.toUpperCase(),
-        decimals: addressInfo?.decimals || 18,
-        address: tokenAddress,
-        logoURI: asset.iconPngUrl || asset.iconSvgUrl || '',
-        cgId: matchingFromToken?.cgId || '',
-        type: 'erc20',
-        rank: matchingFromToken?.rank || 0,
-        balance: matchingFromToken?.balance || '0',
-        price: tokenPrice,
-        networkInfo: {
-          name: chainName.toLowerCase(),
-          isAddress: tokenAddress,
-        },
-      }
-    }) as unknown as NewTokenInfo[]
-
-  // If selling a tradable asset, add additional buy assets (like stablecoins)
-  if (isSellingTradableAsset.value && additionalBuyAssets.value) {
-    const additionalTokens = additionalBuyAssets.value
-      .filter(asset =>
-        asset.addresses.some(
-          addr => addr.chainName?.toUpperCase() === chainName,
-        ),
-      )
-      .map(asset => {
-        const addressInfo = asset.addresses.find(
-          addr => addr.chainName?.toUpperCase() === chainName,
-        )
-        const tokenAddress = addressInfo?.address || ''
-
-        // Check if this token exists in fromTokens to get enriched data
-        const matchingFromToken = tokenAddress
-          ? fromTokensMap.get(tokenAddress.toLowerCase())
-          : undefined
-
-        return {
-          name: asset.name,
-          symbol: asset.symbol.toUpperCase(),
-          decimals: addressInfo?.decimals || 18,
-          address: tokenAddress,
-          logoURI: addressInfo?.tokenLogoUrl || '',
-          cgId: asset.coinId || '',
-          type: 'erc20',
-          rank: matchingFromToken?.rank || 0,
-          balance: matchingFromToken?.balance || '0',
-          price: asset.price || matchingFromToken?.price || 0,
-          networkInfo: {
-            name: chainName.toLowerCase(),
-            isAddress: tokenAddress,
-          },
-        }
-      }) as unknown as NewTokenInfo[]
-
-    // Combine tradable assets with additional buy assets, avoiding duplicates
-    const existingAddresses = new Set(
-      tradableTokens.map(t => t.address?.toLowerCase()),
-    )
-    const uniqueAdditionalTokens = additionalTokens.filter(
-      t => !existingAddresses.has(t.address?.toLowerCase()),
-    )
-
-    return [...tradableTokens, ...uniqueAdditionalTokens]
-  }
-
-  return tradableTokens
-})
-
-// Helper to get token balance parameters
-const getTokenBalanceParams = (token: NewTokenInfo) => {
-  const isMainToken = token.address === MAIN_TOKEN_CONTRACT
-  const balance = token.balance || '0'
-
-  const baseNetworkBalance = parseUnits(
-    walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-    18,
-  )
-
-  const decimals = token.decimals || 18
-  // For ERC20 tokens, balance is already in base units (wei)
-  // For main token, we parse from formatted balance
-  const baseBalance = isMainToken ? baseNetworkBalance : BigInt(balance)
-
-  return { baseBalance, decimals }
-}
-
-// Check if amount has pre-quote errors (invalid format, below minimum) - excludes balance check
-const hasPreQuoteError = computed(() => {
-  if (
-    !fromTokenSelected.value ||
-    !fromAmount.value ||
-    fromAmount.value === '0'
-  ) {
-    return true
-  }
-
-  const amountBN = BigNumber(fromAmount.value)
-  if (amountBN.isNaN() || amountBN.lte(0)) {
-    return true
-  }
-
-  // Check decimals
-  const decimals = fromTokenSelected.value.decimals || 18
-  const decimalPlaces = fromAmount.value.includes('.')
-    ? fromAmount.value.split('.')[1]?.length || 0
-    : 0
-  if (decimalPlaces > decimals) {
-    return true
-  }
-
-  // Minimum $1 value check
-  const tokenPrice = fromTokenSelected.value.price || 0
-  if (tokenPrice > 0) {
-    const usdValue = amountBN
-      .times(tokenPrice)
-      .integerValue(BigNumber.ROUND_CEIL)
-    if (usdValue.lt(1)) {
-      return true
-    }
-  }
-
-  return false
-})
-
-// Computed error for from amount with balance validation
-const fromAmountError = computed(() => {
-  if (
-    !fromTokenSelected.value ||
-    !fromAmount.value ||
-    fromAmount.value === '0'
-  ) {
-    return ''
-  }
-
-  // Check for valid number
-  const amountBN = BigNumber(fromAmount.value)
-  if (amountBN.isNaN()) {
-    return t('swap.error.invalid-amount')
-  }
-
-  // Ensure > 0
-  if (amountBN.lte(0)) {
-    return t('swap.error.more-than-zero')
-  }
-
-  // Check decimals
-  const decimals = fromTokenSelected.value.decimals || 18
-  const decimalPlaces = fromAmount.value.includes('.')
-    ? fromAmount.value.split('.')[1]?.length || 0
-    : 0
-  if (decimalPlaces > decimals) {
-    return t('swap.error.too-many-decimals')
-  }
-
-  // Minimum $1 value check
-  const tokenPrice = fromTokenSelected.value.price || 0
-  if (tokenPrice > 0) {
-    const usdValue = amountBN
-      .times(tokenPrice)
-      .integerValue(BigNumber.ROUND_CEIL)
-    if (usdValue.lt(1)) {
-      return 'Minimum trade value is $1.00'
-    }
-  }
-
-  // Balance check (only when wallet is connected)
-  if (isWalletConnected.value) {
-    try {
-      const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-      const baseAmount = parseUnits(amountBN.toFixed(decimals), decimals)
-
-      if (tokenParams.baseBalance < baseAmount) {
-        return t('swap.error.insufficient-native', {
-          symbol: fromTokenSelected.value.symbol,
-        })
-      }
-    } catch {
-      // If parsing fails, don't show balance error
-    }
-  }
-
-  return ''
-})
-
-const isTradeDisabled = computed(
-  () =>
-    !supportedNetwork.value ||
-    !isMarketOpen.value ||
-    !isSelectedAssetTradeable.value ||
-    !(
-      fromAmount.value !== '' &&
-      fromAmount.value !== '0' &&
-      fromAmountError.value === '' &&
-      toAmount.value !== '0'
-    ) ||
-    isLoadingQuote.value,
-)
-
-// --- Helper Functions ---
-const formatNextOpen = (dateString: string) => {
-  try {
-    const date = new Date(dateString)
-    return date.toLocaleString(undefined, {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZoneName: 'short',
-    })
-  } catch {
-    return dateString
-  }
-}
 
 // --- Methods ---
 const clearValues = () => {
@@ -682,8 +368,7 @@ const clearValues = () => {
   toAmount.value = '0'
   toAmountError.value = ''
   generalError.value = ''
-  currentQuote.value = null
-  needsApproval.value = false
+  resetQuote()
 
   // Reset to default tokens
   if (fromTokens.value.length > 0) {
@@ -706,201 +391,6 @@ const connectWalletForTrade = () => {
   accessStore.openAccessDialog()
 }
 
-const fetchQuote = useDebounceFn(async () => {
-  // Don't fetch quotes when market is closed
-  if (!isMarketOpen.value) {
-    toAmount.value = '0'
-    return
-  }
-
-  // Don't fetch quotes when selected asset is not tradeable (paused)
-  if (!isSelectedAssetTradeable.value) {
-    toAmount.value = '0'
-    return
-  }
-
-  if (
-    !fromTokenSelected.value ||
-    !toTokenSelected.value ||
-    !fromAmount.value ||
-    fromAmount.value === '0' ||
-    !walletAddress.value ||
-    hasPreQuoteError.value // Don't fetch quote if there's a pre-quote error (e.g., below $1 minimum, invalid format)
-  ) {
-    toAmount.value = '0'
-    return
-  }
-
-  isLoadingQuote.value = true
-  generalError.value = ''
-
-  try {
-    // Import OneInchFusion dynamically to avoid circular dependencies
-    const { default: OneInchFusion } =
-      await import('./providers/oneinch_fusion/oneInchFusion')
-
-    const chainId = parseInt(selectedFromChain.value?.chainID || '1')
-    const fusion = new OneInchFusion(wallet.value as any, chainId)
-
-    const decimals = fromTokenSelected.value.decimals || 18
-    const amountInBaseUnits = parseUnits(fromAmount.value, decimals).toString()
-
-    const quote = await fusion.getQuote({
-      fromTokenAddress: fromTokenSelected.value.address,
-      toTokenAddress: toTokenSelected.value.address,
-      amount: amountInBaseUnits,
-      fromAddress: walletAddress.value,
-      fromTokenDecimals: fromTokenSelected.value.decimals || 18,
-      toTokenDecimals: toTokenSelected.value.decimals || 18,
-    })
-
-    currentQuote.value = quote
-    const toDecimals = toTokenSelected.value.decimals || 18
-    toAmount.value = formatFloatingPointValue(
-      formatUnits(quote.avgAmount || quote.startAmount, toDecimals),
-    ).value
-
-    // Check if approval is required
-    const approvalRequired = await fusion.isApprovalRequired(
-      walletAddress.value,
-      fromTokenSelected.value.address,
-      BigInt(amountInBaseUnits),
-    )
-    needsApproval.value = approvalRequired
-  } catch (e) {
-    generalError.value = (e as Error).message || 'Failed to fetch quote'
-    toAmount.value = '0'
-  } finally {
-    isLoadingQuote.value = false
-  }
-}, 500)
-
-const handleApprove = async () => {
-  if (!fromTokenSelected.value || !walletAddress.value || !wallet.value) {
-    return
-  }
-
-  isApproving.value = true
-
-  try {
-    const { default: OneInchFusion } =
-      await import('./providers/oneinch_fusion/oneInchFusion')
-
-    const chainId = parseInt(selectedFromChain.value?.chainID || '1')
-    const fusion = new OneInchFusion(wallet.value as any, chainId)
-
-    await fusion.setApproval(
-      walletAddress.value,
-      fromTokenSelected.value.address,
-    )
-
-    // Approval successful, update state
-    needsApproval.value = false
-
-    toastStore.addToastMessage({
-      text: 'Approval successful! You can now trade.',
-      type: ToastType.Success,
-    })
-  } catch (e) {
-    toastStore.addToastMessage({
-      text:
-        (e as any).details || (e as Error).message || 'Failed to approve token',
-      type: ToastType.Error,
-    })
-  } finally {
-    isApproving.value = false
-  }
-}
-
-const tradeButton = () => {
-  if (!currentQuote.value) {
-    toastStore.addToastMessage({
-      text: 'Please wait for quote to load',
-      type: ToastType.Error,
-    })
-    return
-  }
-  quoteModalOpen.value = true
-}
-
-const confirmTrade = async () => {
-  if (!fromTokenSelected.value || !toTokenSelected.value || !wallet.value) {
-    return
-  }
-
-  txProceeding.value = true
-
-  try {
-    const { default: OneInchFusion } =
-      await import('./providers/oneinch_fusion/oneInchFusion')
-
-    const chainId = parseInt(selectedFromChain.value?.chainID || '1')
-    const fusion = new OneInchFusion(wallet.value as any, chainId)
-
-    const decimals = fromTokenSelected.value.decimals || 18
-    const amountInBaseUnits = parseUnits(fromAmount.value, decimals).toString()
-
-    const result = await fusion.submitOrder({
-      fromTokenAddress: fromTokenSelected.value.address,
-      toTokenAddress: toTokenSelected.value.address,
-      amount: amountInBaseUnits,
-      fromAddress: walletAddress.value!,
-      fromTokenDecimals: fromTokenSelected.value.decimals || 18,
-      toTokenDecimals: toTokenSelected.value.decimals || 18,
-    })
-
-    orderHash.value = result.hash
-    quoteModalOpen.value = false
-    tradeInitiatedOpen.value = true
-
-    // Add order to store (will appear in notifications)
-    const toDecimals = toTokenSelected.value.decimals || 18
-    const expectedToAmount = formatFloatingPointValue(
-      formatUnits(
-        currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n,
-        toDecimals,
-      ),
-    ).value
-
-    tradeOrdersStore.addOrder({
-      hash: result.hash,
-      status: 'pending',
-      fromAmount: fromAmount.value,
-      fromSymbol: fromTokenSelected.value.symbol,
-      fromDecimals: fromTokenSelected.value.decimals || 18,
-      expectedToAmount,
-      toSymbol: toTokenSelected.value.symbol,
-      toDecimals: toTokenSelected.value.decimals || 18,
-      createdAt: Math.floor(Date.now() / 1000),
-      duration: 180, // Default 3 minutes, will be updated from status
-      fills: [],
-      usdValue: fromTokenSelected.value.price
-        ? (
-            parseFloat(fromAmount.value) * fromTokenSelected.value.price
-          ).toFixed(2)
-        : undefined,
-      chainId,
-      fromAddress: walletAddress.value!,
-      seen: false, // New order is unseen
-    })
-
-    toastStore.addToastMessage({
-      text: 'Trade order submitted successfully!',
-      type: ToastType.Success,
-    })
-  } catch (e) {
-    toastStore.addToastMessage({
-      text:
-        (e as any).details ||
-        (e as Error).message ||
-        'Failed to submit trade order',
-      type: ToastType.Error,
-    })
-  } finally {
-    txProceeding.value = false
-  }
-}
-
 // --- Watchers ---
 watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
   fetchQuote()
@@ -915,13 +405,13 @@ watch(selectedChain, newChain => {
   }
 })
 
-// Watch for selected trade token from store (set from stocks view)
+// Watch for selected trade token from store
 watch(
   [selectedTradeTokenSymbol, toTokens],
   ([symbol, tokens]) => {
     if (symbol && tokens.length > 0) {
       const matchingToken = tokens.find(
-        t => t.symbol.toUpperCase() === symbol.toUpperCase(),
+        (t: NewTokenInfo) => t.symbol.toUpperCase() === symbol.toUpperCase(),
       )
       if (matchingToken) {
         toTokenSelected.value = matchingToken
@@ -937,14 +427,7 @@ onBeforeMount(async () => {
   await Promise.all([initSwapper(), loadTradableAssets()])
 
   // Fetch market status
-  try {
-    marketStatus.value = await getMarketStatus()
-    if (!marketStatus.value.isOpen) {
-      startCountdown()
-    }
-  } catch (e) {
-    console.error('Failed to fetch market status:', e)
-  }
+  await fetchMarketStatus()
 
   // Set initial chain
   if (
@@ -964,10 +447,10 @@ onBeforeMount(async () => {
       null
   }
 
-  // Set initial to token - check if there's a selected token from store first
+  // Set initial to token
   if (selectedTradeTokenSymbol.value && toTokens.value.length > 0) {
     const matchingToken = toTokens.value.find(
-      t =>
+      (t: NewTokenInfo) =>
         t.symbol.toUpperCase() ===
         selectedTradeTokenSymbol.value!.toUpperCase(),
     )
