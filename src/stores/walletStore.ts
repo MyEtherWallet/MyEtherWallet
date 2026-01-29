@@ -13,6 +13,7 @@ import { useWatchOnlyStore } from './watchOnlyStore'
 import { useToastStore } from './toastStore'
 import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
+import type { WalletType } from '@/providers/types'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -39,26 +40,33 @@ export const useWalletStore = defineStore('walletStore', () => {
     setAddress()
   }
 
-  const removeWallet = () => {
-    const { selectedChain } = storeToRefs(useChainsStore())
-    if (!(wallet.value instanceof WatchOnlyWallet)) {
-      isWatchOnly.value = true
-      wallet.value?.disconnect()
-      const address = walletAddress.value
-      const walletType = wallet.value?.getWalletType()
+  const setWatchOnlyIfExist = () => {
+    const { watchOnlyAddresses } = useWatchOnlyStore()
+    const currentRecentAddressList =
+      watchOnlyAddresses[selectedChain.value?.type || 'EVM']
+    if (currentRecentAddressList.length > 0) {
+      const newWallet = new WatchOnlyWallet(
+        currentRecentAddressList[currentRecentAddressList.length - 1].address,
+        currentRecentAddressList[currentRecentAddressList.length - 1].chain,
+        currentRecentAddressList[currentRecentAddressList.length - 1]
+          .walletName as WalletType,
+      )
       wallet.value = null
       walletAddress.value = null
-      const watchOnlyWallet = new WatchOnlyWallet(
-        address as string,
-        selectedChain.value!,
-        walletType!,
-      )
-      setWallet(watchOnlyWallet)
+      setWallet(newWallet)
     } else {
       wallet.value = null
       walletAddress.value = null
       removeTokens()
     }
+  }
+
+  const disconnectWallet = () => {
+    if (!(wallet.value instanceof WatchOnlyWallet)) {
+      isWatchOnly.value = true
+      wallet.value?.disconnect()
+    }
+    setWatchOnlyIfExist()
   }
 
   const isWalletConnected = computed(() => {
@@ -302,8 +310,9 @@ export const useWalletStore = defineStore('walletStore', () => {
   return {
     wallet,
     walletAddress,
+    setWatchOnlyIfExist,
     setWallet,
-    removeWallet,
+    disconnectWallet,
     setTokens,
     removeTokens,
     tokens,

@@ -152,18 +152,14 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
 import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
-import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
-import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 
 const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWallet } = store
-const { isEvmChain, isBitcoinChain, selectedChain } = storeToRefs(chainStore)
+const { setWallet, setWatchOnlyIfExist } = store
+const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
-const recentAddressStore = useWatchOnlyStore()
-const { watchOnlyAddresses } = storeToRefs(recentAddressStore)
 
 // Notifications popup ref
 const notificationsRef = ref<InstanceType<typeof TheNotificationsPopup> | null>(
@@ -243,20 +239,7 @@ const selectedOption = ref<AppSelectOption>({
 })
 
 onMounted(() => {
-  const currentRecentAddressList =
-    watchOnlyAddresses.value[selectedChain.value?.type || 'EVM'] || {}
-  const addresses = Object.keys(currentRecentAddressList)
-  const chain =
-    watchOnlyAddresses.value[selectedChain.value?.type || 'EVM'][addresses[0]]
-      ?.chain
-  const walletName = watchOnlyAddresses.value[
-    selectedChain.value?.type || 'EVM'
-  ][addresses[0]]?.walletName as WalletType
-  if (addresses.length > 0) {
-    const newWallet = new WatchOnlyWallet(addresses[0], chain!, walletName!)
-
-    setWallet(newWallet)
-  }
+  setWatchOnlyIfExist()
 })
 
 watch(

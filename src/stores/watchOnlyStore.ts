@@ -3,48 +3,58 @@ import { useLocalStorage } from '@vueuse/core'
 import type { Chain } from '@/mew_api/types'
 
 interface AddressKeyValue {
+  address: string
   walletName: string
   chain: Chain
 }
 
-interface AddressKey {
-  [key: string]: AddressKeyValue
-}
 interface RecentAddress {
-  [key: string]: AddressKey
+  [key: string]: AddressKeyValue[]
 }
+
 export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   const watchOnlyAddresses = useLocalStorage<RecentAddress>(
-    'watchOnly',
+    'watchOnlyList',
     {
-      EVM: {},
-      BITCOIN: {},
-      SOLANA: {},
-      POLKADOT: {},
-      KADENA: {},
+      EVM: [],
+      BITCOIN: [],
     },
     {
       mergeDefaults: true,
     },
   )
-
   // Takes address to store, chain type to store under, and wallet name
   // to allow easy opening for the popup
   const addWallet = (address: string, chain: Chain, walletName: string) => {
-    const addressKeyMap: AddressKeyValue = { walletName, chain }
+    const addressKeyMap: AddressKeyValue = { walletName, chain, address }
 
     if (watchOnlyAddresses.value[chain.type]) {
-      watchOnlyAddresses.value[chain.type][address] = addressKeyMap
-    } else {
-      watchOnlyAddresses.value[chain.type] = {
-        [address]: addressKeyMap,
+      // Check if address already exists
+      const existingIndex = watchOnlyAddresses.value[chain.type].findIndex(
+        item => item.address === address,
+      )
+
+      if (existingIndex !== -1) {
+        // Remove existing entry and add to front (end of array = most recent)
+        watchOnlyAddresses.value[chain.type].splice(existingIndex, 1)
+        watchOnlyAddresses.value[chain.type].push(addressKeyMap)
+      } else {
+        // Remove oldest element if there are already 2 or more
+        if (watchOnlyAddresses.value[chain.type].length >= 2) {
+          watchOnlyAddresses.value[chain.type].shift()
+        }
+        watchOnlyAddresses.value[chain.type].push(addressKeyMap)
       }
+    } else {
+      watchOnlyAddresses.value[chain.type] = [addressKeyMap]
     }
   }
 
   const removeWallet = (address: string, chain: Chain) => {
     if (watchOnlyAddresses.value[chain.type]) {
-      delete watchOnlyAddresses.value[chain.type][address]
+      watchOnlyAddresses.value[chain.type] = watchOnlyAddresses.value[
+        chain.type
+      ].filter(item => item.address !== address)
     }
   }
 
