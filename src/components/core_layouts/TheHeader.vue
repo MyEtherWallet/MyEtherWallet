@@ -110,13 +110,10 @@
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected && !isAccessPage" />
         <!-- Notifications Button -->
-        <app-btn-icon
+        <the-notifications-popup
           v-if="!showMobileMenu && isWalletConnected"
-          :label="$t('menu.open-notifications')"
-          @click="btnClick"
-        >
-          <bell-icon class="w-6 h-6" />
-        </app-btn-icon>
+          ref="notificationsRef"
+        />
 
         <!-- Settings Button -->
         <!-- <app-btn-icon
@@ -132,12 +129,12 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
-import { BellIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
+import TheNotificationsPopup from './TheNotificationsPopup.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -165,6 +162,11 @@ const { isEvmChain, isBitcoinChain, selectedChain } = storeToRefs(chainStore)
 const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
 const recentAddressStore = useWatchOnlyStore()
 const { watchOnlyAddresses } = storeToRefs(recentAddressStore)
+
+// Notifications popup ref
+const notificationsRef = ref<InstanceType<typeof TheNotificationsPopup> | null>(
+  null,
+)
 
 /** ------------------------------
  * Breakpoints determine menu visibility
@@ -232,10 +234,6 @@ const selectedOption = ref<AppSelectOption>({
   label: toolsMenuList.value[0].title,
   value: toolsMenuList.value[0].routeName as string,
 })
-
-const btnClick = (payload: MouseEvent) => {
-  console.log('btnClick', payload)
-}
 
 onMounted(() => {
   const currentRecentAddressList =

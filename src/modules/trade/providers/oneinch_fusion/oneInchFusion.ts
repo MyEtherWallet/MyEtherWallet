@@ -29,7 +29,10 @@ import {
 import { Web3ProviderConnector } from './oneInchProvider'
 import type { AxiosError } from 'axios'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
-import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
+import type {
+  GetWebSwapOndoAssetsResponse,
+  GetWebSwapOndoSupportingAssetsResponse,
+} from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isHardWareWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
@@ -61,6 +64,12 @@ class OneInchFusion {
   public static async getTradableAssets(): Promise<GetWebSwapOndoAssetsResponse> {
     return fetch(getAPIPath(`/v1/web/swap/ondo/assets`)).then(
       res => res.json() as Promise<GetWebSwapOndoAssetsResponse>,
+    )
+  }
+
+  public static async getAdditionalBuyAssets(): Promise<GetWebSwapOndoSupportingAssetsResponse> {
+    return fetch(getAPIPath(`/v1/web/swap/ondo/supporting-assets`)).then(
+      res => res.json() as Promise<GetWebSwapOndoSupportingAssetsResponse>,
     )
   }
 

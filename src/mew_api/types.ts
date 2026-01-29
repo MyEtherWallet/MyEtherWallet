@@ -173,3 +173,6 @@ export type ChainBalance = StockChainBalance | TokenChainBalance
 
 export type GetWebSwapOndoAssetsResponse =
   components['schemas']['GetWebSwapOndoAssetsResponse']
+
+export type GetWebSwapOndoSupportingAssetsResponse =
+  components['schemas']['GetWebSwapOndoSupportingAssetsResponse']

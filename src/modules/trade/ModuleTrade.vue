@@ -193,8 +193,13 @@ const { selectedChain, chains } = storeToRefs(chainsStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
 // --- Use Trade Composable ---
-const { supportedChainNames, tradableAssets, isLoading, loadTradableAssets } =
-  useTrade()
+const {
+  supportedChainNames,
+  tradableAssets,
+  additionalBuyAssets,
+  isLoading,
+  loadTradableAssets,
+} = useTrade()
 
 // --- Use Swap Composable for fromTokens ---
 const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
@@ -244,6 +249,17 @@ const fromTokens = computed(() => {
   return (swapFromTokens.value || []) as NewTokenInfo[]
 })
 
+// Check if selected from token is a tradable asset (stock token)
+const isSellingTradableAsset = computed(() => {
+  if (!fromTokenSelected.value || !tradableAssets.value) return false
+  const fromAddress = fromTokenSelected.value.address?.toLowerCase()
+  if (!fromAddress) return false
+
+  return tradableAssets.value.some(asset =>
+    asset.addresses.some(addr => addr.address?.toLowerCase() === fromAddress),
+  )
+})
+
 const toTokens = computed(() => {
   if (!tradableAssets.value || !selectedFromChain.value)
     return [] as NewTokenInfo[]
@@ -257,7 +273,8 @@ const toTokens = computed(() => {
     }
   }
 
-  return tradableAssets.value
+  // Map tradable assets to NewTokenInfo format
+  const tradableTokens = tradableAssets.value
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
     )
@@ -293,6 +310,56 @@ const toTokens = computed(() => {
         },
       }
     }) as unknown as NewTokenInfo[]
+
+  // If selling a tradable asset, add additional buy assets (like stablecoins)
+  if (isSellingTradableAsset.value && additionalBuyAssets.value) {
+    const additionalTokens = additionalBuyAssets.value
+      .filter(asset =>
+        asset.addresses.some(
+          addr => addr.chainName?.toUpperCase() === chainName,
+        ),
+      )
+      .map(asset => {
+        const addressInfo = asset.addresses.find(
+          addr => addr.chainName?.toUpperCase() === chainName,
+        )
+        const tokenAddress = addressInfo?.address || ''
+
+        // Check if this token exists in fromTokens to get enriched data
+        const matchingFromToken = tokenAddress
+          ? fromTokensMap.get(tokenAddress.toLowerCase())
+          : undefined
+
+        return {
+          name: asset.name,
+          symbol: asset.symbol.toUpperCase(),
+          decimals: addressInfo?.decimals || 18,
+          address: tokenAddress,
+          logoURI: addressInfo?.tokenLogoUrl || '',
+          cgId: asset.coinId || '',
+          type: 'erc20',
+          rank: matchingFromToken?.rank || 0,
+          balance: matchingFromToken?.balance || '0',
+          price: asset.price || matchingFromToken?.price || 0,
+          networkInfo: {
+            name: chainName.toLowerCase(),
+            isAddress: tokenAddress,
+          },
+        }
+      }) as unknown as NewTokenInfo[]
+
+    // Combine tradable assets with additional buy assets, avoiding duplicates
+    const existingAddresses = new Set(
+      tradableTokens.map(t => t.address?.toLowerCase()),
+    )
+    const uniqueAdditionalTokens = additionalTokens.filter(
+      t => !existingAddresses.has(t.address?.toLowerCase()),
+    )
+
+    return [...tradableTokens, ...uniqueAdditionalTokens]
+  }
+
+  return tradableTokens
 })
 
 // Helper to get token balance parameters
