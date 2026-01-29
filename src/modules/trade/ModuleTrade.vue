@@ -135,7 +135,7 @@
             </p>
             <div class="flex flex-wrap gap-2 justify-center">
               <button
-                v-for="chain in supportedChainsList"
+                v-for="chain in supportedChainsList.reverse()"
                 :key="chain.name"
                 class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 text-primary font-medium text-s-14 rounded-12 transition-colors"
                 @click="switchToNetwork(chain)"
