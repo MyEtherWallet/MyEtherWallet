@@ -85,6 +85,23 @@ class Web3InjectedWallet extends BaseEvmWallet {
     return WalletType.INJECTED
   }
 
+  override async changeNetwork(chainID: number): Promise<boolean> {
+    if (chainID !== Number(this.chainId)) {
+      const res = await this.provider.provider
+        .request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: toHex(chainID) }],
+        })
+        .then(() => {
+          this.chainId = chainID.toString()
+          return true
+        })
+        .catch(() => false)
+      return res
+    }
+    return true
+  }
+
   getProviderInstance(): Eip6963Provider {
     return this.provider
   }

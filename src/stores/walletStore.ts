@@ -1,4 +1,4 @@
-import { ref, type Ref, computed } from 'vue'
+import { ref, type Ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
@@ -10,6 +10,9 @@ import { storeToRefs } from 'pinia'
 import { formatUnits } from 'viem'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 import { useWatchOnlyStore } from './watchOnlyStore'
+import { useToastStore } from './toastStore'
+import { ToastType } from '@/types/notification'
+import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -85,7 +88,34 @@ export const useWalletStore = defineStore('walletStore', () => {
     isLoadingBalances.value = isLoading
   }
   const chainStore = useChainsStore()
-  const { selectedChain } = storeToRefs(chainStore)
+  const { selectedChain, isEvmChain } = storeToRefs(chainStore)
+
+  // Watch for chain changes and call changeNetwork on the wallet for EVM chains
+  watch(selectedChain, async newChain => {
+    if (newChain && isEvmChain.value && wallet.value && !isWatchOnly.value) {
+      try {
+        if ((wallet.value as BaseEvmWallet).changeNetwork) {
+          const networkChangeStatus = await (
+            wallet.value as BaseEvmWallet
+          ).changeNetwork(Number(newChain.chainID))
+          if (!networkChangeStatus) {
+            const toastStore = useToastStore()
+            toastStore.addToastMessage({
+              text: 'Network change failed',
+              type: ToastType.Error,
+            })
+          }
+        }
+      } catch (e) {
+        console.error('Failed to switch network on wallet:', e)
+        const toastStore = useToastStore()
+        toastStore.addToastMessage({
+          text: 'Network change failed',
+          type: ToastType.Error,
+        })
+      }
+    }
+  })
 
   const safeMainTokenBalance = computed<TokenBalance | null>(() => {
     if (!mainTokenBalance.value && selectedChain.value) {

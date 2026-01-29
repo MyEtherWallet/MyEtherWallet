@@ -122,6 +122,11 @@ class BaseEvmWallet implements WalletInterface {
   getWalletType(): WalletType {
     throw new Error('Method not implemented: getWalletType')
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async changeNetwork(chainId: number): Promise<boolean> {
+    throw new Error('Method not implemented: changeNetwork')
+  }
+
   getProvider(): string {
     const chainStore = useChainsStore()
     const { selectedChain } = storeToRefs(chainStore)
