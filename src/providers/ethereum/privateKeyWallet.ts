@@ -88,6 +88,10 @@ class PrivateKeyWallet extends BaseEvmWallet {
       toChecksumAddress(bytesToHex(privateToAddress(this.privKey))),
     )
   }
+
+  override async changeNetwork(): Promise<boolean> {
+    return true
+  }
 }
 
 export default PrivateKeyWallet

@@ -143,4 +143,8 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
       return Promise.reject(e)
     }
   }
+
+  override async changeNetwork(): Promise<boolean> {
+    return true
+  }
 }

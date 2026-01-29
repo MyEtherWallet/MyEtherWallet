@@ -130,6 +130,21 @@ class WagmiWallet extends BaseEvmWallet {
   override getWalletType(): WalletType {
     return WalletType.WAGMI
   }
+
+  override async changeNetwork(chainID: number): Promise<boolean> {
+    if (chainID !== Number(this.chainId)) {
+      const res = await this.connector.switchChain!({
+        chainId: chainID,
+      })
+        .then(() => {
+          this.chainId = chainID.toString()
+          return true
+        })
+        .catch(() => false)
+      return res
+    }
+    return true
+  }
 }
 
 export default WagmiWallet

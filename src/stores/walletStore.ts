@@ -101,7 +101,7 @@ export const useWalletStore = defineStore('walletStore', () => {
           if (!networkChangeStatus) {
             const toastStore = useToastStore()
             toastStore.addToastMessage({
-              text: 'Network change failed',
+              text: 'Network change failed. Most likely this network is not supported by connected wallet',
               type: ToastType.Error,
             })
           }
