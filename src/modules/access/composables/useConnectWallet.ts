@@ -58,11 +58,13 @@ export const useConnectWallet = () => {
       if (wallet.id === 'unisat' && !unisatInjection) {
         toastStore.addToastMessage({
           text: `Unisat not detected. Please install ${wallet.name} extension.`,
+          type: ToastType.Warning,
         })
         return
       } else if (wallet.id === 'enkrypt' && !enkryptInjection) {
         toastStore.addToastMessage({
           text: `Enkrypt not detected. Please install ${wallet.name} extension.`,
+          type: ToastType.Warning,
         })
         return
       }
