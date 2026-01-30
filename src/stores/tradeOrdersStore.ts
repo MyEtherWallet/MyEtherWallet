@@ -22,11 +22,44 @@ export interface SavedTradeOrder {
   seen?: boolean
 }
 
+export interface TransactionNotification {
+  type: 'transaction'
+  hash: string
+  status: 'sent' | 'confirmed' | 'failed'
+  fromAddress: string
+  toAddress: string
+  amount: string
+  symbol: string
+  usdValue?: string
+  networkFee?: string
+  networkFeeUSD?: string
+  chainName: string
+  chainIcon?: string
+  blockExplorerUrl: string
+  blockExplorerAddrUrl: string
+  createdAt: number
+  seen?: boolean
+}
+
+export type NotificationItem = SavedTradeOrder | TransactionNotification
+
+// Type guard for transaction notifications
+export const isTransactionNotification = (
+  item: NotificationItem,
+): item is TransactionNotification => {
+  return 'type' in item && item.type === 'transaction'
+}
+
 interface TradeOrdersByAddress {
   [address: string]: SavedTradeOrder[]
 }
 
+interface TransactionsByAddress {
+  [address: string]: TransactionNotification[]
+}
+
 const MAX_ORDERS_PER_ADDRESS = 10
+const MAX_TRANSACTIONS_PER_ADDRESS = 20
 
 export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
   const tradeOrders = useLocalStorage<TradeOrdersByAddress>(
@@ -37,10 +70,33 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     },
   )
 
+  const transactions = useLocalStorage<TransactionsByAddress>(
+    'transactionNotifications',
+    {},
+    {
+      mergeDefaults: true,
+    },
+  )
+
   // Get orders for a specific address
   const getOrdersByAddress = (address: string): SavedTradeOrder[] => {
     const normalizedAddress = address.toLowerCase()
     return tradeOrders.value[normalizedAddress] || []
+  }
+
+  // Get transactions for a specific address
+  const getTransactionsByAddress = (
+    address: string,
+  ): TransactionNotification[] => {
+    const normalizedAddress = address.toLowerCase()
+    return transactions.value[normalizedAddress] || []
+  }
+
+  // Get all notifications (orders + transactions) sorted by createdAt
+  const getAllNotifications = (address: string): NotificationItem[] => {
+    const orders = getOrdersByAddress(address)
+    const txs = getTransactionsByAddress(address)
+    return [...orders, ...txs].sort((a, b) => b.createdAt - a.createdAt)
   }
 
   // Get orders for address as a computed (reactive)
@@ -136,7 +192,8 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
   const getUnseenOrdersCount = (address: string): number => {
     const normalizedAddress = address.toLowerCase()
     const orders = tradeOrders.value[normalizedAddress] || []
-    return orders.filter(o => !o.seen).length
+    const txs = transactions.value[normalizedAddress] || []
+    return orders.filter(o => !o.seen).length + txs.filter(t => !t.seen).length
   }
 
   // Check if there are any unseen orders for an address
@@ -148,12 +205,20 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
   const markAllOrdersAsSeen = (address: string) => {
     const normalizedAddress = address.toLowerCase()
     const orders = tradeOrders.value[normalizedAddress]
-    if (!orders) return
+    if (orders) {
+      tradeOrders.value[normalizedAddress] = orders.map(order => ({
+        ...order,
+        seen: true,
+      }))
+    }
 
-    tradeOrders.value[normalizedAddress] = orders.map(order => ({
-      ...order,
-      seen: true,
-    }))
+    const txs = transactions.value[normalizedAddress]
+    if (txs) {
+      transactions.value[normalizedAddress] = txs.map(tx => ({
+        ...tx,
+        seen: true,
+      }))
+    }
   }
 
   // Mark a specific order as seen
@@ -171,9 +236,77 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     }
   }
 
+  // Add a transaction notification
+  const addTransaction = (tx: TransactionNotification) => {
+    const normalizedAddress = tx.fromAddress.toLowerCase()
+
+    if (!transactions.value[normalizedAddress]) {
+      transactions.value[normalizedAddress] = []
+    }
+
+    // Check if transaction already exists
+    const existingIndex = transactions.value[normalizedAddress].findIndex(
+      t => t.hash === tx.hash,
+    )
+
+    if (existingIndex >= 0) {
+      // Update existing transaction
+      transactions.value[normalizedAddress][existingIndex] = tx
+    } else {
+      // Add new transaction at the beginning
+      transactions.value[normalizedAddress].unshift(tx)
+
+      // Keep only the most recent transactions
+      if (
+        transactions.value[normalizedAddress].length >
+        MAX_TRANSACTIONS_PER_ADDRESS
+      ) {
+        transactions.value[normalizedAddress] = transactions.value[
+          normalizedAddress
+        ].slice(0, MAX_TRANSACTIONS_PER_ADDRESS)
+      }
+    }
+  }
+
+  // Remove a transaction notification
+  const removeTransaction = (address: string, hash: string) => {
+    const normalizedAddress = address.toLowerCase()
+    const txs = transactions.value[normalizedAddress]
+
+    if (!txs) return
+
+    transactions.value[normalizedAddress] = txs.filter(t => t.hash !== hash)
+
+    // Clean up empty address entries
+    if (transactions.value[normalizedAddress].length === 0) {
+      delete transactions.value[normalizedAddress]
+    }
+  }
+
+  // Remove any notification (order or transaction)
+  const removeNotification = (address: string, hash: string) => {
+    removeOrder(address, hash)
+    removeTransaction(address, hash)
+  }
+
+  // Clear all transactions for an address
+  const clearTransactionsForAddress = (address: string) => {
+    const normalizedAddress = address.toLowerCase()
+    delete transactions.value[normalizedAddress]
+  }
+
+  // Clear all notifications for an address
+  const clearAllNotificationsForAddress = (address: string) => {
+    clearOrdersForAddress(address)
+    clearTransactionsForAddress(address)
+  }
+
   return {
     tradeOrders,
+    transactions,
     getOrdersByAddress,
+    getTransactionsByAddress,
+    getAllNotifications,
     ordersForAddress,
     addOrder,
     updateOrder,
@@ -185,5 +318,10 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     hasUnseenOrders,
     markAllOrdersAsSeen,
     markOrderAsSeen,
+    addTransaction,
+    removeTransaction,
+    removeNotification,
+    clearTransactionsForAddress,
+    clearAllNotificationsForAddress,
   }
 })

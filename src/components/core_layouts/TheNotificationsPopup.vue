@@ -36,16 +36,16 @@
           <div class="flex items-center gap-2">
             <h3 class="font-bold text-s-17">Notifications</h3>
             <span
-              v-if="orders.length > 0"
+              v-if="notifications.length > 0"
               class="bg-primary text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
             >
-              {{ orders.length }}
+              {{ notifications.length }}
             </span>
           </div>
           <div class="flex items-center gap-2">
             <button
-              v-if="orders.length > 0"
-              @click="clearAllOrders"
+              v-if="notifications.length > 0"
+              @click="clearAllNotifications"
               class="text-primary text-s-14 font-medium hover:underline"
             >
               Clear all
@@ -59,119 +59,251 @@
           </div>
         </div>
 
-        <!-- Orders List -->
+        <!-- Notifications List -->
         <div
-          v-if="orders.length > 0"
+          v-if="notifications.length > 0"
           class="p-3 space-y-3 flex-1 overflow-y-auto"
         >
-          <div
-            v-for="order in orders"
-            :key="order.hash"
-            :class="[
-              'relative p-4 rounded-16 border-2 transition-colors',
-              getOrderBorderClass(order.status),
-            ]"
-          >
-            <!-- Close Button -->
-            <button
-              @click="removeOrder(order.hash)"
-              class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
-            >
-              <x-mark-icon class="w-4 h-4 text-info" />
-            </button>
-
-            <!-- Status and Time -->
-            <div class="flex items-center justify-between mb-3 pr-6">
-              <div class="flex items-center gap-2">
-                <span
-                  :class="[
-                    'px-2 py-1 rounded-full text-s-10 font-bold uppercase tracking-wider',
-                    getStatusBadgeClass(order.status),
-                  ]"
-                >
-                  {{ order.status }}
-                </span>
-                <span
-                  v-if="order.status === 'pending'"
-                  class="text-s-14 font-mono text-primary"
-                >
-                  {{ formatCountdown(order.remainingTime) }}
-                </span>
-              </div>
-              <span class="text-s-12 text-info">{{
-                formatTime(order.createdAt)
-              }}</span>
-            </div>
-
-            <!-- Filled Transaction -->
+          <template v-for="item in notifications" :key="item.hash">
+            <!-- Transaction Notification -->
             <div
-              v-if="order.status === 'filled' && order.fills.length > 0"
-              class="mb-3"
+              v-if="isTransaction(item)"
+              class="relative p-4 rounded-16 border-2 transition-colors border-success bg-success-10/30"
             >
-              <div class="flex items-center gap-2 text-s-12">
-                <span class="w-2 h-2 bg-success rounded-full"></span>
-                <span class="text-info">Filled in</span>
-                <a
-                  :href="getExplorerLink(order.fills[0].txHash, order.chainId)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-primary font-mono hover:underline"
-                >
-                  {{ truncateHash(order.fills[0].txHash) }}
-                </a>
+              <!-- Close Button -->
+              <button
+                @click="removeNotification(item.hash)"
+                class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
+              >
+                <x-mark-icon class="w-4 h-4 text-info" />
+              </button>
+
+              <!-- Status and Time -->
+              <div class="flex items-center justify-between mb-3 pr-6">
+                <div class="flex items-center gap-2">
+                  <span
+                    class="px-2 py-1 rounded-full text-s-10 font-bold uppercase tracking-wider bg-success-10 text-success"
+                  >
+                    Sent
+                  </span>
+                  <div class="flex items-center gap-1">
+                    <img
+                      v-if="item.chainIcon"
+                      :src="item.chainIcon"
+                      class="w-4 h-4 rounded-full"
+                    />
+                    <span class="text-s-12 text-info">{{
+                      item.chainName
+                    }}</span>
+                  </div>
+                </div>
+                <span class="text-s-12 text-info">{{
+                  formatTime(item.createdAt)
+                }}</span>
+              </div>
+
+              <!-- Transaction Link -->
+              <div class="mb-3">
+                <div class="flex items-center gap-2 text-s-12">
+                  <span class="w-2 h-2 bg-success rounded-full"></span>
+                  <span class="text-info">Transaction</span>
+                  <a
+                    :href="item.blockExplorerUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary font-mono hover:underline flex items-center gap-1"
+                  >
+                    {{ truncateHash(item.hash) }}
+                    <arrow-up-right-icon class="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+
+              <!-- Amount and Recipient -->
+              <div class="flex items-center gap-3">
+                <div class="flex-1">
+                  <p class="text-s-12 text-info">Amount</p>
+                  <p class="font-bold text-s-17">
+                    {{ item.amount }} {{ item.symbol }}
+                  </p>
+                  <p v-if="item.usdValue" class="text-s-12 text-info">
+                    ${{ item.usdValue }}
+                  </p>
+                </div>
+                <arrow-right-icon class="w-4 h-4 text-info flex-shrink-0" />
+                <div class="flex-1 text-right">
+                  <p class="text-s-12 text-info">To</p>
+                  <a
+                    :href="item.blockExplorerAddrUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-mono text-s-14 text-primary hover:underline flex items-center justify-end gap-1"
+                  >
+                    {{ truncateHash(item.toAddress) }}
+                    <arrow-up-right-icon class="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+
+              <!-- Network Fee -->
+              <div
+                v-if="item.networkFee"
+                class="flex items-center justify-between mt-3 pt-3 border-t border-grey-10"
+              >
+                <span class="text-s-12 text-info">Network Fee</span>
+                <div class="text-right">
+                  <span class="text-s-12 text-black">{{
+                    item.networkFee
+                  }}</span>
+                  <span
+                    v-if="item.networkFeeUSD"
+                    class="text-s-12 text-info ml-1"
+                    >(${{ item.networkFeeUSD }})</span
+                  >
+                </div>
               </div>
             </div>
 
-            <!-- From / To -->
-            <div class="flex items-center gap-3">
-              <div class="flex-1">
-                <p class="text-s-12 text-info">From</p>
-                <p class="font-bold text-s-17">
-                  {{ order.fromAmount }} {{ order.fromSymbol }}
-                </p>
-              </div>
-              <arrow-right-icon class="w-4 h-4 text-info flex-shrink-0" />
-              <div class="flex-1 text-right">
-                <p class="text-s-12 text-info">To</p>
-                <p
-                  v-if="order.status === 'filled' && order.finalToAmount"
-                  class="flex flex-col items-end"
-                >
-                  <span class="text-s-12 text-info line-through"
-                    >{{ order.expectedToAmount }} {{ order.toSymbol }}</span
-                  >
-                  <span class="font-bold text-s-17 text-success"
-                    >{{ order.finalToAmount }} {{ order.toSymbol }}</span
-                  >
+            <!-- Trade Order Notification -->
+            <div
+              v-else
+              :class="[
+                'relative p-4 rounded-16 border-2 transition-colors',
+                getOrderBorderClass((item as SavedTradeOrder).status),
+              ]"
+            >
+              <!-- Close Button -->
+              <button
+                @click="removeNotification(item.hash)"
+                class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
+              >
+                <x-mark-icon class="w-4 h-4 text-info" />
+              </button>
+
+              <!-- Status and Time -->
+              <div class="flex items-center justify-between mb-3 pr-6">
+                <div class="flex items-center gap-2">
                   <span
-                    v-if="order.percentageDiff"
                     :class="[
-                      'text-s-12',
-                      order.percentageDiff > 0 ? 'text-success' : 'text-error',
+                      'px-2 py-1 rounded-full text-s-10 font-bold uppercase tracking-wider',
+                      getStatusBadgeClass((item as SavedTradeOrder).status),
                     ]"
                   >
-                    {{ order.percentageDiff > 0 ? '+' : ''
-                    }}{{ order.percentageDiff.toFixed(2) }}%
+                    {{ (item as SavedTradeOrder).status }}
                   </span>
-                </p>
-                <p v-else class="font-bold text-s-17">
-                  ~ {{ order.expectedToAmount }} {{ order.toSymbol }}
-                </p>
+                  <span
+                    v-if="(item as SavedTradeOrder).status === 'pending'"
+                    class="text-s-14 font-mono text-primary"
+                  >
+                    {{
+                      formatCountdown(
+                        getOrderWithRemainingTime(item as SavedTradeOrder)
+                          .remainingTime,
+                      )
+                    }}
+                  </span>
+                </div>
+                <span class="text-s-12 text-info">{{
+                  formatTime(item.createdAt)
+                }}</span>
+              </div>
+
+              <!-- Filled Transaction -->
+              <div
+                v-if="
+                  (item as SavedTradeOrder).status === 'filled' &&
+                  (item as SavedTradeOrder).fills.length > 0
+                "
+                class="mb-3"
+              >
+                <div class="flex items-center gap-2 text-s-12">
+                  <span class="w-2 h-2 bg-success rounded-full"></span>
+                  <span class="text-info">Filled in</span>
+                  <a
+                    :href="
+                      getExplorerLink(
+                        (item as SavedTradeOrder).fills[0].txHash,
+                        (item as SavedTradeOrder).chainId,
+                      )
+                    "
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary font-mono hover:underline"
+                  >
+                    {{
+                      truncateHash((item as SavedTradeOrder).fills[0].txHash)
+                    }}
+                  </a>
+                </div>
+              </div>
+
+              <!-- From / To -->
+              <div class="flex items-center gap-3">
+                <div class="flex-1">
+                  <p class="text-s-12 text-info">From</p>
+                  <p class="font-bold text-s-17">
+                    {{ (item as SavedTradeOrder).fromAmount }}
+                    {{ (item as SavedTradeOrder).fromSymbol }}
+                  </p>
+                </div>
+                <arrow-right-icon class="w-4 h-4 text-info flex-shrink-0" />
+                <div class="flex-1 text-right">
+                  <p class="text-s-12 text-info">To</p>
+                  <p
+                    v-if="
+                      (item as SavedTradeOrder).status === 'filled' &&
+                      (item as SavedTradeOrder).finalToAmount
+                    "
+                    class="flex flex-col items-end"
+                  >
+                    <span class="text-s-12 text-info line-through"
+                      >{{ (item as SavedTradeOrder).expectedToAmount }}
+                      {{ (item as SavedTradeOrder).toSymbol }}</span
+                    >
+                    <span class="font-bold text-s-17 text-success"
+                      >{{ (item as SavedTradeOrder).finalToAmount }}
+                      {{ (item as SavedTradeOrder).toSymbol }}</span
+                    >
+                    <span
+                      v-if="(item as SavedTradeOrder).percentageDiff"
+                      :class="[
+                        'text-s-12',
+                        (item as SavedTradeOrder).percentageDiff! > 0
+                          ? 'text-success'
+                          : 'text-error',
+                      ]"
+                    >
+                      {{
+                        (item as SavedTradeOrder).percentageDiff! > 0
+                          ? '+'
+                          : ''
+                      }}{{
+                        (item as SavedTradeOrder).percentageDiff!.toFixed(2)
+                      }}%
+                    </span>
+                  </p>
+                  <p v-else class="font-bold text-s-17">
+                    ~ {{ (item as SavedTradeOrder).expectedToAmount }}
+                    {{ (item as SavedTradeOrder).toSymbol }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Order Hash and USD Value -->
+              <div
+                class="flex items-center justify-between mt-3 pt-3 border-t border-grey-10"
+              >
+                <span class="text-s-12 text-info font-mono">{{
+                  truncateHash(item.hash)
+                }}</span>
+                <span
+                  v-if="(item as SavedTradeOrder).usdValue"
+                  class="text-s-12 text-info"
+                  >${{ (item as SavedTradeOrder).usdValue }}</span
+                >
               </div>
             </div>
-
-            <!-- Order Hash and USD Value -->
-            <div
-              class="flex items-center justify-between mt-3 pt-3 border-t border-grey-10"
-            >
-              <span class="text-s-12 text-info font-mono">{{
-                truncateHash(order.hash)
-              }}</span>
-              <span v-if="order.usdValue" class="text-s-12 text-info"
-                >${{ order.usdValue }}</span
-              >
-            </div>
-          </div>
+          </template>
         </div>
 
         <!-- Empty State -->
@@ -179,7 +311,7 @@
           <bell-icon class="w-12 h-12 text-grey-30 mx-auto mb-3" />
           <p class="text-info text-s-14">No notifications yet</p>
           <p class="text-info text-s-12 mt-1">
-            Your trade orders will appear here
+            Your trade orders and transactions will appear here
           </p>
         </div>
       </div>
@@ -189,7 +321,12 @@
 
 <script setup lang="ts">
 import { ref, onUnmounted, watch, computed } from 'vue'
-import { BellIcon, XMarkIcon, ArrowRightIcon } from '@heroicons/vue/24/solid'
+import {
+  BellIcon,
+  XMarkIcon,
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+} from '@heroicons/vue/24/solid'
 import { storeToRefs } from 'pinia'
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 import { SUPPORTED_CHAINS } from '@/modules/trade/providers/oneinch_fusion/configs'
@@ -198,6 +335,8 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import {
   useTradeOrdersStore,
   type SavedTradeOrder,
+  type NotificationItem,
+  isTransactionNotification,
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -252,6 +391,12 @@ const hasUnseen = computed(() => {
   return tradeOrdersStore.hasUnseenOrders(walletAddress.value)
 })
 
+// Get all notifications (trade orders + transactions) sorted by time
+const notifications = computed<NotificationItem[]>(() => {
+  if (!walletAddress.value) return []
+  return tradeOrdersStore.getAllNotifications(walletAddress.value)
+})
+
 // Get orders for current wallet address with runtime remainingTime
 const orders = computed<TradeOrder[]>(() => {
   if (!walletAddress.value) return []
@@ -261,6 +406,15 @@ const orders = computed<TradeOrder[]>(() => {
     remainingTime: remainingTimes.value[order.hash] ?? order.duration,
   }))
 })
+
+// Helper to get order with remaining time
+const getOrderWithRemainingTime = (order: SavedTradeOrder): TradeOrder => ({
+  ...order,
+  remainingTime: remainingTimes.value[order.hash] ?? order.duration,
+})
+
+// Check if notification is a transaction
+const isTransaction = isTransactionNotification
 
 // Toggle popup
 const togglePopup = () => {
@@ -400,26 +554,26 @@ const stopPolling = (hash: string) => {
   }
 }
 
-// Remove an order
-const removeOrder = (hash: string) => {
+// Remove a notification (order or transaction)
+const removeNotification = (hash: string) => {
   if (!walletAddress.value) return
 
   stopPolling(hash)
   delete remainingTimes.value[hash]
-  tradeOrdersStore.removeOrder(walletAddress.value, hash)
+  tradeOrdersStore.removeNotification(walletAddress.value, hash)
 
   if (orders.value.length === 0) {
     stopCountdown()
   }
 }
 
-// Clear all orders
-const clearAllOrders = () => {
+// Clear all notifications
+const clearAllNotifications = () => {
   if (!walletAddress.value) return
 
   Object.keys(pollIntervals).forEach(stopPolling)
   remainingTimes.value = {}
-  tradeOrdersStore.clearOrdersForAddress(walletAddress.value)
+  tradeOrdersStore.clearAllNotificationsForAddress(walletAddress.value)
   stopCountdown()
 }
 
