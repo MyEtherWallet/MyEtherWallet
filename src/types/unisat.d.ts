@@ -15,7 +15,7 @@ interface UnisatType {
 declare global {
   interface Window {
     unisat?: UnisatType
-    enkrypt: {
+    enkrypt?: {
       providers: { bitcoin?: UnisatType }
     }
   }
