@@ -17,6 +17,7 @@ const configs = {
     'GNOSIS',
     'ROOTSTOCK',
   ],
+  MEW_LIVE_URLS: ['app.beta.myetherwallet.com', 'app.myetherwallet.com'],
 }
 
 export default configs
