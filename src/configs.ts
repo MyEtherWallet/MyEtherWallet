@@ -17,7 +17,11 @@ const configs = {
     'GNOSIS',
     'ROOTSTOCK',
   ],
-  MEW_LIVE_URLS: ['app.beta.myetherwallet.com', 'app.myetherwallet.com'],
+  MEW_LIVE_URLS: [
+    'app.beta.myetherwallet.com',
+    'app.myetherwallet.com',
+    'feat-v7-fusion-swaps.mew-web-builds.pages.dev',
+  ],
 }
 
 export default configs
