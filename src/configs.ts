@@ -20,7 +20,7 @@ const configs = {
   MEW_LIVE_URLS: [
     'app.beta.myetherwallet.com',
     'app.myetherwallet.com',
-    'feat-v7-fusion-swaps.mew-web-builds.pages.dev',
+    'feat-v7-rwa-restriction.mew-web-builds.pages.dev',
   ],
 }
 
