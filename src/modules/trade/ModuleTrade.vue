@@ -9,7 +9,11 @@
         <div class="flex items-end justify-between mb-2 px-4">
           <p class="font-bold text-s-28">Trade</p>
           <app-btn-text
-            v-if="isMarketOpen && isCurrentNetworkSupported"
+            v-if="
+              isMarketOpen &&
+              isCurrentNetworkSupported &&
+              !isTradingRestrictedInRegion
+            "
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
             >Clear all</app-btn-text
@@ -18,7 +22,9 @@
         <div
           :class="[
             'relative transition-all duration-300',
-            !isMarketOpen || !isCurrentNetworkSupported
+            !isMarketOpen ||
+            !isCurrentNetworkSupported ||
+            isTradingRestrictedInRegion
               ? 'blur-sm pointer-events-none opacity-60'
               : '',
           ]"
@@ -150,6 +156,40 @@
             </div>
           </div>
         </div>
+
+        <!-- Trading Restricted Banner - Centered Overlay -->
+        <div
+          v-if="
+            !isLoading &&
+            isTradingRestrictedInRegion &&
+            isCurrentNetworkSupported
+          "
+          class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+        >
+          <div
+            class="w-full max-w-[380px] p-5 bg-white border border-grey-20 rounded-16 shadow-lg pointer-events-auto"
+          >
+            <div class="flex items-center gap-2 justify-center mb-2">
+              <div class="w-2 h-2 bg-error rounded-full"></div>
+              <p class="text-error font-bold text-s-16">
+                Trading Not Available
+              </p>
+            </div>
+            <p class="text-grey-70 text-s-13 text-center mb-4">
+              Trading is not available in your jurisdiction.
+            </p>
+            <div class="flex justify-center">
+              <a
+                :href="tradingRestrictedHelpUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary font-medium text-s-14 hover:underline"
+              >
+                Learn more about geographic restrictions
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Error Display -->
@@ -181,7 +221,9 @@
       <div
         :class="[
           'w-full max-w-[340px] transition-all duration-300',
-          !isMarketOpen || !isCurrentNetworkSupported
+          !isMarketOpen ||
+          !isCurrentNetworkSupported ||
+          isTradingRestrictedInRegion
             ? 'blur-sm pointer-events-none opacity-60'
             : '',
         ]"
@@ -328,6 +370,8 @@ const toAmountError = ref<string>('')
 const {
   marketStatus,
   isMarketOpen,
+  isTradingRestrictedInRegion,
+  tradingRestrictedHelpUrl,
   countdownText,
   fetchMarketStatus,
   formatNextOpen,

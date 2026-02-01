@@ -1,6 +1,10 @@
 import { ref, computed, onUnmounted } from 'vue'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
-import { getMarketStatus } from '../providers/ondoHelpers'
+import {
+  getMarketStatus,
+  isTradingRestricted,
+  TRADING_RESTRICTED_HELP_URL,
+} from '../providers/ondoHelpers'
 
 interface UseMarketStatusOptions {
   onMarketOpen?: () => void | Promise<void>
@@ -10,6 +14,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
+  const isTradingRestrictedInRegion = ref<boolean>(false)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
   let wasMarketClosed = false
@@ -61,9 +66,22 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     }
   }
 
+  const fetchTradingRestriction = async () => {
+    try {
+      isTradingRestrictedInRegion.value = await isTradingRestricted()
+    } catch (e) {
+      console.error('Failed to check trading restriction:', e)
+      isTradingRestrictedInRegion.value = false
+    }
+  }
+
   const fetchMarketStatus = async () => {
     try {
-      marketStatus.value = await getMarketStatus()
+      const [statusResult] = await Promise.all([
+        getMarketStatus(),
+        fetchTradingRestriction(),
+      ])
+      marketStatus.value = statusResult
 
       if (!marketStatus.value.isOpen) {
         wasMarketClosed = true
@@ -104,6 +122,8 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   return {
     marketStatus,
     isMarketOpen,
+    isTradingRestrictedInRegion,
+    tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus,
     formatNextOpen,
