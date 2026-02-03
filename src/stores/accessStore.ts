@@ -56,6 +56,10 @@ export const useAccessStore = defineStore('accessStore', () => {
     return selectedChain.value?.type === 'EVM'
   })
 
+  const isBitcoinChain = computed(() => {
+    return selectedChain.value?.type === 'BITCOIN'
+  })
+
   return {
     isOpenAccessDialog,
     openAccessDialog,
@@ -67,6 +71,7 @@ export const useAccessStore = defineStore('accessStore', () => {
     setWagmiWalletData,
     selectedChain,
     isEvmChain,
+    isBitcoinChain,
     setSelectedChain,
   }
 })
