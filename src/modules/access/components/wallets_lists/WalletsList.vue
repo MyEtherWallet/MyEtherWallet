@@ -53,7 +53,7 @@
     >
       <btn-wallet
         v-for="wallet in displayWallets"
-        :key="wallet.id"
+        :key="wallet.name + '-' + selectedChain?.name"
         :wallet="wallet"
         @clickWallet="clickWallet"
       ></btn-wallet>
@@ -152,7 +152,12 @@ const displayWallets = computed(() => {
       ),
     )
   }
-  return wallets
+  const includedIds: string[] = []
+  return wallets.filter(w => {
+    if (includedIds.includes(w.name)) return false
+    includedIds.push(w.name)
+    return true
+  })
 })
 
 /** -------------------

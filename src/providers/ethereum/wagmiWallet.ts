@@ -5,9 +5,10 @@ import { hexToBytes } from '@ethereumjs/util'
 import type { Config, Connector } from '@wagmi/core'
 import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
-import { sendTransaction, signMessage } from '@wagmi/core'
+import { sendTransaction, signMessage, signTypedData } from '@wagmi/core'
 import { fromHex, stringToHex } from 'viem'
 import { type SendTransactionParameters } from '@wagmi/core'
+import type { EIP712TypedData } from '@1inch/limit-order-sdk'
 
 class WagmiWallet extends BaseEvmWallet {
   connector: Connector
@@ -33,7 +34,9 @@ class WagmiWallet extends BaseEvmWallet {
 
   override async connect(): Promise<boolean> {
     try {
-      const conn = await this.connector.connect()
+      const conn = await this.connector.connect({
+        chainId: Number(this.chainId),
+      })
       if (conn.accounts.length > 0) {
         if (BigInt(conn.chainId) !== BigInt(this.chainId)) {
           await this.connector.switchChain!({
@@ -89,6 +92,22 @@ class WagmiWallet extends BaseEvmWallet {
     })
   }
 
+  override async SignTypedMessage(
+    typedData: EIP712TypedData,
+  ): Promise<HexPrefixedString> {
+    try {
+      const signature = await signTypedData(this.config, {
+        ...typedData,
+        connector: this.connector,
+        account: await this.getAddress(),
+      })
+      return signature
+    } catch (e) {
+      console.log(e)
+      throw e
+    }
+  }
+
   override async SignMessage(options: {
     message: string
     options?: unknown
@@ -110,6 +129,21 @@ class WagmiWallet extends BaseEvmWallet {
 
   override getWalletType(): WalletType {
     return WalletType.WAGMI
+  }
+
+  override async changeNetwork(chainID: number): Promise<boolean> {
+    if (chainID !== Number(this.chainId)) {
+      const res = await this.connector.switchChain!({
+        chainId: chainID,
+      })
+        .then(() => {
+          this.chainId = chainID.toString()
+          return true
+        })
+        .catch(() => false)
+      return res
+    }
+    return true
   }
 }
 

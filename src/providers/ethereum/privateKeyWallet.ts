@@ -12,12 +12,17 @@ import { type PostSignedTransaction } from '../common/types'
 import { WalletType, type HexPrefixedString } from '../types'
 import { privateKeyToAccount } from 'viem/accounts'
 import { toHex } from 'viem'
+import type { EIP712TypedData } from '@1inch/limit-order-sdk'
 
 class PrivateKeyWallet extends BaseEvmWallet {
   private privKey: Uint8Array
   private walletType: WalletType
 
-  constructor(privateKey: Uint8Array, chainId: string, walletType?: WalletType) {
+  constructor(
+    privateKey: Uint8Array,
+    chainId: string,
+    walletType?: WalletType,
+  ) {
     super(chainId)
     this.privKey = privateKey
     this.walletType = walletType || WalletType.PRIVATE_KEY
@@ -58,19 +63,34 @@ class PrivateKeyWallet extends BaseEvmWallet {
   override getWalletType(): WalletType {
     return this.walletType
   }
+
   override async SignMessage(options: {
     message: string
     options?: unknown
   }): Promise<HexPrefixedString> {
     const account = privateKeyToAccount(bytesToHex(this.privKey))
-    const sig = await account.signMessage({ message: { raw: toHex(options.message) as HexPrefixedString } })
-
+    const sig = await account.signMessage({
+      message: { raw: toHex(options.message) as HexPrefixedString },
+    })
     return Promise.resolve(sig)
   }
+
+  override async SignTypedMessage(
+    typedData: EIP712TypedData,
+  ): Promise<HexPrefixedString> {
+    const account = privateKeyToAccount(bytesToHex(this.privKey))
+    const sig = await account.signTypedData(typedData)
+    return Promise.resolve(sig)
+  }
+
   override getAddress(): Promise<string> {
     return Promise.resolve(
       toChecksumAddress(bytesToHex(privateToAddress(this.privKey))),
     )
+  }
+
+  override async changeNetwork(): Promise<boolean> {
+    return true
   }
 }
 

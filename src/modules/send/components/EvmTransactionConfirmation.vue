@@ -260,6 +260,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification/index'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import {
   formatFloatingPointValue,
   formatIntegerToString,
@@ -274,6 +275,7 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
+import { isHardWareWallet } from '@/utils/walletUtils'
 
 interface EvmTxType {
   toAddress: string
@@ -291,7 +293,9 @@ const props = defineProps<EvmTxType>()
 const model = defineModel()
 const emit = defineEmits(['tx-sent'])
 const chainsStore = useChainsStore()
+const tradeOrdersStore = useTradeOrdersStore()
 const { selectedChain } = storeToRefs(chainsStore)
+
 const showApproveMessage = ref(false)
 
 // Modal settings
@@ -344,15 +348,13 @@ const confirmTransaction = async () => {
     signing.value = true
     // This is done because the modal needs to be shown and the user needs to actually
     // consent to signing the transaction
-    const signedTx =
-      wallet.value?.getWalletType() === WalletType.LEDGER ||
-      wallet.value?.getWalletType() === WalletType.TREZOR
-        ? (
-            await wallet.value?.SignTransaction?.(
-              props.signedTx as HexPrefixedString,
-            )
-          )?.signed
-        : (props.signedTx as HexPrefixedString)
+    const signedTx = isHardWareWallet(wallet.value)
+      ? (
+          await wallet.value?.SignTransaction?.(
+            props.signedTx as HexPrefixedString,
+          )
+        )?.signed
+      : (props.signedTx as HexPrefixedString)
 
     const txPromise =
       wallet.value?.getWalletType() === WalletType.WAGMI ||
@@ -363,10 +365,48 @@ const confirmTransaction = async () => {
 
     await txPromise
       ?.then(hash => {
+        // Build block explorer URLs
+        const blockExplorerUrl = selectedChain.value?.blockExplorerTX
+          ? selectedChain.value.blockExplorerTX.replace('[[txHash]]', hash)
+          : ''
+
+        const blockExplorerAddrUrl = selectedChain.value?.blockExplorerAddr
+          ? selectedChain.value.blockExplorerAddr.replace(
+              '[[address]]',
+              props.toAddress,
+            )
+          : ''
+
         toastStore.addToastMessage({
           type: ToastType.Success,
-          text: `${t('send.toast.tx-send-success')} ${hash}`,
+          text: t('send.toast.tx-send-success'),
           duration: 10000,
+          link: blockExplorerUrl
+            ? {
+                title: `${hash.slice(0, 10)}...${hash.slice(-8)}`,
+                url: blockExplorerUrl,
+              }
+            : undefined,
+        })
+
+        // Add transaction notification
+        tradeOrdersStore.addTransaction({
+          type: 'transaction',
+          hash,
+          status: 'sent',
+          fromAddress: props.fromAddress,
+          toAddress: props.toAddress,
+          amount: props.toAmount,
+          symbol: props.toToken.symbol || '',
+          usdValue: parseFloat(props.toAmountFiat).toFixed(6),
+          networkFee: formatFee.value,
+          networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
+          chainName: selectedChain.value?.nameLong || 'Unknown',
+          chainIcon: selectedChain.value?.icon,
+          blockExplorerUrl,
+          blockExplorerAddrUrl,
+          createdAt: Math.floor(Date.now() / 1000),
+          seen: false,
         })
 
         openModal.value = false

@@ -6,6 +6,7 @@ import BaseEvmWallet from './baseEvmWallet'
 import { Hardfork } from '@ethereumjs/common'
 import { fromHex, toHex } from 'viem'
 import type { Provider as Eip6963Provider } from '@/stores/providerStore.ts'
+import type { EIP712TypedData } from '@1inch/limit-order-sdk'
 
 class Web3InjectedWallet extends BaseEvmWallet {
   provider: Eip6963Provider
@@ -66,12 +67,39 @@ class Web3InjectedWallet extends BaseEvmWallet {
     return txHash as HexPrefixedString
   }
 
+  override async SignTypedMessage(
+    typedData: EIP712TypedData,
+  ): Promise<HexPrefixedString> {
+    const signature = await this.provider.provider.request({
+      method: 'eth_signTypedData_v4',
+      params: [this.address, JSON.stringify(typedData)],
+    })
+    return signature as HexPrefixedString
+  }
+
   override async getAddress(): Promise<HexPrefixedString> {
     return this.address
   }
 
   override getWalletType(): WalletType {
     return WalletType.INJECTED
+  }
+
+  override async changeNetwork(chainID: number): Promise<boolean> {
+    if (chainID !== Number(this.chainId)) {
+      const res = await this.provider.provider
+        .request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: toHex(chainID) }],
+        })
+        .then(() => {
+          this.chainId = chainID.toString()
+          return true
+        })
+        .catch(() => false)
+      return res
+    }
+    return true
   }
 
   getProviderInstance(): Eip6963Provider {

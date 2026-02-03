@@ -135,16 +135,15 @@ const { data: dataPrices, isFetching } = useMEWFetch(fetchUrl, {
   .get()
   .json<PortfolioHistoryResponse>()
 
-//   const isLoading = computed(() => {
-// return isLoadingBalances.value || isFetchingPrices.value
-//   })
-
 const chartData = computed(() => {
   if (!dataPrices.value) return []
   const { timestamps, values } = dataPrices.value
-  return timestamps.map((timestamp, index) => ({
-    timestamp,
-    value: values[index],
-  }))
+  if (timestamps) {
+    return timestamps.map((timestamp, index) => ({
+      timestamp,
+      value: values[index],
+    }))
+  }
+  return []
 })
 </script>

@@ -264,20 +264,17 @@ const openAccess = () => {
 }
 
 const disconnectWallet = () => {
-  walletStore.removeWallet()
+  walletStore.disconnectWallet()
   emit('close')
 }
 
 const deleteWallet = () => {
   const recentAddressStore = useWatchOnlyStore()
-
   recentAddressStore.removeWallet(
     walletAddress.value as string,
     selectedChain.value!,
   )
-  if (!isWatchOnly.value) {
-    disconnectWallet()
-  }
+  disconnectWallet()
   emit('close')
 }
 

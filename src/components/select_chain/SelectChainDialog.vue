@@ -78,7 +78,6 @@
  *
  *   <select-chain-dialog
  *     v-model:chain="selectedChain"
- *     :filter-chain-type="false"
  *     :has-all="true"
  *   />
  * @example: with all chains option
@@ -87,7 +86,6 @@
  *
  * <select-chain-dialog
  *  v-model:chain="selectedChain"
- * :filter-chain-type="false"
  * :has-all="true"
  * />
  *
@@ -100,11 +98,9 @@ import { CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import { ALL_CHAINS } from './helpers'
+import configs from '@/configs'
+
 const prop = defineProps({
-  filterChainType: {
-    type: Boolean,
-    default: false,
-  },
   selectedChain: {
     type: Object as () => Chain | null,
     default: null,
@@ -156,22 +152,57 @@ const setOpenDialog = (value: boolean) => {
  * Search
  -------------------------------*/
 const searchInput = ref('')
+
+// Helper to sort chains: popular first, then alphabetical
+const sortChains = (chainList: Chain[]): Chain[] => {
+  const popularSet = new Set(configs.POPULAR_CHAINS)
+  const popular: Chain[] = []
+  const rest: Chain[] = []
+
+  chainList.forEach(chain => {
+    if (popularSet.has(chain.name)) {
+      popular.push(chain)
+    } else {
+      rest.push(chain)
+    }
+  })
+
+  // Sort popular chains by their order in POPULAR_CHAINS
+  popular.sort(
+    (a, b) =>
+      configs.POPULAR_CHAINS.indexOf(a.name) -
+      configs.POPULAR_CHAINS.indexOf(b.name),
+  )
+
+  // Sort rest alphabetically by nameLong
+  rest.sort((a, b) =>
+    (a.nameLong || a.name).localeCompare(b.nameLong || b.name),
+  )
+
+  return [...popular, ...rest]
+}
+
 const searchResults = computed<Chain[]>(() => {
   const locChain =
     prop.passedChains.length > 0 ? prop.passedChains : chains.value
   const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
-  const chainsToSearch = prop.filterChainType
-    ? _chains.filter(chain => {
-        return chain.type === storeSelectedChain.value?.type
-      })
+  // Always filter by the selected chain's type
+  const currentChainType =
+    prop.selectedChain?.type ?? storeSelectedChain.value?.type
+  const chainsToSearch = currentChainType
+    ? _chains.filter(chain => chain.type === currentChainType)
     : _chains
 
   if (!searchInput.value || searchInput.value === '') {
+    const sortedChains = sortChains(chainsToSearch)
     if (!prop.selectedChain) {
-      return chainsToSearch
+      return sortedChains
     }
-    const unique = new Set([prop.selectedChain, ...chainsToSearch])
-    return [...unique]
+    // Put selected chain first, then sorted chains (removing duplicate)
+    const filtered = sortedChains.filter(
+      c => c.name !== prop.selectedChain?.name,
+    )
+    return [prop.selectedChain, ...filtered]
   }
   const beginsWith = chainsToSearch.filter(chain => {
     return chain.nameLong

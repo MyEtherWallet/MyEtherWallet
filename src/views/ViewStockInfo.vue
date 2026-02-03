@@ -13,7 +13,7 @@ import { onMounted } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
-defineProps({
+const props = defineProps({
   symbol: {
     type: String,
     required: true,
@@ -28,7 +28,11 @@ const { isMDAndUp } = useAppBreakpoints()
 const walletMenu = useWalletMenuStore()
 
 onMounted(() => {
+  // Set the selected token symbol for the Trade module
+  walletMenu.setSelectedTradeTokenSymbol(props.symbol)
+
   if (isMDAndUp.value) {
+    walletMenu.setWalletPanel('trade')
     walletMenu.setIsOpenSideMenu(true)
   } else {
     walletMenu.setIsOpenSideMenu(false)

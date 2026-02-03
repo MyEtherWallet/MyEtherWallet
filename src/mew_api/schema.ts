@@ -212,6 +212,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/web/swap/ondo/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebSwapOndoAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/swap/ondo/supporting-assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebSwapOndoSupportingAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/web/swap/ondo/status/market": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetWebSwapOndoMarketStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/pages/stocks/overview": {
         parameters: {
             query?: never;
@@ -1046,6 +1094,62 @@ export interface components {
                 decimals: number;
             }[];
         }[];
+        GetWebSwapOndoAssetsResponse: {
+            stockAlias?: string;
+            iconPngUrl?: string;
+            iconSvgUrl?: string;
+            symbol: string;
+            tradable: boolean;
+            pause: null | {
+                status: string;
+                type: string;
+                reason: {
+                    code: string;
+                    message: string;
+                };
+                start: null | string;
+                end: null | string;
+            };
+            primaryMarket: {
+                price: string;
+                sharesMultiplier: string;
+            };
+            underlyingMarket: {
+                name: string;
+                price: string;
+            };
+            addresses: {
+                chainName: null | string;
+                ondoGmNetworkChainId: string;
+                address: string;
+                decimals: number;
+            }[];
+        }[];
+        GetWebSwapOndoSupportingAssetsResponse: {
+            coinId: string;
+            name: string;
+            symbol: string;
+            price: number;
+            addresses: {
+                chainName: null | string;
+                tokenLogoUrl: null | string;
+                address: string;
+                decimals: null | number;
+            }[];
+        }[];
+        GetWebSwapOndoMarketStatusResponse: {
+            /** Format: date-time */
+            timestamp: string;
+            isOpen: boolean;
+            marketStatus: string;
+            nextOpenSession: string;
+            nextOpen: string;
+            nextClose: string;
+            reason: null | {
+                code: string;
+                message: string;
+            };
+        };
         GetWebStocksOverviewResponse: {
             newlyAdded: {
                 stockAlias?: string;
@@ -1890,6 +1994,30 @@ export interface components {
                 "application/json": components["schemas"]["GetWebStocksAddressesResponse"];
             };
         };
+        GetWebSwapOndoAssetsSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebSwapOndoAssetsResponse"];
+            };
+        };
+        GetWebSwapOndoSupportingAssetsSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebSwapOndoSupportingAssetsResponse"];
+            };
+        };
+        GetWebSwapOndoMarketStatusSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetWebSwapOndoMarketStatusResponse"];
+            };
+        };
         GetWebStocksOverviewSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -2514,6 +2642,42 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebStocksAddressesSuccess"];
+        };
+    };
+    GetWebSwapOndoAssets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebSwapOndoAssetsSuccess"];
+        };
+    };
+    GetWebSwapOndoSupportingAssets: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebSwapOndoSupportingAssetsSuccess"];
+        };
+    };
+    GetWebSwapOndoMarketStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: components["responses"]["GetWebSwapOndoMarketStatusSuccess"];
         };
     };
     GetWebStocksOverview: {
