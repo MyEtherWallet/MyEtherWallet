@@ -11,7 +11,7 @@
   >
     <template #content>
       <div
-        class="realtive h-[70vh] sm:h-[500px] pb-6 overflow-y-auto mew-scrollbar"
+        class="relative h-[70vh] sm:h-[500px] pb-6 overflow-y-auto mew-scrollbar"
       >
         <!-- Search -->
         <div class="sticky top-0 bg-white z-20">

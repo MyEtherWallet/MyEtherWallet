@@ -28,6 +28,7 @@ export const useGlobalStore = defineStore('global', () => {
   })
   const isEIP1559SupportedNetwork = ref(true) // change to computed in the future
   const setSelectedNetwork = (network: string) => {
+    if (network === '') return
     storage.value.selectedNetwork = network
   }
   /**--------------------

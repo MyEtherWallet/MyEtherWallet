@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, watch, computed } from 'vue'
 import { type WalletView } from '@/modules/access/common/walletConfigs'
-import { type Chain } from '@/mew_api/types' /**
+import { type Chain } from '@/mew_api/types'
+/**
  * Store to manage the state of the access dialog.
- * It provides methods to open and close the dialog.
+ * It provides methods to open and close the dialog. Also manages
+ * the current view within the dialog (default, wallet details, etc.)
+ * and the selected chain for wallet connections.
  */
 
 interface WC_Wallet {
