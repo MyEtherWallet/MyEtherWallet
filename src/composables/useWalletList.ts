@@ -96,10 +96,8 @@ export const useWalletList = () => {
     })
     return newConArr.filter(wallet => {
       return (
-        wallet.canSupport &&
-        !!wallet.canSupport(
-          selectedChain.value || selectedChainFromChainsStore.value,
-        )
+        selectedChain.value?.type === 'EVM' ||
+        (wallet.canSupport && !!wallet.canSupport(selectedChain.value))
       )
     })
   })

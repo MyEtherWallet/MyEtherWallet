@@ -32,6 +32,7 @@
       v-if="isLoadedChains"
       v-model:is-open="openDialog"
       :selected-chain="selectedChain"
+      :filter-by-selected-chain-type="false"
       @update:chain="setSelectedChain"
     />
   </div>

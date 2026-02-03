@@ -113,6 +113,10 @@ const prop = defineProps({
     type: Array as () => Chain[],
     default: () => [],
   },
+  filterBySelectedChainType: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const chainsStore = useChainsStore()
@@ -186,12 +190,19 @@ const searchResults = computed<Chain[]>(() => {
   const locChain =
     prop.passedChains.length > 0 ? prop.passedChains : chains.value
   const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
-  // Always filter by the selected chain's type
-  const currentChainType =
-    prop.selectedChain?.type ?? storeSelectedChain.value?.type
-  const chainsToSearch = currentChainType
-    ? _chains.filter(chain => chain.type === currentChainType)
-    : _chains
+
+  let chainsToSearch: Chain[] = []
+
+  if (prop.filterBySelectedChainType) {
+    // Always filter by the selected chain's type
+    const currentChainType =
+      prop.selectedChain?.type ?? storeSelectedChain.value?.type
+    chainsToSearch = currentChainType
+      ? _chains.filter(chain => chain.type === currentChainType)
+      : _chains
+  } else {
+    chainsToSearch = _chains
+  }
 
   if (!searchInput.value || searchInput.value === '') {
     const sortedChains = sortChains(chainsToSearch)

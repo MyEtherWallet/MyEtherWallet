@@ -96,6 +96,7 @@ import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAccessStore } from '@/stores/accessStore'
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
@@ -104,6 +105,8 @@ const { isHeaderMaxAndUp } = useAppBreakpoints()
 const { connect } = useConnectWallet()
 
 const { defaultWallets, newWalletList } = useWalletList()
+const accessStore = useAccessStore()
+const { selectedChain } = storeToRefs(accessStore)
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []

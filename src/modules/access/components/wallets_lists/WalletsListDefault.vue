@@ -44,9 +44,9 @@ import BtnWallet from './BtnWallet.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useProviderStore } from '@/stores/providerStore'
-import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletList } from '@/composables/useWalletList'
 import { computed } from 'vue'
+import { useAccessStore } from '@/stores/accessStore'
 
 const { connect } = useConnectWallet()
 
@@ -55,8 +55,8 @@ const recentWalletsStore = useRecentWalletsStore()
 const providerStore = useProviderStore()
 const { recentWallets } = storeToRefs(recentWalletsStore)
 const { providers } = storeToRefs(providerStore)
-const chainStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainStore)
+const accessStore = useAccessStore()
+const { selectedChain } = storeToRefs(accessStore)
 
 const reversedRecentWallets = recentWallets.value.slice().reverse()
 
@@ -72,6 +72,7 @@ const defaultWallets = computed(() => {
       if (isMockAvailable && walletConfigs[key].id === 'mock') return true
       return (
         walletConfigs[key].isDefault === true &&
+        selectedChain.value &&
         walletConfigs[key].canSupport!(selectedChain.value)
       )
     })
