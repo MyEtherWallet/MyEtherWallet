@@ -72,7 +72,7 @@
               />
             </div>
             <div
-              :class="[{ ' px-4 xs:px-6 sm:px-8': hasContentGutter }]"
+              :class="[{ 'px-4 xs:px-6 sm:px-8': hasContentGutter }]"
               class="overflow-y-auto mew-scrollbar flex-1"
             >
               <slot name="content" />

@@ -109,6 +109,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const setTokens = (newTokens: Array<TokenBalanceRaw>) => {
     const newTokenCopy: Array<TokenBalance> = []
     hasMissingBalances.value = false
+    removeTokens()
     newTokens.forEach(token => {
       if (token.contract === MAIN_TOKEN_CONTRACT) {
         const _balance = formatUnits(

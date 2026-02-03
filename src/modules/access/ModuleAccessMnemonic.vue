@@ -78,7 +78,11 @@
             <div
               class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
             >
-              <select-chain-for-app />
+              <select-chain-for-app
+                :preselected-chain="selectedChain"
+                :can-store="false"
+                @update:selected-chain="updateChain"
+              />
               <derivation-path />
             </div>
             <select-address-list
@@ -144,8 +148,8 @@ import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
@@ -153,6 +157,15 @@ import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
 import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 
 const { t } = useI18n()
+/**------------------------
+ * Access Store and Chain in the store
+ -------------------------*/
+const accessStore = useAccessStore()
+const { selectedChain } = storeToRefs(accessStore)
+
+const updateChain = (chain: Chain) => {
+  accessStore.setSelectedChain(chain)
+}
 /**------------------------
  * Steps
  -------------------------*/
@@ -225,9 +238,9 @@ watchDebounced(
 
 const wallet = ref<MnemonicToWallet | MnemonicToBitcoinWallet | null>(null)
 const derivationStore = useDerivationStore()
-const chainsStore = useChainsStore()
+
 const { selectedDerivation } = storeToRefs(derivationStore)
-const { selectedChain } = storeToRefs(chainsStore)
+
 const unlockWallet = () => {
   if (isValid.value) {
     const options = {
@@ -341,7 +354,8 @@ const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
 const { setWallet } = walletStore
 const isUnlockingWallet = ref(false)
-const accessStore = useAccessStore()
+const globalStore = useGlobalStore()
+const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
 const access = async () => {
   isUnlockingWallet.value = true
@@ -352,6 +366,7 @@ const access = async () => {
       addWallet(walletConfigs.mnemonic)
     }
   })
+  setSelectedChainGlobalStore(selectedChain.value?.name || '')
 
   isUnlockingWallet.value = false
   accessStore.closeAccessDialog()

@@ -10,9 +10,11 @@
     title="Select Chain"
   >
     <template #content>
-      <div class="realtive max-h-[70vh] sm:max-h-[500px] pb-6">
+      <div
+        class="realtive h-[70vh] sm:h-[500px] pb-6 overflow-y-auto mew-scrollbar"
+      >
         <!-- Search -->
-        <div class="sticky top-0 bg-white z-20 pt-2">
+        <div class="sticky top-0 bg-white z-20">
           <div class="flex items-center mb-2 bg-mewBg rounded-full p-1">
             <app-search-input
               v-model="searchInput"
@@ -172,10 +174,14 @@ const searchResults = computed<Chain[]>(() => {
     return [...unique]
   }
   const beginsWith = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
+    return chain.nameLong
+      .toLowerCase()
+      .startsWith(searchInput.value.toLowerCase())
   })
   const other = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
+    return chain.nameLong
+      .toLowerCase()
+      .includes(searchInput.value.toLowerCase())
   })
   const unique = new Set([...beginsWith, ...other])
   return [...unique]

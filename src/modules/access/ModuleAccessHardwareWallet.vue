@@ -34,7 +34,11 @@
               <div
                 class="grid grid-cols-1 xs:grid-cols-2 justify-space-beween gap-4 my-5"
               >
-                <select-chain-for-app />
+                <select-chain-for-app
+                  :can-store="false"
+                  :preselected-chain="selectedChain"
+                  @update:selected-chain="updateChain"
+                />
                 <hardware-wallet-derivation
                   :paths="paths"
                   :wallet-type="selectedHwWalletType"
@@ -96,7 +100,6 @@ import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
-import { useChainsStore } from '@/stores/chainsStore'
 import HWwallet from '@enkryptcom/hw-wallets'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
@@ -110,15 +113,14 @@ import { ToastType } from '@/types/notification'
 import type { WalletConfig } from '@/modules/access/common/walletConfigs'
 import { NetworkNames } from '@enkryptcom/types'
 import { useAccessStore } from '@/stores/accessStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
 const derivationStore = useDerivationStore()
-const chainsStore = useChainsStore()
 const { trezorSelectedDerivation, ledgerSelectedDerivation } =
   storeToRefs(derivationStore)
-const { selectedChain, isEvmChain } = storeToRefs(chainsStore)
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
 const walletStore = useWalletStore()
@@ -126,12 +128,20 @@ const { setSelectedTrezorDerivation, setSelectedLedgerDerivation } =
   derivationStore
 const { wallet } = storeToRefs(walletStore)
 const { t } = useI18n()
-// used to define which hardware wallet is being accessed
-const accessStore = useAccessStore()
+const globalStore = useGlobalStore()
+const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
 // Wallet instance
 let hwWalletInstance: HWwallet | null = new HWwallet()
-const { currentView } = storeToRefs(accessStore)
+/**------------------------
+ * Access Store and Chain in the store
+ -------------------------*/
+const accessStore = useAccessStore()
+const { currentView, selectedChain, isEvmChain } = storeToRefs(accessStore)
+
+const updateChain = (chain: Chain) => {
+  accessStore.setSelectedChain(chain)
+}
 
 /**------------------------
  * Derivation Path
@@ -360,10 +370,10 @@ const loadList = async (page: number = 0) => {
 }
 
 watch(
-  () => selectedChain.value as Chain | undefined,
-  (newValue: Chain | undefined, oldValue: Chain | undefined) => {
+  () => selectedChain.value,
+  (newValue, oldValue) => {
     if (!oldValue) return
-    if (newValue) {
+    if (newValue !== null) {
       paths.value = []
       isLoadingWalletList.value = true
       hwWalletInstance = new HWwallet()
@@ -418,6 +428,7 @@ const access = async () => {
   addWallet(walletConfig.value as WalletConfig)
   isUnlockingWallet.value = false
   hwWalletInstance = null
+  setSelectedChainGlobalStore(selectedChain.value?.name || '')
   closeAccessDialog()
 }
 </script>

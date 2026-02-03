@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { type WalletView } from '@/modules/access/common/walletConfigs'
-/**
+import { type Chain } from '@/mew_api/types' /**
  * Store to manage the state of the access dialog.
  * It provides methods to open and close the dialog.
  */
@@ -13,6 +13,7 @@ interface WC_Wallet {
 }
 export const useAccessStore = defineStore('accessStore', () => {
   const isOpenAccessDialog = ref(false)
+
   const openAccessDialog = () => {
     isOpenAccessDialog.value = true
   }
@@ -42,6 +43,19 @@ export const useAccessStore = defineStore('accessStore', () => {
     }
   })
 
+  /**------------------------
+   * Selected Chain
+   -------------------------*/
+  const selectedChain = ref<Chain | null>(null)
+
+  const setSelectedChain = (chain: Chain | null) => {
+    selectedChain.value = chain
+  }
+
+  const isEvmChain = computed(() => {
+    return selectedChain.value?.type === 'EVM'
+  })
+
   return {
     isOpenAccessDialog,
     openAccessDialog,
@@ -51,5 +65,8 @@ export const useAccessStore = defineStore('accessStore', () => {
     clickedWalletConnect,
     setClickedWalletConnect,
     setWagmiWalletData,
+    selectedChain,
+    isEvmChain,
+    setSelectedChain,
   }
 })
