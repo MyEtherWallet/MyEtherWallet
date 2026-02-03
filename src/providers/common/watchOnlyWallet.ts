@@ -18,6 +18,7 @@ import type {
   Chain,
   BitcoinQuotesRequestBody,
   BitcoinQuotesResponse,
+  ChainType,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 import type { Provider } from '@/stores/providerStore'
@@ -27,10 +28,18 @@ class WatchOnlyWallet implements WalletInterface {
   address: string
   chain: Chain
   walletType: WalletType
-  constructor(address: string, chain: Chain, walletType: WalletType) {
+  chainType: ChainType
+
+  constructor(
+    address: string,
+    chain: Chain,
+    walletType: WalletType,
+    chainType: ChainType,
+  ) {
     this.address = address
     this.chain = chain
     this.walletType = walletType
+    this.chainType = chainType
   }
   updateChainId: (chainId: string) => void = () => {}
   getWalletInstance?: (() => HWwalletManager | null) | undefined
@@ -151,9 +160,18 @@ class WatchOnlyWallet implements WalletInterface {
   }
 
   async getBalance(): Promise<TokenBalancesRaw> {
-    const address = await this.getAddress()
-    const Endpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
-    return fetchWithRetry<TokenBalancesRaw>(Endpoint)
+    const chainStore = useChainsStore()
+    const { selectedChain } = storeToRefs(chainStore)
+    if (selectedChain.value?.type === this.chainType) {
+      const address = await this.getAddress()
+      const Endpoint = `/balances/${this.getProvider()}/${address}/?noInjectErrors=false&sparklines=true`
+      return fetchWithRetry<TokenBalancesRaw>(Endpoint)
+    } else {
+      const emptyResponse: TokenBalancesRaw = {
+        result: [],
+      }
+      return emptyResponse
+    }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   broadcastTransaction(signedTx: HexPrefixedString): Promise<string> {

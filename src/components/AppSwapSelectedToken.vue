@@ -152,6 +152,17 @@
                       token.price ? formatFiatValue(token.price).value : '0.00'
                     }}
                   </p>
+                  <p
+                    v-if="
+                      isWalletConnected &&
+                      token.balance &&
+                      token.usd_balance > 0
+                    "
+                    class="text-info text-s-12"
+                  >
+                    {{ getBalance(token?.balance || '0', token.decimals) }}
+                    {{ truncate(token.symbol, 7) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -169,7 +180,7 @@
         </div>
         <div>
           <div
-            v-show="tokens.length > paginatedTokens.length"
+            v-show="tokens.length > paginatedTokens.length && !searchInput"
             class="h-[44px] w-full sm:max-w-[250px] mx-auto flex items-center justify-center bg-grey-5 rounded-full mt-1 mb-5"
             :class="{
               'cursor-pointer': !loadingMoreItems,

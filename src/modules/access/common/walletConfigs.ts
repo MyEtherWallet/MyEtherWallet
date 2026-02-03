@@ -1,4 +1,5 @@
 import EnkryptLogo from '@/assets/images/access/enkrypt.webp'
+import UnisatLogo from '@/assets/images/access/unisat.webp'
 import MewLogo from '@/assets/images/access/mew-app.webp'
 import LedgerLogo from '@/assets/images/access/ledger.webp'
 import TrezorLogo from '@/assets/images/access/trezor.webp'
@@ -55,6 +56,7 @@ export type defaultWalletId =
   | 'privateKey'
   | 'keystore'
   | 'mnemonic'
+  | 'unisat'
   | 'mock'
 
 type downloadUrls = {
@@ -100,11 +102,12 @@ const privateKeySupportNetwork = (chain?: Chain): boolean => {
 }
 const enkryptSupportNetwork = (chain?: Chain): boolean => {
   if (!chain) return false
-  return (
-    chain.type === 'EVM' ||
-    ((chain.name === 'BITCOIN' || chain.name === 'BITCOIN_TEST') &&
-      !!window.unisat)
-  )
+  return chain.type === 'EVM' || chain.name === 'BITCOIN'
+}
+
+const unisatSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  return chain.name === 'BITCOIN'
 }
 
 export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
@@ -153,7 +156,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'MEW Mobile',
     icon: MewLogo,
     type: [WalletConfigType.MOBILE],
-    canSupport: keystoreSupportNetwork, // TODO: replace with actual mew wallet support once we confirm DOT and SOL diverges from this
+    canSupport: keystoreSupportNetwork,
     isDefault: true,
     isOfficial: true,
     isWC: true,
@@ -170,6 +173,19 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     isWC: false,
     downloadUrls: {
       browserExtension: 'https://enkrypt.com',
+    },
+  },
+  unisat: {
+    id: 'unisat',
+    name: 'UniSat',
+    icon: UnisatLogo,
+    type: [WalletConfigType.EXTENSION],
+    canSupport: unisatSupportNetwork,
+    isDefault: true,
+    isOfficial: false,
+    isWC: false,
+    downloadUrls: {
+      browserExtension: 'https://unisat.io/',
     },
   },
   mock: {

@@ -147,7 +147,10 @@ const tryAdd = () => {
     adrBookStore.addAddress(
       {
         name: name.value,
-        address: toChecksumAddress(address.value),
+        address:
+          selectedChain.value?.type === 'EVM'
+            ? toChecksumAddress(address.value)
+            : address.value,
         chainName: selectedChain.value?.name || 'ETHEREUM',
         chainType: selectedChain.value?.type || 'EVM',
       },

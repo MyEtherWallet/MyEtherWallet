@@ -18,6 +18,7 @@ import type {
   GetEvmMultiTransactionEstimateRequest,
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
+import { type EIP712TypedData } from '@1inch/limit-order-sdk'
 
 class BaseEvmWallet implements WalletInterface {
   chainId: string
@@ -98,6 +99,12 @@ class BaseEvmWallet implements WalletInterface {
       `'Method not implemented: SignTransaction', ${serializedTx}`,
     )
   }
+
+  SignTypedMessage(typedMessage: EIP712TypedData): Promise<HexPrefixedString> {
+    throw new Error(
+      `'Method not implemented: SignTransaction', ${typedMessage}`,
+    )
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   SendTransaction(serializedTx: HexPrefixedString): Promise<HexPrefixedString> {
     throw new Error('Method not implemented: SignTransaction')
@@ -115,6 +122,11 @@ class BaseEvmWallet implements WalletInterface {
   getWalletType(): WalletType {
     throw new Error('Method not implemented: getWalletType')
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async changeNetwork(chainId: number): Promise<boolean> {
+    throw new Error('Method not implemented: changeNetwork')
+  }
+
   getProvider(): string {
     const chainStore = useChainsStore()
     const { selectedChain } = storeToRefs(chainStore)

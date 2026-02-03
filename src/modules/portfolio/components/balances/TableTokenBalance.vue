@@ -706,7 +706,7 @@ const isLoading = computed(() =>
 const { useMEWFetch } = useFetchMewApi()
 
 const fetchWatchListUrl = computed(() => {
-  const baseUrl = 'https://mew-api-dev.ethvm.dev/v1/web/tokens-watchlist'
+  const baseUrl = getAPIPath('/v1/web/tokens-watchlist')
   return `${baseUrl}?coins=${watchListedTokens.value}`
 })
 

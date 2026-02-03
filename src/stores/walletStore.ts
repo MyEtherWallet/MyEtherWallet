@@ -1,4 +1,4 @@
-import { ref, type Ref, computed } from 'vue'
+import { ref, type Ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
@@ -10,6 +10,10 @@ import { storeToRefs } from 'pinia'
 import { formatUnits } from 'viem'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 import { useWatchOnlyStore } from './watchOnlyStore'
+import { useToastStore } from './toastStore'
+import { ToastType } from '@/types/notification'
+import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
+import type { WalletType } from '@/providers/types'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -36,26 +40,34 @@ export const useWalletStore = defineStore('walletStore', () => {
     setAddress()
   }
 
-  const removeWallet = () => {
-    const { selectedChain } = storeToRefs(useChainsStore())
-    if (!(wallet.value instanceof WatchOnlyWallet)) {
-      isWatchOnly.value = true
-      wallet.value?.disconnect()
-      const address = walletAddress.value
-      const walletType = wallet.value?.getWalletType()
+  const setWatchOnlyIfExist = () => {
+    const { watchOnlyAddresses } = useWatchOnlyStore()
+    const currentRecentAddressList =
+      watchOnlyAddresses[selectedChain.value?.type || 'EVM']
+    if (currentRecentAddressList.length > 0) {
+      const newWallet = new WatchOnlyWallet(
+        currentRecentAddressList[currentRecentAddressList.length - 1].address,
+        currentRecentAddressList[currentRecentAddressList.length - 1].chain,
+        currentRecentAddressList[currentRecentAddressList.length - 1]
+          .walletName as WalletType,
+        currentRecentAddressList[currentRecentAddressList.length - 1].type,
+      )
       wallet.value = null
       walletAddress.value = null
-      const watchOnlyWallet = new WatchOnlyWallet(
-        address as string,
-        selectedChain.value!,
-        walletType!,
-      )
-      setWallet(watchOnlyWallet)
+      setWallet(newWallet)
     } else {
       wallet.value = null
       walletAddress.value = null
       removeTokens()
     }
+  }
+
+  const disconnectWallet = () => {
+    if (!(wallet.value instanceof WatchOnlyWallet)) {
+      isWatchOnly.value = true
+      wallet.value?.disconnect()
+    }
+    setWatchOnlyIfExist()
   }
 
   const isWalletConnected = computed(() => {
@@ -74,6 +86,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         walletAddress.value,
         selectedChain.value!,
         wallet.value.getWalletType(),
+        selectedChain.value!.type,
       )
     }
   }
@@ -85,7 +98,28 @@ export const useWalletStore = defineStore('walletStore', () => {
     isLoadingBalances.value = isLoading
   }
   const chainStore = useChainsStore()
-  const { selectedChain } = storeToRefs(chainStore)
+  const { selectedChain, isEvmChain } = storeToRefs(chainStore)
+
+  // Watch for chain changes and call changeNetwork on the wallet for EVM chains
+  watch(selectedChain, async (newChain, oldChain) => {
+    if (newChain && newChain.type !== oldChain?.type) {
+      setWatchOnlyIfExist()
+    }
+    if (newChain && isEvmChain.value && wallet.value && !isWatchOnly.value) {
+      if ((wallet.value as BaseEvmWallet).changeNetwork) {
+        const networkChangeStatus = await (
+          wallet.value as BaseEvmWallet
+        ).changeNetwork(Number(newChain.chainID))
+        if (!networkChangeStatus) {
+          const toastStore = useToastStore()
+          toastStore.addToastMessage({
+            text: 'Network change failed. Most likely this network is not supported by connected wallet',
+            type: ToastType.Error,
+          })
+        }
+      }
+    }
+  })
 
   const safeMainTokenBalance = computed<TokenBalance | null>(() => {
     if (!mainTokenBalance.value && selectedChain.value) {
@@ -272,8 +306,9 @@ export const useWalletStore = defineStore('walletStore', () => {
   return {
     wallet,
     walletAddress,
+    setWatchOnlyIfExist,
     setWallet,
-    removeWallet,
+    disconnectWallet,
     setTokens,
     removeTokens,
     tokens,

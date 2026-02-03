@@ -13,6 +13,7 @@ import type { NetworkNames } from '@enkryptcom/types'
 import { HWwalletType } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import { chainToEnum } from './chainToEnum'
+import type { EIP712TypedData } from '@1inch/limit-order-sdk'
 
 export default class EvmHardwareWallet extends BaseEvmWallet {
   private address: HexPrefixedString
@@ -99,7 +100,10 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     return this.hwWalletInstance
   }
 
-  override async SignMessage(options: { message: string; options?: unknown }): Promise<HexPrefixedString> {
+  override async SignMessage(options: {
+    message: string
+    options?: unknown
+  }): Promise<HexPrefixedString> {
     try {
       const walletSigned = await this.hwWalletInstance.signPersonalMessage({
         message: Buffer.from(options.message),
@@ -109,11 +113,38 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
           path: this.path.path,
         },
         wallet: this.walletType,
-        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+        networkName: (chainToEnum[this.getProvider()] ??
+          'BTC') as unknown as NetworkNames,
       })
       return Promise.resolve(walletSigned as HexPrefixedString)
     } catch (e) {
       return Promise.reject(e)
     }
+  }
+
+  override async SignTypedMessage(
+    typedData: EIP712TypedData,
+  ): Promise<HexPrefixedString> {
+    try {
+      const walletSigned = await this.hwWalletInstance.signTypedMessage({
+        ...typedData,
+        networkName: (chainToEnum[this.getProvider()] ??
+          'BTC') as unknown as NetworkNames,
+        pathIndex: this.index,
+        pathType: {
+          basePath: this.path.basePath ?? '',
+          path: this.path.path,
+        },
+        version: 'V4',
+        wallet: this.walletType,
+      })
+      return walletSigned as HexPrefixedString
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
+
+  override async changeNetwork(): Promise<boolean> {
+    return true
   }
 }

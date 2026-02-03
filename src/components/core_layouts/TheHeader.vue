@@ -40,6 +40,7 @@
           v-if="showMobileMenu"
           :core-menu-list="coreMenuList"
           :tools-menu-list="toolsMenuList"
+          @open-notifications="openMobileNotifications"
         />
         <!--Desktop Menu -->
         <div v-if="!showMobileMenu" class="flex items-center gap-1 xl:gap-2">
@@ -109,14 +110,12 @@
         <the-current-network v-if="isWalletConnected && !isAccessPage" />
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected && !isAccessPage" />
-        <!-- Notifications Button -->
-        <app-btn-icon
-          v-if="!showMobileMenu && isWalletConnected"
-          :label="$t('menu.open-notifications')"
-          @click="btnClick"
-        >
-          <bell-icon class="w-6 h-6" />
-        </app-btn-icon>
+        <!-- Notifications Button (desktop only, but popup is always available) -->
+        <the-notifications-popup
+          v-if="isWalletConnected"
+          :hide-button="showMobileMenu"
+          ref="notificationsRef"
+        />
 
         <!-- Settings Button -->
         <!-- <app-btn-icon
@@ -132,12 +131,12 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
-import { BellIcon, ChevronDownIcon } from '@heroicons/vue/24/solid'
+import TheNotificationsPopup from './TheNotificationsPopup.vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -153,18 +152,24 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
 import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
-import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
-import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 
 const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWallet } = store
-const { isEvmChain, isBitcoinChain, selectedChain } = storeToRefs(chainStore)
+const { setWallet, setWatchOnlyIfExist } = store
+const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
-const recentAddressStore = useWatchOnlyStore()
-const { watchOnlyAddresses } = storeToRefs(recentAddressStore)
+
+// Notifications popup ref
+const notificationsRef = ref<InstanceType<typeof TheNotificationsPopup> | null>(
+  null,
+)
+
+// Open notifications from mobile menu
+const openMobileNotifications = () => {
+  notificationsRef.value?.openPopup()
+}
 
 /** ------------------------------
  * Breakpoints determine menu visibility
@@ -233,25 +238,8 @@ const selectedOption = ref<AppSelectOption>({
   value: toolsMenuList.value[0].routeName as string,
 })
 
-const btnClick = (payload: MouseEvent) => {
-  console.log('btnClick', payload)
-}
-
 onMounted(() => {
-  const currentRecentAddressList =
-    watchOnlyAddresses.value[selectedChain.value?.type || 'EVM'] || {}
-  const addresses = Object.keys(currentRecentAddressList)
-  const chain =
-    watchOnlyAddresses.value[selectedChain.value?.type || 'EVM'][addresses[0]]
-      ?.chain
-  const walletName = watchOnlyAddresses.value[
-    selectedChain.value?.type || 'EVM'
-  ][addresses[0]]?.walletName as WalletType
-  if (addresses.length > 0) {
-    const newWallet = new WatchOnlyWallet(addresses[0], chain!, walletName!)
-
-    setWallet(newWallet)
-  }
+  setWatchOnlyIfExist()
 })
 
 watch(

@@ -32,6 +32,7 @@ export type EVMTxResponse =
 export type FeePriority = components['schemas']['FeePriority']
 export type GasFeeInfo = components['schemas']['EvmGasFeeInfo']
 export type EvmGasFees = components['schemas']['EvmGasFees']
+export type ChainType = components['schemas']['ChainType']
 
 //Estimates
 export type EstimatesResponse =
@@ -148,6 +149,8 @@ export type GetErc20AddressBalanceResponse =
 export type PortfolioHistoryResponse =
   components['schemas']['GetWeb7dBalancesBackProjectionChartByChainAndAddressResponse']
 
+export type GetTradableAssetsResponse =
+  components['schemas']['GetWebStocksAddressesResponse']
 /** --------------------------
  * Stock Info Page
  --------------------------*/
@@ -168,3 +171,12 @@ export type StockChainBalance =
   GetWebStocksInfoSummaryResponse['chainBalances'][number]
 
 export type ChainBalance = StockChainBalance | TokenChainBalance
+
+export type GetWebSwapOndoAssetsResponse =
+  components['schemas']['GetWebSwapOndoAssetsResponse']
+
+export type GetWebSwapOndoSupportingAssetsResponse =
+  components['schemas']['GetWebSwapOndoSupportingAssetsResponse']
+
+export type GetWebSwapOndoMarketStatusResponse =
+  components['schemas']['GetWebSwapOndoMarketStatusResponse']

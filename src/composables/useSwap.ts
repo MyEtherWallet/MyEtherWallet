@@ -9,12 +9,12 @@ import {
   enumToChain,
 } from '@/providers/ethereum/chainToEnum'
 import Swapper, { WalletIdentifier } from '@enkryptcom/swap'
-import type {
-  TokenType,
-  TokenTypeTo,
-  SupportedNetworkName,
-  ProviderQuoteResponse,
-  ProviderSwapResponse,
+import {
+  type TokenType,
+  type TokenTypeTo,
+  type SupportedNetworkName,
+  type ProviderQuoteResponse,
+  type ProviderSwapResponse,
 } from '@enkryptcom/swap'
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
@@ -23,6 +23,10 @@ import { parseUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import {
+  isTradingRestricted,
+  getRestrictedTokenAddresses,
+} from '@/modules/trade/providers/ondoHelpers'
 
 // TODO: Import types from @enkryptcom/swap
 
@@ -92,7 +96,49 @@ export const useSwap = (): {
       await swapInstance.value.initPromise
       const allFromTokens = swapInstance.value.getFromTokens()
       supportedNetwork.value = allFromTokens.all.length > 0
-      toTokens.value = swapInstance.value.getToTokens()
+      let swapToTokens = swapInstance.value.getToTokens()
+
+      // Check if trading is restricted and filter out restricted token addresses
+      const [isRestricted, restrictedAddresses] = await Promise.all([
+        isTradingRestricted(),
+        getRestrictedTokenAddresses(),
+      ])
+
+      const restrictedAddressesLower = restrictedAddresses.map(addr =>
+        addr.toLowerCase(),
+      )
+
+      // Filter toTokens if trading is restricted
+      if (isRestricted && restrictedAddressesLower.length > 0) {
+        const filterTokenArray = (tokens: TokenTypeTo[]) =>
+          tokens.filter(
+            token =>
+              !restrictedAddressesLower.includes(token.address.toLowerCase()),
+          )
+
+        swapToTokens = {
+          top: Object.fromEntries(
+            Object.entries(swapToTokens.top).map(([network, tokens]) => [
+              network,
+              filterTokenArray(tokens as TokenTypeTo[]),
+            ]),
+          ) as typeof swapToTokens.top,
+          trending: Object.fromEntries(
+            Object.entries(swapToTokens.trending).map(([network, tokens]) => [
+              network,
+              filterTokenArray(tokens as TokenTypeTo[]),
+            ]),
+          ) as typeof swapToTokens.trending,
+          all: Object.fromEntries(
+            Object.entries(swapToTokens.all).map(([network, tokens]) => [
+              network,
+              filterTokenArray(tokens as TokenTypeTo[]),
+            ]),
+          ) as typeof swapToTokens.all,
+        }
+      }
+
+      toTokens.value = swapToTokens
 
       const toTokensNetworks = Object.keys(toTokens.value.all)
       toChains.value = toTokensNetworks
@@ -102,6 +148,7 @@ export const useSwap = (): {
           if (chain) return chain
         })
         .filter((chain): chain is Chain => chain !== undefined)
+
       const allFromTokensWithBalance = allFromTokens.all.map(token => {
         let tokenBalance = '0'
         let tokenPrice = token.price
@@ -119,7 +166,6 @@ export const useSwap = (): {
             }
           }
         }
-
         return Object.freeze({
           ...token,
           balance: tokenBalance,
@@ -143,9 +189,19 @@ export const useSwap = (): {
         },
       )
 
-      fromTokens.value = isWalletConnected.value
+      // Filter out restricted addresses from fromTokens if trading is restricted
+      let finalFromTokens = isWalletConnected.value
         ? fromAllTokensToWalletTokens
         : allFromTokensWithBalance
+
+      if (isRestricted && restrictedAddressesLower.length > 0) {
+        finalFromTokens = finalFromTokens.filter(
+          token =>
+            !restrictedAddressesLower.includes(token.address.toLowerCase()),
+        )
+      }
+
+      fromTokens.value = finalFromTokens
       swapLoaded.value = true
       return Promise.resolve()
     } catch {
@@ -168,13 +224,14 @@ export const useSwap = (): {
       params.amount.toString(),
       params.fromToken.decimals ?? 18,
     ).toString() // Default to 18 decimals if not specified);
-    return swapInstance.value.getQuotes({
+    const quotes = await swapInstance.value.getQuotes({
       fromAddress: params.fromAddress,
       toAddress: params.toAddress,
       amount: new BN(rawAmount),
       fromToken: params.fromToken as TokenType,
       toToken: params.toToken as TokenTypeTo,
     })
+    return quotes.filter(q => q.provider !== 'oneInchFusion') // disable fusion swaps for now
   }
 
   const getSwap = async (

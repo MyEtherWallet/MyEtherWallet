@@ -161,6 +161,10 @@ defineProps({
 const sidebarIsOpen = ref(false)
 const showToolsSubmenu = ref(false)
 
+const emit = defineEmits<{
+  (e: 'openNotifications'): void
+}>()
+
 const toolsMenuItem = computed<AppMenuListItem>(() => {
   return {
     title: t('tools'),
@@ -183,10 +187,14 @@ const otherMenuList = computed<AppMenuListItem[]>(() => {
 /** ------------------------------
  * Menu Methods
  ------------------------------*/
-//TODO: Add click handler
 const clickListItem = (item: AppMenuListItem) => {
-  console.log('clickListItem', item)
   sidebarIsOpen.value = false
+
+  // Handle notifications click
+  if (item.iconID === ICON_IDS.NOTIFICATIONS) {
+    emit('openNotifications')
+    return
+  }
 }
 
 /** ------------------------------

@@ -229,12 +229,9 @@ onFetchResponse(() => {
       fromAmount: '',
       toChain: selectedChain.value as Chain,
     })
-  }
-
-  if (!existsOnCurrentChain.value) {
-    walletMenu.setWalletPanel('bridge')
-  } else {
     walletMenu.setWalletPanel('swap')
+  } else {
+    walletMenu.setWalletPanel('bridge')
   }
   tokenLocalStore.value = fetchedTokenData.value
   isLoadedData.value = true
