@@ -94,25 +94,23 @@ import { useI18n } from 'vue-i18n'
 import { Bars3Icon } from '@heroicons/vue/24/solid'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { useWalletList } from '@/composables/useWalletList'
-import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-
+import { useAccessStore } from '@/stores/accessStore'
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const { t } = useI18n()
 const { isHeaderMaxAndUp } = useAppBreakpoints()
 const { connect } = useConnectWallet()
-const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+
 const { defaultWallets, newWalletList } = useWalletList()
+const accessStore = useAccessStore()
+const { selectedChain } = storeToRefs(accessStore)
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  const supportedDefaultWallets = defaultWallets.value.filter(wallet => {
-    return wallet.canSupport && !!wallet.canSupport(selectedChain.value)
-  })
+  const supportedDefaultWallets = defaultWallets.value
 
   wallets.push(...supportedDefaultWallets)
   wallets.push(...newWalletList.value)

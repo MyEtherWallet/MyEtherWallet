@@ -18,6 +18,7 @@ import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
+import { useGlobalStore } from '@/stores/globalStore'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -26,7 +27,7 @@ export const useConnectWallet = () => {
 
   const providerStore = useProviderStore()
   const chainsStore = useChainsStore()
-  const { selectedChain, chains, isBitcoinChain } = storeToRefs(chainsStore)
+  const { chains } = storeToRefs(chainsStore)
   const wagmiConfig = generateConfig(chains.value)
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
@@ -38,6 +39,9 @@ export const useConnectWallet = () => {
   const route = useRoute()
   const toastStore = useToastStore()
   const accessStore = useAccessStore()
+  const { selectedChain, isBitcoinChain } = storeToRefs(accessStore)
+  const globalStore = useGlobalStore()
+  const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
   const _storeWallet = (
     wallet: WagmiWallet | Web3InjectedWallet | UnisatInjectWallet,
@@ -47,6 +51,7 @@ export const useConnectWallet = () => {
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
     setWallet(wallet)
     addWallet(config)
+    setSelectedChainGlobalStore(selectedChain.value?.name || '')
     accessStore.closeAccessDialog()
   }
 

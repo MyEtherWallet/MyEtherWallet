@@ -98,7 +98,6 @@ import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import { storeToRefs } from 'pinia'
 import { watchDebounced } from '@vueuse/core'
 import { useWalletStore } from '@/stores/walletStore'
-import { useChainsStore } from '@/stores/chainsStore'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import {
   unlockKeystore,
@@ -115,12 +114,13 @@ import AppInput from '@/components/AppInput.vue'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { useAccessStore } from '@/stores/accessStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import AppSheet from '@/components/AppSheet.vue'
 
-// useChainStore
-const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
-
+const accessStore = useAccessStore()
+const { selectedChain } = storeToRefs(accessStore)
+const globalStore = useGlobalStore()
+const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 /**------------------------
  * Steps
  -------------------------*/
@@ -207,8 +207,6 @@ const submitIsDisabled = computed<boolean>(() => {
   return password.value === '' || errorPassword.value !== ''
 })
 
-const accessStore = useAccessStore()
-
 const enterPassword = async () => {
   try {
     isUnlockingKeystore.value = true
@@ -224,6 +222,7 @@ const enterPassword = async () => {
       resetKeystore()
       setWallet(wallet)
       addWallet(walletConfigs.keystore)
+      setSelectedChainGlobalStore(selectedChain.value?.name || '')
       isUnlockingKeystore.value = false
       accessStore.setCurrentView('default')
       accessStore.closeAccessDialog()

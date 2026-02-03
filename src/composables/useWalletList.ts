@@ -9,11 +9,23 @@ import {
 import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import { useChainsStore } from '@/stores/chainsStore'
 import type { Connector, CreateConnectorFn } from '@wagmi/core'
+import { useAccessStore } from '@/stores/accessStore'
 
 export const useWalletList = () => {
   const DEFAULT_IDS = ['enkrypt', 'mew']
   const chainStore = useChainsStore()
-  const { selectedChain, chains } = storeToRefs(chainStore)
+  const { selectedChain: selectedChainFromChainsStore, chains } =
+    storeToRefs(chainStore)
+  const accessStore = useAccessStore()
+  const { selectedChain: selectedChainFromAccessStore } =
+    storeToRefs(accessStore)
+
+  const selectedChain = computed(() => {
+    return (
+      selectedChainFromAccessStore.value || selectedChainFromChainsStore.value
+    )
+  })
+
   const wagmiConfig = generateConfig(chains.value)
   const { connectors } = wagmiConfig
   interface RkConnector extends Connector<CreateConnectorFn> {
@@ -82,7 +94,12 @@ export const useWalletList = () => {
         })
       }
     })
-    return newConArr
+    return newConArr.filter(wallet => {
+      return (
+        selectedChain.value?.type === 'EVM' ||
+        (wallet.canSupport && !!wallet.canSupport(selectedChain.value))
+      )
+    })
   })
 
   const defaultWallets = computed<WalletConfig[]>(() => {
@@ -98,7 +115,9 @@ export const useWalletList = () => {
       }
     })
 
-    return defaultWallets
+    return defaultWallets.filter(wallet => {
+      return wallet.canSupport && !!wallet.canSupport(selectedChain.value)
+    })
   })
 
   return {

@@ -39,7 +39,6 @@ import AppSheet from '@/components/AppSheet.vue'
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
-import { useChainsStore } from '@/stores/chainsStore'
 import { getBufferFromHex, sanitizeHex } from '@/modules/access/common/helpers'
 import EthereumPrivateKey from '@/providers/ethereum/privateKeyWallet'
 import BitcoinPrivateKey from '@/providers/bitcoin/privateKeyWallet'
@@ -56,15 +55,18 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useAccessStore } from '@/stores/accessStore'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore
 const privateKeyInput = ref('')
 const accessStore = useAccessStore()
+const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(accessStore)
+const globalStore = useGlobalStore()
+const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
+
 const walletStore = useWalletStore()
 const { setWallet } = walletStore
-const chainsStore = useChainsStore()
-const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
 
 const recentWalletsStore = useRecentWalletsStore()
 const { addWallet } = recentWalletsStore
@@ -126,6 +128,7 @@ const unlock = () => {
 
     setWallet(wallet as WalletInterface)
     addWallet(walletConfigs.privateKey)
+    setSelectedChainGlobalStore(selectedChain.value?.name || '')
     privateKeyInput.value = ''
     accessStore.setCurrentView('default')
     accessStore.closeAccessDialog()

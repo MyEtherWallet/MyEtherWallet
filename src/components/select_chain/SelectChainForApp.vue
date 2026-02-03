@@ -4,7 +4,6 @@
       name="network-button"
       :openNetworkDialog="setOpenDialog"
       :selectedChain="selectedChain"
-      :filterChainType="true"
     >
       <app-btn-group
         v-if="isBtnGroup"
@@ -73,6 +72,7 @@
       v-model:is-open="openDialog"
       :selected-chain="selectedChain"
       :passed-chains="passedChains"
+      :filter-by-selected-chain-type="canStore"
       @update:chain="setSelectedChain"
     />
   </div>

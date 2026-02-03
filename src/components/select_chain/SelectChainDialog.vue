@@ -10,9 +10,11 @@
     title="Select Chain"
   >
     <template #content>
-      <div class="realtive max-h-[70vh] sm:max-h-[500px] pb-6">
+      <div
+        class="relative h-[70vh] sm:h-[500px] pb-6 overflow-y-auto mew-scrollbar"
+      >
         <!-- Search -->
-        <div class="sticky top-0 bg-white z-20 pt-2">
+        <div class="sticky top-0 bg-white z-20">
           <div class="flex items-center mb-2 bg-mewBg rounded-full p-1">
             <app-search-input
               v-model="searchInput"
@@ -111,6 +113,10 @@ const prop = defineProps({
     type: Array as () => Chain[],
     default: () => [],
   },
+  filterBySelectedChainType: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const chainsStore = useChainsStore()
@@ -184,12 +190,19 @@ const searchResults = computed<Chain[]>(() => {
   const locChain =
     prop.passedChains.length > 0 ? prop.passedChains : chains.value
   const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
-  // Always filter by the selected chain's type
-  const currentChainType =
-    prop.selectedChain?.type ?? storeSelectedChain.value?.type
-  const chainsToSearch = currentChainType
-    ? _chains.filter(chain => chain.type === currentChainType)
-    : _chains
+
+  let chainsToSearch: Chain[] = []
+
+  if (prop.filterBySelectedChainType) {
+    // Always filter by the selected chain's type
+    const currentChainType =
+      prop.selectedChain?.type ?? storeSelectedChain.value?.type
+    chainsToSearch = currentChainType
+      ? _chains.filter(chain => chain.type === currentChainType)
+      : _chains
+  } else {
+    chainsToSearch = _chains
+  }
 
   if (!searchInput.value || searchInput.value === '') {
     const sortedChains = sortChains(chainsToSearch)
@@ -203,10 +216,14 @@ const searchResults = computed<Chain[]>(() => {
     return [prop.selectedChain, ...filtered]
   }
   const beginsWith = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().startsWith(searchInput.value.toLowerCase())
+    return chain.nameLong
+      .toLowerCase()
+      .startsWith(searchInput.value.toLowerCase())
   })
   const other = chainsToSearch.filter(chain => {
-    return chain.name.toLowerCase().includes(searchInput.value.toLowerCase())
+    return chain.nameLong
+      .toLowerCase()
+      .includes(searchInput.value.toLowerCase())
   })
   const unique = new Set([...beginsWith, ...other])
   return [...unique]

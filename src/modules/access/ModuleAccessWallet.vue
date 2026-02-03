@@ -52,7 +52,12 @@
               <h2 class="text-s-28 font-semibold mb-2 md:ml-3">
                 {{ $t('common.select_network') }}
               </h2>
-              <select-chain-for-app is-btn-group />
+              <select-chain-for-app
+                is-btn-group
+                :can-store="false"
+                :preselected-chain="selectedChain"
+                @update:selected-chain="updateChain"
+              />
             </div>
           </div>
           <WalletsDefaultList class="mt-10 mb-12" />
@@ -79,15 +84,16 @@ import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { ArrowRightIcon } from '@heroicons/vue/24/outline'
-
+import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
+import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
 import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
 import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 
 /**-------------------------------
  * Access Wallet Dialog
@@ -99,6 +105,24 @@ const { isOpenAccessDialog, currentView, clickedWalletConnect } =
 const closeAccess = () => {
   accessStore.setCurrentView('default')
 }
+
+/**-------------------------------
+ * Access Wallet Dialog
+ -------------------------------*/
+const { selectedChain } = storeToRefs(accessStore)
+const chainsStore = useChainsStore()
+const { selectedChain: storeSelectedChain } = storeToRefs(chainsStore)
+
+const updateChain = (chain: Chain) => {
+  accessStore.setSelectedChain(chain)
+}
+
+onMounted(() => {
+  // Set default selected chain to store selected chain on mount
+  if (!selectedChain.value && storeSelectedChain.value) {
+    accessStore.setSelectedChain(storeSelectedChain.value)
+  }
+})
 /**-------------------------------
  * UI Elements
  -------------------------------*/
