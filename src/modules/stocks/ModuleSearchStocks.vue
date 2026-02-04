@@ -134,27 +134,44 @@
                       !searchInput || searchInput === '' || results.length === 0
                     "
                   >
-                    <!-- <p class="text-s-12 font-medium text-info ml-3 mb-1">
-                  Recently Viewed
-                </p>
-                <div
-                  class="flex items-center justify-start gap-1 flex-wrap mb-2"
-                >
-                  <button
-                    v-for="(stock, i) in trendingTokens"
-                    :key="i"
-                    class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
-                  >
-                    <app-token-logo
-                      :symbol="stock.ticker"
-                      :url="stock.logoUrl"
-                      height="w-5"
-                      width="w-5"
-                      class="mr-1"
-                    />
-                    <p class="uppercase text-s-14">{{ stock.ticker }}</p>
-                  </button>
-                </div> -->
+                    <p
+                      v-if="recentlyViewedStocks.length > 0"
+                      class="text-s-12 font-medium text-info ml-3 mb-1"
+                    >
+                      Recently Viewed
+                    </p>
+                    <div
+                      v-if="recentlyViewedStocks.length > 0"
+                      class="flex items-center justify-start gap-1 flex-wrap mb-7"
+                    >
+                      <div
+                        v-for="(stock, i) in recentlyViewedStocks.slice(0, 4)"
+                        :key="i"
+                      >
+                        <app-tooltip :text="stock.name">
+                          <router-link
+                            :to="{
+                              name: STOCK_INFO_ROUTE_NAMES.stocks,
+                              params: { symbol: stock.id },
+                            }"
+                            class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+                          >
+                            <app-token-logo
+                              :symbol="stock.symbol"
+                              :url="stock.icon"
+                              height="w-6"
+                              width="w-6"
+                              class="mr-1 text-s-12"
+                              :is-stock="true"
+                            />
+                            <app-token-symbol
+                              :symbol="stock.symbol"
+                              :is-stock="true"
+                            />
+                          </router-link>
+                        </app-tooltip>
+                      </div>
+                    </div>
                     <!-- Trending-->
                     <div
                       v-if="
@@ -173,26 +190,28 @@
                           v-for="(stock, i) in trendingTokens.slice(0, 4)"
                           :key="i"
                         >
-                          <router-link
-                            :to="{
-                              name: STOCK_INFO_ROUTE_NAMES.stocks,
-                              params: { symbol: stock.primaryMarket.symbol },
-                            }"
-                            class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
-                          >
-                            <app-token-logo
-                              :symbol="stock.primaryMarket.symbol"
-                              :url="stock.iconPngUrl || stock.iconSvgUrl"
-                              height="w-6"
-                              width="w-6"
-                              class="mr-1 text-s-12"
-                              :is-stock="true"
-                            />
-                            <app-token-symbol
-                              :symbol="stock.primaryMarket.symbol"
-                              :is-stock="true"
-                            />
-                          </router-link>
+                          <app-tooltip :text="stock.stockAlias">
+                            <router-link
+                              :to="{
+                                name: STOCK_INFO_ROUTE_NAMES.stocks,
+                                params: { symbol: stock.primaryMarket.symbol },
+                              }"
+                              class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+                            >
+                              <app-token-logo
+                                :symbol="stock.primaryMarket.symbol"
+                                :url="stock.iconPngUrl || stock.iconSvgUrl"
+                                height="w-6"
+                                width="w-6"
+                                class="mr-1 text-s-12"
+                                :is-stock="true"
+                              />
+                              <app-token-symbol
+                                :symbol="stock.primaryMarket.symbol"
+                                :is-stock="true"
+                              />
+                            </router-link>
+                          </app-tooltip>
                         </div>
                       </div>
                     </div>
@@ -205,26 +224,28 @@
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
           <p class="font-semibold text-s-14">Trending:</p>
           <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
-            <router-link
-              :to="{
-                name: STOCK_INFO_ROUTE_NAMES.stocks,
-                params: { symbol: stock.primaryMarket.symbol },
-              }"
-              class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
-            >
-              <app-token-logo
-                :symbol="stock.primaryMarket.symbol"
-                :url="stock.iconPngUrl || stock.iconSvgUrl"
-                height="h-6"
-                width="w-6"
-                class="mr-1 text-s-12"
-                :is-stock="true"
-              />
-              <app-token-symbol
-                :symbol="stock.primaryMarket.symbol"
-                :is-stock="true"
-              />
-            </router-link>
+            <app-tooltip :text="stock.stockAlias">
+              <router-link
+                :to="{
+                  name: STOCK_INFO_ROUTE_NAMES.stocks,
+                  params: { symbol: stock.primaryMarket.symbol },
+                }"
+                class="flex items-center justify-start hoverNoBG rounded-full py-1 px-2"
+              >
+                <app-token-logo
+                  :symbol="stock.primaryMarket.symbol"
+                  :url="stock.iconPngUrl || stock.iconSvgUrl"
+                  height="h-6"
+                  width="w-6"
+                  class="mr-1 text-s-12"
+                  :is-stock="true"
+                />
+                <app-token-symbol
+                  :symbol="stock.primaryMarket.symbol"
+                  :is-stock="true"
+                />
+              </router-link>
+            </app-tooltip>
           </div>
         </div>
       </div>
@@ -233,26 +254,36 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useFocusWithin, watchDebounced } from '@vueuse/core'
+import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
+
+// Components
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+
+// Stores and Composables
+import { useStocksStore } from '@/stores/stocksStore'
+import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+
+// Utils and Types
 import {
   formatFiatValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
-import { useFocusWithin, watchDebounced } from '@vueuse/core'
-import { useStocksStore } from '@/stores/stocksStore'
-import { storeToRefs } from 'pinia'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
+
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)
+const recentlyViewedTokensStore = useRecentlyViewedTokensStore()
+const { recentlyViewedStocks } = storeToRefs(recentlyViewedTokensStore)
 
 const searchInput = ref('')
 const { useMEWFetch } = useFetchMewApi()

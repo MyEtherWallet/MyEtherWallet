@@ -2,7 +2,7 @@
   <div
     ref="tooltipActivatorRef"
     class="tooltip"
-    v-element-hover="[onHover, { delayLeave: 500 }]"
+    v-element-hover="[onHover, { delayLeave: 300 }]"
   >
     <slot>
       <information-circle-icon class="h-6 w-6 p-1 cursor-pointer text-info" />
@@ -13,12 +13,12 @@
           ref="tooltipRef"
           role="tooltip"
           v-show="show"
-          class="fixed bg-white rounded-16 p-3 text-s-12 shadow-button w-max max-w-[300px] z-[2101]"
+          class="fixed bg-white rounded-16 p-3 text-s-12 shadow-button shadow-button-elevated w-max max-w-[300px] z-[2101]"
           :class="{
-            'right-top': isTopRight,
-            'left-top': isTopLeft,
-            'right-bottom': isBottomRight,
-            'left-bottom': isBottomLeft,
+            'right-top': position === 'top-right',
+            'left-top': position === 'top-left',
+            'right-bottom': position === 'bottom-right',
+            'left-bottom': position === 'bottom-left',
             hidden: !visible,
           }"
         >
@@ -41,21 +41,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  isTopRight: {
-    type: Boolean,
-    default: true,
-  },
-  isTopLeft: {
-    type: Boolean,
-    default: false,
-  },
-  isBottomRight: {
-    type: Boolean,
-    default: false,
-  },
-  isBottomLeft: {
-    type: Boolean,
-    default: false,
+  position: {
+    type: String as () =>
+      | 'top-right'
+      | 'top-left'
+      | 'bottom-right'
+      | 'bottom-left'
+      | 'middle',
+    default: 'top-right',
   },
 })
 
@@ -72,46 +65,27 @@ const onHover = (hovered: boolean) => {
 const onHoverActive = () => {
   if (tooltipRef.value && tooltipActivatorRef.value) {
     const activator = tooltipActivatorRef.value
-    const topPosition = activator.getBoundingClientRect().top + 2
-    const bottom = activator.getBoundingClientRect().bottom - 1
-    if (props.isTopRight) {
-      const rightTopPosition =
-        activator.getBoundingClientRect().width +
-        activator.getBoundingClientRect().x -
-        10
+    const topPosition = activator.getBoundingClientRect().top - 4
+    const bottom = activator.getBoundingClientRect().bottom + 4
+    const center =
+      activator.getBoundingClientRect().x +
+      activator.getBoundingClientRect().width / 2
+    tooltipRef.value.style.left = `${center}px`
+    if (props.position.includes('top') || props.position === 'middle') {
       tooltipRef.value.style.top = `${topPosition}px`
-      tooltipRef.value.style.left = `${rightTopPosition}px`
-      tooltipRef.value.style.transform = 'translateX(0) translateY(-100%)'
-    } else if (props.isBottomRight) {
-      const rightBottomPosition =
-        activator.getBoundingClientRect().width +
-        activator.getBoundingClientRect().x -
-        4
+    }
+    if (props.position.includes('bottom')) {
       tooltipRef.value.style.top = `${bottom}px`
-      tooltipRef.value.style.left = `${rightBottomPosition}px`
-    } else if (props.isTopLeft) {
-      const left =
-        activator.getBoundingClientRect().x -
-        activator.getBoundingClientRect().width +
-        10
-      tooltipRef.value.style.left = `${left}px`
-      tooltipRef.value.style.top = `${topPosition}px`
-      tooltipRef.value.style.transform = 'translateX(0) translateY(-100%)'
-    } else if (props.isBottomLeft) {
-      const left =
-        activator.getBoundingClientRect().x -
-        activator.getBoundingClientRect().width +
-        10
-      tooltipRef.value.style.left = `${left}px`
-      tooltipRef.value.style.top = `${bottom}px`
-    } else {
-      const tooltipMiddle = tooltipRef.value.getBoundingClientRect().width / 2
-      const middle =
-        activator.getBoundingClientRect().left +
-        activator.getBoundingClientRect().width / 2 -
-        tooltipMiddle
-      tooltipRef.value.style.top = `${bottom}px`
-      tooltipRef.value.style.left = `${middle}px`
+    }
+
+    if (props.position === 'top-right') {
+      tooltipRef.value.style.transform = 'translateY(-100%)'
+    } else if (props.position === 'top-left') {
+      tooltipRef.value.style.transform = 'translateX(-100%) translateY(-100%)'
+    } else if (props.position === 'bottom-left') {
+      tooltipRef.value.style.transform = 'translateX(-100%)'
+    } else if (props.position === 'middle') {
+      tooltipRef.value.style.transform = 'translateX(-50%) translateY(-100%)'
     }
   }
   visible.value = true

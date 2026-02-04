@@ -156,7 +156,7 @@ import type { DisplayToken } from '../portfolio/components/balances/TableTokenBa
 import { useInputStore } from '@/stores/inputStore'
 import type { Chain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/composables/useSwap'
-
+import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 const props = defineProps({
   tokenId: {
     type: String,
@@ -166,6 +166,7 @@ const props = defineProps({
 
 const walletStore = useWalletStore()
 const { walletAddress, isWalletConnected } = storeToRefs(walletStore)
+const recentlyViewedTokensStore = useRecentlyViewedTokensStore()
 /** --------------------
  * Wallet Menu Buttons
  --------------------*/
@@ -217,6 +218,13 @@ onFetchResponse(() => {
   const currentChainToken = fetchedTokenData.value.supportedChains.find(
     chain => chain.chainName === selectedChain.value?.name,
   )
+  recentlyViewedTokensStore.addToken({
+    id: fetchedTokenData.value.coinId,
+    symbol: fetchedTokenData.value.symbol,
+    icon: fetchedTokenData.value.iconUrl || undefined,
+    name: fetchedTokenData.value.name,
+    isStock: false,
+  })
   if (currentChainToken) {
     storeSwapValues({
       fromToken: {} as NewTokenInfo,

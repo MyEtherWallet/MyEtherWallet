@@ -183,6 +183,7 @@ import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { storeToRefs } from 'pinia'
 
 const props = defineProps({
@@ -195,6 +196,8 @@ const props = defineProps({
 const { useMEWFetch } = useFetchMewApi()
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
+const recentlyViewedTokensStore = useRecentlyViewedTokensStore()
+
 /**--------------------
  * Fetch Stock Summary Data
  ---------------------*/
@@ -228,6 +231,13 @@ onFetchResponse(() => {
   if (data.value) {
     isLoadedData.value = true
     stockData.value = data.value
+    recentlyViewedTokensStore.addToken({
+      id: props.symbol,
+      symbol: props.symbol,
+      icon: data.value.iconPngUrl || data.value.iconSvgUrl || undefined,
+      name: data.value.stockAlias || props.symbol,
+      isStock: true,
+    })
   }
 })
 
