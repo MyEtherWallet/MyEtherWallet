@@ -72,6 +72,7 @@
                   ]"
                   v-ripple
                   @click="isOpenLearnMenu = !isOpenLearnMenu"
+                  key="app-learn-menu"
                 >
                   <div class="mr-3 opacity-80">
                     <book-open-icon class="w-4 h-4" />
@@ -85,7 +86,7 @@
                   />
                 </button>
 
-                <div v-if="isOpenLearnMenu" key="app-tools-submenu">
+                <div v-if="isOpenLearnMenu" key="app-learn-submenu">
                   <a
                     v-for="item in learnMenuList"
                     :key="item.label"
