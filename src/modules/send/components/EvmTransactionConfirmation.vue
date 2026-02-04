@@ -275,7 +275,7 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
-import { isHardWareWallet } from '@/utils/walletUtils'
+import { isSignableWallet } from '@/utils/walletUtils'
 
 interface EvmTxType {
   toAddress: string
@@ -348,7 +348,7 @@ const confirmTransaction = async () => {
     signing.value = true
     // This is done because the modal needs to be shown and the user needs to actually
     // consent to signing the transaction
-    const signedTx = isHardWareWallet(wallet.value)
+    const signedTx = isSignableWallet(wallet.value)
       ? (
           await wallet.value?.SignTransaction?.(
             props.signedTx as HexPrefixedString,
