@@ -33,7 +33,35 @@
         <div
           class="p-1.5 min-w-[200px] max-w-full bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"
         >
-          <div v-if="!useVueRouter" class="grid grid-cols-1 gap-1">
+          <div v-if="useVueRouter" class="grid grid-cols-1 gap-1">
+            <router-link
+              v-for="option in options"
+              :key="option.value"
+              class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+              active-class="bg-grey-5 !text-primary"
+              role="option"
+              :id="option.value"
+              :to="{ name: option.value }"
+              @click="selectOption(option)"
+            >
+              {{ option.label }}
+            </router-link>
+          </div>
+          <div v-else-if="useLink" class="grid grid-cols-1 gap-1">
+            <a
+              v-for="option in options"
+              :key="option.value"
+              class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
+              role="option"
+              :id="option.value"
+              :href="option.value"
+              target="_blank"
+              @click="selectOption(option)"
+            >
+              {{ option.label }}
+            </a>
+          </div>
+          <div v-else class="grid grid-cols-1 gap-1">
             <button
               v-for="option in options"
               :key="option.value"
@@ -54,20 +82,6 @@
                 class="ml-auto w-4 h-4 text-primary"
               />
             </button>
-          </div>
-          <div v-else class="grid grid-cols-1 gap-1">
-            <router-link
-              v-for="option in options"
-              :key="option.value"
-              class="flex items-center px-4 h-12 hover:bg-grey-5 hover:text-primary rounded-2xl text-s-14 font-medium text-grey-60 transition-colors"
-              active-class="bg-grey-5 !text-primary"
-              role="option"
-              :id="option.value"
-              :to="{ name: option.value }"
-              @click="selectOption(option)"
-            >
-              {{ option.label }}
-            </router-link>
           </div>
         </div>
       </div>
@@ -132,6 +146,10 @@ const props = defineProps({
    * @useVueRouter If true, the options will be rendered as router-links.
    */
   useVueRouter: {
+    type: Boolean,
+    default: false,
+  },
+  useLink: {
     type: Boolean,
     default: false,
   },

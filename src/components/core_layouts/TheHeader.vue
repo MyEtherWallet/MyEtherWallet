@@ -40,6 +40,7 @@
           v-if="showMobileMenu"
           :core-menu-list="coreMenuList"
           :tools-menu-list="toolsMenuList"
+          :learn-menu-list="learnMenuList"
           @open-notifications="openMobileNotifications"
         />
         <!--Desktop Menu -->
@@ -55,14 +56,23 @@
             {{ item.title }}
           </router-link>
         </div>
-        <a
+        <app-select
           v-if="!showMobileMenu"
-          href="https://help.myetherwallet.com/en/"
-          target="_blank"
-          class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+          :options="learnMenuList"
+          :placeholder="$t('learn')"
+          use-link
+          has-on-Hover
         >
-          {{ $t('learn') }}
-        </a>
+          <template #select-button="{ toggleSelect }">
+            <button
+              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
+              @click="toggleSelect"
+            >
+              {{ $t('learn') }}
+              <chevron-down-icon class="w-4 h-4 ml-2" />
+            </button>
+          </template>
+        </app-select>
         <app-select
           v-if="!showMobileMenu"
           v-model:selected="selectedOption"
@@ -216,6 +226,16 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     },
   ]
 })
+const learnMenuList: AppSelectOption[] = [
+  {
+    label: 'Help Center',
+    value: 'https://help.myetherwallet.com/en/',
+  },
+  {
+    label: 'Blog',
+    value: 'https://www.myetherwallet.com/blog',
+  },
+]
 
 const displayLinks = computed(() => {
   return coreMenuList.value

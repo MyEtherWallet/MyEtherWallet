@@ -193,11 +193,16 @@
             </div>
           </div>
         </div>
-        <app-select-tx-fee :fees="swapGasFeeQuote" />
+        <app-select-tx-fee
+          :fees="swapGasFeeQuote"
+          v-model:gas-fee-error="gasFeeError"
+          class="mb-2"
+        />
         <app-base-button
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="loadingModel"
+          :disabled="!!gasFeeError"
         >
           {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
@@ -221,7 +226,7 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -232,7 +237,6 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
-
 const { t } = useI18n()
 
 enum ProviderName {
@@ -290,6 +294,9 @@ const props = defineProps({
   swapGasFeeQuote: {
     type: Object as () => QuotesResponse,
     default: () => ({}),
+  },
+  swapFeeError: {
+    type: String,
   },
 })
 
@@ -411,4 +418,13 @@ const proceedWithSwap = () => {
 const declineSwap = () => {
   emits('update:declineSwap')
 }
+
+const gasFeeError = ref<string | undefined>('')
+watch(
+  () => props.swapFeeError,
+  () => {
+    gasFeeError.value = props.swapFeeError
+  },
+  { immediate: true },
+)
 </script>

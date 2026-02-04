@@ -8,7 +8,7 @@
       <div class="w-full max-w-[500px]">
         <div class="flex items-end justify-between mb-2 px-4">
           <p class="font-bold text-s-28">
-            {{ walletPanel === 'swap' ? 'Swap' : 'Bridge' }}
+            {{ isSwapView ? 'Swap' : 'Bridge' }}
           </p>
           <app-btn-text class="text-primary text-s-14 pb-1" @click="clearValues"
             >Clear all</app-btn-text
@@ -17,9 +17,14 @@
         <div class="relative">
           <!-- From Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
-            <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
+            <p
+              class="text-s-12 font-bold ml-3"
+              :class="{ 'mb-1': !isSwapView }"
+            >
+              You are selling
+            </p>
             <select-chain-for-app
-              :can-store="false"
+              v-if="!isSwapView"
               :passed-chains="fromChains"
               :preselected-chain="selectedFromChain"
             />
@@ -39,7 +44,7 @@
               :external-loading="fromLoadingState"
               :tokens="parsedFromTokens"
               :show-balance="isWalletConnected"
-              class="mt-3"
+              :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
           </div>
 
@@ -48,17 +53,23 @@
             <div
               class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
             >
-              <arrows-up-down-icon class="w-5 h-5 text-primary" />
+              <arrow-down-icon class="w-5 h-5 text-primary" />
             </div>
           </div>
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 mb-1 font-bold ml-3">You are buying</p>
+            <p
+              class="text-s-12 font-bold ml-3"
+              :class="{ 'mb-1': !isSwapView }"
+            >
+              You are buying
+            </p>
             <select-chain-for-app
               :can-store="false"
               :passed-chains="toChains"
               :preselected-chain="selectedToChain"
+              :class="{ hidden: isSwapView }"
               @update:selected-chain="setToChain"
             />
             <app-swap-enter-amount
@@ -71,9 +82,9 @@
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
-              class="mt-4"
+              :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
-            <div class="pt-4" v-if="isCrossChain"></div>
+            <div class="pt-4" v-if="!isSwapView && isCrossChain"></div>
             <address-input
               v-model:adr-input="userToAddress"
               :resolved-address="toAddress"
@@ -81,7 +92,7 @@
               :address-error-messages="toAddressError"
               :network="selectedToChain"
               @validate:address="validateToAddress"
-              v-if="isCrossChain"
+              v-if="!isSwapView && isCrossChain"
             />
           </div>
         </div>
@@ -132,6 +143,7 @@
       :to-chain="selectedToChain"
       :swap-info="swapInfo || undefined"
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"
+      :swap-fee-error="swapFeeError"
     />
     <swap-initiated-modal
       v-model:swap-initiated-open="swapInitiatedOpen"
@@ -149,7 +161,7 @@ import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -272,6 +284,7 @@ const swapInitiatedOpen = ref(false)
 const txProceeding = ref(false)
 
 // --- Computed Helpers ---
+const isSwapView = computed(() => walletPanel.value === 'swap')
 
 const isCrossChain = computed(
   () => selectedChain.value?.type !== selectedToChain.value?.type,
@@ -532,6 +545,34 @@ const proceedWithSwap = async (quoteId: string) => {
 
 // --- Pre-Swap & Quotes ---
 
+const swapFeeError = computed<string | undefined>(() => {
+  if (
+    !swapGasFeeQuote.value?.fees ||
+    !swapGasFeeQuote.value.fees[gasPriceType.value] ||
+    fromTokenSelected.value === null
+  ) {
+    return undefined
+  }
+  const isMainToken = fromTokenSelected.value.address === MAIN_TOKEN_CONTRACT
+  const fee = BigInt(
+    swapGasFeeQuote.value?.fees[gasPriceType.value]?.nativeValue || '0',
+  )
+  const mainTokenBalance = BigInt(balanceWei.value)
+
+  if (!isMainToken) {
+    if (fee > mainTokenBalance) {
+      return 'NOT_ENOUGH_BALANCE'
+    }
+  } else {
+    const totalBalanceNeeded =
+      fee +
+      BigInt(parseUnits(fromAmount.value, fromTokenSelected.value.decimals))
+    if (totalBalanceNeeded > mainTokenBalance) {
+      return 'NOT_ENOUGH_BALANCE'
+    }
+  }
+  return undefined
+})
 const swapForBtc = async () => {
   bestSwapLoadingOpen.value = true
   generalError.value = ''
