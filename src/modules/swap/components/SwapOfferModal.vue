@@ -193,11 +193,16 @@
             </div>
           </div>
         </div>
-        <app-select-tx-fee :fees="swapGasFeeQuote" />
+        <app-select-tx-fee
+          :fees="swapGasFeeQuote"
+          v-model:gas-fee-error="swapFeeError"
+          class="mb-2"
+        />
         <app-base-button
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="loadingModel"
+          :disabled="!!swapFeeError"
         >
           {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
@@ -232,7 +237,6 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
-
 const { t } = useI18n()
 
 enum ProviderName {
@@ -292,7 +296,10 @@ const props = defineProps({
     default: () => ({}),
   },
 })
-
+const swapFeeError = defineModel<string>('swapFeeError', {
+  type: String,
+  default: '',
+})
 const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 
 const providerName = computed(() => {

@@ -125,6 +125,7 @@
       v-model:swap-offer-open="bestOfferSelectionOpen"
       v-model:selected-quote="selectedQuote"
       v-model:loading="txProceeding"
+      v-model:swap-fee-error="swapFeeError"
       @update:proceedWithSwap="proceedWithSwap"
       @update:declineSwap="bestOfferSelectionOpen = false"
       :quotes="providers"
@@ -532,6 +533,34 @@ const proceedWithSwap = async (quoteId: string) => {
 
 // --- Pre-Swap & Quotes ---
 
+const swapFeeError = computed<string | undefined>(() => {
+  if (
+    !swapGasFeeQuote.value?.fees ||
+    !swapGasFeeQuote.value.fees[gasPriceType.value] ||
+    fromTokenSelected.value === null
+  ) {
+    return undefined
+  }
+  const isMainToken = fromTokenSelected.value.address === MAIN_TOKEN_CONTRACT
+  const fee = BigInt(
+    swapGasFeeQuote.value?.fees[gasPriceType.value]?.nativeValue || '0',
+  )
+  const mainTokenBalance = BigInt(balanceWei.value)
+
+  if (!isMainToken) {
+    if (fee > mainTokenBalance) {
+      return 'NOT_ENOUGH_BALANCE'
+    }
+  } else {
+    const totalBalanceNeeded =
+      fee +
+      BigInt(parseUnits(fromAmount.value, fromTokenSelected.value.decimals))
+    if (totalBalanceNeeded > mainTokenBalance) {
+      return 'NOT_ENOUGH_BALANCE'
+    }
+  }
+  return undefined
+})
 const swapForBtc = async () => {
   bestSwapLoadingOpen.value = true
   generalError.value = ''
