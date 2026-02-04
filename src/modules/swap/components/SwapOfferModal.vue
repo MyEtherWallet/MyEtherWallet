@@ -195,14 +195,14 @@
         </div>
         <app-select-tx-fee
           :fees="swapGasFeeQuote"
-          v-model:gas-fee-error="swapFeeError"
+          v-model:gas-fee-error="gasFeeError"
           class="mb-2"
         />
         <app-base-button
           class="w-full"
           @click="proceedWithSwap"
           :is-loading="loadingModel"
-          :disabled="!!swapFeeError"
+          :disabled="!!gasFeeError"
         >
           {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
@@ -226,7 +226,7 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import {
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
@@ -295,11 +295,11 @@ const props = defineProps({
     type: Object as () => QuotesResponse,
     default: () => ({}),
   },
+  swapFeeError: {
+    type: String,
+  },
 })
-const swapFeeError = defineModel<string>('swapFeeError', {
-  type: String,
-  default: '',
-})
+
 const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 
 const providerName = computed(() => {
@@ -418,4 +418,13 @@ const proceedWithSwap = () => {
 const declineSwap = () => {
   emits('update:declineSwap')
 }
+
+const gasFeeError = ref<string | undefined>('')
+watch(
+  () => props.swapFeeError,
+  () => {
+    gasFeeError.value = props.swapFeeError
+  },
+  { immediate: true },
+)
 </script>
