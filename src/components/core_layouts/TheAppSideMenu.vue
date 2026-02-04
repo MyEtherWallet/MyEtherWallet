@@ -63,15 +63,37 @@
                     :list-item="item"
                     @click="clickListItem(item)"
                   />
+                </div>
+
+                <!-- Learn MENU -->
+                <button
+                  :class="[
+                    'text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG',
+                  ]"
+                  v-ripple
+                  @click="isOpenLearnMenu = !isOpenLearnMenu"
+                >
+                  <div class="mr-3 opacity-80">
+                    <book-open-icon class="w-4 h-4" />
+                  </div>
+                  {{ t('learn') }}
+                  <chevron-down-icon
+                    :class="[
+                      'ml-auto w-4 h-4 transition-transform',
+                      { 'rotate-180': isOpenLearnMenu },
+                    ]"
+                  />
+                </button>
+
+                <div v-if="isOpenLearnMenu" key="app-tools-submenu">
                   <a
-                    href="https://help.myetherwallet.com/en/"
+                    v-for="item in learnMenuList"
+                    :key="item.label"
+                    :href="item.value"
                     target="_blank"
-                    class="text-small rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG"
+                    class="text-s-14 rounded-full py-2 px-4 flex w-full items-center transition-colors hoverNoBG pl-12"
                   >
-                    <div class="mr-3 opacity-80">
-                      <book-open-icon class="w-4 h-4" />
-                    </div>
-                    <p class="capitalize">{{ t('learn') }}</p>
+                    {{ item.label }}
                   </a>
                 </div>
 
@@ -134,7 +156,12 @@
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
-import { Bars3Icon, BookOpenIcon } from '@heroicons/vue/24/solid'
+import { type AppSelectOption } from '@/types/components/appSelect'
+import {
+  Bars3Icon,
+  BookOpenIcon,
+  ChevronDownIcon,
+} from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
 import { ref, computed } from 'vue'
 import MenuListItem from './MenuListItem.vue'
@@ -154,6 +181,10 @@ defineProps({
   },
   toolsMenuList: {
     type: Array as () => AppMenuListItem[],
+    required: true,
+  },
+  learnMenuList: {
+    type: Array as () => AppSelectOption[],
     required: true,
   },
 })
@@ -206,4 +237,9 @@ const connectWallet = () => {
   accessStore.openAccessDialog()
   sidebarIsOpen.value = false
 }
+
+/** ------------------------------
+ * Learn Menu
+ ------------------------------*/
+const isOpenLearnMenu = ref(false)
 </script>
