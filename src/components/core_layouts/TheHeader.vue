@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:pl-10 md-header:pr-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
+    class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 z-10 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -49,7 +49,7 @@
             v-for="(item, index) in displayLinks"
             :key="index"
             :to="{ name: item.routeName }"
-            class="text-s-17 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
+            class="text-s-16 hoverNoBG px-3 py-1 rounded-full font-medium capitalize"
             active-class="bg-surface"
             v-ripple
           >
@@ -65,7 +65,7 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
+              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
               @click="toggleSelect"
             >
               {{ $t('learn') }}
@@ -83,7 +83,7 @@
         >
           <template #select-button="{ toggleSelect }">
             <button
-              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-17 flex items-center capitalize"
+              class="rounded-full hoverNoBG px-3 py-1 font-medium text-s-16 flex items-center capitalize"
               @click="toggleSelect"
             >
               {{ $t('common.more') }}
@@ -96,30 +96,23 @@
       <div class="flex items-center justify-end gap-2 ml-auto">
         <!-- Create wallet button -->
         <router-link
-          v-if="!isWalletConnected && isAccessPage"
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          class="px-4 bg-black text-white h-8 sm:h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
-        >
-          {{ $t('common.create_wallet') }}
-        </router-link>
-        <router-link
-          v-if="!isXS && !isWalletConnected && !isAccessPage"
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          class="px-4 py-2 border-1 border-black text-black h-8 sm:h-10 rounded-full hoverNoBG text-center flex items-center justify-center"
+          v-if="!isWalletConnected"
+          :to="{ name: ROUTES_ACCESS.CREATE.NAME }"
+          class="hidden xs:flex px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('common.create_wallet') }}
         </router-link>
         <!-- Connect wallet button -->
-        <button
-          v-if="!isWalletConnected && !isAccessPage"
-          @click="connectWallet"
-          class="px-4 bg-black text-white h-8 sm:h-10 rounded-full hoverOpacity text-center flex items-center justify-center"
+        <router-link
+          v-if="!isWalletConnected"
+          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          class="px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('connect_wallet') }}
-        </button>
-        <the-current-network v-if="isWalletConnected && !isAccessPage" />
+        </router-link>
+        <the-current-network />
         <!-- Address Menu -->
-        <the-address-menu v-if="isWalletConnected && !isAccessPage" />
+        <the-address-menu v-if="isWalletConnected" />
         <!-- Notifications Button (desktop only, but popup is always available) -->
         <the-notifications-popup
           v-if="isWalletConnected"
@@ -155,8 +148,6 @@ import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
-import { useAccessStore } from '@/stores/accessStore'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
@@ -169,7 +160,7 @@ const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
-const { isMobile, isXS, isXLMinAndUp } = useAppBreakpoints()
+const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 
 // Notifications popup ref
 const notificationsRef = ref<InstanceType<typeof TheNotificationsPopup> | null>(
@@ -301,25 +292,4 @@ watch(
     }
   },
 )
-
-/** ------------------------------
- * Determine if the user is on the access page
- * USed to show the create wallet button
- ------------------------------*/
-const route = useRoute()
-const isAccessPage = computed(() => {
-  return (
-    route.path === ROUTES_ACCESS.ACCESS.PATH ||
-    route.matched.some(route => route.path === ROUTES_ACCESS.ACCESS.PATH)
-  )
-})
-
-/** ------------------------------
- * Connect Wallet
- ------------------------------*/
-const accessStore = useAccessStore()
-
-const connectWallet = () => {
-  accessStore.openAccessDialog()
-}
 </script>
