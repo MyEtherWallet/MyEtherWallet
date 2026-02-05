@@ -97,7 +97,7 @@
         <!-- Create wallet button -->
         <router-link
           v-if="!isWalletConnected"
-          :to="{ name: ROUTES_ACCESS.CREATE.NAME }"
+          :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
           class="hidden xs:flex px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('common.create_wallet') }}
@@ -143,7 +143,11 @@ import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ROUTES_MAIN, ROUTES_ACCESS } from '@/router/routeNames'
+import {
+  ROUTES_MAIN,
+  ROUTES_ACCESS,
+  ROUTES_CREATE_WALLET,
+} from '@/router/routeNames'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
