@@ -165,16 +165,17 @@
 
           <div v-if="activeStep === 2">
             <div class="flex flex-col items-center justify-center pt-8 pb-4">
-              <div
-                class="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mb-6"
+              <check-icon class="w-10 h-10 text-primary stroke-[3px] mb-4" />
+              <h3
+                class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120 text-center"
               >
-                <check-icon class="w-10 h-10 text-green-500 stroke-[3px]" />
-              </div>
-              <app-step-description
-                class="!pt-0 text-center"
-                :description="stepDescription[2]"
-                :activeStep="activeStep"
-              />
+                {{ stepDescription[2].title }}
+              </h3>
+              <p
+                class="text-s-14 sm:text-s-16 text-info leading-p-150 text-center"
+              >
+                {{ stepDescription[2].description }}
+              </p>
             </div>
 
             <div class="pt-4 pb-2">
@@ -186,7 +187,7 @@
                   Connect wallet
                 </app-base-button>
                 <app-btn-text
-                  class="w-full xs:w-auto xs:min-w-[240px] text-primary hoverOpacity flex items-center justify-center group"
+                  class="w-full xs:w-auto xs:min-w-[240px] flex items-center justify-center group"
                   @click="activeStep = 0"
                 >
                   Create another wallet
@@ -240,9 +241,9 @@ const stepDescription: StepDescription[] = [
     description: 'Please select correct words based on their numbers.',
   },
   {
-    title: 'Well done',
+    title: 'All Done',
     description:
-      'You are now ready to take advantage of all that Ethereum has to offer! Access with mnemonic phrase should only be used in an offline setting.',
+      'You are now ready to take advantage of all that Ethereum has to offer! Please store your phrase in a secure place, access with mnemonic phrase should only be used in an offline setting.',
   },
 ]
 
