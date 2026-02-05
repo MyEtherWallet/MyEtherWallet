@@ -213,6 +213,7 @@ import {
 } from '@/providers/types'
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
+import { isSignableWallet } from '@/utils/walletUtils'
 
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
@@ -483,14 +484,12 @@ const handleEvmTransaction = async (quoteId: string) => {
   if (!txs?.serialized?.length) return
 
   let lastTxPromise
-  const isHardware =
-    txCtx.getWalletType() === WalletType.TREZOR ||
-    txCtx.getWalletType() === WalletType.LEDGER
+
   for (const [index, tx] of txs.serialized.entries()) {
     const isLast = index === txs.serialized.length - 1
     if (!tx) continue
 
-    if (!isHardware) {
+    if (!isSignableWallet(txCtx)) {
       const broadcast = await txCtx.SendTransaction?.(tx as HexPrefixedString)
       if (isLast) lastTxPromise = broadcast
     } else {
