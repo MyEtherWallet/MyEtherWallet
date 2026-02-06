@@ -34,7 +34,7 @@ import type {
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
-import { isHardWareWallet } from '@/utils/walletUtils'
+import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
 
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
@@ -163,7 +163,7 @@ class OneInchFusion {
         })
         const serialized = serializeTransaction(tx as any)
         let hash = ''
-        if (isHardWareWallet(this.wallet)) {
+        if (isSignableWallet(this.wallet)) {
           const signedTx = await this.wallet.SignTransaction(serialized)
           hash = await this.publicClient.sendRawTransaction({
             serializedTransaction: signedTx.signed,
@@ -220,7 +220,7 @@ class OneInchFusion {
     })
     const serialized = serializeTransaction(tx as any)
     let hash = ''
-    if (isHardWareWallet(this.wallet)) {
+    if (isSignableWallet(this.wallet)) {
       const signedTx = await this.wallet.SignTransaction(serialized)
       hash = await this.publicClient.sendRawTransaction({
         serializedTransaction: signedTx.signed,
