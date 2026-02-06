@@ -5,7 +5,7 @@
       'w-full max-h-[95vh]',
       currentView === 'mnemonic' || currentView === 'buy'
         ? 'max-w-[1024px] lg:h-auto'
-        : 'max-w-[450px] lg:!max-w-[1024px] lg:h-[800px]',
+        : 'max-w-[450px] lg:!max-w-[952px] lg:max-h-[650px]',
     ]"
     bg="bg-appBackground"
     @close-dialog="closeCreate()"
@@ -53,29 +53,34 @@
     <template #content>
       <div class="px-4 xs:px-6 pb-10">
         <!-- Default View -->
-        <div v-if="currentView === 'default'" class="flex flex-col gap-10">
-          <div class="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6 pt-2">
+        <div v-if="currentView === 'default'" class="flex flex-col gap-7">
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 items-stretch gap-6 pt-[9px]"
+          >
             <!-- Mobile-->
             <div
               tabindex="0"
               role="region"
               aria-label="MEW Mobile App"
-              class="rounded-3xl bg-[rgba(53,94,236,0.1)] pt-6 px-6 sm:px-8 border border-transparent focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all group outline-none overflow-hidden"
+              class="relative rounded-20 lg:rounded-32 bg-mewBg pt-4 px-4 lg:p-6"
             >
-              <div class="flex gap-4 lg:gap-6 items-center mb-6">
+              <div
+                class="absolute top-0 right-0 bg-primary text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
+              >
+                Recommended
+              </div>
+              <div class="flex gap-4 lg:gap-5 items-center mb-4">
                 <img
                   :src="mewMobile"
-                  class="h-[64px] w-[64px] md:h-[70px] md:w-[70px] rounded-16 shadow-[0px_1.5px_6px_0px_rgba(0,0,0,0.1)]"
+                  height="64px"
+                  width="64px"
+                  class="h-[52px] w-[52px] md:h-[64px] md:w-[64px] rounded-12 md:rounded-16 shadow-[0px_1.5px_6px_0px_rgba(0,0,0,0.1)]"
                 />
                 <div>
                   <div class="flex items-start gap-2 mb-1">
                     <h2 class="text-xs-20 md:text-s-24 font-bold leading-tight">
                       MEW Mobile App
                     </h2>
-                    <span
-                      class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0 mt-1"
-                      >Recommended</span
-                    >
                   </div>
                   <div class="flex items-center gap-1 md:gap-3 opacity-70">
                     <img class="h-[14px] md:h-[16px]" :src="mewRating" />
@@ -85,15 +90,17 @@
                   </div>
                 </div>
               </div>
-              <div class="flex flex-wrap lg:flex-nowrap items-stretch lg:gap-8">
+              <div
+                class="flex flex-wrap lg:flex-nowrap items-stretch lg:gap-0 lg:-ml-4"
+              >
                 <div
-                  class="order-2 lg:order-1 sm:-ml-4 bottomShadowIMGMask flex self-end overflow-visible"
+                  class="order-2 lg:order-1 bottomShadowIMGMask flex self-end overflow-visible"
                 >
                   <img
                     :src="mewWalletScreen"
                     width="463"
                     height="638"
-                    class="rounded-xl object-contain object-left-top hidden lg:block transition-transform group-hover:scale-[1.02] duration-500"
+                    class="object-contain object-left-top hidden lg:block transition-transform group-hover:scale-[1.02] duration-500 translate-y-[-3px]"
                   />
                   <img
                     :src="mewWalletScreenSm"
@@ -103,16 +110,16 @@
                   />
                 </div>
                 <div
-                  class="order-1 lg:order-2 flex grow lg:grow-0 items-center justify-center flex-col xl:w-[200px] bg-white p-4 sm:px-6 rounded-2xl shadow-sm mb-6 lg:mb-10 lg:mt-2 self-start"
+                  class="order-1 lg:order-2 flex grow items-center justify-center flex-col lg:min-w-[180px] bg-white p-4 sm:px-5 rounded-2xl shadow-sm mb-0 self-end"
                 >
                   <p
-                    class="text-info text-xs font-bold uppercase tracking-widest mb-4"
+                    class="text-info text-s-12 font-bold uppercase tracking-sp-06 mb-2"
                   >
                     Scan to download
                   </p>
                   <qr-code-vue
                     value="https://download.mewwallet.com/?source=web-home/"
-                    :size="140"
+                    :size="135"
                     level="H"
                     background="rgba(53, 94, 236, 0.05)"
                     class="mb-6"
@@ -152,26 +159,27 @@
               tabindex="0"
               role="region"
               aria-label="Enkrypt Browser Wallet"
-              class="rounded-3xl bg-enkryptBg p-6 sm:p-8 flex flex-col border border-transparent focus-within:ring-2 focus-within:ring-violet focus-within:border-violet transition-all group outline-none h-full w-full"
+              class="relative rounded-20 lg:rounded-32 p-4 lg:p-6 bg-enkryptBg flex flex-col h-full w-full"
             >
-              <div class="flex gap-4 lg:gap-6 items-center mb-6">
+              <div
+                class="absolute top-0 right-0 bg-primary text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
+              >
+                Recommended
+              </div>
+              <div class="flex gap-4 lg:gap-5 items-center mb-4">
                 <img
                   :src="enkryptLogo"
                   contain=""
                   alt=""
-                  width="80px"
-                  height="80px"
-                  class="h-[64px] w-[64px] md:h-[70px] md:w-[70px] rounded-16 shadow-[0px_1.5px_6px_0px_rgba(0,0,0,0.1)]"
+                  width="64px"
+                  height="64px"
+                  class="h-[52px] w-[52px] md:h-[64px] md:w-[64px] rounded-12 md:rounded-16 shadow-[0px_1.5px_6px_0px_rgba(0,0,0,0.1)]"
                 />
                 <div>
                   <div class="flex items-start gap-2 mb-1">
                     <h2 class="text-xs-20 md:text-s-24 font-bold leading-tight">
                       Enkrypt Browser Wallet
                     </h2>
-                    <span
-                      class="bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0 mt-1"
-                      >Recommended</span
-                    >
                   </div>
                   <div class="flex items-center gap-1 md:gap-3 opacity-70">
                     <img
@@ -186,7 +194,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex flex-1 -ml-4 sm:-ml-8 overflow-hidden">
+              <div class="flex flex-1 -ml-4 overflow-hidden">
                 <img
                   :src="enkryptScreen"
                   contain=""
@@ -202,7 +210,9 @@
                 target="_blank"
                 class="inline-block mt-8 px-6 py-3 rounded-full hoverOpacityHasBG bg-violet w-fit"
                 ><div class="flex items-center">
-                  <p class="text-s-17 text-center text-white font-bold mr-2">
+                  <p
+                    class="text-s-16 lg:text-s-17 text-center text-white font-semibold mr-2"
+                  >
                     Get Enkrypt Browser Wallet
                   </p>
                   <arrow-long-right-icon class="w-6 h-6 text-white" />
@@ -213,24 +223,23 @@
 
           <!-- Other Methods Section -->
           <div>
-            <h3 class="text-s-20 font-bold mb-6 px-1">
-              Other creation methods
-            </h3>
+            <h3 class="text-s-20 font-bold mb-3 px-4">Other wallet methods</h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-2 pt-2">
               <!-- Hardware -->
               <button
                 type="button"
-                class="flex flex-col sm:flex-row text-left gap-6 p-6 rounded-3xl bg-white border border-grey-outline hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
+                label="Buy a hardware wallet"
+                class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('buy')"
               >
-                <div class="sm:w-1/3">
+                <div class="w-1/3">
                   <img
                     :src="hardware"
                     alt="hardware wallet"
                     class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                   />
                 </div>
-                <div class="sm:w-2/3 flex flex-col justify-between">
+                <div class="lg:w-2/3 flex flex-col justify-between">
                   <div>
                     <h4 class="text-s-20 font-bold mb-2">Hardware Wallet</h4>
                     <p class="text-info text-s-14 leading-p-150 mb-4">
@@ -239,7 +248,7 @@
                     </p>
                   </div>
                   <div
-                    class="flex items-center text-primary font-bold text-s-16"
+                    class="lg:-ml-2 flex items-center text-s-16 font-medium border-1 rounded-full px-4 py-1 size-max"
                   >
                     Buy a hardware wallet
                     <arrow-long-right-icon
@@ -252,26 +261,28 @@
               <!-- Software -->
               <button
                 type="button"
-                class="flex flex-col sm:flex-row text-left gap-6 p-6 rounded-3xl bg-white border border-grey-outline hover:shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
+                label="Create a software wallet"
+                class="relative flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >
-                <div class="sm:w-1/3 shrink-0">
+                <div
+                  class="absolute top-0 right-0 border-error border-1 bg-error-7 text-error text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-button"
+                >
+                  not recommended
+                </div>
+                <div class="w-1/3 shrink-0">
                   <img
                     :src="software"
                     alt="software wallet"
                     class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                   />
                 </div>
-                <div class="sm:w-2/3 flex flex-col justify-between">
+                <div class="lg:w-2/3 flex flex-col justify-between">
                   <div>
                     <div class="flex items-start justify-between gap-2 mb-2">
                       <h4 class="text-s-20 font-bold leading-tight">
                         Software Wallet
                       </h4>
-                      <span
-                        class="bg-error/10 text-error text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0 mt-1"
-                        >Not Recommended</span
-                      >
                     </div>
                     <p class="text-info text-s-14 leading-p-150 mb-4">
                       Create a wallet using a recovery phrase. Use only in
@@ -279,7 +290,7 @@
                     </p>
                   </div>
                   <div
-                    class="flex items-center text-primary font-bold text-s-16"
+                    class="lg:-ml-2 flex items-center font-medium text-s-16 border-1 rounded-full px-4 py-1 size-max w-fit"
                   >
                     Create a software wallet
                     <arrow-long-right-icon
@@ -304,7 +315,7 @@
               <img :src="ledgerIcon" width="100" class="mb-4" />
               <div>
                 <p
-                  class="text-info text-s-14 font-medium mb-1 tracking-wide uppercase"
+                  class="text-info text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
                 >
                   Starting from
                 </p>
@@ -326,7 +337,7 @@
               <img :src="trezorIcon" width="100" class="mb-4" />
               <div>
                 <p
-                  class="text-info text-s-14 font-medium mb-1 tracking-wide uppercase"
+                  class="text-info text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
                 >
                   Starting from
                 </p>
