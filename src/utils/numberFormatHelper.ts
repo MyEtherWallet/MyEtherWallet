@@ -29,7 +29,8 @@ interface FormattedNumber {
 const SmallNumberBreakpoint = 0.0001
 const SmallFiatBreakpoint = 0.01
 const TenThousand = 1e4
-const OneMillion = 1e6
+export const OneThousand = 1e3
+export const OneMillion = 1e6
 const OneBillion = 1e9
 const TenBillion = 1e10
 const OneTrillion = 1e12
@@ -45,6 +46,7 @@ const FormattedNumberUnit = {
   T: 'T',
   Q: 'Q',
   M: 'M',
+  K: 'K',
   FIAT: 'fiat',
 }
 
@@ -103,7 +105,7 @@ const formatIntegerValue = (_value: string | number | BigNumber) => {
   }
 
   /* Case V: value < 1,000,000,000 */
-  return { value: value.toFormat() }
+  return { value: value.toFormat(0) }
 }
 
 /**
@@ -443,6 +445,19 @@ const formatFiatValue = (
  * Do not export then to use in formatting strings
  * ---------------------------------
  */
+
+/**
+ * Helper function. Converts a value to Thousands in FormattedNumber object
+ * @param {BigNumber} value - number to convert takes BigNumber || string || number 1000
+ * @return {object} - FormatterNumber
+ */
+export const convertToThousand = (value: BigNumber): FormattedNumber => {
+  const result = value.dividedBy(OneThousand)
+  return {
+    value: `${getRoundNumber(result, 2).value}${FormattedNumberUnit.K}`,
+    tooltipText: value.toFormat(),
+  }
+}
 
 /**
  * Helper function. Converts a value to Millions in FormattedNumber object

@@ -65,7 +65,7 @@ export default {
       'grey-8': 'rgba(0,0,0,0.08)',
       error: 'rgba(228,12,91,1)',
       'error-10': 'rgba(228,12,91,0.1)',
-      'error-7': 'rgba(228,12,91,0.07)',
+      'error-7': '#f9eaef',
       blue: 'rgba(22 129,255,1)',
       'blue-10': 'rgba(22,129,255,0.1)',
       'blue-7': 'rgba(22,129,255,0.07)',
