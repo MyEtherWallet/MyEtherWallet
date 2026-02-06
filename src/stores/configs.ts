@@ -7,6 +7,7 @@ export const StoreConfigs = {
     custom: 'custom-store',
     addressBook: 'address-book',
     article: 'article-store',
+    recentlyViewedTokens: 'recently-viewed-tokens',
     // ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },
   VERSION: {
@@ -16,6 +17,7 @@ export const StoreConfigs = {
     custom: '1.0.4',
     addressBook: '1.0.0',
     article: '1.0.0',
+    recentlyViewedTokens: '1.0.0',
     // ...dappStoreConfigs.VERSION
   },
 }
