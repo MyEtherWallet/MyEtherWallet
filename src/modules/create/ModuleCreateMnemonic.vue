@@ -38,7 +38,7 @@
               </app-btn-text>
             </div>
             <div
-              class="grow border border-grey-outline text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
+              class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
             >
               <div
                 class="grid grid-cols-2 gap-x-4 gap-y-3 w-full max-w-[500px]"
