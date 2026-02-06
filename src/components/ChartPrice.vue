@@ -18,8 +18,15 @@ import {
   type ChartOptions,
   type ChartData,
 } from 'chart.js'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import {
+  formatFiatValue,
+  formatIntegerValue,
+  convertToThousand,
+  OneThousand,
+  OneMillion,
+} from '@/utils/numberFormatHelper'
 import type { WebTokenPriceChartInterval } from '@/mew_api/types'
+import BigNumber from 'bignumber.js'
 
 const props = withDefaults(
   defineProps<{
@@ -291,11 +298,11 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       },
     },
     y: {
-      display: false,
+      display: true,
       ticks: {
         count: 3,
-        callback: function (value) {
-          return '$' + formatFiatValue(value).value
+        callback: function (value: any) {
+          return formatChartValue(value)
         },
         font: {
           size: 10,
@@ -304,6 +311,10 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       },
       suggestedMin: yBounds.value.min,
       suggestedMax: yBounds.value.max,
+      position: 'right',
+      border: {
+        display: false, // This removes the main x-axis line
+      },
       grid: {
         display: false, // Set display to false to remove vertical grid lines
       },
@@ -311,6 +322,24 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
   },
   elements: { line: { capBezierPoints: true } },
 }))
+
+const formatChartValue = (_value: number) => {
+  const value = new BigNumber(_value)
+  if (value === undefined || value.isZero() || value.isNaN()) {
+    return '$0'
+  }
+  if (value.isGreaterThanOrEqualTo(OneMillion)) {
+    return `$${formatIntegerValue(value).value}`
+  }
+  if (value.isGreaterThanOrEqualTo(OneThousand)) {
+    return `$${convertToThousand(value).value}`
+  }
+
+  if (value.isGreaterThanOrEqualTo(10)) {
+    return `$${value.toFormat(2, 1)}`
+  }
+  return `$${value.toPrecision(4, 1)}`
+}
 </script>
 
 <style scoped>
