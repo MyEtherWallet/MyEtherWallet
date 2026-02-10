@@ -38,7 +38,7 @@
         :is-from-view="isFromView"
       />
     </div>
-    <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
+    <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"

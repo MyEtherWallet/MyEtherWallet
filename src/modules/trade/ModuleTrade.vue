@@ -9,7 +9,9 @@
         <div class="flex items-end justify-between mb-2 px-4">
           <div>
             <p class="font-bold text-s-28">Trade</p>
-            <p class="text-info text-s-12">Buy/Sell Ondo Tokenized stock</p>
+            <p class="text-info text-s-12 ml-1">
+              Buy/Sell Ondo Tokenized stock
+            </p>
           </div>
           <app-btn-text
             v-if="
@@ -62,12 +64,12 @@
                 <template #header>
                   <div
                     v-if="isWalletConnected && fromTokenSelected"
-                    class="flex justify-end gap-2 -mt-2 mr-1 mb-3"
+                    class="flex justify-end gap-2 -mt-2 mr-1 mb-4"
                   >
                     <button
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
-                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hover:bg-primary hover:text-white hover:border-primary rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       @click="setPercentageAmount(pct)"
                     >
                       {{ pct === 100 ? 'Max' : `${pct}%` }}
@@ -80,21 +82,15 @@
 
           <!-- Arrow Button -->
           <divx class="relative h-0 z-10 flex justify-center items-center">
-            <div
+            <button
+              label="Swap From/To stocks"
               :class="[
-                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/3 shadow-button shadow-button-elevated transition-colors',
-                hasBuyingTokenBalance
-                  ? 'cursor-pointer hover:bg-grey-10 transition-colors'
-                  : '',
+                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
               ]"
-              @click="hasBuyingTokenBalance ? swapTokens() : undefined"
+              @click="swapTokens"
             >
-              <arrows-up-down-icon
-                v-if="hasBuyingTokenBalance"
-                class="w-5 h-5 text-primary"
-              />
-              <arrow-down-icon v-else class="w-5 h-5 text-primary" />
-            </div>
+              <arrows-up-down-icon class="w-5 h-5 text-primary" />
+            </button>
           </divx>
 
           <!-- To Section -->
@@ -110,7 +106,7 @@
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
-              class="mt-4"
+              class="mt-2"
             />
           </div>
         </div>
@@ -329,7 +325,6 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 import { parseUnits, formatUnits } from 'viem'
 
 // Components
@@ -445,22 +440,6 @@ const fromChains = computed(() => {
 
 const fromTokens = computed(() => {
   return (swapFromTokens.value || []) as NewTokenInfo[]
-})
-
-// Check if user has balance in the buying token by looking up from wallet's allTokens
-const hasBuyingTokenBalance = computed(() => {
-  if (!toTokenSelected.value || !isWalletConnected.value) return false
-  const toAddress = toTokenSelected.value.address?.toLowerCase()
-  if (!toAddress) return false
-
-  // Find the token in the user's wallet tokens
-  const walletToken = allTokens.value.find(
-    t => t.contract?.toLowerCase() === toAddress,
-  )
-  if (!walletToken) return false
-
-  const balance = parseFloat(walletToken.balance || '0')
-  return balance > 0
 })
 
 // Find the highest balance token from additionalBuyAssets that the user owns
@@ -627,7 +606,6 @@ const switchToNetwork = (chain: Chain) => {
 }
 
 const swapTokens = () => {
-  if (!hasBuyingTokenBalance.value) return
   const tempFrom = fromTokenSelected.value
   const tempTo = toTokenSelected.value
 
