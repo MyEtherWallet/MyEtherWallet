@@ -442,6 +442,67 @@ const hasBuyingTokenBalance = computed(() => {
   return balance > 0
 })
 
+// Find the highest balance token from additionalBuyAssets that the user owns
+const getHighestBalanceAdditionalAsset = (): NewTokenInfo | null => {
+  if (
+    !isWalletConnected.value ||
+    !additionalBuyAssets.value ||
+    !selectedFromChain.value
+  ) {
+    return null
+  }
+
+  const chainName = selectedFromChain.value.name.toUpperCase()
+  let highestBalanceToken: NewTokenInfo | null = null
+  let highestBalance = 0
+
+  for (const asset of additionalBuyAssets.value) {
+    // Find the address for this asset on the current chain
+    const addressInfo = asset.addresses.find(
+      addr => addr.chainName?.toUpperCase() === chainName,
+    )
+    if (!addressInfo?.address) continue
+
+    const assetAddress = addressInfo.address.toLowerCase()
+
+    // Check if user has this token in their wallet
+    const walletToken = allTokens.value.find(
+      t => t.contract?.toLowerCase() === assetAddress,
+    )
+    if (!walletToken) continue
+
+    const balance = parseFloat(walletToken.balance || '0')
+    if (balance > highestBalance) {
+      highestBalance = balance
+      // Find the matching token in fromTokens
+      const matchingFromToken = fromTokens.value.find(
+        t => t.address?.toLowerCase() === assetAddress,
+      )
+      if (matchingFromToken) {
+        highestBalanceToken = matchingFromToken
+      }
+    }
+  }
+
+  return highestBalanceToken
+}
+
+// Get the default from token - prefer highest balance additional asset, then main token
+const getDefaultFromToken = (): NewTokenInfo | null => {
+  // First check for highest balance additional buy asset
+  const highestBalanceAsset = getHighestBalanceAdditionalAsset()
+  if (highestBalanceAsset) {
+    return highestBalanceAsset
+  }
+
+  // Fall back to main token or first available
+  return (
+    fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
+    fromTokens.value[0] ||
+    null
+  )
+}
+
 // Use wallet address or fallback to donation address for quotes
 const userAddress = computed(
   () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
@@ -520,12 +581,9 @@ const clearValues = () => {
   generalError.value = ''
   resetQuote()
 
-  // Reset to default tokens
+  // Reset to default tokens - prefer highest balance additional asset
   if (fromTokens.value.length > 0) {
-    fromTokenSelected.value =
-      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-      fromTokens.value[0] ||
-      null
+    fromTokenSelected.value = getDefaultFromToken()
   }
   if (toTokens.value.length > 0) {
     toTokenSelected.value = toTokens.value[0] || null
@@ -584,15 +642,34 @@ watch(selectedChain, newChain => {
 // Watch for swap loaded to set default tokens after chain change
 watch(swapLoaded, loaded => {
   if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
-    fromTokenSelected.value =
-      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-      fromTokens.value[0] ||
-      null
+    fromTokenSelected.value = getDefaultFromToken()
   }
   if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
     toTokenSelected.value = toTokens.value[0] || null
   }
 })
+
+// Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
+watch(
+  [allTokens, additionalBuyAssets, fromTokens, selectedFromChain],
+  () => {
+    // Check if we should update the from token selection
+    if (!fromTokens.value.length || !isWalletConnected.value) return
+
+    const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
+    const isMainToken =
+      !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
+
+    // Only auto-update if currently using main token (not manually selected another token)
+    if (isMainToken) {
+      const highestBalanceAsset = getHighestBalanceAdditionalAsset()
+      if (highestBalanceAsset) {
+        fromTokenSelected.value = highestBalanceAsset
+      }
+    }
+  },
+  { deep: true, immediate: true },
+)
 
 // Watch for selected trade token from store
 watch(
@@ -620,12 +697,9 @@ onBeforeMount(async () => {
 
   // Only set tokens if the network is supported
   if (isCurrentNetworkSupported.value) {
-    // Set initial from token (works with or without wallet connected)
+    // Set initial from token - prefer highest balance additional asset
     if (fromTokens.value.length > 0) {
-      fromTokenSelected.value =
-        fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-        fromTokens.value[0] ||
-        null
+      fromTokenSelected.value = getDefaultFromToken()
     }
 
     // Set initial to token
