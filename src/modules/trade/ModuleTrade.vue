@@ -61,9 +61,19 @@
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
             <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+              :class="[
+                'absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center',
+                hasBuyingTokenBalance
+                  ? 'cursor-pointer hover:bg-grey-10 transition-colors'
+                  : '',
+              ]"
+              @click="hasBuyingTokenBalance ? swapTokens() : undefined"
             >
-              <arrows-up-down-icon class="w-5 h-5 text-primary" />
+              <arrows-up-down-icon
+                v-if="hasBuyingTokenBalance"
+                class="w-5 h-5 text-primary"
+              />
+              <arrow-down-icon v-else class="w-5 h-5 text-primary" />
             </div>
           </div>
 
@@ -299,6 +309,7 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -339,7 +350,7 @@ const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 
 // --- Refs from Stores ---
-const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
+const { isWalletConnected, walletAddress, wallet, isWatchOnly, allTokens } =
   storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
@@ -413,6 +424,22 @@ const fromChains = computed(() => {
 
 const fromTokens = computed(() => {
   return (swapFromTokens.value || []) as NewTokenInfo[]
+})
+
+// Check if user has balance in the buying token by looking up from wallet's allTokens
+const hasBuyingTokenBalance = computed(() => {
+  if (!toTokenSelected.value || !isWalletConnected.value) return false
+  const toAddress = toTokenSelected.value.address?.toLowerCase()
+  if (!toAddress) return false
+
+  // Find the token in the user's wallet tokens
+  const walletToken = allTokens.value.find(
+    t => t.contract?.toLowerCase() === toAddress,
+  )
+  if (!walletToken) return false
+
+  const balance = parseFloat(walletToken.balance || '0')
+  return balance > 0
 })
 
 // Use wallet address or fallback to donation address for quotes
@@ -518,6 +545,17 @@ const setFromChain = (chain: Chain) => {
 
 const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
+}
+
+const swapTokens = () => {
+  if (!hasBuyingTokenBalance.value) return
+  const tempFrom = fromTokenSelected.value
+  const tempTo = toTokenSelected.value
+
+  fromTokenSelected.value = tempTo
+  toTokenSelected.value = tempFrom
+  fromAmount.value = '0'
+  toAmount.value = '0'
 }
 
 const connectWalletForTrade = () => {
