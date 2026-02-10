@@ -4,7 +4,7 @@
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
       'ring-2 ring-primary': inFocusInput && !hasError && !readonly,
-      'ring-2 ring-error': hasError,
+      'ring-2 ring-error ': hasError,
     }"
     @click="setInFocusInput"
   >
@@ -67,7 +67,7 @@
       <transition name="fade" mode="out-in">
         <p
           v-if="hasError && !isLoading"
-          class="text-error text-s-12 leading-p-130"
+          class="text-error text-s-12 leading-p-130 mt-1"
         >
           {{ errorMessage }}
         </p>
