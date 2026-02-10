@@ -7,7 +7,10 @@
     >
       <div class="w-full max-w-[500px] relative">
         <div class="flex items-end justify-between mb-2 px-4">
-          <p class="font-bold text-s-28">Trade</p>
+          <div>
+            <p class="font-bold text-s-28">Trade</p>
+            <p class="text-info text-s-12">Buy/Sell Ondo Tokenized stock</p>
+          </div>
           <app-btn-text
             v-if="
               isMarketOpen &&
@@ -29,54 +32,57 @@
               : '',
           ]"
         >
-          <!-- From Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
-            <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
+          <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
             <select-chain-for-app
               :can-store="false"
               :passed-chains="fromChains"
               :preselected-chain="selectedFromChain"
               @update:selected-chain="setFromChain"
             />
-            <!-- Percentage Buttons -->
-            <div
-              v-if="isWalletConnected && fromTokenSelected"
-              class="flex justify-end gap-2 mt-2 mr-1"
-            >
-              <button
-                v-for="pct in [25, 50, 75, 100]"
-                :key="pct"
-                class="px-3 py-1 text-s-12 font-semibold text-primary bg-white hover:bg-primary hover:text-white border border-primary-20 hover:border-primary rounded-full transition-all duration-150 shadow-sm hover:shadow-md"
-                @click="setPercentageAmount(pct)"
+          </div>
+          <!-- From Section -->
+          <div
+            v-if="supportedNetwork"
+            class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
+          >
+            <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
+
+            <div>
+              <app-swap-enter-amount
+                v-model:amount="fromAmount"
+                v-model:selected-token="fromTokenSelected!"
+                v-model:error="fromAmountError"
+                :external-loading="isLoading || !swapLoaded"
+                :tokens="fromTokens"
+                :show-balance="isWalletConnected"
+                class="mt-2"
               >
-                {{ pct === 100 ? 'Max' : `${pct}%` }}
-              </button>
+                <!-- Percentage Buttons -->
+
+                <template #header>
+                  <div
+                    v-if="isWalletConnected && fromTokenSelected"
+                    class="flex justify-end gap-2 -mt-2 mr-1 mb-3"
+                  >
+                    <button
+                      v-for="pct in [25, 50, 75, 100]"
+                      :key="pct"
+                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hover:bg-primary hover:text-white hover:border-primary rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      @click="setPercentageAmount(pct)"
+                    >
+                      {{ pct === 100 ? 'Max' : `${pct}%` }}
+                    </button>
+                  </div></template
+                ></app-swap-enter-amount
+              >
             </div>
-            <div
-              v-if="!isLoading && !supportedNetwork"
-              class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
-            >
-              <p class="text-error text-center text-s-12">
-                Network not supported for trading
-              </p>
-            </div>
-            <app-swap-enter-amount
-              v-else
-              v-model:amount="fromAmount"
-              v-model:selected-token="fromTokenSelected!"
-              v-model:error="fromAmountError"
-              :external-loading="isLoading || !swapLoaded"
-              :tokens="fromTokens"
-              :show-balance="isWalletConnected"
-              class="mt-3"
-            />
           </div>
 
           <!-- Arrow Button -->
-          <div class="relative h-0 z-10 flex justify-center items-center">
+          <divx class="relative h-0 z-10 flex justify-center items-center">
             <div
               :class="[
-                'absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center',
+                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/3 shadow-button shadow-button-elevated transition-colors',
                 hasBuyingTokenBalance
                   ? 'cursor-pointer hover:bg-grey-10 transition-colors'
                   : '',
@@ -89,7 +95,7 @@
               />
               <arrow-down-icon v-else class="w-5 h-5 text-primary" />
             </div>
-          </div>
+          </divx>
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">

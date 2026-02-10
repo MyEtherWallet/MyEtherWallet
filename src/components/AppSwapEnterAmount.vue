@@ -8,6 +8,7 @@
     }"
     @click="setInFocusInput"
   >
+    <slot name="header" />
     <div class="flex justify-between items-center w-full gap-2">
       <input
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
