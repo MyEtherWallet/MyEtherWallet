@@ -38,6 +38,20 @@
               :preselected-chain="selectedFromChain"
               @update:selected-chain="setFromChain"
             />
+            <!-- Percentage Buttons -->
+            <div
+              v-if="isWalletConnected && fromTokenSelected"
+              class="flex justify-end gap-2 mt-2 mr-1"
+            >
+              <button
+                v-for="pct in [25, 50, 75, 100]"
+                :key="pct"
+                class="px-3 py-1 text-s-12 font-semibold text-primary bg-white hover:bg-primary hover:text-white border border-primary-20 hover:border-primary rounded-full transition-all duration-150 shadow-sm hover:shadow-md"
+                @click="setPercentageAmount(pct)"
+              >
+                {{ pct === 100 ? 'Max' : `${pct}%` }}
+              </button>
+            </div>
             <div
               v-if="!isLoading && !supportedNetwork"
               class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
@@ -310,6 +324,7 @@ import { ref, onBeforeMount, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
 import { ArrowDownIcon } from '@heroicons/vue/24/solid'
+import { parseUnits, formatUnits } from 'viem'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -614,6 +629,41 @@ const swapTokens = () => {
   toTokenSelected.value = tempFrom
   fromAmount.value = '0'
   toAmount.value = '0'
+}
+
+const setPercentageAmount = (percentage: number) => {
+  if (!fromTokenSelected.value || !isWalletConnected.value) return
+
+  const tokenAddress = fromTokenSelected.value.address?.toLowerCase()
+  if (!tokenAddress) return
+
+  // Find the token balance from wallet
+  const walletToken = allTokens.value.find(
+    t => t.contract?.toLowerCase() === tokenAddress,
+  )
+  if (!walletToken) return
+
+  const decimals = fromTokenSelected.value.decimals || 18
+  const balanceWei = walletToken.balanceWei || '0'
+
+  if (balanceWei === '0') return
+
+  // Convert percentage to bigint calculation
+  const balanceBigInt = BigInt(balanceWei)
+  let amountBigInt = (balanceBigInt * BigInt(percentage)) / BigInt(100)
+
+  // If selecting Max on main token, leave some for gas
+  if (
+    percentage === 100 &&
+    tokenAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
+  ) {
+    const gasBuffer = parseUnits('0.005', decimals) // Reserve ~0.005 ETH/BNB for gas
+    amountBigInt =
+      amountBigInt > gasBuffer ? amountBigInt - gasBuffer : BigInt(0)
+  }
+
+  // Format using viem's formatUnits
+  fromAmount.value = formatUnits(amountBigInt, decimals)
 }
 
 const connectWalletForTrade = () => {
