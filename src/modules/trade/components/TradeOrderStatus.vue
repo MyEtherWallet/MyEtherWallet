@@ -159,6 +159,8 @@ import {
   type SavedTradeOrder,
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 
 // Extended TradeOrder with runtime-only remainingTime
 export interface TradeOrder extends SavedTradeOrder {
@@ -168,6 +170,7 @@ export interface TradeOrder extends SavedTradeOrder {
 // Store and wallet
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
+const toastStore = useToastStore()
 const { walletAddress } = storeToRefs(walletStore)
 
 // Runtime state (not persisted)
@@ -239,6 +242,9 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
   const order = orders.value.find(o => o.hash === hash)
   if (!order) return
 
+  // Only show toast if status has changed
+  const statusChanged = order.status !== status.status
+
   const updates: Partial<SavedTradeOrder> = {
     status: status.status,
     fills: status.fills,
@@ -259,10 +265,46 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
     // Stop polling for this order
     stopPolling(hash)
+
+    // Show success toast with trade info
+    if (statusChanged) {
+      toastStore.addToastMessage({
+        type: ToastType.Success,
+        text: 'Trade Order Filled',
+        tradeInfo: {
+          fromToken: order.fromSymbol,
+          fromtTokenIcon: order.fromTokenIcon || '',
+          fromTokenIsStock: false,
+          fromAmount: order.fromAmount,
+          toToken: order.toSymbol,
+          toTokenIcon: order.toTokenIcon || '',
+          toTokenIsStock: false,
+          toAmount: finalAmount,
+        },
+      })
+    }
   }
 
   if (status.status === 'cancelled' || status.status === 'expired') {
     stopPolling(hash)
+
+    // Show error toast with trade info
+    if (statusChanged) {
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: `Trade Order ${status.status === 'cancelled' ? 'Cancelled' : 'Expired'}`,
+        tradeInfo: {
+          fromToken: order.fromSymbol,
+          fromtTokenIcon: order.fromTokenIcon || '',
+          fromTokenIsStock: false,
+          fromAmount: order.fromAmount,
+          toToken: order.toSymbol,
+          toTokenIcon: order.toTokenIcon || '',
+          toTokenIsStock: false,
+          toAmount: order.expectedToAmount,
+        },
+      })
+    }
   }
 
   tradeOrdersStore.updateOrder(walletAddress.value, hash, updates)

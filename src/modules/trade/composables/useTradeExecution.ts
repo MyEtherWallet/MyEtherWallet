@@ -144,9 +144,11 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fromAmount: fromAmount.value,
         fromSymbol: fromTokenSelected.value.symbol,
         fromDecimals: fromTokenSelected.value.decimals || 18,
+        fromTokenIcon: fromTokenSelected.value.logoURI,
         expectedToAmount,
         toSymbol: toTokenSelected.value.symbol,
         toDecimals: toTokenSelected.value.decimals || 18,
+        toTokenIcon: toTokenSelected.value.logoURI,
         createdAt: Math.floor(Date.now() / 1000),
         duration: 180,
         fills: [],
@@ -169,7 +171,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       toastStore.addToastMessage({
         text: 'Trade order submitted:',
         type: ToastType.Success,
-        duration: 5000,
+        duration: 10000,
         tradeInfo: {
           fromToken: fromTokenSelected.value.symbol,
           fromtTokenIcon: fromTokenSelected.value.logoURI,
