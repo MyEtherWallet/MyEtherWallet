@@ -18,4 +18,14 @@ export interface Toast {
   link?: ToastLink
   duration?: number
   isInfinite?: boolean
+  tradeInfo?: {
+    fromToken: string
+    fromtTokenIcon: string
+    fromTokenIsStock: boolean
+    fromAmount: string
+    toToken: string
+    toTokenIcon: string
+    toTokenIsStock: boolean
+    toAmount: string
+  }
 }

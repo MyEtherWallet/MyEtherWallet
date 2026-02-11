@@ -4,10 +4,11 @@
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
       'ring-2 ring-primary': inFocusInput && !hasError && !readonly,
-      'ring-2 ring-error': hasError,
+      'ring-2 ring-error ': hasError,
     }"
     @click="setInFocusInput"
   >
+    <slot name="header" />
     <div class="flex justify-between items-center w-full gap-2">
       <input
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
@@ -37,7 +38,7 @@
         :is-from-view="isFromView"
       />
     </div>
-    <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
+    <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
       <transition name="fade" mode="out-in">
         <div
           v-if="isLoading"
@@ -66,7 +67,7 @@
       <transition name="fade" mode="out-in">
         <p
           v-if="hasError && !isLoading"
-          class="text-error text-s-12 leading-p-130"
+          class="text-error text-s-12 leading-p-130 mt-1"
         >
           {{ errorMessage }}
         </p>

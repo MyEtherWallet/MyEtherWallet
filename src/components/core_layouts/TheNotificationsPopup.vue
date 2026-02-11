@@ -341,6 +341,8 @@ import {
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { onClickOutside } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
@@ -360,8 +362,9 @@ const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
 const walletMenuStore = useWalletMenuStore()
 const appLayoutStore = useAppLayoutStore()
+const toastStore = useToastStore()
 const { walletAddress } = storeToRefs(walletStore)
-const { isOverflowHidden } = storeToRefs(appLayoutStore)
+const { isOverflowHidden, isNotificationsOpen } = storeToRefs(appLayoutStore)
 
 // Router for closing AppViewAsDialog
 const route = useRoute()
@@ -377,6 +380,14 @@ const isOpen = ref(false)
 onClickOutside(containerRef, () => {
   if (isOpen.value) {
     isOpen.value = false
+    isNotificationsOpen.value = false
+  }
+})
+
+// Watch for external trigger to open notifications
+watch(isNotificationsOpen, newValue => {
+  if (newValue && !isOpen.value) {
+    togglePopup()
   }
 })
 
@@ -436,6 +447,7 @@ const togglePopup = () => {
       tradeOrdersStore.markAllOrdersAsSeen(walletAddress.value)
     }
   }
+  isNotificationsOpen.value = isOpen.value
 }
 
 // Open popup (for programmatic access from parent)
@@ -506,12 +518,46 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
     // Stop polling for this order
     stopPolling(hash)
+
+    // Show success toast with trade info
+    toastStore.addToastMessage({
+      type: ToastType.Success,
+      text: 'Trade Order Filled',
+      duration: 10000,
+      tradeInfo: {
+        fromToken: order.fromSymbol,
+        fromtTokenIcon: order.fromTokenIcon || '',
+        fromTokenIsStock: false,
+        fromAmount: formatFloatingPointValue(order.fromAmount).value,
+        toToken: order.toSymbol,
+        toTokenIcon: order.toTokenIcon || '',
+        toTokenIsStock: false,
+        toAmount: formatFloatingPointValue(finalAmount).value,
+      },
+    })
   }
 
   if (status.status === 'cancelled' || status.status === 'expired') {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
+
+    // Show error toast with trade info
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: `Trade Order ${status.status === 'cancelled' ? 'Cancelled' : 'Expired'}`,
+      duration: 10000,
+      tradeInfo: {
+        fromToken: order.fromSymbol,
+        fromtTokenIcon: order.fromTokenIcon || '',
+        fromTokenIsStock: false,
+        fromAmount: formatFloatingPointValue(order.fromAmount).value,
+        toToken: order.toSymbol,
+        toTokenIcon: order.toTokenIcon || '',
+        toTokenIsStock: false,
+        toAmount: formatFloatingPointValue(order.expectedToAmount).value,
+      },
+    })
   }
 
   tradeOrdersStore.updateOrder(walletAddress.value, hash, updates)
