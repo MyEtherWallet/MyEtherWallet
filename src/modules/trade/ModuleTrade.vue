@@ -81,7 +81,7 @@
           </div>
 
           <!-- Arrow Button -->
-          <divx class="relative h-0 z-10 flex justify-center items-center">
+          <div class="relative h-0 z-10 flex justify-center items-center">
             <button
               label="Swap From/To stocks"
               :class="[
@@ -91,7 +91,7 @@
             >
               <arrows-up-down-icon class="w-5 h-5 text-primary" />
             </button>
-          </divx>
+          </div>
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">

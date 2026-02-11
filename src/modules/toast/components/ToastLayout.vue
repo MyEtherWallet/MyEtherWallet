@@ -9,34 +9,80 @@
   >
     <div class="flex w-full items-start py-3 px-2">
       <component :is="icon" :class="[iconColor, 'w-7 h-7 mt-1 ml-2 mr-1']" />
-      <div class="flex-1 px-2 pt-[5px]">
+      <div class="flex-1 px-2 pt-[5px] bg-white">
         <p
           :class="[
             { 'mb-2': toast.link },
-            { 'font-bold': toast.textSecondary },
+            { 'font-bold': toast.textSecondary || toast.tradeInfo },
             'text-balance break-all ',
           ]"
         >
           {{ toast.text }}
         </p>
-        <p
-          v-if="toast.textSecondary"
-          :class="[{ 'mb-3': toast.link }, 'text-info word-break']"
-        >
-          {{ toast.textSecondary }}
-        </p>
-        <a
-          v-if="toast.link"
-          :href="toast.link.url"
-          target="_blank"
-          :class="[
-            toast.link.isButton
-              ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
-              : 'underline',
-          ]"
-          >{{ toast.link.title }}</a
-        >
+        <div v-if="!toast.tradeInfo">
+          <p
+            v-if="toast.textSecondary"
+            :class="[{ 'mb-3': toast.link }, 'text-info word-break']"
+          >
+            {{ toast.textSecondary }}
+          </p>
+          <a
+            v-if="toast.link"
+            :href="toast.link.url"
+            target="_blank"
+            :class="[
+              toast.link.isButton
+                ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
+                : 'underline',
+            ]"
+            >{{ toast.link.title }}</a
+          >
+        </div>
+        <div class="mt-4 -ml-4" v-if="toast.tradeInfo">
+          <div
+            class="flex flex-wrap justify-start gap-4 items-center rounded-16 border-grey-10 border-1 px-3 py-2"
+          >
+            <div class="flex items-center gap-3">
+              <app-token-logo
+                :url="toast.tradeInfo.fromtTokenIcon"
+                :symbol="toast.tradeInfo.fromToken"
+                :is-stock="toast.tradeInfo.fromTokenIsStock"
+              />
+
+              <div>
+                <app-token-symbol
+                  :symbol="toast.tradeInfo.fromToken"
+                  :is-stock="toast.tradeInfo.fromTokenIsStock"
+                />
+                <p class="text-nowrap text-info text-s-14">
+                  {{ toast.tradeInfo.fromAmount }}
+                </p>
+              </div>
+            </div>
+            <ArrowLongRightIcon class="w-5 h-5" />
+            <div class="flex items-center gap-3">
+              <app-token-logo
+                :url="toast.tradeInfo.toTokenIcon"
+                :symbol="toast.tradeInfo.toToken"
+                :is-stock="toast.tradeInfo.toTokenIsStock"
+              />
+              <div>
+                <app-token-symbol
+                  :symbol="toast.tradeInfo.toToken"
+                  :is-stock="toast.tradeInfo.toTokenIsStock"
+                />
+                <p class="text-nowrap text-info text-s-14">
+                  {{ toast.tradeInfo.toAmount }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <app-btn-text class="underline text-s-14 mt-2">
+            More Info
+          </app-btn-text>
+        </div>
       </div>
+
       <app-btn-icon-close @close="toastStore.removeToastMessage(index)" />
     </div>
   </div>
@@ -49,11 +95,14 @@ import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
+  ArrowLongRightIcon,
 } from '@heroicons/vue/24/solid'
 import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 const props = defineProps<{
   /**
    * @toast The toast message to display.
