@@ -364,7 +364,7 @@ const walletMenuStore = useWalletMenuStore()
 const appLayoutStore = useAppLayoutStore()
 const toastStore = useToastStore()
 const { walletAddress } = storeToRefs(walletStore)
-const { isOverflowHidden } = storeToRefs(appLayoutStore)
+const { isOverflowHidden, isNotificationsOpen } = storeToRefs(appLayoutStore)
 
 // Router for closing AppViewAsDialog
 const route = useRoute()
@@ -380,6 +380,14 @@ const isOpen = ref(false)
 onClickOutside(containerRef, () => {
   if (isOpen.value) {
     isOpen.value = false
+    isNotificationsOpen.value = false
+  }
+})
+
+// Watch for external trigger to open notifications
+watch(isNotificationsOpen, newValue => {
+  if (newValue && !isOpen.value) {
+    togglePopup()
   }
 })
 
@@ -439,6 +447,7 @@ const togglePopup = () => {
       tradeOrdersStore.markAllOrdersAsSeen(walletAddress.value)
     }
   }
+  isNotificationsOpen.value = isOpen.value
 }
 
 // Open popup (for programmatic access from parent)

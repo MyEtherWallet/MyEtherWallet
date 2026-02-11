@@ -77,7 +77,10 @@
               </div>
             </div>
           </div>
-          <app-btn-text class="underline text-s-14 mt-2">
+          <app-btn-text
+            class="underline text-s-14 mt-2"
+            @click="openNotifications"
+          >
             More Info
           </app-btn-text>
         </div>
@@ -89,6 +92,7 @@
 </template>
 <script setup lang="ts">
 import { useToastStore } from '@/stores/toastStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { ToastType, type Toast } from '@/types/notification'
 import {
   InformationCircleIcon,
@@ -116,6 +120,12 @@ const props = defineProps<{
 
 const { isXS } = useAppBreakpoints()
 const toastStore = useToastStore()
+const appLayoutStore = useAppLayoutStore()
+
+const openNotifications = () => {
+  appLayoutStore.isNotificationsOpen = true
+  toastStore.removeToastMessage(props.index)
+}
 
 /**
  * The border color of the toast message. Based on the type of the toast.
