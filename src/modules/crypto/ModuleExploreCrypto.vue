@@ -273,7 +273,7 @@
                   class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center"
                 >
                   <button
-                    :label="
+                    :aria-label="
                       isWatchListed(getWatchlistId(token))
                         ? 'Remove from Watchlist'
                         : 'Add to Watchlist'

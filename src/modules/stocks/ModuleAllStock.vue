@@ -234,7 +234,7 @@
                 <!-- Watchlist -->
                 <td class="sm:w-10 hidden sm:table-cell rounded-l-12 pl-1">
                   <button
-                    :label="
+                    :aria-label="
                       isWatchListed(token.coinId)
                         ? 'Remove from Watchlist'
                         : 'Add to Watchlist'
@@ -355,13 +355,8 @@
                         <div
                           class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
                         >
-                          <div
+                          <button
                             v-if="token.coinId"
-                            :label="
-                              isWatchListed(token.coinId)
-                                ? 'Remove from Watchlist'
-                                : 'Add to Watchlist'
-                            "
                             class="sm:hidden flex items-center p-2 hoverBGWhite rounded-12"
                             @click.stop="[
                               setWatchlistToken(token.coinId),
@@ -381,7 +376,7 @@
                                 ? 'Remove from Watchlist'
                                 : 'Add to Watchlist'
                             }}</span>
-                          </div>
+                          </button>
                           <hr
                             class="h-px bg-grey-outline border-0 w-full my-2 sm:hidden"
                           />

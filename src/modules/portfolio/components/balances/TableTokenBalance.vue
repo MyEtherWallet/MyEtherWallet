@@ -345,7 +345,7 @@
                     <div
                       class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
                     >
-                      <div
+                      <button
                         v-if="getWatchlistId(token)"
                         class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
                         @click.stop="[setWatchlistToken(token), toggleMenu()]"
@@ -363,7 +363,7 @@
                             ? 'Remove from Watchlist'
                             : 'Add to Watchlist'
                         }}</span>
-                      </div>
+                      </button>
                       <hr
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
