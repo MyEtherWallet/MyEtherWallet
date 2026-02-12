@@ -836,6 +836,11 @@ const tokens = computed<DisplayToken[]>(() => {
   )
   const coinIdMap = new Map(allTokens.value.map(t => [t.coinId, t]))
 
+  // Create lookup for stocks by ondo symbol
+  const stocksMap = new Map(
+    allStocks.value.map(s => [s.ondo?.primaryMarket?.symbol, s]),
+  )
+
   if (props.view === 'watchlist') {
     // Map tokens watchlist
     const tokensList =
@@ -866,7 +871,13 @@ const tokens = computed<DisplayToken[]>(() => {
         .filter(stock =>
           watchListedStocks.value.includes(stock.primaryMarket.symbol),
         )
-        .map(stock => formatStock(stock)) || []
+        .map(stock => {
+          // Check if user has balance for this stock
+          const balanceStock = stocksMap.get(stock.primaryMarket.symbol)
+          if (balanceStock) return mapToDisplay(balanceStock)
+
+          return formatStock(stock)
+        }) || []
 
     list = [...tokensList, ...stocksList]
   } else if (props.view === 'custom') {
