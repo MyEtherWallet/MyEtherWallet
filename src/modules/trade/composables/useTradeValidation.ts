@@ -117,7 +117,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (tokenPrice > 0) {
       const usdValue = amountBN
         .times(tokenPrice)
-        .integerValue(BigNumber.ROUND_CEIL)
+        .integerValue(BigNumber.ROUND_HALF_CEIL)
       if (usdValue.lt(1)) {
         return 'Minimum trade value is $1.00'
       }

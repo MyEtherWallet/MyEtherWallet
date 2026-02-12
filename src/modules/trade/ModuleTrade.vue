@@ -7,7 +7,12 @@
     >
       <div class="w-full max-w-[500px] relative">
         <div class="flex items-end justify-between mb-2 px-4">
-          <p class="font-bold text-s-28">Trade</p>
+          <div>
+            <p class="font-bold text-s-28">Trade</p>
+            <p class="text-info text-s-12 ml-1">
+              Buy/Sell Ondo Tokenized stock
+            </p>
+          </div>
           <app-btn-text
             v-if="
               isMarketOpen &&
@@ -29,42 +34,63 @@
               : '',
           ]"
         >
-          <!-- From Section -->
-          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
-            <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
+          <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
             <select-chain-for-app
               :can-store="false"
               :passed-chains="fromChains"
               :preselected-chain="selectedFromChain"
               @update:selected-chain="setFromChain"
             />
-            <div
-              v-if="!isLoading && !supportedNetwork"
-              class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
-            >
-              <p class="text-error text-center text-s-12">
-                Network not supported for trading
-              </p>
+          </div>
+          <!-- From Section -->
+          <div
+            v-if="supportedNetwork"
+            class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
+          >
+            <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
+
+            <div>
+              <app-swap-enter-amount
+                v-model:amount="fromAmount"
+                v-model:selected-token="fromTokenSelected!"
+                v-model:error="fromAmountError"
+                :external-loading="isLoading || !swapLoaded"
+                :tokens="fromTokens"
+                :show-balance="isWalletConnected"
+                class="mt-2"
+              >
+                <!-- Percentage Buttons -->
+
+                <template #header>
+                  <div
+                    v-if="isWalletConnected && fromTokenSelected"
+                    class="flex justify-end gap-2 -mt-2 mr-1 mb-4"
+                  >
+                    <button
+                      v-for="pct in [25, 50, 75, 100]"
+                      :key="pct"
+                      class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      @click="setPercentageAmount(pct)"
+                    >
+                      {{ pct === 100 ? 'Max' : `${pct}%` }}
+                    </button>
+                  </div></template
+                ></app-swap-enter-amount
+              >
             </div>
-            <app-swap-enter-amount
-              v-else
-              v-model:amount="fromAmount"
-              v-model:selected-token="fromTokenSelected!"
-              v-model:error="fromAmountError"
-              :external-loading="isLoading || !swapLoaded"
-              :tokens="fromTokens"
-              :show-balance="isWalletConnected"
-              class="mt-3"
-            />
           </div>
 
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
-            <div
-              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+            <button
+              label="Swap From/To stocks"
+              :class="[
+                'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
+              ]"
+              @click="swapTokens"
             >
               <arrows-up-down-icon class="w-5 h-5 text-primary" />
-            </div>
+            </button>
           </div>
 
           <!-- To Section -->
@@ -80,7 +106,7 @@
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
-              class="mt-4"
+              class="mt-2"
             />
           </div>
         </div>
@@ -299,6 +325,7 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
+import { parseUnits, formatUnits } from 'viem'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -339,7 +366,7 @@ const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 
 // --- Refs from Stores ---
-const { isWalletConnected, walletAddress, wallet, isWatchOnly } =
+const { isWalletConnected, walletAddress, wallet, isWatchOnly, allTokens } =
   storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
@@ -414,6 +441,67 @@ const fromChains = computed(() => {
 const fromTokens = computed(() => {
   return (swapFromTokens.value || []) as NewTokenInfo[]
 })
+
+// Find the highest balance token from additionalBuyAssets that the user owns
+const getHighestBalanceAdditionalAsset = (): NewTokenInfo | null => {
+  if (
+    !isWalletConnected.value ||
+    !additionalBuyAssets.value ||
+    !selectedFromChain.value
+  ) {
+    return null
+  }
+
+  const chainName = selectedFromChain.value.name.toUpperCase()
+  let highestBalanceToken: NewTokenInfo | null = null
+  let highestBalance = 0
+
+  for (const asset of additionalBuyAssets.value) {
+    // Find the address for this asset on the current chain
+    const addressInfo = asset.addresses.find(
+      addr => addr.chainName?.toUpperCase() === chainName,
+    )
+    if (!addressInfo?.address) continue
+
+    const assetAddress = addressInfo.address.toLowerCase()
+
+    // Check if user has this token in their wallet
+    const walletToken = allTokens.value.find(
+      t => t.contract?.toLowerCase() === assetAddress,
+    )
+    if (!walletToken) continue
+
+    const balance = parseFloat(walletToken.balance || '0')
+    if (balance > highestBalance) {
+      highestBalance = balance
+      // Find the matching token in fromTokens
+      const matchingFromToken = fromTokens.value.find(
+        t => t.address?.toLowerCase() === assetAddress,
+      )
+      if (matchingFromToken) {
+        highestBalanceToken = matchingFromToken
+      }
+    }
+  }
+
+  return highestBalanceToken
+}
+
+// Get the default from token - prefer highest balance additional asset, then main token
+const getDefaultFromToken = (): NewTokenInfo | null => {
+  // First check for highest balance additional buy asset
+  const highestBalanceAsset = getHighestBalanceAdditionalAsset()
+  if (highestBalanceAsset) {
+    return highestBalanceAsset
+  }
+
+  // Fall back to main token or first available
+  return (
+    fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
+    fromTokens.value[0] ||
+    null
+  )
+}
 
 // Use wallet address or fallback to donation address for quotes
 const userAddress = computed(
@@ -493,12 +581,9 @@ const clearValues = () => {
   generalError.value = ''
   resetQuote()
 
-  // Reset to default tokens
+  // Reset to default tokens - prefer highest balance additional asset
   if (fromTokens.value.length > 0) {
-    fromTokenSelected.value =
-      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-      fromTokens.value[0] ||
-      null
+    fromTokenSelected.value = getDefaultFromToken()
   }
   if (toTokens.value.length > 0) {
     toTokenSelected.value = toTokens.value[0] || null
@@ -518,6 +603,51 @@ const setFromChain = (chain: Chain) => {
 
 const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
+}
+
+const swapTokens = () => {
+  const tempFrom = fromTokenSelected.value
+  const tempTo = toTokenSelected.value
+
+  fromTokenSelected.value = tempTo
+  toTokenSelected.value = tempFrom
+  fromAmount.value = '0'
+  toAmount.value = '0'
+}
+
+const setPercentageAmount = (percentage: number) => {
+  if (!fromTokenSelected.value || !isWalletConnected.value) return
+
+  const tokenAddress = fromTokenSelected.value.address?.toLowerCase()
+  if (!tokenAddress) return
+
+  // Find the token balance from wallet
+  const walletToken = allTokens.value.find(
+    t => t.contract?.toLowerCase() === tokenAddress,
+  )
+  if (!walletToken) return
+
+  const decimals = fromTokenSelected.value.decimals || 18
+  const balanceWei = walletToken.balanceWei || '0'
+
+  if (balanceWei === '0') return
+
+  // Convert percentage to bigint calculation
+  const balanceBigInt = BigInt(balanceWei)
+  let amountBigInt = (balanceBigInt * BigInt(percentage)) / BigInt(100)
+
+  // If selecting Max on main token, leave some for gas
+  if (
+    percentage === 100 &&
+    tokenAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
+  ) {
+    const gasBuffer = parseUnits('0.005', decimals) // Reserve ~0.005 ETH/BNB for gas
+    amountBigInt =
+      amountBigInt > gasBuffer ? amountBigInt - gasBuffer : BigInt(0)
+  }
+
+  // Format using viem's formatUnits
+  fromAmount.value = formatUnits(amountBigInt, decimals)
 }
 
 const connectWalletForTrade = () => {
@@ -546,15 +676,34 @@ watch(selectedChain, newChain => {
 // Watch for swap loaded to set default tokens after chain change
 watch(swapLoaded, loaded => {
   if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
-    fromTokenSelected.value =
-      fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-      fromTokens.value[0] ||
-      null
+    fromTokenSelected.value = getDefaultFromToken()
   }
   if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
     toTokenSelected.value = toTokens.value[0] || null
   }
 })
+
+// Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
+watch(
+  [allTokens, additionalBuyAssets, fromTokens, selectedFromChain],
+  () => {
+    // Check if we should update the from token selection
+    if (!fromTokens.value.length || !isWalletConnected.value) return
+
+    const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
+    const isMainToken =
+      !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
+
+    // Only auto-update if currently using main token (not manually selected another token)
+    if (isMainToken) {
+      const highestBalanceAsset = getHighestBalanceAdditionalAsset()
+      if (highestBalanceAsset) {
+        fromTokenSelected.value = highestBalanceAsset
+      }
+    }
+  },
+  { deep: true, immediate: true },
+)
 
 // Watch for selected trade token from store
 watch(
@@ -582,12 +731,9 @@ onBeforeMount(async () => {
 
   // Only set tokens if the network is supported
   if (isCurrentNetworkSupported.value) {
-    // Set initial from token (works with or without wallet connected)
+    // Set initial from token - prefer highest balance additional asset
     if (fromTokens.value.length > 0) {
-      fromTokenSelected.value =
-        fromTokens.value.find(t => t.address === MAIN_TOKEN_CONTRACT) ||
-        fromTokens.value[0] ||
-        null
+      fromTokenSelected.value = getDefaultFromToken()
     }
 
     // Set initial to token

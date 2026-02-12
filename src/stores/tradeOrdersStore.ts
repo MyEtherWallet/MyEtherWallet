@@ -8,9 +8,11 @@ export interface SavedTradeOrder {
   fromAmount: string
   fromSymbol: string
   fromDecimals: number
+  fromTokenIcon?: string
   expectedToAmount: string
   toSymbol: string
   toDecimals: number
+  toTokenIcon?: string
   createdAt: number
   duration: number
   fills: { txHash: string }[]
