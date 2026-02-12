@@ -33,9 +33,20 @@ const isTradingRestricted = async (): Promise<boolean> => {
     .catch(() => false)
 }
 
+const checkAddressRestriction = async (address: string): Promise<boolean> => {
+  const addrCheckRequest = await fetch(
+    `https://partners.mewapi.io/o/walletscreen?address=${address}`,
+  )
+  const { isRestricted } = await addrCheckRequest.json()
+  if (isRestricted) {
+    window.location.href = 'https://www.myetherwallet.com/blocked'
+  }
+  return isRestricted
+}
 export {
   getMarketStatus,
   isTradingRestricted,
   getRestrictedTokenAddresses,
   TRADING_RESTRICTED_HELP_URL,
+  checkAddressRestriction,
 }

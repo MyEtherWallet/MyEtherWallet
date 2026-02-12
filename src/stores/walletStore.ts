@@ -14,7 +14,7 @@ import { useToastStore } from './toastStore'
 import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
-
+import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
@@ -30,14 +30,18 @@ export const useWalletStore = defineStore('walletStore', () => {
   /** -------------------------------
   * The Wallet
   -------------------------------*/
-  const setWallet = (newWallet: WalletInterface) => {
-    if (newWallet instanceof WatchOnlyWallet) {
-      isWatchOnly.value = true
-    } else {
-      isWatchOnly.value = false
+  const setWallet = async (newWallet: WalletInterface): Promise<void> => {
+    const _address = await newWallet.getAddress()
+    const isRestricted = await checkAddressRestriction(_address)
+    if (!isRestricted) {
+      if (newWallet instanceof WatchOnlyWallet) {
+        isWatchOnly.value = true
+      } else {
+        isWatchOnly.value = false
+      }
+      wallet.value = newWallet
+      setAddress()
     }
-    wallet.value = newWallet
-    setAddress()
   }
 
   const setWatchOnlyIfExist = () => {
