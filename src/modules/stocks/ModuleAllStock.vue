@@ -425,7 +425,7 @@
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
               class="mb-1 text-center lg:mt-10"
             >
-              You dont have any watchlisted tokens.
+              You don't have any watchlisted stocks.
             </p>
             <p v-if="searchInput" class="mb-1 text-center lg:my-10">
               No results found for "{{ searchInput }}".
@@ -435,7 +435,7 @@
               class="underline lg:mb-10"
               @click="selectedCryptoFilter = cryptoFilterOptions[0]"
             >
-              Discover more tokens
+              Discover more stocks
               <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
             </button>
           </div>
@@ -547,14 +547,16 @@ import type {
   Chain,
   GetWebStocksTableResponse,
   GetWebStocksTableResponseItem,
-  GetWebTokensWatchlistResponse,
+  GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import {
   formatFiatValue,
   formatIntegerValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { useToastStore } from '@/stores/toastStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -589,7 +591,7 @@ const isLoading = ref<boolean>(true)
 
 const watchListStore = useWatchlistStore()
 const { isWatchListed, setWatchlistItem } = watchListStore
-const { watchListedTokens } = storeToRefs(watchListStore)
+const { watchListedStocks } = storeToRefs(watchListStore)
 
 const setWatchlistToken = (
   tokenId: string,
@@ -675,6 +677,7 @@ const setSelectedChain = (chain: Chain) => {
 
 const cryptoFilterOptions = ref([
   { label: 'All Assets', value: 'all' },
+  { label: 'Watchlist', value: 'watchlist' },
   { label: 'ETF', value: 'ETF' },
   { label: 'Stock', value: 'STOCK' },
   { label: 'Equities', value: 'EQUITIES' },
@@ -695,6 +698,10 @@ interface DisplayToken {
   coinId: string
   iconPngUrl?: string
   iconSvgUrl?: string
+  // Raw numeric values for sorting
+  priceRaw: number
+  marketCapRaw: number
+  totalVolumeRaw: number
 }
 const tokens: Ref<DisplayToken[]> = ref([])
 const page = ref<number>(1)
@@ -702,14 +709,75 @@ const totalPages = ref<number>(1)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const fetchWatchListUrl = computed(() => {
-  const baseUrl = `${configs.MEW_API_URL}/v1/web/tokens-watchlist`
-  const defaultChain =
-    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
-      ? ''
-      : `filterChain=${selectedChainFilter.value.name}`
-  return `${baseUrl}?${defaultChain}&coins=${watchListedTokens.value}`
-})
+/** -------------------------------
+ * Watchlist Fetch (using useFetchWatchlist)
+-------------------------------*/
+const selectedChainForWatchlist = computed(
+  () => selectedChainFilter.value ?? null,
+)
+
+const {
+  stocksWatchlistData,
+  fetchStocksWatchlist,
+  onStocksWatchlistResponse,
+  onStocksWatchlistError,
+} = useFetchWatchlist(selectedChainForWatchlist)
+
+const formatStock = (
+  item: GetWebStocksWatchlistResponseStock,
+): DisplayToken => {
+  const priceRaw = item.primaryMarket.price
+    ? Number(item.primaryMarket.price)
+    : 0
+  const marketCapRaw = item.underlyingMarket.marketCap
+    ? Number(item.underlyingMarket.marketCap)
+    : 0
+  const totalVolumeRaw = item.underlyingMarket.volume24h
+    ? Number(item.underlyingMarket.volume24h)
+    : 0
+
+  return {
+    symbol: item.primaryMarket.symbol,
+    name: item.underlyingMarket.name,
+    price: priceRaw ? `$${formatFiatValue(priceRaw).value}` : '-',
+    marketCap: marketCapRaw
+      ? `$${formatIntegerValue(marketCapRaw).value}`
+      : '-',
+    totalVolume: totalVolumeRaw
+      ? `$${formatIntegerValue(totalVolumeRaw).value}`
+      : '-',
+    sparklineIn7d: item.primaryMarket.sparkline24h || [],
+    coinId: item.primaryMarket.symbol,
+    priceChangePercentage24h: item.primaryMarket.priceChangePercentage24h
+      ? Number(item.primaryMarket.priceChangePercentage24h)
+      : 0,
+    iconPngUrl: item.iconPngUrl || undefined,
+    iconSvgUrl: item.iconSvgUrl || undefined,
+    priceRaw,
+    marketCapRaw,
+    totalVolumeRaw,
+  }
+}
+
+const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
+  const sortMap: Record<string, () => DisplayToken[]> = {
+    NAME: () => sortObjectArrayString(tokensList, 'name', tableDirection.value),
+    MARKET_CAP: () =>
+      sortObjectArrayNumber(tokensList, 'marketCapRaw', tableDirection.value),
+    VOLUME_24H: () =>
+      sortObjectArrayNumber(tokensList, 'totalVolumeRaw', tableDirection.value),
+    PRICE: () =>
+      sortObjectArrayNumber(tokensList, 'priceRaw', tableDirection.value),
+    PRICE_CHANGE_PERCENTAGE_24H: () =>
+      sortObjectArrayNumber(
+        tokensList,
+        'priceChangePercentage24h',
+        tableDirection.value,
+      ),
+  }
+
+  return sortMap[headerSort.value] ? sortMap[headerSort.value]() : tokensList
+}
 
 const fetchGainersUrl = computed(() => {
   const url = new URL(`${configs.MEW_API_URL}/v1/web/pages/stocks/table`)
@@ -755,17 +823,6 @@ const {
   .json<GetWebStocksTableResponse>()
 
 const {
-  data: fetchWatchlistData,
-  onFetchResponse: onFetchWatchlistResponse,
-  execute: fetchWatchlistTable,
-  onFetchError: onFetchWatchlistError,
-} = useMEWFetch(fetchWatchListUrl, {
-  immediate: false,
-})
-  .get()
-  .json<GetWebTokensWatchlistResponse>()
-
-const {
   data: fetchTokenData,
   onFetchResponse: onFetchTokenTableResponse,
   execute: fetchTokenTable,
@@ -781,7 +838,7 @@ const debounceFetchTokens = useDebounceFn(() => {
   tableContainer.value?.scrollTo(0, 0)
 }, 100)
 const debounceFetchWatchlist = useDebounceFn(() => {
-  fetchWatchlistTable()
+  fetchStocksWatchlist()
   tableContainer.value?.scrollTo(0, 0)
 }, 100)
 const debounceFetchGainers = useDebounceFn(() => {
@@ -802,17 +859,25 @@ onMounted(() => {
 
 const formatToken = (item: GetWebStocksTableResponseItem): DisplayToken => {
   const tableItem = item as GetWebStocksTableResponseItem
+  const priceRaw = tableItem.primaryMarket.price
+    ? Number(tableItem.primaryMarket.price)
+    : 0
+  const marketCapRaw = tableItem.underlyingMarket.marketCap
+    ? Number(tableItem.underlyingMarket.marketCap)
+    : 0
+  const totalVolumeRaw = tableItem.underlyingMarket.volume24h
+    ? Number(tableItem.underlyingMarket.volume24h)
+    : 0
+
   return {
     symbol: tableItem.primaryMarket.symbol,
     name: tableItem.underlyingMarket.name,
-    price: tableItem.primaryMarket.price
-      ? `$${formatFiatValue(tableItem.primaryMarket.price).value}`
+    price: priceRaw ? `$${formatFiatValue(priceRaw).value}` : '-',
+    marketCap: marketCapRaw
+      ? `$${formatIntegerValue(marketCapRaw).value}`
       : '-',
-    marketCap: tableItem.underlyingMarket.marketCap
-      ? `$${formatIntegerValue(tableItem.underlyingMarket.marketCap).value}`
-      : '-',
-    totalVolume: tableItem.underlyingMarket.volume24h
-      ? `$${formatIntegerValue(tableItem.underlyingMarket.volume24h).value}`
+    totalVolume: totalVolumeRaw
+      ? `$${formatIntegerValue(totalVolumeRaw).value}`
       : '-',
     sparklineIn7d: tableItem.primaryMarket.sparkline24h,
     coinId: tableItem.primaryMarket.symbol,
@@ -821,37 +886,30 @@ const formatToken = (item: GetWebStocksTableResponseItem): DisplayToken => {
       : 0,
     iconPngUrl: tableItem.iconPngUrl,
     iconSvgUrl: tableItem.iconSvgUrl,
+    priceRaw,
+    marketCapRaw,
+    totalVolumeRaw,
   }
 }
 
-// // Fallback for flat structure (e.g. Watchlist)
-// const watchlistItem = item as GetWebTokensWatchlistResponse[number]
-// return {
-//   symbol: watchlistItem.symbol || '',
-//   name: watchlistItem.name || '',
-//   price: watchlistItem.price
-//     ? `$${formatFiatValue(watchlistItem.price).value}`
-//     : '-',
-//   marketCap: watchlistItem.marketCap
-//     ? `$${formatIntegerValue(watchlistItem.marketCap).value}`
-//     : '-',
-//   totalVolume: watchlistItem.totalVolume
-//     ? `$${formatIntegerValue(watchlistItem.totalVolume).value}`
-//     : '-',
-//   sparklineIn7d: watchlistItem.sparkline24h || watchlistItem.sparklineIn7d,
-//   coinId: watchlistItem.coinId || watchlistItem.symbol,
-//   priceChangePercentage24h: watchlistItem.priceChangePercentage24h || 0,
-//   iconPngUrl: watchlistItem.logoUrl || watchlistItem.iconPngUrl,
-//   iconSvgUrl: watchlistItem.iconSvgUrl,
-// }
-
-onFetchWatchlistResponse(() => {
-  totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
-  totalPages.value = 1
-  if (fetchWatchlistData.value) {
-    tokens.value =
-      fetchWatchlistData.value.map((item: any) => formatToken(item)) || []
+onStocksWatchlistResponse(() => {
+  if (selectedCryptoFilter.value.value !== 'watchlist') return
+  const watchlistData = stocksWatchlistData.value
+  if (!Array.isArray(watchlistData)) {
+    tokens.value = []
+    totalTokenCount.value = 0
+    totalPages.value = 1
+    isLoading.value = false
+    return
   }
+  const stocksList = watchlistData
+    .filter(stock =>
+      watchListedStocks.value.includes(stock.primaryMarket.symbol),
+    )
+    .map(stock => formatStock(stock))
+  tokens.value = sortWatchlistTokens(stocksList)
+  totalTokenCount.value = tokens.value.length
+  totalPages.value = 1
   isLoading.value = false
 })
 onFetchGainersResponse(() => {
@@ -879,7 +937,7 @@ onFetchGainersError(err => {
     text: err,
   })
 })
-onFetchWatchlistError(err => {
+onStocksWatchlistError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
     text: err,
@@ -923,6 +981,16 @@ watch(
   },
 )
 
+// Track previous values to detect sort-only changes
+const prevWatchValues = ref({
+  chain: selectedChainFilter.value,
+  page: page.value,
+  shownItems: shownItems.value,
+  headerSort: headerSort.value,
+  tableDirection: tableDirection.value,
+  cryptoFilter: selectedCryptoFilter.value,
+})
+
 watch(
   () => [
     selectedChainFilter.value,
@@ -933,6 +1001,35 @@ watch(
     selectedCryptoFilter.value,
   ],
   () => {
+    const prev = prevWatchValues.value
+    const isOnlyHeaderSortChanged =
+      prev.chain === selectedChainFilter.value &&
+      prev.page === page.value &&
+      prev.shownItems === shownItems.value &&
+      prev.cryptoFilter === selectedCryptoFilter.value &&
+      (prev.headerSort !== headerSort.value ||
+        prev.tableDirection !== tableDirection.value)
+
+    // Update previous values
+    prevWatchValues.value = {
+      chain: selectedChainFilter.value,
+      page: page.value,
+      shownItems: shownItems.value,
+      headerSort: headerSort.value,
+      tableDirection: tableDirection.value,
+      cryptoFilter: selectedCryptoFilter.value,
+    }
+
+    // If on watchlist and only sort changed, just re-sort existing data
+    if (
+      selectedCryptoFilter.value.value === 'watchlist' &&
+      isOnlyHeaderSortChanged &&
+      tokens.value.length > 0
+    ) {
+      tokens.value = sortWatchlistTokens(tokens.value)
+      return
+    }
+
     isLoading.value = true
     tokens.value = []
     if (
@@ -940,11 +1037,13 @@ watch(
       selectedCryptoFilter.value.value === 'topLosers'
     ) {
       fetchGainersTable()
-    } else if (
-      selectedCryptoFilter.value.value === 'watchlist' &&
-      watchListedTokens.value.length > 0
-    ) {
-      fetchWatchlistTable()
+    } else if (selectedCryptoFilter.value.value === 'watchlist') {
+      if (watchListedStocks.value.length > 0) {
+        fetchStocksWatchlist()
+      } else {
+        // Empty watchlist - don't fetch, just show empty state
+        isLoading.value = false
+      }
     } else {
       fetchTokenTable()
     }
