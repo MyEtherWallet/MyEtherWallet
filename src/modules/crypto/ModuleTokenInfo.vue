@@ -9,7 +9,11 @@
         <app-btn-icon label="Share" :disabled="isLoading">
           <share-icon class="h-5 w-5" />
         </app-btn-icon>
-        <app-btn-icon label="Star" :disabled="isLoading">
+        <app-btn-icon
+          :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
+          :disabled="isLoading"
+          @click="toggleWatchlist"
+        >
           <star-solid-icon v-if="isWatchlisted" class="h-5 w-5" />
           <star-outline-icon v-else class="h-5 w-5" />
         </app-btn-icon>
@@ -154,6 +158,7 @@ import TokenInfoBalance from './components/token_info/TokenInfoBalance.vue'
 import { useTokenInfoStore } from '@/stores/tokenInfoStore'
 import type { DisplayToken } from '../portfolio/components/balances/TableTokenBalance.vue'
 import { useInputStore } from '@/stores/inputStore'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import type { Chain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
@@ -362,9 +367,21 @@ const tokenData = computed(() => {
   return parsedTokenInfo as unknown as GetWebTokenInfo
 })
 
-/**
- * TEMP DATA FOR UI
- */
+/** --------------------
+ * Watchlist
+ --------------------*/
+const watchlistStore = useWatchlistStore()
+const { isWatchListed, setWatchlistItem } = watchlistStore
 
-const isWatchlisted = ref(true)
+const isWatchlisted = computed(() => {
+  const coinId = tokenData.value?.coinId
+  if (!coinId) return false
+  return isWatchListed(coinId)
+})
+
+const toggleWatchlist = () => {
+  const coinId = tokenData.value?.coinId
+  if (!coinId) return
+  setWatchlistItem(coinId, false) // false = not a stock
+}
 </script>

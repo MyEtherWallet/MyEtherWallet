@@ -234,6 +234,11 @@
                 <!-- Watchlist -->
                 <td class="sm:w-10 hidden sm:table-cell rounded-l-12 pl-1">
                   <button
+                    :label="
+                      isWatchListed(token.coinId)
+                        ? 'Remove from Watchlist'
+                        : 'Add to Watchlist'
+                    "
                     @click.stop="setWatchlistToken(token.coinId)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
@@ -352,6 +357,11 @@
                         >
                           <div
                             v-if="token.coinId"
+                            :label="
+                              isWatchListed(token.coinId)
+                                ? 'Remove from Watchlist'
+                                : 'Add to Watchlist'
+                            "
                             class="sm:hidden flex items-center p-2 hoverBGWhite rounded-12"
                             @click.stop="[
                               setWatchlistToken(token.coinId),
@@ -578,16 +588,14 @@ const isLoading = ref<boolean>(true)
 -------------------------------*/
 
 const watchListStore = useWatchlistStore()
-const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  watchListStore
+const { isWatchListed, setWatchlistItem } = watchListStore
 const { watchListedTokens } = storeToRefs(watchListStore)
 
-const setWatchlistToken = (tokenId: string) => {
-  if (isWatchListed(tokenId)) {
-    removeTokenWatchList(tokenId)
-  } else {
-    addTokenToWatchList(tokenId)
-  }
+const setWatchlistToken = (
+  tokenId: string,
+  isStock: boolean | null | undefined = true,
+) => {
+  setWatchlistItem(tokenId, isStock)
 }
 
 /** -------------------------------

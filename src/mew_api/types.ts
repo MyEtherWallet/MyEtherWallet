@@ -71,13 +71,22 @@ export type GetWebTrendingTokensResponse =
   components['schemas']['GetWebTrendingTokensResponse']
 export type GetWebTrendingTokensResponseToken =
   components['schemas']['GetWebTrendingTokensResponse']['items'][number]
+//Overview
+export type CryptoOverview =
+  components['schemas']['GetWebCryptoOverviewResponse']
+export type CryptoOverviewToken = CryptoOverview['newCoins'][number]
+
+/** --------------------------
+ * Watchlist
+ --------------------------*/
 export type GetWebTokensWatchlistResponse =
   components['schemas']['GetWebTokensWatchlistResponse']
 export type GetWebTokensWatchlistResponseToken =
   components['schemas']['GetWebTokensWatchlistResponse'][number]
-export type CryptoOverview =
-  components['schemas']['GetWebCryptoOverviewResponse']
-export type CryptoOverviewToken = CryptoOverview['newCoins'][number]
+export type GetWebStocksWatchlistResponse =
+  components['schemas']['GetWebStocksWatchlistResponse']
+export type GetWebStocksWatchlistResponseStock =
+  components['schemas']['GetWebStocksWatchlistResponse'][number]
 
 /** --------------------------
  * BTC types

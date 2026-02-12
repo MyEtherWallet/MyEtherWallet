@@ -273,13 +273,18 @@
                   class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center"
                 >
                   <button
-                    @click.stop="setWatchlistToken(token.coinId)"
+                    :label="
+                      isWatchListed(getWatchlistId(token))
+                        ? 'Remove from Watchlist'
+                        : 'Add to Watchlist'
+                    "
+                    @click.stop="setWatchlistToken(token)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   >
                     <!-- changes color when active -->
                     <star-outline-icon
                       class="h-4 w-4 cursor-pointer"
-                      v-if="!isWatchListed(token.coinId)"
+                      v-if="!isWatchListed(getWatchlistId(token))"
                     />
                     <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
                   </button>
@@ -383,28 +388,28 @@
                         <div
                           class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
                         >
-                          <div
-                            v-if="token.coinId"
+                          <button
+                            v-if="token.coinId || token.ondo"
                             class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
                             @click.stop="[
-                              setWatchlistToken(token.coinId),
+                              setWatchlistToken(token),
                               toggleMenu(),
                             ]"
                           >
                             <star-outline-icon
                               class="h-4 w-4 cursor-pointer"
-                              v-if="!isWatchListed(token.coinId)"
+                              v-if="!isWatchListed(getWatchlistId(token))"
                             />
                             <star-solid-icon
                               v-else
                               class="h-4 w-4 cursor-pointer"
                             />
                             <span class="ml-2">{{
-                              isWatchListed(token.coinId)
+                              isWatchListed(getWatchlistId(token))
                                 ? 'Remove from Watchlist'
                                 : 'Add to Watchlist'
                             }}</span>
-                          </div>
+                          </button>
                           <hr
                             class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                           />
@@ -498,12 +503,15 @@
           class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
         >
           <div
-            v-if="!isLoading"
+            v-if="!isLoading && selectedCryptoFilter.value !== 'watchlist'"
             class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
           >
             {{ getCurrentViewableItemsIndex }} of {{ totalTokenCount }} results
           </div>
-          <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
+          <div
+            class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0"
+            :class="{ 'mx-auto': selectedCryptoFilter.value === 'watchlist' }"
+          >
             <app-btn-icon
               :disabled="!isLoading && page === 1"
               label="previous page"
@@ -527,6 +535,7 @@
           </div>
           <div class="flex items-center gap-2 order-2 xs:order-3 mb-4 xs:mb-0">
             <app-select
+              v-if="selectedCryptoFilter.value !== 'watchlist'"
               v-model:selected="activeShownItems"
               :options="shownItemsOptions"
               position="top-[-160px] right-0"
@@ -589,7 +598,7 @@ import type {
   Chain,
   GetWebTokensTableResponse,
   GetWebTokensTableResponseToken,
-  GetWebTokensWatchlistResponse,
+  GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import {
@@ -600,6 +609,7 @@ import {
 import { useToastStore } from '@/stores/toastStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
+import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
@@ -642,16 +652,18 @@ const isLoading = ref<boolean>(true)
 -------------------------------*/
 
 const watchListStore = useWatchlistStore()
-const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  watchListStore
-const { watchListedTokens } = storeToRefs(watchListStore)
+const { isWatchListed, setWatchlistItem } = watchListStore
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchListStore)
 
-const setWatchlistToken = (tokenId: string) => {
-  if (isWatchListed(tokenId)) {
-    removeTokenWatchList(tokenId)
-  } else {
-    addTokenToWatchList(tokenId)
-  }
+const getWatchlistId = (token: DisplayToken) => {
+  const isStock = token.ondo !== null && token.ondo?.primaryMarket?.symbol
+  return isStock ? token.ondo!.primaryMarket.symbol : token.coinId
+}
+
+const setWatchlistToken = (token: DisplayToken) => {
+  const isStock = !!(token.ondo !== null && token.ondo?.primaryMarket?.symbol)
+  const id = getWatchlistId(token)
+  setWatchlistItem(id, isStock)
 }
 
 /** -------------------------------
@@ -787,14 +799,15 @@ const getCurrentViewableItemsIndex = computed<number>(() => {
 
 const { useMEWFetch } = useFetchMewApi()
 
-const fetchWatchListUrl = computed(() => {
-  const baseUrl = getAPIPath('/v1/web/tokens-watchlist')
-  const defaultChain =
-    !selectedChainFilter.value || selectedChainFilter.value.name === 'all'
-      ? ''
-      : `filterChain=${selectedChainFilter.value.name}`
-  return `${baseUrl}?${defaultChain}&coins=${watchListedTokens.value}`
-})
+const {
+  tokensWatchlistData,
+  onTokensWatchlistResponse,
+  onTokensWatchlistError,
+  stocksWatchlistData,
+  fetchAllWatchlist,
+  onStocksWatchlistResponse,
+  onStocksWatchlistError,
+} = useFetchWatchlist(selectedChainFilter)
 
 const fetchGainersUrl = computed(() => {
   const baseUrl = getAPIPath('/v1/web/tokens-table')
@@ -828,17 +841,6 @@ const {
   .json<GetWebTokensTableResponse>()
 
 const {
-  data: fetchWatchlistData,
-  onFetchResponse: onFetchWatchlistResponse,
-  execute: fetchWatchlistTable,
-  onFetchError: onFetchWatchlistError,
-} = useMEWFetch(fetchWatchListUrl, {
-  immediate: false,
-})
-  .get()
-  .json<GetWebTokensWatchlistResponse>()
-
-const {
   data: fetchTokenData,
   onFetchResponse: onFetchTokenTableResponse,
   execute: fetchTokenTable,
@@ -854,7 +856,7 @@ const debounceFetchTokens = useDebounceFn(() => {
   tableContainer.value?.scrollTo(0, 0)
 }, 100)
 const debounceFetchWatchlist = useDebounceFn(() => {
-  fetchWatchlistTable()
+  fetchAllWatchlist()
   tableContainer.value?.scrollTo(0, 0)
 }, 100)
 const debounceFetchGainers = useDebounceFn(() => {
@@ -886,12 +888,118 @@ const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
       : '-',
   }
 }
-onFetchWatchlistResponse(() => {
-  totalTokenCount.value = fetchWatchlistData.value?.length ?? 0
-  totalPages.value = 1
-  if (fetchWatchlistData.value) {
-    tokens.value = fetchWatchlistData.value.map(item => formatToken(item)) || []
+
+const formatStock = (
+  item: GetWebStocksWatchlistResponseStock,
+): DisplayToken => {
+  return {
+    coinId: '',
+    name: item.underlyingMarket.name,
+    symbol: item.primaryMarket.symbol,
+    logoUrl: item.iconPngUrl || item.iconSvgUrl || null,
+    price: item.primaryMarket.price
+      ? `$${formatFiatValue(Number(item.primaryMarket.price)).value}`
+      : '-',
+    priceChangePercentage1h: null,
+    priceChangePercentage24h: item.primaryMarket.priceChangePercentage24h
+      ? Number(item.primaryMarket.priceChangePercentage24h)
+      : null,
+    priceChangePercentage7d: null,
+    totalVolume: item.underlyingMarket.volume24h
+      ? `$${formatIntegerValue(Number(item.underlyingMarket.volume24h)).value}`
+      : '-',
+    marketCap: item.underlyingMarket.marketCap
+      ? `$${formatIntegerValue(Number(item.underlyingMarket.marketCap)).value}`
+      : '-',
+    addresses: {},
+    nativeChains: [],
+    chains: [],
+    ondo: {
+      stockAlias: item.stockAlias,
+      iconPngUrl: item.iconPngUrl,
+      iconSvgUrl: item.iconSvgUrl,
+      primaryMarket: {
+        symbol: item.primaryMarket.symbol,
+      },
+      underlyingMarket: {
+        name: item.underlyingMarket.name,
+      },
+    },
+    sparklineIn7d: item.primaryMarket.sparkline24h || null,
   }
+}
+
+const parseFormattedNumber = (value: string): number => {
+  if (value === '-') return 0
+  // Remove $ and commas
+  const cleaned = value.replace(/[$,]/g, '')
+  // Handle K, M, B, T suffixes from formatIntegerValue
+  const multipliers: Record<string, number> = {
+    K: 1e3,
+    M: 1e6,
+    B: 1e9,
+    T: 1e12,
+  }
+  const match = cleaned.match(/^([\d.]+)([KMBT])?$/)
+  if (match) {
+    const num = parseFloat(match[1])
+    const suffix = match[2]
+    return suffix ? num * multipliers[suffix] : num
+  }
+  return parseFloat(cleaned) || 0
+}
+
+const sortWatchlistTokens = (tokensList: DisplayToken[]): DisplayToken[] => {
+  return [...tokensList].sort((a, b) => {
+    let comparison = 0
+
+    switch (headerSort.value) {
+      case 'NAME':
+        comparison = a.name.localeCompare(b.name)
+        break
+      case 'MARKET_CAP':
+        comparison =
+          parseFormattedNumber(a.marketCap) - parseFormattedNumber(b.marketCap)
+        break
+      case 'TOTAL_VOLUME':
+        comparison =
+          parseFormattedNumber(a.totalVolume) -
+          parseFormattedNumber(b.totalVolume)
+        break
+      case 'PRICE':
+        comparison =
+          parseFormattedNumber(a.price) - parseFormattedNumber(b.price)
+        break
+      default:
+        comparison = 0
+    }
+
+    return tableDirection.value === 'desc' ? -comparison : comparison
+  })
+}
+
+onTokensWatchlistResponse(() => {
+  // Only update tokens if watchlist filter is selected
+  if (selectedCryptoFilter.value.value !== 'watchlist') return
+  const tokensData =
+    tokensWatchlistData.value?.map(item => formatToken(item)) || []
+  const stocksData =
+    stocksWatchlistData.value?.map(item => formatStock(item)) || []
+  tokens.value = sortWatchlistTokens([...tokensData, ...stocksData])
+  totalTokenCount.value = tokens.value.length
+  totalPages.value = 1
+  isLoading.value = false
+})
+onStocksWatchlistResponse(() => {
+  // Only update tokens if watchlist filter is selected
+  if (selectedCryptoFilter.value.value !== 'watchlist') return
+  const tokensData =
+    tokensWatchlistData.value?.map(item => formatToken(item)) || []
+  const stocksData =
+    stocksWatchlistData.value?.map(item => formatStock(item)) || []
+  tokens.value = sortWatchlistTokens([...tokensData, ...stocksData])
+  totalTokenCount.value = tokens.value.length
+  totalPages.value = 1
   isLoading.value = false
 })
 onFetchGainersResponse(() => {
@@ -919,7 +1027,13 @@ onFetchGainersError(err => {
     text: err,
   })
 })
-onFetchWatchlistError(err => {
+onTokensWatchlistError(err => {
+  isLoading.value = false
+  toastStore.addToastMessage({
+    text: err,
+  })
+})
+onStocksWatchlistError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
     text: err,
@@ -963,6 +1077,16 @@ watch(
   },
 )
 
+// Track previous values to detect sort-only changes
+const prevWatchValues = ref({
+  chain: selectedChainFilter.value,
+  page: page.value,
+  shownItems: shownItems.value,
+  headerSort: headerSort.value,
+  tableDirection: tableDirection.value,
+  cryptoFilter: selectedCryptoFilter.value,
+})
+
 watch(
   () => [
     selectedChainFilter.value,
@@ -973,6 +1097,35 @@ watch(
     selectedCryptoFilter.value,
   ],
   () => {
+    const prev = prevWatchValues.value
+    const isOnlyHeaderSortChanged =
+      prev.chain === selectedChainFilter.value &&
+      prev.page === page.value &&
+      prev.shownItems === shownItems.value &&
+      prev.cryptoFilter === selectedCryptoFilter.value &&
+      (prev.headerSort !== headerSort.value ||
+        prev.tableDirection !== tableDirection.value)
+
+    // Update previous values
+    prevWatchValues.value = {
+      chain: selectedChainFilter.value,
+      page: page.value,
+      shownItems: shownItems.value,
+      headerSort: headerSort.value,
+      tableDirection: tableDirection.value,
+      cryptoFilter: selectedCryptoFilter.value,
+    }
+
+    // If on watchlist and only sort changed, just re-sort existing data
+    if (
+      selectedCryptoFilter.value.value === 'watchlist' &&
+      isOnlyHeaderSortChanged &&
+      tokens.value.length > 0
+    ) {
+      tokens.value = sortWatchlistTokens(tokens.value)
+      return
+    }
+
     isLoading.value = true
     tokens.value = []
     if (
@@ -982,9 +1135,9 @@ watch(
       fetchGainersTable()
     } else if (
       selectedCryptoFilter.value.value === 'watchlist' &&
-      watchListedTokens.value.length > 0
+      (watchListedTokens.value.length > 0 || watchListedStocks.value.length > 0)
     ) {
-      fetchWatchlistTable()
+      fetchAllWatchlist()
     } else {
       fetchTokenTable()
     }

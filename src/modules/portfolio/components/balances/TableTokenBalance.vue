@@ -216,14 +216,14 @@
             <!-- Watchlist -->
             <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
               <button
-                v-if="token.coinId"
-                @click.stop="setWatchlistToken(token.coinId)"
+                v-if="getWatchlistId(token)"
+                @click.stop="setWatchlistToken(token)"
                 class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
               >
-                <!-- changes color when active -->
+                <!-- changes icon when active -->
                 <star-outline-icon
                   class="h-4 w-4 cursor-pointer"
-                  v-if="!isWatchListed(token.coinId)"
+                  v-if="!isWatchListed(getWatchlistId(token))"
                 />
                 <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
               </button>
@@ -346,23 +346,20 @@
                       class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
                     >
                       <div
-                        v-if="token.coinId"
+                        v-if="getWatchlistId(token)"
                         class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
-                        @click.stop="[
-                          setWatchlistToken(token.coinId),
-                          toggleMenu(),
-                        ]"
+                        @click.stop="[setWatchlistToken(token), toggleMenu()]"
                       >
                         <star-outline-icon
                           class="h-4 w-4 cursor-pointer"
-                          v-if="!isWatchListed(token.coinId)"
+                          v-if="!isWatchListed(getWatchlistId(token))"
                         />
                         <star-solid-icon
                           v-else
                           class="h-4 w-4 cursor-pointer"
                         />
                         <span class="ml-2">{{
-                          isWatchListed(token.coinId)
+                          isWatchListed(getWatchlistId(token))
                             ? 'Remove from Watchlist'
                             : 'Add to Watchlist'
                         }}</span>
@@ -593,7 +590,7 @@ import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 
 // Composables & Utils
 import { usePaginate } from '@/composables/usePaginate'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
@@ -608,7 +605,7 @@ import {
 import type {
   GetErc20AddressBalanceResponse,
   TokenBalance,
-  GetWebTokensWatchlistResponse,
+  GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import type { AppSelectOption } from '@/types/components/appSelect'
 import {
@@ -672,9 +669,8 @@ const {
   walletAddress,
 } = storeToRefs(walletStore)
 
-const { isWatchListed, addTokenToWatchList, removeTokenWatchList } =
-  watchListStore
-const { watchListedTokens } = storeToRefs(watchListStore)
+const { isWatchListed, setWatchlistItem } = watchListStore
+const { watchListedTokens, watchListedStocks } = storeToRefs(watchListStore)
 const { customTokens } = storeToRefs(customTokenStore)
 const { openCustomTokenDialog, setCurrentView } = customTokenStore
 
@@ -703,20 +699,53 @@ const isLoading = computed(() =>
 /** -------------------------------
  * Fetching & Watchers
  -------------------------------*/
-const { useMEWFetch } = useFetchMewApi()
-
-const fetchWatchListUrl = computed(() => {
-  const baseUrl = getAPIPath('/v1/web/tokens-watchlist')
-  return `${baseUrl}?coins=${watchListedTokens.value}`
-})
+const selectedChainForWatchlist = computed(() => selectedChain.value ?? null)
 
 const {
-  data: wachListMarketData,
-  isFetching: isLoadingWatchlist,
-  execute: fetchWatchlistTable,
-} = useMEWFetch(fetchWatchListUrl, {})
-  .get()
-  .json<GetWebTokensWatchlistResponse>()
+  tokensWatchlistData,
+  stocksWatchlistData,
+  isFetchingTokensWatchlist,
+  isFetchingStocksWatchlist,
+  fetchAllWatchlist,
+} = useFetchWatchlist(selectedChainForWatchlist)
+
+const isLoadingWatchlist = computed(
+  () => isFetchingTokensWatchlist.value || isFetchingStocksWatchlist.value,
+)
+
+const formatStock = (
+  item: GetWebStocksWatchlistResponseStock,
+): DisplayToken => {
+  return {
+    name: item.underlyingMarket.name,
+    symbol: item.primaryMarket.symbol,
+    logo_url: item.iconPngUrl || item.iconSvgUrl || '',
+    price: item.primaryMarket.price ? Number(item.primaryMarket.price) : 0,
+    price_change_percentage_24h: item.primaryMarket.priceChangePercentage24h
+      ? Number(item.primaryMarket.priceChangePercentage24h)
+      : 0,
+    market_cap: item.underlyingMarket.marketCap
+      ? Number(item.underlyingMarket.marketCap)
+      : 0,
+    sparkline_in_7d: item.primaryMarket.sparkline24h || [],
+    balanceWei: '0x',
+    balance: '0',
+    contract: '',
+    fiatBalance: 0,
+    fiatBalanceFormatted: '$0.00',
+    ondo: {
+      stockAlias: item.stockAlias,
+      iconPngUrl: item.iconPngUrl,
+      iconSvgUrl: item.iconSvgUrl,
+      primaryMarket: {
+        symbol: item.primaryMarket.symbol,
+      },
+      underlyingMarket: {
+        name: item.underlyingMarket.name,
+      },
+    },
+  } as DisplayToken
+}
 
 const getCustomTokenBalance = async (
   contractAddress: string,
@@ -730,6 +759,20 @@ const getCustomTokenBalance = async (
 }
 
 watch(selectedChain, () => (extraCustomBalances.value = {}))
+
+// Fetch watchlist when view is 'watchlist'
+watch(
+  () => props.view,
+  newView => {
+    if (
+      newView === 'watchlist' &&
+      (watchListedTokens.value.length > 0 || watchListedStocks.value.length > 0)
+    ) {
+      fetchAllWatchlist()
+    }
+  },
+  { immediate: true },
+)
 
 watch(
   [chainCustomTokens, walletAddress],
@@ -794,8 +837,9 @@ const tokens = computed<DisplayToken[]>(() => {
   const coinIdMap = new Map(allTokens.value.map(t => [t.coinId, t]))
 
   if (props.view === 'watchlist') {
-    list =
-      (wachListMarketData.value || [])
+    // Map tokens watchlist
+    const tokensList =
+      (tokensWatchlistData.value || [])
         .filter(token => watchListedTokens.value.includes(token.coinId))
         .map(token => {
           const balanceToken = coinIdMap.get(token.coinId)
@@ -815,6 +859,16 @@ const tokens = computed<DisplayToken[]>(() => {
             logo_url: token.logoUrl || '',
           } as DisplayToken
         }) || []
+
+    // Map stocks watchlist
+    const stocksList =
+      (stocksWatchlistData.value || [])
+        .filter(stock =>
+          watchListedStocks.value.includes(stock.primaryMarket.symbol),
+        )
+        .map(stock => formatStock(stock)) || []
+
+    list = [...tokensList, ...stocksList]
   } else if (props.view === 'custom') {
     list = chainCustomTokens.value.map(customToken => {
       const balanceToken = balanceMap.get(customToken.address.toLowerCase())
@@ -939,13 +993,21 @@ const goToTokenPage = (token: DisplayToken) => {
   })
 }
 
-const setWatchlistToken = (tokenId: string) => {
-  if (!tokenId) return
-  if (isWatchListed(tokenId)) {
-    removeTokenWatchList(tokenId)
-  } else {
-    addTokenToWatchList(tokenId)
-    fetchWatchlistTable()
+const getWatchlistId = (token: DisplayToken): string => {
+  return token.ondo?.primaryMarket?.symbol || token.coinId || ''
+}
+
+const isTokenStock = (token: DisplayToken): boolean => {
+  return token.ondo !== undefined && !!token.ondo?.primaryMarket?.symbol
+}
+
+const setWatchlistToken = (token: DisplayToken) => {
+  const id = getWatchlistId(token)
+  if (!id) return
+  const isStock = isTokenStock(token)
+  setWatchlistItem(id, isStock)
+  if (!isWatchListed(id)) {
+    fetchAllWatchlist()
   }
 }
 
