@@ -1,15 +1,18 @@
 import configs from '@/configs'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import { getAPIPath } from '@/utils/constructAPIPath'
+import { throttle } from 'underscore'
 
 const TRADING_RESTRICTED_HELP_URL =
   'https://help.myetherwallet.com/en/articles/12897302-geographic-restrictions-for-mew'
 
-const getMarketStatus = (): Promise<GetWebSwapOndoMarketStatusResponse> => {
+const _getMarketStatus = (): Promise<GetWebSwapOndoMarketStatusResponse> => {
   return fetch(getAPIPath(`/v1/web/swap/ondo/status/market`)).then(
     res => res.json() as Promise<GetWebSwapOndoMarketStatusResponse>,
   )
 }
+
+const getMarketStatus = throttle(_getMarketStatus, 1000)
 
 const getRestrictedTokenAddresses = (): Promise<string[]> => {
   return fetch(
