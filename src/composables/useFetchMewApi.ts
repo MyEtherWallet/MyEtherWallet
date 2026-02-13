@@ -19,7 +19,6 @@ export const useFetchMewApi = (
   const url = ref('')
   const delay = ref(1000)
 
-   
   type ExecuteFunction = (throwOnFailed?: boolean) => Promise<any>
   const execute = ref<ExecuteFunction | null>(null)
 
@@ -57,6 +56,9 @@ export const useFetchMewApi = (
       onFetchError: async ({ data, error, execute, response }) => {
         if (isDevMode) {
           console.log('Fetch Error: ', data, error)
+        }
+        if (error.name === 'AbortError') {
+          return
         }
         if (isActivePolling.value) {
           pausePoll()
