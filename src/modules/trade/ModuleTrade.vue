@@ -122,19 +122,19 @@
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
-            class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 shadow-lg pointer-events-auto"
+            class="w-full max-w-[380px] px-3 py-5 bg-white border border-primary rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
           >
-            <div class="flex items-center gap-2 justify-center mb-1">
-              <div class="w-2 h-2 bg-warning rounded-full"></div>
-              <p class="text-warning font-bold text-s-14">Market Closed</p>
+            <div class="flex items-center gap-2 justify-center mb-2">
+              <exclamation-circle-icon class="w-5 h-5 text-primary" />
+              <p class="text-primary font-medium text-s-16">Market Closed</p>
             </div>
-            <p class="text-grey-70 text-s-12 text-center">
+            <p class="text-info text-s-14 text-center mb-4">
               {{ marketStatus.reason?.message }}
             </p>
-            <div class="mt-2 text-center">
+            <div class="text-center">
               <p
                 v-if="countdownText"
-                class="text-primary font-bold text-s-16 tabular-nums"
+                class="font-medium text-s-16 mb-1 tabular-nums"
               >
                 Opens in {{ countdownText }}
               </p>
@@ -151,34 +151,37 @@
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
-            class="w-full max-w-[380px] p-5 bg-white border border-grey-20 rounded-16 shadow-lg pointer-events-auto"
+            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
           >
             <div class="flex items-center gap-2 justify-center mb-2">
-              <div class="w-2 h-2 bg-error rounded-full"></div>
-              <p class="text-error font-bold text-s-16">
+              <exclamation-circle-icon class="w-5 h-5 text-warning" />
+              <p class="text-warning font-medium text-s-16">
                 Network Not Supported
               </p>
             </div>
-            <p class="text-grey-70 text-s-13 text-center mb-4">
+            <p class="text-info text-s-14 text-center mb-4">
               Trading is not available on
               {{ selectedChain?.nameLong || selectedChain?.name }}. Please
               switch to a supported network.
             </p>
-            <div class="flex flex-wrap gap-2 justify-center">
-              <button
-                v-for="chain in supportedChainsList.reverse()"
-                :key="chain.name"
-                class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 text-primary font-medium text-s-14 rounded-12 transition-colors"
-                @click="switchToNetwork(chain)"
-              >
-                <img
-                  v-if="chain.icon"
-                  :src="chain.icon"
-                  :alt="chain.name"
-                  class="w-5 h-5 rounded-full"
-                />
-                <span>{{ chain.nameLong || chain.name }}</span>
-              </button>
+            <div class="flex flex-col items-center justify-center">
+              <div class="">
+                <button
+                  v-for="chain in supportedChainsList.reverse()"
+                  :key="chain.name"
+                  class="flex items-center gap-2 px-4 py-2 bg-primary-10 hover:bg-primary-20 font-medium text-s-14 rounded-full transition-colors shadow-button shadow-button-elevated mb-3 w-full"
+                  @click="switchToNetwork(chain)"
+                >
+                  <app-token-logo
+                    v-if="chain.icon"
+                    :url="chain.icon"
+                    :sumbol="chain.nameLong"
+                    width="w-5"
+                    height="h-5"
+                  />
+                  <span>{{ chain.nameLong || chain.name }}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -193,25 +196,26 @@
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
         >
           <div
-            class="w-full max-w-[380px] p-5 bg-white border border-grey-20 rounded-16 shadow-lg pointer-events-auto"
+            class="w-full max-w-[380px] px-3 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
           >
             <div class="flex items-center gap-2 justify-center mb-2">
-              <div class="w-2 h-2 bg-error rounded-full"></div>
-              <p class="text-error font-bold text-s-16">
+              <exclamation-circle-icon class="w-5 h-5 text-warning" />
+              <p class="text-warning font-medium text-s-16">
                 Trading Not Available
               </p>
             </div>
-            <p class="text-grey-70 text-s-13 text-center mb-4">
-              Trading is not available in your jurisdiction.
+            <p class="text-info text-s-14 text-center mb-4">
+              Access to trading is restricted in your jurisdiction.
             </p>
             <div class="flex justify-center">
               <a
                 :href="tradingRestrictedHelpUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-primary font-medium text-s-14 hover:underline"
+                class="text-s-14 font-medium hover:underline"
               >
-                Learn more about geographic restrictions
+                Learn more
+                <arrow-long-right-icon class="w-4 h-4 inline-block" />
               </a>
             </div>
           </div>
@@ -335,7 +339,7 @@ import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
-
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 // Stores
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -357,6 +361,12 @@ import {
 // Types
 import type { Chain } from '@/mew_api/types'
 import configs from '@/configs'
+
+//icons
+import {
+  ExclamationCircleIcon,
+  ArrowLongRightIcon,
+} from '@heroicons/vue/24/solid'
 
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
