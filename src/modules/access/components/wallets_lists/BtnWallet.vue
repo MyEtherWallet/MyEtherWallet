@@ -79,6 +79,9 @@ const clickDefaultWallet = (wallet: WalletConfig) => {
 }
 
 const getBadge = (type: WalletConfigType) => {
+  if (props.isDetected) {
+    return type === WalletConfigType.EXTENSION ? ExtensionBadge : undefined
+  }
   if (type === WalletConfigType.MOBILE) {
     return MobileBadge
   }

@@ -110,8 +110,7 @@ const { selectedChain } = storeToRefs(accessStore)
 
 const displayWallets = computed(() => {
   const wallets: WalletConfig[] = []
-  const supportedDefaultWallets = defaultWallets.value
-
+  const supportedDefaultWallets = [...defaultWallets.value]
   wallets.push(...supportedDefaultWallets)
   wallets.push(...newWalletList.value)
   if (searchInput.value) {
@@ -125,7 +124,6 @@ const displayWallets = computed(() => {
         !wallet.name.toLowerCase().startsWith(search)
       )
     })
-
     return [...beginsWith, ...other]
   }
   if (activeSort.value.value === SortBy.A_Z) {

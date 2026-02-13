@@ -9,6 +9,7 @@ import {
 import { generateConfig } from '@/providers/ethereum/wagmiConfig'
 import { useChainsStore } from '@/stores/chainsStore'
 import type { Connector, CreateConnectorFn } from '@wagmi/core'
+import type { Wallet } from '@rainbow-me/rainbowkit'
 import { useAccessStore } from '@/stores/accessStore'
 
 export const useWalletList = () => {
@@ -29,11 +30,7 @@ export const useWalletList = () => {
   const wagmiConfig = generateConfig(chains.value)
   const { connectors } = wagmiConfig
   interface RkConnector extends Connector<CreateConnectorFn> {
-    rkDetails: {
-      iconUrl: () => Promise<string>
-      name: string
-      isRainbowKitConnector: boolean
-    }
+    rkDetails?: Wallet
   }
   const walletGetIcon = (wallet: RkConnector) => {
     if (wallet.icon) return wallet.icon
@@ -53,20 +50,24 @@ export const useWalletList = () => {
     if (selectedChain.value && selectedChain.value.type !== 'EVM') return []
     const newConArr: WalletConfig[] = []
     const rkConnectors = connectors as RkConnector[]
+    const injectedWallets: WalletConfig[] = []
     rkConnectors.forEach(async wallet => {
+      const rainbowId = wallet.rkDetails?.id
+      //RainBow Kit Wallets that do not include defualts and ledger
       if (
-        !DEFAULT_IDS.includes(wallet.id) &&
-        wallet.id !== 'ledger' &&
-        wallet.id !== 'mock'
+        wallet.rkDetails !== undefined &&
+        rainbowId &&
+        !DEFAULT_IDS.includes(rainbowId) &&
+        rainbowId !== 'ledger'
       ) {
         const _types: WalletConfigType[] = []
-        if (wallet.extension || wallet.installed) {
+        if (wallet.rkDetails.extension) {
           _types.push(WalletConfigType.EXTENSION)
         }
-        if (wallet.rkDetails && wallet.rkDetails.isRainbowKitConnector) {
+        if (wallet.rkDetails.mobile) {
           _types.push(WalletConfigType.MOBILE)
         }
-        if (wallet.desktop) {
+        if (wallet.rkDetails.desktop) {
           _types.push(WalletConfigType.DESKTOP)
         }
 
@@ -77,7 +78,9 @@ export const useWalletList = () => {
           icon: walletGetIcon(wallet),
           type: _types,
         })
-      } else if (wallet.id === 'ledger') {
+      }
+      // Ledger Mobile
+      else if (wallet.rkDetails && wallet.rkDetails.id === 'ledger') {
         newConArr.push({
           ...wallet,
           id: 'ledger-mobile',
@@ -85,7 +88,9 @@ export const useWalletList = () => {
           icon: walletGetIcon(wallet),
           type: [WalletConfigType.MOBILE],
         })
-      } else if (wallet.id === 'mock') {
+      }
+      //Mock Wallet for testing
+      else if (wallet.id === 'mock') {
         newConArr.push({
           ...wallet,
           id: wallet.id,
@@ -93,8 +98,51 @@ export const useWalletList = () => {
           type: [WalletConfigType.MOCK],
         })
       }
+      //Injected Wallets
+      else if (wallet.rkDetails === undefined) {
+        injectedWallets.push({
+          ...wallet,
+          id: wallet.id,
+          name: walletGetName(wallet),
+          icon: walletGetIcon(wallet),
+          type: [WalletConfigType.EXTENSION],
+        })
+      }
     })
-    return newConArr.filter(wallet => {
+
+    //Need to do this since injected ids do not match rainbow kit ids and we want to avoid duplicates
+    if (injectedWallets.length > 0) {
+      //check if injected wallet is already in newConArr by name, if not add it
+      injectedWallets.forEach(injectedWallet => {
+        const existingWalletIndex = newConArr.findIndex(
+          wallet =>
+            wallet.name.toLowerCase() === injectedWallet.name.toLowerCase(),
+        )
+        if (
+          existingWalletIndex < 0 &&
+          !DEFAULT_IDS.includes(injectedWallet.name.toLowerCase())
+        ) {
+          // If no wallet with same name, add injected wallet to array
+          newConArr.push(injectedWallet)
+        }
+      })
+    }
+
+    // Remove duplicates by wallet.name from injected, prioritizing wallet with more types
+    // Sort by type length descending first to ensure wallets with more types are prioritized
+    const sortedByTypes = [...newConArr].sort(
+      (a, b) => (b.type?.length || 0) - (a.type?.length || 0),
+    )
+    const walletsByName = new Map<string, WalletConfig>()
+    sortedByTypes.forEach(wallet => {
+      // Only add if not already in map (first occurrence wins, which has most types due to sorting)
+      if (!walletsByName.has(wallet.name)) {
+        walletsByName.set(wallet.name, wallet)
+      }
+    })
+    const uniqueWallets = Array.from(walletsByName.values())
+
+    return uniqueWallets.filter(wallet => {
       return (
         selectedChain.value?.type === 'EVM' ||
         (wallet.canSupport && !!wallet.canSupport(selectedChain.value))
