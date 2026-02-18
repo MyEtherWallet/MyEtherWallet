@@ -1,19 +1,31 @@
 import { mainnet } from '@wagmi/core/chains'
 import * as allChains from '@wagmi/core/chains'
 import { createConfig, http, mock, type Config } from '@wagmi/core'
-import { connectorsForWallets } from '@rainbow-me/rainbowkit'
-import * as rainndowWallets from '@rainbow-me/rainbowkit/wallets'
+import { connectorsForWallets, type WalletList } from '@rainbow-me/rainbowkit'
+import * as rainbowWallets from '@rainbow-me/rainbowkit/wallets'
+
 import Configs from '@/configs'
 import type { Chain } from '@/mew_api/types'
 import type { Chain as wChain } from '@wagmi/core/chains'
 
+type CreateWalletFn = WalletList[number]['wallets'][number]
+
+const REMOVED_WALLETS_ID = ['bitskiWallet', 'backpackWallet', 'portoWallet']
+
 const projectId = Configs.WALLET_CONNECT_PROJECT_ID
-const allRainbowWallets = Object.values(rainndowWallets)
+const allRainbowWallets = Object.values(rainbowWallets).filter(wallet => {
+  return (
+    typeof wallet === 'function' &&
+    'name' in wallet &&
+    !REMOVED_WALLETS_ID.includes(wallet.name)
+  )
+}) as unknown as CreateWalletFn[]
+
 const connectorsLocal = connectorsForWallets(
   [
     {
       groupName: 'MEW',
-      wallets: allRainbowWallets as any[],
+      wallets: allRainbowWallets,
     },
   ],
   {
