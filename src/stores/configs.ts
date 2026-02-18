@@ -8,6 +8,9 @@ export const StoreConfigs = {
     addressBook: 'address-book',
     article: 'article-store',
     recentlyViewedTokens: 'recently-viewed-tokens',
+    watchListedTokens: 'watch-listed-tokens',
+    watchListedStocks: 'watch-listed-stocks',
+
     // ...dappStoreConfigs.LOCAL_STORAGE_KEYS
   },
   VERSION: {

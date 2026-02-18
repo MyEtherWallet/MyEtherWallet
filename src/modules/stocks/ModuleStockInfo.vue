@@ -8,8 +8,13 @@
         <app-btn-icon label="Share" :disabled="isLoading">
           <ShareIcon class="h-5 w-5" />
         </app-btn-icon>
-        <app-btn-icon label="Star" :disabled="isLoading">
-          <StarIcon class="h-5 w-5" />
+        <app-btn-icon
+          :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
+          :disabled="isLoading"
+          @click="toggleWatchlist"
+        >
+          <StarSolidIcon v-if="isWatchlisted" class="h-5 w-5" />
+          <StarOutlineIcon v-else class="h-5 w-5" />
         </app-btn-icon>
       </div>
 
@@ -171,10 +176,11 @@ import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoS
 import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
 import {
   ShareIcon,
-  StarIcon,
+  StarIcon as StarOutlineIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
 } from '@heroicons/vue/24/outline'
+import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
 import {
   formatFiatValue,
   formatPercentageValue,
@@ -184,6 +190,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
+import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
 
 const props = defineProps({
@@ -197,6 +204,18 @@ const { useMEWFetch } = useFetchMewApi()
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const recentlyViewedTokensStore = useRecentlyViewedTokensStore()
+
+/** --------------------
+ * Watchlist
+ --------------------*/
+const watchlistStore = useWatchlistStore()
+const { isWatchListed, setWatchlistItem } = watchlistStore
+
+const isWatchlisted = computed(() => isWatchListed(props.symbol))
+
+const toggleWatchlist = () => {
+  setWatchlistItem(props.symbol, true) // true = isStock
+}
 
 /**--------------------
  * Fetch Stock Summary Data
