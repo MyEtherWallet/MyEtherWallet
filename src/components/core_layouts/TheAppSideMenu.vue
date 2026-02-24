@@ -61,7 +61,7 @@
                     v-for="item in coreMenuList"
                     :key="item.title"
                     :list-item="item"
-                    @click="clickListItem(item)"
+                    @click="clickListItem()"
                   />
                 </div>
 
@@ -112,21 +112,22 @@
                     :key="item.title"
                     :list-item="item"
                     is-submenu
-                    @click="clickListItem(item)"
+                    @click="clickListItem()"
                   />
                 </div>
                 <!--  DIVIDER -->
                 <hr
+                  v-if="!isWalletConnected"
                   class="h-px bg-grey-outline border-0 w-full my-3"
                   key="app-menu-divider-2"
                 />
                 <!--  OTHER MENU (Settings, etc) -->
-                <menu-list-item
+                <!-- <menu-list-item
                   v-for="item in otherMenuList"
                   :key="item.title"
                   :list-item="item"
-                  @click="clickListItem(item)"
-                />
+                  @click="clickListItem()"
+                /> -->
                 <div
                   v-if="!isWalletConnected"
                   class="flex flex-col gap-3 pt-5 px-5 mt-1"
@@ -193,40 +194,26 @@ defineProps({
 const sidebarIsOpen = ref(false)
 const showToolsSubmenu = ref(false)
 
-const emit = defineEmits<{
-  (e: 'openNotifications'): void
-}>()
-
 const toolsMenuItem = computed<AppMenuListItem>(() => {
   return {
     title: t('tools'),
     iconID: ICON_IDS.TOOLS,
   }
 })
-const otherMenuList = computed<AppMenuListItem[]>(() => {
-  return [
-    // {
-    //   title: t('settings'),
-    //   iconID: ICON_IDS.SETTINGS,
-    // },
-    {
-      title: t('notifications'),
-      iconID: ICON_IDS.NOTIFICATIONS,
-    },
-  ]
-})
+// const otherMenuList = computed<AppMenuListItem[]>(() => {
+//   return [
+// {
+//   title: t('settings'),
+//   iconID: ICON_IDS.SETTINGS,
+// },
+//   ]
+// })
 
 /** ------------------------------
  * Menu Methods
  ------------------------------*/
-const clickListItem = (item: AppMenuListItem) => {
+const clickListItem = () => {
   sidebarIsOpen.value = false
-
-  // Handle notifications click
-  if (item.iconID === ICON_IDS.NOTIFICATIONS) {
-    emit('openNotifications')
-    return
-  }
 }
 
 /** ------------------------------
