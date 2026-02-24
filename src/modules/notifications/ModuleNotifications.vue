@@ -56,6 +56,15 @@
       />
     </div>
     <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
+    <div class="flex justify-center">
+      <app-btn-text
+        v-if="notificationsCount > 1"
+        @click="deleteAllNotifications"
+        class="text-primary text-s-14"
+      >
+        Delete all
+      </app-btn-text>
+    </div>
   </div>
 </template>
 
@@ -68,6 +77,8 @@ import TradeOrderContainer from './components/TradeOrderContainer.vue'
 import SwapContainer from './components/SwapContainer.vue'
 import BridgeContainer from './components/BridgeContainer.vue'
 import EmptyContainer from './components/EmptyContainer.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
+
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
 import { formatUnits } from 'viem'
@@ -133,6 +144,58 @@ const toastStore = useToastStore()
 const { walletAddress, wallet } = storeToRefs(walletStore)
 const { setTokens, setIsLoadingBalances } = walletStore
 
+// Get notifications count based on selected category
+const notificationsCount = computed(() => {
+  return filteredNotifications.value.length
+})
+
+// Clear all notifications via child component
+const deleteAllNotifications = () => {
+  if (!walletAddress.value) return
+  switch (selectedCategory.value.value) {
+    case 'trade':
+      // Stop polling for trade orders
+      Object.keys(pollIntervals).forEach(stopPolling)
+      Object.keys(remainingTimes.value).forEach(hash => {
+        delete remainingTimes.value[hash]
+      })
+      stopCountdown()
+      tradeOrdersStore.clearOrdersForAddress(walletAddress.value)
+      break
+    case 'txs':
+      // Stop polling for transactions
+      tradeOrdersStore
+        .getTransactionsByAddress(walletAddress.value)
+        .forEach(tx => {
+          stopStatusPolling(tx.hash)
+        })
+      tradeOrdersStore.clearTransactionsForAddress(walletAddress.value)
+      break
+    case 'swap':
+      // Stop polling for swaps
+      tradeOrdersStore.getSwapsByAddress(walletAddress.value).forEach(swap => {
+        stopStatusPolling(swap.hash)
+      })
+      tradeOrdersStore.clearSwapsForAddress(walletAddress.value)
+      break
+    case 'bridge':
+      // Stop polling for bridges
+      tradeOrdersStore
+        .getBridgesByAddress(walletAddress.value)
+        .forEach(bridge => {
+          stopStatusPolling(bridge.hash)
+        })
+      tradeOrdersStore.clearBridgesForAddress(walletAddress.value)
+      break
+    default:
+      // Stop all polling
+      Object.keys(pollIntervals).forEach(stopPolling)
+      Object.keys(statusPollIntervals).forEach(stopStatusPolling)
+      remainingTimes.value = {}
+      stopCountdown()
+      tradeOrdersStore.clearAllNotificationsForAddress(walletAddress.value)
+  }
+}
 // Fetch balances after status changes
 const fetchBalances = () => {
   setIsLoadingBalances(true)
@@ -352,17 +415,6 @@ const removeNotification = (hash: string) => {
   if (orders.value.length === 0) {
     stopCountdown()
   }
-}
-
-// Clear all notifications
-const clearAllNotifications = () => {
-  if (!walletAddress.value) return
-
-  Object.keys(pollIntervals).forEach(stopPolling)
-  Object.keys(statusPollIntervals).forEach(stopStatusPolling)
-  remainingTimes.value = {}
-  tradeOrdersStore.clearAllNotificationsForAddress(walletAddress.value)
-  stopCountdown()
 }
 
 // Helper to start polling for all pending orders
@@ -666,10 +718,4 @@ watch(
   },
   { deep: true },
 )
-
-// Expose methods for parent component
-defineExpose({
-  clearAllNotifications,
-  notifications,
-})
 </script>
