@@ -27,6 +27,7 @@ const ROUTES_MAIN: RouteNameCollection = {
   CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
   LEARN: { NAME: 'Learn', PATH: '/learn' },
   STOCKS: { NAME: 'Stocks', PATH: '/stocks' },
+  MCP: { NAME: 'MCP', PATH: '/mcp' },
 }
 const TOKEN_INFO = { PATH: 'token/:tokenId' }
 const TOKEN_INFO_ROUTE_NAMES = {

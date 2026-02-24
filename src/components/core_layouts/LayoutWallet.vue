@@ -161,6 +161,25 @@
                 {{ $t('sell') }}
               </p>
             </a>
+            <!-- MCP button -->
+            <button
+              v-if="isWalletConnected"
+              :class="[
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center hoverNoBG w-full',
+              ]"
+              @click="router.push({ name: ROUTES_MAIN.MCP.NAME })"
+            >
+              <ShieldCheckIcon
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+              />
+              <p
+                :class="[
+                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                ]"
+              >
+                AI
+              </p>
+            </button>
           </div>
         </div>
       </div>
@@ -224,13 +243,15 @@ import {
   QrCodeIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
+  ShieldCheckIcon,
 } from '@heroicons/vue/24/outline'
 import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
+  ROUTES_MAIN,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
@@ -240,6 +261,7 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
+const router = useRouter()
 
 onMounted(() => {
   if (

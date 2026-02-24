@@ -16,6 +16,7 @@ const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
+const ViewMCP = () => import('@/views/ViewMCP.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -94,6 +95,11 @@ const DefaultRoutes = <RouteNameCollection>[
         ...STOCK_INFO_ROUTE,
       },
     ],
+  },
+  {
+    path: ROUTES_MAIN.MCP.PATH,
+    name: ROUTES_MAIN.MCP.NAME,
+    component: ViewMCP,
   },
   {
     path: '/:pathMatch(.*)*',
