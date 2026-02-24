@@ -377,18 +377,6 @@ const confirmTransaction = async () => {
             )
           : ''
 
-        toastStore.addToastMessage({
-          type: ToastType.Success,
-          text: t('send.toast.tx-send-success'),
-          duration: 10000,
-          link: blockExplorerUrl
-            ? {
-                title: `${hash.slice(0, 10)}...${hash.slice(-8)}`,
-                url: blockExplorerUrl,
-              }
-            : undefined,
-        })
-
         // Add transaction notification
         tradeOrdersStore.addTransaction({
           type: 'transaction',
@@ -398,17 +386,19 @@ const confirmTransaction = async () => {
           toAddress: props.toAddress,
           amount: props.toAmount,
           symbol: props.toToken.symbol || '',
+          tokenIcon: props.toToken.logo_url,
           usdValue: parseFloat(props.toAmountFiat).toFixed(6),
           networkFee: formatFee.value,
           networkFeeUSD: parseFloat(props.networkFeeUSD).toFixed(6),
           chainName: selectedChain.value?.nameLong || 'Unknown',
           chainIcon: selectedChain.value?.icon,
+          chainSymbol: selectedChain.value?.currencyName || '',
           blockExplorerUrl,
           blockExplorerAddrUrl,
           createdAt: Math.floor(Date.now() / 1000),
           seen: false,
+          chainId: selectedChain.value?.chainID || '',
         })
-
         openModal.value = false
         model.value = false
         emit('tx-sent')

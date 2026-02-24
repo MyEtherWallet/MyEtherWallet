@@ -2,7 +2,7 @@
   <app-dialog
     v-model:is-open="model"
     title="Swap"
-    class="sm:max-w-[460px] sm:mx-auto lg:h-[650px]"
+    class="lg:min-h-[614px] xs:min-w-[450px]"
   >
     <template #content>
       <div class="mx-4 mb-2">
@@ -30,20 +30,23 @@
             {{ t('swap.swap-offer.you-will-get') }}:
           </p>
           <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
-            <div class="relative flex-none overflow-visible">
+            <div class="relative">
               <app-token-logo
                 :url="toToken?.logoURI"
                 :symbol="toToken?.symbol"
-                width="w-8 lg:w-[64px]"
-                height="h-8 lg:h-[64px]"
+                width="w-8 lg:w-[48px]"
+                height="h-8 lg:h-[48px]"
               />
-              <app-token-logo
-                :url="toChain?.icon"
-                symbol=""
-                width="w-4 lg:w-6"
-                height="h-4 lg:h-6"
-                class="absolute bottom-[-3px] right-[-6px]"
-              />
+              <div
+                class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4"
+              >
+                <app-token-logo
+                  :url="toChain?.icon"
+                  symbol=""
+                  width="w-4 lg:w-6"
+                  height="h-4 lg:h-6"
+                />
+              </div>
             </div>
             <div class="ml-5 min-w-0">
               <div
@@ -206,14 +209,13 @@
         >
           {{ t('swap.swap-offer.proceed') }}
         </app-base-button>
-        <app-base-button
-          class="w-full mt-4"
-          :is-outline="true"
-          theme="error"
+        <app-btn-text
+          class="mx-auto w-full mt-2 text-error"
+          is-large
           @click="declineSwap"
         >
-          {{ t('swap.swap-offer.decline') }}
-        </app-base-button>
+          Cancel
+        </app-btn-text>
       </div>
     </template>
   </app-dialog>
@@ -225,6 +227,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import { computed, watch, ref } from 'vue'
 import {
