@@ -11,7 +11,7 @@
         class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
-          v-if="txStatus.label === 'pending'"
+          v-if="txStatus.label === 'Pending'"
           class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
         {{ txStatus.label }}
