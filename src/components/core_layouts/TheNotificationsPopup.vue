@@ -25,7 +25,7 @@
         leave-to-class="opacity-0 scale-95"
       >
         <div
-          v-if="isNotificationsOpen"
+          v-show="isNotificationsOpen"
           ref="popupRef"
           :style="popupStyle"
           class="fixed z-[2101] w-[calc(100vw-80px)] sm:w-[360px] sm:max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] flex flex-col"
@@ -77,7 +77,7 @@
           </div>
 
           <!-- Notifications List -->
-          <div class="p-3 flex-1 overflow-y-auto">
+          <div class="p-3 flex-1 overflow-y-auto max-h-[calc(100vh-200px)]">
             <module-notifications ref="tradeNotificationsRef" />
           </div>
         </div>

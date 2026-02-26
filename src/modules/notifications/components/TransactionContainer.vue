@@ -1,5 +1,5 @@
 <template>
-  <div class="relative px-1 rounded-16 bg-white">
+  <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
       <div>
         <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
