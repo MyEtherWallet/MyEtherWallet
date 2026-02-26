@@ -5,6 +5,7 @@
       v-model:selected="selectedCategory"
       :btn-list="categories"
       size="xs"
+      class="mb-5"
     >
       <template #btn-content="{ data }">
         {{ data.label }}
@@ -97,9 +98,12 @@ import {
 } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
 
+const appLayoutStore = useAppLayoutStore()
+const { isNotificationsOpen } = storeToRefs(appLayoutStore)
 // Extended TradeOrder with runtime-only remainingTime
 interface TradeOrder extends SavedTradeOrder {
   remainingTime: number
@@ -318,23 +322,24 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
 
     // Stop polling for this order
     stopPolling(hash)
-
-    // Show success toast with trade info
-    toastStore.addToastMessage({
-      type: ToastType.Success,
-      text: 'Trade Order Filled',
-      duration: 10000,
-      tradeInfo: {
-        fromToken: order.fromSymbol,
-        fromtTokenIcon: order.fromTokenIcon || '',
-        fromTokenIsStock: false,
-        fromAmount: formatFloatingPointValue(order.fromAmount).value,
-        toToken: order.toSymbol,
-        toTokenIcon: order.toTokenIcon || '',
-        toTokenIsStock: false,
-        toAmount: formatFloatingPointValue(finalAmount).value,
-      },
-    })
+    if (!isNotificationsOpen.value) {
+      // Show success toast with trade info
+      toastStore.addToastMessage({
+        type: ToastType.Success,
+        text: 'Trade Order Filled',
+        duration: 10000,
+        tradeInfo: {
+          fromToken: order.fromSymbol,
+          fromtTokenIcon: order.fromTokenIcon || '',
+          fromTokenIsStock: false,
+          fromAmount: formatFloatingPointValue(order.fromAmount).value,
+          toToken: order.toSymbol,
+          toTokenIcon: order.toTokenIcon || '',
+          toTokenIsStock: false,
+          toAmount: formatFloatingPointValue(finalAmount).value,
+        },
+      })
+    }
 
     // Refresh balances after trade order is filled
     fetchBalances()
@@ -346,21 +351,23 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     stopPolling(hash)
 
     // Show error toast with trade info
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: `Trade Order ${status.status === 'cancelled' ? 'Cancelled' : 'Expired'}`,
-      duration: 10000,
-      tradeInfo: {
-        fromToken: order.fromSymbol,
-        fromtTokenIcon: order.fromTokenIcon || '',
-        fromTokenIsStock: false,
-        fromAmount: formatFloatingPointValue(order.fromAmount).value,
-        toToken: order.toSymbol,
-        toTokenIcon: order.toTokenIcon || '',
-        toTokenIsStock: false,
-        toAmount: formatFloatingPointValue(order.expectedToAmount).value,
-      },
-    })
+    if (!isNotificationsOpen.value) {
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: `Trade Order ${status.status === 'cancelled' ? 'Cancelled' : 'Expired'}`,
+        duration: 10000,
+        tradeInfo: {
+          fromToken: order.fromSymbol,
+          fromtTokenIcon: order.fromTokenIcon || '',
+          fromTokenIsStock: false,
+          fromAmount: formatFloatingPointValue(order.fromAmount).value,
+          toToken: order.toSymbol,
+          toTokenIcon: order.toTokenIcon || '',
+          toTokenIsStock: false,
+          toAmount: formatFloatingPointValue(order.expectedToAmount).value,
+        },
+      })
+    }
   }
 
   tradeOrdersStore.updateOrder(walletAddress.value, hash, updates)
@@ -455,7 +462,7 @@ const updateNotificationStatus = (
 
   if (_status === 'confirmed' || _status === 'success') {
     newStatus = 'confirmed'
-  } else if (_status === 'failed') {
+  } else if (_status === 'fail') {
     newStatus = 'failed'
   }
 
@@ -472,30 +479,34 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
-
-    toastStore.addToastMessage({
-      type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
-      text: `Transaction ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
-      duration: 10000,
-    })
+    if (!isNotificationsOpen.value) {
+      // Show toast for transaction status update
+      toastStore.addToastMessage({
+        type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
+        text: `Transaction ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        duration: 10000,
+      })
+    }
 
     if (shouldRefreshBalances) fetchBalances()
   } else if (type === 'swap') {
     const swaps = tradeOrdersStore.getSwapsByAddress(walletAddress.value)
     const swap = swaps.find(s => s.hash === hash)
     if (!swap || newStatus === swap.status) return
-
     tradeOrdersStore.updateSwap(walletAddress.value, hash, {
       status: newStatus,
       seen: false,
     })
     stopStatusPolling(hash)
 
-    toastStore.addToastMessage({
-      type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
-      text: `Swap ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
-      duration: 10000,
-    })
+    if (!isNotificationsOpen.value) {
+      // Show toast for swap status update
+      toastStore.addToastMessage({
+        type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
+        text: `Swap ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        duration: 10000,
+      })
+    }
 
     if (shouldRefreshBalances) fetchBalances()
   } else if (type === 'bridge') {
@@ -508,12 +519,15 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (!isNotificationsOpen.value) {
+      // Show toast for bridge status update
 
-    toastStore.addToastMessage({
-      type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
-      text: `Bridge ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
-      duration: 10000,
-    })
+      toastStore.addToastMessage({
+        type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
+        text: `Bridge ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        duration: 10000,
+      })
+    }
 
     if (shouldRefreshBalances) fetchBalances()
   }
@@ -526,7 +540,6 @@ const startStatusPolling = async (
   type: StatusNotificationType,
 ) => {
   if (statusPollIntervals[hash]) return
-
   statusPollIntervals[hash] = -1
 
   const pollStatus = async () => {

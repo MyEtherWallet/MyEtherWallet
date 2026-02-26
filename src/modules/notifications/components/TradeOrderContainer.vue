@@ -1,11 +1,17 @@
 <template>
-  <div class="relative px-1 rounded-16 bg-white">
+  <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
       <div class="basis-1/4">
         <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
           trade order
         </p>
       </div>
+      <span
+        v-if="order.status === 'pending'"
+        class="text-s-12 font-mono text-primary ml-auto"
+      >
+        {{ formatCountdown(remainingTime) }}
+      </span>
       <div
         :class="statusBadgeClass"
         class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
@@ -16,12 +22,6 @@
         ></div>
         {{ order.status }}
       </div>
-      <span
-        v-if="order.status === 'pending'"
-        class="text-s-12 font-mono text-primary"
-      >
-        {{ formatCountdown(remainingTime) }}
-      </span>
     </div>
 
     <!-- From / To -->
