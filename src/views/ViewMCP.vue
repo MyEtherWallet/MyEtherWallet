@@ -162,8 +162,76 @@
         </div>
       </div>
 
+      <!-- Tasks Table -->
+      <div v-if="tasks.length > 0" class="w-full">
+        <h3 class="text-s-16 font-bold mb-3 text-center">Pending Tasks</h3>
+        <div class="bg-white rounded-20 shadow-button overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-grey-5 border-b border-grey-10">
+                  <th
+                    class="px-6 py-4 text-s-12 font-semibold text-grey-50 uppercase tracking-wider"
+                  >
+                    Task ID
+                  </th>
+                  <th
+                    class="px-6 py-4 text-s-12 font-semibold text-grey-50 uppercase tracking-wider"
+                  >
+                    Action
+                  </th>
+                  <th
+                    class="px-6 py-4 text-s-12 font-semibold text-grey-50 uppercase tracking-wider"
+                  >
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-grey-10">
+                <tr
+                  v-for="(task, idx) in tasks"
+                  :key="idx"
+                  class="hover:bg-grey-5 transition-colors"
+                >
+                  <td
+                    class="px-6 py-4 text-s-14 font-mono text-grey-70 whitespace-nowrap"
+                  >
+                    {{
+                      task.taskId ? task.taskId.slice(0, 8) + '...' : 'Unknown'
+                    }}
+                  </td>
+                  <td
+                    class="px-6 py-4 text-s-14 text-grey-90 max-w-xs truncate"
+                    :title="JSON.stringify(task, null, 2)"
+                  >
+                    <div class="flex flex-col">
+                      <span class="font-medium">{{
+                        task.action || task.type || 'Generic Task'
+                      }}</span>
+                      <span
+                        v-if="task.networkType"
+                        class="text-xs text-grey-50"
+                      >
+                        {{ task.networkType }}
+                      </span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                    >
+                      {{ task.status || 'Pending' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- Disclaimer -->
-      <p class="text-s-12 text-grey-30 text-center leading-p-150">
+      <p class="text-s-12 text-grey-30 text-center leading-p-150 mt-4">
         Always review transactions before confirming. MyEtherWallet never
         auto-approves any action on your behalf.
       </p>
@@ -175,11 +243,22 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import configs from '@/configs'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import { useWalletStore } from '@/stores/walletStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useInputStore } from '@/stores/inputStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { walletAddress } = storeToRefs(walletStore)
+const walletMenuStore = useWalletMenuStore()
+const inputStore = useInputStore()
 
 const sessionId = ref<string>('')
 const isLoading = ref(false)
 const error = ref<string>('')
 const agentConnected = ref(false)
+const tasks = ref<any[]>([])
+const processedTaskIds = ref(new Set<string>())
 
 const features = [
   'AI-powered transactions',
@@ -188,12 +267,117 @@ const features = [
 ]
 
 let pollTimer: ReturnType<typeof setInterval> | null = null
+let tasksPollTimer: ReturnType<typeof setInterval> | null = null
 
 function stopPolling() {
   if (pollTimer !== null) {
     clearInterval(pollTimer)
     pollTimer = null
   }
+  if (tasksPollTimer !== null) {
+    clearInterval(tasksPollTimer)
+    tasksPollTimer = null
+  }
+}
+
+async function pollTasks() {
+  if (!sessionId.value) return
+  try {
+    const res = await fetch(
+      `${configs.MEW_MPC_RPC_URL}/api/tasks/${sessionId.value}`,
+    )
+    if (res.ok) {
+      const data = await res.json()
+      tasks.value = data.tasks || []
+
+      // Process pending tasks
+      // We look for any task that hasn't been processed yet.
+      const newTasks = tasks.value.filter(
+        task => !processedTaskIds.value.has(task.taskId),
+      )
+
+      if (newTasks.length > 0) {
+        // If we see *any* new tasks, we assume the user's intent has updated.
+        // We only care about the very last task in the underlying list from the server
+        // assuming the server appends new tasks.
+        const latestTask = tasks.value[tasks.value.length - 1]
+
+        // If the latest task is actually one of the new ones (or we just decided to always
+        // sync to the latest state), we execute it.
+        // We also mark ALL tasks as processed to avoid processing "stale" middle tasks.
+        tasks.value.forEach(t => processedTaskIds.value.add(t.taskId))
+
+        // Reset sidebar state if needed (optional, but good for clarity)
+        // inputStore.clearSendValues() -> technically storeSendValues overwrites so it's fine.
+
+        if (
+          latestTask.action === 'getAddress' &&
+          latestTask.status !== 'completed' &&
+          latestTask.status !== 'processing'
+        ) {
+          await handleGetAddressTask(latestTask)
+        } else if (
+          latestTask.action === 'sendTransaction' &&
+          latestTask.status !== 'completed' &&
+          latestTask.status !== 'processing'
+        ) {
+          handleSendTransactionTask(latestTask)
+        }
+      }
+    }
+  } catch {
+    // silently ignore
+  }
+}
+
+function handleSendTransactionTask(task: any) {
+  if (!task.data) return
+  // Open Send menu and populate fields
+  inputStore.storeSendValues({
+    toAddress: task.data.to,
+    amount: task.data.amount,
+    token: task.data.contract,
+  })
+
+  walletMenuStore.setWalletPanel('send')
+  walletMenuStore.setIsOpenSideMenu(true)
+}
+
+async function handleGetAddressTask(task: any) {
+  if (!walletAddress.value) {
+    console.warn('No wallet connected, cannot process getAddress task')
+    return
+  }
+
+  try {
+    const responsePayload = {
+      taskId: task.taskId,
+      response: walletAddress.value,
+    }
+
+    const res = await fetch(
+      `${configs.MEW_MPC_RPC_URL}/api/response/${sessionId.value}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(responsePayload),
+      },
+    )
+
+    if (!res.ok) {
+      console.error('Failed to send task response', await res.text())
+    }
+  } catch (e) {
+    console.error('Error handling getAddress task:', e)
+  }
+}
+
+async function startTaskPolling() {
+  // Poll immediately then set interval
+  await pollTasks()
+  tasksPollTimer = setInterval(pollTasks, 3000)
 }
 
 async function pollAgentStatus(uuid: string) {
@@ -205,7 +389,8 @@ async function pollAgentStatus(uuid: string) {
       const data: { isAgentConnected: boolean } = await res.json()
       if (data.isAgentConnected) {
         agentConnected.value = true
-        stopPolling()
+        stopPolling() // stops the agent status polling
+        startTaskPolling()
       }
     }
   } catch {

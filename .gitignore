@@ -58,6 +58,6 @@ chrome-extension
 .env-v6
 .env-v7
 .history
-
+mew-mcp-server
 
 *.tsbuildinfo

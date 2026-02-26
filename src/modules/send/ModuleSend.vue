@@ -168,6 +168,7 @@ onMounted(async () => {
   if (hasSendValues.value) {
     amount.value = sendValues.value.amount
     toAddress.value = sendValues.value.toAddress
+    adrInput.value = sendValues.value.toAddress
     tokenSelectedContract.value = sendValues.value.token
     clearSendValues()
   }
