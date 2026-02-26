@@ -28,12 +28,15 @@
           v-show="isNotificationsOpen"
           ref="popupRef"
           :style="popupStyle"
-          class="fixed z-[2101] w-[calc(100vw-80px)] sm:w-[360px] sm:max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] flex flex-col"
+          class="fixed z-[2101] w-[calc(100vw-32px)] sm:w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] flex flex-col"
         >
-          <!-- Header (drag handle) -->
+          <!-- Header (drag handle on desktop only) -->
           <div
             ref="dragHandleRef"
-            class="flex items-center justify-between px-4 pt-4 cursor-move select-none"
+            :class="[
+              'flex items-center justify-between px-4 pt-4 select-none',
+              !isMobile && 'cursor-move',
+            ]"
           >
             <div class="flex items-center gap-2">
               <h3 class="font-bold text-s-17 group flex items-center gap-1">
@@ -47,6 +50,7 @@
                 {{ unseenNotificationsCount }}
               </span>
               <img
+                v-if="!isMobile"
                 :src="dragIcon"
                 alt="drag"
                 :class="[
@@ -57,6 +61,7 @@
             </div>
             <div class="flex items-center gap-2">
               <app-tooltip
+                v-if="!isMobile"
                 :text="isPinned ? 'Unpin' : 'Pin to keep open'"
                 position="top-left"
               >
@@ -102,9 +107,14 @@ import {
   useDraggable,
   useLocalStorage,
   useElementHover,
+  useWindowSize,
 } from '@vueuse/core'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import pinIcon from '@/assets/icons/pin-icon.svg'
 import dragIcon from '@/assets/icons/drag-icon.svg'
+
+// Breakpoints
+const { isMobile } = useAppBreakpoints()
 
 // Store and wallet
 const tradeOrdersStore = useTradeOrdersStore()
@@ -135,25 +145,49 @@ const savedPosition = useLocalStorage('notificationsPopupPosition', {
   y: 80, // default: top-20 (80px from top)
 })
 
-// Draggable functionality
+// Draggable functionality (disabled on mobile)
 const { x, y } = useDraggable(popupRef, {
   handle: dragHandleRef,
   initialValue: { x: savedPosition.value.x, y: savedPosition.value.y },
+  onStart: () => {
+    // Prevent dragging on mobile
+    if (isMobile.value) return false
+  },
   onEnd: () => {
-    // Save position when drag ends
-    savedPosition.value = { x: x.value, y: y.value }
+    // Save position when drag ends (only on desktop)
+    if (!isMobile.value) {
+      savedPosition.value = { x: x.value, y: y.value }
+    }
   },
 })
 
 // Computed style for popup position
-const popupStyle = computed(() => ({
-  left: `${x.value}px`,
-  top: `${y.value}px`,
-}))
+const popupStyle = computed(() => {
+  if (isMobile.value) {
+    // Position below the notification button on mobile
+    const buttonEl = containerRef.value
+    if (buttonEl) {
+      const rect = buttonEl.getBoundingClientRect()
+      return {
+        right: '16px',
+        top: `${rect.bottom + 8}px`,
+      }
+    }
+    // Fallback if ref not available
+    return {
+      right: '16px',
+      top: '60px',
+    }
+  }
+  return {
+    left: `${x.value}px`,
+    top: `${y.value}px`,
+  }
+})
 
-// Initialize position when popup opens
+// Initialize position when popup opens (only on desktop)
 watch(isNotificationsOpen, async newValue => {
-  if (newValue) {
+  if (newValue && !isMobile.value) {
     await nextTick()
     // Restore saved position, ensuring it's within viewport bounds
     const maxX = window.innerWidth - 360
@@ -163,11 +197,32 @@ watch(isNotificationsOpen, async newValue => {
   }
 })
 
-// Click outside handler - ignore clicks on the popup itself, and skip if pinned
+// Keep popup visible when window is resized
+const { width: windowWidth, height: windowHeight } = useWindowSize()
+
+watch([windowWidth, windowHeight], () => {
+  if (!isNotificationsOpen.value || isMobile.value) return
+  
+  // Ensure popup stays within viewport bounds on desktop
+  const maxX = windowWidth.value - 360
+  const maxY = windowHeight.value - 100
+  
+  if (x.value > maxX) {
+    x.value = Math.max(0, maxX)
+    savedPosition.value = { x: x.value, y: y.value }
+  }
+  if (y.value > maxY) {
+    y.value = Math.max(0, maxY)
+    savedPosition.value = { x: x.value, y: y.value }
+  }
+})
+
+// Click outside handler - ignore clicks on the popup itself, and skip if pinned (pin disabled on mobile)
 onClickOutside(
   containerRef,
   () => {
-    if (isNotificationsOpen.value && !isPinned.value) {
+    const shouldRespectPin = !isMobile.value && isPinned.value
+    if (isNotificationsOpen.value && !shouldRespectPin) {
       togglePopup()
     }
   },
