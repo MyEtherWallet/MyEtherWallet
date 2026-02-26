@@ -321,6 +321,10 @@
       v-model:is-open="tradeInitiatedOpen"
       :order-hash="orderHash"
       :from-chain="selectedFromChain"
+      :from-token="fromTokenSelected"
+      :to-token="toTokenSelected"
+      :from-amount="fromAmount"
+      :to-amount="toAmount"
     />
   </div>
 </template>
