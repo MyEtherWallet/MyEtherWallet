@@ -123,5 +123,6 @@ module.exports = [
   'https://cloudflare-eth.com:443',
   //TRENDING TOKENS
   'https://raw.githubusercontent.com:443/enkryptcom/dynamic-data/main/swaplists/top-tokens.json',
-  'https://api.coingecko.com:443'
+  'https://api.coingecko.com:443',
+  'https://mainnet.krown.network:443'
 ];

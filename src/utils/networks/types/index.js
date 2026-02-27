@@ -4,6 +4,7 @@ import SEPOLIA from './SEPOLIA';
 import GO from './GO.js';
 import MINTME from './MINTME';
 import KAIA from './KAIA.js';
+import KROWN from './KROWN.js';
 import ROOTSTOCKTESTNET from './ROOTSTOCKTESTNET.js';
 import AMOY from './AMOY.js';
 import XLAYER from './XLAYER.js';
@@ -44,6 +45,7 @@ export {
   FTM,
   GNO,
   KAIA,
+  KROWN,
   OP,
   ROOTSTOCKTESTNET,
   AMOY,

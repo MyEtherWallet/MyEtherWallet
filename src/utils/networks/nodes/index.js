@@ -22,6 +22,7 @@ import cotiws from './coti-ws';
 import xlayer from './xlayer-okx-ws';
 import xlayertestws from './xlayer-okx-testnet-ws';
 import base from './base-mew-ws';
+import krown from './krown-ws';
 
 export {
   etcethereumclassiccooperativeparityws,
@@ -47,5 +48,6 @@ export {
   rootstocktestnet,
   amoyws,
   xlayer,
-  xlayertestws
+  xlayertestws,
+  krown
 };
