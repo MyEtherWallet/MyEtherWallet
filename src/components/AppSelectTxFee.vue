@@ -15,7 +15,10 @@
           v-if="!hasFees"
           class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
         ></div>
-        <p v-else class="font-medium text-black">{{ selectedFeeFiat }}</p>
+        <p v-else-if="hasFiatEstimates" class="font-medium text-black">
+          {{ selectedFeeFiat }}
+        </p>
+        <p v-else class="font-medium text-black">{{ selectedFeeNative }}</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -23,7 +26,7 @@
           v-if="!hasFees"
           class="bg-grey-10 rounded-full animate-pulse w-24 h-4"
         ></div>
-        <template v-else>
+        <template v-else-if="hasFiatEstimates">
           <span class="text-info font-medium">
             {{ selectedFeeNative }}
           </span>
@@ -363,6 +366,14 @@ const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
   return props.fees ? props.fees.fees : feeEstmates.value
 })
 
+const hasFiatEstimates = computed(() => {
+  return (
+    usedFeeToDisplay.value &&
+    usedFeeToDisplay.value[gasPriceType.value] &&
+    (usedFeeToDisplay.value[gasPriceType.value].fiatValue !== undefined ||
+      usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal !== undefined)
+  )
+})
 const selectedFeeFiat = computed(() => {
   if (hasFees.value && usedFeeToDisplay.value) {
     const fiatValue = formatFiatValue(
