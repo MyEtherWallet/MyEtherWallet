@@ -50,6 +50,7 @@ module.exports = [
   'wss://nodes.mewapi.io:443',
   'wss://ws.mainnet.krown.network:443',
   'wss://ws.mainnet1.krown.network:443',
+  'https://mainnet.krown.network:443',
   'wss://rpc.gochain.io:443/ws',
   'wss://ws.xinfin.network:443',
   'wss://www.ethercluster.com:443',
@@ -125,6 +126,5 @@ module.exports = [
   'https://cloudflare-eth.com:443',
   //TRENDING TOKENS
   'https://raw.githubusercontent.com:443/enkryptcom/dynamic-data/main/swaplists/top-tokens.json',
-  'https://api.coingecko.com:443',
-  'https://mainnet.krown.network:443'
+  'https://api.coingecko.com:443'
 ];
