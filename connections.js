@@ -48,6 +48,8 @@ module.exports = [
   'https://nodes.mewapi.io:443',
   'wss://nodesmw.mewapi.io:443',
   'wss://nodes.mewapi.io:443',
+  'wss://ws.mainnet.krown.network:443',
+  'wss://ws.mainnet1.krown.network:443',
   'wss://rpc.gochain.io:443/ws',
   'wss://ws.xinfin.network:443',
   'wss://www.ethercluster.com:443',
