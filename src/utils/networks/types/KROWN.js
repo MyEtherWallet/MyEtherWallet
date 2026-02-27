@@ -20,7 +20,7 @@ export default {
   },
   gasPriceMultiplier: 1,
   canBuy: false,
-  coingeckoID: 'krown',
+  coingeckoID: 'krown-network',
   balanceApi: ''
 };
 
