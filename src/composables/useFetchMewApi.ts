@@ -57,7 +57,11 @@ export const useFetchMewApi = (
         if (isDevMode) {
           console.log('Fetch Error: ', data, error)
         }
-        if (error.includes('AbortError')) {
+        if (
+          error &&
+          typeof error === 'string' &&
+          error.includes('AbortError')
+        ) {
           return
         }
         if (isActivePolling.value) {

@@ -31,6 +31,7 @@
             :is-loading-fees="isLoadingFees"
             :txRequestBody="gasFeeTxEstimate"
             v-model:gas-fee-error="gasFeeError"
+            @fee-is-loading="setDefaultFee"
           />
         </div>
       </div>
@@ -121,6 +122,7 @@ const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 // stored inputs
 import { useInputStore } from '@/stores/inputStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
+
 const inputStore = useInputStore()
 const { storeSendValues, clearSendValues } = inputStore
 const { hasSendValues, sendValues } = storeToRefs(inputStore)
@@ -228,6 +230,11 @@ const networkFeeCrypto = computed(() => {
     : formatUnits(BigInt(nativeValue), 8)
 })
 
+const defaultFeeIsFetching = ref(true)
+const setDefaultFee = (isLoading: boolean) => {
+  defaultFeeIsFetching.value = isLoading
+}
+
 const validSend = computed(() => {
   return (
     amountError.value === '' &&
@@ -235,6 +242,7 @@ const validSend = computed(() => {
     toAddressError.value === '' &&
     isValidAdrInput.value &&
     !isLoadingFees.value &&
+    !defaultFeeIsFetching.value &&
     gasFeeError.value === ''
   )
 })
@@ -389,12 +397,16 @@ const getGasFeeQuotes = async () => {
     }
     isLoadingFees.value = false
   } catch (e) {
-    isLoadingFees.value = false
     if (e instanceof Error) {
       if (e.message) {
-        gasFeeError.value = e.message.includes('insufficient funds')
-          ? 'NOT_ENOUGH_BALANCE'
-          : e.message
+        const isInsufficientFundsError =
+          e.message.includes('insufficient funds')
+        if (isInsufficientFundsError) {
+          gasFeeError.value = 'NOT_ENOUGH_BALANCE'
+          isLoadingFees.value = false
+        } else {
+          gasFeeError.value = e.message
+        }
       } else {
         gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
       }

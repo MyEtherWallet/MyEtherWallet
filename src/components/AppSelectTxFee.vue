@@ -264,11 +264,12 @@ const feeEstmates = ref<FeeOption | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const { data, onFetchResponse, execute, onFetchError } = useMEWFetch(fetchURL, {
-  immediate: false,
-})
-  .post(JSON.stringify(txData.value))
-  .json<QuotesResponse>()
+const { data, onFetchResponse, execute, onFetchError, isFetching } =
+  useMEWFetch(fetchURL, {
+    immediate: false,
+  })
+    .post(JSON.stringify(txData.value))
+    .json<QuotesResponse>()
 
 onFetchResponse(() => {
   if (data.value) {
@@ -315,11 +316,22 @@ watch(
         feesReady.value = true
         return
       }
+      console.log('Fetching fees with body:', txData.value)
       execute()
     }
   },
 )
 
+const emit = defineEmits<{
+  (e: 'fee-is-loading', isFetching: boolean): void
+}>()
+
+watch(
+  () => isFetching.value,
+  () => {
+    emit('fee-is-loading', isFetching.value)
+  },
+)
 onMounted(() => {
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
