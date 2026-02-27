@@ -192,7 +192,10 @@
           >
             You can close this window and
           </p>
-          <app-base-button class="group border-2 mt-2 w-full">
+          <app-base-button
+            class="group border-2 mt-2 w-full"
+            @click="openNotifications"
+          >
             Track progress in notifications
           </app-base-button>
 
@@ -232,6 +235,7 @@ import {
   ArrowUpRightIcon,
 } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { type Chain } from '@/mew_api/types'
 import { type ProviderQuoteResponse } from '@enkryptcom/swap'
 import { type HexPrefixedString } from '@/providers/types'
@@ -250,7 +254,9 @@ import {
 const { t } = useI18n()
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
+const appLayoutStore = useAppLayoutStore()
 const { walletAddress } = storeToRefs(walletStore)
+const { isNotificationsOpen } = storeToRefs(appLayoutStore)
 
 const props = defineProps<{
   fromChain: Chain | undefined
@@ -265,6 +271,12 @@ const model = defineModel<boolean>('swapInitiatedOpen', {
   default: false,
   required: true,
 })
+
+// Open notifications and close modal
+const openNotifications = () => {
+  model.value = false
+  isNotificationsOpen.value = true
+}
 
 // Truncated transaction hash
 const truncatedTxHash = computed(() => {

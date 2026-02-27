@@ -152,7 +152,10 @@
           >
             You can close this window and
           </p>
-          <app-base-button class="group border-2 mt-2 w-full">
+          <app-base-button
+            class="group border-2 mt-2 w-full"
+            @click="openNotifications"
+          >
             Track progress in notifications
           </app-base-button>
         </div>
@@ -176,6 +179,7 @@ import {
 import type { Chain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useWalletStore } from '@/stores/walletStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import BigNumber from 'bignumber.js'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
@@ -192,8 +196,16 @@ const props = defineProps<{
 }>()
 
 const walletStore = useWalletStore()
+const appLayoutStore = useAppLayoutStore()
 const tradeOrdersStore = useTradeOrdersStore()
 const { walletAddress } = storeToRefs(walletStore)
+const { isNotificationsOpen } = storeToRefs(appLayoutStore)
+
+// Open notifications and close modal
+const openNotifications = () => {
+  model.value = false
+  isNotificationsOpen.value = true
+}
 
 const truncatedHash = computed(() => {
   if (!props.orderHash) return ''
