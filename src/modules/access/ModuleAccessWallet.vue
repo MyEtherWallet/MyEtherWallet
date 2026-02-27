@@ -119,10 +119,11 @@ const updateChain = (chain: Chain) => {
 
 onMounted(() => {
   // Set default selected chain to store selected chain on mount
-  if (!selectedChain.value && storeSelectedChain.value) {
+  if (storeSelectedChain.value) {
     accessStore.setSelectedChain(storeSelectedChain.value)
   }
 })
+
 /**-------------------------------
  * UI Elements
  -------------------------------*/
