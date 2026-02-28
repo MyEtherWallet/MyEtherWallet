@@ -15,6 +15,7 @@ import {
   type SupportedNetworkName,
   type ProviderQuoteResponse,
   type ProviderSwapResponse,
+  isSupportedNetwork,
 } from '@enkryptcom/swap'
 import Web3Eth from 'web3-eth'
 import type { Chain } from '@/mew_api/types'
@@ -49,6 +50,10 @@ export interface QuoteParam {
   toToken: NewTokenInfo
 }
 
+const NetworkNotSupportedError = new Error(
+  'Selected network is not supported for swap',
+)
+
 export const useSwap = (): {
   initSwapper: () => Promise<void>
   supportedNetwork: Ref<boolean>
@@ -82,11 +87,19 @@ export const useSwap = (): {
     try {
       swapLoaded.value = false
       const rpc = selectedChain.value?.rpcUrls?.[0] || ''
+      const activeNetworkName =
+        selectedChain.value?.name || selectedNetwork.value
+      const activeNetworkEnum = supportedSwapEnums[
+        activeNetworkName
+      ] as SupportedNetworkName
+      const isSupported = isSupportedNetwork(activeNetworkEnum)
+      if (!activeNetworkEnum || !isSupported) {
+        supportedNetwork.value = false
+        throw NetworkNotSupportedError
+      }
+
       swapInstance.value = new Swapper({
-        network: supportedSwapEnums[
-          (selectedChain.value?.name as string) ||
-            (selectedNetwork.value as string)
-        ] as SupportedNetworkName,
+        network: activeNetworkEnum,
         api: new Web3Eth(rpc) as any,
         walletIdentifier: WalletIdentifier.mew,
         evmOptions: {
@@ -204,12 +217,20 @@ export const useSwap = (): {
       fromTokens.value = finalFromTokens
       swapLoaded.value = true
       return Promise.resolve()
-    } catch {
-      // TODO: add sentry to catch actual error
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: t('swap.error.initializing-swap-failed'),
-      })
+    } catch (e) {
+      if (
+        e instanceof Error &&
+        e.message === NetworkNotSupportedError.message
+      ) {
+        supportedNetwork.value = false
+        swapLoaded.value = true
+      } else {
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: t('swap.error.initializing-swap-failed'),
+        })
+        // TODO: add sentry to catch actual error
+      }
     }
   }
 

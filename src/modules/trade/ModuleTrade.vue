@@ -6,7 +6,7 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <div class="flex items-end justify-between mb-2 px-4">
+        <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
             <p class="font-bold text-s-28">Trade</p>
             <p class="text-info text-s-12 ml-1">
@@ -24,16 +24,7 @@
             >Clear all</app-btn-text
           >
         </div>
-        <div
-          :class="[
-            'relative transition-all duration-300',
-            !isMarketOpen ||
-            !isCurrentNetworkSupported ||
-            isTradingRestrictedInRegion
-              ? 'blur-sm pointer-events-none opacity-60'
-              : '',
-          ]"
-        >
+        <div :class="['relative transition-all duration-300', blurClass]">
           <div class="bg-mewBg rounded-20 p-4 mx-auto mb-2">
             <select-chain-for-app
               :can-store="false"
@@ -225,6 +216,7 @@
       <!-- Error Display -->
       <div
         v-if="!isLoading && generalError"
+        :class="blurClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
         <p class="text-error text-s-14 text-center break-words">
@@ -249,14 +241,7 @@
       </div>
 
       <div
-        :class="[
-          'w-full max-w-[340px] transition-all duration-300',
-          !isMarketOpen ||
-          !isCurrentNetworkSupported ||
-          isTradingRestrictedInRegion
-            ? 'blur-sm pointer-events-none opacity-60'
-            : '',
-        ]"
+        :class="['w-full max-w-[340px] transition-all duration-300', blurClass]"
       >
         <app-base-button
           v-if="isWalletConnected && !isWatchOnly"
@@ -301,6 +286,7 @@
         title="Need help trading?"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
+        :class="blurClass"
       />
     </div>
 
@@ -766,5 +752,13 @@ onBeforeMount(async () => {
       toTokenSelected.value = toTokens.value[0] || null
     }
   }
+})
+
+const blurClass = computed(() => {
+  return !isMarketOpen.value ||
+    !isCurrentNetworkSupported.value ||
+    isTradingRestrictedInRegion.value
+    ? 'blur-sm pointer-events-none opacity-60'
+    : ''
 })
 </script>

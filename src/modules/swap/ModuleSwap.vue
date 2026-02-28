@@ -5,16 +5,19 @@
         'static w-full flex flex-col items-center justify-items-stretch gap-3',
       ]"
     >
-      <div class="w-full max-w-[500px]">
-        <div class="flex items-end justify-between mb-2 px-4">
+      <div class="w-full max-w-[500px] relative">
+        <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <p class="font-bold text-s-28">
             {{ isSwapView ? 'Swap' : 'Bridge' }}
           </p>
-          <app-btn-text class="text-primary text-s-14 pb-1" @click="clearValues"
+          <app-btn-text
+            v-if="supportedNetwork"
+            class="text-primary text-s-14 pb-1"
+            @click="clearValues"
             >Clear all</app-btn-text
           >
         </div>
-        <div class="relative">
+        <div :class="['relative transition-all duration-300', blurClass]">
           <!-- From Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto">
             <p
@@ -28,16 +31,7 @@
               :passed-chains="fromChains"
               :preselected-chain="selectedFromChain"
             />
-            <div
-              v-if="swapLoaded && !isLoading && !supportedNetwork"
-              class="min-h-[108px] mt-4 w-full rounded-16 bg-white py-4 box-border border-transparent border-2 transition-colors shadow-button shadow-button-elevated"
-            >
-              <p class="text-error text-center text-s-12">
-                {{ t('swap.not-supported-network') }}
-              </p>
-            </div>
             <app-swap-enter-amount
-              v-else
               v-model:amount="fromAmount"
               v-model:selected-token="fromTokenSelected!"
               v-model:error="fromAmountError"
@@ -96,11 +90,43 @@
             />
           </div>
         </div>
+
+        <!-- Network Not Supported Banner - Centered Overlay -->
+        <div
+          v-if="swapLoaded && !supportedNetwork"
+          class="absolute flex top-[100px] z-20 pointer-events-none"
+        >
+          <div
+            class="w-full max-w-[380px] px-5 py-5 bg-white border border-warning rounded-16 shadow-button shadow-button-elevated pointer-events-auto"
+          >
+            <div class="flex items-center gap-2 justify-center mb-2">
+              <exclamation-circle-icon class="w-5 h-5 text-warning" />
+              <p class="text-warning font-medium text-s-16">
+                Network Not Supported
+              </p>
+            </div>
+            <p class="text-info text-s-14 text-center mb-4">
+              {{ isSwapView ? 'Swapping' : 'Bridging' }} is not available on
+              {{ selectedChain?.nameLong || selectedChain?.name }}. Please
+              switch to a supported network.
+            </p>
+
+            <select-chain-for-app
+              :passed-chains="fromChains"
+              :preselected-chain="defualtChainWhenNetworkUnsupported"
+              :can-store="false"
+              id="SWAP:NetworkNotSupported"
+              class="mt-4"
+              @update:selected-chain="switchGlobalNetwork"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- Error Display -->
       <div
         v-if="!isLoading && generalError"
+        :class="blurClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
@@ -109,19 +135,15 @@
       </div>
 
       <app-base-button
-        class="w-full max-w-[340px]"
+        :class="['w-full max-w-[340px]', blurClass]"
         v-if="isWalletConnected && !isWatchOnly"
         :disabled="isSwapDisabled"
         @click="swapButton"
       >
         {{ t('common.swap') }}</app-base-button
       >
-      <div class="mx-auto w-full max-w-[340px]" v-else>
-        <app-base-button
-          class="w-full"
-          :disabled="swapLoaded && !supportedNetwork"
-          @click="connectWalletForSwap"
-        >
+      <div :class="['mx-auto w-full max-w-[340px]', blurClass]" v-else>
+        <app-base-button class="w-full" @click="connectWalletForSwap">
           {{ t('connect_wallet') }}</app-base-button
         >
       </div>
@@ -129,6 +151,7 @@
         title="Need help swaping?"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
+        :class="blurClass"
       />
     </div>
     <best-offer-modal v-model:best-offer-open="bestSwapLoadingOpen" />
@@ -164,7 +187,7 @@ import { storeToRefs } from 'pinia'
 import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
 import { useDebounceFn } from '@vueuse/core'
-import { ArrowDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon, ExclamationCircleIcon } from '@heroicons/vue/24/solid'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -314,6 +337,19 @@ const fromChains = computed(() => {
     .filter((chain): chain is Chain => chain !== null)
 })
 
+const defualtChainWhenNetworkUnsupported = computed(() => {
+  return (
+    fromChains.value.filter(chain => chain.name === 'ETHEREUM')[0] ||
+    fromChains.value[0]
+  )
+})
+
+const blurClass = computed(() => {
+  return swapLoaded && !supportedNetwork.value
+    ? 'blur-sm pointer-events-none opacity-60'
+    : ''
+})
+
 const toAddress = computed(() => {
   if (selectedToChain.value?.name === selectedChain.value?.name)
     return userAddress.value
@@ -424,6 +460,10 @@ const getTokenBalanceParams = (token: NewTokenInfo) => {
       : BigInt(balance)
 
   return { baseBalance, totalBalance, baseNetworkBalance }
+}
+
+const switchGlobalNetwork = (chain: Chain) => {
+  globalStore.setSelectedNetwork(chain.name)
 }
 
 const clearValues = () => {
@@ -804,12 +844,14 @@ const setFromToken = () => {
 }
 
 const connectWalletForSwap = () => {
-  storeSwapValues({
-    fromToken: fromTokenSelected.value!,
-    toToken: toTokenSelected.value!,
-    toChain: selectedToChain.value!,
-    fromAmount: fromAmount.value,
-  })
+  if (swapLoaded.value && supportedNetwork.value) {
+    storeSwapValues({
+      fromToken: fromTokenSelected.value!,
+      toToken: toTokenSelected.value!,
+      toChain: selectedToChain.value!,
+      fromAmount: fromAmount.value,
+    })
+  }
   accessStore.openAccessDialog()
 }
 

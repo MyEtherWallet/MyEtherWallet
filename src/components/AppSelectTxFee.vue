@@ -316,7 +316,6 @@ watch(
         feesReady.value = true
         return
       }
-      console.log('Fetching fees with body:', txData.value)
       execute()
     }
   },

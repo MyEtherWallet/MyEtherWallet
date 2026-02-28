@@ -93,7 +93,7 @@ import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
 import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
-import { computed, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 
 /**-------------------------------
  * Access Wallet Dialog
@@ -117,12 +117,14 @@ const updateChain = (chain: Chain) => {
   accessStore.setSelectedChain(chain)
 }
 
-onMounted(() => {
-  // Set default selected chain to store selected chain on mount
-  if (storeSelectedChain.value) {
-    accessStore.setSelectedChain(storeSelectedChain.value)
-  }
-})
+watch(
+  () => isOpenAccessDialog.value,
+  (newVal: boolean) => {
+    if (newVal && storeSelectedChain.value) {
+      accessStore.setSelectedChain(storeSelectedChain.value)
+    }
+  },
+)
 
 /**-------------------------------
  * UI Elements

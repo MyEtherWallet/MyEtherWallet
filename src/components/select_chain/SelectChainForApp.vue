@@ -162,7 +162,7 @@ watch(
       )
       selectedChain.value =
         preselected ?? prop.preselectedChain ?? defaultChains.value[0] ?? null
-      if (!prop.canStore && selectedChain.value) {
+      if (!prop.canStore && prop.preselectedChain !== selectedChain.value) {
         emits('update:selectedChain', selectedChain.value)
       }
     }
@@ -179,7 +179,7 @@ onMounted(() => {
     selectedChain.value = preselected ?? prop.preselectedChain // Fallback to preselectedChain prop
     if (prop.canStore) {
       setSelectedChainStore(selectedChain.value?.name || '')
-    } else {
+    } else if (selectedChain.value !== prop.preselectedChain) {
       emits('update:selectedChain', selectedChain.value)
     }
   } else {
