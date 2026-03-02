@@ -67,15 +67,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       needsApproval.value = false
 
       toastStore.addToastMessage({
-        text: 'Approval successful! You can now trade.',
+        text: 'Approval successful! ',
+        textSecondary: `You can now trade ${fromTokenSelected.value.symbol}.`,
         type: ToastType.Success,
       })
     } catch (e) {
       toastStore.addToastMessage({
-        text:
-          (e as any).details ||
-          (e as Error).message ||
-          'Failed to approve token',
+        text: 'Could not approve token',
+        textSecondary: (e as any).details || (e as Error).message,
         type: ToastType.Error,
       })
     } finally {
@@ -87,7 +86,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     if (!currentQuote.value) {
       toastStore.addToastMessage({
         text: 'Please wait for quote to load',
-        type: ToastType.Error,
       })
       return
     }
@@ -185,10 +183,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       })
     } catch (e) {
       toastStore.addToastMessage({
-        text:
-          (e as any).details ||
-          (e as Error).message ||
-          'Failed to submit trade order',
+        text: 'Failed to submit trade order',
+        textSecondary: (e as any).details || (e as Error).message,
         type: ToastType.Error,
       })
     } finally {

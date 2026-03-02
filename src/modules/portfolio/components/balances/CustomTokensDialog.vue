@@ -249,7 +249,7 @@ const handleAdd = () => {
     symbol: tokenSymbol.value,
   })
   toastStore.addToastMessage({
-    text: 'Custom token added successfully.',
+    text: 'Custom token was added',
     type: ToastType.Success,
   })
 }
@@ -267,7 +267,7 @@ const handleEdit = () => {
     },
   )
   toastStore.addToastMessage({
-    text: 'Custom token updated successfully.',
+    text: 'Custom token was updated',
     type: ToastType.Success,
   })
 }
@@ -279,7 +279,7 @@ const handleDelete = () => {
     selectedToken.value.address,
   )
   toastStore.addToastMessage({
-    text: 'Custom token deleted successfully.',
+    text: 'Custom token was deleted',
     type: ToastType.Success,
   })
 }

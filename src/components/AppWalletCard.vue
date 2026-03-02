@@ -168,7 +168,7 @@ import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
-
+import { ToastType } from '@/types/notification'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -214,10 +214,19 @@ const copy = () => {
  * emits the close event when the close button is clicked.
  */
 const copyClick = () => {
-  copy()
-  toastStore.addToastMessage({
-    text: `${t('common.copied_to_clipboard')}: ${walletAddress.value}`,
-  })
+  try {
+    if (!walletAddress.value) throw new Error('No wallet address to copy')
+    copy()
+    toastStore.addToastMessage({
+      text: `${t('common.copied_to_clipboard')}`,
+      hash: walletAddress.value,
+    })
+  } catch {
+    toastStore.addToastMessage({
+      text: t('common.copy_failed'),
+      type: ToastType.Error,
+    })
+  }
 }
 
 /** -------------------------------

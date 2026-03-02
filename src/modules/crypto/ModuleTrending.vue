@@ -75,7 +75,8 @@ onFetchResponse(() => {
 onFetchError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
-    text: err,
+    text: 'Could not fetch data',
+    textSecondary: err,
   })
 })
 

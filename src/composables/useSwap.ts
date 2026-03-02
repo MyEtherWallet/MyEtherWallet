@@ -227,7 +227,8 @@ export const useSwap = (): {
       } else {
         toastStore.addToastMessage({
           type: ToastType.Error,
-          text: t('swap.error.initializing-swap-failed'),
+          text: 'Something went wrong',
+          textSecondary: t('swap.error.initializing-swap-failed'),
         })
         // TODO: add sentry to catch actual error
       }
@@ -269,7 +270,8 @@ export const useSwap = (): {
       // TODO: add sentry to catch actual error
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: t('swap.error.getting-swap'),
+        text: 'Something went wrong',
+        textSecondary: t('swap.error.getting-swap'),
       })
       return null
     }

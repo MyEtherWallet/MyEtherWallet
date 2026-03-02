@@ -362,7 +362,8 @@ const loadList = async (page: number = 0) => {
     console.log(e)
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: e instanceof Error ? e.message : String(e),
+      text: 'Something went wrong',
+      textSecondary: e instanceof Error ? e.message : String(e),
     })
   } finally {
     isLoadingWalletList.value = false

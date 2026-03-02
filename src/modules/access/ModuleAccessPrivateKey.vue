@@ -134,9 +134,10 @@ const unlock = () => {
     accessStore.closeAccessDialog()
   } catch (error) {
     addToastMessage({
-      text: (error as Error).message
+      text: 'Something went wrong',
+      textSecondary: (error as Error).message
         ? (error as Error).message
-        : 'There was an error creating the wallet. Please try again.',
+        : 'There was an error accessing the wallet. Please try again.',
       type: ToastType.Error,
     })
   }

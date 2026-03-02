@@ -62,13 +62,15 @@ export const useConnectWallet = () => {
       const enkryptInjection = window.enkrypt?.providers?.bitcoin
       if (wallet.id === 'unisat' && !unisatInjection) {
         toastStore.addToastMessage({
-          text: `Unisat not detected. Please install ${wallet.name} extension.`,
+          text: 'Unisat not detected',
+          textSecondary: `Please install ${wallet.name} extension.`,
           type: ToastType.Warning,
         })
         return
       } else if (wallet.id === 'enkrypt' && !enkryptInjection) {
         toastStore.addToastMessage({
-          text: `Enkrypt not detected. Please install ${wallet.name} extension.`,
+          text: 'Enkrypt not detected',
+          textSecondary: `Please install ${wallet.name} extension.`,
           type: ToastType.Warning,
         })
         return
@@ -85,7 +87,9 @@ export const useConnectWallet = () => {
               _storeWallet(unisatWallet, wallet)
             } catch (error) {
               toastStore.addToastMessage({
-                text: `Web3 connect failed: ${error}`,
+                text: 'Web3 connect failed',
+                textSecondary:
+                  error instanceof Error ? error.message : String(error),
                 type: ToastType.Error,
               })
             }
@@ -102,7 +106,8 @@ export const useConnectWallet = () => {
             _type = ToastType.Info
           }
           toastStore.addToastMessage({
-            text: error,
+            text: 'Could not connect to wallet',
+            textSecondary: error,
             type: _type,
           })
         })
@@ -120,7 +125,8 @@ export const useConnectWallet = () => {
         _connectWagmi(wallet)
       } else {
         toastStore.addToastMessage({
-          text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
+          text: 'Web3 wallet not detected',
+          textSecondary: `Please install ${wallet.name} extension to connect.`,
           link: {
             title: 'Click here to install',
             url:
@@ -130,7 +136,7 @@ export const useConnectWallet = () => {
               wallet.downloadUrls?.firefox ||
               '',
           },
-          type: ToastType.Error,
+          type: ToastType.Warning,
           isInfinite: true,
         })
       }
@@ -148,7 +154,9 @@ export const useConnectWallet = () => {
               _storeWallet(web3Wallet, wallet)
             } catch (error) {
               toastStore.addToastMessage({
-                text: `Web3 connect failed: ${error}`,
+                text: 'Web3 connect failed',
+                textSecondary:
+                  error instanceof Error ? error.message : String(error),
                 type: ToastType.Error,
               })
             }
@@ -165,7 +173,8 @@ export const useConnectWallet = () => {
             _type = ToastType.Info
           }
           toastStore.addToastMessage({
-            text: error,
+            text: 'Could not connect to wallet',
+            textSecondary: error,
             type: _type,
           })
         })
@@ -208,7 +217,9 @@ export const useConnectWallet = () => {
             _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
-              text: error instanceof Error ? error.message : String(error),
+              text: 'Could not connect to wallet',
+              textSecondary:
+                error instanceof Error ? error.message : String(error),
               type: ToastType.Error,
             })
           }
@@ -225,7 +236,8 @@ export const useConnectWallet = () => {
           _type = ToastType.Info
         }
         toastStore.addToastMessage({
-          text: error,
+          text: 'Could not connect to wallet',
+          textSecondary: error,
           type: _type,
         })
       })

@@ -407,12 +407,13 @@ const confirmTransaction = async () => {
         //TODO: implement error localization
         toastStore.addToastMessage({
           type: ToastType.Error,
-          text:
-            e instanceof Error
+          text: t('send.toast.tx-send-failed'),
+          textSecondary:
+            e instanceof Error && e.message
               ? sanitizeErrorMessage(e.message)
               : typeof e === 'string'
                 ? sanitizeErrorMessage(e)
-                : t('send.toast.tx-send-failed'),
+                : undefined,
         })
       })
     signing.value = false
@@ -423,7 +424,13 @@ const confirmTransaction = async () => {
     showApproveMessage.value = false
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: e instanceof Error ? e.message : t('send.toast.tx-send-failed'),
+      text: t('send.toast.tx-send-failed'),
+      textSecondary:
+        e instanceof Error && e.message
+          ? sanitizeErrorMessage(e.message)
+          : typeof e === 'string'
+            ? sanitizeErrorMessage(e)
+            : undefined,
     })
   }
 }
