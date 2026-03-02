@@ -5,7 +5,7 @@
     class="sm:max-w-[460px] sm:mx-auto"
   >
     <template #content>
-      <div class="mx-4 mb-4 pb-2">
+      <div class="mx-4 mb-1 pb-2">
         <div
           class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
         >
@@ -75,13 +75,13 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex flex-col sm:flex-row gap-3 mt-4">
+        <div class="flex flex-col gap-3 mt-4">
           <app-base-button
             class="flex-1"
             :disabled="loading"
             @click="$emit('confirm')"
           >
-            <span v-if="loading" class="flex items-center gap-2">
+            <div v-if="loading" class="flex items-center gap-2 justify-center">
               <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
                 <circle
                   class="opacity-25"
@@ -98,18 +98,18 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Processing...
-            </span>
+              <span>Processing...</span>
+            </div>
             <span v-else>Confirm Trade</span>
           </app-base-button>
-          <app-base-button
-            class="flex-1"
-            :is-outline="true"
+          <app-btn-text
             :disabled="loading"
+            is-large
+            class="text-error"
             @click="$emit('cancel')"
           >
             Cancel
-          </app-base-button>
+          </app-btn-text>
         </div>
       </div>
     </template>
@@ -120,6 +120,7 @@
 import { computed } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { formatUnits } from 'viem'
 import {

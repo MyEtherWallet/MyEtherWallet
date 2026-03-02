@@ -1,400 +1,233 @@
 <template>
   <div ref="containerRef" class="relative">
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
-    <app-btn-icon
-      v-show="!hideButton"
-      :label="$t('menu.open-notifications')"
-      @click="togglePopup"
-    >
+    <app-btn-icon :label="$t('menu.open-notifications')" @click="togglePopup">
       <div class="relative">
         <bell-icon class="w-6 h-6" />
-        <!-- Red dot indicator for unseen orders -->
-        <span
+        <!--  dot indicator for unseen orders -->
+        <div
           v-if="hasUnseen"
-          class="absolute -top-1 -right-1 w-3 h-3 bg-error rounded-full border-2 border-white"
-        ></span>
+          class="absolute -top-2 -right-1 min-w-4 min-h-4 bg-primary rounded-full unseenNotificationsCount text-[11px] leading-none text-white flex items-center justify-center font-bold px-[4px]"
+        >
+          {{ unseenNotificationsCount }}
+        </div>
       </div>
     </app-btn-icon>
 
     <!-- Popup -->
-    <transition
-      enter-from-class="opacity-0 scale-95"
-      enter-active-class="transform ease-out duration-200 transition"
-      enter-to-class="opacity-100 scale-100"
-      leave-from-class="opacity-100 scale-100"
-      leave-active-class="transform ease-in duration-150 transition"
-      leave-to-class="opacity-0 scale-95"
-    >
-      <div
-        v-if="isOpen"
-        class="fixed left-4 right-auto sm:left-auto sm:right-24 top-20 bottom-4 sm:bottom-auto z-[9999] w-[calc(100vw-80px)] sm:w-[360px] sm:max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-lg border border-grey-10 flex flex-col"
+    <teleport to="#app">
+      <transition
+        enter-from-class="opacity-0 scale-95"
+        enter-active-class="transform ease-out duration-200 transition"
+        enter-to-class="opacity-100 scale-100"
+        leave-from-class="opacity-100 scale-100"
+        leave-active-class="transform ease-in duration-150 transition"
+        leave-to-class="opacity-0 scale-95"
       >
-        <!-- Header -->
         <div
-          class="flex items-center justify-between p-4 border-b border-grey-10"
+          v-show="isNotificationsOpen"
+          ref="popupRef"
+          :style="popupStyle"
+          class="fixed z-[2101] w-[calc(100vw-32px)] sm:w-[360px] max-h-[calc(100vh-100px)] overflow-hidden bg-white rounded-20 shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] flex flex-col"
         >
-          <div class="flex items-center gap-2">
-            <h3 class="font-bold text-s-17">Notifications</h3>
-            <span
-              v-if="notifications.length > 0"
-              class="bg-primary text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
-            >
-              {{ notifications.length }}
-            </span>
-          </div>
-          <div class="flex items-center gap-2">
-            <button
-              v-if="notifications.length > 0"
-              @click="clearAllNotifications"
-              class="text-primary text-s-14 font-medium hover:underline"
-            >
-              Clear all
-            </button>
-            <button
-              @click="isOpen = false"
-              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
-            >
-              <x-mark-icon class="w-5 h-5 text-info" />
-            </button>
-          </div>
-        </div>
+          <!-- Header (drag handle on desktop only) -->
+          <div
+            ref="dragHandleRef"
+            :class="[
+              'flex items-center justify-between px-4 pt-4 select-none',
+              !isMobile && 'cursor-move',
+            ]"
+          >
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-s-17 group flex items-center gap-1">
+                Notifications
+              </h3>
 
-        <!-- Notifications List -->
-        <div
-          v-if="notifications.length > 0"
-          class="p-3 space-y-3 flex-1 overflow-y-auto"
-        >
-          <template v-for="item in notifications" :key="item.hash">
-            <!-- Transaction Notification -->
-            <div
-              v-if="isTransaction(item)"
-              class="relative p-4 rounded-16 border-2 transition-colors border-success bg-success-10/30"
-            >
-              <!-- Close Button -->
-              <button
-                @click="removeNotification(item.hash)"
-                class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
+              <span
+                v-if="unseenNotificationsCount > 0"
+                class="bg-primary text-white text-s-12 font-bold px-2 py-0.5 rounded-full"
               >
-                <x-mark-icon class="w-4 h-4 text-info" />
-              </button>
-
-              <!-- Status and Time -->
-              <div class="flex items-center justify-between mb-3 pr-6">
-                <div class="flex items-center gap-2">
-                  <span
-                    class="px-2 py-1 rounded-full text-s-10 font-bold uppercase tracking-wider bg-success-10 text-success"
-                  >
-                    Sent
-                  </span>
-                  <div class="flex items-center gap-1">
-                    <img
-                      v-if="item.chainIcon"
-                      :src="item.chainIcon"
-                      class="w-4 h-4 rounded-full"
-                    />
-                    <span class="text-s-12 text-info">{{
-                      item.chainName
-                    }}</span>
-                  </div>
-                </div>
-                <span class="text-s-12 text-info">{{
-                  formatTime(item.createdAt)
-                }}</span>
-              </div>
-
-              <!-- Transaction Link -->
-              <div class="mb-3">
-                <div class="flex items-center gap-2 text-s-12">
-                  <span class="w-2 h-2 bg-success rounded-full"></span>
-                  <span class="text-info">Transaction</span>
-                  <a
-                    :href="item.blockExplorerUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary font-mono hover:underline flex items-center gap-1"
-                  >
-                    {{ truncateHash(item.hash) }}
-                    <arrow-up-right-icon class="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
-
-              <!-- Amount and Recipient -->
-              <div class="flex items-center gap-3">
-                <div class="flex-1">
-                  <p class="text-s-12 text-info">Amount</p>
-                  <p class="font-bold text-s-17">
-                    {{ item.amount }} {{ item.symbol }}
-                  </p>
-                  <p v-if="item.usdValue" class="text-s-12 text-info">
-                    ${{ item.usdValue }}
-                  </p>
-                </div>
-                <arrow-right-icon class="w-4 h-4 text-info flex-shrink-0" />
-                <div class="flex-1 text-right">
-                  <p class="text-s-12 text-info">To</p>
-                  <a
-                    :href="item.blockExplorerAddrUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-mono text-s-14 text-primary hover:underline flex items-center justify-end gap-1"
-                  >
-                    {{ truncateHash(item.toAddress) }}
-                    <arrow-up-right-icon class="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
-
-              <!-- Network Fee -->
-              <div
-                v-if="item.networkFee"
-                class="flex items-center justify-between mt-3 pt-3 border-t border-grey-10"
-              >
-                <span class="text-s-12 text-info">Network Fee</span>
-                <div class="text-right">
-                  <span class="text-s-12 text-black">{{
-                    item.networkFee
-                  }}</span>
-                  <span
-                    v-if="item.networkFeeUSD"
-                    class="text-s-12 text-info ml-1"
-                    >(${{ item.networkFeeUSD }})</span
-                  >
-                </div>
-              </div>
+                {{ unseenNotificationsCount }}
+              </span>
+              <img
+                v-if="!isMobile"
+                :src="dragIcon"
+                alt="drag"
+                :class="[
+                  isHovered ? 'opacity-100' : 'opacity-0',
+                  'ml-1 w-5 h-5 transition-opacity align-middle inline-block',
+                ]"
+              />
             </div>
-
-            <!-- Trade Order Notification -->
-            <div
-              v-else
-              :class="[
-                'relative p-4 rounded-16 border-2 transition-colors',
-                getOrderBorderClass((item as SavedTradeOrder).status),
-              ]"
-            >
-              <!-- Close Button -->
-              <button
-                @click="removeNotification(item.hash)"
-                class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full hover:bg-grey-10 transition-colors"
+            <div class="flex items-center gap-2">
+              <app-tooltip
+                v-if="!isMobile"
+                :text="isPinned ? 'Unpin' : 'Pin to keep open'"
+                position="top-left"
               >
-                <x-mark-icon class="w-4 h-4 text-info" />
-              </button>
-
-              <!-- Status and Time -->
-              <div class="flex items-center justify-between mb-3 pr-6">
-                <div class="flex items-center gap-2">
-                  <span
-                    :class="[
-                      'px-2 py-1 rounded-full text-s-10 font-bold uppercase tracking-wider',
-                      getStatusBadgeClass((item as SavedTradeOrder).status),
-                    ]"
-                  >
-                    {{ (item as SavedTradeOrder).status }}
-                  </span>
-                  <span
-                    v-if="(item as SavedTradeOrder).status === 'pending'"
-                    class="text-s-14 font-mono text-primary"
-                  >
-                    {{
-                      formatCountdown(
-                        getOrderWithRemainingTime(item as SavedTradeOrder)
-                          .remainingTime,
-                      )
-                    }}
-                  </span>
-                </div>
-                <span class="text-s-12 text-info">{{
-                  formatTime(item.createdAt)
-                }}</span>
-              </div>
-
-              <!-- Filled Transaction -->
-              <div
-                v-if="
-                  (item as SavedTradeOrder).status === 'filled' &&
-                  (item as SavedTradeOrder).fills.length > 0
-                "
-                class="mb-3"
-              >
-                <div class="flex items-center gap-2 text-s-12">
-                  <span class="w-2 h-2 bg-success rounded-full"></span>
-                  <span class="text-info">Filled in</span>
-                  <a
-                    :href="
-                      getExplorerLink(
-                        (item as SavedTradeOrder).fills[0].txHash,
-                        (item as SavedTradeOrder).chainId,
-                      )
-                    "
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary font-mono hover:underline"
-                  >
-                    {{
-                      truncateHash((item as SavedTradeOrder).fills[0].txHash)
-                    }}
-                  </a>
-                </div>
-              </div>
-
-              <!-- From / To -->
-              <div class="flex items-center gap-3">
-                <div class="flex-1">
-                  <p class="text-s-12 text-info">From</p>
-                  <p class="font-bold text-s-17">
-                    {{ (item as SavedTradeOrder).fromAmount }}
-                    {{ (item as SavedTradeOrder).fromSymbol }}
-                  </p>
-                </div>
-                <arrow-right-icon class="w-4 h-4 text-info flex-shrink-0" />
-                <div class="flex-1 text-right">
-                  <p class="text-s-12 text-info">To</p>
-                  <p
-                    v-if="
-                      (item as SavedTradeOrder).status === 'filled' &&
-                      (item as SavedTradeOrder).finalToAmount
-                    "
-                    class="flex flex-col items-end"
-                  >
-                    <span class="text-s-12 text-info line-through"
-                      >{{ (item as SavedTradeOrder).expectedToAmount }}
-                      {{ (item as SavedTradeOrder).toSymbol }}</span
-                    >
-                    <span class="font-bold text-s-17 text-success"
-                      >{{ (item as SavedTradeOrder).finalToAmount }}
-                      {{ (item as SavedTradeOrder).toSymbol }}</span
-                    >
-                    <span
-                      v-if="(item as SavedTradeOrder).percentageDiff"
-                      :class="[
-                        'text-s-12',
-                        (item as SavedTradeOrder).percentageDiff! > 0
-                          ? 'text-success'
-                          : 'text-error',
-                      ]"
-                    >
-                      {{
-                        (item as SavedTradeOrder).percentageDiff! > 0
-                          ? '+'
-                          : ''
-                      }}{{
-                        (item as SavedTradeOrder).percentageDiff!.toFixed(2)
-                      }}%
-                    </span>
-                  </p>
-                  <p v-else class="font-bold text-s-17">
-                    ~ {{ (item as SavedTradeOrder).expectedToAmount }}
-                    {{ (item as SavedTradeOrder).toSymbol }}
-                  </p>
-                </div>
-              </div>
-
-              <!-- Order Hash and USD Value -->
-              <div
-                class="flex items-center justify-between mt-3 pt-3 border-t border-grey-10"
-              >
-                <span class="text-s-12 text-info font-mono">{{
-                  truncateHash(item.hash)
-                }}</span>
-                <span
-                  v-if="(item as SavedTradeOrder).usdValue"
-                  class="text-s-12 text-info"
-                  >${{ (item as SavedTradeOrder).usdValue }}</span
+                <app-btn-icon
+                  :label="isPinned ? 'Unpin' : 'Pin'"
+                  @click="isPinned = !isPinned"
+                  class="text-primary"
                 >
-              </div>
+                  <img
+                    :src="pinIcon"
+                    alt="pin"
+                    :class="[{ grayscale: !isPinned }, 'w-5 h-5']"
+                  />
+                </app-btn-icon>
+              </app-tooltip>
+              <app-btn-icon-close @click="togglePopup"> </app-btn-icon-close>
             </div>
-          </template>
-        </div>
+          </div>
 
-        <!-- Empty State -->
-        <div v-else class="p-8 text-center">
-          <bell-icon class="w-12 h-12 text-grey-30 mx-auto mb-3" />
-          <p class="text-info text-s-14">No notifications yet</p>
-          <p class="text-info text-s-12 mt-1">
-            Your trade orders and transactions will appear here
-          </p>
+          <!-- Notifications List -->
+          <div class="p-3 flex-1 overflow-y-auto max-h-[calc(100vh-200px)]">
+            <module-notifications ref="tradeNotificationsRef" />
+          </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted, watch, computed } from 'vue'
-import {
-  BellIcon,
-  XMarkIcon,
-  ArrowRightIcon,
-  ArrowUpRightIcon,
-} from '@heroicons/vue/24/solid'
+import { ref, watch, computed, nextTick } from 'vue'
+import { BellIcon } from '@heroicons/vue/24/solid'
 import { storeToRefs } from 'pinia'
-import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
-import { SUPPORTED_CHAINS } from '@/modules/trade/providers/oneinch_fusion/configs'
-import { formatUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
-import {
-  useTradeOrdersStore,
-  type SavedTradeOrder,
-  type NotificationItem,
-  isTransactionNotification,
-} from '@/stores/tradeOrdersStore'
+import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
-import { useToastStore } from '@/stores/toastStore'
-import { ToastType } from '@/types/notification'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import { onClickOutside } from '@vueuse/core'
-import { useRoute, useRouter } from 'vue-router'
+import AppBtnIconClose from '../AppBtnIconClose.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
+import ModuleNotifications from '@/modules/notifications/ModuleNotifications.vue'
+import {
+  onClickOutside,
+  useDraggable,
+  useLocalStorage,
+  useElementHover,
+  useWindowSize,
+} from '@vueuse/core'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import pinIcon from '@/assets/icons/pin-icon.svg'
+import dragIcon from '@/assets/icons/drag-icon.svg'
 
-// Props
-defineProps<{
-  hideButton?: boolean
-}>()
-
-// Extended TradeOrder with runtime-only remainingTime
-interface TradeOrder extends SavedTradeOrder {
-  remainingTime: number
-}
+// Breakpoints
+const { isMobile } = useAppBreakpoints()
 
 // Store and wallet
 const tradeOrdersStore = useTradeOrdersStore()
 const walletStore = useWalletStore()
-const walletMenuStore = useWalletMenuStore()
 const appLayoutStore = useAppLayoutStore()
-const toastStore = useToastStore()
 const { walletAddress } = storeToRefs(walletStore)
-const { isOverflowHidden, isNotificationsOpen } = storeToRefs(appLayoutStore)
-
-// Router for closing AppViewAsDialog
-const route = useRoute()
-const router = useRouter()
+const { isNotificationsOpen } = storeToRefs(appLayoutStore)
 
 // Container ref for click outside
 const containerRef = ref<HTMLElement | null>(null)
 
+// Popup and drag handle refs
+const popupRef = ref<HTMLElement | null>(null)
+const dragHandleRef = ref<HTMLElement | null>(null)
+
+const isHovered = useElementHover(dragHandleRef)
+// Trade notifications component ref
+const tradeNotificationsRef = ref<InstanceType<
+  typeof ModuleNotifications
+> | null>(null)
+
 // Popup state
-const isOpen = ref(false)
+const isPinned = ref(false)
 
-// Click outside handler
-onClickOutside(containerRef, () => {
-  if (isOpen.value) {
-    isOpen.value = false
-    isNotificationsOpen.value = false
+// Persisted position in localStorage
+const savedPosition = useLocalStorage('notificationsPopupPosition', {
+  x: window.innerWidth - 360 - 96, // default: right-24 (96px from right)
+  y: 80, // default: top-20 (80px from top)
+})
+
+// Draggable functionality (disabled on mobile)
+const { x, y } = useDraggable(popupRef, {
+  handle: dragHandleRef,
+  initialValue: { x: savedPosition.value.x, y: savedPosition.value.y },
+  onStart: () => {
+    // Prevent dragging on mobile
+    if (isMobile.value) return false
+  },
+  onEnd: () => {
+    // Save position when drag ends (only on desktop)
+    if (!isMobile.value) {
+      savedPosition.value = { x: x.value, y: y.value }
+    }
+  },
+})
+
+// Computed style for popup position
+const popupStyle = computed(() => {
+  if (isMobile.value) {
+    // Position below the notification button on mobile
+    const buttonEl = containerRef.value
+    if (buttonEl) {
+      const rect = buttonEl.getBoundingClientRect()
+      return {
+        right: '16px',
+        top: `${rect.bottom + 8}px`,
+      }
+    }
+    // Fallback if ref not available
+    return {
+      right: '16px',
+      top: '60px',
+    }
+  }
+  return {
+    left: `${x.value}px`,
+    top: `${y.value}px`,
   }
 })
 
-// Watch for external trigger to open notifications
-watch(isNotificationsOpen, newValue => {
-  if (newValue && !isOpen.value) {
-    togglePopup()
+// Initialize position when popup opens (only on desktop)
+watch(isNotificationsOpen, async newValue => {
+  if (newValue && !isMobile.value) {
+    await nextTick()
+    // Restore saved position, ensuring it's within viewport bounds
+    const maxX = window.innerWidth - 360
+    const maxY = window.innerHeight - 100
+    x.value = Math.min(Math.max(0, savedPosition.value.x), maxX)
+    y.value = Math.min(Math.max(0, savedPosition.value.y), maxY)
   }
 })
 
-// Runtime state (not persisted)
-const remainingTimes = ref<Record<string, number>>({})
-const pollIntervals: Record<string, number> = {}
-let countdownInterval: number | null = null
+// Keep popup visible when window is resized
+const { width: windowWidth, height: windowHeight } = useWindowSize()
+
+watch([windowWidth, windowHeight], () => {
+  if (!isNotificationsOpen.value || isMobile.value) return
+  
+  // Ensure popup stays within viewport bounds on desktop
+  const maxX = windowWidth.value - 360
+  const maxY = windowHeight.value - 100
+  
+  if (x.value > maxX) {
+    x.value = Math.max(0, maxX)
+    savedPosition.value = { x: x.value, y: y.value }
+  }
+  if (y.value > maxY) {
+    y.value = Math.max(0, maxY)
+    savedPosition.value = { x: x.value, y: y.value }
+  }
+})
+
+// Click outside handler - ignore clicks on the popup itself, and skip if pinned (pin disabled on mobile)
+onClickOutside(
+  containerRef,
+  () => {
+    const shouldRespectPin = !isMobile.value && isPinned.value
+    if (isNotificationsOpen.value && !shouldRespectPin) {
+      togglePopup()
+    }
+  },
+  { ignore: [popupRef] },
+)
 
 // Check if there are unseen orders
 const hasUnseen = computed(() => {
@@ -402,57 +235,23 @@ const hasUnseen = computed(() => {
   return tradeOrdersStore.hasUnseenOrders(walletAddress.value)
 })
 
-// Get all notifications (trade orders + transactions) sorted by time
-const notifications = computed<NotificationItem[]>(() => {
-  if (!walletAddress.value) return []
-  return tradeOrdersStore.getAllNotifications(walletAddress.value)
+const unseenNotificationsCount = computed(() => {
+  if (!walletAddress.value) return 0
+  return tradeOrdersStore.getUnseenNotificationsCount(walletAddress.value)
 })
-
-// Get orders for current wallet address with runtime remainingTime
-const orders = computed<TradeOrder[]>(() => {
-  if (!walletAddress.value) return []
-  const savedOrders = tradeOrdersStore.getOrdersByAddress(walletAddress.value)
-  return savedOrders.map(order => ({
-    ...order,
-    remainingTime: remainingTimes.value[order.hash] ?? order.duration,
-  }))
-})
-
-// Helper to get order with remaining time
-const getOrderWithRemainingTime = (order: SavedTradeOrder): TradeOrder => ({
-  ...order,
-  remainingTime: remainingTimes.value[order.hash] ?? order.duration,
-})
-
-// Check if notification is a transaction
-const isTransaction = isTransactionNotification
 
 // Toggle popup
 const togglePopup = () => {
-  isOpen.value = !isOpen.value
-  if (isOpen.value) {
-    // Close side menu when opening notifications
-    walletMenuStore.setIsOpenSideMenu(false)
-
-    // Close AppViewAsDialog if open (detected by nested routes)
-    if (route.matched.length > 1) {
-      // Navigate to parent route to close the dialog
-      const parentRouteName = route.matched[route.matched.length - 2].name
-      isOverflowHidden.value = false
-      router.push({ name: parentRouteName })
-    }
-
-    if (walletAddress.value) {
-      // Mark all orders as seen when opening
-      tradeOrdersStore.markAllOrdersAsSeen(walletAddress.value)
-    }
+  if (isNotificationsOpen.value && walletAddress.value && hasUnseen.value) {
+    // Mark all orders as seen when closing
+    tradeOrdersStore.markAllOrdersAsSeen(walletAddress.value)
   }
-  isNotificationsOpen.value = isOpen.value
+  isNotificationsOpen.value = !isNotificationsOpen.value
 }
 
 // Open popup (for programmatic access from parent)
 const openPopup = () => {
-  if (!isOpen.value) {
+  if (!isNotificationsOpen.value) {
     togglePopup()
   }
 }
@@ -461,307 +260,4 @@ const openPopup = () => {
 defineExpose({
   openPopup,
 })
-
-// Start countdown timer
-const startCountdown = () => {
-  if (countdownInterval) return
-  countdownInterval = window.setInterval(() => {
-    orders.value.forEach(order => {
-      if (
-        order.status === 'pending' &&
-        (remainingTimes.value[order.hash] ?? order.duration) > 0
-      ) {
-        remainingTimes.value[order.hash] = Math.max(
-          0,
-          (remainingTimes.value[order.hash] ?? order.duration) - 1,
-        )
-      }
-    })
-  }, 1000)
-}
-
-// Stop countdown timer
-const stopCountdown = () => {
-  if (countdownInterval) {
-    clearInterval(countdownInterval)
-    countdownInterval = null
-  }
-}
-
-// Update order status
-const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
-  if (!walletAddress.value) return
-
-  const order = orders.value.find(o => o.hash === hash)
-  if (!order) return
-
-  const updates: Partial<SavedTradeOrder> = {
-    status: status.status,
-    fills: status.fills,
-  }
-
-  if (status.status === 'filled' && status.finalToAmount) {
-    const finalAmount = formatFloatingPointValue(
-      formatUnits(status.finalToAmount, order.toDecimals),
-    ).value
-    updates.finalToAmount = finalAmount
-
-    // Calculate percentage difference
-    const expected = parseFloat(order.expectedToAmount)
-    const actual = parseFloat(finalAmount)
-    if (expected > 0) {
-      updates.percentageDiff = ((actual - expected) / expected) * 100
-    }
-
-    // Mark as unseen when status changes to filled (important update)
-    updates.seen = false
-
-    // Stop polling for this order
-    stopPolling(hash)
-
-    // Show success toast with trade info
-    toastStore.addToastMessage({
-      type: ToastType.Success,
-      text: 'Trade Order Filled',
-      duration: 10000,
-      tradeInfo: {
-        fromToken: order.fromSymbol,
-        fromtTokenIcon: order.fromTokenIcon || '',
-        fromTokenIsStock: false,
-        fromAmount: formatFloatingPointValue(order.fromAmount).value,
-        toToken: order.toSymbol,
-        toTokenIcon: order.toTokenIcon || '',
-        toTokenIsStock: false,
-        toAmount: formatFloatingPointValue(finalAmount).value,
-      },
-    })
-  }
-
-  if (status.status === 'cancelled' || status.status === 'expired') {
-    // Mark as unseen when status changes
-    updates.seen = false
-    stopPolling(hash)
-
-    // Show error toast with trade info
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: `Trade Order ${status.status === 'cancelled' ? 'Cancelled' : 'Expired'}`,
-      duration: 10000,
-      tradeInfo: {
-        fromToken: order.fromSymbol,
-        fromtTokenIcon: order.fromTokenIcon || '',
-        fromTokenIsStock: false,
-        fromAmount: formatFloatingPointValue(order.fromAmount).value,
-        toToken: order.toSymbol,
-        toTokenIcon: order.toTokenIcon || '',
-        toTokenIsStock: false,
-        toAmount: formatFloatingPointValue(order.expectedToAmount).value,
-      },
-    })
-  }
-
-  tradeOrdersStore.updateOrder(walletAddress.value, hash, updates)
-}
-
-// Start polling for order status
-const startPolling = async (hash: string, chainId: number) => {
-  if (pollIntervals[hash]) return
-
-  // Set a placeholder immediately to prevent duplicate calls during async operation
-  pollIntervals[hash] = -1
-
-  const pollStatus = async () => {
-    try {
-      const { default: OneInchFusion } =
-        await import('@/modules/trade/providers/oneinch_fusion/oneInchFusion')
-      const fusion = new OneInchFusion(null as any, chainId)
-      const status = await fusion.getOrderStatus(hash)
-      updateOrderStatus(hash, status)
-    } catch (e) {
-      console.error('Failed to fetch order status:', e)
-    }
-  }
-
-  // Initial poll
-  await pollStatus()
-
-  // Poll every 5 seconds (replace placeholder with actual interval)
-  // Only set interval if the order is still pending (might have been filled/expired during initial poll)
-  if (pollIntervals[hash] === -1) {
-    pollIntervals[hash] = window.setInterval(pollStatus, 5000)
-  }
-}
-
-// Stop polling for a specific order
-const stopPolling = (hash: string) => {
-  if (pollIntervals[hash]) {
-    clearInterval(pollIntervals[hash])
-    delete pollIntervals[hash]
-  }
-}
-
-// Remove a notification (order or transaction)
-const removeNotification = (hash: string) => {
-  if (!walletAddress.value) return
-
-  stopPolling(hash)
-  delete remainingTimes.value[hash]
-  tradeOrdersStore.removeNotification(walletAddress.value, hash)
-
-  if (orders.value.length === 0) {
-    stopCountdown()
-  }
-}
-
-// Clear all notifications
-const clearAllNotifications = () => {
-  if (!walletAddress.value) return
-
-  Object.keys(pollIntervals).forEach(stopPolling)
-  remainingTimes.value = {}
-  tradeOrdersStore.clearAllNotificationsForAddress(walletAddress.value)
-  stopCountdown()
-}
-
-// Format countdown time
-const formatCountdown = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${mins}:${secs.toString().padStart(2, '0')}`
-}
-
-// Format time
-const formatTime = (timestamp: number): string => {
-  const date = new Date(timestamp * 1000)
-  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
-
-// Truncate hash
-const truncateHash = (hash: string): string => {
-  if (!hash) return ''
-  return `${hash.slice(0, 6)}...${hash.slice(-4)}`
-}
-
-// Get explorer link based on chainId
-const getExplorerLink = (txHash: string, chainId: number): string => {
-  const chainConfig = SUPPORTED_CHAINS.find(c => c.chainId === chainId)
-  const blockExplorer = chainConfig?.chain.blockExplorers?.default?.url || ''
-  return `${blockExplorer}/tx/${txHash}`
-}
-
-// Get status badge class
-const getStatusBadgeClass = (status: string): string => {
-  switch (status.toLowerCase()) {
-    case 'filled':
-      return 'bg-success-10 text-success'
-    case 'pending':
-      return 'bg-primary-10 text-primary'
-    case 'cancelled':
-    case 'expired':
-      return 'bg-error-10 text-error'
-    default:
-      return 'bg-grey-10 text-info'
-  }
-}
-
-// Get order border class
-const getOrderBorderClass = (status: string): string => {
-  switch (status.toLowerCase()) {
-    case 'filled':
-      return 'border-success bg-success-10/30'
-    case 'pending':
-      return 'border-grey-10 bg-white'
-    case 'cancelled':
-    case 'expired':
-      return 'border-error bg-error-10/30'
-    default:
-      return 'border-grey-10 bg-white'
-  }
-}
-
-// Cleanup on unmount
-onUnmounted(() => {
-  Object.keys(pollIntervals).forEach(stopPolling)
-  stopCountdown()
-})
-
-// Watch for empty orders to stop countdown
-watch(
-  () => orders.value.length,
-  newLen => {
-    if (newLen === 0) {
-      stopCountdown()
-    }
-  },
-)
-
-// Helper to start polling for all pending orders
-const startPollingForPendingOrders = (address: string) => {
-  const pendingOrders = tradeOrdersStore.getPendingOrders(address)
-  if (pendingOrders.length > 0) {
-    pendingOrders.forEach(order => {
-      // Calculate remaining time based on creation time and duration
-      const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
-      const remaining = Math.max(0, order.duration - elapsed)
-      remainingTimes.value[order.hash] = remaining
-
-      // Only start polling if not already polling this order
-      if (!pollIntervals[order.hash]) {
-        startPolling(order.hash, order.chainId)
-      }
-    })
-    startCountdown()
-  }
-}
-
-// Watch for wallet address changes to resume polling
-watch(
-  walletAddress,
-  newAddress => {
-    // Stop all current polling
-    Object.keys(pollIntervals).forEach(stopPolling)
-    stopCountdown()
-    remainingTimes.value = {}
-
-    if (newAddress) {
-      // Resume polling for pending orders
-      startPollingForPendingOrders(newAddress)
-    }
-  },
-  { immediate: true },
-)
-
-// Watch for new orders added to the store
-watch(
-  () =>
-    walletAddress.value
-      ? tradeOrdersStore.getOrdersByAddress(walletAddress.value)
-      : [],
-  (newOrders, oldOrders) => {
-    if (!walletAddress.value) return
-
-    // Find newly added orders (orders in new list but not in old list)
-    const oldHashes = new Set((oldOrders || []).map(o => o.hash))
-    const newlyAdded = newOrders.filter(o => !oldHashes.has(o.hash))
-
-    // Start polling for new orders
-    newlyAdded.forEach(order => {
-      if (order.status === 'pending') {
-        // Initialize remaining time
-        const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
-        const remaining = Math.max(0, order.duration - elapsed)
-        remainingTimes.value[order.hash] = remaining
-
-        if (!pollIntervals[order.hash]) {
-          startPolling(order.hash, order.chainId)
-        }
-        startCountdown()
-      }
-    })
-
-    // Also check for any pending orders that aren't being polled
-    startPollingForPendingOrders(walletAddress.value)
-  },
-  { deep: true },
-)
 </script>

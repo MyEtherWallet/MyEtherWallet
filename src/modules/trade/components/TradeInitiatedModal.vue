@@ -1,53 +1,162 @@
 <template>
-  <app-dialog v-model:is-open="model" class="sm:max-w-[420px] sm:mx-auto">
+  <app-dialog
+    v-model:is-open="model"
+    class="sm:max-w-[420px] sm:mx-auto"
+    title="Trade Order Submitted"
+  >
     <template #content>
-      <div class="px-6 pb-8 pt-4">
-        <div class="flex flex-col items-center pt-8 mb-10 text-center">
-          <div
-            class="w-16 h-16 bg-[#e6f6f4] rounded-full flex items-center justify-center mb-6"
-          >
-            <check-circle-icon class="w-10 h-10 text-success" />
-          </div>
-          <h3 class="text-s-24 font-bold mb-3 text-p-120">
-            Trade Order Submitted
-          </h3>
-          <p class="text-s-16 text-grey-50 px-4 leading-relaxed">
+      <div class="px-4 lg:px-6 pb-8 pt-2">
+        <div class="flex flex-col items-center pt-8 text-center">
+          <p class="text-s-13 lg:text-s-14 text-info px-4 leading-p-160">
             Your trade order has been submitted to the 1inch Fusion network. The
             order will be filled by market makers.
           </p>
-        </div>
 
-        <div class="px-4">
-          <div class="bg-mewBg rounded-16 p-4">
-            <div class="flex justify-between items-center">
-              <span class="text-s-14 text-info">Order Hash</span>
-              <div class="flex items-center gap-2">
-                <span class="text-s-12 font-mono truncate max-w-[150px]">
-                  {{ truncatedHash }}
-                </span>
-                <app-btn-copy :copy-value="orderHash" />
+          <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">
+            <!-- Progress -->
+            <div
+              class="flex items-end justify-center rounded-full mb-2 mx-auto"
+            >
+              <!-- Spinner / Status Icon -->
+              <div class="mr-2">
+                <svg
+                  v-if="notificationStatus === 'pending'"
+                  class="w-5 h-5 animate-spin text-primary"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <check-circle-icon
+                  v-else-if="notificationStatus === 'filled'"
+                  class="w-5 h-5 text-success"
+                />
+                <x-circle-icon
+                  v-else-if="
+                    notificationStatus === 'cancelled' ||
+                    notificationStatus === 'expired'
+                  "
+                  class="w-5 h-5 text-error"
+                />
+              </div>
+
+              <!-- Status Text -->
+              <span
+                class="text-s-14 font-semibold"
+                :class="{
+                  'text-primary': notificationStatus === 'pending',
+                  'text-success': notificationStatus === 'filled',
+                  'text-error':
+                    notificationStatus === 'cancelled' ||
+                    notificationStatus === 'expired',
+                }"
+              >
+                {{ statusText }}
+              </span>
+            </div>
+            <div class="flex flex-col justify-start bg-mewBg p-4 rounded-20">
+              <!-- From Row -->
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <app-token-logo
+                    :url="fromToken?.logoURI"
+                    :symbol="fromToken?.symbol"
+                    width="w-9 lg:w-12"
+                    height="h-9 lg:h-12"
+                  />
+                </div>
+                <div class="flex flex-col text-left">
+                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
+                    {{ fromAmount }} {{ fromToken?.symbol }}
+                  </p>
+                  <p class="text-info text-s-14">${{ fromAmountFiat }}</p>
+                </div>
+              </div>
+
+              <!-- Divider Arrow -->
+              <div class="flex justify-start my-2 lg:my-4 mx-[6px] lg:mx-3">
+                <arrow-long-down-icon class="w-6 h-6" />
+              </div>
+
+              <!-- To Row -->
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <app-token-logo
+                    :url="toToken?.logoURI"
+                    :symbol="toToken?.symbol"
+                    width="w-9 lg:w-12"
+                    height="h-9 lg:h-12"
+                  />
+                </div>
+                <div class="flex flex-col text-left">
+                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
+                    {{ toAmount }} {{ toToken?.symbol }}
+                  </p>
+                  <p class="text-info text-s-14">${{ toAmountFiat }}</p>
+                </div>
               </div>
             </div>
-            <div class="flex justify-between items-center mt-3">
-              <span class="text-s-14 text-info">Network</span>
-              <div class="flex items-center gap-2">
-                <img
-                  v-if="fromChain?.icon"
-                  :src="fromChain.icon"
-                  :alt="fromChain.nameLong"
-                  class="w-5 h-5 rounded-full"
-                />
-                <span class="text-s-14 font-medium">{{
-                  fromChain?.nameLong
-                }}</span>
+
+            <!-- Order Info -->
+            <div class="w-full my-5 px-2 lg:px-4">
+              <div class="flex justify-between items-center">
+                <span
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  >Order Hash</span
+                >
+                <div class="flex items-center gap-2">
+                  <span class="text-s-12 font-mono truncate max-w-[150px]">
+                    {{ truncatedHash }}
+                  </span>
+                  <app-btn-copy :copy-value="orderHash" class="-mr-3" />
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-4">
+                <span
+                  class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
+                  >Network</span
+                >
+                <div class="flex items-center gap-2">
+                  <app-token-logo
+                    v-if="fromChain?.icon"
+                    :url="fromChain.icon"
+                    :symbol="fromChain.nameLong"
+                    width="w-6"
+                    height="h-6"
+                  />
+                  <span class="text-s-14 font-medium">{{
+                    fromChain?.nameLong
+                  }}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row mt-10 gap-3">
-          <app-base-button class="flex-1" @click="close">
-            Close
+        <div class="mt-6 lg:mt-10">
+          <p
+            class="text-center text-s-13 lg:text-s-14 text-info px-4 leading-p-160"
+          >
+            You can close this window and
+          </p>
+          <app-base-button
+            class="group border-2 mt-2 w-full"
+            @click="openNotifications"
+          >
+            Track progress in notifications
           </app-base-button>
         </div>
       </div>
@@ -57,18 +166,46 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import { CheckCircleIcon } from '@heroicons/vue/24/solid'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ArrowLongDownIcon,
+} from '@heroicons/vue/24/solid'
 import type { Chain } from '@/mew_api/types'
+import type { NewTokenInfo } from '@/composables/useSwap'
+import { useWalletStore } from '@/stores/walletStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
+import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
+import BigNumber from 'bignumber.js'
+import { formatFiatValue } from '@/utils/numberFormatHelper'
 
 const model = defineModel<boolean>('isOpen', { default: false })
 
 const props = defineProps<{
   orderHash: string
   fromChain?: Chain
+  fromToken?: NewTokenInfo | null
+  toToken?: NewTokenInfo | null
+  fromAmount?: string
+  toAmount?: string
 }>()
+
+const walletStore = useWalletStore()
+const appLayoutStore = useAppLayoutStore()
+const tradeOrdersStore = useTradeOrdersStore()
+const { walletAddress } = storeToRefs(walletStore)
+const { isNotificationsOpen } = storeToRefs(appLayoutStore)
+
+// Open notifications and close modal
+const openNotifications = () => {
+  model.value = false
+  isNotificationsOpen.value = true
+}
 
 const truncatedHash = computed(() => {
   if (!props.orderHash) return ''
@@ -76,7 +213,42 @@ const truncatedHash = computed(() => {
   return `${props.orderHash.slice(0, 8)}...${props.orderHash.slice(-8)}`
 })
 
-const close = () => {
-  model.value = false
-}
+// Fiat values
+const fromAmountFiat = computed(() => {
+  const price = props.fromToken?.price ?? 0
+  const amount = props.fromAmount ?? '0'
+  return formatFiatValue(BigNumber(amount).multipliedBy(price).toFixed(6)).value
+})
+
+const toAmountFiat = computed(() => {
+  const price = props.toToken?.price ?? 0
+  const amount = props.toAmount ?? '0'
+  return formatFiatValue(BigNumber(amount).multipliedBy(price).toFixed(6)).value
+})
+
+// Track notification status from store
+const notificationStatus = computed(() => {
+  if (!walletAddress.value || !props.orderHash) return 'pending'
+
+  const orders = tradeOrdersStore.getOrdersByAddress(walletAddress.value)
+  const order = orders.find(o => o.hash === props.orderHash)
+  if (order) return order.status
+
+  return 'pending'
+})
+
+const statusText = computed(() => {
+  switch (notificationStatus.value) {
+    case 'pending':
+      return 'Pending'
+    case 'filled':
+      return 'Filled'
+    case 'cancelled':
+      return 'Cancelled'
+    case 'expired':
+      return 'Expired'
+    default:
+      return 'Pending'
+  }
+})
 </script>

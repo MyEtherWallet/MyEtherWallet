@@ -41,7 +41,6 @@
           :core-menu-list="coreMenuList"
           :tools-menu-list="toolsMenuList"
           :learn-menu-list="learnMenuList"
-          @open-notifications="openMobileNotifications"
         />
         <!--Desktop Menu -->
         <div v-if="!showMobileMenu" class="flex items-center gap-1 xl:gap-2">
@@ -114,11 +113,7 @@
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected" />
         <!-- Notifications Button (desktop only, but popup is always available) -->
-        <the-notifications-popup
-          v-if="isWalletConnected"
-          :hide-button="showMobileMenu"
-          ref="notificationsRef"
-        />
+        <the-notifications-popup v-if="isWalletConnected" />
 
         <!-- Settings Button -->
         <!-- <app-btn-icon
@@ -165,16 +160,6 @@ const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
-
-// Notifications popup ref
-const notificationsRef = ref<InstanceType<typeof TheNotificationsPopup> | null>(
-  null,
-)
-
-// Open notifications from mobile menu
-const openMobileNotifications = () => {
-  notificationsRef.value?.openPopup()
-}
 
 /** ------------------------------
  * Breakpoints determine menu visibility

@@ -28,7 +28,9 @@
     },
     "initiated": {
       "swap-initiated": "Swap initiated",
-      "completed-note": "Once completed, {symbol} will be deposited to the address you specified.",
+      "bridge-initiated": "Bridge initiated",
+      "swap-completed-note": "Once completed, {symbol} will be deposited to your wallet",
+      "bridge-completed-note": "Once completed, {symbol} will be bridged to this wallet",
       "view-progress": "View Progress"
     },
     "swap-offer": {

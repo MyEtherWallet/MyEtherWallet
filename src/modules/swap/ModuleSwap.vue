@@ -151,6 +151,9 @@
       :to-chain="selectedToChain"
       :selected-quote="selectedQuote"
       :tx-hash="txHash"
+      :to-address="toAddress"
+      :from-address="userAddress"
+      :swap-gas-fee-quote="swapGasFeeQuote"
     />
   </div>
 </template>
@@ -522,11 +525,6 @@ const proceedWithSwap = async (quoteId: string) => {
       txHash.value = hash as HexPrefixedString
       bestOfferSelectionOpen.value = false
       swapInitiatedOpen.value = true
-      toastStore.addToastMessage({
-        type: ToastType.Success,
-        text: t('swap.toast.tx-send-success'),
-        duration: 10000,
-      })
     }
   } catch (e: any) {
     const errorMsg =

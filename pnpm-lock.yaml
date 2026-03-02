@@ -27,8 +27,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8(@siddomains/sid-contracts@0.1.31(@nomiclabs/hardhat-web3@2.1.0(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)))(bufferutil@4.1.0)(ethers@5.8.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(web3-core-helpers@1.10.4)(web3-core-promievent@1.10.4)(web3-eth-abi@4.4.1(typescript@5.9.3)(zod@3.25.76))(web3-utils@4.3.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@enkryptcom/swap':
-        specifier: ^0.0.8
-        version: 0.0.8(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
+        specifier: ^0.0.9
+        version: 0.0.9(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@enkryptcom/types':
         specifier: ^0.0.5
         version: 0.0.5
@@ -305,6 +305,17 @@ packages:
 
   '@1inch/fusion-sdk@2.4.5':
     resolution: {integrity: sha512-qhk60aFHCoFL9445L6yvDO7GlsAIlL5+u3HLdnQg6o/eT1JvvqlL0XOy93PfeXXxXV9ZeZkA9OeYuxuoroVEOQ==}
+    peerDependencies:
+      assert: ^2.0.0
+      axios: '>=1 <2'
+    peerDependenciesMeta:
+      assert:
+        optional: true
+      axios:
+        optional: true
+
+  '@1inch/fusion-sdk@2.4.6':
+    resolution: {integrity: sha512-WDftqVDXnzJHDSJcfz0HFON8yyyI27pYgNsggvkUeC+sCREgPEFbaYI6OpSl4LbbXJgVYoahcQVJYGbcoXFWrg==}
     peerDependencies:
       assert: ^2.0.0
       axios: '>=1 <2'
@@ -1661,8 +1672,8 @@ packages:
     resolution: {integrity: sha512-pWzSxfmcgqdZQWyfWdowQ2MS9YFNOgW5EVpnAQjGYyKZIjvBLMil1h54n1v67n5qXPA5qr8IjEauffLaUlhkrw==}
     engines: {node: '>=14.15.0'}
 
-  '@enkryptcom/swap@0.0.8':
-    resolution: {integrity: sha512-mAr47r0MK9SG02D7wriyVD8gysJR0X32SSFaNqvflUQ/NsaXDmLZ0Ef4z6l/v4VgyLGX+MusBqL5KZho02B7yw==}
+  '@enkryptcom/swap@0.0.9':
+    resolution: {integrity: sha512-cOH8DrNdpwhbfUMpcZ5sDn9xbV3nfi7EvjYbnV1GeB4t290tIbQUIpp9ajPZL37oZJ9jogcw7HQucUxJjiyroA==}
     engines: {node: '>=14.15.0'}
 
   '@enkryptcom/types@0.0.4':
@@ -5950,6 +5961,7 @@ packages:
 
   '@walletconnect/ethereum-provider@2.21.1':
     resolution: {integrity: sha512-SSlIG6QEVxClgl1s0LMk4xr2wg4eT3Zn/Hb81IocyqNSGfXpjtawWxKxiC5/9Z95f1INyBD6MctJbL/R1oBwIw==}
+    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/events@1.0.1':
     resolution: {integrity: sha512-NPTqaoi0oPBVNuLv7qPaJazmGHs5JGyO8eEAk5VGKmJzDR7AHzD4k6ilox5kxk1iwiOnFopBOOMLs86Oa76HpQ==}
@@ -5994,9 +6006,11 @@ packages:
 
   '@walletconnect/sign-client@2.21.0':
     resolution: {integrity: sha512-z7h+PeLa5Au2R591d/8ZlziE0stJvdzP9jNFzFolf2RG/OiXulgFKum8PrIyXy+Rg2q95U9nRVUF9fWcn78yBA==}
+    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/sign-client@2.21.1':
     resolution: {integrity: sha512-QaXzmPsMnKGV6tc4UcdnQVNOz4zyXgarvdIQibJ4L3EmLat73r5ZVl4c0cCOcoaV7rgM9Wbphgu5E/7jNcd3Zg==}
+    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/time@1.0.2':
     resolution: {integrity: sha512-uzdd9woDcJ1AaBZRhqy5rNC9laqWGErfc4dxA9a87mPdKOgWMD85mcFo9dIYIts/Jwocfwn07EC6EzclKubk/g==}
@@ -6009,9 +6023,11 @@ packages:
 
   '@walletconnect/universal-provider@2.21.0':
     resolution: {integrity: sha512-mtUQvewt+X0VBQay/xOJBvxsB3Xsm1lTwFjZ6WUwSOTR1X+FNb71hSApnV5kbsdDIpYPXeQUbGt2se1n5E5UBg==}
+    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/universal-provider@2.21.1':
     resolution: {integrity: sha512-Wjx9G8gUHVMnYfxtasC9poGm8QMiPCpXpbbLFT+iPoQskDDly8BwueWnqKs4Mx2SdIAWAwuXeZ5ojk5qQOxJJg==}
+    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
 
   '@walletconnect/utils@2.21.0':
     resolution: {integrity: sha512-zfHLiUoBrQ8rP57HTPXW7rQMnYxYI4gT9yTACxVW6LhIFROTF6/ytm5SKNoIvi4a5nX5dfXG4D9XwQUCu8Ilig==}
@@ -15856,6 +15872,20 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@1inch/fusion-sdk@2.4.6(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@1inch/byte-utils': 3.1.7(assert@2.1.0)
+      '@1inch/limit-order-sdk': 5.2.2(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      ethers: 6.16.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      tslib: 2.8.1
+      ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+    optionalDependencies:
+      assert: 2.1.0
+      axios: 1.13.3(debug@4.4.1)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@1inch/limit-order-sdk@5.2.2(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
@@ -16005,7 +16035,7 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       form-data: 4.0.5
       js-base64: 3.7.8
       jwt-decode: 4.0.0
@@ -18215,9 +18245,9 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@enkryptcom/swap@0.0.8(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
+  '@enkryptcom/swap@0.0.9(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
-      '@1inch/fusion-sdk': 2.4.5(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@1inch/fusion-sdk': 2.4.6(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@1inch/limit-order-sdk': 5.2.3(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@enkryptcom/types': 0.0.5
       '@enkryptcom/utils': 0.0.7(@polkadot/util@14.0.1)
@@ -18556,7 +18586,7 @@ snapshots:
   '@ethereumjs/common@10.1.0':
     dependencies:
       '@ethereumjs/util': 10.1.0
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
 
   '@ethereumjs/common@2.5.0':
     dependencies:
@@ -19622,7 +19652,7 @@ snapshots:
 
   '@jsdoc/salty@0.2.9':
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   '@keplr-wallet/cosmos@0.9.16(debug@4.4.1)':
     dependencies:
@@ -19713,7 +19743,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -19739,7 +19769,7 @@ snapshots:
       expect: 27.5.1
       graphql: 16.12.0
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - '@types/react'
@@ -19775,7 +19805,7 @@ snapshots:
       create-hmac: 1.1.7
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       ripemd160: 2.0.3
       rxjs: 7.8.2
       secp256k1: 4.0.4
@@ -19804,7 +19834,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
@@ -19834,7 +19864,7 @@ snapshots:
       cosmjs-types: 0.2.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
       semver: 7.7.3
@@ -19863,7 +19893,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
@@ -19890,7 +19920,7 @@ snapshots:
       expect: 27.5.1
       imurmurhash: 0.1.4
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       react-native-get-random-values: 1.11.0(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@18.3.1)(utf-8-validate@5.0.10))
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -19917,7 +19947,7 @@ snapshots:
       ethers: 6.15.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       invariant: 2.2.4
       iso-filecoin: 4.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - bufferutil
@@ -19941,7 +19971,7 @@ snapshots:
       eip55: 2.1.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -19964,7 +19994,7 @@ snapshots:
       eip55: 2.1.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -19987,7 +20017,7 @@ snapshots:
       eip55: 2.1.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -20033,7 +20063,7 @@ snapshots:
       eip55: 2.1.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -20058,7 +20088,7 @@ snapshots:
       eip55: 2.1.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
       uuid: 11.1.0
@@ -20085,7 +20115,7 @@ snapshots:
       expect: 27.5.1
       imurmurhash: 0.1.4
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
       uuid: 11.1.0
@@ -20109,7 +20139,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
       viem: 2.44.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
     transitivePeerDependencies:
@@ -20142,7 +20172,7 @@ snapshots:
       expect: 27.5.1
       icon-sdk-js: 1.5.2
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       prando: 6.0.1
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -20162,7 +20192,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
@@ -20182,7 +20212,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       near-api-js: 3.0.4
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -20212,7 +20242,7 @@ snapshots:
       bignumber.js: 9.3.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - bufferutil
@@ -20239,7 +20269,7 @@ snapshots:
       bs58: 4.0.1
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       object-hash: 2.2.0
       rxjs: 7.8.2
       superstruct: 0.14.2
@@ -20271,7 +20301,7 @@ snapshots:
       bignumber.js: 9.3.1
       c32check: 1.1.3
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       ripple-address-codec: 5.0.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       ripple-binary-codec: 1.11.0
       rxjs: 7.8.2
@@ -20322,7 +20352,7 @@ snapshots:
       blake2b: 2.1.4
       bs58check: 3.0.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
@@ -20349,7 +20379,7 @@ snapshots:
       expect: 27.5.1
       imurmurhash: 0.1.4
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       msw: 2.12.7(@types/node@25.0.3)(typescript@5.9.3)
       rxjs: 7.8.2
     transitivePeerDependencies:
@@ -20374,7 +20404,7 @@ snapshots:
       bs58check: 2.1.2
       expect: 27.5.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
       tronweb: 5.3.4(bufferutil@4.1.0)(debug@4.4.1)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -20397,7 +20427,7 @@ snapshots:
       bignumber.js: 9.3.1
       eip55: 2.1.1
       invariant: 2.2.4
-      lodash: 4.17.21
+      lodash: 4.17.23
       rxjs: 7.8.2
     transitivePeerDependencies:
       - bufferutil
@@ -20838,7 +20868,7 @@ snapshots:
       '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/hw-transport-node-hid-noevents': 6.31.0
       '@ledgerhq/logs': 6.14.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       node-hid: 2.1.2
       usb: 2.9.0
     optional: true
@@ -21077,7 +21107,7 @@ snapshots:
       '@types/redux-actions': 2.6.5
       '@xstate/react': 1.6.3(react@18.3.1)(xstate@4.38.3)
       '@zondax/ledger-casper': 2.6.3
-      '@zondax/ledger-cosmos-js': 3.0.3(@babel/core@7.28.5)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(eslint@9.39.2(jiti@2.6.1))(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.3)
+      '@zondax/ledger-cosmos-js': 3.0.3(@babel/core@7.28.5)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(eslint@9.39.2(jiti@2.6.1))(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.3)
       '@zondax/ledger-filecoin': 0.11.2
       '@zondax/ledger-icp': 0.7.0
       '@zondax/ledger-stacks': 1.1.0
@@ -21097,7 +21127,7 @@ snapshots:
       isomorphic-ws: 4.0.1(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
       jotai: 2.16.1(@babel/core@7.28.5)(@babel/template@7.27.2)(react@18.3.1)
       json-rpc-2.0: 0.2.19
-      lodash: 4.17.21
+      lodash: 4.17.23
       minimatch: 5.1.6
       numeral: 2.0.6
       pako: 2.1.0
@@ -21219,7 +21249,7 @@ snapshots:
 
   '@ledgerhq/live-config@3.3.0':
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   '@ledgerhq/live-countervalues-react@0.2.44(debug@4.4.1)(react@18.3.1)':
     dependencies:
@@ -21397,7 +21427,7 @@ snapshots:
       base64-js: 1.5.1
       bignumber.js: 9.3.1
       isomorphic-ws: 5.0.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))
-      lodash: 4.17.21
+      lodash: 4.17.23
       pako: 2.1.0
       rxjs: 7.8.2
       zod: 3.25.76
@@ -21727,7 +21757,7 @@ snapshots:
       '@types/debug': 4.1.12
       '@types/lodash': 4.17.21
       debug: 4.4.3(supports-color@10.2.2)
-      lodash: 4.17.21
+      lodash: 4.17.23
       pony-cause: 2.1.11
       semver: 7.7.3
       uuid: 9.0.1
@@ -22397,7 +22427,7 @@ snapshots:
       '@polkadot/types-known': 11.2.1
       '@polkadot/util': 12.6.2
       '@polkadot/util-crypto': 12.6.2(@polkadot/util@12.6.2)
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       rxjs: 7.8.2
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -22408,7 +22438,7 @@ snapshots:
   '@polkadot/keyring@12.6.2(@polkadot/util-crypto@12.6.2(@polkadot/util@12.6.2))(@polkadot/util@12.6.2)':
     dependencies:
       '@polkadot/util': 12.6.2
-      '@polkadot/util-crypto': 12.6.2(@polkadot/util@14.0.1)
+      '@polkadot/util-crypto': 12.6.2(@polkadot/util@12.6.2)
       tslib: 2.8.1
 
   '@polkadot/keyring@14.0.1(@polkadot/util-crypto@14.0.1(@polkadot/util@14.0.1))(@polkadot/util@14.0.1)':
@@ -22464,7 +22494,7 @@ snapshots:
       '@polkadot/x-fetch': 12.6.2
       '@polkadot/x-global': 12.6.2
       '@polkadot/x-ws': 12.6.2(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       mock-socket: 9.3.1
       nock: 13.5.6
       tslib: 2.8.1
@@ -22534,7 +22564,7 @@ snapshots:
       '@polkadot/types-codec': 11.2.1
       '@polkadot/types-create': 11.2.1
       '@polkadot/util': 12.6.2
-      '@polkadot/util-crypto': 12.6.2(@polkadot/util@14.0.1)
+      '@polkadot/util-crypto': 12.6.2(@polkadot/util@12.6.2)
       rxjs: 7.8.2
       tslib: 2.8.1
 
@@ -24365,7 +24395,7 @@ snapshots:
       blakejs: 1.2.1
       bs58: 5.0.0
       buffer: 6.0.3
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   '@styled-system/background@5.1.2':
     dependencies:
@@ -25671,18 +25701,18 @@ snapshots:
 
   '@vue/cli-overlay@5.0.9': {}
 
-  '@vue/cli-plugin-router@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))':
+  '@vue/cli-plugin-router@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))':
     dependencies:
-      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
+      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
       '@vue/cli-shared-utils': 5.0.9
     transitivePeerDependencies:
       - encoding
 
-  '@vue/cli-plugin-typescript@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vue-template-compiler@2.7.16)(vue@2.7.16)':
+  '@vue/cli-plugin-typescript@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vue-template-compiler@2.7.16)(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.28.5
       '@types/webpack-env': 1.18.8
-      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
+      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
       '@vue/cli-shared-utils': 5.0.9
       babel-loader: 8.4.1(@babel/core@7.28.5)(webpack@5.104.1)
       fork-ts-checker-webpack-plugin: 6.5.3(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vue-template-compiler@2.7.16)(webpack@5.104.1)
@@ -25703,22 +25733,22 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@vue/cli-plugin-vuex@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))':
+  '@vue/cli-plugin-vuex@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))':
     dependencies:
-      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
+      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
 
-  '@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)':
+  '@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)':
     dependencies:
       '@babel/helper-compilation-targets': 7.27.2
       '@soda/friendly-errors-webpack-plugin': 1.8.1(webpack@5.104.1)
       '@soda/get-current-script': 1.0.2
       '@types/minimist': 1.2.5
       '@vue/cli-overlay': 5.0.9
-      '@vue/cli-plugin-router': 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))
-      '@vue/cli-plugin-vuex': 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))
+      '@vue/cli-plugin-router': 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))
+      '@vue/cli-plugin-vuex': 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))
       '@vue/cli-shared-utils': 5.0.9
-      '@vue/component-compiler-utils': 3.3.0(ejs@3.1.10)(lodash@4.17.21)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
-      '@vue/vue-loader-v15': vue-loader@15.11.1(@vue/compiler-sfc@3.5.26)(css-loader@6.11.0(webpack@5.104.1))(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(vue-template-compiler@2.7.16)(webpack@5.104.1)
+      '@vue/component-compiler-utils': 3.3.0(ejs@3.1.10)(lodash@4.17.23)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
+      '@vue/vue-loader-v15': vue-loader@15.11.1(@vue/compiler-sfc@3.5.26)(css-loader@6.11.0(webpack@5.104.1))(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(vue-template-compiler@2.7.16)(webpack@5.104.1)
       '@vue/web-component-wrapper': 1.3.0
       acorn: 8.15.0
       acorn-walk: 8.3.4
@@ -25892,9 +25922,9 @@ snapshots:
       '@vue/compiler-dom': 3.5.26
       '@vue/shared': 3.5.26
 
-  '@vue/component-compiler-utils@3.3.0(ejs@3.1.10)(lodash@4.17.21)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)':
+  '@vue/component-compiler-utils@3.3.0(ejs@3.1.10)(lodash@4.17.23)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)':
     dependencies:
-      consolidate: 0.15.1(ejs@3.1.10)(lodash@4.17.21)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
+      consolidate: 0.15.1(ejs@3.1.10)(lodash@4.17.23)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
       hash-sum: 1.0.2
       lru-cache: 4.1.5
       merge-source-map: 1.1.0
@@ -26885,15 +26915,15 @@ snapshots:
     dependencies:
       '@zondax/ledger-js': 0.10.0
 
-  '@zondax/ledger-cosmos-js@3.0.3(@babel/core@7.28.5)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(eslint@9.39.2(jiti@2.6.1))(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.3)':
+  '@zondax/ledger-cosmos-js@3.0.3(@babel/core@7.28.5)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(eslint@9.39.2(jiti@2.6.1))(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(underscore@1.13.7)(utf-8-validate@5.0.10)(webpack-sources@3.3.3)':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/runtime': 7.28.4
       '@ledgerhq/hw-transport': 6.27.1
       '@ledgerhq/hw-transport-u2f': 5.36.0-deprecated
       '@types/node': 25.0.3
-      '@vue/cli-plugin-typescript': 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vue-template-compiler@2.7.16)(vue@2.7.16)
-      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
+      '@vue/cli-plugin-typescript': 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@2.7.16)(webpack-sources@3.3.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)(vue-template-compiler@2.7.16)(vue@2.7.16)
+      '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.26)(bufferutil@4.1.0)(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(utf-8-validate@5.0.10)(vue-template-compiler@2.7.16)(vue@3.5.26(typescript@5.9.3))(webpack-sources@3.3.3)
       bech32: 1.1.4
       buffer: 6.0.3
       crypto: 1.0.1
@@ -27816,7 +27846,7 @@ snapshots:
       buffer-compare: 1.1.1
       elliptic: 6.6.1
       inherits: 2.0.1
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   bl@4.1.0:
     dependencies:
@@ -28252,7 +28282,7 @@ snapshots:
       glob: 7.2.3
       humanize-duration: 3.33.2
       key-encoder: 2.0.3
-      lodash: 4.17.21
+      lodash: 4.17.23
       node-fetch: 2.6.13
       reflect-metadata: 0.1.14
       ts-results: '@casperlabs/ts-results@3.3.5'
@@ -28264,7 +28294,7 @@ snapshots:
 
   catharsis@0.9.0:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   cbor@10.0.11:
     dependencies:
@@ -28673,12 +28703,12 @@ snapshots:
 
   console-browserify@1.2.0: {}
 
-  consolidate@0.15.1(ejs@3.1.10)(lodash@4.17.21)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7):
+  consolidate@0.15.1(ejs@3.1.10)(lodash@4.17.23)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7):
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
       ejs: 3.1.10
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 18.3.1
       react-dom: 19.2.0(react@18.3.1)
       underscore: 1.13.7
@@ -31373,7 +31403,7 @@ snapshots:
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       pretty-error: 4.0.0
       tapable: 2.3.0
     optionalDependencies:
@@ -34501,7 +34531,7 @@ snapshots:
 
   pretty-error@4.0.0:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
       renderkid: 3.0.0
 
   pretty-format@26.6.2:
@@ -35113,7 +35143,7 @@ snapshots:
       css-select: 4.3.0
       dom-converter: 0.2.0
       htmlparser2: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       strip-ansi: 6.0.1
 
   request@2.88.2:
@@ -35167,7 +35197,7 @@ snapshots:
 
   requizzle@0.2.4:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   reselect@4.1.8: {}
 
@@ -35329,7 +35359,7 @@ snapshots:
       '@types/uuid': 8.3.4
       '@types/ws': 8.18.1
       buffer: 6.0.3
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       uuid: 8.3.2
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
@@ -36512,7 +36542,7 @@ snapshots:
       ethers: 6.16.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       eventemitter3: 3.1.2
       injectpromise: 1.0.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       querystring-es3: 0.2.1
       semver: 5.7.2
       validator: 13.15.26
@@ -37249,9 +37279,9 @@ snapshots:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.26(typescript@5.9.3)
 
-  vue-loader@15.11.1(@vue/compiler-sfc@3.5.26)(css-loader@6.11.0(webpack@5.104.1))(ejs@3.1.10)(lodash@4.17.21)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(vue-template-compiler@2.7.16)(webpack@5.104.1):
+  vue-loader@15.11.1(@vue/compiler-sfc@3.5.26)(css-loader@6.11.0(webpack@5.104.1))(ejs@3.1.10)(lodash@4.17.23)(prettier@3.7.4)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)(vue-template-compiler@2.7.16)(webpack@5.104.1):
     dependencies:
-      '@vue/component-compiler-utils': 3.3.0(ejs@3.1.10)(lodash@4.17.21)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
+      '@vue/component-compiler-utils': 3.3.0(ejs@3.1.10)(lodash@4.17.23)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)(underscore@1.13.7)
       css-loader: 6.11.0(webpack@5.104.1)
       hash-sum: 1.0.2
       loader-utils: 1.4.2
@@ -38424,7 +38454,7 @@ snapshots:
       '@xrplf/isomorphic': 1.0.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@xrplf/secret-numbers': 2.0.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       bignumber.js: 9.3.1
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       fast-json-stable-stringify: 2.1.0
       ripple-address-codec: 5.0.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       ripple-binary-codec: 2.6.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)

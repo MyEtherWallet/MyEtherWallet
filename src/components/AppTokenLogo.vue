@@ -21,7 +21,9 @@
         v-if="!image && !isLoading"
         class="absolute inset-0 flex items-center justify-center"
       >
-        <span class="text-info font-medium uppercase leading-none">
+        <span
+          :class="['text-info font-medium uppercase leading-none', getTextSize]"
+        >
           {{ getSymbol() }}
         </span>
       </div>
@@ -38,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 const props = defineProps({
   url: {
     type: [String, null],
@@ -100,4 +102,12 @@ watch(
     resolveImage()
   },
 )
+
+const getTextSize = computed(() => {
+  if (props.width === 'w-8') {
+    return 'text-s-12'
+  } else {
+    return 'text-[10px]'
+  }
+})
 </script>

@@ -10,10 +10,11 @@
   >
     <div
       v-if="isLoaded"
-      class="flex flex-row gap-1"
-      :class="
-        hasFullWidth ? 'justify-stretch  w-full' : 'flex-wrap justify-start'
-      "
+      class="flex flex-row"
+      :class="[
+        hasFullWidth ? 'justify-stretch  w-full' : 'flex-wrap justify-start',
+        variant === 'outline' ? 'gap-2' : 'gap-1',
+      ]"
     >
       <button
         v-for="(btn, index) in btnList"
@@ -26,19 +27,19 @@
           { 'min-h-7 min-w-[80px] !text-s-14': size === 'small' },
           { 'min-h-6 min-w-[46px] !text-s-12': size === 'xs' },
           {
-            'bg-white shadow-container hover:bg-white':
+            'bg-white shadow-container !hover:bg-white':
               variant === 'default' && areEqual(selected, btn),
           },
+          { hoverNoBG: variant === 'default' && !areEqual(selected, btn) },
           {
-            'border border-grey-outline ':
-              variant === 'outline' && !areEqual(selected, btn),
+            '!bg-surface': variant === 'outline' && !areEqual(selected, btn),
           },
           {
-            'border-2 border-primary !bg-primary text-white':
+            ' !bg-black text-white':
               variant === 'outline' && areEqual(selected, btn),
           },
           { 'w-full': hasFullWidth },
-          'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium hoverNoBG ',
+          'text-s-17 px-2 leading-p-140  rounded-full bg-transparent font-medium  ',
 
           variant === 'outline' ? '' : '',
         ]"
