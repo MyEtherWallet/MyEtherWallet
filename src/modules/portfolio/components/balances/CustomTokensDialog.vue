@@ -2,8 +2,6 @@
   <app-dialog
     v-model:is-open="isOpenCustomTokenDialog"
     :title="title"
-    z-index-overlay="z-[150]"
-    z-index-container="z-[151]"
     class="sm:max-w-[420px]"
     :class="{ '!min-h-0': currentView === 'delete' }"
   >
@@ -185,8 +183,14 @@ const decimalsError = computed(() => {
 })
 
 // Address Composable
-const { adrInput, adrError, resolvedAddress, onInput, validateAddressInput } =
-  useAddressInput(selectedChain)
+const {
+  adrInput,
+  adrError,
+  resolvedAddress,
+  onInput,
+  validateAddressInput,
+  clearAddressInput,
+} = useAddressInput(selectedChain)
 
 // --- Computed ---
 const title = computed(() => {
@@ -236,7 +240,7 @@ const resetForm = () => {
   tokenName.value = ''
   tokenDecimals.value = ''
   tokenSymbol.value = ''
-  adrInput.value = ''
+  clearAddressInput()
   localAddressError.value = ''
   fetchedInfoViaAddress.value = false
 }
