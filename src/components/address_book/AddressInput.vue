@@ -43,10 +43,7 @@
         type="text"
         :class="[
           {
-            '!border-error border-2': hasError,
-          },
-          {
-            '!border-primary !border-2': inFocusInput && !hasError,
+            '!border-primary !border-2': inFocusInput,
           },
           'grow focus:outline-none focus:ring-0 bg-white border border-grey-10 text-normal rounded-20 h-[58px] w-full pl-14 pr-24 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"

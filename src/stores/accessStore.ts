@@ -58,7 +58,6 @@ export const useAccessStore = defineStore('accessStore', () => {
   const web3ConnectionError = ref<string | null>(null)
 
   const setWeb3ConnectionError = (error: string | null) => {
-    console.log('error connecting to web3 wallet:', error)
     web3ConnectionError.value = error
   }
   const clearWeb3ConnectionError = () => {

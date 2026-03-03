@@ -189,7 +189,7 @@ export const useConnectWallet = () => {
             err.message.toLowerCase().includes('unrecognized chain id')
           ) {
             error =
-              'Your wallet does not support selected network unsupported network. Please switch to a supported network or enable it in your wallet.'
+              'Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet.'
           }
           accessStore.setWeb3ConnectionError(error)
         })

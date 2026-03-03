@@ -3,8 +3,7 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput && !hasError && !readonly,
-      'ring-2 ring-error ': hasError,
+      'ring-2 ring-primary': inFocusInput && !readonly,
     }"
     @click="setInFocusInput"
   >
@@ -27,7 +26,6 @@
         placeholder="0.0"
         v-model="amount"
         :readonly="readonly"
-        @input="validateAmount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
@@ -78,7 +76,7 @@
 
 <script setup lang="ts">
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { ref, computed, type PropType } from 'vue'
+import { ref, computed, type PropType, watch } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'
@@ -149,6 +147,13 @@ const debouncedValidate = useDebounceFn(
   },
   1000,
   { maxWait: 5000 },
+)
+
+watch(
+  () => amount.value,
+  () => {
+    validateAmount()
+  },
 )
 
 const validateAmount = () => {

@@ -3,8 +3,7 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput && !error,
-      'ring-2 ring-error': !!error,
+      'ring-2 ring-primary': inFocusInput,
     }"
     @click="setInFocusInput"
   >

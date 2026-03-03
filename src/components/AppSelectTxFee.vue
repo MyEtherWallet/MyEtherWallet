@@ -2,10 +2,6 @@
   <div>
     <button
       class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
-      :class="{
-        'ring-2 ring-error':
-          isWalletConnected && gasFeeError && gasFeeError !== '',
-      }"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
     >
