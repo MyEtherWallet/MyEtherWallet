@@ -53,6 +53,11 @@ export const useConnectWallet = () => {
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     accessStore.closeAccessDialog()
+    toastStore.addToastMessage({
+      text: 'Wallet connected',
+      textSecondary: `You have successfully connected your ${config.name} wallet.`,
+      type: ToastType.Success,
+    })
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
@@ -79,6 +84,12 @@ export const useConnectWallet = () => {
         wallet.id === 'unisat' ? unisatInjection! : enkryptInjection!,
         selectedChain.value?.name ?? 'BITCOIN',
       )
+
+      // Show the web3_wallet view while connecting
+      accessStore.clearWeb3ConnectionError()
+      accessStore.setClickedWeb3Wallet(wallet)
+      accessStore.setCurrentView('web3_wallet')
+
       unisatWallet
         .connect()
         .then(res => {
@@ -86,30 +97,23 @@ export const useConnectWallet = () => {
             try {
               _storeWallet(unisatWallet, wallet)
             } catch (error) {
-              toastStore.addToastMessage({
-                text: 'Web3 connect failed',
-                textSecondary:
-                  error instanceof Error ? error.message : String(error),
-                type: ToastType.Error,
-              })
+              accessStore.setWeb3ConnectionError(
+                error instanceof Error ? error.message : String(error),
+              )
             }
+          } else {
+            accessStore.setWeb3ConnectionError(t('error_connecting'))
           }
         })
         .catch(err => {
           let error = t('error_connecting')
-          let _type = ToastType.Warning
           if (
             err.message &&
             err.message.toLowerCase().includes('user rejected')
           ) {
             error = t('common.error.user_canceled_request')
-            _type = ToastType.Info
           }
-          toastStore.addToastMessage({
-            text: 'Could not connect to wallet',
-            textSecondary: error,
-            type: _type,
-          })
+          accessStore.setWeb3ConnectionError(error)
         })
       return
     }
@@ -146,6 +150,10 @@ export const useConnectWallet = () => {
         selectedChain.value?.chainID || '1',
       )
 
+      // Show the web3_wallet view while connecting
+      accessStore.clearWeb3ConnectionError()
+      accessStore.setClickedWeb3Wallet(wallet)
+      accessStore.setCurrentView('web3_wallet')
       web3Wallet
         .connect()
         .then(res => {
@@ -153,30 +161,37 @@ export const useConnectWallet = () => {
             try {
               _storeWallet(web3Wallet, wallet)
             } catch (error) {
-              toastStore.addToastMessage({
-                text: 'Web3 connect failed',
-                textSecondary:
-                  error instanceof Error ? error.message : String(error),
-                type: ToastType.Error,
-              })
+              accessStore.setWeb3ConnectionError(
+                error instanceof Error ? error.message : String(error),
+              )
             }
+          } else {
+            accessStore.setWeb3ConnectionError(t('error_connecting'))
           }
         })
         .catch(err => {
           let error = t('error_connecting')
-          let _type = ToastType.Warning
           if (
             err.message &&
             err.message.toLowerCase().includes('user rejected')
           ) {
             error = t('common.error.user_canceled_request')
-            _type = ToastType.Info
           }
-          toastStore.addToastMessage({
-            text: 'Could not connect to wallet',
-            textSecondary: error,
-            type: _type,
-          })
+          if (
+            err.message &&
+            err.message.toLowerCase().includes('already pending')
+          ) {
+            error =
+              'Request to connect already pending, please check your wallet extension'
+          }
+          if (
+            err.message &&
+            err.message.toLowerCase().includes('unrecognized chain id')
+          ) {
+            error =
+              'Your wallet does not support selected network unsupported network. Please switch to a supported network or enable it in your wallet.'
+          }
+          accessStore.setWeb3ConnectionError(error)
         })
     }
   }

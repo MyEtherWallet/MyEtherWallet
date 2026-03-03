@@ -72,6 +72,7 @@
         <module-access-wallet-connect
           v-else-if="currentView === 'wallet_connect'"
         />
+        <module-access-web3-wallet v-else-if="currentView === 'web3_wallet'" />
       </div>
     </template>
   </app-dialog>
@@ -93,13 +94,14 @@ import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
 import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
+import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
 import { computed, watch } from 'vue'
 
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const { isOpenAccessDialog, currentView, clickedWalletConnect } =
+const { isOpenAccessDialog, currentView, clickedWeb3Wallet } =
   storeToRefs(accessStore)
 
 const closeAccess = () => {
@@ -148,7 +150,8 @@ const getTitle = computed(() => {
       method = 'Trezor'
       break
     case 'wallet_connect':
-      method = clickedWalletConnect.value?.walletName || ''
+    case 'web3_wallet':
+      method = clickedWeb3Wallet.value?.name || ''
       break
     default:
       method = ''

@@ -58,7 +58,8 @@
     "deposit_description": "You can deposit any tokens supported by {chain} to this address.",
     "not_enough_balance_to_cover_fee": "Not enough {symbol} to cover network fee.",
     "buy_more": "Buy more {symbol}",
-    "allocation": "Allocation"
+    "allocation": "Allocation",
+    "retry": "Retry"
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",
