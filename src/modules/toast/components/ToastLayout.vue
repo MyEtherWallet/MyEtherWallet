@@ -14,7 +14,7 @@
           :class="[
             { 'mb-2': toast.link },
             { 'font-bold': toast.textSecondary || toast.tradeInfo },
-            'text-balance break-all ',
+            'text-balance word-break',
           ]"
         >
           {{ toast.text }}

@@ -150,7 +150,7 @@ const debouncedValidate = useDebounceFn(
 )
 
 watch(
-  () => amount.value,
+  () => [amount.value, error.value],
   () => {
     validateAmount()
   },

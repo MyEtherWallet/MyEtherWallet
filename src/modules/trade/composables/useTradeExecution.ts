@@ -72,9 +72,24 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         type: ToastType.Success,
       })
     } catch (e) {
+      const errorMessage =
+        e instanceof Error && e.message
+          ? e.message.toLowerCase()
+          : (e as any).details
+            ? (e as any).details
+            : typeof e === 'string'
+              ? e
+              : 'Could not approve token'
+      if (errorMessage.includes('user rejected')) {
+        toastStore.addToastMessage({
+          text: 'Approval cancelled by user',
+          type: ToastType.Info,
+        })
+        return
+      }
       toastStore.addToastMessage({
         text: 'Could not approve token',
-        textSecondary: (e as any).details || (e as Error).message,
+        textSecondary: errorMessage,
         type: ToastType.Error,
       })
     } finally {
@@ -182,9 +197,24 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         },
       })
     } catch (e) {
+      const errorMessage =
+        e instanceof Error && e.message
+          ? e.message.toLowerCase()
+          : (e as any).details
+            ? (e as any).details
+            : typeof e === 'string'
+              ? e
+              : 'Failed to submit trade order'
+      if (errorMessage.includes('user rejected')) {
+        toastStore.addToastMessage({
+          text: 'Trade cancelled by user',
+          type: ToastType.Info,
+        })
+        return
+      }
       toastStore.addToastMessage({
         text: 'Failed to submit trade order',
-        textSecondary: (e as any).details || (e as Error).message,
+        textSecondary: errorMessage,
         type: ToastType.Error,
       })
     } finally {

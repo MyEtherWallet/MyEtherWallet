@@ -442,7 +442,7 @@ const handleSubmit = async () => {
     } catch (e) {
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: t('send.toast.tx-send-failed'),
+        text: 'Could not sign transaction',
         textSecondary: e instanceof Error && e.message ? e.message : undefined,
       })
     }

@@ -215,12 +215,12 @@
 
       <!-- Error Display -->
       <div
-        v-if="!isLoading && generalError"
+        v-if="!isLoading && displayGeneralError"
         :class="blurClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2 max-h-[120px] overflow-y-auto"
       >
         <p class="text-error text-s-14 text-center break-words">
-          {{ generalError }}
+          {{ displayGeneralError }}
         </p>
       </div>
 
@@ -508,6 +508,19 @@ const userAddress = computed(
   () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
 )
 
+const displayGeneralError = ref<string>('')
+
+watch(generalError, newVal => {
+  if (newVal) {
+    displayGeneralError.value = ''
+    if (fromAmountError.value)
+      if (generalError.value === 'pathfinder error') {
+        displayGeneralError.value = ''
+      } else {
+        displayGeneralError.value = newVal
+      }
+  }
+})
 // --- Trade Tokens ---
 const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
   useTradeTokens({
@@ -534,6 +547,7 @@ const { hasPreQuoteError, fromAmountError, isTradeDisabled } =
     isSelectedAssetTradeable,
     supportedNetwork,
     isLoadingQuote,
+    generalError,
   })
 
 // --- Trade Quote ---

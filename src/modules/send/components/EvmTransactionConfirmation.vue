@@ -405,16 +405,25 @@ const confirmTransaction = async () => {
       })
       .catch(e => {
         //TODO: implement error localization
-        toastStore.addToastMessage({
-          type: ToastType.Error,
-          text: t('send.toast.tx-send-failed'),
-          textSecondary:
-            e instanceof Error && e.message
-              ? sanitizeErrorMessage(e.message)
-              : typeof e === 'string'
-                ? sanitizeErrorMessage(e)
-                : undefined,
-        })
+        const errorMessage =
+          e instanceof Error && e.message ? e.message.toLowerCase() : e
+        if (errorMessage.includes('user rejected')) {
+          toastStore.addToastMessage({
+            type: ToastType.Info,
+            text: 'Transaction canceled by user',
+          })
+        } else {
+          toastStore.addToastMessage({
+            type: ToastType.Error,
+            text: t('send.toast.tx-send-failed'),
+            textSecondary:
+              e instanceof Error && e.message
+                ? sanitizeErrorMessage(e.message)
+                : typeof e === 'string'
+                  ? sanitizeErrorMessage(e)
+                  : undefined,
+          })
+        }
       })
     signing.value = false
     showApproveMessage.value = false

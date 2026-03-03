@@ -567,14 +567,26 @@ const proceedWithSwap = async (quoteId: string) => {
       swapInitiatedOpen.value = true
     }
   } catch (e: any) {
-    const errorMsg =
-      e?.message || t('swap.toast.tx-sign-failed') || 'Transaction failed'
-    generalError.value = errorMsg
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: errorMsg,
-      duration: 10000,
-    })
+    const errorMessage =
+      e instanceof Error && e.message
+        ? e.message.toLowerCase()
+        : typeof e === 'string'
+          ? e
+          : t('swap.toast.tx-sign-failed')
+    if (errorMessage.includes('user rejected')) {
+      toastStore.addToastMessage({
+        type: ToastType.Info,
+        text: 'Swap canceled by user',
+      })
+    } else {
+      generalError.value = errorMessage
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: 'Swap Failed',
+        textSecondary: errorMessage,
+        duration: 10000,
+      })
+    }
   } finally {
     txProceeding.value = false
   }
