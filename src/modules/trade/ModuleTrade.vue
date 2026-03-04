@@ -439,7 +439,18 @@ const fromChains = computed(() => {
 })
 
 const fromTokens = computed(() => {
-  return (swapFromTokens.value || []) as NewTokenInfo[]
+  const tokens = (swapFromTokens.value || []) as NewTokenInfo[]
+  const sanitized = tokens.filter(token => {
+    if (!token.address) return false
+    const matchingToken = allTokens.value.find(
+      t => t.contract?.toLowerCase() === token.address?.toLowerCase(),
+    )
+    // Keep token if it has marketCap
+    return (
+      matchingToken && matchingToken.market_cap && matchingToken.market_cap > 0
+    )
+  })
+  return sanitized
 })
 
 // Find the highest balance token from additionalBuyAssets that the user owns
