@@ -128,18 +128,24 @@ export const useConnectWallet = () => {
         // open wallet connect modal if it is also a mobile wallet and extension instance not found
         _connectWagmi(wallet)
       } else {
+        const _haslink =
+          wallet.downloadUrls?.browserExtension ||
+          wallet.downloadUrls?.qrCode ||
+          wallet.downloadUrls?.chrome ||
+          wallet.downloadUrls?.firefox
+        const link = _haslink
+          ? {
+              title: 'Click here to install',
+              url: _haslink,
+            }
+          : {
+              title: "Don't have a wallet?",
+              url: 'https://enkrypt.com',
+            }
         toastStore.addToastMessage({
           text: 'Web3 wallet not detected',
-          textSecondary: `Please install ${wallet.name} extension to connect.`,
-          link: {
-            title: 'Click here to install',
-            url:
-              wallet.downloadUrls?.browserExtension ||
-              wallet.downloadUrls?.qrCode ||
-              wallet.downloadUrls?.chrome ||
-              wallet.downloadUrls?.firefox ||
-              '',
-          },
+          textSecondary: `Please install ${wallet.name} extension to connect or select a different wallet.`,
+          link: link,
           type: ToastType.Warning,
           isInfinite: true,
         })
