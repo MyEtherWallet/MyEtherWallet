@@ -35,7 +35,7 @@
                 @click="
                   isShownSecondaryTextInFull = !isShownSecondaryTextInFull
                 "
-                class="-ml-4 relativetext-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
+                class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
               >
                 <p>
                   {{

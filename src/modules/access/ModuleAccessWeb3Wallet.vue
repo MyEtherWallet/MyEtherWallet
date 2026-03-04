@@ -23,7 +23,12 @@
             <p class="text-info text-s-14 text-center mb-6">
               {{ web3ConnectionError }}
             </p>
-            <app-base-button @click="handleRetry" class="min-w-[200px]">
+            <app-base-button
+              :disabled="!canRetry"
+              :is-loading="!canRetry"
+              @click="handleRetry"
+              class="min-w-[200px]"
+            >
               {{ $t('common.retry') }}
             </app-base-button>
           </template>
@@ -74,10 +79,22 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
 
 const accessStore = useAccessStore()
 const { web3ConnectionError, clickedWeb3Wallet } = storeToRefs(accessStore)
 const { connect } = useConnectWallet()
+
+const canRetry = ref(true)
+
+watch(web3ConnectionError, newError => {
+  if (newError) {
+    canRetry.value = false
+    setTimeout(() => {
+      canRetry.value = true
+    }, 2000)
+  }
+})
 
 const handleRetry = () => {
   if (clickedWeb3Wallet.value) {
