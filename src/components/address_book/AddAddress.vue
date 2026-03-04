@@ -31,6 +31,7 @@
       :address-error-messages="addressErrorMessages"
       :has-address-book="false"
       :network="selectedChain"
+      :is-raised="false"
       @validate:address="additionalAddressValidation"
       @immediate-update:resolved-address="onInput"
     />
@@ -149,7 +150,10 @@ const tryAdd = () => {
         name: name.value,
         address:
           selectedChain.value?.type === 'EVM'
-            ? toChecksumAddress(address.value)
+            ? toChecksumAddress(
+                address.value,
+                selectedChain.value?.name || 'ETHEREUM',
+              )
             : address.value,
         chainName: selectedChain.value?.name || 'ETHEREUM',
         chainType: selectedChain.value?.type || 'EVM',

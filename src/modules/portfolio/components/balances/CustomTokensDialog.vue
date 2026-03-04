@@ -14,6 +14,7 @@
             :resolved-address="resolvedAddress"
             :address-error-messages="addressError"
             :chain="selectedChain"
+            :is-raised="false"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
           />
