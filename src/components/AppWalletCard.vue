@@ -200,23 +200,12 @@ const fetchBalances = () => {
   })
 }
 /**
- * Copies the copyValue to the clipboard.
+ * Copies the wallet address to the clipboard.
  */
-const copy = () => {
-  return new Promise((resolve, reject) => {
-    navigator.clipboard
-      .writeText(walletAddress.value || '')
-      .then(resolve)
-      .catch(reject)
-  })
-}
-/**
- * emits the close event when the close button is clicked.
- */
-const copyClick = () => {
+const copyClick = async () => {
   try {
     if (!walletAddress.value) throw new Error('No wallet address to copy')
-    copy()
+    await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,
       hash: walletAddress.value,
