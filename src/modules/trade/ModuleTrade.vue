@@ -676,7 +676,6 @@ const setPercentageAmount = (percentage: number) => {
 }
 
 const connectWalletForTrade = () => {
-  walletMenu.setIsOpenSideMenu(false)
   accessStore.openAccessDialog()
 }
 
