@@ -18,11 +18,24 @@
       <app-token-logo
         :url="selectedToken.logoURI"
         :symbol="selectedToken.symbol"
+        :address="
+          networkName
+            ? { address: selectedToken.address, network: networkName }
+            : undefined
+        "
         width="w-7"
         height="h-7"
         class="mr-2"
       />
-      <app-token-symbol v-if="!isLoading" :symbol="selectedToken.symbol" />
+      <app-token-symbol
+        v-if="!isLoading"
+        :symbol="selectedToken.symbol"
+        :address="
+          networkName
+            ? { address: selectedToken.address, network: networkName }
+            : undefined
+        "
+      />
       <div class="ml-1 min-w-4 h-4">
         <chevron-down-icon v-if="!isLoading" class="text-info" />
       </div>
@@ -121,10 +134,22 @@
                 <app-token-logo
                   :url="token.logoURI"
                   :symbol="token.symbol"
+                  :address="
+                    networkName
+                      ? { address: token.address, network: networkName }
+                      : undefined
+                  "
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
-                  <app-token-symbol :symbol="token.symbol" />
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :address="
+                      networkName
+                        ? { address: token.address, network: networkName }
+                        : undefined
+                    "
+                  />
                   <app-tooltip v-if="token.name.length > 10" :text="token.name">
                     <h2 class="text-s-12 text-info whitespace-nowrap">
                       {{ truncate(token.name, 20) }}
@@ -262,6 +287,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  networkName: {
+    type: String,
+    required: false,
+  },
 })
 
 const { t } = useI18n()
@@ -293,6 +322,9 @@ const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
+  if (!props.isFromView) {
+    activeSortValue.value = SortValueString.PRICE
+  }
 })
 
 // pagination

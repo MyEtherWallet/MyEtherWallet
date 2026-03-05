@@ -20,13 +20,26 @@
             <app-token-logo
               :url="fromToken?.logoURI"
               :symbol="fromToken?.symbol"
+              :address="
+                fromToken && fromChain
+                  ? { address: fromToken.address, network: fromChain.name }
+                  : undefined
+              "
               width="w-6 lg:w-8"
               height="h-6 lg:h-8"
             />
             <span class="font-bold">
               {{ amount }}
-              {{ fromToken?.symbol }}</span
-            >
+            </span>
+            <app-token-symbol
+              :symbol="fromToken?.symbol || 'UNKNOWN'"
+              :address="
+                fromToken && fromChain
+                  ? { address: fromToken.address, network: fromChain.name }
+                  : undefined
+              "
+              class="text-s-17 lg:text-s-20 !font-bold !leading-p-100 inline-block align-middle"
+            />
             {{ t('swap.swap-offer.you-will-get') }}:
           </p>
           <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
@@ -34,6 +47,11 @@
               <app-token-logo
                 :url="toToken?.logoURI"
                 :symbol="toToken?.symbol"
+                :address="
+                  toToken && toChain
+                    ? { address: toToken.address, network: toChain.name }
+                    : undefined
+                "
                 width="w-8 lg:w-[48px]"
                 height="h-8 lg:h-[48px]"
               />
@@ -65,7 +83,15 @@
                 <span v-else class="truncate">{{
                   toAmountFormatted.truncated
                 }}</span>
-                <span class="flex-none">{{ toToken?.symbol }}</span>
+                <app-token-symbol
+                  :symbol="toToken?.symbol || 'UNKNOWN'"
+                  :address="
+                    toToken && toChain
+                      ? { address: toToken.address, network: toChain.name }
+                      : undefined
+                  "
+                  class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 inline-block align-middle"
+                />
               </div>
               <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
             </div>
@@ -146,9 +172,20 @@
                             ).truncated
                           }}
                         </span>
-                        <span class="truncate">{{
-                          item.quote?.options?.toToken?.symbol
-                        }}</span>
+                        <app-token-symbol
+                          :symbol="
+                            item.quote?.options?.toToken?.symbol || 'UNKNOWN'
+                          "
+                          :address="
+                            item.quote?.options?.toToken && toChain
+                              ? {
+                                  address: item.quote.options.toToken.address,
+                                  network: toChain.name,
+                                }
+                              : undefined
+                          "
+                          class="text-s-14 !font-semibold !leading-p-160 inline-block align-middle"
+                        />
                       </div>
                     </div>
                     <div class="flex items-center gap-2 flex-none ml-auto">
@@ -175,9 +212,29 @@
             </template>
           </app-pop-up-menu>
           <div class="pt-3 ml-2">
-            <div class="text-s-14 text-info">
-              Rate: 1 {{ fromToken?.symbol }} ≈ {{ exchangeRate }}
-              {{ toToken?.symbol }}
+            <div class="text-s-14 text-info flex items-center gap-1">
+              <span>Rate: 1</span>
+              <app-token-symbol
+                :symbol="fromToken?.symbol || 'UNKNOWN'"
+                :address="
+                  fromToken && fromChain
+                    ? { address: fromToken.address, network: fromChain.name }
+                    : undefined
+                "
+                :has-gradient="false"
+                class="!text-s-14 !font-normal !leading-p-100"
+              />
+              <span>≈ {{ exchangeRate }}</span>
+              <app-token-symbol
+                :symbol="toToken?.symbol || 'UNKNOWN'"
+                :address="
+                  toToken && toChain
+                    ? { address: toToken.address, network: toChain.name }
+                    : undefined
+                "
+                :has-gradient="false"
+                class="!text-s-14 !font-normal !leading-p-100"
+              />
             </div>
             <!-- TODO: make library return these values -->
             <!-- <div class="text-s-14 text-info">Price impact: -0.07%</div> -->
@@ -224,6 +281,7 @@
 <script lang="ts" setup>
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -240,6 +298,7 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
 
 enum ProviderName {
@@ -285,6 +344,9 @@ const props = defineProps({
     default: '0',
   },
   toChain: {
+    type: Object as () => Chain,
+  },
+  fromChain: {
     type: Object as () => Chain,
   },
   swapInfo: {

@@ -21,11 +21,25 @@
     <!-- From / To -->
     <div class="flex items-center gap-3 justify-start mt-3 mb-4">
       <div class="flex items-center gap-2">
-        <app-token-logo :url="swap.fromTokenIcon" :symbol="swap.fromSymbol" />
+        <app-token-logo
+          :url="swap.fromTokenIcon"
+          :symbol="swap.fromSymbol"
+          :address="{
+            address: swap.fromTokenAddress,
+            network: swap.fromChainName,
+          }"
+        />
         <div>
           <p class="font-bold text-s-14">
             {{ formatFloatingPointValue(swap.fromAmount).value }}
-            {{ swap.fromSymbol }}
+            <app-token-symbol
+              :symbol="swap.fromSymbol"
+              :address="{
+                address: swap.fromTokenAddress,
+                network: swap.fromChainName,
+              }"
+              class="inline-flex !text-s-14 !font-bold"
+            />
           </p>
           <p v-if="swap.fromUsdValue" class="text-s-12 text-info">
             ${{ swap.fromUsdValue }}
@@ -34,11 +48,25 @@
       </div>
       <arrow-long-right-icon class="w-4 h-4 flex-shrink-0" />
       <div class="flex items-center gap-2">
-        <app-token-logo :url="swap.toTokenIcon" :symbol="swap.toSymbol" />
+        <app-token-logo
+          :url="swap.toTokenIcon"
+          :symbol="swap.toSymbol"
+          :address="{
+            address: swap.toTokenAddress,
+            network: swap.fromChainName,
+          }"
+        />
         <div>
           <p class="font-bold text-s-14">
             {{ formatFloatingPointValue(swap.toAmount).value }}
-            {{ swap.toSymbol }}
+            <app-token-symbol
+              :symbol="swap.toSymbol"
+              :address="{
+                address: swap.toTokenAddress,
+                network: swap.fromChainName,
+              }"
+              class="inline-flex !text-s-14 !font-bold"
+            />
           </p>
           <p v-if="swap.toUsdValue" class="text-s-12 text-info">
             ${{ swap.toUsdValue }}
@@ -150,6 +178,7 @@ import {
 import type { SwapNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import {

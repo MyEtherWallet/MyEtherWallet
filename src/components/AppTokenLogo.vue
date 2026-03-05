@@ -4,7 +4,7 @@
       width,
       height,
       'rounded-full flex-none relative box-border transition-colors duration-300 ease-in-out',
-      isStock ? 'p-[1.2px]  bg-stock-gradient' : 'border border-grey-5',
+      showIsStock ? 'p-[1.2px]  bg-stock-gradient' : 'border border-grey-5',
     ]"
   >
     <div
@@ -40,7 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch, computed, type PropType } from 'vue'
+import { useStocksStore } from '@/stores/stocksStore'
+import { storeToRefs } from 'pinia'
+
+interface TokenAddress {
+  address: string
+  network: string
+}
+
 const props = defineProps({
   url: {
     type: [String, null],
@@ -62,6 +70,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  address: {
+    type: Object as PropType<TokenAddress>,
+    required: false,
+  },
+})
+
+const stocksStore = useStocksStore()
+const { hasStocksAddressesData } = storeToRefs(stocksStore)
+
+const showIsStock = computed(() => {
+  if (props.isStock) return true
+  if (props.address && hasStocksAddressesData.value) {
+    return stocksStore.isStock(props.address.address, props.address.network)
+  }
+  return false
 })
 
 const getSymbol = (): string => {

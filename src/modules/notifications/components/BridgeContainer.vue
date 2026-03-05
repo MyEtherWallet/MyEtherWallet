@@ -26,6 +26,10 @@
           <app-token-logo
             :url="bridge.fromTokenIcon"
             :symbol="bridge.fromSymbol"
+            :address="{
+              address: bridge.fromTokenAddress,
+              network: bridge.fromChainName,
+            }"
           />
           <div class="absolute -bottom-1 -right-1">
             <app-token-logo
@@ -43,7 +47,14 @@
           </p>
           <p class="font-bold text-s-14">
             {{ formatFloatingPointValue(bridge.fromAmount).value }}
-            {{ bridge.fromSymbol }}
+            <app-token-symbol
+              :symbol="bridge.fromSymbol"
+              :address="{
+                address: bridge.fromTokenAddress,
+                network: bridge.fromChainName,
+              }"
+              class="inline-flex !text-s-14 !font-bold"
+            />
           </p>
           <p v-if="bridge.fromUsdValue" class="text-s-12 text-info">
             ${{ bridge.fromUsdValue }}
@@ -54,7 +65,14 @@
       <!-- To -->
       <div class="flex items-center gap-3">
         <div class="relative">
-          <app-token-logo :url="bridge.toTokenIcon" :symbol="bridge.toSymbol" />
+          <app-token-logo
+            :url="bridge.toTokenIcon"
+            :symbol="bridge.toSymbol"
+            :address="{
+              address: bridge.toTokenAddress,
+              network: bridge.toChainName,
+            }"
+          />
           <div class="absolute -bottom-1 -right-1">
             <app-token-logo
               v-if="bridge.toChainIcon"
@@ -71,7 +89,14 @@
           </p>
           <p class="font-bold text-s-14">
             {{ formatFloatingPointValue(bridge.toAmount).value }}
-            {{ bridge.toSymbol }}
+            <app-token-symbol
+              :symbol="bridge.toSymbol"
+              :address="{
+                address: bridge.toTokenAddress,
+                network: bridge.toChainName,
+              }"
+              class="inline-flex !text-s-14 !font-bold"
+            />
           </p>
           <p v-if="bridge.toUsdValue" class="text-s-12 text-info">
             ${{ bridge.toUsdValue }}
@@ -190,6 +215,7 @@ import {
 import type { BridgeNotification } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppBlockie from '@/components/AppBlockie.vue'

@@ -55,10 +55,12 @@ export interface NotificationBaseSwapBridge {
   fromSymbol: string
   fromTokenIcon: string
   fromUsdValue?: string
+  fromTokenAddress: string
   toAmount: string
   toSymbol: string
   toTokenIcon: string
   toUsdValue?: string
+  toTokenAddress: string
   networkFee?: string
   networkFeeUSD?: string
   fromChainId: string

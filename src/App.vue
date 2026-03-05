@@ -31,12 +31,16 @@ import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import useBalanceHandler from './utils/balanceHandler'
+import { useStocksStore } from '@/stores/stocksStore'
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
 
 const purchaseStore = usePurchaseStore()
 const { fetchPurchaseInfo } = purchaseStore
+
+const stocksStore = useStocksStore()
+const { fetchStocksAddresses } = stocksStore
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
@@ -141,6 +145,7 @@ const showFeedbackToast = () => {
 }
 onMounted(() => {
   fetchPurchaseInfo()
+  fetchStocksAddresses()
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
     const customEvent = event as CustomEvent
     const provider = customEvent.detail

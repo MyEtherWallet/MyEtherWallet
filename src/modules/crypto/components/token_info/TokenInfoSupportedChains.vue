@@ -26,6 +26,11 @@
                 <app-token-logo
                   :url="tokenIconUrl"
                   :symbol="tokenSymbol"
+                  :address="
+                    i.contract
+                      ? { address: i.contract, network: i.chainName }
+                      : undefined
+                  "
                   width="w-4 xl:w-5"
                   height="h-4 xl:h-5"
                 />

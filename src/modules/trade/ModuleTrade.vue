@@ -48,6 +48,7 @@
                 :external-loading="isLoading || !swapLoaded"
                 :tokens="fromTokens"
                 :show-balance="isWalletConnected"
+                :network-name="selectedFromChain?.name"
                 class="mt-2"
               >
                 <!-- Percentage Buttons -->
@@ -95,6 +96,7 @@
               :show-balance="false"
               :tokens="toTokens"
               :readonly="true"
+              :network-name="selectedFromChain?.name"
               :is-estimate="true"
               :is-from-view="false"
               class="mt-2"
