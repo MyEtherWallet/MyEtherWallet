@@ -9,12 +9,9 @@
       :readonly="props.readonly"
       :class="[
         {
-          '!border-error border-2': hasError,
+          '!border-primary !border-2': inFocusInput,
         },
-        {
-          '!border-primary !border-2': inFocusInput && !hasError,
-        },
-        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-10 text-s-17 rounded-20 h-[160px] w-full px-6 pt-5 pb-4 transition-colors placeholder:text-grey-30',
+        'grow focus:outline-none focus:ring-0 bg-white border border-1 border-grey-outline text-s-17 rounded-20 h-[160px] w-full px-6 pt-5 pb-4 transition-colors placeholder:text-grey-30',
       ]"
       :aria-label="placeholder"
       @focus="setInFocusInput()"
@@ -44,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, computed, watch } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 /**
  * Text Field component
@@ -104,11 +101,6 @@ const baseInput = ref<HTMLElement | null>(null)
  * Error State
  -------------------------*/
 const hasRequiredError = ref(false)
-
-const hasError = computed(
-  () =>
-    (props.errorMessage && props.errorMessage !== '') || hasRequiredError.value,
-)
 
 /**------------------------
  * Focus State

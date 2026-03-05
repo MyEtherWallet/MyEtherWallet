@@ -14,17 +14,52 @@
           :class="[
             { 'mb-2': toast.link },
             { 'font-bold': toast.textSecondary || toast.tradeInfo },
-            'text-balance break-all ',
+            'text-balance word-break',
           ]"
         >
           {{ toast.text }}
         </p>
         <div v-if="!toast.tradeInfo">
+          <div v-if="toast.textSecondary">
+            <p
+              v-if="!hideSecondaryText"
+              :class="[
+                { 'mb-3': toast.link },
+                'text-s-14 mt-1 text-info  word-break',
+              ]"
+            >
+              {{ toast.textSecondary }}
+            </p>
+            <div v-else>
+              <button
+                @click="
+                  isShownSecondaryTextInFull = !isShownSecondaryTextInFull
+                "
+                class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
+              >
+                <p>
+                  {{
+                    isShownSecondaryTextInFull
+                      ? toast.textSecondary
+                      : `${toast.textSecondary.slice(0, 60)}...`
+                  }}
+                </p>
+                <ChevronDownIcon
+                  class="w-5 h-5 mt-1 mx-auto"
+                  aria-label="Toggle full text"
+                  :class="{ 'rotate-180': isShownSecondaryTextInFull }"
+                />
+              </button>
+            </div>
+          </div>
           <p
-            v-if="toast.textSecondary"
-            :class="[{ 'mb-3': toast.link }, 'text-info word-break']"
+            v-if="toast.hash"
+            :class="[
+              { 'mb-3': toast.link },
+              'text-s-14 mt-1 text-info word-break break-all',
+            ]"
           >
-            {{ toast.textSecondary }}
+            {{ toast.hash }}
           </p>
           <a
             v-if="toast.link"
@@ -77,12 +112,6 @@
               </div>
             </div>
           </div>
-          <app-btn-text
-            class="underline text-s-14 mt-2"
-            @click="openNotifications"
-          >
-            More Info
-          </app-btn-text>
         </div>
       </div>
 
@@ -92,7 +121,6 @@
 </template>
 <script setup lang="ts">
 import { useToastStore } from '@/stores/toastStore'
-import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { ToastType, type Toast } from '@/types/notification'
 import {
   InformationCircleIcon,
@@ -100,13 +128,13 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ArrowLongRightIcon,
+  ChevronDownIcon,
 } from '@heroicons/vue/24/solid'
 import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
 const props = defineProps<{
   /**
    * @toast The toast message to display.
@@ -120,12 +148,6 @@ const props = defineProps<{
 
 const { isXS } = useAppBreakpoints()
 const toastStore = useToastStore()
-const appLayoutStore = useAppLayoutStore()
-
-const openNotifications = () => {
-  appLayoutStore.isNotificationsOpen = true
-  toastStore.removeToastMessage(props.index)
-}
 
 /**
  * The border color of the toast message. Based on the type of the toast.
@@ -173,6 +195,13 @@ const iconColor = computed(() => {
     default:
       return 'text-primary'
   }
+})
+
+const isShownSecondaryTextInFull = ref(false)
+const hideSecondaryText = computed(() => {
+  return props.toast.textSecondary
+    ? props.toast.textSecondary.length > 150
+    : false
 })
 
 /**

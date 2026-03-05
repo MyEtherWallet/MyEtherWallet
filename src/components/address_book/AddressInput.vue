@@ -43,12 +43,13 @@
         type="text"
         :class="[
           {
-            '!border-error border-2': hasError,
+            '!border-primary !border-2': inFocusInput,
+            '!text-s-11': adrInput && adrInput.toString().length > 24,
           },
-          {
-            '!border-primary !border-2': inFocusInput && !hasError,
-          },
-          'grow focus:outline-none focus:ring-0 bg-white border border-grey-10 text-normal rounded-20 h-[58px] w-full pl-14 pr-24 pt-4 pb-0 text-sm transition-colors font-medium',
+          isRaised
+            ? 'shadow-button shadow-button-elevated'
+            : 'border border-grey-outline',
+          'grow focus:outline-none focus:ring-0 bg-white   text-normal rounded-20 h-[58px] w-full pl-14 pr-20 pt-4 pb-0 text-sm transition-colors font-medium',
         ]"
         :aria-label="label"
         @focus="setInFocusInput()"
@@ -67,7 +68,6 @@
           <x-circle-icon class="w-6 h-6" />
         </app-btn-icon>
         <app-btn-icon
-          v-if="hasAddressBook"
           label="open address book"
           @click="isAddressBookOpen = true"
           class="text-primary"
@@ -83,7 +83,7 @@
           v-if="addressErrorMessages !== '' || resolvedAddress !== ''"
           :class="{
             'text-error': addressErrorMessages,
-            'text-info': resolvedAddress,
+            'text-info !text-s-11': resolvedAddress,
           }"
           class="text-s-12 truncate"
         >
@@ -171,6 +171,10 @@ const props = defineProps({
   isDisabled: {
     type: Boolean,
     default: false,
+  },
+  isRaised: {
+    type: Boolean,
+    default: true,
   },
 })
 

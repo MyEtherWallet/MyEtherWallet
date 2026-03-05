@@ -7,13 +7,16 @@ import {
 import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 
-const isAddress = (address: string): boolean => {
+const isAddress = (
+  address: string,
+  network: string | undefined = undefined,
+): boolean => {
   if (!address) return false
   const store = useGlobalStore()
   const { selectedNetwork } = storeToRefs(store)
-
+  const _network = network || selectedNetwork.value
   // TODO: change to global definition instead of hardcoding
-  if (selectedNetwork.value === 'ROOTSTOCK') {
+  if (_network === 'ROOTSTOCK') {
     // check if it has the basic requirements of an address
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
       return false
@@ -35,9 +38,13 @@ const isAddress = (address: string): boolean => {
   )
 }
 
-const toChecksumAddress = (address: string): string => {
+const toChecksumAddress = (
+  address: string,
+  network: string | undefined = undefined,
+): string => {
   const store = useGlobalStore()
   const { selectedNetwork } = storeToRefs(store)
+  const _network = network || selectedNetwork.value
 
   /**
    * ethereumjs/util works differently than web3-utils
@@ -45,7 +52,7 @@ const toChecksumAddress = (address: string): string => {
    *
    */
   // TODO: change to global definition instead of hardcoding
-  if (selectedNetwork.value === 'ROOTSTOCK') {
+  if (_network === 'ROOTSTOCK') {
     return toChecksumAddr(address, 30)
   }
   return toChecksumAddressWeb3(address)

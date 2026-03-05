@@ -19,10 +19,12 @@ export const useAddressInput = (
 
   const isValidAdrInput = computed<boolean>(() => {
     if (isBitcoinChain.value) return true
+    const _network = unref(network)
+    const _networkName = _network?.name || undefined
     return (
       resolvedAddress.value !== undefined &&
       resolvedAddress.value !== '' &&
-      isAddress(resolvedAddress.value)
+      isAddress(resolvedAddress.value, _networkName)
     )
   })
 
@@ -47,8 +49,9 @@ export const useAddressInput = (
         return false
       }
       if (isEvmChain.value) {
+        const _networkName = currentSelectedNetwork?.name
         if (
-          !isAddress(addressToCheck) &&
+          !isAddress(addressToCheck, _networkName) &&
           !(
             resolver.value.isValidName(addressToCheck) &&
             resolvedAddress.value !== ''
@@ -62,7 +65,8 @@ export const useAddressInput = (
           adrError.value = 'network is required'
           return false
         }
-        const bitcoinNetworkInfo = INFO_MAP[currentSelectedNetwork.name]?.network
+        const bitcoinNetworkInfo =
+          INFO_MAP[currentSelectedNetwork.name]?.network
         toOutputScript(addressToCheck, bitcoinNetworkInfo) // throws invalid
         return true
       }
@@ -88,7 +92,11 @@ export const useAddressInput = (
       if (!validateAddressInput()) {
         resolvedAddress.value = ''
       } else {
-        const locResolvedAddr = isBitcoinChain.value ? adrInput.value : toChecksumAddress(adrInput.value)
+        const _network = unref(network)
+        const _networkName = _network?.name || undefined
+        const locResolvedAddr = isBitcoinChain.value
+          ? adrInput.value
+          : toChecksumAddress(adrInput.value, _networkName)
         resolvedAddress.value = locResolvedAddr
       }
     }
@@ -120,6 +128,6 @@ export const useAddressInput = (
     isValidAdrInput,
     onInput,
     validateAddressInput,
-    clearAddressInput
+    clearAddressInput,
   }
 }

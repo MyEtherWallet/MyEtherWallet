@@ -11,9 +11,15 @@
           <app-base-button
             @click="handleSigner"
             class="w-full sm:w-auto"
-            :disabled="isWalletConnected ? !cansignMessage : false"
+            :disabled="
+              isWalletConnected && !isWatchOnly ? !cansignMessage : false
+            "
           >
-            {{ isWalletConnected ? $t('sign-message') : $t('connect_wallet') }}
+            {{
+              isWalletConnected && !isWatchOnly
+                ? $t('sign-message')
+                : $t('connect_wallet')
+            }}
           </app-base-button>
 
           <app-dialog
@@ -131,7 +137,7 @@ const copy = () => {
 }
 
 const handleSigner = async () => {
-  if (!isWalletConnected.value) {
+  if (!isWalletConnected.value || isWatchOnly.value) {
     openAccessDialog()
     return
   }

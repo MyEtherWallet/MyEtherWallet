@@ -2,10 +2,6 @@
   <div>
     <button
       class="hoverNoBG rounded-20 bg-white shadow-button shadow-button-elevated border-none px-5 h-[58px] flex justify-between items-center text-sm w-full transition-all"
-      :class="{
-        'ring-2 ring-error':
-          isWalletConnected && gasFeeError && gasFeeError !== '',
-      }"
       @click.prevent="openFeeModal"
       :disabled="!hasFees"
     >
@@ -15,7 +11,10 @@
           v-if="!hasFees"
           class="bg-grey-10 rounded-full animate-pulse min-w-[80px] h-4"
         ></div>
-        <p v-else class="font-medium text-black">{{ selectedFeeFiat }}</p>
+        <p v-else-if="hasFiatEstimates" class="font-medium text-black">
+          {{ selectedFeeFiat }}
+        </p>
+        <p v-else class="font-medium text-black">{{ selectedFeeNative }}</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -23,7 +22,7 @@
           v-if="!hasFees"
           class="bg-grey-10 rounded-full animate-pulse w-24 h-4"
         ></div>
-        <template v-else>
+        <template v-else-if="hasFiatEstimates">
           <span class="text-info font-medium">
             {{ selectedFeeNative }}
           </span>
@@ -261,11 +260,12 @@ const feeEstmates = ref<FeeOption | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const { data, onFetchResponse, execute, onFetchError } = useMEWFetch(fetchURL, {
-  immediate: false,
-})
-  .post(JSON.stringify(txData.value))
-  .json<QuotesResponse>()
+const { data, onFetchResponse, execute, onFetchError, isFetching } =
+  useMEWFetch(fetchURL, {
+    immediate: false,
+  })
+    .post(JSON.stringify(txData.value))
+    .json<QuotesResponse>()
 
 onFetchResponse(() => {
   if (data.value) {
@@ -317,6 +317,16 @@ watch(
   },
 )
 
+const emit = defineEmits<{
+  (e: 'fee-is-loading', isFetching: boolean): void
+}>()
+
+watch(
+  () => isFetching.value,
+  () => {
+    emit('fee-is-loading', isFetching.value)
+  },
+)
 onMounted(() => {
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
@@ -363,6 +373,14 @@ const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
   return props.fees ? props.fees.fees : feeEstmates.value
 })
 
+const hasFiatEstimates = computed(() => {
+  return (
+    usedFeeToDisplay.value &&
+    usedFeeToDisplay.value[gasPriceType.value] &&
+    (usedFeeToDisplay.value[gasPriceType.value].fiatValue !== undefined ||
+      usedFeeToDisplay.value[gasPriceType.value].fiatFeeTotal !== undefined)
+  )
+})
 const selectedFeeFiat = computed(() => {
   if (hasFees.value && usedFeeToDisplay.value) {
     const fiatValue = formatFiatValue(

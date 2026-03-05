@@ -68,22 +68,15 @@ const emit = defineEmits<{
 }>()
 
 /**
- * Copies the copyValue to the clipboard.
- */
-const copy = () => {
-  return new Promise((resolve, reject) => {
-    navigator.clipboard.writeText(props.copyValue).then(resolve).catch(reject)
-  })
-}
-/**
- * emits the close event when the close button is clicked.
+ * Copies the copyValue to the clipboard and emits copy event.
  * @param payload The mouse event payload.
  */
 const copyClick = async (payload: MouseEvent) => {
   try {
-    await copy()
+    await navigator.clipboard.writeText(props.copyValue)
     toastStore.addToastMessage({
-      text: `${t('common.copied_to_clipboard')}: ${props.copyValue}`,
+      text: `${t('common.copied_to_clipboard')}`,
+      textSecondary: props.copyValue,
     })
     emit('copy', payload)
   } catch {

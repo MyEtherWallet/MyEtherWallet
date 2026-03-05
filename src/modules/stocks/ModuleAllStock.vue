@@ -929,19 +929,37 @@ onFetchTokenTableResponse(() => {
 onFetchGainersError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
-    text: err,
+    text: 'Could not fetch data.',
+    textSecondary:
+      err instanceof Error && err.message
+        ? err.message
+        : typeof err === 'string'
+          ? err
+          : undefined,
   })
 })
 onStocksWatchlistError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
-    text: err,
+    text: 'Could not fetch data.',
+    textSecondary:
+      err instanceof Error && err.message
+        ? err.message
+        : typeof err === 'string'
+          ? err
+          : undefined,
   })
 })
 onFetchTokenTableError(err => {
   isLoading.value = false
   toastStore.addToastMessage({
-    text: err,
+    text: 'Could not fetch data.',
+    textSecondary:
+      err instanceof Error && err.message
+        ? err.message
+        : typeof err === 'string'
+          ? err
+          : undefined,
   })
 })
 

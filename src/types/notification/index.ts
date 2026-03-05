@@ -15,6 +15,7 @@ export interface Toast {
   type?: ToastType
   text: string
   textSecondary?: string
+  hash?: string
   link?: ToastLink
   duration?: number
   isInfinite?: boolean

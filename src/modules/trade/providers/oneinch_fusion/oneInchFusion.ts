@@ -182,7 +182,15 @@ class OneInchFusion {
           })
       }
     } catch (e: unknown) {
-      throw new Error((e as Error).message || 'Failed to submit order to 1inch')
+      const errorMessage =
+        e instanceof Error && e.message
+          ? e.message.toLowerCase()
+          : (e as any).details
+            ? (e as any).details
+            : typeof e === 'string'
+              ? e
+              : 'Failed to submit order to 1inch'
+      throw new Error(errorMessage)
     }
   }
 
@@ -231,9 +239,6 @@ class OneInchFusion {
     return this.publicClient
       .waitForTransactionReceipt({ hash: hash as `0x${string}` })
       .then(res => {
-        console.log(
-          `Transaction mined:  ${res.transactionHash} status: ${res.status}`,
-        )
         return res.transactionHash
       })
   }

@@ -2,8 +2,6 @@
   <app-dialog
     v-model:is-open="isOpenCustomTokenDialog"
     :title="title"
-    z-index-overlay="z-[150]"
-    z-index-container="z-[151]"
     class="sm:max-w-[420px]"
     :class="{ '!min-h-0': currentView === 'delete' }"
   >
@@ -16,6 +14,7 @@
             :resolved-address="resolvedAddress"
             :address-error-messages="addressError"
             :chain="selectedChain"
+            :is-raised="false"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
           />
@@ -185,8 +184,14 @@ const decimalsError = computed(() => {
 })
 
 // Address Composable
-const { adrInput, adrError, resolvedAddress, onInput, validateAddressInput } =
-  useAddressInput(selectedChain)
+const {
+  adrInput,
+  adrError,
+  resolvedAddress,
+  onInput,
+  validateAddressInput,
+  clearAddressInput,
+} = useAddressInput(selectedChain)
 
 // --- Computed ---
 const title = computed(() => {
@@ -236,7 +241,7 @@ const resetForm = () => {
   tokenName.value = ''
   tokenDecimals.value = ''
   tokenSymbol.value = ''
-  adrInput.value = ''
+  clearAddressInput()
   localAddressError.value = ''
   fetchedInfoViaAddress.value = false
 }
@@ -249,7 +254,7 @@ const handleAdd = () => {
     symbol: tokenSymbol.value,
   })
   toastStore.addToastMessage({
-    text: 'Custom token added successfully.',
+    text: 'Custom token was added',
     type: ToastType.Success,
   })
 }
@@ -267,7 +272,7 @@ const handleEdit = () => {
     },
   )
   toastStore.addToastMessage({
-    text: 'Custom token updated successfully.',
+    text: 'Custom token was updated',
     type: ToastType.Success,
   })
 }
@@ -279,7 +284,7 @@ const handleDelete = () => {
     selectedToken.value.address,
   )
   toastStore.addToastMessage({
-    text: 'Custom token deleted successfully.',
+    text: 'Custom token was deleted',
     type: ToastType.Success,
   })
 }

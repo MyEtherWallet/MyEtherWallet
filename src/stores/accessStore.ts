@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref, watch, computed } from 'vue'
-import { type WalletView } from '@/modules/access/common/walletConfigs'
+import {
+  type WalletView,
+  type WalletConfig,
+} from '@/modules/access/common/walletConfigs'
 import { type Chain } from '@/mew_api/types'
 /**
  * Store to manage the state of the access dialog.
@@ -40,9 +43,32 @@ export const useAccessStore = defineStore('accessStore', () => {
     }
   }
 
+  /**------------------------
+   * Clicked Web3 Wallet Config (for retry)
+   -------------------------*/
+  const clickedWeb3Wallet = ref<WalletConfig | undefined>(undefined)
+
+  const setClickedWeb3Wallet = (config: WalletConfig | undefined) => {
+    clickedWeb3Wallet.value = config
+  }
+
+  /**------------------------
+   * Web3 Connection Error State
+   -------------------------*/
+  const web3ConnectionError = ref<string | null>(null)
+
+  const setWeb3ConnectionError = (error: string | null) => {
+    web3ConnectionError.value = error
+  }
+  const clearWeb3ConnectionError = () => {
+    web3ConnectionError.value = null
+  }
+
   watch(currentView, newView => {
     if (newView === 'default') {
       setClickedWalletConnect(undefined)
+      setClickedWeb3Wallet(undefined)
+      clearWeb3ConnectionError()
     }
   })
 
@@ -72,6 +98,11 @@ export const useAccessStore = defineStore('accessStore', () => {
     clickedWalletConnect,
     setClickedWalletConnect,
     setWagmiWalletData,
+    clickedWeb3Wallet,
+    setClickedWeb3Wallet,
+    web3ConnectionError,
+    setWeb3ConnectionError,
+    clearWeb3ConnectionError,
     selectedChain,
     isEvmChain,
     isBitcoinChain,

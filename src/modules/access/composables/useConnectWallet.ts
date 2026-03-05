@@ -53,6 +53,11 @@ export const useConnectWallet = () => {
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     accessStore.closeAccessDialog()
+    toastStore.addToastMessage({
+      text: 'Wallet connected',
+      textSecondary: `You have successfully connected your ${config.name} wallet.`,
+      type: ToastType.Success,
+    })
   }
 
   const _connectWeb3 = async (wallet: WalletConfig) => {
@@ -62,13 +67,15 @@ export const useConnectWallet = () => {
       const enkryptInjection = window.enkrypt?.providers?.bitcoin
       if (wallet.id === 'unisat' && !unisatInjection) {
         toastStore.addToastMessage({
-          text: `Unisat not detected. Please install ${wallet.name} extension.`,
+          text: 'Unisat not detected',
+          textSecondary: `Please install ${wallet.name} extension.`,
           type: ToastType.Warning,
         })
         return
       } else if (wallet.id === 'enkrypt' && !enkryptInjection) {
         toastStore.addToastMessage({
-          text: `Enkrypt not detected. Please install ${wallet.name} extension.`,
+          text: 'Enkrypt not detected',
+          textSecondary: `Please install ${wallet.name} extension.`,
           type: ToastType.Warning,
         })
         return
@@ -77,6 +84,12 @@ export const useConnectWallet = () => {
         wallet.id === 'unisat' ? unisatInjection! : enkryptInjection!,
         selectedChain.value?.name ?? 'BITCOIN',
       )
+
+      // Show the web3_wallet view while connecting
+      accessStore.clearWeb3ConnectionError()
+      accessStore.setClickedWeb3Wallet(wallet)
+      accessStore.setCurrentView('web3_wallet')
+
       unisatWallet
         .connect()
         .then(res => {
@@ -84,27 +97,23 @@ export const useConnectWallet = () => {
             try {
               _storeWallet(unisatWallet, wallet)
             } catch (error) {
-              toastStore.addToastMessage({
-                text: `Web3 connect failed: ${error}`,
-                type: ToastType.Error,
-              })
+              accessStore.setWeb3ConnectionError(
+                error instanceof Error ? error.message : String(error),
+              )
             }
+          } else {
+            accessStore.setWeb3ConnectionError(t('error_connecting'))
           }
         })
         .catch(err => {
           let error = t('error_connecting')
-          let _type = ToastType.Warning
           if (
             err.message &&
             err.message.toLowerCase().includes('user rejected')
           ) {
             error = t('common.error.user_canceled_request')
-            _type = ToastType.Info
           }
-          toastStore.addToastMessage({
-            text: error,
-            type: _type,
-          })
+          accessStore.setWeb3ConnectionError(error)
         })
       return
     }
@@ -119,18 +128,25 @@ export const useConnectWallet = () => {
         // open wallet connect modal if it is also a mobile wallet and extension instance not found
         _connectWagmi(wallet)
       } else {
+        const _haslink =
+          wallet.downloadUrls?.browserExtension ||
+          wallet.downloadUrls?.qrCode ||
+          wallet.downloadUrls?.chrome ||
+          wallet.downloadUrls?.firefox
+        const link = _haslink
+          ? {
+              title: 'Click here to install',
+              url: _haslink,
+            }
+          : {
+              title: "Don't have a wallet?",
+              url: 'https://enkrypt.com',
+            }
         toastStore.addToastMessage({
-          text: `Web3 wallet not detected. Please install the ${wallet.name} extension.`,
-          link: {
-            title: 'Click here to install',
-            url:
-              wallet.downloadUrls?.browserExtension ||
-              wallet.downloadUrls?.qrCode ||
-              wallet.downloadUrls?.chrome ||
-              wallet.downloadUrls?.firefox ||
-              '',
-          },
-          type: ToastType.Error,
+          text: 'Web3 wallet not detected',
+          textSecondary: `Please install ${wallet.name} extension to connect or select a different wallet.`,
+          link: link,
+          type: ToastType.Warning,
           isInfinite: true,
         })
       }
@@ -140,6 +156,10 @@ export const useConnectWallet = () => {
         selectedChain.value?.chainID || '1',
       )
 
+      // Show the web3_wallet view while connecting
+      accessStore.clearWeb3ConnectionError()
+      accessStore.setClickedWeb3Wallet(wallet)
+      accessStore.setCurrentView('web3_wallet')
       web3Wallet
         .connect()
         .then(res => {
@@ -147,27 +167,37 @@ export const useConnectWallet = () => {
             try {
               _storeWallet(web3Wallet, wallet)
             } catch (error) {
-              toastStore.addToastMessage({
-                text: `Web3 connect failed: ${error}`,
-                type: ToastType.Error,
-              })
+              accessStore.setWeb3ConnectionError(
+                error instanceof Error ? error.message : String(error),
+              )
             }
+          } else {
+            accessStore.setWeb3ConnectionError(t('error_connecting'))
           }
         })
         .catch(err => {
           let error = t('error_connecting')
-          let _type = ToastType.Warning
           if (
             err.message &&
             err.message.toLowerCase().includes('user rejected')
           ) {
             error = t('common.error.user_canceled_request')
-            _type = ToastType.Info
           }
-          toastStore.addToastMessage({
-            text: error,
-            type: _type,
-          })
+          if (
+            err.message &&
+            err.message.toLowerCase().includes('already pending')
+          ) {
+            error =
+              'Request to connect already pending, please check your wallet extension'
+          }
+          if (
+            err.message &&
+            err.message.toLowerCase().includes('unrecognized chain id')
+          ) {
+            error =
+              'Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet.'
+          }
+          accessStore.setWeb3ConnectionError(error)
         })
     }
   }
@@ -208,7 +238,9 @@ export const useConnectWallet = () => {
             _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
-              text: error instanceof Error ? error.message : String(error),
+              text: 'Could not connect to wallet',
+              textSecondary:
+                error instanceof Error ? error.message : String(error),
               type: ToastType.Error,
             })
           }
@@ -225,7 +257,8 @@ export const useConnectWallet = () => {
           _type = ToastType.Info
         }
         toastStore.addToastMessage({
-          text: error,
+          text: 'Could not connect to wallet',
+          textSecondary: error,
           type: _type,
         })
       })

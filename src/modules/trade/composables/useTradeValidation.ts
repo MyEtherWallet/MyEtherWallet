@@ -14,6 +14,7 @@ interface UseTradeValidationOptions {
   isSelectedAssetTradeable: ComputedRef<boolean>
   supportedNetwork: ComputedRef<boolean>
   isLoadingQuote: Ref<boolean>
+  generalError: Ref<string>
 }
 
 export function useTradeValidation(options: UseTradeValidationOptions) {
@@ -26,6 +27,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     isSelectedAssetTradeable,
     supportedNetwork,
     isLoadingQuote,
+    generalError,
   } = options
 
   const { t } = useI18n()
@@ -71,13 +73,10 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       return true
     }
 
-    // Minimum $1 value check
     const tokenPrice = fromTokenSelected.value.price || 0
     if (tokenPrice > 0) {
-      const usdValue = amountBN
-        .times(tokenPrice)
-        .integerValue(BigNumber.ROUND_CEIL)
-      if (usdValue.lt(1)) {
+      const usdValue = amountBN.times(tokenPrice)
+      if (usdValue.lt(0.95)) {
         return true
       }
     }
@@ -93,6 +92,9 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       fromAmount.value === '0'
     ) {
       return ''
+    }
+    if (generalError.value === 'pathfinder error') {
+      return 'This token is unavailable to trade. Please choose another or try again later.'
     }
 
     const amountBN = BigNumber(fromAmount.value)
@@ -112,14 +114,12 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
       return t('swap.error.too-many-decimals')
     }
 
-    // Minimum $1 value check
+    // Minimum $0.95 value check
     const tokenPrice = fromTokenSelected.value.price || 0
     if (tokenPrice > 0) {
-      const usdValue = amountBN
-        .times(tokenPrice)
-        .integerValue(BigNumber.ROUND_HALF_CEIL)
-      if (usdValue.lt(1)) {
-        return 'Minimum trade value is $1.00'
+      const usdValue = amountBN.times(tokenPrice)
+      if (usdValue.lt(0.95)) {
+        return 'Minimum trade value is around $1.00'
       }
     }
 

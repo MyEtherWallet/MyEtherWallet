@@ -71,7 +71,8 @@ export const useEmailSubscription = () => {
       } catch (e) {
         console.error('Error subscribing to email list: ', e)
         toastStore.addToastMessage({
-          text: 'Something went wrong, please try again later.',
+          text: 'Something went wrong',
+          textSecondary: 'Please try again later.',
           type: ToastType.Error,
         })
         isLoading.value = false

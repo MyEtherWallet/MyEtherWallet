@@ -14,6 +14,7 @@
             :resolved-address="resolvedAddress"
             :network="selectedChain"
             :address-error-messages="adrError"
+            :is-raised="false"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
             label="Signing Address"

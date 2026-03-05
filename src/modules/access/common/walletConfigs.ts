@@ -19,6 +19,7 @@ export const ACCESS_WALLET_VIEWS = [
   'mnemonic',
   'private_key',
   'wallet_connect',
+  'web3_wallet',
 ] as const
 
 export const CREATE_WALLET_VIEWS = ['default', 'buy', 'mnemonic'] as const

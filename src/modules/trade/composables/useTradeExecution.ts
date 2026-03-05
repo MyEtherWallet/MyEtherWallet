@@ -67,15 +67,29 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       needsApproval.value = false
 
       toastStore.addToastMessage({
-        text: 'Approval successful! You can now trade.',
+        text: 'Approval successful! ',
+        textSecondary: `You can now trade ${fromTokenSelected.value.symbol}.`,
         type: ToastType.Success,
       })
     } catch (e) {
+      const errorMessage =
+        e instanceof Error && e.message
+          ? e.message.toLowerCase()
+          : (e as any).details
+            ? (e as any).details
+            : typeof e === 'string'
+              ? e
+              : 'Could not approve token'
+      if (errorMessage.includes('user rejected')) {
+        toastStore.addToastMessage({
+          text: 'Approval cancelled by user',
+          type: ToastType.Info,
+        })
+        return
+      }
       toastStore.addToastMessage({
-        text:
-          (e as any).details ||
-          (e as Error).message ||
-          'Failed to approve token',
+        text: 'Could not approve token',
+        textSecondary: errorMessage,
         type: ToastType.Error,
       })
     } finally {
@@ -87,7 +101,6 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     if (!currentQuote.value) {
       toastStore.addToastMessage({
         text: 'Please wait for quote to load',
-        type: ToastType.Error,
       })
       return
     }
@@ -184,11 +197,24 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         },
       })
     } catch (e) {
+      const errorMessage =
+        e instanceof Error && e.message
+          ? e.message.toLowerCase()
+          : (e as any).details
+            ? (e as any).details
+            : typeof e === 'string'
+              ? e
+              : 'Failed to submit trade order'
+      if (errorMessage.includes('user rejected')) {
+        toastStore.addToastMessage({
+          text: 'Trade cancelled by user',
+          type: ToastType.Info,
+        })
+        return
+      }
       toastStore.addToastMessage({
-        text:
-          (e as any).details ||
-          (e as Error).message ||
-          'Failed to submit trade order',
+        text: 'Failed to submit trade order',
+        textSecondary: errorMessage,
         type: ToastType.Error,
       })
     } finally {
