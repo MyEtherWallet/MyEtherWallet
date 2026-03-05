@@ -31,11 +31,27 @@
           v-if="order.fromTokenIcon"
           :url="order.fromTokenIcon"
           :symbol="order.fromSymbol"
+          :address="
+            order.fromTokenAddress
+              ? { address: order.fromTokenAddress, network: order.chainName }
+              : undefined
+          "
         />
         <div>
           <p class="font-bold text-s-14">
             {{ formatFloatingPointValue(order.fromAmount).value }}
-            {{ order.fromSymbol }}
+            <app-token-symbol
+              :symbol="order.fromSymbol"
+              :address="
+                order.fromTokenAddress
+                  ? {
+                      address: order.fromTokenAddress,
+                      network: order.chainName,
+                    }
+                  : undefined
+              "
+              class="inline-flex !text-s-14 !font-bold"
+            />
           </p>
         </div>
       </div>
@@ -45,6 +61,11 @@
           v-if="order.toTokenIcon"
           :url="order.toTokenIcon"
           :symbol="order.toSymbol"
+          :address="
+            order.toTokenAddress
+              ? { address: order.toTokenAddress, network: order.chainName }
+              : undefined
+          "
         />
         <div>
           <p
@@ -55,18 +76,48 @@
               <span class="uppercase text-s-9 mr-1 opacity-80">est:</span>
               <span class="opacity-70"
                 >{{ formatFloatingPointValue(order.expectedToAmount).value }}
-                {{ order.toSymbol }}</span
-              >
+                <app-token-symbol
+                  :symbol="order.toSymbol"
+                  :address="
+                    order.toTokenAddress
+                      ? {
+                          address: order.toTokenAddress,
+                          network: order.chainName,
+                        }
+                      : undefined
+                  "
+                  :has-gradient="false"
+                  class="inline-flex !text-s-12 opacity-70"
+              /></span>
             </span>
             <span class="font-bold text-s-14 text-success"
               >{{ formatFloatingPointValue(order.finalToAmount).value }}
-              {{ order.toSymbol }}</span
-            >
+              <app-token-symbol
+                :symbol="order.toSymbol"
+                :address="
+                  order.toTokenAddress
+                    ? {
+                        address: order.toTokenAddress,
+                        network: order.chainName,
+                      }
+                    : undefined
+                "
+                :has-gradient="false"
+                class="inline-flex !text-s-14 !font-bold text-success"
+            /></span>
           </p>
           <p v-else class="font-bold text-s-14">
             ~
             {{ formatFloatingPointValue(order.expectedToAmount).value }}
-            {{ order.toSymbol }}
+            <app-token-symbol
+              :symbol="order.toSymbol"
+              :address="
+                order.toTokenAddress
+                  ? { address: order.toTokenAddress, network: order.chainName }
+                  : undefined
+              "
+              class="inline-flex !text-s-14 !font-bold"
+            />
           </p>
           <p v-if="order.usdValue" class="text-s-12 text-info">
             ${{ order.usdValue }}
@@ -177,6 +228,7 @@ import { SUPPORTED_CHAINS } from '@/modules/trade/providers/oneinch_fusion/confi
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'

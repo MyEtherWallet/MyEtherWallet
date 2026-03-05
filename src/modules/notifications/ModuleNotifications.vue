@@ -99,10 +99,12 @@ import {
 import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
+import { useStocksStore } from '@/stores/stocksStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
 
 const appLayoutStore = useAppLayoutStore()
+const stocksStore = useStocksStore()
 const { isNotificationsOpen } = storeToRefs(appLayoutStore)
 // Extended TradeOrder with runtime-only remainingTime
 interface TradeOrder extends SavedTradeOrder {
@@ -331,11 +333,17 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
         tradeInfo: {
           fromToken: order.fromSymbol,
           fromtTokenIcon: order.fromTokenIcon || '',
-          fromTokenIsStock: false,
+          fromTokenIsStock: stocksStore.isStock(
+            order.fromTokenAddress || '',
+            order.chainName,
+          ),
           fromAmount: formatFloatingPointValue(order.fromAmount).value,
           toToken: order.toSymbol,
           toTokenIcon: order.toTokenIcon || '',
-          toTokenIsStock: false,
+          toTokenIsStock: stocksStore.isStock(
+            order.toTokenAddress || '',
+            order.chainName,
+          ),
           toAmount: formatFloatingPointValue(finalAmount).value,
         },
       })
@@ -359,11 +367,17 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
         tradeInfo: {
           fromToken: order.fromSymbol,
           fromtTokenIcon: order.fromTokenIcon || '',
-          fromTokenIsStock: false,
+          fromTokenIsStock: stocksStore.isStock(
+            order.fromTokenAddress || '',
+            order.chainName,
+          ),
           fromAmount: formatFloatingPointValue(order.fromAmount).value,
           toToken: order.toSymbol,
           toTokenIcon: order.toTokenIcon || '',
-          toTokenIsStock: false,
+          toTokenIsStock: stocksStore.isStock(
+            order.toTokenAddress || '',
+            order.chainName,
+          ),
           toAmount: formatFloatingPointValue(order.expectedToAmount).value,
         },
       })
@@ -505,6 +519,22 @@ const updateNotificationStatus = (
         type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
         text: `Swap ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
         duration: 10000,
+        tradeInfo: {
+          fromToken: swap.fromSymbol,
+          fromtTokenIcon: swap.fromTokenIcon || '',
+          fromTokenIsStock: stocksStore.isStock(
+            swap.fromTokenAddress || '',
+            swap.fromChainName,
+          ),
+          fromAmount: formatFloatingPointValue(swap.fromAmount).value,
+          toToken: swap.toSymbol,
+          toTokenIcon: swap.toTokenIcon || '',
+          toTokenIsStock: stocksStore.isStock(
+            swap.toTokenAddress || '',
+            swap.fromChainName,
+          ),
+          toAmount: formatFloatingPointValue(swap.toAmount).value,
+        },
       })
     }
 
@@ -525,7 +555,24 @@ const updateNotificationStatus = (
       toastStore.addToastMessage({
         type: newStatus === 'confirmed' ? ToastType.Success : ToastType.Error,
         text: `Bridge ${newStatus === 'confirmed' ? 'Successful' : 'Failed'}`,
+        textSecondary: `${bridge.fromChainName} → ${bridge.toChainName}`,
         duration: 10000,
+        tradeInfo: {
+          fromToken: bridge.fromSymbol,
+          fromtTokenIcon: bridge.fromTokenIcon || '',
+          fromTokenIsStock: stocksStore.isStock(
+            bridge.fromTokenAddress || '',
+            bridge.fromChainName,
+          ),
+          fromAmount: formatFloatingPointValue(bridge.fromAmount).value,
+          toToken: bridge.toSymbol,
+          toTokenIcon: bridge.toTokenIcon || '',
+          toTokenIsStock: stocksStore.isStock(
+            bridge.toTokenAddress || '',
+            bridge.toChainName,
+          ),
+          toAmount: formatFloatingPointValue(bridge.toAmount).value,
+        },
       })
     }
 

@@ -164,6 +164,7 @@
       @update:declineSwap="bestOfferSelectionOpen = false"
       :quotes="providers"
       :amount="fromAmount"
+      :from-chain="selectedChain"
       :to-chain="selectedToChain"
       :swap-info="swapInfo || undefined"
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"

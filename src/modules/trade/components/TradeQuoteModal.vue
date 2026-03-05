@@ -12,27 +12,46 @@
           <h3 class="font-bold text-s-17 lg:text-s-20 ml-2">
             Trade Quote from 1inch Fusion
           </h3>
-          <p
+          <div
             class="font-normal text-s-17 lg:text-s-20 my-2 mb-2 ml-2 flex flex-wrap items-center gap-2"
           >
-            For
+            <span> For</span>
+
             <app-token-logo
               :url="fromToken?.logoURI"
               :symbol="fromToken?.symbol"
+              :address="
+                fromToken && chain
+                  ? { address: fromToken?.address, network: chain.name }
+                  : undefined
+              "
               width="w-6 lg:w-8"
               height="h-6 lg:h-8"
             />
-            <span class="font-bold">
-              {{ fromAmount }}
-              {{ fromToken?.symbol }}</span
-            >
-            you will get:
-          </p>
+            <div class="flex items-center font-bold">
+              <span>{{ fromAmount }}</span>
+              <app-token-symbol
+                :symbol="fromToken?.symbol || 'UNKNOWN'"
+                :address="
+                  fromToken && chain
+                    ? { address: fromToken.address, network: chain.name }
+                    : undefined
+                "
+                class="!text-s-17 lg:!text-s-20 !font-bold ml-[2px]"
+              />
+            </div>
+            <span> you will get:</span>
+          </div>
           <div class="flex items-center bg-mewBg rounded-20 p-4 my-2">
             <div class="relative flex-none overflow-visible">
               <app-token-logo
                 :url="toToken?.logoURI"
                 :symbol="toToken?.symbol"
+                :address="
+                  toToken && chain
+                    ? { address: toToken.address, network: chain.name }
+                    : undefined
+                "
                 width="w-8 lg:w-[64px]"
                 height="h-8 lg:h-[64px]"
               />
@@ -43,7 +62,15 @@
               >
                 <span class="flex-none">≈</span>
                 <span class="truncate">{{ toAmountFormatted }}</span>
-                <span class="flex-none">{{ toToken?.symbol }}</span>
+                <app-token-symbol
+                  :symbol="toToken?.symbol || 'UNKNOWN'"
+                  :address="
+                    toToken && chain
+                      ? { address: toToken.address, network: chain.name }
+                      : undefined
+                  "
+                  class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 flex-none"
+                />
               </div>
               <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
             </div>
@@ -53,15 +80,33 @@
           <div class="mt-4 space-y-2 px-2">
             <div class="flex justify-between text-s-14">
               <span class="text-info">Estimated Amount</span>
-              <span class="font-medium"
-                >{{ toAmountFormatted }} {{ toToken?.symbol }}</span
-              >
+              <span class="font-medium flex items-center gap-1"
+                >{{ toAmountFormatted }}
+                <app-token-symbol
+                  :symbol="toToken?.symbol || 'UNKNOWN'"
+                  :address="
+                    toToken && chain
+                      ? { address: toToken.address, network: chain.name }
+                      : undefined
+                  "
+                  class="!text-s-14 !font-medium !leading-p-100"
+                />
+              </span>
             </div>
             <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
               <span class="text-info">Min Amount</span>
-              <span class="font-medium"
-                >{{ minAmountFormatted }} {{ toToken?.symbol }}</span
-              >
+              <span class="font-medium flex items-center gap-1"
+                >{{ minAmountFormatted }}
+                <app-token-symbol
+                  :symbol="toToken?.symbol || 'UNKNOWN'"
+                  :address="
+                    toToken && chain
+                      ? { address: toToken.address, network: chain.name }
+                      : undefined
+                  "
+                  class="!text-s-14 !font-medium !leading-p-100"
+                />
+              </span>
             </div>
           </div>
 
@@ -122,13 +167,14 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { formatUnits } from 'viem'
 import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import type { NewTokenInfo } from '@/composables/useSwap'
-
+import type { Chain } from '@/mew_api/types'
 const model = defineModel<boolean>('isOpen', { default: false })
 
 const props = defineProps<{
@@ -141,6 +187,7 @@ const props = defineProps<{
   toToken: NewTokenInfo | null
   fromAmount: string
   loading?: boolean
+  chain?: Chain
 }>()
 
 defineEmits<{

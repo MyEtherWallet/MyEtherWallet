@@ -9,10 +9,12 @@ export interface SavedTradeOrder {
   fromSymbol: string
   fromDecimals: number
   fromTokenIcon?: string
+  fromTokenAddress: string
   expectedToAmount: string
   toSymbol: string
   toDecimals: number
   toTokenIcon?: string
+  toTokenAddress: string
   createdAt: number
   duration: number
   fills: { txHash: string }[]
@@ -20,6 +22,7 @@ export interface SavedTradeOrder {
   percentageDiff?: number
   usdValue?: string
   chainId: number
+  chainName: string
   fromAddress: string
   seen?: boolean
 }

@@ -173,28 +173,9 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         chainId,
         fromAddress: walletAddress.value!,
         seen: false,
-      })
-      //Show Success Toast
-      const amount =
-        currentQuote.value?.avgAmount || currentQuote.value?.startAmount || 0n
-      const formattedTo = formatFloatingPointValue(
-        formatUnits(amount, toTokenSelected.value.decimals || 18),
-      ).value
-      const formattedFrom = formatFloatingPointValue(fromAmount.value).value
-      toastStore.addToastMessage({
-        text: 'Trade order submitted:',
-        type: ToastType.Success,
-        duration: 10000,
-        tradeInfo: {
-          fromToken: fromTokenSelected.value.symbol,
-          fromtTokenIcon: fromTokenSelected.value.logoURI,
-          fromTokenIsStock: false,
-          fromAmount: formattedFrom,
-          toToken: toTokenSelected.value.symbol,
-          toTokenIcon: toTokenSelected.value.logoURI,
-          toTokenIsStock: false,
-          toAmount: formattedTo,
-        },
+        chainName: selectedFromChain.value?.name || 'ETHEREUM',
+        fromTokenAddress: fromTokenSelected.value.address,
+        toTokenAddress: toTokenSelected.value.address,
       })
     } catch (e) {
       const errorMessage =

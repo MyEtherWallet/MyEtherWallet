@@ -237,7 +237,20 @@
         class="w-full max-w-[340px] p-4 bg-warning-10 border border-warning rounded-12 mb-2"
       >
         <p class="text-warning text-s-14 text-center">
-          {{ toTokenSelected?.symbol }} not currently tradable due to
+          <app-token-symbol
+            :symbol="toTokenSelected?.symbol || 'UNKNOWN'"
+            :address="
+              toTokenSelected && selectedFromChain
+                ? {
+                    address: toTokenSelected.address,
+                    network: selectedFromChain.name,
+                  }
+                : undefined
+            "
+            :has-gradient="false"
+            class="inline-flex !text-s-14"
+          />
+          is currently not tradable due to
           {{ nonTradeableAssetMessage }}
         </p>
       </div>
@@ -300,6 +313,7 @@
       :to-token="toTokenSelected"
       :from-amount="fromAmount"
       :loading="txProceeding"
+      :chain="selectedFromChain"
       @confirm="confirmTrade"
       @cancel="quoteModalOpen = false"
     />
@@ -332,6 +346,7 @@ import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 // Stores
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -526,12 +541,19 @@ const displayGeneralError = ref<string>('')
 watch(generalError, newVal => {
   if (newVal) {
     displayGeneralError.value = ''
-    if (fromAmountError.value)
-      if (generalError.value === 'pathfinder error') {
-        displayGeneralError.value = ''
-      } else {
-        displayGeneralError.value = newVal
-      }
+    if (fromAmountError.value) {
+      return
+    }
+    if (generalError.value === 'pathfinder error') {
+      displayGeneralError.value = ''
+    } else if (
+      generalError.value.toLowerCase().includes('internal server error')
+    ) {
+      displayGeneralError.value =
+        'One or more tokens are currently not tradable. Try again later or select different tokens.'
+    } else {
+      displayGeneralError.value = newVal
+    }
   }
 })
 // --- Trade Tokens ---
