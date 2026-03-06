@@ -478,14 +478,14 @@
                       v-if="token.ondo !== null"
                       size="small"
                       @click="tradeBtn(token)"
-                      class="min-w-[60px]"
+                      class="min-w-[64px]"
                       >Trade
                     </app-base-button>
                     <app-base-button
                       v-else-if="getIsBridgeable(token)"
                       size="small"
                       @click="bridgeBtn(token)"
-                      class="min-w-[60px]"
+                      class="min-w-[64px]"
                       >Bridge
                     </app-base-button>
                     <app-base-button
@@ -495,7 +495,7 @@
                       "
                       size="small"
                       @click="swapBtn(token)"
-                      class="min-w-[60px]"
+                      class="min-w-[64px]"
                       >Swap
                     </app-base-button>
 
@@ -663,6 +663,8 @@ import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import {
@@ -767,10 +769,16 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   const isNativeToken = token.nativeChains.length > 0
   const currentChainName = selectedChainStore.value.name
-  const hasCurrentChainAsNative = token.nativeChains.some(
+  const isNativeToCurrentChain = token.nativeChains.some(
     c => c.chainName === currentChainName,
   )
-  return isNativeToken && !hasCurrentChainAsNative
+  const isAvailableOnCurrentChain = token.chains.some(
+    c => c.chainName === currentChainName,
+  )
+  if (isNativeToken && isNativeToCurrentChain) {
+    return false
+  }
+  return isNativeToken && !isAvailableOnCurrentChain
 }
 const buyBtn = () => {
   window.open(
@@ -780,6 +788,29 @@ const buyBtn = () => {
   )
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
+  const selectedChain = (
+    selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
+      ? selectedChainFilter.value
+      : selectedChainStore.value
+  ) as Chain
+  const tokenOnChain =
+    token.nativeChains.find(c => c.chainName === selectedChain?.name) ||
+    token.nativeChains[0]
+
+  const targetToChain =
+    chainsStore.chains.find(c => c.name === tokenOnChain.chainName) ||
+    selectedChain
+  storeSwapValues({
+    fromToken: {} as NewTokenInfo,
+    toToken: {
+      address: MAIN_TOKEN_CONTRACT,
+      symbol: token.symbol,
+      decimals: tokenOnChain?.decimals || 18,
+      name: token.name,
+    } as NewTokenInfo,
+    fromAmount: '',
+    toChain: targetToChain as Chain,
+  })
   setWalletPanel('bridge')
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)
@@ -794,9 +825,15 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
       ? selectedChainFilter.value
       : selectedChainStore.value
   ) as Chain
+  const _chains = getTokenIsCurrentNative(token)
+    ? token.nativeChains
+    : token.chains
+  const _address = getTokenIsCurrentNative(token)
+    ? MAIN_TOKEN_CONTRACT
+    : token.chains.find(c => c.chainName === selectedChain?.name)?.address || ''
+
   const tokenOnChain =
-    token.chains.find(c => c.chainName === selectedChain?.name) ||
-    token.chains[0]
+    _chains.find(c => c.chainName === selectedChain?.name) || _chains[0]
 
   const targetToChain =
     chainsStore.chains.find(c => c.name === tokenOnChain.chainName) ||
@@ -805,7 +842,7 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
   storeSwapValues({
     fromToken: {} as NewTokenInfo,
     toToken: {
-      address: tokenOnChain?.address || '',
+      address: _address,
       symbol: token.symbol,
       decimals: tokenOnChain?.decimals || 18,
       name: token.name,
