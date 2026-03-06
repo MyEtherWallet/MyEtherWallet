@@ -417,6 +417,10 @@ const fromAmountError = computed(() => {
 })
 
 const toAmountError = computed(() => {
+  // In bridge mode, if toAddress is missing, don't show "no quotes" — the address input handles it
+  if (isCrossChain.value && !toAddress.value) {
+    return ''
+  }
   if (
     !isLoading.value &&
     providers.value.length === 0 &&
@@ -480,7 +484,7 @@ const clearValues = () => {
 
 const validateToAddress = async () => {
   if (!userToAddress.value) {
-    toAddressError.value = 'address is required'
+    toAddressError.value = 'Recipient address is required for bridging'
     return
   }
   const valid = await toTokenSelected.value?.networkInfo.isAddress(
@@ -944,7 +948,11 @@ watch(
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      if (isCrossChain.value && !toAddress.value) return
+      if (isCrossChain.value && !toAddress.value) {
+        // Highlight the missing address instead of silently returning
+        toAddressError.value = 'Recipient address is required for bridging'
+        return
+      }
       debounceFetchQuotes()
     }
   },
