@@ -411,6 +411,13 @@
                             }}</span>
                           </button>
                           <hr
+                            v-if="
+                              isBuyable(token.coinId) ||
+                              token.ondo !== null ||
+                              getIsBridgeable(token) ||
+                              token.chains.length > 0 ||
+                              getTokenIsCurrentNative(token)
+                            "
                             class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                           />
 
@@ -423,20 +430,44 @@
                               <icon-buy class="text-primary w-4 h-4 mr-2" />
                               <p>Buy</p>
                             </li>
-                            <li
-                              @click.stop="[toggleMenu, swapBtn(token, true)]"
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                            >
-                              <icon-swap class="text-primary w-4 h-4 mr-2" />
-                              <p>Swap</p>
-                            </li>
-                            <li
-                              @click.stop="[toggleMenu, bridgeBtn(token, true)]"
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                            >
-                              <icon-bridge class="text-primary w-4 h-4 mr-2" />
-                              <p>Bridge</p>
-                            </li>
+                            <template v-if="token.ondo !== null">
+                              <li
+                                @click.stop="[
+                                  tradeBtn(token, true),
+                                  toggleMenu(),
+                                ]"
+                                class="p-2 flex items-center hoverBGWhite rounded-12"
+                              >
+                                <icon-trade class="text-primary w-4 h-4 mr-2" />
+                                <p>Trade</p>
+                              </li>
+                            </template>
+                            <template v-else>
+                              <li
+                                v-if="getIsBridgeable(token)"
+                                @click.stop="[
+                                  toggleMenu,
+                                  bridgeBtn(token, true),
+                                ]"
+                                class="p-2 flex items-center hoverBGWhite rounded-12"
+                              >
+                                <icon-bridge
+                                  class="text-primary w-4 h-4 mr-2"
+                                />
+                                <p>Bridge</p>
+                              </li>
+                              <li
+                                v-else-if="
+                                  token.chains.length > 0 ||
+                                  getTokenIsCurrentNative(token)
+                                "
+                                @click.stop="[toggleMenu, swapBtn(token, true)]"
+                                class="p-2 flex items-center hoverBGWhite rounded-12"
+                              >
+                                <icon-swap class="text-primary w-4 h-4 mr-2" />
+                                <p>Swap</p>
+                              </li>
+                            </template>
                           </ul>
                         </div>
                       </template>
@@ -444,11 +475,30 @@
                   </div>
                   <div class="hidden lg:flex flex-row gap-2 justify-end">
                     <app-base-button
+                      v-if="token.ondo !== null"
+                      size="small"
+                      @click="tradeBtn(token)"
+                      class="min-w-[60px]"
+                      >Trade
+                    </app-base-button>
+                    <app-base-button
+                      v-else-if="getIsBridgeable(token)"
+                      size="small"
+                      @click="bridgeBtn(token)"
+                      class="min-w-[60px]"
+                      >Bridge
+                    </app-base-button>
+                    <app-base-button
+                      v-else-if="
+                        token.chains.length > 0 ||
+                        getTokenIsCurrentNative(token)
+                      "
                       size="small"
                       @click="swapBtn(token)"
                       class="min-w-[60px]"
                       >Swap
                     </app-base-button>
+
                     <app-base-button
                       v-if="isBuyable(token.coinId)"
                       size="small"
@@ -580,6 +630,7 @@ import AppTooltip from '@/components/AppTooltip.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
+import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import {
   StarIcon as StarSolidIcon,
   ChevronDownIcon,
@@ -624,7 +675,7 @@ import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel } = walletMenu
+const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
@@ -699,6 +750,28 @@ const nextPage = () => {
   tableContainer.value?.scrollTo(0, 0)
 }
 
+/** -------------------------------
+ * Buy/Trade/Swap/Bridge Button Actions
+-------------------------------*/
+
+const getTokenIsCurrentNative = (token: DisplayToken): boolean => {
+  if (!selectedChainStore.value) {
+    return false
+  }
+  const currentChainName = selectedChainStore.value.name
+  return token.nativeChains.some(c => c.chainName === currentChainName)
+}
+const getIsBridgeable = (token: DisplayToken): boolean => {
+  if (!selectedChainStore.value) {
+    return false
+  }
+  const isNativeToken = token.nativeChains.length > 0
+  const currentChainName = selectedChainStore.value.name
+  const hasCurrentChainAsNative = token.nativeChains.some(
+    c => c.chainName === currentChainName,
+  )
+  return isNativeToken && !hasCurrentChainAsNative
+}
 const buyBtn = () => {
   window.open(
     'https://ccswap.myetherwallet.com/',
@@ -721,7 +794,6 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
       ? selectedChainFilter.value
       : selectedChainStore.value
   ) as Chain
-
   const tokenOnChain =
     token.chains.find(c => c.chainName === selectedChain?.name) ||
     token.chains[0]
@@ -742,6 +814,17 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
     toChain: targetToChain as Chain,
   })
   setWalletPanel('swap')
+  if (!isOpenSideMenu.value) {
+    walletMenu.setIsOpenSideMenu(true)
+  }
+  if (!isMobile) {
+    goToTokenPage(token)
+  }
+}
+
+const tradeBtn = (token: DisplayToken, isMobile = false) => {
+  setSelectedTradeTokenSymbol(token.symbol)
+  setWalletPanel('trade')
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)
   }

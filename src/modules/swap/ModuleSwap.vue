@@ -141,7 +141,7 @@
         :disabled="isSwapDisabled"
         @click="swapButton"
       >
-        {{ t('common.swap') }}</app-base-button
+        {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
       >
       <div :class="['mx-auto w-full max-w-[340px]', blurClass]" v-else>
         <app-base-button class="w-full" @click="connectWalletForSwap">

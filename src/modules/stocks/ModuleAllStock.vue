@@ -383,18 +383,11 @@
 
                           <ul>
                             <li
-                              @click.stop="[toggleMenu, swapBtn(token, true)]"
+                              @click.stop="[toggleMenu, tradeBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <icon-swap class="text-primary w-4 h-4 mr-2" />
-                              <p>Swap</p>
-                            </li>
-                            <li
-                              @click.stop="[toggleMenu, bridgeBtn(token, true)]"
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                            >
-                              <icon-bridge class="text-primary w-4 h-4 mr-2" />
-                              <p>Bridge</p>
+                              <icon-trade class="text-primary w-4 h-4 mr-2" />
+                              <p>Trade</p>
                             </li>
                           </ul>
                         </div>
@@ -404,8 +397,8 @@
                   <div
                     class="hidden lg:flex flex-row gap-1 justify-end flex-wrap"
                   >
-                    <app-base-button size="small" @click="swapBtn(token)"
-                      >Swap
+                    <app-base-button size="small" @click="tradeBtn(token)"
+                      >Trade
                     </app-base-button>
                   </div>
                 </td>
@@ -520,8 +513,7 @@ import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
+import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import {
   StarIcon as StarSolidIcon,
   ChevronDownIcon,
@@ -562,7 +554,7 @@ import { useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel } = walletMenu
+const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const tableContainer = ref<HTMLElement | null>(null)
@@ -636,17 +628,9 @@ const nextPage = () => {
   tableContainer.value?.scrollTo(0, 0)
 }
 
-const bridgeBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('bridge')
-  if (!isOpenSideMenu.value) {
-    walletMenu.setIsOpenSideMenu(true)
-  }
-  if (!isMobile) {
-    goToTokenPage(token)
-  }
-}
-const swapBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('swap')
+const tradeBtn = (token: DisplayToken, isMobile = false) => {
+  setSelectedTradeTokenSymbol(token.symbol)
+  setWalletPanel('trade')
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)
   }
