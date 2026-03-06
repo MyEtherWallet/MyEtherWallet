@@ -27,7 +27,7 @@
         role="listbox"
         aria-label="Select an option"
         v-show="openSelect"
-        class="absolute top-full focus:outline-none z-[100] pt-2"
+        class="absolute top-full focus:outline-none z-[500] pt-2"
         :class="position"
       >
         <div

@@ -7,34 +7,36 @@
     <template #content>
       <div class="px-4 lg:px-6 pb-8 pt-2">
         <div class="flex flex-col items-center text-center">
-          <p class="text-s-13 lg:text-s-16 text-info px-4 leading-p-160">
+          <div class="text-s-13 lg:text-s-16 text-info px-4 leading-p-160">
             {{ completedNote }}
-            <app-blockie
-              v-if="isBridge"
-              :address="props.toAddress"
-              :size="5"
-              class="inline-block mx-2 align-middle"
-            />
-            <a
-              v-if="isBridge && toChain?.blockExplorerAddr"
-              :href="`${toChain.blockExplorerAddr}${props.toAddress}`"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hover:underline cursor-pointer font-mono text-black text-s-14 pr-1"
-            >
-              {{ truncateHash(props.toAddress) }}
-              <arrow-up-right-icon
-                class="w-3 h-3 inline-block align-middle text-black"
-            /></a>
+            <div class="inline-flex align-middle">
+              <app-blockie
+                v-if="isBridge"
+                :address="props.toAddress"
+                :size="5"
+                class="inline-block mx-2 align-middle"
+              />
+              <a
+                v-if="isBridge && toChain?.blockExplorerAddr"
+                :href="`${toChain.blockExplorerAddr}${props.toAddress}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
+              >
+                {{ truncateHash(props.toAddress) }}
+                <arrow-up-right-icon
+                  class="w-3 h-3 inline-block align-middle text-black"
+              /></a>
+            </div>
             <span
               v-if="isBridge && !toChain?.blockExplorerAddr"
-              class="font-mono text-s-14"
+              class="font-mono text-s-13 lg:text-s-16"
             >
               {{ truncateHash(props.toAddress) }}
             </span>
 
             on {{ toTokenChain }}
-          </p>
+          </div>
 
           <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">
             <!-- Progress -->

@@ -40,6 +40,7 @@
       "minimum-received": "Minimum received",
       "offer-includes": "Offer includes {feePercent}% fee",
       "proceed": "Proceed With Swap",
+      "proceed-bridge": "Proceed With Bridge",
       "decline": "Decline Swap",
       "unknown-provider": "Unknown provider",
       "offers": "Offer | {count} other offers",
