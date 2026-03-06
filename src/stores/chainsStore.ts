@@ -7,6 +7,7 @@ export const useChainsStore = defineStore('chainsStore', () => {
   const globalStore = useGlobalStore()
   const { selectedNetwork } = storeToRefs(globalStore)
   const chains = ref<Chain[]>([])
+  const allChains = ref<Chain[]>([])
   const isLoaded = ref(false)
 
   const selectedChain = computed<Chain | undefined>(() => {
@@ -17,6 +18,7 @@ export const useChainsStore = defineStore('chainsStore', () => {
 
   const setChainData = (_chains: Chain[]) => {
     chains.value = _chains.filter(chain => chain.type !== 'SOLANA')
+    allChains.value = _chains
     if (_chains.length > 0) {
       isLoaded.value = true
     }
@@ -40,6 +42,7 @@ export const useChainsStore = defineStore('chainsStore', () => {
 
   return {
     chains,
+    allChains,
     isLoaded,
     setChainData,
     getChainIcon,

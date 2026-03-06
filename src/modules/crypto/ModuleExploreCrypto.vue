@@ -798,7 +798,7 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
     token.nativeChains[0]
 
   const targetToChain =
-    chainsStore.chains.find(c => c.name === tokenOnChain.chainName) ||
+    chainsStore.allChains.find(c => c.name === tokenOnChain.chainName) ||
     selectedChain
   storeSwapValues({
     fromToken: {} as NewTokenInfo,
