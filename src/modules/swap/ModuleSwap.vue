@@ -484,7 +484,7 @@ const validateToAddress = async () => {
     return
   }
   const valid = await toTokenSelected.value?.networkInfo.isAddress(
-    userToAddress.value.toLowerCase(),
+    userToAddress.value,
   )
   toAddressError.value = valid ? '' : 'invalid address'
 }
