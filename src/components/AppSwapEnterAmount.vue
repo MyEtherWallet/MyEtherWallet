@@ -34,6 +34,7 @@
         :external-loading="isLoading"
         :chain-tokens="tokens || []"
         :is-from-view="isFromView"
+        :network-name="networkName"
       />
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
@@ -116,6 +117,10 @@ const props = defineProps({
   isFromView: {
     type: Boolean,
     default: true,
+  },
+  networkName: {
+    type: String,
+    required: false,
   },
 })
 

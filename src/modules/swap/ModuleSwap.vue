@@ -29,12 +29,12 @@
             <select-chain-for-app
               v-if="!isSwapView"
               :passed-chains="fromChains"
-              :preselected-chain="selectedFromChain"
             />
             <app-swap-enter-amount
               v-model:amount="fromAmount"
               v-model:selected-token="fromTokenSelected!"
               v-model:error="fromAmountError"
+              :network-name="selectedChain?.name"
               :external-loading="fromLoadingState"
               :tokens="parsedFromTokens"
               :show-balance="isWalletConnected"
@@ -76,6 +76,7 @@
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
+              :network-name="selectedToChain?.name"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
             <div class="pt-4" v-if="!isSwapView && isCrossChain"></div>
@@ -163,6 +164,7 @@
       @update:declineSwap="bestOfferSelectionOpen = false"
       :quotes="providers"
       :amount="fromAmount"
+      :from-chain="selectedChain"
       :to-chain="selectedToChain"
       :swap-info="swapInfo || undefined"
       :swap-gas-fee-quote="swapGasFeeQuote || undefined"
@@ -282,7 +284,6 @@ const {
 // --- Local State ---
 
 // Selections
-const selectedFromChain = ref<Chain>()
 const selectedToChain = ref<Chain>()
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
 const toTokenSelected = ref<NewTokenInfo | null>(null)

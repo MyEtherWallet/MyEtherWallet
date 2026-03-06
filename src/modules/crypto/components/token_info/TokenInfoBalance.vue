@@ -17,6 +17,7 @@
           <app-token-logo
             :url="tokenIconUrl"
             :symbol="tokenSymbol"
+            :is-stock="isStock"
             width="w-9"
             height="h-9"
           />
@@ -82,6 +83,7 @@
               <app-token-logo
                 :url="tokenIconUrl"
                 :symbol="tokenSymbol"
+                :is-stock="isStock"
                 width="w-7 xl:w-9"
                 height="h-7 xl:h-9"
               />

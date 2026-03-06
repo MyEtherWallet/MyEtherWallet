@@ -25,9 +25,9 @@
             </p>
             <app-base-button
               :disabled="!canRetry"
+              :is-loading="!canRetry"
               @click="handleRetry"
               class="min-w-[200px]"
-              :is-loading="!canRetry"
             >
               {{ $t('common.retry') }}
             </app-base-button>

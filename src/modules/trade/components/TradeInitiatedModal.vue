@@ -74,13 +74,35 @@
                   <app-token-logo
                     :url="fromToken?.logoURI"
                     :symbol="fromToken?.symbol"
+                    :address="
+                      fromToken && fromChain
+                        ? {
+                            address: fromToken.address,
+                            network: fromChain.name,
+                          }
+                        : undefined
+                    "
                     width="w-9 lg:w-12"
                     height="h-9 lg:h-12"
                   />
                 </div>
                 <div class="flex flex-col text-left">
-                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
-                    {{ fromAmount }} {{ fromToken?.symbol }}
+                  <p
+                    class="text-s-16 lg:text-s-20 font-bold leading-tight flex items-center gap-1"
+                  >
+                    {{ fromAmount }}
+                    <app-token-symbol
+                      :symbol="fromToken?.symbol || 'UNKNOWN'"
+                      :address="
+                        fromToken && fromChain
+                          ? {
+                              address: fromToken.address,
+                              network: fromChain.name,
+                            }
+                          : undefined
+                      "
+                      class="!text-s-16 lg:!text-s-20 !font-bold"
+                    />
                   </p>
                   <p class="text-info text-s-14">${{ fromAmountFiat }}</p>
                 </div>
@@ -97,13 +119,32 @@
                   <app-token-logo
                     :url="toToken?.logoURI"
                     :symbol="toToken?.symbol"
+                    :address="
+                      toToken && fromChain
+                        ? { address: toToken.address, network: fromChain.name }
+                        : undefined
+                    "
                     width="w-9 lg:w-12"
                     height="h-9 lg:h-12"
                   />
                 </div>
                 <div class="flex flex-col text-left">
-                  <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
-                    {{ toAmount }} {{ toToken?.symbol }}
+                  <p
+                    class="text-s-16 lg:text-s-20 font-bold leading-tight flex items-center gap-1"
+                  >
+                    {{ toAmount }}
+                    <app-token-symbol
+                      :symbol="toToken?.symbol || 'UNKNOWN'"
+                      :address="
+                        toToken && fromChain
+                          ? {
+                              address: toToken.address,
+                              network: fromChain.name,
+                            }
+                          : undefined
+                      "
+                      class="!text-s-16 lg:!text-s-20 !font-bold"
+                    />
                   </p>
                   <p class="text-info text-s-14">${{ toAmountFiat }}</p>
                 </div>
@@ -171,6 +212,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import {
   CheckCircleIcon,
   XCircleIcon,

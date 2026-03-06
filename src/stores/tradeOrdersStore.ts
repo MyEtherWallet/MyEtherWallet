@@ -9,10 +9,12 @@ export interface SavedTradeOrder {
   fromSymbol: string
   fromDecimals: number
   fromTokenIcon?: string
+  fromTokenAddress: string
   expectedToAmount: string
   toSymbol: string
   toDecimals: number
   toTokenIcon?: string
+  toTokenAddress: string
   createdAt: number
   duration: number
   fills: { txHash: string }[]
@@ -20,6 +22,7 @@ export interface SavedTradeOrder {
   percentageDiff?: number
   usdValue?: string
   chainId: number
+  chainName: string
   fromAddress: string
   seen?: boolean
 }
@@ -55,10 +58,12 @@ export interface NotificationBaseSwapBridge {
   fromSymbol: string
   fromTokenIcon: string
   fromUsdValue?: string
+  fromTokenAddress: string
   toAmount: string
   toSymbol: string
   toTokenIcon: string
   toUsdValue?: string
+  toTokenAddress: string
   networkFee?: string
   networkFeeUSD?: string
   fromChainId: string

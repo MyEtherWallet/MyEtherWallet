@@ -5,18 +5,23 @@
       :key="i.symbol"
       class="flex items-center last:mb-0 w-full justify-between py-1.5"
     >
-      <div class="flex items-center gap-2 uppercase overflow-hidden">
+      <div class="flex items-center gap-2 uppercase overflow-hidden group pl-1">
         <div
-          class="h-2.5 w-2.5 rounded-full shrink-0"
+          class="h-2.5 w-2.5 rounded-full shrink-0 group-hover:scale-125 transition-transform"
           :style="{ backgroundColor: getBGColor(index) }"
         ></div>
         <app-tooltip :text="i.name">
           <router-link
             v-if="i.id"
             :to="getTokenRouteParams(i)"
-            class="text-s-14 font-medium truncate hover:text-primary transition-colors block max-w-[80px]"
-            >{{ truncate(i.symbol, 10) }}</router-link
+            class="truncate group-hover:text-primary transition-colors block max-w-[80px]"
           >
+            <app-token-symbol
+              :symbol="i.symbol"
+              :is-stock="i.is_stock"
+              class="!text-s-14 !font-medium inline-flex truncate max-w-[80px]"
+            />
+          </router-link>
           <p v-else class="text-s-14 font-medium truncate block max-w-[80px]">
             {{ truncate(i.symbol, 10) }}
           </p>
@@ -42,6 +47,7 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 defineProps({
   /**
    * @title The title of the dialog, not required

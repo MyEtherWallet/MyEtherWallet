@@ -102,6 +102,14 @@
                   <app-token-logo
                     :url="fromTokenIcon"
                     :symbol="fromTokenSymbol"
+                    :address="
+                      props.fromChain
+                        ? {
+                            address: fromTokenAddress,
+                            network: props.fromChain?.name,
+                          }
+                        : undefined
+                    "
                     width="w-9 lg:w-12"
                     height="h-9 lg:h-12"
                   />
@@ -123,7 +131,18 @@
                   </p>
                   <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
                     {{ formatFloatingPointValue(fromTokenAmount).value }}
-                    {{ fromTokenSymbol }}
+                    <app-token-symbol
+                      :symbol="fromTokenSymbol"
+                      :address="
+                        props.fromChain
+                          ? {
+                              address: fromTokenAddress,
+                              network: props.fromChain?.name,
+                            }
+                          : undefined
+                      "
+                      class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
+                    />
                   </p>
                   <p class="text-info text-s-14">${{ fromTokenAmountFiat }}</p>
                 </div>
@@ -140,6 +159,14 @@
                   <app-token-logo
                     :url="toTokenIcon"
                     :symbol="toTokenSymbol"
+                    :address="
+                      props.toChain
+                        ? {
+                            address: toTokenAddress,
+                            network: props.toChain?.name,
+                          }
+                        : undefined
+                    "
                     width="w-9 lg:w-12"
                     height="h-9 lg:h-12"
                   />
@@ -161,7 +188,18 @@
                   </p>
                   <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
                     {{ formatFloatingPointValue(toTokenAmount).value }}
-                    {{ toTokenSymbol }}
+                    <app-token-symbol
+                      :symbol="toTokenSymbol"
+                      :address="
+                        props.toChain
+                          ? {
+                              address: toTokenAddress,
+                              network: props.toChain?.name,
+                            }
+                          : undefined
+                      "
+                      class="inline-flex !text-s-16 !lg:text-s-20 !font-bold !leading-tight"
+                    />
                   </p>
                   <p class="text-info text-s-14">${{ toTokenAmountFiat }}</p>
                 </div>
@@ -227,6 +265,7 @@ import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import ethSvg from '@/assets/icons/tokens/eth.svg'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import {
   CheckCircleIcon,
@@ -303,7 +342,7 @@ const notificationStatus = computed(() => {
 })
 
 const toTokenSymbol = computed(() => {
-  return props.selectedQuote?.quote.options.toToken.symbol || 'Unknown Token'
+  return props.selectedQuote?.quote.options.toToken.symbol || 'Unknown'
 })
 
 const toTokenAmount = computed(() => {
@@ -332,6 +371,10 @@ const toTokenChainImg = computed(() => {
   return props.toChain?.icon || ethSvg // Fallback to ETH icon if no chain icon is available
 })
 
+const toTokenAddress = computed(() => {
+  return props.selectedQuote?.quote.options.toToken.address || ''
+})
+
 const fromTokenSymbol = computed(() => {
   return props.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
 })
@@ -357,6 +400,10 @@ const fromTokenIcon = computed(() => {
 
 const fromTokenChainImg = computed(() => {
   return props.fromChain?.icon || ethSvg // Fallback to ETH icon if no chain icon is available
+})
+
+const fromTokenAddress = computed(() => {
+  return props.selectedQuote?.quote.options.fromToken.address || ''
 })
 
 const blockExplorerUrl = computed(() => {
@@ -416,10 +463,12 @@ watch(
           fromUsdValue: fromTokenAmountFiat.value,
           fromSymbol: fromTokenSymbol.value,
           fromTokenIcon: fromTokenIcon.value,
+          fromTokenAddress: fromTokenAddress.value,
           toAmount: toTokenAmount.value,
           toUsdValue: toTokenAmountFiat.value,
           toSymbol: toTokenSymbol.value,
           toTokenIcon: toTokenIcon.value,
+          toTokenAddress: toTokenAddress.value,
           blockExplorerUrl: hashLink,
           fromChainId: fromChain.chainID || '',
           fromChainName: fromChain.nameLong,

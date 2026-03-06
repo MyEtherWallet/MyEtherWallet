@@ -19,60 +19,56 @@
         >
           {{ toast.text }}
         </p>
-        <div v-if="!toast.tradeInfo">
-          <div v-if="toast.textSecondary">
-            <p
-              v-if="!hideSecondaryText"
-              :class="[
-                { 'mb-3': toast.link },
-                'text-s-14 mt-1 text-info  word-break',
-              ]"
-            >
-              {{ toast.textSecondary }}
-            </p>
-            <div v-else>
-              <button
-                @click="
-                  isShownSecondaryTextInFull = !isShownSecondaryTextInFull
-                "
-                class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
-              >
-                <p>
-                  {{
-                    isShownSecondaryTextInFull
-                      ? toast.textSecondary
-                      : `${toast.textSecondary.slice(0, 60)}...`
-                  }}
-                </p>
-                <ChevronDownIcon
-                  class="w-5 h-5 mt-1 mx-auto"
-                  aria-label="Toggle full text"
-                  :class="{ 'rotate-180': isShownSecondaryTextInFull }"
-                />
-              </button>
-            </div>
-          </div>
+        <div v-if="toast.textSecondary">
           <p
-            v-if="toast.hash"
+            v-if="!hideSecondaryText"
             :class="[
               { 'mb-3': toast.link },
-              'text-s-14 mt-1 text-info word-break break-all',
+              'text-s-14 mt-1 text-info  word-break',
             ]"
           >
-            {{ toast.hash }}
+            {{ toast.textSecondary }}
           </p>
-          <a
-            v-if="toast.link"
-            :href="toast.link.url"
-            target="_blank"
-            :class="[
-              toast.link.isButton
-                ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
-                : 'underline',
-            ]"
-            >{{ toast.link.title }}</a
-          >
+          <div v-else>
+            <button
+              @click="isShownSecondaryTextInFull = !isShownSecondaryTextInFull"
+              class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
+            >
+              <p>
+                {{
+                  isShownSecondaryTextInFull
+                    ? toast.textSecondary
+                    : `${toast.textSecondary.slice(0, 60)}...`
+                }}
+              </p>
+              <ChevronDownIcon
+                class="w-5 h-5 mt-1 mx-auto"
+                aria-label="Toggle full text"
+                :class="{ 'rotate-180': isShownSecondaryTextInFull }"
+              />
+            </button>
+          </div>
         </div>
+        <p
+          v-if="toast.hash"
+          :class="[
+            { 'mb-3': toast.link },
+            'text-s-14 mt-1 text-info word-break break-all',
+          ]"
+        >
+          {{ toast.hash }}
+        </p>
+        <a
+          v-if="toast.link"
+          :href="toast.link.url"
+          target="_blank"
+          :class="[
+            toast.link.isButton
+              ? 'py-2  px-4 text-s-15 bg-primary hoverOpacityHasBG text-white rounded-full font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white mb-1 text-center block mt-5 mx-auto'
+              : 'underline',
+          ]"
+          >{{ toast.link.title }}</a
+        >
         <div class="mt-4 -ml-4" v-if="toast.tradeInfo">
           <div
             class="flex flex-wrap justify-start gap-4 items-center rounded-16 border-grey-10 border-1 px-3 py-2"
