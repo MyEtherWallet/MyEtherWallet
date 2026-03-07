@@ -165,7 +165,6 @@
 import OverviewContainer from './components/overview/OverviewContainer.vue'
 import TokenRow from './components/overview/TokenRow.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { useToastStore } from '@/stores/toastStore'
 import { ref } from 'vue'
 import {
   formatPercentageValue,
@@ -177,7 +176,6 @@ import ModuleTrending from '@/modules/crypto/ModuleTrending.vue'
 import { usePaginate } from '@/composables/usePaginate'
 
 const { useMEWFetch } = useFetchMewApi()
-const toastStore = useToastStore()
 
 const newTokens = ref<CryptoOverviewToken[]>([])
 const gainersTokens = ref<CryptoOverviewToken[]>([])
@@ -185,7 +183,6 @@ const fetchUrl = '/v1/web/overview'
 const {
   data,
   onFetchResponse,
-  onFetchError,
   isFetching: isLoading,
 } = useMEWFetch(fetchUrl).get().json<CryptoOverview>()
 
@@ -211,13 +208,6 @@ onFetchResponse(() => {
       },
     )
   }
-})
-
-onFetchError(err => {
-  toastStore.addToastMessage({
-    text: 'Could not fetch data',
-    textSecondary: err,
-  })
 })
 
 const {

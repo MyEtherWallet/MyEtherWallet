@@ -35,7 +35,6 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     error: tokensWatchlistError,
     execute: fetchTokensWatchlist,
     onFetchResponse: onTokensWatchlistResponse,
-    onFetchError: onTokensWatchlistError,
   } = useMEWFetch(fetchWatchListUrl, { immediate: false, refetch: true })
     .get()
     .json<GetWebTokensWatchlistResponse>()
@@ -61,7 +60,6 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     error: stocksWatchlistError,
     execute: fetchStocksWatchlist,
     onFetchResponse: onStocksWatchlistResponse,
-    onFetchError: onStocksWatchlistError,
   } = useMEWFetch(fetchStocksWatchListUrl, { immediate: false, refetch: true })
     .get()
     .json<GetWebStocksWatchlistResponse>()
@@ -91,14 +89,12 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     tokensWatchlistError,
     fetchTokensWatchlist,
     onTokensWatchlistResponse,
-    onTokensWatchlistError,
     //stocks
     stocksWatchlistData,
     isFetchingStocksWatchlist,
     stocksWatchlistError,
     fetchStocksWatchlist,
     onStocksWatchlistResponse,
-    onStocksWatchlistError,
     //all
     fetchAllWatchlist,
     isPendingAllWatchlist,

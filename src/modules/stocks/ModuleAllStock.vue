@@ -544,7 +544,6 @@ import {
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
-import { useToastStore } from '@/stores/toastStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { type AppSelectOption } from '@/types/components/appSelect'
@@ -559,7 +558,6 @@ const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const tableContainer = ref<HTMLElement | null>(null)
 
-const toastStore = useToastStore()
 const chainsStore = useChainsStore()
 const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
   storeToRefs(chainsStore)
@@ -695,12 +693,8 @@ const selectedChainForWatchlist = computed(
   () => selectedChainFilter.value ?? null,
 )
 
-const {
-  stocksWatchlistData,
-  fetchStocksWatchlist,
-  onStocksWatchlistResponse,
-  onStocksWatchlistError,
-} = useFetchWatchlist(selectedChainForWatchlist)
+const { stocksWatchlistData, fetchStocksWatchlist, onStocksWatchlistResponse } =
+  useFetchWatchlist(selectedChainForWatchlist)
 
 const formatStock = (
   item: GetWebStocksWatchlistResponseStock,
@@ -794,7 +788,6 @@ const {
   data: fetchGainersData,
   onFetchResponse: onFetchGainersResponse,
   execute: fetchGainersTable,
-  onFetchError: onFetchGainersError,
 } = useMEWFetch(fetchGainersUrl, {
   immediate: false,
 })
@@ -805,7 +798,6 @@ const {
   data: fetchTokenData,
   onFetchResponse: onFetchTokenTableResponse,
   execute: fetchTokenTable,
-  onFetchError: onFetchTokenTableError,
 } = useMEWFetch(fetchTableUrl, {
   immediate: false,
 })
@@ -908,43 +900,6 @@ onFetchTokenTableResponse(() => {
       fetchTokenData.value.items.map(item => formatToken(item)) || []
   }
   isLoading.value = false
-})
-
-onFetchGainersError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data.',
-    textSecondary:
-      err instanceof Error && err.message
-        ? err.message
-        : typeof err === 'string'
-          ? err
-          : undefined,
-  })
-})
-onStocksWatchlistError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data.',
-    textSecondary:
-      err instanceof Error && err.message
-        ? err.message
-        : typeof err === 'string'
-          ? err
-          : undefined,
-  })
-})
-onFetchTokenTableError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data.',
-    textSecondary:
-      err instanceof Error && err.message
-        ? err.message
-        : typeof err === 'string'
-          ? err
-          : undefined,
-  })
 })
 
 const parsePercent = (val: number | null): string => {

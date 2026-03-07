@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import OverviewContainer from './components/overview/OverviewContainer.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import { useToastStore } from '@/stores/toastStore'
 import { computed, onMounted, ref, type Ref } from 'vue'
 import type {
   GetWebTrendingTokensResponse,
@@ -34,7 +33,6 @@ import TokenRow from './components/overview/TokenRow.vue'
 import { getAPIPath } from '@/utils/constructAPIPath'
 
 const { useMEWFetch } = useFetchMewApi()
-const toastStore = useToastStore()
 const isLoading = ref(true)
 const trendingTokens: Ref<GetWebTrendingTokensResponseToken[]> = ref([])
 
@@ -46,7 +44,7 @@ const url = computed(() => {
   )
 })
 const fetchUrl = url
-const { execute, data, onFetchResponse, onFetchError } = useMEWFetch(fetchUrl, {
+const { execute, data, onFetchResponse } = useMEWFetch(fetchUrl, {
   immediate: false,
 })
   .get()
@@ -70,14 +68,6 @@ onFetchResponse(() => {
     ]
   }
   isLoading.value = false
-})
-
-onFetchError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data',
-    textSecondary: err,
-  })
 })
 
 /** --------------------------

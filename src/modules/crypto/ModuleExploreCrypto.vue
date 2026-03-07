@@ -446,7 +446,7 @@
                               <li
                                 v-if="getIsBridgeable(token)"
                                 @click.stop="[
-                                  toggleMenu,
+                                  toggleMenu(),
                                   bridgeBtn(token, true),
                                 ]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -462,7 +462,10 @@
                                   (token.chains.length > 0 ||
                                     getTokenIsCurrentNative(token))
                                 "
-                                @click.stop="[toggleMenu, swapBtn(token, true)]"
+                                @click.stop="[
+                                  toggleMenu(),
+                                  swapBtn(token, true),
+                                ]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
                                 <icon-swap class="text-primary w-4 h-4 mr-2" />
@@ -659,7 +662,6 @@ import {
   formatIntegerValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
-import { useToastStore } from '@/stores/toastStore'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
@@ -689,7 +691,6 @@ const { storeSwapValues } = inputStore
 
 const tableContainer = ref<HTMLElement | null>(null)
 
-const toastStore = useToastStore()
 const chainsStore = useChainsStore()
 const {
   isLoaded: isLoadedChains,
@@ -936,11 +937,9 @@ const { useMEWFetch } = useFetchMewApi()
 const {
   tokensWatchlistData,
   onTokensWatchlistResponse,
-  onTokensWatchlistError,
   stocksWatchlistData,
   fetchAllWatchlist,
   onStocksWatchlistResponse,
-  onStocksWatchlistError,
 } = useFetchWatchlist(selectedChainFilter)
 
 const fetchGainersUrl = computed(() => {
@@ -967,7 +966,6 @@ const {
   data: fetchGainersData,
   onFetchResponse: onFetchGainersResponse,
   execute: fetchGainersTable,
-  onFetchError: onFetchGainersError,
 } = useMEWFetch(fetchGainersUrl, {
   immediate: false,
 })
@@ -978,7 +976,6 @@ const {
   data: fetchTokenData,
   onFetchResponse: onFetchTokenTableResponse,
   execute: fetchTokenTable,
-  onFetchError: onFetchTokenTableError,
 } = useMEWFetch(fetchTableUrl, {
   immediate: false,
 })
@@ -1153,35 +1150,6 @@ onFetchTokenTableResponse(() => {
       fetchTokenData.value.items.map(item => formatToken(item)) || []
   }
   isLoading.value = false
-})
-
-onFetchGainersError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data',
-    textSecondary: err,
-  })
-})
-onTokensWatchlistError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data',
-    textSecondary: err,
-  })
-})
-onStocksWatchlistError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data',
-    textSecondary: err,
-  })
-})
-onFetchTokenTableError(err => {
-  isLoading.value = false
-  toastStore.addToastMessage({
-    text: 'Could not fetch data',
-    textSecondary: err,
-  })
 })
 
 const parsePercent = (val: number | null): string => {

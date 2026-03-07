@@ -260,7 +260,7 @@ const feeEstmates = ref<FeeOption | undefined>(undefined)
 
 const { useMEWFetch } = useFetchMewApi()
 
-const { data, onFetchResponse, execute, onFetchError, isFetching } =
+const { data, onFetchResponse, execute, onFetchError, isFetching, aborted } =
   useMEWFetch(fetchURL, {
     immediate: false,
   })
@@ -294,6 +294,9 @@ onFetchResponse(() => {
 
 onFetchError(e => {
   if (e.message) {
+    if (aborted.value || e.message.toLowerCase().includes('abort')) {
+      return
+    }
     gasFeeError.value = e.message.includes('insufficient funds')
       ? NOT_ENOUGH_BALANCE
       : e.message

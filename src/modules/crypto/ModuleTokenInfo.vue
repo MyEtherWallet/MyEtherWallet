@@ -301,12 +301,7 @@ const {
   data: fetchedTokenData,
   isFetching,
   onFetchResponse,
-  onFetchError,
 } = useMEWFetch(endpoint, { refetch: true }).get().json<GetWebTokenInfo>()
-
-onFetchError(() => {
-  isLoadedData.value = true
-})
 
 const isLoading = computed(() => {
   return !isLoadedData.value
