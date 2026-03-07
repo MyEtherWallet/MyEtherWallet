@@ -458,8 +458,9 @@
                               </li>
                               <li
                                 v-else-if="
-                                  token.chains.length > 0 ||
-                                  getTokenIsCurrentNative(token)
+                                  currentChainhasSwapSupport &&
+                                  (token.chains.length > 0 ||
+                                    getTokenIsCurrentNative(token))
                                 "
                                 @click.stop="[toggleMenu, swapBtn(token, true)]"
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -490,8 +491,9 @@
                     </app-base-button>
                     <app-base-button
                       v-else-if="
-                        token.chains.length > 0 ||
-                        getTokenIsCurrentNative(token)
+                        currentChainhasSwapSupport &&
+                        (token.chains.length > 0 ||
+                          getTokenIsCurrentNative(token))
                       "
                       size="small"
                       @click="swapBtn(token)"
@@ -689,8 +691,11 @@ const tableContainer = ref<HTMLElement | null>(null)
 
 const toastStore = useToastStore()
 const chainsStore = useChainsStore()
-const { isLoaded: isLoadedChains, selectedChain: selectedChainStore } =
-  storeToRefs(chainsStore)
+const {
+  isLoaded: isLoadedChains,
+  selectedChain: selectedChainStore,
+  currentChainhasSwapSupport,
+} = storeToRefs(chainsStore)
 const searchInput = ref('')
 const activeSort = ref({ label: '', value: '' })
 const selectedChainFilter = ref<Chain | null>(null)
@@ -775,10 +780,14 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   const isAvailableOnCurrentChain = token.chains.some(
     c => c.chainName === currentChainName,
   )
+  // Check if any native chain has swap support
+  const hasSwapSupportChain = token.nativeChains.some(c =>
+    chainsStore.chainHasSwapSupport(c.chainName),
+  )
   if (isNativeToken && isNativeToCurrentChain) {
     return false
   }
-  return isNativeToken && !isAvailableOnCurrentChain
+  return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
 const buyBtn = () => {
   window.open(
@@ -793,9 +802,14 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
       ? selectedChainFilter.value
       : selectedChainStore.value
   ) as Chain
-  const tokenOnChain =
-    token.nativeChains.find(c => c.chainName === selectedChain?.name) ||
-    token.nativeChains[0]
+  // Find the first native chain with swap support
+  const tokenOnChain = token.nativeChains.find(c =>
+    chainsStore.chainHasSwapSupport(c.chainName),
+  )
+
+  if (!tokenOnChain) {
+    return
+  }
 
   const targetToChain =
     chainsStore.allChains.find(c => c.name === tokenOnChain.chainName) ||

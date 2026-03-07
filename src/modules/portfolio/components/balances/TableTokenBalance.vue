@@ -365,6 +365,12 @@
                         }}</span>
                       </button>
                       <hr
+                        v-if="
+                          props.view === 'custom' ||
+                          isBuyable(token.coinId) ||
+                          token.ondo !== undefined ||
+                          currentChainhasSwapSupport
+                        "
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
 
@@ -386,20 +392,13 @@
                             <p>Trade</p>
                           </li>
                         </template>
-                        <template v-else>
+                        <template v-else-if="currentChainhasSwapSupport">
                           <li
                             @click.stop="[swapBtn(token, true), toggleMenu()]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
                             <icon-swap class="text-primary w-4 h-4 mr-2" />
                             <p>Swap</p>
-                          </li>
-                          <li
-                            @click.stop="[bridgeBtn(token, true), toggleMenu()]"
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                          >
-                            <icon-bridge class="text-primary w-4 h-4 mr-2" />
-                            <p>Bridge</p>
                           </li>
                         </template>
                       </ul>
@@ -441,7 +440,7 @@
                   >Trade
                 </app-base-button>
                 <app-base-button
-                  v-else
+                  v-else-if="currentChainhasSwapSupport"
                   size="small"
                   @click="swapBtn(token)"
                   class="min-w-[60px]"
@@ -604,7 +603,6 @@ import {
 } from '@heroicons/vue/24/solid'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 
@@ -677,7 +675,7 @@ const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
 const { isBuyable } = purchaseStore
 
-const { selectedChain } = storeToRefs(chainStore)
+const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const {
@@ -1059,12 +1057,6 @@ const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
 
 const swapBtn = (token: DisplayToken, isMobile = false) => {
   setWalletPanel('swap')
-  if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
-  if (!isMobile) goToTokenPage(token)
-}
-
-const bridgeBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('bridge')
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
   if (!isMobile) goToTokenPage(token)
 }

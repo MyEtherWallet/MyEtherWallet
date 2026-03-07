@@ -118,6 +118,8 @@
         :token-symbol="tokenData?.symbol"
         :supported-chains="tokenData?.supportedChains"
         :current-price="tokenData?.currentPrice?.toString() || undefined"
+        :is-stock-view="false"
+        @bridge-to-chain="setBridgeWalletStore"
       />
     </div>
     <!-- Market Data -->
@@ -130,6 +132,8 @@
       :token-symbol="tokenData?.symbol || undefined"
       :supported-chains="tokenData?.supportedChains"
       :token-id="tokenData?.coinId"
+      :is-stock-view="false"
+      @bridge-to-chain="setBridgeWalletStore"
     />
   </div>
 </template>
@@ -145,7 +149,7 @@ import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
 } from '@heroicons/vue/24/outline'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
@@ -159,9 +163,11 @@ import { useTokenInfoStore } from '@/stores/tokenInfoStore'
 import type { DisplayToken } from '../portfolio/components/balances/TableTokenBalance.vue'
 import { useInputStore } from '@/stores/inputStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
-import type { Chain } from '@/mew_api/types'
+import type { Chain, TokenSupportedChain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
+import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+
 const props = defineProps({
   tokenId: {
     type: String,
@@ -176,13 +182,102 @@ const recentlyViewedTokensStore = useRecentlyViewedTokensStore()
  * Wallet Menu Buttons
  --------------------*/
 const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu } = storeToRefs(walletMenu)
+const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
 
 /** --------------------
  * Input Store
  --------------------*/
 const inputStore = useInputStore()
 const { storeSwapValues } = inputStore
+
+const isInSwapPackage = (chainName: string): boolean => {
+  return chainsStore.chainHasSwapSupport(chainName)
+}
+
+const setSwapWalletStore = () => {
+  if (fetchedTokenData.value === null || tokenData.value === null) {
+    return
+  }
+  const currentChainToken = fetchedTokenData.value.supportedChains.find(
+    chain => chain.chainName === selectedChain.value?.name,
+  )
+  if (
+    currentChainToken &&
+    currentChainToken.contract &&
+    isInSwapPackage(currentChainToken.chainName)
+  ) {
+    storeSwapValues({
+      fromToken: {} as NewTokenInfo,
+      toToken: {
+        address: currentChainToken.contract,
+        symbol: fetchedTokenData.value.symbol,
+        decimals: 18,
+        name: fetchedTokenData.value.name,
+      } as NewTokenInfo,
+      fromAmount: '',
+      toChain: selectedChain.value as Chain,
+    })
+  }
+}
+
+interface BridgeValues {
+  fromToken: NewTokenInfo
+  toToken: NewTokenInfo
+  fromAmount: string
+  toChain: Chain
+}
+const bridgeValues = ref<BridgeValues | undefined>(undefined)
+
+const setBridgeValues = (
+  _chain: TokenSupportedChain | undefined = undefined,
+) => {
+  if (fetchedTokenData.value === null || tokenData.value === null) {
+    return
+  }
+  const targetToChain = _chain
+    ? _chain
+    : fetchedTokenData.value.supportedChains.find(
+        chain => chain.chainName !== selectedChain.value?.name,
+      )
+  if (targetToChain && isInSwapPackage(targetToChain.chainName)) {
+    const chainInstore = chainsStore.allChains.find(
+      c => c.name === targetToChain.chainName,
+    )
+    if (!chainInstore) {
+      return
+    }
+    const _contract = targetToChain?.contract || MAIN_TOKEN_CONTRACT
+    bridgeValues.value = {
+      fromToken: {} as NewTokenInfo,
+      toToken: {
+        address: _contract,
+        symbol: fetchedTokenData.value.symbol,
+        decimals: 18,
+        name: fetchedTokenData.value.name,
+      } as NewTokenInfo,
+      fromAmount: '',
+      toChain: chainInstore,
+    }
+  }
+}
+
+const setBridgeWalletStore = (
+  _chain: TokenSupportedChain | undefined = undefined,
+) => {
+  setBridgeValues(_chain)
+  if (bridgeValues.value) {
+    storeSwapValues(bridgeValues.value)
+  }
+  walletMenu.setWalletPanel('bridge')
+}
+
+watch(walletPanel, () => {
+  if (walletPanel.value === 'swap') {
+    setSwapWalletStore()
+  } else if (walletPanel.value === 'bridge') {
+    setBridgeWalletStore()
+  }
+})
 
 /** --------------------
  * Fetch Data
@@ -231,19 +326,10 @@ onFetchResponse(() => {
     isStock: false,
   })
   if (currentChainToken) {
-    storeSwapValues({
-      fromToken: {} as NewTokenInfo,
-      toToken: {
-        address: currentChainToken.contract,
-        symbol: fetchedTokenData.value.symbol,
-        decimals: 18,
-        name: fetchedTokenData.value.name,
-      } as NewTokenInfo,
-      fromAmount: '',
-      toChain: selectedChain.value as Chain,
-    })
+    setSwapWalletStore()
     walletMenu.setWalletPanel('swap')
   } else {
+    setBridgeWalletStore(currentChainToken)
     walletMenu.setWalletPanel('bridge')
   }
   tokenLocalStore.value = fetchedTokenData.value

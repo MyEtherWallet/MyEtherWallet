@@ -118,7 +118,12 @@
               <p class="text-info text-s-14 font-medium">${{ i.fiatValue }}</p>
             </div>
           </div>
-          <app-base-button size="small" class="shrink-0 hidden sm:block">
+          <app-base-button
+            v-if="!isStockView && canBridge(i)"
+            size="small"
+            class="shrink-0 hidden sm:block"
+            @click="bridgeBtn(i)"
+          >
             Bridge
           </app-base-button>
         </div>
@@ -180,6 +185,11 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  isStockView: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 /** --------------------
@@ -193,6 +203,10 @@ const { selectedChain } = storeToRefs(chainsStore)
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
+
+const canBridge = (chain: TokenSupportedChain): boolean => {
+  return chainsStore.chainHasSwapSupport(chain.chainName)
+}
 
 /** --------------------
  * Balances
@@ -299,5 +313,12 @@ const getFormattedFiatValueForChain = (balance: string) => {
 }
 const getChainIcon = (chainName: string): string | undefined => {
   return chainsStore.getChainIcon(chainName)
+}
+
+const emit = defineEmits<{
+  bridgeToChain: [chain: TokenSupportedChain]
+}>()
+const bridgeBtn = (chain: TokenSupportedChain) => {
+  emit('bridgeToChain', chain)
 }
 </script>

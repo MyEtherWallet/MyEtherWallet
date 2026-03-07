@@ -72,7 +72,7 @@ export const useSwap = (): {
   const globalStore = useGlobalStore()
   const walletStore = useWalletStore()
   const swapInstance: Ref<Swapper | null> = ref(null)
-  const { selectedChain, allChains } = storeToRefs(chainsStore)
+  const { selectedChain, allChains, swapChains } = storeToRefs(chainsStore)
   const { selectedNetwork } = storeToRefs(globalStore)
   const { tokens, balanceWei, isWalletConnected } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(true)
@@ -161,7 +161,7 @@ export const useSwap = (): {
           if (chain) return chain
         })
         .filter((chain): chain is Chain => chain !== undefined)
-
+      swapChains.value = toChains.value
       const allFromTokensWithBalance = allFromTokens.all.map(token => {
         let tokenBalance = '0'
         let tokenPrice = token.price
