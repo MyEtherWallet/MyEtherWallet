@@ -383,7 +383,10 @@
 
                           <ul>
                             <li
-                              @click.stop="[toggleMenu, tradeBtn(token, true)]"
+                              @click.stop="[
+                                toggleMenu(),
+                                tradeBtn(token, true),
+                              ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-trade class="text-primary w-4 h-4 mr-2" />
