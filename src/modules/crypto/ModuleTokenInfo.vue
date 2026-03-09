@@ -201,17 +201,22 @@ const setSwapWalletStore = () => {
   const currentChainToken = fetchedTokenData.value.supportedChains.find(
     chain => chain.chainName === selectedChain.value?.name,
   )
+  const currentBalance = fetchedTokenData.value.chainBalances?.find(
+    chain => chain.chainName === selectedChain.value?.name,
+  )
   if (
     currentChainToken &&
     currentChainToken.contract &&
-    isInSwapPackage(currentChainToken.chainName)
+    isInSwapPackage(currentChainToken.chainName) &&
+    currentBalance &&
+    currentBalance.result.ok
   ) {
     storeSwapValues({
       fromToken: {} as NewTokenInfo,
       toToken: {
         address: currentChainToken.contract,
         symbol: fetchedTokenData.value.symbol,
-        decimals: 18,
+        decimals: currentBalance.result.value.decimals || 18,
         name: fetchedTokenData.value.name,
       } as NewTokenInfo,
       fromAmount: '',
@@ -237,9 +242,11 @@ const setBridgeValues = (
   const targetToChain = _chain
     ? _chain
     : fetchedTokenData.value.supportedChains.find(
-        chain => chain.chainName !== selectedChain.value?.name,
+        chain =>
+          chain.chainName !== selectedChain.value?.name &&
+          isInSwapPackage(chain.chainName),
       )
-  if (targetToChain && isInSwapPackage(targetToChain.chainName)) {
+  if (targetToChain) {
     const chainInstore = chainsStore.allChains.find(
       c => c.name === targetToChain.chainName,
     )
@@ -247,12 +254,18 @@ const setBridgeValues = (
       return
     }
     const _contract = targetToChain?.contract || MAIN_TOKEN_CONTRACT
+    const chainBalance = fetchedTokenData.value.chainBalances?.find(
+      chain => chain.chainName === targetToChain.chainName,
+    )
+    if (!chainBalance || !chainBalance.result.ok) {
+      return
+    }
     bridgeValues.value = {
       fromToken: {} as NewTokenInfo,
       toToken: {
         address: _contract,
         symbol: fetchedTokenData.value.symbol,
-        decimals: 18,
+        decimals: chainBalance.result.value.decimals || 18,
         name: fetchedTokenData.value.name,
       } as NewTokenInfo,
       fromAmount: '',
