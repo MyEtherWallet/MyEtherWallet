@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="model"
-    title="Swap"
+    :title="title"
     class="lg:min-h-[614px] xs:min-w-[450px]"
   >
     <template #content>
@@ -264,7 +264,7 @@
           :is-loading="loadingModel"
           :disabled="!!gasFeeError"
         >
-          {{ t('swap.swap-offer.proceed') }}
+          {{ btnText }}
         </app-base-button>
         <app-btn-text
           class="mx-auto w-full mt-2 text-error"
@@ -389,6 +389,21 @@ const getProviderDisplayName = (name: string) => {
       return t('swap.swap-offer.unknown-provider')
   }
 }
+
+const isBridge = computed(() => {
+  if (!props.fromChain || !props.toChain) return false
+  return props.fromChain.name !== props.toChain.name
+})
+
+const title = computed(() => {
+  return isBridge.value ? 'Bridge' : 'Swap'
+})
+
+const btnText = computed(() => {
+  return isBridge.value
+    ? t('swap.swap-offer.proceed-bridge')
+    : t('swap.swap-offer.proceed')
+})
 
 const setItem = (item: ProviderQuoteResponse, close: () => void) => {
   selectedQuote.value = item

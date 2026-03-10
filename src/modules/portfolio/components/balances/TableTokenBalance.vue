@@ -365,6 +365,12 @@
                         }}</span>
                       </button>
                       <hr
+                        v-if="
+                          props.view === 'custom' ||
+                          isBuyable(token.coinId) ||
+                          token.ondo !== undefined ||
+                          currentChainhasSwapSupport
+                        "
                         class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                       />
 
@@ -377,20 +383,24 @@
                           <icon-buy class="text-primary w-4 h-4 mr-2" />
                           <p>Buy</p>
                         </li>
-                        <li
-                          @click.stop="[swapBtn(token, true), toggleMenu()]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <icon-swap class="text-primary w-4 h-4 mr-2" />
-                          <p>Swap</p>
-                        </li>
-                        <li
-                          @click.stop="[bridgeBtn(token, true), toggleMenu()]"
-                          class="p-2 flex items-center hoverBGWhite rounded-12"
-                        >
-                          <icon-bridge class="text-primary w-4 h-4 mr-2" />
-                          <p>Bridge</p>
-                        </li>
+                        <template v-if="token.ondo !== undefined">
+                          <li
+                            @click.stop="[tradeBtn(token, true), toggleMenu()]"
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                          >
+                            <icon-trade class="text-primary w-4 h-4 mr-2" />
+                            <p>Trade</p>
+                          </li>
+                        </template>
+                        <template v-else-if="currentChainhasSwapSupport">
+                          <li
+                            @click.stop="[swapBtn(token, true), toggleMenu()]"
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                          >
+                            <icon-swap class="text-primary w-4 h-4 mr-2" />
+                            <p>Swap</p>
+                          </li>
+                        </template>
                       </ul>
                       <ul v-else>
                         <li
@@ -423,6 +433,14 @@
                 class="hidden lg:flex flex-row gap-2 justify-end"
               >
                 <app-base-button
+                  v-if="token.ondo !== undefined"
+                  size="small"
+                  @click="tradeBtn(token)"
+                  class="min-w-[60px]"
+                  >Trade
+                </app-base-button>
+                <app-base-button
+                  v-else-if="currentChainhasSwapSupport"
                   size="small"
                   @click="swapBtn(token)"
                   class="min-w-[60px]"
@@ -585,7 +603,7 @@ import {
 } from '@heroicons/vue/24/solid'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
+import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 
 // Composables & Utils
@@ -657,8 +675,8 @@ const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
 const { isBuyable } = purchaseStore
 
-const { selectedChain } = storeToRefs(chainStore)
-const { setWalletPanel } = walletMenu
+const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
+const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const {
   isWalletConnected,
@@ -1043,8 +1061,9 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
   if (!isMobile) goToTokenPage(token)
 }
 
-const bridgeBtn = (token: DisplayToken, isMobile = false) => {
-  setWalletPanel('bridge')
+const tradeBtn = (token: DisplayToken, isMobile = false) => {
+  setSelectedTradeTokenSymbol(token.symbol)
+  setWalletPanel('trade')
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
   if (!isMobile) goToTokenPage(token)
 }

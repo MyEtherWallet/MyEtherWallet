@@ -10,7 +10,7 @@
         <div
           v-for="i in supportedChains"
           :key="i.chainName"
-          class="flex items-center justify-start py-3 -ml-1 pl-1 gap-5"
+          class="flex items-center justify-start py-3 -ml-1 pl-1 gap-5 max-w-[360px]"
         >
           <div class="flex items-center">
             <div class="relative mr-4 shrink-0">
@@ -71,6 +71,14 @@
               current chain
             </span>
           </div>
+          <app-base-button
+            v-else-if="!isStockView && canBridge(i)"
+            size="small"
+            class="shrink-0 hidden sm:block ml-auto"
+            @click="bridgeBtn(i)"
+          >
+            Bridge
+          </app-base-button>
         </div>
       </div>
     </div>
@@ -79,6 +87,7 @@
 
 <script setup lang="ts">
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { type PropType } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
@@ -86,6 +95,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { truncateAddress } from '@/utils/filters'
 import { type TokenSupportedChain } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
@@ -105,8 +115,25 @@ defineProps({
   tokenIconUrl: {
     type: String,
   },
+  isStockView: {
+    type: Boolean,
+    required: false,
+    default: true,
+  },
 })
 
 const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
+
+const emit = defineEmits<{
+  bridgeToChain: [chain: TokenSupportedChain]
+}>()
+
+const bridgeBtn = (chain: TokenSupportedChain) => {
+  emit('bridgeToChain', chain)
+}
+
+const canBridge = (chain: TokenSupportedChain): boolean => {
+  return chainsStore.chainHasSwapSupport(chain.chainName)
+}
 </script>
