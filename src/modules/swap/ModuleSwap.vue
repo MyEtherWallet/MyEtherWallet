@@ -423,7 +423,7 @@ const toAmountError = computed(() => {
   }
   if (
     !isLoading.value &&
-    providers.value.length === 0 &&
+    qoutesError.value &&
     fromAmount.value !== '0' &&
     fromAmountError.value === ''
   ) {
@@ -686,14 +686,17 @@ const swapButton = () => {
   return isBitcoinChain.value ? swapForBtc() : swapForEvm()
 }
 
+const qoutesError = ref<boolean>(false)
+
 const fetchQuotes = async () => {
   if (!fromTokenSelected.value || !toTokenSelected.value) return
-
+  isLoadingQuotes.value = true
   providers.value = []
   selectedQuote.value = undefined
-  isLoadingQuotes.value = true
+
   generalError.value = ''
   toAmount.value = '0'
+  qoutesError.value = false
 
   try {
     const quotes = await getQuote({
@@ -721,10 +724,10 @@ const fetchQuotes = async () => {
 
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
-        generalError.value = t('swap.error.no-quotes')
+        qoutesError.value = true
       }
     } else {
-      generalError.value = t('swap.error.no-quotes')
+      qoutesError.value = true
     }
   } catch (err: any) {
     generalError.value = t('swap.error.fetching-quotes')
@@ -937,7 +940,7 @@ watch(
       selectedChain.value?.chainID === selectedToChain.value?.chainID
     const isSameToken =
       fromTokenSelected.value?.address === toTokenSelected.value?.address
-
+    qoutesError.value = false
     // Auto-switch token if duplicate selected on same chain
     if (fromTokenSelected.value && isSameToken && isSameChain) {
       setToToken()

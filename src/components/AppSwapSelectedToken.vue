@@ -244,7 +244,7 @@
 <script setup lang="ts">
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/composables/useSwap'
-import { type Ref, ref, computed, onMounted } from 'vue'
+import { type Ref, ref, computed, onMounted, watch } from 'vue'
 import {
   ChevronDownIcon,
   ArrowLongDownIcon,
@@ -294,7 +294,10 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const emit = defineEmits(['update:selectedToken'])
+const emit = defineEmits<{
+  'update:selectedToken': [token: NewTokenInfo]
+  'open:selectToken': [isOpen: boolean]
+}>()
 
 const store = useWalletStore()
 const { isLoadingBalances, isWalletConnected } = storeToRefs(store)
@@ -326,6 +329,13 @@ onMounted(() => {
     activeSortValue.value = SortValueString.PRICE
   }
 })
+
+watch(
+  () => showAllTokens.value,
+  () => {
+    emit('open:selectToken', showAllTokens.value)
+  },
+)
 
 // pagination
 const endingPagination = ref(100)

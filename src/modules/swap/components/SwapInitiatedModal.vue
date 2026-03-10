@@ -415,13 +415,8 @@ const blockExplorerUrl = computed(() => {
 })
 
 const isBridge = computed(() => {
-  const fromChainId = props.fromChain?.chainID
-  const toChainId = props.toChain?.chainID
-  return (
-    fromChainId !== undefined &&
-    toChainId !== undefined &&
-    fromChainId !== toChainId
-  )
+  if (!props.fromChain || !props.toChain) return false
+  return props.fromChain.name !== props.toChain.name
 })
 
 const title = computed(() => {
