@@ -18,7 +18,7 @@
               />
               <a
                 v-if="isBridge && toChain?.blockExplorerAddr"
-                :href="`${toChain.blockExplorerAddr}${props.toAddress}`"
+                :href="addressExplorerUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
@@ -414,6 +414,13 @@ const blockExplorerUrl = computed(() => {
   )
 })
 
+const addressExplorerUrl = computed(() => {
+  return (
+    props.toChain?.blockExplorerAddr.replace('[[address]]', props.toAddress) ||
+    ''
+  )
+})
+
 const isBridge = computed(() => {
   if (!props.fromChain || !props.toChain) return false
   return props.fromChain.name !== props.toChain.name
@@ -449,8 +456,8 @@ watch(
 
       if (fromChain && toChain) {
         const createdAt = Math.floor(Date.now() / 1000)
-        const hashLink = `${fromChain.blockExplorerTX.replace('[[txHash]]', props.txHash)}`
-        const addressLink = `${toChain.blockExplorerAddr.replace('[[address]]', props.toAddress)}`
+        const hashLink = blockExplorerUrl.value
+        const addressLink = addressExplorerUrl.value
         const shared: NotificationBaseSwapBridge = {
           status: 'sent',
           hash: props.txHash,

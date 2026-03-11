@@ -10,7 +10,7 @@
         <div
           v-for="i in supportedChains"
           :key="i.chainName"
-          class="flex items-center justify-start py-3 -ml-1 pl-1 gap-5"
+          class="flex items-center justify-start py-3 -ml-1 pl-1 gap-5 max-w-[360px]"
         >
           <div class="flex items-center">
             <div class="relative mr-4 shrink-0">
@@ -74,7 +74,7 @@
           <app-base-button
             v-else-if="!isStockView && canBridge(i)"
             size="small"
-            class="shrink-0 hidden sm:block mx-auto"
+            class="shrink-0 hidden sm:block ml-auto"
             @click="bridgeBtn(i)"
           >
             Bridge

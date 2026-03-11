@@ -64,7 +64,10 @@
               :can-store="false"
               :passed-chains="toChains"
               :preselected-chain="selectedToChain"
-              :class="{ hidden: isSwapView }"
+              :class="{
+                hidden:
+                  isSwapView && selectedChain?.name === selectedToChain?.name,
+              }"
               @update:selected-chain="setToChain"
             />
             <app-swap-enter-amount
