@@ -39,7 +39,7 @@
                 <arrow-top-right-on-square-icon class="w-5 h-5" />
               </app-btn-icon>
             </div>
-            <p v-if="showBalance" class="text-xs text-info">
+            <p class="text-xs text-info">
               {{ walletList[i - 1].balance }}
               {{ selectedChain?.currencyName || 'Eth' }}
             </p>
@@ -120,11 +120,6 @@ const props = defineProps({
     type: Boolean,
     required: true,
     default: true,
-  },
-  showBalance: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
 })
 
