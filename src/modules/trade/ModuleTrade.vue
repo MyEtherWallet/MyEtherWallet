@@ -49,6 +49,7 @@
                 :tokens="fromTokens"
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
+                :is-pristine="isPristine"
                 class="mt-2"
               >
                 <!-- Percentage Buttons -->
@@ -99,6 +100,7 @@
               :network-name="selectedFromChain?.name"
               :is-estimate="true"
               :is-from-view="false"
+              :is-pristine="isPristine"
               class="mt-2"
             />
           </div>
@@ -405,10 +407,11 @@ const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
 const selectedFromChain = ref<Chain | undefined>(chainsStore.selectedChain)
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
 const toTokenSelected = ref<NewTokenInfo | null>(null)
-const fromAmount = ref<string>('0')
-const toAmount = ref<string>('0')
+const fromAmount = ref<string>('')
+const toAmount = ref<string>('')
 const generalError = ref<string>('')
 const toAmountError = ref<string>('')
+const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 
 // --- Market Status ---
 const {
@@ -556,6 +559,7 @@ watch(generalError, newVal => {
     }
   }
 })
+
 // --- Trade Tokens ---
 const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
   useTradeTokens({
@@ -624,10 +628,12 @@ const {
 
 // --- Methods ---
 const clearValues = () => {
-  fromAmount.value = '0'
-  toAmount.value = '0'
+  isPristine.value = true // Reset to pristine state
+  fromAmount.value = ''
+  toAmount.value = ''
   toAmountError.value = ''
   generalError.value = ''
+  displayGeneralError.value = '' // Clear display error
   resetQuote()
 
   // Reset to default tokens - prefer highest balance additional asset
@@ -704,6 +710,17 @@ const connectWalletForTrade = () => {
 }
 
 // --- Watchers ---
+
+// Reset state when Trade Initiated Modal closes
+watch(
+  () => tradeInitiatedOpen.value,
+  isOpen => {
+    if (!isOpen) {
+      clearValues()
+    }
+  },
+)
+
 watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
   fetchQuote()
 })
@@ -767,6 +784,16 @@ watch(
     }
   },
   { immediate: true },
+)
+
+// Mark form as not pristine when user starts typing
+watch(
+  () => fromAmount.value,
+  (newVal, oldVal) => {
+    if (newVal !== '' && oldVal === '') {
+      isPristine.value = false
+    }
+  },
 )
 
 // --- Lifecycle ---

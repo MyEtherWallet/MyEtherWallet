@@ -54,6 +54,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (
       !fromTokenSelected.value ||
       !fromAmount.value ||
+      fromAmount.value === '' ||
       fromAmount.value === '0'
     ) {
       return true
@@ -89,6 +90,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     if (
       !fromTokenSelected.value ||
       !fromAmount.value ||
+      fromAmount.value === '' ||
       fromAmount.value === '0'
     ) {
       return ''
@@ -152,6 +154,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         fromAmount.value !== '' &&
         fromAmount.value !== '0' &&
         fromAmountError.value === '' &&
+        toAmount.value !== '' &&
         toAmount.value !== '0'
       ) ||
       isLoadingQuote.value,

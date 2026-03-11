@@ -23,7 +23,7 @@
         :class="[
           'pointer-events-none absolute left-14 transition-all aria-hidden',
           inFocusInput
-            ? hasError
+            ? hasError && !isPristine
               ? 'text-error'
               : 'text-primary'
             : 'text-grey-50',
@@ -80,14 +80,21 @@
     <div class="min-h-6 flex items-center px-4">
       <transition name="fade" mode="out-in">
         <p
-          v-if="addressErrorMessages !== '' || resolvedAddress !== ''"
+          v-if="
+            (addressErrorMessages !== '' && !isPristine) ||
+            resolvedAddress !== ''
+          "
           :class="{
-            'text-error': addressErrorMessages,
+            'text-error': addressErrorMessages && !isPristine,
             'text-info !text-s-11': resolvedAddress,
           }"
           class="text-s-12 truncate"
         >
-          {{ addressErrorMessages || foundNickName || resolvedAddress }}
+          {{
+            (!isPristine && addressErrorMessages) ||
+            foundNickName ||
+            resolvedAddress
+          }}
         </p>
       </transition>
     </div>
@@ -175,6 +182,10 @@ const props = defineProps({
   isRaised: {
     type: Boolean,
     default: true,
+  },
+  isPristine: {
+    type: Boolean,
+    default: false,
   },
 })
 

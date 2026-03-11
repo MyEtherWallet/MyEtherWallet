@@ -38,6 +38,7 @@
               :external-loading="fromLoadingState"
               :tokens="parsedFromTokens"
               :show-balance="isWalletConnected"
+              :is-pristine="isPristine"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
           </div>
@@ -77,6 +78,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :network-name="selectedToChain?.name"
+              :is-pristine="isPristine"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
             <div class="pt-4" v-if="!isSwapView && isCrossChain"></div>
@@ -86,6 +88,7 @@
               :found-nick-name="foundNickName"
               :address-error-messages="toAddressError"
               :network="selectedToChain"
+              :is-pristine="isPristine"
               @validate:address="validateToAddress"
               v-if="!isSwapView && isCrossChain"
             />
@@ -291,10 +294,11 @@ const toTokenSelected = ref<NewTokenInfo | null>(null)
 // Error State
 const toAddressError = ref<string>('')
 const generalError = ref<string>('')
+const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 
 // Data Models
-const fromAmount = ref<string>('0')
-const toAmount = ref<string>('0')
+const fromAmount = ref<string>('')
+const toAmount = ref<string>('')
 const userToAddress = ref<string>('')
 const foundNickName = ref<string>('')
 const providers = ref<ProviderQuoteResponse[]>([])
@@ -362,7 +366,7 @@ const toLoadingState = computed(() => isLoading.value)
 const fromLoadingState = computed(() => !swapLoaded.value)
 
 const fromAmountError = computed(() => {
-  if (!fromAmount.value || fromAmount.value === '0')
+  if (!fromAmount.value || fromAmount.value === '0' || fromAmount.value === '')
     return t('swap.error.amount-required')
 
   if (!fromTokenSelected.value) return ''
@@ -423,8 +427,9 @@ const toAmountError = computed(() => {
   }
   if (
     !isLoading.value &&
-    providers.value.length === 0 &&
+    qoutesError.value &&
     fromAmount.value !== '0' &&
+    fromAmount.value !== '' &&
     fromAmountError.value === ''
   ) {
     return t('swap.error.no-quotes')
@@ -472,9 +477,12 @@ const switchGlobalNetwork = (chain: Chain) => {
 }
 
 const clearValues = () => {
+  isPristine.value = true // Reset to pristine state
+  toAddressError.value = '' // Clear error immediately
+  generalError.value = '' // Clear general error
   clearSwapValues()
-  fromAmount.value = '0'
-  toAmount.value = '0'
+  fromAmount.value = ''
+  toAmount.value = ''
   userToAddress.value = ''
   foundNickName.value = ''
   selectedQuote.value = undefined
@@ -483,6 +491,11 @@ const clearValues = () => {
 }
 
 const validateToAddress = async () => {
+  // Skip validation if form is pristine
+  if (isPristine.value) {
+    toAddressError.value = ''
+    return
+  }
   if (!userToAddress.value) {
     toAddressError.value = 'Recipient address is required for bridging'
     return
@@ -686,14 +699,17 @@ const swapButton = () => {
   return isBitcoinChain.value ? swapForBtc() : swapForEvm()
 }
 
+const qoutesError = ref<boolean>(false)
+
 const fetchQuotes = async () => {
   if (!fromTokenSelected.value || !toTokenSelected.value) return
-
+  isLoadingQuotes.value = true
   providers.value = []
   selectedQuote.value = undefined
-  isLoadingQuotes.value = true
+
   generalError.value = ''
   toAmount.value = '0'
+  qoutesError.value = false
 
   try {
     const quotes = await getQuote({
@@ -721,10 +737,10 @@ const fetchQuotes = async () => {
 
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
-        generalError.value = t('swap.error.no-quotes')
+        qoutesError.value = true
       }
     } else {
-      generalError.value = t('swap.error.no-quotes')
+      qoutesError.value = true
     }
   } catch (err: any) {
     generalError.value = t('swap.error.fetching-quotes')
@@ -879,6 +895,7 @@ watch(
   () => swapValues.value,
   async newVal => {
     if (hasSwapValues.value) {
+      isPristine.value = false // Restoring values means form is not pristine
       selectedToChain.value = newVal.toChain
       await nextTick()
       setToToken()
@@ -911,13 +928,7 @@ watch(
       // Cleanup
       txHash.value = '0x'
       providers.value = []
-      selectedQuote.value = undefined
-      fromAmount.value = '0'
-      toAmount.value = '0'
-      userToAddress.value = ''
-      foundNickName.value = ''
-      setToToken()
-      setFromToken()
+      clearValues()
     }
   },
 )
@@ -937,7 +948,7 @@ watch(
       selectedChain.value?.chainID === selectedToChain.value?.chainID
     const isSameToken =
       fromTokenSelected.value?.address === toTokenSelected.value?.address
-
+    qoutesError.value = false
     // Auto-switch token if duplicate selected on same chain
     if (fromTokenSelected.value && isSameToken && isSameChain) {
       setToToken()
@@ -948,7 +959,7 @@ watch(
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      if (isCrossChain.value && !toAddress.value) {
+      if (isCrossChain.value && !toAddress.value && !isPristine.value) {
         // Highlight the missing address instead of silently returning
         toAddressError.value = 'Recipient address is required for bridging'
         return
@@ -1003,10 +1014,24 @@ watch(
   { deep: true },
 )
 
+// Mark form as not pristine when user starts typing in address or amount field
+watch(
+  () => [userToAddress.value, fromAmount.value],
+  ([newAdr, newAmount], [oldAdr, oldAmount]) => {
+    if (
+      (newAdr !== '' && oldAdr === '') ||
+      (newAmount !== '' && oldAmount === '')
+    ) {
+      isPristine.value = false
+    }
+  },
+)
+
 // --- Lifecycle ---
 
 onBeforeMount(async () => {
   if (hasSwapValues.value) {
+    isPristine.value = false // Restoring values means form is not pristine
     selectedToChain.value = swapValues.value.toChain
   }
 
