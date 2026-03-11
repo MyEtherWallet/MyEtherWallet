@@ -592,7 +592,6 @@ const startStatusPolling = async (
       const data = await response.json()
 
       if (data) {
-        console.log(`Fetched status for ${type} ${hash}:`, data)
         updateNotificationStatus(hash, type, data)
       }
     } catch (e) {

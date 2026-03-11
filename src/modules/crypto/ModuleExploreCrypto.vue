@@ -809,6 +809,11 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   )
 
   if (!tokenOnChain) {
+    console.error(
+      'CLICK Bridge: No native chain with swap support found for this token.',
+      token,
+      selectedChain,
+    )
     return
   }
 
@@ -853,7 +858,14 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
   const targetToChain =
     chainsStore.chains.find(c => c.name === tokenOnChain.chainName) ||
     selectedChain
-
+  if (_address === '') {
+    console.error(
+      'SWAP: No address found for this token on the selected chain.',
+      token,
+      selectedChain,
+    )
+    return
+  }
   storeSwapValues({
     fromToken: {} as NewTokenInfo,
     toToken: {
