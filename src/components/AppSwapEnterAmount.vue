@@ -13,7 +13,7 @@
         ref="amountInput"
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
         :class="{
-          'text-error': hasError && !isOpenSelectToken,
+          'text-error': hasError && !isOpenSelectToken && !isPristine,
           'animate-pulse text-info': isLoading,
           '!text-s-24':
             amount &&
@@ -24,7 +24,7 @@
         name="amount-input"
         type="text"
         autoComplete="off"
-        placeholder="0.0"
+        placeholder="0"
         v-model="amount"
         :readonly="readonly"
         @focus="setInFocusInput"
@@ -49,7 +49,9 @@
           <div
             class="text-sm"
             :class="[
-              hasError && !isOpenSelectToken ? 'text-error' : 'text-info',
+              hasError && !isOpenSelectToken && !isPristine
+                ? 'text-error'
+                : 'text-info',
             ]"
           >
             {{ balanceFiatOrError }}
@@ -58,7 +60,9 @@
             v-if="showBalance"
             class="text-s-12 text-info transition-colors h-5"
             :class="{
-              'text-primary': (inFocusInput || isOpenSelectToken) && !hasError,
+              'text-primary':
+                (inFocusInput || isOpenSelectToken) &&
+                (!hasError || isPristine),
             }"
           >
             {{ $t('common.balance') }}:
@@ -68,7 +72,7 @@
       </transition>
       <transition name="fade" mode="out-in">
         <p
-          v-if="hasError && !isLoading && !isOpenSelectToken"
+          v-if="hasError && !isLoading && !isOpenSelectToken && !isPristine"
           class="text-error text-s-12 leading-p-130 mt-1"
         >
           {{ errorMessage }}
@@ -125,6 +129,10 @@ const props = defineProps({
   networkName: {
     type: String,
     required: false,
+  },
+  isPristine: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -192,7 +200,12 @@ const isLoading = computed(() => {
 
 const balanceFiatOrError = computed(() => {
   // handles the case where toAmount has the ≈ sign
-  if (hasError.value && !isLoading.value && !props.isFromView) {
+  if (
+    hasError.value &&
+    !isLoading.value &&
+    !props.isFromView &&
+    !props.isPristine
+  ) {
     return '$0.00'
   }
   const numAmount =

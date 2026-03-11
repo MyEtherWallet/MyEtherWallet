@@ -11,7 +11,7 @@
       <input
         ref="amountInput"
         class="grow py-1 text-3xl font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
-        :class="{ 'text-error': !!error && !isOpenSelectToken }"
+        :class="{ 'text-error': !!error && !isOpenSelectToken && !isPristine }"
         name="amount-input"
         type="text"
         autoComplete="off"
@@ -34,7 +34,9 @@
         <div v-else class="flex justify-between items-end">
           <div
             :class="[
-              !!error && !isOpenSelectToken ? 'text-error' : 'text-info',
+              !!error && !isOpenSelectToken && !isPristine
+                ? 'text-error'
+                : 'text-info',
               'text-s-14',
             ]"
           >
@@ -48,7 +50,7 @@
       </transition>
       <transition name="fade" mode="out-in">
         <p
-          v-if="!!error && !isLoading && !isOpenSelectToken"
+          v-if="!!error && !isLoading && !isOpenSelectToken && !isPristine"
           class="text-error text-s-12 leading-p-130 mt-1"
         >
           {{ error }}
@@ -82,6 +84,10 @@ const props = defineProps({
     type: Function as PropType<() => void>,
     default: () => {},
     required: true,
+  },
+  isPristine: {
+    type: Boolean,
+    default: false,
   },
 })
 
