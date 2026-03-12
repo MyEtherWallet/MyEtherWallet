@@ -325,8 +325,31 @@ const isCrossChain = computed(
   () => selectedChain.value?.type !== selectedToChain.value?.type,
 )
 
-const parsedFromTokens = computed(() => fromTokens.value as NewTokenInfo[])
-const parsedToTokens = computed(() => localToTokens.value)
+const parsedFromTokens = computed<NewTokenInfo[]>(() => {
+  if (!fromTokens.value || !selectedChain.value || !selectedToChain.value)
+    return []
+  if (selectedChain.value.name !== selectedToChain.value.name) {
+    return fromTokens.value
+  }
+  const _tokens = fromTokens.value
+  return _tokens.filter(
+    token =>
+      token.address.toLowerCase() !==
+      toTokenSelected.value?.address?.toLowerCase(),
+  )
+})
+const parsedToTokens = computed<NewTokenInfo[]>(() => {
+  if (!selectedChain.value || !selectedToChain.value) return []
+
+  if (selectedChain.value.name !== selectedToChain.value.name) {
+    return localToTokens.value
+  }
+  return localToTokens.value.filter(
+    token =>
+      token.address.toLowerCase() !==
+      fromTokenSelected.value?.address?.toLowerCase(),
+  )
+})
 
 const userAddress = computed(
   () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
