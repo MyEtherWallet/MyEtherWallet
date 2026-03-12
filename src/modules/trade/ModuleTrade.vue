@@ -462,13 +462,19 @@ const fromTokens = computed(() => {
   const tokens = (swapFromTokens.value || []) as NewTokenInfo[]
   const sanitized = tokens.filter(token => {
     if (!token.address) return false
-    const matchingToken = allTokens.value.find(
-      t => t.contract?.toLowerCase() === token.address?.toLowerCase(),
-    )
-    // Keep token if it has marketCap
-    return (
-      matchingToken && matchingToken.market_cap && matchingToken.market_cap > 0
-    )
+    if (isWalletConnected.value) {
+      const matchingToken = allTokens.value.find(
+        t => t.contract?.toLowerCase() === token.address?.toLowerCase(),
+      )
+      // Keep token if it has marketCap
+      return (
+        matchingToken &&
+        matchingToken.market_cap &&
+        matchingToken.market_cap > 0
+      )
+    } else {
+      return token.price && token.price > 0
+    }
   })
   return sanitized
 })
@@ -733,20 +739,23 @@ watch(selectedChain, newChain => {
     selectedFromChain.value = newChain
     fromTokenSelected.value = null
     toTokenSelected.value = null
-    fromAmount.value = '0'
-    toAmount.value = '0'
+    fromAmount.value = ''
+    toAmount.value = ''
   }
 })
 
 // Watch for swap loaded to set default tokens after chain change
-watch(swapLoaded, loaded => {
-  if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
-    fromTokenSelected.value = getDefaultFromToken()
-  }
-  if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
-    toTokenSelected.value = toTokens.value[0] || null
-  }
-})
+watch(
+  () => swapLoaded.value,
+  loaded => {
+    if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
+      fromTokenSelected.value = getDefaultFromToken()
+    }
+    if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
+      toTokenSelected.value = toTokens.value[0] || null
+    }
+  },
+)
 
 // Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
 watch(
