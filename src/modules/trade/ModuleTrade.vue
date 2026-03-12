@@ -95,7 +95,7 @@
               v-model:error="toAmountError"
               :external-loading="isLoadingQuote"
               :show-balance="false"
-              :tokens="toTokens"
+              :tokens="toTokenSantized"
               :readonly="true"
               :network-name="selectedFromChain?.name"
               :is-estimate="true"
@@ -476,7 +476,20 @@ const fromTokens = computed(() => {
       return token.price && token.price > 0
     }
   })
-  return sanitized
+  return sanitized.filter(
+    token =>
+      toTokenSelected.value?.address.toLowerCase() !==
+      token.address.toLowerCase(),
+  )
+})
+
+const toTokenSantized = computed(() => {
+  if (!toTokens.value || !fromTokenSelected.value) return []
+  return toTokens.value.filter(
+    token =>
+      token.address.toLowerCase() !==
+      fromTokenSelected.value?.address.toLowerCase(),
+  )
 })
 
 // Find the highest balance token from additionalBuyAssets that the user owns
