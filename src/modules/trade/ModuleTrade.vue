@@ -385,8 +385,14 @@ const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 
 // --- Refs from Stores ---
-const { isWalletConnected, walletAddress, wallet, isWatchOnly, allTokens } =
-  storeToRefs(walletStore)
+const {
+  isWalletConnected,
+  walletAddress,
+  wallet,
+  isWatchOnly,
+  allTokens,
+  isLoadingBalances,
+} = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
@@ -772,13 +778,19 @@ watch(
 
 // Watch for fromTokens to update selected token with fresh data (e.g., after wallet connection)
 watch(
-  () => fromTokens.value,
-  newTokens => {
-    if (!fromTokenSelected.value || !newTokens.length) return
+  () => isLoadingBalances.value,
+  newVal => {
+    if (
+      !isWalletConnected.value ||
+      newVal ||
+      !fromTokenSelected.value ||
+      fromTokens.value.length === 0
+    )
+      return
 
     // Find the same token in the updated list and refresh the selection with new data
     const currentAddress = fromTokenSelected.value.address?.toLowerCase()
-    const updatedToken = newTokens.find(
+    const updatedToken = fromTokens.value.find(
       t => t.address?.toLowerCase() === currentAddress,
     )
     if (updatedToken) {
@@ -786,30 +798,25 @@ watch(
       fromTokenSelected.value = updatedToken
     }
   },
-  { deep: true },
 )
 
 // Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
-watch(
-  [allTokens, additionalBuyAssets, fromTokens, selectedFromChain],
-  () => {
-    // Check if we should update the from token selection
-    if (!fromTokens.value.length || !isWalletConnected.value) return
+watch([additionalBuyAssets, () => isWalletConnected.value], () => {
+  // Check if we should update the from token selection
+  if (!fromTokens.value.length || !isWalletConnected.value) return
 
-    const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
-    const isMainToken =
-      !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
+  const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
+  const isMainToken =
+    !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
 
-    // Only auto-update if currently using main token (not manually selected another token)
-    if (isMainToken) {
-      const highestBalanceAsset = getHighestBalanceAdditionalAsset()
-      if (highestBalanceAsset) {
-        fromTokenSelected.value = highestBalanceAsset
-      }
+  // Only auto-update if currently using main token (not manually selected another token)
+  if (isMainToken) {
+    const highestBalanceAsset = getHighestBalanceAdditionalAsset()
+    if (highestBalanceAsset) {
+      fromTokenSelected.value = highestBalanceAsset
     }
-  },
-  { deep: true, immediate: true },
-)
+  }
+})
 
 // Watch for selected trade token from store
 watch(
@@ -820,7 +827,11 @@ watch(
         (t: NewTokenInfo) => t.symbol.toUpperCase() === symbol.toUpperCase(),
       )
       if (matchingToken) {
-        toTokenSelected.value = matchingToken
+        // Guard: only set if different to avoid reactive loop
+        const currentAddress = toTokenSelected.value?.address?.toLowerCase()
+        if (matchingToken.address?.toLowerCase() !== currentAddress) {
+          toTokenSelected.value = matchingToken
+        }
       }
     }
   },
