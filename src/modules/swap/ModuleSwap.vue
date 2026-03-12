@@ -489,6 +489,9 @@ const clearValues = () => {
   userToAddress.value = ''
   foundNickName.value = ''
   selectedQuote.value = undefined
+  // Reset token selections so setToToken/setFromToken will set defaults
+  fromTokenSelected.value = null
+  toTokenSelected.value = null
   setToToken()
   setFromToken()
 }
@@ -811,7 +814,39 @@ const setToToken = () => {
   })
 
   // 2. Select Token Logic
-  if (!hasSwapValues.value) {
+  if (hasSwapValues.value) {
+    // Deep link / restore values - use stored token
+
+    const match = localToTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        swapValues.value.toToken.address.toLowerCase(),
+    )
+    if (match) {
+      toTokenSelected.value = match
+    } else if (localToTokens.value.length > 0) {
+      const fallback = localToTokens.value[0]
+      toTokenSelected.value = {
+        ...fallback,
+        balance: formatUnits(
+          BigInt(fallback.balance?.toString() ?? '0'),
+          fallback.decimals ?? 18,
+        ),
+      } as NewTokenInfo
+    }
+  } else if (toTokenSelected.value) {
+    // Token already selected and no stored values - keep selection if it exists in list
+    const existsInList = localToTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        toTokenSelected.value?.address?.toLowerCase(),
+    )
+    if (existsInList) {
+      // Update with fresh data but keep selection
+      toTokenSelected.value = existsInList as NewTokenInfo
+      return
+    }
+    // Selected token doesn't exist in new list, fall through to default selection
     if (toTokens.value && allToTokensRaw.length > 0) {
       const allToTrending =
         toTokens.value.trending[
@@ -840,22 +875,33 @@ const setToToken = () => {
       }
     }
   } else {
-    const match = localToTokens.value.find(
-      t =>
-        t.address.toLowerCase() ===
-        swapValues.value.toToken.address.toLowerCase(),
-    )
-    if (match) {
-      toTokenSelected.value = match
-    } else if (localToTokens.value.length > 0) {
-      const fallback = localToTokens.value[0]
-      toTokenSelected.value = {
-        ...fallback,
-        balance: formatUnits(
-          BigInt(fallback.balance?.toString() ?? '0'),
-          fallback.decimals ?? 18,
-        ),
-      } as NewTokenInfo
+    // No token selected, no stored values - use default
+    if (toTokens.value && allToTokensRaw.length > 0) {
+      const allToTrending =
+        toTokens.value.trending[
+          enkryptEnum as keyof typeof toTokens.value.trending
+        ]
+      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const sameNetworks =
+        currentToChain.chainID === selectedChain.value?.chainID
+
+      const defaultToken = sameNetworks
+        ? candidates.find(
+            t =>
+              t.address.toLowerCase() !==
+              fromTokenSelected.value?.address.toLowerCase(),
+          )
+        : candidates[0]
+
+      if (defaultToken) {
+        toTokenSelected.value = {
+          ...defaultToken,
+          balance: formatUnits(
+            BigInt(defaultToken.balance?.toString() ?? '0'),
+            defaultToken.decimals ?? 18,
+          ),
+        } as NewTokenInfo
+      }
     }
   }
 }
@@ -863,19 +909,37 @@ const setToToken = () => {
 const setFromToken = () => {
   if (!fromTokens.value?.length) return
 
-  if (!hasSwapValues.value) {
-    const mewToken = fromTokens.value.find(
-      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
-    )
-    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
-  } else {
-    // Deep link match
+  if (hasSwapValues.value) {
+    // Deep link / restore values - use stored token
     const match = fromTokens.value.find(
       t =>
         t.address.toLowerCase() ===
         swapValues.value.fromToken.address?.toLowerCase(),
     )
     fromTokenSelected.value = (match || fromTokens.value[0]) as NewTokenInfo
+  } else if (fromTokenSelected.value) {
+    // Token already selected and no stored values - keep selection if it exists in list
+    const existsInList = fromTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        fromTokenSelected.value?.address?.toLowerCase(),
+    )
+    if (existsInList) {
+      // Update with fresh data but keep selection
+      fromTokenSelected.value = existsInList as NewTokenInfo
+      return
+    }
+    // Selected token doesn't exist in new list, fall through to default
+    const mewToken = fromTokens.value.find(
+      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
+    )
+    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
+  } else {
+    // No token selected, no stored values - use default
+    const mewToken = fromTokens.value.find(
+      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
+    )
+    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
   }
 }
 
