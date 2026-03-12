@@ -16,7 +16,7 @@
       "insufficient-native": "Insufficient {symbol} balance.",
       "minimum-amount": "Amount too low.",
       "maximum-amount": "Amount too high.",
-      "no-quotes": "No quotes available.",
+      "no-quotes": "No quotes available for selected token pair",
       "fetching-quotes": "Error fetching quotes. Please try again.",
       "initializing-swap-failed": "Error initializing swap. Please try again.",
       "getting-swap": "Error getting swap. Please try again.",

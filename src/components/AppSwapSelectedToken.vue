@@ -161,7 +161,7 @@
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
-                <div v-if="isFromView">
+                <div v-if="isFromView && isWalletConnected">
                   <p class="font-medium text-black">
                     $ {{ formatUsdBalance(token.usd_balance) }}
                   </p>
@@ -244,7 +244,7 @@
 <script setup lang="ts">
 import { useWalletStore } from '@/stores/walletStore'
 import { type NewTokenInfo } from '@/composables/useSwap'
-import { type Ref, ref, computed, onMounted } from 'vue'
+import { type Ref, ref, computed, onMounted, watch } from 'vue'
 import {
   ChevronDownIcon,
   ArrowLongDownIcon,
@@ -294,7 +294,10 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
-const emit = defineEmits(['update:selectedToken'])
+const emit = defineEmits<{
+  'update:selectedToken': [token: NewTokenInfo]
+  'open:selectToken': [isOpen: boolean]
+}>()
 
 const store = useWalletStore()
 const { isLoadingBalances, isWalletConnected } = storeToRefs(store)
@@ -322,10 +325,17 @@ const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
-  if (!props.isFromView) {
+  if (!props.isFromView || !isWalletConnected.value) {
     activeSortValue.value = SortValueString.PRICE
   }
 })
+
+watch(
+  () => showAllTokens.value,
+  () => {
+    emit('open:selectToken', showAllTokens.value)
+  },
+)
 
 // pagination
 const endingPagination = ref(100)
@@ -355,7 +365,7 @@ const sortOptions = computed(() => {
       label: t('common.symbol'),
     },
   ]
-  if (props.isFromView) {
+  if (props.isFromView && isWalletConnected.value) {
     return [
       ...shared,
       {

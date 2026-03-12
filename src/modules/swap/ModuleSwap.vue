@@ -38,6 +38,7 @@
               :external-loading="fromLoadingState"
               :tokens="parsedFromTokens"
               :show-balance="isWalletConnected"
+              :is-pristine="isPristine"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
           </div>
@@ -80,6 +81,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :network-name="selectedToChain?.name"
+              :is-pristine="isPristine"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
             <div class="pt-4" v-if="!isSwapView && isCrossChain"></div>
@@ -89,6 +91,7 @@
               :found-nick-name="foundNickName"
               :address-error-messages="toAddressError"
               :network="selectedToChain"
+              :is-pristine="isPristine"
               @validate:address="validateToAddress"
               v-if="!isSwapView && isCrossChain"
             />
@@ -294,10 +297,11 @@ const toTokenSelected = ref<NewTokenInfo | null>(null)
 // Error State
 const toAddressError = ref<string>('')
 const generalError = ref<string>('')
+const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 
 // Data Models
-const fromAmount = ref<string>('0')
-const toAmount = ref<string>('0')
+const fromAmount = ref<string>('')
+const toAmount = ref<string>('')
 const userToAddress = ref<string>('')
 const foundNickName = ref<string>('')
 const providers = ref<ProviderQuoteResponse[]>([])
@@ -321,8 +325,31 @@ const isCrossChain = computed(
   () => selectedChain.value?.type !== selectedToChain.value?.type,
 )
 
-const parsedFromTokens = computed(() => fromTokens.value as NewTokenInfo[])
-const parsedToTokens = computed(() => localToTokens.value)
+const parsedFromTokens = computed<NewTokenInfo[]>(() => {
+  if (!fromTokens.value || !selectedChain.value || !selectedToChain.value)
+    return []
+  if (selectedChain.value.name !== selectedToChain.value.name) {
+    return fromTokens.value
+  }
+  const _tokens = fromTokens.value
+  return _tokens.filter(
+    token =>
+      token.address.toLowerCase() !==
+      toTokenSelected.value?.address?.toLowerCase(),
+  )
+})
+const parsedToTokens = computed<NewTokenInfo[]>(() => {
+  if (!selectedChain.value || !selectedToChain.value) return []
+
+  if (selectedChain.value.name !== selectedToChain.value.name) {
+    return localToTokens.value
+  }
+  return localToTokens.value.filter(
+    token =>
+      token.address.toLowerCase() !==
+      fromTokenSelected.value?.address?.toLowerCase(),
+  )
+})
 
 const userAddress = computed(
   () => walletAddress.value || configs.MEW_DONATION_ADDRESS,
@@ -365,7 +392,7 @@ const toLoadingState = computed(() => isLoading.value)
 const fromLoadingState = computed(() => !swapLoaded.value)
 
 const fromAmountError = computed(() => {
-  if (!fromAmount.value || fromAmount.value === '0')
+  if (!fromAmount.value || fromAmount.value === '0' || fromAmount.value === '')
     return t('swap.error.amount-required')
 
   if (!fromTokenSelected.value) return ''
@@ -426,8 +453,9 @@ const toAmountError = computed(() => {
   }
   if (
     !isLoading.value &&
-    providers.value.length === 0 &&
+    qoutesError.value &&
     fromAmount.value !== '0' &&
+    fromAmount.value !== '' &&
     fromAmountError.value === ''
   ) {
     return t('swap.error.no-quotes')
@@ -475,17 +503,28 @@ const switchGlobalNetwork = (chain: Chain) => {
 }
 
 const clearValues = () => {
+  isPristine.value = true // Reset to pristine state
+  toAddressError.value = '' // Clear error immediately
+  generalError.value = '' // Clear general error
   clearSwapValues()
-  fromAmount.value = '0'
-  toAmount.value = '0'
+  fromAmount.value = ''
+  toAmount.value = ''
   userToAddress.value = ''
   foundNickName.value = ''
   selectedQuote.value = undefined
+  // Reset token selections so setToToken/setFromToken will set defaults
+  fromTokenSelected.value = null
+  toTokenSelected.value = null
   setToToken()
   setFromToken()
 }
 
 const validateToAddress = async () => {
+  // Skip validation if form is pristine
+  if (isPristine.value) {
+    toAddressError.value = ''
+    return
+  }
   if (!userToAddress.value) {
     toAddressError.value = 'Recipient address is required for bridging'
     return
@@ -689,14 +728,17 @@ const swapButton = () => {
   return isBitcoinChain.value ? swapForBtc() : swapForEvm()
 }
 
+const qoutesError = ref<boolean>(false)
+
 const fetchQuotes = async () => {
   if (!fromTokenSelected.value || !toTokenSelected.value) return
-
+  isLoadingQuotes.value = true
   providers.value = []
   selectedQuote.value = undefined
-  isLoadingQuotes.value = true
+
   generalError.value = ''
   toAmount.value = '0'
+  qoutesError.value = false
 
   try {
     const quotes = await getQuote({
@@ -724,10 +766,10 @@ const fetchQuotes = async () => {
 
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
-        generalError.value = t('swap.error.no-quotes')
+        qoutesError.value = true
       }
     } else {
-      generalError.value = t('swap.error.no-quotes')
+      qoutesError.value = true
     }
   } catch (err: any) {
     generalError.value = t('swap.error.fetching-quotes')
@@ -795,7 +837,39 @@ const setToToken = () => {
   })
 
   // 2. Select Token Logic
-  if (!hasSwapValues.value) {
+  if (hasSwapValues.value) {
+    // Deep link / restore values - use stored token
+
+    const match = localToTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        swapValues.value.toToken.address.toLowerCase(),
+    )
+    if (match) {
+      toTokenSelected.value = match
+    } else if (localToTokens.value.length > 0) {
+      const fallback = localToTokens.value[0]
+      toTokenSelected.value = {
+        ...fallback,
+        balance: formatUnits(
+          BigInt(fallback.balance?.toString() ?? '0'),
+          fallback.decimals ?? 18,
+        ),
+      } as NewTokenInfo
+    }
+  } else if (toTokenSelected.value) {
+    // Token already selected and no stored values - keep selection if it exists in list
+    const existsInList = localToTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        toTokenSelected.value?.address?.toLowerCase(),
+    )
+    if (existsInList) {
+      // Update with fresh data but keep selection
+      toTokenSelected.value = existsInList as NewTokenInfo
+      return
+    }
+    // Selected token doesn't exist in new list, fall through to default selection
     if (toTokens.value && allToTokensRaw.length > 0) {
       const allToTrending =
         toTokens.value.trending[
@@ -824,22 +898,33 @@ const setToToken = () => {
       }
     }
   } else {
-    const match = localToTokens.value.find(
-      t =>
-        t.address.toLowerCase() ===
-        swapValues.value.toToken.address.toLowerCase(),
-    )
-    if (match) {
-      toTokenSelected.value = match
-    } else if (localToTokens.value.length > 0) {
-      const fallback = localToTokens.value[0]
-      toTokenSelected.value = {
-        ...fallback,
-        balance: formatUnits(
-          BigInt(fallback.balance?.toString() ?? '0'),
-          fallback.decimals ?? 18,
-        ),
-      } as NewTokenInfo
+    // No token selected, no stored values - use default
+    if (toTokens.value && allToTokensRaw.length > 0) {
+      const allToTrending =
+        toTokens.value.trending[
+          enkryptEnum as keyof typeof toTokens.value.trending
+        ]
+      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const sameNetworks =
+        currentToChain.chainID === selectedChain.value?.chainID
+
+      const defaultToken = sameNetworks
+        ? candidates.find(
+            t =>
+              t.address.toLowerCase() !==
+              fromTokenSelected.value?.address.toLowerCase(),
+          )
+        : candidates[0]
+
+      if (defaultToken) {
+        toTokenSelected.value = {
+          ...defaultToken,
+          balance: formatUnits(
+            BigInt(defaultToken.balance?.toString() ?? '0'),
+            defaultToken.decimals ?? 18,
+          ),
+        } as NewTokenInfo
+      }
     }
   }
 }
@@ -847,19 +932,37 @@ const setToToken = () => {
 const setFromToken = () => {
   if (!fromTokens.value?.length) return
 
-  if (!hasSwapValues.value) {
-    const mewToken = fromTokens.value.find(
-      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
-    )
-    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
-  } else {
-    // Deep link match
+  if (hasSwapValues.value) {
+    // Deep link / restore values - use stored token
     const match = fromTokens.value.find(
       t =>
         t.address.toLowerCase() ===
         swapValues.value.fromToken.address?.toLowerCase(),
     )
     fromTokenSelected.value = (match || fromTokens.value[0]) as NewTokenInfo
+  } else if (fromTokenSelected.value) {
+    // Token already selected and no stored values - keep selection if it exists in list
+    const existsInList = fromTokens.value.find(
+      t =>
+        t.address.toLowerCase() ===
+        fromTokenSelected.value?.address?.toLowerCase(),
+    )
+    if (existsInList) {
+      // Update with fresh data but keep selection
+      fromTokenSelected.value = existsInList as NewTokenInfo
+      return
+    }
+    // Selected token doesn't exist in new list, fall through to default
+    const mewToken = fromTokens.value.find(
+      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
+    )
+    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
+  } else {
+    // No token selected, no stored values - use default
+    const mewToken = fromTokens.value.find(
+      t => t.address.toLowerCase() === MAIN_TOKEN_CONTRACT,
+    )
+    fromTokenSelected.value = (mewToken || fromTokens.value[0]) as NewTokenInfo
   }
 }
 
@@ -882,6 +985,7 @@ watch(
   () => swapValues.value,
   async newVal => {
     if (hasSwapValues.value) {
+      isPristine.value = false // Restoring values means form is not pristine
       selectedToChain.value = newVal.toChain
       await nextTick()
       setToToken()
@@ -914,13 +1018,7 @@ watch(
       // Cleanup
       txHash.value = '0x'
       providers.value = []
-      selectedQuote.value = undefined
-      fromAmount.value = '0'
-      toAmount.value = '0'
-      userToAddress.value = ''
-      foundNickName.value = ''
-      setToToken()
-      setFromToken()
+      clearValues()
     }
   },
 )
@@ -940,7 +1038,7 @@ watch(
       selectedChain.value?.chainID === selectedToChain.value?.chainID
     const isSameToken =
       fromTokenSelected.value?.address === toTokenSelected.value?.address
-
+    qoutesError.value = false
     // Auto-switch token if duplicate selected on same chain
     if (fromTokenSelected.value && isSameToken && isSameChain) {
       setToToken()
@@ -951,7 +1049,7 @@ watch(
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
     ) {
-      if (isCrossChain.value && !toAddress.value) {
+      if (isCrossChain.value && !toAddress.value && !isPristine.value) {
         // Highlight the missing address instead of silently returning
         toAddressError.value = 'Recipient address is required for bridging'
         return
@@ -1006,10 +1104,24 @@ watch(
   { deep: true },
 )
 
+// Mark form as not pristine when user starts typing in address or amount field
+watch(
+  () => [userToAddress.value, fromAmount.value],
+  ([newAdr, newAmount], [oldAdr, oldAmount]) => {
+    if (
+      (newAdr !== '' && oldAdr === '') ||
+      (newAmount !== '' && oldAmount === '')
+    ) {
+      isPristine.value = false
+    }
+  },
+)
+
 // --- Lifecycle ---
 
 onBeforeMount(async () => {
   if (hasSwapValues.value) {
+    isPristine.value = false // Restoring values means form is not pristine
     selectedToChain.value = swapValues.value.toChain
   }
 

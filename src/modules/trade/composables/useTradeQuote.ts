@@ -46,6 +46,11 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
   const needsApproval = ref(false)
 
   const fetchQuote = useDebounceFn(async () => {
+    //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
+    if (fromAmount.value === '') {
+      toAmount.value = ''
+      return
+    }
     // Don't fetch quotes when market is closed
     if (!isMarketOpen.value) {
       toAmount.value = '0'

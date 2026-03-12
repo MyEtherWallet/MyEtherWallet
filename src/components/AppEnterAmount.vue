@@ -3,14 +3,15 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput,
+      'ring-2 ring-primary': inFocusInput || isOpenSelectToken,
     }"
     @click="setInFocusInput"
   >
     <div class="flex justify-between items-center w-full gap-2">
       <input
+        ref="amountInput"
         class="grow py-1 text-3xl font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0"
-        :class="{ 'text-error': !!error }"
+        :class="{ 'text-error': !!error && !isOpenSelectToken && !isPristine }"
         name="amount-input"
         type="text"
         autoComplete="off"
@@ -19,7 +20,10 @@
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
       />
-      <app-token-select v-model:selected-token-contract="selectedToken" />
+      <app-token-select
+        v-model:selected-token-contract="selectedToken"
+        @open:select-token="setIsOpenSelectToken"
+      />
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-2">
       <transition name="fade" mode="out-in">
@@ -29,19 +33,28 @@
         ></div>
         <div v-else class="flex justify-between items-end">
           <div
-            class="text-sm font-medium"
-            :class="{
-              'text-error': !!error,
-              'text-info': !error,
-            }"
+            :class="[
+              !!error && !isOpenSelectToken && !isPristine
+                ? 'text-error'
+                : 'text-info',
+              'text-s-14',
+            ]"
           >
-            {{ balanceFiatOrError }}
+            {{ balanceFiat }}
           </div>
           <div v-if="isWalletConnected" class="text-s-12 text-info font-medium">
             {{ $t('common.balance') }}:
             <span class="text-black">{{ balance }}</span>
           </div>
         </div>
+      </transition>
+      <transition name="fade" mode="out-in">
+        <p
+          v-if="!!error && !isLoading && !isOpenSelectToken && !isPristine"
+          class="text-error text-s-12 leading-p-130 mt-1"
+        >
+          {{ error }}
+        </p>
       </transition>
     </div>
   </div>
@@ -50,7 +63,7 @@
 <script setup lang="ts">
 import { type TokenBalance } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'
-import { watch, ref, computed, type PropType } from 'vue'
+import { watch, ref, computed, type PropType, nextTick } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import BigNumber from 'bignumber.js'
 import AppTokenSelect from './AppTokenSelect.vue'
@@ -60,6 +73,7 @@ import {
   formatFloatingPointValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
+import { useInFocusInput } from '@/composables/useInFocusInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
@@ -70,6 +84,10 @@ const props = defineProps({
     type: Function as PropType<() => void>,
     default: () => {},
     required: true,
+  },
+  isPristine: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -92,13 +110,13 @@ const tokenBalanceRaw = computed(() => {
   return walletStore.getTokenBalance(selectedToken.value) as TokenBalance | null
 })
 
-const balanceFiatOrError = computed(() => {
+const balanceFiat = computed(() => {
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(
       BigNumber(amount.value || 0),
     ),
   )
-  return error.value ? error.value : `$ ${formatFiatValue(_balance).value}`
+  return `$${formatFiatValue(_balance).value}`
 })
 
 const balance = computed(() => {
@@ -106,6 +124,14 @@ const balance = computed(() => {
     ? formatFloatingPointValue(tokenBalanceRaw.value.balance).value
     : '0'
 })
+
+const isOpenSelectToken = ref(false)
+const setIsOpenSelectToken = (value: boolean) => {
+  isOpenSelectToken.value = value
+  if (!isOpenSelectToken.value) {
+    setInFocusInput()
+  }
+}
 
 watch(
   () => amount.value,
@@ -119,17 +145,28 @@ watch(
  * Focus State
  -------------------------*/
 const target = ref<HTMLElement | null>(null)
-const inFocusInput = ref(false)
 const targetValue = ref<HTMLElement | null>(null)
+const amountInput = ref<HTMLElement | null>(null)
+
+const {
+  inFocusInput,
+  setInFocusInput: setInFocusInputElement,
+  startOutOfFocusTimeout,
+} = useInFocusInput(amountInput)
 
 const setInFocusInput = () => {
-  inFocusInput.value = true
+  nextTick(() => {
+    setInFocusInputElement()
+  })
   targetValue.value = target.value
+  nextTick(() => {
+    setInFocusInputElement()
+  })
 }
 
 onClickOutside(targetValue, () => {
   targetValue.value = null
-  inFocusInput.value = false
+  startOutOfFocusTimeout()
   props.validateInput()
 })
 
@@ -140,6 +177,14 @@ watch(
     if (!isLoading.value && inFocusInput.value) {
       props.validateInput()
     }
+  },
+)
+
+watch(
+  () => selectedToken.value,
+  () => {
+    if (isLoading.value) return
+    props.validateInput()
   },
 )
 

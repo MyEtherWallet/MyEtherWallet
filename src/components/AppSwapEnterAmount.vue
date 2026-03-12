@@ -3,16 +3,17 @@
     ref="target"
     class="w-full rounded-20 shadow-button shadow-button-elevated bg-white p-5 transition-all min-h-[120px] flex flex-col justify-between"
     :class="{
-      'ring-2 ring-primary': inFocusInput && !readonly,
+      'ring-2 ring-primary': (inFocusInput || isOpenSelectToken) && !readonly,
     }"
     @click="setInFocusInput"
   >
     <slot name="header" />
-    <div class="flex justify-between items-center w-full gap-2">
+    <div class="flex items-center w-full gap-2">
       <input
+        ref="amountInput"
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
         :class="{
-          'text-error': hasError,
+          'text-error': hasError && !isOpenSelectToken && !isPristine,
           'animate-pulse text-info': isLoading,
           '!text-s-24':
             amount &&
@@ -23,7 +24,7 @@
         name="amount-input"
         type="text"
         autoComplete="off"
-        placeholder="0.0"
+        placeholder="0"
         v-model="amount"
         :readonly="readonly"
         @focus="setInFocusInput"
@@ -35,6 +36,7 @@
         :chain-tokens="tokens || []"
         :is-from-view="isFromView"
         :network-name="networkName"
+        @open:select-token="setIsOpenSelectToken"
       />
     </div>
     <div :class="{ 'animate-pulse': isLoading }" class="mt-3">
@@ -43,20 +45,25 @@
           v-if="isLoading"
           class="h-5 flex bg-grey-10 rounded-full w-1/2"
         ></div>
-        <div v-else class="flex justify-between items-end">
+        <div v-else class="flex justify-between items-start">
           <div
             class="text-sm"
-            :class="{
-              'text-error': hasError,
-              'text-info': !hasError,
-            }"
+            :class="[
+              hasError && !isOpenSelectToken && !isPristine
+                ? 'text-error'
+                : 'text-info',
+            ]"
           >
             {{ balanceFiatOrError }}
           </div>
           <div
             v-if="showBalance"
-            class="text-s-12 text-info transition-colors"
-            :class="{ 'text-primary': inFocusInput && !hasError }"
+            class="text-s-12 text-info transition-colors h-5"
+            :class="{
+              'text-primary':
+                (inFocusInput || isOpenSelectToken) &&
+                (!hasError || isPristine),
+            }"
           >
             {{ $t('common.balance') }}:
             <span class="text-black">{{ balance }}</span>
@@ -65,7 +72,7 @@
       </transition>
       <transition name="fade" mode="out-in">
         <p
-          v-if="hasError && !isLoading"
+          v-if="hasError && !isLoading && !isOpenSelectToken && !isPristine"
           class="text-error text-s-12 leading-p-130 mt-1"
         >
           {{ errorMessage }}
@@ -77,7 +84,7 @@
 
 <script setup lang="ts">
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
-import { ref, computed, type PropType, watch } from 'vue'
+import { ref, computed, type PropType, watch, nextTick } from 'vue'
 import BigNumber from 'bignumber.js'
 import AppSwapTokenSelect from './AppSwapSelectedToken.vue'
 import { onClickOutside } from '@vueuse/core'
@@ -88,6 +95,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import { type NewTokenInfo } from '@/composables/useSwap'
 import { useDebounceFn } from '@vueuse/core'
+import { useInFocusInput } from '@/composables/useInFocusInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: storeLoading, isWalletConnected } =
@@ -122,6 +130,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  isPristine: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 //String will be returned when input is cleared --> ''
@@ -139,6 +151,14 @@ const error = defineModel('error', {
   required: true,
   default: '',
 })
+
+const isOpenSelectToken = ref(false)
+const setIsOpenSelectToken = (value: boolean) => {
+  isOpenSelectToken.value = value
+  if (!isOpenSelectToken.value) {
+    setInFocusInput()
+  }
+}
 
 const debouncedValidate = useDebounceFn(
   () => {
@@ -180,6 +200,14 @@ const isLoading = computed(() => {
 
 const balanceFiatOrError = computed(() => {
   // handles the case where toAmount has the ≈ sign
+  if (
+    hasError.value &&
+    !isLoading.value &&
+    !props.isFromView &&
+    !props.isPristine
+  ) {
+    return '$0.00'
+  }
   const numAmount =
     typeof amount.value === 'string'
       ? amount.value.replace(/[^0-9.-]/g, '')
@@ -206,17 +234,29 @@ const balance = computed(() => {
  * Focus State
  -------------------------*/
 const target = ref<HTMLElement | null>(null)
-const inFocusInput = ref(false)
 const targetValue = ref<HTMLElement | null>(null)
+const amountInput = ref<HTMLElement | null>(null)
+
+const {
+  inFocusInput,
+  setInFocusInput: setInFocusInputElement,
+  startOutOfFocusTimeout,
+} = useInFocusInput(amountInput)
 
 const setInFocusInput = () => {
-  inFocusInput.value = true
-  targetValue.value = target.value
+  if (props.isFromView) {
+    hasError.value = false
+    targetValue.value = target.value
+    nextTick(() => {
+      setInFocusInputElement()
+    })
+  }
 }
 
 onClickOutside(targetValue, () => {
+  startOutOfFocusTimeout()
   targetValue.value = null
-  inFocusInput.value = false
+
   if (error.value !== '') {
     hasError.value = true
     errorMessage.value = error.value

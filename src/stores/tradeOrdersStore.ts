@@ -135,7 +135,28 @@ const MAX_TRANSACTIONS_PER_ADDRESS = 20
 const MAX_SWAPS_PER_ADDRESS = 20
 const MAX_BRIDGES_PER_ADDRESS = 20
 
+// Notification event types
+export type NotificationType = 'order' | 'transaction' | 'swap' | 'bridge'
+export type NotificationAddedCallback = (
+  item: NotificationItem,
+  type: NotificationType,
+) => void
+
 export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
+  // Subscription system for notification events
+  const subscribers = new Set<NotificationAddedCallback>()
+
+  const subscribe = (callback: NotificationAddedCallback) => {
+    subscribers.add(callback)
+    return () => subscribers.delete(callback)
+  }
+
+  const notifySubscribers = (
+    item: NotificationItem,
+    type: NotificationType,
+  ) => {
+    subscribers.forEach(callback => callback(item, type))
+  }
   const tradeOrders = useLocalStorage<TradeOrdersByAddress>(
     'tradeOrders',
     {},
@@ -239,6 +260,9 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
           normalizedAddress
         ].slice(0, MAX_ORDERS_PER_ADDRESS)
       }
+
+      // Notify subscribers of new order
+      notifySubscribers(order, 'order')
     }
   }
 
@@ -332,10 +356,10 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     const swapList = swaps.value[normalizedAddress] || []
     const bridgeList = bridges.value[normalizedAddress] || []
     return (
-      orders.filter(o => !o.seen).length +
-      txs.filter(t => !t.seen).length +
-      swapList.filter(s => !s.seen).length +
-      bridgeList.filter(b => !b.seen).length
+      orders.filter(o => !o.seen && o.status !== 'pending').length +
+      txs.filter(t => !t.seen && t.status !== 'sent').length +
+      swapList.filter(s => !s.seen && s.status !== 'sent').length +
+      bridgeList.filter(b => !b.seen && b.status !== 'sent').length
     )
   }
 
@@ -460,6 +484,9 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
           normalizedAddress
         ].slice(0, MAX_TRANSACTIONS_PER_ADDRESS)
       }
+
+      // Notify subscribers of new transaction
+      notifySubscribers(tx, 'transaction')
     }
   }
 
@@ -505,6 +532,9 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
           MAX_SWAPS_PER_ADDRESS,
         )
       }
+
+      // Notify subscribers of new swap
+      notifySubscribers(swap, 'swap')
     }
   }
 
@@ -576,6 +606,9 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
           normalizedAddress
         ].slice(0, MAX_BRIDGES_PER_ADDRESS)
       }
+
+      // Notify subscribers of new bridge
+      notifySubscribers(bridge, 'bridge')
     }
   }
 
@@ -660,6 +693,7 @@ export const useTradeOrdersStore = defineStore('tradeOrdersStore', () => {
     transactions,
     swaps,
     bridges,
+    subscribe,
     getOrdersByAddress,
     getTransactionsByAddress,
     getSwapsByAddress,

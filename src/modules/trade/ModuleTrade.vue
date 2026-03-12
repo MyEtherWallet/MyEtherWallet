@@ -49,6 +49,7 @@
                 :tokens="fromTokens"
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
+                :is-pristine="isPristine"
                 class="mt-2"
               >
                 <!-- Percentage Buttons -->
@@ -94,11 +95,12 @@
               v-model:error="toAmountError"
               :external-loading="isLoadingQuote"
               :show-balance="false"
-              :tokens="toTokens"
+              :tokens="toTokenSantized"
               :readonly="true"
               :network-name="selectedFromChain?.name"
               :is-estimate="true"
               :is-from-view="false"
+              :is-pristine="isPristine"
               class="mt-2"
             />
           </div>
@@ -383,8 +385,14 @@ const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 
 // --- Refs from Stores ---
-const { isWalletConnected, walletAddress, wallet, isWatchOnly, allTokens } =
-  storeToRefs(walletStore)
+const {
+  isWalletConnected,
+  walletAddress,
+  wallet,
+  isWatchOnly,
+  allTokens,
+  isLoadingBalances,
+} = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
@@ -405,10 +413,11 @@ const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
 const selectedFromChain = ref<Chain | undefined>(chainsStore.selectedChain)
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
 const toTokenSelected = ref<NewTokenInfo | null>(null)
-const fromAmount = ref<string>('0')
-const toAmount = ref<string>('0')
+const fromAmount = ref<string>('')
+const toAmount = ref<string>('')
 const generalError = ref<string>('')
 const toAmountError = ref<string>('')
+const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 
 // --- Market Status ---
 const {
@@ -459,15 +468,34 @@ const fromTokens = computed(() => {
   const tokens = (swapFromTokens.value || []) as NewTokenInfo[]
   const sanitized = tokens.filter(token => {
     if (!token.address) return false
-    const matchingToken = allTokens.value.find(
-      t => t.contract?.toLowerCase() === token.address?.toLowerCase(),
-    )
-    // Keep token if it has marketCap
-    return (
-      matchingToken && matchingToken.market_cap && matchingToken.market_cap > 0
-    )
+    if (isWalletConnected.value) {
+      const matchingToken = allTokens.value.find(
+        t => t.contract?.toLowerCase() === token.address?.toLowerCase(),
+      )
+      // Keep token if it has marketCap
+      return (
+        matchingToken &&
+        matchingToken.market_cap &&
+        matchingToken.market_cap > 0
+      )
+    } else {
+      return token.price && token.price > 0
+    }
   })
-  return sanitized
+  return sanitized.filter(
+    token =>
+      toTokenSelected.value?.address.toLowerCase() !==
+      token.address.toLowerCase(),
+  )
+})
+
+const toTokenSantized = computed(() => {
+  if (!toTokens.value || !fromTokenSelected.value) return []
+  return toTokens.value.filter(
+    token =>
+      token.address.toLowerCase() !==
+      fromTokenSelected.value?.address.toLowerCase(),
+  )
 })
 
 // Find the highest balance token from additionalBuyAssets that the user owns
@@ -556,6 +584,7 @@ watch(generalError, newVal => {
     }
   }
 })
+
 // --- Trade Tokens ---
 const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
   useTradeTokens({
@@ -624,10 +653,12 @@ const {
 
 // --- Methods ---
 const clearValues = () => {
-  fromAmount.value = '0'
-  toAmount.value = '0'
+  isPristine.value = true // Reset to pristine state
+  fromAmount.value = ''
+  toAmount.value = ''
   toAmountError.value = ''
   generalError.value = ''
+  displayGeneralError.value = '' // Clear display error
   resetQuote()
 
   // Reset to default tokens - prefer highest balance additional asset
@@ -704,6 +735,17 @@ const connectWalletForTrade = () => {
 }
 
 // --- Watchers ---
+
+// Reset state when Trade Initiated Modal closes
+watch(
+  () => tradeInitiatedOpen.value,
+  isOpen => {
+    if (!isOpen) {
+      clearValues()
+    }
+  },
+)
+
 watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
   fetchQuote()
 })
@@ -716,42 +758,65 @@ watch(selectedChain, newChain => {
     selectedFromChain.value = newChain
     fromTokenSelected.value = null
     toTokenSelected.value = null
-    fromAmount.value = '0'
-    toAmount.value = '0'
+    fromAmount.value = ''
+    toAmount.value = ''
   }
 })
 
 // Watch for swap loaded to set default tokens after chain change
-watch(swapLoaded, loaded => {
-  if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
-    fromTokenSelected.value = getDefaultFromToken()
-  }
-  if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
-    toTokenSelected.value = toTokens.value[0] || null
-  }
-})
-
-// Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
 watch(
-  [allTokens, additionalBuyAssets, fromTokens, selectedFromChain],
-  () => {
-    // Check if we should update the from token selection
-    if (!fromTokens.value.length || !isWalletConnected.value) return
-
-    const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
-    const isMainToken =
-      !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
-
-    // Only auto-update if currently using main token (not manually selected another token)
-    if (isMainToken) {
-      const highestBalanceAsset = getHighestBalanceAdditionalAsset()
-      if (highestBalanceAsset) {
-        fromTokenSelected.value = highestBalanceAsset
-      }
+  () => swapLoaded.value,
+  loaded => {
+    if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
+      fromTokenSelected.value = getDefaultFromToken()
+    }
+    if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
+      toTokenSelected.value = toTokens.value[0] || null
     }
   },
-  { deep: true, immediate: true },
 )
+
+// Watch for fromTokens to update selected token with fresh data (e.g., after wallet connection)
+watch(
+  () => isLoadingBalances.value,
+  newVal => {
+    if (
+      !isWalletConnected.value ||
+      newVal ||
+      !fromTokenSelected.value ||
+      fromTokens.value.length === 0
+    )
+      return
+
+    // Find the same token in the updated list and refresh the selection with new data
+    const currentAddress = fromTokenSelected.value.address?.toLowerCase()
+    const updatedToken = fromTokens.value.find(
+      t => t.address?.toLowerCase() === currentAddress,
+    )
+    if (updatedToken) {
+      // Update with fresh balance data
+      fromTokenSelected.value = updatedToken
+    }
+  },
+)
+
+// Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
+watch([additionalBuyAssets, () => isWalletConnected.value], () => {
+  // Check if we should update the from token selection
+  if (!fromTokens.value.length || !isWalletConnected.value) return
+
+  const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
+  const isMainToken =
+    !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
+
+  // Only auto-update if currently using main token (not manually selected another token)
+  if (isMainToken) {
+    const highestBalanceAsset = getHighestBalanceAdditionalAsset()
+    if (highestBalanceAsset) {
+      fromTokenSelected.value = highestBalanceAsset
+    }
+  }
+})
 
 // Watch for selected trade token from store
 watch(
@@ -762,11 +827,25 @@ watch(
         (t: NewTokenInfo) => t.symbol.toUpperCase() === symbol.toUpperCase(),
       )
       if (matchingToken) {
-        toTokenSelected.value = matchingToken
+        // Guard: only set if different to avoid reactive loop
+        const currentAddress = toTokenSelected.value?.address?.toLowerCase()
+        if (matchingToken.address?.toLowerCase() !== currentAddress) {
+          toTokenSelected.value = matchingToken
+        }
       }
     }
   },
   { immediate: true },
+)
+
+// Mark form as not pristine when user starts typing
+watch(
+  () => fromAmount.value,
+  (newVal, oldVal) => {
+    if (newVal !== '' && oldVal === '') {
+      isPristine.value = false
+    }
+  },
 )
 
 // --- Lifecycle ---

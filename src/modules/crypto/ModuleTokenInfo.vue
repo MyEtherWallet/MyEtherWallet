@@ -239,6 +239,10 @@ const setBridgeValues = (
   if (fetchedTokenData.value === null || tokenData.value === null) {
     return
   }
+  //if no chain is provided and local values exhist dont override them, this allows to switch between swap and bridge view without losing selected chain in bridge
+  if (!_chain && bridgeValues.value) {
+    return
+  }
   const targetToChain = _chain
     ? _chain
     : fetchedTokenData.value.supportedChains.find(
@@ -281,7 +285,9 @@ const setBridgeWalletStore = (
   if (bridgeValues.value) {
     storeSwapValues(bridgeValues.value)
   }
-  walletMenu.setWalletPanel('bridge')
+  if (walletPanel.value !== 'bridge') {
+    walletMenu.setWalletPanel('bridge')
+  }
 }
 
 watch(walletPanel, () => {
@@ -314,12 +320,7 @@ const {
   data: fetchedTokenData,
   isFetching,
   onFetchResponse,
-  onFetchError,
 } = useMEWFetch(endpoint, { refetch: true }).get().json<GetWebTokenInfo>()
-
-onFetchError(() => {
-  isLoadedData.value = true
-})
 
 const isLoading = computed(() => {
   return !isLoadedData.value

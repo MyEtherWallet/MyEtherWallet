@@ -85,13 +85,16 @@ import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fu
 import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { ToastType } from '@/types/notification'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import Configs from '@/configs'
 // Stores
 import { storeToRefs } from 'pinia'
 import {
   useTradeOrdersStore,
   type SavedTradeOrder,
   type NotificationItem,
+  type SwapNotification,
+  type BridgeNotification,
+  type TransactionNotification,
   isTransactionNotification,
   isSwapNotification,
   isBridgeNotification,
@@ -458,7 +461,6 @@ const startPollingForPendingOrders = (address: string) => {
 }
 
 // Status polling API
-const { useMEWFetch } = useFetchMewApi()
 
 // Notification type for status polling
 type StatusNotificationType = 'transaction' | 'swap' | 'bridge'
@@ -470,7 +472,6 @@ const updateNotificationStatus = (
   apiStatus: { status: string },
 ) => {
   if (!walletAddress.value) return
-
   const _status = apiStatus.status.toLowerCase()
   let newStatus: 'sent' | 'confirmed' | 'failed' = 'sent'
 
@@ -479,14 +480,13 @@ const updateNotificationStatus = (
   } else if (_status === 'fail') {
     newStatus = 'failed'
   }
-
   // Only refresh balances if status actually changed from 'sent'
   const shouldRefreshBalances = newStatus !== 'sent'
-
+  if (!shouldRefreshBalances) return
   if (type === 'transaction') {
     const txs = tradeOrdersStore.getTransactionsByAddress(walletAddress.value)
     const tx = txs.find(t => t.hash === hash)
-    if (!tx || newStatus === tx.status) return
+    if (!tx) return
 
     tradeOrdersStore.updateTransaction(walletAddress.value, hash, {
       status: newStatus,
@@ -501,12 +501,10 @@ const updateNotificationStatus = (
         duration: 10000,
       })
     }
-
-    if (shouldRefreshBalances) fetchBalances()
   } else if (type === 'swap') {
     const swaps = tradeOrdersStore.getSwapsByAddress(walletAddress.value)
     const swap = swaps.find(s => s.hash === hash)
-    if (!swap || newStatus === swap.status) return
+    if (!swap) return
     tradeOrdersStore.updateSwap(walletAddress.value, hash, {
       status: newStatus,
       seen: false,
@@ -537,12 +535,10 @@ const updateNotificationStatus = (
         },
       })
     }
-
-    if (shouldRefreshBalances) fetchBalances()
   } else if (type === 'bridge') {
     const bridges = tradeOrdersStore.getBridgesByAddress(walletAddress.value)
     const bridge = bridges.find(b => b.hash === hash)
-    if (!bridge || newStatus === bridge.status) return
+    if (!bridge) return
 
     tradeOrdersStore.updateBridge(walletAddress.value, hash, {
       status: newStatus,
@@ -575,9 +571,8 @@ const updateNotificationStatus = (
         },
       })
     }
-
-    if (shouldRefreshBalances) fetchBalances()
   }
+  fetchBalances()
 }
 
 // Start polling for notification status (works for transactions, swaps, and bridges)
@@ -591,12 +586,13 @@ const startStatusPolling = async (
 
   const pollStatus = async () => {
     try {
-      const { data } = await useMEWFetch(
-        `/v1/evm/chains/${chainId}/transactions/${hash}/status`,
-      ).json()
+      const response = await fetch(
+        `${Configs.MEW_API_URL}/v1/evm/chains/${chainId}/transactions/${hash}/status`,
+      )
+      const data = await response.json()
 
-      if (data.value) {
-        updateNotificationStatus(hash, type, data.value)
+      if (data) {
+        updateNotificationStatus(hash, type, data)
       }
     } catch (e) {
       console.error(`Failed to fetch ${type} status:`, e)
@@ -646,10 +642,13 @@ const startPollingForPendingNotifications = (address: string) => {
 }
 
 // Cleanup on unmount
+let unsubscribe: (() => void) | null = null
+
 onUnmounted(() => {
   Object.keys(pollIntervals).forEach(stopPolling)
   Object.keys(statusPollIntervals).forEach(stopStatusPolling)
   stopCountdown()
+  unsubscribe?.()
 })
 
 // Watch for empty orders to stop countdown
@@ -682,100 +681,38 @@ watch(
   { immediate: true },
 )
 
-// Watch for new orders added to the store
-watch(
-  () =>
-    walletAddress.value
-      ? tradeOrdersStore.getOrdersByAddress(walletAddress.value)
-      : [],
-  (newOrders, oldOrders) => {
-    if (!walletAddress.value) return
+// Subscribe to new notifications from the store
+unsubscribe = tradeOrdersStore.subscribe((item, type) => {
+  if (!walletAddress.value) return
 
-    // Find newly added orders (orders in new list but not in old list)
-    const oldHashes = new Set((oldOrders || []).map(o => o.hash))
-    const newlyAdded = newOrders.filter(o => !oldHashes.has(o.hash))
+  if (type === 'order') {
+    const order = item as SavedTradeOrder
+    if (order.status === 'pending') {
+      // Initialize remaining time
+      const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
+      const remaining = Math.max(0, order.duration - elapsed)
+      remainingTimes.value[order.hash] = remaining
 
-    // Start polling for new orders
-    newlyAdded.forEach(order => {
-      if (order.status === 'pending') {
-        // Initialize remaining time
-        const elapsed = Math.floor(Date.now() / 1000) - order.createdAt
-        const remaining = Math.max(0, order.duration - elapsed)
-        remainingTimes.value[order.hash] = remaining
-
-        if (!pollIntervals[order.hash]) {
-          startPolling(order.hash, order.chainId)
-        }
-        startCountdown()
+      if (!pollIntervals[order.hash]) {
+        startPolling(order.hash, order.chainId)
       }
-    })
-
-    // Also check for any pending orders that aren't being polled
-    startPollingForPendingOrders(walletAddress.value)
-  },
-  { deep: true },
-)
-
-// Watch for new transactions added to the store
-watch(
-  () =>
-    walletAddress.value
-      ? tradeOrdersStore.getTransactionsByAddress(walletAddress.value)
-      : [],
-  (newTxs, oldTxs) => {
-    if (!walletAddress.value) return
-
-    const oldHashes = new Set((oldTxs || []).map(t => t.hash))
-    const newlyAdded = newTxs.filter(t => !oldHashes.has(t.hash))
-
-    newlyAdded.forEach(tx => {
-      if (tx.status === 'sent' && !statusPollIntervals[tx.hash]) {
-        startStatusPolling(tx.hash, tx.chainId, 'transaction')
-      }
-    })
-  },
-  { deep: true },
-)
-
-// Watch for new swaps added to the store
-watch(
-  () =>
-    walletAddress.value
-      ? tradeOrdersStore.getSwapsByAddress(walletAddress.value)
-      : [],
-  (newSwaps, oldSwaps) => {
-    if (!walletAddress.value) return
-
-    const oldHashes = new Set((oldSwaps || []).map(s => s.hash))
-    const newlyAdded = newSwaps.filter(s => !oldHashes.has(s.hash))
-
-    newlyAdded.forEach(swap => {
-      if (swap.status === 'sent' && !statusPollIntervals[swap.hash]) {
-        startStatusPolling(swap.hash, swap.fromChainId, 'swap')
-      }
-    })
-  },
-  { deep: true },
-)
-
-// Watch for new bridges added to the store
-watch(
-  () =>
-    walletAddress.value
-      ? tradeOrdersStore.getBridgesByAddress(walletAddress.value)
-      : [],
-  (newBridges, oldBridges) => {
-    if (!walletAddress.value) return
-
-    const oldHashes = new Set((oldBridges || []).map(b => b.hash))
-    const newlyAdded = newBridges.filter(b => !oldHashes.has(b.hash))
-
-    newlyAdded.forEach(bridge => {
-      if (bridge.status === 'sent' && !statusPollIntervals[bridge.hash]) {
-        startStatusPolling(bridge.hash, bridge.fromChainId, 'bridge')
-      }
-    })
-  },
-  { deep: true },
-)
+      startCountdown()
+    }
+  } else if (type === 'transaction') {
+    const tx = item as TransactionNotification
+    if (tx.status === 'sent' && !statusPollIntervals[tx.hash]) {
+      startStatusPolling(tx.hash, tx.chainId, 'transaction')
+    }
+  } else if (type === 'swap') {
+    const swap = item as SwapNotification
+    if (swap.status === 'sent' && !statusPollIntervals[swap.hash]) {
+      startStatusPolling(swap.hash, swap.fromChainId, 'swap')
+    }
+  } else if (type === 'bridge') {
+    const bridge = item as BridgeNotification
+    if (bridge.status === 'sent' && !statusPollIntervals[bridge.hash]) {
+      startStatusPolling(bridge.hash, bridge.fromChainId, 'bridge')
+    }
+  }
+})
 </script>

@@ -237,12 +237,9 @@ const fetchUrl = computed(() => {
 })
 
 const isLoadedData = ref(false)
-const { data, isFetching, onFetchError, onFetchResponse } = useMEWFetch(
-  fetchUrl,
-  {
-    refetch: true,
-  },
-)
+const { data, isFetching, onFetchResponse } = useMEWFetch(fetchUrl, {
+  refetch: true,
+})
   .get()
   .json<GetWebStocksInfoSummaryResponse>()
 
@@ -258,10 +255,6 @@ onFetchResponse(() => {
       isStock: true,
     })
   }
-})
-
-onFetchError(() => {
-  isLoadedData.value = true
 })
 
 const isLoading = computed(() => {

@@ -53,16 +53,18 @@ export const useFetchMewApi = (
         return ctx
       },
       updateDataOnError: true,
-      onFetchError: async ({ data, error, execute, response }) => {
+      onFetchError: async ctx => {
+        const { data, error, execute, response } = ctx
         if (isDevMode) {
-          console.log('Fetch Error: ', data, error)
+          console.error('Fetch Error: ', data, error)
         }
         if (
           error &&
           typeof error === 'string' &&
           error.includes('AbortError')
         ) {
-          return
+          delete ctx.error
+          return ctx
         }
         if (isActivePolling.value) {
           pausePoll()
@@ -85,10 +87,8 @@ export const useFetchMewApi = (
           if (isDevMode) {
             console.error('Failed to fetch. URL: ', url.value)
           }
-          // ctx.data = null
-          error.value = data?.message || 'Unkown Error.Failed to fetch.'
-
-          return error
+          ctx.error = data?.message || 'Unknown Error. Failed to fetch.'
+          return ctx
         }
       },
     },

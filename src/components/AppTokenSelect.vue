@@ -180,7 +180,7 @@
 <script setup lang="ts">
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { type TokenBalance } from '@/mew_api/types'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import {
   ChevronDownIcon,
   ArrowLongDownIcon,
@@ -359,4 +359,14 @@ const getBalance = (_value: string) => {
 const getName = (token: TokenBalance): string => {
   return token.ondo?.stockAlias ? token.ondo.stockAlias : token.name
 }
+
+const emit = defineEmits<{
+  'open:selectToken': [isOpen: boolean]
+}>()
+watch(
+  () => showAllTokens.value,
+  () => {
+    emit('open:selectToken', showAllTokens.value)
+  },
+)
 </script>

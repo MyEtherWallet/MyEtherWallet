@@ -16,6 +16,7 @@
             v-model:selected-token="tokenSelectedContract"
             v-model:error="amountError"
             :validate-input="checkAmountForError"
+            :is-pristine="isPristine"
           />
           <address-input
             v-model:adr-input="adrInput"
@@ -23,6 +24,7 @@
             :address-error-messages="toAddressError"
             :network="selectedChain"
             :found-nick-name="foundNickName"
+            :is-pristine="isPristine"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
           />
@@ -130,9 +132,10 @@ const { inAddressBook, addRecentAddress } = useAddressBookStore()
 
 const chainsStore = useChainsStore()
 const { selectedChain, isEvmChain, isBitcoinChain } = storeToRefs(chainsStore)
-const amount = ref<number | string>('0')
+const amount = ref<number | string>('')
 const tokenSelectedContract: Ref<string> = ref(MAIN_TOKEN_CONTRACT)
 const amountError = ref('')
+const isPristine = ref(true) // Track if form is in pristine (untouched/cleared) state
 const gasPrice = ref('0x0')
 const data = ref('0x')
 const gasFeeTxEstimate = ref<
@@ -168,6 +171,7 @@ onMounted(async () => {
   address.value = await wallet.value.getAddress()
 
   if (hasSendValues.value) {
+    isPristine.value = false // Restoring values means form is not pristine
     amount.value = sendValues.value.amount
     toAddress.value = sendValues.value.toAddress
     tokenSelectedContract.value = sendValues.value.token
@@ -183,6 +187,11 @@ const tokenSelected = computed(() => {
 })
 
 const checkAmountForError = () => {
+  // Skip validation if form is pristine (just cleared or initial state)
+  if (isPristine.value) {
+    amountError.value = ''
+    return
+  }
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
 
   const baseTokenBalance = parseUnits(
@@ -237,6 +246,7 @@ const setDefaultFee = (isLoading: boolean) => {
 
 const validSend = computed(() => {
   return (
+    amount.value !== '' &&
     amountError.value === '' &&
     toAddress.value !== undefined &&
     toAddressError.value === '' &&
@@ -343,11 +353,26 @@ watchDebounced(
 )
 
 const resetSendModule = () => {
-  amount.value = '0'
+  isPristine.value = true // Reset to pristine state
+  amountError.value = '' // Clear error immediately
+  amount.value = ''
   toAddress.value = ''
   signedTx.value = ''
   clearAddressInput()
 }
+
+// Mark form as not pristine when user starts typing
+watch(
+  () => [amount.value, adrInput.value],
+  ([newAmount, newAdr], [oldAmount, oldAdr]) => {
+    if (
+      (newAmount !== '' && oldAmount === '') ||
+      (newAdr !== '' && oldAdr === '')
+    ) {
+      isPristine.value = false
+    }
+  },
+)
 
 const saveToAddressBookAfterSending = () => {
   if (toAddress.value) {
