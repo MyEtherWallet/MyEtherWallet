@@ -757,6 +757,25 @@ watch(
   },
 )
 
+// Watch for fromTokens to update selected token with fresh data (e.g., after wallet connection)
+watch(
+  () => fromTokens.value,
+  newTokens => {
+    if (!fromTokenSelected.value || !newTokens.length) return
+
+    // Find the same token in the updated list and refresh the selection with new data
+    const currentAddress = fromTokenSelected.value.address?.toLowerCase()
+    const updatedToken = newTokens.find(
+      t => t.address?.toLowerCase() === currentAddress,
+    )
+    if (updatedToken) {
+      // Update with fresh balance data
+      fromTokenSelected.value = updatedToken
+    }
+  },
+  { deep: true },
+)
+
 // Watch for wallet tokens and additionalBuyAssets to update default from token when balances load
 watch(
   [allTokens, additionalBuyAssets, fromTokens, selectedFromChain],
