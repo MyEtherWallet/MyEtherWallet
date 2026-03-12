@@ -161,7 +161,7 @@
                 </div>
               </div>
               <div v-if="token.price !== 0" class="text-right">
-                <div v-if="isFromView">
+                <div v-if="isFromView && isWalletConnected">
                   <p class="font-medium text-black">
                     $ {{ formatUsdBalance(token.usd_balance) }}
                   </p>
@@ -325,7 +325,7 @@ const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
   if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
-  if (!props.isFromView) {
+  if (!props.isFromView || !isWalletConnected.value) {
     activeSortValue.value = SortValueString.PRICE
   }
 })
@@ -365,7 +365,7 @@ const sortOptions = computed(() => {
       label: t('common.symbol'),
     },
   ]
-  if (props.isFromView) {
+  if (props.isFromView && isWalletConnected.value) {
     return [
       ...shared,
       {
