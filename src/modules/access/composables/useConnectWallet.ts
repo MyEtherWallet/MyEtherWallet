@@ -49,7 +49,7 @@ export const useConnectWallet = () => {
   ) => {
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
-    setWallet(wallet)
+    setWallet(wallet, config.name)
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     accessStore.closeAccessDialog()

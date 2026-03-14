@@ -425,7 +425,10 @@ const access = async () => {
   const wallet = walletList.value[selectedIndex.value]?.walletInstance
   isUnlockingWallet.value = true
 
-  setWallet(markRaw(wallet as EvmHardwareWallet) as WalletInterface)
+  setWallet(
+    markRaw(wallet as EvmHardwareWallet) as WalletInterface,
+    walletConfig.value?.name || 'hardware',
+  )
   addWallet(walletConfig.value as WalletConfig)
   isUnlockingWallet.value = false
   hwWalletInstance = null

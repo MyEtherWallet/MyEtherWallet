@@ -220,7 +220,7 @@ const enterPassword = async () => {
         selectedChain.value?.chainID || '1',
       )
       resetKeystore()
-      setWallet(wallet)
+      setWallet(wallet, 'keystore')
       addWallet(walletConfigs.keystore)
       setSelectedChainGlobalStore(selectedChain.value?.name || '')
       isUnlockingKeystore.value = false
