@@ -118,7 +118,7 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const hasChainBalance = computed(() => {
     const balanceBN = new BigNumber(balanceWei.value || '0')
-    return isWalletConnected.value ? balanceBN.gt(0) : true
+    return balanceBN.gt(0)
   })
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
