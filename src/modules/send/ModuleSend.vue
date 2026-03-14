@@ -29,6 +29,7 @@
             @immediate-update:resolved-address="onInput"
           />
           <app-select-tx-fee
+            v-if="isBitcoinChain ? hasChainBalance : true"
             :fees="gasFees"
             :is-loading-fees="isLoadingFees"
             :txRequestBody="gasFeeTxEstimate"
@@ -38,17 +39,25 @@
         </div>
       </div>
       <app-base-button
-        v-if="isWalletConnected && !isWatchOnly"
-        :disabled="!validSend"
-        :is-loading="isLoadingFees"
-        @click="handleSubmit"
-        class="w-full max-w-[340px]"
+        v-if="!isWalletConnected || isWatchOnly"
+        class="w-full capitalize"
+        @click="connectWallet"
       >
-        {{ $t('common.send') }}</app-base-button
-      >
-      <app-base-button class="w-[70%] capitalize" @click="connectWallet" v-else>
         {{ $t('common.connect_wallet') }}</app-base-button
       >
+      <div v-else class="flex w-full">
+        <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+        <app-base-button
+          v-else
+          :disabled="!validSend"
+          :is-loading="isLoadingFees"
+          @click="handleSubmit"
+          class="w-full max-w-[340px]"
+        >
+          {{ $t('common.send') }}</app-base-button
+        >
+      </div>
+
       <app-need-help
         :title="$t('send.need-help')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
@@ -82,6 +91,7 @@ import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
+import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 import type {
   QuotesResponse,
   EstimatesRequestBody,
@@ -113,6 +123,7 @@ const {
   isLoadingBalances,
   balanceWei,
   isWatchOnly,
+  hasChainBalance,
 } = storeToRefs(walletStore)
 
 /** ----------------
@@ -253,7 +264,8 @@ const validSend = computed(() => {
     isValidAdrInput.value &&
     !isLoadingFees.value &&
     !defaultFeeIsFetching.value &&
-    gasFeeError.value === ''
+    gasFeeError.value === '' &&
+    hasChainBalance.value
   )
 })
 
@@ -424,8 +436,9 @@ const getGasFeeQuotes = async () => {
   } catch (e) {
     if (e instanceof Error) {
       if (e.message) {
-        const isInsufficientFundsError =
-          e.message.includes('insufficient funds')
+        const isInsufficientFundsError = e.message
+          .toLowerCase()
+          .includes('insufficient funds')
         if (isInsufficientFundsError) {
           gasFeeError.value = 'NOT_ENOUGH_BALANCE'
           isLoadingFees.value = false

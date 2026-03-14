@@ -116,6 +116,10 @@ export const useWalletStore = defineStore('walletStore', () => {
   const chainStore = useChainsStore()
   const { selectedChain, isEvmChain } = storeToRefs(chainStore)
 
+  const hasChainBalance = computed(() => {
+    const balanceBN = new BigNumber(balanceWei.value || '0')
+    return isWalletConnected.value ? balanceBN.gt(0) : true
+  })
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
     if (newChain && newChain.type !== oldChain?.type) {
@@ -356,5 +360,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     hasMissingBalances,
     hasBalances,
     allStocks,
+    hasChainBalance,
   }
 })
