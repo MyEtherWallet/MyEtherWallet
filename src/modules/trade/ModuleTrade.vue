@@ -261,43 +261,48 @@
         :class="['w-full max-w-[340px] transition-all duration-300', blurClass]"
       >
         <app-base-button
-          v-if="isWalletConnected && !isWatchOnly"
-          class="w-full"
-          :disabled="isTradeDisabled || isApproving"
-          @click="needsApproval ? handleApprove() : openTradeModal()"
-        >
-          <span
-            v-if="isApproving"
-            class="flex items-center justify-center gap-2"
-          >
-            <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-                fill="none"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Approving...
-          </span>
-          <span v-else>{{ needsApproval ? 'Approve' : 'Trade' }}</span>
-        </app-base-button>
-        <app-base-button
-          v-else
+          v-if="!isWalletConnected || isWatchOnly"
           class="w-full"
           :disabled="!supportedNetwork"
           @click="connectWalletForTrade"
         >
           Connect wallet
         </app-base-button>
+        <div v-else>
+          <transition name="fade" mode="out-in">
+            <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+            <app-base-button
+              v-else
+              class="w-full"
+              :disabled="isTradeDisabled || isApproving"
+              @click="needsApproval ? handleApprove() : openTradeModal()"
+            >
+              <span
+                v-if="isApproving"
+                class="flex items-center justify-center gap-2"
+              >
+                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    fill="none"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Approving...
+              </span>
+              <span v-else>{{ needsApproval ? 'Approve' : 'Trade' }}</span>
+            </app-base-button>
+          </transition>
+        </div>
       </div>
       <app-need-help
         title="Need help trading?"
@@ -349,6 +354,8 @@ import TradeQuoteModal from './components/TradeQuoteModal.vue'
 import TradeInitiatedModal from './components/TradeInitiatedModal.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
+
 // Stores
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -392,6 +399,7 @@ const {
   isWatchOnly,
   allTokens,
   isLoadingBalances,
+  hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)

@@ -140,20 +140,27 @@
           {{ generalError }}
         </p>
       </div>
-
       <app-base-button
-        :class="['w-full max-w-[340px]', blurClass]"
-        v-if="isWalletConnected && !isWatchOnly"
-        :disabled="isSwapDisabled"
-        @click="swapButton"
+        v-if="!isWalletConnected || isWatchOnly"
+        :class="['mx-auto w-full max-w-[340px]', blurClass]"
+        @click="connectWalletForSwap"
       >
-        {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
+        {{ t('connect_wallet') }}</app-base-button
       >
-      <div :class="['mx-auto w-full max-w-[340px]', blurClass]" v-else>
-        <app-base-button class="w-full" @click="connectWalletForSwap">
-          {{ t('connect_wallet') }}</app-base-button
-        >
+      <div v-else :class="['w-full max-w-[340px]', blurClass]">
+        <transition name="fade" mode="out-in">
+          <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+          <app-base-button
+            v-else
+            :disabled="isSwapDisabled"
+            @click="swapButton"
+            class="w-full"
+          >
+            {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
+          >
+        </transition>
       </div>
+
       <app-need-help
         title="Need help swaping?"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
@@ -207,6 +214,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
+import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -270,6 +278,7 @@ const {
   isWatchOnly,
   tokens,
   balanceWei,
+  hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
 const { hasSwapValues, swapValues } = storeToRefs(inputStore)
@@ -473,7 +482,8 @@ const isSwapDisabled = computed(
       toAmount.value !== '0'
     ) ||
     (isCrossChain.value && toAddressError.value !== '') ||
-    isLoadingQuotes.value,
+    isLoadingQuotes.value ||
+    !hasChainBalance.value,
 )
 
 // --- Helper Methods ---
