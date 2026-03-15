@@ -370,6 +370,7 @@ const resetSendModule = () => {
   amount.value = ''
   toAddress.value = ''
   signedTx.value = ''
+  tokenSelectedContract.value = MAIN_TOKEN_CONTRACT
   clearAddressInput()
 }
 
