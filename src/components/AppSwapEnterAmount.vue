@@ -9,6 +9,24 @@
   >
     <slot name="header" />
     <div class="flex items-center w-full gap-2">
+      <p
+        v-if="!isFromView && !isLoading && amount"
+        :class="{
+          'text-error': hasError && !isOpenSelectToken && !isPristine,
+          'animate-pulse text-info': isLoading,
+          '!text-s-24':
+            amount &&
+            amount.toString().length > 7 &&
+            amount.toString().length <= 10,
+          '!text-s-16':
+            amount &&
+            amount.toString().length > 10 &&
+            amount.toString().length <= 15,
+          '!text-s-12': amount && amount.toString().length > 15,
+        }"
+      >
+        ≈
+      </p>
       <input
         ref="amountInput"
         class="grow py-1 text-s-28 font-medium focus:outline-none focus:ring-0 !border-transparent !appearance-none bg-transparent min-w-0 h-9"
@@ -19,7 +37,11 @@
             amount &&
             amount.toString().length > 7 &&
             amount.toString().length <= 10,
-          '!text-s-16': amount && amount.toString().length > 10,
+          '!text-s-16':
+            amount &&
+            amount.toString().length > 10 &&
+            amount.toString().length <= 15,
+          '!text-s-12': amount && amount.toString().length > 15,
         }"
         name="amount-input"
         type="text"
@@ -57,7 +79,7 @@
             {{ balanceFiatOrError }}
           </div>
           <div
-            v-if="showBalance"
+            v-if="showBalance && isFromView"
             class="text-s-12 text-info transition-colors h-5"
             :class="{
               'text-primary':
@@ -67,6 +89,10 @@
           >
             {{ $t('common.balance') }}:
             <span class="text-black">{{ balance }}</span>
+          </div>
+          <div v-else class="text-s-12 text-info transition-colors h-5">
+            {{ $t('common.price') }}:
+            <span>${{ tokenPrice }}</span>
           </div>
         </div>
       </transition>
@@ -198,6 +224,9 @@ const isLoading = computed(() => {
   return props.externalLoading
 })
 
+const tokenPrice = computed(() => {
+  return formatFiatValue(selectedToken.value?.price || 0).value
+})
 const balanceFiatOrError = computed(() => {
   // handles the case where toAmount has the ≈ sign
   if (
@@ -214,9 +243,10 @@ const balanceFiatOrError = computed(() => {
       : amount.value
   if (!props.showBalance) {
     const val = BigNumber(selectedToken.value?.price || 0)
-      .times(BigNumber(numAmount).gt(0) ? numAmount : 1)
+      .times(numAmount || 0)
       .toFixed(2)
-    return `${props.isEstimate ? '≈ ' : ''}$ ${val}`
+    const formattedVal = formatFiatValue(val).value
+    return `${props.isEstimate ? '≈ ' : ''}$ ${formattedVal}`
   }
   const _balance = BigNumber(
     BigNumber(tokenBalanceRaw.value?.price || 0).times(

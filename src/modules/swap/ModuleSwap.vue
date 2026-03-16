@@ -236,7 +236,6 @@ import {
   supportedSwapEnums,
 } from '@/providers/ethereum/chainToEnum'
 import { formatUnits, parseUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import dataTxAction from '@/utils/dataTxAction'
 import {
   type Chain,
@@ -751,7 +750,6 @@ const fetchQuotes = async () => {
   generalError.value = ''
   toAmount.value = '0'
   qoutesError.value = false
-
   try {
     const quotes = await getQuote({
       fromToken: fromTokenSelected.value,
@@ -801,6 +799,7 @@ const setToChain = (chain: Chain) => {
   } else if (chain) {
     selectedToChain.value = chain
   }
+  toAmount.value = ''
   setToToken()
 }
 
@@ -1076,17 +1075,39 @@ watch(
   { deep: true },
 )
 
+const bestRate = computed(() => {
+  if (providers.value.length === 0) return null
+  return providers.value[0]
+})
+
 // Update To Amount Estimate
 watch(
-  () => providers.value,
+  () => bestRate.value,
   () => {
-    if (providers.value.length > 0 && !fromAmountError.value) {
-      const best = providers.value[0]
+    if (
+      bestRate.value &&
+      providers.value.length > 0 &&
+      !fromAmountError.value
+    ) {
       const val = formatUnits(
-        BigInt(best.toTokenAmount.toString()),
+        BigInt(bestRate.value.toTokenAmount.toString()),
         toTokenSelected.value?.decimals || 18,
       )
-      toAmount.value = `≈ ${formatFloatingPointValue(val).value}`
+
+      const BigNumberVal = BigNumber(val)
+      if (BigNumberVal.gte(100000)) {
+        toAmount.value = BigNumberVal.toFixed(0) // No decimals for very large numbers
+        return
+      }
+      if (BigNumberVal.gte(10)) {
+        toAmount.value = BigNumberVal.toFixed(2) // 2 decimals for numbers >= 10
+        return
+      }
+      if (BigNumberVal.gte(1)) {
+        toAmount.value = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
+        return
+      }
+      toAmount.value = BigNumberVal.toFixed(6) // Limit to 8 decimals for display
     }
   },
 )
