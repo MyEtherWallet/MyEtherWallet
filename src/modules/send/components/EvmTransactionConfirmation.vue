@@ -405,23 +405,26 @@ const confirmTransaction = async () => {
       })
       .catch(e => {
         //TODO: implement error localization
-        const errorMessage =
-          e instanceof Error && e.message ? e.message.toLowerCase() : e
-        if (errorMessage.includes('user rejected')) {
+        const msg =
+          e instanceof Error && e.message
+            ? e.message.toLowerCase()
+            : typeof e === 'object' && e !== null && 'message' in e
+              ? String((e as Record<string, unknown>).message).toLowerCase()
+              : typeof e === 'string'
+                ? e.toLowerCase()
+                : ''
+        if (msg.includes('user rejected')) {
           toastStore.addToastMessage({
             type: ToastType.Info,
             text: 'Transaction canceled by user',
           })
         } else {
+          const errorMessage = msg ? sanitizeErrorMessage(msg) : undefined
+
           toastStore.addToastMessage({
             type: ToastType.Error,
             text: t('send.toast.tx-send-failed'),
-            textSecondary:
-              e instanceof Error && e.message
-                ? sanitizeErrorMessage(e.message)
-                : typeof e === 'string'
-                  ? sanitizeErrorMessage(e)
-                  : undefined,
+            textSecondary: errorMessage,
           })
         }
       })
@@ -431,15 +434,21 @@ const confirmTransaction = async () => {
     // possibly catch more errors
     signing.value = false
     showApproveMessage.value = false
+    const errorMessage =
+      e instanceof Error && e.message
+        ? sanitizeErrorMessage(e.message.toLowerCase())
+        : typeof e === 'string'
+          ? sanitizeErrorMessage(e)
+          : typeof e === 'object' && e !== null && 'message' in e
+            ? sanitizeErrorMessage(
+                String((e as Record<string, unknown>).message).toLowerCase(),
+              )
+            : undefined
+
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('send.toast.tx-send-failed'),
-      textSecondary:
-        e instanceof Error && e.message
-          ? sanitizeErrorMessage(e.message)
-          : typeof e === 'string'
-            ? sanitizeErrorMessage(e)
-            : undefined,
+      textSecondary: errorMessage,
     })
   }
 }
