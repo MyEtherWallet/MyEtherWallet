@@ -490,20 +490,12 @@ const fromTokens = computed(() => {
       return token.price && token.price > 0
     }
   })
-  return sanitized.filter(
-    token =>
-      toTokenSelected.value?.address.toLowerCase() !==
-      token.address.toLowerCase(),
-  )
+  return sanitized
 })
 
 const toTokenSantized = computed(() => {
   if (!toTokens.value || !fromTokenSelected.value) return []
-  return toTokens.value.filter(
-    token =>
-      token.address.toLowerCase() !==
-      fromTokenSelected.value?.address.toLowerCase(),
-  )
+  return toTokens.value
 })
 
 // Find the highest balance token from additionalBuyAssets that the user owns
@@ -609,18 +601,23 @@ const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
 const isLoadingQuote = ref(false)
 
 // --- Trade Validation ---
-const { hasPreQuoteError, fromAmountError, isTradeDisabled } =
-  useTradeValidation({
-    fromTokenSelected,
-    fromAmount,
-    toAmount,
-    isWalletConnected,
-    isMarketOpen,
-    isSelectedAssetTradeable,
-    supportedNetwork,
-    isLoadingQuote,
-    generalError,
-  })
+const {
+  hasPreQuoteError,
+  fromAmountError,
+  isTradeDisabled,
+  isSameTokenSelected,
+} = useTradeValidation({
+  fromTokenSelected,
+  fromAmount,
+  toAmount,
+  isWalletConnected,
+  isMarketOpen,
+  isSelectedAssetTradeable,
+  supportedNetwork,
+  isLoadingQuote,
+  generalError,
+  toTokenSelected,
+})
 
 // --- Trade Quote ---
 const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
@@ -755,6 +752,10 @@ watch(
 )
 
 watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
+  if (isSameTokenSelected.value) {
+    toAmount.value = '' // Reset same token error on any change
+    return
+  }
   fetchQuote()
 })
 
