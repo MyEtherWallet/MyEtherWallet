@@ -137,7 +137,7 @@ import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { validateMnemonic } from 'bip39'
 import { watchDebounced } from '@vueuse/core'
-import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
+import { useWalletStore } from '@/stores/walletStore'
 import MnemonicToWallet from '@/providers/ethereum/mnemonicToWallet'
 import MnemonicToBitcoinWallet from '@/providers/bitcoin/mnemonicToBitcoinWallet'
 import { type SelectAddress } from './types/selectAddress'
@@ -150,10 +150,10 @@ import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import type { HexPrefixedString } from '@/providers/types'
 import { fromWei } from 'web3-utils'
 import { fromBase } from '@/utils/unit'
-import type { Chain, TokenBalancesRaw } from '@/mew_api/types'
+import type { Chain, AddressBalanceResponse } from '@/mew_api/types'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
 
 const { t } = useI18n()
@@ -293,49 +293,70 @@ const isLoadingWalletList = ref(true)
 const selectedIndex = ref(0)
 const page = ref(0)
 
+const { useMEWFetch } = useFetchMewApi()
+
 const loadList = async (page: number = 0) => {
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
+
   for (let i = startIndex; i < startIndex + 5; i++) {
-    await wallet.value?.getWallet(i).then(async wallet => {
-      if (wallet) {
-        const fetchBalance = await wallet.getBalance()
-        if (Array.isArray((fetchBalance as TokenBalancesRaw).result)) {
-          const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
-            token => token.contract === MAIN_TOKEN_CONTRACT,
+    const walletInstance = await wallet.value?.getWallet(i)
+    if (walletInstance) {
+      walletList.value.push({
+        address: await walletInstance.getAddress(),
+        index: i,
+        balance: '0',
+      })
+    }
+  }
+
+  if (
+    walletList.value.length > 0 &&
+    selectedChain.value?.type === 'EVM' &&
+    selectedChain.value.chainID
+  ) {
+    try {
+      const addresses = walletList.value.map(w => w.address).join(',')
+      const { data } = await useMEWFetch(
+        `/v1/evm/chains/${selectedChain.value.chainID}/balances?addresses=${addresses}`,
+      )
+        .get()
+        .json<AddressBalanceResponse[]>()
+
+      if (data.value) {
+        for (const b of data.value) {
+          const item = walletList.value.find(
+            w => w.address.toLowerCase() === b.address.toLowerCase(),
           )
-          walletList.value.push({
-            address: await wallet.getAddress(),
-            index: i,
-            balance: fromWei(
-              (mainToken?.balance || '0x0') as HexPrefixedString,
-              'ether',
-            ).toString(),
-          })
-        } else {
-          // TODO: change this once api changes are made to return consistent data
-          // for all networks
-          const newFetchBalance = fetchBalance as unknown as {
-            balance: { nativeValue: string }
-          }
-          walletList.value.push({
-            address: await wallet.getAddress(),
-            index: i,
-            balance: fromBase(
-              newFetchBalance.balance.nativeValue,
-              8,
-            ).toString(),
-          })
-        }
-        if (walletList.value.length === 1) {
-          selectedIndex.value = walletList.value[0].index
-          isLoadingWalletList.value = false
+          if (item) item.balance = fromWei(b.value, 'ether')
         }
       }
-    })
+    } catch (e) {
+      console.error('Error fetching balances:', e)
+    }
+  } else if (
+    walletList.value.length > 0 &&
+    selectedChain.value?.type === 'BITCOIN'
+  ) {
+    for (const item of walletList.value) {
+      try {
+        const walletInstance = await wallet.value?.getWallet(item.index)
+        if (walletInstance) {
+          const fetchBalance = (await walletInstance.getBalance()) as unknown as {
+            balance: { nativeValue: string }
+          }
+          item.balance = fromBase(fetchBalance.balance.nativeValue, 8).toString()
+        }
+      } catch (e) {
+        console.error('Error fetching BTC balance:', e)
+      }
+    }
   }
-  //TODO: Load balance
+
+  if (walletList.value.length > 0) {
+    selectedIndex.value = walletList.value[0].index
+  }
   isLoadingWalletList.value = false
 }
 

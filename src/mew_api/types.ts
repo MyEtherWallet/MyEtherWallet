@@ -189,3 +189,11 @@ export type GetWebSwapOndoSupportingAssetsResponse =
 
 export type GetWebSwapOndoMarketStatusResponse =
   components['schemas']['GetWebSwapOndoMarketStatusResponse']
+
+/** --------------------------
+ * Address Balances (batch)
+ --------------------------*/
+export interface AddressBalanceResponse {
+  address: string
+  value: string
+}
