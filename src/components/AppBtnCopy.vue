@@ -76,7 +76,7 @@ const copyClick = async (payload: MouseEvent) => {
     await navigator.clipboard.writeText(props.copyValue)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,
-      textSecondary: props.copyValue,
+      hash: props.copyValue,
     })
     emit('copy', payload)
   } catch {
