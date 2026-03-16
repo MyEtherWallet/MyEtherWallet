@@ -4,7 +4,7 @@ import { getAPIPath } from '@/utils/constructAPIPath'
 import { throttle } from 'underscore'
 
 const TRADING_RESTRICTED_HELP_URL =
-  'https://help.myetherwallet.com/en/articles/12897302-geographic-restrictions-for-mew'
+  'https://help.myetherwallet.com/en/articles/13641432-restrictions-on-tokenized-stock-trading-in-mew'
 
 const _getMarketStatus = (): Promise<GetWebSwapOndoMarketStatusResponse> => {
   return fetch(getAPIPath(`/v1/web/swap/ondo/status/market`)).then(
