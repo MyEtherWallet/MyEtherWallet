@@ -71,16 +71,7 @@
                 class="font-bold text-s-20 lg:text-s-24 flex items-center gap-1 min-w-0"
               >
                 <span class="flex-none">≈</span>
-                <app-tooltip
-                  v-if="toAmountFormatted.hasMore"
-                  :text="toAmountFormatted.full"
-                  class="truncate"
-                >
-                  <span class="cursor-pointer truncate">{{
-                    toAmountFormatted.truncated
-                  }}</span>
-                </app-tooltip>
-                <span v-else class="truncate">{{
+                <span class="cursor-pointer truncate">{{
                   toAmountFormatted.truncated
                 }}</span>
                 <app-token-symbol
@@ -92,6 +83,12 @@
                   "
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 inline-block align-middle"
                 />
+                <app-tooltip
+                  v-if="toAmountFormatted.hasMore"
+                  :text="toAmountFormatted.full"
+                  class="truncate"
+                >
+                </app-tooltip>
               </div>
               <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
             </div>
@@ -141,30 +138,7 @@
                         class="font-semibold text-s-14 flex items-center gap-1"
                       >
                         <span>~</span>
-                        <app-tooltip
-                          v-if="
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).hasMore
-                          "
-                          :text="
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).full
-                          "
-                        >
-                          <span class="cursor-pointer">
-                            {{
-                              getAmountData(
-                                item.toTokenAmount,
-                                item.quote?.options?.toToken?.decimals,
-                              ).truncated
-                            }}
-                          </span>
-                        </app-tooltip>
-                        <span v-else>
+                        <span>
                           {{
                             getAmountData(
                               item.toTokenAmount,
@@ -172,6 +146,7 @@
                             ).truncated
                           }}
                         </span>
+
                         <app-token-symbol
                           :symbol="
                             item.quote?.options?.toToken?.symbol || 'UNKNOWN'
@@ -186,6 +161,21 @@
                           "
                           class="text-s-14 !font-semibold !leading-p-160 inline-block align-middle"
                         />
+                        <app-tooltip
+                          v-if="
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).hasMore
+                          "
+                          :text="
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).full
+                          "
+                        >
+                        </app-tooltip>
                       </div>
                     </div>
                     <div class="flex items-center gap-2 flex-none ml-auto">
@@ -298,6 +288,7 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
+import { formatFiatValue } from '@/utils/numberFormatHelper'
 
 const { t } = useI18n()
 
@@ -432,28 +423,53 @@ const toAmountFormatted = computed(() => {
     BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
     toToken.value?.decimals ?? 18,
   )
-  const bn = BigNumber(full)
-  const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
-  const decimalPlaces = bn.decimalPlaces()
-  const hasMore = decimalPlaces !== null && decimalPlaces > 4
+
+  const BigNumberVal = BigNumber(full)
+  const decimalPlaces = BigNumberVal.decimalPlaces()
+
+  let truncated = BigNumberVal.toFixed(6) // Limit to 8 decimals for display
+  let hasMore = decimalPlaces !== null && decimalPlaces > 6
+
+  if (BigNumberVal.gte(100000)) {
+    truncated = BigNumberVal.toFixed(0) // No decimals for very large numbers
+    hasMore = decimalPlaces !== null && decimalPlaces > 0
+  } else if (BigNumberVal.gte(10)) {
+    truncated = BigNumberVal.toFixed(2) // 2 decimals for numbers >= 10
+    hasMore = decimalPlaces !== null && decimalPlaces > 2
+  } else if (BigNumberVal.gte(1)) {
+    truncated = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
+    hasMore = decimalPlaces !== null && decimalPlaces > 4
+  }
+
   return { full, truncated, hasMore }
 })
 
 const toAmountFiat = computed(() => {
   const toTokenPrice = toToken.value?.price || '0'
-  return BigNumber(toAmount.value)
-    .multipliedBy(toTokenPrice)
-    .decimalPlaces(2)
-    .toString()
+  const value = BigNumber(toAmount.value).multipliedBy(toTokenPrice)
+  return formatFiatValue(value.toString()).value
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
   if (!amount) return { full: '0', truncated: '0', hasMore: false }
   const full = formatUnits(BigInt(amount.toString()), decimals || 18)
   const bn = BigNumber(full)
-  const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
   const decimalPlaces = bn.decimalPlaces()
-  const hasMore = decimalPlaces !== null && decimalPlaces > 4
+
+  let truncated = bn.toFixed(6)
+  let hasMore = decimalPlaces !== null && decimalPlaces > 6
+
+  if (bn.gte(100000)) {
+    truncated = bn.toFixed(0)
+    hasMore = decimalPlaces !== null && decimalPlaces > 0
+  } else if (bn.gte(10)) {
+    truncated = bn.toFixed(2)
+    hasMore = decimalPlaces !== null && decimalPlaces > 2
+  } else if (bn.gte(1)) {
+    truncated = bn.toFixed(4)
+    hasMore = decimalPlaces !== null && decimalPlaces > 4
+  }
+
   return { full, truncated, hasMore }
 }
 
