@@ -124,6 +124,7 @@ const {
   balanceWei,
   isWatchOnly,
   hasChainBalance,
+  walletAddress,
 } = storeToRefs(walletStore)
 
 /** ----------------
@@ -384,6 +385,20 @@ watch(
     ) {
       isPristine.value = false
     }
+  },
+)
+
+watch(
+  () => selectedChain.value,
+  () => {
+    resetSendModule()
+  },
+)
+
+watch(
+  () => walletAddress.value,
+  () => {
+    checkAmountForError()
   },
 )
 
