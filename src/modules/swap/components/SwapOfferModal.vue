@@ -418,7 +418,7 @@ const toAmount = computed(() => {
       BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
       toToken.value?.decimals ?? 18,
     ),
-  ).decimalPlaces(4)
+  )
 })
 
 const toAmountFormatted = computed(() => {
