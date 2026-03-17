@@ -73,7 +73,7 @@
               v-model:error="toAmountError"
               :external-loading="toLoadingState"
               :show-balance="false"
-              :tokens="localToTokens"
+              :tokens="filteredToTokens"
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
@@ -354,6 +354,19 @@ const parsedFromTokens = computed<NewTokenInfo[]>(() => {
   return fromTokens.value
 })
 
+const filteredToTokens = computed<NewTokenInfo[]>(() => {
+  if (
+    !fromTokenSelected.value ||
+    selectedChain.value?.name !== selectedToChain.value?.name
+  )
+    return localToTokens.value
+  return localToTokens.value.filter(
+    t =>
+      t.address.toLowerCase() !==
+      fromTokenSelected.value!.address.toLowerCase(),
+  )
+})
+
 const parsedToChains = computed<Chain[]>(() => {
   if (!toChains.value) return []
   if (isBitcoinChain.value) {
@@ -599,6 +612,7 @@ const handleEvmTransaction = async (quoteId: string) => {
       const broadcast = txCtx.broadcastTransaction(
         signedTx?.signed as unknown as HexPrefixedString,
       )
+      await new Promise(resolve => setTimeout(resolve, 1000))
       if (isLast) lastTxPromise = broadcast
     }
   }
@@ -871,12 +885,19 @@ const setToToken = () => {
     }
   } else if (toTokenSelected.value) {
     // Token already selected and no stored values - keep selection if it exists in list
+    const sameNetworks = currentToChain.name === selectedChain.value?.name
     const existsInList = localToTokens.value.find(
       t =>
         t.address.toLowerCase() ===
         toTokenSelected.value?.address?.toLowerCase(),
     )
-    if (existsInList) {
+    const collidesWithFrom =
+      sameNetworks &&
+      fromTokenSelected.value &&
+      toTokenSelected.value.address.toLowerCase() ===
+        fromTokenSelected.value.address.toLowerCase()
+
+    if (existsInList && !collidesWithFrom) {
       // Update with fresh data but keep selection
       toTokenSelected.value = existsInList as NewTokenInfo
       return
@@ -1148,6 +1169,37 @@ watch(
 watch(
   () => fromTokens.value,
   () => setFromToken(),
+  { deep: true },
+)
+
+// When from-token changes on same chain, auto-switch to-token if it matches
+watch(
+  () => fromTokenSelected.value?.address,
+  () => {
+    if (
+      fromTokenSelected.value &&
+      toTokenSelected.value &&
+      selectedChain.value?.name === selectedToChain.value?.name &&
+      fromTokenSelected.value.address.toLowerCase() ===
+        toTokenSelected.value.address.toLowerCase()
+    ) {
+      const alt = filteredToTokens.value[0]
+      toTokenSelected.value = alt || null
+    }
+  },
+)
+
+// Handle To Tokens Updates (e.g. swap re-init on chain change)
+watch(
+  () => toTokens.value,
+  () => setToToken(),
+  { deep: true },
+)
+
+// Refresh localToTokens balances when wallet balances update
+watch(
+  () => [tokens.value, balanceWei.value],
+  () => setToToken(),
   { deep: true },
 )
 

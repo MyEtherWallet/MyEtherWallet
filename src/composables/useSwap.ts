@@ -48,6 +48,7 @@ export interface QuoteParam {
   amount: string | number
   fromToken: NewTokenInfo
   toToken: NewTokenInfo
+  rank?: number
 }
 
 const NetworkNotSupportedError = new Error(
