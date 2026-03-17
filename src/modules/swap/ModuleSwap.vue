@@ -491,14 +491,13 @@ const isSwapDisabled = computed(
 const getTokenBalanceParams = (token: NewTokenInfo) => {
   const isMainToken = token.address === MAIN_TOKEN_CONTRACT
   const balance = token.balance || '0'
-
+  const baseTokenBalance = walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)
   const baseNetworkBalance = parseUnits(
-    walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-    18,
+    baseTokenBalance?.balance || '0',
+    baseTokenBalance?.decimals || 18,
   )
 
   const baseBalance = isMainToken ? baseNetworkBalance : BigInt(balance)
-
   // For calculating remaining balance (native logic)
   const totalBalance =
     isMainToken && isWalletConnected.value
