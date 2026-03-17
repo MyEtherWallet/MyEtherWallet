@@ -739,7 +739,9 @@ const swapForEvm = async () => {
       value: tx.value || '0x0',
       action: dataTxAction(tx) as EvmTransactionAction,
     }))
-
+    if (!swapInfo.value) {
+      throw new Error('Pair currently not available')
+    }
     const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
     swapGasFeeQuote.value = res || undefined
     bestOfferSelectionOpen.value = true
