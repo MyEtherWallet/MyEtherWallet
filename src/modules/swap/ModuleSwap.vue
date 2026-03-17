@@ -87,8 +87,12 @@
                   : 'mt-3'
               "
             />
-            <div class="pt-4" v-if="!isSwapView && isCrossChain"></div>
+            <div
+              class="pt-4"
+              v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
+            ></div>
             <address-input
+              v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
               v-model:adr-input="userToAddress"
               :resolved-address="toAddress"
               :found-nick-name="foundNickName"
@@ -96,7 +100,6 @@
               :network="selectedToChain"
               :is-pristine="isPristine"
               @validate:address="validateToAddress"
-              v-if="!isSwapView && isCrossChain"
             />
           </div>
         </div>
