@@ -72,7 +72,7 @@
               >
                 <span class="flex-none">≈</span>
                 <span class="cursor-pointer truncate">{{
-                  toAmountFormatted.truncated
+                  toAmountFormatted.value
                 }}</span>
                 <app-token-symbol
                   :symbol="toToken?.symbol || 'UNKNOWN'"
@@ -84,8 +84,8 @@
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 inline-block align-middle"
                 />
                 <app-tooltip
-                  v-if="toAmountFormatted.hasMore"
-                  :text="toAmountFormatted.full"
+                  v-if="toAmountFormatted.tooltipText"
+                  :text="toAmountFormatted.tooltipText"
                   class="truncate"
                 >
                 </app-tooltip>
@@ -143,7 +143,7 @@
                             getAmountData(
                               item.toTokenAmount,
                               item.quote?.options?.toToken?.decimals,
-                            ).truncated
+                            ).value
                           }}
                         </span>
 
@@ -166,13 +166,13 @@
                             getAmountData(
                               item.toTokenAmount,
                               item.quote?.options?.toToken?.decimals,
-                            ).hasMore
+                            ).tooltipText
                           "
                           :text="
                             getAmountData(
                               item.toTokenAmount,
                               item.quote?.options?.toToken?.decimals,
-                            ).full
+                            ).tooltipText
                           "
                         >
                         </app-tooltip>
@@ -288,7 +288,10 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import {
+  formatFiatValue,
+  formatFloatingPointValue,
+} from '@/utils/numberFormatHelper'
 
 const { t } = useI18n()
 
@@ -415,7 +418,7 @@ const toAmount = computed(() => {
       BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
       toToken.value?.decimals ?? 18,
     ),
-  ).decimalPlaces(4)
+  )
 })
 
 const toAmountFormatted = computed(() => {
@@ -425,23 +428,7 @@ const toAmountFormatted = computed(() => {
   )
 
   const BigNumberVal = BigNumber(full)
-  const decimalPlaces = BigNumberVal.decimalPlaces()
-
-  let truncated = BigNumberVal.toFixed(6) // Limit to 8 decimals for display
-  let hasMore = decimalPlaces !== null && decimalPlaces > 6
-
-  if (BigNumberVal.gte(100000)) {
-    truncated = BigNumberVal.toFixed(0) // No decimals for very large numbers
-    hasMore = decimalPlaces !== null && decimalPlaces > 0
-  } else if (BigNumberVal.gte(10)) {
-    truncated = BigNumberVal.toFixed(2) // 2 decimals for numbers >= 10
-    hasMore = decimalPlaces !== null && decimalPlaces > 2
-  } else if (BigNumberVal.gte(1)) {
-    truncated = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
-    hasMore = decimalPlaces !== null && decimalPlaces > 4
-  }
-
-  return { full, truncated, hasMore }
+  return formatFloatingPointValue(BigNumberVal)
 })
 
 const toAmountFiat = computed(() => {
@@ -451,26 +438,9 @@ const toAmountFiat = computed(() => {
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
-  if (!amount) return { full: '0', truncated: '0', hasMore: false }
+  if (!amount) return { value: '0' }
   const full = formatUnits(BigInt(amount.toString()), decimals || 18)
-  const bn = BigNumber(full)
-  const decimalPlaces = bn.decimalPlaces()
-
-  let truncated = bn.toFixed(6)
-  let hasMore = decimalPlaces !== null && decimalPlaces > 6
-
-  if (bn.gte(100000)) {
-    truncated = bn.toFixed(0)
-    hasMore = decimalPlaces !== null && decimalPlaces > 0
-  } else if (bn.gte(10)) {
-    truncated = bn.toFixed(2)
-    hasMore = decimalPlaces !== null && decimalPlaces > 2
-  } else if (bn.gte(1)) {
-    truncated = bn.toFixed(4)
-    hasMore = decimalPlaces !== null && decimalPlaces > 4
-  }
-
-  return { full, truncated, hasMore }
+  return formatFloatingPointValue(BigNumber(full))
 }
 
 const getPercentageDiff = (amount: BN, decimals: number) => {

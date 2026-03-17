@@ -96,10 +96,6 @@
                 </div>
                 <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
               </div>
-              <check-icon
-                v-if="chain.name === selectedChain?.name"
-                class="w-6 h-6 text-[#2F80ED]"
-              />
             </div>
           </div>
         </div>
