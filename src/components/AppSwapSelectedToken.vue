@@ -324,11 +324,21 @@ const scrollContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
-  if (tokens.value.length > 0) setSelectedToken(tokens.value[0])
   if (!props.isFromView || !isWalletConnected.value) {
-    activeSortValue.value = SortValueString.PRICE
+    activeSortValue.value = SortValueString.RANK
   }
 })
+
+// Set default token to the top of the sorted list on network change
+watch(
+  () => props.networkName,
+  () => {
+    if (tokens.value.length > 0) {
+      const top = searchResults.value[0]
+      if (top) emit('update:selectedToken', top)
+    }
+  },
+)
 
 watch(
   () => showAllTokens.value,
@@ -347,6 +357,7 @@ const paginatedTokens: Ref<NewTokenInfo[]> = computed(() => {
  *   Search & Sort
  * -------------------*/
 enum SortValueString {
+  RANK = 'Rank',
   NAME = 'Name',
   SYMBOL = 'Symbol',
   PRICE = 'Price',
@@ -357,6 +368,10 @@ enum SortValueString {
 const sortOptions = computed(() => {
   const shared = [
     {
+      value: SortValueString.RANK,
+      label: t('common.rank'),
+    },
+    {
       value: SortValueString.NAME,
       label: t('common.name'),
     },
@@ -365,7 +380,7 @@ const sortOptions = computed(() => {
       label: t('common.symbol'),
     },
   ]
-  if (props.isFromView && isWalletConnected.value) {
+  if (isWalletConnected.value) {
     return [
       ...shared,
       {
@@ -392,8 +407,8 @@ enum SortDirection {
   DESC = 'desc',
 }
 
-const activeSortValue = ref<SortValueString>(SortValueString.USD)
-const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
+const activeSortValue = ref<SortValueString>(SortValueString.RANK)
+const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
@@ -404,6 +419,7 @@ const setActiveSort = (value: SortValueString) => {
   } else {
     activeSortValue.value = value
     const isNumericSort = [
+      SortValueString.RANK,
       SortValueString.PRICE,
       SortValueString.USD,
       SortValueString.BALANCE,
@@ -416,10 +432,11 @@ const setActiveSort = (value: SortValueString) => {
 
 interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
+  rank: number
 }
 
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
-  const allItems = tokens.value.map(token => {
+  const allItems = tokens.value.map((token, index) => {
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(
         BigNumber(
@@ -433,6 +450,7 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
+      rank: index,
     }
   })
 
@@ -440,6 +458,7 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     SortValueString,
     { key: keyof TokenBalanceWithUsd; type: 'string' | 'number' }
   > = {
+    [SortValueString.RANK]: { key: 'rank', type: 'number' },
     [SortValueString.NAME]: { key: 'name', type: 'string' },
     [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
     [SortValueString.PRICE]: { key: 'price', type: 'number' },
