@@ -599,6 +599,7 @@ const handleEvmTransaction = async (quoteId: string) => {
       const broadcast = txCtx.broadcastTransaction(
         signedTx?.signed as unknown as HexPrefixedString,
       )
+      await new Promise(resolve => setTimeout(resolve, 1000))
       if (isLast) lastTxPromise = broadcast
     }
   }
