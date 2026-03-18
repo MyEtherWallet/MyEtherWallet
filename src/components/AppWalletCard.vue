@@ -169,6 +169,8 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { ToastType } from '@/types/notification'
+import * as Sentry from '@sentry/vue'
+
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -210,11 +212,12 @@ const copyClick = async () => {
       text: `${t('common.copied_to_clipboard')}`,
       hash: walletAddress.value,
     })
-  } catch {
+  } catch (err) {
     toastStore.addToastMessage({
       text: t('common.copy_failed'),
       type: ToastType.Error,
     })
+    Sentry.captureException(err)
   }
 }
 

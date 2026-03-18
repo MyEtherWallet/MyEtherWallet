@@ -63,6 +63,7 @@ import {
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 import { onMounted, ref } from 'vue'
+import { captureException } from '@sentry/vue'
 
 const props = defineProps<{
   wallet: WalletConfig
@@ -105,7 +106,13 @@ const resolveImg = async (_img: () => Promise<string>) => {
     img.value = image
     isLoadedImg.value = true
   } catch (error) {
-    console.error('Error loading image: ', error)
+    captureException(error, {
+      extra: {
+        title: 'BTN WALLET: Error loading wallet image',
+        walletName: props.wallet.name,
+        errorMessage: error,
+      },
+    })
     return ''
   }
 }

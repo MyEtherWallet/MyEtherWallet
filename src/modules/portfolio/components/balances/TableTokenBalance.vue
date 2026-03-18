@@ -618,6 +618,7 @@ import {
   formatFloatingPointValue,
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
+import { captureException } from '@sentry/vue'
 
 // Types & Routes
 import type {
@@ -809,7 +810,13 @@ watch(
             token.address,
           )
         } catch (e) {
-          console.error('Error fetching custom token balance:', e)
+          captureException(e, {
+            extra: {
+              title: 'Error fetching custom token balance',
+              tokenAddress: token.address,
+              chainId: selectedChain.value?.chainID,
+            },
+          })
         }
       }
     }

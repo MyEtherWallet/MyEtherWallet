@@ -4,6 +4,10 @@ import BigNumber from 'bignumber.js'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { MAIN_TOKEN_CONTRACT, useWalletStore } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
+import { captureException } from '@sentry/vue'
+import Configs from '@/configs'
+
+const isDevMode = Configs.IS_DEV_MODE
 
 interface UseTradeValidationOptions {
   fromTokenSelected: Ref<NewTokenInfo | null>
@@ -138,9 +142,18 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
             symbol: fromTokenSelected.value.symbol,
           })
         }
-      } catch {
-        // If parsing fails, don't show balance error
-        console.error('Error parsing amount for balance check')
+      } catch (e) {
+        if (isDevMode) {
+          console.error('Error parsing amount for balance check')
+        } else {
+          captureException(e, {
+            extra: {
+              title: 'TRADE: Error parsing amount for balance check',
+              amount: fromAmount.value,
+              tokenSymbol: fromTokenSelected.value.symbol,
+            },
+          })
+        }
       }
     }
 

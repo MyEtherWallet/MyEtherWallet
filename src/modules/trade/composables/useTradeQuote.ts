@@ -4,6 +4,10 @@ import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
+import { captureException } from '@sentry/vue'
+import Configs from '@/configs'
+
+const isDevMode = Configs.IS_DEV_MODE
 
 interface QuoteData {
   startAmount: bigint
@@ -116,6 +120,16 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       generalError.value = (e as Error).message || 'Failed to fetch quote'
       toAmount.value = '0'
+      if (isDevMode) {
+        console.error('Error fetching quote:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'TRADE: Error fetching quote',
+            errorMessage: generalError.value,
+          },
+        })
+      }
     } finally {
       isLoadingQuote.value = false
     }

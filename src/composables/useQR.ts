@@ -1,5 +1,6 @@
 import QRCodeStyling, { type DrawType, type DotType } from 'qr-code-styling'
 import { ref } from 'vue'
+import { captureException } from '@sentry/vue'
 
 export const useQR = () => {
   /** -------------------
@@ -60,7 +61,15 @@ export const useQR = () => {
         qrCodeStyling.append(qrCode.value)
       }
     } catch (error) {
-      console.error('Failed to append QR Code:', error)
+      captureException(error, {
+        extra: {
+          title: 'QR CODE: Error setting QR code',
+          data,
+          width,
+          height,
+          image,
+        },
+      })
     }
   }
   return {
