@@ -47,10 +47,10 @@ if (dsn) {
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: [
       'localhost',
-      /^https?:\/\/app\.myetherwallet\.com/,
-      /^https?:\/\/www\.app\.myetherwallet\.com/,
-      /^https?:\/\/www\.app\.beta\.myetherwallet\.com/,
-      /^https?:\/\/app\.beta\.myetherwallet\.com/,
+      /^https?:\/\/app\.myetherwallet\.com(?:\/|$)/,
+      /^https?:\/\/www\.app\.myetherwallet\.com(?:\/|$)/,
+      /^https?:\/\/www\.app\.beta\.myetherwallet\.com(?:\/|$)/,
+      /^https?:\/\/app\.beta\.myetherwallet\.com(?:\/|$)/,
     ],
     // Session Replay
     replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
