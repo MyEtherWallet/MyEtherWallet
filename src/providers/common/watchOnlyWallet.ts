@@ -29,17 +29,20 @@ class WatchOnlyWallet implements WalletInterface {
   chain: Chain
   walletType: WalletType
   chainType: ChainType
+  walletName: string
 
   constructor(
     address: string,
     chain: Chain,
     walletType: WalletType,
     chainType: ChainType,
+    walletName: string,
   ) {
     this.address = address
     this.chain = chain
     this.walletType = walletType
     this.chainType = chainType
+    this.walletName = walletName
   }
   updateChainId: (chainId: string) => void = () => {}
   getWalletInstance?: (() => HWwalletManager | null) | undefined
@@ -152,6 +155,9 @@ class WatchOnlyWallet implements WalletInterface {
   }
   getWalletType(): WalletType {
     return this.walletType
+  }
+  getWalletName(): string {
+    return this.walletName
   }
   getProvider(): string {
     const chainStore = useChainsStore()

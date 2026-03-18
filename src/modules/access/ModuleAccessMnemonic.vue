@@ -383,7 +383,7 @@ const access = async () => {
 
   await wallet.value?.getWallet(selectedIndex.value).then(wallet => {
     if (wallet) {
-      setWallet(wallet)
+      setWallet(wallet, 'mnemonic')
       addWallet(walletConfigs.mnemonic)
     }
   })

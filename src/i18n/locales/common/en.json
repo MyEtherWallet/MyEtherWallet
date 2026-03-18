@@ -49,6 +49,7 @@
     "select_token": "select token",
     "name": "name",
     "symbol": "symbol",
+    "rank": "rank",
     "price": "price",
     "usd_balance": "USD Balance",
     "fee": "Fee",

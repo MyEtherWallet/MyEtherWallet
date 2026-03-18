@@ -30,30 +30,35 @@
         </template>
       </div>
     </button>
-    <div class="min-h-6 flex items-center px-4 mt-1">
+    <div
+      v-if="!(isLoadingFees || isLoadingBalances) && isLoadedChainsData"
+      class="min-h-6 flex items-center px-4 mt-1"
+    >
       <transition name="fade" mode="out-in">
         <div
           v-if="isWalletConnected && gasFeeError && gasFeeError !== ''"
           class="text-error text-s-12 leading-tight"
         >
           <!-- TODO Add PROPER LINK -->
-          <p v-if="isNotEnoughBalance">
-            {{
-              $t('common.not_enough_balance_to_cover_fee', {
-                symbol: selectedChain?.currencyName || 'ETH',
-              })
-            }}
-            <a
-              href="https://ccswap.myetherwallet.com/"
-              target="_blank"
-              class="text-primary cursor-pointer underline underline-offset-2"
-              >{{
-                $t('common.buy_more', {
+          <div v-if="isNotEnoughBalance">
+            <p v-if="hasChainBalance">
+              {{
+                $t('common.not_enough_balance_to_cover_fee', {
                   symbol: selectedChain?.currencyName || 'ETH',
                 })
-              }}</a
-            >
-          </p>
+              }}
+              <a
+                href="https://ccswap.myetherwallet.com/"
+                target="_blank"
+                class="text-primary cursor-pointer underline underline-offset-2"
+                >{{
+                  $t('common.buy_more', {
+                    symbol: selectedChain?.currencyName || 'ETH',
+                  })
+                }}</a
+              >
+            </p>
+          </div>
           <p v-else>{{ gasFeeError }}</p>
         </div>
       </transition>
@@ -201,8 +206,13 @@ const {
   isBitcoinChain,
 } = storeToRefs(chainStore)
 const walletStore = useWalletStore()
-const { isWalletConnected, walletAddress, balanceWei } =
-  storeToRefs(walletStore)
+const {
+  isWalletConnected,
+  walletAddress,
+  balanceWei,
+  hasChainBalance,
+  isLoadingBalances,
+} = storeToRefs(walletStore)
 
 const txData = computed<EstimatesRequestBody | GetBtcTransactionEstimateBody>(
   (): EstimatesRequestBody | GetBtcTransactionEstimateBody => {
@@ -297,7 +307,7 @@ onFetchError(e => {
     if (aborted.value || e.message.toLowerCase().includes('abort')) {
       return
     }
-    gasFeeError.value = e.message.includes('insufficient funds')
+    gasFeeError.value = e.message.toLowerCase().includes('insufficient funds')
       ? NOT_ENOUGH_BALANCE
       : e.message
   } else {

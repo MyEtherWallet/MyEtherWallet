@@ -7,6 +7,7 @@ interface AddressKeyValue {
   walletName: string
   chain: Chain
   type: ChainType
+  walletType: string
 }
 
 interface RecentAddress {
@@ -29,10 +30,17 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   const addWallet = (
     address: string,
     chain: Chain,
-    walletName: string,
+    walletType: string,
     type: ChainType,
+    walletName: string,
   ) => {
-    const addressKeyMap: AddressKeyValue = { walletName, chain, address, type }
+    const addressKeyMap: AddressKeyValue = {
+      walletType,
+      walletName,
+      chain,
+      address,
+      type,
+    }
 
     if (watchOnlyAddresses.value[chain.type]) {
       // Check if address already exists

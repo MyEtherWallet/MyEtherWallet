@@ -54,19 +54,16 @@
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p
-              class="text-s-12 font-bold ml-3"
-              :class="{ 'mb-1': !isSwapView }"
-            >
-              You are buying
-            </p>
+            <p class="text-s-12 font-bold ml-3">You are buying</p>
             <select-chain-for-app
               :can-store="false"
-              :passed-chains="toChains"
+              :passed-chains="parsedToChains"
               :preselected-chain="selectedToChain"
               :class="{
                 hidden:
-                  isSwapView && selectedChain?.name === selectedToChain?.name,
+                  isSwapView &&
+                  selectedChain?.name === selectedToChain?.name &&
+                  !isBitcoinChain,
               }"
               @update:selected-chain="setToChain"
             />
@@ -76,16 +73,26 @@
               v-model:error="toAmountError"
               :external-loading="toLoadingState"
               :show-balance="false"
-              :tokens="parsedToTokens"
+              :tokens="filteredToTokens"
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
               :network-name="selectedToChain?.name"
               :is-pristine="isPristine"
-              :class="isSwapView ? 'mt-1' : 'mt-3'"
+              :class="
+                isSwapView &&
+                selectedChain?.name === selectedToChain?.name &&
+                !isBitcoinChain
+                  ? 'mt-1'
+                  : 'mt-3'
+              "
             />
-            <div class="pt-4" v-if="!isSwapView && isCrossChain"></div>
+            <div
+              class="pt-4"
+              v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
+            ></div>
             <address-input
+              v-if="(!isSwapView && isCrossChain) || isBitcoinChain"
               v-model:adr-input="userToAddress"
               :resolved-address="toAddress"
               :found-nick-name="foundNickName"
@@ -93,7 +100,6 @@
               :network="selectedToChain"
               :is-pristine="isPristine"
               @validate:address="validateToAddress"
-              v-if="!isSwapView && isCrossChain"
             />
           </div>
         </div>
@@ -140,20 +146,27 @@
           {{ generalError }}
         </p>
       </div>
-
       <app-base-button
-        :class="['w-full max-w-[340px]', blurClass]"
-        v-if="isWalletConnected && !isWatchOnly"
-        :disabled="isSwapDisabled"
-        @click="swapButton"
+        v-if="!isWalletConnected || isWatchOnly"
+        :class="['mx-auto w-full max-w-[340px]', blurClass]"
+        @click="connectWalletForSwap"
       >
-        {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
+        {{ t('connect_wallet') }}</app-base-button
       >
-      <div :class="['mx-auto w-full max-w-[340px]', blurClass]" v-else>
-        <app-base-button class="w-full" @click="connectWalletForSwap">
-          {{ t('connect_wallet') }}</app-base-button
-        >
+      <div v-else :class="['w-full max-w-[340px]', blurClass]">
+        <transition name="fade" mode="out-in">
+          <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+          <app-base-button
+            v-else
+            :disabled="isSwapDisabled"
+            @click="swapButton"
+            class="w-full"
+          >
+            {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
+          >
+        </transition>
       </div>
+
       <app-need-help
         title="Need help swaping?"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
@@ -207,6 +220,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
+import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
@@ -225,7 +239,6 @@ import {
   supportedSwapEnums,
 } from '@/providers/ethereum/chainToEnum'
 import { formatUnits, parseUnits } from 'viem'
-import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import dataTxAction from '@/utils/dataTxAction'
 import {
   type Chain,
@@ -270,6 +283,7 @@ const {
   isWatchOnly,
   tokens,
   balanceWei,
+  hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, isBitcoinChain, chains } = storeToRefs(chainsStore)
 const { hasSwapValues, swapValues } = storeToRefs(inputStore)
@@ -325,30 +339,40 @@ const isCrossChain = computed(
   () => selectedChain.value?.type !== selectedToChain.value?.type,
 )
 
+const isSameToken = computed(() => {
+  if (!fromTokenSelected.value || !toTokenSelected.value) return false
+  return (
+    selectedChain.value?.name === selectedToChain.value?.name &&
+    fromTokenSelected.value.address.toLowerCase() ===
+      toTokenSelected.value.address.toLowerCase()
+  )
+})
+
 const parsedFromTokens = computed<NewTokenInfo[]>(() => {
   if (!fromTokens.value || !selectedChain.value || !selectedToChain.value)
     return []
-  if (selectedChain.value.name !== selectedToChain.value.name) {
-    return fromTokens.value
-  }
-  const _tokens = fromTokens.value
-  return _tokens.filter(
-    token =>
-      token.address.toLowerCase() !==
-      toTokenSelected.value?.address?.toLowerCase(),
+  return fromTokens.value
+})
+
+const filteredToTokens = computed<NewTokenInfo[]>(() => {
+  if (
+    !fromTokenSelected.value ||
+    selectedChain.value?.name !== selectedToChain.value?.name
+  )
+    return localToTokens.value
+  return localToTokens.value.filter(
+    t =>
+      t.address.toLowerCase() !==
+      fromTokenSelected.value!.address.toLowerCase(),
   )
 })
-const parsedToTokens = computed<NewTokenInfo[]>(() => {
-  if (!selectedChain.value || !selectedToChain.value) return []
 
-  if (selectedChain.value.name !== selectedToChain.value.name) {
-    return localToTokens.value
+const parsedToChains = computed<Chain[]>(() => {
+  if (!toChains.value) return []
+  if (isBitcoinChain.value) {
+    return toChains.value.filter(chain => chain.name !== 'BITCOIN')
   }
-  return localToTokens.value.filter(
-    token =>
-      token.address.toLowerCase() !==
-      fromTokenSelected.value?.address?.toLowerCase(),
-  )
+  return toChains.value
 })
 
 const userAddress = computed(
@@ -473,7 +497,9 @@ const isSwapDisabled = computed(
       toAmount.value !== '0'
     ) ||
     (isCrossChain.value && toAddressError.value !== '') ||
-    isLoadingQuotes.value,
+    isLoadingQuotes.value ||
+    !hasChainBalance.value ||
+    isSameToken.value,
 )
 
 // --- Helper Methods ---
@@ -481,14 +507,13 @@ const isSwapDisabled = computed(
 const getTokenBalanceParams = (token: NewTokenInfo) => {
   const isMainToken = token.address === MAIN_TOKEN_CONTRACT
   const balance = token.balance || '0'
-
+  const baseTokenBalance = walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)
   const baseNetworkBalance = parseUnits(
-    walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)?.balance || '0',
-    18,
+    baseTokenBalance?.balance || '0',
+    baseTokenBalance?.decimals || 18,
   )
 
   const baseBalance = isMainToken ? baseNetworkBalance : BigInt(balance)
-
   // For calculating remaining balance (native logic)
   const totalBalance =
     isMainToken && isWalletConnected.value
@@ -587,6 +612,7 @@ const handleEvmTransaction = async (quoteId: string) => {
       const broadcast = txCtx.broadcastTransaction(
         signedTx?.signed as unknown as HexPrefixedString,
       )
+      await new Promise(resolve => setTimeout(resolve, 1000))
       if (isLast) lastTxPromise = broadcast
     }
   }
@@ -713,7 +739,9 @@ const swapForEvm = async () => {
       value: tx.value || '0x0',
       action: dataTxAction(tx) as EvmTransactionAction,
     }))
-
+    if (!swapInfo.value) {
+      throw new Error('Pair currently not available')
+    }
     const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
     swapGasFeeQuote.value = res || undefined
     bestOfferSelectionOpen.value = true
@@ -731,7 +759,8 @@ const swapButton = () => {
 const qoutesError = ref<boolean>(false)
 
 const fetchQuotes = async () => {
-  if (!fromTokenSelected.value || !toTokenSelected.value) return
+  if (!fromTokenSelected.value || !toTokenSelected.value || isSameToken.value)
+    return
   isLoadingQuotes.value = true
   providers.value = []
   selectedQuote.value = undefined
@@ -739,7 +768,6 @@ const fetchQuotes = async () => {
   generalError.value = ''
   toAmount.value = '0'
   qoutesError.value = false
-
   try {
     const quotes = await getQuote({
       fromToken: fromTokenSelected.value,
@@ -789,6 +817,7 @@ const setToChain = (chain: Chain) => {
   } else if (chain) {
     selectedToChain.value = chain
   }
+  toAmount.value = ''
   setToToken()
 }
 
@@ -813,8 +842,7 @@ const setToToken = () => {
   localToTokens.value = allToTokensRaw.map((token: TokenType) => {
     let tokenBalance = '0'
     let tokenPrice = token.price
-    const sameNetworks = currentToChain.chainID === selectedChain.value?.chainID
-
+    const sameNetworks = currentToChain.name === selectedChain.value?.name
     if (sameNetworks && (tokens.value.length > 0 || balanceWei.value !== '0')) {
       if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
         tokenBalance = balanceWei.value
@@ -859,12 +887,19 @@ const setToToken = () => {
     }
   } else if (toTokenSelected.value) {
     // Token already selected and no stored values - keep selection if it exists in list
+    const sameNetworks = currentToChain.name === selectedChain.value?.name
     const existsInList = localToTokens.value.find(
       t =>
         t.address.toLowerCase() ===
         toTokenSelected.value?.address?.toLowerCase(),
     )
-    if (existsInList) {
+    const collidesWithFrom =
+      sameNetworks &&
+      fromTokenSelected.value &&
+      toTokenSelected.value.address.toLowerCase() ===
+        fromTokenSelected.value.address.toLowerCase()
+
+    if (existsInList && !collidesWithFrom) {
       // Update with fresh data but keep selection
       toTokenSelected.value = existsInList as NewTokenInfo
       return
@@ -876,8 +911,7 @@ const setToToken = () => {
           enkryptEnum as keyof typeof toTokens.value.trending
         ]
       const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
-      const sameNetworks =
-        currentToChain.chainID === selectedChain.value?.chainID
+      const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
         ? candidates.find(
@@ -905,8 +939,7 @@ const setToToken = () => {
           enkryptEnum as keyof typeof toTokens.value.trending
         ]
       const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
-      const sameNetworks =
-        currentToChain.chainID === selectedChain.value?.chainID
+      const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
         ? candidates.find(
@@ -1027,21 +1060,18 @@ watch(
 watch(
   () => [
     fromAmount.value,
-    fromTokenSelected.value,
+    fromTokenSelected.value?.address,
     userAddress.value,
     toAddress.value,
-    toTokenSelected.value,
+    toTokenSelected.value?.address,
   ],
   () => {
     generalError.value = ''
-    const isSameChain =
-      selectedChain.value?.chainID === selectedToChain.value?.chainID
-    const isSameToken =
-      fromTokenSelected.value?.address === toTokenSelected.value?.address
+
     qoutesError.value = false
-    // Auto-switch token if duplicate selected on same chain
-    if (fromTokenSelected.value && isSameToken && isSameChain) {
-      setToToken()
+    if (isSameToken.value) {
+      toAmount.value = ''
+      return
     }
 
     if (
@@ -1070,17 +1100,39 @@ watch(
   { deep: true },
 )
 
+const bestRate = computed(() => {
+  if (providers.value.length === 0) return null
+  return providers.value[0]
+})
+
 // Update To Amount Estimate
 watch(
-  () => providers.value,
+  () => bestRate.value,
   () => {
-    if (providers.value.length > 0 && !fromAmountError.value) {
-      const best = providers.value[0]
+    if (
+      bestRate.value &&
+      providers.value.length > 0 &&
+      !fromAmountError.value
+    ) {
       const val = formatUnits(
-        BigInt(best.toTokenAmount.toString()),
+        BigInt(bestRate.value.toTokenAmount.toString()),
         toTokenSelected.value?.decimals || 18,
       )
-      toAmount.value = `≈ ${formatFloatingPointValue(val).value}`
+
+      const BigNumberVal = BigNumber(val)
+      if (BigNumberVal.gte(100000)) {
+        toAmount.value = BigNumberVal.toFixed(0) // No decimals for very large numbers
+        return
+      }
+      if (BigNumberVal.gte(10)) {
+        toAmount.value = BigNumberVal.toFixed(2) // 2 decimals for numbers >= 10
+        return
+      }
+      if (BigNumberVal.gte(1)) {
+        toAmount.value = BigNumberVal.toFixed(4) // 4 decimals for numbers between 0 and 10
+        return
+      }
+      toAmount.value = BigNumberVal.toFixed(6) // Limit to 8 decimals for display
     }
   },
 )
@@ -1097,10 +1149,59 @@ watch(
   { immediate: true },
 )
 
+// Reset toChain and inputs when global chain changes in swap view
+watch(
+  () => selectedChain.value?.name,
+  (newName, oldName) => {
+    if (!newName || !oldName || newName === oldName) return
+
+    if (newName === 'BITCOIN') {
+      const eth = chains.value.find(c => c.name === 'ETHEREUM')
+      if (eth) selectedToChain.value = eth
+    } else {
+      if (isSwapView.value) {
+        selectedToChain.value = selectedChain.value!
+      }
+    }
+    clearValues()
+  },
+)
+
 // Handle From Tokens Updates
 watch(
   () => fromTokens.value,
   () => setFromToken(),
+  { deep: true },
+)
+
+// When from-token changes on same chain, auto-switch to-token if it matches
+watch(
+  () => fromTokenSelected.value?.address,
+  () => {
+    if (
+      fromTokenSelected.value &&
+      toTokenSelected.value &&
+      selectedChain.value?.name === selectedToChain.value?.name &&
+      fromTokenSelected.value.address.toLowerCase() ===
+        toTokenSelected.value.address.toLowerCase()
+    ) {
+      const alt = filteredToTokens.value[0]
+      toTokenSelected.value = alt || null
+    }
+  },
+)
+
+// Handle To Tokens Updates (e.g. swap re-init on chain change)
+watch(
+  () => toTokens.value,
+  () => setToToken(),
+  { deep: true },
+)
+
+// Refresh localToTokens balances when wallet balances update
+watch(
+  () => [tokens.value, balanceWei.value],
+  () => setToToken(),
   { deep: true },
 )
 
@@ -1123,6 +1224,9 @@ onBeforeMount(async () => {
   if (hasSwapValues.value) {
     isPristine.value = false // Restoring values means form is not pristine
     selectedToChain.value = swapValues.value.toChain
+  }
+  if (isSwapView.value && !hasSwapValues.value && !isBitcoinChain.value) {
+    selectedToChain.value = selectedChain.value
   }
 
   await nextTick()

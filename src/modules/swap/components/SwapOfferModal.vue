@@ -71,17 +71,8 @@
                 class="font-bold text-s-20 lg:text-s-24 flex items-center gap-1 min-w-0"
               >
                 <span class="flex-none">≈</span>
-                <app-tooltip
-                  v-if="toAmountFormatted.hasMore"
-                  :text="toAmountFormatted.full"
-                  class="truncate"
-                >
-                  <span class="cursor-pointer truncate">{{
-                    toAmountFormatted.truncated
-                  }}</span>
-                </app-tooltip>
-                <span v-else class="truncate">{{
-                  toAmountFormatted.truncated
+                <span class="cursor-pointer truncate">{{
+                  toAmountFormatted.value
                 }}</span>
                 <app-token-symbol
                   :symbol="toToken?.symbol || 'UNKNOWN'"
@@ -92,6 +83,12 @@
                   "
                   class="text-s-20 lg:text-s-24 !font-bold !leading-p-100 inline-block align-middle"
                 />
+                <app-tooltip
+                  v-if="toAmountFormatted.tooltipText"
+                  :text="toAmountFormatted.tooltipText"
+                  class="truncate"
+                >
+                </app-tooltip>
               </div>
               <div class="text-s-12 text-info">≈ ${{ toAmountFiat }}</div>
             </div>
@@ -141,37 +138,15 @@
                         class="font-semibold text-s-14 flex items-center gap-1"
                       >
                         <span>~</span>
-                        <app-tooltip
-                          v-if="
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).hasMore
-                          "
-                          :text="
-                            getAmountData(
-                              item.toTokenAmount,
-                              item.quote?.options?.toToken?.decimals,
-                            ).full
-                          "
-                        >
-                          <span class="cursor-pointer">
-                            {{
-                              getAmountData(
-                                item.toTokenAmount,
-                                item.quote?.options?.toToken?.decimals,
-                              ).truncated
-                            }}
-                          </span>
-                        </app-tooltip>
-                        <span v-else>
+                        <span>
                           {{
                             getAmountData(
                               item.toTokenAmount,
                               item.quote?.options?.toToken?.decimals,
-                            ).truncated
+                            ).value
                           }}
                         </span>
+
                         <app-token-symbol
                           :symbol="
                             item.quote?.options?.toToken?.symbol || 'UNKNOWN'
@@ -186,6 +161,21 @@
                           "
                           class="text-s-14 !font-semibold !leading-p-160 inline-block align-middle"
                         />
+                        <app-tooltip
+                          v-if="
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).tooltipText
+                          "
+                          :text="
+                            getAmountData(
+                              item.toTokenAmount,
+                              item.quote?.options?.toToken?.decimals,
+                            ).tooltipText
+                          "
+                        >
+                        </app-tooltip>
                       </div>
                     </div>
                     <div class="flex items-center gap-2 flex-none ml-auto">
@@ -298,6 +288,10 @@ import { type Chain, type QuotesResponse } from '@/mew_api/types'
 import BN from 'bn.js'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
+import {
+  formatFiatValue,
+  formatFloatingPointValue,
+} from '@/utils/numberFormatHelper'
 
 const { t } = useI18n()
 
@@ -424,7 +418,7 @@ const toAmount = computed(() => {
       BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
       toToken.value?.decimals ?? 18,
     ),
-  ).decimalPlaces(4)
+  )
 })
 
 const toAmountFormatted = computed(() => {
@@ -432,29 +426,21 @@ const toAmountFormatted = computed(() => {
     BigInt(selectedQuote.value?.toTokenAmount.toString() || '0'),
     toToken.value?.decimals ?? 18,
   )
-  const bn = BigNumber(full)
-  const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
-  const decimalPlaces = bn.decimalPlaces()
-  const hasMore = decimalPlaces !== null && decimalPlaces > 4
-  return { full, truncated, hasMore }
+
+  const BigNumberVal = BigNumber(full)
+  return formatFloatingPointValue(BigNumberVal)
 })
 
 const toAmountFiat = computed(() => {
   const toTokenPrice = toToken.value?.price || '0'
-  return BigNumber(toAmount.value)
-    .multipliedBy(toTokenPrice)
-    .decimalPlaces(2)
-    .toString()
+  const value = BigNumber(toAmount.value).multipliedBy(toTokenPrice)
+  return formatFiatValue(value.toString()).value
 })
 
 const getAmountData = (amount: BN, decimals: number) => {
-  if (!amount) return { full: '0', truncated: '0', hasMore: false }
+  if (!amount) return { value: '0' }
   const full = formatUnits(BigInt(amount.toString()), decimals || 18)
-  const bn = BigNumber(full)
-  const truncated = bn.decimalPlaces(4, BigNumber.ROUND_DOWN).toString()
-  const decimalPlaces = bn.decimalPlaces()
-  const hasMore = decimalPlaces !== null && decimalPlaces > 4
-  return { full, truncated, hasMore }
+  return formatFloatingPointValue(BigNumber(full))
 }
 
 const getPercentageDiff = (amount: BN, decimals: number) => {

@@ -26,11 +26,15 @@ export const useWalletStore = defineStore('walletStore', () => {
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
   const isWatchOnly = ref(false)
   const hasMissingBalances = ref(false)
+  const walletName = ref<string>('')
 
   /** -------------------------------
   * The Wallet
   -------------------------------*/
-  const setWallet = async (newWallet: WalletInterface): Promise<void> => {
+  const setWallet = async (
+    newWallet: WalletInterface,
+    _walletName: string = '',
+  ): Promise<void> => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
     if (!isRestricted) {
@@ -41,6 +45,7 @@ export const useWalletStore = defineStore('walletStore', () => {
       }
       wallet.value = newWallet
       setAddress()
+      walletName.value = _walletName
     }
   }
 
@@ -53,12 +58,18 @@ export const useWalletStore = defineStore('walletStore', () => {
         currentRecentAddressList[currentRecentAddressList.length - 1].address,
         currentRecentAddressList[currentRecentAddressList.length - 1].chain,
         currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletName as WalletType,
+          .walletType as WalletType,
         currentRecentAddressList[currentRecentAddressList.length - 1].type,
+        currentRecentAddressList[currentRecentAddressList.length - 1]
+          .walletName,
       )
       wallet.value = null
       walletAddress.value = null
-      setWallet(newWallet)
+      setWallet(
+        newWallet,
+        currentRecentAddressList[currentRecentAddressList.length - 1]
+          .walletName,
+      )
     } else {
       wallet.value = null
       walletAddress.value = null
@@ -91,6 +102,7 @@ export const useWalletStore = defineStore('walletStore', () => {
         selectedChain.value!,
         wallet.value.getWalletType(),
         selectedChain.value!.type,
+        walletName.value,
       )
     }
   }
@@ -104,6 +116,10 @@ export const useWalletStore = defineStore('walletStore', () => {
   const chainStore = useChainsStore()
   const { selectedChain, isEvmChain } = storeToRefs(chainStore)
 
+  const hasChainBalance = computed(() => {
+    const balanceBN = new BigNumber(balanceWei.value || '0')
+    return balanceBN.gt(0)
+  })
   // Watch for chain changes and call changeNetwork on the wallet for EVM chains
   watch(selectedChain, async (newChain, oldChain) => {
     if (newChain && newChain.type !== oldChain?.type) {
@@ -312,6 +328,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   return {
     wallet,
     walletAddress,
+    walletName,
     setWatchOnlyIfExist,
     setWallet,
     disconnectWallet,
@@ -343,5 +360,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     hasMissingBalances,
     hasBalances,
     allStocks,
+    hasChainBalance,
   }
 })

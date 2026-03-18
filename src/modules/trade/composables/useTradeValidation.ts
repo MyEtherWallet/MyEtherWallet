@@ -15,6 +15,7 @@ interface UseTradeValidationOptions {
   supportedNetwork: ComputedRef<boolean>
   isLoadingQuote: Ref<boolean>
   generalError: Ref<string>
+  toTokenSelected: Ref<NewTokenInfo | null>
 }
 
 export function useTradeValidation(options: UseTradeValidationOptions) {
@@ -28,6 +29,7 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
     supportedNetwork,
     isLoadingQuote,
     generalError,
+    toTokenSelected,
   } = options
 
   const { t } = useI18n()
@@ -158,12 +160,22 @@ export function useTradeValidation(options: UseTradeValidationOptions) {
         toAmount.value !== '' &&
         toAmount.value !== '0'
       ) ||
-      isLoadingQuote.value,
+      isLoadingQuote.value ||
+      isSameTokenSelected.value,
   )
+
+  const isSameTokenSelected = computed(() => {
+    if (!fromTokenSelected.value || !toTokenSelected.value) return false
+    return (
+      fromTokenSelected.value.address.toLowerCase() ===
+      toTokenSelected.value.address.toLowerCase()
+    )
+  })
 
   return {
     hasPreQuoteError,
     fromAmountError,
     isTradeDisabled,
+    isSameTokenSelected,
   }
 }

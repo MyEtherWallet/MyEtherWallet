@@ -7,7 +7,7 @@
     z-index-overlay="z-[200]"
     z-index-container="z-[201]"
     has-content-gutter
-    title="Select Chain"
+    title="Select Network"
   >
     <template #content>
       <div
@@ -26,7 +26,10 @@
           <div class="h-px bg-grey-outline w-full mb-2"></div>
         </div>
         <!-- Search Result-->
-        <div v-if="searchResults.length" class="flex flex-col gap-1">
+        <div
+          v-if="searchResults.length || notSupportedChains.length"
+          class="flex flex-col gap-1"
+        >
           <button
             v-for="chain in searchResults"
             :key="chain.name"
@@ -60,6 +63,41 @@
               />
             </div>
           </button>
+          <div
+            v-if="notSupportedChains.length"
+            class="flex items-center gap-1 pl-5 pt-5 pb-1"
+          >
+            <app-tooltip
+              text="To access these networks, use a different wallet or install the Enkrypt browser extension"
+            >
+              <p class="text-s-16 font-medium text-info">
+                Networks incompatible with your wallet
+              </p></app-tooltip
+            >
+          </div>
+          <div
+            v-for="chain in notSupportedChains"
+            :key="chain.name"
+            class="flex items-center justify-between px-4 py-3 rounded-20 box-border opacity-50"
+          >
+            <div class="flex justify-between items-center w-full">
+              <div class="flex items-center">
+                <div class="relative mr-4 overflow-visible">
+                  <img
+                    v-if="chain.icon"
+                    class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
+                    :src="chain.icon"
+                    alt="token icon"
+                  />
+                  <div
+                    v-else
+                    class="w-9 h-9 rounded-full bg-surface shadow-button"
+                  ></div>
+                </div>
+                <span class="text-s-17 text-black">{{ chain.nameLong }}</span>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- Search not found-->
         <div v-else>
@@ -92,11 +130,13 @@
  */
 import { ref, computed } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
@@ -125,6 +165,9 @@ const {
   isLoaded: isLoadedChains,
   selectedChain: storeSelectedChain,
 } = storeToRefs(chainsStore)
+
+const walletStore = useWalletStore()
+const { isWalletConnected, walletName } = storeToRefs(walletStore)
 
 const emit = defineEmits<{
   (e: 'update:chain', chain: Chain): void
@@ -193,7 +236,11 @@ const searchResults = computed<Chain[]>(() => {
 
   let chainsToSearch: Chain[] = []
 
-  if (prop.filterBySelectedChainType) {
+  if (
+    prop.filterBySelectedChainType &&
+    isWalletConnected.value &&
+    walletName.value !== 'Enkrypt'
+  ) {
     // Always filter by the selected chain's type
     const currentChainType =
       prop.selectedChain?.type ?? storeSelectedChain.value?.type
@@ -227,5 +274,40 @@ const searchResults = computed<Chain[]>(() => {
   })
   const unique = new Set([...beginsWith, ...other])
   return [...unique]
+})
+
+const notSupportedChains = computed<Chain[]>(() => {
+  if (
+    prop.filterBySelectedChainType &&
+    isWalletConnected.value &&
+    walletName.value !== 'Enkrypt'
+  ) {
+    const locChain =
+      prop.passedChains.length > 0 ? prop.passedChains : chains.value
+    const _chains = prop.hasAll ? [ALL_CHAINS.value, ...locChain] : locChain
+    const currentChainType =
+      prop.selectedChain?.type ?? storeSelectedChain.value?.type
+
+    const _otherChains = currentChainType
+      ? _chains.filter(chain => chain.type !== currentChainType)
+      : []
+
+    if (!searchInput.value || searchInput.value === '') {
+      return sortChains(_otherChains)
+    }
+    const beginsWith = _otherChains.filter(chain => {
+      return chain.nameLong
+        .toLowerCase()
+        .startsWith(searchInput.value.toLowerCase())
+    })
+    const other = _otherChains.filter(chain => {
+      return chain.nameLong
+        .toLowerCase()
+        .includes(searchInput.value.toLowerCase())
+    })
+    const unique = new Set([...beginsWith, ...other])
+    return [...unique]
+  }
+  return []
 })
 </script>

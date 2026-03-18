@@ -68,13 +68,12 @@ const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
 const purchaseStore = usePurchaseStore()
 const { selectedChain } = storeToRefs(chainsStore)
+const { isBuyable } = purchaseStore
+const { isFetching: isFetchingBuyableCoins } = storeToRefs(purchaseStore)
 
 const isNativeBuyable = computed(() => {
-  return purchaseStore.purchaseInfo?.assets.some(
-    asset =>
-      asset.name.toLowerCase() ===
-      selectedChain.value?.currencyName.toLowerCase(),
-  )
+  if (isFetchingBuyableCoins.value) return false
+  return isBuyable(selectedChain.value?.currencyNameLong.toLowerCase())
 })
 
 const buyBtn = () => {
