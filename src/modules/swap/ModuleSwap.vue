@@ -392,7 +392,12 @@ const toLoadingState = computed(() => isLoading.value)
 const fromLoadingState = computed(() => !swapLoaded.value)
 
 const fromAmountError = computed(() => {
-  if (!fromAmount.value || fromAmount.value === '0' || fromAmount.value === '')
+  if (
+    !fromAmount.value ||
+    fromAmount.value === '0' ||
+    fromAmount.value === '' ||
+    BigNumber(fromAmount.value).isNaN()
+  )
     return t('swap.error.amount-required')
 
   if (!fromTokenSelected.value) return ''
@@ -1055,6 +1060,11 @@ watch(
         return
       }
       debounceFetchQuotes()
+    } else {
+      // Clear stale quotes when amount becomes invalid
+      providers.value = []
+      selectedQuote.value = undefined
+      toAmount.value = ''
     }
   },
 )
