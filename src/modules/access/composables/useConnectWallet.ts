@@ -7,7 +7,6 @@ import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import {
   type WalletConfig,
   WalletConfigType,
-  walletConfigs,
 } from '@/modules/access/common/walletConfigs'
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
@@ -125,19 +124,6 @@ export const useConnectWallet = () => {
     )
 
     if (!providerInjected) {
-      // Check if wallet supports the selected network, if not auto-switch to a supported one
-      const originalConfig = walletConfigs[wallet.id as keyof typeof walletConfigs]
-      const canSupport = originalConfig?.canSupport ?? wallet.canSupport
-      if (canSupport && selectedChain.value && !canSupport(selectedChain.value)) {
-        // Find a supported network and switch to it
-        const supportedChain = chains.value.find(chain => canSupport(chain))
-        if (supportedChain) {
-          accessStore.setSelectedChain(supportedChain)
-          // Re-call _connectWeb3 with the new chain
-          _connectWeb3(wallet)
-          return
-        }
-      }
       if (wallet.type.includes(WalletConfigType.MOBILE)) {
         // open wallet connect modal if it is also a mobile wallet and extension instance not found
         _connectWagmi(wallet)
