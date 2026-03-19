@@ -19,6 +19,7 @@ import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 import { useGlobalStore } from '@/stores/globalStore'
+import { captureException } from '@sentry/vue'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -100,6 +101,7 @@ export const useConnectWallet = () => {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
               )
+              captureException(error)
             }
           } else {
             accessStore.setWeb3ConnectionError(t('error_connecting'))
@@ -114,6 +116,9 @@ export const useConnectWallet = () => {
             error = t('common.error.user_canceled_request')
           }
           accessStore.setWeb3ConnectionError(error)
+          if (error !== t('common.error.user_canceled_request')) {
+            captureException(err)
+          }
         })
       return
     }
@@ -170,6 +175,7 @@ export const useConnectWallet = () => {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
               )
+              captureException(error)
             }
           } else {
             accessStore.setWeb3ConnectionError(t('error_connecting'))
@@ -198,6 +204,9 @@ export const useConnectWallet = () => {
               'Your wallet does not support selected network. Please switch to a supported network or enable it in your wallet.'
           }
           accessStore.setWeb3ConnectionError(error)
+          if (error === t('error_connecting')) {
+            captureException(err)
+          }
         })
     }
   }
@@ -243,6 +252,7 @@ export const useConnectWallet = () => {
                 error instanceof Error ? error.message : String(error),
               type: ToastType.Error,
             })
+            captureException(error)
           }
         }
       })
@@ -261,6 +271,9 @@ export const useConnectWallet = () => {
           textSecondary: error,
           type: _type,
         })
+        if (error === t('error_connecting')) {
+          captureException(err)
+        }
       })
   }
 

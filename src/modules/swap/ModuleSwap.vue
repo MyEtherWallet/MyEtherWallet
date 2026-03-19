@@ -261,6 +261,9 @@ import {
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 import { isSignableWallet } from '@/utils/walletUtils'
+import { captureException } from '@sentry/vue'
+
+const isDevMode = configs.IS_DEV_MODE
 
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
@@ -659,6 +662,16 @@ const proceedWithSwap = async (quoteId: string) => {
         textSecondary: errorMessage,
         duration: 10000,
       })
+      if (isDevMode) {
+        console.error('Error proceeding with swap:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'SWAP: Error proceeding with swap',
+            errorMessage,
+          },
+        })
+      }
     }
   } finally {
     txProceeding.value = false
@@ -716,6 +729,16 @@ const swapForBtc = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || 'Error fetching BTC gas fees'
+    if (isDevMode) {
+      console.error('Error fetching BTC gas fees:', e)
+    } else {
+      captureException(e, {
+        extra: {
+          title: 'SWAP: Error fetching BTC gas fees',
+          errorMessage: generalError.value,
+        },
+      })
+    }
   } finally {
     bestSwapLoadingOpen.value = false
   }
@@ -747,6 +770,16 @@ const swapForEvm = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || 'Error fetching gas fees'
+    if (isDevMode) {
+      console.error('Error fetching gas fees:', e)
+    } else {
+      captureException(e, {
+        extra: {
+          title: 'SWAP: Error fetching gas fees',
+          errorMessage: generalError.value,
+        },
+      })
+    }
   } finally {
     bestSwapLoadingOpen.value = false
   }
@@ -801,7 +834,16 @@ const fetchQuotes = async () => {
     }
   } catch (err: any) {
     generalError.value = t('swap.error.fetching-quotes')
-    console.error('Swap: fetchQuotes failed', err)
+    if (isDevMode) {
+      console.error('Error fetching quotes:', err)
+    } else {
+      captureException(err, {
+        extra: {
+          title: 'SWAP: fetchQuotes Error',
+          errorMessage: err?.message || 'Unknown error',
+        },
+      })
+    }
   } finally {
     isLoadingQuotes.value = false
   }

@@ -6,6 +6,10 @@ import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { ToastType } from '@/types/notification'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
+import { captureException } from '@sentry/vue'
+import Configs from '@/configs'
+
+const isDevMode = Configs.IS_DEV_MODE
 
 interface QuoteData {
   startAmount: bigint
@@ -87,6 +91,17 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         })
         return
       }
+      if (isDevMode) {
+        console.error('Error approving token:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'TRADE: Error approving token',
+            errorMessage,
+          },
+        })
+      }
+
       toastStore.addToastMessage({
         text: 'Could not approve token',
         textSecondary: errorMessage,
@@ -192,6 +207,16 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
           type: ToastType.Info,
         })
         return
+      }
+      if (isDevMode) {
+        console.error('Error submitting trade order:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'TRADE: Error submitting trade order',
+            errorMessage,
+          },
+        })
       }
       toastStore.addToastMessage({
         text: 'Failed to submit trade order',

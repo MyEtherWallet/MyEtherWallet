@@ -4,6 +4,10 @@ import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
+import { captureException } from '@sentry/vue'
+import Configs from '@/configs'
+
+const isDevMode = Configs.IS_DEV_MODE
 
 export interface UseTrade {
   supportedChainNames: Ref<string[]>
@@ -36,6 +40,16 @@ export const useTrade = (): UseTrade => {
       additionalBuyAssets.value = additionalAssets
     } catch (e) {
       error.value = (e as Error).message || 'Failed to load tradable assets'
+      if (isDevMode) {
+        console.error('Error loading tradable assets:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'TRADE: Error loading tradable assets',
+            errorMessage: error.value,
+          },
+        })
+      }
     } finally {
       isLoading.value = false
     }

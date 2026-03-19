@@ -56,6 +56,7 @@ import { ToastType } from '@/types/notification'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { captureException } from '@sentry/vue'
 
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore
@@ -140,6 +141,7 @@ const unlock = () => {
         : 'There was an error accessing the wallet. Please try again.',
       type: ToastType.Error,
     })
+    captureException(error)
   }
 }
 </script>

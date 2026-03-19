@@ -86,6 +86,10 @@ import verifier from '@/utils/verifySignature'
 import type { HexPrefixedString } from '@/providers/types'
 import { toHex } from 'viem'
 import { useAccessStore } from '@/stores/accessStore'
+import { captureException } from '@sentry/vue'
+import Configs from '@/configs'
+
+const isDevMode = Configs.IS_DEV_MODE
 const accessDialog = useAccessStore()
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
@@ -162,6 +166,15 @@ const signMessage = async () => {
       type: ToastType.Error,
       duration: 10000,
     })
+    if (isDevMode) {
+      console.error('Error signing message:', e)
+    } else {
+      captureException(e, {
+        extra: {
+          title: 'Error signing message',
+        },
+      })
+    }
   }
   signing.value = false
 }

@@ -8,6 +8,8 @@ import {
   browserTracingIntegration,
   replayIntegration,
   captureException,
+  createSentryPiniaPlugin,
+  vueIntegration,
 } from '@sentry/vue'
 import App from './App.vue'
 import router from './router'
@@ -17,36 +19,57 @@ import { Provider } from './providers'
 import type { PopupState } from './stores/popup'
 import { Analytics } from './analytics/amplitude'
 import rippleDirective from '@/directives/ripple'
+import configs from '@/configs'
 
 const app = createApp(App)
 
-const dsn = import.meta.env.VITE_SENTRY_DSN
+/**-------------------------
+ * Sentry initialization
+ -------------------------*/
+
+const dsn = configs.MEW_SENTRY_DSN
 
 if (dsn) {
   sentryInit({
     app,
     dsn,
-    integrations: [browserTracingIntegration({ router }), replayIntegration()],
+    integrations: [
+      browserTracingIntegration({ router }),
+      replayIntegration(),
+      vueIntegration({
+        tracingOptions: {
+          trackComponents: true,
+        },
+      }),
+    ],
     // Tracing
-    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    tracesSampleRate: 0.2, //  Capture 20% of the transactions
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: [
       'localhost',
-      /^https?:\/\/myetherwallet\.com/,
-      /^https?:\/\/www\.myetherwallet\.com/,
+      /^https?:\/\/app\.myetherwallet\.com(?:\/|$)/,
+      /^https?:\/\/www\.app\.myetherwallet\.com(?:\/|$)/,
+      /^https?:\/\/www\.app\.beta\.myetherwallet\.com(?:\/|$)/,
+      /^https?:\/\/app\.beta\.myetherwallet\.com(?:\/|$)/,
     ],
     // Session Replay
     replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+
+    enableLogs: true,
   })
 }
 
 // In v6 this is ens_namehash(version)
 // TODO: figure out an appropriate value for it, ens namehash package
 // would need to be added for the previous version
+
 const __TMP_VERSION__ = 'v7'
 const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
 
+/**-------------------------
+ * Amplitude instance and initialization
+ -------------------------*/
 let consentToTrack: boolean = false
 const initialPopupStateJson = localStorage.getItem(
   StoreConfigs.LOCAL_STORAGE_KEYS.popups,
@@ -98,12 +121,20 @@ amplitude.init(__TMP_HASHED_VERSION__, {
     pageViews: false,
   },
 })
+/**-------------------------
+ * PINIA
+ -------------------------*/
+const pinia = createPinia()
+pinia.use(createSentryPiniaPlugin())
 
-app.use(createPinia())
+/**-------------------------
+ * App setup
+ -------------------------*/
+app.use(pinia)
 app.use(router)
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
-/**
+/**-------------------------
  * Usage:
  *
  * ```ts
@@ -120,7 +151,7 @@ app.directive('ripple', rippleDirective)
  *
  * // ...
  * ```
- */
+ -------------------------*/
 app.provide(Provider.ANALYTICS, new Analytics({ amplitude }))
 
 app.mount('#app')

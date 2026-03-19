@@ -36,7 +36,7 @@ import type {
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
-
+import { captureException } from '@sentry/vue'
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
   return {
@@ -122,6 +122,12 @@ class OneInchFusion {
     } catch (e: unknown) {
       const response =
         ((e as AxiosError).response?.data as any)?.description || null
+
+      captureException(e, {
+        extra: {
+          title: 'TRADE: Error fetching quote from 1inch',
+        },
+      })
       throw new Error(
         response || (e as Error).message || 'Failed to fetch quote from 1inch',
       )
