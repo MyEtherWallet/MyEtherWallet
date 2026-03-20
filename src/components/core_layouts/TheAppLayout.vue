@@ -35,7 +35,7 @@
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto']">
+        <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
           <div class="min-h-[600px] pt-3 xs:pt-6 px-3 xs:px-5">
             <router-view />
           </div>
@@ -49,9 +49,17 @@
             @update:consent="handleSetConsent"
             class="!px-3 !xs:px-5"
           />
+          <div
+            class="sticky flex items-center justify-center w-full h-12 bottom-0 z-10 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
+          >
+            <p class="text-s-16 text-center underline">
+              Old version of MEW Portfolio here
+            </p>
+          </div>
         </main>
       </div>
     </div>
+
     <layout-wallet />
   </div>
 </template>
