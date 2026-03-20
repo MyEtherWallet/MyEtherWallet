@@ -2,6 +2,8 @@ import { captureException } from '@sentry/vue'
 import type {
   ConnectWalletEvent,
   ConnectWalletPayload,
+  CreateWalletEvent,
+  CreateWalletPayload,
   BridgeEvent,
   BridgePayload,
   BuyEvent,
@@ -249,6 +251,22 @@ export class Analytics {
   readonly trackConnectWalletEvent = (
     event: ConnectWalletEvent,
     payload?: ConnectWalletPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Create Wallet analytics event to Amplitude
+   *
+   * @param event     Type of Create Wallet event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackCreateWalletEvent = (
+    event: CreateWalletEvent,
+    payload?: CreateWalletPayload,
   ): Promise<void> => {
     return this._track(event, {
       ...payload,

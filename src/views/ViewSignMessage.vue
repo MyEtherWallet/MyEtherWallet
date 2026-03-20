@@ -144,7 +144,7 @@ const copy = () => {
 const handleSigner = async () => {
   if (!isWalletConnected.value || isWatchOnly.value) {
     analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-      source: 'SignMessage',
+      source: 'Sign_Message',
     })
     openAccessDialog()
     return

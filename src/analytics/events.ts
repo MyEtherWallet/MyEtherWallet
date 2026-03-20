@@ -20,6 +20,13 @@ export const CreateWalletEvent = {
 export type CreateWalletEvent =
   (typeof CreateWalletEvent)[keyof typeof CreateWalletEvent]
 
+export type CreateWalletPayload = {
+  source?: string
+  walletName?: string
+  walletType?: string
+  destination?: string
+}
+
 // =============================================================================
 // CONNECT WALLET
 // =============================================================================

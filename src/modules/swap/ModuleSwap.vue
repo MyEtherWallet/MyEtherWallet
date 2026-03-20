@@ -1051,8 +1051,9 @@ const connectWalletForSwap = () => {
       fromAmount: fromAmount.value,
     })
   }
+  const source = isSwapView.value ? 'Swap' : 'Bridge'
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Swap',
+    source,
   })
   accessStore.openAccessDialog()
 }

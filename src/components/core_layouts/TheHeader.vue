@@ -98,6 +98,11 @@
           v-if="!isWalletConnected"
           :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
           class="hidden xs:flex px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+          @click="
+            analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
+              source: 'Header_Create',
+            })
+          "
         >
           {{ $t('common.create_wallet') }}
         </router-link>
@@ -107,7 +112,7 @@
           :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
           @click="
             analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-              source: 'HeaderConnect',
+              source: 'Header_Connect',
             })
           "
           class="px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
@@ -159,7 +164,7 @@ import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
 import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import { analytics } from '@/analytics'
-import { ConnectWalletEvent } from '@/analytics/events'
+import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
 
 const { t } = useI18n()
 const store = useWalletStore()

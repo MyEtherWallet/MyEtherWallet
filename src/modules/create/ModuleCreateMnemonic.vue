@@ -260,7 +260,7 @@ const nextStep = () => {
 const closeCreateOpenAccess = () => {
   closeCreateDialog()
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'CreateMnemonic',
+    source: 'Create_Mnemonic',
   })
   openAccessDialog()
   setCurrentView('mnemonic')
