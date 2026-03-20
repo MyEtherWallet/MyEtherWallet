@@ -16,6 +16,7 @@ import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
 import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
 import { analytics, WalletStatus } from '@/analytics'
+import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
@@ -36,18 +37,27 @@ export const useWalletStore = defineStore('walletStore', () => {
   const setWallet = async (
     newWallet: WalletInterface,
     _walletName: string = '',
+    _walletType: WalletConfigType,
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
     if (!isRestricted) {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true
+        analytics.setWalletStatus(WalletStatus.WATCH_ONLY)
       } else {
         isWatchOnly.value = false
+        analytics.setWalletStatus(WalletStatus.CONNECTED)
       }
       wallet.value = newWallet
       setAddress()
-      walletName.value = _walletName
+      if (walletName.value !== '') {
+        walletName.value = _walletName
+        analytics.setWalletName(_walletName)
+      }
+      if (_walletType) {
+        analytics.setWalletType(_walletType)
+      }
     }
   }
 
@@ -71,8 +81,9 @@ export const useWalletStore = defineStore('walletStore', () => {
         newWallet,
         currentRecentAddressList[currentRecentAddressList.length - 1]
           .walletName,
+        currentRecentAddressList[currentRecentAddressList.length - 1]
+          .walletType as WalletConfigType,
       )
-      analytics.setWalletStatus(WalletStatus.WATCH_ONLY)
     } else {
       wallet.value = null
       walletAddress.value = null

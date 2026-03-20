@@ -152,7 +152,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
 import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
-
+import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
@@ -258,7 +258,7 @@ watch(
               _wallet.updateAddress(
                 (accounts as string[])[0] as HexPrefixedString,
               )
-              setWallet(_wallet)
+              setWallet(_wallet, '', WalletConfigType.EXTENSION)
             }
           },
         )
@@ -274,7 +274,7 @@ watch(
               (accounts as string[])[0] as HexPrefixedString,
             )
 
-            setWallet(_wallet)
+            setWallet(_wallet, '', WalletConfigType.EXTENSION)
           }
         })
       }

@@ -126,7 +126,11 @@ const unlock = () => {
       })
     }
 
-    setWallet(wallet as WalletInterface, 'privateKey')
+    setWallet(
+      wallet as WalletInterface,
+      'privateKey',
+      walletConfigs.privateKey.type[0],
+    )
     addWallet(walletConfigs.privateKey)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     privateKeyInput.value = ''

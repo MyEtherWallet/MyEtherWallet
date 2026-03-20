@@ -343,10 +343,14 @@ const loadList = async (page: number = 0) => {
       try {
         const walletInstance = await wallet.value?.getWallet(item.index)
         if (walletInstance) {
-          const fetchBalance = (await walletInstance.getBalance()) as unknown as {
-            balance: { nativeValue: string }
-          }
-          item.balance = fromBase(fetchBalance.balance.nativeValue, 8).toString()
+          const fetchBalance =
+            (await walletInstance.getBalance()) as unknown as {
+              balance: { nativeValue: string }
+            }
+          item.balance = fromBase(
+            fetchBalance.balance.nativeValue,
+            8,
+          ).toString()
         }
       } catch (e) {
         console.error('Error fetching BTC balance:', e)
@@ -383,7 +387,7 @@ const access = async () => {
 
   await wallet.value?.getWallet(selectedIndex.value).then(wallet => {
     if (wallet) {
-      setWallet(wallet, 'mnemonic')
+      setWallet(wallet, 'mnemonic', walletConfigs.mnemonic.type[0])
       addWallet(walletConfigs.mnemonic)
     }
   })
