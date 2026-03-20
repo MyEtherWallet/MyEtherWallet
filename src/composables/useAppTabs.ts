@@ -1,7 +1,7 @@
 import { computed, nextTick, onBeforeMount, type Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { type Tab, type Tab_Panel } from '@/types/components/appTabs'
-
+import { captureException } from '@sentry/vue'
 export const useAppTabs = (
   activeTabIndex: Ref<number>,
   panels: Tab_Panel[],
@@ -35,8 +35,13 @@ export const useAppTabs = (
       await nextTick()
       document.getElementById(tabs[index].id)?.focus()
     } catch (err) {
-      //Todo: add sentry logging
-      console.error('Failed to navigate to tab:', err)
+      captureException(err, {
+        extra: {
+          title: 'APP TABS: Navigation Error',
+          index: index,
+          routeName: tabs[index].routeName,
+        },
+      })
     }
   }
 

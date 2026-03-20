@@ -15,6 +15,7 @@ import { ClipboardDocumentIcon } from '@heroicons/vue/24/outline'
 import { useToastStore } from '@/stores/toastStore'
 import { useI18n } from 'vue-i18n'
 import { ToastType } from '@/types/notification'
+import * as Sentry from '@sentry/vue'
 
 const { t } = useI18n()
 const toastStore = useToastStore()
@@ -79,11 +80,12 @@ const copyClick = async (payload: MouseEvent) => {
       hash: props.copyValue,
     })
     emit('copy', payload)
-  } catch {
+  } catch (err) {
     toastStore.addToastMessage({
       text: t('common.copy_failed'),
       type: ToastType.Error,
     })
+    Sentry.captureException(err)
   }
 }
 </script>

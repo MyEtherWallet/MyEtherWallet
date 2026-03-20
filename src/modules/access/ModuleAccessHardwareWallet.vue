@@ -120,6 +120,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
+import { captureException } from '@sentry/vue'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -364,12 +365,12 @@ const loadList = async (page: number = 0) => {
       }
     }
   } catch (e) {
-    console.log(e)
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: 'Something went wrong',
       textSecondary: e instanceof Error ? e.message : String(e),
     })
+    captureException(e)
   } finally {
     isLoadingWalletList.value = false
   }

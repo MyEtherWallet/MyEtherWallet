@@ -28,6 +28,7 @@ import {
   isTradingRestricted,
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
+import { captureException } from '@sentry/vue'
 
 // TODO: Import types from @enkryptcom/swap
 
@@ -231,7 +232,7 @@ export const useSwap = (): {
           text: 'Something went wrong',
           textSecondary: t('swap.error.initializing-swap-failed'),
         })
-        // TODO: add sentry to catch actual error
+        captureException(e)
       }
     }
   }
@@ -267,8 +268,8 @@ export const useSwap = (): {
     try {
       const response = await swapInstance.value.getSwap(providerQuote.quote)
       return response
-    } catch {
-      // TODO: add sentry to catch actual error
+    } catch (err) {
+      captureException(err)
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: 'Something went wrong',

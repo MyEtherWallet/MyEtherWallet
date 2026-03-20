@@ -18,6 +18,9 @@ const configs = {
     'ROOTSTOCK',
   ],
   MEW_LIVE_URLS: ['app.beta.myetherwallet.com', 'app.myetherwallet.com'],
+  MEW_SENTRY_DSN:
+    import.meta.env.VITE_SENTRY_DSN ||
+    'https://3779ba7db0670350a396d35fbeb766c0@o382951.ingest.us.sentry.io/4511061868347392',
 }
 
 export default configs

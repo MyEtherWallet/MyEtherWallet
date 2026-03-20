@@ -65,6 +65,7 @@ import {
 import { onMounted, ref } from 'vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
+import { captureException } from '@sentry/vue'
 
 const props = defineProps<{
   wallet: WalletConfig
@@ -110,7 +111,13 @@ const resolveImg = async (_img: () => Promise<string>) => {
     img.value = image
     isLoadedImg.value = true
   } catch (error) {
-    console.error('Error loading image: ', error)
+    captureException(error, {
+      extra: {
+        title: 'BTN WALLET: Error loading wallet image',
+        walletName: props.wallet.name,
+        errorMessage: error,
+      },
+    })
     return ''
   }
 }

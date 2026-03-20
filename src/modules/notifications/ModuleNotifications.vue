@@ -86,6 +86,8 @@ import { formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { ToastType } from '@/types/notification'
 import Configs from '@/configs'
+import { captureException } from '@sentry/vue'
+
 // Stores
 import { storeToRefs } from 'pinia'
 import {
@@ -405,7 +407,7 @@ const startPolling = async (hash: string, chainId: number) => {
       const status = await fusion.getOrderStatus(hash)
       updateOrderStatus(hash, status)
     } catch (e) {
-      console.error('Failed to fetch order status:', e)
+      captureException(e)
     }
   }
 
@@ -595,7 +597,7 @@ const startStatusPolling = async (
         updateNotificationStatus(hash, type, data)
       }
     } catch (e) {
-      console.error(`Failed to fetch ${type} status:`, e)
+      captureException(e)
     }
   }
 

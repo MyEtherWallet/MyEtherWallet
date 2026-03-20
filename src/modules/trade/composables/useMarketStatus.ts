@@ -5,6 +5,10 @@ import {
   isTradingRestricted,
   TRADING_RESTRICTED_HELP_URL,
 } from '../providers/ondoHelpers'
+import { captureException } from '@sentry/vue'
+import Configs from '@/configs'
+
+const isDevMode = Configs.IS_DEV_MODE
 
 interface UseMarketStatusOptions {
   onMarketOpen?: () => void | Promise<void>
@@ -70,7 +74,16 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     try {
       isTradingRestrictedInRegion.value = await isTradingRestricted()
     } catch (e) {
-      console.error('Failed to check trading restriction:', e)
+      if (isDevMode) {
+        console.error('Failed to check trading restriction:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'TRADE: Error checking trading restriction',
+            errorMessage: (e as Error).message || 'Unknown error',
+          },
+        })
+      }
       isTradingRestrictedInRegion.value = false
     }
   }
@@ -95,7 +108,16 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
         }
       }
     } catch (e) {
-      console.error('Failed to fetch market status:', e)
+      if (isDevMode) {
+        console.error('Failed to fetch market status:', e)
+      } else {
+        captureException(e, {
+          extra: {
+            title: 'TRADE: Error fetching market status',
+            errorMessage: (e as Error).message || 'Unknown error',
+          },
+        })
+      }
     }
   }
 

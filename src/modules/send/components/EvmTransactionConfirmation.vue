@@ -276,6 +276,7 @@ import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
 import { isSignableWallet } from '@/utils/walletUtils'
+import { captureException } from '@sentry/vue'
 
 interface EvmTxType {
   toAddress: string
@@ -426,6 +427,13 @@ const confirmTransaction = async () => {
             text: t('send.toast.tx-send-failed'),
             textSecondary: errorMessage,
           })
+
+          captureException(e, {
+            extra: {
+              title: 'Error sending transaction: TX Promise',
+              errorMessage: errorMessage,
+            },
+          })
         }
       })
     signing.value = false
@@ -449,6 +457,12 @@ const confirmTransaction = async () => {
       type: ToastType.Error,
       text: t('send.toast.tx-send-failed'),
       textSecondary: errorMessage,
+    })
+    captureException(e, {
+      extra: {
+        title: 'Error sending transaction',
+        errorMessage,
+      },
     })
   }
 }

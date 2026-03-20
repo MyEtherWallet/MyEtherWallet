@@ -1,6 +1,8 @@
 import { ref, type Ref } from 'vue'
 import { createFetch, useTimeoutPoll } from '@vueuse/core'
 import Configs from '@/configs'
+import { captureException } from '@sentry/vue'
+
 export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
 const isDevMode = import.meta.env.DEV
 
@@ -83,11 +85,14 @@ export const useFetchMewApi = (
 
           return execute()
         } else {
-          //TODO: change to send this to sentry instead of console
           if (isDevMode) {
             console.error('Failed to fetch. URL: ', url.value)
           }
+          if (!isDevMode) {
+            captureException(ctx.error)
+          }
           ctx.error = data?.message || 'Unknown Error. Failed to fetch.'
+
           return ctx
         }
       },

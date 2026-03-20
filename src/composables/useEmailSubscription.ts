@@ -3,6 +3,8 @@ import { watchDebounced } from '@vueuse/core'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import Configs from '@/configs'
+import { captureException } from '@sentry/vue'
+
 export const useEmailSubscription = () => {
   const toastStore = useToastStore()
 
@@ -69,7 +71,7 @@ export const useEmailSubscription = () => {
         }
         return true
       } catch (e) {
-        console.error('Error subscribing to email list: ', e)
+        captureException(e)
         toastStore.addToastMessage({
           text: 'Something went wrong',
           textSecondary: 'Please try again later.',

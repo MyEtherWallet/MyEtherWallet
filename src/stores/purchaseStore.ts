@@ -3,6 +3,9 @@ import { ref, computed } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { PurchaseInfo } from '@/types/buyToken'
 import configs from '@/configs'
+import { captureException } from '@sentry/vue'
+
+const isDevMode = configs.IS_DEV_MODE
 
 export const usePurchaseStore = defineStore('purchase', () => {
   const purchaseInfo = ref<PurchaseInfo | null>(null)
@@ -31,7 +34,15 @@ export const usePurchaseStore = defineStore('purchase', () => {
         .json<PurchaseInfo>()
       purchaseInfo.value = data.value
     } catch (error) {
-      console.error('Failed to fetch purchase info:', error)
+      if (isDevMode) {
+        console.error('Failed to fetch purchase info:', error)
+      } else {
+        captureException(error, {
+          extra: {
+            title: 'PURCHASE STORE: Failed to fetch purchase info',
+          },
+        })
+      }
     } finally {
       isFetching.value = false
     }
