@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import type { FeePriority } from '@/mew_api/types'
 import { analytics } from '@/analytics'
-
+import * as Sentry from '@sentry/vue'
 interface SelectedNetwork {
   selectedNetwork: string
 }
@@ -28,6 +28,7 @@ export const useGlobalStore = defineStore('global', () => {
     if (network === '') return
     storage.value.selectedNetwork = network
     analytics.setNetwork(network)
+    Sentry.setTag('network', network)
   }
   /**--------------------
    * GAS
