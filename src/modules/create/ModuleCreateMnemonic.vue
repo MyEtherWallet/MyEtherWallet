@@ -148,7 +148,7 @@
                 <app-base-button
                   class="w-full xs:w-auto xs:min-w-[180px]"
                   :disabled="!verifyMnemonic"
-                  @click="activeStep = 2"
+                  @click="showStepTwo"
                 >
                   {{ $t('common.next') }}
                 </app-base-button>
@@ -221,7 +221,7 @@ import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import { analytics, ConnectWalletEvent, CreateWalletEvent } from '@/analytics'
 
 const { closeCreateDialog } = useCreateStore()
 const { openAccessDialog, setCurrentView } = useAccessStore()
@@ -255,6 +255,10 @@ const backStep = () => {
 
 const nextStep = () => {
   activeStep.value = 1
+}
+const showStepTwo = () => {
+  activeStep.value = 2
+  analytics.trackCreateWalletEvent(CreateWalletEvent.SUCCESS)
 }
 
 const closeCreateOpenAccess = () => {

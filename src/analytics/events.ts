@@ -22,9 +22,6 @@ export type CreateWalletEvent =
 
 export type CreateWalletPayload = {
   source?: string
-  walletName?: string
-  walletType?: string
-  destination?: string
 }
 
 // =============================================================================
