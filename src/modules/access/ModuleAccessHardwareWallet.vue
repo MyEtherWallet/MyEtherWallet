@@ -119,6 +119,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -438,6 +439,11 @@ const access = async () => {
   isUnlockingWallet.value = false
   hwWalletInstance = null
   setSelectedChainGlobalStore(selectedChain.value?.name || '')
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+    walletName: walletConfig.value?.name || 'hardware',
+    walletType: WalletConfigType.HARDWARE,
+    network: selectedChain.value?.name,
+  })
   closeAccessDialog()
 }
 </script>

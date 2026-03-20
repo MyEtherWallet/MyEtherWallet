@@ -155,6 +155,7 @@ import { fromBase } from '@/utils/unit'
 import type { Chain, AddressBalanceResponse } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { DerivationPath as DerivationPathType } from './common/configs/configPaths'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const { t } = useI18n()
 /**------------------------
@@ -394,6 +395,11 @@ const access = async () => {
   setSelectedChainGlobalStore(selectedChain.value?.name || '')
 
   isUnlockingWallet.value = false
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+    walletName: 'mnemonic',
+    walletType: walletConfigs.mnemonic.type[0],
+    network: selectedChain.value?.name,
+  })
   accessStore.closeAccessDialog()
 }
 </script>

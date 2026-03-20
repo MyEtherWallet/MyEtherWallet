@@ -19,6 +19,7 @@ import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 import { useGlobalStore } from '@/stores/globalStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -52,6 +53,11 @@ export const useConnectWallet = () => {
     setWallet(wallet, config.name, config.type[0])
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+      walletName: config.name,
+      walletType: config.type[0],
+      network: selectedChain.value?.name,
+    })
     accessStore.closeAccessDialog()
     toastStore.addToastMessage({
       text: 'Wallet connected',

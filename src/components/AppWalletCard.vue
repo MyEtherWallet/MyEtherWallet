@@ -169,6 +169,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { ToastType } from '@/types/notification'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 const { t } = useI18n()
 const emit = defineEmits<{
   (e: 'close'): void
@@ -257,6 +258,9 @@ const accessStore = useAccessStore()
 const { setCurrentView, openAccessDialog } = accessStore
 
 const openAccess = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'WalletCard_Connect',
+  })
   openAccessDialog()
   emit('close')
 }
@@ -307,6 +311,9 @@ const switchAddress = () => {
 
   setCurrentView(ACCESS_WALLET_VIEWS[index])
   emit('close')
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'WalletCard_SwitchAddress',
+  })
   openAccessDialog()
 }
 </script>

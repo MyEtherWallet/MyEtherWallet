@@ -105,6 +105,11 @@
         <router-link
           v-if="!isWalletConnected"
           :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          @click="
+            analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+              source: 'HeaderConnect',
+            })
+          "
           class="px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('connect_wallet') }}
@@ -153,6 +158,9 @@ import { watch } from 'vue'
 import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
 import { WalletConfigType } from '@/modules/access/common/walletConfigs'
+import { analytics } from '@/analytics'
+import { ConnectWalletEvent } from '@/analytics/events'
+
 const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()

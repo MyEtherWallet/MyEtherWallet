@@ -232,6 +232,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Utils and Types
 import {
@@ -1008,6 +1009,9 @@ const connectWalletForSwap = () => {
       fromAmount: fromAmount.value,
     })
   }
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Swap',
+  })
   accessStore.openAccessDialog()
 }
 

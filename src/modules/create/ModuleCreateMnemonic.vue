@@ -221,6 +221,7 @@ import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const { closeCreateDialog } = useCreateStore()
 const { openAccessDialog, setCurrentView } = useAccessStore()
@@ -258,6 +259,9 @@ const nextStep = () => {
 
 const closeCreateOpenAccess = () => {
   closeCreateDialog()
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'CreateMnemonic',
+  })
   openAccessDialog()
   setCurrentView('mnemonic')
 }

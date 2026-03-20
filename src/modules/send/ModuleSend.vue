@@ -114,6 +114,7 @@ import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -229,6 +230,9 @@ const connectWallet = () => {
     toAddress: toAddress.value ?? '',
     amount: amount.value.toString(),
     token: tokenSelectedContract.value,
+  })
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Send',
   })
   accessStore.openAccessDialog()
 }

@@ -56,6 +56,7 @@ import { ToastType } from '@/types/notification'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore
@@ -135,6 +136,11 @@ const unlock = () => {
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     privateKeyInput.value = ''
     accessStore.setCurrentView('default')
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+      walletName: 'privateKey',
+      walletType: walletConfigs.privateKey.type[0],
+      network: selectedChain.value?.name,
+    })
     accessStore.closeAccessDialog()
   } catch (error) {
     addToastMessage({

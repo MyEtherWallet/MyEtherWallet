@@ -63,6 +63,8 @@ import {
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
 import { onMounted, ref } from 'vue'
+import { analytics } from '@/analytics'
+import { ConnectWalletEvent } from '@/analytics/events'
 
 const props = defineProps<{
   wallet: WalletConfig
@@ -75,6 +77,9 @@ const emit = defineEmits<{
 }>()
 
 const clickDefaultWallet = (wallet: WalletConfig) => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.SELECT_WALLET, {
+    walletName: wallet.name,
+  })
   emit('clickWallet', wallet)
 }
 

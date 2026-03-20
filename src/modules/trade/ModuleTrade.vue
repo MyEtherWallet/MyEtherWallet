@@ -362,6 +362,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
 import { useTrade } from './useTrade'
@@ -736,6 +737,9 @@ const setPercentageAmount = (percentage: number) => {
 }
 
 const connectWalletForTrade = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Trade',
+  })
   accessStore.openAccessDialog()
 }
 

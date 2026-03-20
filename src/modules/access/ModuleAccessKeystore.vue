@@ -116,6 +116,7 @@ import AppNotRecommended from '@/components/AppNotRecommended.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import AppSheet from '@/components/AppSheet.vue'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const accessStore = useAccessStore()
 const { selectedChain } = storeToRefs(accessStore)
@@ -225,6 +226,11 @@ const enterPassword = async () => {
       setSelectedChainGlobalStore(selectedChain.value?.name || '')
       isUnlockingKeystore.value = false
       accessStore.setCurrentView('default')
+      analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+        walletName: 'keystore',
+        walletType: walletConfigs.keystore.type[0],
+        network: selectedChain.value?.name,
+      })
       accessStore.closeAccessDialog()
     }
   } catch {

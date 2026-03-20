@@ -9,27 +9,36 @@ export const ConsentEvent = {
 export type ConsentEvent = (typeof ConsentEvent)[keyof typeof ConsentEvent]
 
 // =============================================================================
-// ACCESS WALLET
+// CREATE WALLET
+// =============================================================================
+export const CreateWalletEvent = {
+  SHOWN: 'CreateWallet_Shown',
+  CLICKED: 'CreateWallet_Clicked',
+  SELECT_WALLET: 'CreateWallet_Select_Wallet',
+  SUCCESS: 'CreateWallet_Success',
+} as const
+export type CreateWalletEvent =
+  (typeof CreateWalletEvent)[keyof typeof CreateWalletEvent]
+
+// =============================================================================
+// CONNECT WALLET
 // =============================================================================
 
-export const AccessWalletEvent = {
-  SHOWN: 'AccessWallet_Shown',
-  CLICKED: 'AccessWallet_Clicked',
-  SUCCESS: 'AccessWallet_Success',
-  FAILED: 'AccessWallet_Failed',
-  USER_ERROR: 'AccessWallet_UserError',
-  NETWORK: 'AccessWallet_Network',
-  WALLET: 'AccessWallet_Wallet',
+export const ConnectWalletEvent = {
+  SHOWN: 'ConnectWallet_Shown',
+  CLICKED: 'ConnectWallet_Clicked',
+  SELECT_WALLET: 'ConnectWallet_Select_Wallet',
+  SUCCESS: 'ConnectWallet_Success',
+  FAILED: 'ConnectWallet_Failed',
 } as const
-export type AccessWalletEvent =
-  (typeof AccessWalletEvent)[keyof typeof AccessWalletEvent]
+export type ConnectWalletEvent =
+  (typeof ConnectWalletEvent)[keyof typeof ConnectWalletEvent]
 
-export type AccessWalletPayload = {
-  product?: string
-  sourceUrl?: string
-  destinationUrl?: string
+export type ConnectWalletPayload = {
+  source?: string
   network?: string
-  wallet?: string
+  walletName?: string
+  walletType?: string
   type?: string
   errorMsg?: string
 }
