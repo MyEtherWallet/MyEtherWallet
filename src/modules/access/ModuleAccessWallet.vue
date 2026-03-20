@@ -88,6 +88,7 @@ import { ArrowRightIcon } from '@heroicons/vue/24/outline'
 import { type Chain } from '@/mew_api/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import ModuleAccessKeystore from './ModuleAccessKeystore.vue'
 import ModuleAccessPrivateKey from './ModuleAccessPrivateKey.vue'
@@ -114,9 +115,11 @@ const closeAccess = () => {
 const { selectedChain } = storeToRefs(accessStore)
 const chainsStore = useChainsStore()
 const { selectedChain: storeSelectedChain } = storeToRefs(chainsStore)
+const globalStore = useGlobalStore()
 
 const updateChain = (chain: Chain) => {
   accessStore.setSelectedChain(chain)
+  globalStore.setSelectedNetwork(chain.name)
 }
 
 watch(
