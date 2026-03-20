@@ -1,13 +1,6 @@
-export const EthVMEvent = {
-  ETHVM_LINK_CLICKED: 'EthVMLinkClicked',
-} as const
-export type EthVMEvent = (typeof EthVMEvent)[keyof typeof EthVMEvent]
-
-export const WalletDirectLinkAccessEvent = {
-  WALLET_DIRECT_LINK_ACCESS: 'WalletDirectLinkAccess',
-} as const
-export type WalletDirectLinkAccessEvent =
-  (typeof WalletDirectLinkAccessEvent)[keyof typeof WalletDirectLinkAccessEvent]
+// =============================================================================
+// CONSENT
+// =============================================================================
 
 export const ConsentEvent = {
   USER_OPT_OUT_TRACKING: 'UserOptOutTracking',
@@ -15,153 +8,198 @@ export const ConsentEvent = {
 } as const
 export type ConsentEvent = (typeof ConsentEvent)[keyof typeof ConsentEvent]
 
-export const DashboardEvent = {
-  SWAP_BALANCE: 'SwapBalance',
-  SWAP_MY_TOKENS_VALUE: 'SwapMyTokensValue',
-  SWAP_PAIRS: 'SwapPairs',
-  SWAP_LEFT_NAVIGATION: 'SwapLeftNavigation',
-  SHOW_RECEIVE_ADDRESS: 'ShowReceiveAddress',
-} as const
-export type DashboardEvent =
-  (typeof DashboardEvent)[keyof typeof DashboardEvent]
-
-export const CreateWalletEvent = {
-  KEYSTORE_FILE_CLICKED: 'KeystoreFileClicked',
-  MNEMONIC_PHRASE_CLICKED: 'MnemonicPhraseClicked',
-  KEYSTORE_VERIFICATION: 'KeystoreVerification',
-  KEYSTORE_DOWNLOAD: 'KeystoreDownload',
-  KEYSTORE_SUCCESS_ACCESS: 'KeystoreSuccessAccessWallet',
-  KEYSTORE_BACK: 'KeystoreDownloadBackClicked',
-  KEYSTORE_SUCCESS_CREATE: 'KeystoreSuccessCreateWallet',
-  MNEMONIC_SUCCESS: 'MnemonicSuccess',
-  MNEMONIC_SUCCESS_ACCESS: 'MnemonicSuccessAccessWallet',
-  MNEMONIC_WROTE_DOWN: 'WroteDownClicked',
-  MNEMONIC_BACK: 'MnemonicBackToStepOne',
-  MNEMONIC_SUCCESS_CREATE: 'MnemonicSuccessCreateWallet',
-  NAVIGATE_TO_ACCESS: 'NavigateToAccess',
-  BUY_HARDWARE: 'BuyHardware',
-  SOFTWARE_METHOD: 'SoftwareMethod',
-  CLOSE_SOFTWARE: 'CloseSoftware',
-} as const
-export type CreateWalletEvent =
-  (typeof CreateWalletEvent)[keyof typeof CreateWalletEvent]
+// =============================================================================
+// ACCESS WALLET
+// =============================================================================
 
 export const AccessWalletEvent = {
-  ENKRYPT: 'Enkrypt',
-  BROWSER_EXTENSION: 'BrowserExtension',
-  MOBILE_APPS: 'MobileApps',
-  HARWARE_WALLETS: 'HardwareWallets',
-  SOFTWARE: 'Software',
-  CLOSE_SOFTWARE_ACCESS: 'CloseSoftwareAccess',
-  CLOSE_HARDWARE_ACCESS: 'CloseHardwareAccess',
-  CLOSE_MOBILE_ACCESS: 'CloseMobileAccess',
-  WEB3_ACCESS_SUCCESS: 'Web3AccessSuccess',
-  SOFTWARE_BACK: 'SoftwareBack',
-  KEYSTORE_SHOWN: 'KeystoreShown',
-  MNEMONIC_SHOWN: 'MnemonicShown',
-  PRIVATE_KEY_SHOWN: 'PrivateKeyShown',
-  KEYSTORE_CONNECTED: 'KeystoreConnected',
-  MNEMONIC_CONNECTED: 'MnemonicConnected',
-  PRIVATE_KEY_CONNECTED: 'PrivateKeyConnected',
-  WALLET_CONNECT_QR_SHOWN: 'MobileAppsWalletConnectQRShown',
-  WALLET_CONNECT_QR_SUCCESSFUL: 'MobileAppsWalletConnectQRShownSuccessful',
-  WALLET_CONNECT_QR_FAILED: 'MobileAppsWalletConnectQRShownFailed',
-  WALLET_LINK_QR_SHOWN: 'MobileAppsWalletLinkQRShown',
-  WALLET_LINK_QR_SUCCESSFUL: 'MobileAppsWalletLinkQRSuccessful',
-  WALLET_LINK_QR_FAILED: 'MobileAppsWalletLinkQRFailed',
-  MEW_WALLET_QR_SHOWN: 'MobileAppsMEWWalletQRShown',
-  MEW_WALLET_QR_SUCCESSFUL: 'MobileAppsMEWWalletQRSuccess',
-  MEW_WALLET_QR_FAILED: 'MobileAppsMEWWalletQRFailed',
-  HW_LEDGER_CLICKED: 'HWLedgerClicked',
-  HW_TREZOR_CLICKED: 'HWTrezorClicked',
-  HW_KEEPKEY_CLICKED: 'HWKeepKeyClicked',
-  HW_BITBOX02_CLICKED: 'HWBitBox02Clicked',
-  HW_COOL_WALLET_CLICKED: 'HWCoolWalletClicked',
-  HW_BITBOX02_SHOWN: 'HWBitBox02Shown',
-  HW_LEDGER_SHOWN: 'HWLedgerShown',
-  HW_COOL_WALLET_SHOWN: 'HWCoolWalletShown',
-  HW_TREZOR_SHOWN: 'HWTrezorShown',
-  HW_KEEPKEY_SHOWN: 'HWKeepKeyShown',
-  HW_LEDGER_CONNECTED: 'HWLedgerConnected',
-  HW_TREZOR_CONNECTED: 'HWTrezorConnected',
-  HW_COOL_WALLET_CONNECTED: 'HWCoolWalletConnected',
-  HW_BITBOX02_CONNECTED: 'HWBitBox02Connected',
-  HW_KEEPKEY_CONNECTED: 'HWKeepKeyConnected',
-  ACCESS_FAILED: 'Failed',
-  PRIV_KEY_TERMS: 'PrivateKeyTermsAccepted',
-  PRIV_INVISIBLE_BOX: 'PrivateKeyInvisibleBox',
-  SOFTWARE_FAILED: 'SoftwareFailed',
-  HW_FAILED: 'HWFailed',
+  SHOWN: 'AccessWallet_Shown',
+  CLICKED: 'AccessWallet_Clicked',
+  SUCCESS: 'AccessWallet_Success',
+  FAILED: 'AccessWallet_Failed',
+  USER_ERROR: 'AccessWallet_UserError',
+  NETWORK: 'AccessWallet_Network',
+  WALLET: 'AccessWallet_Wallet',
 } as const
 export type AccessWalletEvent =
   (typeof AccessWalletEvent)[keyof typeof AccessWalletEvent]
 
-export const BuySellEvent = {
-  OPEN_BUY_SELL_MODAL: 'OpenBuySellModal',
-  BUY_NOW_BUTTON: 'BuyNow',
-  BUY_TAB: 'BuyTab',
-  SELL_TAB: 'SellTab',
-  BUY_SELL_CLOSED: 'CloseModal',
-  BUY_INPUT: 'BuyInput',
-  SELL_INPUT: 'SellInput',
-  BUY_W_SIMPLEX: 'BuyWithSimplex',
-  BUY_W_SIMPLEX_SUCCESS: 'BuyWithSimplexSuccess',
-  BUY_W_SIMPLEX_FAILED: 'BuyWithSimplexFailed',
-  BUY_W_MOONPAY: 'BuyWithMoonpay',
-  BUY_W_MOONPAY_SUCCESS: 'BuyWithMoonpaySuccess',
-  BUY_W_MOONPAY_FAILED: 'BuyWithMoonpayFailed',
-  SELL_WITH_MOONPAY: 'SellWithMoonpay',
-  SELL_WITH_MOONPAY_SUCCESS: 'SellWithMoonpaySuccess',
-  SELL_WITH_MOONPAY_FAILED: 'SellWithMoonpayFailed',
-  BUY_W_TOPPER: 'BuyWithTopper',
-  BUY_W_TOPPER_SUCCESS: 'BuyWithTopperSuccess',
-  BUY_W_TOPPER_FAILED: 'BuyWithTopperFailed',
-  BUY_PROVIDER_SELECTED: 'BuyWithProviderSelected',
-} as const
-export type BuySellEvent = (typeof BuySellEvent)[keyof typeof BuySellEvent]
+export type AccessWalletPayload = {
+  product?: string
+  sourceUrl?: string
+  destinationUrl?: string
+  network?: string
+  wallet?: string
+  type?: string
+  errorMsg?: string
+}
 
-export const ContractEvent = {
-  INTERACT_W_CONTRACT_WRITE: 'InteractWithContractWriteButtonClicked',
-  INTERACT_W_CONTRACT_WRITE_SUCCESS: 'InteractWithContractWriteSuccess',
-  INTERACT_W_CONTRACT_WRITE_FAIL: 'InteractWithContractWriteFail',
-  INTERACT_W_CONTRACT_READ: 'InteractWithContractReadButtonClicked',
-  INTERACT_W_CONTRACT_READ_SUCCESS: 'InteractWithContractReadSuccess',
-  INTERACT_W_CONTRACT_READ_FAIL: 'InteractWithContractReadFail',
-  DEPLOY_CONTRACT: 'DeployContractButtonClicked',
-  DEPLOY_CONTRACT_SUCCESS: 'DeployContractSuccess',
-  DEPLOY_CONTRACT_FAIL: 'DeployContractFail',
-  NAVIGATE_TO_INTERACT: 'NavigateToInteract',
-  NAVIGATE_TO_DEPLOY: 'NavigateToDeploy',
-} as const
-export type ContractEvent = (typeof ContractEvent)[keyof typeof ContractEvent]
-
-export const StakingEvent = {
-  SIDE_MENU: 'SideMenu',
-  DASHBOARD: 'Dashboard',
-  DASHBOARD_CLOSED: 'DashboardClosed',
-  STAKE_CENTER_STAKED: 'PageStaked',
-  STAKE_CENTER_COINBASE: 'PageCoinbase',
-  STAKE_CENTER_MORE_ABOUT: 'PageMoreAboutStaking',
-  HEADER_NOW: 'HeaderNow',
-} as const
-export type StakingEvent = (typeof StakingEvent)[keyof typeof StakingEvent]
+// =============================================================================
+// SWAP
+// =============================================================================
 
 export const SwapEvent = {
-  BROADCASTED: 'Broadcasted',
-  RECEIPT: 'Receipt',
-  FAILED: 'Failed',
-  NOT_BROADCASTED: 'NotBroadcasted',
-  VERIFY_PAGE_SHOWN: 'VerifyPageShown',
-  CANCELLED: 'Cancelled',
-  SUCCESS: 'Success',
-  CONFIRM_CLICKED: 'ConfirmClicked',
-  FIELD_INPUTS: 'FieldInputs',
-  NEXT_CLICKED: 'NextClicked',
-  INITIAL_MODAL_CLOSED: 'InitiatedModalClosed',
-  SWAP_INITIATED: 'SwapInitiated',
-  TRANSACTION_INITIATIED: 'TransactionInitiated',
-  X_OUT: 'XOut',
-  CLICK_OUTSIDE: 'ClickOutside',
-  BUTTON_CANCEL: 'ButtonCancel',
+  SHOWN: 'Swap_Shown',
+  SUCCESS: 'Swap_Success',
+  FAILED: 'Swap_Failed',
+  USER_ERROR: 'Swap_UserError',
+  USER_ACTIVITY: 'Swap_UserActivity',
 } as const
 export type SwapEvent = (typeof SwapEvent)[keyof typeof SwapEvent]
+
+export type SwapPayload = {
+  walletConnected?: boolean
+  sourceUrl?: string
+  destinationUrl?: string
+  fromNetwork?: string
+  fromToken?: string
+  fromAmount?: string
+  toNetwork?: string
+  toToken?: string
+  toAmount?: string
+  swapPair?: string
+  wallet?: string
+  type?: string
+  errorMsg?: string
+  activity?: string
+}
+
+// =============================================================================
+// SEND
+// =============================================================================
+
+export const SendEvent = {
+  SHOWN: 'Send_Shown',
+  SUCCESS: 'Send_Success',
+  FAILED: 'Send_Failed',
+  USER_ERROR: 'Send_UserError',
+} as const
+export type SendEvent = (typeof SendEvent)[keyof typeof SendEvent]
+
+export type SendPayload = {
+  walletConnected?: boolean
+  sourceUrl?: string
+  destinationUrl?: string
+  fromNetwork?: string
+  fromToken?: string
+  fromAmount?: string
+  toNetwork?: string
+  toToken?: string
+  toAmount?: string
+  wallet?: string
+  type?: string
+  errorMsg?: string
+}
+
+// =============================================================================
+// BRIDGE
+// =============================================================================
+
+export const BridgeEvent = {
+  SHOWN: 'Bridge_Shown',
+  SUCCESS: 'Bridge_Success',
+  FAILED: 'Bridge_Failed',
+  USER_ERROR: 'Bridge_UserError',
+  USER_ACTIVITY: 'Bridge_UserActivity',
+} as const
+export type BridgeEvent = (typeof BridgeEvent)[keyof typeof BridgeEvent]
+
+export type BridgePayload = {
+  walletConnected?: boolean
+  sourceUrl?: string
+  destinationUrl?: string
+  fromNetwork?: string
+  fromToken?: string
+  fromAmount?: string
+  toNetwork?: string
+  toToken?: string
+  toAmount?: string
+  bridgePair?: string
+  wallet?: string
+  type?: string
+  errorMsg?: string
+  activity?: string
+}
+
+// =============================================================================
+// DEPOSIT
+// =============================================================================
+
+export const DepositEvent = {
+  SHOWN: 'Deposit_Shown',
+  USER_ACTIVITY: 'Deposit_UserActivity',
+} as const
+export type DepositEvent = (typeof DepositEvent)[keyof typeof DepositEvent]
+
+export type DepositPayload = {
+  walletConnected?: boolean
+  sourceUrl?: string
+  destinationUrl?: string
+  copy?: boolean
+  ethVm?: boolean
+}
+
+// =============================================================================
+// BUY
+// =============================================================================
+
+export const BuyEvent = {
+  SHOWN: 'Buy_Shown',
+} as const
+export type BuyEvent = (typeof BuyEvent)[keyof typeof BuyEvent]
+
+export type BuyPayload = {
+  walletConnected?: boolean
+  sourceUrl?: string
+  destinationUrl?: string
+}
+
+// =============================================================================
+// SELL
+// =============================================================================
+
+export const SellEvent = {
+  SHOWN: 'Sell_Shown',
+} as const
+export type SellEvent = (typeof SellEvent)[keyof typeof SellEvent]
+
+export type SellPayload = {
+  walletConnected?: boolean
+  sourceUrl?: string
+  destinationUrl?: string
+}
+
+// =============================================================================
+// WALLET CONNECTION
+// =============================================================================
+
+export const WalletConnectionEvent = {
+  CONNECTION: 'Wallet_Connection',
+} as const
+export type WalletConnectionEvent =
+  (typeof WalletConnectionEvent)[keyof typeof WalletConnectionEvent]
+
+export type WalletConnectionPayload = {
+  network?: string
+}
+
+// =============================================================================
+// NOTIFICATIONS
+// =============================================================================
+
+export const NotificationEvent = {
+  SHOWN: 'Notification_Shown',
+  USER_ACTIVITY: 'Notification_UserActivity',
+} as const
+export type NotificationEvent =
+  (typeof NotificationEvent)[keyof typeof NotificationEvent]
+
+export type NotificationPayload = {
+  network?: string
+  openTime?: number
+  pinned?: boolean
+  filter?: string
+  delete?: boolean
+  moreDetails?: boolean
+  ethVm?: boolean
+}

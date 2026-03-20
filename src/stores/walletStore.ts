@@ -15,6 +15,8 @@ import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
 import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
+import { analytics, WalletStatus } from '@/analytics'
+
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
@@ -70,10 +72,12 @@ export const useWalletStore = defineStore('walletStore', () => {
         currentRecentAddressList[currentRecentAddressList.length - 1]
           .walletName,
       )
+      analytics.setWalletStatus(WalletStatus.WATCH_ONLY)
     } else {
       wallet.value = null
       walletAddress.value = null
       removeTokens()
+      analytics.setWalletStatus(WalletStatus.NOT_CONNECTED)
     }
   }
 

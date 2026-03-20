@@ -1,61 +1,205 @@
 import { captureException } from '@sentry/vue'
 import type {
   AccessWalletEvent,
-  BuySellEvent,
+  AccessWalletPayload,
+  BridgeEvent,
+  BridgePayload,
+  BuyEvent,
+  BuyPayload,
   ConsentEvent,
-  ContractEvent,
-  CreateWalletEvent,
-  DashboardEvent,
-  EthVMEvent,
-  StakingEvent,
+  DepositEvent,
+  DepositPayload,
+  NotificationEvent,
+  NotificationPayload,
+  SellEvent,
+  SellPayload,
+  SendEvent,
+  SendPayload,
   SwapEvent,
-  WalletDirectLinkAccessEvent,
+  SwapPayload,
+  WalletConnectionEvent,
+  WalletConnectionPayload,
 } from './events'
+import {
+  type BalanceBracket,
+  type UserProperties,
+  type WalletStatus,
+} from './user'
+import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import type { createInstance } from '@amplitude/analytics-browser'
+import { Identify } from '@amplitude/analytics-browser'
 
 export type AmplitudeAnalyticsOptions = {
   amplitude: ReturnType<typeof createInstance>
 }
 
-export type ExtraContext = {
-  network?: string
-}
-
-const EventType = {
-  ETHVM: 'ethvm',
-  WALLET_DIRECT_LINK_ACCESS: '???wallet_direct_link_access???',
-  CONSENT: 'consent',
-  CONTRACT: 'contract',
-  DASHBOARD: 'dashboard',
-  CREATE_WALLET: 'create_wallet',
-  ACCESS_WALLET: 'access_wallet',
-  BUY_SELL: 'buy_sell',
-  STAKING: 'staking',
-  SWAP: 'swap',
-} as const
-type EventType = (typeof EventType)[keyof typeof EventType]
-
 export class Analytics {
   readonly amplitude: ReturnType<typeof createInstance>
-  private _context: ExtraContext
 
   constructor(opts: AmplitudeAnalyticsOptions) {
     const { amplitude } = opts
     this.amplitude = amplitude
-    this._context = {}
+  }
+
+  // =============================================================================
+  // User Properties
+  // =============================================================================
+
+  /**
+   * Set all user properties at once
+   *
+   * @param properties   User properties to set
+   */
+  setUserProperties(properties: UserProperties): void {
+    const identify = new Identify()
+
+    if (properties.walletStatus !== undefined) {
+      identify.set('walletStatus', properties.walletStatus)
+    }
+    if (properties.walletName !== undefined) {
+      identify.set('walletName', properties.walletName)
+    }
+    if (properties.walletType !== undefined) {
+      identify.set('walletType', properties.walletType)
+    }
+    if (properties.network !== undefined) {
+      identify.set('network', properties.network)
+    }
+    if (properties.balanceBracket !== undefined) {
+      identify.set('balanceBracket', properties.balanceBracket)
+    }
+    if (properties.isRWAHolder !== undefined) {
+      identify.set('isRWAHolder', properties.isRWAHolder)
+    }
+    if (properties.isStablecoinHolder !== undefined) {
+      identify.set('isStablecoinHolder', properties.isStablecoinHolder)
+    }
+    if (properties.isCryptoHolder !== undefined) {
+      identify.set('isCryptoHolder', properties.isCryptoHolder)
+    }
+    if (properties.isPartnerHolder !== undefined) {
+      identify.set('isPartnerHolder', properties.isPartnerHolder)
+    }
+    if (properties.hasBalance !== undefined) {
+      identify.set('hasBalance', properties.hasBalance)
+    }
+
+    this.amplitude.identify(identify)
   }
 
   /**
-   * Update global Amplitude analytics context
+   * Set wallet status user property
    *
-   * @param context   New context to merge with existing context
+   * @param status   Wallet connection status
    */
-  patchContext(context: ExtraContext): void {
-    this._context = {
-      ...this._context,
-      ...context,
-    }
+  setWalletStatus(status: WalletStatus): void {
+    const identify = new Identify()
+    identify.set('walletStatus', status)
+    this.amplitude.identify(identify)
   }
+
+  /**
+   * Set wallet name user property
+   *
+   * @param name   Wallet name
+   */
+  setWalletName(name: string): void {
+    const identify = new Identify()
+    identify.set('walletName', name)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set wallet type user property
+   *
+   * @param type   Wallet type (software, hardware, rainbow kit, web3)
+   */
+  setWalletType(type: WalletConfigType): void {
+    const identify = new Identify()
+    identify.set('walletType', type)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set network user property
+   *
+   * @param network   Network name
+   */
+  setNetwork(network: string): void {
+    const identify = new Identify()
+    identify.set('network', network)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set balance bracket user property
+   *
+   * @param bracket   Balance bracket
+   */
+  setBalanceBracket(bracket: BalanceBracket): void {
+    const identify = new Identify()
+    identify.set('balanceBracket', bracket)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set RWA holder user property
+   *
+   * @param isHolder   Whether user holds RWA assets
+   */
+  setIsRWAHolder(isHolder: boolean): void {
+    const identify = new Identify()
+    identify.set('isRWAHolder', isHolder)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set stablecoin holder user property
+   *
+   * @param isHolder   Whether user holds stablecoins
+   */
+  setIsStablecoinHolder(isHolder: boolean): void {
+    const identify = new Identify()
+    identify.set('isStablecoinHolder', isHolder)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set crypto holder user property
+   *
+   * @param isHolder   Whether user holds crypto assets
+   */
+  setIsCryptoHolder(isHolder: boolean): void {
+    const identify = new Identify()
+    identify.set('isCryptoHolder', isHolder)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set partner holder user property
+   *
+   * @param isHolder   Whether user holds partner assets (e.g., ONDO)
+   */
+  setIsPartnerHolder(isHolder: boolean): void {
+    const identify = new Identify()
+    identify.set('isPartnerHolder', isHolder)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set has balance user property
+   *
+   * @param hasBalance   Whether user has any balance
+   */
+  setHasBalance(hasBalance: boolean): void {
+    const identify = new Identify()
+    identify.set('hasBalance', hasBalance)
+    this.amplitude.identify(identify)
+  }
+
+  // =============================================================================
+  // Events
+  // =============================================================================
 
   /**
    * Opt in or out of tracking
@@ -67,7 +211,7 @@ export class Analytics {
   }
 
   /**
-   * Send an analytics even to Amplitude
+   * Send an analytics event to Amplitude
    *
    * @param name      Event name
    * @param payload   Event properties
@@ -86,150 +230,156 @@ export class Analytics {
   }
 
   /**
-   * Send an EthVM analytics event to Amplitude
-   *
-   * @param event     Type of EthVM event
-   * @param payload   Event properties
-   * @returns         Promise that resolves when the event is tracked
-   */
-  readonly trackEthVMEvent = (
-    event: EthVMEvent,
-    payload: {
-      path: string
-    },
-  ): Promise<void> => {
-    return this._track(EventType.ETHVM, {
-      event,
-      network: this._context.network,
-      ...payload,
-    })
-  }
-
-  /**
-   * Send a Wallet Direct Link Access analytics event to Amplitude
-   *
-   * @param event     Type of Wallet Direct Link Access event
-   * @param payload   Event properties
-   * @returns         Promise that resolves when the event is tracked
-   */
-  readonly trackWalletDirectLinkAccessEvent = (
-    event: WalletDirectLinkAccessEvent,
-    payload: {
-      to: string
-    },
-  ): Promise<void> => {
-    return this._track(EventType.WALLET_DIRECT_LINK_ACCESS, {
-      event,
-      network: this._context.network,
-      ...payload,
-    })
-  }
-
-  /**
    * Send a Consent analytics event to Amplitude
    *
    * @param event   Type of Consent event
    * @returns       Promise that resolves when the event is tracked
    */
   readonly trackConsentEvent = (event: ConsentEvent): Promise<void> => {
-    return this._track(EventType.CONSENT, {
-      event,
-      network: this._context.network,
-    })
-  }
-
-  /**
-   * Send a Dashboard analytics event to Amplitude
-   *
-   * @param event   Type of Dashboard event
-   * @returns       Promise that resolves when the event is tracked
-   */
-  readonly trackDashboardEvent = (event: DashboardEvent): Promise<void> => {
-    return this._track(EventType.DASHBOARD, {
-      event,
-      network: this._context.network,
-    })
-  }
-
-  /**
-   * Send a Create Wallet analytics event to Amplitude
-   *
-   * @param event   Type of Create Wallet event
-   * @returns       Promise that resolves when the event is tracked
-   */
-  readonly trackCreateWalletEvent = (
-    event: CreateWalletEvent,
-  ): Promise<void> => {
-    return this._track(EventType.CREATE_WALLET, {
-      event,
-      network: this._context.network,
-    })
+    return this._track(event, {})
   }
 
   /**
    * Send an Access Wallet analytics event to Amplitude
    *
-   * @param event   Type of Access Wallet event
-   * @returns       Promise that resolves when the event is tracked
+   * @param event     Type of Access Wallet event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
    */
   readonly trackAccessWalletEvent = (
     event: AccessWalletEvent,
+    payload?: AccessWalletPayload,
   ): Promise<void> => {
-    return this._track(EventType.ACCESS_WALLET, {
-      event,
-      network: this._context.network,
-    })
-  }
-
-  /**
-   * Send a Buy/Sell analytics event to Amplitude
-   *
-   * @param event   Type of Buy/Sell event
-   * @returns       Promise that resolves when the event is tracked
-   */
-  readonly trackBuySellEvent = (event: BuySellEvent): Promise<void> => {
-    return this._track(EventType.BUY_SELL, {
-      event,
-      network: this._context.network,
-    })
-  }
-
-  /**
-   * Send a Contract analytics event to Amplitude
-   *
-   * @param event   Type of Contract event
-   * @returns       Promise that resolves when the event is tracked
-   */
-  readonly trackContractEvent = (event: ContractEvent): Promise<void> => {
-    return this._track(EventType.CONTRACT, {
-      event,
-      network: this._context.network,
-    })
-  }
-
-  /**
-   * Send a Staking analytics event to Amplitude
-   *
-   * @param event   Type of Staking event
-   * @returns       Promise that resolves when the event is tracked
-   */
-  readonly trackStakingEvent = (event: StakingEvent): Promise<void> => {
-    return this._track(EventType.STAKING, {
-      event,
-      network: this._context.network,
+    return this._track(event, {
+      ...payload,
     })
   }
 
   /**
    * Send a Swap analytics event to Amplitude
    *
-   * @param event   Type of Swap event
-   * @returns       Promise that resolves when the event is tracked
+   * @param event     Type of Swap event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
    */
-  readonly trackSwapEvent = (event: SwapEvent): Promise<void> => {
-    return this._track(EventType.SWAP, {
-      event,
-      network: this._context.network,
+  readonly trackSwapEvent = (
+    event: SwapEvent,
+    payload?: SwapPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Send analytics event to Amplitude
+   *
+   * @param event     Type of Send event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSendEvent = (
+    event: SendEvent,
+    payload?: SendPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Bridge analytics event to Amplitude
+   *
+   * @param event     Type of Bridge event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackBridgeEvent = (
+    event: BridgeEvent,
+    payload?: BridgePayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Deposit analytics event to Amplitude
+   *
+   * @param event     Type of Deposit event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackDepositEvent = (
+    event: DepositEvent,
+    payload?: DepositPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Buy analytics event to Amplitude
+   *
+   * @param event     Type of Buy event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackBuyEvent = (
+    event: BuyEvent,
+    payload?: BuyPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Sell analytics event to Amplitude
+   *
+   * @param event     Type of Sell event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSellEvent = (
+    event: SellEvent,
+    payload?: SellPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Wallet Connection analytics event to Amplitude
+   *
+   * @param event     Type of Wallet Connection event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackWalletConnectionEvent = (
+    event: WalletConnectionEvent,
+    payload?: WalletConnectionPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Notification analytics event to Amplitude
+   *
+   * @param event     Type of Notification event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackNotificationEvent = (
+    event: NotificationEvent,
+    payload?: NotificationPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
     })
   }
 }
