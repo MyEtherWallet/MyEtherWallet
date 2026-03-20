@@ -107,6 +107,7 @@ import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
+import { analytics, SwapEventStatus } from '@/analytics'
 
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
@@ -512,6 +513,23 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus === 'confirmed' || newStatus === 'failed') {
+      const event =
+        newStatus === 'confirmed'
+          ? SwapEventStatus.SUCCESS
+          : SwapEventStatus.FAILED
+      analytics.trackSwapEventStatus(event, {
+        hash: hash,
+        fromAmount: swap.fromAmount,
+        toAmount: swap.toAmount,
+        fromToken: swap.fromSymbol,
+        toToken: swap.toSymbol,
+        fromNetwork: swap.fromChainName,
+        toNetwork: swap.fromChainName,
+        isBridge: false,
+        swapPair: `${swap.fromSymbol}-${swap.toSymbol}`,
+      })
+    }
 
     if (!isNotificationsOpen.value) {
       // Show toast for swap status update
@@ -547,6 +565,23 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus === 'confirmed' || newStatus === 'failed') {
+      const event =
+        newStatus === 'confirmed'
+          ? SwapEventStatus.SUCCESS
+          : SwapEventStatus.FAILED
+      analytics.trackSwapEventStatus(event, {
+        hash: hash,
+        fromAmount: bridge.fromAmount,
+        toAmount: bridge.toAmount,
+        fromToken: bridge.fromSymbol,
+        toToken: bridge.toSymbol,
+        fromNetwork: bridge.fromChainName,
+        toNetwork: bridge.toChainName,
+        isBridge: true,
+        swapPair: `${bridge.fromSymbol}-${bridge.toSymbol}`,
+      })
+    }
     if (!isNotificationsOpen.value) {
       // Show toast for bridge status update
 

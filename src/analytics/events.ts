@@ -3,8 +3,8 @@
 // =============================================================================
 
 export const ConsentEvent = {
-  USER_OPT_OUT_TRACKING: 'UserOptOutTracking',
-  USER_OPT_IN_TRACKING: 'UserOptInTracking',
+  USER_OPT_OUT_TRACKING: 'User_OptOut_Tracking',
+  USER_OPT_IN_TRACKING: 'User_OptIn_Tracking',
 } as const
 export type ConsentEvent = (typeof ConsentEvent)[keyof typeof ConsentEvent]
 
@@ -12,10 +12,10 @@ export type ConsentEvent = (typeof ConsentEvent)[keyof typeof ConsentEvent]
 // CREATE WALLET
 // =============================================================================
 export const CreateWalletEvent = {
-  SHOWN: 'CreateWallet_Shown',
-  CLICKED: 'CreateWallet_Clicked',
-  SELECT_WALLET: 'CreateWallet_Select_Wallet',
-  SUCCESS: 'CreateWallet_Success',
+  SHOWN: 'Create_Wallet_Shown',
+  CLICKED: 'Create_Wallet_Clicked',
+  SELECT_WALLET: 'Create_Wallet_Selected_Wallet',
+  SUCCESS: 'Create_Wallet_Success',
 } as const
 export type CreateWalletEvent =
   (typeof CreateWalletEvent)[keyof typeof CreateWalletEvent]
@@ -29,11 +29,11 @@ export type CreateWalletPayload = {
 // =============================================================================
 
 export const ConnectWalletEvent = {
-  SHOWN: 'ConnectWallet_Shown',
-  CLICKED: 'ConnectWallet_Clicked',
-  SELECT_WALLET: 'ConnectWallet_Select_Wallet',
-  SUCCESS: 'ConnectWallet_Success',
-  FAILED: 'ConnectWallet_Failed',
+  SHOWN: 'Connect_Wallet_Shown',
+  CLICKED: 'Connect_Wallet_Clicked',
+  SELECT_WALLET: 'Connect_Wallet_Selected_Wallet',
+  SUCCESS: 'Connect_Wallet_Success',
+  FAILED: 'Connect_Wallet_Failed',
 } as const
 export type ConnectWalletEvent =
   (typeof ConnectWalletEvent)[keyof typeof ConnectWalletEvent]
@@ -52,29 +52,51 @@ export type ConnectWalletPayload = {
 // =============================================================================
 
 export const SwapEvent = {
-  SHOWN: 'Swap_Shown',
-  SUCCESS: 'Swap_Success',
-  FAILED: 'Swap_Failed',
-  USER_ERROR: 'Swap_UserError',
-  USER_ACTIVITY: 'Swap_UserActivity',
+  PRELIMINARY_SHOWN: 'Swap_Preliminary_Rate_Shown',
+  CLICK_BUY: 'Swap_Clicked_Buy',
+  CLICK_SWAP: 'Swap_Clicked_Swap',
+  OFFER_SHOWN: 'Swap_Offer_Shown',
+  OFFER_SELECT_NEW: 'Swap_Offer_Selected_New',
+  OFFER_DECLINED: 'Swap_Offer_Declined',
+  OFFER_PROCEED: 'Swap_Offer_Clicked_Proceed',
 } as const
+
 export type SwapEvent = (typeof SwapEvent)[keyof typeof SwapEvent]
 
-export type SwapPayload = {
-  walletConnected?: boolean
-  sourceUrl?: string
-  destinationUrl?: string
-  fromNetwork?: string
-  fromToken?: string
-  fromAmount?: string
-  toNetwork?: string
-  toToken?: string
-  toAmount?: string
-  swapPair?: string
-  wallet?: string
-  type?: string
-  errorMsg?: string
-  activity?: string
+export type SwapPayloadShared = {
+  fromNetwork: string
+  fromToken: string
+  fromAmount: string
+  toNetwork: string
+  toToken: string
+  toAmount: string
+  swapPair: string
+  isBridge: boolean
+  providerName?: string
+}
+
+export const SwapEventError = {
+  PRELIMINARY_ERROR: 'Swap_Preliminary_Rate_Error',
+  OFFER_ERROR: 'Swap_Offer_Error',
+  SIGN_ERROR: 'Swap_Sign_Error',
+} as const
+export type SwapEventError =
+  (typeof SwapEventError)[keyof typeof SwapEventError]
+export type SwapErrorPayload = SwapPayloadShared & {
+  errorMsg: string
+}
+
+export const SwapEventStatus = {
+  SUCCESS: 'Swap_Success',
+  FAILED: 'Swap_Failed',
+  INITIATED: 'Swap_Initiated',
+} as const
+
+export type SwapEventStatus =
+  (typeof SwapEventStatus)[keyof typeof SwapEventStatus]
+
+export type SwapStatusPayload = SwapPayloadShared & {
+  hash: string
 }
 
 // =============================================================================
@@ -82,56 +104,39 @@ export type SwapPayload = {
 // =============================================================================
 
 export const SendEvent = {
-  SHOWN: 'Send_Shown',
-  SUCCESS: 'Send_Success',
-  FAILED: 'Send_Failed',
-  USER_ERROR: 'Send_UserError',
+  CLICK_SEND: 'Send_Clicked_Send',
+  CONFIRM_SHOWN: 'Send_Confirm_Shown',
+  CONFIRM_PROCEED: 'Send_Confirm_Clicked_Proceed',
 } as const
 export type SendEvent = (typeof SendEvent)[keyof typeof SendEvent]
 
 export type SendPayload = {
-  walletConnected?: boolean
-  sourceUrl?: string
-  destinationUrl?: string
-  fromNetwork?: string
-  fromToken?: string
-  fromAmount?: string
-  toNetwork?: string
-  toToken?: string
-  toAmount?: string
-  wallet?: string
-  type?: string
+  network?: string
+  token?: string
   errorMsg?: string
 }
 
-// =============================================================================
-// BRIDGE
-// =============================================================================
-
-export const BridgeEvent = {
-  SHOWN: 'Bridge_Shown',
-  SUCCESS: 'Bridge_Success',
-  FAILED: 'Bridge_Failed',
-  USER_ERROR: 'Bridge_UserError',
-  USER_ACTIVITY: 'Bridge_UserActivity',
+export const SendEventError = {
+  PRELIMINARY_ERROR: 'Send_Preliminary_Error',
+  SIGN_ERROR: 'Send_Sign_Error',
 } as const
-export type BridgeEvent = (typeof BridgeEvent)[keyof typeof BridgeEvent]
+export type SendEventError =
+  (typeof SendEventError)[keyof typeof SendEventError]
+export type SendErrorPayload = SendPayload & {
+  errorMsg: string
+}
 
-export type BridgePayload = {
-  walletConnected?: boolean
-  sourceUrl?: string
-  destinationUrl?: string
-  fromNetwork?: string
-  fromToken?: string
-  fromAmount?: string
-  toNetwork?: string
-  toToken?: string
-  toAmount?: string
-  bridgePair?: string
-  wallet?: string
-  type?: string
-  errorMsg?: string
-  activity?: string
+export const SendEventStatus = {
+  SUCCESS: 'Send_Success',
+  FAILED: 'Send_Failed',
+  INITIATED: 'Send_Initiated',
+} as const
+
+export type SendEventStatus =
+  (typeof SendEventStatus)[keyof typeof SendEventStatus]
+
+export type SendStatusPayload = SendPayload & {
+  hash: string
 }
 
 // =============================================================================
@@ -140,61 +145,8 @@ export type BridgePayload = {
 
 export const DepositEvent = {
   SHOWN: 'Deposit_Shown',
-  USER_ACTIVITY: 'Deposit_UserActivity',
 } as const
 export type DepositEvent = (typeof DepositEvent)[keyof typeof DepositEvent]
-
-export type DepositPayload = {
-  walletConnected?: boolean
-  sourceUrl?: string
-  destinationUrl?: string
-  copy?: boolean
-  ethVm?: boolean
-}
-
-// =============================================================================
-// BUY
-// =============================================================================
-
-export const BuyEvent = {
-  SHOWN: 'Buy_Shown',
-} as const
-export type BuyEvent = (typeof BuyEvent)[keyof typeof BuyEvent]
-
-export type BuyPayload = {
-  walletConnected?: boolean
-  sourceUrl?: string
-  destinationUrl?: string
-}
-
-// =============================================================================
-// SELL
-// =============================================================================
-
-export const SellEvent = {
-  SHOWN: 'Sell_Shown',
-} as const
-export type SellEvent = (typeof SellEvent)[keyof typeof SellEvent]
-
-export type SellPayload = {
-  walletConnected?: boolean
-  sourceUrl?: string
-  destinationUrl?: string
-}
-
-// =============================================================================
-// WALLET CONNECTION
-// =============================================================================
-
-export const WalletConnectionEvent = {
-  CONNECTION: 'Wallet_Connection',
-} as const
-export type WalletConnectionEvent =
-  (typeof WalletConnectionEvent)[keyof typeof WalletConnectionEvent]
-
-export type WalletConnectionPayload = {
-  network?: string
-}
 
 // =============================================================================
 // NOTIFICATIONS
@@ -202,17 +154,17 @@ export type WalletConnectionPayload = {
 
 export const NotificationEvent = {
   SHOWN: 'Notification_Shown',
-  USER_ACTIVITY: 'Notification_UserActivity',
+  CLOSED: 'Notification_Closed',
+  PINNED: 'Notification_Pinned',
 } as const
 export type NotificationEvent =
   (typeof NotificationEvent)[keyof typeof NotificationEvent]
 
 export type NotificationPayload = {
-  network?: string
-  openTime?: number
-  pinned?: boolean
-  filter?: string
-  delete?: boolean
-  moreDetails?: boolean
-  ethVm?: boolean
+  duration?: number
 }
+
+// select Address
+// buy button clicked
+// swap button clicked
+// trade button clicked

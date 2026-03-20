@@ -33,8 +33,8 @@ amplitude.init(__TMP_HASHED_VERSION__, {
   optOut: consentToTrack,
   serverUrl:
     process.env.NODE_ENV === 'production'
-      ? 'https://analytics-web.mewwallet.dev/record'
-      : 'https://analytics-web-development.mewwallet.dev/record',
+      ? 'https://analytics-web-v7.mewwallet.dev/record'
+      : 'https://analytics-web-development-v7.mewwallet.dev/record',
   appVersion: __TMP_VERSION__,
   trackingOptions: {
     ipAddress: false,

@@ -4,23 +4,18 @@ import type {
   ConnectWalletPayload,
   CreateWalletEvent,
   CreateWalletPayload,
-  BridgeEvent,
-  BridgePayload,
-  BuyEvent,
-  BuyPayload,
   ConsentEvent,
   DepositEvent,
-  DepositPayload,
   NotificationEvent,
   NotificationPayload,
-  SellEvent,
-  SellPayload,
   SendEvent,
   SendPayload,
   SwapEvent,
-  SwapPayload,
-  WalletConnectionEvent,
-  WalletConnectionPayload,
+  SwapPayloadShared,
+  SwapEventError,
+  SwapErrorPayload,
+  SwapEventStatus,
+  SwapStatusPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -272,6 +267,9 @@ export class Analytics {
       ...payload,
     })
   }
+  // =============================================================================
+  // SWAP
+  // =============================================================================
 
   /**
    * Send a Swap analytics event to Amplitude
@@ -282,7 +280,39 @@ export class Analytics {
    */
   readonly trackSwapEvent = (
     event: SwapEvent,
-    payload?: SwapPayload,
+    payload?: SwapPayloadShared,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Swap Error analytics event to Amplitude
+   *
+   * @param event     Type of SwapEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSwapEventError = (
+    event: SwapEventError,
+    payload?: SwapErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Swap Status analytics event to Amplitude
+   *
+   * @param event     Type of SwapEventStatus
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSwapEventStatus = (
+    event: SwapEventStatus,
+    payload?: SwapStatusPayload,
   ): Promise<void> => {
     return this._track(event, {
       ...payload,
@@ -306,83 +336,14 @@ export class Analytics {
   }
 
   /**
-   * Send a Bridge analytics event to Amplitude
-   *
-   * @param event     Type of Bridge event
-   * @param payload   Event properties
-   * @returns         Promise that resolves when the event is tracked
-   */
-  readonly trackBridgeEvent = (
-    event: BridgeEvent,
-    payload?: BridgePayload,
-  ): Promise<void> => {
-    return this._track(event, {
-      ...payload,
-    })
-  }
-
-  /**
    * Send a Deposit analytics event to Amplitude
    *
    * @param event     Type of Deposit event
    * @param payload   Event properties
    * @returns         Promise that resolves when the event is tracked
    */
-  readonly trackDepositEvent = (
-    event: DepositEvent,
-    payload?: DepositPayload,
-  ): Promise<void> => {
-    return this._track(event, {
-      ...payload,
-    })
-  }
-
-  /**
-   * Send a Buy analytics event to Amplitude
-   *
-   * @param event     Type of Buy event
-   * @param payload   Event properties
-   * @returns         Promise that resolves when the event is tracked
-   */
-  readonly trackBuyEvent = (
-    event: BuyEvent,
-    payload?: BuyPayload,
-  ): Promise<void> => {
-    return this._track(event, {
-      ...payload,
-    })
-  }
-
-  /**
-   * Send a Sell analytics event to Amplitude
-   *
-   * @param event     Type of Sell event
-   * @param payload   Event properties
-   * @returns         Promise that resolves when the event is tracked
-   */
-  readonly trackSellEvent = (
-    event: SellEvent,
-    payload?: SellPayload,
-  ): Promise<void> => {
-    return this._track(event, {
-      ...payload,
-    })
-  }
-
-  /**
-   * Send a Wallet Connection analytics event to Amplitude
-   *
-   * @param event     Type of Wallet Connection event
-   * @param payload   Event properties
-   * @returns         Promise that resolves when the event is tracked
-   */
-  readonly trackWalletConnectionEvent = (
-    event: WalletConnectionEvent,
-    payload?: WalletConnectionPayload,
-  ): Promise<void> => {
-    return this._track(event, {
-      ...payload,
-    })
+  readonly trackDepositEvent = (event: DepositEvent): Promise<void> => {
+    return this._track(event, {})
   }
 
   /**
