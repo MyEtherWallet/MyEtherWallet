@@ -33,6 +33,8 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import useBalanceHandler from './utils/balanceHandler'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useSwap } from '@/composables/useSwap'
+import { usePopupStore } from '@/stores/popup'
+import { analytics } from '@/analytics'
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -45,13 +47,33 @@ const { fetchStocksAddresses } = stocksStore
 
 const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
-const { wallet, walletAddress, isWalletConnected, hasMissingBalances } =
-  storeToRefs(store)
+const {
+  wallet,
+  walletAddress,
+  isWalletConnected,
+  hasMissingBalances,
+  userProperties,
+} = storeToRefs(store)
 const chainStore = useChainsStore()
 const { initSwapper } = useSwap()
 const { selectedChain } = storeToRefs(chainStore)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
+
+const popupStore = usePopupStore()
+const { consent } = storeToRefs(popupStore)
+
+watch(
+  () => consent.value,
+  (newVal, oldVal) => {
+    if (newVal && !oldVal) {
+      analytics.setUserProperties({
+        ...userProperties.value,
+        network: selectedChain.value?.name,
+      })
+    }
+  },
+)
 
 const { isPending, start, stop } = useTimeoutFn(() => {
   fetchBalances()

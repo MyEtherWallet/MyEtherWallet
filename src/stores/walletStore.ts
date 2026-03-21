@@ -1,4 +1,4 @@
-import { ref, type Ref, computed, watch } from 'vue'
+import { ref, type Ref, computed, watch, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
@@ -15,7 +15,7 @@ import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
 import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
-import { analytics, WalletStatus, BalanceBracket } from '@/analytics'
+import { analytics, WalletStatus, BalanceBracket, type UserProperties } from '@/analytics'
 import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
 
@@ -33,6 +33,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const isWatchOnly = ref(false)
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
+  const userProperties = reactive<UserProperties>({})
 
   /** -------------------------------
   * The Wallet
@@ -48,10 +49,12 @@ export const useWalletStore = defineStore('walletStore', () => {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true
         analytics.setWalletStatus(WalletStatus.WATCH_ONLY)
+        userProperties.walletStatus = WalletStatus.WATCH_ONLY
         Sentry.setTag('wallet_status', 'watch_only')
       } else {
         isWatchOnly.value = false
         analytics.setWalletStatus(WalletStatus.CONNECTED)
+        userProperties.walletStatus = WalletStatus.CONNECTED
         Sentry.setTag('wallet_status', 'connected')
       }
       wallet.value = newWallet
@@ -59,10 +62,12 @@ export const useWalletStore = defineStore('walletStore', () => {
       if (_walletName !== '') {
         walletName.value = _walletName
         analytics.setWalletName(_walletName)
+        userProperties.walletName = _walletName
         Sentry.setTag('wallet_name', _walletName)
       }
       if (_walletType) {
         analytics.setWalletType(_walletType)
+        userProperties.walletType = _walletType
       }
     }
   }
@@ -95,6 +100,7 @@ export const useWalletStore = defineStore('walletStore', () => {
       walletAddress.value = null
       removeTokens()
       analytics.setWalletStatus(WalletStatus.NOT_CONNECTED)
+      userProperties.walletStatus = WalletStatus.NOT_CONNECTED
       Sentry.setTag('wallet_status', 'not_connected')
     }
   }
@@ -270,6 +276,14 @@ export const useWalletStore = defineStore('walletStore', () => {
       balanceBracket = BalanceBracket.OVER_500K
     }
     analytics.setBalanceBracket(balanceBracket)
+    Object.assign(userProperties, {
+      hasBalance: hasBalances,
+      isRWAHolder: hasRwas,
+      isCryptoHolder: hasOtherCryptoTokens,
+      isStablecoinHolder: hasStables,
+      isPartnerHolder: hasPartnerTokens,
+      balanceBracket,
+    })
   }
 
   const allTokens = computed<Array<TokenBalance>>(() => {
@@ -437,5 +451,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     hasBalances,
     allStocks,
     hasChainBalance,
+    userProperties,
   }
 })

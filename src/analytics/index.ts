@@ -30,7 +30,7 @@ const amplitude = createInstance()
 amplitude.init(__TMP_HASHED_VERSION__, {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
-  optOut: consentToTrack,
+  optOut: !consentToTrack,
   serverUrl:
     process.env.NODE_ENV === 'production'
       ? 'https://analytics-web-v7.mewwallet.dev/record'
