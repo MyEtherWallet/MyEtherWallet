@@ -21,6 +21,7 @@ const configs = {
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
     'https://3779ba7db0670350a396d35fbeb766c0@o382951.ingest.us.sentry.io/4511061868347392',
+  VINATGE: 'https://www.myetherwallet.com/wallet/access',
 }
 
 export default configs

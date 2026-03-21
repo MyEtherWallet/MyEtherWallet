@@ -52,9 +52,17 @@
           <div
             class="sticky flex items-center justify-center w-full h-12 bottom-0 z-10 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
           >
-            <p class="text-s-16 text-center underline">
+            <a
+              class="text-s-16 text-center group hover:underline hoverOpacityHasBG transition"
+              :href="configs.VINATGE"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Old version of MEW Portfolio here
-            </p>
+              <arrow-long-right-icon
+                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+              />
+            </a>
           </div>
         </main>
       </div>
@@ -79,6 +87,8 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
+import configs from '@/configs'
+import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)

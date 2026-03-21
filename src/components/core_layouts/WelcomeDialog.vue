@@ -13,10 +13,15 @@
               no brokerage required.
             </p>
             <p class="text-s-16 max-w-[600px] text-info mt-2">
-              We hope you will love the new dashboard and features. Meanwhile, if
-              you're feeling nostalgic, you can still find the previous version
-              of MEW
-              <a href="#" target="_blank" class="underline">here</a>.
+              We hope you will love the new dashboard and features. Meanwhile,
+              if you're feeling nostalgic, you can still find the previous
+              version of MEW
+              <a
+                :href="configs.VINATGE"
+                target="_blank"
+                class="underline hover:text-black transition-colors"
+                >here</a
+              >.
             </p>
           </div>
           <div class="max-w-[156px] rounded-16 flex items-center justify-end">
@@ -42,7 +47,7 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
 import { ref, onMounted, watch } from 'vue'
-
+import configs from '@/configs'
 const openWelcomeDialog = ref(false)
 const emit = defineEmits<{
   (e: 'close-welcome-dialog'): void
