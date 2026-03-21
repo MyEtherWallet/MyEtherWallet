@@ -88,9 +88,9 @@
                 </div>
                 <div class="flex flex-col text-left">
                   <p
-                    class="text-s-16 lg:text-s-20 font-bold leading-tight flex items-center gap-1"
+                    class="text-s-16 lg:text-s-20 font-bold leading-tight flex items-center gap-1 flex-wrap"
                   >
-                    {{ fromAmount }}
+                    {{ fromAmountFormatted.value }}
                     <app-token-symbol
                       :symbol="fromToken?.symbol || 'UNKNOWN'"
                       :address="
@@ -103,6 +103,11 @@
                       "
                       class="!text-s-16 lg:!text-s-20 !font-bold"
                     />
+                    <app-tooltip
+                      v-if="fromAmountFormatted.tooltipText"
+                      :text="fromAmountFormatted.tooltipText"
+                    >
+                    </app-tooltip>
                   </p>
                   <p class="text-info text-s-14">${{ fromAmountFiat }}</p>
                 </div>
@@ -130,9 +135,9 @@
                 </div>
                 <div class="flex flex-col text-left">
                   <p
-                    class="text-s-16 lg:text-s-20 font-bold leading-tight flex items-center gap-1"
+                    class="text-s-16 lg:text-s-20 font-bold leading-tight flex items-center gap-1 flex-wrap"
                   >
-                    {{ toAmount }}
+                    {{ toAmountFormatted.value }}
                     <app-token-symbol
                       :symbol="toToken?.symbol || 'UNKNOWN'"
                       :address="
@@ -145,6 +150,11 @@
                       "
                       class="!text-s-16 lg:!text-s-20 !font-bold"
                     />
+                    <app-tooltip
+                      v-if="toAmountFormatted.tooltipText"
+                      :text="toAmountFormatted.tooltipText"
+                    >
+                    </app-tooltip>
                   </p>
                   <p class="text-info text-s-14">${{ toAmountFiat }}</p>
                 </div>
@@ -213,6 +223,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import {
   CheckCircleIcon,
   XCircleIcon,
@@ -224,7 +235,10 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import BigNumber from 'bignumber.js'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import {
+  formatFiatValue,
+  formatFloatingPointValue,
+} from '@/utils/numberFormatHelper'
 
 const model = defineModel<boolean>('isOpen', { default: false })
 
@@ -253,6 +267,15 @@ const truncatedHash = computed(() => {
   if (!props.orderHash) return ''
   if (props.orderHash.length <= 16) return props.orderHash
   return `${props.orderHash.slice(0, 8)}...${props.orderHash.slice(-8)}`
+})
+
+// Formatted amounts using formatFloatingPointValue helper
+const fromAmountFormatted = computed(() => {
+  return formatFloatingPointValue(props.fromAmount ?? '0')
+})
+
+const toAmountFormatted = computed(() => {
+  return formatFloatingPointValue(props.toAmount ?? '0')
 })
 
 // Fiat values

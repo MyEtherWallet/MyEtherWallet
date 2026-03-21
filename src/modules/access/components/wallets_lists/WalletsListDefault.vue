@@ -39,6 +39,7 @@ import DontHaveWallet from './DontHaveWallet.vue'
 import {
   type WalletConfig,
   walletConfigs,
+  type defaultWalletId,
 } from '@/modules/access/common/walletConfigs'
 import BtnWallet from './BtnWallet.vue'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
@@ -58,14 +59,28 @@ const { providers } = storeToRefs(providerStore)
 const accessStore = useAccessStore()
 const { selectedChain } = storeToRefs(accessStore)
 
-const reversedRecentWallets = recentWallets.value.slice().reverse()
+const reversedRecentWallets = computed(() => {
+  return recentWallets.value
+    .filter(wallet => {
+      // Check if wallet exists in walletConfigs
+      const config = walletConfigs[wallet.id as defaultWalletId]
+      if (config?.canSupport && selectedChain.value) {
+        // Use canSupport to filter
+        return config.canSupport(selectedChain.value)
+      }
+      // If no canSupport (dynamic wallet like MetaMask), only show for EVM chains
+      return selectedChain.value?.type === 'EVM'
+    })
+    .slice()
+    .reverse()
+})
 
 const keys = Object.keys(walletConfigs) as Array<keyof typeof walletConfigs>
 
 const isMockAvailable = newWalletList.value.find(nw => nw.id === 'mock')
 
 const defaultWallets = computed(() => {
-  const recentIds = reversedRecentWallets.map(r => r.name)
+  const recentIds = reversedRecentWallets.value.map(r => r.name)
   return keys
     .filter(key => {
       if (recentIds.includes(walletConfigs[key].name)) return false
