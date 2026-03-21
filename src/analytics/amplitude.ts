@@ -10,6 +10,10 @@ import type {
   NotificationPayload,
   SendEvent,
   SendPayload,
+  SendEventError,
+  SendErrorPayload,
+  SendEventStatus,
+  SendStatusPayload,
   SwapEvent,
   SwapPayloadShared,
   SwapEventError,
@@ -319,6 +323,10 @@ export class Analytics {
     })
   }
 
+  // =============================================================================
+  // SEND
+  // =============================================================================
+
   /**
    * Send a Send analytics event to Amplitude
    *
@@ -329,6 +337,38 @@ export class Analytics {
   readonly trackSendEvent = (
     event: SendEvent,
     payload?: SendPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Send Error analytics event to Amplitude
+   *
+   * @param event     Type of SendEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSendErrorEvent = (
+    event: SendEventError,
+    payload?: SendErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Send Status analytics event to Amplitude
+   *
+   * @param event     Type of SendEventStatus
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSendEventStatus = (
+    event: SendEventStatus,
+    payload?: SendStatusPayload,
   ): Promise<void> => {
     return this._track(event, {
       ...payload,

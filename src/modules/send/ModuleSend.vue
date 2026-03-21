@@ -114,7 +114,12 @@ import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  SendEvent,
+  SendEventError,
+} from '@/analytics'
 
 const { t } = useI18n()
 const walletStore = useWalletStore()
@@ -473,6 +478,9 @@ const getGasFeeQuotes = async () => {
 }
 
 const handleSubmit = async () => {
+  analytics.trackSendEvent(SendEvent.CLICK_SEND, {
+    token: tokenSelected.value?.symbol,
+  })
   gasFeeError.value = ''
   await getGasFeeQuotes()
   if (!wallet.value || !gasFees.value) return
@@ -498,6 +506,13 @@ const handleSubmit = async () => {
       signedTx.value = signResponse.signed
       openTxModal.value = true
     } catch (e) {
+      analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+        token: tokenSelected.value?.symbol,
+        errorMsg:
+          e instanceof Error || (e as any).message
+            ? (e as any).message
+            : 'Unknown error during signing',
+      })
       toastStore.addToastMessage({
         type: ToastType.Error,
         text: 'Could not sign transaction',

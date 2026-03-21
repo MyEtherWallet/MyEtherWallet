@@ -111,13 +111,11 @@ export const SendEvent = {
 export type SendEvent = (typeof SendEvent)[keyof typeof SendEvent]
 
 export type SendPayload = {
-  network?: string
   token?: string
   errorMsg?: string
 }
 
 export const SendEventError = {
-  PRELIMINARY_ERROR: 'Send_Preliminary_Error',
   SIGN_ERROR: 'Send_Sign_Error',
 } as const
 export type SendEventError =

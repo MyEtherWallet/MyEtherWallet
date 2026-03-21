@@ -107,7 +107,7 @@ import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
-import { analytics, SwapEventStatus } from '@/analytics'
+import { analytics, SwapEventStatus, SendEventStatus } from '@/analytics'
 
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
@@ -496,6 +496,17 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus === 'confirmed' || newStatus === 'failed') {
+      const event =
+        newStatus === 'confirmed'
+          ? SendEventStatus.SUCCESS
+          : SendEventStatus.FAILED
+      analytics.trackSendEventStatus(event, {
+        hash: hash,
+        token: tx.symbol,
+      })
+    }
+
     if (!isNotificationsOpen.value) {
       // Show toast for transaction status update
       toastStore.addToastMessage({
