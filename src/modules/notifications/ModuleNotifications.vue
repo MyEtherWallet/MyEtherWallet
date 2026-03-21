@@ -107,7 +107,13 @@ import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
-import { analytics, SwapEventStatus, SendEventStatus } from '@/analytics'
+import {
+  analytics,
+  SwapEventStatus,
+  SendEventStatus,
+  TradeEventStatus,
+  type TradeEventStatusPayload,
+} from '@/analytics'
 
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
@@ -311,8 +317,22 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     status: status.status,
     fills: status.fills,
   }
+  const analyticsPayload: TradeEventStatusPayload = {
+    orderHash: hash,
+    fromAmount: order.fromAmount,
+    toAmount: order.expectedToAmount,
+    fromToken: order.fromSymbol,
+    toToken: order.toSymbol,
+    network: order.chainName,
+    tradePair: `${order.fromSymbol}-${order.toSymbol}`,
+    expectedToAmount: order.expectedToAmount,
+    txHash: status.fills.length > 0 ? status.fills[0].txHash : '',
+    finalToAmount: order.finalToAmount,
+    percentageDiff: order.percentageDiff,
+  }
 
   if (status.status === 'filled' && status.finalToAmount) {
+    analytics.trackTradeEventStatus(TradeEventStatus.SUCCESS, analyticsPayload)
     const finalAmount = formatFloatingPointValue(
       formatUnits(status.finalToAmount, order.toDecimals),
     ).value
@@ -363,7 +383,11 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
-
+    const event =
+      status.status === 'cancelled'
+        ? TradeEventStatus.CANCELLED
+        : TradeEventStatus.EXPIRED
+    analytics.trackTradeEventStatus(event, analyticsPayload)
     // Show error toast with trade info
     if (!isNotificationsOpen.value) {
       toastStore.addToastMessage({

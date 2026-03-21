@@ -20,6 +20,12 @@ import type {
   SwapErrorPayload,
   SwapEventStatus,
   SwapStatusPayload,
+  TradeEvent,
+  TradePayloadShared,
+  TradeEventError,
+  TradeErrorPayload,
+  TradeEventStatus,
+  TradeEventStatusPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -369,6 +375,58 @@ export class Analytics {
   readonly trackSendEventStatus = (
     event: SendEventStatus,
     payload?: SendStatusPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  // =============================================================================
+  // TRADE
+  // =============================================================================
+
+  /**
+   * Send a Trade analytics event to Amplitude
+   *
+   * @param event     Type of Trade event
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackTradeEvent = (
+    event: TradeEvent,
+    payload?: TradePayloadShared,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Trade Error analytics event to Amplitude
+   *
+   * @param event     Type of TradeEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackTradeEventError = (
+    event: TradeEventError,
+    payload?: TradeErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, {
+      ...payload,
+    })
+  }
+
+  /**
+   * Send a Trade Status analytics event to Amplitude
+   *
+   * @param event     Type of TradeEventStatus
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackTradeEventStatus = (
+    event: TradeEventStatus,
+    payload?: TradeEventStatusPayload,
   ): Promise<void> => {
     return this._track(event, {
       ...payload,

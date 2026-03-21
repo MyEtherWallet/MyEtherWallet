@@ -98,7 +98,6 @@ export type SwapEventStatus =
 export type SwapStatusPayload = SwapPayloadShared & {
   hash: string
 }
-
 // =============================================================================
 // SEND
 // =============================================================================
@@ -135,6 +134,63 @@ export type SendEventStatus =
 
 export type SendStatusPayload = SendPayload & {
   hash: string
+}
+
+// =============================================================================
+// TRADE
+// =============================================================================
+
+export const TradeEvent = {
+  PRELIMINARY_SHOWN: 'Trade_Preliminary_Rate_Shown',
+  CLICK_APPROVE: 'Trade_Clicked_Approve',
+  CLICK_TRADE: 'Trade_Clicked_Trade',
+  OFFER_SHOWN: 'Trade_Offer_Shown',
+  OFFER_SELECT_NEW: 'Trade_Offer_Selected_New',
+  OFFER_DECLINED: 'Trade_Offer_Declined',
+  OFFER_PROCEED: 'Trade_Offer_Clicked_Proceed',
+} as const
+
+export type TradeEvent = (typeof TradeEvent)[keyof typeof TradeEvent]
+
+export type TradePayloadShared = {
+  network: string
+  fromToken: string
+  fromAmount: string
+  toToken: string
+  toAmount: string
+  tradePair: string
+  providerName?: string
+  orderHash?: string
+}
+
+export const TradeEventError = {
+  PRELIMINARY_ERROR: 'Trade_Preliminary_Rate_Error',
+  OFFER_ERROR: 'Trade_Offer_Error',
+  SIGN_ERROR: 'Trade_Sign_Error',
+  APPROVAL_ERROR: 'Trade_Approval_Error',
+} as const
+export type TradeEventError =
+  (typeof TradeEventError)[keyof typeof TradeEventError]
+export type TradeErrorPayload = TradePayloadShared & {
+  errorMsg: string
+}
+
+export const TradeEventStatus = {
+  SUCCESS: 'Trade_Success',
+  // FAILED: 'Trade_Failed',
+  CANCELLED: 'Trade_Cancelled',
+  EXPIRED: 'Trade_Expired',
+  INITIATED: 'Trade_Initiated',
+} as const
+
+export type TradeEventStatus =
+  (typeof TradeEventStatus)[keyof typeof TradeEventStatus]
+
+export type TradeEventStatusPayload = TradePayloadShared & {
+  finalToAmount?: string
+  expectedToAmount?: string
+  txHash?: string
+  percentageDiff?: number
 }
 
 // =============================================================================
