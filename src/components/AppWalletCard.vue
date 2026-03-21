@@ -169,7 +169,11 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { ToastType } from '@/types/notification'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  SelectNewAddressEvent,
+} from '@/analytics'
 import * as Sentry from '@sentry/vue'
 
 const { t } = useI18n()
@@ -298,6 +302,8 @@ const canSwitchAddress = computed(() => {
 })
 
 const switchAddress = () => {
+  analytics.trackSelectNewAddressEvent(SelectNewAddressEvent)
+
   // Map wallet types to their corresponding WALLET_VIEWS index
   const currentWalletType = wallet.value?.getWalletType()
   const viewIndexByType: Partial<Record<WalletType, number>> = {

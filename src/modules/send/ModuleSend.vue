@@ -46,7 +46,7 @@
         {{ $t('common.connect_wallet') }}</app-base-button
       >
       <div v-else class="flex w-full">
-        <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+        <app-no-chain-balance v-if="!hasChainBalance" source="send" class="mb-5 -mt-1" />
         <app-base-button
           v-else
           :disabled="!validSend"

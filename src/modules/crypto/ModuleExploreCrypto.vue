@@ -424,7 +424,10 @@
                           <ul>
                             <li
                               v-if="isBuyable(token.coinId)"
-                              @click.stop="[toggleMenu, buyBtn()]"
+                              @click.stop="[
+                                toggleMenu,
+                                buyBtn(token.symbol, true),
+                              ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-buy class="text-primary w-4 h-4 mr-2" />
@@ -507,7 +510,7 @@
                     <app-base-button
                       v-if="isBuyable(token.coinId)"
                       size="small"
-                      @click="buyBtn()"
+                      @click="buyBtn(token.symbol)"
                       is-outline
                       class="min-w-[60px]"
                       >Buy</app-base-button
@@ -679,6 +682,7 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
+import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
@@ -790,7 +794,12 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
-const buyBtn = () => {
+const buyBtn = (symbol: string, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
+    location: 'crypto_table',
+    token: symbol,
+    isMobile,
+  })
   window.open(
     'https://ccswap.myetherwallet.com/',
     '_blank',
@@ -798,6 +807,11 @@ const buyBtn = () => {
   )
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BRIDGE, {
+    location: 'crypto_table',
+    token: token.symbol,
+    isMobile,
+  })
   const selectedChain = (
     selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
       ? selectedChainFilter.value
@@ -840,6 +854,11 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   }
 }
 const swapBtn = (token: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.SWAP, {
+    location: 'crypto_table',
+    token: token.symbol,
+    isMobile,
+  })
   const selectedChain = (
     selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
       ? selectedChainFilter.value
@@ -887,6 +906,11 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
 }
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
+    location: 'crypto_table',
+    token: token.symbol,
+    stock: token.ondo?.underlyingMarket.name,
+  })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
   if (!isOpenSideMenu.value) {

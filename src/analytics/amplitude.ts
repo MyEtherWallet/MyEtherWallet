@@ -8,6 +8,9 @@ import type {
   DepositEvent,
   NotificationEvent,
   NotificationPayload,
+  SelectNewAddressEvent,
+  ClickMainMenuEvent,
+  ClickMainMenuPayload,
   SendEvent,
   SendPayload,
   SendEventError,
@@ -26,6 +29,8 @@ import type {
   TradeErrorPayload,
   TradeEventStatus,
   TradeEventStatusPayload,
+  ClickTokenTradePayload,
+  ClickTokenTradeEvent,
 } from './events'
 import {
   type BalanceBracket,
@@ -444,6 +449,19 @@ export class Analytics {
     return this._track(event, {})
   }
 
+  readonly trackSelectNewAddressEvent = (
+    event: typeof SelectNewAddressEvent,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackClickMainMenuEvent = (
+    event: typeof ClickMainMenuEvent,
+    payload: ClickMainMenuPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
   /**
    * Send a Notification analytics event to Amplitude
    *
@@ -458,5 +476,12 @@ export class Analytics {
     return this._track(event, {
       ...payload,
     })
+  }
+
+  readonly trackClickTokenTradeEvent = (
+    event: (typeof ClickTokenTradeEvent)[keyof typeof ClickTokenTradeEvent],
+    payload?: ClickTokenTradePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
   }
 }

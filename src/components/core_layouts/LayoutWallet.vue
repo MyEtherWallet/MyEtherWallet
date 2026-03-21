@@ -131,6 +131,11 @@
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
+              @click="
+                analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
+                  button: 'buy',
+                })
+              "
             >
               <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
@@ -151,6 +156,11 @@
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
+              @click="
+                analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
+                  button: 'sell',
+                })
+              "
             >
               <icon-sell :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
@@ -231,6 +241,7 @@ import {
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import { useRoute } from 'vue-router'
+import { analytics, ClickMainMenuEvent } from '@/analytics'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
@@ -287,6 +298,9 @@ const openPanel = (panel: WalletPanel) => {
     walletMenu.setIsOpenSideMenu(true)
   }
   walletMenu.setWalletPanel(panel)
+  analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
+    button: panel as any,
+  })
 }
 
 const openDepositDialog = ref(false) //deposit dialog

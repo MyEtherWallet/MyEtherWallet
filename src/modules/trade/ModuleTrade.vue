@@ -270,7 +270,7 @@
         </app-base-button>
         <div v-else>
           <transition name="fade" mode="out-in">
-            <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+            <app-no-chain-balance v-if="!hasChainBalance" source="trade" class="mb-5 -mt-1" />
             <app-base-button
               v-else
               class="w-full"

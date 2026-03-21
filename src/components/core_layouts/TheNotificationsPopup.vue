@@ -93,6 +93,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, nextTick } from 'vue'
+import { analytics, NotificationEvent } from '@/analytics'
 import { BellIcon } from '@heroicons/vue/24/solid'
 import { storeToRefs } from 'pinia'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
@@ -138,6 +139,7 @@ const tradeNotificationsRef = ref<InstanceType<
 
 // Popup state
 const isPinned = ref(false)
+const openedAt = ref<number | null>(null)
 
 // Persisted position in localStorage
 const savedPosition = useLocalStorage('notificationsPopupPosition', {
@@ -187,26 +189,43 @@ const popupStyle = computed(() => {
 
 // Initialize position when popup opens (only on desktop)
 watch(isNotificationsOpen, async newValue => {
-  if (newValue && !isMobile.value) {
-    await nextTick()
-    // Restore saved position, ensuring it's within viewport bounds
-    const maxX = window.innerWidth - 360
-    const maxY = window.innerHeight - 100
-    x.value = Math.min(Math.max(0, savedPosition.value.x), maxX)
-    y.value = Math.min(Math.max(0, savedPosition.value.y), maxY)
+  if (newValue) {
+    openedAt.value = Date.now()
+    analytics.trackNotificationEvent(NotificationEvent.SHOWN)
+    if (!isMobile.value) {
+      await nextTick()
+      // Restore saved position, ensuring it's within viewport bounds
+      const maxX = window.innerWidth - 360
+      const maxY = window.innerHeight - 100
+      x.value = Math.min(Math.max(0, savedPosition.value.x), maxX)
+      y.value = Math.min(Math.max(0, savedPosition.value.y), maxY)
+    }
+  } else {
+    const duration =
+      openedAt.value !== null
+        ? Math.round((Date.now() - openedAt.value) / 1000)
+        : undefined
+    openedAt.value = null
+    analytics.trackNotificationEvent(NotificationEvent.CLOSED, { duration })
   }
 })
 
 // Keep popup visible when window is resized
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 
+watch(isPinned, newValue => {
+  if (newValue) {
+    analytics.trackNotificationEvent(NotificationEvent.PINNED)
+  }
+})
+
 watch([windowWidth, windowHeight], () => {
   if (!isNotificationsOpen.value || isMobile.value) return
-  
+
   // Ensure popup stays within viewport bounds on desktop
   const maxX = windowWidth.value - 360
   const maxY = windowHeight.value - 100
-  
+
   if (x.value > maxX) {
     x.value = Math.max(0, maxX)
     savedPosition.value = { x: x.value, y: y.value }

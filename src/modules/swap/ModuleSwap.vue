@@ -155,7 +155,7 @@
       >
       <div v-else :class="['w-full max-w-[340px]', blurClass]">
         <transition name="fade" mode="out-in">
-          <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+          <app-no-chain-balance v-if="!hasChainBalance" :source="isSwapView ? 'swap' : 'bridge'" class="mb-5 -mt-1" />
           <app-base-button
             v-else
             :disabled="isSwapDisabled"

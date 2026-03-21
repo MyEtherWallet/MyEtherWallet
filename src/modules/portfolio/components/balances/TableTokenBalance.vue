@@ -377,7 +377,7 @@
                       <ul v-if="props.view !== 'custom'">
                         <li
                           v-if="isBuyable(token.coinId)"
-                          @click.stop="[buyBtn(), toggleMenu()]"
+                          @click.stop="[buyBtn(token, true), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <icon-buy class="text-primary w-4 h-4 mr-2" />
@@ -449,7 +449,7 @@
                 <app-base-button
                   v-if="isBuyable(token.coinId)"
                   size="small"
-                  @click="buyBtn"
+                  @click="buyBtn(token)"
                   is-outline
                   class="min-w-[60px]"
                   >Buy
@@ -613,6 +613,7 @@ import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { truncate } from '@/utils/filters'
 import { getAPIPath } from '@/utils/constructAPIPath'
+import { analytics, ClickTokenTradeEvent } from '@/analytics'
 import {
   formatFiatValue,
   formatFloatingPointValue,
@@ -1012,7 +1013,14 @@ const getCurrentViewableItemsIndex = computed(() =>
 /** -------------------------------
  * Navigation & Handlers
  -------------------------------*/
-const buyBtn = () => window.open('https://ccswap.myetherwallet.com', '_blank')
+const buyBtn = (token?: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
+    location: 'balance_table',
+    token: token?.symbol,
+    isMobile,
+  })
+  window.open('https://ccswap.myetherwallet.com', '_blank')
+}
 
 const goToTokenPage = (token: DisplayToken) => {
   if (token.ondo !== undefined) {
@@ -1063,12 +1071,23 @@ const customTokenAction = (action: 'delete' | 'edit', token: TokenBalance) => {
 }
 
 const swapBtn = (token: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.SWAP, {
+    location: 'balance_table',
+    token: token.symbol,
+    isMobile,
+  })
   setWalletPanel('swap')
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)
   if (!isMobile) goToTokenPage(token)
 }
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
+    location: 'balance_table',
+    token: token.symbol,
+    isMobile,
+    stock: token.ondo?.underlyingMarket.name,
+  })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
   if (!isOpenSideMenu.value) walletMenu.setIsOpenSideMenu(true)

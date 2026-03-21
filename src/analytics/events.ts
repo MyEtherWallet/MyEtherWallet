@@ -218,7 +218,47 @@ export type NotificationPayload = {
   duration?: number
 }
 
-// select Address
-// buy button clicked
-// swap button clicked
-// trade button clicked
+// =============================================================================
+// Click Token Trade
+// =============================================================================
+
+export const ClickTokenTradeEvent = {
+  TRADE: 'Clicked_Token_Trade',
+  BUY: 'Clicked_Token_Buy',
+  BRIDGE: 'Clicked_Token_Bridge',
+  SWAP: 'Clicked_Token_Swap',
+} as const
+
+export type ClickTokenTradePayload = {
+  location:
+    | 'balance_table'
+    | 'token_details_page'
+    | 'stocks_table'
+    | 'crypto_table'
+    | 'trade_module'
+    | 'trade'
+    | 'swap'
+    | 'bridge'
+    | 'send'
+    | 'portfolio_no_balance'
+    | 'select_fee'
+
+  token?: string
+  isMobile?: boolean
+  stock?: string
+}
+// =============================================================================
+// Main Menu
+// =============================================================================
+
+export const ClickMainMenuEvent = 'Clicked_Wallet_Menu' as const
+
+export type ClickMainMenuPayload = {
+  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send'
+}
+
+// =============================================================================
+// Select New Address
+// =============================================================================
+
+export const SelectNewAddressEvent = 'Selected_New_Address' as const
