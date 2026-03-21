@@ -5,15 +5,6 @@
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
       <div class="flex items-center gap-2 relative">
-        <div
-          class="py-[1px] sm:py-[2px] rounded-full flex items-center justify-center bg-white px-[6px] absolute top-0 left-0 translate-y-[-40%] translate-x-3 sm:translate-x-5 shadow-button shadow-button-elevated border-2 border-portfolio"
-        >
-          <p
-            class="text-portfolio text-[8px] sm:text-s-11 uppercase font-bold tracking-sp-06"
-          >
-            BETA
-          </p>
-        </div>
         <router-link
           :to="{ name: ROUTES_MAIN.HOME.NAME }"
           class="cursor-pointer mr-1 sm:mr-4 xl:mr-10"

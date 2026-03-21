@@ -558,8 +558,9 @@
           class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
         >
           <div
-            v-if="!isLoading && selectedCryptoFilter.value !== 'watchlist'"
+            v-if="selectedCryptoFilter.value !== 'watchlist'"
             class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
+            :class="isLoading ? 'invisible' : 'visible'"
           >
             {{ getCurrentViewableItemsIndex }} of {{ totalTokenCount }} results
           </div>
@@ -575,10 +576,10 @@
               <ChevronLeftIcon class="w-4 h-4" />
             </app-btn-icon>
 
-            <div class="flex items-center gap-2">
-              <span class="text-black">{{ page }}</span>
+            <div class="flex items-center justify-center gap-2 min-w-[70px]">
+              <span class="text-black tabular-nums">{{ page }}</span>
               <span class="text-info">of</span>
-              <span class="text-info">{{ totalPages }}</span>
+              <span class="text-info tabular-nums">{{ totalPages }}</span>
             </div>
             <app-btn-icon
               :disabled="!isLoading && page >= totalPages"
@@ -1192,6 +1193,14 @@ watch(
     } else {
       debounceFetchTokens()
     }
+  },
+)
+
+// Reset page to 1 when filter or items per page changes
+watch(
+  () => [selectedCryptoFilter.value, shownItems.value],
+  () => {
+    page.value = 1
   },
 )
 

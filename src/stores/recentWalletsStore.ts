@@ -25,12 +25,17 @@ export const useRecentWalletsStore = defineStore(
       },
     )
     const addWallet = (passedWallet: WalletConfig) => {
-      const passedWalletExists =
-        recentWallets.value.find(wallet => wallet.id === passedWallet.id) !==
-        undefined
+      const existingWalletIndex = recentWallets.value.findIndex(
+        wallet => wallet.id === passedWallet.id,
+      )
       const isOfficial = passedWallet.isOfficial
 
-      if (passedWalletExists || isOfficial) {
+      // If wallet already exists, don't add again
+      if (existingWalletIndex !== -1) {
+        return
+      }
+
+      if (isOfficial) {
         return
       }
       const walletToSave: SavedWalletType = {
