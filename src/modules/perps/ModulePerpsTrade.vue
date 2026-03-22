@@ -192,6 +192,7 @@
           <!-- Leverage -->
           <div
             class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-4 flex justify-between items-center cursor-pointer shadow-sm"
+            @click="openLeverageModal"
           >
             <span class="text-s-16 font-medium text-textDark ml-1"
               >Leverage</span
@@ -230,9 +231,12 @@
           </div>
           <div class="flex justify-between text-s-14 px-3 mb-2 font-medium">
             <span class="text-[#58595b]">Estimated Liquidation</span>
-            <span class="text-textDark font-bold">{{
-              estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
-            }}</span>
+            <span class="text-textDark font-bold">
+              TODO
+              {{
+                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+              }}</span
+            >
           </div>
         </div>
 
@@ -258,6 +262,128 @@
         </div>
       </div>
     </div>
+
+    <!-- Leverage Modal Overlay -->
+    <Teleport to="body">
+      <div
+        v-if="showLeverageModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center"
+        @click.self="showLeverageModal = false"
+      >
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/40" />
+
+        <!-- Modal -->
+        <div
+          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
+        >
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2.5">
+              <img
+                :src="getLogoUrl(displaySymbol)"
+                :alt="displaySymbol"
+                class="w-8 h-8 rounded-full"
+              />
+              <span class="font-bold text-s-20 text-textDark"
+                >{{ displaySymbol }} Leverage</span
+              >
+            </div>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors text-textDark"
+              @click="showLeverageModal = false"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Leverage Card -->
+          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-5">
+            <!-- +/- Controls -->
+            <div class="flex items-center justify-center gap-6 mb-5">
+              <button
+                class="w-10 h-10 rounded-full border border-[#e5e7eb] bg-white flex items-center justify-center text-textDark hover:bg-greyLight transition-colors text-s-20"
+                :disabled="tempLeverage <= 1"
+                :class="{ 'opacity-30 cursor-not-allowed': tempLeverage <= 1 }"
+                @click="tempLeverage = Math.max(1, tempLeverage - 1)"
+              >
+                &minus;
+              </button>
+              <span
+                class="font-bold text-[40px] text-textDark tracking-tight min-w-[100px] text-center"
+                >{{ tempLeverage }}&times;</span
+              >
+              <button
+                class="w-10 h-10 rounded-full border border-[#e5e7eb] bg-white flex items-center justify-center text-textDark hover:bg-greyLight transition-colors text-s-20"
+                :disabled="tempLeverage >= 20"
+                :class="{
+                  'opacity-30 cursor-not-allowed': tempLeverage >= 20,
+                }"
+                @click="tempLeverage = Math.min(20, tempLeverage + 1)"
+              >
+                +
+              </button>
+            </div>
+
+            <!-- Tick Labels -->
+            <div class="flex justify-between px-1 mb-1.5">
+              <span
+                v-for="tick in [1, 5, 10, 15, 20]"
+                :key="tick"
+                class="text-[11px] font-medium"
+                :class="tempLeverage >= tick ? 'text-textDark' : 'text-grey-40'"
+                >{{ tick }}&times;</span
+              >
+            </div>
+
+            <!-- Slider -->
+            <div class="relative px-0">
+              <input
+                v-model.number="tempLeverage"
+                type="range"
+                min="1"
+                max="20"
+                step="1"
+                class="w-full h-2 rounded-full appearance-none cursor-pointer leverage-slider"
+                :style="{
+                  background: `linear-gradient(to right, #0052ff 0%, #0052ff ${((tempLeverage - 1) / 19) * 100}%, #e5e7eb ${((tempLeverage - 1) / 19) * 100}%, #e5e7eb 100%)`,
+                }"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p class="text-s-14 text-[#58595b] mb-6 leading-relaxed">
+            Leverage increases both your potential profits and losses. Using
+            higher leverage means higher risk of losing your position.
+            <a href="#" class="text-[#0052ff] font-medium hover:underline"
+              >Learn more</a
+            >
+          </p>
+
+          <!-- Save Button -->
+          <button
+            class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
+            :disabled="isSavingLeverage"
+            @click="saveLeverage"
+          >
+            {{ isSavingLeverage ? 'Saving...' : 'Save' }}
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -291,6 +417,9 @@ const sliderValue = ref(0)
 const isSubmitting = ref(false)
 const markPriceData = ref<any>(null)
 const maxOrderSize = ref<MaxOrderSizeResult | null>(null)
+const showLeverageModal = ref(false)
+const tempLeverage = ref(1)
+const isSavingLeverage = ref(false)
 
 // Computed
 const activeMarket = computed(
@@ -367,21 +496,24 @@ function getBaseSizeForPercent(pct: number): number | null {
     75: 'percent75',
     100: 'percent100',
   }
+  // API returns max sizes assuming 20x leverage; scale to actual leverage
+  const leverageScale = leverage.value / 20
   const levelKey = levels[pct]
   if (levelKey) {
-    return parseFloat(maxOrderSize.value[levelKey][side]) || 0
+    return (parseFloat(maxOrderSize.value[levelKey][side]) || 0) * leverageScale
   }
   // For 10%, derive from max (percent100) * 0.1
-  const maxBase = parseFloat(maxOrderSize.value.percent100[side]) || 0
+  const maxBase =
+    (parseFloat(maxOrderSize.value.percent100[side]) || 0) * leverageScale
   return maxBase * (pct / 100)
 }
 
 function setPercentage(pct: number) {
   const baseSize = getBaseSizeForPercent(pct)
-  console.log(baseSize, currentPrice)
   if (baseSize !== null && baseSize > 0 && currentPrice.value > 0) {
-    const usdValue = baseSize * currentPrice.value
-    inputAmount.value = usdValue.toFixed(2)
+    // baseSize * price = position size in USD, divide by leverage to get margin
+    const margin = (baseSize * currentPrice.value) / leverage.value
+    inputAmount.value = margin.toFixed(2)
     // Update slider proportionally to max
     const maxBase = getBaseSizeForPercent(100) || 1
     sliderValue.value = Math.min((baseSize / maxBase) * 100, 100)
@@ -392,8 +524,8 @@ function onSliderInput() {
   const maxBase = getBaseSizeForPercent(100)
   if (maxBase && maxBase > 0 && currentPrice.value > 0) {
     const baseSize = maxBase * (sliderValue.value / 100)
-    const usdValue = baseSize * currentPrice.value
-    inputAmount.value = usdValue.toFixed(2)
+    const margin = (baseSize * currentPrice.value) / leverage.value
+    inputAmount.value = margin.toFixed(2)
   } else if (availableMargin.value > 0) {
     inputAmount.value = (
       (availableMargin.value * sliderValue.value) /
@@ -412,6 +544,28 @@ function openTokenSelect() {
 
 function getLogoUrl(base: string): string {
   return `https://cdn.ondoperps.xyz/symbol-icons/${encodeURIComponent(base)}.svg`
+}
+
+function openLeverageModal() {
+  tempLeverage.value = leverage.value
+  showLeverageModal.value = true
+}
+
+async function saveLeverage() {
+  isSavingLeverage.value = true
+  try {
+    if (token.value && markets.value.length) {
+      await perpsClient.setLeverage(fullMarketName.value, tempLeverage.value)
+    }
+    leverage.value = tempLeverage.value
+    showLeverageModal.value = false
+    // Re-fetch max order size with new leverage
+    fetchMaxOrderSize()
+  } catch (e) {
+    console.error('Failed to save leverage:', e)
+  } finally {
+    isSavingLeverage.value = false
+  }
 }
 
 async function fetchLeverage() {
@@ -539,6 +693,33 @@ watch(
 }
 
 .slider-input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0052ff;
+  border: 4px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.leverage-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0052ff;
+  border: 4px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.leverage-slider:active::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+.leverage-slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
