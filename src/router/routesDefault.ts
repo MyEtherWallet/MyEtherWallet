@@ -16,6 +16,7 @@ const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
+const ViewPerps = () => import('@/modules/perps/ViewPerps.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[
@@ -77,6 +78,14 @@ const DefaultRoutes = <RouteNameCollection>[
     path: ROUTES_MAIN.SIGN_MESSAGE.PATH,
     name: ROUTES_MAIN.SIGN_MESSAGE.NAME,
     component: SignMessageView,
+    meta: {
+      noAuth: true,
+    },
+  },
+  {
+    path: ROUTES_MAIN.PERPS.PATH,
+    name: ROUTES_MAIN.PERPS.NAME,
+    component: ViewPerps,
     meta: {
       noAuth: true,
     },

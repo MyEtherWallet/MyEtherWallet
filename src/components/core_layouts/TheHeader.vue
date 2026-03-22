@@ -188,6 +188,11 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       iconID: ICON_IDS.CRYPTO,
     },
     {
+      title: t('perps'),
+      routeName: ROUTES_MAIN.PERPS.NAME,
+      iconID: ICON_IDS.PERPS,
+    },
+    {
       title: t('earn'),
       routeName: ROUTES_MAIN.EARN.NAME,
       iconID: ICON_IDS.STAKE,

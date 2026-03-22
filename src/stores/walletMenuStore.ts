@@ -1,7 +1,14 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export type WalletPanel = 'trade' | 'swap' | 'send' | 'buy' | 'sell' | 'bridge'
+export type WalletPanel =
+  | 'trade'
+  | 'swap'
+  | 'send'
+  | 'buy'
+  | 'sell'
+  | 'bridge'
+  | 'perps'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const hasShadow = ref(true)

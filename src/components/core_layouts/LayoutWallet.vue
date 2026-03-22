@@ -60,6 +60,27 @@
                 {{ $t('common.swap') }}
               </p>
             </button>
+            <!-- Perps button -->
+            <button
+              @click="openPanel('perps')"
+              :class="[
+                walletPanel === 'perps' && isOpenSideMenu
+                  ? 'bg-mewBg'
+                  : 'hoverNoBG',
+                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
+              ]"
+            >
+              <icon-perps
+                :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']"
+              />
+              <p
+                :class="[
+                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
+                ]"
+              >
+                {{ $t('perps') }}
+              </p>
+            </button>
             <!-- Bridge button -->
             <button
               @click="openPanel('bridge')"
@@ -196,6 +217,7 @@
           <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
           <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
           <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
+          <ModulePerps v-else-if="walletPanel === 'perps'" key="perps" />
           <div v-else key="coming-soon" class="mt-6 text-center font-medium">
             {{ comingSoon }}
           </div>
@@ -216,9 +238,11 @@ import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
 import IconSell from '@/assets/icons/core_menu/icon-sell.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import IconPerps from '@/modules/perps/IconPerps.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
+import ModulePerps from '@/modules/perps/ModulePerps.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   QrCodeIcon,

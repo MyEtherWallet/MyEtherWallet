@@ -22,6 +22,7 @@ const ROUTES_MAIN: RouteNameCollection = {
   SIGN_MESSAGE: { NAME: 'SignMessage', PATH: '/sign' },
   SETTINGS: { NAME: 'Settings', PATH: '/settings' },
   EARN: { NAME: 'Earn', PATH: '/earn' },
+  PERPS: { NAME: 'Perps', PATH: '/perps' },
   SWAP: { NAME: 'Swap', PATH: '/swap' },
   VERIFY_MESSAGE: { NAME: 'VerifyMessage', PATH: '/verify' },
   CRYPTO: { NAME: 'Crypto', PATH: '/crypto' },
