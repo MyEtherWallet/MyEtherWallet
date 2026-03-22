@@ -24,12 +24,18 @@ import PerpsPositionsTable from './components/PerpsPositionsTable.vue'
 import PerpsMarketList from './components/PerpsMarketList.vue'
 import PerpsDepositDialog from './components/PerpsDepositDialog.vue'
 import PerpsWithdrawDialog from './components/PerpsWithdrawDialog.vue'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const router = useRouter()
+const walletMenu = useWalletMenuStore()
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
 
 function handleOpenPosition(market: string) {
+  walletMenu.setWalletPanel('perps')
+  walletMenu.setIsOpenSideMenu(true)
+  walletMenu.setSelectedTradeTokenSymbol(market)
+
   router.push({
     name: PERP_INFO_ROUTE_NAME,
     params: { market },

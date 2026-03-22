@@ -578,7 +578,7 @@ function updateFundingCountdown() {
   if (mins === 0) fundingCountdown.value = `${secs}s`
 }
 
-countdownTimer = setInterval(updateFundingCountdown, 1000)
+countdownTimer = setInterval(updateFundingCountdown, 5000)
 updateFundingCountdown()
 
 onUnmounted(() => {

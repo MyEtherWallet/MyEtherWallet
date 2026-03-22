@@ -217,6 +217,10 @@
           <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
           <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
           <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
+          <ModulePerpsTrade
+            v-else-if="walletPanel === 'perps' && selectedTradeTokenSymbol"
+            key="perps-trade"
+          />
           <ModulePerps v-else-if="walletPanel === 'perps'" key="perps" />
           <div v-else key="coming-soon" class="mt-6 text-center font-medium">
             {{ comingSoon }}
@@ -242,7 +246,7 @@ import IconPerps from '@/modules/perps/IconPerps.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
-import ModulePerps from '@/modules/perps/ModulePerps.vue'
+import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   QrCodeIcon,
@@ -257,7 +261,8 @@ import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.
 import { useRoute } from 'vue-router'
 
 const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
+const { isOpenSideMenu, walletPanel, hasShadow, selectedTradeTokenSymbol } =
+  storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
 const { isXLAndUp, isMDAndUp } = breakpoints
