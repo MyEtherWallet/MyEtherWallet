@@ -1,16 +1,16 @@
 <template>
-  <div class="bg-white rounded-20 p-6 sm:p-8">
+  <div>
     <div class="flex items-center justify-between mb-4">
-      <p class="font-bold text-s-24">Markets</p>
+      <p class="font-bold text-s-28">Markets</p>
       <div class="flex bg-surface rounded-full p-1">
         <button
           v-for="filter in filters"
           :key="filter.key"
           :class="[
-            'px-4 py-1.5 rounded-full text-s-13 font-medium transition-colors',
+            'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
             activeFilter === filter.key
               ? 'bg-white shadow-container'
-              : 'text-info hoverNoBG',
+              : 'hoverNoBG',
           ]"
           @click="activeFilter = filter.key"
         >
@@ -19,125 +19,142 @@
       </div>
     </div>
 
-    <!-- Search -->
-    <div class="mb-4">
-      <div class="flex items-center gap-2 bg-surface rounded-12 px-4 py-2.5">
-        <MagnifyingGlassIcon class="w-5 h-5 text-info" />
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search"
-          class="w-full bg-transparent text-s-14 outline-none placeholder:text-info"
-        />
+    <div class="bg-white rounded-20 p-6 sm:p-8">
+      <!-- Search -->
+      <div class="mb-4">
+        <div
+          class="flex items-center gap-2 border border-grey-10 rounded-full px-4 py-2.5 max-w-md"
+        >
+          <MagnifyingGlassIcon class="w-5 h-5 text-info" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search"
+            class="w-full bg-transparent text-s-14 outline-none placeholder:text-info"
+          />
+        </div>
       </div>
-    </div>
 
-    <!-- Loading -->
-    <div v-if="contractsLoading" class="text-center py-8 text-info text-s-14">
-      Loading markets...
-    </div>
+      <!-- Loading -->
+      <div v-if="contractsLoading" class="text-center py-8 text-info text-s-14">
+        Loading markets...
+      </div>
 
-    <!-- Error -->
-    <div
-      v-else-if="contractsError"
-      class="text-center py-8 text-error text-s-14"
-    >
-      {{ contractsError }}
-    </div>
+      <!-- Error -->
+      <div
+        v-else-if="contractsError"
+        class="text-center py-8 text-error text-s-14"
+      >
+        {{ contractsError }}
+      </div>
 
-    <!-- Markets table -->
-    <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
-      <table class="w-full text-s-13 min-w-[800px]">
-        <thead>
-          <tr
-            class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
-          >
-            <th class="px-6 sm:px-8 py-3 text-left font-medium">Name</th>
-            <th class="px-3 py-3 text-right font-medium">Price</th>
-            <th class="px-3 py-3 text-center font-medium">24H</th>
-            <th class="px-3 py-3 text-right font-medium">Volume</th>
-            <th class="px-3 py-3 text-right font-medium">Market Cap</th>
-            <th class="px-6 sm:px-8 py-3 text-right font-medium">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="contract in filteredContracts"
-            :key="contract.market"
-            class="border-b border-grey-10 last:border-0"
-          >
-            <td class="px-6 sm:px-8 py-4">
-              <div class="flex items-center gap-3">
-                <img
-                  :src="getLogoUrl(contract.baseCurrency)"
-                  :alt="contract.baseCurrency"
-                  class="w-8 h-8 rounded-full"
-                />
-                <div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold">{{ contract.baseCurrency }}</span>
-                    <span
-                      class="bg-surface text-info rounded px-1.5 py-0.5 text-s-11 font-medium"
-                    >
-                      20x
-                    </span>
+      <!-- Markets table -->
+      <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
+        <table class="w-full text-s-14 min-w-[800px]">
+          <thead>
+            <tr
+              class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
+            >
+              <th class="px-6 sm:px-8 py-3 text-left font-medium">Name</th>
+              <th class="px-3 py-3 text-right font-medium">Price</th>
+              <th class="px-3 py-3 text-center font-medium">24H</th>
+              <th class="px-3 py-3 text-right font-medium">Volume</th>
+              <th class="px-3 py-3 text-right font-medium">Market Cap</th>
+              <th class="px-6 sm:px-8 py-3 text-right font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="contract in filteredContracts"
+              :key="contract.market"
+              class="border-b border-grey-10 last:border-0"
+            >
+              <td class="px-6 sm:px-8 py-4">
+                <div class="flex items-center gap-3">
+                  <button
+                    class="text-grey-30 hover:text-gold transition-colors"
+                    @click.stop="toggleWatchlist(contract.baseCurrency)"
+                  >
+                    <StarIcon
+                      :class="[
+                        'w-5 h-5',
+                        watchlist.has(contract.baseCurrency)
+                          ? 'fill-gold text-gold'
+                          : '',
+                      ]"
+                    />
+                  </button>
+                  <img
+                    :src="getLogoUrl(contract.baseCurrency)"
+                    :alt="contract.baseCurrency"
+                    class="w-8 h-8 rounded-full"
+                  />
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold">{{ contract.baseCurrency }}</span>
+                      <span
+                        class="bg-surface text-info rounded px-1.5 py-0.5 text-s-11 font-medium"
+                      >
+                        20x
+                      </span>
+                    </div>
+                    <span class="text-info text-s-12">{{
+                      contract.displayName
+                    }}</span>
                   </div>
-                  <span class="text-info text-s-12">{{
-                    contract.displayName
-                  }}</span>
                 </div>
-              </div>
-            </td>
-            <td class="px-3 py-4 text-right font-medium">
-              {{ formatPrice(contract.lastPrice) }}
-            </td>
-            <td class="px-3 py-4 text-center">
-              <div class="flex items-center justify-center gap-2">
-                <table-sparkline
-                  v-if="contract.sparkline?.price.length"
-                  :points="contract.sparkline.price.map(Number)"
-                  :percent-change="
-                    parseFloat(contract.priceChangePercent ?? '0')
-                  "
-                  :width="80"
-                  :height="28"
-                />
-                <span
-                  :class="[
-                    parseFloat(contract.priceChangePercent ?? '0') >= 0
-                      ? 'text-success'
-                      : 'text-error',
-                    'text-s-12 font-medium',
-                  ]"
+              </td>
+              <td class="px-3 py-4 text-right font-bold">
+                {{ formatPrice(midPrice(contract)) }}
+              </td>
+              <td class="px-3 py-4 text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <table-sparkline
+                    v-if="contract.sparkline?.price.length"
+                    :points="contract.sparkline.price.map(Number)"
+                    :percent-change="
+                      parseFloat(contract.priceChangePercent ?? '0')
+                    "
+                    :width="80"
+                    :height="28"
+                  />
+                  <span
+                    :class="[
+                      parseFloat(contract.priceChangePercent ?? '0') >= 0
+                        ? 'text-success'
+                        : 'text-error',
+                      'text-s-12 font-medium',
+                    ]"
+                  >
+                    {{ formatChange(contract.priceChangePercent) }}
+                  </span>
+                </div>
+              </td>
+              <td class="px-3 py-4 text-right font-bold">
+                {{ formatVolume(contract.usdVolume) }}
+              </td>
+              <td class="px-3 py-4 text-right font-bold">
+                {{ formatVolume(contract.openInterestUsd) }}
+              </td>
+              <td class="px-6 sm:px-8 py-4 text-right">
+                <button
+                  class="bg-primary text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
+                  @click="$emit('openPosition', contract.market)"
                 >
-                  {{ formatChange(contract.priceChangePercent) }}
-                </span>
-              </div>
-            </td>
-            <td class="px-3 py-4 text-right">
-              {{ formatVolume(contract.usdVolume) }}
-            </td>
-            <td class="px-3 py-4 text-right">
-              {{ formatVolume(contract.openInterestUsd) }}
-            </td>
-            <td class="px-6 sm:px-8 py-4 text-right">
-              <button
-                class="bg-success text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
-                @click="$emit('openPosition', contract.market)"
-              >
-                Open position
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                  Open position
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { MagnifyingGlassIcon, StarIcon } from '@heroicons/vue/24/outline'
 import TableSparkline from '@/components/TableSparkline.vue'
 import {
   usePerpsMarkets,
@@ -158,6 +175,16 @@ const {
 
 const searchQuery = ref('')
 const activeFilter = ref<string>('all')
+const watchlist = ref<Set<string>>(new Set())
+
+function toggleWatchlist(symbol: string) {
+  if (watchlist.value.has(symbol)) {
+    watchlist.value.delete(symbol)
+  } else {
+    watchlist.value.add(symbol)
+  }
+  watchlist.value = new Set(watchlist.value)
+}
 
 const COMMODITIES = new Set(['XAU', 'XAG'])
 const ETFS = new Set(['QQQ', 'SPY'])
@@ -188,7 +215,9 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
 const filteredContracts = computed(() => {
   let list = enrichedContracts.value
 
-  if (activeFilter.value === 'commodities') {
+  if (activeFilter.value === 'watchlist') {
+    list = list.filter(c => watchlist.value.has(c.baseCurrency))
+  } else if (activeFilter.value === 'commodities') {
     list = list.filter(c => COMMODITIES.has(c.baseCurrency))
   } else if (activeFilter.value === 'etfs') {
     list = list.filter(c => ETFS.has(c.baseCurrency))
@@ -213,6 +242,13 @@ const filteredContracts = computed(() => {
 
 function getLogoUrl(base: string): string {
   return `https://cdn.ondoperps.xyz/symbol-icons/${encodeURIComponent(base)}.svg`
+}
+
+function midPrice(contract: Contract): string | undefined {
+  const bid = parseFloat(contract.bid ?? '')
+  const ask = parseFloat(contract.ask ?? '')
+  if (isNaN(bid) || isNaN(ask)) return contract.indexPrice
+  return String((bid + ask) / 2)
 }
 
 function formatPrice(price?: string): string {

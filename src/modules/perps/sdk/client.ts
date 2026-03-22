@@ -27,6 +27,11 @@ import type {
   LeverageSetting,
   MarkPrice,
   MaxOrderSizeResult,
+  PaginatedResponse,
+  ApiOrder,
+  ApiFill,
+  WalletDeposit,
+  WalletWithdrawal,
 } from './types'
 
 export class PerpsClient {
@@ -104,7 +109,9 @@ export class PerpsClient {
     )
   }
 
-  async acceptAgreement(data: AgreementRequest): Promise<GenericResponse<void>> {
+  async acceptAgreement(
+    data: AgreementRequest,
+  ): Promise<GenericResponse<void>> {
     return this.authPost<GenericResponse<void>>('/v1/agreement', data)
   }
 
@@ -114,7 +121,9 @@ export class PerpsClient {
 
   async getContracts(sparkline = false): Promise<GenericResponse<Contract[]>> {
     const params = sparkline ? '?sparkline=true' : ''
-    return this.request<GenericResponse<Contract[]>>(`/v1/perps/contracts${params}`)
+    return this.request<GenericResponse<Contract[]>>(
+      `/v1/perps/contracts${params}`,
+    )
   }
 
   async getHistory(
@@ -135,13 +144,19 @@ export class PerpsClient {
   async listDepositAddresses(
     data: DepositAddressListRequest,
   ): Promise<GenericResponse<DepositAddress[]>> {
-    return this.authPost<GenericResponse<DepositAddress[]>>('/v1/wallet/deposit_address/list', data)
+    return this.authPost<GenericResponse<DepositAddress[]>>(
+      '/v1/wallet/deposit_address/list',
+      data,
+    )
   }
 
   async provisionAddress(
     data: ProvisionAddressRequest,
   ): Promise<GenericResponse<ProvisionAddressResult>> {
-    return this.authPost<GenericResponse<ProvisionAddressResult>>('/v1/provision_address', data)
+    return this.authPost<GenericResponse<ProvisionAddressResult>>(
+      '/v1/provision_address',
+      data,
+    )
   }
 
   async getAccount(): Promise<GenericResponse<AccountInfo>> {
@@ -149,7 +164,9 @@ export class PerpsClient {
   }
 
   async getPortfolioSummary(): Promise<GenericResponse<PortfolioSummary>> {
-    return this.authGet<GenericResponse<PortfolioSummary>>('/v1/portfolio/summary')
+    return this.authGet<GenericResponse<PortfolioSummary>>(
+      '/v1/portfolio/summary',
+    )
   }
 
   async getPerpsBalance(): Promise<GenericResponse<PerpsBalance>> {
@@ -157,7 +174,9 @@ export class PerpsClient {
   }
 
   async getAddressBook(): Promise<GenericResponse<AddressBookResult>> {
-    return this.authGet<GenericResponse<AddressBookResult>>('/v1/wallet/address_book')
+    return this.authGet<GenericResponse<AddressBookResult>>(
+      '/v1/wallet/address_book',
+    )
   }
 
   async getAddressBookChallenge(
@@ -178,11 +197,15 @@ export class PerpsClient {
     )
   }
 
-  async withdraw(data: WithdrawRequest): Promise<GenericResponse<WithdrawResult>> {
+  async withdraw(
+    data: WithdrawRequest,
+  ): Promise<GenericResponse<WithdrawResult>> {
     return this.authPost<GenericResponse<WithdrawResult>>('/v1/withdraw', data)
   }
 
-  async createOrder(data: CreateOrderRequest): Promise<GenericResponse<OrderResult>> {
+  async createOrder(
+    data: CreateOrderRequest,
+  ): Promise<GenericResponse<OrderResult>> {
     return this.authPost<GenericResponse<OrderResult>>('/v1/perps/orders', data)
   }
 
@@ -190,13 +213,19 @@ export class PerpsClient {
     return this.authGet<GenericResponse<Position[]>>('/v1/perps/positions')
   }
 
-  async getLeverage(market?: string): Promise<GenericResponse<LeverageSetting[]>> {
+  async getLeverage(
+    market?: string,
+  ): Promise<GenericResponse<LeverageSetting[]>> {
     const params = market ? `?market=${encodeURIComponent(market)}` : ''
-    return this.authGet<GenericResponse<LeverageSetting[]>>(`/v1/perps/leverage${params}`)
+    return this.authGet<GenericResponse<LeverageSetting[]>>(
+      `/v1/perps/leverage${params}`,
+    )
   }
 
   async getMarkPrices(): Promise<GenericResponse<Record<string, MarkPrice>>> {
-    return this.request<GenericResponse<Record<string, MarkPrice>>>('/v1/perps/mark_prices')
+    return this.request<GenericResponse<Record<string, MarkPrice>>>(
+      '/v1/perps/mark_prices',
+    )
   }
 
   async getMaxOrderSize(
@@ -207,6 +236,48 @@ export class PerpsClient {
     if (buffer !== undefined) params.set('buffer', buffer.toString())
     return this.authGet<GenericResponse<MaxOrderSizeResult>>(
       `/v1/perps/max_order_size?${params.toString()}`,
+    )
+  }
+
+  async getOrders(opts?: {
+    market?: string
+    status?: string
+    limit?: number
+    cursor?: string
+  }): Promise<PaginatedResponse<ApiOrder>> {
+    const params = new URLSearchParams()
+    if (opts?.market) params.set('market', opts.market)
+    if (opts?.status) params.set('status', opts.status)
+    if (opts?.limit) params.set('limit', opts.limit.toString())
+    if (opts?.cursor) params.set('cursor', opts.cursor)
+    const qs = params.toString()
+    return this.authGet<PaginatedResponse<ApiOrder>>(
+      `/v1/perps/orders${qs ? `?${qs}` : ''}`,
+    )
+  }
+
+  async getFills(opts?: {
+    market?: string
+    limit?: number
+    cursor?: string
+  }): Promise<PaginatedResponse<ApiFill>> {
+    const params = new URLSearchParams()
+    if (opts?.market) params.set('market', opts.market)
+    if (opts?.limit) params.set('limit', opts.limit.toString())
+    if (opts?.cursor) params.set('cursor', opts.cursor)
+    const qs = params.toString()
+    return this.authGet<PaginatedResponse<ApiFill>>(
+      `/v1/perps/fills${qs ? `?${qs}` : ''}`,
+    )
+  }
+
+  async getDeposits(): Promise<GenericResponse<WalletDeposit[]>> {
+    return this.authGet<GenericResponse<WalletDeposit[]>>('/v1/wallet/deposits')
+  }
+
+  async getWithdrawals(): Promise<GenericResponse<WalletWithdrawal[]>> {
+    return this.authGet<GenericResponse<WalletWithdrawal[]>>(
+      '/v1/wallet/withdrawals',
     )
   }
 }

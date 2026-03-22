@@ -35,4 +35,10 @@ export type {
   MarkPrice,
   MaxOrderSizeLevel,
   MaxOrderSizeResult,
+  PageInfo,
+  PaginatedResponse,
+  ApiOrder,
+  ApiFill,
+  WalletDeposit,
+  WalletWithdrawal,
 } from './types'

@@ -17,27 +17,29 @@
     </div>
 
     <!-- Authenticated -->
-    <div v-else>
-      <p class="text-info text-s-14">Total account value</p>
-      <p class="font-bold text-s-36 mt-1">{{ formatUsd(marginBalance) }}</p>
-      <div class="flex items-center gap-4 mt-1">
-        <p class="text-s-14">
-          <span class="text-info">Unrealized PnL</span>
-          <span :class="pnlColorClass" class="ml-2 font-medium">
-            {{ formatPnl(unrealizedPnl) }}
-            ({{ pnlPercent }})
-          </span>
-        </p>
+    <div v-else class="flex items-end justify-between">
+      <div>
+        <p class="text-info text-s-14">Total account value</p>
+        <p class="font-bold text-s-40 mt-1">{{ formatUsd(marginBalance) }}</p>
+        <div class="flex items-center gap-4 mt-1">
+          <p class="text-s-14">
+            <span class="text-info">Unrealized PnL</span>
+            <span :class="pnlColorClass" class="ml-2 font-bold">
+              {{ formatPnl(unrealizedPnl) }}
+              ({{ pnlPercent }})
+            </span>
+          </p>
+        </div>
       </div>
-      <div class="flex items-center gap-3 mt-6">
+      <div class="flex items-center gap-3">
         <button
-          class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
+          class="bg-primary text-white rounded-full px-8 py-3 text-s-16 font-bold hoverOpacity"
           @click="$emit('deposit')"
         >
           Deposit
         </button>
         <button
-          class="border-1 border-black rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
+          class="border-1 border-primary text-primary rounded-full px-8 py-3 text-s-16 font-bold hoverOpacity"
           @click="$emit('withdraw')"
         >
           Withdraw

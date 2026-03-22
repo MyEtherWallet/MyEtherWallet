@@ -287,3 +287,78 @@ export interface OrderResult {
   createdAt: string
   type: string
 }
+
+export interface PageInfo {
+  prevCursor?: string
+  nextCursor?: string
+}
+
+export interface PaginatedResponse<T> {
+  success: boolean
+  result: T[]
+  pageInfo?: PageInfo
+}
+
+export interface ApiOrder {
+  orderId: string
+  clientOrderId?: string
+  side: 'buy' | 'sell'
+  price: string
+  size: string
+  market: string
+  filledSize: string
+  lastFillSize: string
+  filledCost: string
+  fee: string
+  status: 'open' | 'fullyfilled' | 'canceled' | 'pending' | 'untriggered'
+  createdAt: string
+  filledAt?: string
+  canceledAt?: string
+  cancelReason?: string
+  type: 'limit' | 'market' | 'stopMarket' | 'takeProfitMarket'
+  timeInForce?: 'GTC' | 'IOC'
+  reduceOnly?: boolean
+  realizedPnl?: string
+}
+
+export interface ApiFill {
+  id: string
+  orderId: string
+  market: string
+  price: string
+  size: string
+  side: 'buy' | 'sell'
+  direction?: string
+  filledCost: string
+  fee: string
+  pnl?: string
+  time: string
+  isMaker: boolean
+}
+
+export interface WalletDeposit {
+  coin: string
+  size: string
+  status: 'pending' | 'confirmed'
+  txid: string
+  fromAddress: string
+  time: string
+  currentConfirmations?: number
+  requiredConfirmations?: number
+  chainId: string
+  usdValue: string
+}
+
+export interface WalletWithdrawal {
+  coin: string
+  size: string
+  status: string
+  address: string
+  withdrawal_id: string
+  txid: string
+  customer_withdrawal_id: string
+  time: string
+  usdValue?: string
+  usdFee?: string
+  chainId: string
+}
