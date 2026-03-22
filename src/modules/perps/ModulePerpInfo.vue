@@ -154,12 +154,21 @@
                   </td>
                   <td class="py-3 text-right">
                     <button
-                      class="bg-primary text-white rounded-full px-3 py-1 text-s-12 font-medium hoverOpacity"
+                      class="rounded-full px-3 py-1 text-s-12 font-medium hoverOpacity text-white"
+                      :class="
+                        pos.direction === 'long'
+                          ? 'bg-success'
+                          : 'bg-error'
+                      "
                       :disabled="closingMarket === pos.market"
                       @click="handleClose(pos)"
                     >
                       {{
-                        closingMarket === pos.market ? 'Closing...' : 'Close'
+                        closingMarket === pos.market
+                          ? 'Closing...'
+                          : pos.direction === 'long'
+                            ? 'Manage Long'
+                            : 'Manage Short'
                       }}
                     </button>
                   </td>

@@ -129,23 +129,17 @@
                   </span>
                 </td>
                 <td class="px-6 sm:px-8 py-4 text-right">
-                  <div class="flex items-center justify-end gap-2">
-                    <button
-                      class="bg-success text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
-                      @click="$emit('openPosition', pos.market)"
-                    >
-                      Add
-                    </button>
-                    <button
-                      :disabled="closingMarket === pos.market"
-                      class="bg-primary text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity disabled:opacity-50"
-                      @click="handleClose(pos)"
-                    >
-                      {{
-                        closingMarket === pos.market ? 'Closing...' : 'Close'
-                      }}
-                    </button>
-                  </div>
+                  <button
+                    class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white"
+                    :class="
+                      pos.direction === 'long' ? 'bg-success' : 'bg-error'
+                    "
+                    @click="$emit('openPosition', pos.market)"
+                  >
+                    {{
+                      pos.direction === 'long' ? 'Manage Long' : 'Manage Short'
+                    }}
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -410,7 +404,6 @@ import {
   usePerpsFills,
   usePerpsDepositsWithdrawals,
 } from '../composables/usePerpsHistory'
-import type { Position } from '../sdk/types'
 import {
   formatUsd,
   formatPrice,
@@ -426,7 +419,7 @@ defineEmits<{
 }>()
 
 const { token } = usePerpsAuth()
-const { positions, loading, closePosition } = usePerpsPositions()
+const { positions, loading } = usePerpsPositions()
 const { orders, loading: ordersLoading } = usePerpsOrders()
 const { fills, loading: fillsLoading } = usePerpsFills()
 const {
@@ -485,7 +478,6 @@ const combinedDW = computed(() => {
 })
 
 const activeTab = ref<string>('positions')
-const closingMarket = ref<string | null>(null)
 
 const tabs = [
   { key: 'positions', label: 'Positions' },
@@ -494,12 +486,5 @@ const tabs = [
   { key: 'deposits', label: 'Deposits & Withdrawals' },
 ]
 
-async function handleClose(pos: Position) {
-  closingMarket.value = pos.market
-  try {
-    await closePosition(pos)
-  } finally {
-    closingMarket.value = null
-  }
-}
+
 </script>

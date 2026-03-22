@@ -139,6 +139,24 @@
               </td>
               <td class="px-6 sm:px-8 py-4 text-right">
                 <button
+                  v-if="getPosition(contract.market)"
+                  class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white"
+                  :class="
+                    getPosition(contract.market)!.direction === 'long'
+                      ? 'bg-success'
+                      : 'bg-error'
+                  "
+                  @click="$emit('openPosition', contract.market)"
+                >
+                  Manage
+                  {{
+                    getPosition(contract.market)!.direction === 'long'
+                      ? 'Long'
+                      : 'Short'
+                  }}
+                </button>
+                <button
+                  v-else
                   class="bg-primary text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
                   @click="$emit('openPosition', contract.market)"
                 >
@@ -164,6 +182,7 @@ import {
 import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
+import { usePerpsPositions } from '../composables/usePerpsPositions'
 
 defineEmits<{
   openPosition: [market: string]
@@ -175,6 +194,11 @@ const {
   isLoading: contractsLoading,
   error: contractsError,
 } = usePerpsContracts()
+const { positions } = usePerpsPositions()
+
+function getPosition(market: string) {
+  return positions.value.find(p => p.market === market) || null
+}
 
 const searchQuery = ref('')
 const activeFilter = ref<string>('all')
