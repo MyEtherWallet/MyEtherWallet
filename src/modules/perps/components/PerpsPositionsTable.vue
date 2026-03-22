@@ -411,6 +411,15 @@ import {
   usePerpsDepositsWithdrawals,
 } from '../composables/usePerpsHistory'
 import type { Position } from '../sdk/types'
+import {
+  formatUsd,
+  formatPrice,
+  formatPnl,
+  formatRoe,
+  pnlColor,
+  formatDate,
+} from '../utils/formatters'
+import { getBase, getLogoUrl } from '../utils/market'
 
 defineEmits<{
   openPosition: [market: string]
@@ -484,62 +493,6 @@ const tabs = [
   { key: 'fills', label: 'Fills' },
   { key: 'deposits', label: 'Deposits & Withdrawals' },
 ]
-
-function getBase(market: string): string {
-  return market.split('-')[0] ?? market
-}
-
-function getLogoUrl(base: string): string {
-  return `https://cdn.ondoperps.xyz/symbol-icons/${encodeURIComponent(base)}.svg`
-}
-
-function formatUsd(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '$0.00'
-  return n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  })
-}
-
-function formatPrice(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '—'
-  return `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-}
-
-function formatPnl(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '$0.00'
-  const sign = n >= 0 ? '+' : ''
-  return `${sign}${formatUsd(val)}`
-}
-
-function formatRoe(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '0.00%'
-  const pct = n * 100
-  return `${pct >= 0 ? '' : ''}${pct.toFixed(2)}%`
-}
-
-function pnlColor(val: string): string {
-  const n = parseFloat(val)
-  if (n > 0) return 'text-success'
-  if (n < 0) return 'text-error'
-  return 'text-info'
-}
-
-function formatDate(val: string): string {
-  const d = new Date(val)
-  if (isNaN(d.getTime())) return '—'
-  return d.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 
 async function handleClose(pos: Position) {
   closingMarket.value = pos.market

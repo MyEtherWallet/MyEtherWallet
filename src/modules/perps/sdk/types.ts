@@ -99,6 +99,7 @@ export interface Contract {
   takerFee?: string
   priceChangePercent?: string
   sparkline?: Sparkline
+  tags?: string[]
 }
 
 export interface HistoryResult {

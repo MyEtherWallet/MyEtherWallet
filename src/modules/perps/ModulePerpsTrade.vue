@@ -536,6 +536,8 @@ import {
   usePerpsMarkets,
   usePerpsContracts,
 } from './composables/usePerpsMarkets'
+import { formatUsd } from './utils/formatters'
+import { getLogoUrl } from './utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -619,16 +621,6 @@ const submitDisabled = computed(() => {
 })
 
 // Methods
-function formatUsd(val: number): string {
-  if (isNaN(val)) return '$0.00'
-  return val.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: val % 1 === 0 ? 0 : 2,
-    maximumFractionDigits: 2,
-  })
-}
-
 function getBaseSizeForPercent(pct: number): number | null {
   if (!maxOrderSize.value) return null
   const side = orderSide.value === 'buy' ? 'maxBidBaseSize' : 'maxAskBaseSize'
@@ -682,10 +674,6 @@ function toggleOrderType() {
 
 function openTokenSelect() {
   // Can implement token selector modal later
-}
-
-function getLogoUrl(base: string): string {
-  return `https://cdn.ondoperps.xyz/symbol-icons/${encodeURIComponent(base)}.svg`
 }
 
 function openLeverageModal() {

@@ -431,6 +431,19 @@ import { usePerpsAuth } from './composables/usePerpsAuth'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import type { Position, ApiOrder, ApiFill, MarkPrice } from './sdk/types'
+import {
+  formatUsd,
+  formatPrice,
+  formatPnl,
+  pnlColor,
+  formatPercent,
+  formatVolume,
+} from './utils/formatters'
+import {
+  getLogoUrl,
+  getCategory,
+  midPrice as computeMidPrice,
+} from './utils/market'
 
 const props = defineProps({
   market: {
@@ -438,9 +451,6 @@ const props = defineProps({
     required: true,
   },
 })
-
-const COMMODITIES = new Set(['XAU', 'XAG'])
-const ETFS = new Set(['QQQ', 'SPY'])
 
 const { token } = usePerpsAuth()
 const { markets } = usePerpsMarkets()
@@ -461,10 +471,7 @@ const contractData = computed(() =>
 const currentPrice = computed(() => {
   const c = contractData.value
   if (!c) return undefined
-  const bid = parseFloat(c.bid ?? '')
-  const ask = parseFloat(c.ask ?? '')
-  if (!isNaN(bid) && !isNaN(ask)) return String((bid + ask) / 2)
-  return c.indexPrice
+  return computeMidPrice(c)
 })
 
 const priceChangePercent = computed(() => {
@@ -474,9 +481,8 @@ const priceChangePercent = computed(() => {
 })
 
 const category = computed(() => {
-  if (COMMODITIES.has(baseCurrency.value)) return 'Commodities'
-  if (ETFS.has(baseCurrency.value)) return 'ETFs'
-  return 'Equities'
+  const c = contractData.value
+  return c ? getCategory(c) : 'Equities'
 })
 
 // Fetch stock description from MEW API
@@ -679,54 +685,4 @@ watch(() => props.market, fetchChart, { immediate: true })
 // Clear chart cache every 5 minutes
 const cacheClearTimer = setInterval(() => chartCache.clear(), 5 * 60 * 1000)
 onUnmounted(() => clearInterval(cacheClearTimer))
-
-// Formatters
-function getLogoUrl(base: string): string {
-  return `https://cdn.ondoperps.xyz/symbol-icons/${encodeURIComponent(base)}.svg`
-}
-
-function formatPrice(val?: string): string {
-  if (!val) return '—'
-  const n = parseFloat(val)
-  if (isNaN(n)) return '—'
-  return `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-}
-
-function formatUsd(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '$0.00'
-  return n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  })
-}
-
-function formatPnl(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '$0.00'
-  const sign = n >= 0 ? '+' : ''
-  return `${sign}${formatUsd(val)}`
-}
-
-function pnlColor(val: string): string {
-  const n = parseFloat(val)
-  if (n > 0) return 'text-success'
-  if (n < 0) return 'text-error'
-  return 'text-info'
-}
-
-function formatPercent(val: number): string {
-  return `${val >= 0 ? '+' : ''}${val.toFixed(2)}%`
-}
-
-function formatVolume(vol?: string): string {
-  if (!vol) return '—'
-  const num = parseFloat(vol)
-  if (num >= 1e12) return `$${(num / 1e12).toFixed(2)}T`
-  if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`
-  if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`
-  if (num >= 1e3) return `$${(num / 1e3).toFixed(2)}K`
-  return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-}
 </script>

@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
+import { formatUsd, formatPnl, pnlColor } from '../utils/formatters'
 
 defineEmits<{
   deposit: []
@@ -73,27 +74,5 @@ const pnlPercent = computed(() => {
   return `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`
 })
 
-const pnlColorClass = computed(() => {
-  const n = parseFloat(unrealizedPnl.value)
-  if (n > 0) return 'text-success'
-  if (n < 0) return 'text-error'
-  return 'text-info'
-})
-
-function formatUsd(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '$0.00'
-  return n.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  })
-}
-
-function formatPnl(val: string): string {
-  const n = parseFloat(val)
-  if (isNaN(n)) return '$0.00'
-  const sign = n >= 0 ? '+' : ''
-  return `${sign}${formatUsd(val)}`
-}
+const pnlColorClass = computed(() => pnlColor(unrealizedPnl.value))
 </script>

@@ -162,6 +162,8 @@ import {
   usePerpsContracts,
 } from '../composables/usePerpsMarkets'
 import type { Contract, TradingPair } from '../sdk/types'
+import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
+import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 
 defineEmits<{
   openPosition: [market: string]
@@ -186,9 +188,6 @@ function toggleWatchlist(symbol: string) {
   }
   watchlist.value = new Set(watchlist.value)
 }
-
-const COMMODITIES = new Set(['XAU', 'XAG'])
-const ETFS = new Set(['QQQ', 'SPY'])
 
 const filters = [
   { key: 'all', label: 'All Markets' },
@@ -219,13 +218,11 @@ const filteredContracts = computed(() => {
   if (activeFilter.value === 'watchlist') {
     list = list.filter(c => watchlist.value.has(c.baseCurrency))
   } else if (activeFilter.value === 'commodities') {
-    list = list.filter(c => COMMODITIES.has(c.baseCurrency))
+    list = list.filter(c => hasTag(c, 'commodity'))
   } else if (activeFilter.value === 'etfs') {
-    list = list.filter(c => ETFS.has(c.baseCurrency))
+    list = list.filter(c => hasTag(c, 'etf'))
   } else if (activeFilter.value === 'stocks') {
-    list = list.filter(
-      c => !COMMODITIES.has(c.baseCurrency) && !ETFS.has(c.baseCurrency),
-    )
+    list = list.filter(c => !hasTag(c, 'commodity') && !hasTag(c, 'etf'))
   }
 
   if (searchQuery.value) {
@@ -241,36 +238,8 @@ const filteredContracts = computed(() => {
   return list
 })
 
-function getLogoUrl(base: string): string {
-  return `https://cdn.ondoperps.xyz/symbol-icons/${encodeURIComponent(base)}.svg`
-}
-
-function midPrice(contract: Contract): string | undefined {
-  const bid = parseFloat(contract.bid ?? '')
-  const ask = parseFloat(contract.ask ?? '')
-  if (isNaN(bid) || isNaN(ask)) return contract.indexPrice
-  return String((bid + ask) / 2)
-}
-
-function formatPrice(price?: string): string {
-  if (!price) return '—'
-  const num = parseFloat(price)
-  return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-}
-
 function formatChange(pct?: string): string {
   if (!pct) return '—'
-  const num = parseFloat(pct)
-  return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`
-}
-
-function formatVolume(vol?: string): string {
-  if (!vol) return '—'
-  const num = parseFloat(vol)
-  if (num >= 1e12) return `$${(num / 1e12).toFixed(2)}T`
-  if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`
-  if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`
-  if (num >= 1e3) return `$${(num / 1e3).toFixed(2)}K`
-  return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return formatPercent(parseFloat(pct))
 }
 </script>
