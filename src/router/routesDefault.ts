@@ -2,9 +2,11 @@ import {
   ROUTES_MAIN,
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
+  PERP_INFO_ROUTE_NAME,
 } from './routeNames'
 import { TOKEN_INFO_ROUTE } from './routeTokenInfo'
 import { STOCK_INFO_ROUTE } from './routeStockInfo'
+import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
 import { type RouterOptions } from 'vue-router'
@@ -89,6 +91,12 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: PERP_INFO_ROUTE_NAME,
+        ...PERP_INFO_ROUTE,
+      },
+    ],
   },
   {
     path: ROUTES_MAIN.STOCKS.PATH,

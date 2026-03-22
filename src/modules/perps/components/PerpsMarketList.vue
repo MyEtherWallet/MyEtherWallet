@@ -67,7 +67,8 @@
             <tr
               v-for="contract in filteredContracts"
               :key="contract.market"
-              class="border-b border-grey-10 last:border-0"
+              class="border-b border-grey-10 last:border-0 cursor-pointer hover:bg-surface/50 transition-colors"
+              @click="$emit('openPosition', contract.market)"
             >
               <td class="px-6 sm:px-8 py-4">
                 <div class="flex items-center gap-3">

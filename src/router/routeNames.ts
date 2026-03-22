@@ -40,6 +40,8 @@ const STOCK_INFO_ROUTE_NAMES = {
   crypto: 'crypto-stock-info',
   stocks: 'stocks-stock-info',
 }
+const PERP_INFO = { PATH: 'perp/:market' }
+const PERP_INFO_ROUTE_NAME = 'perps-perp-info'
 
 const ROUTES_SEND: RouteNameCollection = {
   SEND: { NAME: 'WalletSend', PATH: '/send' },
@@ -59,4 +61,6 @@ export {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO,
   STOCK_INFO_ROUTE_NAMES,
+  PERP_INFO,
+  PERP_INFO_ROUTE_NAME,
 }

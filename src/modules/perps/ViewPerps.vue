@@ -17,17 +17,22 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
 import PerpsPortfolioSummary from './components/PerpsPortfolioSummary.vue'
 import PerpsPositionsTable from './components/PerpsPositionsTable.vue'
 import PerpsMarketList from './components/PerpsMarketList.vue'
 import PerpsDepositDialog from './components/PerpsDepositDialog.vue'
 import PerpsWithdrawDialog from './components/PerpsWithdrawDialog.vue'
 
+const router = useRouter()
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function handleOpenPosition(_market: string) {
-  // TODO: open position flow for the selected market
+function handleOpenPosition(market: string) {
+  router.push({
+    name: PERP_INFO_ROUTE_NAME,
+    params: { market },
+  })
 }
 </script>
