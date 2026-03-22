@@ -221,7 +221,6 @@
             v-else-if="walletPanel === 'perps' && selectedTradeTokenSymbol"
             key="perps-trade"
           />
-          <ModulePerps v-else-if="walletPanel === 'perps'" key="perps" />
           <div v-else key="coming-soon" class="mt-6 text-center font-medium">
             {{ comingSoon }}
           </div>

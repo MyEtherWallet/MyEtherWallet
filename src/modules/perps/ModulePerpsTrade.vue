@@ -251,17 +251,146 @@
                 : '',
             ]"
             :disabled="submitDisabled"
-            @click="submitOrder"
+            @click="showConfirmation"
           >
-            <span v-if="isSubmitting">Processing...</span>
-            <span v-else
-              >{{ orderSide === 'buy' ? 'Long' : 'Short' }}
-              {{ displaySymbol }}</span
-            >
+            {{ orderSide === 'buy' ? 'Long' : 'Short' }}
+            {{ displaySymbol }}
           </button>
         </div>
       </div>
     </div>
+
+    <!-- Order Confirmation Overlay -->
+    <Teleport to="body">
+      <div
+        v-if="showConfirmModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center"
+        @click.self="showConfirmModal = false"
+      >
+        <div class="absolute inset-0 bg-black/40" />
+        <div
+          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
+        >
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2.5">
+              <img
+                :src="getLogoUrl(displaySymbol)"
+                :alt="displaySymbol"
+                class="w-8 h-8 rounded-full"
+              />
+              <span class="font-bold text-s-20 text-textDark"
+                >Confirm
+                {{ orderSide === 'buy' ? 'Long' : 'Short' }}
+                {{ displaySymbol }}</span
+              >
+            </div>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors text-textDark"
+              @click="showConfirmModal = false"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Order Details -->
+          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-5 space-y-3">
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Side</span>
+              <span
+                class="font-bold"
+                :class="
+                  orderSide === 'buy' ? 'text-[#00c896]' : 'text-[#ff5b5a]'
+                "
+                >{{ orderSide === 'buy' ? 'Long' : 'Short' }}</span
+              >
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Order type</span>
+              <span class="text-textDark font-bold">{{
+                orderType === 'market' ? 'Market' : 'Limit'
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Market price</span>
+              <span class="text-textDark font-bold">{{
+                formatUsd(currentPrice)
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Margin</span>
+              <span class="text-textDark font-bold">{{
+                formatUsd(parseFloat(inputAmount) || 0)
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Leverage</span>
+              <span class="text-textDark font-bold">{{ leverage }}&times;</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Position size</span>
+              <span class="text-textDark font-bold">{{
+                formatUsd(positionSizeUsd)
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium"
+                >Size ({{ displaySymbol }})</span
+              >
+              <span class="text-textDark font-bold">{{
+                currentPrice ? (positionSizeUsd / currentPrice).toFixed(4) : '0'
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Est. liquidation</span>
+              <span class="text-textDark font-bold">{{
+                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+              }}</span>
+            </div>
+          </div>
+
+          <!-- Error -->
+          <div
+            v-if="orderError"
+            class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
+          >
+            <p class="text-[#ff5b5a] text-s-14 font-medium">{{ orderError }}</p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3">
+            <button
+              class="flex-1 border border-[#e5e7eb] text-textDark rounded-full py-3.5 text-s-16 font-bold hover:bg-greyLight transition-colors"
+              :disabled="isSubmitting"
+              @click="showConfirmModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              class="flex-1 text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
+              :class="orderSide === 'buy' ? 'bg-[#00c896]' : 'bg-[#ff5b5a]'"
+              :disabled="isSubmitting"
+              @click="confirmAndSubmitOrder"
+            >
+              <span v-if="isSubmitting">Processing...</span>
+              <span v-else>Confirm</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
     <!-- Leverage Modal Overlay -->
     <Teleport to="body">
@@ -373,6 +502,16 @@
             >
           </p>
 
+          <!-- Leverage Error -->
+          <div
+            v-if="leverageError"
+            class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
+          >
+            <p class="text-[#ff5b5a] text-s-14 font-medium">
+              {{ leverageError }}
+            </p>
+          </div>
+
           <!-- Save Button -->
           <button
             class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
@@ -420,6 +559,9 @@ const maxOrderSize = ref<MaxOrderSizeResult | null>(null)
 const showLeverageModal = ref(false)
 const tempLeverage = ref(1)
 const isSavingLeverage = ref(false)
+const leverageError = ref('')
+const showConfirmModal = ref(false)
+const orderError = ref('')
 
 // Computed
 const activeMarket = computed(
@@ -489,7 +631,7 @@ function formatUsd(val: number): string {
 
 function getBaseSizeForPercent(pct: number): number | null {
   if (!maxOrderSize.value) return null
-  const side = orderSide.value === 'buy' ? 'maxAskBaseSize' : 'maxBidBaseSize'
+  const side = orderSide.value === 'buy' ? 'maxBidBaseSize' : 'maxAskBaseSize'
   const levels: Record<number, keyof MaxOrderSizeResult> = {
     25: 'percent25',
     50: 'percent50',
@@ -548,11 +690,13 @@ function getLogoUrl(base: string): string {
 
 function openLeverageModal() {
   tempLeverage.value = leverage.value
+  leverageError.value = ''
   showLeverageModal.value = true
 }
 
 async function saveLeverage() {
   isSavingLeverage.value = true
+  leverageError.value = ''
   try {
     if (token.value && markets.value.length) {
       await perpsClient.setLeverage(fullMarketName.value, tempLeverage.value)
@@ -561,8 +705,11 @@ async function saveLeverage() {
     showLeverageModal.value = false
     // Re-fetch max order size with new leverage
     fetchMaxOrderSize()
-  } catch (e) {
-    console.error('Failed to save leverage:', e)
+  } catch (e: any) {
+    leverageError.value =
+      e?.message ||
+      e?.toString() ||
+      'Failed to save leverage. Please try again.'
   } finally {
     isSavingLeverage.value = false
   }
@@ -605,28 +752,44 @@ async function fetchMarkPrices() {
   }
 }
 
-async function submitOrder() {
+function showConfirmation() {
+  if (submitDisabled.value) return
+  orderError.value = ''
+  showConfirmModal.value = true
+}
+
+async function confirmAndSubmitOrder() {
   if (submitDisabled.value) return
 
   isSubmitting.value = true
   try {
-    const size = (positionSizeUsd.value / currentPrice.value).toFixed(4)
+    const market = markets.value.find(m => m.market === fullMarketName.value)
+    const increment = parseFloat(market?.baseIncrement || '0.0001')
+    const rawSize = positionSizeUsd.value / currentPrice.value
+    const size = (Math.floor(rawSize / increment) * increment).toFixed(
+      Math.max(0, -Math.floor(Math.log10(increment))),
+    )
 
-    await perpsClient.createOrder({
+    const orderParams: Record<string, unknown> = {
       market: fullMarketName.value,
       side: orderSide.value,
       type: orderType.value,
       size: size,
-      timeInForce: 'GTC',
       postOnly: false,
       reduceOnly: false,
-    })
+    }
+    if (orderType.value === 'limit') {
+      orderParams.timeInForce = 'GTC'
+    }
+    await perpsClient.createOrder(orderParams as any)
 
+    showConfirmModal.value = false
     // Reset form on success
     inputAmount.value = ''
-    // Trigger toast/notification here
-  } catch (error) {
-    console.error('Order failed:', error)
+    sliderValue.value = 0
+  } catch (error: any) {
+    orderError.value =
+      error?.message || error?.toString() || 'Order failed. Please try again.'
   } finally {
     isSubmitting.value = false
   }
