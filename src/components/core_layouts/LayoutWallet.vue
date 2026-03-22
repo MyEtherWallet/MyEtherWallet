@@ -258,6 +258,7 @@ import {
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import { useRoute } from 'vue-router'
+import { usePerpsContracts } from '@/modules/perps/composables/usePerpsMarkets'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu, walletPanel, hasShadow, selectedTradeTokenSymbol } =
@@ -268,6 +269,7 @@ const { isXLAndUp, isMDAndUp } = breakpoints
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 const route = useRoute()
+const { contracts: perpsContracts } = usePerpsContracts()
 
 onMounted(() => {
   if (
@@ -315,6 +317,14 @@ const openPanel = (panel: WalletPanel) => {
     walletMenu.setIsOpenSideMenu(true)
   }
   walletMenu.setWalletPanel(panel)
+
+  // When opening perps without a selected market, pick the first available one
+  if (panel === 'perps' && !selectedTradeTokenSymbol.value) {
+    if (perpsContracts.value.length > 0) {
+      const first = perpsContracts.value[0]
+      walletMenu.setSelectedTradeTokenSymbol(first.baseCurrency)
+    }
+  }
 }
 
 const openDepositDialog = ref(false) //deposit dialog

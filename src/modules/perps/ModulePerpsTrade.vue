@@ -392,6 +392,168 @@
       </div>
     </Teleport>
 
+    <!-- Market Selector Modal -->
+    <Teleport to="body">
+      <div
+        v-if="showMarketModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center"
+        @click.self="showMarketModal = false"
+      >
+        <div class="absolute inset-0 bg-black/40" />
+        <div
+          class="relative bg-white rounded-[24px] w-full max-w-[480px] mx-4 shadow-xl z-10 flex flex-col"
+          style="max-height: 60vh"
+        >
+          <!-- Header -->
+          <div class="relative flex items-center justify-center px-6 pt-6 pb-4">
+            <span class="font-bold text-s-22 text-textDark">Select Market</span>
+            <button
+              class="absolute right-6 w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors text-textDark"
+              @click="showMarketModal = false"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="px-6 mb-3">
+            <div
+              class="flex items-center gap-2 bg-[#f5f5f5] rounded-full px-4 py-2.5"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9ca3af"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                v-model="marketSearch"
+                type="text"
+                placeholder="Search"
+                class="w-full bg-transparent text-s-14 outline-none placeholder:text-grey-40"
+              />
+              <button
+                class="flex items-center gap-1 text-s-13 font-bold text-textDark whitespace-nowrap border border-[#e5e7eb] rounded-full px-3 py-1 hover:bg-greyLight transition-colors"
+                @click="marketSortAsc = !marketSortAsc"
+              >
+                Name
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  :style="{
+                    transform: marketSortAsc
+                      ? 'rotate(0deg)'
+                      : 'rotate(180deg)',
+                    transition: 'transform 0.2s',
+                  }"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <polyline points="19 12 12 19 5 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Tabs -->
+          <div class="px-6 mb-3">
+            <div class="flex gap-1 bg-[#f0f0f0] rounded-full p-1">
+              <button
+                v-for="tab in marketFilterTabs"
+                :key="tab.key"
+                class="flex-1 px-3 py-1.5 text-s-14 font-bold transition-colors rounded-full"
+                :class="
+                  marketFilter === tab.key
+                    ? 'bg-white text-textDark shadow-sm'
+                    : 'text-grey-40 hover:text-textDark'
+                "
+                @click="marketFilter = tab.key"
+              >
+                {{ tab.label }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Market List -->
+          <div class="overflow-y-auto flex-1 px-2 pb-4 mr-1 market-list-scroll">
+            <div
+              v-for="contract in filteredMarketList"
+              :key="contract.market"
+              class="flex items-center justify-between px-4 py-3 rounded-[16px] cursor-pointer hover:bg-[#f5f5f5] transition-colors"
+              @click="selectMarket(contract)"
+            >
+              <div class="flex items-center gap-3">
+                <img
+                  :src="getLogoUrl(contract.baseCurrency)"
+                  :alt="contract.baseCurrency"
+                  class="w-10 h-10 rounded-full"
+                />
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-s-15 text-textDark">{{
+                      contract.baseCurrency
+                    }}</span>
+                    <span
+                      class="bg-[#f0f0f0] text-grey-40 rounded px-1.5 py-0.5 text-[11px] font-medium"
+                      >20x</span
+                    >
+                  </div>
+                  <span class="text-grey-40 text-s-12">{{
+                    getMarketDisplayName(contract)
+                  }}</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-s-15 text-textDark">
+                  {{ formatContractPrice(contract) }}
+                </p>
+                <p
+                  class="text-s-12 font-medium"
+                  :class="
+                    parseFloat(contract.priceChangePercent ?? '0') >= 0
+                      ? 'text-[#00c896]'
+                      : 'text-[#ff5b5a]'
+                  "
+                >
+                  {{ formatPriceChange(contract.priceChangePercent) }}
+                </p>
+              </div>
+            </div>
+            <div
+              v-if="filteredMarketList.length === 0"
+              class="text-center py-8 text-grey-40 text-s-14"
+            >
+              No markets found
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
     <!-- Leverage Modal Overlay -->
     <Teleport to="body">
       <div
@@ -528,6 +690,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import type { MaxOrderSizeResult } from './sdk/types'
 import { perpsClient } from './configs'
@@ -537,12 +700,13 @@ import {
   usePerpsContracts,
 } from './composables/usePerpsMarkets'
 import { formatUsd } from './utils/formatters'
-import { getLogoUrl } from './utils/market'
+import { getLogoUrl, getCategory } from './utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
 
 const walletMenuStore = useWalletMenuStore()
+const router = useRouter()
 const { token, login } = usePerpsAuth()
 const { balance } = usePerpsBalance()
 const { markets } = usePerpsMarkets()
@@ -564,6 +728,10 @@ const isSavingLeverage = ref(false)
 const leverageError = ref('')
 const showConfirmModal = ref(false)
 const orderError = ref('')
+const showMarketModal = ref(false)
+const marketSearch = ref('')
+const marketFilter = ref('all')
+const marketSortAsc = ref(true)
 
 // Computed
 const activeMarket = computed(
@@ -673,7 +841,75 @@ function toggleOrderType() {
 }
 
 function openTokenSelect() {
-  // Can implement token selector modal later
+  marketSearch.value = ''
+  marketFilter.value = 'all'
+  showMarketModal.value = true
+}
+
+const marketFilterTabs = [
+  { key: 'all', label: 'All' },
+  { key: 'Equities', label: 'Equities' },
+  { key: 'Commodities', label: 'Commodities' },
+  { key: 'ETFs', label: 'ETFs' },
+]
+
+const filteredMarketList = computed(() => {
+  let list = [...contracts.value]
+
+  // Category filter
+  if (marketFilter.value !== 'all') {
+    list = list.filter(c => getCategory(c) === marketFilter.value)
+  }
+
+  // Search
+  if (marketSearch.value) {
+    const q = marketSearch.value.toLowerCase()
+    list = list.filter(
+      c =>
+        c.baseCurrency.toLowerCase().includes(q) ||
+        c.market.toLowerCase().includes(q),
+    )
+  }
+
+  // Sort
+  list.sort((a, b) => {
+    const cmp = a.baseCurrency.localeCompare(b.baseCurrency)
+    return marketSortAsc.value ? cmp : -cmp
+  })
+
+  return list
+})
+
+function getMarketDisplayName(contract: any): string {
+  const match = markets.value.find(m => m.market === contract.market)
+  return match?.displayName ?? contract.baseCurrency
+}
+
+function formatContractPrice(contract: any): string {
+  const bid = parseFloat(contract.bid ?? '')
+  const ask = parseFloat(contract.ask ?? '')
+  let price: number
+  if (!isNaN(bid) && !isNaN(ask)) {
+    price = (bid + ask) / 2
+  } else if (contract.indexPrice) {
+    price = parseFloat(contract.indexPrice)
+  } else {
+    return '—'
+  }
+  return formatUsd(price)
+}
+
+function formatPriceChange(pct?: string): string {
+  if (!pct) return '0.00%'
+  const num = parseFloat(pct)
+  return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`
+}
+
+function selectMarket(contract: any) {
+  walletMenuStore.setSelectedTradeTokenSymbol(contract.baseCurrency)
+  showMarketModal.value = false
+  // Navigate route so the info screen updates too
+  router.push({ path: `/perps/perp/${contract.market}` })
 }
 
 function openLeverageModal() {
@@ -878,5 +1114,28 @@ watch(
   border: 4px solid white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+}
+
+.market-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.market-list-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+
+.market-list-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.market-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.market-list-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
 }
 </style>
