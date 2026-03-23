@@ -48,8 +48,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(vue@3.5.26(typescript@5.9.3))
       '@myetherwallet/vue-common-components':
-        specifier: ^1.3.4
-        version: 1.3.4(vue@3.5.26(typescript@5.9.3))
+        specifier: ^1.3.5
+        version: 1.3.5(vue@3.5.26(typescript@5.9.3))
       '@originjs/vite-plugin-commonjs':
         specifier: ^1.0.3
         version: 1.0.3
@@ -3208,8 +3208,8 @@ packages:
   '@multiversx/sdk-transaction-decoder@1.0.2':
     resolution: {integrity: sha512-j43QsKquu8N51WLmVlJ7dV2P3A1448R7/ktvl8r3i6wRMpfdtzDPNofTdHmMRT7DdQdvs4+RNgz8hVKL11Etsw==}
 
-  '@myetherwallet/vue-common-components@1.3.4':
-    resolution: {integrity: sha512-6j0DKJN36c0siHTqs2E4va/m5nGaeDEPYUm7AlyqGiDLPu9MJGVtO/tkFigeQqYJnam8hmrd2aTEhvdTqyJB1Q==}
+  '@myetherwallet/vue-common-components@1.3.5':
+    resolution: {integrity: sha512-CBNnGgRM9izg7KYYK4EhO3vK8p4yQegKEirKZBqOKgNMsT8txWQ0qOlvkA/CdxIZ0u7qp/OW6oHTmVKN+0B6Yg==}
 
   '@napi-rs/nice-android-arm-eabi@1.1.1':
     resolution: {integrity: sha512-kjirL3N6TnRPv5iuHw36wnucNqXAO46dzK9oPb0wj076R5Xm8PfUVA9nAFB5ZNMmfJQJVKACAPd/Z2KYMppthw==}
@@ -21845,7 +21845,7 @@ snapshots:
     dependencies:
       bech32: 2.0.0
 
-  '@myetherwallet/vue-common-components@1.3.4(vue@3.5.26(typescript@5.9.3))':
+  '@myetherwallet/vue-common-components@1.3.5(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       '@lottiefiles/dotlottie-vue': 0.4.10(vue@3.5.26(typescript@5.9.3))
     transitivePeerDependencies:
