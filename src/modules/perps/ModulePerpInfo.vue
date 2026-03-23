@@ -479,7 +479,7 @@ const contractData = computed(() =>
 
 const currentPrice = computed(() => {
   const c = contractData.value
-  if (!c) return undefined
+  if (!c) return 0
   return computeMidPrice(c)
 })
 

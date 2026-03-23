@@ -65,3 +65,21 @@ export function pnlColor(val: string): string {
   if (n < 0) return 'text-error'
   return 'text-info'
 }
+
+export function formatContractPrice(contract: {
+  bid?: string
+  ask?: string
+  indexPrice?: string
+}): string {
+  const bid = parseFloat(contract.bid ?? '')
+  const ask = parseFloat(contract.ask ?? '')
+  if (!isNaN(bid) && !isNaN(ask)) return formatUsd((bid + ask) / 2)
+  if (contract.indexPrice) return formatUsd(parseFloat(contract.indexPrice))
+  return '—'
+}
+
+export function formatPriceChange(pct?: string): string {
+  if (!pct) return '0.00%'
+  const num = parseFloat(pct)
+  return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`
+}

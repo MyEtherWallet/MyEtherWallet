@@ -11,11 +11,12 @@ export function getBase(market: string): string {
   return market.split('-')[0] ?? market
 }
 
-export function midPrice(contract: Contract): string | undefined {
+export function midPrice(contract: Contract): number {
   const bid = parseFloat(contract.bid ?? '')
   const ask = parseFloat(contract.ask ?? '')
-  if (isNaN(bid) || isNaN(ask)) return contract.indexPrice
-  return String((bid + ask) / 2)
+  if (!isNaN(bid) && !isNaN(ask)) return (bid + ask) / 2
+  if (contract.indexPrice) return parseFloat(contract.indexPrice)
+  return 0
 }
 
 export function hasTag(contract: Contract, tag: string): boolean {

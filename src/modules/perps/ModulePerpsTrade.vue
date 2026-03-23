@@ -236,14 +236,9 @@
             </div>
             <div class="flex justify-between text-s-14 px-3 mb-2 font-medium">
               <span class="text-[#58595b]">Estimated Liquidation</span>
-              <span class="text-textDark font-bold">
-                TODO
-                {{
-                  estimatedLiquidation
-                    ? formatUsd(estimatedLiquidation)
-                    : '$0.00'
-                }}</span
-              >
+              <span class="text-textDark font-bold">{{
+                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+              }}</span>
             </div>
           </div>
 
@@ -1068,525 +1063,82 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import type { MaxOrderSizeResult } from './sdk/types'
-import { perpsClient } from './configs'
-import { usePerpsAuth, usePerpsBalance } from './composables/usePerpsAuth'
 import {
-  usePerpsMarkets,
-  usePerpsContracts,
-} from './composables/usePerpsMarkets'
-import { formatUsd, formatPnl } from './utils/formatters'
-import { getLogoUrl, getCategory } from './utils/market'
-import { usePerpsPositions } from './composables/usePerpsPositions'
-import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
+  formatUsd,
+  formatPnl,
+  formatContractPrice,
+  formatPriceChange,
+} from './utils/formatters'
+import { getLogoUrl } from './utils/market'
+import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 
-type OrderSide = 'buy' | 'sell'
-type OrderType = 'market' | 'limit'
-
-const walletMenuStore = useWalletMenuStore()
-const router = useRouter()
-const { token, login } = usePerpsAuth()
-const { balance } = usePerpsBalance()
-const { markets } = usePerpsMarkets()
-const { contracts } = usePerpsContracts()
-const { positions, closePosition } = usePerpsPositions()
-const { markPriceData } = usePerpsMarkPrices()
-
-// State
-const orderSide = ref<OrderSide>('buy')
-const orderType = ref<OrderType>('market')
-const inputAmount = ref('')
-const leverage = ref(1)
-const sliderValue = ref(0)
-
-const isSubmitting = ref(false)
-const maxOrderSize = ref<MaxOrderSizeResult | null>(null)
-const showLeverageModal = ref(false)
-const tempLeverage = ref(1)
-const isSavingLeverage = ref(false)
-const leverageError = ref('')
-const showConfirmModal = ref(false)
-const orderError = ref('')
-const showMarketModal = ref(false)
-const marketSearch = ref('')
-const marketFilter = ref('all')
-const marketSortAsc = ref(true)
-const manageMode = ref<'add' | 'close'>('add')
-const closeAmount = ref('')
-const closeSliderValue = ref(0)
-const isClosing = ref(false)
-const closeError = ref('')
-const showCloseConfirmModal = ref(false)
-
-// Computed
-const activeMarket = computed(
-  () => walletMenuStore.selectedTradeTokenSymbol || 'AAPL-USD',
-)
-const displaySymbol = computed(() => activeMarket.value.split('-')[0])
-const fullMarketName = computed(() => {
-  const match = markets.value.find(m => m.pair.base === displaySymbol.value)
-  return match?.market || activeMarket.value
-})
-
-// Active position for the current market (if any)
-const activePosition = computed(
-  () => positions.value.find(p => p.market === fullMarketName.value) || null,
-)
-
-const positionNotionalValue = computed(() => {
-  if (!activePosition.value) return 0
-  return parseFloat(String(activePosition.value.notionalValue || 0))
-})
-
-const positionPnl = computed(() => {
-  if (!activePosition.value) return 0
-  return parseFloat(String(activePosition.value.unrealizedPnl || 0))
-})
-
-const positionRoe = computed(() => {
-  if (!activePosition.value) return 0
-  return parseFloat(String(activePosition.value.returnOnEquity || 0))
-})
-
-// Close position: compute the USD amount from slider percentage
-function setClosePercentage(pct: number) {
-  if (!activePosition.value || positionNotionalValue.value <= 0) return
-  const amt = (positionNotionalValue.value * pct) / 100
-  closeAmount.value = amt.toFixed(2)
-  closeSliderValue.value = pct
-}
-
-function onCloseSliderInput() {
-  if (!activePosition.value || positionNotionalValue.value <= 0) return
-  const amt = (positionNotionalValue.value * closeSliderValue.value) / 100
-  closeAmount.value = amt.toFixed(2)
-}
-
-async function handleClosePosition() {
-  if (!activePosition.value || isClosing.value) return
-  isClosing.value = true
-  closeError.value = ''
-  try {
-    const closePct = closeSliderValue.value
-    if (closePct >= 100) {
-      // Full close
-      await closePosition(activePosition.value)
-    } else {
-      // Partial close — create a reduce-only order for the close amount
-      const closeUsd = parseFloat(closeAmount.value) || 0
-      if (closeUsd <= 0) return
-      const rawSize = closeUsd / currentPrice.value
-      const roundedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
-      await perpsClient.createOrder({
-        market: fullMarketName.value,
-        side: activePosition.value.direction === 'long' ? 'sell' : 'buy',
-        type: 'market',
-        size: roundedSize,
-        postOnly: false,
-        reduceOnly: true,
-      } as any)
-    }
-    closeAmount.value = ''
-    closeSliderValue.value = 0
-  } catch (e: any) {
-    closeError.value =
-      e?.message || e?.toString() || 'Failed to close position.'
-  } finally {
-    isClosing.value = false
-  }
-}
-
-async function confirmAndClosePosition() {
-  await handleClosePosition()
-  if (!closeError.value) {
-    showCloseConfirmModal.value = false
-  }
-}
-
-const currentPrice = computed(() => {
-  const contract = contracts.value.find(c => c.market === fullMarketName.value)
-  if (contract) {
-    const bid = parseFloat(contract.bid ?? '')
-    const ask = parseFloat(contract.ask ?? '')
-    if (!isNaN(bid) && !isNaN(ask)) return (bid + ask) / 2
-    if (contract.indexPrice) return parseFloat(contract.indexPrice)
-  }
-  if (markPriceData.value?.[fullMarketName.value]) {
-    return parseFloat(markPriceData.value[fullMarketName.value].price)
-  }
-  return 0
-})
-
-const priceChange = computed(() => {
-  const contract = contracts.value.find(c => c.market === fullMarketName.value)
-  if (contract?.priceChangePercent) {
-    return parseFloat(contract.priceChangePercent)
-  }
-  return 0
-})
-
-const availableMargin = computed(() => {
-  const bal = parseFloat(balance.value?.availableMargin || '0')
-  return bal
-})
-
-const positionSizeUsd = computed(() => {
-  const amt = parseFloat(inputAmount.value) || 0
-  return amt * leverage.value
-})
-
-const estimatedLiquidation = computed(() => {
-  if (!positionSizeUsd.value || !currentPrice.value) return 0
-  const direction = orderSide.value === 'buy' ? -1 : 1
-  return (
-    currentPrice.value + direction * (currentPrice.value / leverage.value) * 0.9
-  )
-})
-
-function floorToIncrement(value: number, increment: number): string {
-  const floored = Math.floor(value / increment) * increment
-  const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
-  return floored.toFixed(decimals)
-}
-
-const activeMarketIncrement = computed(() => {
-  const market = markets.value.find(m => m.market === fullMarketName.value)
-  return parseFloat(market?.baseIncrement || '0.0001')
-})
-
-const orderSize = computed(() => {
-  if (!currentPrice.value) return '0'
-  const rawSize = positionSizeUsd.value / currentPrice.value
-  return floorToIncrement(rawSize, activeMarketIncrement.value)
-})
-
-const minOrderAmount = computed(() => {
-  return activeMarketIncrement.value * currentPrice.value
-})
-
-const closeDisabled = computed(() => {
-  if (closeSliderValue.value <= 0 || isClosing.value) return true
-  const amt = parseFloat(closeAmount.value) || 0
-  return amt > 0 && amt < minOrderAmount.value
-})
-
-const closeOrderSize = computed(() => {
-  const amt = parseFloat(closeAmount.value) || 0
-  if (!currentPrice.value || amt <= 0) return '0'
-  const rawSize = amt / currentPrice.value
-  return floorToIncrement(rawSize, activeMarketIncrement.value)
-})
-
-const closeButtonLabel = computed(() => {
-  const amt = parseFloat(closeAmount.value) || 0
-  if (amt > 0 && amt < minOrderAmount.value) {
-    return `Min. amount ${formatUsd(minOrderAmount.value)}`
-  }
-  if (isClosing.value) return 'Closing...'
-  return `Close ${displaySymbol.value} ${activePosition.value?.direction === 'long' ? 'Long' : 'Short'}`
-})
-
-const submitDisabled = computed(() => {
-  const amt = parseFloat(inputAmount.value)
-  if (!amt || amt <= 0 || isSubmitting.value) return true
-  if (availableMargin.value * leverage.value < minOrderAmount.value) return true
-  if (amt > availableMargin.value) return true
-  return positionSizeUsd.value < minOrderAmount.value
-})
-
-const submitButtonLabel = computed(() => {
-  const amt = parseFloat(inputAmount.value)
-  if (availableMargin.value * leverage.value < minOrderAmount.value) {
-    return `Min. margin required ${formatUsd(minOrderAmount.value)}`
-  }
-  if (positionSizeUsd.value < minOrderAmount.value) {
-    return `Min. amount ${formatUsd(minOrderAmount.value)}`
-  }
-  if (amt > availableMargin.value) {
-    return `Not enough margin ${formatUsd(amt)}`
-  }
-  if (activePosition.value) {
-    return `Add to ${displaySymbol.value} ${activePosition.value.direction === 'long' ? 'Long' : 'Short'}`
-  }
-  return `${orderSide.value === 'buy' ? 'Long' : 'Short'} ${displaySymbol.value}`
-})
-
-// Methods
-function getBaseSizeForPercent(pct: number): number | null {
-  if (!maxOrderSize.value) return null
-  const side = orderSide.value === 'buy' ? 'maxBidBaseSize' : 'maxAskBaseSize'
-  const levels: Record<number, keyof MaxOrderSizeResult> = {
-    25: 'percent25',
-    50: 'percent50',
-    75: 'percent75',
-    100: 'percent100',
-  }
-  // API returns max sizes assuming 20x leverage; scale to actual leverage
-  const leverageScale = leverage.value / 20
-  const levelKey = levels[pct]
-  if (levelKey) {
-    return (parseFloat(maxOrderSize.value[levelKey][side]) || 0) * leverageScale
-  }
-  // For 10%, derive from max (percent100) * 0.1
-  const maxBase =
-    (parseFloat(maxOrderSize.value.percent100[side]) || 0) * leverageScale
-  return maxBase * (pct / 100)
-}
-
-function setPercentage(pct: number) {
-  const baseSize = getBaseSizeForPercent(pct)
-  if (baseSize !== null && baseSize > 0 && currentPrice.value > 0) {
-    // baseSize * price = position size in USD, divide by leverage to get margin
-    const margin = (baseSize * currentPrice.value) / leverage.value
-    inputAmount.value = margin.toFixed(2)
-    // Update slider proportionally to max
-    const maxBase = getBaseSizeForPercent(100) || 1
-    sliderValue.value = Math.min((baseSize / maxBase) * 100, 100)
-  }
-}
-
-function onSliderInput() {
-  const maxBase = getBaseSizeForPercent(100)
-  if (maxBase && maxBase > 0 && currentPrice.value > 0) {
-    const baseSize = maxBase * (sliderValue.value / 100)
-    const margin = (baseSize * currentPrice.value) / leverage.value
-    inputAmount.value = margin.toFixed(2)
-  } else if (availableMargin.value > 0) {
-    inputAmount.value = (
-      (availableMargin.value * sliderValue.value) /
-      100
-    ).toFixed(2)
-  }
-}
-
-function toggleOrderType() {
-  orderType.value = orderType.value === 'market' ? 'limit' : 'market'
-}
-
-function openTokenSelect() {
-  marketSearch.value = ''
-  marketFilter.value = 'all'
-  showMarketModal.value = true
-}
-
-const marketFilterTabs = [
-  { key: 'all', label: 'All' },
-  { key: 'Equities', label: 'Equities' },
-  { key: 'Commodities', label: 'Commodities' },
-  { key: 'ETFs', label: 'ETFs' },
-]
-
-const filteredMarketList = computed(() => {
-  let list = [...contracts.value]
-
-  // Category filter
-  if (marketFilter.value !== 'all') {
-    list = list.filter(c => getCategory(c) === marketFilter.value)
-  }
-
-  // Search
-  if (marketSearch.value) {
-    const q = marketSearch.value.toLowerCase()
-    list = list.filter(
-      c =>
-        c.baseCurrency.toLowerCase().includes(q) ||
-        c.market.toLowerCase().includes(q),
-    )
-  }
-
-  // Sort
-  list.sort((a, b) => {
-    const cmp = a.baseCurrency.localeCompare(b.baseCurrency)
-    return marketSortAsc.value ? cmp : -cmp
-  })
-
-  return list
-})
-
-function getMarketDisplayName(contract: any): string {
-  const match = markets.value.find(m => m.market === contract.market)
-  return match?.displayName ?? contract.baseCurrency
-}
-
-function formatContractPrice(contract: any): string {
-  const bid = parseFloat(contract.bid ?? '')
-  const ask = parseFloat(contract.ask ?? '')
-  let price: number
-  if (!isNaN(bid) && !isNaN(ask)) {
-    price = (bid + ask) / 2
-  } else if (contract.indexPrice) {
-    price = parseFloat(contract.indexPrice)
-  } else {
-    return '—'
-  }
-  return formatUsd(price)
-}
-
-function formatPriceChange(pct?: string): string {
-  if (!pct) return '0.00%'
-  const num = parseFloat(pct)
-  return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`
-}
-
-function selectMarket(contract: any) {
-  walletMenuStore.setSelectedTradeTokenSymbol(contract.baseCurrency)
-  showMarketModal.value = false
-  // Navigate route so the info screen updates too
-  router.push({ path: `/perps/perp/${contract.market}` })
-}
-
-function openLeverageModal() {
-  tempLeverage.value = leverage.value
-  leverageError.value = ''
-  showLeverageModal.value = true
-}
-
-async function saveLeverage() {
-  isSavingLeverage.value = true
-  leverageError.value = ''
-  try {
-    if (token.value && markets.value.length) {
-      await perpsClient.setLeverage(fullMarketName.value, tempLeverage.value)
-    }
-    leverage.value = tempLeverage.value
-    showLeverageModal.value = false
-    // Re-fetch max order size with new leverage
-    fetchMaxOrderSize()
-  } catch (e: any) {
-    leverageError.value =
-      e?.message ||
-      e?.toString() ||
-      'Failed to save leverage. Please try again.'
-  } finally {
-    isSavingLeverage.value = false
-  }
-}
-
-async function fetchLeverage() {
-  if (!token.value) return
-  if (!markets.value.length) return
-  try {
-    const res = await perpsClient.getLeverage(fullMarketName.value)
-    if (res.success && res.result?.length) {
-      leverage.value = parseInt(res.result[0].leverage) || 1
-    }
-  } catch (e) {
-    console.error('Failed to fetch leverage:', e)
-  }
-}
-
-async function fetchMaxOrderSize() {
-  if (!token.value) return
-  // Wait for markets data so fullMarketName resolves properly
-  if (!markets.value.length) return
-  try {
-    const res = await perpsClient.getMaxOrderSize(fullMarketName.value)
-    if (res.success) {
-      maxOrderSize.value = res.result
-      setPercentage(10)
-    }
-  } catch (e) {
-    console.error('Failed to fetch max order size:', e)
-  }
-}
-
-function showConfirmation() {
-  if (submitDisabled.value) return
-  orderError.value = ''
-  showConfirmModal.value = true
-}
-
-function showCloseConfirmation() {
-  if (closeDisabled.value) return
-  closeError.value = ''
-  showCloseConfirmModal.value = true
-}
-
-async function confirmAndSubmitOrder() {
-  if (submitDisabled.value) return
-
-  isSubmitting.value = true
-  try {
-    const orderParams: Record<string, unknown> = {
-      market: fullMarketName.value,
-      side: orderSide.value,
-      type: orderType.value,
-      size: orderSize.value,
-      postOnly: false,
-      reduceOnly: false,
-    }
-    if (orderType.value === 'limit') {
-      orderParams.timeInForce = 'GTC'
-    }
-    await perpsClient.createOrder(orderParams as any)
-
-    showConfirmModal.value = false
-    // Reset form on success
-    inputAmount.value = ''
-    sliderValue.value = 0
-  } catch (error: any) {
-    orderError.value =
-      error?.message || error?.toString() || 'Order failed. Please try again.'
-  } finally {
-    isSubmitting.value = false
-  }
-}
-
-// Lifecycle
-onMounted(() => {
-  fetchLeverage()
-  fetchMaxOrderSize()
-})
-
-// When a position exists, sync orderSide with position direction
-watch(
+const {
+  // Auth
+  token,
+  login,
+  // Market info
+  displaySymbol,
+  currentPrice,
+  priceChange,
+  // Order form
+  orderSide,
+  orderType,
+  inputAmount,
+  leverage,
+  sliderValue,
+  positionSizeUsd,
+  estimatedLiquidation,
+  orderSize,
+  availableMargin,
+  // Position
   activePosition,
-  pos => {
-    if (pos) {
-      orderSide.value = pos.direction === 'long' ? 'buy' : 'sell'
-    }
-  },
-  { immediate: true },
-)
-
-watch(
-  () => activeMarket.value,
-  () => {
-    // Reset form when changing markets
-    inputAmount.value = ''
-    sliderValue.value = 0
-    maxOrderSize.value = null
-    manageMode.value = 'add'
-    closeAmount.value = ''
-    closeSliderValue.value = 0
-    closeError.value = ''
-    fetchLeverage()
-    fetchMaxOrderSize()
-  },
-)
-
-watch(
-  () => token.value,
-  () => {
-    if (token.value) {
-      fetchLeverage()
-      fetchMaxOrderSize()
-    }
-  },
-)
-
-watch(
-  () => markets.value,
-  () => {
-    if (markets.value.length && token.value) {
-      fetchLeverage()
-      fetchMaxOrderSize()
-    }
-  },
-)
+  positionNotionalValue,
+  positionPnl,
+  positionRoe,
+  manageMode,
+  // Close
+  closeAmount,
+  closeSliderValue,
+  closeDisabled,
+  closeOrderSize,
+  closeButtonLabel,
+  closeError,
+  isClosing,
+  showCloseConfirmModal,
+  setClosePercentage,
+  onCloseSliderInput,
+  confirmAndClosePosition,
+  showCloseConfirmation,
+  // Submit
+  isSubmitting,
+  submitDisabled,
+  submitButtonLabel,
+  orderError,
+  showConfirmModal,
+  showConfirmation,
+  confirmAndSubmitOrder,
+  // Slider
+  setPercentage,
+  onSliderInput,
+  toggleOrderType,
+  // Market selector
+  showMarketModal,
+  marketSearch,
+  marketFilter,
+  marketSortAsc,
+  marketFilterTabs,
+  filteredMarketList,
+  getMarketDisplayName,
+  openTokenSelect,
+  selectMarket,
+  // Leverage
+  showLeverageModal,
+  tempLeverage,
+  isSavingLeverage,
+  leverageError,
+  openLeverageModal,
+  saveLeverage,
+} = usePerpsTradeForm()
 </script>
 
 <style scoped>

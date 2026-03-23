@@ -1,53 +1,73 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
 
-export function usePerpsMarkets() {
-  const markets = ref<TradingPair[]>([])
-  const isLoading = ref(true)
-  const error = ref<string | null>(null)
+// Singleton state for markets
+const markets = ref<TradingPair[]>([])
+const marketsLoading = ref(false)
+const marketsError = ref<string | null>(null)
+let marketsInitialized = false
 
-  async function fetchMarkets() {
-    isLoading.value = true
-    error.value = null
-    try {
-      const data = await perpsClient.getMarkets()
-      if (data.success) {
-        markets.value = data.result.perps.tradingPairs
-      }
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to fetch markets'
-    } finally {
-      isLoading.value = false
+async function fetchMarkets() {
+  marketsLoading.value = true
+  marketsError.value = null
+  try {
+    const data = await perpsClient.getMarkets()
+    if (data.success) {
+      markets.value = data.result.perps.tradingPairs
     }
+  } catch (e) {
+    marketsError.value =
+      e instanceof Error ? e.message : 'Failed to fetch markets'
+  } finally {
+    marketsLoading.value = false
   }
+}
 
-  onMounted(fetchMarkets)
+export function usePerpsMarkets() {
+  if (!marketsInitialized) {
+    marketsInitialized = true
+    fetchMarkets()
+  }
+  return {
+    markets,
+    isLoading: marketsLoading,
+    error: marketsError,
+    refetch: fetchMarkets,
+  }
+}
 
-  return { markets, isLoading, error, refetch: fetchMarkets }
+// Singleton state for contracts
+const contracts = ref<Contract[]>([])
+const contractsLoading = ref(false)
+const contractsError = ref<string | null>(null)
+let contractsInitialized = false
+
+async function fetchContracts() {
+  contractsLoading.value = true
+  contractsError.value = null
+  try {
+    const data = await perpsClient.getContracts(true)
+    if (data.success) {
+      contracts.value = data.result
+    }
+  } catch (e) {
+    contractsError.value =
+      e instanceof Error ? e.message : 'Failed to fetch contracts'
+  } finally {
+    contractsLoading.value = false
+  }
 }
 
 export function usePerpsContracts() {
-  const contracts = ref<Contract[]>([])
-  const isLoading = ref(true)
-  const error = ref<string | null>(null)
-
-  async function fetchContracts() {
-    isLoading.value = true
-    error.value = null
-    try {
-      const data = await perpsClient.getContracts(true)
-      if (data.success) {
-        contracts.value = data.result
-      }
-    } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to fetch contracts'
-    } finally {
-      isLoading.value = false
-    }
+  if (!contractsInitialized) {
+    contractsInitialized = true
+    fetchContracts()
   }
-
-  onMounted(fetchContracts)
-
-  return { contracts, isLoading, error, refetch: fetchContracts }
+  return {
+    contracts,
+    isLoading: contractsLoading,
+    error: contractsError,
+    refetch: fetchContracts,
+  }
 }
