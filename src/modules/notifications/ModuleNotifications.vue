@@ -647,10 +647,23 @@ const updateNotificationStatus = (
   fetchBalances()
 }
 
+// Get the correct transaction status URL based on chain
+const getTransactionStatusUrl = (
+  hash: string,
+  chainId: string,
+  chainName: string,
+): string => {
+  if (chainName.toLowerCase() === 'bitcoin') {
+    return `${Configs.MEW_API_URL}/v1/btc/${chainName.toLowerCase()}/transactions/${hash}/status`
+  }
+  return `${Configs.MEW_API_URL}/v1/evm/chains/${chainId}/transactions/${hash}/status`
+}
+
 // Start polling for notification status (works for transactions, swaps, and bridges)
 const startStatusPolling = async (
   hash: string,
   chainId: string,
+  chainName: string,
   type: StatusNotificationType,
 ) => {
   if (statusPollIntervals[hash]) return
@@ -659,7 +672,7 @@ const startStatusPolling = async (
   const pollStatus = async () => {
     try {
       const response = await fetch(
-        `${Configs.MEW_API_URL}/v1/evm/chains/${chainId}/transactions/${hash}/status`,
+        getTransactionStatusUrl(hash, chainId, chainName),
       )
       const data = await response.json()
 
@@ -692,7 +705,7 @@ const startPollingForPendingNotifications = (address: string) => {
   const pendingTxs = tradeOrdersStore.getPendingTransactions(address)
   pendingTxs.forEach(tx => {
     if (!statusPollIntervals[tx.hash]) {
-      startStatusPolling(tx.hash, tx.chainId, 'transaction')
+      startStatusPolling(tx.hash, tx.chainId, tx.chainName, 'transaction')
     }
   })
 
@@ -700,7 +713,12 @@ const startPollingForPendingNotifications = (address: string) => {
   const pendingSwaps = tradeOrdersStore.getPendingSwaps(address)
   pendingSwaps.forEach(swap => {
     if (!statusPollIntervals[swap.hash]) {
-      startStatusPolling(swap.hash, swap.fromChainId, 'swap')
+      startStatusPolling(
+        swap.hash,
+        swap.fromChainId,
+        swap.fromChainName,
+        'swap',
+      )
     }
   })
 
@@ -708,7 +726,12 @@ const startPollingForPendingNotifications = (address: string) => {
   const pendingBridges = tradeOrdersStore.getPendingBridges(address)
   pendingBridges.forEach(bridge => {
     if (!statusPollIntervals[bridge.hash]) {
-      startStatusPolling(bridge.hash, bridge.fromChainId, 'bridge')
+      startStatusPolling(
+        bridge.hash,
+        bridge.fromChainId,
+        bridge.fromChainName,
+        'bridge',
+      )
     }
   })
 }
@@ -773,17 +796,27 @@ unsubscribe = tradeOrdersStore.subscribe((item, type) => {
   } else if (type === 'transaction') {
     const tx = item as TransactionNotification
     if (tx.status === 'sent' && !statusPollIntervals[tx.hash]) {
-      startStatusPolling(tx.hash, tx.chainId, 'transaction')
+      startStatusPolling(tx.hash, tx.chainId, tx.chainName, 'transaction')
     }
   } else if (type === 'swap') {
     const swap = item as SwapNotification
     if (swap.status === 'sent' && !statusPollIntervals[swap.hash]) {
-      startStatusPolling(swap.hash, swap.fromChainId, 'swap')
+      startStatusPolling(
+        swap.hash,
+        swap.fromChainId,
+        swap.fromChainName,
+        'swap',
+      )
     }
   } else if (type === 'bridge') {
     const bridge = item as BridgeNotification
     if (bridge.status === 'sent' && !statusPollIntervals[bridge.hash]) {
-      startStatusPolling(bridge.hash, bridge.fromChainId, 'bridge')
+      startStatusPolling(
+        bridge.hash,
+        bridge.fromChainId,
+        bridge.fromChainName,
+        'bridge',
+      )
     }
   }
 })
