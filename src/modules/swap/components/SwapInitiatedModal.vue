@@ -12,27 +12,27 @@
             <div class="inline-flex align-middle">
               <app-blockie
                 v-if="isBridge"
-                :address="props.toAddress"
+                :address="snapshot.toAddress"
                 :size="5"
                 class="inline-block mx-2 align-middle"
               />
               <a
-                v-if="isBridge && toChain?.blockExplorerAddr"
+                v-if="isBridge && snapshot.toChain?.blockExplorerAddr"
                 :href="addressExplorerUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="hover:underline cursor-pointer font-mono text-black text-s-13 lg:text-s-16 pr-1"
               >
-                {{ truncateHash(props.toAddress) }}
+                {{ truncateHash(snapshot.toAddress) }}
                 <arrow-up-right-icon
                   class="w-3 h-3 inline-block align-middle text-black"
               /></a>
             </div>
             <span
-              v-if="isBridge && !toChain?.blockExplorerAddr"
+              v-if="isBridge && !snapshot.toChain?.blockExplorerAddr"
               class="font-mono text-s-13 lg:text-s-16"
             >
-              {{ truncateHash(props.toAddress) }}
+              {{ truncateHash(snapshot.toAddress) }}
             </span>
 
             on {{ toTokenChain }}
@@ -105,10 +105,10 @@
                     :url="fromTokenIcon"
                     :symbol="fromTokenSymbol"
                     :address="
-                      props.fromChain
+                      snapshot.fromChain
                         ? {
                             address: fromTokenAddress,
-                            network: props.fromChain?.name,
+                            network: snapshot.fromChain?.name,
                           }
                         : undefined
                     "
@@ -136,10 +136,10 @@
                     <app-token-symbol
                       :symbol="fromTokenSymbol"
                       :address="
-                        props.fromChain
+                        snapshot.fromChain
                           ? {
                               address: fromTokenAddress,
-                              network: props.fromChain?.name,
+                              network: snapshot.fromChain?.name,
                             }
                           : undefined
                       "
@@ -162,10 +162,10 @@
                     :url="toTokenIcon"
                     :symbol="toTokenSymbol"
                     :address="
-                      props.toChain
+                      snapshot.toChain
                         ? {
                             address: toTokenAddress,
-                            network: props.toChain?.name,
+                            network: snapshot.toChain?.name,
                           }
                         : undefined
                     "
@@ -193,10 +193,10 @@
                     <app-token-symbol
                       :symbol="toTokenSymbol"
                       :address="
-                        props.toChain
+                        snapshot.toChain
                           ? {
                               address: toTokenAddress,
-                              network: props.toChain?.name,
+                              network: snapshot.toChain?.name,
                             }
                           : undefined
                       "
@@ -219,7 +219,7 @@
                   <span class="text-s-12 font-mono truncate max-w-[150px]">
                     {{ truncatedTxHash }}
                   </span>
-                  <app-btn-copy :copy-value="props.txHash" class="-mr-3" />
+                  <app-btn-copy :copy-value="snapshot.txHash" class="-mr-3" />
                 </div>
               </div>
             </div>
@@ -259,7 +259,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, watch, reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
@@ -313,6 +313,34 @@ const model = defineModel<boolean>('swapInitiatedOpen', {
   required: true,
 })
 
+// Local snapshot of props to prevent "Unknown" flash when parent resets values
+const snapshot = reactive({
+  fromChain: undefined as Chain | undefined,
+  toChain: undefined as Chain | undefined,
+  selectedQuote: undefined as ProviderQuoteResponse | undefined,
+  txHash: '0x' as HexPrefixedString,
+  toAddress: '',
+  fromAddress: '',
+})
+
+const captureSnapshot = () => {
+  snapshot.fromChain = props.fromChain
+  snapshot.toChain = props.toChain
+  snapshot.selectedQuote = props.selectedQuote
+  snapshot.txHash = props.txHash
+  snapshot.toAddress = props.toAddress
+  snapshot.fromAddress = props.fromAddress
+}
+
+const clearSnapshot = () => {
+  snapshot.fromChain = undefined
+  snapshot.toChain = undefined
+  snapshot.selectedQuote = undefined
+  snapshot.txHash = '0x'
+  snapshot.toAddress = ''
+  snapshot.fromAddress = ''
+}
+
 // Open notifications and close modal
 const openNotifications = () => {
   model.value = false
@@ -321,109 +349,109 @@ const openNotifications = () => {
 
 // Truncated transaction hash
 const truncatedTxHash = computed(() => {
-  if (!props.txHash) return ''
-  if (props.txHash.length <= 16) return props.txHash
-  return `${props.txHash.slice(0, 8)}...${props.txHash.slice(-8)}`
+  if (!snapshot.txHash) return ''
+  if (snapshot.txHash.length <= 16) return snapshot.txHash
+  return `${snapshot.txHash.slice(0, 8)}...${snapshot.txHash.slice(-8)}`
 })
 
 // Track notification status from store
 const notificationStatus = computed(() => {
-  if (!walletAddress.value || !props.txHash) return 'sent'
+  if (!walletAddress.value || !snapshot.txHash) return 'sent'
 
   // Check swaps first
   const swapsList = tradeOrdersStore.getSwapsByAddress(walletAddress.value)
-  const swap = swapsList.find(s => s.hash === props.txHash)
+  const swap = swapsList.find(s => s.hash === snapshot.txHash)
   if (swap) return swap.status
 
   // Check bridges
   const bridgesList = tradeOrdersStore.getBridgesByAddress(walletAddress.value)
-  const bridge = bridgesList.find(b => b.hash === props.txHash)
+  const bridge = bridgesList.find(b => b.hash === snapshot.txHash)
   if (bridge) return bridge.status
 
   return 'sent'
 })
 
 const toTokenSymbol = computed(() => {
-  return props.selectedQuote?.quote.options.toToken.symbol || 'Unknown'
+  return snapshot.selectedQuote?.quote.options.toToken.symbol || 'Unknown'
 })
 
 const toTokenAmount = computed(() => {
   return formatUnits(
-    BigInt(props.selectedQuote?.toTokenAmount.toString() || '0'),
-    props.selectedQuote?.quote.options.toToken.decimals ?? 18,
+    BigInt(snapshot.selectedQuote?.toTokenAmount.toString() || '0'),
+    snapshot.selectedQuote?.quote.options.toToken.decimals ?? 18,
   )
 })
 
 const toTokenAmountFiat = computed(() => {
-  const price = props.selectedQuote?.quote.options.toToken.price ?? 0
+  const price = snapshot.selectedQuote?.quote.options.toToken.price ?? 0
   return formatFiatValue(
     BigNumber(toTokenAmount.value).multipliedBy(price).toFixed(6),
   ).value
 })
 
 const toTokenIcon = computed(() => {
-  return props.selectedQuote?.quote.options.toToken.logoURI || ethSvg // Fallback to ETH icon if no token icon is available
+  return snapshot.selectedQuote?.quote.options.toToken.logoURI || ethSvg
 })
 
 const toTokenChain = computed(() => {
-  return props.toChain?.nameLong || 'Unknown Chain'
+  return snapshot.toChain?.nameLong || 'Unknown Chain'
 })
 
 const toTokenChainImg = computed(() => {
-  return props.toChain?.icon || ethSvg // Fallback to ETH icon if no chain icon is available
+  return snapshot.toChain?.icon || ethSvg
 })
 
 const toTokenAddress = computed(() => {
-  return props.selectedQuote?.quote.options.toToken.address || ''
+  return snapshot.selectedQuote?.quote.options.toToken.address || ''
 })
 
 const fromTokenSymbol = computed(() => {
-  return props.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
+  return snapshot.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
 })
 const fromTokenAmount = computed(() => {
   return formatUnits(
-    BigInt(props.selectedQuote?.fromTokenAmount.toString() || '0'),
-    props.selectedQuote?.quote.options.fromToken.decimals ?? 18,
+    BigInt(snapshot.selectedQuote?.fromTokenAmount.toString() || '0'),
+    snapshot.selectedQuote?.quote.options.fromToken.decimals ?? 18,
   )
 })
 const fromTokenAmountFiat = computed(() => {
-  const price = props.selectedQuote?.quote.options.fromToken.price ?? 0
+  const price = snapshot.selectedQuote?.quote.options.fromToken.price ?? 0
   return formatFiatValue(
     BigNumber(fromTokenAmount.value).multipliedBy(price).toFixed(6),
   ).value
 })
 
 const fromTokenChain = computed(() => {
-  return props.fromChain?.name || 'Unknown Chain'
+  return snapshot.fromChain?.name || 'Unknown Chain'
 })
 const fromTokenIcon = computed(() => {
-  return props.selectedQuote?.quote.options.fromToken.logoURI || ethSvg // Fallback to ETH icon if no token icon is available
+  return snapshot.selectedQuote?.quote.options.fromToken.logoURI || ethSvg
 })
 
 const fromTokenChainImg = computed(() => {
-  return props.fromChain?.icon || ethSvg // Fallback to ETH icon if no chain icon is available
+  return snapshot.fromChain?.icon || ethSvg
 })
 
 const fromTokenAddress = computed(() => {
-  return props.selectedQuote?.quote.options.fromToken.address || ''
+  return snapshot.selectedQuote?.quote.options.fromToken.address || ''
 })
 
 const blockExplorerUrl = computed(() => {
   return (
-    props.fromChain?.blockExplorerTX.replace('[[txHash]]', props.txHash) || ''
+    snapshot.fromChain?.blockExplorerTX.replace('[[txHash]]', snapshot.txHash) || ''
   )
 })
 
 const addressExplorerUrl = computed(() => {
   return (
-    props.toChain?.blockExplorerAddr.replace('[[address]]', props.toAddress) ||
+    snapshot.toChain?.blockExplorerAddr.replace('[[address]]', snapshot.toAddress) ||
     ''
   )
 })
 
 const isBridge = computed(() => {
-  if (!props.fromChain || !props.toChain) return false
-  return props.fromChain.name !== props.toChain.name
+  if (!snapshot.fromChain || !snapshot.toChain) return false
+  return snapshot.fromChain.name !== snapshot.toChain.name
 })
 
 const title = computed(() => {
@@ -448,10 +476,18 @@ const truncateHash = (hash: string): string => {
 watch(
   () => model.value,
   (newValue: boolean) => {
-    if (newValue && props.selectedQuote) {
+    if (newValue) {
+      // Capture snapshot of props when modal opens
+      captureSnapshot()
+    } else {
+      // Clear snapshot when modal closes
+      clearSnapshot()
+    }
+
+    if (newValue && snapshot.selectedQuote) {
       // Add swap or bridge notification based on cross-chain status
-      const fromChain = props.fromChain
-      const toChain = props.toChain
+      const fromChain = snapshot.fromChain
+      const toChain = snapshot.toChain
       const isBridge = fromChain?.chainID !== toChain?.chainID
 
       if (fromChain && toChain) {
@@ -460,9 +496,9 @@ watch(
         const addressLink = addressExplorerUrl.value
         const shared: NotificationBaseSwapBridge = {
           status: 'sent',
-          hash: props.txHash,
-          fromAddress: props.fromAddress,
-          toAddress: props.toAddress,
+          hash: snapshot.txHash,
+          fromAddress: snapshot.fromAddress,
+          toAddress: snapshot.toAddress,
           fromAmount: fromTokenAmount.value,
           fromUsdValue: fromTokenAmountFiat.value,
           fromSymbol: fromTokenSymbol.value,
