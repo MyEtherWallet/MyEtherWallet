@@ -249,7 +249,6 @@ export class PerpsClient {
     market: string,
     buffer?: number,
   ): Promise<GenericResponse<MaxOrderSizeResult>> {
-    console.log(market, buffer)
     const params = new URLSearchParams({ market })
     if (buffer !== undefined) params.set('buffer', buffer.toString())
     return this.authGet<GenericResponse<MaxOrderSizeResult>>(

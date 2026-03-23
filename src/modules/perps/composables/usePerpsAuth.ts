@@ -1,4 +1,4 @@
-import { ref, watchEffect, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -86,43 +86,57 @@ export function usePerpsAuth() {
   }
 }
 
+// Shared singleton state for balance polling
+const _sharedBalance = ref<PerpsBalance | null>(null)
+const _sharedBalanceLoading = ref(false)
+let _balanceInitialized = false
+let _sharedFetchBalance: (() => Promise<void>) | null = null
+
 export function usePerpsBalance() {
   const { token, refreshKey } = usePerpsAuth()
-  const balance = ref<PerpsBalance | null>(null)
-  const loading = ref(false)
-  let pollTimer: ReturnType<typeof setInterval> | null = null
+  const balance = _sharedBalance
+  const loading = _sharedBalanceLoading
 
-  async function fetchBalance() {
-    if (!token.value) {
-      balance.value = null
-      return
+  if (!_balanceInitialized) {
+    _balanceInitialized = true
+
+    async function fetchBalance() {
+      if (!token.value) {
+        balance.value = null
+        return
+      }
+      loading.value = true
+      try {
+        const res = await perpsClient.getPerpsBalance()
+        balance.value = res.result
+      } catch {
+        balance.value = null
+      } finally {
+        loading.value = false
+      }
     }
-    loading.value = true
-    try {
-      const res = await perpsClient.getPerpsBalance()
-      balance.value = res.result
-    } catch {
-      balance.value = null
-    } finally {
-      loading.value = false
+
+    function poll() {
+      if (token.value) {
+        fetchBalance()
+      } else {
+        balance.value = null
+      }
     }
+
+    poll()
+    setInterval(poll, 5_000)
+
+    let lastRefreshKey = refreshKey.value
+    setInterval(() => {
+      if (refreshKey.value !== lastRefreshKey) {
+        lastRefreshKey = refreshKey.value
+        poll()
+      }
+    }, 500)
+
+    _sharedFetchBalance = fetchBalance
   }
 
-  watchEffect(() => {
-    void refreshKey.value
-    if (pollTimer) clearInterval(pollTimer)
-    if (token.value) {
-      fetchBalance()
-      pollTimer = setInterval(fetchBalance, 5_000)
-    } else {
-      balance.value = null
-      pollTimer = null
-    }
-  })
-
-  onUnmounted(() => {
-    if (pollTimer) clearInterval(pollTimer)
-  })
-
-  return { balance, loading, refetch: fetchBalance }
+  return { balance, loading, refetch: _sharedFetchBalance! }
 }

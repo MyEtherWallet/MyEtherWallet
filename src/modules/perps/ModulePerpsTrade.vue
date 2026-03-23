@@ -5,11 +5,6 @@
       <div>
         <p class="font-bold text-s-28 tracking-tight">Perps</p>
       </div>
-      <button
-        class="text-[#0052ff] font-medium text-s-14 hover:opacity-80 transition-opacity"
-      >
-        Clear all
-      </button>
     </div>
 
     <div
@@ -51,7 +46,8 @@
               {{ formatUsd(currentPrice) }}
             </p>
             <p
-              class="text-[#00c896] text-s-12 font-medium text-right flex items-center justify-end gap-1"
+              :class="priceChange >= 0 ? 'text-[#00c896]' : 'text-[#ff5b5a]'"
+              class="text-s-12 font-medium text-right flex items-center justify-end gap-1"
             >
               <svg
                 width="12"
@@ -63,200 +59,450 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                <polyline points="16 7 22 7 22 13"></polyline>
+                <template v-if="priceChange >= 0">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                  <polyline points="16 7 22 7 22 13"></polyline>
+                </template>
+                <template v-else>
+                  <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+                  <polyline points="16 17 22 17 22 11"></polyline>
+                </template>
               </svg>
               {{ priceChange.toFixed(2) }}%
             </p>
           </div>
         </div>
 
-        <!-- Long / Short Toggle + Order Type on same row -->
-        <div class="flex items-center justify-between mb-4 px-4">
-          <div class="flex bg-[#eef1f8] rounded-full p-1 w-fit">
-            <button
-              class="flex items-center gap-1.5 px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
-              :class="
-                orderSide === 'buy'
-                  ? 'bg-[#00c896] text-white shadow-sm'
-                  : 'text-textDark hover:bg-[#e4e9f4]'
-              "
-              @click="orderSide = 'buy'"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                <polyline points="16 7 22 7 22 13"></polyline>
-              </svg>
-              Long
-            </button>
-            <button
-              class="flex items-center gap-1.5 px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
-              :class="
-                orderSide === 'sell'
-                  ? 'bg-[#ff5b5a] text-white shadow-sm'
-                  : 'text-textDark hover:bg-[#e4e9f4]'
-              "
-              @click="orderSide = 'sell'"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
-                <polyline points="16 17 22 17 22 11"></polyline>
-              </svg>
-              Short
-            </button>
-          </div>
-          <div
-            class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark"
-            @click="toggleOrderType"
-          >
-            {{ orderType === 'market' ? 'Market' : 'Limit' }}
-            <img
-              src="@/assets/icons/chevron-down.svg"
-              class="w-5 h-5 opacity-50"
-            />
-          </div>
-        </div>
-
-        <!-- Main Blue Wrapper -->
-        <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
-          <!-- Position Size -->
-          <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
-            Position size
-          </p>
-
-          <!-- Inner white card -->
-          <div
-            class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
-          >
-            <p class="text-s-14 text-info mb-1 font-medium">
-              Available
-              <span class="text-textDark font-bold ml-1"
-                >{{ formatUsd(availableMargin) }}
-                <span class="text-info font-normal"
-                  >({{ leverage }}x
-                  {{ formatUsd(availableMargin * leverage) }})</span
-                ></span
-              >
-            </p>
-            <p class="font-bold text-[36px] text-textDark mb-3 tracking-tight">
-              {{ inputAmount ? formatUsd(parseFloat(inputAmount)) : '$0.00' }}
-            </p>
-
-            <!-- Slider -->
-            <div class="relative mb-6 px-1">
-              <input
-                v-model="sliderValue"
-                type="range"
-                min="0"
-                max="100"
-                step="0.01"
-                class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
-                :style="{
-                  background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
-                }"
-                @input="onSliderInput"
-              />
-            </div>
-
-            <!-- Size Pills -->
-            <div class="flex justify-between gap-2">
+        <!-- Long / Short Toggle + Order Type on same row (no position) -->
+        <template v-if="!activePosition">
+          <div class="flex items-center justify-between mb-4 px-4">
+            <div class="flex bg-[#eef1f8] rounded-full p-1 w-fit">
               <button
-                v-for="pct in [10, 25, 50, 75, 100]"
-                :key="pct"
-                class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover:text-textDark rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
-                @click="setPercentage(pct)"
+                class="flex items-center gap-1.5 px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
+                :class="
+                  orderSide === 'buy'
+                    ? 'bg-[#00c896] text-white shadow-sm'
+                    : 'text-textDark hover:bg-[#e4e9f4]'
+                "
+                @click="orderSide = 'buy'"
               >
-                {{ pct === 100 ? 'Max' : pct + '%' }}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                  <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                Long
+              </button>
+              <button
+                class="flex items-center gap-1.5 px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
+                :class="
+                  orderSide === 'sell'
+                    ? 'bg-[#ff5b5a] text-white shadow-sm'
+                    : 'text-textDark hover:bg-[#e4e9f4]'
+                "
+                @click="orderSide = 'sell'"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
+                  <polyline points="16 17 22 17 22 11"></polyline>
+                </svg>
+                Short
               </button>
             </div>
-          </div>
-
-          <!-- Leverage -->
-          <div
-            class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-4 flex justify-between items-center cursor-pointer shadow-sm"
-            @click="openLeverageModal"
-          >
-            <span class="text-s-16 font-medium text-textDark ml-1"
-              >Leverage</span
+            <div
+              class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark"
+              @click="toggleOrderType"
             >
-            <div class="flex items-center gap-1">
-              <span class="text-s-20 font-bold text-textDark"
-                >{{ leverage }}&times;</span
-              >
+              {{ orderType === 'market' ? 'Market' : 'Limit' }}
               <img
                 src="@/assets/icons/chevron-down.svg"
-                class="w-5 h-5 opacity-40 mr-[-2px]"
+                class="w-5 h-5 opacity-50"
               />
             </div>
           </div>
 
-          <!-- Auto Close -->
-          <div
-            class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
-          >
-            <span class="text-s-16 font-medium text-textDark ml-1"
-              >Auto close</span
+          <!-- Main Blue Wrapper -->
+          <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
+            <!-- Position Size -->
+            <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
+              Position size
+            </p>
+
+            <!-- Inner white card -->
+            <div
+              class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
             >
+              <p class="text-s-14 text-info mb-1 font-medium">
+                Available
+                <span class="text-textDark font-bold ml-1"
+                  >{{ formatUsd(availableMargin) }}
+                  <span class="text-info font-normal"
+                    >({{ leverage }}x
+                    {{ formatUsd(availableMargin * leverage) }})</span
+                  ></span
+                >
+              </p>
+              <p
+                class="font-bold text-[36px] text-textDark mb-3 tracking-tight"
+              >
+                {{ inputAmount ? formatUsd(parseFloat(inputAmount)) : '$0.00' }}
+              </p>
+
+              <!-- Slider -->
+              <div class="relative mb-6 px-1">
+                <input
+                  v-model="sliderValue"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
+                  :style="{
+                    background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
+                  }"
+                  @input="onSliderInput"
+                />
+              </div>
+
+              <!-- Size Pills -->
+              <div class="flex justify-between gap-2">
+                <button
+                  v-for="pct in [10, 25, 50, 75, 100]"
+                  :key="pct"
+                  class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover:text-textDark rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
+                  @click="setPercentage(pct)"
+                >
+                  {{ pct === 100 ? 'Max' : pct + '%' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Leverage -->
+            <div
+              class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-4 flex justify-between items-center cursor-pointer shadow-sm"
+              @click="openLeverageModal"
+            >
+              <span class="text-s-16 font-medium text-textDark ml-1"
+                >Leverage</span
+              >
+              <div class="flex items-center gap-1">
+                <span class="text-s-20 font-bold text-textDark"
+                  >{{ leverage }}&times;</span
+                >
+                <img
+                  src="@/assets/icons/chevron-down.svg"
+                  class="w-5 h-5 opacity-40 mr-[-2px]"
+                />
+              </div>
+            </div>
+
+            <!-- Auto Close -->
+            <div
+              class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
+            >
+              <span class="text-s-16 font-medium text-textDark ml-1"
+                >Auto close</span
+              >
+              <button
+                class="flex items-center gap-1.5 text-[#0052ff] text-s-16 font-bold mr-1"
+              >
+                <span class="text-s-20 font-medium">+</span> Add
+              </button>
+            </div>
+
+            <!-- Summary -->
+            <div class="flex justify-between text-s-14 px-3 mb-3.5 font-medium">
+              <span class="text-[#58595b]">Position size</span>
+              <span class="text-textDark font-bold">{{
+                positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00'
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14 px-3 mb-2 font-medium">
+              <span class="text-[#58595b]">Estimated Liquidation</span>
+              <span class="text-textDark font-bold">
+                TODO
+                {{
+                  estimatedLiquidation
+                    ? formatUsd(estimatedLiquidation)
+                    : '$0.00'
+                }}</span
+              >
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pb-10 px-4">
             <button
-              class="flex items-center gap-1.5 text-[#0052ff] text-s-16 font-bold mr-1"
+              class="w-full text-white rounded-full py-4 text-s-18 font-bold hoverOpacity transition-all active:scale-[0.98]"
+              :class="[
+                orderSide === 'buy' ? 'bg-[#00c896]' : 'bg-[#ff5b5a]',
+                submitDisabled
+                  ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed shadow-none opacity-80'
+                  : '',
+              ]"
+              :disabled="submitDisabled"
+              @click="showConfirmation"
             >
-              <span class="text-s-20 font-medium">+</span> Add
+              {{ orderSide === 'buy' ? 'Long' : 'Short' }}
+              {{ displaySymbol }}
             </button>
           </div>
+        </template>
 
-          <!-- Summary -->
-          <div class="flex justify-between text-s-14 px-3 mb-3.5 font-medium">
+        <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
+        <template v-else>
+          <!-- Add / Close Toggle + Order Type -->
+          <div class="flex items-center justify-between mb-4 px-4">
+            <div class="flex bg-[#eef1f8] rounded-full p-1 w-fit">
+              <button
+                class="px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
+                :class="
+                  manageMode === 'add'
+                    ? 'bg-white text-textDark shadow-sm'
+                    : 'text-textDark hover:bg-[#e4e9f4]'
+                "
+                @click="manageMode = 'add'"
+              >
+                Add
+              </button>
+              <button
+                class="px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
+                :class="
+                  manageMode === 'close'
+                    ? 'bg-white text-textDark shadow-sm'
+                    : 'text-textDark hover:bg-[#e4e9f4]'
+                "
+                @click="manageMode = 'close'"
+              >
+                Close
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark"
+              @click="toggleOrderType"
+            >
+              {{ orderType === 'market' ? 'Market' : 'Limit' }}
+              <img
+                src="@/assets/icons/chevron-down.svg"
+                class="w-5 h-5 opacity-50"
+              />
+            </div>
+          </div>
+
+          <!-- Position Info -->
+          <div class="flex justify-between text-s-14 px-4 mb-1.5 font-medium">
             <span class="text-[#58595b]">Position size</span>
             <span class="text-textDark font-bold">{{
-              positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00'
+              formatUsd(positionNotionalValue)
             }}</span>
           </div>
-          <div class="flex justify-between text-s-14 px-3 mb-2 font-medium">
-            <span class="text-[#58595b]">Estimated Liquidation</span>
-            <span class="text-textDark font-bold">
-              TODO
-              {{
-                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
-              }}</span
+          <div class="flex justify-between text-s-14 px-4 mb-4 font-medium">
+            <span class="text-[#58595b]">Current Profit</span>
+            <span
+              :class="positionPnl >= 0 ? 'text-[#00c896]' : 'text-[#ff5b5a]'"
+              class="font-bold"
             >
+              {{ formatPnl(String(positionPnl)) }}
+              ({{ (positionRoe * 100).toFixed(2) }}%)
+            </span>
           </div>
-        </div>
 
-        <!-- Submit Button -->
-        <div class="pb-10 px-4">
-          <button
-            class="w-full text-white rounded-full py-4 text-s-18 font-bold hoverOpacity transition-all active:scale-[0.98]"
-            :class="[
-              orderSide === 'buy' ? 'bg-[#00c896]' : 'bg-[#ff5b5a]',
-              submitDisabled
-                ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed shadow-none opacity-80'
-                : '',
-            ]"
-            :disabled="submitDisabled"
-            @click="showConfirmation"
-          >
-            {{ orderSide === 'buy' ? 'Long' : 'Short' }}
-            {{ displaySymbol }}
-          </button>
-        </div>
+          <!-- ADD MODE -->
+          <template v-if="manageMode === 'add'">
+            <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
+              <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
+                Add margin
+              </p>
+
+              <div
+                class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
+              >
+                <p class="text-s-14 text-info mb-1 font-medium">
+                  Available
+                  <span class="text-textDark font-bold ml-1"
+                    >{{ formatUsd(availableMargin) }}
+                    <span class="text-info font-normal"
+                      >({{ leverage }}x
+                      {{ formatUsd(availableMargin * leverage) }})</span
+                    ></span
+                  >
+                </p>
+                <p
+                  class="font-bold text-[36px] text-textDark mb-3 tracking-tight"
+                >
+                  {{
+                    inputAmount ? formatUsd(parseFloat(inputAmount)) : '$0.00'
+                  }}
+                </p>
+
+                <div class="relative mb-6 px-1">
+                  <input
+                    v-model="sliderValue"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
+                    :style="{
+                      background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
+                    }"
+                    @input="onSliderInput"
+                  />
+                </div>
+
+                <div class="flex justify-between gap-2">
+                  <button
+                    v-for="pct in [10, 25, 50, 75, 100]"
+                    :key="pct"
+                    class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover:text-textDark rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
+                    @click="setPercentage(pct)"
+                  >
+                    {{ pct === 100 ? 'Max' : pct + '%' }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Leverage -->
+              <div
+                class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-4 flex justify-between items-center cursor-pointer shadow-sm"
+                @click="openLeverageModal"
+              >
+                <span class="text-s-16 font-medium text-textDark ml-1"
+                  >Leverage</span
+                >
+                <div class="flex items-center gap-1">
+                  <span class="text-s-20 font-bold text-textDark"
+                    >{{ leverage }}&times;</span
+                  >
+                  <img
+                    src="@/assets/icons/chevron-down.svg"
+                    class="w-5 h-5 opacity-40 mr-[-2px]"
+                  />
+                </div>
+              </div>
+
+              <!-- Auto Close -->
+              <div
+                class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
+              >
+                <span class="text-s-16 font-medium text-textDark ml-1"
+                  >Auto close</span
+                >
+                <button
+                  class="flex items-center gap-1.5 text-[#0052ff] text-s-16 font-bold mr-1"
+                >
+                  <span class="text-s-20 font-medium">+</span> Add
+                </button>
+              </div>
+            </div>
+
+            <!-- Add to Position Button -->
+            <div class="pb-10 px-4">
+              <button
+                class="w-full bg-[#00c896] text-white rounded-full py-4 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98] truncate px-4"
+                :class="
+                  submitDisabled
+                    ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed shadow-none opacity-80'
+                    : ''
+                "
+                :disabled="submitDisabled"
+                @click="showConfirmation"
+              >
+                {{ submitButtonLabel }}
+              </button>
+            </div>
+          </template>
+
+          <!-- CLOSE MODE -->
+          <template v-else>
+            <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
+              <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
+                Amount to close
+              </p>
+
+              <div
+                class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb]"
+              >
+                <p
+                  class="font-bold text-[36px] text-textDark mb-3 tracking-tight"
+                >
+                  {{
+                    closeAmount ? formatUsd(parseFloat(closeAmount)) : '$0.00'
+                  }}
+                </p>
+
+                <div class="relative mb-6 px-1">
+                  <input
+                    v-model="closeSliderValue"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
+                    :style="{
+                      background: `linear-gradient(to right, #0052ff 0%, #0052ff ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,
+                    }"
+                    @input="onCloseSliderInput"
+                  />
+                </div>
+
+                <div class="flex justify-between gap-2">
+                  <button
+                    v-for="pct in [0, 25, 50, 75, 100]"
+                    :key="pct"
+                    class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover:text-textDark rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
+                    @click="setClosePercentage(pct)"
+                  >
+                    {{ pct }}%
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Close Error -->
+            <div
+              v-if="closeError"
+              class="mx-4 mb-4 bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+            >
+              <p class="text-[#ff5b5a] text-s-14 font-medium">
+                {{ closeError }}
+              </p>
+            </div>
+
+            <!-- Close Position Button -->
+            <div class="pb-10 px-4">
+              <button
+                class="w-full bg-[#00c896] text-white rounded-full py-4 text-s-18 font-bold hoverOpacity transition-all active:scale-[0.98]"
+                :class="
+                  closeDisabled
+                    ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed shadow-none opacity-80'
+                    : ''
+                "
+                :disabled="closeDisabled"
+                @click="showCloseConfirmation"
+              >
+                {{ closeButtonLabel }}
+              </button>
+            </div>
+          </template>
+        </template>
       </div>
     </div>
 
@@ -349,9 +595,7 @@
               <span class="text-[#58595b] font-medium"
                 >Size ({{ displaySymbol }})</span
               >
-              <span class="text-textDark font-bold">{{
-                currentPrice ? (positionSizeUsd / currentPrice).toFixed(4) : '0'
-              }}</span>
+              <span class="text-textDark font-bold">{{ orderSize }}</span>
             </div>
             <div class="flex justify-between text-s-14">
               <span class="text-[#58595b] font-medium">Est. liquidation</span>
@@ -385,6 +629,141 @@
               @click="confirmAndSubmitOrder"
             >
               <span v-if="isSubmitting">Processing...</span>
+              <span v-else>Confirm</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- Close Confirmation Modal -->
+    <Teleport to="body">
+      <div
+        v-if="showCloseConfirmModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center"
+        @click.self="showCloseConfirmModal = false"
+      >
+        <div class="absolute inset-0 bg-black/40" />
+        <div
+          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
+        >
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2.5">
+              <img
+                :src="getLogoUrl(displaySymbol)"
+                :alt="displaySymbol"
+                class="w-8 h-8 rounded-full"
+              />
+              <span class="font-bold text-s-20 text-textDark"
+                >Confirm Close
+                {{ displaySymbol }}
+                {{
+                  activePosition?.direction === 'long' ? 'Long' : 'Short'
+                }}</span
+              >
+            </div>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors text-textDark"
+              @click="showCloseConfirmModal = false"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Close Details -->
+          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-5 space-y-3">
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Side</span>
+              <span
+                class="font-bold"
+                :class="
+                  activePosition?.direction === 'long'
+                    ? 'text-[#ff5b5a]'
+                    : 'text-[#00c896]'
+                "
+                >{{
+                  activePosition?.direction === 'long'
+                    ? 'Sell (Close Long)'
+                    : 'Buy (Close Short)'
+                }}</span
+              >
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Order type</span>
+              <span class="text-textDark font-bold">Market</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Market price</span>
+              <span class="text-textDark font-bold">{{
+                formatUsd(currentPrice)
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Close amount</span>
+              <span class="text-textDark font-bold">{{
+                formatUsd(parseFloat(closeAmount) || 0)
+              }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium"
+                >Size ({{ displaySymbol }})</span
+              >
+              <span class="text-textDark font-bold">{{ closeOrderSize }}</span>
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Close percentage</span>
+              <span class="text-textDark font-bold"
+                >{{ Math.round(closeSliderValue) }}%</span
+              >
+            </div>
+            <div class="flex justify-between text-s-14">
+              <span class="text-[#58595b] font-medium">Current P&amp;L</span>
+              <span
+                class="font-bold"
+                :class="positionPnl >= 0 ? 'text-[#00c896]' : 'text-[#ff5b5a]'"
+                >{{ formatPnl(String(positionPnl)) }} ({{
+                  (positionRoe * 100).toFixed(2)
+                }}%)</span
+              >
+            </div>
+          </div>
+
+          <!-- Error -->
+          <div
+            v-if="closeError"
+            class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
+          >
+            <p class="text-[#ff5b5a] text-s-14 font-medium">{{ closeError }}</p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3">
+            <button
+              class="flex-1 border border-[#e5e7eb] text-textDark rounded-full py-3.5 text-s-16 font-bold hover:bg-greyLight transition-colors"
+              :disabled="isClosing"
+              @click="showCloseConfirmModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              class="flex-1 bg-[#ff5b5a] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
+              :disabled="isClosing"
+              @click="confirmAndClosePosition"
+            >
+              <span v-if="isClosing">Closing...</span>
               <span v-else>Confirm</span>
             </button>
           </div>
@@ -699,8 +1078,10 @@ import {
   usePerpsMarkets,
   usePerpsContracts,
 } from './composables/usePerpsMarkets'
-import { formatUsd } from './utils/formatters'
+import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl, getCategory } from './utils/market'
+import { usePerpsPositions } from './composables/usePerpsPositions'
+import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -711,6 +1092,8 @@ const { token, login } = usePerpsAuth()
 const { balance } = usePerpsBalance()
 const { markets } = usePerpsMarkets()
 const { contracts } = usePerpsContracts()
+const { positions, closePosition } = usePerpsPositions()
+const { markPriceData } = usePerpsMarkPrices()
 
 // State
 const orderSide = ref<OrderSide>('buy')
@@ -720,7 +1103,6 @@ const leverage = ref(1)
 const sliderValue = ref(0)
 
 const isSubmitting = ref(false)
-const markPriceData = ref<any>(null)
 const maxOrderSize = ref<MaxOrderSizeResult | null>(null)
 const showLeverageModal = ref(false)
 const tempLeverage = ref(1)
@@ -732,6 +1114,12 @@ const showMarketModal = ref(false)
 const marketSearch = ref('')
 const marketFilter = ref('all')
 const marketSortAsc = ref(true)
+const manageMode = ref<'add' | 'close'>('add')
+const closeAmount = ref('')
+const closeSliderValue = ref(0)
+const isClosing = ref(false)
+const closeError = ref('')
+const showCloseConfirmModal = ref(false)
 
 // Computed
 const activeMarket = computed(
@@ -742,6 +1130,81 @@ const fullMarketName = computed(() => {
   const match = markets.value.find(m => m.pair.base === displaySymbol.value)
   return match?.market || activeMarket.value
 })
+
+// Active position for the current market (if any)
+const activePosition = computed(
+  () => positions.value.find(p => p.market === fullMarketName.value) || null,
+)
+
+const positionNotionalValue = computed(() => {
+  if (!activePosition.value) return 0
+  return parseFloat(String(activePosition.value.notionalValue || 0))
+})
+
+const positionPnl = computed(() => {
+  if (!activePosition.value) return 0
+  return parseFloat(String(activePosition.value.unrealizedPnl || 0))
+})
+
+const positionRoe = computed(() => {
+  if (!activePosition.value) return 0
+  return parseFloat(String(activePosition.value.returnOnEquity || 0))
+})
+
+// Close position: compute the USD amount from slider percentage
+function setClosePercentage(pct: number) {
+  if (!activePosition.value || positionNotionalValue.value <= 0) return
+  const amt = (positionNotionalValue.value * pct) / 100
+  closeAmount.value = amt.toFixed(2)
+  closeSliderValue.value = pct
+}
+
+function onCloseSliderInput() {
+  if (!activePosition.value || positionNotionalValue.value <= 0) return
+  const amt = (positionNotionalValue.value * closeSliderValue.value) / 100
+  closeAmount.value = amt.toFixed(2)
+}
+
+async function handleClosePosition() {
+  if (!activePosition.value || isClosing.value) return
+  isClosing.value = true
+  closeError.value = ''
+  try {
+    const closePct = closeSliderValue.value
+    if (closePct >= 100) {
+      // Full close
+      await closePosition(activePosition.value)
+    } else {
+      // Partial close — create a reduce-only order for the close amount
+      const closeUsd = parseFloat(closeAmount.value) || 0
+      if (closeUsd <= 0) return
+      const rawSize = closeUsd / currentPrice.value
+      const roundedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
+      await perpsClient.createOrder({
+        market: fullMarketName.value,
+        side: activePosition.value.direction === 'long' ? 'sell' : 'buy',
+        type: 'market',
+        size: roundedSize,
+        postOnly: false,
+        reduceOnly: true,
+      } as any)
+    }
+    closeAmount.value = ''
+    closeSliderValue.value = 0
+  } catch (e: any) {
+    closeError.value =
+      e?.message || e?.toString() || 'Failed to close position.'
+  } finally {
+    isClosing.value = false
+  }
+}
+
+async function confirmAndClosePosition() {
+  await handleClosePosition()
+  if (!closeError.value) {
+    showCloseConfirmModal.value = false
+  }
+}
 
 const currentPrice = computed(() => {
   const contract = contracts.value.find(c => c.market === fullMarketName.value)
@@ -783,9 +1246,72 @@ const estimatedLiquidation = computed(() => {
   )
 })
 
+function floorToIncrement(value: number, increment: number): string {
+  const floored = Math.floor(value / increment) * increment
+  const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
+  return floored.toFixed(decimals)
+}
+
+const activeMarketIncrement = computed(() => {
+  const market = markets.value.find(m => m.market === fullMarketName.value)
+  return parseFloat(market?.baseIncrement || '0.0001')
+})
+
+const orderSize = computed(() => {
+  if (!currentPrice.value) return '0'
+  const rawSize = positionSizeUsd.value / currentPrice.value
+  return floorToIncrement(rawSize, activeMarketIncrement.value)
+})
+
+const minOrderAmount = computed(() => {
+  return activeMarketIncrement.value * currentPrice.value
+})
+
+const closeDisabled = computed(() => {
+  if (closeSliderValue.value <= 0 || isClosing.value) return true
+  const amt = parseFloat(closeAmount.value) || 0
+  return amt > 0 && amt < minOrderAmount.value
+})
+
+const closeOrderSize = computed(() => {
+  const amt = parseFloat(closeAmount.value) || 0
+  if (!currentPrice.value || amt <= 0) return '0'
+  const rawSize = amt / currentPrice.value
+  return floorToIncrement(rawSize, activeMarketIncrement.value)
+})
+
+const closeButtonLabel = computed(() => {
+  const amt = parseFloat(closeAmount.value) || 0
+  if (amt > 0 && amt < minOrderAmount.value) {
+    return `Min. amount ${formatUsd(minOrderAmount.value)}`
+  }
+  if (isClosing.value) return 'Closing...'
+  return `Close ${displaySymbol.value} ${activePosition.value?.direction === 'long' ? 'Long' : 'Short'}`
+})
+
 const submitDisabled = computed(() => {
   const amt = parseFloat(inputAmount.value)
-  return !amt || amt <= 0 || amt > availableMargin.value || isSubmitting.value
+  if (!amt || amt <= 0 || isSubmitting.value) return true
+  if (availableMargin.value * leverage.value < minOrderAmount.value) return true
+  if (amt > availableMargin.value) return true
+  return positionSizeUsd.value < minOrderAmount.value
+})
+
+const submitButtonLabel = computed(() => {
+  const amt = parseFloat(inputAmount.value)
+  if (availableMargin.value * leverage.value < minOrderAmount.value) {
+    return `Min. margin required ${formatUsd(minOrderAmount.value)}`
+  }
+  if (positionSizeUsd.value < minOrderAmount.value) {
+    return `Min. amount ${formatUsd(minOrderAmount.value)}`
+  }
+  if (amt > availableMargin.value) {
+    return `Not enough margin ${formatUsd(amt)}`
+  }
+  if (activePosition.value) {
+    return `Add to ${displaySymbol.value} ${activePosition.value.direction === 'long' ? 'Long' : 'Short'}`
+  }
+  return `${orderSide.value === 'buy' ? 'Long' : 'Short'} ${displaySymbol.value}`
 })
 
 // Methods
@@ -967,19 +1493,16 @@ async function fetchMaxOrderSize() {
   }
 }
 
-async function fetchMarkPrices() {
-  try {
-    const res = await perpsClient.getMarkPrices()
-    markPriceData.value = res.result ?? {}
-  } catch (e) {
-    console.error('Failed to fetch mark prices:', e)
-  }
-}
-
 function showConfirmation() {
   if (submitDisabled.value) return
   orderError.value = ''
   showConfirmModal.value = true
+}
+
+function showCloseConfirmation() {
+  if (closeDisabled.value) return
+  closeError.value = ''
+  showCloseConfirmModal.value = true
 }
 
 async function confirmAndSubmitOrder() {
@@ -987,18 +1510,11 @@ async function confirmAndSubmitOrder() {
 
   isSubmitting.value = true
   try {
-    const market = markets.value.find(m => m.market === fullMarketName.value)
-    const increment = parseFloat(market?.baseIncrement || '0.0001')
-    const rawSize = positionSizeUsd.value / currentPrice.value
-    const size = (Math.floor(rawSize / increment) * increment).toFixed(
-      Math.max(0, -Math.floor(Math.log10(increment))),
-    )
-
     const orderParams: Record<string, unknown> = {
       market: fullMarketName.value,
       side: orderSide.value,
       type: orderType.value,
-      size: size,
+      size: orderSize.value,
       postOnly: false,
       reduceOnly: false,
     }
@@ -1021,12 +1537,20 @@ async function confirmAndSubmitOrder() {
 
 // Lifecycle
 onMounted(() => {
-  fetchMarkPrices()
   fetchLeverage()
   fetchMaxOrderSize()
-  // Poll mark prices every 5s
-  setInterval(fetchMarkPrices, 5000)
 })
+
+// When a position exists, sync orderSide with position direction
+watch(
+  activePosition,
+  pos => {
+    if (pos) {
+      orderSide.value = pos.direction === 'long' ? 'buy' : 'sell'
+    }
+  },
+  { immediate: true },
+)
 
 watch(
   () => activeMarket.value,
@@ -1035,6 +1559,10 @@ watch(
     inputAmount.value = ''
     sliderValue.value = 0
     maxOrderSize.value = null
+    manageMode.value = 'add'
+    closeAmount.value = ''
+    closeSliderValue.value = 0
+    closeError.value = ''
     fetchLeverage()
     fetchMaxOrderSize()
   },

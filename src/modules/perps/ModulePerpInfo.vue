@@ -156,9 +156,7 @@
                     <button
                       class="rounded-full px-3 py-1 text-s-12 font-medium hoverOpacity text-white"
                       :class="
-                        pos.direction === 'long'
-                          ? 'bg-success'
-                          : 'bg-error'
+                        pos.direction === 'long' ? 'bg-success' : 'bg-error'
                       "
                       :disabled="closingMarket === pos.market"
                       @click="handleClose(pos)"
@@ -437,9 +435,10 @@ import {
 } from './composables/usePerpsMarkets'
 import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
+import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
-import type { Position, ApiOrder, ApiFill, MarkPrice } from './sdk/types'
+import type { Position, ApiOrder, ApiFill } from './sdk/types'
 import {
   formatUsd,
   formatPrice,
@@ -465,6 +464,7 @@ const { token } = usePerpsAuth()
 const { markets } = usePerpsMarkets()
 const { contracts } = usePerpsContracts()
 const { positions, closePosition } = usePerpsPositions()
+const { markPriceData } = usePerpsMarkPrices()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 
@@ -519,21 +519,8 @@ const marketPositions = computed(() =>
 )
 
 // Mark price
-const markPrices = ref<Record<string, MarkPrice>>({})
-
-async function fetchMarkPrices() {
-  try {
-    const res = await perpsClient.getMarkPrices()
-    markPrices.value = res.result ?? {}
-  } catch {
-    markPrices.value = {}
-  }
-}
-
-fetchMarkPrices()
-
 const markPrice = computed(() => {
-  const mp = markPrices.value[props.market]
+  const mp = markPriceData.value[props.market]
   return mp?.price
 })
 
