@@ -31,10 +31,11 @@ const walletMenu = useWalletMenuStore()
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
 
-function handleOpenPosition(market: string) {
+function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
   walletMenu.setWalletPanel('perps')
   walletMenu.setIsOpenSideMenu(true)
   walletMenu.setSelectedTradeTokenSymbol(market)
+  walletMenu.setSelectedTradeOrderSide(side ?? null)
 
   router.push({
     name: PERP_INFO_ROUTE_NAME,

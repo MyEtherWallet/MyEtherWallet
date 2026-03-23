@@ -18,6 +18,7 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
 
   // Selected token symbol for Trade module (set from stocks view)
   const selectedTradeTokenSymbol = ref<string | null>(null)
+  const selectedTradeOrderSide = ref<'buy' | 'sell' | null>(null)
 
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value
@@ -31,6 +32,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     selectedTradeTokenSymbol.value = symbol
   }
 
+  const setSelectedTradeOrderSide = (side: 'buy' | 'sell' | null) => {
+    selectedTradeOrderSide.value = side
+  }
+
   return {
     isOpenSideMenu,
     setIsOpenSideMenu,
@@ -39,5 +44,7 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     hasShadow,
     selectedTradeTokenSymbol,
     setSelectedTradeTokenSymbol,
+    selectedTradeOrderSide,
+    setSelectedTradeOrderSide,
   }
 })

@@ -52,9 +52,7 @@
       <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
         <table class="w-full text-s-14 min-w-[800px]">
           <thead>
-            <tr
-              class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
-            >
+            <tr class="text-info uppercase text-s-11 tracking-wider">
               <th class="px-6 sm:px-8 py-3 text-left font-medium">Name</th>
               <th class="px-3 py-3 text-right font-medium">Price</th>
               <th class="px-3 py-3 text-center font-medium">24H</th>
@@ -67,7 +65,7 @@
             <tr
               v-for="contract in filteredContracts"
               :key="contract.market"
-              class="border-b border-grey-10 last:border-0 cursor-pointer hover:bg-surface/50 transition-colors"
+              class="cursor-pointer hover:bg-surface/50 transition-colors"
               @click="$emit('openPosition', contract.market)"
             >
               <td class="px-6 sm:px-8 py-4">
@@ -155,13 +153,20 @@
                       : 'Short'
                   }}
                 </button>
-                <button
-                  v-else
-                  class="bg-primary text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
-                  @click="$emit('openPosition', contract.market)"
-                >
-                  Open position
-                </button>
+                <div v-else class="flex gap-2 justify-end">
+                  <button
+                    class="bg-success text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
+                    @click.stop="$emit('openPosition', contract.market, 'buy')"
+                  >
+                    Long
+                  </button>
+                  <button
+                    class="bg-error text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
+                    @click.stop="$emit('openPosition', contract.market, 'sell')"
+                  >
+                    Short
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -185,7 +190,7 @@ import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 
 defineEmits<{
-  openPosition: [market: string]
+  openPosition: [market: string, side?: 'buy' | 'sell']
 }>()
 
 const { markets } = usePerpsMarkets()

@@ -24,7 +24,9 @@ export function usePerpsTradeForm() {
   const { markPriceData } = usePerpsMarkPrices()
 
   // ── State ──────────────────────────────────────────────────
-  const orderSide = ref<OrderSide>('buy')
+  const orderSide = ref<OrderSide>(
+    walletMenuStore.selectedTradeOrderSide ?? 'buy',
+  )
   const orderType = ref<OrderType>('market')
   const inputAmount = ref('')
   const leverage = ref(1)
@@ -445,6 +447,16 @@ export function usePerpsTradeForm() {
       }
     },
     { immediate: true },
+  )
+
+  watch(
+    () => walletMenuStore.selectedTradeOrderSide,
+    side => {
+      if (side) {
+        orderSide.value = side
+        walletMenuStore.setSelectedTradeOrderSide(null)
+      }
+    },
   )
 
   watch(

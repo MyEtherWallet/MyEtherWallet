@@ -49,7 +49,7 @@
           <table class="w-full text-s-14 min-w-[900px]">
             <thead>
               <tr
-                class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
+                class="text-info uppercase text-s-11 tracking-wider"
               >
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
                 <th class="px-3 py-3 text-left font-medium">Leverage</th>
@@ -71,7 +71,7 @@
               <tr
                 v-for="pos in positions"
                 :key="pos.market"
-                class="border-b border-grey-10 last:border-0"
+                class=""
               >
                 <td class="px-6 sm:px-8 py-4">
                   <div class="flex items-center gap-3">
@@ -165,7 +165,7 @@
           <table class="w-full text-s-14 min-w-[800px]">
             <thead>
               <tr
-                class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
+                class="text-info uppercase text-s-11 tracking-wider"
               >
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
                 <th class="px-3 py-3 text-left font-medium">Side</th>
@@ -182,7 +182,7 @@
               <tr
                 v-for="order in orders"
                 :key="order.orderId"
-                class="border-b border-grey-10 last:border-0"
+                class=""
               >
                 <td class="px-6 sm:px-8 py-4">
                   <div class="flex items-center gap-3">
@@ -258,7 +258,7 @@
           <table class="w-full text-s-14 min-w-[800px]">
             <thead>
               <tr
-                class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
+                class="text-info uppercase text-s-11 tracking-wider"
               >
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
                 <th class="px-3 py-3 text-left font-medium">Side</th>
@@ -275,7 +275,7 @@
               <tr
                 v-for="fill in fills"
                 :key="fill.id"
-                class="border-b border-grey-10 last:border-0"
+                class=""
               >
                 <td class="px-6 sm:px-8 py-4">
                   <div class="flex items-center gap-3">
@@ -347,7 +347,7 @@
           <table class="w-full text-s-14 min-w-[700px]">
             <thead>
               <tr
-                class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
+                class="text-info uppercase text-s-11 tracking-wider"
               >
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Type</th>
                 <th class="px-3 py-3 text-left font-medium">Asset</th>
@@ -361,7 +361,7 @@
               <tr
                 v-for="item in combinedDW"
                 :key="item.key"
-                class="border-b border-grey-10 last:border-0"
+                class=""
               >
                 <td class="px-6 sm:px-8 py-4">
                   <span
