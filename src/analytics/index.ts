@@ -1,7 +1,7 @@
 import { Types, createInstance } from '@amplitude/analytics-browser'
 import { Analytics } from './amplitude'
 import { StoreConfigs } from '@/stores/configs'
-import type { PopupState } from '@/stores/popup'
+import type { AnalyticsState } from '@/stores/analyticsStore'
 import { captureException } from '@sentry/vue'
 
 const __TMP_VERSION__ = 'v7'
@@ -10,16 +10,21 @@ const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
 // Check initial consent state from localStorage
 let consentToTrack: boolean = false
 const initialPopupStateJson = localStorage.getItem(
-  StoreConfigs.LOCAL_STORAGE_KEYS.popups,
+  StoreConfigs.LOCAL_STORAGE_KEYS.analytics,
 )
 if (initialPopupStateJson) {
   try {
-    const initialPopupState = JSON.parse(initialPopupStateJson) as PopupState
-    if (typeof initialPopupState?.consentToTrack === 'boolean') {
-      consentToTrack = initialPopupState.consentToTrack
+    const initialAnalyticsState = JSON.parse(
+      initialPopupStateJson,
+    ) as AnalyticsState
+    if (
+      typeof initialAnalyticsState?.consentToTrack === 'boolean' &&
+      initialAnalyticsState?.hasSetConsent === true
+    ) {
+      consentToTrack = initialAnalyticsState.consentToTrack
     }
   } catch (err) {
-    console.error('Error parsing popups store from localStorage', err)
+    console.error('Error parsing analytics store from localStorage', err)
     captureException(err)
   }
 }

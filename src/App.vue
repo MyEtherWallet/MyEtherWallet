@@ -8,11 +8,13 @@
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
+    <the-gdpr-banner v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
   </div>
 </template>
 
 <script setup lang="ts">
 import TheAppLayout from '@components/core_layouts/TheAppLayout.vue'
+import TheGdprBanner from '@components/core_layouts/TheGdprBanner.vue'
 import ModuleToast from './modules/toast/ModuleToast.vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { type ChainsRaw, type TokenBalancesRaw } from '@/mew_api/types'
@@ -33,7 +35,7 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import useBalanceHandler from './utils/balanceHandler'
 import { useStocksStore } from '@/stores/stocksStore'
 import { useSwap } from '@/composables/useSwap'
-import { usePopupStore } from '@/stores/popup'
+import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { analytics } from '@/analytics'
 
 const dialogStore = useDialogStore()
@@ -60,7 +62,7 @@ const { selectedChain } = storeToRefs(chainStore)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
 
-const popupStore = usePopupStore()
+const popupStore = useAnalyticsStore()
 const { consent } = storeToRefs(popupStore)
 
 watch(

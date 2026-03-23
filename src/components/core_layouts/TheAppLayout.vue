@@ -44,7 +44,7 @@
             :amplitude="analytics.amplitude"
             :link-component="RouterLink"
             :package-version="packageVersion"
-            :user-consent="popupStore.consent"
+            :user-consent="analyticsStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
             class="!px-3 !xs:px-5"
@@ -79,7 +79,7 @@ import { useI18n } from 'vue-i18n'
 import { inject, computed } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
-import { usePopupStore } from '@/stores/popup'
+import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
@@ -93,7 +93,7 @@ import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
-const popupStore = usePopupStore()
+const analyticsStore = useAnalyticsStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -107,7 +107,7 @@ const CURR_PROJECT = 'MEW_PORTFOLIO'
 const packageVersion = 'v7'
 
 const handleSetConsent = (consent: boolean) => {
-  popupStore.setTrackingConsent(consent)
+  analyticsStore.setTrackingConsent(consent)
 }
 
 const route = useRoute()
