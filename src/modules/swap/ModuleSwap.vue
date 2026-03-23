@@ -138,6 +138,15 @@
 
       <!-- Error Display -->
       <div
+        v-if="!isLoading && priceImpactTooHigh"
+        :class="blurClass"
+        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
+      >
+        <p class="text-error text-s-14 text-center">
+          Price impact is too high {{ priceImpact.toFixed(2) }}%
+        </p>
+      </div>
+      <div
         v-if="!isLoading && generalError"
         :class="blurClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
@@ -264,7 +273,7 @@ import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 
 const isDevMode = configs.IS_DEV_MODE
-
+const MAX_PRICE_IMPACT = 10
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
@@ -495,6 +504,19 @@ const toAmountError = computed(() => {
   return ''
 })
 
+const priceImpact = computed(() => {
+  const fromAmt = parseFloat(fromAmount.value)
+  const toAmt = parseFloat(toAmount.value)
+  const fromPrice = fromTokenSelected.value?.price || 0
+  const toPrice = toTokenSelected.value?.price || 0
+  if (!fromAmt || !toAmt || !fromPrice || !toPrice) return 0
+  const fromValue = fromAmt * fromPrice
+  const toValue = toAmt * toPrice
+  return ((fromValue - toValue) / fromValue) * 100
+})
+
+const priceImpactTooHigh = computed(() => priceImpact.value > MAX_PRICE_IMPACT)
+
 const isSwapDisabled = computed(
   () =>
     (swapLoaded.value && !supportedNetwork.value) ||
@@ -507,7 +529,8 @@ const isSwapDisabled = computed(
     (isCrossChain.value && toAddressError.value !== '') ||
     isLoadingQuotes.value ||
     !hasChainBalance.value ||
-    isSameToken.value,
+    isSameToken.value ||
+    priceImpactTooHigh.value,
 )
 
 // --- Helper Methods ---
