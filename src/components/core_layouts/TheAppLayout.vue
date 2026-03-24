@@ -50,10 +50,10 @@
             class="!px-3 !xs:px-5"
           />
           <div
-            class="sticky flex items-center justify-center w-full h-12 bottom-0 z-10 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
+            class="sticky flex items-center justify-center w-full bottom-0 z-10"
           >
             <a
-              class="text-s-16 text-center group hover:underline hoverOpacityHasBG transition"
+              class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
               :href="configs.VINATGE"
               target="_blank"
               rel="noopener noreferrer"
@@ -114,7 +114,7 @@ const route = useRoute()
 
 const backgroundClass = computed(() => {
   if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
-    return 'home-not-connected-background h-[800px] '
+    return 'home-not-connected-background '
   } else if (route.name === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
   } else {

@@ -9,8 +9,8 @@
         <div class="flex flex-row mb-4">
           <div class="xs:min-w-[320px] max-w-[400px]">
             <p class="text-s-16 max-w-[600px] text-info">
-              Now you can manage all your crypto, stocks, and ETFs in one place,
-              no brokerage required.
+              Now you can manage all your crypto, tokenized stocks, and ETFs in
+              one place, no brokerage required.
             </p>
             <p class="text-s-16 max-w-[600px] text-info mt-2">
               We hope you will love the new dashboard and features. Meanwhile,

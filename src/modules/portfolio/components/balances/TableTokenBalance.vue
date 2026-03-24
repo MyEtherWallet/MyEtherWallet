@@ -501,6 +501,19 @@
         >
       </div>
       <div
+        v-if="paginatedArray.length === 0 && props.view === 'stocks'"
+        class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
+      >
+        <p class="mb-6 lg:mt-10">
+          You don't have any tokenized stocks or ETFS in your portfolio yet.
+        </p>
+        <app-base-button
+          size="medium"
+          @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
+          >Explore stocks</app-base-button
+        >
+      </div>
+      <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >

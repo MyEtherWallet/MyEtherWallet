@@ -235,7 +235,7 @@ const stepDescription: StepDescription[] = [
   {
     title: 'Your phrase',
     description:
-      'Write your recovery phrase on paper and keep it somewhere secure. Do not email it or take screenshots.',
+      'Write down your recovery phrase and keep it somewhere secure. Do not email it or take screenshots.',
   },
   {
     title: "Let's double check it",
