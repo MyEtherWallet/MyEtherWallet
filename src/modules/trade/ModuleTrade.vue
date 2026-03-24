@@ -63,6 +63,15 @@
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
                       class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      :disabled="
+                        pct === 100 &&
+                        fromTokenSelected?.address === MAIN_TOKEN_CONTRACT
+                      "
+                      :class="{
+                        'opacity-40 cursor-not-allowed':
+                          pct === 100 &&
+                          fromTokenSelected?.address === MAIN_TOKEN_CONTRACT,
+                      }"
                       @click="setPercentageAmount(pct)"
                     >
                       {{ pct === 100 ? 'Max' : `${pct}%` }}
