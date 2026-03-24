@@ -425,7 +425,7 @@
                             <li
                               v-if="isBuyable(token.coinId)"
                               @click.stop="[
-                                toggleMenu,
+                                toggleMenu(),
                                 buyBtn(token.symbol, true),
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
