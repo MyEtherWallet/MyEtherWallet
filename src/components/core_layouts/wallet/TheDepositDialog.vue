@@ -94,6 +94,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import { watch, computed } from 'vue'
+import { analytics, DepositEvent } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(walletStore)
@@ -119,6 +120,7 @@ watch(
       if (qrCode.value.innerHTML === '') {
         setQRCode(walletAddress.value, 200, 200)
       }
+      analytics.trackDepositEvent(DepositEvent.SHOWN)
     }
   },
 )

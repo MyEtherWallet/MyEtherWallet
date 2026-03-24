@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import { type CreateWalletView } from '@/modules/access/common/walletConfigs'
+import { analytics } from '@/analytics'
+import { CreateWalletEvent } from '@/analytics/events'
 /**
  * Store to manage the state of the access dialog.
  * It provides methods to open and close the dialog.
@@ -15,6 +17,7 @@ export const useCreateStore = defineStore('createStore', () => {
   const isOpenCreateDialog = ref(false)
   const openCreateDialog = () => {
     isOpenCreateDialog.value = true
+    analytics.trackCreateWalletEvent(CreateWalletEvent.SHOWN)
   }
   const closeCreateDialog = () => {
     isOpenCreateDialog.value = false

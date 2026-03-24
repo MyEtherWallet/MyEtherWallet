@@ -45,6 +45,11 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import { storeToRefs } from 'pinia'
 import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
 import { ref, computed } from 'vue'
+import { analytics, ClickTokenTradeEvent } from '@/analytics'
+
+const props = defineProps<{
+  source: 'send' | 'swap' | 'bridge' | 'trade'
+}>()
 
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
@@ -59,6 +64,10 @@ const isNativeBuyable = computed(() => {
 })
 
 const buyBtn = () => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
+    location: props.source,
+    token: selectedChain.value?.currencyName,
+  })
   window.open(
     'https://ccswap.myetherwallet.com/',
     '_blank',

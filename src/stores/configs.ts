@@ -2,7 +2,7 @@ export const StoreConfigs = {
   LOCAL_STORAGE_KEYS: {
     amplitude: 'amplitude',
     global: 'global-store',
-    popups: 'popups-store',
+    analytics: 'analytics-store',
     notifications: 'notifications-store',
     custom: 'custom-store',
     addressBook: 'address-book',
@@ -15,7 +15,7 @@ export const StoreConfigs = {
   },
   VERSION: {
     global: '1.0.9',
-    popups: '1.0.0',
+    analytics: '1.0.0',
     notifications: '1.0.4',
     custom: '1.0.4',
     addressBook: '1.0.0',

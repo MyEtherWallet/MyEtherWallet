@@ -277,6 +277,12 @@ import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
+import {
+  analytics,
+  SendEvent,
+  SendEventStatus,
+  SendEventError,
+} from '@/analytics'
 
 interface EvmTxType {
   toAddress: string
@@ -306,6 +312,11 @@ watch(
   () => model.value,
   value => {
     openModal.value = !!value
+    if (openModal.value) {
+      analytics.trackSendEvent(SendEvent.CONFIRM_SHOWN, {
+        token: props.toToken?.symbol,
+      })
+    }
   },
 )
 
@@ -337,6 +348,9 @@ const sanitizeErrorMessage = (e: string) => {
 }
 
 const confirmTransaction = async () => {
+  analytics.trackSendEvent(SendEvent.CONFIRM_PROCEED, {
+    token: props.toToken?.symbol,
+  })
   try {
     //TO: show message that wallet is not connected
     if (!wallet.value) {
@@ -377,6 +391,10 @@ const confirmTransaction = async () => {
               props.toAddress,
             )
           : ''
+        analytics.trackSendEventStatus(SendEventStatus.INITIATED, {
+          token: props.toToken?.symbol,
+          hash: hash,
+        })
 
         // Add transaction notification
         tradeOrdersStore.addTransaction({
@@ -421,6 +439,11 @@ const confirmTransaction = async () => {
           })
         } else {
           const errorMessage = msg ? sanitizeErrorMessage(msg) : undefined
+
+          analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+            token: props.toToken?.symbol,
+            errorMsg: errorMessage || msg,
+          })
 
           toastStore.addToastMessage({
             type: ToastType.Error,

@@ -35,7 +35,7 @@
       <div
         :class="['relative flex justify-center  w-full mt-[68px] sm:mt-[76px]']"
       >
-        <main :class="[' basis-full w-full max-w-[1440px] mx-auto']">
+        <main :class="[' basis-full w-full max-w-[1440px] mx-auto relative']">
           <div class="min-h-[600px] pt-3 xs:pt-6 px-3 xs:px-5">
             <router-view />
           </div>
@@ -44,14 +44,30 @@
             :amplitude="analytics.amplitude"
             :link-component="RouterLink"
             :package-version="packageVersion"
-            :user-consent="popupStore.consent"
+            :user-consent="analyticsStore.consent"
             :curr-project="CURR_PROJECT"
             @update:consent="handleSetConsent"
             class="!px-3 !xs:px-5"
           />
+          <div
+            class="sticky flex items-center justify-center w-full bottom-0 z-10"
+          >
+            <a
+              class="text-s-14 sm:text-s-16 text-center group hover:underline hoverOpacityHasBG transition h-12 px-5 md-header:px-9 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)] rounded-3xl flex items-center justify-center mb-5"
+              :href="configs.VINATGE"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Old version of MEW Portfolio here
+              <arrow-long-right-icon
+                class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"
+              />
+            </a>
+          </div>
         </main>
       </div>
     </div>
+
     <layout-wallet />
   </div>
 </template>
@@ -63,7 +79,7 @@ import { useI18n } from 'vue-i18n'
 import { inject, computed } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
-import { usePopupStore } from '@/stores/popup'
+import { useAnalyticsStore } from '@/stores/analyticsStore'
 import TheHeader from './TheHeader.vue'
 import LayoutWallet from './LayoutWallet.vue'
 import { ROUTES_MAIN } from '@/router/routeNames'
@@ -71,17 +87,19 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
+import configs from '@/configs'
+import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
-const popupStore = usePopupStore()
+const analyticsStore = useAnalyticsStore()
 const analytics = inject<Analytics>(Provider.ANALYTICS)!
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 //TODO: make a new project for MEW  PORTOFLIO APP
-const CURR_PROJECT = 'MEW_PORTFOLIO'
+const CURR_PROJECT = 'MEW_WEBAPP'
 /**
  * App Version
  */
@@ -89,14 +107,14 @@ const CURR_PROJECT = 'MEW_PORTFOLIO'
 const packageVersion = 'v7'
 
 const handleSetConsent = (consent: boolean) => {
-  popupStore.setTrackingConsent(consent)
+  analyticsStore.setTrackingConsent(consent)
 }
 
 const route = useRoute()
 
 const backgroundClass = computed(() => {
   if (route.name === ROUTES_MAIN.HOME.NAME && !isWalletConnected.value) {
-    return 'home-not-connected-background h-[800px] '
+    return 'home-not-connected-background '
   } else if (route.name === ROUTES_MAIN.EARN.NAME) {
     return 'blue-gradient'
   } else {

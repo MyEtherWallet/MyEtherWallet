@@ -7,10 +7,10 @@
     <div class="w-full flex flex-col gap-6 lg:gap-10 lg:py-8">
       <div class="lg:ml-4 lg:mt-3 text-center">
         <h1 class="text-s-28 lg:text-s-40 font-bold">
-          Explore Tokenized Stock
+          Explore Tokenized Stocks
         </h1>
         <p class="text-s-14 lg:text-s-16 text-info">
-          100+ stock options, powered by Ondo
+          200+ tokenized stocks and ETFs, powered by Ondo
         </p>
       </div>
       <div class="flex items-center justify-center flex-col">

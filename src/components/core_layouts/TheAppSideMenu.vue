@@ -171,6 +171,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { ROUTES_MAIN } from '@/router/routeNames'
 import { useAccessStore } from '@/stores/accessStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const { t } = useI18n()
 const store = useWalletStore()
@@ -222,6 +223,9 @@ const clickListItem = () => {
 const accessStore = useAccessStore()
 
 const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'MobileMenu',
+  })
   accessStore.openAccessDialog()
   sidebarIsOpen.value = false
 }

@@ -16,7 +16,8 @@
 
         <p class="text-s-14 lg:text-s-16 text-info">
           Unlock your wallet to see full features. Manage your crypto assets
-          across multiple blockchains: trade stock, swap, stake, and more.
+          across multiple blockchains: trade tokenized stocks and ETFs, swap
+          crypto tokens, stake, and more.
         </p>
       </div>
       <div

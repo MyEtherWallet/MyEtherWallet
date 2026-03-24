@@ -94,7 +94,10 @@ import { useWalletStore } from '@/stores/walletStore'
 import { type SelectAddress } from './types/selectAddress'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
-import { walletConfigs } from '@/modules/access/common/walletConfigs'
+import {
+  walletConfigs,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
 import { useRecentWalletsStore } from '@/stores/recentWalletsStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useI18n } from 'vue-i18n'
@@ -116,6 +119,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 
 // store instantiation needs to be at the top level
@@ -430,11 +434,17 @@ const access = async () => {
   setWallet(
     markRaw(wallet as EvmHardwareWallet) as WalletInterface,
     walletConfig.value?.name || 'hardware',
+    WalletConfigType.HARDWARE,
   )
   addWallet(walletConfig.value as WalletConfig)
   isUnlockingWallet.value = false
   hwWalletInstance = null
   setSelectedChainGlobalStore(selectedChain.value?.name || '')
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+    walletName: walletConfig.value?.name || 'hardware',
+    walletType: WalletConfigType.HARDWARE,
+    network: selectedChain.value?.name,
+  })
   closeAccessDialog()
 }
 </script>

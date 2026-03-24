@@ -86,6 +86,7 @@ import verifier from '@/utils/verifySignature'
 import type { HexPrefixedString } from '@/providers/types'
 import { toHex } from 'viem'
 import { useAccessStore } from '@/stores/accessStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import Configs from '@/configs'
 
@@ -142,6 +143,9 @@ const copy = () => {
 
 const handleSigner = async () => {
   if (!isWalletConnected.value || isWatchOnly.value) {
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+      source: 'Sign_Message',
+    })
     openAccessDialog()
     return
   }

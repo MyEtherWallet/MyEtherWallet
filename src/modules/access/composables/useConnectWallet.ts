@@ -19,6 +19,7 @@ import { useI18n } from 'vue-i18n'
 import Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 import { useGlobalStore } from '@/stores/globalStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 
 export const useConnectWallet = () => {
@@ -50,9 +51,14 @@ export const useConnectWallet = () => {
   ) => {
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
-    setWallet(wallet, config.name)
+    setWallet(wallet, config.name, config.type[0])
     addWallet(config)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+      walletName: config.name,
+      walletType: config.type[0],
+      network: selectedChain.value?.name,
+    })
     accessStore.closeAccessDialog()
     toastStore.addToastMessage({
       text: 'Wallet connected',

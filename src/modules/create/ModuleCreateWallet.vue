@@ -131,6 +131,12 @@
                       href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet&referrer=utm_source%3Dweb-home"
                       target="_blank"
                       class="cursor-pointer hoverOpacityHasBG w-full"
+                      @click="
+                        analytics.trackCreateWalletEvent(
+                          CreateWalletEvent.SELECT_WALLET,
+                          { source: 'Mobile_Google_Play' },
+                        )
+                      "
                     >
                       <img
                         :src="IMGGooglePlay"
@@ -143,6 +149,12 @@
                       href="https://apps.apple.com/app/apple-store/id1464614025?pt=118781877&ct=web-home&mt=8"
                       target="_blank"
                       class="cursor-pointer hoverOpacityHasBG w-full"
+                      @click="
+                        analytics.trackCreateWalletEvent(
+                          CreateWalletEvent.SELECT_WALLET,
+                          { source: 'Mobile_Apple_Store' },
+                        )
+                      "
                     >
                       <img
                         :src="IMGIOSstore"
@@ -209,6 +221,12 @@
                 href="https://www.enkrypt.com/download.html"
                 target="_blank"
                 class="inline-block mt-8 px-6 py-3 rounded-full hoverOpacityHasBG bg-violet w-fit"
+                @click="
+                  analytics.trackCreateWalletEvent(
+                    CreateWalletEvent.SELECT_WALLET,
+                    { source: 'Enkrypt_Browser_Wallet' },
+                  )
+                "
                 ><div class="flex items-center">
                   <p
                     class="text-s-16 lg:text-s-17 text-center text-white font-semibold mr-2"
@@ -385,6 +403,8 @@ import ledgerWallet from '@/assets/images/create/buy/buy-ledger.png'
 import trezorIcon from '@/assets/images/create/buy/trezor-logo.svg'
 import trezorWallet from '@/assets/images/create/buy/buy-trezor.png'
 import ModuleCreateMnemonic from './ModuleCreateMnemonic.vue'
+import { analytics } from '@/analytics'
+import { CreateWalletEvent } from '@/analytics/events'
 
 /**-------------------------------
  * Access Wallet Dialog
@@ -410,10 +430,21 @@ const getTitle = computed(() => {
 
 const setView = (view: CreateWalletView) => {
   isOtherMethodsOpen.value = false
+  if (view == 'buy' || view == 'mnemonic') {
+    const source = view === 'buy' ? 'Buy_Hardware_Wallet' : 'Mnemonic_Wallet'
+    analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
+      source,
+    })
+  }
+
   createStore.setCurrentView(view)
 }
 
 const openBuyWallet = (type: 'ledger' | 'trezor') => {
+  const source = type === 'ledger' ? 'Buy_Ledger_Wallet' : 'Buy_Trezor_Wallet'
+  analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
+    source,
+  })
   const url =
     type === 'ledger'
       ? 'https://shop.ledger.com/?r=fa4b'

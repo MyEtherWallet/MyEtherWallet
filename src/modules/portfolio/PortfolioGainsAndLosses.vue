@@ -1,7 +1,9 @@
 <template>
   <div class="w-full" v-if="isWalletConnected">
     <div class="flex flex-wrap items-center w-full justify-between mb-3 px-1">
-      <h2 class="text-s-18 font-bold">{{ title }}</h2>
+      <h2 class="text-s-14 xs:text-s-18 font-bold max-w-[160px] xs:max-w-none">
+        {{ title }}
+      </h2>
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">
         <app-btn-icon
           :disabled="isLoading || currentPage === 0"
@@ -50,12 +52,14 @@
           v-if="type === 'stock' && allStocks.length === 0"
           class="flex flex-col items-center justify-center p-6 text-center"
         >
-          <p class="text-s-14 text-info mb-4">You don't have any stock</p>
+          <p class="text-s-14 text-info mb-4">
+            You don't have any tokenized stocks or ETFS in your portfolio yet.
+          </p>
           <app-base-button
+            size="medium"
             @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
+            >Explore stocks</app-base-button
           >
-            Get Stock
-          </app-base-button>
         </div>
         <div v-if="!hasBalances && type !== 'stock'" class="text-center"></div>
       </div>
@@ -114,7 +118,7 @@ const props = withDefaults(
 const title = computed(() => {
   switch (props.type) {
     case 'stock':
-      return 'Stock Gains & Losses'
+      return 'Tokenized Stocks Gains & Losses'
     default:
       return 'All Gains & Losses'
   }
@@ -123,7 +127,7 @@ const title = computed(() => {
 const buttonText = computed(() => {
   switch (props.type) {
     case 'stock':
-      return 'All stock trends'
+      return 'All tokenized stocks trends'
     default:
       return 'All crypto trends'
   }

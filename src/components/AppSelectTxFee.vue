@@ -51,6 +51,15 @@
                 href="https://ccswap.myetherwallet.com/"
                 target="_blank"
                 class="text-primary cursor-pointer underline underline-offset-2"
+                @click="
+                  analytics.trackClickTokenTradeEvent(
+                    ClickTokenTradeEvent.BUY,
+                    {
+                      location: 'select_fee',
+                      token: selectedChain?.currencyName || 'ETH',
+                    },
+                  )
+                "
                 >{{
                   $t('common.buy_more', {
                     symbol: selectedChain?.currencyName || 'ETH',
@@ -161,6 +170,7 @@ import type {
 import { useI18n } from 'vue-i18n'
 import { formatUnits } from 'viem'
 import { P2WPKH_DUST } from '@/providers/common/btcInfo'
+import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
 /** ----------------
  * DEFAULTS
