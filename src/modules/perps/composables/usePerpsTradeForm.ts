@@ -52,6 +52,17 @@ export function usePerpsTradeForm() {
   const showCloseConfirmModal = ref(false)
 
   // ── Market / position lookups ──────────────────────────────
+  // When opening perps without a selected market, pick the first available one
+  watch(
+    contracts,
+    val => {
+      if (!walletMenuStore.selectedTradeTokenSymbol && val.length > 0) {
+        walletMenuStore.setSelectedTradeTokenSymbol(val[0].baseCurrency)
+      }
+    },
+    { immediate: true },
+  )
+
   const activeMarket = computed(
     () => walletMenuStore.selectedTradeTokenSymbol || 'AAPL-USD',
   )
