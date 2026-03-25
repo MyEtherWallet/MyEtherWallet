@@ -42,7 +42,9 @@
           <!-- Content Card -->
           <div class="bg-[#edf2fa] rounded-[24px] p-5 mb-6">
             <!-- Network Selector -->
-            <div class="bg-white rounded-[18px] border border-[#e5e7eb] p-4 mb-5">
+            <div
+              class="bg-white rounded-[18px] border border-[#e5e7eb] p-4 mb-5"
+            >
               <div class="flex items-center gap-3">
                 <img
                   :src="selectedChain?.icon"
@@ -55,10 +57,6 @@
                     Ethereum
                   </p>
                 </div>
-                <img
-                  src="@/assets/icons/chevron-down.svg"
-                  class="w-5 h-5 opacity-30"
-                />
               </div>
             </div>
 
@@ -206,9 +204,7 @@
                 <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
-            <h2
-              class="font-bold text-[20px] text-textDark flex-1 text-center"
-            >
+            <h2 class="font-bold text-[20px] text-textDark flex-1 text-center">
               Ethereum deposit address
             </h2>
             <button
