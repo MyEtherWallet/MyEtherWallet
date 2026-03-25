@@ -48,9 +48,7 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[900px]">
             <thead>
-              <tr
-                class="text-info uppercase text-s-11 tracking-wider"
-              >
+              <tr class="text-info uppercase text-s-11 tracking-wider">
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
                 <th class="px-3 py-3 text-left font-medium">Leverage</th>
                 <th class="px-3 py-3 text-right font-medium">Value</th>
@@ -68,11 +66,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="pos in positions"
-                :key="pos.market"
-                class=""
-              >
+              <tr v-for="pos in positions" :key="pos.market" class="">
                 <td class="px-6 sm:px-8 py-4">
                   <div class="flex items-center gap-3">
                     <img
@@ -149,6 +143,26 @@
 
       <!-- Orders tab -->
       <template v-else-if="activeTab === 'orders'">
+        <div class="flex items-center gap-1 mb-4">
+          <button
+            :class="[
+              'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
+              orderFilter === 'pending' ? 'bg-primary text-white' : 'hoverNoBG',
+            ]"
+            @click="orderFilter = 'pending'"
+          >
+            Pending
+          </button>
+          <button
+            :class="[
+              'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
+              orderFilter === 'all' ? 'bg-primary text-white' : 'hoverNoBG',
+            ]"
+            @click="orderFilter = 'all'"
+          >
+            All
+          </button>
+        </div>
         <div
           v-if="ordersLoading && orders.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -156,7 +170,7 @@
           Loading orders...
         </div>
         <div
-          v-else-if="orders.length === 0"
+          v-else-if="filteredOrders.length === 0"
           class="text-center py-8 text-info text-s-14"
         >
           No orders
@@ -164,9 +178,7 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[800px]">
             <thead>
-              <tr
-                class="text-info uppercase text-s-11 tracking-wider"
-              >
+              <tr class="text-info uppercase text-s-11 tracking-wider">
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
                 <th class="px-3 py-3 text-left font-medium">Side</th>
                 <th class="px-3 py-3 text-left font-medium">Type</th>
@@ -175,15 +187,12 @@
                 <th class="px-3 py-3 text-right font-medium">Filled</th>
                 <th class="px-3 py-3 text-right font-medium">Fee</th>
                 <th class="px-3 py-3 text-left font-medium">Status</th>
-                <th class="px-6 sm:px-8 py-3 text-right font-medium">Time</th>
+                <th class="px-3 py-3 text-right font-medium">Time</th>
+                <th class="px-6 sm:px-8 py-3 text-right font-medium"></th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="order in orders"
-                :key="order.orderId"
-                class=""
-              >
+              <tr v-for="order in filteredOrders" :key="order.orderId" class="">
                 <td class="px-6 sm:px-8 py-4">
                   <div class="flex items-center gap-3">
                     <img
@@ -231,8 +240,26 @@
                     {{ order.status }}
                   </span>
                 </td>
-                <td class="px-6 sm:px-8 py-4 text-right text-info text-s-12">
+                <td class="px-3 py-4 text-right text-info text-s-12">
                   {{ formatDate(order.createdAt) }}
+                </td>
+                <td class="px-6 sm:px-8 py-4 text-right">
+                  <button
+                    v-if="
+                      order.status === 'pending' ||
+                      order.status === 'untriggered' ||
+                      order.status === 'open'
+                    "
+                    class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
+                    :disabled="cancellingOrderId === order.orderId"
+                    @click="cancelOrder(order.orderId)"
+                  >
+                    {{
+                      cancellingOrderId === order.orderId
+                        ? 'Cancelling...'
+                        : 'Cancel'
+                    }}
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -257,9 +284,7 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[800px]">
             <thead>
-              <tr
-                class="text-info uppercase text-s-11 tracking-wider"
-              >
+              <tr class="text-info uppercase text-s-11 tracking-wider">
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
                 <th class="px-3 py-3 text-left font-medium">Side</th>
                 <th class="px-3 py-3 text-right font-medium">Price</th>
@@ -272,11 +297,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="fill in fills"
-                :key="fill.id"
-                class=""
-              >
+              <tr v-for="fill in fills" :key="fill.id" class="">
                 <td class="px-6 sm:px-8 py-4">
                   <div class="flex items-center gap-3">
                     <img
@@ -346,9 +367,7 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[700px]">
             <thead>
-              <tr
-                class="text-info uppercase text-s-11 tracking-wider"
-              >
+              <tr class="text-info uppercase text-s-11 tracking-wider">
                 <th class="px-6 sm:px-8 py-3 text-left font-medium">Type</th>
                 <th class="px-3 py-3 text-left font-medium">Asset</th>
                 <th class="px-3 py-3 text-right font-medium">Amount</th>
@@ -358,11 +377,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="item in combinedDW"
-                :key="item.key"
-                class=""
-              >
+              <tr v-for="item in combinedDW" :key="item.key" class="">
                 <td class="px-6 sm:px-8 py-4">
                   <span
                     :class="[
@@ -413,6 +428,7 @@ import {
   formatDate,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
+import { perpsClient } from '../configs'
 
 defineEmits<{
   openPosition: [market: string]
@@ -420,13 +436,31 @@ defineEmits<{
 
 const { token } = usePerpsAuth()
 const { positions, loading } = usePerpsPositions()
-const { orders, loading: ordersLoading } = usePerpsOrders()
+const {
+  orders,
+  loading: ordersLoading,
+  refetch: refetchOrders,
+} = usePerpsOrders()
 const { fills, loading: fillsLoading } = usePerpsFills()
 const {
   deposits,
   withdrawals,
   loading: dwLoading,
 } = usePerpsDepositsWithdrawals()
+
+const cancellingOrderId = ref<string | null>(null)
+
+async function cancelOrder(orderId: string) {
+  cancellingOrderId.value = orderId
+  try {
+    await perpsClient.cancelOrder(orderId)
+    await refetchOrders()
+  } catch (e) {
+    console.error('Failed to cancel order:', e)
+  } finally {
+    cancellingOrderId.value = null
+  }
+}
 
 const combinedDW = computed(() => {
   const items: Array<{
@@ -478,6 +512,13 @@ const combinedDW = computed(() => {
 })
 
 const activeTab = ref<string>('positions')
+const orderFilter = ref<'pending' | 'all'>('pending')
+
+const pendingStatuses = new Set(['pending', 'untriggered', 'open'])
+const filteredOrders = computed(() => {
+  if (orderFilter.value === 'all') return orders.value
+  return orders.value.filter(o => pendingStatuses.has(o.status))
+})
 
 const tabs = [
   { key: 'positions', label: 'Positions' },
@@ -485,6 +526,4 @@ const tabs = [
   { key: 'fills', label: 'Fills' },
   { key: 'deposits', label: 'Deposits & Withdrawals' },
 ]
-
-
 </script>

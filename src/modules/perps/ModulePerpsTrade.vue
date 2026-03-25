@@ -230,7 +230,9 @@
 
             <!-- Auto Close -->
             <div
+              v-if="!hasAutoClose"
               class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
+              @click="openAutoCloseModal"
             >
               <span class="text-s-16 font-medium text-textDark ml-1"
                 >Auto close</span
@@ -240,6 +242,85 @@
               >
                 <span class="text-s-20 font-medium">+</span> Add
               </button>
+            </div>
+            <div
+              v-else
+              class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 shadow-sm"
+            >
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-s-16 font-medium text-textDark ml-1"
+                  >Auto close</span
+                >
+                <button
+                  class="flex items-center gap-1.5 text-[#0052ff] text-s-14 font-bold mr-1"
+                  @click="openAutoCloseModal"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                    />
+                    <path
+                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                    />
+                  </svg>
+                  Edit
+                </button>
+              </div>
+              <div
+                v-if="takeProfitPrice !== null"
+                class="flex justify-between items-center text-s-14 mb-2 ml-1"
+              >
+                <span class="font-medium text-textDark">Take Profit</span>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-textDark">{{
+                    formatUsd(takeProfitPrice)
+                  }}</span>
+                  <span
+                    v-if="takeProfitPct !== null"
+                    class="text-[#00c896] font-bold text-s-12"
+                    >({{ takeProfitPct >= 0 ? '+' : ''
+                    }}{{ takeProfitPct.toFixed(0) }}%)</span
+                  >
+                  <button
+                    class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
+                    @click="clearTakeProfit"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+              <div
+                v-if="stopLossPrice !== null"
+                class="flex justify-between items-center text-s-14 ml-1"
+              >
+                <span class="font-medium text-textDark">Stop Loss</span>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-textDark">{{
+                    formatUsd(stopLossPrice)
+                  }}</span>
+                  <span
+                    v-if="stopLossPct !== null"
+                    class="text-[#ff5b5a] font-bold text-s-12"
+                    >({{ stopLossPct >= 0 ? '+' : ''
+                    }}{{ stopLossPct.toFixed(0) }}%)</span
+                  >
+                  <button
+                    class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
+                    @click="clearStopLoss"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
             </div>
 
             <!-- Summary -->
@@ -410,7 +491,9 @@
 
               <!-- Auto Close -->
               <div
+                v-if="!hasAutoClose"
                 class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
+                @click="openAutoCloseModal"
               >
                 <span class="text-s-16 font-medium text-textDark ml-1"
                   >Auto close</span
@@ -420,6 +503,85 @@
                 >
                   <span class="text-s-20 font-medium">+</span> Add
                 </button>
+              </div>
+              <div
+                v-else
+                class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 shadow-sm"
+              >
+                <div class="flex justify-between items-center mb-3">
+                  <span class="text-s-16 font-medium text-textDark ml-1"
+                    >Auto close</span
+                  >
+                  <button
+                    class="flex items-center gap-1.5 text-[#0052ff] text-s-14 font-bold mr-1"
+                    @click="openAutoCloseModal"
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                      />
+                      <path
+                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                      />
+                    </svg>
+                    Edit
+                  </button>
+                </div>
+                <div
+                  v-if="takeProfitPrice !== null"
+                  class="flex justify-between items-center text-s-14 mb-2 ml-1"
+                >
+                  <span class="font-medium text-textDark">Take Profit</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-textDark">{{
+                      formatUsd(takeProfitPrice)
+                    }}</span>
+                    <span
+                      v-if="takeProfitPct !== null"
+                      class="text-[#00c896] font-bold text-s-12"
+                      >({{ takeProfitPct >= 0 ? '+' : ''
+                      }}{{ takeProfitPct.toFixed(0) }}%)</span
+                    >
+                    <button
+                      class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
+                      @click="clearTakeProfit"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+                <div
+                  v-if="stopLossPrice !== null"
+                  class="flex justify-between items-center text-s-14 ml-1"
+                >
+                  <span class="font-medium text-textDark">Stop Loss</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-textDark">{{
+                      formatUsd(stopLossPrice)
+                    }}</span>
+                    <span
+                      v-if="stopLossPct !== null"
+                      class="text-[#ff5b5a] font-bold text-s-12"
+                      >({{ stopLossPct >= 0 ? '+' : ''
+                      }}{{ stopLossPct.toFixed(0) }}%)</span
+                    >
+                    <button
+                      class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
+                      @click="clearStopLoss"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -611,6 +773,24 @@
               <span class="text-[#58595b] font-medium">Est. liquidation</span>
               <span class="text-textDark font-bold">{{
                 estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+              }}</span>
+            </div>
+            <div
+              v-if="takeProfitPrice !== null"
+              class="flex justify-between text-s-14"
+            >
+              <span class="text-[#58595b] font-medium">Take Profit</span>
+              <span class="text-[#00c896] font-bold">{{
+                formatUsd(takeProfitPrice)
+              }}</span>
+            </div>
+            <div
+              v-if="stopLossPrice !== null"
+              class="flex justify-between text-s-14"
+            >
+              <span class="text-[#58595b] font-medium">Stop Loss</span>
+              <span class="text-[#ff5b5a] font-bold">{{
+                formatUsd(stopLossPrice)
               }}</span>
             </div>
           </div>
@@ -1074,6 +1254,187 @@
         </div>
       </div>
     </Teleport>
+
+    <!-- Auto Close Modal -->
+    <Teleport to="body">
+      <div
+        v-if="showAutoCloseModal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center"
+        @click.self="showAutoCloseModal = false"
+      >
+        <div class="absolute inset-0 bg-black/40" />
+        <div
+          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
+        >
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-5">
+            <span class="font-bold text-s-20 text-textDark">Auto close</span>
+            <button
+              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors text-textDark"
+              @click="showAutoCloseModal = false"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Asset & Price -->
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-2">
+              <img
+                :src="getLogoUrl(displaySymbol)"
+                :alt="displaySymbol"
+                class="w-7 h-7 rounded-full"
+              />
+              <span class="font-bold text-s-16 text-textDark">{{
+                displaySymbol
+              }}</span>
+            </div>
+            <div class="text-right">
+              <span class="text-[#58595b] text-s-14 mr-2">Current price</span>
+              <span class="font-bold text-s-16 text-textDark">{{
+                formatUsd(currentPrice)
+              }}</span>
+            </div>
+          </div>
+
+          <!-- Take Profit -->
+          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-4">
+            <div class="flex justify-between items-center mb-3 px-1">
+              <p class="text-s-14 font-bold text-textDark">
+                Take profit if {{ displaySymbol }} reaches
+              </p>
+              <button
+                class="text-[#0052ff] text-s-14 font-bold hover:opacity-70"
+                @click="clearTempTakeProfit"
+              >
+                Clear
+              </button>
+            </div>
+            <div
+              class="bg-white rounded-[16px] p-5 shadow-sm border border-[#e5e7eb]"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div
+                  class="flex items-center gap-1 text-s-14 font-medium text-[#58595b]"
+                >
+                  Price
+                </div>
+                <p class="font-bold text-[28px] text-textDark tracking-tight">
+                  {{
+                    tempTakeProfitPrice !== null
+                      ? formatUsd(tempTakeProfitPrice)
+                      : '—'
+                  }}
+                </p>
+              </div>
+              <div class="flex justify-between gap-2 mb-3">
+                <button
+                  v-for="pct in [10, 20, 30, 50, 100]"
+                  :key="pct"
+                  class="h-[34px] flex-1 border rounded-full text-[13px] font-bold transition-all flex items-center justify-center bg-white"
+                  :class="
+                    activeTpPill === pct
+                      ? 'border-[#0052ff] text-[#0052ff]'
+                      : 'border-[#e5e7eb] text-textDark hover:border-grey-300'
+                  "
+                  @click="setTakeProfitPct(pct)"
+                >
+                  +{{ pct }}%
+                </button>
+              </div>
+              <div
+                v-if="
+                  tempProjectedProfit !== null && tempTakeProfitPrice !== null
+                "
+                class="text-right text-s-13 mt-2"
+              >
+                <span class="text-[#58595b]">Projected profit</span>
+                <span class="text-[#00c896] font-bold ml-2"
+                  >+{{ formatUsd(Math.abs(tempProjectedProfit)) }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Stop Loss -->
+          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-6">
+            <div class="flex justify-between items-center mb-3 px-1">
+              <p class="text-s-14 font-bold text-textDark">
+                Stop loss if {{ displaySymbol }} reaches
+              </p>
+              <button
+                class="text-[#0052ff] text-s-14 font-bold hover:opacity-70"
+                @click="clearTempStopLoss"
+              >
+                Clear
+              </button>
+            </div>
+            <div
+              class="bg-white rounded-[16px] p-5 shadow-sm border border-[#e5e7eb]"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <div
+                  class="flex items-center gap-1 text-s-14 font-medium text-[#58595b]"
+                >
+                  Price
+                </div>
+                <p class="font-bold text-[28px] text-textDark tracking-tight">
+                  {{
+                    tempStopLossPrice !== null
+                      ? formatUsd(tempStopLossPrice)
+                      : '—'
+                  }}
+                </p>
+              </div>
+              <div class="flex justify-between gap-2 mb-3">
+                <button
+                  v-for="pct in [1, 2, 3, 4, 5]"
+                  :key="pct"
+                  class="h-[34px] flex-1 border rounded-full text-[13px] font-bold transition-all flex items-center justify-center bg-white"
+                  :class="
+                    activeSlPill === pct
+                      ? 'border-[#c9379d] text-[#c9379d]'
+                      : 'border-[#e5e7eb] text-textDark hover:border-grey-300'
+                  "
+                  @click="setStopLossPct(pct)"
+                >
+                  -{{ pct }}%
+                </button>
+              </div>
+              <div
+                v-if="tempProjectedLoss !== null && tempStopLossPrice !== null"
+                class="text-right text-s-13 mt-2"
+              >
+                <span class="text-[#58595b]">Projected loss</span>
+                <span class="text-[#ff5b5a] font-bold ml-2"
+                  >-{{ formatUsd(Math.abs(tempProjectedLoss)) }}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Button -->
+          <button
+            class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
+            @click="confirmAutoClose"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -1135,6 +1496,27 @@ const {
   onCloseSliderInput,
   confirmAndClosePosition,
   showCloseConfirmation,
+  // Auto Close
+  showAutoCloseModal,
+  hasAutoClose,
+  takeProfitPrice,
+  stopLossPrice,
+  takeProfitPct,
+  stopLossPct,
+  tempProjectedProfit,
+  tempProjectedLoss,
+  tempTakeProfitPrice,
+  tempStopLossPrice,
+  activeTpPill,
+  activeSlPill,
+  openAutoCloseModal,
+  setTakeProfitPct,
+  setStopLossPct,
+  clearTempTakeProfit,
+  clearTempStopLoss,
+  confirmAutoClose,
+  clearTakeProfit,
+  clearStopLoss,
   // Submit
   isSubmitting,
   submitDisabled,

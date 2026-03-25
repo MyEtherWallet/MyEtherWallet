@@ -102,6 +102,16 @@ export class PerpsClient {
     })
   }
 
+  private async authDelete<T>(path: string): Promise<T> {
+    if (!this.token) throw new Error('Not authenticated')
+    return this.request<T>(path, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+  }
+
   async getStatus(): Promise<GenericResponse<StatusResult>> {
     return this.request<GenericResponse<StatusResult>>('/status')
   }
@@ -222,6 +232,12 @@ export class PerpsClient {
     data: CreateOrderRequest,
   ): Promise<GenericResponse<OrderResult>> {
     return this.authPost<GenericResponse<OrderResult>>('/v1/perps/orders', data)
+  }
+
+  async cancelOrder(orderId: string): Promise<GenericResponse<OrderResult>> {
+    return this.authDelete<GenericResponse<OrderResult>>(
+      `/v1/perps/orders/${encodeURIComponent(orderId)}`,
+    )
   }
 
   async getPositions(): Promise<GenericResponse<Position[]>> {

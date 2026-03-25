@@ -12,6 +12,7 @@ export function usePerpsOrders() {
   const { token, refreshKey } = usePerpsAuth()
   const orders = ref<ApiOrder[]>([])
   const loading = ref(false)
+  let pollTimer: ReturnType<typeof setInterval> | null = null
 
   async function fetchOrders() {
     if (!token.value) {
@@ -31,11 +32,18 @@ export function usePerpsOrders() {
 
   watchEffect(() => {
     void refreshKey.value
+    if (pollTimer) clearInterval(pollTimer)
     if (token.value) {
       fetchOrders()
+      pollTimer = setInterval(fetchOrders, 10_000)
     } else {
       orders.value = []
+      pollTimer = null
     }
+  })
+
+  onUnmounted(() => {
+    if (pollTimer) clearInterval(pollTimer)
   })
 
   return { orders, loading, refetch: fetchOrders }
@@ -45,6 +53,7 @@ export function usePerpsFills() {
   const { token, refreshKey } = usePerpsAuth()
   const fills = ref<ApiFill[]>([])
   const loading = ref(false)
+  let pollTimer: ReturnType<typeof setInterval> | null = null
 
   async function fetchFills() {
     if (!token.value) {
@@ -64,11 +73,18 @@ export function usePerpsFills() {
 
   watchEffect(() => {
     void refreshKey.value
+    if (pollTimer) clearInterval(pollTimer)
     if (token.value) {
       fetchFills()
+      pollTimer = setInterval(fetchFills, 10_000)
     } else {
       fills.value = []
+      pollTimer = null
     }
+  })
+
+  onUnmounted(() => {
+    if (pollTimer) clearInterval(pollTimer)
   })
 
   return { fills, loading, refetch: fetchFills }

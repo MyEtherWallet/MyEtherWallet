@@ -197,10 +197,11 @@
                   <th class="py-2 px-4 text-right font-medium w-[25%]">
                     Price
                   </th>
-                  <th class="py-2 px-4 text-right font-medium w-[20%]">Size</th>
-                  <th class="py-2 pl-4 text-right font-medium w-[25%]">
+                  <th class="py-2 px-4 text-right font-medium w-[15%]">Size</th>
+                  <th class="py-2 px-4 text-right font-medium w-[20%]">
                     Status
                   </th>
+                  <th class="py-2 pl-4 text-right font-medium w-[10%]"></th>
                 </tr>
               </thead>
               <tbody>
@@ -228,8 +229,26 @@
                   <td class="py-3 px-4 text-right font-bold">
                     {{ order.size }}
                   </td>
-                  <td class="py-3 pl-4 text-right capitalize font-bold">
+                  <td class="py-3 px-4 text-right capitalize font-bold">
                     {{ order.status }}
+                  </td>
+                  <td class="py-3 pl-4 text-right">
+                    <button
+                      v-if="
+                        order.status === 'pending' ||
+                        order.status === 'untriggered' ||
+                        order.status === 'open'
+                      "
+                      class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
+                      :disabled="cancellingOrderId === order.orderId"
+                      @click="cancelInfoOrder(order.orderId)"
+                    >
+                      {{
+                        cancellingOrderId === order.orderId
+                          ? 'Cancelling...'
+                          : 'Cancel'
+                      }}
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -528,6 +547,8 @@ const markPrice = computed(() => {
 const marketOrders = ref<ApiOrder[]>([])
 const marketFills = ref<ApiFill[]>([])
 
+const cancellingOrderId = ref<string | null>(null)
+
 async function fetchMarketOrders() {
   if (!token.value) return
   try {
@@ -535,6 +556,18 @@ async function fetchMarketOrders() {
     marketOrders.value = res.result ?? []
   } catch {
     marketOrders.value = []
+  }
+}
+
+async function cancelInfoOrder(orderId: string) {
+  cancellingOrderId.value = orderId
+  try {
+    await perpsClient.cancelOrder(orderId)
+    await fetchMarketOrders()
+  } catch (e) {
+    console.error('Failed to cancel order:', e)
+  } finally {
+    cancellingOrderId.value = null
   }
 }
 

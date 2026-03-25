@@ -236,16 +236,23 @@ export interface Position {
   takeProfitTriggerPrice?: string
 }
 
+export interface StopOrderReq {
+  triggerPrice: string
+}
+
 export interface CreateOrderRequest {
   market: string
   side: 'buy' | 'sell'
   size: string
-  type: 'limit' | 'market'
+  type: 'limit' | 'market' | 'stopMarket' | 'takeProfitMarket'
   price?: string
+  triggerPrice?: string
   clientOrderId?: string
   timeInForce?: 'GTC' | 'IOC'
   postOnly?: boolean
   reduceOnly?: boolean
+  takeProfit?: StopOrderReq
+  stopLoss?: StopOrderReq
 }
 
 export interface LeverageSetting {

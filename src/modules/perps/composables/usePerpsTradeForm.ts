@@ -51,6 +51,15 @@ export function usePerpsTradeForm() {
   const closeError = ref('')
   const showCloseConfirmModal = ref(false)
 
+  // Auto Close
+  const showAutoCloseModal = ref(false)
+  const takeProfitPrice = ref<number | null>(null)
+  const stopLossPrice = ref<number | null>(null)
+  const tempTakeProfitPrice = ref<number | null>(null)
+  const tempStopLossPrice = ref<number | null>(null)
+  const activeTpPill = ref<number | null>(null)
+  const activeSlPill = ref<number | null>(null)
+
   // ── Market / position lookups ──────────────────────────────
   // When opening perps without a selected market, pick the first available one
   watch(
@@ -404,6 +413,126 @@ export function usePerpsTradeForm() {
     }
   }
 
+  // ── Auto Close ─────────────────────────────────────────────
+  const hasAutoClose = computed(
+    () => takeProfitPrice.value !== null || stopLossPrice.value !== null,
+  )
+
+  const takeProfitPct = computed(() => {
+    if (takeProfitPrice.value == null || !currentPrice.value) return null
+    return ((takeProfitPrice.value - currentPrice.value) / currentPrice.value) * 100
+  })
+
+  const stopLossPct = computed(() => {
+    if (stopLossPrice.value == null || !currentPrice.value) return null
+    return ((stopLossPrice.value - currentPrice.value) / currentPrice.value) * 100
+  })
+
+  const projectedProfit = computed(() => {
+    if (takeProfitPrice.value == null || !currentPrice.value) return null
+    const posSize = activePosition.value
+      ? positionNotionalValue.value
+      : positionSizeUsd.value
+    if (!posSize) return null
+    const pctMove =
+      (takeProfitPrice.value - currentPrice.value) / currentPrice.value
+    return posSize * pctMove
+  })
+
+  const projectedLoss = computed(() => {
+    if (stopLossPrice.value == null || !currentPrice.value) return null
+    const posSize = activePosition.value
+      ? positionNotionalValue.value
+      : positionSizeUsd.value
+    if (!posSize) return null
+    const pctMove =
+      (stopLossPrice.value - currentPrice.value) / currentPrice.value
+    return posSize * pctMove
+  })
+
+  const tempProjectedProfit = computed(() => {
+    if (tempTakeProfitPrice.value == null || !currentPrice.value) return null
+    const posSize = activePosition.value
+      ? positionNotionalValue.value
+      : positionSizeUsd.value
+    if (!posSize) return null
+    const pctMove =
+      (tempTakeProfitPrice.value - currentPrice.value) / currentPrice.value
+    return posSize * pctMove
+  })
+
+  const tempProjectedLoss = computed(() => {
+    if (tempStopLossPrice.value == null || !currentPrice.value) return null
+    const posSize = activePosition.value
+      ? positionNotionalValue.value
+      : positionSizeUsd.value
+    if (!posSize) return null
+    const pctMove =
+      (tempStopLossPrice.value - currentPrice.value) / currentPrice.value
+    return posSize * pctMove
+  })
+
+  function openAutoCloseModal() {
+    tempTakeProfitPrice.value = takeProfitPrice.value
+    tempStopLossPrice.value = stopLossPrice.value
+    activeTpPill.value = null
+    activeSlPill.value = null
+
+    // Default to +30% TP and -3% SL if nothing is set yet
+    if (tempTakeProfitPrice.value == null && currentPrice.value) {
+      setTakeProfitPct(30)
+    }
+    if (tempStopLossPrice.value == null && currentPrice.value) {
+      setStopLossPct(3)
+    }
+
+    showAutoCloseModal.value = true
+  }
+
+  function setTakeProfitPct(pct: number) {
+    if (!currentPrice.value) return
+    const isLong =
+      activePosition.value?.direction === 'long' || orderSide.value === 'buy'
+    tempTakeProfitPrice.value = isLong
+      ? currentPrice.value * (1 + pct / 100)
+      : currentPrice.value * (1 - pct / 100)
+    activeTpPill.value = pct
+  }
+
+  function setStopLossPct(pct: number) {
+    if (!currentPrice.value) return
+    const isLong =
+      activePosition.value?.direction === 'long' || orderSide.value === 'buy'
+    tempStopLossPrice.value = isLong
+      ? currentPrice.value * (1 - pct / 100)
+      : currentPrice.value * (1 + pct / 100)
+    activeSlPill.value = pct
+  }
+
+  function clearTempTakeProfit() {
+    tempTakeProfitPrice.value = null
+    activeTpPill.value = null
+  }
+
+  function clearTempStopLoss() {
+    tempStopLossPrice.value = null
+    activeSlPill.value = null
+  }
+
+  function confirmAutoClose() {
+    takeProfitPrice.value = tempTakeProfitPrice.value
+    stopLossPrice.value = tempStopLossPrice.value
+    showAutoCloseModal.value = false
+  }
+
+  function clearTakeProfit() {
+    takeProfitPrice.value = null
+  }
+
+  function clearStopLoss() {
+    stopLossPrice.value = null
+  }
+
   // ── Confirm / submit ──────────────────────────────────────
   function showConfirmation() {
     if (submitDisabled.value) return
@@ -431,6 +560,16 @@ export function usePerpsTradeForm() {
       }
       if (orderType.value === 'limit') {
         orderParams.timeInForce = 'GTC'
+      }
+      if (takeProfitPrice.value !== null) {
+        orderParams.takeProfit = {
+          triggerPrice: takeProfitPrice.value.toFixed(2),
+        }
+      }
+      if (stopLossPrice.value !== null) {
+        orderParams.stopLoss = {
+          triggerPrice: stopLossPrice.value.toFixed(2),
+        }
       }
       await perpsClient.createOrder(orderParams as any)
       showConfirmModal.value = false
@@ -480,6 +619,8 @@ export function usePerpsTradeForm() {
       closeAmount.value = ''
       closeSliderValue.value = 0
       closeError.value = ''
+      takeProfitPrice.value = null
+      stopLossPrice.value = null
       fetchLeverage()
       fetchMaxOrderSize()
     },
@@ -543,6 +684,29 @@ export function usePerpsTradeForm() {
     onCloseSliderInput,
     confirmAndClosePosition,
     showCloseConfirmation,
+    // Auto Close
+    showAutoCloseModal,
+    hasAutoClose,
+    takeProfitPrice,
+    stopLossPrice,
+    takeProfitPct,
+    stopLossPct,
+    projectedProfit,
+    projectedLoss,
+    tempProjectedProfit,
+    tempProjectedLoss,
+    tempTakeProfitPrice,
+    tempStopLossPrice,
+    activeTpPill,
+    activeSlPill,
+    openAutoCloseModal,
+    setTakeProfitPct,
+    setStopLossPct,
+    clearTempTakeProfit,
+    clearTempStopLoss,
+    confirmAutoClose,
+    clearTakeProfit,
+    clearStopLoss,
     // Submit
     isSubmitting,
     submitDisabled,
