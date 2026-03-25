@@ -56,6 +56,7 @@ import { ToastType } from '@/types/notification'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 
 const toastStore = useToastStore()
@@ -127,11 +128,20 @@ const unlock = () => {
       })
     }
 
-    setWallet(wallet as WalletInterface, 'privateKey')
+    setWallet(
+      wallet as WalletInterface,
+      'privateKey',
+      walletConfigs.privateKey.type[0],
+    )
     addWallet(walletConfigs.privateKey)
     setSelectedChainGlobalStore(selectedChain.value?.name || '')
     privateKeyInput.value = ''
     accessStore.setCurrentView('default')
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SUCCESS, {
+      walletName: 'privateKey',
+      walletType: walletConfigs.privateKey.type[0],
+      network: selectedChain.value?.name,
+    })
     accessStore.closeAccessDialog()
   } catch (error) {
     addToastMessage({

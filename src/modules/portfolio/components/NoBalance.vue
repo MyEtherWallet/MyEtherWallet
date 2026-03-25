@@ -62,6 +62,7 @@ import { storeToRefs } from 'pinia'
 import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
 import { ref, computed } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
 const { isXLAndUp } = useAppBreakpoints()
 const openDepositDialog = ref(false)
@@ -77,6 +78,10 @@ const isNativeBuyable = computed(() => {
 })
 
 const buyBtn = () => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
+    location: 'portfolio_no_balance',
+    token: selectedChain.value?.currencyName,
+  })
   window.open(
     'https://ccswap.myetherwallet.com/',
     '_blank',

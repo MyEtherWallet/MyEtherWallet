@@ -124,7 +124,7 @@
           <app-base-button
             class="flex-1"
             :disabled="loading"
-            @click="$emit('confirm')"
+            @click="proceedWithTrade"
           >
             <div v-if="loading" class="flex items-center gap-2 justify-center">
               <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -162,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -175,6 +175,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
+import { analytics, TradeEvent } from '@/analytics'
 const model = defineModel<boolean>('isOpen', { default: false })
 
 const props = defineProps<{
@@ -190,7 +191,7 @@ const props = defineProps<{
   chain?: Chain
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   confirm: []
   cancel: []
 }>()
@@ -219,4 +220,20 @@ const toAmountFiat = computed(() => {
   const fiat = parseFloat(formatted) * price
   return formatFiatValue(fiat.toString()).value
 })
+
+const isProcessing = ref(false)
+
+const proceedWithTrade = () => {
+  isProcessing.value = true
+  emit('confirm')
+}
+watch(
+  () => model.value,
+  newVal => {
+    if (newVal === false && !isProcessing.value) {
+      analytics.trackTradeEvent(TradeEvent.OFFER_DECLINED)
+      isProcessing.value = false
+    }
+  },
+)
 </script>

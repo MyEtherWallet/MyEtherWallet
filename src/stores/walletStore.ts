@@ -1,4 +1,4 @@
-import { ref, type Ref, computed, watch } from 'vue'
+import { ref, type Ref, computed, watch, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
@@ -15,6 +15,12 @@ import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
 import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
+import { analytics, WalletStatus, BalanceBracket, type UserProperties } from '@/analytics'
+import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
+import * as Sentry from '@sentry/vue'
+
+const PARTNER = 'ondo-finance'
+
 export const useWalletStore = defineStore('walletStore', () => {
   const wallet: Ref<WalletInterface | null> = ref(null) // allows for falsey
   const walletAddress: Ref<string | null> = ref(null)
@@ -27,6 +33,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const isWatchOnly = ref(false)
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
+  const userProperties = reactive<UserProperties>({})
 
   /** -------------------------------
   * The Wallet
@@ -34,18 +41,34 @@ export const useWalletStore = defineStore('walletStore', () => {
   const setWallet = async (
     newWallet: WalletInterface,
     _walletName: string = '',
+    _walletType: WalletConfigType,
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
     if (!isRestricted) {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true
+        analytics.setWalletStatus(WalletStatus.WATCH_ONLY)
+        userProperties.walletStatus = WalletStatus.WATCH_ONLY
+        Sentry.setTag('wallet_status', 'watch_only')
       } else {
         isWatchOnly.value = false
+        analytics.setWalletStatus(WalletStatus.CONNECTED)
+        userProperties.walletStatus = WalletStatus.CONNECTED
+        Sentry.setTag('wallet_status', 'connected')
       }
       wallet.value = newWallet
       setAddress()
-      walletName.value = _walletName
+      if (_walletName !== '') {
+        walletName.value = _walletName
+        analytics.setWalletName(_walletName)
+        userProperties.walletName = _walletName
+        Sentry.setTag('wallet_name', _walletName)
+      }
+      if (_walletType) {
+        analytics.setWalletType(_walletType)
+        userProperties.walletType = _walletType
+      }
     }
   }
 
@@ -69,11 +92,16 @@ export const useWalletStore = defineStore('walletStore', () => {
         newWallet,
         currentRecentAddressList[currentRecentAddressList.length - 1]
           .walletName,
+        currentRecentAddressList[currentRecentAddressList.length - 1]
+          .walletType as WalletConfigType,
       )
     } else {
       wallet.value = null
       walletAddress.value = null
       removeTokens()
+      analytics.setWalletStatus(WalletStatus.NOT_CONNECTED)
+      userProperties.walletStatus = WalletStatus.NOT_CONNECTED
+      Sentry.setTag('wallet_status', 'not_connected')
     }
   }
 
@@ -197,6 +225,65 @@ export const useWalletStore = defineStore('walletStore', () => {
       }
     })
     tokens.value = newTokenCopy
+    //Analytics: hasBalance
+    const raw = [...newTokenCopy]
+    if (mainTokenBalance.value) {
+      raw.push(mainTokenBalance.value)
+    }
+    const all = raw.filter(token => token.price && token.market_cap)
+    const hasBalances = all.length > 0 || balanceWei.value !== '0'
+    analytics.setHasBalance(hasBalances)
+    //Analytics: isRWAHolder,
+    const rwas = all.filter(token => token.ondo !== undefined)
+    const hasRwas = rwas.length > 0
+    analytics.setIsRWAHolder(hasRwas)
+    //Analytics: isCryptoHolder
+    const otherCryptoTokens = all.filter(
+      token =>
+        token.contract !== MAIN_TOKEN_CONTRACT && token.ondo === undefined, // Exclude RWAs
+    )
+    const hasOtherCryptoTokens = otherCryptoTokens.length > 0
+    analytics.setIsCryptoHolder(hasOtherCryptoTokens)
+    //Analytics: isStablecoinHolder
+    const stables = all.filter(token => token.is_stablecoin)
+    const hasStables = stables.length > 0
+    analytics.setIsStablecoinHolder(hasStables)
+    //Analytics: isPartnerHolder
+    const partnerTokens = all.filter(token => token.coinId === PARTNER)
+    const hasPartnerTokens = partnerTokens.length > 0
+    analytics.setIsPartnerHolder(hasPartnerTokens)
+    //Analytics: Bracket
+    const totalBalanceFiat = all.reduce((total, token) => {
+      const tokenBalance = new BigNumber(token.balance || 0)
+      const tokenFiatValue = new BigNumber(token.price || 0)
+      const tokenValue = tokenBalance.multipliedBy(tokenFiatValue)
+      return total.plus(tokenValue)
+    }, new BigNumber(0))
+    let balanceBracket: BalanceBracket
+    if (totalBalanceFiat.isLessThan(500)) {
+      balanceBracket = BalanceBracket.UNDER_500
+    } else if (totalBalanceFiat.isLessThan(2500)) {
+      balanceBracket = BalanceBracket.BRACKET_500
+    } else if (totalBalanceFiat.isLessThan(10000)) {
+      balanceBracket = BalanceBracket.BRACKET_2500
+    } else if (totalBalanceFiat.isLessThan(50000)) {
+      balanceBracket = BalanceBracket.BRACKET_10K
+    } else if (totalBalanceFiat.isLessThan(100000)) {
+      balanceBracket = BalanceBracket.BRACKET_50K
+    } else if (totalBalanceFiat.isLessThan(500000)) {
+      balanceBracket = BalanceBracket.BRACKET_100K
+    } else {
+      balanceBracket = BalanceBracket.OVER_500K
+    }
+    analytics.setBalanceBracket(balanceBracket)
+    Object.assign(userProperties, {
+      hasBalance: hasBalances,
+      isRWAHolder: hasRwas,
+      isCryptoHolder: hasOtherCryptoTokens,
+      isStablecoinHolder: hasStables,
+      isPartnerHolder: hasPartnerTokens,
+      balanceBracket,
+    })
   }
 
   const allTokens = computed<Array<TokenBalance>>(() => {
@@ -325,6 +412,9 @@ export const useWalletStore = defineStore('walletStore', () => {
     )
   })
 
+  /** -------------------------------
+  * Stock Values
+  -------------------------------*/
   return {
     wallet,
     walletAddress,
@@ -361,5 +451,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     hasBalances,
     allStocks,
     hasChainBalance,
+    userProperties,
   }
 })

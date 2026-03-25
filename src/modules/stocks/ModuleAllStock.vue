@@ -554,6 +554,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { analytics, ClickTokenTradeEvent } from '@/analytics'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
@@ -630,6 +631,12 @@ const nextPage = () => {
 }
 
 const tradeBtn = (token: DisplayToken, isMobile = false) => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.TRADE, {
+    location: 'stocks_table',
+    token: token.symbol,
+    stock: token.name,
+    isMobile,
+  })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
   if (!isOpenSideMenu.value) {

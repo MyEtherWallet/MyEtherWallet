@@ -9,7 +9,7 @@
         <div class="flex flex-col items-center pt-8 text-center">
           <p class="text-s-13 lg:text-s-14 text-info px-4 leading-p-160">
             Your trade order has been submitted to the 1inch Fusion network. The
-            order will be filled by market makers.
+            order is being filled.
           </p>
 
           <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">

@@ -5,15 +5,6 @@
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
       <div class="flex items-center gap-2 relative">
-        <div
-          class="py-[1px] sm:py-[2px] rounded-full flex items-center justify-center bg-white px-[6px] absolute top-0 left-0 translate-y-[-40%] translate-x-3 sm:translate-x-5 shadow-button shadow-button-elevated border-2 border-portfolio"
-        >
-          <p
-            class="text-portfolio text-[8px] sm:text-s-11 uppercase font-bold tracking-sp-06"
-          >
-            BETA
-          </p>
-        </div>
         <router-link
           :to="{ name: ROUTES_MAIN.HOME.NAME }"
           class="cursor-pointer mr-1 sm:mr-4 xl:mr-10"
@@ -98,6 +89,11 @@
           v-if="!isWalletConnected"
           :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
           class="hidden xs:flex px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+          @click="
+            analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
+              source: 'Header_Create',
+            })
+          "
         >
           {{ $t('common.create_wallet') }}
         </router-link>
@@ -105,6 +101,11 @@
         <router-link
           v-if="!isWalletConnected"
           :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+          @click="
+            analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+              source: 'Header_Connect',
+            })
+          "
           class="px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('connect_wallet') }}
@@ -152,6 +153,9 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
 import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
+import { WalletConfigType } from '@/modules/access/common/walletConfigs'
+import { analytics } from '@/analytics'
+import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
 
 const { t } = useI18n()
 const store = useWalletStore()
@@ -263,7 +267,7 @@ watch(
               _wallet.updateAddress(
                 (accounts as string[])[0] as HexPrefixedString,
               )
-              setWallet(_wallet)
+              setWallet(_wallet, '', WalletConfigType.EXTENSION)
             }
           },
         )
@@ -279,7 +283,7 @@ watch(
               (accounts as string[])[0] as HexPrefixedString,
             )
 
-            setWallet(_wallet)
+            setWallet(_wallet, '', WalletConfigType.EXTENSION)
           }
         })
       }

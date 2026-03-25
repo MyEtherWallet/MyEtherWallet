@@ -5,6 +5,8 @@ import {
   type WalletConfig,
 } from '@/modules/access/common/walletConfigs'
 import { type Chain } from '@/mew_api/types'
+import { analytics } from '@/analytics'
+import { ConnectWalletEvent } from '@/analytics/events'
 /**
  * Store to manage the state of the access dialog.
  * It provides methods to open and close the dialog. Also manages
@@ -22,6 +24,7 @@ export const useAccessStore = defineStore('accessStore', () => {
 
   const openAccessDialog = () => {
     isOpenAccessDialog.value = true
+    analytics.trackConnectWalletEvent(ConnectWalletEvent.SHOWN)
   }
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false

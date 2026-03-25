@@ -107,6 +107,13 @@ import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
+import {
+  analytics,
+  SwapEventStatus,
+  SendEventStatus,
+  TradeEventStatus,
+  type TradeEventStatusPayload,
+} from '@/analytics'
 
 const appLayoutStore = useAppLayoutStore()
 const stocksStore = useStocksStore()
@@ -310,8 +317,22 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     status: status.status,
     fills: status.fills,
   }
+  const analyticsPayload: TradeEventStatusPayload = {
+    orderHash: hash,
+    fromAmount: order.fromAmount,
+    toAmount: order.expectedToAmount,
+    fromToken: order.fromSymbol,
+    toToken: order.toSymbol,
+    network: order.chainName,
+    tradePair: `${order.fromSymbol}-${order.toSymbol}`,
+    expectedToAmount: order.expectedToAmount,
+    txHash: status.fills.length > 0 ? status.fills[0].txHash : '',
+    finalToAmount: order.finalToAmount,
+    percentageDiff: order.percentageDiff,
+  }
 
   if (status.status === 'filled' && status.finalToAmount) {
+    analytics.trackTradeEventStatus(TradeEventStatus.SUCCESS, analyticsPayload)
     const finalAmount = formatFloatingPointValue(
       formatUnits(status.finalToAmount, order.toDecimals),
     ).value
@@ -362,7 +383,11 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
-
+    const event =
+      status.status === 'cancelled'
+        ? TradeEventStatus.CANCELLED
+        : TradeEventStatus.EXPIRED
+    analytics.trackTradeEventStatus(event, analyticsPayload)
     // Show error toast with trade info
     if (!isNotificationsOpen.value) {
       toastStore.addToastMessage({
@@ -495,6 +520,17 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus === 'confirmed' || newStatus === 'failed') {
+      const event =
+        newStatus === 'confirmed'
+          ? SendEventStatus.SUCCESS
+          : SendEventStatus.FAILED
+      analytics.trackSendEventStatus(event, {
+        hash: hash,
+        token: tx.symbol,
+      })
+    }
+
     if (!isNotificationsOpen.value) {
       // Show toast for transaction status update
       toastStore.addToastMessage({
@@ -512,6 +548,23 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus === 'confirmed' || newStatus === 'failed') {
+      const event =
+        newStatus === 'confirmed'
+          ? SwapEventStatus.SUCCESS
+          : SwapEventStatus.FAILED
+      analytics.trackSwapEventStatus(event, {
+        hash: hash,
+        fromAmount: swap.fromAmount,
+        toAmount: swap.toAmount,
+        fromToken: swap.fromSymbol,
+        toToken: swap.toSymbol,
+        fromNetwork: swap.fromChainName,
+        toNetwork: swap.fromChainName,
+        isBridge: false,
+        swapPair: `${swap.fromSymbol}-${swap.toSymbol}`,
+      })
+    }
 
     if (!isNotificationsOpen.value) {
       // Show toast for swap status update
@@ -547,6 +600,23 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus === 'confirmed' || newStatus === 'failed') {
+      const event =
+        newStatus === 'confirmed'
+          ? SwapEventStatus.SUCCESS
+          : SwapEventStatus.FAILED
+      analytics.trackSwapEventStatus(event, {
+        hash: hash,
+        fromAmount: bridge.fromAmount,
+        toAmount: bridge.toAmount,
+        fromToken: bridge.fromSymbol,
+        toToken: bridge.toSymbol,
+        fromNetwork: bridge.fromChainName,
+        toNetwork: bridge.toChainName,
+        isBridge: true,
+        swapPair: `${bridge.fromSymbol}-${bridge.toSymbol}`,
+      })
+    }
     if (!isNotificationsOpen.value) {
       // Show toast for bridge status update
 
@@ -577,10 +647,23 @@ const updateNotificationStatus = (
   fetchBalances()
 }
 
+// Get the correct transaction status URL based on chain
+const getTransactionStatusUrl = (
+  hash: string,
+  chainId: string,
+  chainName: string,
+): string => {
+  if (chainName.toLowerCase() === 'bitcoin') {
+    return `${Configs.MEW_API_URL}/v1/btc/${chainName.toLowerCase()}/transactions/${hash}/status`
+  }
+  return `${Configs.MEW_API_URL}/v1/evm/chains/${chainId}/transactions/${hash}/status`
+}
+
 // Start polling for notification status (works for transactions, swaps, and bridges)
 const startStatusPolling = async (
   hash: string,
   chainId: string,
+  chainName: string,
   type: StatusNotificationType,
 ) => {
   if (statusPollIntervals[hash]) return
@@ -589,7 +672,7 @@ const startStatusPolling = async (
   const pollStatus = async () => {
     try {
       const response = await fetch(
-        `${Configs.MEW_API_URL}/v1/evm/chains/${chainId}/transactions/${hash}/status`,
+        getTransactionStatusUrl(hash, chainId, chainName),
       )
       const data = await response.json()
 
@@ -622,7 +705,7 @@ const startPollingForPendingNotifications = (address: string) => {
   const pendingTxs = tradeOrdersStore.getPendingTransactions(address)
   pendingTxs.forEach(tx => {
     if (!statusPollIntervals[tx.hash]) {
-      startStatusPolling(tx.hash, tx.chainId, 'transaction')
+      startStatusPolling(tx.hash, tx.chainId, tx.chainName, 'transaction')
     }
   })
 
@@ -630,7 +713,12 @@ const startPollingForPendingNotifications = (address: string) => {
   const pendingSwaps = tradeOrdersStore.getPendingSwaps(address)
   pendingSwaps.forEach(swap => {
     if (!statusPollIntervals[swap.hash]) {
-      startStatusPolling(swap.hash, swap.fromChainId, 'swap')
+      startStatusPolling(
+        swap.hash,
+        swap.fromChainId,
+        swap.fromChainName,
+        'swap',
+      )
     }
   })
 
@@ -638,7 +726,12 @@ const startPollingForPendingNotifications = (address: string) => {
   const pendingBridges = tradeOrdersStore.getPendingBridges(address)
   pendingBridges.forEach(bridge => {
     if (!statusPollIntervals[bridge.hash]) {
-      startStatusPolling(bridge.hash, bridge.fromChainId, 'bridge')
+      startStatusPolling(
+        bridge.hash,
+        bridge.fromChainId,
+        bridge.fromChainName,
+        'bridge',
+      )
     }
   })
 }
@@ -703,17 +796,27 @@ unsubscribe = tradeOrdersStore.subscribe((item, type) => {
   } else if (type === 'transaction') {
     const tx = item as TransactionNotification
     if (tx.status === 'sent' && !statusPollIntervals[tx.hash]) {
-      startStatusPolling(tx.hash, tx.chainId, 'transaction')
+      startStatusPolling(tx.hash, tx.chainId, tx.chainName, 'transaction')
     }
   } else if (type === 'swap') {
     const swap = item as SwapNotification
     if (swap.status === 'sent' && !statusPollIntervals[swap.hash]) {
-      startStatusPolling(swap.hash, swap.fromChainId, 'swap')
+      startStatusPolling(
+        swap.hash,
+        swap.fromChainId,
+        swap.fromChainName,
+        'swap',
+      )
     }
   } else if (type === 'bridge') {
     const bridge = item as BridgeNotification
     if (bridge.status === 'sent' && !statusPollIntervals[bridge.hash]) {
-      startStatusPolling(bridge.hash, bridge.fromChainId, 'bridge')
+      startStatusPolling(
+        bridge.hash,
+        bridge.fromChainId,
+        bridge.fromChainName,
+        'bridge',
+      )
     }
   }
 })

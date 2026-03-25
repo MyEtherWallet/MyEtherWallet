@@ -138,6 +138,15 @@
 
       <!-- Error Display -->
       <div
+        v-if="!isLoading && priceImpactTooHigh"
+        :class="blurClass"
+        class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
+      >
+        <p class="text-error text-s-14 text-center">
+          Price impact is too high {{ priceImpact.toFixed(2) }}%
+        </p>
+      </div>
+      <div
         v-if="!isLoading && generalError"
         :class="blurClass"
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
@@ -155,7 +164,7 @@
       >
       <div v-else :class="['w-full max-w-[340px]', blurClass]">
         <transition name="fade" mode="out-in">
-          <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+          <app-no-chain-balance v-if="!hasChainBalance" :source="isSwapView ? 'swap' : 'bridge'" class="mb-5 -mt-1" />
           <app-base-button
             v-else
             :disabled="isSwapDisabled"
@@ -180,7 +189,7 @@
       v-model:selected-quote="selectedQuote"
       v-model:loading="txProceeding"
       @update:proceedWithSwap="proceedWithSwap"
-      @update:declineSwap="bestOfferSelectionOpen = false"
+      @update:declineSwap="cancelSwap"
       :quotes="providers"
       :amount="fromAmount"
       :from-chain="selectedChain"
@@ -232,6 +241,14 @@ import { useToastStore } from '@/stores/toastStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
+import {
+  analytics,
+  ConnectWalletEvent,
+  SwapEvent,
+  SwapEventError,
+  SwapEventStatus,
+  type SwapPayloadShared,
+} from '@/analytics'
 
 // Utils and Types
 import {
@@ -264,7 +281,7 @@ import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 
 const isDevMode = configs.IS_DEV_MODE
-
+const MAX_PRICE_IMPACT = 10
 // --- Stores ---
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
@@ -495,6 +512,19 @@ const toAmountError = computed(() => {
   return ''
 })
 
+const priceImpact = computed(() => {
+  const fromAmt = parseFloat(fromAmount.value)
+  const toAmt = parseFloat(toAmount.value)
+  const fromPrice = fromTokenSelected.value?.price || 0
+  const toPrice = toTokenSelected.value?.price || 0
+  if (!fromAmt || !toAmt || !fromPrice || !toPrice) return 0
+  const fromValue = fromAmt * fromPrice
+  const toValue = toAmt * toPrice
+  return ((fromValue - toValue) / fromValue) * 100
+})
+
+const priceImpactTooHigh = computed(() => priceImpact.value > MAX_PRICE_IMPACT)
+
 const isSwapDisabled = computed(
   () =>
     (swapLoaded.value && !supportedNetwork.value) ||
@@ -507,7 +537,8 @@ const isSwapDisabled = computed(
     (isCrossChain.value && toAddressError.value !== '') ||
     isLoadingQuotes.value ||
     !hasChainBalance.value ||
-    isSameToken.value,
+    isSameToken.value ||
+    priceImpactTooHigh.value,
 )
 
 // --- Helper Methods ---
@@ -567,7 +598,19 @@ const validateToAddress = async () => {
   )
   toAddressError.value = valid ? '' : 'invalid address'
 }
-
+const getAnalyticsShared = (): SwapPayloadShared => {
+  return {
+    isBridge: selectedChain.value?.name !== selectedToChain.value?.name,
+    fromAmount: fromAmount.value,
+    toAmount: toAmount.value,
+    fromToken: fromTokenSelected.value?.symbol || 'N/A',
+    toToken: toTokenSelected.value?.symbol || 'N/A',
+    fromNetwork: selectedChain.value?.name || 'N/A',
+    toNetwork: selectedToChain.value?.name || 'N/A',
+    swapPair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
+    providerName: selectedQuote.value?.provider || 'N/A',
+  }
+}
 // --- Swap Logic & Transactions ---
 
 const handleBitcoinTransaction = async (quoteId: string) => {
@@ -630,6 +673,8 @@ const handleEvmTransaction = async (quoteId: string) => {
 const proceedWithSwap = async (quoteId: string) => {
   txProceeding.value = true
   generalError.value = ''
+  const analyticsPayload = getAnalyticsShared()
+  analytics.trackSwapEvent(SwapEvent.OFFER_PROCEED, analyticsPayload)
   try {
     let txPromise: Promise<string> | undefined
 
@@ -646,18 +691,27 @@ const proceedWithSwap = async (quoteId: string) => {
       txHash.value = hash as HexPrefixedString
       bestOfferSelectionOpen.value = false
       swapInitiatedOpen.value = true
+      analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {
+        ...analyticsPayload,
+        hash: hash,
+      })
     }
   } catch (e: any) {
     const errorMessage =
-      e instanceof Error && e.message
+      e instanceof Error || e.message
         ? e.message.toLowerCase()
         : typeof e === 'string'
           ? e
           : t('swap.toast.tx-sign-failed')
+    console.log('Error message:', errorMessage) // Log the error message for debugging
     if (errorMessage.includes('user rejected')) {
       toastStore.addToastMessage({
         type: ToastType.Info,
         text: 'Swap canceled by user',
+      })
+      analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
+        ...analyticsPayload,
+        errorMsg: 'declined_by_user',
       })
     } else {
       generalError.value = errorMessage
@@ -670,6 +724,10 @@ const proceedWithSwap = async (quoteId: string) => {
       if (isDevMode) {
         console.error('Error proceeding with swap:', e)
       } else {
+        analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
+          ...analyticsPayload,
+          errorMsg: errorMessage,
+        })
         captureException(e, {
           extra: {
             title: 'SWAP: Error proceeding with swap',
@@ -716,6 +774,7 @@ const swapFeeError = computed<string | undefined>(() => {
 const swapForBtc = async () => {
   bestSwapLoadingOpen.value = true
   generalError.value = ''
+  const analyticsPayload = getAnalyticsShared()
   try {
     await debounceFetchQuotes()
 
@@ -737,6 +796,10 @@ const swapForBtc = async () => {
     if (isDevMode) {
       console.error('Error fetching BTC gas fees:', e)
     } else {
+      analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+        ...analyticsPayload,
+        errorMsg: generalError.value,
+      })
       captureException(e, {
         extra: {
           title: 'SWAP: Error fetching BTC gas fees',
@@ -752,6 +815,7 @@ const swapForBtc = async () => {
 const swapForEvm = async () => {
   bestSwapLoadingOpen.value = true
   generalError.value = ''
+  const analyticsPayload = getAnalyticsShared()
   try {
     await debounceFetchQuotes()
 
@@ -778,6 +842,10 @@ const swapForEvm = async () => {
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
+      analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+        ...analyticsPayload,
+        errorMsg: generalError.value,
+      })
       captureException(e, {
         extra: {
           title: 'SWAP: Error fetching gas fees',
@@ -791,7 +859,13 @@ const swapForEvm = async () => {
 }
 
 const swapButton = () => {
+  const analyticsPayload = getAnalyticsShared()
+  analytics.trackSwapEvent(SwapEvent.CLICK_SWAP, analyticsPayload)
   return isBitcoinChain.value ? swapForBtc() : swapForEvm()
+}
+
+const cancelSwap = () => {
+  bestOfferSelectionOpen.value = false
 }
 
 const qoutesError = ref<boolean>(false)
@@ -806,6 +880,7 @@ const fetchQuotes = async () => {
   generalError.value = ''
   toAmount.value = '0'
   qoutesError.value = false
+  const analyticsPayload = getAnalyticsShared()
   try {
     const quotes = await getQuote({
       fromToken: fromTokenSelected.value,
@@ -833,9 +908,27 @@ const fetchQuotes = async () => {
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
         qoutesError.value = true
+        const event = bestSwapLoadingOpen.value
+          ? SwapEventError.OFFER_ERROR
+          : SwapEventError.PRELIMINARY_ERROR
+        analytics.trackSwapEventError(event, {
+          ...analyticsPayload,
+          errorMsg: 'No quotes after filtering by minimum from amount',
+        })
+      } else if (!bestSwapLoadingOpen.value && fromAmountError.value === '') {
+        analytics.trackSwapEvent(SwapEvent.PRELIMINARY_SHOWN, {
+          ...analyticsPayload,
+        })
       }
     } else {
       qoutesError.value = true
+      const event = bestSwapLoadingOpen.value
+        ? SwapEventError.OFFER_ERROR
+        : SwapEventError.PRELIMINARY_ERROR
+      analytics.trackSwapEventError(event, {
+        ...analyticsPayload,
+        errorMsg: 'No quotes returned from getQuote',
+      })
     }
   } catch (err: any) {
     generalError.value = t('swap.error.fetching-quotes')
@@ -847,6 +940,14 @@ const fetchQuotes = async () => {
           title: 'SWAP: fetchQuotes Error',
           errorMessage: err?.message || 'Unknown error',
         },
+      })
+      const event = bestSwapLoadingOpen.value
+        ? SwapEventError.OFFER_ERROR
+        : SwapEventError.PRELIMINARY_ERROR
+      const analyticsPayload = getAnalyticsShared()
+      analytics.trackSwapEventError(event, {
+        ...analyticsPayload,
+        errorMsg: 'No quotes returned from getQuote',
       })
     }
   } finally {
@@ -1055,6 +1156,10 @@ const connectWalletForSwap = () => {
       fromAmount: fromAmount.value,
     })
   }
+  const source = isSwapView.value ? 'Swap' : 'Bridge'
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source,
+  })
   accessStore.openAccessDialog()
 }
 

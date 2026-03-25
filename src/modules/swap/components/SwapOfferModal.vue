@@ -292,6 +292,7 @@ import {
   formatFiatValue,
   formatFloatingPointValue,
 } from '@/utils/numberFormatHelper'
+import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 
 const { t } = useI18n()
 
@@ -399,8 +400,24 @@ const btnText = computed(() => {
     : t('swap.swap-offer.proceed')
 })
 
+const getAnalyticsPayload = (): SwapPayloadShared => {
+  return {
+    isBridge: isBridge.value,
+    providerName: providerName.value,
+    fromAmount: props.amount.toString(),
+    toAmount: toAmountFormatted.value.value,
+    fromToken: fromToken.value?.symbol || 'N/A',
+    toToken: toToken.value?.symbol || 'N/A',
+    fromNetwork: props.fromChain?.name || 'N/A',
+    toNetwork: props.toChain?.name || 'N/A',
+    swapPair: `${fromToken.value?.symbol || 'N/A'}-${toToken.value?.symbol || 'N/A'}`,
+  }
+}
+
 const setItem = (item: ProviderQuoteResponse, close: () => void) => {
   selectedQuote.value = item
+  const analyticsPayload = getAnalyticsPayload()
+  analytics.trackSwapEvent(SwapEvent.OFFER_SELECT_NEW, analyticsPayload)
   close()
 }
 
@@ -469,15 +486,26 @@ const exchangeRate = computed(() => {
   return BigNumber(fromTokenPrice).div(toTokenPrice).toFormat(2)
 })
 
+const isProceeding = ref(false)
 watch(
   () => model.value,
   () => {
+    const analyticsPayload = getAnalyticsPayload()
+    if (model.value) {
+      analytics.trackSwapEvent(SwapEvent.OFFER_SHOWN, { ...analyticsPayload })
+    } else if (!isProceeding.value) {
+      analytics.trackSwapEvent(SwapEvent.OFFER_DECLINED, {
+        ...analyticsPayload,
+      })
+    }
+    isProceeding.value = false
     loadingModel.value = false
   },
 )
 
 // Let parent know when the swap is to be proceeded
 const proceedWithSwap = () => {
+  isProceeding.value = true
   loadingModel.value = true
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
 }

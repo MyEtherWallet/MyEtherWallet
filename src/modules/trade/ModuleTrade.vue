@@ -63,6 +63,15 @@
                       v-for="pct in [25, 50, 75, 100]"
                       :key="pct"
                       class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      :disabled="
+                        pct === 100 &&
+                        fromTokenSelected?.address === MAIN_TOKEN_CONTRACT
+                      "
+                      :class="{
+                        'opacity-40 cursor-not-allowed':
+                          pct === 100 &&
+                          fromTokenSelected?.address === MAIN_TOKEN_CONTRACT,
+                      }"
                       @click="setPercentageAmount(pct)"
                     >
                       {{ pct === 100 ? 'Max' : `${pct}%` }}
@@ -270,7 +279,7 @@
         </app-base-button>
         <div v-else>
           <transition name="fade" mode="out-in">
-            <app-no-chain-balance v-if="!hasChainBalance" class="mb-5 -mt-1" />
+            <app-no-chain-balance v-if="!hasChainBalance" source="trade" class="mb-5 -mt-1" />
             <app-base-button
               v-else
               class="w-full"
@@ -362,6 +371,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
 import { useTrade } from './useTrade'
@@ -736,6 +746,9 @@ const setPercentageAmount = (percentage: number) => {
 }
 
 const connectWalletForTrade = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Trade',
+  })
   accessStore.openAccessDialog()
 }
 
