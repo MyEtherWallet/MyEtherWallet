@@ -37,6 +37,7 @@ import type {
 export class PerpsClient {
   private baseUrl: string
   private token: string | null = null
+  private onUnauthorized: (() => void) | null = null
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
@@ -50,9 +51,16 @@ export class PerpsClient {
     return this.token
   }
 
+  setOnUnauthorized(handler: (() => void) | null) {
+    this.onUnauthorized = handler
+  }
+
   private async request<T>(path: string, options?: RequestInit): Promise<T> {
     const res = await fetch(`${this.baseUrl}${path}`, options)
     if (!res.ok) {
+      if (res.status === 401 && this.onUnauthorized) {
+        this.onUnauthorized()
+      }
       let msg = `HTTP ${res.status}`
       try {
         const body = await res.json()

@@ -228,7 +228,7 @@
           <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
           <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
           <ModulePerpsTrade
-            v-else-if="walletPanel === 'perps' && selectedTradeTokenSymbol"
+            v-else-if="walletPanel === 'perps'"
             key="perps-trade"
           />
           <div v-else key="coming-soon" class="mt-6 text-center font-medium">
@@ -271,8 +271,7 @@ import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
 const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu, walletPanel, hasShadow, selectedTradeTokenSymbol } =
-  storeToRefs(walletMenu)
+const { isOpenSideMenu, walletPanel, hasShadow } = storeToRefs(walletMenu)
 
 const breakpoints = useAppBreakpoints()
 const { isXLAndUp, isMDAndUp } = breakpoints

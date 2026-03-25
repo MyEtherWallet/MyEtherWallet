@@ -1,12 +1,22 @@
 <template>
   <div class="bg-white rounded-20 p-6 sm:p-8">
     <!-- Not authenticated -->
-    <div v-if="!token" class="text-center py-8">
+    <div v-if="!isWalletConnected || isWatchOnly" class="text-center py-8">
       <p class="text-info text-s-14 mb-4">
-        Connect and sign in to view your perps portfolio
+        Connect your wallet to view your perps portfolio
       </p>
       <button
-        v-if="isWalletConnected"
+        class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
+        @click="connectWallet"
+      >
+        Connect Wallet
+      </button>
+    </div>
+    <div v-else-if="!token" class="text-center py-8">
+      <p class="text-info text-s-14 mb-4">
+        Sign in to view your perps portfolio
+      </p>
+      <button
         :disabled="isAuthenticating"
         class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
         @click="login"
@@ -53,11 +63,22 @@
 import { computed } from 'vue'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
 import { formatUsd, formatPnl, pnlColor } from '../utils/formatters'
+import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { storeToRefs } from 'pinia'
 
 defineEmits<{
   deposit: []
   withdraw: []
 }>()
+
+const walletStore = useWalletStore()
+const { isWatchOnly } = storeToRefs(walletStore)
+const accessStore = useAccessStore()
+
+const connectWallet = () => {
+  accessStore.openAccessDialog()
+}
 
 const { token, isWalletConnected, isAuthenticating, authError, login } =
   usePerpsAuth()

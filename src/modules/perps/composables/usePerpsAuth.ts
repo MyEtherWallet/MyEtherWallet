@@ -20,6 +20,18 @@ if (savedToken) {
   perpsClient.setToken(savedToken)
 }
 
+function clearAuth() {
+  token.value = null
+  accountId.value = null
+  perpsClient.setToken(null)
+  localStorage.removeItem(STORAGE_KEY_TOKEN)
+  localStorage.removeItem(STORAGE_KEY_ACCOUNT)
+}
+
+perpsClient.setOnUnauthorized(() => {
+  clearAuth()
+})
+
 export function usePerpsAuth() {
   const store = useWalletStore()
   const { wallet, isWalletConnected } = storeToRefs(store)
@@ -62,11 +74,7 @@ export function usePerpsAuth() {
   }
 
   function logout() {
-    token.value = null
-    accountId.value = null
-    perpsClient.setToken(null)
-    localStorage.removeItem(STORAGE_KEY_TOKEN)
-    localStorage.removeItem(STORAGE_KEY_ACCOUNT)
+    clearAuth()
   }
 
   function triggerRefresh() {

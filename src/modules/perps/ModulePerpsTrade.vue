@@ -8,7 +8,22 @@
     </div>
 
     <div
-      v-if="!token"
+      v-if="!isWalletConnected || isWatchOnly"
+      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
+    >
+      <p class="text-info text-s-14 mb-4">
+        Connect your wallet to start trading
+      </p>
+      <button
+        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+        @click="connectWallet"
+      >
+        Connect Wallet
+      </button>
+    </div>
+
+    <div
+      v-else-if="!token"
       class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
     >
       <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
@@ -1071,6 +1086,17 @@ import {
 } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
+import { useWalletStore } from '@/stores/walletStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
+const accessStore = useAccessStore()
+
+const connectWallet = () => {
+  accessStore.openAccessDialog()
+}
 
 const {
   // Auth
