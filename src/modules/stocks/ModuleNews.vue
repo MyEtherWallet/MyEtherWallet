@@ -41,13 +41,22 @@
             <p class="text-s-14 line-clamp-2">
               {{ article.title }}
             </p>
-            <p class="text-s-11 text-info">
-              {{
-                article.timestamp
-                  ? new Date(article.timestamp).toLocaleDateString()
-                  : ''
-              }}
-            </p>
+            <div class="flex items-center gap-2 flex-wrap">
+              <p class="text-s-11 text-info">
+                {{
+                  article.timestamp
+                    ? new Date(article.timestamp).toLocaleDateString()
+                    : ''
+                }}
+              </p>
+              <span
+v-for="ticker in article.tickers || []"
+                :key="ticker"
+                class="text-s-9 font-semibold tracking-sp-06 uppercase text-info bg-mewBg px-2 py-[1px] rounded"
+              >
+                {{ ticker }}
+              </span>
+            </div>
           </div>
         </a>
       </div>
