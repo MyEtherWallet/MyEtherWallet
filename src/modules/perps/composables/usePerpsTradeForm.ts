@@ -16,7 +16,7 @@ type OrderType = 'market' | 'limit'
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
-  const { token, login } = usePerpsAuth()
+  const { token, login, triggerRefresh } = usePerpsAuth()
   const { balance } = usePerpsBalance()
   const { markets } = usePerpsMarkets()
   const { contracts } = usePerpsContracts()
@@ -28,6 +28,9 @@ export function usePerpsTradeForm() {
     walletMenuStore.selectedTradeOrderSide ?? 'buy',
   )
   const orderType = ref<OrderType>('market')
+  const showOrderTypeDropdown = ref(false)
+  const limitPrice = ref('')
+  const activeLimitPill = ref<number | null>(null)
   const inputAmount = ref('')
   const leverage = ref(1)
   const sliderValue = ref(0)
@@ -202,27 +205,40 @@ export function usePerpsTradeForm() {
     closeError.value = ''
     try {
       const closePct = closeSliderValue.value
-      if (closePct >= 100) {
+      const isLimit = orderType.value === 'limit'
+
+      if (closePct >= 100 && !isLimit) {
+        // Full close via market order
         await closePosition(activePosition.value)
       } else {
-        const closeUsd = parseFloat(closeAmount.value) || 0
-        if (closeUsd <= 0) return
-        const rawSize = closeUsd / currentPrice.value
-        const roundedSize = floorToIncrement(
-          rawSize,
-          activeMarketIncrement.value,
-        )
-        await perpsClient.createOrder({
+        let size: string
+        if (closePct >= 100) {
+          // Full close via limit
+          size = activePosition.value.netQuantity
+        } else {
+          const closeUsd = parseFloat(closeAmount.value) || 0
+          if (closeUsd <= 0) return
+          const rawSize = closeUsd / currentPrice.value
+          size = floorToIncrement(rawSize, activeMarketIncrement.value)
+        }
+
+        const orderParams: Record<string, unknown> = {
           market: fullMarketName.value,
           side: activePosition.value.direction === 'long' ? 'sell' : 'buy',
-          type: 'market',
-          size: roundedSize,
+          type: isLimit ? 'limit' : 'market',
+          size,
           postOnly: false,
-          reduceOnly: true,
-        } as any)
+          reduceOnly: false,
+        }
+        if (isLimit && limitPrice.value) {
+          orderParams.price = limitPrice.value
+          orderParams.timeInForce = 'GTC'
+        }
+        await perpsClient.createOrder(orderParams as any)
       }
       closeAmount.value = ''
       closeSliderValue.value = 0
+      triggerRefresh()
     } catch (e: any) {
       closeError.value =
         e?.message || e?.toString() || 'Failed to close position.'
@@ -313,6 +329,22 @@ export function usePerpsTradeForm() {
 
   function toggleOrderType() {
     orderType.value = orderType.value === 'market' ? 'limit' : 'market'
+  }
+
+  function setOrderType(type: OrderType) {
+    orderType.value = type
+    showOrderTypeDropdown.value = false
+    if (type === 'limit' && currentPrice.value) {
+      limitPrice.value = currentPrice.value.toFixed(2)
+      activeLimitPill.value = null
+    }
+  }
+
+  function setLimitPricePct(pct: number) {
+    if (!currentPrice.value) return
+    activeLimitPill.value = pct
+    const price = currentPrice.value * (1 + pct / 100)
+    limitPrice.value = price.toFixed(2)
   }
 
   // ── Market selector ────────────────────────────────────────
@@ -420,12 +452,16 @@ export function usePerpsTradeForm() {
 
   const takeProfitPct = computed(() => {
     if (takeProfitPrice.value == null || !currentPrice.value) return null
-    return ((takeProfitPrice.value - currentPrice.value) / currentPrice.value) * 100
+    return (
+      ((takeProfitPrice.value - currentPrice.value) / currentPrice.value) * 100
+    )
   })
 
   const stopLossPct = computed(() => {
     if (stopLossPrice.value == null || !currentPrice.value) return null
-    return ((stopLossPrice.value - currentPrice.value) / currentPrice.value) * 100
+    return (
+      ((stopLossPrice.value - currentPrice.value) / currentPrice.value) * 100
+    )
   })
 
   const projectedProfit = computed(() => {
@@ -560,6 +596,9 @@ export function usePerpsTradeForm() {
       }
       if (orderType.value === 'limit') {
         orderParams.timeInForce = 'GTC'
+        if (limitPrice.value) {
+          orderParams.price = limitPrice.value
+        }
       }
       if (takeProfitPrice.value !== null) {
         orderParams.takeProfit = {
@@ -575,6 +614,7 @@ export function usePerpsTradeForm() {
       showConfirmModal.value = false
       inputAmount.value = ''
       sliderValue.value = 0
+      triggerRefresh()
     } catch (error: any) {
       orderError.value =
         error?.message || error?.toString() || 'Order failed. Please try again.'
@@ -719,6 +759,11 @@ export function usePerpsTradeForm() {
     setPercentage,
     onSliderInput,
     toggleOrderType,
+    setOrderType,
+    showOrderTypeDropdown,
+    limitPrice,
+    activeLimitPill,
+    setLimitPricePct,
     // Market selector
     showMarketModal,
     marketSearch,

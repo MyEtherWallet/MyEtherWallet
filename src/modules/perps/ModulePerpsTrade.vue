@@ -141,20 +141,75 @@
                 Short
               </button>
             </div>
-            <div
-              class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark"
-              @click="toggleOrderType"
-            >
-              {{ orderType === 'market' ? 'Market' : 'Limit' }}
-              <img
-                src="@/assets/icons/chevron-down.svg"
-                class="w-5 h-5 opacity-50"
-              />
+            <div class="relative">
+              <div
+                class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark select-none"
+                @click="showOrderTypeDropdown = !showOrderTypeDropdown"
+              >
+                {{ orderType === 'market' ? 'Market' : 'Limit' }}
+                <img
+                  src="@/assets/icons/chevron-down.svg"
+                  class="w-5 h-5 opacity-50 transition-transform"
+                  :class="showOrderTypeDropdown ? 'rotate-180' : ''"
+                />
+              </div>
+              <!-- Dropdown -->
+              <div
+                v-if="showOrderTypeDropdown"
+                class="absolute right-0 top-full mt-2 bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] z-50 w-[260px] p-2 overflow-hidden"
+              >
+                <div
+                  class="flex items-start gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                  :class="
+                    orderType === 'market'
+                      ? 'bg-[#edf2fa]'
+                      : 'hover:bg-[#f8f9fb]'
+                  "
+                  @click="setOrderType('market')"
+                >
+                  <span
+                    v-if="orderType === 'market'"
+                    class="text-textDark mt-0.5 text-s-16"
+                    >✓</span
+                  >
+                  <span v-else class="w-4 mt-0.5" />
+                  <div>
+                    <p class="font-bold text-s-14 text-textDark">
+                      Market Order
+                    </p>
+                    <p class="text-[#58595b] text-s-12 mt-0.5">
+                      Long or Short immediately
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="flex items-start gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                  :class="
+                    orderType === 'limit'
+                      ? 'bg-[#edf2fa]'
+                      : 'hover:bg-[#f8f9fb]'
+                  "
+                  @click="setOrderType('limit')"
+                >
+                  <span
+                    v-if="orderType === 'limit'"
+                    class="text-textDark mt-0.5 text-s-16"
+                    >✓</span
+                  >
+                  <span v-else class="w-4 mt-0.5" />
+                  <div>
+                    <p class="font-bold text-s-14 text-textDark">Limit Order</p>
+                    <p class="text-[#58595b] text-s-12 mt-0.5">
+                      You set the price to enter a Long or Short
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Main Blue Wrapper -->
-          <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
+          <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-4">
             <!-- Position Size -->
             <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
               Position size
@@ -208,6 +263,40 @@
                 </button>
               </div>
             </div>
+
+            <!-- Target Price (Limit Orders) -->
+            <template v-if="orderType === 'limit'">
+              <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
+                Target {{ displaySymbol }} price
+              </p>
+              <div
+                class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
+              >
+                <input
+                  v-model="limitPrice"
+                  type="text"
+                  inputmode="decimal"
+                  placeholder="$0.00"
+                  class="w-full font-bold text-[36px] text-textDark tracking-tight outline-none bg-transparent"
+                  @input="activeLimitPill = null"
+                />
+                <div class="flex justify-between gap-2 mt-3">
+                  <button
+                    v-for="pct in [-10, -5, 0, 5, 10]"
+                    :key="pct"
+                    class="h-8 flex-1 border rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
+                    :class="
+                      activeLimitPill === pct
+                        ? 'border-[#0052ff] text-[#0052ff]'
+                        : 'border-[#e5e7eb] text-textDark hover:border-grey-300'
+                    "
+                    @click="setLimitPricePct(pct)"
+                  >
+                    {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
+                  </button>
+                </div>
+              </div>
+            </template>
 
             <!-- Leverage -->
             <div
@@ -385,15 +474,69 @@
                 Close
               </button>
             </div>
-            <div
-              class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark"
-              @click="toggleOrderType"
-            >
-              {{ orderType === 'market' ? 'Market' : 'Limit' }}
-              <img
-                src="@/assets/icons/chevron-down.svg"
-                class="w-5 h-5 opacity-50"
-              />
+            <div class="relative">
+              <div
+                class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark select-none"
+                @click="showOrderTypeDropdown = !showOrderTypeDropdown"
+              >
+                {{ orderType === 'market' ? 'Market' : 'Limit' }}
+                <img
+                  src="@/assets/icons/chevron-down.svg"
+                  class="w-5 h-5 opacity-50 transition-transform"
+                  :class="showOrderTypeDropdown ? 'rotate-180' : ''"
+                />
+              </div>
+              <div
+                v-if="showOrderTypeDropdown"
+                class="absolute right-0 top-full mt-2 bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] z-50 w-[260px] p-2 overflow-hidden"
+              >
+                <div
+                  class="flex items-start gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                  :class="
+                    orderType === 'market'
+                      ? 'bg-[#edf2fa]'
+                      : 'hover:bg-[#f8f9fb]'
+                  "
+                  @click="setOrderType('market')"
+                >
+                  <span
+                    v-if="orderType === 'market'"
+                    class="text-textDark mt-0.5 text-s-16"
+                    >✓</span
+                  >
+                  <span v-else class="w-4 mt-0.5" />
+                  <div>
+                    <p class="font-bold text-s-14 text-textDark">
+                      Market Order
+                    </p>
+                    <p class="text-[#58595b] text-s-12 mt-0.5">
+                      Long or Short immediately
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="flex items-start gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                  :class="
+                    orderType === 'limit'
+                      ? 'bg-[#edf2fa]'
+                      : 'hover:bg-[#f8f9fb]'
+                  "
+                  @click="setOrderType('limit')"
+                >
+                  <span
+                    v-if="orderType === 'limit'"
+                    class="text-textDark mt-0.5 text-s-16"
+                    >✓</span
+                  >
+                  <span v-else class="w-4 mt-0.5" />
+                  <div>
+                    <p class="font-bold text-s-14 text-textDark">Limit Order</p>
+                    <p class="text-[#58595b] text-s-12 mt-0.5">
+                      You set the price to enter a Long or Short
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -417,7 +560,7 @@
 
           <!-- ADD MODE -->
           <template v-if="manageMode === 'add'">
-            <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
+            <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-4">
               <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
                 Add margin
               </p>
@@ -469,6 +612,40 @@
                   </button>
                 </div>
               </div>
+
+              <!-- Target Price (Limit) -->
+              <template v-if="orderType === 'limit'">
+                <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
+                  Target {{ displaySymbol }} price
+                </p>
+                <div
+                  class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
+                >
+                  <input
+                    v-model="limitPrice"
+                    type="text"
+                    inputmode="decimal"
+                    placeholder="$0.00"
+                    class="w-full font-bold text-[36px] text-textDark tracking-tight outline-none bg-transparent"
+                    @input="activeLimitPill = null"
+                  />
+                  <div class="flex justify-between gap-2 mt-3">
+                    <button
+                      v-for="pct in [-10, -5, 0, 5, 10]"
+                      :key="pct"
+                      class="h-8 flex-1 border rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
+                      :class="
+                        activeLimitPill === pct
+                          ? 'border-[#0052ff] text-[#0052ff]'
+                          : 'border-[#e5e7eb] text-textDark hover:border-grey-300'
+                      "
+                      @click="setLimitPricePct(pct)"
+                    >
+                      {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
+                    </button>
+                  </div>
+                </div>
+              </template>
 
               <!-- Leverage -->
               <div
@@ -648,6 +825,42 @@
               </div>
             </div>
 
+            <!-- Target Price (Limit) for Close -->
+            <template v-if="orderType === 'limit'">
+              <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-4">
+                <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
+                  Target {{ displaySymbol }} price
+                </p>
+                <div
+                  class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb]"
+                >
+                  <input
+                    v-model="limitPrice"
+                    type="text"
+                    inputmode="decimal"
+                    placeholder="$0.00"
+                    class="w-full font-bold text-[36px] text-textDark tracking-tight outline-none bg-transparent"
+                    @input="activeLimitPill = null"
+                  />
+                  <div class="flex justify-between gap-2 mt-3">
+                    <button
+                      v-for="pct in [-10, -5, 0, 5, 10]"
+                      :key="pct"
+                      class="h-8 flex-1 border rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
+                      :class="
+                        activeLimitPill === pct
+                          ? 'border-[#0052ff] text-[#0052ff]'
+                          : 'border-[#e5e7eb] text-textDark hover:border-grey-300'
+                      "
+                      @click="setLimitPricePct(pct)"
+                    >
+                      {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </template>
+
             <!-- Close Error -->
             <div
               v-if="closeError"
@@ -746,6 +959,13 @@
               <span class="text-textDark font-bold">{{
                 formatUsd(currentPrice)
               }}</span>
+            </div>
+            <div
+              v-if="orderType === 'limit'"
+              class="flex justify-between text-s-14"
+            >
+              <span class="text-[#58595b] font-medium">Limit price</span>
+              <span class="text-textDark font-bold">${{ limitPrice }}</span>
             </div>
             <div class="flex justify-between text-s-14">
               <span class="text-[#58595b] font-medium">Margin</span>
@@ -1528,7 +1748,11 @@ const {
   // Slider
   setPercentage,
   onSliderInput,
-  toggleOrderType,
+  setOrderType,
+  showOrderTypeDropdown,
+  limitPrice,
+  activeLimitPill,
+  setLimitPricePct,
   // Market selector
   showMarketModal,
   marketSearch,

@@ -479,7 +479,7 @@ const props = defineProps({
   },
 })
 
-const { token } = usePerpsAuth()
+const { token, refreshKey } = usePerpsAuth()
 const { markets } = usePerpsMarkets()
 const { contracts } = usePerpsContracts()
 const { positions, closePosition } = usePerpsPositions()
@@ -592,6 +592,29 @@ watch(
   { immediate: true },
 )
 
+let ordersPollTimer: ReturnType<typeof setInterval> | null = null
+if (token.value) {
+  ordersPollTimer = setInterval(fetchMarketOrders, 10_000)
+}
+watch(
+  () => token.value,
+  t => {
+    if (ordersPollTimer) {
+      clearInterval(ordersPollTimer)
+      ordersPollTimer = null
+    }
+    if (t) {
+      ordersPollTimer = setInterval(fetchMarketOrders, 10_000)
+    }
+  },
+)
+
+watch(refreshKey, () => {
+  if (token.value) {
+    fetchMarketOrders()
+  }
+})
+
 // Funding countdown timer
 const fundingCountdown = ref('')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
@@ -618,6 +641,7 @@ updateFundingCountdown()
 
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
+  if (ordersPollTimer) clearInterval(ordersPollTimer)
 })
 
 // Tabs
