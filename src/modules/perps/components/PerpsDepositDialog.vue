@@ -47,14 +47,21 @@
             >
               <div class="flex items-center gap-3">
                 <img
+                  v-if="IS_PERPS_LIVE"
                   :src="selectedChain?.icon"
                   alt="Ethereum"
                   class="w-9 h-9 rounded-full"
                 />
+                <div
+                  v-else
+                  class="w-9 h-9 rounded-full bg-[#edf2fa] flex items-center justify-center text-[#0052ff] font-bold text-s-14"
+                >
+                  S
+                </div>
                 <div class="flex-1">
                   <p class="text-[#58595b] text-s-12 font-medium">Network</p>
                   <p class="font-bold text-[18px] text-textDark leading-tight">
-                    Ethereum
+                    {{ IS_PERPS_LIVE ? 'Ethereum' : 'Sandbox (Sepolia)' }}
                   </p>
                 </div>
               </div>
@@ -95,12 +102,20 @@
                     ? `$${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                     : '$0.00'
                 }}</span>
-                <span class="text-[#58595b]"
-                  >Available:
-                  <span class="font-bold text-textDark"
-                    >{{ formattedUsdcBalance }} USDC</span
-                  ></span
-                >
+                <span class="text-[#58595b]">
+                  <template v-if="IS_PERPS_LIVE">
+                    Available:
+                    <span class="font-bold text-textDark"
+                      >{{ formattedUsdcBalance }} USDC</span
+                    >
+                  </template>
+                  <template v-else>
+                    Max:
+                    <span class="font-bold text-textDark"
+                      >{{ SANDBOX_MAX_DEPOSIT }} USDC</span
+                    >
+                  </template>
+                </span>
               </div>
 
               <!-- Percentage Pills -->
@@ -161,7 +176,10 @@
           </button>
 
           <!-- Deposit Address Link -->
-          <div v-if="!txHash && depositAddress" class="text-center mt-5">
+          <div
+            v-if="IS_PERPS_LIVE && !txHash && depositAddress"
+            class="text-center mt-5"
+          >
             <button
               class="text-[#0052ff] text-s-14 font-medium hover:underline inline-flex items-center gap-1"
               @click="showDepositAddress = true"
@@ -183,8 +201,8 @@
           </div>
         </template>
 
-        <!-- ===== PAGE 2: Deposit Address ===== -->
-        <template v-else>
+        <!-- ===== PAGE 2: Deposit Address (live only) ===== -->
+        <template v-else-if="IS_PERPS_LIVE">
           <!-- Header -->
           <div class="flex items-center mb-6">
             <button
@@ -342,7 +360,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
-import { perpsClient, USDC_ADDRESS } from '../configs'
+import { perpsClient, USDC_ADDRESS, IS_PERPS_LIVE } from '../configs'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -355,6 +373,8 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import type { EstimatesRequestBody, QuotesResponse } from '@/mew_api/types'
 import { isSignableWallet } from '@/utils/walletUtils'
+
+const SANDBOX_MAX_DEPOSIT = 1000
 
 const props = defineProps<{
   visible: boolean
@@ -421,6 +441,11 @@ const formattedUsdcBalance = computed(() => {
 })
 
 function setAmountPercent(pct: number) {
+  if (!IS_PERPS_LIVE) {
+    const val = (SANDBOX_MAX_DEPOSIT * pct) / 100
+    amount.value = val.toFixed(2)
+    return
+  }
   if (!usdcBalance.value) return
   const bal = parseFloat(usdcBalance.value.balance)
   const val = (bal * pct) / 100
@@ -428,19 +453,25 @@ function setAmountPercent(pct: number) {
 }
 
 const depositDisabled = computed(() => {
-  return true
-  // const amt = parseFloat(amount.value)
-  // if (!amt || amt <= 0 || sending.value || loading.value) return true
-  // if (!depositAddress.value) return true
-  // if (!usdcBalance.value) return true
-  // if (amt > parseFloat(usdcBalance.value.balance)) return true
-  // return false
+  const amt = parseFloat(amount.value)
+  if (!amt || amt <= 0 || sending.value || loading.value) return true
+  if (!IS_PERPS_LIVE) {
+    return amt > SANDBOX_MAX_DEPOSIT
+  }
+  if (!depositAddress.value) return true
+  if (!usdcBalance.value) return true
+  if (amt > parseFloat(usdcBalance.value.balance)) return true
+  return false
 })
 
 const depositButtonLabel = computed(() => {
   if (loading.value) return 'Loading...'
   if (sending.value) return 'Sending...'
   const amt = parseFloat(amount.value)
+  if (!IS_PERPS_LIVE) {
+    if (amt > SANDBOX_MAX_DEPOSIT) return `Max ${SANDBOX_MAX_DEPOSIT} USDC`
+    return 'Deposit'
+  }
   if (!usdcBalance.value) return 'No USDC balance'
   if (amt > parseFloat(usdcBalance.value.balance)) return 'Insufficient balance'
   return 'Deposit'
@@ -455,7 +486,9 @@ watch(
     showDepositAddress.value = false
     amount.value = ''
     error.value = null
-    await fetchDepositAddress()
+    if (IS_PERPS_LIVE) {
+      await fetchDepositAddress()
+    }
   },
 )
 
@@ -487,7 +520,27 @@ async function fetchDepositAddress() {
   }
 }
 
-async function sendDeposit() {
+async function sendSandboxDeposit() {
+  if (!amount.value || !accountId.value) return
+  sending.value = true
+  error.value = null
+  try {
+    await perpsClient.sandboxDeposit({
+      amount: parseFloat(amount.value).toFixed(2),
+      symbol: 'USDC',
+      deposit_destination: { id: accountId.value, wallet: 'margin' },
+      chain_id: 'eth-sepolia',
+    })
+    txHash.value = 'sandbox'
+    triggerRefresh()
+  } catch (e: any) {
+    error.value = e?.message || e?.toString() || 'Sandbox deposit failed'
+  } finally {
+    sending.value = false
+  }
+}
+
+async function sendLiveDeposit() {
   if (
     !amount.value ||
     !depositAddress.value ||
@@ -564,6 +617,14 @@ async function sendDeposit() {
     }
   } finally {
     sending.value = false
+  }
+}
+
+function sendDeposit() {
+  if (IS_PERPS_LIVE) {
+    sendLiveDeposit()
+  } else {
+    sendSandboxDeposit()
   }
 }
 </script>

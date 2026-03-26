@@ -184,6 +184,15 @@ export class PerpsClient {
     )
   }
 
+  async sandboxDeposit(data: {
+    amount: string
+    symbol: string
+    deposit_destination: { id: string; wallet: string }
+    chain_id: string
+  }): Promise<GenericResponse<{ deposit_address: string; txn_hash: string }>> {
+    return this.authPost('/v1/sandbox_deposit', data)
+  }
+
   async getAccount(): Promise<GenericResponse<AccountInfo>> {
     return this.authGet<GenericResponse<AccountInfo>>('/v1/account')
   }
