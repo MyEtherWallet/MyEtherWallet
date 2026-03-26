@@ -179,6 +179,7 @@ onMounted(() => {
     addProvider(provider)
   })
   initSwapper()
+  console.log('INTERCOME_TEST',configs.INTERCOM_APP_ID)
   if (configs.INTERCOM_APP_ID) {
     Intercom({
       app_id: configs.INTERCOM_APP_ID,
