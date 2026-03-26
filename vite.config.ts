@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import nightwatchPlugin from 'vite-plugin-nightwatch'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
-// import basicSsl from '@vitejs/plugin-basic-ssl'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import wasm from 'vite-plugin-wasm'
 import tailwindcss from '@tailwindcss/vite'
@@ -19,6 +19,7 @@ export default defineConfig({
     vue(),
     viteCommonjs({ skipPreBuild: true }),
     nightwatchPlugin(),
+    basicSsl(),
     vueDevTools(),
     nodePolyfills({
       include: [

@@ -816,7 +816,13 @@
                   <button
                     v-for="pct in [0, 25, 50, 75, 100]"
                     :key="pct"
-                    class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover:text-textDark rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
+                    :disabled="isClosePillDisabled(pct)"
+                    class="h-8 flex-1 border border-[#e5e7eb] rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
+                    :class="
+                      isClosePillDisabled(pct)
+                        ? 'opacity-40 cursor-not-allowed'
+                        : 'hover:border-grey-300 hover:text-textDark'
+                    "
                     @click="setClosePercentage(pct)"
                   >
                     {{ pct }}%
@@ -1712,6 +1718,7 @@ const {
   closeError,
   isClosing,
   showCloseConfirmModal,
+  isClosePillDisabled,
   setClosePercentage,
   onCloseSliderInput,
   confirmAndClosePosition,

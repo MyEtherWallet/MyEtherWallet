@@ -163,11 +163,49 @@ export function usePerpsTradeForm() {
     () => activeMarketIncrement.value * currentPrice.value,
   )
 
+  // ── Max-order-size helpers ─────────────────────────────────
+  const maxBaseSizeForClose = computed(() => {
+    if (!maxOrderSize.value || !activePosition.value) return null
+    const side =
+      activePosition.value.direction === 'long'
+        ? 'maxAskBaseSize'
+        : 'maxBidBaseSize'
+    const leverageScale = leverage.value / 20
+    return (
+      (parseFloat(maxOrderSize.value.percent100[side]) || 0) * leverageScale
+    )
+  })
+
+  const maxCloseSizeUsd = computed(() => {
+    if (maxBaseSizeForClose.value == null || !currentPrice.value) return null
+    return maxBaseSizeForClose.value * currentPrice.value
+  })
+
+  const maxBaseSizeForSubmit = computed(() => {
+    if (!maxOrderSize.value) return null
+    const side = orderSide.value === 'buy' ? 'maxBidBaseSize' : 'maxAskBaseSize'
+    const leverageScale = leverage.value / 20
+    return (
+      (parseFloat(maxOrderSize.value.percent100[side]) || 0) * leverageScale
+    )
+  })
+
+  function isClosePillDisabled(pct: number) {
+    if (pct === 0) return false
+    if (maxCloseSizeUsd.value == null || positionNotionalValue.value <= 0)
+      return false
+    const amt = (positionNotionalValue.value * pct) / 100
+    return amt > maxCloseSizeUsd.value
+  }
+
   // ── Close-position helpers ─────────────────────────────────
   const closeDisabled = computed(() => {
     if (closeSliderValue.value <= 0 || isClosing.value) return true
     const amt = parseFloat(closeAmount.value) || 0
-    return amt > 0 && amt < minOrderAmount.value
+    if (amt > 0 && amt < minOrderAmount.value) return true
+    if (maxCloseSizeUsd.value !== null && amt > maxCloseSizeUsd.value)
+      return true
+    return false
   })
 
   const closeOrderSize = computed(() => {
@@ -181,6 +219,9 @@ export function usePerpsTradeForm() {
     const amt = parseFloat(closeAmount.value) || 0
     if (amt > 0 && amt < minOrderAmount.value) {
       return `Min. amount ${formatUsd(minOrderAmount.value)}`
+    }
+    if (maxCloseSizeUsd.value !== null && amt > maxCloseSizeUsd.value) {
+      return `Exceeds max order size ${formatUsd(maxCloseSizeUsd.value)}`
     }
     if (isClosing.value) return 'Closing...'
     return `Close ${displaySymbol.value} ${activePosition.value?.direction === 'long' ? 'Long' : 'Short'}`
@@ -261,7 +302,13 @@ export function usePerpsTradeForm() {
     if (availableMargin.value * leverage.value < minOrderAmount.value)
       return true
     if (amt > availableMargin.value) return true
-    return positionSizeUsd.value < minOrderAmount.value
+    if (positionSizeUsd.value < minOrderAmount.value) return true
+    if (
+      maxBaseSizeForSubmit.value &&
+      parseFloat(orderSize.value) > maxBaseSizeForSubmit.value
+    )
+      return true
+    return false
   })
 
   const submitButtonLabel = computed(() => {
@@ -274,6 +321,13 @@ export function usePerpsTradeForm() {
     }
     if (amt > availableMargin.value) {
       return `Not enough margin ${formatUsd(amt)}`
+    }
+    if (
+      maxBaseSizeForSubmit.value &&
+      parseFloat(orderSize.value) > maxBaseSizeForSubmit.value
+    ) {
+      const maxUsd = maxBaseSizeForSubmit.value * currentPrice.value
+      return `Exceeds max order size ${formatUsd(maxUsd)}`
     }
     if (activePosition.value) {
       return `Add to ${displaySymbol.value} ${activePosition.value.direction === 'long' ? 'Long' : 'Short'}`
@@ -720,6 +774,7 @@ export function usePerpsTradeForm() {
     closeError,
     isClosing,
     showCloseConfirmModal,
+    isClosePillDisabled,
     setClosePercentage,
     onCloseSliderInput,
     confirmAndClosePosition,
