@@ -8,6 +8,20 @@
       "tx-send-success": "Transaction sent successfully",
       "tx-send-failed": "Transaction failed to send",
       "failed_to_fetch_gas_fees": "Failed to fetch gas fees"
+    },
+    "initiated": {
+      "title": "Send initiated",
+      "completed-note": "Once completed, {symbol} will be sent to",
+      "on-chain": "on {chain}",
+      "status": {
+        "pending": "Pending",
+        "successful": "Successful",
+        "failed": "Failed"
+      },
+      "tx-hash": "Transaction Hash",
+      "track-progress": "Track progress in notifications",
+      "close-window": "You can close this window and",
+      "check-explorer": "or check block explorer"
     }
   },
   "verify-tx": {
