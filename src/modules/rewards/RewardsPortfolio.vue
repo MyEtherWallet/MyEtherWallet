@@ -174,7 +174,7 @@ import { storeToRefs } from 'pinia'
 
 const isClaimed = ref(false)
 const isPending = ref(false)
-const canClaim = ref(false)
+const canClaim = ref(true)
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
