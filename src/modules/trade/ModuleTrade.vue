@@ -12,7 +12,7 @@
           <div>
             <p class="font-bold text-s-28">Trade</p>
             <p class="text-info text-s-12 ml-1">
-              Buy/Sell Ondo Tokenized stock
+              Buy/Sell Ondo Tokenized stocks
             </p>
           </div>
           <app-btn-text
