@@ -28,7 +28,7 @@
           Remember to earn another<br />reward tomorrow!
         </p>
         <div
-          class="mt-3 inline-flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1 w-fit"
+          class="mt-3 inline-flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1 w-fit -mr-5"
         >
           <svg
             v-if="isPending"
@@ -109,24 +109,33 @@
 
     <!-- Remaining Rewards Counter -->
     <div
-      class="flex items-center xs:items-start lg-max:items-center 2xl:items-center justify-end flex-col gap-3 w-full pt-4 2xl:pr-6 3xl:pr-0"
+      class="flex items-center xs:items-start lg-max:items-center 2xl:items-center justify-end flex-col gap-3 w-full pt-4 3xl:pr-0"
       :class="{ 'xl:items-start': isOpenSideMenu }"
     >
       <div
         class="text-s-12 font-light text-info tracking-sp-06 uppercase text-center"
       >
-        {{ remainingRewards }} remaining rewards left today
+        {{ remainingRewards }} rewards left today
       </div>
 
       <!-- Actions -->
       <app-base-button
+        v-if="canClaim"
         class="w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
+        :disabled="!canClaim"
         @click="goToSwap"
         size="medium"
       >
-        Swap Now
+        {{ 'Swap Now' }}
       </app-base-button>
+      <p
+        v-else
+        class="bg-white/60 rounded-full px-7 py-3 font-semibold xs:-ml-4 lg-max:ml-0 text-center"
+        :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
+      >
+        Sorry, try again tomorrow !
+      </p>
       <button
         class="text-s-12 text-[#64748B] text-[10px] font-bold tracking-wider uppercase hoverOpacity cursor-pointer w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
@@ -144,7 +153,7 @@
             alt=""
             width="160"
             height="167"
-            class="w-full h-full object-contain max-h-[180px] md:max-h-[200px] lg-max:max-h-[150px] 2xl:max-h-[168px]"
+            class="w-full h-full object-contain max-h-[180px] md:max-h-[200px] lg-max:max-h-[150px] 2xl:max-h-[156px]"
             :class="[isOpenSideMenu ? 'xl:max-h-[200px]' : 'xl:max-h-[170px]']"
           />
         </div>
@@ -163,21 +172,16 @@ import peggyClaimed from '@/assets/images/peggy/peggy-reward-claimed.png'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
-defineProps({
-  isClaimed: {
-    type: Boolean,
-    default: true,
-  },
-})
+const isClaimed = ref(false)
+const isPending = ref(false)
+const canClaim = ref(false)
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 const { setWalletPanel } = walletMenuStore
 
-const remainingRewards = ref(37)
+const remainingRewards = ref(0)
 const isLearnMoreOpen = ref(false)
-
-const isPending = ref(false)
 
 // Generate confetti positions in the upper-right triangle (right of diagonal from top-left to bottom-right)
 const confettiPositions = Array.from({ length: 20 }, () => {
