@@ -57,6 +57,7 @@
       >
         Learn More
       </button>
+      <rewards-lear-more v-model:is-open="isLearnMoreOpen" />
       <div
         class="hidden xs:block absolute top-5 md:top-2 2xl:-right-4 xs:right-1 sm:right-10 lg-max:right-1 2xl:right-2 3xl:right-2 2xl:pl-4 3xl:pl-[33px]"
       >
@@ -77,25 +78,28 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { ROUTES_MAIN } from '@/router/routeNames'
+import RewardsLearMore from '@/modules/rewards/RewardsLearMore.vue'
 import astronautImg from '@/assets/images/peggy/peggy-usdc.png'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
+const { setWalletPanel } = walletMenuStore
 
-const router = useRouter()
 const remainingRewards = ref(37)
+const isLearnMoreOpen = ref(false)
 
 const goToSwap = () => {
-  router.push({ name: ROUTES_MAIN.SWAP.NAME })
+  setWalletPanel('swap')
+  if (!isOpenSideMenu.value) {
+    walletMenuStore.setIsOpenSideMenu(true)
+  }
 }
 
 const onLearnMore = () => {
-  // TODO: implement learn more action
+  isLearnMoreOpen.value = true
 }
 </script>
 
