@@ -10,12 +10,12 @@
       Learn More
     </button>
   </div>
-  <rewards-lear-more v-model:is-open="isLearnMoreOpen" />
+  <rewards-learn-more v-model:is-open="isLearnMoreOpen" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import RewardsLearMore from '@/modules/rewards/RewardsLearMore.vue'
+import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 
 const isLearnMoreOpen = ref(false)
 

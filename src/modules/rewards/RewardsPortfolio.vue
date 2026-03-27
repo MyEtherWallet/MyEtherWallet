@@ -143,7 +143,7 @@
       >
         Learn More
       </button>
-      <rewards-lear-more v-model:is-open="isLearnMoreOpen" />
+      <rewards-learn-more v-model:is-open="isLearnMoreOpen" />
       <div
         class="hidden xs:block absolute top-5 md:top-2 2xl:-right-4 xs:right-1 sm:right-10 lg-max:right-1 2xl:right-2 3xl:right-2 2xl:pl-4 3xl:pl-[33px]"
       >
@@ -165,7 +165,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import RewardsLearMore from '@/modules/rewards/RewardsLearMore.vue'
+import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import peggyUsdc from '@/assets/images/peggy/peggy-usdc.png'
 import peggyClaimed from '@/assets/images/peggy/peggy-reward-claimed.png'
