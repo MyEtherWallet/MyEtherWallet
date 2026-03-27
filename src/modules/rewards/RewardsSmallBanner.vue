@@ -10,12 +10,16 @@
       Learn More
     </button>
   </div>
-  <rewards-learn-more v-model:is-open="isLearnMoreOpen" />
+  <rewards-learn-more v-model:is-open="isLearnMoreOpen" :location="props.location" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
+
+const props = defineProps<{
+  location: 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
+}>()
 
 const isLearnMoreOpen = ref(false)
 

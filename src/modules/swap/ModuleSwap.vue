@@ -6,7 +6,10 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner :class="blurClass" />
+        <rewards-small-banner
+          :class="blurClass"
+          :location="isSwapView ? 'small-banner-swap' : 'small-banner-bridge'"
+        />
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <p class="font-bold text-s-28">

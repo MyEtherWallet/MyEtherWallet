@@ -75,7 +75,7 @@ export const useToastStore = defineStore('toastStore', () => {
     messages.value.splice(index, 1)
   }
 
-  const showRewardToast = ref(true)
+  const showRewardToast = ref(false)
 
   const toggleRewardToast = (value: boolean) => {
     showRewardToast.value = value

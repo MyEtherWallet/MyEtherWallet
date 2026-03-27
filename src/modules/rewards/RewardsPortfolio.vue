@@ -143,7 +143,7 @@
       >
         Learn More
       </button>
-      <rewards-learn-more v-model:is-open="isLearnMoreOpen" />
+      <rewards-learn-more v-model:is-open="isLearnMoreOpen" location="main-banner" />
       <div
         class="hidden xs:block absolute top-5 md:top-2 2xl:-right-4 xs:right-1 sm:right-10 lg-max:right-1 2xl:right-2 3xl:right-2 2xl:pl-4 3xl:pl-[33px]"
       >
@@ -163,7 +163,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { CheckIcon } from '@heroicons/vue/24/solid'
@@ -171,6 +171,7 @@ import peggyUsdc from '@/assets/images/peggy/peggy-usdc.png'
 import peggyClaimed from '@/assets/images/peggy/peggy-reward-claimed.png'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
+import { analytics, RewardsEvent } from '@/analytics'
 
 const isClaimed = ref(false)
 const isPending = ref(false)
@@ -183,6 +184,10 @@ const { setWalletPanel } = walletMenuStore
 const remainingRewards = ref(0)
 const isLearnMoreOpen = ref(false)
 
+onMounted(() => {
+  analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
+})
+
 // Generate confetti positions in the upper-right triangle (right of diagonal from top-left to bottom-right)
 const confettiPositions = Array.from({ length: 20 }, () => {
   const top = Math.random() * 100
@@ -191,6 +196,9 @@ const confettiPositions = Array.from({ length: 20 }, () => {
 })
 
 const goToSwap = () => {
+  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
+    location: 'main-banner',
+  })
   setWalletPanel('swap')
   if (!isOpenSideMenu.value) {
     walletMenuStore.setIsOpenSideMenu(true)

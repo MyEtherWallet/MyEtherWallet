@@ -125,17 +125,31 @@ import {
   ClockIcon,
 } from '@heroicons/vue/24/solid'
 
+const props = defineProps<{
+  location?: 'main-banner' | 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
+}>()
+
 const isOpenModel = defineModel('isOpen', {
   type: Boolean,
   required: true,
 })
 
+import { watch } from 'vue'
+import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const { setWalletPanel } = walletMenu
+
+watch(isOpenModel, (val) => {
+  if (val) {
+    analytics.trackRewardsEvent(RewardsEvent.LEARN_MORE_CLICKED, {
+      location: props.location,
+    })
+  }
+})
 
 const howItWorks = [
   { icon: 'swap', text: 'Make a swap or trade of $10 or more' },
@@ -156,6 +170,9 @@ const availability = [
 ]
 
 const onEarnReward = () => {
+  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
+    location: 'learn-more-dialog',
+  })
   isOpenModel.value = false
   setWalletPanel('swap')
   if (!isOpenSideMenu.value) {

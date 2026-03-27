@@ -31,6 +31,8 @@ import type {
   TradeEventStatusPayload,
   ClickTokenTradePayload,
   ClickTokenTradeEvent,
+  RewardsEvent,
+  RewardsPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -481,6 +483,13 @@ export class Analytics {
   readonly trackClickTokenTradeEvent = (
     event: (typeof ClickTokenTradeEvent)[keyof typeof ClickTokenTradeEvent],
     payload?: ClickTokenTradePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackRewardsEvent = (
+    event: RewardsEvent,
+    payload?: RewardsPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
