@@ -27,7 +27,7 @@
           >
             Earn $5 USDC on Every Eligible Swap
           </h3>
-          <p class="text-s-14 sm:text-s-16 text-info mt-3 leading-p-160">
+          <p class="text-s-14 text-info mt-3 leading-p-160">
             Complete a swap over $10 and receive $5 USDC — available to the
             first 100 users each day.
           </p>
@@ -166,10 +166,6 @@ const onEarnReward = () => {
 
 <style scoped>
 .rewards-left-bg {
-  background: linear-gradient(
-    to right,
-    rgba(141, 66, 255, 0.4) 0%,
-    #c7d8ff 100%
-  );
+  background: linear-gradient(162deg, #ebdcff 0%, #dde1ff 100%);
 }
 </style>

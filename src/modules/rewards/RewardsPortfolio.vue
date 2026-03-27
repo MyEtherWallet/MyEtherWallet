@@ -105,10 +105,6 @@ const onLearnMore = () => {
 
 <style scoped>
 .rewards-bg {
-  background: linear-gradient(
-    to right,
-    rgba(141, 66, 255, 0.4) 0%,
-    #c7d8ff 100%
-  );
+  background: linear-gradient(135deg, rgba(141, 66, 255, 0.4) 0%, #c7d8ff 100%);
 }
 </style>
