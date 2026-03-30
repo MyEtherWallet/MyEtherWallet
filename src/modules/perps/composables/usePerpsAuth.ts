@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { perpsClient } from '../configs'
+import { BUILDER_CODE, perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance } from '../sdk/types'
@@ -55,6 +55,7 @@ export function usePerpsAuth() {
       const complete = await perpsClient.completeLoginChallenge({
         id: challenge.result.id,
         signature,
+        builderCode: BUILDER_CODE,
       })
       token.value = complete.result.token
       accountId.value = complete.result.accountId

@@ -26,6 +26,7 @@ export interface LoginChallengeResult {
 export interface LoginCompleteChallengeRequest {
   id: string
   signature: string
+  builderCode: string
 }
 
 export interface LoginCompleteChallengeResult {
