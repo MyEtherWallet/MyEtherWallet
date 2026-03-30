@@ -5,6 +5,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 
 const isDevMode = Configs.IS_DEV_MODE
@@ -124,6 +125,7 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         console.error('Error fetching quote:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error fetching quote',
             errorMessage: generalError.value,

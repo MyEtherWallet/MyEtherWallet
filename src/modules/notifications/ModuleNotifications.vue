@@ -87,6 +87,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { ToastType } from '@/types/notification'
 import Configs from '@/configs'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 // Stores
 import { storeToRefs } from 'pinia'
@@ -432,7 +433,7 @@ const startPolling = async (hash: string, chainId: number) => {
       const status = await fusion.getOrderStatus(hash)
       updateOrderStatus(hash, status)
     } catch (e) {
-      captureException(e)
+      captureException(e, SENTRY_MODULE_TAGS.NOTIFICATIONS)
     }
   }
 
@@ -680,7 +681,7 @@ const startStatusPolling = async (
         updateNotificationStatus(hash, type, data)
       }
     } catch (e) {
-      captureException(e)
+      captureException(e, SENTRY_MODULE_TAGS.NOTIFICATIONS)
     }
   }
 

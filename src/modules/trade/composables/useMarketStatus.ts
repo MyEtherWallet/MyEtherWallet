@@ -6,6 +6,7 @@ import {
   TRADING_RESTRICTED_HELP_URL,
 } from '../providers/ondoHelpers'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 
 const isDevMode = Configs.IS_DEV_MODE
@@ -78,6 +79,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
         console.error('Failed to check trading restriction:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error checking trading restriction',
             errorMessage: (e as Error).message || 'Unknown error',
@@ -112,6 +114,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
         console.error('Failed to fetch market status:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error fetching market status',
             errorMessage: (e as Error).message || 'Unknown error',

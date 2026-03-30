@@ -7,6 +7,7 @@ import { ToastType } from '@/types/notification'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
   TradeEvent,
@@ -119,6 +120,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         console.error('Error approving token:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error approving token',
             errorMessage,
@@ -247,6 +249,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         console.error('Error submitting trade order:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error submitting trade order',
             errorMessage,

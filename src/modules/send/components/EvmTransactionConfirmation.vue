@@ -277,6 +277,7 @@ import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
   SendEvent,
@@ -452,6 +453,7 @@ const confirmTransaction = async () => {
           })
 
           captureException(e, {
+            ...SENTRY_MODULE_TAGS.SEND,
             extra: {
               title: 'Error sending transaction: TX Promise',
               errorMessage: errorMessage,
@@ -482,6 +484,7 @@ const confirmTransaction = async () => {
       textSecondary: errorMessage,
     })
     captureException(e, {
+      ...SENTRY_MODULE_TAGS.SEND,
       extra: {
         title: 'Error sending transaction',
         errorMessage,
