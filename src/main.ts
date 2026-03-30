@@ -29,6 +29,7 @@ if (dsn) {
   sentryInit({
     app,
     dsn,
+    release: 'myetherwallet@' + configs.APP_VERSION,
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration(),
