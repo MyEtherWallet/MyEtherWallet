@@ -121,6 +121,7 @@ import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -370,7 +371,7 @@ const loadList = async (page: number = 0) => {
       text: 'Something went wrong',
       textSecondary: e instanceof Error ? e.message : String(e),
     })
-    captureException(e)
+    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
   } finally {
     isLoadingWalletList.value = false
   }

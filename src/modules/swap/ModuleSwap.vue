@@ -291,6 +291,7 @@ import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const isDevMode = configs.IS_DEV_MODE
 const MAX_PRICE_IMPACT = 10
@@ -766,6 +767,7 @@ const proceedWithSwap = async (quoteId: string) => {
           errorMsg: errorMessage,
         })
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
           extra: {
             title: 'SWAP: Error proceeding with swap',
             errorMessage,
@@ -838,6 +840,7 @@ const swapForBtc = async () => {
         errorMsg: generalError.value,
       })
       captureException(e, {
+        ...SENTRY_MODULE_TAGS.SWAP,
         extra: {
           title: 'SWAP: Error fetching BTC gas fees',
           errorMessage: generalError.value,
@@ -884,6 +887,7 @@ const swapForEvm = async () => {
         errorMsg: generalError.value,
       })
       captureException(e, {
+        ...SENTRY_MODULE_TAGS.SWAP,
         extra: {
           title: 'SWAP: Error fetching gas fees',
           errorMessage: generalError.value,
@@ -973,6 +977,7 @@ const fetchQuotes = async () => {
       console.error('Error fetching quotes:', err)
     } else {
       captureException(err, {
+        ...SENTRY_MODULE_TAGS.SWAP,
         extra: {
           title: 'SWAP: fetchQuotes Error',
           errorMessage: err?.message || 'Unknown error',

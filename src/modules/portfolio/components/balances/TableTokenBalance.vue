@@ -680,6 +680,7 @@ import {
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 // Types & Routes
 import type {
@@ -873,6 +874,7 @@ watch(
           )
         } catch (e) {
           captureException(e, {
+            ...SENTRY_MODULE_TAGS.PORTFOLIO,
             extra: {
               title: 'Error fetching custom token balance',
               tokenAddress: token.address,
