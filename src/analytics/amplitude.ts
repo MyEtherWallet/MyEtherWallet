@@ -97,6 +97,9 @@ export class Analytics {
     if (properties.hasBalance !== undefined) {
       identify.set('hasBalance', properties.hasBalance)
     }
+    if (properties.canClaimRewards !== undefined) {
+      identify.set('canClaimRewards', properties.canClaimRewards)
+    }
 
     this.amplitude.identify(identify)
   }

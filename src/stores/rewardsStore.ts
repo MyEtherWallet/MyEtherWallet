@@ -5,6 +5,7 @@ import Configs from '@/configs'
 import { useWalletStore } from './walletStore'
 import { useChainsStore } from './chainsStore'
 import { useToastStore } from './toastStore'
+import { analytics, RewardsEvent } from '@/analytics'
 
 type PoolStatusResponse = components['schemas']['PoolStatusResponse']
 type EligibilityResponse = components['schemas']['EligibilityResponse']
@@ -115,6 +116,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       eligibility.value = await fetchRewards<EligibilityResponse>(
         `/v1/addresses/${walletAddress.value}/rewards/eligibility`,
       )
+      const eligibale = eligibility.value?.eligible
+        ? eligibility.value.eligible
+        : false
+      analytics.setUserProperties({ canClaimRewards: eligibale })
     } catch (error) {
       console.error('Failed to fetch reward eligibility:', error)
     } finally {
@@ -194,6 +199,8 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       await fetchUserRewards()
       if (rewards.value[0] && isRewardFromToday(rewards.value[0])) {
         setEarnedPotentialReward(false)
+        analytics.setUserProperties({ canClaimRewards: false })
+        analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED)
       }
       if (
         rewards.value[0] &&
