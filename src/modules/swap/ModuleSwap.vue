@@ -704,13 +704,17 @@ const proceedWithSwap = async (quoteId: string) => {
       bestOfferSelectionOpen.value = false
       swapInitiatedOpen.value = true
       //check reward elements availability after transaction is sent
+      let canEarnReward: undefined | boolean = undefined
+
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
       if (fromUsdValue > 10) {
-        rewardsStore.checkAvailabilityAfterTransaction()
+        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
+        canEarnReward = canEarn ? true : undefined
       }
       analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {
         ...analyticsPayload,
+        canEarnReward,
         hash: hash,
       })
     }

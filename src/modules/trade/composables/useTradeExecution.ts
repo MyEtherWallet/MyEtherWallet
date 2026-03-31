@@ -182,18 +182,21 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       })
 
       orderHash.value = result.hash
-      analytics.trackTradeEventStatus(TradeEventStatus.INITIATED, {
-        ...analyticsPayload,
-        orderHash: result.hash,
-      })
+
       quoteModalOpen.value = false
       tradeInitiatedOpen.value = true
-
+      let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
       if (fromUsdValue > 10) {
-        rewardsStore.checkAvailabilityAfterTransaction()
+        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
+        canEarnReward = canEarn ? true : undefined
       }
+      analytics.trackTradeEventStatus(TradeEventStatus.INITIATED, {
+        ...analyticsPayload,
+        canEarnReward,
+        orderHash: result.hash,
+      })
 
       // Add order to store
       const toDecimals = toTokenSelected.value.decimals || 18

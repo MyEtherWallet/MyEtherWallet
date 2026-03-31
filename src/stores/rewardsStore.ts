@@ -128,8 +128,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       await fetchEligibility()
       if (eligibility.value?.eligible) {
         earnedPotentialRewardAddresses.value.push(walletAddress.value!)
+        return true
       }
     }
+    return false
   }
 
   /** User Rewards */

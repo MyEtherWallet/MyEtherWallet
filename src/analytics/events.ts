@@ -97,6 +97,7 @@ export type SwapEventStatus =
 
 export type SwapStatusPayload = SwapPayloadShared & {
   hash: string
+  canEarnReward?: boolean
 }
 // =============================================================================
 // SEND
@@ -191,6 +192,7 @@ export type TradeEventStatusPayload = TradePayloadShared & {
   expectedToAmount?: string
   txHash?: string
   percentageDiff?: number
+  canEarnReward?: boolean
 }
 
 // =============================================================================
