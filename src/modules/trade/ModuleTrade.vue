@@ -378,6 +378,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { usePairStore } from '@/stores/pairStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
@@ -402,6 +403,9 @@ import {
 } from '@heroicons/vue/24/solid'
 
 // --- Stores ---
+const pairStore = usePairStore()
+const { tradeFromSymbol, tradeToSymbol } = storeToRefs(pairStore)
+const { setTradeFromSymbol, setTradeToSymbol } = pairStore
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
@@ -674,6 +678,31 @@ const {
 })
 
 // --- Methods ---
+const restoreToToken = () => {
+  if (!toTokens.value.length) return
+  const storedToSymbol = tradeToSymbol.value
+  if (selectedTradeTokenSymbol.value) {
+    const matchingToken = toTokens.value.find(
+      (t: NewTokenInfo) =>
+        t.symbol.toUpperCase() === selectedTradeTokenSymbol.value!.toUpperCase(),
+    )
+    toTokenSelected.value = matchingToken ?? toTokens.value[0] ?? null
+  } else if (storedToSymbol) {
+    const restoredTo = toTokens.value.find(
+      (t: NewTokenInfo) => t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
+    ) ?? null
+    if (restoredTo) {
+      toTokenSelected.value = restoredTo
+    } else {
+      const defaultTo = toTokens.value[0] ?? null
+      toTokenSelected.value = defaultTo
+      setTradeToSymbol(defaultTo?.symbol ?? null)
+    }
+  } else {
+    toTokenSelected.value = toTokens.value[0] ?? null
+  }
+}
+
 const clearValues = () => {
   isPristine.value = true // Reset to pristine state
   fromAmount.value = ''
@@ -799,8 +828,8 @@ watch(
     if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
       fromTokenSelected.value = getDefaultFromToken()
     }
-    if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
-      toTokenSelected.value = toTokens.value[0] || null
+    if (loaded && !toTokenSelected.value) {
+      restoreToToken()
     }
   },
 )
@@ -847,25 +876,21 @@ watch([additionalBuyAssets, () => isWalletConnected.value], () => {
   }
 })
 
-// Watch for selected trade token from store
-watch(
-  [selectedTradeTokenSymbol, toTokens],
-  ([symbol, tokens]) => {
-    if (symbol && tokens.length > 0) {
-      const matchingToken = tokens.find(
-        (t: NewTokenInfo) => t.symbol.toUpperCase() === symbol.toUpperCase(),
-      )
-      if (matchingToken) {
-        // Guard: only set if different to avoid reactive loop
-        const currentAddress = toTokenSelected.value?.address?.toLowerCase()
-        if (matchingToken.address?.toLowerCase() !== currentAddress) {
-          toTokenSelected.value = matchingToken
-        }
-      }
-    }
-  },
-  { immediate: true },
-)
+// Watch for selected trade token symbol being set externally (e.g. navigating from portfolio)
+watch(selectedTradeTokenSymbol, symbol => {
+  if (symbol && toTokens.value.length > 0) {
+    restoreToToken()
+  }
+})
+
+// Sync trade pair to pairStore
+watch(fromTokenSelected, token => {
+  setTradeFromSymbol(token?.symbol ?? null)
+})
+
+watch(toTokenSelected, token => {
+  setTradeToSymbol(token?.symbol ?? null)
+})
 
 // Mark form as not pristine when user starts typing
 watch(
@@ -887,26 +912,28 @@ onBeforeMount(async () => {
 
   // Only set tokens if the network is supported
   if (isCurrentNetworkSupported.value) {
-    // Set initial from token - prefer highest balance additional asset
+    // Restore from token: check pairStore first, then fall back to default
     if (fromTokens.value.length > 0) {
-      fromTokenSelected.value = getDefaultFromToken()
+      const storedFromSymbol = tradeFromSymbol.value
+      if (storedFromSymbol) {
+        const restoredFrom = fromTokens.value.find(
+          (t: NewTokenInfo) =>
+            t.symbol.toUpperCase() === storedFromSymbol.toUpperCase(),
+        ) ?? null
+        if (restoredFrom) {
+          fromTokenSelected.value = restoredFrom
+        } else {
+          const defaultFrom = getDefaultFromToken()
+          fromTokenSelected.value = defaultFrom
+          setTradeFromSymbol(defaultFrom?.symbol ?? null)
+        }
+      } else {
+        fromTokenSelected.value = getDefaultFromToken()
+      }
     }
 
-    // Set initial to token
-    if (selectedTradeTokenSymbol.value && toTokens.value.length > 0) {
-      const matchingToken = toTokens.value.find(
-        (t: NewTokenInfo) =>
-          t.symbol.toUpperCase() ===
-          selectedTradeTokenSymbol.value!.toUpperCase(),
-      )
-      if (matchingToken) {
-        toTokenSelected.value = matchingToken
-      } else if (toTokens.value.length > 0) {
-        toTokenSelected.value = toTokens.value[0] || null
-      }
-    } else if (toTokens.value.length > 0) {
-      toTokenSelected.value = toTokens.value[0] || null
-    }
+    // Restore to token: selectedTradeTokenSymbol takes priority, then pairStore, then first
+    restoreToToken()
   }
 })
 
