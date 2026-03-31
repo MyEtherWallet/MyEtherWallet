@@ -34,7 +34,7 @@
           Remember to earn another<br />reward tomorrow!
         </p>
         <div
-          class="mt-3 inline-flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1 w-fit -mr-5"
+          class="mt-3 inline-flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1 w-fit -mr-5 -ml-2"
         >
           <svg
             v-if="isPending"
@@ -62,6 +62,18 @@
             }}
           </span>
         </div>
+        <a
+          v-if="!isPending && todaysReward?.rewardTransactionHash"
+          :href="`https://www.ethvm.com/tx/${todaysReward.rewardTransactionHash}?t=actions`"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-s-11 text-info mt-0.5 group hover:underline"
+        >
+          See Reward Tx
+          <arrow-long-right-icon
+            class="w-4 h-4 text-info inline-block group-hover:translate-x-1 transition-transform"
+          />
+        </a>
       </div>
       <div class="hidden xs:block shrink-0">
         <img
@@ -188,6 +200,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
