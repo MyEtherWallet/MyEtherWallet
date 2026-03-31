@@ -3,6 +3,7 @@
 # Feat
 
 - Swap and Trade Tokenized stock rewards [#5327](https://github.com/MyEtherWallet/MyEtherWallet/pull/5327)
+- Balance Refresh and Tx has for rewards [#5334](https://github.com/MyEtherWallet/MyEtherWallet/pull/5334)
 
 ### v7.0.1
 
