@@ -306,6 +306,7 @@ import {
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { WalletType } from '@/providers/types'
 
 const { t } = useI18n()
 
@@ -524,7 +525,7 @@ watch(
 const proceedWithSwap = () => {
   isProceeding.value = true
   loadingModel.value = true
-  if(wallet.value?.getWalletType() === 'TREZOR' || wallet.value?.getWalletType() === 'LEDGER') {
+  if(wallet.value?.getWalletType() === WalletType.TREZOR || wallet.value?.getWalletType() === WalletType.LEDGER) {
     showApproveMessage.value = true
   }
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
