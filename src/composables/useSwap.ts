@@ -28,7 +28,7 @@ import {
   isTradingRestricted,
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
-import Sentry from '@sentry/vue'
+import * as Sentry from '@sentry/vue'
 
 // TODO: Import types from @enkryptcom/swap
 
