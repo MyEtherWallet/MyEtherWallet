@@ -31,6 +31,8 @@ import type {
   TradeEventStatusPayload,
   ClickTokenTradePayload,
   ClickTokenTradeEvent,
+  RewardsEvent,
+  RewardsPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -94,6 +96,9 @@ export class Analytics {
     }
     if (properties.hasBalance !== undefined) {
       identify.set('hasBalance', properties.hasBalance)
+    }
+    if (properties.canClaimRewards !== undefined) {
+      identify.set('canClaimRewards', properties.canClaimRewards)
     }
 
     this.amplitude.identify(identify)
@@ -481,6 +486,13 @@ export class Analytics {
   readonly trackClickTokenTradeEvent = (
     event: (typeof ClickTokenTradeEvent)[keyof typeof ClickTokenTradeEvent],
     payload?: ClickTokenTradePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackRewardsEvent = (
+    event: RewardsEvent,
+    payload?: RewardsPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

@@ -1,41 +1,37 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col gap-y-5">
     <div
       v-if="isWalletConnected"
       :class="[
-        isOpenSideMenu
-          ? 'lg-max:grid-cols-[300px_1fr] 2xl:grid-cols-[360px_1fr_1fr]'
-          : 'lg-max:grid-cols-[300px_1fr_1fr] 2xl:grid-cols-[360px_1fr_1fr]',
-        'grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch basis-full',
+        'grid grid-cols-1 md:grid-cols-[300px_1fr] lg-max:grid-cols-[360px_1fr] gap-5 items-stretch basis-full',
       ]"
     >
-      <app-wallet-card class="h-full" />
+      <app-wallet-card />
+      <portfolio-history v-if="isLoadingBalances || hasBalances" />
 
-      <portfolio-allocation
-        v-if="isLoadingBalances || hasBalances"
-        class="lg-max:order-2 h-full"
-      />
-      <portfolio-history
-        v-if="isLoadingBalances || hasBalances"
+      <no-balance v-else />
+    </div>
+    <div
+      :class="[
+        isOpenSideMenu ? 'xl:grid-cols-2' : 'xl:grid-cols-3',
+        'grid grid-cols-1 lg-max:grid-cols-3  2xl:grid-cols-3 gap-5 lg:mt-3',
+      ]"
+      v-if="isLoadingBalances || hasBalances"
+    >
+      <portfolio-overview />
+
+      <portfolio-allocation class="h-full" />
+
+      <rewards-portfolio
+        class="h-full"
         :class="[
-          isOpenSideMenu
-            ? '2xl:col-span-1 lg-max:col-span-2'
-            : 'lg-max:col-span-1',
-          'col-span-1 md:col-span-2  lg-max:order-2 h-full',
-        ]"
-      />
-      <no-balance
-        v-if="!isLoadingBalances && !hasBalances"
-        :class="[
-          isOpenSideMenu ? 'lg-max:col-span-1' : 'lg-max:col-span-2',
-          ' md:col-span-1  2xl:col-span-2 ',
+          { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
+          'col-span-1',
         ]"
       />
     </div>
-    <div
-      v-if="isWalletConnected"
-      class="flex flex-col lg-max:flex-row gap-4 mt-7"
-    >
+
+    <div v-if="isWalletConnected" class="flex flex-col lg-max:flex-row gap-5">
       <portfolio-gains-and-losses type="all" />
       <portfolio-gains-and-losses type="stock" />
     </div>
@@ -48,11 +44,13 @@
 </template>
 <script setup lang="ts">
 import AppWalletCard from '@/components/AppWalletCard.vue'
+import PortfolioOverview from '@/modules/portfolio/PortfolioOverview.vue'
 import PortfolioHistory from '@/modules/portfolio/PortfolioHistory.vue'
 import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'
 import PortfolioGainsAndLosses from '@/modules/portfolio/PortfolioGainsAndLosses.vue'
 import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import ConnectWallet from '@/modules/portfolio/components/ConnectWallet.vue'
+import RewardsPortfolio from '@/modules/rewards/RewardsPortfolio.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import NoBalance from '@/modules/portfolio/components/NoBalance.vue'

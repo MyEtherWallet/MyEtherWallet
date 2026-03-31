@@ -45,10 +45,10 @@
             ref="targetDialog"
           >
             <div
-              class="z-10 pb-2 flex flex-none relative"
+              class="z-10 flex flex-none relative"
               :class="[
                 {
-                  'justify-between': title || $slots.title,
+                  'justify-between pb-2': title || $slots.title,
                   'justify-end': !title && !$slots.title,
                 },
                 hasContentGutter ? 'px-4 xs:px-6 sm:px-8' : '',
