@@ -251,6 +251,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import {
   analytics,
   ConnectWalletEvent,
@@ -302,6 +303,7 @@ const chainsStore = useChainsStore()
 const inputStore = useInputStore()
 const toastStore = useToastStore()
 const accessStore = useAccessStore()
+const rewardsStore = useRewardsStore()
 const { t } = useI18n()
 
 // --- Refs from Stores ---
@@ -701,6 +703,12 @@ const proceedWithSwap = async (quoteId: string) => {
       txHash.value = hash as HexPrefixedString
       bestOfferSelectionOpen.value = false
       swapInitiatedOpen.value = true
+      //check reward elements availability after transaction is sent
+      const fromUsdValue =
+        parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
+      if (fromUsdValue > 10) {
+        rewardsStore.checkAvailabilityAfterTransaction()
+      }
       analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {
         ...analyticsPayload,
         hash: hash,

@@ -28,8 +28,8 @@
             Earn $5 USDC on Every Eligible Swap
           </h3>
           <p class="text-s-14 text-info mt-3 leading-p-160">
-            Complete a swap over $10 and receive $5 USDC — available to the
-            first 100 users each day.
+            Complete a swap or trade on Ethereum over $10 and receive $5 USDC —
+            available to the first 100 users each day.
           </p>
 
           <!-- How It Works -->
@@ -103,7 +103,11 @@
           </div>
 
           <!-- CTA Button -->
-          <app-base-button class="w-full mt-6" @click="onEarnReward">
+          <app-base-button
+            v-if="canEarn"
+            class="w-full mt-6"
+            @click="onEarnReward"
+          >
             Earn Your Reward
           </app-base-button>
         </div>
@@ -126,7 +130,11 @@ import {
 } from '@heroicons/vue/24/solid'
 
 const props = defineProps<{
-  location?: 'main-banner' | 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
+  location?:
+    | 'main-banner'
+    | 'small-banner-swap'
+    | 'small-banner-trade'
+    | 'small-banner-bridge'
 }>()
 
 const isOpenModel = defineModel('isOpen', {
@@ -134,16 +142,32 @@ const isOpenModel = defineModel('isOpen', {
   required: true,
 })
 
-import { watch } from 'vue'
+import { watch, computed } from 'vue'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useToastStore } from '@/stores/toastStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 const { setWalletPanel } = walletMenu
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+const toastStore = useToastStore()
+const chainsStore = useChainsStore()
+const { isBitcoinChain } = storeToRefs(chainsStore)
+const walletStore = useWalletStore()
+const { walletName } = storeToRefs(walletStore)
 
-watch(isOpenModel, (val) => {
+const canEarn = computed(() => {
+  if (isBitcoinChain.value && walletName.value !== 'Enkrypt') return false
+  return true
+})
+
+watch(isOpenModel, val => {
   if (val) {
     analytics.trackRewardsEvent(RewardsEvent.LEARN_MORE_CLICKED, {
       location: props.location,
@@ -152,7 +176,10 @@ watch(isOpenModel, (val) => {
 })
 
 const howItWorks = [
-  { icon: 'swap', text: 'Make a swap or trade of $10 or more' },
+  {
+    icon: 'swap',
+    text: 'Make a swap or trade of $10 or more on Ethereum network',
+  },
   {
     icon: 'currency-dollar',
     text: "If you're within the first 100, you earn $5 USDC",
@@ -174,6 +201,13 @@ const onEarnReward = () => {
     location: 'learn-more-dialog',
   })
   isOpenModel.value = false
+  const ETH_NETWORK_NAME = 'ETHEREUM'
+  if (selectedNetwork.value !== ETH_NETWORK_NAME) {
+    globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
+    toastStore.addToastMessage({
+      text: 'Switched app network to Ethereum',
+    })
+  }
   setWalletPanel('swap')
   if (!isOpenSideMenu.value) {
     walletMenu.setIsOpenSideMenu(true)

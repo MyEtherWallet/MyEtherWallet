@@ -1,7 +1,13 @@
 <template>
   <!-- Claimed State -->
   <div
-    v-if="isClaimed"
+    v-if="!hadInitialLoad"
+    class="rewards-bg rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
+  >
+    <p class="text-center text-s-14 text-info">Loading Rewards</p>
+  </div>
+  <div
+    v-else-if="isClaimed"
     class="rewards-bg rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px]"
   >
     <!-- Confetti -->
@@ -83,7 +89,7 @@
     <!-- Top section: Text left, Astronaut right -->
     <div class="relative xs:w-full flex items-start justify-between">
       <div
-        class="xs:min-w-[122px] mt-[10px] xs:flex-none xs:w-[280px] md:w-auto 2xl:w-[160px] 3xl:w-[194px]"
+        class="xs:min-w-[122px] mt-[10px] xs:flex-none xs:w-[280px] md:w-[390px] lg:w-auto 2xl:w-[160px] 3xl:w-[194px]"
       >
         <h3
           class="text-s-24 md:text-s-32 lg-max:text-s-28 2xl:text-s-28 font-bold leading-p-100 mb-3 text-center xs:text-start"
@@ -101,7 +107,8 @@
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
           :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[164px]']"
         >
-          First 100 swaps or trades each day <br class="hidden 2xl:flex" />
+          First 100 swaps or trades on Ethereum each day
+          <br class="hidden 2xl:flex" />
           over $10 get $5 USDC
         </p>
       </div>
@@ -115,22 +122,23 @@
       <div
         class="text-s-12 font-light text-info tracking-sp-06 uppercase text-center"
       >
-        {{ remainingRewards }} rewards left today
+        {{ rewardsLeft }} rewards left today
       </div>
 
       <!-- Actions -->
       <app-base-button
-        v-if="canClaim"
+        v-if="canClaimReward && canSwap"
         class="w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
-        :disabled="!canClaim"
+        :disabled="!canClaimReward"
+        :is-loading="earnedPotentialReward"
         @click="goToSwap"
         size="medium"
       >
         {{ 'Swap Now' }}
       </app-base-button>
       <p
-        v-else
+        v-else-if="!canClaimReward && canSwap"
         class="bg-white/60 rounded-full px-7 py-3 font-semibold xs:-ml-4 lg-max:ml-0 text-center"
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
       >
@@ -138,12 +146,15 @@
       </p>
       <button
         class="text-s-12 text-[#64748B] text-[10px] font-bold tracking-wider uppercase hoverOpacity cursor-pointer w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
-        :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
+        :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu, 'pt-2': !canSwap }"
         @click="onLearnMore"
       >
         Learn More
       </button>
-      <rewards-learn-more v-model:is-open="isLearnMoreOpen" location="main-banner" />
+      <rewards-learn-more
+        v-model:is-open="isLearnMoreOpen"
+        location="main-banner"
+      />
       <div
         class="hidden xs:block absolute top-5 md:top-2 2xl:-right-4 xs:right-1 sm:right-10 lg-max:right-1 2xl:right-2 3xl:right-2 2xl:pl-4 3xl:pl-[33px]"
       >
@@ -163,29 +174,63 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import peggyUsdc from '@/assets/images/peggy/peggy-usdc.png'
 import peggyClaimed from '@/assets/images/peggy/peggy-reward-claimed.png'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import { analytics, RewardsEvent } from '@/analytics'
-
-const isClaimed = ref(false)
-const isPending = ref(false)
-const canClaim = ref(true)
+import { useToastStore } from '@/stores/toastStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletStore } from '@/stores/walletStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 const { setWalletPanel } = walletMenuStore
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+const toastStore = useToastStore()
+const chainsStore = useChainsStore()
+const { isBitcoinChain } = storeToRefs(chainsStore)
+const walletStore = useWalletStore()
+const { walletName } = storeToRefs(walletStore)
+const rewardsStore = useRewardsStore()
+const {
+  rewardsLeft,
+  canClaimReward,
+  hadInitialLoad,
+  earnedPotentialReward,
+  todaysReward,
+  eligibility,
+} = storeToRefs(rewardsStore)
 
-const remainingRewards = ref(0)
 const isLearnMoreOpen = ref(false)
 
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
+})
+
+const isClaimed = computed(() => {
+  if (todaysReward.value !== null) {
+    return true
+  } else if (eligibility.value && !eligibility.value.eligible) {
+    const reasons = eligibility.value.reasons
+    const userRewarded = reasons.filter(
+      reason => reason.type === 'USER_RECENTLY_REWARDED',
+    )
+
+    return userRewarded.length > 0
+  }
+  return false
+})
+
+const isPending = computed(() => {
+  return isClaimed.value && todaysReward.value?.rewardStatus !== 'SUCCESS'
 })
 
 // Generate confetti positions in the upper-right triangle (right of diagonal from top-left to bottom-right)
@@ -195,10 +240,22 @@ const confettiPositions = Array.from({ length: 20 }, () => {
   return { top, left }
 })
 
+const canSwap = computed(() => {
+  if (isBitcoinChain.value && walletName.value !== 'Enkrypt') return false
+  return true
+})
+
 const goToSwap = () => {
   analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
     location: 'main-banner',
   })
+  const ETH_NETWORK_NAME = 'ETHEREUM'
+  if (selectedNetwork.value !== ETH_NETWORK_NAME) {
+    globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
+    toastStore.addToastMessage({
+      text: 'Switched app network to Ethereum',
+    })
+  }
   setWalletPanel('swap')
   if (!isOpenSideMenu.value) {
     walletMenuStore.setIsOpenSideMenu(true)

@@ -21,7 +21,8 @@
     "format": "prettier --write src/",
     "prepare": "husky",
     "zip": "cd dist; zip -r release.zip *;",
-    "update-api-schema": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema.yaml -o src/mew_api/schema.ts"
+    "update-api-schema": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema.yaml -o src/mew_api/schema.ts",
+    "update-rewards-schema": "npx openapi-typescript https://mew-rewards-prod.ethvm.dev/schema.yaml -o src/mew_api/schemaRewards.ts"
   },
   "dependencies": {
     "@1inch/fusion-sdk": "^2.4.5",

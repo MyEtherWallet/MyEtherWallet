@@ -15,6 +15,7 @@ import {
   type TradePayloadShared,
 } from '@/analytics'
 import Configs from '@/configs'
+import { useRewardsStore } from '@/stores/rewardsStore'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -49,6 +50,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
 
   const toastStore = useToastStore()
   const tradeOrdersStore = useTradeOrdersStore()
+  const rewardsStore = useRewardsStore()
 
   const isApproving = ref(false)
   const txProceeding = ref(false)
@@ -186,6 +188,12 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       })
       quoteModalOpen.value = false
       tradeInitiatedOpen.value = true
+
+      const fromUsdValue =
+        parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
+      if (fromUsdValue > 10) {
+        rewardsStore.checkAvailabilityAfterTransaction()
+      }
 
       // Add order to store
       const toDecimals = toTokenSelected.value.decimals || 18
