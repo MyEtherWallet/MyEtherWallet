@@ -1,6 +1,6 @@
 # Feat
 
-- fix error when watchlist tokens are cleared [#5335](https://github.com/MyEtherWallet/MyEtherWallet/pull/5335)
+- fix error when watchlist tokens are cleared [#5336](https://github.com/MyEtherWallet/MyEtherWallet/pull/5336)
 
 ### v7.0.2
 
