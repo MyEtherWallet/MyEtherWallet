@@ -1,6 +1,6 @@
 # Feat
 
-- Add blinking info for approval on ledger or trezor []()
+- Add blinking info for approval on ledger or trezor [#5331](https://github.com/MyEtherWallet/MyEtherWallet/pull/5331)
 
 
 ### v7.0.1
