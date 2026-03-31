@@ -319,11 +319,6 @@ const getTxRequestBody = ():
         tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
       if (isSendingContractToken) {
         const web3Contract = new Contract(abi, tokenSelected.value.contract)
-        console.log('Encoding data for contract token transfer', {
-          to: toAddress.value,
-          amount: amount.value.toString(),
-          decimals: tokenSelected.value.decimals,
-        })
         data.value = web3Contract.methods
           .transfer(
             toAddress.value,
@@ -473,7 +468,7 @@ const getGasFeeQuotes = async () => {
           'ERC20InsufficientBalance',
         )
         const tokenHasBalance =
-          BigInt(tokenSelected.value?.balance || '0') > BigInt(0)
+          BigInt(balanceWei.value || '0') > BigInt(0)
         if (isInsufficientFundsError) {
           gasFeeError.value = 'NOT_ENOUGH_BALANCE'
         } else if (isERC20InsufficientBalance && tokenHasBalance) {

@@ -1,6 +1,6 @@
 ### Fix
 
-- handle shit token send error []()
+- handle shit token send error [#5330](https://github.com/MyEtherWallet/MyEtherWallet/pull/5330)
 
 
 ### v7.0.1
