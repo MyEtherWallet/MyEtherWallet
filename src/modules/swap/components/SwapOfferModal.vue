@@ -6,6 +6,16 @@
   >
     <template #content>
       <div class="mx-4 mb-2">
+        <expand-transition>
+          <div v-if="showApproveMessage">
+            <div
+              class="flex items-center justify-center gap-5 my-4 font-bold text-primary animate-pulse"
+              key="confirmation-approve-message"
+            >
+              Approve Tx on your device
+            </div>
+          </div>
+        </expand-transition>
         <div
           class="p-4 flex flex-col border border-solid border-grey-10 rounded-20 mb-2"
         >
@@ -269,6 +279,7 @@
 </template>
 
 <script lang="ts" setup>
+import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
@@ -293,6 +304,8 @@ import {
   formatFloatingPointValue,
 } from '@/utils/numberFormatHelper'
 import { analytics, SwapEvent, type SwapPayloadShared } from '@/analytics'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
 
@@ -313,6 +326,9 @@ enum DisplayProviderName {
   rango = 'Rango',
   jupiter = 'Jupiter',
 }
+
+const walletStore = useWalletStore()
+const { wallet } = storeToRefs(walletStore)
 
 const model = defineModel('swapOfferOpen', {
   type: Boolean,
@@ -360,6 +376,7 @@ const props = defineProps({
   },
 })
 
+const showApproveMessage = ref(false)
 const emits = defineEmits(['update:proceedWithSwap', 'update:declineSwap'])
 
 const providerName = computed(() => {
@@ -507,6 +524,9 @@ watch(
 const proceedWithSwap = () => {
   isProceeding.value = true
   loadingModel.value = true
+  if(wallet.value?.getWalletType() === 'TREZOR' || wallet.value?.getWalletType() === 'LEDGER') {
+    showApproveMessage.value = true
+  }
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')
 }
 const declineSwap = () => {

@@ -1,3 +1,8 @@
+# Feat
+
+- Add blinking info for approval on ledger or trezor []()
+
+
 ### v7.0.1
 
 # Feat
