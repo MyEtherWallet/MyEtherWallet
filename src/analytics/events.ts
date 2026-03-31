@@ -97,6 +97,7 @@ export type SwapEventStatus =
 
 export type SwapStatusPayload = SwapPayloadShared & {
   hash: string
+  canEarnReward?: boolean
 }
 // =============================================================================
 // SEND
@@ -191,6 +192,7 @@ export type TradeEventStatusPayload = TradePayloadShared & {
   expectedToAmount?: string
   txHash?: string
   percentageDiff?: number
+  canEarnReward?: boolean
 }
 
 // =============================================================================
@@ -262,3 +264,25 @@ export type ClickMainMenuPayload = {
 // =============================================================================
 
 export const SelectNewAddressEvent = 'Selected_New_Address' as const
+
+// =============================================================================
+// REWARDS
+// =============================================================================
+
+export const RewardsEvent = {
+  MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
+  LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
+  CLICK_SWAP: 'Rewards_Clicked_Swap',
+  REWARD_EARNED: 'Rewards_Earned',
+} as const
+
+export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
+
+export type RewardsPayload = {
+  location?:
+    | 'main-banner'
+    | 'small-banner-swap'
+    | 'small-banner-trade'
+    | 'small-banner-bridge'
+    | 'learn-more-dialog'
+}

@@ -1,7 +1,9 @@
 <template>
   <div class="w-full" v-if="isWalletConnected">
-    <div class="flex flex-wrap items-center w-full justify-between mb-3 px-1">
-      <h2 class="text-s-14 xs:text-s-18 font-bold max-w-[160px] xs:max-w-none">
+    <div class="flex flex-wrap items-center w-full justify-between mb-1 px-1">
+      <h2
+        class="text-s-14 xs:text-s-18 font-bold max-w-[160px] xs:max-w-none pl-2"
+      >
         {{ title }}
       </h2>
       <div class="flex items-center justify-center gap-1 order-2 ml-auto">
@@ -65,7 +67,7 @@
       </div>
       <div v-else class="flex flex-col gap-3 w-full min-h-[181px]">
         <div
-          v-for="token in 3"
+          v-for="token in 4"
           :key="`loading-gains-and-losses-${token}`"
           class="bg-grey-10 animate-pulse flex items-end justify-between rounded-16 w-full h-[51px]"
         ></div>
@@ -196,5 +198,5 @@ const topTokens = computed<TokenGainOrLoss[]>(() => {
 })
 
 const { currentPage, paginatedArray, nextPage, prevPage, totalPages } =
-  usePaginate<TokenGainOrLoss>(topTokens, 3)
+  usePaginate<TokenGainOrLoss>(topTokens, 4)
 </script>

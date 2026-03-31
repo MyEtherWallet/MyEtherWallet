@@ -37,6 +37,7 @@ import { useStocksStore } from '@/stores/stocksStore'
 import { useSwap } from '@/composables/useSwap'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { analytics } from '@/analytics'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import Intercom from '@intercom/messenger-js-sdk'
 
 const dialogStore = useDialogStore()
@@ -170,16 +171,19 @@ const showFeedbackToast = () => {
     })
   }, 4000)
 }
+const rewardsStore = useRewardsStore()
+
 onMounted(() => {
   fetchPurchaseInfo()
   fetchStocksAddresses()
+  rewardsStore.fetchAll()
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
     const customEvent = event as CustomEvent
     const provider = customEvent.detail
     addProvider(provider)
   })
   initSwapper()
-  console.log('INTERCOME_TEST',configs.INTERCOM_APP_ID)
+  console.log('INTERCOME_TEST', configs.INTERCOM_APP_ID)
   if (configs.INTERCOM_APP_ID) {
     Intercom({
       app_id: configs.INTERCOM_APP_ID,

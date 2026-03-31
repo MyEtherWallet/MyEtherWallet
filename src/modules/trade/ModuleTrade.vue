@@ -6,11 +6,13 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
+        <rewards-small-banner :class="blurClass" location="small-banner-trade" />
+
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
             <p class="font-bold text-s-28">Trade</p>
             <p class="text-info text-s-12 ml-1">
-              Buy/Sell Ondo Tokenized stock
+              Buy/Sell Ondo Tokenized stocks
             </p>
           </div>
           <app-btn-text
@@ -279,7 +281,11 @@
         </app-base-button>
         <div v-else>
           <transition name="fade" mode="out-in">
-            <app-no-chain-balance v-if="!hasChainBalance" source="trade" class="mb-5 -mt-1" />
+            <app-no-chain-balance
+              v-if="!hasChainBalance"
+              source="trade"
+              class="mb-5 -mt-1"
+            />
             <app-base-button
               v-else
               class="w-full"
@@ -357,6 +363,7 @@ import { parseUnits, formatUnits } from 'viem'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
