@@ -1,8 +1,14 @@
-### v7.0.1
+### v7.0.2
 
 # Feat
 
 - Swap and Trade Tokenized stock rewards [#5327](https://github.com/MyEtherWallet/MyEtherWallet/pull/5327)
+
+### v7.0.1
+
+# Feat
+
+- added intercom support [#5324](https://github.com/MyEtherWallet/MyEtherWallet/pull/5324)
 
 ---
 

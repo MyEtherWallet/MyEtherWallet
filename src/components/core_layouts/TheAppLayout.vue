@@ -104,7 +104,7 @@ const CURR_PROJECT = 'MEW_WEBAPP'
  * App Version
  */
 
-const packageVersion = '7.0.1'
+const packageVersion = '7.0.2'
 
 const handleSetConsent = (consent: boolean) => {
   analyticsStore.setTrackingConsent(consent)
