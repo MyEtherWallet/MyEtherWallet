@@ -28,12 +28,30 @@ const fetchRewards = async <T>(url: string): Promise<T> => {
 }
 
 export const useRewardsStore = defineStore('rewardsStore', () => {
-  const earnedPotentialReward = ref(false) // to track if user has earned a potential reward in the current eligibility period. This is needed to show the "Earned Potential Reward" badge immediately after user becomes eligible, without waiting for the next eligibility fetch.
-
   const walletStore = useWalletStore()
   const { walletAddress } = storeToRefs(walletStore)
   const chainsStore = useChainsStore()
   const { isBitcoinChain } = storeToRefs(chainsStore)
+  const earnedPotentialRewardAddresses = ref<string[]>([]) // to track if user has earned a potential reward in the current eligibility period. This is needed to show the "Earned Potential Reward" badge immediately after user becomes eligible, without waiting for the next eligibility fetch.
+
+  const earnedPotentialReward = computed(() => {
+    if (isBitcoinChain.value) return false
+    if (!walletAddress.value) return false
+    return earnedPotentialRewardAddresses.value.includes(walletAddress.value)
+  })
+
+  const setEarnedPotentialReward = (earned: boolean) => {
+    if (earned && walletAddress.value) {
+      if (!earnedPotentialRewardAddresses.value.includes(walletAddress.value)) {
+        earnedPotentialRewardAddresses.value.push(walletAddress.value)
+      }
+    } else {
+      earnedPotentialRewardAddresses.value =
+        earnedPotentialRewardAddresses.value.filter(
+          a => a !== walletAddress.value,
+        )
+    }
+  }
 
   const pool = ref<PoolStatusResponse | null>(null)
   const eligibility = ref<EligibilityResponse | null>(null)
@@ -109,7 +127,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     if (eligibility.value === null || eligibility.value.eligible) {
       await fetchEligibility()
       if (eligibility.value?.eligible) {
-        earnedPotentialReward.value = true
+        earnedPotentialRewardAddresses.value.push(walletAddress.value!)
       }
     }
   }
@@ -172,6 +190,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     stopRewardsPoll()
     rewardsPollInterval = setInterval(async () => {
       await fetchUserRewards()
+      if (rewards.value[0] && isRewardFromToday(rewards.value[0])) {
+        setEarnedPotentialReward(false)
+      }
       if (
         rewards.value[0] &&
         isRewardFromToday(rewards.value[0]) &&
@@ -245,8 +266,11 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     isLoadingRewards,
     fetchUserRewards,
     fetchAll,
-    // Other
+    // Earned Potential Reward badge
+    earnedPotentialRewardAddresses,
     earnedPotentialReward,
+    setEarnedPotentialReward,
+    // Other
     canClaimReward,
     isLoading,
     hadInitialLoad,

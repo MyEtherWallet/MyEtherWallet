@@ -27,8 +27,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8(@siddomains/sid-contracts@0.1.31(@nomiclabs/hardhat-web3@2.1.0(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)))(bufferutil@4.1.0)(ethers@5.8.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(web3-core-helpers@1.10.4)(web3-core-promievent@1.10.4)(web3-eth-abi@4.4.1(typescript@5.9.3)(zod@3.25.76))(web3-utils@4.3.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@enkryptcom/swap':
-        specifier: ^0.0.15
-        version: 0.0.15(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
+        specifier: ^0.0.16
+        version: 0.0.16(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@enkryptcom/types':
         specifier: ^0.0.5
         version: 0.0.5
@@ -1672,8 +1672,8 @@ packages:
     resolution: {integrity: sha512-pWzSxfmcgqdZQWyfWdowQ2MS9YFNOgW5EVpnAQjGYyKZIjvBLMil1h54n1v67n5qXPA5qr8IjEauffLaUlhkrw==}
     engines: {node: '>=14.15.0'}
 
-  '@enkryptcom/swap@0.0.15':
-    resolution: {integrity: sha512-hElmyk5ww3n2pWoKo5J+skTkSadJWdDvTP7nHH+G/sMjFGpOe0PNRdEWnOBEAnuYDEH8g+1ZuKUZGmjfm0Sn9w==}
+  '@enkryptcom/swap@0.0.16':
+    resolution: {integrity: sha512-jTHoqF/TPxCPFvmemDhjY3fABNtugvUAZzcas/JeSpF1ISqQ3yVyIB07z5OZwHoWXTvb1Dl6Cr4hEsckI6p1cA==}
     engines: {node: '>=14.15.0'}
 
   '@enkryptcom/types@0.0.4':
@@ -6119,11 +6119,12 @@ packages:
   '@xmldom/xmldom@0.7.13':
     resolution: {integrity: sha512-lm2GW5PkosIzccsaZIz7tp8cPADSIlIHWDFTR1N0SzfinhhYgeIQjFMz4rYzanCScr3DqQLeomUDArp6MWKm+g==}
     engines: {node: '>=10.0.0'}
-    deprecated: this version is no longer supported, please update to at least 0.8.*
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xmldom/xmldom@0.8.11':
     resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xrplf/isomorphic@1.0.1':
     resolution: {integrity: sha512-0bIpgx8PDjYdrLFeC3csF305QQ1L7sxaWnL5y71mCvhenZzJgku9QsA+9QCXBC1eNYtxWO/xR91zrXJy2T/ixg==}
@@ -18246,7 +18247,7 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@enkryptcom/swap@0.0.15(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
+  '@enkryptcom/swap@0.0.16(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@1inch/fusion-sdk': 2.4.6(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@1inch/limit-order-sdk': 5.2.3(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)

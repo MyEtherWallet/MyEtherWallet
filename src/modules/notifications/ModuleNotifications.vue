@@ -386,7 +386,7 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     stopPolling(hash)
     const rewardsStore = useRewardsStore()
     if (rewardsStore.earnedPotentialReward) {
-      rewardsStore.earnedPotentialReward = false
+      rewardsStore.setEarnedPotentialReward(false)
     }
     const event =
       status.status === 'cancelled'
@@ -556,7 +556,7 @@ const updateNotificationStatus = (
     if (newStatus !== 'confirmed') {
       const rewardsStore = useRewardsStore()
       if (rewardsStore.earnedPotentialReward) {
-        rewardsStore.earnedPotentialReward = false
+        rewardsStore.setEarnedPotentialReward(false)
       }
     }
     if (newStatus === 'confirmed' || newStatus === 'failed') {
