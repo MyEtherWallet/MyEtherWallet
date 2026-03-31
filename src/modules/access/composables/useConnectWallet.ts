@@ -146,13 +146,13 @@ export const useConnectWallet = () => {
           wallet.downloadUrls?.firefox
         const link = _haslink
           ? {
-              title: 'Click here to install',
-              url: _haslink,
-            }
+            title: 'Click here to install',
+            url: _haslink,
+          }
           : {
-              title: "Don't have a wallet?",
-              url: 'https://enkrypt.com',
-            }
+            title: "Don't have a wallet?",
+            url: 'https://enkrypt.com',
+          }
         toastStore.addToastMessage({
           text: 'Web3 wallet not detected',
           textSecondary: `Please install ${wallet.name} extension to connect or select a different wallet.`,
