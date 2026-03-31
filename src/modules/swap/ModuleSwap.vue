@@ -6,6 +6,11 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
+        <rewards-small-banner
+          :class="blurClass"
+          :location="isSwapView ? 'small-banner-swap' : 'small-banner-bridge'"
+        />
+
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <p class="font-bold text-s-28">
             {{ isSwapView ? 'Swap' : 'Bridge' }}
@@ -164,7 +169,11 @@
       >
       <div v-else :class="['w-full max-w-[340px]', blurClass]">
         <transition name="fade" mode="out-in">
-          <app-no-chain-balance v-if="!hasChainBalance" :source="isSwapView ? 'swap' : 'bridge'" class="mb-5 -mt-1" />
+          <app-no-chain-balance
+            v-if="!hasChainBalance"
+            :source="isSwapView ? 'swap' : 'bridge'"
+            class="mb-5 -mt-1"
+          />
           <app-base-button
             v-else
             :disabled="isSwapDisabled"
@@ -226,6 +235,7 @@ import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
@@ -241,6 +251,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import {
   analytics,
   ConnectWalletEvent,
@@ -292,6 +303,7 @@ const chainsStore = useChainsStore()
 const inputStore = useInputStore()
 const toastStore = useToastStore()
 const accessStore = useAccessStore()
+const rewardsStore = useRewardsStore()
 const { t } = useI18n()
 
 // --- Refs from Stores ---
@@ -691,8 +703,18 @@ const proceedWithSwap = async (quoteId: string) => {
       txHash.value = hash as HexPrefixedString
       bestOfferSelectionOpen.value = false
       swapInitiatedOpen.value = true
+      //check reward elements availability after transaction is sent
+      let canEarnReward: undefined | boolean = undefined
+
+      const fromUsdValue =
+        parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
+      if (fromUsdValue > 10) {
+        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
+        canEarnReward = canEarn ? true : undefined
+      }
       analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {
         ...analyticsPayload,
+        canEarnReward,
         hash: hash,
       })
     }

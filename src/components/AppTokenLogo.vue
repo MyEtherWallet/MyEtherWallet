@@ -13,7 +13,7 @@
         {
           'bg-white shadow-token': image && !isLoading,
         },
-        { 'bg-surface': !image || isLoading },
+        { 'bg-surface-light shadow-token': !image || isLoading },
         { 'animate-pulse': isLoading },
       ]"
     >
