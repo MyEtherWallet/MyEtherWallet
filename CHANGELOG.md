@@ -1,3 +1,8 @@
+### Fix
+
+- handle shit token send error []()
+
+
 ### v7.0.1
 
 # Feat
@@ -6,4 +11,4 @@
 
 ### v7.0.0
 
-Official realease
+- Official realease

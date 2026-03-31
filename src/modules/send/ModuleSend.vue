@@ -319,6 +319,11 @@ const getTxRequestBody = ():
         tokenSelected.value.contract !== MAIN_TOKEN_CONTRACT
       if (isSendingContractToken) {
         const web3Contract = new Contract(abi, tokenSelected.value.contract)
+        console.log('Encoding data for contract token transfer', {
+          to: toAddress.value,
+          amount: amount.value.toString(),
+          decimals: tokenSelected.value.decimals,
+        })
         data.value = web3Contract.methods
           .transfer(
             toAddress.value,
@@ -428,7 +433,6 @@ const saveToAddressBookAfterSending = () => {
 const toastStore = useToastStore()
 
 // Get quotes:
-
 const getGasFeeQuotes = async () => {
   try {
     const body = getTxRequestBody()
@@ -461,12 +465,19 @@ const getGasFeeQuotes = async () => {
   } catch (e) {
     if (e instanceof Error) {
       if (e.message) {
+        
         const isInsufficientFundsError = e.message
           .toLowerCase()
           .includes('insufficient funds')
+        const isERC20InsufficientBalance = e.message.includes(
+          'ERC20InsufficientBalance',
+        )
+        const tokenHasBalance =
+          BigInt(tokenSelected.value?.balance || '0') > BigInt(0)
         if (isInsufficientFundsError) {
           gasFeeError.value = 'NOT_ENOUGH_BALANCE'
-          isLoadingFees.value = false
+        } else if (isERC20InsufficientBalance && tokenHasBalance) {
+          gasFeeError.value = t('send.toast.frozen_token')
         } else {
           gasFeeError.value = e.message
         }
@@ -474,6 +485,7 @@ const getGasFeeQuotes = async () => {
         gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
       }
     }
+    isLoadingFees.value = false
   }
 }
 
