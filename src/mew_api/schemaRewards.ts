@@ -169,7 +169,7 @@ export interface components {
              * @description Machine-readable reason code.
              * @enum {string}
              */
-            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED";
+            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED" | "ACCOUNT_TOO_NEW";
             /** @description Human-readable explanation of the ineligibility reason. */
             message: string;
         };
@@ -205,7 +205,7 @@ export interface components {
              * @description Current status of the reward transaction.
              * @enum {string}
              */
-            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL";
+            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL" | "DROPPED";
             /** @description Address that sent the reward (0x-prefixed hex). */
             rewardSenderAddress: string;
             /** @description Address that received the reward (0x-prefixed hex). */

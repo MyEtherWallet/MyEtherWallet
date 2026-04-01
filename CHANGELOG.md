@@ -4,6 +4,7 @@
 
 - Swap and Trade Tokenized stock rewards [#5327](https://github.com/MyEtherWallet/MyEtherWallet/pull/5327)
 - Balance Refresh and Tx has for rewards [#5334](https://github.com/MyEtherWallet/MyEtherWallet/pull/5334)
+- Account eligibility [#5339](https://github.com/MyEtherWallet/MyEtherWallet/pull/5339)
 
 ### v7.0.1
 

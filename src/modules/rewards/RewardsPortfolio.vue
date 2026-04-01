@@ -132,9 +132,13 @@
       :class="{ 'xl:items-start': isOpenSideMenu }"
     >
       <div
-        class="text-s-12 font-light text-info tracking-sp-06 uppercase text-center"
+        class="text-[10px] font-light text-info tracking-sp-06 uppercase text-center"
       >
         {{ rewardsLeft }} rewards left today
+        <span v-if="rewardsLeft === 0 || rewardsLeft === '0'" class="mx-1"
+          >·</span
+        >
+        Resets in {{ timeUntilReset }}
       </div>
 
       <!-- Actions -->
@@ -154,7 +158,11 @@
         class="bg-white/60 rounded-full px-7 py-3 font-semibold xs:-ml-4 lg-max:ml-0 text-center"
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
       >
-        Sorry, try again tomorrow !
+        {{
+          isAccountTooNew
+            ? 'Account not eligible'
+            : 'Sorry, try again tomorrow!'
+        }}
       </p>
       <button
         class="text-s-12 text-[#64748B] text-[10px] font-bold tracking-wider uppercase hoverOpacity cursor-pointer w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
@@ -186,7 +194,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { CheckIcon } from '@heroicons/vue/24/solid'
@@ -220,12 +228,38 @@ const {
   earnedPotentialReward,
   todaysReward,
   eligibility,
+  eligibilityReasons,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)
 
+const timeUntilReset = ref('')
+let resetTimer: ReturnType<typeof setInterval> | null = null
+
+function updateCountdown() {
+  const now = new Date()
+  const midnightUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+  )
+  const diff = midnightUTC.getTime() - now.getTime()
+  const h = Math.floor(diff / 3_600_000)
+  const m = Math.floor((diff % 3_600_000) / 60_000)
+  const s = Math.floor((diff % 60_000) / 1_000)
+  timeUntilReset.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
+  updateCountdown()
+  resetTimer = setInterval(updateCountdown, 1_000)
+})
+
+onUnmounted(() => {
+  if (resetTimer) clearInterval(resetTimer)
+})
+
+const isAccountTooNew = computed(() => {
+  return eligibilityReasons.value.some(r => r.type === 'ACCOUNT_TOO_NEW')
 })
 
 const isClaimed = computed(() => {
