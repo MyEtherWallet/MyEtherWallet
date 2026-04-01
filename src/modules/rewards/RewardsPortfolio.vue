@@ -132,9 +132,13 @@
       :class="{ 'xl:items-start': isOpenSideMenu }"
     >
       <div
-        class="text-s-12 font-light text-info tracking-sp-06 uppercase text-center"
+        class="text-[10px] font-light text-info tracking-sp-06 uppercase text-center"
       >
         {{ rewardsLeft }} rewards left today
+        <span v-if="rewardsLeft === 0 || rewardsLeft === '0'" class="mx-1"
+          >·</span
+        >
+        Resets in {{ timeUntilReset }}
       </div>
 
       <!-- Actions -->
@@ -186,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { CheckIcon } from '@heroicons/vue/24/solid'
@@ -224,8 +228,29 @@ const {
 
 const isLearnMoreOpen = ref(false)
 
+const timeUntilReset = ref('')
+let resetTimer: ReturnType<typeof setInterval> | null = null
+
+function updateCountdown() {
+  const now = new Date()
+  const midnightUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+  )
+  const diff = midnightUTC.getTime() - now.getTime()
+  const h = Math.floor(diff / 3_600_000)
+  const m = Math.floor((diff % 3_600_000) / 60_000)
+  const s = Math.floor((diff % 60_000) / 1_000)
+  timeUntilReset.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
+  updateCountdown()
+  resetTimer = setInterval(updateCountdown, 1_000)
+})
+
+onUnmounted(() => {
+  if (resetTimer) clearInterval(resetTimer)
 })
 
 const isClaimed = computed(() => {

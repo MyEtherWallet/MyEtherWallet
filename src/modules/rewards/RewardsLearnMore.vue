@@ -21,7 +21,7 @@
         </div>
 
         <!-- Right Panel: Content -->
-        <div class="flex-1 px-6 sm:px-8 py-6 sm:pt-10 flex flex-col">
+        <div class="flex-1 px-6 py-6 sm:pt-10 flex flex-col">
           <h3
             class="text-s-24 sm:text-s-32 font-bold text-primary leading-p-120"
           >
@@ -94,6 +94,10 @@
                   v-else-if="item.icon === 'trending-down'"
                   class="w-4 h-4 text-violet"
                 />
+                <user-icon
+                  v-else-if="item.icon === 'user'"
+                  class="w-3 h-3 sm:w-4 sm:h-4 text-violet"
+                />
                 <span v-else class="text-s-14">{{ item.icon }}</span>
               </div>
               <p class="text-s-12 sm:text-s-14 text-info leading-snug pt-1">
@@ -127,6 +131,7 @@ import {
   CurrencyDollarIcon,
   ArrowTrendingDownIcon,
   ClockIcon,
+  UserIcon,
 } from '@heroicons/vue/24/solid'
 
 const props = defineProps<{
@@ -193,7 +198,11 @@ const howItWorks = [
 const availability = [
   { icon: 'clock', text: 'Limited to 100 rewards per day' },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
-  { icon: 'calendar', text: 'If rewards run out, try again the next day' },
+  {
+    icon: 'calendar',
+    text: 'If rewards run out, try again the next day, resets at midnight UTC.',
+  },
+  { icon: 'user', text: 'Address must be funded at least 14 days ago' },
 ]
 
 const onEarnReward = () => {
