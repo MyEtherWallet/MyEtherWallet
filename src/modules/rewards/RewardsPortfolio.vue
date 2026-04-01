@@ -158,7 +158,11 @@
         class="bg-white/60 rounded-full px-7 py-3 font-semibold xs:-ml-4 lg-max:ml-0 text-center"
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
       >
-        Sorry, try again tomorrow !
+        {{
+          isAccountTooNew
+            ? 'Account not eligible'
+            : 'Sorry, try again tomorrow!'
+        }}
       </p>
       <button
         class="text-s-12 text-[#64748B] text-[10px] font-bold tracking-wider uppercase hoverOpacity cursor-pointer w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
@@ -224,6 +228,7 @@ const {
   earnedPotentialReward,
   todaysReward,
   eligibility,
+  eligibilityReasons,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)
@@ -251,6 +256,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (resetTimer) clearInterval(resetTimer)
+})
+
+const isAccountTooNew = computed(() => {
+  return eligibilityReasons.value.some(r => r.type === 'ACCOUNT_TOO_NEW')
 })
 
 const isClaimed = computed(() => {

@@ -114,6 +114,12 @@
           >
             Earn Your Reward
           </app-base-button>
+          <p
+            v-else-if="isAccountTooNew"
+            class="bg-surface rounded-full px-7 py-3 font-semibold text-info text-s-14 text-center mt-6"
+          >
+            Account not eligible
+          </p>
         </div>
       </div>
     </template>
@@ -154,6 +160,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
 const walletMenu = useWalletMenuStore()
@@ -166,9 +173,19 @@ const chainsStore = useChainsStore()
 const { isBitcoinChain } = storeToRefs(chainsStore)
 const walletStore = useWalletStore()
 const { walletName } = storeToRefs(walletStore)
+const rewardsStore = useRewardsStore()
+const { eligibilityReasons } = storeToRefs(rewardsStore)
+
+const isAccountTooNew = computed(() => {
+  return eligibilityReasons.value.some(r => r.type === 'ACCOUNT_TOO_NEW')
+})
 
 const canEarn = computed(() => {
-  if (isBitcoinChain.value && walletName.value !== 'Enkrypt') return false
+  if (
+    isAccountTooNew.value ||
+    (isBitcoinChain.value && walletName.value !== 'Enkrypt')
+  )
+    return false
   return true
 })
 
