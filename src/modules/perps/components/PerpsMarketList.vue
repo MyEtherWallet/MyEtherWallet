@@ -1,22 +1,45 @@
 <template>
   <div>
-    <div class="flex items-center justify-between mb-4">
-      <p class="font-bold text-s-28">Markets</p>
-      <div class="flex bg-surface rounded-full p-1">
-        <button
-          v-for="filter in filters"
-          :key="filter.key"
-          :class="[
-            'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
-            activeFilter === filter.key
-              ? 'bg-white shadow-container'
-              : 'hoverNoBG',
-          ]"
-          @click="activeFilter = filter.key"
+    <div
+      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
+    >
+      <h1 class="text-s-24 xs:text-s-32 font-bold">Markets</h1>
+      <!--Filter Lists-->
+      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+        <app-btn-group
+          v-model:selected="selectedFilter"
+          :btn-list="filterOptions"
+          size="large"
+          class="flex-wrap"
         >
-          {{ filter.label }}
-        </button>
+          <template #btn-content="{ data }">
+            <span class="px-2">{{ data.label }}</span>
+          </template>
+        </app-btn-group>
       </div>
+      <app-select
+        v-model:selected="selectedFilter"
+        :options="filterOptions"
+        position="right-0"
+        placeholder="Filter"
+        class="lg:hidden"
+      >
+        <template #select-button="{ toggleSelect }">
+          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <button
+              class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+              @click="toggleSelect"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-s-16 font-medium">{{
+                  selectedFilter.label
+                }}</span>
+                <chevron-down-icon class="w-4 h-4 ml-1" />
+              </div>
+            </button>
+          </div>
+        </template>
+      </app-select>
     </div>
 
     <div class="bg-white rounded-20 p-6 sm:p-8">
@@ -179,6 +202,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { MagnifyingGlassIcon, StarIcon } from '@heroicons/vue/24/outline'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSelect from '@/components/AppSelect.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
 import {
   usePerpsMarkets,
@@ -206,7 +232,6 @@ function getPosition(market: string) {
 }
 
 const searchQuery = ref('')
-const activeFilter = ref<string>('all')
 const watchlist = ref<Set<string>>(new Set())
 
 function toggleWatchlist(symbol: string) {
@@ -218,13 +243,20 @@ function toggleWatchlist(symbol: string) {
   watchlist.value = new Set(watchlist.value)
 }
 
-const filters = [
-  { key: 'all', label: 'All Markets' },
-  { key: 'stocks', label: 'Stocks' },
-  { key: 'commodities', label: 'Commodities' },
-  { key: 'etfs', label: 'ETFs' },
-  { key: 'watchlist', label: 'Watchlist' },
+interface FilterOption {
+  label: string
+  value: string
+}
+
+const filterOptions: FilterOption[] = [
+  { label: 'All Markets', value: 'all' },
+  { label: 'Stocks', value: 'stocks' },
+  { label: 'Commodities', value: 'commodities' },
+  { label: 'ETFs', value: 'etfs' },
+  { label: 'Watchlist', value: 'watchlist' },
 ]
+
+const selectedFilter = ref<FilterOption>(filterOptions[0])
 
 interface EnrichedContract extends Contract {
   displayName: string
@@ -244,13 +276,13 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
 const filteredContracts = computed(() => {
   let list = enrichedContracts.value
 
-  if (activeFilter.value === 'watchlist') {
+  if (selectedFilter.value.value === 'watchlist') {
     list = list.filter(c => watchlist.value.has(c.baseCurrency))
-  } else if (activeFilter.value === 'commodities') {
+  } else if (selectedFilter.value.value === 'commodities') {
     list = list.filter(c => hasTag(c, 'commodity'))
-  } else if (activeFilter.value === 'etfs') {
+  } else if (selectedFilter.value.value === 'etfs') {
     list = list.filter(c => hasTag(c, 'etf'))
-  } else if (activeFilter.value === 'stocks') {
+  } else if (selectedFilter.value.value === 'stocks') {
     list = list.filter(c => !hasTag(c, 'commodity') && !hasTag(c, 'etf'))
   }
 
