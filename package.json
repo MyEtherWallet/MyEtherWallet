@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "7.0.0",
+  "version": "7.0.2",
   "private": true,
   "type": "module",
   "engines": {
@@ -21,7 +21,8 @@
     "format": "prettier --write src/",
     "prepare": "husky",
     "zip": "cd dist; zip -r release.zip *;",
-    "update-api-schema": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema.yaml -o src/mew_api/schema.ts"
+    "update-api-schema": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema.yaml -o src/mew_api/schema.ts",
+    "update-rewards-schema": "npx openapi-typescript https://mew-rewards-prod.ethvm.dev/schema.yaml -o src/mew_api/schemaRewards.ts"
   },
   "dependencies": {
     "@1inch/fusion-sdk": "^2.4.5",
@@ -30,13 +31,14 @@
     "@commitlint/config-conventional": "^20.3.1",
     "@enkryptcom/hw-wallets": "^0.0.16",
     "@enkryptcom/name-resolution": "^0.0.8",
-    "@enkryptcom/swap": "^0.0.15",
+    "@enkryptcom/swap": "^0.0.16",
     "@enkryptcom/types": "^0.0.5",
     "@ethereumjs/common": "^4.4.0",
     "@ethereumjs/tx": "^5.4.0",
     "@ethereumjs/util": "^9.1.0",
     "@ethereumjs/wallet": "^2.0.4",
     "@heroicons/vue": "^2.2.0",
+    "@intercom/messenger-js-sdk": "^0.0.18",
     "@myetherwallet/vue-common-components": "^1.3.9",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@rainbow-me/rainbowkit": "^2.2.10",

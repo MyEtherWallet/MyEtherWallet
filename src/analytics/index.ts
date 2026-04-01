@@ -41,9 +41,6 @@ amplitude.init(__TMP_HASHED_VERSION__, {
       ? 'https://analytics-web-v7.mewwallet.dev/record'
       : 'https://analytics-web-development-v7.mewwallet.dev/record',
   appVersion: __TMP_VERSION__,
-  trackingOptions: {
-    ipAddress: false,
-  },
   identityStorage: 'none',
   logLevel: Types.LogLevel.None,
   defaultTracking: {

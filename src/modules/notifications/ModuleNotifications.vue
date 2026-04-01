@@ -105,6 +105,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useStocksStore } from '@/stores/stocksStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
 import {
@@ -383,6 +384,10 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
+    const rewardsStore = useRewardsStore()
+    if (rewardsStore.earnedPotentialReward) {
+      rewardsStore.setEarnedPotentialReward(false)
+    }
     const event =
       status.status === 'cancelled'
         ? TradeEventStatus.CANCELLED
@@ -548,6 +553,12 @@ const updateNotificationStatus = (
       seen: false,
     })
     stopStatusPolling(hash)
+    if (newStatus !== 'confirmed') {
+      const rewardsStore = useRewardsStore()
+      if (rewardsStore.earnedPotentialReward) {
+        rewardsStore.setEarnedPotentialReward(false)
+      }
+    }
     if (newStatus === 'confirmed' || newStatus === 'failed') {
       const event =
         newStatus === 'confirmed'
