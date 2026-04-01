@@ -18,7 +18,7 @@ const PortfolioView = () => import('@/views/ViewPortfolio.vue')
 const ViewCrypto = () => import('@/views/ViewCrypto.vue')
 const NotFoundView = () => import('@/views/ViewNotFound.vue')
 const ViewStocks = () => import('@/views/ViewStocks.vue')
-const ViewPerps = () => import('@/modules/perps/ViewPerps.vue')
+const ViewPerps = () => import('@/views/ViewPerps.vue')
 
 type RouteNameCollection = RouterOptions['routes']
 const DefaultRoutes = <RouteNameCollection>[

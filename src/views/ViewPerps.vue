@@ -19,11 +19,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
-import PerpsPortfolioSummary from './components/PerpsPortfolioSummary.vue'
-import PerpsPositionsTable from './components/PerpsPositionsTable.vue'
-import PerpsMarketList from './components/PerpsMarketList.vue'
-import PerpsDepositDialog from './components/PerpsDepositDialog.vue'
-import PerpsWithdrawDialog from './components/PerpsWithdrawDialog.vue'
+import PerpsPortfolioSummary from '@/modules/perps/components/PerpsPortfolioSummary.vue'
+import PerpsPositionsTable from '@/modules/perps/components/PerpsPositionsTable.vue'
+import PerpsMarketList from '@/modules/perps/components/PerpsMarketList.vue'
+import PerpsDepositDialog from '@/modules/perps/components/PerpsDepositDialog.vue'
+import PerpsWithdrawDialog from '@/modules/perps/components/PerpsWithdrawDialog.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 const router = useRouter()
