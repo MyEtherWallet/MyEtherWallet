@@ -9,6 +9,7 @@
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <the-gdpr-banner v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
+    <app-mew-wallet-banner v-if="!isTradingRestrictedInRegion" />
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
+import AppMewWalletBanner from '@/components/AppMewWalletBanner.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
@@ -39,6 +41,9 @@ import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { analytics } from '@/analytics'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import Intercom from '@intercom/messenger-js-sdk'
+import { useMarketStatus } from './modules/trade/composables'
+
+const { isTradingRestrictedInRegion, fetchMarketStatus } = useMarketStatus()
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -174,6 +179,7 @@ const showFeedbackToast = () => {
 const rewardsStore = useRewardsStore()
 
 onMounted(() => {
+  fetchMarketStatus()
   fetchPurchaseInfo()
   fetchStocksAddresses()
   rewardsStore.fetchAll()
