@@ -3,7 +3,7 @@
     <transition name="banner-slide">
       <div
         v-if="isVisible"
-        class="fixed left-0 bottom-0 z-50 w-full flex justify-center h-[190px] max-[768px]:h-[300px] overflow-hidden shadow-2xl banner-bg min-[1920px]:left-6 min-[1920px]:bottom-8 min-[1920px]:w-[550px] min-[1920px]:h-[245px] min-[1920px]:rounded-2xl min-[1920px]:justify-start"
+        class="fixed left-0 bottom-0 z-50 w-full flex justify-center h-[190px] max-[768px]:h-[260px] overflow-hidden shadow-2xl banner-bg min-[1920px]:left-6 min-[1920px]:bottom-8 min-[1920px]:w-[550px] min-[1920px]:h-[245px] min-[1920px]:rounded-2xl min-[1920px]:justify-start"
       >
         <!-- Close button -->
         <button
