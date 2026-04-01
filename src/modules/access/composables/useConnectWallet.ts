@@ -245,7 +245,7 @@ export const useConnectWallet = () => {
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
-    wagWallet
+    return wagWallet
       .connect()
       .then(res => {
         if (res) {
@@ -270,6 +270,13 @@ export const useConnectWallet = () => {
           err.message.toLowerCase().includes('user rejected')
         ) {
           error = t('common.error.user_canceled_request')
+          _type = ToastType.Info
+        }
+        if (
+          err.message &&
+          err.message.toLowerCase().includes('proposal expired')
+        ) {
+          error = 'Connection timed out. Please try again.'
           _type = ToastType.Info
         }
         toastStore.addToastMessage({
