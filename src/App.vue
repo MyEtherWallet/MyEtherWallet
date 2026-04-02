@@ -9,7 +9,9 @@
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <the-gdpr-banner v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
-    <app-mew-wallet-banner v-if="!isTradingRestrictedInRegion" />
+    <app-mew-wallet-banner
+      v-if="isLoadingComplete && !isTradingRestrictedInRegion"
+    />
   </div>
 </template>
 
