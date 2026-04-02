@@ -46,7 +46,11 @@
         {{ $t('common.connect_wallet') }}</app-base-button
       >
       <div v-else class="flex w-full">
-        <app-no-chain-balance v-if="!hasChainBalance" source="send" class="mb-5 -mt-1" />
+        <app-no-chain-balance
+          v-if="!hasChainBalance"
+          source="send"
+          class="mb-5 -mt-1"
+        />
         <app-base-button
           v-else
           :disabled="!validSend"
@@ -460,15 +464,13 @@ const getGasFeeQuotes = async () => {
   } catch (e) {
     if (e instanceof Error) {
       if (e.message) {
-        
         const isInsufficientFundsError = e.message
           .toLowerCase()
           .includes('insufficient funds')
         const isERC20InsufficientBalance = e.message.includes(
           'ERC20InsufficientBalance',
         )
-        const tokenHasBalance =
-          BigInt(balanceWei.value || '0') > BigInt(0)
+        const tokenHasBalance = BigInt(balanceWei.value || '0') > BigInt(0)
         if (isInsufficientFundsError) {
           gasFeeError.value = 'NOT_ENOUGH_BALANCE'
         } else if (isERC20InsufficientBalance && tokenHasBalance) {

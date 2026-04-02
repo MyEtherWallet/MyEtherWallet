@@ -6,7 +6,10 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner :class="blurClass" location="small-banner-trade" />
+        <rewards-small-banner
+          :class="blurClass"
+          location="small-banner-trade"
+        />
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
