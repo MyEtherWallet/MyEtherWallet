@@ -1,3 +1,8 @@
+# Fix
+
+- fix metamask error on cancelling send and fix bug when disconnecting through metamask [#5337](https://github.com/MyEtherWallet/MyEtherWallet/pull/5337)
+
+
 ### v7.0.2
 
 # Feat
