@@ -23,7 +23,8 @@
           <p
             class="text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
-            Earn tokenized stock rewards <br />from a $100,000 pool
+            Earn tokenized stock rewards
+            <br class="block max-[700px]:hidden" />from a $100,000 pool
           </p>
 
           <!-- Download button + QR -->
@@ -36,7 +37,7 @@
             >
               Download now
             </a>
-            <div
+            <button
               class="relative"
               @mouseenter="showQr = true"
               @mouseleave="showQr = false"
@@ -59,7 +60,7 @@
                   class="w-full flex-1 object-contain"
                 />
               </div>
-            </div>
+            </button>
           </div>
 
           <!-- Store badges -->
@@ -89,7 +90,7 @@
           <p
             class="text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
-            Earn tokenized stock rewardsfrom a $100,000 pool
+            Earn tokenized stock rewards from a $100,000 pool
           </p>
 
           <!-- Download button + QR -->
@@ -102,7 +103,7 @@
             >
               Download now
             </a>
-            <div
+            <button
               class="relative"
               @mouseenter="showQr = true"
               @mouseleave="showQr = false"
@@ -125,7 +126,7 @@
                   class="w-full flex-1 object-contain"
                 />
               </div>
-            </div>
+            </button>
             <a
               href="https://apps.apple.com/app/mew-crypto-wallet-buy-eth/id1464614025"
               target="_blank"
@@ -143,7 +144,7 @@
           </div>
         </div>
         <div
-          class="z-0 flex items-end overflow-hidden self-stretch min-[1920px]:absolute min-[1920px]:right-[-10px]"
+          class="z-0 flex items-end overflow-hidden self-stretch max-[600px]:hidden min-[1920px]:absolute min-[1920px]:right-[-10px]"
         >
           <img
             :src="mewBannerItem"
