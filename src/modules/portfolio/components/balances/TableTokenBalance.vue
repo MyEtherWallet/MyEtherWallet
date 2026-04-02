@@ -11,34 +11,6 @@
         >
           <app-search-input v-model="searchInput" class="grow" />
         </div>
-        <div
-          v-if="paginatedArray.length && props.view === 'custom'"
-          class="flex-none"
-        >
-          <app-base-button size="medium" @click="openAddCustom"
-            >+ Add
-          </app-base-button>
-        </div>
-      </div>
-      <!-- TOTAL VALUE-->
-      <div class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0 flex items-center gap-2">
-        <div class="lg:text-right">
-          <p
-            class="font-bold text-info uppercase tracking-sp-06 text-s-14"
-          >
-            Total Value
-          </p>
-          <p
-            v-if="!isLoading"
-            class="text-s-24 font-bold rounded-12 leading-none text-black"
-          >
-            {{ totalValue }}
-          </p>
-          <div
-            v-else
-            class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
-          ></div>
-        </div>
         <app-pop-up-menu placeholder="table options" location="right">
           <template #menu-button="{ toggleMenu }">
             <app-btn-icon
@@ -59,16 +31,59 @@
                 <span class="grow text-left">Hide tokens with no value</span>
                 <span
                   class="ml-2 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0"
-                  :class="showLowBalance ? 'bg-primary border-primary' : 'border-grey-30'"
+                  :class="
+                    !hideLowBalance
+                      ? 'bg-primary border-primary'
+                      : 'border-grey-30'
+                  "
                 >
-                  <svg v-if="showLowBalance" class="w-3 h-3 text-white" fill="none" viewBox="0 0 12 12">
-                    <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg
+                    v-if="!hideLowBalance"
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    viewBox="0 0 12 12"
+                  >
+                    <path
+                      d="M2 6l3 3 5-5"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 </span>
               </button>
             </div>
           </template>
         </app-pop-up-menu>
+        <div
+          v-if="paginatedArray.length && props.view === 'custom'"
+          class="flex-none"
+        >
+          <app-base-button size="medium" @click="openAddCustom"
+            >+ Add
+          </app-base-button>
+        </div>
+      </div>
+      <!-- TOTAL VALUE-->
+      <div
+        class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0 flex items-center gap-2"
+      >
+        <div class="lg:text-right">
+          <p class="font-bold text-info uppercase tracking-sp-06 text-s-14">
+            Total Value
+          </p>
+          <p
+            v-if="!isLoading"
+            class="text-s-24 font-bold rounded-12 leading-none text-black"
+          >
+            {{ totalValue }}
+          </p>
+          <div
+            v-else
+            class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
+          ></div>
+        </div>
       </div>
     </div>
     <div :class="['static', getTableHeight]" ref="tableContainer">
@@ -723,8 +738,9 @@ const purchaseStore = usePurchaseStore()
 const { isBuyable } = purchaseStore
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
-const { setWalletPanel, setSelectedTradeTokenSymbol, toggleShowBalance } = walletMenu
-const { isOpenSideMenu, showLowBalance } = storeToRefs(walletMenu)
+const { setWalletPanel, setSelectedTradeTokenSymbol, toggleShowBalance } =
+  walletMenu
+const { isOpenSideMenu, hideLowBalance } = storeToRefs(walletMenu)
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
@@ -998,7 +1014,7 @@ const tokens = computed<DisplayToken[]>(() => {
     list = allTokens.value.map(mapToDisplay)
   }
 
-  if (showLowBalance.value) {
+  if (!hideLowBalance.value) {
     list = list.filter(t => (t.fiatBalance ?? 0) > 0)
   }
 
