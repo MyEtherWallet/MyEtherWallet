@@ -1,7 +1,7 @@
-# Fix
+### Fix
 
 - fix metamask error on cancelling send and fix bug when disconnecting through metamask [#5337](https://github.com/MyEtherWallet/MyEtherWallet/pull/5337)
-
+- handle shit token send error [#5330](https://github.com/MyEtherWallet/MyEtherWallet/pull/5330)
 
 ### v7.0.2
 

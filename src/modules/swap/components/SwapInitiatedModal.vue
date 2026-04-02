@@ -406,7 +406,9 @@ const toTokenAddress = computed(() => {
 })
 
 const fromTokenSymbol = computed(() => {
-  return snapshot.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
+  return (
+    snapshot.selectedQuote?.quote.options.fromToken.symbol || 'Unknown Token'
+  )
 })
 const fromTokenAmount = computed(() => {
   return formatUnits(
@@ -438,14 +440,19 @@ const fromTokenAddress = computed(() => {
 
 const blockExplorerUrl = computed(() => {
   return (
-    snapshot.fromChain?.blockExplorerTX.replace('[[txHash]]', snapshot.txHash) || ''
+    snapshot.fromChain?.blockExplorerTX.replace(
+      '[[txHash]]',
+      snapshot.txHash,
+    ) || ''
   )
 })
 
 const addressExplorerUrl = computed(() => {
   return (
-    snapshot.toChain?.blockExplorerAddr.replace('[[address]]', snapshot.toAddress) ||
-    ''
+    snapshot.toChain?.blockExplorerAddr.replace(
+      '[[address]]',
+      snapshot.toAddress,
+    ) || ''
   )
 })
 

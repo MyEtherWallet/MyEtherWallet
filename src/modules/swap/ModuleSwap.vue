@@ -725,7 +725,6 @@ const proceedWithSwap = async (quoteId: string) => {
         : typeof e === 'string'
           ? e
           : t('swap.toast.tx-sign-failed')
-    console.log('Error message:', errorMessage) // Log the error message for debugging
     if (errorMessage.includes('user rejected')) {
       toastStore.addToastMessage({
         type: ToastType.Info,

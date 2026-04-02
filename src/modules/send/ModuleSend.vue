@@ -46,7 +46,11 @@
         {{ $t('common.connect_wallet') }}</app-base-button
       >
       <div v-else class="flex w-full">
-        <app-no-chain-balance v-if="!hasChainBalance" source="send" class="mb-5 -mt-1" />
+        <app-no-chain-balance
+          v-if="!hasChainBalance"
+          source="send"
+          class="mb-5 -mt-1"
+        />
         <app-base-button
           v-else
           :disabled="!validSend"
@@ -428,7 +432,6 @@ const saveToAddressBookAfterSending = () => {
 const toastStore = useToastStore()
 
 // Get quotes:
-
 const getGasFeeQuotes = async () => {
   try {
     const body = getTxRequestBody()
@@ -464,9 +467,14 @@ const getGasFeeQuotes = async () => {
         const isInsufficientFundsError = e.message
           .toLowerCase()
           .includes('insufficient funds')
+        const isERC20InsufficientBalance = e.message.includes(
+          'ERC20InsufficientBalance',
+        )
+        const tokenHasBalance = BigInt(balanceWei.value || '0') > BigInt(0)
         if (isInsufficientFundsError) {
           gasFeeError.value = 'NOT_ENOUGH_BALANCE'
-          isLoadingFees.value = false
+        } else if (isERC20InsufficientBalance && tokenHasBalance) {
+          gasFeeError.value = t('send.toast.frozen_token')
         } else {
           gasFeeError.value = e.message
         }
@@ -474,6 +482,7 @@ const getGasFeeQuotes = async () => {
         gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
       }
     }
+    isLoadingFees.value = false
   }
 }
 

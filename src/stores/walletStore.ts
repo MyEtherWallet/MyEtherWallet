@@ -15,7 +15,12 @@ import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
 import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
-import { analytics, WalletStatus, BalanceBracket, type UserProperties } from '@/analytics'
+import {
+  analytics,
+  WalletStatus,
+  BalanceBracket,
+  type UserProperties,
+} from '@/analytics'
 import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
 
