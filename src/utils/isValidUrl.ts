@@ -1,5 +1,4 @@
 export default (urlString: string) => {
-
   let url
   try {
     url = new URL(urlString)

@@ -6,6 +6,8 @@ import { useWalletStore } from './walletStore'
 import { useChainsStore } from './chainsStore'
 import { useToastStore } from './toastStore'
 import { analytics, RewardsEvent } from '@/analytics'
+import useBalanceHandler from '@/utils/balanceHandler'
+import type { TokenBalancesRaw } from '@/mew_api/types'
 
 type PoolStatusResponse = components['schemas']['PoolStatusResponse']
 type EligibilityResponse = components['schemas']['EligibilityResponse']
@@ -30,7 +32,8 @@ const fetchRewards = async <T>(url: string): Promise<T> => {
 
 export const useRewardsStore = defineStore('rewardsStore', () => {
   const walletStore = useWalletStore()
-  const { walletAddress } = storeToRefs(walletStore)
+  const { walletAddress, wallet } = storeToRefs(walletStore)
+  const { setTokens, setIsLoadingBalances } = walletStore
   const chainsStore = useChainsStore()
   const { isBitcoinChain } = storeToRefs(chainsStore)
   const earnedPotentialRewardAddresses = ref<string[]>([]) // to track if user has earned a potential reward in the current eligibility period. This is needed to show the "Earned Potential Reward" badge immediately after user becomes eligible, without waiting for the next eligibility fetch.
@@ -210,6 +213,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         const toastStore = useToastStore()
         toastStore.toggleRewardToast(true)
         stopRewardsPoll()
+        wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
+          useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+        })
       }
     }, 5000)
   }

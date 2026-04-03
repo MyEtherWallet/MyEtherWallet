@@ -21,7 +21,7 @@
         </div>
 
         <!-- Right Panel: Content -->
-        <div class="flex-1 px-6 sm:px-8 py-6 sm:pt-10 flex flex-col">
+        <div class="flex-1 px-6 py-6 sm:pt-10 flex flex-col">
           <h3
             class="text-s-24 sm:text-s-32 font-bold text-primary leading-p-120"
           >
@@ -94,6 +94,10 @@
                   v-else-if="item.icon === 'trending-down'"
                   class="w-4 h-4 text-violet"
                 />
+                <user-icon
+                  v-else-if="item.icon === 'user'"
+                  class="w-3 h-3 sm:w-4 sm:h-4 text-violet"
+                />
                 <span v-else class="text-s-14">{{ item.icon }}</span>
               </div>
               <p class="text-s-12 sm:text-s-14 text-info leading-snug pt-1">
@@ -110,6 +114,12 @@
           >
             Earn Your Reward
           </app-base-button>
+          <p
+            v-else-if="isAccountTooNew"
+            class="bg-surface rounded-full px-7 py-3 font-semibold text-info text-s-14 text-center mt-6"
+          >
+            Account not eligible
+          </p>
         </div>
       </div>
     </template>
@@ -127,6 +137,7 @@ import {
   CurrencyDollarIcon,
   ArrowTrendingDownIcon,
   ClockIcon,
+  UserIcon,
 } from '@heroicons/vue/24/solid'
 
 const props = defineProps<{
@@ -149,6 +160,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
 const walletMenu = useWalletMenuStore()
@@ -161,9 +173,19 @@ const chainsStore = useChainsStore()
 const { isBitcoinChain } = storeToRefs(chainsStore)
 const walletStore = useWalletStore()
 const { walletName } = storeToRefs(walletStore)
+const rewardsStore = useRewardsStore()
+const { eligibilityReasons } = storeToRefs(rewardsStore)
+
+const isAccountTooNew = computed(() => {
+  return eligibilityReasons.value.some(r => r.type === 'ACCOUNT_TOO_NEW')
+})
 
 const canEarn = computed(() => {
-  if (isBitcoinChain.value && walletName.value !== 'Enkrypt') return false
+  if (
+    isAccountTooNew.value ||
+    (isBitcoinChain.value && walletName.value !== 'Enkrypt')
+  )
+    return false
   return true
 })
 
@@ -193,7 +215,11 @@ const howItWorks = [
 const availability = [
   { icon: 'clock', text: 'Limited to 100 rewards per day' },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
-  { icon: 'calendar', text: 'If rewards run out, try again the next day' },
+  {
+    icon: 'calendar',
+    text: 'If rewards run out, try again the next day, resets at midnight UTC.',
+  },
+  { icon: 'user', text: 'Address must be funded at least 14 days ago' },
 ]
 
 const onEarnReward = () => {

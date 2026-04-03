@@ -4,7 +4,7 @@
     class="sm:max-w-[400px] !min-h-[385px] sm:mx-auto"
   >
     <template #content>
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center pt-12">
         <img
           :src="bestOfferIcon"
           class="w-[175px]"

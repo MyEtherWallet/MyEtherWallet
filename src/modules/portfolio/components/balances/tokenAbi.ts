@@ -6,12 +6,12 @@ export default [
     outputs: [
       {
         name: '',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -20,12 +20,12 @@ export default [
     outputs: [
       {
         name: '',
-        type: 'uint8'
-      }
+        type: 'uint8',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
@@ -34,30 +34,30 @@ export default [
     outputs: [
       {
         name: '',
-        type: 'string'
-      }
+        type: 'string',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
+    type: 'function',
   },
   {
     constant: true,
     inputs: [
       {
         name: '_owner',
-        type: 'address'
-      }
+        type: 'address',
+      },
     ],
     name: 'balanceOf',
     outputs: [
       {
         name: 'balance',
-        type: 'uint256'
-      }
+        type: 'uint256',
+      },
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function'
-  }
-];
+    type: 'function',
+  },
+]

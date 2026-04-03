@@ -432,7 +432,8 @@ const confirmTransaction = async () => {
               : typeof e === 'string'
                 ? e.toLowerCase()
                 : ''
-        if (msg.includes('user rejected')) {
+        
+        if (msg.includes('rejected') || msg.includes('denied')  || msg.includes('cancelled')) {
           toastStore.addToastMessage({
             type: ToastType.Info,
             text: 'Transaction canceled by user',
