@@ -3,6 +3,10 @@
 - fix metamask error on cancelling send and fix bug when disconnecting through metamask [#5337](https://github.com/MyEtherWallet/MyEtherWallet/pull/5337)
 - handle shit token send error [#5330](https://github.com/MyEtherWallet/MyEtherWallet/pull/5330)
 
+# Feat
+
+- Add blinking info for approval on ledger or trezor [#5331](https://github.com/MyEtherWallet/MyEtherWallet/pull/5331)
+
 ### v7.0.2
 
 # Feat
