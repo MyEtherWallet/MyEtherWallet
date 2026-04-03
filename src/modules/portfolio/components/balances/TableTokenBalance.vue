@@ -881,9 +881,11 @@ const tokens = computed<DisplayToken[]>(() => {
   )
 
   if (props.view === 'watchlist') {
+    // make sure that response is array, if not set to empty array
+    const watchlistTokenResponse = Array.isArray(tokensWatchlistData.value) ? tokensWatchlistData.value : []
     // Map tokens watchlist
     const tokensList =
-      (tokensWatchlistData.value || [])
+      watchlistTokenResponse
         .filter(token => watchListedTokens.value.includes(token.coinId))
         .map(token => {
           const balanceToken = coinIdMap.get(token.coinId)
