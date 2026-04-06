@@ -75,22 +75,6 @@ Install pnpm if you don't have it: `npm install -g pnpm`
 6. App should be running at `https://localhost:8080`
 7. Run `pnpm test:unit` to execute unit tests
 
-### Run End-to-End Tests with [Nightwatch](https://nightwatchjs.org/)
-
-```sh
-# When using CI, build first
-pnpm build
-
-# Run all end-to-end tests
-pnpm test:e2e
-# Run tests only on Chrome
-pnpm test:e2e --env chrome
-# Run tests for a specific file
-pnpm test:e2e tests/e2e/example.ts
-# Run tests in debug mode
-pnpm test:e2e --debug
-```
-
 ### Lint & Format
 
 ```sh
