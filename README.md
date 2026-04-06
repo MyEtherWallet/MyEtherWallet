@@ -1,9 +1,7 @@
 <img src="./src/assets/images/presskit/logo-dark.png" width="300px"/>
 
-[![Website](https://img.shields.io/website-up-down-green-red/http/myetherwallet.com.svg?label=MyEtherWallet.com&style=flat-square)](http://www.MyEtherWallet.com/)
 [![Github All Releases](https://img.shields.io/github/downloads/MyEtherWallet/MyEtherWallet/total.svg?style=flat-square)](https://www.github.com/MyEtherWallet/MyEtherWallet/releases)
 [![GitHub issues](https://img.shields.io/github/issues-raw/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/issues)
-[![Travis](https://img.shields.io/travis/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://travis-ci.org/MyEtherWallet/MyEtherWallet)
 [![GitHub package version](https://img.shields.io/github/package-json/v/MyEtherWallet/MyEtherWallet.svg?style=flat-square)](https://github.com/MyEtherWallet/MyEtherWallet/blob/main/package.json) [![Greenkeeper badge](https://badges.greenkeeper.io/MyEtherWallet/MyEtherWallet.svg)](https://greenkeeper.io/)
 ![GitHub contributors](https://img.shields.io/github/contributors/MyEtherWallet/MyEtherWallet.svg?style=flat-square) [![Codecov badge](https://img.shields.io/codecov/c/github/MyEtherWallet/MyEtherWallet/develop.svg?style=flat-square)](https://codecov.io/github/MyEtherWallet/MyEtherWallet?branch=develop)
 
@@ -50,50 +48,35 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 
 If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/MyEtherWallet/MyEtherWallet/issues)
 
-## Getting started
+## Requirements
+
+- **Node.js** `>= v22.11.0`
+- **pnpm** `>= 10.28.2`
+
+Install pnpm if you don't have it: `npm install -g pnpm`
+
+## Getting Started
 
 1. Open terminal
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-3. run `npm ci` to install node packages.
-4. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-5. start `npm start`
-6. If `npm start` fails and above the error message it states 'new update found' then the package.json version of the indicated packages needs to be updated to match the versions shown in the notice.
-7. App should be running in `https://localhost:8080`
+3. Run `pnpm install` to install packages
+4. Run `pnpm build` to produce a production build. You can also use the offline version by opening `dist/index.html` in your browser
 
 ## Developers
 
 1. Open terminal
 2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-3. run `git checkout develop`
-4. run `pnpm install` to install node packages.
-5. run `pnpm build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-6. start `pnpm dev`
-7. App should be running in `https://localhost:8080`
-8. run `pnpm test:unit` to execute Unit Tests
+3. Run `git checkout develop`
+4. Run `pnpm install` to install packages
+5. Run `pnpm dev` to start the development server
+6. App should be running at `https://localhost:8080`
+7. Run `pnpm test:unit` to execute unit tests
 
-EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
-For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
-
-### Run End-to-End Tests with [Nightwatch](https://nightwatchjs.org/)
+### Lint & Format
 
 ```sh
-# When using CI, the project must be built first.
-pnpm build
-
-# Runs the end-to-end tests
-pnpm test:e2e
-# Runs the tests only on Chrome
-pnpm test:e2e --env chrome
-# Runs the tests of a specific file
-pnpm test:e2e tests/e2e/example.ts
-# Runs the tests in debug mode
-pnpm test:e2e --debug
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
+pnpm lint      # ESLint with auto-fix
+pnpm format    # Prettier
 ```
 
 ## Integrations
@@ -106,10 +89,10 @@ _A Hardware wallet must meet the following minimum requirements:_
 
 1. Message signing
 2. Data signing
-3. Must be able to sign other ethereum-based chains, specifically, Matic and BSC.
-4. EIP1559 signing
+3. Must be able to sign other Ethereum-based chains, specifically Polygon and BSC
+4. EIP-1559 signing
 
-Reach out to us at <integrations@myetherwallet.com>, so we can determine if we will be able to integrate your hardware wallet.
+Reach out to us at <integrations@myetherwallet.com> so we can determine if we will be able to integrate your hardware wallet.
 
 ### DApps
 
