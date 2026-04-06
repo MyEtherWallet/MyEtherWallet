@@ -787,6 +787,8 @@ watch(
   { immediate: true },
 )
 
+defineExpose({ checkPendingNotifications: startPollingForPendingNotifications })
+
 // Subscribe to new notifications from the store
 unsubscribe = tradeOrdersStore.subscribe((item, type) => {
   if (!walletAddress.value) return
