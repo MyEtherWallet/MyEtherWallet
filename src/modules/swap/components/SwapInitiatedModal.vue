@@ -35,7 +35,7 @@
               {{ truncateHash(snapshot.toAddress) }}
             </span>
 
-            on {{ toTokenChain }}
+            {{ t('swap.on') }} {{ toTokenChain }}
           </div>
 
           <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">
@@ -87,12 +87,12 @@
               >
                 {{
                   notificationStatus === 'sent'
-                    ? 'Pending'
+                    ? t('swap.initiated.pending')
                     : notificationStatus === 'confirmed'
-                      ? 'Successful'
+                      ? t('swap.initiated.successful')
                       : notificationStatus === 'failed'
-                        ? 'Failed'
-                        : 'Pending'
+                        ? t('swap.initiated.failed')
+                        : t('swap.initiated.pending')
                 }}
               </span>
             </div>
@@ -129,7 +129,7 @@
                     v-if="isBridge"
                     class="text-s-9 font-bold tracking-sp-06 uppercase text-info"
                   >
-                    from {{ fromTokenChain }}
+                    {{ t('swap.initiated.from-chain', { chain: fromTokenChain }) }}
                   </p>
                   <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
                     {{ formatFloatingPointValue(fromTokenAmount).value }}
@@ -186,7 +186,7 @@
                     v-if="isBridge"
                     class="text-s-9 font-bold tracking-sp-06 uppercase text-info"
                   >
-                    to {{ toTokenChain }}
+                    {{ t('swap.initiated.to-chain', { chain: toTokenChain }) }}
                   </p>
                   <p class="text-s-16 lg:text-s-20 font-bold leading-tight">
                     {{ formatFloatingPointValue(toTokenAmount).value }}
@@ -213,7 +213,7 @@
               <div class="flex justify-between items-center">
                 <span
                   class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
-                  >Transaction Hash</span
+                  >{{ t('common.transaction_hash') }}</span
                 >
                 <div class="flex items-center gap-2">
                   <span class="text-s-12 font-mono truncate max-w-[150px]">
@@ -230,13 +230,13 @@
           <p
             class="text-center text-s-13 lg:text-s-16 text-info px-4 leading-p-160"
           >
-            You can close this window and
+            {{ t('swap.initiated.close-window') }}
           </p>
           <app-base-button
             class="group border-2 mt-2 w-full"
             @click="openNotifications"
           >
-            Track progress in notifications
+            {{ t('swap.initiated.track-progress') }}
           </app-base-button>
 
           <p class="text-center mt-4">
@@ -246,7 +246,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="group underline inline-block"
-              >or check block explorer
+              >{{ t('swap.initiated.check-explorer') }}
               <arrow-long-right-icon
                 class="inline-block align-middle w-4 h-4 ml-1 transition-transform group-hover:translate-x-1"
               />

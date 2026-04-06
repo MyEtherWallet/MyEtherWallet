@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between gap-2">
       <div>
         <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
-          swap
+          {{ $t('notifications_module.swap') }}
         </p>
       </div>
       <div
@@ -11,10 +11,10 @@
         class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
-          v-if="swapStatus.label === 'Pending'"
+          v-if="swapStatus.key === 'pending'"
           class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
-        {{ swapStatus.label }}
+        {{ $t(swapStatus.labelKey) }}
       </div>
     </div>
 
@@ -79,7 +79,7 @@
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
-        More details
+        {{ $t('common.more_details') }}
         <chevron-down-icon
           :class="[
             'transition-transform w-3 h-3 ml-2',
@@ -89,7 +89,7 @@
       </app-btn-text>
       <!-- delete Button -->
       <app-btn-icon
-        label="delete notification"
+        :label="$t('common.delete_notification')"
         @click="$emit('remove', swap.hash)"
         class="ml-auto -mr-2"
       >
@@ -102,7 +102,7 @@
         <div class="flex items-center justify-between pt-2">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Chain</span
+            >{{ $t('common.chain') }}</span
           >
           <div class="flex items-center gap-1">
             <app-token-logo
@@ -119,7 +119,7 @@
         <div class="flex items-center justify-between mt-3">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Created at</span
+            >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
             {{ formatTime(swap.createdAt) }}
@@ -130,7 +130,7 @@
         <div class="flex items-center justify-between mt-3">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Tx hash</span
+            >{{ $t('common.tx_hash') }}</span
           >
           <a
             :href="swap.blockExplorerUrl"
@@ -150,7 +150,7 @@
         >
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Network Fee</span
+            >{{ $t('common.network_fee') }}</span
           >
           <div class="text-right">
             <p class="text-s-13 text-black">
@@ -218,13 +218,13 @@ const swapStatus = computed(() => {
 
   if (status === 'sent') {
     if (isOlderThan48Hours) {
-      return { label: 'Possibly Dropped', color: 'bg-surface' }
+      return { key: 'possibly_dropped', labelKey: 'notifications_module.status.possibly_dropped', color: 'bg-surface' }
     }
-    return { label: 'Pending', color: 'bg-primary' }
+    return { key: 'pending', labelKey: 'notifications_module.status.pending', color: 'bg-primary' }
   } else if (status === 'failed') {
-    return { label: 'Failed', color: 'bg-error' }
+    return { key: 'failed', labelKey: 'notifications_module.status.failed', color: 'bg-error' }
   } else {
-    return { label: 'Successful', color: 'bg-success' }
+    return { key: 'successful', labelKey: 'notifications_module.status.successful', color: 'bg-success' }
   }
 })
 </script>

@@ -14,8 +14,8 @@
         class="w-16 h-16 object-contain shrink-0 -ml-1"
       />
       <div class="flex-1 px-3">
-        <p class="font-bold text-s-16">Congratulations!</p>
-        <p class="text-s-14 text-info mt-0.5">You received your reward</p>
+        <p class="font-bold text-s-16">{{ $t('rewards.congratulations') }}</p>
+        <p class="text-s-14 text-info mt-0.5">{{ $t('rewards.you_received_reward') }}</p>
       </div>
       <app-btn-icon-close @close="toggleRewardToast(false)" />
     </div>

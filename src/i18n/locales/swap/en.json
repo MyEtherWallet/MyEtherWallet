@@ -3,11 +3,20 @@
     "title1": "Simple and Secure Token Swap",
     "title2": "Instant crypto exchange with minimal fees",
     "not-supported-network": "Selected network does not support swaps. Please select a different network.",
+    "you-are-selling": "You are selling",
+    "you-are-buying": "You are buying",
+    "network-not-supported": "Network Not Supported",
+    "swapping-not-available": "Swapping is not available on {network}. Please switch to a supported network.",
+    "bridging-not-available": "Bridging is not available on {network}. Please switch to a supported network.",
+    "need-help-swapping": "Need help swapping?",
+    "price-impact-too-high": "Price impact is too high {percent}%",
     "toast": {
       "select-chain": "Please select a chain.",
       "unsupported-chain": "Selected chain is not supported.",
       "tx-sign-failed": "Transaction signing failed. Please try again.",
-      "tx-send-success": "Swap executed successfully."
+      "tx-send-success": "Swap executed successfully.",
+      "swap-canceled": "Swap canceled by user",
+      "swap-failed": "Swap Failed"
     },
     "error": {
       "amount-required": "Amount is required.",
@@ -20,7 +29,10 @@
       "fetching-quotes": "Error fetching quotes. Please try again.",
       "initializing-swap-failed": "Error initializing swap. Please try again.",
       "getting-swap": "Error getting swap. Please try again.",
-      "too-many-decimals": "Amount has too many decimals"
+      "too-many-decimals": "Amount has too many decimals",
+      "pair-not-available": "Pair currently not available",
+      "recipient-required": "Recipient address is required for bridging",
+      "invalid-address": "Invalid address"
     },
     "best-offer": {
       "looking": "Looking for the best offer",
@@ -31,7 +43,15 @@
       "bridge-initiated": "Bridge initiated",
       "swap-completed-note": "Once completed, {symbol} will be deposited to your wallet",
       "bridge-completed-note": "Once completed, {symbol} will be bridged to this wallet",
-      "view-progress": "View Progress"
+      "view-progress": "View Progress",
+      "pending": "Pending",
+      "successful": "Successful",
+      "failed": "Failed",
+      "from-chain": "from {chain}",
+      "to-chain": "to {chain}",
+      "close-window": "You can close this window and",
+      "track-progress": "Track progress in notifications",
+      "check-explorer": "or check block explorer"
     },
     "swap-offer": {
       "best-offer-from": "Best offer from",

@@ -6,7 +6,7 @@
           <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
           <app-text-field
             v-model="message"
-            placeholder="Enter the message to verify"
+            :placeholder="$t('sign_message.enter_message_to_verify')"
             class="w-full"
           />
           <address-input
@@ -17,13 +17,13 @@
             :is-raised="false"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
-            label="Signing Address"
+            :label="$t('sign_message.signing_address')"
             class="w-full mb-4"
           />
 
           <app-text-field
             v-model="signature"
-            placeholder="Enter the signature to verify"
+            :placeholder="$t('sign_message.enter_signature_to_verify')"
             class="w-full"
           />
 
@@ -79,6 +79,9 @@ import { useAddressInput } from '@/composables/useAddressInput'
 import { storeToRefs } from 'pinia'
 import verifier from '@/utils/verifySignature'
 import { hexToString } from 'viem'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface VerifierObj {
   [key: string]: (params: {
@@ -155,12 +158,12 @@ const verifyMessage = async () => {
         signature: signature.value,
       })
       if (!verified.value) throw new Error('Verification failed')
-      verifyMessageDesc.value = `Message ${message.value} is signed by ${signingAddress.value}.`
+      verifyMessageDesc.value = t('sign_message.message_signed_by', { message: message.value, address: signingAddress.value })
     } catch {
-      verifyMessageDesc.value = `Message ${message.value} is NOT signed by ${signingAddress.value}.`
+      verifyMessageDesc.value = t('sign_message.message_not_signed_by', { message: message.value, address: signingAddress.value })
     }
   } else {
-    verifyMessageDesc.value = `Verify message not supported for ${selectedChain.value?.name}`
+    verifyMessageDesc.value = t('sign_message.verify_not_supported', { chain: selectedChain.value?.name })
   }
   verifying.value = false
 }

@@ -4,7 +4,7 @@
     v-if="!hadInitialLoad"
     class="rewards-bg rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
   >
-    <p class="text-center text-s-14 text-info">Loading Rewards</p>
+    <p class="text-center text-s-14 text-info">{{ $t('rewards.loading') }}</p>
   </div>
   <div
     v-else-if="isClaimed"
@@ -26,12 +26,12 @@
     <!-- Text + Astronaut -->
     <div class="relative flex items-start justify-between w-full">
       <div class="flex flex-col gap-2 min-w-[175px]">
-        <h3 class="text-s-28 md:text-s-32 font-bold leading-p-100">Hooray!</h3>
+        <h3 class="text-s-28 md:text-s-32 font-bold leading-p-100">{{ $t('rewards.hooray') }}</h3>
         <p class="text-s-16 font-semibold leading-tight mt-1">
-          You've been<br />rewarded with<br />$5 USDC
+          {{ $t('rewards.rewarded_with') }}
         </p>
         <p class="text-s-14 text-[#334155] leading-snug mt-2">
-          Remember to earn another<br />reward tomorrow!
+          {{ $t('rewards.earn_another_tomorrow') }}
         </p>
         <div
           class="mt-3 inline-flex items-center gap-1.5 bg-white/60 rounded-full px-3 py-1 w-fit -mr-5 -ml-2"
@@ -58,7 +58,7 @@
           <CheckIcon v-else class="w-4 h-4 text-primary" />
           <span class="text-s-12 font-semibold text-[#334155]">
             {{
-              isPending ? 'Reward is on its way' : 'Reward is in your wallet'
+              isPending ? $t('rewards.reward_on_its_way') : $t('rewards.reward_in_wallet')
             }}
           </span>
         </div>
@@ -69,7 +69,7 @@
           rel="noopener noreferrer"
           class="text-s-11 text-info mt-0.5 group hover:underline"
         >
-          See Reward Tx
+          {{ $t('rewards.see_reward_tx') }}
           <arrow-long-right-icon
             class="w-4 h-4 text-info inline-block group-hover:translate-x-1 transition-transform"
           />
@@ -107,21 +107,19 @@
           class="text-s-24 md:text-s-32 lg-max:text-s-28 2xl:text-s-28 font-bold leading-p-100 mb-3 text-center xs:text-start"
           :class="'text-s-32 '"
         >
-          Earn $5
+          {{ $t('rewards.earn_amount') }}
           <br
             :class="[
               isOpenSideMenu ? 'xl:hidden' : 'xl:flex',
               'hidden lg-max:flex 2xl:flex',
             ]"
-          />USDC
+          />{{ $t('rewards.usdc') }}
         </h3>
         <p
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
           :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[164px]']"
         >
-          First 100 swaps or trades on Ethereum each day
-          <br class="hidden 2xl:flex" />
-          over $10 get $5 USDC
+          {{ $t('rewards.first_100_swaps') }}
         </p>
       </div>
     </div>
@@ -134,11 +132,11 @@
       <div
         class="text-[10px] font-light text-info tracking-sp-06 uppercase text-center"
       >
-        {{ rewardsLeft }} rewards left today
+        {{ $t('rewards.rewards_left_today', { count: rewardsLeft }) }}
         <span v-if="rewardsLeft === 0 || rewardsLeft === '0'" class="mx-1"
           >·</span
         >
-        Resets in {{ timeUntilReset }}
+        {{ $t('rewards.resets_in', { time: timeUntilReset }) }}
       </div>
 
       <!-- Actions -->
@@ -151,7 +149,7 @@
         @click="goToSwap"
         size="medium"
       >
-        {{ 'Swap Now' }}
+        {{ $t('rewards.swap_now') }}
       </app-base-button>
       <p
         v-else-if="!canClaimReward && canSwap"
@@ -160,8 +158,8 @@
       >
         {{
           isAccountTooNew
-            ? 'Account not eligible'
-            : 'Sorry, try again tomorrow!'
+            ? $t('rewards.account_not_eligible')
+            : $t('rewards.try_again_tomorrow')
         }}
       </p>
       <button
@@ -169,7 +167,7 @@
         :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu, 'pt-2': !canSwap }"
         @click="onLearnMore"
       >
-        Learn More
+        {{ $t('rewards.learn_more') }}
       </button>
       <rewards-learn-more
         v-model:is-open="isLearnMoreOpen"
@@ -209,6 +207,9 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
@@ -300,7 +301,7 @@ const goToSwap = () => {
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {
     globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
     toastStore.addToastMessage({
-      text: 'Switched app network to Ethereum',
+      text: t('rewards.switched_to_ethereum'),
     })
   }
   setWalletPanel('swap')

@@ -2,7 +2,7 @@
   <div class="flex flex-col justify-center max-w-[490px] w-full">
     <app-input
       v-model="email"
-      placeholder="Enter your email"
+      :placeholder="$t('common.enter_your_email')"
       type="email"
       :error-message="emailErrorMessage"
     />
@@ -13,7 +13,7 @@
       :is-loading="isLoading"
       is-required
     >
-      Notify me
+      {{ $t('common.notify_me') }}
     </app-base-button>
   </div>
 </template>

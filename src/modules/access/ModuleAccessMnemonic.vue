@@ -40,7 +40,7 @@
                   }}
                 </p>
                 <p class="text-s-14 text-info italic">
-                  Also known as "Passphrase" or "13th/25th word"
+                  {{ $t('access_wallet_mnemonic.extra_word_known_as') }}
                 </p>
               </div>
               <app-toggle

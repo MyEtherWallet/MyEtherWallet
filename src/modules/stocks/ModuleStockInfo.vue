@@ -5,11 +5,11 @@
       <div
         class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px]"
       >
-        <app-btn-icon label="Share" :disabled="isLoading">
+        <app-btn-icon :label="$t('common.share')" :disabled="isLoading">
           <ShareIcon class="h-5 w-5" />
         </app-btn-icon>
         <app-btn-icon
-          :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
+          :label="isWatchlisted ? $t('common.remove_from_watchlist') : $t('common.add_to_watchlist')"
           :disabled="isLoading"
           @click="toggleWatchlist"
         >
@@ -107,7 +107,7 @@
             v-if="!isLoading && existsOnCurrentChain"
             class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
           >
-            on {{ selectedChain?.name }}
+            {{ $t('stocks.on_chain', { chain: selectedChain?.name }) }}
           </p>
         </div>
       </div>

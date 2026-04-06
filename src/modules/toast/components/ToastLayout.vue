@@ -43,7 +43,7 @@
               </p>
               <ChevronDownIcon
                 class="w-5 h-5 mt-1 mx-auto"
-                aria-label="Toggle full text"
+                :aria-label="$t('rewards.toggle_full_text')"
                 :class="{ 'rotate-180': isShownSecondaryTextInFull }"
               />
             </button>

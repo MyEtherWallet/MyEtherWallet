@@ -46,7 +46,7 @@
       <app-btn-icon
         v-if="type === 'password'"
         @click="togglePasswordVisibility"
-        :label="!showPassword ? 'Show Password' : 'Hide Password'"
+        :label="!showPassword ? $t('common.show_password') : $t('common.hide_password')"
         :disabled="isDisabled"
       >
         <component
@@ -66,7 +66,7 @@
         v-else-if="hasRequiredError"
         class="pl-4 pt-[1px] text-error text-[12px] leading-[23px]"
       >
-        required
+        {{ $t('common.required') }}
       </p>
     </transition>
   </div>

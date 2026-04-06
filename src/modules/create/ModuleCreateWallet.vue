@@ -16,7 +16,7 @@
           <app-btn-icon
             v-if="currentView !== 'default'"
             icon="icon-arrow-left"
-            label="back to connect options"
+            :label="$t('create_wallet.back_to_connect_options')"
             class="!w-10 !h-10 mr-auto mt-4"
             @click="createStore.setCurrentView('default')"
           >
@@ -38,7 +38,7 @@
             v-if="currentView === 'default'"
             class="text-s-14 sm:text-s-17 leading-p-150 mb-2 text-info"
           >
-            MEW is available on mobile and on desktop in your browser.
+            {{ $t('create_wallet.subtitle') }}
             <!-- <a
               href="https://help.myetherwallet.com/en/articles/5979837-how-to-create-an-ethereum-wallet-with-mew"
               target="_blank"
@@ -61,13 +61,13 @@
             <div
               tabindex="0"
               role="region"
-              aria-label="MEW Mobile App"
+              :aria-label="$t('create_wallet.mew_mobile_app')"
               class="relative rounded-20 lg:rounded-32 bg-mewBg pt-4 px-4 lg:p-6"
             >
               <div
                 class="absolute top-0 right-0 bg-primary text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
               >
-                Recommended
+                {{ $t('create_wallet.recommended') }}
               </div>
               <div class="flex gap-4 lg:gap-5 items-center mb-4">
                 <img
@@ -79,13 +79,13 @@
                 <div>
                   <div class="flex items-start gap-2 mb-1">
                     <h2 class="text-xs-20 md:text-s-24 font-bold leading-tight">
-                      MEW Mobile App
+                      {{ $t('create_wallet.mew_mobile_app') }}
                     </h2>
                   </div>
                   <div class="flex items-center gap-1 md:gap-3 opacity-70">
                     <img class="h-[14px] md:h-[16px]" :src="mewRating" />
                     <p class="text-s-12 md:text-s-14 font-medium">
-                      13k+ ratings
+                      {{ $t('create_wallet.ratings_count') }}
                     </p>
                   </div>
                 </div>
@@ -115,7 +115,7 @@
                   <p
                     class="text-info text-s-12 font-bold uppercase tracking-sp-06 mb-2"
                   >
-                    Scan to download
+                    {{ $t('create_wallet.scan_to_download') }}
                   </p>
                   <qr-code-vue
                     value="https://download.mewwallet.com/?source=web-home/"
@@ -141,7 +141,7 @@
                       <img
                         :src="IMGGooglePlay"
                         contain
-                        alt="Google Play Store download"
+                        :alt="$t('create_wallet.google_play_alt')"
                         class="h-10 w-full object-contain"
                       />
                     </a>
@@ -158,7 +158,7 @@
                     >
                       <img
                         :src="IMGIOSstore"
-                        alt="Apple App Store download"
+                        :alt="$t('create_wallet.apple_store_alt')"
                         class="h-10 w-full object-contain"
                       />
                     </a>
@@ -170,13 +170,13 @@
             <div
               tabindex="0"
               role="region"
-              aria-label="Enkrypt Browser Wallet"
+              :aria-label="$t('create_wallet.enkrypt_browser_wallet')"
               class="relative rounded-20 lg:rounded-32 p-4 lg:p-6 bg-enkryptBg flex flex-col h-full w-full"
             >
               <div
                 class="absolute top-0 right-0 bg-primary text-white text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-token"
               >
-                Recommended
+                {{ $t('create_wallet.recommended') }}
               </div>
               <div class="flex gap-4 lg:gap-5 items-center mb-4">
                 <img
@@ -190,7 +190,7 @@
                 <div>
                   <div class="flex items-start gap-2 mb-1">
                     <h2 class="text-xs-20 md:text-s-24 font-bold leading-tight">
-                      Enkrypt Browser Wallet
+                      {{ $t('create_wallet.enkrypt_browser_wallet') }}
                     </h2>
                   </div>
                   <div class="flex items-center gap-1 md:gap-3 opacity-70">
@@ -201,7 +201,7 @@
                       class="h-[14px] md:h-[16px]"
                     />
                     <p class="text-s-12 md:text-s-14 font-medium">
-                      100,000+ users
+                      {{ $t('create_wallet.enkrypt_users_count') }}
                     </p>
                   </div>
                 </div>
@@ -231,7 +231,7 @@
                   <p
                     class="text-s-16 lg:text-s-17 text-center text-white font-semibold mr-2"
                   >
-                    Get Enkrypt Browser Wallet
+                    {{ $t('create_wallet.get_enkrypt') }}
                   </p>
                   <arrow-long-right-icon class="w-6 h-6 text-white" />
                 </div>
@@ -241,34 +241,33 @@
 
           <!-- Other Methods Section -->
           <div>
-            <h3 class="text-s-20 font-bold mb-3 px-4">Other wallet methods</h3>
+            <h3 class="text-s-20 font-bold mb-3 px-4">{{ $t('create_wallet.other_wallet_methods') }}</h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-2 pt-2">
               <!-- Hardware -->
               <button
                 type="button"
-                label="Buy a hardware wallet"
+                :label="$t('create_wallet.buy_hardware_wallet')"
                 class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('buy')"
               >
                 <div class="w-1/3">
                   <img
                     :src="hardware"
-                    alt="hardware wallet"
+                    :alt="$t('create_wallet.hardware_wallet_alt')"
                     class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                   />
                 </div>
                 <div class="lg:w-2/3 flex flex-col justify-between">
                   <div>
-                    <h4 class="text-s-20 font-bold mb-2">Hardware Wallet</h4>
+                    <h4 class="text-s-20 font-bold mb-2">{{ $t('create_wallet.hardware_wallet') }}</h4>
                     <p class="text-info text-s-14 leading-p-150 mb-4">
-                      The highest standard of security. Order a device online
-                      and use it with MEW.
+                      {{ $t('create_wallet.hardware_wallet_description') }}
                     </p>
                   </div>
                   <div
                     class="lg:-ml-2 flex items-center text-s-16 font-medium border-1 rounded-full px-4 py-1 size-max"
                   >
-                    Buy a hardware wallet
+                    {{ $t('create_wallet.buy_hardware_wallet') }}
                     <arrow-long-right-icon
                       class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
                     />
@@ -279,19 +278,19 @@
               <!-- Software -->
               <button
                 type="button"
-                label="Create a software wallet"
+                :label="$t('create_wallet.create_software_wallet')"
                 class="relative flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >
                 <div
                   class="absolute top-0 right-0 border-error border-1 bg-error-7 text-error text-s-8 lg:text-s-9 font-bold px-2.5 py-1 lg:py-[6px] rounded-full uppercase tracking-sp-06 translate-y-[-35%] translate-x-[10%] shadow-button"
                 >
-                  not recommended
+                  {{ $t('create_wallet.not_recommended') }}
                 </div>
                 <div class="w-1/3 shrink-0">
                   <img
                     :src="software"
-                    alt="software wallet"
+                    :alt="$t('create_wallet.software_wallet_alt')"
                     class="rounded-2xl w-full object-contain transform transition-transform group-hover:scale-105"
                   />
                 </div>
@@ -299,18 +298,17 @@
                   <div>
                     <div class="flex items-start justify-between gap-2 mb-2">
                       <h4 class="text-s-20 font-bold leading-tight">
-                        Software Wallet
+                        {{ $t('create_wallet.software_wallet') }}
                       </h4>
                     </div>
                     <p class="text-info text-s-14 leading-p-150 mb-4">
-                      Create a wallet using a recovery phrase. Use only in
-                      offline settings.
+                      {{ $t('create_wallet.software_wallet_description') }}
                     </p>
                   </div>
                   <div
                     class="lg:-ml-2 flex items-center font-medium text-s-16 border-1 rounded-full px-4 py-1 size-max w-fit"
                   >
-                    Create a software wallet
+                    {{ $t('create_wallet.create_software_wallet') }}
                     <arrow-long-right-icon
                       class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1"
                     />
@@ -335,7 +333,7 @@
                 <p
                   class="text-info text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
                 >
-                  Starting from
+                  {{ $t('create_wallet.starting_from') }}
                 </p>
                 <span class="font-bold text-s-32">$59.00</span>
               </div>
@@ -357,7 +355,7 @@
                 <p
                   class="text-info text-s-14 font-medium mb-1 tracking-sp-06 uppercase"
                 >
-                  Starting from
+                  {{ $t('create_wallet.starting_from') }}
                 </p>
                 <span class="font-bold text-s-32">$79.00</span>
               </div>
@@ -405,6 +403,9 @@ import trezorWallet from '@/assets/images/create/buy/buy-trezor.png'
 import ModuleCreateMnemonic from './ModuleCreateMnemonic.vue'
 import { analytics } from '@/analytics'
 import { CreateWalletEvent } from '@/analytics/events'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 /**-------------------------------
  * Access Wallet Dialog
@@ -422,10 +423,10 @@ const isOtherMethodsOpen = ref(false)
  * UI Elements
  -------------------------------*/
 const getTitle = computed(() => {
-  if (currentView.value === 'default') return 'Create Wallet'
-  if (currentView.value === 'buy') return 'Buy a Hardware Wallet'
-  if (currentView.value === 'mnemonic') return 'Create a Mnemonic Wallet'
-  return 'Create Wallet'
+  if (currentView.value === 'default') return t('create_wallet.title')
+  if (currentView.value === 'buy') return t('create_wallet.buy_hardware_wallet_title')
+  if (currentView.value === 'mnemonic') return t('create_wallet.create_mnemonic_wallet_title')
+  return t('create_wallet.title')
 })
 
 const setView = (view: CreateWalletView) => {
