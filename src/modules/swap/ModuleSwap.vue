@@ -306,8 +306,8 @@ const toastStore = useToastStore()
 const accessStore = useAccessStore()
 const rewardsStore = useRewardsStore()
 const pairStore = usePairStore()
-const { swapFromToken, swapToToken } = storeToRefs(pairStore)
-const { setSwapFromToken, setSwapToToken } = pairStore
+const { swapFromToken, swapToToken, swapToChain } = storeToRefs(pairStore)
+const { setSwapFromToken, setSwapToToken, setSwapToChain } = pairStore
 const { t } = useI18n()
 
 // --- Refs from Stores ---
@@ -1199,6 +1199,14 @@ watch(toTokenSelected, token => {
   setSwapToToken(token ?? null)
 })
 
+watch(selectedToChain, chain => {
+  if (chain && chain.name !== selectedChain.value?.name) {
+    setSwapToChain(chain)
+  } else {
+    setSwapToChain(null)
+  }
+})
+
 // Deep Link / Swap Values Watcher
 watch(
   () => swapValues.value,
@@ -1422,6 +1430,9 @@ onBeforeMount(async () => {
 
   // Pre-populate from pairStore so setFromToken/setToToken keep the selection if found in list
   if (!hasSwapValues.value) {
+    if (swapToChain.value && swapToChain.value.name !== selectedChain.value?.name) {
+      selectedToChain.value = swapToChain.value
+    }
     if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
     if (swapToToken.value) toTokenSelected.value = swapToToken.value
   }
