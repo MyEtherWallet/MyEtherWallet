@@ -1,9 +1,8 @@
-import { toHex } from 'viem';
+import { toHex } from 'viem'
 import { WalletType, type HexPrefixedString } from '../types'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { Psbt } from 'bitcoinjs-lib'
 import { INFO_MAP, UNISAT_MAP } from '../common/btcInfo'
-
 
 class UnisatInjectWallet extends BaseBtcWallet {
   unisat: NonNullable<typeof window.unisat> // TODO: make or find proper instance
@@ -41,13 +40,14 @@ class UnisatInjectWallet extends BaseBtcWallet {
     serializedTx: HexPrefixedString,
   ): Promise<HexPrefixedString> {
     try {
-      const signedHexString = await this.unisat.signPsbt(
-        serializedTx,
-        { autoFinalized: false }
-      )
-      const psbtInstance = Psbt.fromHex(signedHexString, { network: INFO_MAP[this.chainName].network });
-      psbtInstance.finalizeAllInputs();
-      const tx = psbtInstance.extractTransaction(false);
+      const signedHexString = await this.unisat.signPsbt(serializedTx, {
+        autoFinalized: false,
+      })
+      const psbtInstance = Psbt.fromHex(signedHexString, {
+        network: INFO_MAP[this.chainName].network,
+      })
+      psbtInstance.finalizeAllInputs()
+      const tx = psbtInstance.extractTransaction(false)
       const txId = await this.broadcastTransaction(`0x${tx.toHex()}`)
       return txId as HexPrefixedString
     } catch (err) {
@@ -74,12 +74,12 @@ class UnisatInjectWallet extends BaseBtcWallet {
   }
 
   override async SignMessage(options: {
-    message: string;
-    options?: unknown;
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
-    const provider = this.getProviderInstance();
-    const signature = await provider.signMessage(toHex(options.message));
-    return signature as HexPrefixedString;
+    const provider = this.getProviderInstance()
+    const signature = await provider.signMessage(toHex(options.message))
+    return signature as HexPrefixedString
   }
 }
 

@@ -252,6 +252,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useAddressBookStore, type Address } from '@/stores/addressBook'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { usePairStore } from '@/stores/pairStore'
 import {
   analytics,
   ConnectWalletEvent,
@@ -304,6 +305,9 @@ const inputStore = useInputStore()
 const toastStore = useToastStore()
 const accessStore = useAccessStore()
 const rewardsStore = useRewardsStore()
+const pairStore = usePairStore()
+const { swapFromToken, swapToToken } = storeToRefs(pairStore)
+const { setSwapFromToken, setSwapToToken } = pairStore
 const { t } = useI18n()
 
 // --- Refs from Stores ---
@@ -725,7 +729,6 @@ const proceedWithSwap = async (quoteId: string) => {
         : typeof e === 'string'
           ? e
           : t('swap.toast.tx-sign-failed')
-    console.log('Error message:', errorMessage) // Log the error message for debugging
     if (errorMessage.includes('user rejected')) {
       toastStore.addToastMessage({
         type: ToastType.Info,
@@ -1187,6 +1190,15 @@ const connectWalletForSwap = () => {
 
 // --- Watchers ---
 
+// Sync swap pair to pairStore
+watch(fromTokenSelected, token => {
+  setSwapFromToken(token ?? null)
+})
+
+watch(toTokenSelected, token => {
+  setSwapToToken(token ?? null)
+})
+
 // Deep Link / Swap Values Watcher
 watch(
   () => swapValues.value,
@@ -1406,6 +1418,12 @@ onBeforeMount(async () => {
   }
   if (isSwapView.value && !hasSwapValues.value && !isBitcoinChain.value) {
     selectedToChain.value = selectedChain.value
+  }
+
+  // Pre-populate from pairStore so setFromToken/setToToken keep the selection if found in list
+  if (!hasSwapValues.value) {
+    if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
+    if (swapToToken.value) toTokenSelected.value = swapToToken.value
   }
 
   await nextTick()
