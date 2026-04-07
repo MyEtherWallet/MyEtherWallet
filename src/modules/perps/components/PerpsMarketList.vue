@@ -42,18 +42,16 @@
       </app-select>
     </div>
 
-    <div class="bg-white rounded-20 p-6 sm:p-8">
+    <div class="mt-3 bg-white rounded-16 py-4 px-2">
       <!-- Search -->
-      <div class="mb-4">
+      <div class="flex items-center px-2 pt-2 pb-6 mb-4 border-b border-grey-5">
         <div
-          class="flex items-center gap-2 border border-grey-10 rounded-full px-4 py-2.5 max-w-md"
+          class="flex grow gap-4 justify-between items-center bg-surface rounded-full p-1 w-full md:max-w-[500px]"
         >
-          <MagnifyingGlassIcon class="w-5 h-5 text-info" />
-          <input
+          <app-search-input
             v-model="searchQuery"
-            type="text"
+            class="grow"
             placeholder="Search"
-            class="w-full bg-transparent text-s-14 outline-none placeholder:text-info"
           />
         </div>
       </div>
@@ -72,46 +70,59 @@
       </div>
 
       <!-- Markets table -->
-      <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
-        <table class="w-full text-s-14 min-w-[800px]">
-          <thead>
-            <tr class="text-info uppercase text-s-11 tracking-wider">
-              <th class="px-6 sm:px-8 py-3 text-left font-medium">Name</th>
-              <th class="px-3 py-3 text-right font-medium">Price</th>
-              <th class="px-3 py-3 text-center font-medium">24H</th>
-              <th class="px-3 py-3 text-right font-medium">Volume</th>
-              <th class="px-3 py-3 text-right font-medium">Market Cap</th>
-              <th class="px-6 sm:px-8 py-3 text-right font-medium">Actions</th>
+      <div v-else>
+        <table class="w-full text-sm table-fixed">
+          <thead class="bg-white">
+            <tr
+              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+            >
+              <th class="hidden xs:table-cell xs:w-10 py-3 text-center"></th>
+              <th class="px-1 py-3">Name</th>
+              <th class="px-3 py-3 text-right">Price</th>
+              <th class="px-3 py-3 text-right">24H</th>
+              <th class="hidden 2xl:table-cell px-3 py-3 text-right">Volume</th>
+              <th class="hidden md:table-cell px-3 py-3 text-right">
+                Market Cap
+              </th>
+              <th
+                class="lg:pl-6 lg:pr-4 py-3 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
+              ></th>
             </tr>
           </thead>
           <tbody>
             <tr
               v-for="contract in filteredContracts"
               :key="contract.market"
-              class="cursor-pointer hover:bg-surface/50 transition-colors"
+              class="h-14 hoverBGWhite cursor-pointer"
               @click="$emit('openPosition', contract.market)"
             >
-              <td class="px-6 sm:px-8 py-4">
-                <div class="flex items-center gap-3">
-                  <button
-                    class="text-grey-30 hover:text-gold transition-colors"
-                    @click.stop="toggleWatchlist(contract.baseCurrency)"
-                  >
-                    <StarIcon
-                      :class="[
-                        'w-5 h-5',
-                        watchlist.has(contract.baseCurrency)
-                          ? 'fill-gold text-gold'
-                          : '',
-                      ]"
-                    />
-                  </button>
-                  <img
-                    :src="getLogoUrl(contract.baseCurrency)"
-                    :alt="contract.baseCurrency"
-                    class="w-8 h-8 rounded-full"
+              <!-- Watchlist -->
+              <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
+                <button
+                  :aria-label="
+                    watchlist.has(contract.baseCurrency)
+                      ? 'Remove from Watchlist'
+                      : 'Add to Watchlist'
+                  "
+                  class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
+                  @click.stop="toggleWatchlist(contract.baseCurrency)"
+                >
+                  <star-outline-icon
+                    v-if="!watchlist.has(contract.baseCurrency)"
+                    class="h-4 w-4 cursor-pointer"
                   />
-                  <div>
+                  <star-solid-icon v-else class="h-4 w-4 cursor-pointer" />
+                </button>
+              </td>
+              <!-- Name -->
+              <td class="px-1 py-2 rounded-l-12 xs:rounded-none">
+                <div class="flex items-center gap-3">
+                  <app-token-logo
+                    :url="getLogoUrl(contract.baseCurrency)"
+                    :symbol="contract.baseCurrency"
+                    class="rounded-full"
+                  />
+                  <div class="truncate">
                     <div class="flex items-center gap-2">
                       <span class="font-bold">{{ contract.baseCurrency }}</span>
                       <span
@@ -120,80 +131,204 @@
                         20x
                       </span>
                     </div>
-                    <span class="text-info text-s-12">{{
+                    <span class="text-info text-s-12 truncate">{{
                       contract.displayName
                     }}</span>
                   </div>
                 </div>
               </td>
-              <td class="px-3 py-4 text-right font-bold">
-                {{ formatPrice(midPrice(contract)) }}
+              <!-- Price -->
+              <td class="px-1 py-2 text-right">
+                <p class="text-right">
+                  {{ formatPrice(midPrice(contract)) }}
+                </p>
               </td>
-              <td class="px-3 py-4 text-center">
-                <div class="flex items-center justify-center gap-2">
-                  <table-sparkline
-                    v-if="contract.sparkline?.price.length"
-                    :points="contract.sparkline.price.map(Number)"
-                    :percent-change="
-                      parseFloat(contract.priceChangePercent ?? '0')
-                    "
-                    :width="80"
-                    :height="28"
-                  />
-                  <span
-                    :class="[
-                      parseFloat(contract.priceChangePercent ?? '0') >= 0
-                        ? 'text-success'
-                        : 'text-error',
-                      'text-s-12 font-medium',
-                    ]"
-                  >
+              <!-- 24H % -->
+              <td
+                class="px-1 py-2 text-right text-s-13 leading-p-100"
+                :class="
+                  parseFloat(contract.priceChangePercent ?? '0') >= 0
+                    ? 'text-success'
+                    : 'text-error'
+                "
+              >
+                <div>
+                  <p class="mb-1">
                     {{ formatChange(contract.priceChangePercent) }}
-                  </span>
+                  </p>
+                  <div v-if="!contract.sparkline?.price.length"></div>
+                  <table-sparkline
+                    v-else
+                    :points="contract.sparkline.price.map(Number)"
+                    :width="70"
+                    :height="24"
+                    :max-points="34"
+                    :percent-change="
+                      parseFloat(contract.priceChangePercent ?? '0') ||
+                      undefined
+                    "
+                    fill
+                  />
                 </div>
               </td>
-              <td class="px-3 py-4 text-right font-bold">
+              <!-- Volume -->
+              <td class="hidden 2xl:table-cell px-1 py-2 text-right">
                 {{ formatVolume(contract.usdVolume) }}
               </td>
-              <td class="px-3 py-4 text-right font-bold">
+              <!-- Market Cap -->
+              <td class="hidden md:table-cell px-1 py-2 text-right">
                 {{ formatVolume(contract.openInterestUsd) }}
               </td>
-              <td class="px-6 sm:px-8 py-4 text-right">
-                <button
-                  v-if="getPosition(contract.market)"
-                  class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white"
-                  :class="
-                    getPosition(contract.market)!.direction === 'long'
-                      ? 'bg-success'
-                      : 'bg-error'
-                  "
-                  @click="$emit('openPosition', contract.market)"
+              <!-- Actions -->
+              <td class="lg:pr-2 py-1 rounded-r-12 relative text-right">
+                <div
+                  class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
                 >
-                  Manage
-                  {{
-                    getPosition(contract.market)!.direction === 'long'
-                      ? 'Long'
-                      : 'Short'
-                  }}
-                </button>
-                <div v-else class="flex gap-2 justify-end">
-                  <button
-                    class="bg-success text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
-                    @click.stop="$emit('openPosition', contract.market, 'buy')"
+                  <app-pop-up-menu placeholder="actions menu" location="right">
+                    <template #menu-button="{ toggleMenu }">
+                      <app-btn-icon
+                        label="action menu"
+                        @click.stop="toggleMenu"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                      >
+                        <ellipsis-vertical-icon class="w-5 h-5" />
+                      </app-btn-icon>
+                    </template>
+                    <template #menu-content="{ toggleMenu }">
+                      <div
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      >
+                        <button
+                          class="xs:hidden flex items-center p-2 hoverBGWhite rounded-12"
+                          @click.stop="[
+                            toggleWatchlist(contract.baseCurrency),
+                            toggleMenu(),
+                          ]"
+                        >
+                          <star-outline-icon
+                            v-if="!watchlist.has(contract.baseCurrency)"
+                            class="h-4 w-4 cursor-pointer"
+                          />
+                          <star-solid-icon
+                            v-else
+                            class="h-4 w-4 cursor-pointer"
+                          />
+                          <span class="ml-2">{{
+                            watchlist.has(contract.baseCurrency)
+                              ? 'Remove from Watchlist'
+                              : 'Add to Watchlist'
+                          }}</span>
+                        </button>
+                        <hr
+                          class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
+                        />
+                        <ul>
+                          <li
+                            v-if="getPosition(contract.market)"
+                            @click.stop="[
+                              toggleMenu(),
+                              $emit('openPosition', contract.market),
+                            ]"
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                          >
+                            <p>
+                              Manage
+                              {{
+                                getPosition(contract.market)!.direction ===
+                                'long'
+                                  ? 'Long'
+                                  : 'Short'
+                              }}
+                            </p>
+                          </li>
+                          <template v-else>
+                            <li
+                              @click.stop="[
+                                toggleMenu(),
+                                $emit('openPosition', contract.market, 'buy'),
+                              ]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <p>Long</p>
+                            </li>
+                            <li
+                              @click.stop="[
+                                toggleMenu(),
+                                $emit('openPosition', contract.market, 'sell'),
+                              ]"
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                            >
+                              <p>Short</p>
+                            </li>
+                          </template>
+                        </ul>
+                      </div>
+                    </template>
+                  </app-pop-up-menu>
+                </div>
+                <div class="hidden lg:flex flex-row gap-2 justify-end">
+                  <app-base-button
+                    v-if="getPosition(contract.market)"
+                    size="small"
+                    @click.stop="$emit('openPosition', contract.market)"
                   >
-                    Long
-                  </button>
-                  <button
-                    class="bg-error text-white rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity"
-                    @click.stop="$emit('openPosition', contract.market, 'sell')"
-                  >
-                    Short
-                  </button>
+                    Manage
+                    {{
+                      getPosition(contract.market)!.direction === 'long'
+                        ? 'Long'
+                        : 'Short'
+                    }}
+                  </app-base-button>
+                  <template v-else>
+                    <app-base-button
+                      size="small"
+                      class="min-w-[64px]"
+                      theme="success"
+                      @click.stop="
+                        $emit('openPosition', contract.market, 'buy')
+                      "
+                    >
+                      Long
+                    </app-base-button>
+                    <app-base-button
+                      size="small"
+                      theme="error"
+                      class="min-w-[64px]"
+                      @click.stop="
+                        $emit('openPosition', contract.market, 'sell')
+                      "
+                    >
+                      Short
+                    </app-base-button>
+                  </template>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
+        <div
+          v-if="filteredContracts.length === 0"
+          class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
+        >
+          <p
+            v-if="selectedFilter.value === 'watchlist' && !searchQuery"
+            class="mb-1 text-center lg:mt-10"
+          >
+            You don't have any watchlisted tokens.
+          </p>
+          <p v-if="searchQuery" class="mb-1 text-center lg:my-10">
+            No results found for "{{ searchQuery }}".
+          </p>
+          <button
+            v-if="selectedFilter.value === 'watchlist' && !searchQuery"
+            class="underline lg:mb-10"
+            @click="selectedFilter = filterOptions[0]"
+          >
+            Discover markets
+            <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -201,11 +336,21 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { MagnifyingGlassIcon, StarIcon } from '@heroicons/vue/24/outline'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import AppSearchInput from '@/components/AppSearchInput.vue'
+import {
+  ChevronDownIcon,
+  StarIcon as StarSolidIcon,
+  ArrowLongUpIcon,
+  EllipsisVerticalIcon,
+} from '@heroicons/vue/24/solid'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   usePerpsMarkets,
   usePerpsContracts,

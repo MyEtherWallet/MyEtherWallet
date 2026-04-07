@@ -13,14 +13,18 @@
           ? 'hoverOpacity'
           : 'hoverOpacityHasBG',
       'rounded-full font-medium transition-colors hover:opacity-90 !box-border',
-      // computed breaks error style
+      // computed breaks error/success style
       theme === 'primary'
         ? isOutline
           ? 'border border-2 border-primary text-primary bg-transparent'
           : 'text-white bg-primary'
-        : isOutline
-          ? 'border border-2 border-error text-error bg-transparent'
-          : 'text-white bg-error',
+        : theme === 'success'
+          ? isOutline
+            ? 'border border-2 border-success text-success bg-transparent'
+            : 'text-white bg-success'
+          : isOutline
+            ? 'border border-2 border-error text-error bg-transparent'
+            : 'text-white bg-error',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -95,7 +99,7 @@ const props = defineProps({
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error'>,
+    type: String as PropType<'primary' | 'error' | 'success'>,
     default: 'primary',
   },
 })
