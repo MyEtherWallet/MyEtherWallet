@@ -4,7 +4,8 @@
   font-style: normal;
   font-weight: 100;
   font-display: swap;
-  src: url('@assets/fonts/DMSans/DMSans-100.woff2');
+  src: url('/fonts/DMSans/DMSans-100.woff2') format('woff2'),
+       url('@assets/fonts/DMSans/DMSans-100.woff2') format('woff2');
 }
 
 /* DM Sans - 300 - latin */
@@ -13,7 +14,8 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url('@assets/fonts/DMSans/DMSans-300.woff2');
+  src: url('/fonts/DMSans/DMSans-300.woff2') format('woff2'),
+       url('@assets/fonts/DMSans/DMSans-300.woff2') format('woff2');
 }
 
 /* DM Sans - regular - latin */
@@ -22,7 +24,8 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('@assets/fonts/DMSans/DMSans-400.woff2');
+  src: url('/fonts/DMSans/DMSans-400.woff2') format('woff2'),
+       url('@assets/fonts/DMSans/DMSans-400.woff2') format('woff2');
 }
 
 /* DM Sans - 500 - latin */
@@ -31,7 +34,8 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('@assets/fonts/DMSans/DMSans-500.woff2');
+  src: url('/fonts/DMSans/DMSans-500.woff2') format('woff2'),
+       url('@assets/fonts/DMSans/DMSans-500.woff2') format('woff2');
 }
 
 /* DM Sans - 600 - latin */
@@ -40,7 +44,8 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('@assets/fonts/DMSans/DMSans-600.woff2');
+  src: url('/fonts/DMSans/DMSans-600.woff2') format('woff2'),
+       url('@assets/fonts/DMSans/DMSans-600.woff2') format('woff2');
 }
 
 /* DM Sans - 700 - latin */
@@ -49,5 +54,6 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('@assets/fonts/DMSans/DMSans-700.woff2');
+  src: url('/fonts/DMSans/DMSans-700.woff2') format('woff2'),
+       url('@assets/fonts/DMSans/DMSans-700.woff2') format('woff2');
 }
