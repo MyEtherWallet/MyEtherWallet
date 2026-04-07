@@ -4,10 +4,9 @@ import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 
 export const usePairStore = defineStore('pairStore', () => {
-  // Swap pairs
+  // Swap pairs (same-chain swap view)
   const swapFromToken = ref<NewTokenInfo | null>(null)
   const swapToToken = ref<NewTokenInfo | null>(null)
-  const swapToChain = ref<Chain | null>(null)
 
   const setSwapFromToken = (token: NewTokenInfo | null) => {
     swapFromToken.value = token
@@ -17,14 +16,32 @@ export const usePairStore = defineStore('pairStore', () => {
     swapToToken.value = token
   }
 
-  const setSwapToChain = (chain: Chain | null) => {
-    swapToChain.value = chain
-  }
-
   const clearSwapPair = () => {
     swapFromToken.value = null
     swapToToken.value = null
-    swapToChain.value = null
+  }
+
+  // Bridge pairs (cross-chain bridge view)
+  const bridgeFromToken = ref<NewTokenInfo | null>(null)
+  const bridgeToToken = ref<NewTokenInfo | null>(null)
+  const bridgeToChain = ref<Chain | null>(null)
+
+  const setBridgeFromToken = (token: NewTokenInfo | null) => {
+    bridgeFromToken.value = token
+  }
+
+  const setBridgeToToken = (token: NewTokenInfo | null) => {
+    bridgeToToken.value = token
+  }
+
+  const setBridgeToChain = (chain: Chain | null) => {
+    bridgeToChain.value = chain
+  }
+
+  const clearBridgePair = () => {
+    bridgeFromToken.value = null
+    bridgeToToken.value = null
+    bridgeToChain.value = null
   }
 
   // Trade pairs
@@ -47,11 +64,16 @@ export const usePairStore = defineStore('pairStore', () => {
   return {
     swapFromToken,
     swapToToken,
-    swapToChain,
     setSwapFromToken,
     setSwapToToken,
-    setSwapToChain,
     clearSwapPair,
+    bridgeFromToken,
+    bridgeToToken,
+    bridgeToChain,
+    setBridgeFromToken,
+    setBridgeToToken,
+    setBridgeToChain,
+    clearBridgePair,
     tradeFromSymbol,
     tradeToSymbol,
     setTradeFromSymbol,

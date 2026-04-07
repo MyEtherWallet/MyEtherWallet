@@ -306,8 +306,20 @@ const toastStore = useToastStore()
 const accessStore = useAccessStore()
 const rewardsStore = useRewardsStore()
 const pairStore = usePairStore()
-const { swapFromToken, swapToToken, swapToChain } = storeToRefs(pairStore)
-const { setSwapFromToken, setSwapToToken, setSwapToChain } = pairStore
+const {
+  swapFromToken,
+  swapToToken,
+  bridgeFromToken,
+  bridgeToToken,
+  bridgeToChain,
+} = storeToRefs(pairStore)
+const {
+  setSwapFromToken,
+  setSwapToToken,
+  setBridgeFromToken,
+  setBridgeToToken,
+  setBridgeToChain,
+} = pairStore
 const { t } = useI18n()
 
 // --- Refs from Stores ---
@@ -1190,20 +1202,26 @@ const connectWalletForSwap = () => {
 
 // --- Watchers ---
 
-// Sync swap pair to pairStore
+// Sync swap/bridge pair to pairStore
 watch(fromTokenSelected, token => {
-  setSwapFromToken(token ?? null)
+  if (isSwapView.value) {
+    setSwapFromToken(token ?? null)
+  } else {
+    setBridgeFromToken(token ?? null)
+  }
 })
 
 watch(toTokenSelected, token => {
-  setSwapToToken(token ?? null)
+  if (isSwapView.value) {
+    setSwapToToken(token ?? null)
+  } else {
+    setBridgeToToken(token ?? null)
+  }
 })
 
 watch(selectedToChain, chain => {
-  if (chain && chain.name !== selectedChain.value?.name) {
-    setSwapToChain(chain)
-  } else {
-    setSwapToChain(null)
+  if (!isSwapView.value) {
+    setBridgeToChain(chain && chain.name !== selectedChain.value?.name ? chain : null)
   }
 })
 
@@ -1430,11 +1448,16 @@ onBeforeMount(async () => {
 
   // Pre-populate from pairStore so setFromToken/setToToken keep the selection if found in list
   if (!hasSwapValues.value) {
-    if (swapToChain.value && swapToChain.value.name !== selectedChain.value?.name) {
-      selectedToChain.value = swapToChain.value
+    if (isSwapView.value) {
+      if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
+      if (swapToToken.value) toTokenSelected.value = swapToToken.value
+    } else {
+      if (bridgeToChain.value && bridgeToChain.value.name !== selectedChain.value?.name) {
+        selectedToChain.value = bridgeToChain.value
+      }
+      if (bridgeFromToken.value) fromTokenSelected.value = bridgeFromToken.value
+      if (bridgeToToken.value) toTokenSelected.value = bridgeToToken.value
     }
-    if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
-    if (swapToToken.value) toTokenSelected.value = swapToToken.value
   }
 
   await nextTick()
