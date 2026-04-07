@@ -3,11 +3,11 @@ name: add offline build [v6]
 on:
   pull_request:
     branches:
-      - 'main'
+      - 'v6main'
 
 jobs:
   offline-build:
-    if: github.head_ref == 'develop'
+    if: github.head_ref == 'v6develop'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

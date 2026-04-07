@@ -3,7 +3,7 @@ name: generate changelog [v6]
 on:
   push:
     branches:
-      - develop
+      - v6develop
 
 jobs:
   changelog:
@@ -23,5 +23,5 @@ jobs:
           token: ${{secrets.MEW_BOT_TOKEN}}
           commit-message: 'chore: 👷 generate changelog for release'
           branch: chore/generate-changelog
-          base: develop
+          base: v6develop
           title: 'chore: 👷 generate changelog for release'

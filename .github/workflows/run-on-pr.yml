@@ -3,8 +3,8 @@ name: run on pull request [v6]
 on:
   pull_request:
     branches:
-      - main
-      - develop
+      - v6main
+      - v6develop
 
 jobs:
   run-on-pr:

@@ -3,7 +3,7 @@ name: validate changelog [v6]
 on:
   pull_request:
     branches:
-      - develop
+      - v6develop
 
 jobs:
   validate-changelog:

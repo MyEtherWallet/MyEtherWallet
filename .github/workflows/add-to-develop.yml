@@ -3,7 +3,7 @@ name: add to develop [v6]
 on:
   push:
     branches:
-      - develop
+      - v6develop
 
 jobs:
   develop-build:
