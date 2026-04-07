@@ -121,7 +121,9 @@
     "vue-tsc": "^3.2.2",
     "web3-eth-abi": "^4.4.1"
   },
-  "resolutions": {
-    "axios": "1.14.0"
+  "pnpm": {
+    "overrides": {
+      "axios": "1.14.0"
+    }
   }
 }
