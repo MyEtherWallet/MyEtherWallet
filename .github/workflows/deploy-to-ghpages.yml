@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: v6main
 
       - name: verify tag
         run: |
-          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^main$'
+          git branch --contains $GITHUB_SHA | sed -e 's/^[ \t *]*//' | grep '^v6main$'
           git checkout $GITHUB_SHA
 
       - name: setup env
