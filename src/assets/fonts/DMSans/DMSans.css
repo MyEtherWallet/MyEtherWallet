@@ -3,6 +3,7 @@
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 100;
+  font-display: swap;
   src: url('@assets/fonts/DMSans/DMSans-100.woff2');
 }
 
@@ -11,6 +12,7 @@
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 300;
+  font-display: swap;
   src: url('@assets/fonts/DMSans/DMSans-300.woff2');
 }
 
@@ -19,6 +21,7 @@
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 400;
+  font-display: swap;
   src: url('@assets/fonts/DMSans/DMSans-400.woff2');
 }
 
@@ -27,6 +30,7 @@
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 500;
+  font-display: swap;
   src: url('@assets/fonts/DMSans/DMSans-500.woff2');
 }
 
@@ -35,6 +39,7 @@
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 600;
+  font-display: swap;
   src: url('@assets/fonts/DMSans/DMSans-600.woff2');
 }
 
@@ -43,5 +48,6 @@
   font-family: 'DM Sans';
   font-style: normal;
   font-weight: 700;
+  font-display: swap;
   src: url('@assets/fonts/DMSans/DMSans-700.woff2');
 }

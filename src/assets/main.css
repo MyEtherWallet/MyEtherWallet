@@ -48,7 +48,7 @@
  * VARIABLES
  */
 :root {
-  font-family: 'DM Sans';
+  font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --borderRadius: 5px;
   min-width: 320px;
   zoom: 1;
