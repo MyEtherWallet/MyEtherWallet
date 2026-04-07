@@ -53,7 +53,7 @@
     "@wagmi/core": "^3.1.0",
     "@web3-name-sdk/core": "^0.4.2",
     "animejs": "^4.2.2",
-    "axios": "~1.13.3",
+    "axios": "1.14.0",
     "bignumber.js": "^9.3.1",
     "bip39": "^3.1.0",
     "bitcoinjs-lib": "^6.1.7",
@@ -120,5 +120,8 @@
     "vitest": "^4.0.16",
     "vue-tsc": "^3.2.2",
     "web3-eth-abi": "^4.4.1"
+  },
+  "resolutions": {
+    "axios": "1.14.0"
   }
 }
