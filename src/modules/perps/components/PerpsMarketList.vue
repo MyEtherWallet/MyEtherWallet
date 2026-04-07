@@ -77,13 +77,144 @@
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
             >
               <th class="hidden xs:table-cell xs:w-10 py-2 text-center"></th>
-              <th class="px-1 py-2">Name</th>
-              <th class="px-1 py-2 text-right">Price</th>
-              <th class="hidden xs:table-cell px-1 py-2 text-right">24H</th>
-              <th class="hidden 2xl:table-cell px-1 py-2 text-right">Volume</th>
-              <th class="hidden md:table-cell px-1 py-2 text-right">
-                Market Cap
+              <!-- Name -->
+              <th
+                class="cursor-pointer px-1 py-2 hover:text-black transition-colors"
+                @click="setHeaderSort(SortValue.NAME)"
+              >
+                <div
+                  class="flex items-center gap-1 ml-11 font-bold"
+                  :class="{
+                    'text-black': headerSort === SortValue.NAME,
+                  }"
+                >
+                  Name
+                  <arrow-long-down-icon
+                    v-if="
+                      headerSort === SortValue.NAME && tableDirection === 'desc'
+                    "
+                    class="w-3.5 h-3.5"
+                  />
+                  <arrow-long-up-icon
+                    v-if="
+                      headerSort === SortValue.NAME && tableDirection === 'asc'
+                    "
+                    class="w-3.5 h-3.5"
+                  />
+                </div>
               </th>
+              <!-- Price -->
+              <th
+                class="cursor-pointer px-1 py-2 hover:text-black transition-colors"
+                @click="setHeaderSort(SortValue.PRICE)"
+              >
+                <div
+                  class="flex items-center gap-1 justify-end relative font-bold"
+                  :class="{
+                    'text-black': headerSort === SortValue.PRICE,
+                  }"
+                >
+                  Price
+                  <arrow-long-down-icon
+                    v-if="
+                      headerSort === SortValue.PRICE &&
+                      tableDirection === 'desc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                  <arrow-long-up-icon
+                    v-if="
+                      headerSort === SortValue.PRICE && tableDirection === 'asc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                </div>
+              </th>
+              <!-- 24H -->
+              <th
+                class="hidden xs:table-cell cursor-pointer px-1 py-2 hover:text-black transition-colors"
+                @click="setHeaderSort(SortValue.PERCENT)"
+              >
+                <div
+                  class="flex items-center gap-1 justify-end relative font-bold"
+                  :class="{
+                    'text-black': headerSort === SortValue.PERCENT,
+                  }"
+                >
+                  24H
+                  <arrow-long-down-icon
+                    v-if="
+                      headerSort === SortValue.PERCENT &&
+                      tableDirection === 'desc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                  <arrow-long-up-icon
+                    v-if="
+                      headerSort === SortValue.PERCENT &&
+                      tableDirection === 'asc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                </div>
+              </th>
+              <!-- Volume -->
+              <th
+                class="hidden 2xl:table-cell cursor-pointer px-1 py-2 hover:text-black transition-colors"
+                @click="setHeaderSort(SortValue.VOLUME)"
+              >
+                <div
+                  class="flex items-center gap-1 justify-end relative font-bold"
+                  :class="{
+                    'text-black': headerSort === SortValue.VOLUME,
+                  }"
+                >
+                  Volume
+                  <arrow-long-down-icon
+                    v-if="
+                      headerSort === SortValue.VOLUME &&
+                      tableDirection === 'desc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                  <arrow-long-up-icon
+                    v-if="
+                      headerSort === SortValue.VOLUME &&
+                      tableDirection === 'asc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                </div>
+              </th>
+              <!-- Market Cap -->
+              <th
+                class="hidden md:table-cell cursor-pointer px-1 py-2 hover:text-black transition-colors"
+                @click="setHeaderSort(SortValue.MARKET_CAP)"
+              >
+                <div
+                  class="flex items-center gap-1 justify-end relative font-bold"
+                  :class="{
+                    'text-black': headerSort === SortValue.MARKET_CAP,
+                  }"
+                >
+                  Market Cap
+                  <arrow-long-down-icon
+                    v-if="
+                      headerSort === SortValue.MARKET_CAP &&
+                      tableDirection === 'desc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                  <arrow-long-up-icon
+                    v-if="
+                      headerSort === SortValue.MARKET_CAP &&
+                      tableDirection === 'asc'
+                    "
+                    class="w-3.5 h-3.5 absolute -right-4"
+                  />
+                </div>
+              </th>
+              <!-- Actions -->
               <th
                 class="lg:pl-6 lg:pr-4 py-2 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
               ></th>
@@ -157,7 +288,7 @@
               </td>
               <!-- 24H % -->
               <td class="hidden xs:table-cell px-1 py-1 text-right">
-                <div class="flex flex-col items-end justify-center py-2 pr-2">
+                <div class="flex flex-col items-end justify-center py-2">
                   <p
                     class="text-s-13 font-normal mb-1"
                     :class="
@@ -353,6 +484,7 @@ import {
   ChevronDownIcon,
   StarIcon as StarSolidIcon,
   ArrowLongUpIcon,
+  ArrowLongDownIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/solid'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
@@ -389,6 +521,26 @@ function getPosition(market: string) {
 
 const searchQuery = ref('')
 const watchlist = ref<Set<string>>(new Set())
+
+enum SortValue {
+  NAME = 'NAME',
+  PRICE = 'PRICE',
+  PERCENT = 'PERCENT',
+  VOLUME = 'VOLUME',
+  MARKET_CAP = 'MARKET_CAP',
+}
+
+const headerSort = ref<SortValue>(SortValue.MARKET_CAP)
+const tableDirection = ref<'asc' | 'desc'>('desc')
+
+function setHeaderSort(key: SortValue) {
+  if (headerSort.value === key) {
+    tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    tableDirection.value = 'desc'
+    headerSort.value = key
+  }
+}
 
 function toggleWatchlist(symbol: string) {
   if (watchlist.value.has(symbol)) {
@@ -451,6 +603,33 @@ const filteredContracts = computed(() => {
         c.displayName.toLowerCase().includes(q),
     )
   }
+
+  const dir = tableDirection.value === 'desc' ? -1 : 1
+  list = [...list].sort((a, b) => {
+    let cmp = 0
+    switch (headerSort.value) {
+      case SortValue.NAME:
+        cmp = a.baseCurrency.localeCompare(b.baseCurrency)
+        break
+      case SortValue.PRICE:
+        cmp = midPrice(a) - midPrice(b)
+        break
+      case SortValue.PERCENT:
+        cmp =
+          parseFloat(a.priceChangePercent ?? '0') -
+          parseFloat(b.priceChangePercent ?? '0')
+        break
+      case SortValue.VOLUME:
+        cmp = parseFloat(a.usdVolume ?? '0') - parseFloat(b.usdVolume ?? '0')
+        break
+      case SortValue.MARKET_CAP:
+        cmp =
+          parseFloat(a.openInterestUsd ?? '0') -
+          parseFloat(b.openInterestUsd ?? '0')
+        break
+    }
+    return cmp * dir
+  })
 
   return list
 })
