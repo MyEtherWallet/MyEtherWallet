@@ -1,0 +1,73 @@
+name: Build and Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - feat/v7
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/v7
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog entry
+        id: changelog
+        run: |
+          python3 - <<'EOF'
+          import re
+
+          with open('CHANGELOG.md', 'r') as f:
+              content = f.read()
+
+          version = '${{ steps.version.outputs.version }}'
+          pattern = rf'(### v{re.escape(version)}.*?)(?=\n### v|\Z)'
+          match = re.search(pattern, content, re.DOTALL)
+          entry = match.group(1).strip() if match else f'### v{version}'
+
+          with open('/tmp/release_notes.md', 'w') as f:
+              f.write(entry)
+          EOF
+
+      - name: Build container
+        run: docker build -t mew-build-container .
+
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "dir=$(docker run --rm -v `pwd`:/home:rw mew-build-container /bin/bash -c "pnpm store path")" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "pnpm install --silent"
+
+      - name: Build and zip
+        run: docker run --rm -v `pwd`:/home:rw --user "$(id -u):$(id -g)" mew-build-container /bin/bash -c "pnpm build && pnpm zip"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          body_path: /tmp/release_notes.md
+          files: ./dist/release.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
