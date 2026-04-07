@@ -4,16 +4,19 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  axios: 1.14.0
+
 importers:
 
   .:
     dependencies:
       '@1inch/fusion-sdk':
         specifier: ^2.4.5
-        version: 2.4.5(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+        version: 2.4.5(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@1inch/limit-order-sdk':
         specifier: ^5.2.3
-        version: 5.2.3(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+        version: 5.2.3(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@amplitude/analytics-browser':
         specifier: ^2.36.2
         version: 2.36.8
@@ -28,7 +31,7 @@ importers:
         version: 0.0.8(@siddomains/sid-contracts@0.1.31(@nomiclabs/hardhat-web3@2.1.0(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)))(bufferutil@4.1.0)(ethers@5.8.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(hardhat@2.26.3(bufferutil@4.1.0)(ts-node@10.9.2(@types/node@25.0.3)(typescript@5.9.3))(typescript@5.9.3)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(web3-core-helpers@1.10.4)(web3-core-promievent@1.10.4)(web3-eth-abi@4.4.1(typescript@5.9.3)(zod@3.25.76))(web3-utils@4.3.3))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@enkryptcom/swap':
         specifier: ^0.0.16
-        version: 0.0.16(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
+        version: 0.0.16(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@enkryptcom/types':
         specifier: ^0.0.5
         version: 0.0.5
@@ -79,7 +82,7 @@ importers:
         version: 14.1.0(vue@3.5.26(typescript@5.9.3))
       '@vueuse/integrations':
         specifier: ^14.1.0
-        version: 14.1.0(axios@1.13.3(debug@4.4.1))(change-case@5.4.4)(idb-keyval@6.2.2)(jwt-decode@4.0.0)(qrcode@1.5.4)(vue@3.5.26(typescript@5.9.3))
+        version: 14.1.0(axios@1.14.0(debug@4.4.1))(change-case@5.4.4)(idb-keyval@6.2.2)(jwt-decode@4.0.0)(qrcode@1.5.4)(vue@3.5.26(typescript@5.9.3))
       '@wagmi/connectors':
         specifier: ^7.0.7
         version: 7.0.7(@coinbase/wallet-sdk@4.3.6(bufferutil@4.1.0)(immer@10.2.0)(react@18.3.1)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.25.76))(@metamask/sdk@0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10))(@safe-global/safe-apps-provider@0.18.6(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@wagmi/core@3.1.0(@tanstack/query-core@5.90.16)(immer@10.2.0)(ox@0.11.3(typescript@5.9.3)(zod@3.25.76))(react@18.3.1)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.44.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@walletconnect/ethereum-provider@2.21.1(bufferutil@4.1.0)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(typescript@5.9.3)(viem@2.44.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
@@ -93,8 +96,8 @@ importers:
         specifier: ^4.2.2
         version: 4.2.2
       axios:
-        specifier: ^1.13.3
-        version: 1.13.3(debug@4.4.1)
+        specifier: 1.14.0
+        version: 1.14.0(debug@4.4.1)
       bignumber.js:
         specifier: ^9.3.1
         version: 9.3.1
@@ -310,7 +313,7 @@ packages:
     resolution: {integrity: sha512-qhk60aFHCoFL9445L6yvDO7GlsAIlL5+u3HLdnQg6o/eT1JvvqlL0XOy93PfeXXxXV9ZeZkA9OeYuxuoroVEOQ==}
     peerDependencies:
       assert: ^2.0.0
-      axios: '>=1 <2'
+      axios: 1.14.0
     peerDependenciesMeta:
       assert:
         optional: true
@@ -321,7 +324,7 @@ packages:
     resolution: {integrity: sha512-WDftqVDXnzJHDSJcfz0HFON8yyyI27pYgNsggvkUeC+sCREgPEFbaYI6OpSl4LbbXJgVYoahcQVJYGbcoXFWrg==}
     peerDependencies:
       assert: ^2.0.0
-      axios: '>=1 <2'
+      axios: 1.14.0
     peerDependenciesMeta:
       assert:
         optional: true
@@ -333,7 +336,7 @@ packages:
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
-      axios: '>=1 <2'
+      axios: 1.14.0
     peerDependenciesMeta:
       assert:
         optional: true
@@ -345,7 +348,7 @@ packages:
     engines: {node: '>=20.9.0'}
     peerDependencies:
       assert: ^2.0.0
-      axios: '>=1 <2'
+      axios: 1.14.0
     peerDependenciesMeta:
       assert:
         optional: true
@@ -437,7 +440,7 @@ packages:
     resolution: {integrity: sha512-pBlIAT/W+Qa0TOr/318U8r0Gxw/jfyRLcvDGMEXgcVrPqO9Qhwsmozw6LPPIZ963FB7smwIaMeexWFDs3zijcg==}
     engines: {node: '>=15.10.0'}
     peerDependencies:
-      axios: ^1.8.4
+      axios: 1.14.0
       got: ^11.8.6
 
   '@aptos-labs/aptos-dynamic-transaction-composer@0.1.5':
@@ -3157,9 +3160,11 @@ packages:
 
   '@metamask/sdk-analytics@0.0.5':
     resolution: {integrity: sha512-fDah+keS1RjSUlC8GmYXvx6Y26s3Ax1U9hGpWb6GSY5SAdmTSIqp2CvYy6yW0WgLhnYhW+6xERuD0eVqV63QIQ==}
+    deprecated: No longer maintained, superseded by @metamask/connect-analytics
 
   '@metamask/sdk-communication-layer@0.33.1':
     resolution: {integrity: sha512-0bI9hkysxcfbZ/lk0T2+aKVo1j0ynQVTuB3sJ5ssPWlz+Z3VwveCkP1O7EVu1tsVVCb0YV5WxK9zmURu2FIiaA==}
+    deprecated: No longer maintained, superseded by https://docs.metamask.io/metamask-connect
     peerDependencies:
       cross-fetch: ^4.0.0
       eciesjs: '*'
@@ -3169,9 +3174,11 @@ packages:
 
   '@metamask/sdk-install-modal-web@0.32.1':
     resolution: {integrity: sha512-MGmAo6qSjf1tuYXhCu2EZLftq+DSt5Z7fsIKr2P+lDgdTPWgLfZB1tJKzNcwKKOdf6q9Qmmxn7lJuI/gq5LrKw==}
+    deprecated: No longer maintained, superseded by https://docs.metamask.io/metamask-connect
 
   '@metamask/sdk@0.33.1':
     resolution: {integrity: sha512-1mcOQVGr9rSrVcbKPNVzbZ8eCl1K0FATsYH3WJ/MH4WcZDWGECWrXJPNMZoEAkLxWiMe8jOQBumg2pmcDa9zpQ==}
+    deprecated: No longer maintained, superseded by https://docs.metamask.io/metamask-connect
 
   '@metamask/superstruct@3.2.1':
     resolution: {integrity: sha512-fLgJnDOXFmuVlB38rUN5SmU7hAFQcCjrg3Vrxz67KTY7YHFnSNEKvX4avmEBdOI0yTCxZjwMCFEqsC8k2+Wd3g==}
@@ -5837,7 +5844,7 @@ packages:
     resolution: {integrity: sha512-eNQPdisnO9SvdydTIXnTE7c29yOsJBD/xkwEyQLdhDC/LKbqrFpXHb3uS//7NcIrQO3fWVuvMGp8dbK6mNEMCA==}
     peerDependencies:
       async-validator: ^4
-      axios: ^1
+      axios: 1.14.0
       change-case: ^5
       drauu: ^0.4
       focus-trap: ^7
@@ -6561,29 +6568,8 @@ packages:
     resolution: {integrity: sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==}
     engines: {node: '>=4'}
 
-  axios@0.21.1:
-    resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
-
-  axios@0.21.4:
-    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
-
-  axios@0.24.0:
-    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
-
-  axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
-
-  axios@1.12.2:
-    resolution: {integrity: sha512-vMJzPewAlRyOgxV2dU0Cuz2O8zzzx9VYtbJOaBgXFeLc4IV/Eg50n4LowmehOOR61S8ZMpc2K5Sa7g6A4jfkUw==}
-
-  axios@1.13.2:
-    resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
-
-  axios@1.13.3:
-    resolution: {integrity: sha512-ERT8kdX7DZjtUm7IitEyV7InTHAF42iJuMArIiDIV5YtPanJkgw4hw5Dyg9fh0mihdWNn1GKaeIWErfe56UQ1g==}
-
-  axios@1.7.7:
-    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
+  axios@1.14.0:
+    resolution: {integrity: sha512-3Y8yrqLSwjuzpXuZ0oIYZ/XGgLwUIBU3uLvbcpb0pidD9ctpShJd43KSlEEkVQg6DS0G9NKyzOvBfUtDKEyHvQ==}
 
   b4a@1.7.3:
     resolution: {integrity: sha512-5Q2mfq2WfGuFp3uS//0s6baOJLMoVduPYVeNmDYxu5OUA1/cBfvr2RIS7vi62LdNj/urk1hfmj867I3qt6uZ7Q==}
@@ -12721,6 +12707,10 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
+  proxy-from-env@2.1.0:
+    resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
+    engines: {node: '>=10'}
+
   pseudomap@1.0.2:
     resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
 
@@ -15865,52 +15855,52 @@ snapshots:
     optionalDependencies:
       assert: 2.1.0
 
-  '@1inch/fusion-sdk@2.4.5(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@1inch/fusion-sdk@2.4.5(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@1inch/byte-utils': 3.1.7(assert@2.1.0)
-      '@1inch/limit-order-sdk': 5.2.2(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@1inch/limit-order-sdk': 5.2.2(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       ethers: 6.16.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       tslib: 2.8.1
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       assert: 2.1.0
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@1inch/fusion-sdk@2.4.6(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@1inch/fusion-sdk@2.4.6(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@1inch/byte-utils': 3.1.7(assert@2.1.0)
-      '@1inch/limit-order-sdk': 5.2.2(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@1inch/limit-order-sdk': 5.2.2(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       ethers: 6.16.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       tslib: 2.8.1
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       assert: 2.1.0
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@1inch/limit-order-sdk@5.2.2(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@1inch/limit-order-sdk@5.2.2(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
       ethers: 6.13.5(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       assert: 2.1.0
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@1inch/limit-order-sdk@5.2.3(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@1inch/limit-order-sdk@5.2.3(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
       '@1inch/byte-utils': 3.0.0(assert@2.1.0)
       ethers: 6.13.5(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       assert: 2.1.0
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -16023,9 +16013,9 @@ snapshots:
     dependencies:
       commander: 12.1.0
 
-  '@aptos-labs/aptos-client@1.2.0(axios@1.7.7(debug@4.4.1))(got@12.1.0)':
+  '@aptos-labs/aptos-client@1.2.0(axios@1.14.0(debug@4.4.1))(got@12.1.0)':
     dependencies:
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       got: 12.1.0
 
   '@aptos-labs/aptos-dynamic-transaction-composer@0.1.5': {}
@@ -16034,10 +16024,10 @@ snapshots:
     dependencies:
       '@aptos-labs/aptos-dynamic-transaction-composer': 0.1.5
 
-  '@aptos-labs/ts-sdk@1.39.0(axios@1.7.7(debug@4.4.1))(got@12.1.0)':
+  '@aptos-labs/ts-sdk@1.39.0(axios@1.14.0(debug@4.4.1))(got@12.1.0)':
     dependencies:
       '@aptos-labs/aptos-cli': 1.1.1
-      '@aptos-labs/aptos-client': 1.2.0(axios@1.7.7(debug@4.4.1))(got@12.1.0)
+      '@aptos-labs/aptos-client': 1.2.0(axios@1.14.0(debug@4.4.1))(got@12.1.0)
       '@aptos-labs/script-composer-pack': 0.0.9
       '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
@@ -17199,7 +17189,7 @@ snapshots:
       '@ledgerhq/hw-transport-mocker': 6.31.0
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.7.7(debug@4.4.3)
+      axios: 1.14.0(debug@4.4.3)
       bignumber.js: 9.3.1
       semver: 7.7.3
     transitivePeerDependencies:
@@ -17658,7 +17648,7 @@ snapshots:
       '@cosmjs/encoding': 0.24.1
       '@cosmjs/math': 0.24.1
       '@cosmjs/utils': 0.24.1
-      axios: 0.21.4(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       fast-deep-equal: 3.1.3
     transitivePeerDependencies:
       - debug
@@ -17871,7 +17861,7 @@ snapshots:
       '@cosmjs/socket': 0.26.8(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@cosmjs/stream': 0.26.8
       '@cosmjs/utils': 0.26.8
-      axios: 0.21.4(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       readonly-date: 1.0.0
       xstream: 11.14.0
     transitivePeerDependencies:
@@ -17888,7 +17878,7 @@ snapshots:
       '@cosmjs/socket': 0.28.13(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@cosmjs/stream': 0.28.13
       '@cosmjs/utils': 0.28.13
-      axios: 0.21.4(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       readonly-date: 1.0.0
       xstream: 11.14.0
     transitivePeerDependencies:
@@ -17905,7 +17895,7 @@ snapshots:
       '@cosmjs/socket': 0.29.5(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@cosmjs/stream': 0.29.5
       '@cosmjs/utils': 0.29.5
-      axios: 0.21.4(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       readonly-date: 1.0.0
       xstream: 11.14.0
     transitivePeerDependencies:
@@ -17922,7 +17912,7 @@ snapshots:
       '@cosmjs/socket': 0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@cosmjs/stream': 0.33.1
       '@cosmjs/utils': 0.33.1
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       readonly-date: 1.0.0
       xstream: 11.14.0
     transitivePeerDependencies:
@@ -18073,7 +18063,7 @@ snapshots:
 
   '@elrondnetwork/erdjs-network-providers@1.2.0(debug@4.4.1)':
     dependencies:
-      axios: 0.24.0(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bech32: 1.1.4
       bignumber.js: 9.0.1
       buffer: 6.0.3
@@ -18253,10 +18243,10 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@enkryptcom/swap@0.0.16(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
+  '@enkryptcom/swap@0.0.16(@polkadot/util@14.0.1)(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(debug@4.4.1)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
-      '@1inch/fusion-sdk': 2.4.6(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@1inch/limit-order-sdk': 5.2.3(assert@2.1.0)(axios@1.13.3(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@1inch/fusion-sdk': 2.4.6(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@1inch/limit-order-sdk': 5.2.3(assert@2.1.0)(axios@1.14.0(debug@4.4.1))(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@enkryptcom/types': 0.0.5
       '@enkryptcom/utils': 0.0.7(@polkadot/util@14.0.1)
       '@solana/spl-token': 0.4.14(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
@@ -19429,7 +19419,7 @@ snapshots:
       '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bip39: 3.1.0
       cosmjs-types: 0.9.0
       crypto-js: 4.2.0
@@ -19462,7 +19452,7 @@ snapshots:
       '@injectivelabs/exceptions': 1.16.17
       '@injectivelabs/networks': 1.16.17
       '@injectivelabs/ts-types': 1.16.17
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       http-status-codes: 2.3.0
     transitivePeerDependencies:
@@ -19670,7 +19660,7 @@ snapshots:
       '@keplr-wallet/crypto': 0.9.10
       '@keplr-wallet/types': 0.9.12(debug@4.4.1)
       '@keplr-wallet/unit': 0.9.12(debug@4.4.1)
-      axios: 0.21.4(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bech32: 1.1.4
       buffer: 6.0.3
       long: 4.0.0
@@ -19694,7 +19684,7 @@ snapshots:
 
   '@keplr-wallet/types@0.11.64(debug@4.4.1)':
     dependencies:
-      axios: 0.27.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       long: 4.0.0
     transitivePeerDependencies:
       - debug
@@ -19703,7 +19693,7 @@ snapshots:
     dependencies:
       '@cosmjs/launchpad': 0.24.1(debug@4.4.1)
       '@cosmjs/proto-signing': 0.24.1(debug@4.4.1)
-      axios: 0.21.4(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       long: 4.0.0
       secretjs: 0.17.8(debug@4.4.1)
     transitivePeerDependencies:
@@ -19762,10 +19752,10 @@ snapshots:
       - react-redux
       - supports-color
 
-  '@ledgerhq/coin-aptos@1.9.6(axios@1.7.7(debug@4.4.1))(debug@4.4.1)(got@12.1.0)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)':
+  '@ledgerhq/coin-aptos@1.9.6(axios@1.14.0(debug@4.4.1))(debug@4.4.1)(got@12.1.0)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@apollo/client': 3.14.0(graphql@16.12.0)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)
-      '@aptos-labs/ts-sdk': 1.39.0(axios@1.7.7(debug@4.4.1))(got@12.1.0)
+      '@aptos-labs/ts-sdk': 1.39.0(axios@1.14.0(debug@4.4.1))(got@12.1.0)
       '@ledgerhq/coin-framework': 5.8.0(debug@4.4.1)(react@18.3.1)
       '@ledgerhq/cryptoassets': 13.35.1(react@18.3.1)
       '@ledgerhq/devices': 8.4.4
@@ -19868,7 +19858,7 @@ snapshots:
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-cryptoassets': 7.31.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bech32: 1.1.4
       bignumber.js: 9.3.1
       cosmjs-types: 0.2.1
@@ -19923,7 +19913,7 @@ snapshots:
       '@ledgerhq/live-network': 2.1.4(debug@4.4.1)
       '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/logs': 6.14.0
-      axios: 1.12.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       eip55: 2.1.1
       ethers: 6.15.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -20092,7 +20082,7 @@ snapshots:
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-cryptoassets': 7.31.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -20118,7 +20108,7 @@ snapshots:
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-cryptoassets': 7.31.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.12.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       bip32-path: 0.4.2
       eip55: 2.1.1
@@ -20307,7 +20297,7 @@ snapshots:
       '@stacks/network': 6.10.0
       '@stacks/transactions': 6.11.0
       '@zondax/ledger-stacks': 1.1.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       c32check: 1.1.3
       invariant: 2.2.4
@@ -20482,21 +20472,21 @@ snapshots:
   '@ledgerhq/cryptoassets-evm-signatures@13.7.1(debug@4.4.1)':
     dependencies:
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.12.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - debug
 
   '@ledgerhq/cryptoassets-evm-signatures@13.7.1(debug@4.4.3)':
     dependencies:
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.12.2(debug@4.4.3)
+      axios: 1.14.0(debug@4.4.3)
     transitivePeerDependencies:
       - debug
 
   '@ledgerhq/cryptoassets@13.10.0(debug@4.4.1)':
     dependencies:
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bs58check: 2.1.2
       invariant: 2.2.4
     transitivePeerDependencies:
@@ -20505,7 +20495,7 @@ snapshots:
   '@ledgerhq/cryptoassets@13.12.0(debug@4.4.1)':
     dependencies:
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bs58check: 2.1.2
       invariant: 2.2.4
     transitivePeerDependencies:
@@ -20514,7 +20504,7 @@ snapshots:
   '@ledgerhq/cryptoassets@13.13.0(debug@4.4.1)':
     dependencies:
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bs58check: 2.1.2
       invariant: 2.2.4
     transitivePeerDependencies:
@@ -20523,7 +20513,7 @@ snapshots:
   '@ledgerhq/cryptoassets@13.23.0(debug@4.4.1)':
     dependencies:
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bs58check: 2.1.2
       invariant: 2.2.4
     transitivePeerDependencies:
@@ -20625,7 +20615,7 @@ snapshots:
       '@ledgerhq/errors': 6.29.0
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.13.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       eip55: 2.1.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -20638,7 +20628,7 @@ snapshots:
       '@ledgerhq/errors': 6.29.0
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.13.2(debug@4.4.3)
+      axios: 1.14.0(debug@4.4.3)
       eip55: 2.1.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -20657,7 +20647,7 @@ snapshots:
       '@ethersproject/constants': 5.8.0
       '@ethersproject/hash': 5.8.0
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.13.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       crypto-js: 4.2.0
     transitivePeerDependencies:
       - debug
@@ -20667,7 +20657,7 @@ snapshots:
       '@ethersproject/constants': 5.8.0
       '@ethersproject/hash': 5.8.0
       '@ledgerhq/live-env': 2.26.0
-      axios: 1.13.2(debug@4.4.3)
+      axios: 1.14.0(debug@4.4.3)
       crypto-js: 4.2.0
     transitivePeerDependencies:
       - debug
@@ -20731,7 +20721,7 @@ snapshots:
       '@ledgerhq/hw-transport-mocker': 6.31.0
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.12.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       semver: 7.7.3
     transitivePeerDependencies:
@@ -20751,7 +20741,7 @@ snapshots:
       '@ledgerhq/hw-transport-mocker': 6.31.0
       '@ledgerhq/logs': 6.14.0
       '@ledgerhq/types-live': 6.94.0(react@18.3.1)
-      axios: 1.13.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       semver: 7.7.3
     transitivePeerDependencies:
@@ -20888,7 +20878,7 @@ snapshots:
       '@ledgerhq/errors': 6.29.0
       '@ledgerhq/hw-transport': 6.32.0
       '@ledgerhq/logs': 6.14.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       rxjs: 7.8.2
     transitivePeerDependencies:
       - debug
@@ -21040,7 +21030,7 @@ snapshots:
       '@dfinity/candid': 0.21.4(@dfinity/principal@0.15.7(@types/node@25.0.3)(typescript@5.9.3))
       '@dfinity/principal': 0.15.7(@types/node@25.0.3)(typescript@5.9.3)
       '@ledgerhq/coin-algorand': 0.7.9(debug@4.4.1)(react@18.3.1)
-      '@ledgerhq/coin-aptos': 1.9.6(axios@1.7.7(debug@4.4.1))(debug@4.4.1)(got@12.1.0)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)
+      '@ledgerhq/coin-aptos': 1.9.6(axios@1.14.0(debug@4.4.1))(debug@4.4.1)(got@12.1.0)(react-dom@19.2.0(react@18.3.1))(react@18.3.1)
       '@ledgerhq/coin-bitcoin': 0.10.4(debug@4.4.1)(react@18.3.1)
       '@ledgerhq/coin-cardano': 0.4.5(debug@4.4.1)(react@18.3.1)
       '@ledgerhq/coin-cosmos': 0.7.1(bufferutil@4.1.0)(debug@4.4.1)(react@18.3.1)(utf-8-validate@5.0.10)
@@ -21122,7 +21112,7 @@ snapshots:
       '@zondax/ledger-icp': 0.7.0
       '@zondax/ledger-stacks': 1.1.0
       async: 3.2.6
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bech32: 1.1.4
       bignumber.js: 9.3.1
       bip32: 2.0.6
@@ -21361,7 +21351,7 @@ snapshots:
       '@ledgerhq/live-env': 2.26.0
       '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/logs': 6.14.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
       - debug
@@ -21372,7 +21362,7 @@ snapshots:
       '@ledgerhq/live-env': 2.26.0
       '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/logs': 6.14.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
       - debug
@@ -21383,7 +21373,7 @@ snapshots:
       '@ledgerhq/live-env': 2.26.0
       '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/logs': 6.14.0
-      axios: 1.7.7(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
       - debug
@@ -21394,7 +21384,7 @@ snapshots:
       '@ledgerhq/live-env': 2.26.0
       '@ledgerhq/live-promise': 0.1.1
       '@ledgerhq/logs': 6.14.0
-      axios: 1.12.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       lru-cache: 7.18.3
     transitivePeerDependencies:
       - debug
@@ -21845,7 +21835,7 @@ snapshots:
       uuid: 8.3.2
     optionalDependencies:
       '@multiversx/sdk-bls-wasm': 0.3.5
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bip39: 3.1.0
     transitivePeerDependencies:
       - debug
@@ -22330,7 +22320,7 @@ snapshots:
   '@osmonauts/lcd@0.8.0(debug@4.4.1)':
     dependencies:
       '@babel/runtime': 7.28.4
-      axios: 0.27.2(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - debug
 
@@ -24360,7 +24350,7 @@ snapshots:
   '@stellar/stellar-sdk@11.3.0(bare-url@2.2.2)(debug@4.4.1)':
     dependencies:
       '@stellar/stellar-base': 11.0.1(bare-url@2.2.2)
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       eventsource: 2.0.2
       randombytes: 2.1.0
@@ -24373,7 +24363,7 @@ snapshots:
   '@stellar/stellar-sdk@14.2.0(debug@4.4.1)':
     dependencies:
       '@stellar/stellar-base': 14.0.4
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       eventsource: 2.0.2
       feaxios: 0.0.23
@@ -24709,7 +24699,7 @@ snapshots:
     dependencies:
       '@ton/core': 0.56.3(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       dataloader: 2.2.3
       symbol.inspect: 1.0.1
       teslabot: 1.5.0
@@ -26121,13 +26111,13 @@ snapshots:
       '@vueuse/shared': 14.1.0(vue@3.5.26(typescript@5.9.3))
       vue: 3.5.26(typescript@5.9.3)
 
-  '@vueuse/integrations@14.1.0(axios@1.13.3(debug@4.4.1))(change-case@5.4.4)(idb-keyval@6.2.2)(jwt-decode@4.0.0)(qrcode@1.5.4)(vue@3.5.26(typescript@5.9.3))':
+  '@vueuse/integrations@14.1.0(axios@1.14.0(debug@4.4.1))(change-case@5.4.4)(idb-keyval@6.2.2)(jwt-decode@4.0.0)(qrcode@1.5.4)(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       '@vueuse/core': 14.1.0(vue@3.5.26(typescript@5.9.3))
       '@vueuse/shared': 14.1.0(vue@3.5.26(typescript@5.9.3))
       vue: 3.5.26(typescript@5.9.3)
     optionalDependencies:
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       change-case: 5.4.4
       idb-keyval: 6.2.2
       jwt-decode: 4.0.0
@@ -27072,7 +27062,7 @@ snapshots:
     dependencies:
       '@ledgerhq/hw-transport': 6.31.0
       '@zondax/ledger-js': 0.8.2
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
     transitivePeerDependencies:
       - debug
 
@@ -27080,7 +27070,7 @@ snapshots:
     dependencies:
       '@ledgerhq/hw-transport': 6.31.15
       '@zondax/ledger-js': 1.3.1
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       buffer: 6.0.3
     optionalDependencies:
       '@ledgerhq/hw-transport-node-hid': 6.30.0
@@ -27450,84 +27440,19 @@ snapshots:
 
   axe-core@4.11.1: {}
 
-  axios@0.21.1(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-    transitivePeerDependencies:
-      - debug
-
-  axios@0.21.4(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-    transitivePeerDependencies:
-      - debug
-
-  axios@0.24.0(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-    transitivePeerDependencies:
-      - debug
-
-  axios@0.27.2(debug@4.4.1):
+  axios@1.14.0(debug@4.4.1):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.1)
       form-data: 4.0.5
+      proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
 
-  axios@1.12.2(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.12.2(debug@4.4.3):
+  axios@1.14.0(debug@4.4.3):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
       form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.13.2(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.13.2(debug@4.4.3):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.3)
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.13.3(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.7.7(debug@4.4.1):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
-  axios@1.7.7(debug@4.4.3):
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.3)
-      form-data: 4.0.5
-      proxy-from-env: 1.1.0
+      proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
 
@@ -28444,7 +28369,7 @@ snapshots:
   chromedriver@143.0.4(debug@4.4.1):
     dependencies:
       '@testim/chrome-version': 1.1.4
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       compare-versions: 6.1.1
       extract-zip: 2.0.1
       proxy-agent: 6.5.0
@@ -34739,6 +34664,8 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
+  proxy-from-env@2.1.0: {}
+
   pseudomap@1.0.2: {}
 
   psl@1.15.0:
@@ -34860,7 +34787,7 @@ snapshots:
 
   rango-sdk-basic@0.1.73(debug@4.4.1):
     dependencies:
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       rango-types: 0.1.94
       uuid-random: 1.3.2
     transitivePeerDependencies:
@@ -35512,7 +35439,7 @@ snapshots:
       '@iov/crypto': 2.1.0
       '@iov/encoding': 2.1.0
       '@iov/utils': 2.0.2
-      axios: 0.21.1(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       curve25519-js: 0.0.4
       fast-deep-equal: 3.1.1
       js-crypto-hkdf: 0.7.3
@@ -36545,7 +36472,7 @@ snapshots:
       '@babel/runtime': 7.28.4
       '@ethersproject/abi': 5.8.0
       '@tronweb3/google-protobuf': 3.21.4
-      axios: 1.13.3(debug@4.4.1)
+      axios: 1.14.0(debug@4.4.1)
       bignumber.js: 9.3.1
       ethereum-cryptography: 2.2.1
       ethers: 6.16.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
