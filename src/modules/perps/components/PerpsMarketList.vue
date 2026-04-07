@@ -76,16 +76,16 @@
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
             >
-              <th class="hidden xs:table-cell xs:w-10 py-3 text-center"></th>
-              <th class="px-1 py-3">Name</th>
-              <th class="px-3 py-3 text-right">Price</th>
-              <th class="px-3 py-3 text-right">24H</th>
-              <th class="hidden 2xl:table-cell px-3 py-3 text-right">Volume</th>
-              <th class="hidden md:table-cell px-3 py-3 text-right">
+              <th class="hidden xs:table-cell xs:w-10 py-2 text-center"></th>
+              <th class="px-1 py-2">Name</th>
+              <th class="px-1 py-2 text-right">Price</th>
+              <th class="hidden xs:table-cell px-1 py-2 text-right">24H</th>
+              <th class="hidden 2xl:table-cell px-1 py-2 text-right">Volume</th>
+              <th class="hidden md:table-cell px-1 py-2 text-right">
                 Market Cap
               </th>
               <th
-                class="lg:pl-6 lg:pr-4 py-3 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
+                class="lg:pl-6 lg:pr-4 py-2 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
               ></th>
             </tr>
           </thead>
@@ -122,16 +122,18 @@
                     :symbol="contract.baseCurrency"
                     class="rounded-full"
                   />
-                  <div class="truncate">
-                    <div class="flex items-center gap-2">
-                      <span class="font-bold">{{ contract.baseCurrency }}</span>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 relative">
+                      <span class="font-bold truncate">{{
+                        contract.baseCurrency
+                      }}</span>
                       <span
-                        class="bg-surface text-info rounded px-1.5 py-0.5 text-s-11 font-medium"
+                        class="absolute -right-5 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
                       >
                         20x
                       </span>
                     </div>
-                    <span class="text-info text-s-12 truncate">{{
+                    <span class="text-info text-s-12 truncate block">{{
                       contract.displayName
                     }}</span>
                   </div>
@@ -142,23 +144,32 @@
                 <p class="text-right">
                   {{ formatPrice(midPrice(contract)) }}
                 </p>
+                <p
+                  class="text-s-12 font-normal mb-1 xs:hidden"
+                  :class="
+                    parseFloat(contract.priceChangePercent ?? '0') >= 0
+                      ? 'text-success'
+                      : 'text-error'
+                  "
+                >
+                  {{ formatChange(contract.priceChangePercent) }}
+                </p>
               </td>
               <!-- 24H % -->
-              <td
-                class="px-1 py-2 text-right text-s-13 leading-p-100"
-                :class="
-                  parseFloat(contract.priceChangePercent ?? '0') >= 0
-                    ? 'text-success'
-                    : 'text-error'
-                "
-              >
-                <div>
-                  <p class="mb-1">
+              <td class="hidden xs:table-cell px-1 py-1 text-right">
+                <div class="flex flex-col items-end justify-center py-2 pr-2">
+                  <p
+                    class="text-s-13 font-normal mb-1"
+                    :class="
+                      parseFloat(contract.priceChangePercent ?? '0') >= 0
+                        ? 'text-success'
+                        : 'text-error'
+                    "
+                  >
                     {{ formatChange(contract.priceChangePercent) }}
                   </p>
-                  <div v-if="!contract.sparkline?.price.length"></div>
                   <table-sparkline
-                    v-else
+                    v-if="contract.sparkline?.price.length"
                     :points="contract.sparkline.price.map(Number)"
                     :width="70"
                     :height="24"
