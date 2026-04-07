@@ -1,5 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
+import { readFileSync } from 'node:fs'
+const { version } = JSON.parse(readFileSync('./package.json', 'utf-8'))
 import vue from '@vitejs/plugin-vue'
 import nightwatchPlugin from 'vite-plugin-nightwatch'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -11,6 +13,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    APP_VERSION: JSON.stringify(version),
+  },
   server: {
     port: 8080,
   },
