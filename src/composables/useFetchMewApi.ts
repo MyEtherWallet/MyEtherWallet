@@ -52,6 +52,7 @@ export const useFetchMewApi = (
           resumePoll()
         }
         delay.value = 1000
+        retryCount.value = 0
         return ctx
       },
       updateDataOnError: true,
@@ -72,12 +73,9 @@ export const useFetchMewApi = (
           pausePoll()
         }
         // If the request fails,  retry the request
-        if (
-          _hasRetry &&
-          retryCount.value < 3 &&
-          response?.status &&
-          response?.status >= 500
-        ) {
+        const isNetworkError = !response
+        const isServerError = response?.status && response.status >= 500
+        if (_hasRetry && retryCount.value < 3 && (isNetworkError || isServerError)) {
           retryCount.value++
           // wait for delay
           await new Promise(resolve => setTimeout(resolve, delay.value))
@@ -92,7 +90,8 @@ export const useFetchMewApi = (
             captureException(ctx.error)
           }
           ctx.error = data?.message || 'Unknown Error. Failed to fetch.'
-
+          retryCount.value = 0
+          delay.value = 1000
           return ctx
         }
       },
