@@ -4,6 +4,7 @@
 
 - fix metamask error on cancelling send and fix bug when disconnecting through metamask [#5337](https://github.com/MyEtherWallet/MyEtherWallet/pull/5337)
 - handle crap token send error [#5330](https://github.com/MyEtherWallet/MyEtherWallet/pull/5330)
+- Add filter low fiat balance tokens [#5333](https://github.com/MyEtherWallet/MyEtherWallet/pull/5333)
 
 # Feat
 
@@ -14,7 +15,7 @@
 
 ### v7.0.2
 
-# Feat
+#### Feat
 
 - Swap and Trade Tokenized stock rewards [#5327](https://github.com/MyEtherWallet/MyEtherWallet/pull/5327)
 - Balance Refresh and Tx has for rewards [#5334](https://github.com/MyEtherWallet/MyEtherWallet/pull/5334)
@@ -22,7 +23,7 @@
 
 ### v7.0.1
 
-# Feat
+#### Feat
 
 - added intercom support [#5324](https://github.com/MyEtherWallet/MyEtherWallet/pull/5324)
 

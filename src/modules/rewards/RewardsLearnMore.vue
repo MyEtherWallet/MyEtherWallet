@@ -213,13 +213,16 @@ const howItWorks = [
 ]
 
 const availability = [
-  { icon: 'clock', text: 'Limited to 100 rewards per day' },
+  { icon: 'clock', text: 'Limited to 100 rewards per day (No Bots!)' },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
   {
     icon: 'calendar',
     text: 'If rewards run out, try again the next day, resets at midnight UTC.',
   },
-  { icon: 'user', text: 'Address must be funded at least 14 days ago' },
+  {
+    icon: 'user',
+    text: 'Minimum of 0.001 ETH balance required prior to March 31st, 2026',
+  },
 ]
 
 const onEarnReward = () => {
