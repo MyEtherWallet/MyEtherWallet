@@ -5,6 +5,7 @@
 - fix metamask error on cancelling send and fix bug when disconnecting through metamask [#5337](https://github.com/MyEtherWallet/MyEtherWallet/pull/5337)
 - handle crap token send error [#5330](https://github.com/MyEtherWallet/MyEtherWallet/pull/5330)
 - Add filter low fiat balance tokens [#5333](https://github.com/MyEtherWallet/MyEtherWallet/pull/5333)
+- fix font loading [#5356](https://github.com/MyEtherWallet/MyEtherWallet/pull/5356)
 
 # Feat
 
