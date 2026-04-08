@@ -1296,6 +1296,39 @@ watch(
   { deep: true },
 )
 
+// Re-fetch gas fees when provider is changed inside the offer modal
+watch(
+  () => swapInfo.value,
+  async () => {
+    if (!bestOfferSelectionOpen.value || !swapInfo.value) return
+    if (isBitcoinChain.value) {
+      const transactions = (
+        (swapInfo.value.transactions as GenericTransaction[]) || []
+      ).map(tx => ({ address: tx.to, amount: tx.value }))
+      const txForm = {
+        fromAddresses: [userAddress.value],
+        consolidationAddress: userAddress.value,
+        outputs: transactions,
+      }
+      const res = await wallet.value?.getBtcGasFee?.(txForm)
+      swapGasFeeQuote.value = (res as QuotesResponse) || undefined
+    } else {
+      const transactions = (swapInfo.value.transactions || []).filter(
+        (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+      )
+      const parsedTransactions = transactions.map(tx => ({
+        address: tx.from,
+        to: tx.to,
+        data: tx.data,
+        value: tx.value || '0x0',
+        action: dataTxAction(tx) as EvmTransactionAction,
+      }))
+      const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
+      swapGasFeeQuote.value = res || undefined
+    }
+  },
+)
+
 const bestRate = computed(() => {
   if (providers.value.length === 0) return null
   return providers.value[0]
