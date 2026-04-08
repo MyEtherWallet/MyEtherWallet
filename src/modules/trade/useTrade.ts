@@ -5,6 +5,7 @@ import type {
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 
 const isDevMode = Configs.IS_DEV_MODE
@@ -44,6 +45,7 @@ export const useTrade = (): UseTrade => {
         console.error('Error loading tradable assets:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error loading tradable assets',
             errorMessage: error.value,

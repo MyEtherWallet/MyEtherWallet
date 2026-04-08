@@ -21,6 +21,7 @@ import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -107,7 +108,7 @@ export const useConnectWallet = () => {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
               )
-              captureException(error)
+              captureException(error, SENTRY_MODULE_TAGS.ACCESS)
             }
           } else {
             accessStore.setWeb3ConnectionError(t('error_connecting'))
@@ -123,7 +124,7 @@ export const useConnectWallet = () => {
           }
           accessStore.setWeb3ConnectionError(error)
           if (error !== t('common.error.user_canceled_request')) {
-            captureException(err)
+            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
           }
         })
       return
@@ -181,7 +182,7 @@ export const useConnectWallet = () => {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
               )
-              captureException(error)
+              captureException(error, SENTRY_MODULE_TAGS.ACCESS)
             }
           } else {
             accessStore.setWeb3ConnectionError(t('error_connecting'))
@@ -211,7 +212,7 @@ export const useConnectWallet = () => {
           }
           accessStore.setWeb3ConnectionError(error)
           if (error === t('error_connecting')) {
-            captureException(err)
+            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
           }
         })
     }
@@ -258,7 +259,7 @@ export const useConnectWallet = () => {
                 error instanceof Error ? error.message : String(error),
               type: ToastType.Error,
             })
-            captureException(error)
+            captureException(error, SENTRY_MODULE_TAGS.ACCESS)
           }
         }
       })
@@ -285,7 +286,7 @@ export const useConnectWallet = () => {
           type: _type,
         })
         if (error === t('error_connecting')) {
-          captureException(err)
+          captureException(err, SENTRY_MODULE_TAGS.ACCESS)
         }
       })
   }
