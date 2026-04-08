@@ -261,7 +261,7 @@
                       <span
                         class="absolute -right-5 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
                       >
-                        20x
+                        {{ contract.defaultLeverage }}x
                       </span>
                     </div>
                     <span class="text-info text-s-12 truncate block">{{
@@ -568,6 +568,7 @@ const selectedFilter = ref<FilterOption>(filterOptions[0])
 
 interface EnrichedContract extends Contract {
   displayName: string
+  defaultLeverage: string
 }
 
 const enrichedContracts = computed<EnrichedContract[]>(() => {
@@ -578,6 +579,7 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
   return contracts.value.map(c => ({
     ...c,
     displayName: marketMap.get(c.market)?.displayName ?? c.baseCurrency,
+    defaultLeverage: marketMap.get(c.market)?.defaultLeverage ?? '',
   }))
 })
 

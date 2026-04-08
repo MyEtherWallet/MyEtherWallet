@@ -392,7 +392,7 @@
     </div>
 
     <!-- Instrument Info -->
-    <div class="px-4 lg:px-10 py-4 border-t border-grey-10">
+    <div class="px-4 lg:px-10 py-4 border-t border-grey-10 pb-10">
       <h3 class="text-s-20 font-bold mb-3">Instrument Information</h3>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <div>

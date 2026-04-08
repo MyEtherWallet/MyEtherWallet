@@ -53,6 +53,7 @@ export interface TradingPair {
   displayName: string
   baseIncrement: string
   quoteIncrement: string
+  defaultLeverage: string
 }
 
 export interface MarketsResult {
