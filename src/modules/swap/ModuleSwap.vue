@@ -1335,14 +1335,24 @@ watch(
 
 // Update SwapInfo when Quote Selected; if modal is open re-fetch gas fees too
 watch(
-  () => selectedQuote.value,
-  async provider => {
+  () => selectedQuote.value?.provider,
+  async () => {
+    const provider = selectedQuote.value
     if (!provider) return
     swapInfo.value = await getSwap(provider)
 
+    if (!swapInfo.value) {
+      // Remove the failed provider and fall back to the next best quote
+      providers.value = providers.value.filter(
+        q => q.provider !== provider.provider,
+      )
+      selectedQuote.value = providers.value[0] ?? undefined
+      return
+    }
+
     // When provider is changed inside the offer modal, re-fetch gas fees so
     // the quoteId used for signing belongs to the newly selected provider.
-    if (!bestOfferSelectionOpen.value || !swapInfo.value) return
+    if (!bestOfferSelectionOpen.value) return
     txProceeding.value = true
     try {
       if (isBitcoinChain.value) {
