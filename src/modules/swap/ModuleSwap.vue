@@ -124,7 +124,9 @@
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ isSwapView ? $t('swap.swapping-not-available', { network: selectedChain?.nameLong || selectedChain?.name }) : $t('swap.bridging-not-available', { network: selectedChain?.nameLong || selectedChain?.name }) }}
+              {{ isSwapView
+                ? $t('swap.swapping-not-available', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') })
+                : $t('swap.bridging-not-available', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
             </p>
 
             <select-chain-for-app
