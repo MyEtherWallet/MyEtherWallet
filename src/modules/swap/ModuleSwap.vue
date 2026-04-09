@@ -752,13 +752,6 @@ const proceedWithSwap = async (quoteId: string) => {
         errorMsg: 'declined_by_user',
       })
     } else {
-      generalError.value = errorMessage
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: 'Swap Failed',
-        textSecondary: errorMessage,
-        duration: 10000,
-      })
       if (isDevMode) {
         console.error('Error proceeding with swap:', e)
       } else {
@@ -774,6 +767,24 @@ const proceedWithSwap = async (quoteId: string) => {
           },
         })
       }
+      if (
+        errorMessage.includes('rejected') ||
+        errorMessage.includes('denied') ||
+        errorMessage.includes('cancelled')
+      ) {
+        toastStore.addToastMessage({
+          type: ToastType.Info,
+          text: 'Transaction canceled by user',
+        })
+        return
+      }
+      generalError.value = errorMessage
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: 'Swap Failed',
+        textSecondary: errorMessage,
+        duration: 10000,
+      })
     }
   } finally {
     txProceeding.value = false
@@ -817,8 +828,13 @@ const swapForBtc = async () => {
   try {
     await debounceFetchQuotes()
 
+    if (!selectedQuote.value) throw new Error('No quote available')
+    swapInfo.value = await getSwap(selectedQuote.value)
+
+    if (!swapInfo.value) throw new Error('Pair currently not available')
+
     const transactions = (
-      (swapInfo.value?.transactions as GenericTransaction[]) || []
+      (swapInfo.value.transactions as GenericTransaction[]) || []
     ).map(tx => ({ address: tx.to, amount: tx.value }))
 
     const txForm = {
@@ -859,8 +875,15 @@ const swapForEvm = async () => {
   try {
     await debounceFetchQuotes()
 
+    if (!selectedQuote.value) throw new Error('No quote available')
+    swapInfo.value = await getSwap(selectedQuote.value)
+
+    if (!swapInfo.value) {
+      throw new Error('Pair currently not available')
+    }
+
     // Filter for EVM Transactions
-    const transactions = (swapInfo.value?.transactions || []).filter(
+    const transactions = (swapInfo.value.transactions || []).filter(
       (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
     )
 
@@ -871,9 +894,6 @@ const swapForEvm = async () => {
       value: tx.value || '0x0',
       action: dataTxAction(tx) as EvmTransactionAction,
     }))
-    if (!swapInfo.value) {
-      throw new Error('Pair currently not available')
-    }
     const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
     swapGasFeeQuote.value = res || undefined
     bestOfferSelectionOpen.value = true
@@ -1226,7 +1246,9 @@ watch(toTokenSelected, token => {
 
 watch(selectedToChain, chain => {
   if (!isSwapView.value) {
-    setBridgeToChain(chain && chain.name !== selectedChain.value?.name ? chain : null)
+    setBridgeToChain(
+      chain && chain.name !== selectedChain.value?.name ? chain : null,
+    )
   }
 })
 
@@ -1326,31 +1348,53 @@ watch(
 watch(
   () => swapInfo.value,
   async () => {
+    console.log(swapInfo.value, 'swapInfo updated, refetching gas fees')
     if (!bestOfferSelectionOpen.value || !swapInfo.value) return
-    if (isBitcoinChain.value) {
-      const transactions = (
-        (swapInfo.value.transactions as GenericTransaction[]) || []
-      ).map(tx => ({ address: tx.to, amount: tx.value }))
-      const txForm = {
-        fromAddresses: [userAddress.value],
-        consolidationAddress: userAddress.value,
-        outputs: transactions,
+    try {
+      if (isBitcoinChain.value) {
+        const transactions = (
+          (swapInfo.value.transactions as GenericTransaction[]) || []
+        ).map(tx => ({ address: tx.to, amount: tx.value }))
+        const txForm = {
+          fromAddresses: [userAddress.value],
+          consolidationAddress: userAddress.value,
+          outputs: transactions,
+        }
+        const res = await wallet.value?.getBtcGasFee?.(txForm)
+        swapGasFeeQuote.value = (res as QuotesResponse) || undefined
+      } else {
+        const transactions = (swapInfo.value.transactions || []).filter(
+          (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+        )
+        const parsedTransactions = transactions.map(tx => ({
+          address: tx.from,
+          to: tx.to,
+          data: tx.data,
+          value: tx.value || '0x0',
+          action: dataTxAction(tx) as EvmTransactionAction,
+        }))
+        const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
+        swapGasFeeQuote.value = res || undefined
       }
-      const res = await wallet.value?.getBtcGasFee?.(txForm)
-      swapGasFeeQuote.value = (res as QuotesResponse) || undefined
-    } else {
-      const transactions = (swapInfo.value.transactions || []).filter(
-        (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
-      )
-      const parsedTransactions = transactions.map(tx => ({
-        address: tx.from,
-        to: tx.to,
-        data: tx.data,
-        value: tx.value || '0x0',
-        action: dataTxAction(tx) as EvmTransactionAction,
-      }))
-      const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
-      swapGasFeeQuote.value = res || undefined
+    } catch (e: any) {
+      generalError.value =
+        e?.message || 'Error fetching gas fees for selected offer'
+      if (isDevMode) {
+        console.error('Error fetching gas fees on quote change:', e)
+      } else {
+        const analyticsPayload = getAnalyticsShared()
+        analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+          ...analyticsPayload,
+          errorMsg: e?.message || 'Unknown error',
+        })
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
+          extra: {
+            title: 'SWAP: Error fetching gas fees on quote change',
+            errorMessage: e?.message || 'Unknown error',
+          },
+        })
+      }
     }
   },
 )
@@ -1490,7 +1534,10 @@ onBeforeMount(async () => {
       if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
       if (swapToToken.value) toTokenSelected.value = swapToToken.value
     } else {
-      if (bridgeToChain.value && bridgeToChain.value.name !== selectedChain.value?.name) {
+      if (
+        bridgeToChain.value &&
+        bridgeToChain.value.name !== selectedChain.value?.name
+      ) {
         selectedToChain.value = bridgeToChain.value
       }
       if (bridgeFromToken.value) fromTokenSelected.value = bridgeFromToken.value
