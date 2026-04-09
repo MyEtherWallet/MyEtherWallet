@@ -444,6 +444,7 @@ const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
 // Initialize selectedFromChain immediately from the store to prevent defaulting to Ethereum
 const selectedFromChain = ref<Chain | undefined>(chainsStore.selectedChain)
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
+const fromTokenManuallySelected = ref(false)
 const toTokenSelected = ref<NewTokenInfo | null>(null)
 const fromAmount = ref<string>('')
 const toAmount = ref<string>('')
@@ -708,6 +709,7 @@ const restoreToToken = () => {
 
 const clearValues = () => {
   isPristine.value = true // Reset to pristine state
+  fromTokenManuallySelected.value = false
   fromAmount.value = ''
   toAmount.value = ''
   toAmountError.value = ''
@@ -726,6 +728,7 @@ const clearValues = () => {
 
 const setFromChain = (chain: Chain) => {
   selectedFromChain.value = chain
+  fromTokenManuallySelected.value = false
   // Update the global network - useSwap has a watcher that will reinitialize
   globalStore.setSelectedNetwork(chain.name)
   // Clear current selections - they'll be repopulated when swapLoaded becomes true
@@ -866,6 +869,9 @@ watch([additionalBuyAssets, () => isWalletConnected.value], () => {
   // Check if we should update the from token selection
   if (!fromTokens.value.length || !isWalletConnected.value) return
 
+  // Never override a token the user explicitly picked
+  if (fromTokenManuallySelected.value) return
+
   const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
   const isMainToken =
     !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
@@ -886,9 +892,13 @@ watch(selectedTradeTokenSymbol, symbol => {
   }
 })
 
-// Sync trade pair to pairStore
+// Sync trade pair to pairStore; detect manual user selection
 watch(fromTokenSelected, token => {
   setTradeFromSymbol(token?.symbol ?? null)
+  // If the token changed and it wasn't a programmatic reset (null), treat as manual
+  if (token !== null) {
+    fromTokenManuallySelected.value = true
+  }
 })
 
 watch(toTokenSelected, token => {
