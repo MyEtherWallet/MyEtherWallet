@@ -169,7 +169,7 @@
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ $t('trade.trading_not_available_on', { network: selectedChain?.nameLong || selectedChain?.name }) }}
+              {{ $t('trade.trading_not_available_on', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
             </p>
             <div class="flex flex-col items-center justify-center">
               <div class="">
@@ -601,7 +601,7 @@ watch(generalError, newVal => {
     } else if (
       generalError.value.toLowerCase().includes('internal server error')
     ) {
-      displayGeneralError.value = t('trade.tokens_not_tradable')
+      displayGeneralError.value = t('trade.service_unavailable')
     } else {
       displayGeneralError.value = newVal
     }

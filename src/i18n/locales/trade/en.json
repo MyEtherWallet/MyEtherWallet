@@ -19,6 +19,7 @@
     "trade_button": "Trade",
     "need_help": "Need help trading?",
     "tokens_not_tradable": "One or more tokens are currently not tradable. Try again later or select different tokens.",
+    "service_unavailable": "Trading service is temporarily unavailable. Please try again later.",
     "asset_not_tradable": "is currently not tradable due to {reason}",
     "quote_modal": {
       "title": "Trade Quote",
