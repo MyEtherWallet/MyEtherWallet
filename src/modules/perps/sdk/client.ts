@@ -32,6 +32,7 @@ import type {
   ApiFill,
   WalletDeposit,
   WalletWithdrawal,
+  MarketInfoData,
 } from './types'
 
 export class PerpsClient {
@@ -328,6 +329,14 @@ export class PerpsClient {
   async getWithdrawals(): Promise<GenericResponse<WalletWithdrawal[]>> {
     return this.authGet<GenericResponse<WalletWithdrawal[]>>(
       '/v1/wallet/withdrawals',
+    )
+  }
+
+  async getPerpetualInfo(
+    perpetual: string,
+  ): Promise<GenericResponse<MarketInfoData>> {
+    return this.request<GenericResponse<MarketInfoData>>(
+      `/v1/markets/info/${encodeURIComponent(perpetual)}`,
     )
   }
 }

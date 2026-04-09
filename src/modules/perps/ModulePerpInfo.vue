@@ -1,42 +1,67 @@
 <template>
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-full divide-y divide-grey-10">
     <!-- Header -->
-    <div class="px-4 lg:px-10 pt-6 pb-4 mr-[72px] xs:mr-[80px]">
-      <div class="flex items-start gap-4">
-        <img
-          :src="getLogoUrl(baseCurrency)"
-          :alt="baseCurrency"
-          class="w-10 h-10 xs:w-14 xs:h-14 rounded-full"
+    <div class="pb-3 xs:pb-5">
+      <div
+        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px]"
+      >
+        <app-btn-icon label="Share">
+          <share-icon class="h-5 w-5" />
+        </app-btn-icon>
+      </div>
+      <div class="px-4 lg:px-10 py-0 flex items-start gap-4">
+        <app-token-logo
+          :url="getLogoUrl(baseCurrency)"
+          :symbol="baseCurrency"
+          width="w-10 xs:w-[56px]"
+          height="h-10 xs:h-[56px]"
         />
         <div class="flex flex-col">
-          <div class="flex items-end gap-2">
-            <span
-              class="text-s-20 xs:text-s-24 xl:text-s-28 font-bold leading-tight"
+          <h1
+            class="text-s-20 xs:text-s-24 leading-p-110 font-bold xl:text-s-28"
+          >
+            {{ baseCurrency.toUpperCase() }}
+            <span class="text-s-17 xs:text-s-20 mr-1 font-semibold"
+              >({{ displayName }})</span
             >
-              {{ displayName }} &bull; Perpetual
-            </span>
-          </div>
-          <div class="flex items-center gap-2 mt-1">
-            <span class="text-s-20 xs:text-s-24">
+          </h1>
+          <div>
+            <p class="text-s-20 xs:text-s-24 inline">
               {{ formatPrice(currentPrice) }}
-            </span>
-            <span
-              v-if="priceChangePercent !== null"
-              :class="[
-                priceChangePercent >= 0 ? 'text-success' : 'text-error',
-                'text-s-14',
-              ]"
-            >
-              {{ priceChangePercent >= 0 ? '↗' : '↘' }}
-              {{ formatPercent(priceChangePercent) }}
-            </span>
+            </p>
+            <div v-if="priceChangePercent !== null" class="inline-block ml-2">
+              <ArrowTrendingDownIcon
+                v-if="priceChangePercent < 0"
+                class="w-4 h-4 inline-block text-error"
+              />
+              <ArrowTrendingUpIcon
+                v-else
+                class="w-4 h-4 inline-block text-success"
+              />
+              <span
+                :class="[
+                  {
+                    'text-success': priceChangePercent >= 0,
+                    'text-error': priceChangePercent < 0,
+                  },
+                  'ml-1 text-s-14 xs:text-s-17',
+                ]"
+              >
+                {{ formatPercent(priceChangePercent) }}
+              </span>
+            </div>
           </div>
+          <p
+            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
+          >
+            Perpetual
+          </p>
         </div>
       </div>
     </div>
 
     <!-- Chart -->
-    <div class="px-4 lg:px-10 py-4 border-t border-grey-10">
+    <div class="px-4 lg:px-10 py-4">
       <div class="flex items-center gap-1 mb-4">
         <button
           v-for="interval in chartIntervals"
@@ -75,7 +100,7 @@
     </div>
 
     <!-- Positions for this market -->
-    <div class="px-4 lg:px-10 py-4 border-t border-grey-10">
+    <div class="px-4 lg:px-10 py-4">
       <div class="flex bg-surface rounded-full p-1 w-fit mb-4">
         <button
           v-for="tab in infoTabs"
@@ -321,7 +346,7 @@
     </div>
 
     <!-- Market Stats -->
-    <div class="px-4 lg:px-10 py-4 border-t border-grey-10">
+    <div class="px-4 lg:px-10 py-4">
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <div>
           <p
@@ -384,7 +409,7 @@
     </div>
 
     <!-- About -->
-    <div class="px-4 lg:px-10 py-4 border-t border-grey-10">
+    <div class="px-4 lg:px-10 py-4">
       <h3 class="text-s-20 font-bold mb-3">About {{ baseCurrency }}</h3>
       <p class="text-s-14 text-info leading-relaxed">
         {{ stockDescription }}
@@ -392,7 +417,7 @@
     </div>
 
     <!-- Instrument Info -->
-    <div class="px-4 lg:px-10 py-4 border-t border-grey-10 pb-10">
+    <div class="px-4 lg:px-10 py-4 pb-10">
       <h3 class="text-s-20 font-bold mb-3">Instrument Information</h3>
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <div>
@@ -426,7 +451,7 @@
             24H High
           </p>
           <p class="text-s-14 font-bold">
-            {{ formatPrice(stockData?.primaryMarket?.high24h) }}
+            {{ formatPrice(perpInfo?.underlyingMarket?.high) }}
           </p>
         </div>
         <div>
@@ -436,7 +461,7 @@
             24H Low
           </p>
           <p class="text-s-14 font-bold">
-            {{ formatPrice(stockData?.primaryMarket?.low24h) }}
+            {{ formatPrice(perpInfo?.underlyingMarket?.low) }}
           </p>
         </div>
       </div>
@@ -446,7 +471,14 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onUnmounted } from 'vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
+import { ShareIcon } from '@heroicons/vue/24/solid'
+import {
+  ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+} from '@heroicons/vue/24/outline'
 import { perpsClient } from './configs'
 import {
   usePerpsMarkets,
@@ -455,9 +487,7 @@ import {
 import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
-import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
-import type { Position, ApiOrder, ApiFill } from './sdk/types'
+import type { Position, ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import {
   formatUsd,
   formatPrice,
@@ -513,23 +543,23 @@ const category = computed(() => {
   return c ? getCategory(c) : 'Equities'
 })
 
-// Fetch stock description from MEW API
-const { useMEWFetch } = useFetchMewApi()
-const stockFetchUrl = computed(
-  () => `/v1/web/pages/stocks-info/stocks/${baseCurrency.value}on/summary`,
-)
-const stockData = ref<GetWebStocksInfoSummaryResponse | undefined>(undefined)
-const { data: stockResponse, onFetchResponse } = useMEWFetch(stockFetchUrl, {
-  refetch: true,
-})
-  .get()
-  .json<GetWebStocksInfoSummaryResponse>()
-onFetchResponse(() => {
-  if (stockResponse.value) stockData.value = stockResponse.value
-})
+// Fetch perpetual info from Ondo API
+const perpInfo = ref<MarketInfoData | undefined>(undefined)
+
+async function fetchPerpetualInfo() {
+  try {
+    const res = await perpsClient.getPerpetualInfo(props.market)
+    if (res.success) perpInfo.value = res.result
+  } catch {
+    perpInfo.value = undefined
+  }
+}
+
+watch(() => props.market, fetchPerpetualInfo, { immediate: true })
+
 const stockDescription = computed(
   () =>
-    stockData.value?.description ??
+    perpInfo.value?.description ??
     `${baseCurrency.value}-PERP is a perpetual futures contract tracking the ${displayName.value} asset. Trade with up to 20x leverage.`,
 )
 

@@ -372,3 +372,30 @@ export interface WalletWithdrawal {
   usdFee?: string
   chainId: string
 }
+
+// Market/info
+export type OndoUnderlyingMarket = {
+  open: string
+  high: string
+  low: string
+  marketCap: string
+  volume24h: string
+  averageVolume: string
+}
+
+export type OndoTag = {
+  categoryLayer: string
+  categorySlug: string
+  categoryLabel: string
+  tagSlug: string
+  tagLabel: string
+}
+
+export type MarketInfoData = {
+  // corresponds to V1MarketInfoResult
+  description: string
+  underlyingMarket: OndoUnderlyingMarket
+  underlyingName: string
+  ticker: string
+  tags: OndoTag[]
+}
