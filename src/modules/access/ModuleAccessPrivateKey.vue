@@ -58,6 +58,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -154,7 +155,7 @@ const unlock = () => {
         : t('access_wallet_keystore.error_accessing_wallet'),
       type: ToastType.Error,
     })
-    captureException(error)
+    captureException(error, SENTRY_MODULE_TAGS.ACCESS)
   }
 }
 </script>

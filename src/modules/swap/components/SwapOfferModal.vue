@@ -525,7 +525,10 @@ watch(
 const proceedWithSwap = () => {
   isProceeding.value = true
   loadingModel.value = true
-  if(wallet.value?.getWalletType() === WalletType.TREZOR || wallet.value?.getWalletType() === WalletType.LEDGER) {
+  if (
+    wallet.value?.getWalletType() === WalletType.TREZOR ||
+    wallet.value?.getWalletType() === WalletType.LEDGER
+  ) {
     showApproveMessage.value = true
   }
   emits('update:proceedWithSwap', props.swapGasFeeQuote?.quoteId || '')

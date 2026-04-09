@@ -289,6 +289,7 @@ import { ToastType } from '@/types/notification'
 import configs from '@/configs'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const isDevMode = configs.IS_DEV_MODE
 const MAX_PRICE_IMPACT = 10
@@ -304,8 +305,20 @@ const toastStore = useToastStore()
 const accessStore = useAccessStore()
 const rewardsStore = useRewardsStore()
 const pairStore = usePairStore()
-const { swapFromToken, swapToToken } = storeToRefs(pairStore)
-const { setSwapFromToken, setSwapToToken } = pairStore
+const {
+  swapFromToken,
+  swapToToken,
+  bridgeFromToken,
+  bridgeToToken,
+  bridgeToChain,
+} = storeToRefs(pairStore)
+const {
+  setSwapFromToken,
+  setSwapToToken,
+  setBridgeFromToken,
+  setBridgeToToken,
+  setBridgeToChain,
+} = pairStore
 const { t } = useI18n()
 
 // --- Refs from Stores ---
@@ -752,6 +765,7 @@ const proceedWithSwap = async (quoteId: string) => {
           errorMsg: errorMessage,
         })
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
           extra: {
             title: 'SWAP: Error proceeding with swap',
             errorMessage,
@@ -824,6 +838,7 @@ const swapForBtc = async () => {
         errorMsg: generalError.value,
       })
       captureException(e, {
+        ...SENTRY_MODULE_TAGS.SWAP,
         extra: {
           title: 'SWAP: Error fetching BTC gas fees',
           errorMessage: generalError.value,
@@ -870,6 +885,7 @@ const swapForEvm = async () => {
         errorMsg: generalError.value,
       })
       captureException(e, {
+        ...SENTRY_MODULE_TAGS.SWAP,
         extra: {
           title: 'SWAP: Error fetching gas fees',
           errorMessage: generalError.value,
@@ -959,6 +975,7 @@ const fetchQuotes = async () => {
       console.error('Error fetching quotes:', err)
     } else {
       captureException(err, {
+        ...SENTRY_MODULE_TAGS.SWAP,
         extra: {
           title: 'SWAP: fetchQuotes Error',
           errorMessage: err?.message || 'Unknown error',
@@ -1188,13 +1205,27 @@ const connectWalletForSwap = () => {
 
 // --- Watchers ---
 
-// Sync swap pair to pairStore
+// Sync swap/bridge pair to pairStore
 watch(fromTokenSelected, token => {
-  setSwapFromToken(token ?? null)
+  if (isSwapView.value) {
+    setSwapFromToken(token ?? null)
+  } else {
+    setBridgeFromToken(token ?? null)
+  }
 })
 
 watch(toTokenSelected, token => {
-  setSwapToToken(token ?? null)
+  if (isSwapView.value) {
+    setSwapToToken(token ?? null)
+  } else {
+    setBridgeToToken(token ?? null)
+  }
+})
+
+watch(selectedToChain, chain => {
+  if (!isSwapView.value) {
+    setBridgeToChain(chain && chain.name !== selectedChain.value?.name ? chain : null)
+  }
 })
 
 // Deep Link / Swap Values Watcher
@@ -1287,6 +1318,39 @@ watch(
     }
   },
   { deep: true },
+)
+
+// Re-fetch gas fees when provider is changed inside the offer modal
+watch(
+  () => swapInfo.value,
+  async () => {
+    if (!bestOfferSelectionOpen.value || !swapInfo.value) return
+    if (isBitcoinChain.value) {
+      const transactions = (
+        (swapInfo.value.transactions as GenericTransaction[]) || []
+      ).map(tx => ({ address: tx.to, amount: tx.value }))
+      const txForm = {
+        fromAddresses: [userAddress.value],
+        consolidationAddress: userAddress.value,
+        outputs: transactions,
+      }
+      const res = await wallet.value?.getBtcGasFee?.(txForm)
+      swapGasFeeQuote.value = (res as QuotesResponse) || undefined
+    } else {
+      const transactions = (swapInfo.value.transactions || []).filter(
+        (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
+      )
+      const parsedTransactions = transactions.map(tx => ({
+        address: tx.from,
+        to: tx.to,
+        data: tx.data,
+        value: tx.value || '0x0',
+        action: dataTxAction(tx) as EvmTransactionAction,
+      }))
+      const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
+      swapGasFeeQuote.value = res || undefined
+    }
+  },
 )
 
 const bestRate = computed(() => {
@@ -1420,8 +1484,16 @@ onBeforeMount(async () => {
 
   // Pre-populate from pairStore so setFromToken/setToToken keep the selection if found in list
   if (!hasSwapValues.value) {
-    if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
-    if (swapToToken.value) toTokenSelected.value = swapToToken.value
+    if (isSwapView.value) {
+      if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
+      if (swapToToken.value) toTokenSelected.value = swapToToken.value
+    } else {
+      if (bridgeToChain.value && bridgeToChain.value.name !== selectedChain.value?.name) {
+        selectedToChain.value = bridgeToChain.value
+      }
+      if (bridgeFromToken.value) fromTokenSelected.value = bridgeFromToken.value
+      if (bridgeToToken.value) toTokenSelected.value = bridgeToToken.value
+    }
   }
 
   await nextTick()
