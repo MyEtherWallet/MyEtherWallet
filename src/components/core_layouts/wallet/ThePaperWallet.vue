@@ -75,7 +75,7 @@
           <p
             class="my-6 mx-auto text-s-14 text-p-130 text-info print:text-black text-center max-w-[400px]"
           >
-            <span class="font-semibold uppercase">Tip:</span> {{ $t('paper_wallet.tip') }}
+            <span class="font-semibold uppercase">{{ $t('paper_wallet.tip_label') }}</span> {{ $t('paper_wallet.tip') }}
           </p>
           <hr class="h-px bg-grey-outline border-0 w-full my-6" />
           <!-- TODO:  add privatekey option-->

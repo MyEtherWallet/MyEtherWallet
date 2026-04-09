@@ -107,13 +107,7 @@
           class="text-s-24 md:text-s-32 lg-max:text-s-28 2xl:text-s-28 font-bold leading-p-100 mb-3 text-center xs:text-start"
           :class="'text-s-32 '"
         >
-          {{ $t('rewards.earn_amount') }}
-          <br
-            :class="[
-              isOpenSideMenu ? 'xl:hidden' : 'xl:flex',
-              'hidden lg-max:flex 2xl:flex',
-            ]"
-          />{{ $t('rewards.usdc') }}
+          {{ $t('rewards.earn_amount_usdc') }}
         </h3>
         <p
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
@@ -132,7 +126,7 @@
       <div
         class="text-[10px] font-light text-info tracking-sp-06 uppercase text-center"
       >
-        {{ $t('rewards.rewards_left_today', { count: rewardsLeft }) }}
+        {{ $t('rewards.rewards_left_today', Number(rewardsLeft)) }}
         <span v-if="rewardsLeft === 0 || rewardsLeft === '0'" class="mx-1"
           >·</span
         >

@@ -204,6 +204,7 @@
   "paper_wallet": {
     "title": "Paper Wallet",
     "my_address": "My {chain} address",
+    "tip_label": "Tip:",
     "tip": "Always look for the icon when sending to this wallet. And please keep your paper wallet at a Safe Place!",
     "print": "Print"
   },

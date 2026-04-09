@@ -940,7 +940,7 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
-const cryptoFilterOptions = ref([
+const cryptoFilterOptions = computed(() => [
   { label: t('crypto.all_tokens'), value: 'all' },
   { label: t('crypto.top_gainers'), value: 'topGainers' },
   { label: t('crypto.top_losers'), value: 'topLosers' },
@@ -952,6 +952,12 @@ const cryptoFilterOptions = ref([
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+watch(cryptoFilterOptions, options => {
+  selectedCryptoFilter.value =
+    options.find(opt => opt.value === selectedCryptoFilter.value.value) ||
+    options[0]
+})
 
 interface DisplayToken extends Omit<
   GetWebTokensTableResponseToken,

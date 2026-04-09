@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeUnmount } from 'vue'
+import { computed, ref, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
@@ -82,7 +82,7 @@ interface Item {
   label: string
   value: StockPriceChartInterval
 }
-const chartFilterOptions = ref<Item[]>([
+const chartFilterOptions = computed<Item[]>(() => [
   { label: t('stocks.chart_1d'), value: '1D' },
   { label: t('stocks.chart_7d'), value: '7D' },
   { label: t('stocks.chart_1m'), value: '1M' },
@@ -91,7 +91,13 @@ const chartFilterOptions = ref<Item[]>([
   { label: t('stocks.chart_all'), value: 'ALL' },
 ])
 
-const selectedChartFilter = ref(chartFilterOptions.value[0])
+const selectedChartFilter = ref<Item>(chartFilterOptions.value[0])
+
+watch(chartFilterOptions, options => {
+  selectedChartFilter.value =
+    options.find(opt => opt.value === selectedChartFilter.value.value) ||
+    options[0]
+})
 
 /** --------------------
  * FetchData

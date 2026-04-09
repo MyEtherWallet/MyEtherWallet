@@ -664,7 +664,7 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
-const cryptoFilterOptions = ref([
+const cryptoFilterOptions = computed(() => [
   { label: t('stocks.category_all_assets'), value: 'all' },
   { label: t('stocks.category_watchlist'), value: 'watchlist' },
   { label: t('stocks.category_etf'), value: 'ETF' },
@@ -675,6 +675,12 @@ const cryptoFilterOptions = ref([
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+watch(cryptoFilterOptions, options => {
+  selectedCryptoFilter.value =
+    options.find(opt => opt.value === selectedCryptoFilter.value.value) ||
+    options[0]
+})
 
 interface DisplayToken {
   symbol: string

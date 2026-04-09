@@ -90,7 +90,7 @@
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
             <button
-              :label="$t('trade.swap_from_to')"
+              :aria-label="$t('trade.swap_from_to')"
               :class="[
                 'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
               ]"

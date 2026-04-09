@@ -125,8 +125,7 @@
                     <exclamation-circle-icon
                       class="inline-block w-5 h-5 text-grey-50 mr-1"
                     />
-                    {{ $t('stocks.no_results_found_for') }}
-                    {{ searchInput }}
+                    {{ $t('stocks.no_results_found_for', { query: searchInput }) }}
                   </p>
                   <!-- Suggestions Trending and Recently Viewed -->
                   <div

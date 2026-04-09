@@ -33,6 +33,7 @@
             <button
               @click="isShownSecondaryTextInFull = !isShownSecondaryTextInFull"
               class="-ml-4 text-s-14 py-2 px-4 text-info word-break hoverBGWhite rounded-12 text-left"
+              :aria-label="$t('rewards.toggle_full_text')"
             >
               <p>
                 {{
@@ -43,7 +44,7 @@
               </p>
               <ChevronDownIcon
                 class="w-5 h-5 mt-1 mx-auto"
-                :aria-label="$t('rewards.toggle_full_text')"
+                aria-hidden="true"
                 :class="{ 'rotate-180': isShownSecondaryTextInFull }"
               />
             </button>

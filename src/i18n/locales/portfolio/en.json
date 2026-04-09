@@ -26,7 +26,7 @@
       "title_all": "All Gains & Losses",
       "link_stocks": "All tokenized stocks trends",
       "link_all": "All crypto trends",
-      "empty_stocks": "You don't have any tokenized stocks or ETFS in your portfolio yet.",
+      "empty_stocks": "You don't have any tokenized stocks or ETFs in your portfolio yet.",
       "page_of": "{current} of {total}",
       "price_24h_header": "Price / 24h",
       "gain_loss_header": "Gain / Loss"
@@ -46,7 +46,7 @@
       "discover_more_tokens": "Discover more tokens",
       "empty_custom": "You don't have any custom tokens.",
       "add_custom_token": "+ Add Custom Token",
-      "empty_stocks": "You don't have any tokenized stocks or ETFS in your portfolio yet.",
+      "empty_stocks": "You don't have any tokenized stocks or ETFs in your portfolio yet.",
       "no_results": "No results found for \"{query}\".",
       "results_of": "{count} of {total} results",
       "page_current": "{current}",
