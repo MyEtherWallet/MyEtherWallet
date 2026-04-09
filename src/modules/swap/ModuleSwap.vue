@@ -1348,7 +1348,6 @@ watch(
 watch(
   () => swapInfo.value,
   async () => {
-    console.log(swapInfo.value, 'swapInfo updated, refetching gas fees')
     if (!bestOfferSelectionOpen.value || !swapInfo.value) return
     try {
       if (isBitcoinChain.value) {
