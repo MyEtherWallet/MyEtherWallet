@@ -58,6 +58,7 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore
@@ -151,7 +152,7 @@ const unlock = () => {
         : 'There was an error accessing the wallet. Please try again.',
       type: ToastType.Error,
     })
-    captureException(error)
+    captureException(error, SENTRY_MODULE_TAGS.ACCESS)
   }
 }
 </script>

@@ -277,6 +277,7 @@ import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
   SendEvent,
@@ -298,7 +299,9 @@ interface EvmTxType {
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
-const emit = defineEmits(['tx-sent'])
+const emit = defineEmits<{
+  'tx-sent': [txHash: string]
+}>()
 const chainsStore = useChainsStore()
 const tradeOrdersStore = useTradeOrdersStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -420,7 +423,7 @@ const confirmTransaction = async () => {
         })
         openModal.value = false
         model.value = false
-        emit('tx-sent')
+        emit('tx-sent', hash)
       })
       .catch(e => {
         //TODO: implement error localization
@@ -432,7 +435,8 @@ const confirmTransaction = async () => {
               : typeof e === 'string'
                 ? e.toLowerCase()
                 : ''
-        if (msg.includes('user rejected')) {
+        
+        if (msg.includes('rejected') || msg.includes('denied')  || msg.includes('cancelled')) {
           toastStore.addToastMessage({
             type: ToastType.Info,
             text: 'Transaction canceled by user',
@@ -452,6 +456,7 @@ const confirmTransaction = async () => {
           })
 
           captureException(e, {
+            ...SENTRY_MODULE_TAGS.SEND,
             extra: {
               title: 'Error sending transaction: TX Promise',
               errorMessage: errorMessage,
@@ -482,6 +487,7 @@ const confirmTransaction = async () => {
       textSecondary: errorMessage,
     })
     captureException(e, {
+      ...SENTRY_MODULE_TAGS.SEND,
       extra: {
         title: 'Error sending transaction',
         errorMessage,

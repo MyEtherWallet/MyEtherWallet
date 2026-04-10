@@ -161,7 +161,7 @@ const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWallet, setWatchOnlyIfExist } = store
+const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 
@@ -255,6 +255,10 @@ watch(
         injectedInfo?.provider.on(
           'accountsChanged',
           async (accounts: unknown) => {
+            if(accounts && (accounts as string[]).length === 0) {
+              disconnectWallet()
+              return
+            }
             if (
               (accounts as string[])[0] !== (await wallet.value?.getAddress())
             ) {

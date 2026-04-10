@@ -13,7 +13,9 @@ const beforeRouteEnter = (
   if (
     to.query.type &&
     typeof to.query.type === 'string' &&
-    ACCESS_WALLET_VIEWS.includes(to.query.type as (typeof ACCESS_WALLET_VIEWS)[number])
+    ACCESS_WALLET_VIEWS.includes(
+      to.query.type as (typeof ACCESS_WALLET_VIEWS)[number],
+    )
   ) {
     next()
   } else {

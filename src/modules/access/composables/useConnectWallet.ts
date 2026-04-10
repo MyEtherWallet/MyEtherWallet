@@ -21,6 +21,7 @@ import UnisatInjectWallet from '@/providers/bitcoin/unisatInjectedWallet'
 import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -107,7 +108,7 @@ export const useConnectWallet = () => {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
               )
-              captureException(error)
+              captureException(error, SENTRY_MODULE_TAGS.ACCESS)
             }
           } else {
             accessStore.setWeb3ConnectionError(t('error_connecting'))
@@ -123,7 +124,7 @@ export const useConnectWallet = () => {
           }
           accessStore.setWeb3ConnectionError(error)
           if (error !== t('common.error.user_canceled_request')) {
-            captureException(err)
+            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
           }
         })
       return
@@ -146,13 +147,13 @@ export const useConnectWallet = () => {
           wallet.downloadUrls?.firefox
         const link = _haslink
           ? {
-              title: 'Click here to install',
-              url: _haslink,
-            }
+            title: 'Click here to install',
+            url: _haslink,
+          }
           : {
-              title: "Don't have a wallet?",
-              url: 'https://enkrypt.com',
-            }
+            title: "Don't have a wallet?",
+            url: 'https://enkrypt.com',
+          }
         toastStore.addToastMessage({
           text: 'Web3 wallet not detected',
           textSecondary: `Please install ${wallet.name} extension to connect or select a different wallet.`,
@@ -181,7 +182,7 @@ export const useConnectWallet = () => {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
               )
-              captureException(error)
+              captureException(error, SENTRY_MODULE_TAGS.ACCESS)
             }
           } else {
             accessStore.setWeb3ConnectionError(t('error_connecting'))
@@ -211,7 +212,7 @@ export const useConnectWallet = () => {
           }
           accessStore.setWeb3ConnectionError(error)
           if (error === t('error_connecting')) {
-            captureException(err)
+            captureException(err, SENTRY_MODULE_TAGS.ACCESS)
           }
         })
     }
@@ -245,7 +246,7 @@ export const useConnectWallet = () => {
       selectedChain.value?.chainID || '1',
       wagmiConfig,
     )
-    wagWallet
+    return wagWallet
       .connect()
       .then(res => {
         if (res) {
@@ -258,7 +259,7 @@ export const useConnectWallet = () => {
                 error instanceof Error ? error.message : String(error),
               type: ToastType.Error,
             })
-            captureException(error)
+            captureException(error, SENTRY_MODULE_TAGS.ACCESS)
           }
         }
       })
@@ -272,13 +273,20 @@ export const useConnectWallet = () => {
           error = t('common.error.user_canceled_request')
           _type = ToastType.Info
         }
+        if (
+          err.message &&
+          err.message.toLowerCase().includes('proposal expired')
+        ) {
+          error = 'Connection timed out. Please try again.'
+          _type = ToastType.Info
+        }
         toastStore.addToastMessage({
           text: 'Could not connect to wallet',
           textSecondary: error,
           type: _type,
         })
         if (error === t('error_connecting')) {
-          captureException(err)
+          captureException(err, SENTRY_MODULE_TAGS.ACCESS)
         }
       })
   }
