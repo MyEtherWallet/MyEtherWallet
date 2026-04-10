@@ -270,11 +270,7 @@ import { useScroll } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
 import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
-import {
-  analytics,
-  TradeClickSortEvent,
-  SwapClickSortEvent,
-} from '@/analytics'
+import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
 
 const props = defineProps({
   selectedToken: {
@@ -423,10 +419,12 @@ const setActiveSort = (value: SortValueString) => {
   if (props.sortContext === 'trade') {
     analytics.trackTradeClickSortEvent(TradeClickSortEvent, {
       sortOption: value,
+      isFromView: props.isFromView,
     })
   } else if (props.sortContext === 'swap') {
     analytics.trackSwapClickSortEvent(SwapClickSortEvent, {
       sortOption: value,
+      isFromView: props.isFromView,
     })
   }
   if (value === activeSortValue.value) {

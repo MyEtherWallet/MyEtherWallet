@@ -364,4 +364,5 @@ export const SwapClickSortEvent = 'Swap_Click_Sort' as const
 
 export type ClickSortPayload = {
   sortOption: string
+  isFromView?: boolean
 }
