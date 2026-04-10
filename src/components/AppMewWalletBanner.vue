@@ -3,7 +3,7 @@
     <transition name="banner-slide">
       <div
         v-if="isVisible"
-        class="fixed left-0 bottom-0 z-50 w-full flex justify-center h-[190px] max-[768px]:h-[260px] overflow-hidden shadow-2xl banner-bg min-[1920px]:left-6 min-[1920px]:bottom-8 min-[1920px]:w-[550px] min-[1920px]:h-[245px] min-[1920px]:rounded-2xl min-[1920px]:justify-start"
+        class="fixed left-0 bottom-0 z-50 flex justify-center overflow-hidden shadow-2xl banner-bg left-6 bottom-8 w-[550px] h-[245px] rounded-2xl justify-start"
       >
         <!-- Close button -->
         <button
@@ -14,9 +14,7 @@
           <XCircleIcon class="w-5 h-5" />
         </button>
 
-        <div
-          class="block min-[769px]:hidden min-[1920px]:block pl-7 pr-6 py-5 z-10 relative"
-        >
+        <div class="block pl-7 pr-6 py-5 z-10 relative">
           <p class="font-bold text-s-28 text-black leading-[60px] mb-1">
             Get MEW app
           </p>
@@ -24,7 +22,7 @@
             class="text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
             Earn tokenized stock rewards
-            <br class="block max-[700px]:hidden" />from a $100,000 pool
+            <br />from a $100,000 pool
           </p>
 
           <!-- Download button + QR -->
@@ -82,75 +80,9 @@
           </div>
         </div>
         <div
-          class="hidden min-[769px]:block min-[1920px]:hidden pl-7 pr-6 py-5 z-10 relative"
+          class="z-0 flex items-end overflow-hidden self-stretch absolute right-[-10px]"
         >
-          <p class="font-bold text-s-28 text-black leading-[60px] mb-1">
-            Get MEW app
-          </p>
-          <p
-            class="text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
-          >
-            Earn tokenized stock rewards from a $100,000 pool
-          </p>
-
-          <!-- Download button + QR -->
-          <div class="flex items-center gap-3 mb-4">
-            <a
-              href="https://mewwallet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center px-5 py-2 rounded-full bg-primary text-white font-medium text-s-16 whitespace-nowrap"
-            >
-              Download now
-            </a>
-            <button
-              class="relative"
-              @mouseenter="showQr = true"
-              @mouseleave="showQr = false"
-            >
-              <div
-                class="w-10 h-10 bg-grey-light rounded-full flex items-center justify-center cursor-pointer"
-              >
-                <QrCodeIcon class="w-5 h-5" />
-              </div>
-              <div
-                v-if="showQr"
-                class="absolute top-1/2 -translate-y-[70%] left-full ml-3 bg-white rounded-2xl shadow-xl p-3 w-[150px] h-[170px] flex flex-col z-20"
-              >
-                <p class="text-xs font-semibold text-black mb-2">
-                  Scan to download
-                </p>
-                <img
-                  :src="qrCode"
-                  alt="QR code"
-                  class="w-full flex-1 object-contain"
-                />
-              </div>
-            </button>
-            <a
-              href="https://apps.apple.com/app/mew-crypto-wallet-buy-eth/id1464614025"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img :src="appStoreIos" alt="App Store" class="h-5 mr-2" />
-            </a>
-            <a
-              href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img :src="appStoreGoogle" alt="Google Play" class="h-5" />
-            </a>
-          </div>
-        </div>
-        <div
-          class="z-0 flex items-end overflow-hidden self-stretch max-[600px]:hidden min-[1920px]:absolute min-[1920px]:right-[-10px]"
-        >
-          <img
-            :src="mewBannerItem"
-            alt="Mew wallet app"
-            class="h-[300px] min-[1920px]:h-[245px]"
-          />
+          <img :src="mewBannerItem" alt="Mew wallet app" class="h-[245px]" />
         </div>
       </div>
     </transition>
