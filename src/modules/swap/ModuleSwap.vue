@@ -828,13 +828,8 @@ const swapForBtc = async () => {
   try {
     await debounceFetchQuotes()
 
-    if (!selectedQuote.value) throw new Error('No quote available')
-    swapInfo.value = await getSwap(selectedQuote.value)
-
-    if (!swapInfo.value) throw new Error('Pair currently not available')
-
     const transactions = (
-      (swapInfo.value.transactions as GenericTransaction[]) || []
+      (swapInfo.value?.transactions as GenericTransaction[]) || []
     ).map(tx => ({ address: tx.to, amount: tx.value }))
 
     const txForm = {
@@ -875,15 +870,8 @@ const swapForEvm = async () => {
   try {
     await debounceFetchQuotes()
 
-    if (!selectedQuote.value) throw new Error('No quote available')
-    swapInfo.value = await getSwap(selectedQuote.value)
-
-    if (!swapInfo.value) {
-      throw new Error('Pair currently not available')
-    }
-
     // Filter for EVM Transactions
-    const transactions = (swapInfo.value.transactions || []).filter(
+    const transactions = (swapInfo.value?.transactions || []).filter(
       (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
     )
 
@@ -1333,76 +1321,14 @@ watch(
   },
 )
 
-// Update SwapInfo when Quote Selected; if modal is open re-fetch gas fees too
 watch(
-  () => selectedQuote.value?.provider,
-  async () => {
-    const provider = selectedQuote.value
-    if (!provider) return
-    swapInfo.value = await getSwap(provider)
-
-    if (!swapInfo.value) {
-      // Remove the failed provider and fall back to the next best quote
-      providers.value = providers.value.filter(
-        q => q.provider !== provider.provider,
-      )
-      selectedQuote.value = providers.value[0] ?? undefined
-      return
-    }
-
-    // When provider is changed inside the offer modal, re-fetch gas fees so
-    // the quoteId used for signing belongs to the newly selected provider.
-    if (!bestOfferSelectionOpen.value) return
-    txProceeding.value = true
-    try {
-      if (isBitcoinChain.value) {
-        const transactions = (
-          (swapInfo.value.transactions as GenericTransaction[]) || []
-        ).map(tx => ({ address: tx.to, amount: tx.value }))
-        const txForm = {
-          fromAddresses: [userAddress.value],
-          consolidationAddress: userAddress.value,
-          outputs: transactions,
-        }
-        const res = await wallet.value?.getBtcGasFee?.(txForm)
-        swapGasFeeQuote.value = (res as QuotesResponse) || undefined
-      } else {
-        const transactions = (swapInfo.value.transactions || []).filter(
-          (tx): tx is EVMTransaction => 'gasLimit' in tx && 'data' in tx,
-        )
-        const parsedTransactions = transactions.map(tx => ({
-          address: tx.from,
-          to: tx.to,
-          data: tx.data,
-          value: tx.value || '0x0',
-          action: dataTxAction(tx) as EvmTransactionAction,
-        }))
-        const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
-        swapGasFeeQuote.value = res || undefined
-      }
-    } catch (e: any) {
-      generalError.value =
-        e?.message || 'Error fetching gas fees for selected offer'
-      if (isDevMode) {
-        console.error('Error fetching gas fees on quote change:', e)
-      } else {
-        const analyticsPayload = getAnalyticsShared()
-        analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
-          ...analyticsPayload,
-          errorMsg: e?.message || 'Unknown error',
-        })
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.SWAP,
-          extra: {
-            title: 'SWAP: Error fetching gas fees on quote change',
-            errorMessage: e?.message || 'Unknown error',
-          },
-        })
-      }
-    } finally {
-      txProceeding.value = false
+  () => selectedQuote.value,
+  async provider => {
+    if (provider) {
+      swapInfo.value = await getSwap(provider)
     }
   },
+  { deep: true },
 )
 
 const bestRate = computed(() => {
