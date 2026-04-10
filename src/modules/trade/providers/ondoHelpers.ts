@@ -7,9 +7,11 @@ const TRADING_RESTRICTED_HELP_URL =
   'https://help.myetherwallet.com/en/articles/13641432-restrictions-on-tokenized-stock-trading-in-mew'
 
 const _getMarketStatus = (): Promise<GetWebSwapOndoMarketStatusResponse> => {
-  return fetch(getAPIPath(`/v1/web/swap/ondo/status/market`)).then(
-    res => res.json() as Promise<GetWebSwapOndoMarketStatusResponse>,
-  )
+  return fetch(getAPIPath(`/v1/web/swap/ondo/status/market`)).then(res => {
+    if (!res.ok)
+      throw new Error(`Failed to fetch market status: ${res.status}`)
+    return res.json() as Promise<GetWebSwapOndoMarketStatusResponse>
+  })
 }
 
 const getMarketStatus = throttle(_getMarketStatus, 1000)
@@ -17,7 +19,12 @@ const getMarketStatus = throttle(_getMarketStatus, 1000)
 const getRestrictedTokenAddresses = (): Promise<string[]> => {
   return fetch(
     `https://raw.githubusercontent.com/enkryptcom/dynamic-data/refs/heads/main/configs/filtered-rwa-addresses.json`,
-  ).then(res => res.json() as Promise<string[]>)
+  )
+    .then(res => {
+      if (!res.ok) return []
+      return res.json() as Promise<string[]>
+    })
+    .catch(() => [])
 }
 
 const isTradingRestricted = async (): Promise<boolean> => {

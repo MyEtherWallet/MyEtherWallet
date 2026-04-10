@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, nextTick } from 'vue'
+import { ref, watch, computed, nextTick, onMounted } from 'vue'
 import { analytics, NotificationEvent } from '@/analytics'
 import { BellIcon } from '@heroicons/vue/24/solid'
 import { storeToRefs } from 'pinia'
@@ -247,6 +247,20 @@ onClickOutside(
   },
   { ignore: [popupRef] },
 )
+
+// On mount check pending notifications for already-connected wallet
+onMounted(() => {
+  if (walletAddress.value) {
+    tradeNotificationsRef.value?.checkPendingNotifications(walletAddress.value)
+  }
+})
+
+// On wallet connect, check any pending notifications immediately
+watch(walletAddress, newAddress => {
+  if (newAddress) {
+    tradeNotificationsRef.value?.checkPendingNotifications(newAddress)
+  }
+})
 
 // Check if there are unseen orders
 const hasUnseen = computed(() => {

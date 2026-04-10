@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { NewTokenInfo } from '@/composables/useSwap'
+import type { Chain } from '@/mew_api/types'
 
 export const usePairStore = defineStore('pairStore', () => {
-  // Swap pairs
+  // Swap pairs (same-chain swap view)
   const swapFromToken = ref<NewTokenInfo | null>(null)
   const swapToToken = ref<NewTokenInfo | null>(null)
 
@@ -18,6 +19,29 @@ export const usePairStore = defineStore('pairStore', () => {
   const clearSwapPair = () => {
     swapFromToken.value = null
     swapToToken.value = null
+  }
+
+  // Bridge pairs (cross-chain bridge view)
+  const bridgeFromToken = ref<NewTokenInfo | null>(null)
+  const bridgeToToken = ref<NewTokenInfo | null>(null)
+  const bridgeToChain = ref<Chain | null>(null)
+
+  const setBridgeFromToken = (token: NewTokenInfo | null) => {
+    bridgeFromToken.value = token
+  }
+
+  const setBridgeToToken = (token: NewTokenInfo | null) => {
+    bridgeToToken.value = token
+  }
+
+  const setBridgeToChain = (chain: Chain | null) => {
+    bridgeToChain.value = chain
+  }
+
+  const clearBridgePair = () => {
+    bridgeFromToken.value = null
+    bridgeToToken.value = null
+    bridgeToChain.value = null
   }
 
   // Trade pairs
@@ -43,6 +67,13 @@ export const usePairStore = defineStore('pairStore', () => {
     setSwapFromToken,
     setSwapToToken,
     clearSwapPair,
+    bridgeFromToken,
+    bridgeToToken,
+    bridgeToChain,
+    setBridgeFromToken,
+    setBridgeToToken,
+    setBridgeToChain,
+    clearBridgePair,
     tradeFromSymbol,
     tradeToSymbol,
     setTradeFromSymbol,
