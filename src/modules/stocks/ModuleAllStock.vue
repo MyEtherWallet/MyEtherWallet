@@ -229,7 +229,7 @@
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
                 class="h-14 hoverBGWhite cursor-pointer"
-                @click="goToTokenPage(token)"
+                @click="onRowClick(token)"
               >
                 <!-- Watchlist -->
                 <td class="sm:w-10 hidden sm:table-cell rounded-l-12 pl-1">
@@ -1062,12 +1062,16 @@ const getSparkLinePoints = (token: DisplayToken) => {
  --------------------------------*/
 const router = useRouter()
 
-const goToTokenPage = (token: DisplayToken) => {
+const onRowClick = (token: DisplayToken) => {
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
     location: 'token_row',
     stockName: token.name,
     stockSymbol: token.symbol,
   })
+  goToTokenPage(token)
+}
+
+const goToTokenPage = (token: DisplayToken) => {
   router.push({
     name: STOCK_INFO_ROUTE_NAMES.stocks,
     params: { symbol: token.symbol },

@@ -266,7 +266,7 @@
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
                 class="h-14 cursor-pointer hoverBGWhite"
-                @click="goToTokenPage(token)"
+                @click="onRowClick(token)"
               >
                 <!-- Watchlist -->
                 <td
@@ -426,7 +426,7 @@
                               v-if="isBuyable(token.coinId)"
                               @click.stop="[
                                 toggleMenu(),
-                                buyBtn(token.symbol, true),
+                                buyBtn(token, true),
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -510,7 +510,7 @@
                     <app-base-button
                       v-if="isBuyable(token.coinId)"
                       size="small"
-                      @click="buyBtn(token.symbol)"
+                      @click="buyBtn(token)"
                       is-outline
                       class="min-w-[60px]"
                       >Buy</app-base-button
@@ -795,16 +795,16 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
-const buyBtn = (symbol: string, isMobile = false) => {
+const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'crypto_table',
-    token: symbol,
+    token: token.symbol,
     isMobile,
   })
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
     location: 'buy_button',
-    tokenName: symbol,
-    tokenSymbol: symbol,
+    tokenName: token.name,
+    tokenSymbol: token.symbol,
   })
   window.open(
     'https://ccswap.myetherwallet.com/',
@@ -926,11 +926,6 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
     location: 'crypto_table',
     token: token.symbol,
     stock: token.ondo?.underlyingMarket.name,
-  })
-  analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
-    location: 'token_row',
-    tokenName: token.name,
-    tokenSymbol: token.symbol,
   })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
@@ -1408,12 +1403,16 @@ const getSparkLinePoints = (token: DisplayToken) => {
  --------------------------------*/
 const router = useRouter()
 
-const goToTokenPage = (token: DisplayToken) => {
+const onRowClick = (token: DisplayToken) => {
   analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
     location: 'token_row',
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
+  goToTokenPage(token)
+}
+
+const goToTokenPage = (token: DisplayToken) => {
   if (token.ondo !== null && token.ondo.primaryMarket.symbol) {
     router.push({
       name: STOCK_INFO_ROUTE_NAMES.crypto,
