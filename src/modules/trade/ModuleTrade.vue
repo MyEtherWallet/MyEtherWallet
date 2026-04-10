@@ -55,6 +55,7 @@
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
                 :is-pristine="isPristine"
+                sort-context="trade"
                 class="mt-2"
               >
                 <!-- Percentage Buttons -->
@@ -115,6 +116,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :is-pristine="isPristine"
+              sort-context="trade"
               class="mt-2"
             />
           </div>
