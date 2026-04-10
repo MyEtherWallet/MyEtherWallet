@@ -163,6 +163,17 @@ export interface PortfolioSummary {
   volumeAllTime: string
 }
 
+export interface PortfolioGraphPoint {
+  time: string
+  marginBalance: string
+  totalPnL: string
+  realizedPnl: string
+  netInvested: string
+  fillVolume: string
+  allTimeDeposits: string
+  allTimeWithdrawals: string
+}
+
 export interface PerpsBalance {
   walletBalance: string
   realizedPnl: string

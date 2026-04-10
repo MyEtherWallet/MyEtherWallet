@@ -1,91 +1,92 @@
 <template>
-  <div class="bg-white rounded-20 p-6 sm:p-8">
-    <!-- Not authenticated -->
-    <div v-if="!isWalletConnected || isWatchOnly" class="text-center py-8">
-      <p class="text-info text-s-14 mb-4">
-        Connect your wallet to view your perps portfolio
-      </p>
-      <button
-        class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
-        @click="connectWallet"
-      >
-        Connect Wallet
-      </button>
-    </div>
-    <div v-else-if="!token" class="text-center py-8">
-      <p class="text-info text-s-14 mb-4">
-        Sign in to view your perps portfolio
-      </p>
-      <button
-        :disabled="isAuthenticating"
-        class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
-        @click="login"
-      >
-        {{ isAuthenticating ? 'Signing in...' : 'Sign in to Perps' }}
-      </button>
-      <p v-if="authError" class="text-error text-s-12 mt-2">{{ authError }}</p>
-    </div>
-
-    <!-- Authenticated -->
-    <div v-else class="flex items-end justify-between">
+  <app-sheet :is-elivated="false" sheet-class="!p-4 sm:!p-6 lg:!w-[300px]">
+    <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between s">
       <div>
-        <p class="text-info text-s-14">Total account value</p>
-        <p class="font-bold text-s-40 mt-1">{{ formatUsd(marginBalance) }}</p>
-        <div class="flex items-center gap-4 mt-1">
-          <p class="text-s-14">
-            <span class="text-info">Unrealized PnL</span>
-            <span :class="pnlColorClass" class="ml-2 font-bold">
-              {{ formatPnl(unrealizedPnl) }}
-              ({{ pnlPercent }})
-            </span>
-          </p>
+        <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
+          Total account value
+        </p>
+        <p class="font-bold text-s-32 lg:text-s-40 mt-1">
+          {{ formatUsd(marginBalance) }}
+        </p>
+        <p
+          :class="pnlColorClass"
+          class="inline-flex text-s-20 align-middle ml-1"
+        >
+          {{ pnlPercent }}
+        </p>
+        <div class="flex items-center gap-3 justify-start mt-3">
+          <AppBaseButton
+            @click="$emit('deposit')"
+            class="min-w-[120px]"
+            size="medium"
+          >
+            Deposit
+          </AppBaseButton>
+          <AppBaseButton
+            is-outline
+            @click="$emit('withdraw')"
+            class="min-w-[120px]"
+            size="medium"
+          >
+            Withdraw
+          </AppBaseButton>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <button
-          class="bg-primary text-white rounded-full px-8 py-3 text-s-16 font-bold hoverOpacity"
-          @click="$emit('deposit')"
-        >
-          Deposit
-        </button>
-        <button
-          class="border-1 border-primary text-primary rounded-full px-8 py-3 text-s-16 font-bold hoverOpacity"
-          @click="$emit('withdraw')"
-        >
-          Withdraw
-        </button>
+      <hr class="my-6 border-t-1 border-grey-5 sm:hidden lg:flex" />
+      <div class="flex flex-col gap-4 w-full max-w-[300px] lg:max-w-none">
+        <div class="flex items-center justify-between gap-4 w-full">
+          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+            Perpetuals Value
+          </p>
+          <p class="ml-2 font-medium">{{ formatUsd(walletBalance) }}</p>
+        </div>
+        <div class="flex items-center justify-between gap-4 w-full">
+          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+            Unrealized PnL
+          </p>
+          <p :class="pnlColorClass" class="ml-2 font-medium">
+            {{ formatPnl(unrealizedPnl) }}
+          </p>
+        </div>
+        <div class="flex items-center justify-between gap-4 w-full">
+          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+            Available Margin
+          </p>
+          <p class="ml-2 font-medium">{{ formatUsd(availableMargin) }}</p>
+        </div>
+        <div class="flex items-center justify-between gap-4 w-full">
+          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+            Volume (30d)
+          </p>
+          <p class="ml-2 font-medium">{{ formatUsd(volume30d) }}</p>
+        </div>
       </div>
     </div>
-  </div>
+  </app-sheet>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppSheet from '@/components/AppSheet.vue'
+import {
+  usePerpsBalance,
+  usePerpsPortfolioSummary,
+} from '../composables/usePerpsAuth'
 import { formatUsd, formatPnl, pnlColor } from '../utils/formatters'
-import { useWalletStore } from '@/stores/walletStore'
-import { useAccessStore } from '@/stores/accessStore'
-import { storeToRefs } from 'pinia'
 
 defineEmits<{
   deposit: []
   withdraw: []
 }>()
 
-const walletStore = useWalletStore()
-const { isWatchOnly } = storeToRefs(walletStore)
-const accessStore = useAccessStore()
-
-const connectWallet = () => {
-  accessStore.openAccessDialog()
-}
-
-const { token, isWalletConnected, isAuthenticating, authError, login } =
-  usePerpsAuth()
 const { balance } = usePerpsBalance()
-
+const { summary } = usePerpsPortfolioSummary()
 const marginBalance = computed(() => balance.value?.marginBalance ?? '0')
 const unrealizedPnl = computed(() => balance.value?.unrealizedPnl ?? '0')
+const walletBalance = computed(() => balance.value?.walletBalance ?? '0')
+const availableMargin = computed(() => balance.value?.availableMargin ?? '0')
+const volume30d = computed(() => summary.value?.volume30d ?? '0')
 
 const pnlPercent = computed(() => {
   const margin = parseFloat(marginBalance.value)

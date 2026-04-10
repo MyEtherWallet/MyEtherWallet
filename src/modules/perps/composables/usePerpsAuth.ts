@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import type { PerpsBalance } from '../sdk/types'
+import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -148,4 +148,51 @@ export function usePerpsBalance() {
   }
 
   return { balance, loading, refetch: _sharedFetchBalance! }
+}
+
+// Shared singleton state for portfolio summary
+const _sharedSummary = ref<PortfolioSummary | null>(null)
+const _sharedSummaryLoading = ref(false)
+let _summaryInitialized = false
+let _sharedFetchSummary: (() => Promise<void>) | null = null
+
+export function usePerpsPortfolioSummary() {
+  const { token } = usePerpsAuth()
+  const summary = _sharedSummary
+  const loading = _sharedSummaryLoading
+
+  if (!_summaryInitialized) {
+    _summaryInitialized = true
+
+    async function fetchSummary() {
+      if (!token.value) {
+        summary.value = null
+        return
+      }
+      loading.value = true
+      try {
+        const res = await perpsClient.getPortfolioSummary()
+        summary.value = res.result
+      } catch {
+        summary.value = null
+      } finally {
+        loading.value = false
+      }
+    }
+
+    function poll() {
+      if (token.value) {
+        fetchSummary()
+      } else {
+        summary.value = null
+      }
+    }
+
+    poll()
+    setInterval(poll, 300_000) // refresh every 5 minutes
+
+    _sharedFetchSummary = fetchSummary
+  }
+
+  return { summary, loading, refetch: _sharedFetchSummary! }
 }

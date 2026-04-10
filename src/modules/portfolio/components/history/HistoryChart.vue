@@ -27,6 +27,9 @@ interface DataPoint {
 const props = defineProps<{
   /** 7 days * 24 hours = 168 values (oldest -> newest) */
   data: DataPoint[]
+  topData?: DataPoint[]
+  bottomData?: DataPoint[]
+  dispalayYAxis?: boolean
 }>()
 
 /**
@@ -53,17 +56,26 @@ const colors = {
 const points = computed(() => props.data.map(d => d.value))
 const labels = computed(() => props.data.map(d => d.timestamp))
 
+const topPoints = computed(() => props.topData?.map(d => d.value) || [])
+const bottomPoints = computed(() => props.bottomData?.map(d => d.value) || [])
+
 const chartWidth = ref<number>(0)
 const chartHeight = ref<number>(0)
 const gradient = ref<CanvasGradient | null>(null)
 const chartData = computed<ChartData<'line'>>(() => {
-  return {
+  const lineSettings = {
+    borderWidth: 1.5,
+    pointRadius: 0,
+    tension: 0.5, // low smoothing to keep detail
+  }
+  const dataSet: ChartData<'line'> = {
     labels: labels.value,
     datasets: [
       {
         data: points.value,
         borderColor: 'rgb(0,90,229,1)',
         fill: true,
+        ...lineSettings,
         backgroundColor: function (context) {
           const chart = context.chart
           const { ctx, chartArea } = chart
@@ -96,12 +108,24 @@ const chartData = computed<ChartData<'line'>>(() => {
           }
           return gradient.value
         },
-        borderWidth: 1.5,
-        pointRadius: 0,
-        tension: 0.5, // low smoothing to keep detail
       },
     ],
   }
+  if (topPoints.value.length > 0) {
+    dataSet.datasets!.push({
+      data: topPoints.value,
+      borderColor: '#9D00FF',
+      ...lineSettings,
+    })
+  }
+  if (bottomPoints.value.length > 0) {
+    dataSet.datasets!.push({
+      data: bottomPoints.value,
+      borderColor: colors.upColor,
+      ...lineSettings,
+    })
+  }
+  return dataSet
 })
 const yBounds = computed(() => {
   const arr = points.value
@@ -192,7 +216,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       },
     },
     y: {
-      display: false,
+      display: props.dispalayYAxis ?? false,
       ticks: {
         count: 3,
         callback: function (value) {
@@ -208,6 +232,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       grid: {
         display: false, // Set display to false to remove vertical grid lines
       },
+      position: 'right',
     },
   },
   elements: { line: { capBezierPoints: true } },

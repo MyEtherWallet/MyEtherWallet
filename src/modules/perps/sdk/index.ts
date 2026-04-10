@@ -21,6 +21,7 @@ export type {
   ProvisionAddressResult,
   AccountInfo,
   PortfolioSummary,
+  PortfolioGraphPoint,
   PerpsBalance,
   AddressBookEntry,
   AddressBookResult,

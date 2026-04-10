@@ -15,6 +15,7 @@ import type {
   ProvisionAddressResult,
   AccountInfo,
   PortfolioSummary,
+  PortfolioGraphPoint,
   PerpsBalance,
   AddressBookResult,
   AddressBookGetChallengeRequest,
@@ -201,6 +202,14 @@ export class PerpsClient {
   async getPortfolioSummary(): Promise<GenericResponse<PortfolioSummary>> {
     return this.authGet<GenericResponse<PortfolioSummary>>(
       '/v1/portfolio/summary',
+    )
+  }
+
+  async getPortfolioGraph(
+    range: '24h' | '7d' | '30d' | 'all' = '30d',
+  ): Promise<GenericResponse<PortfolioGraphPoint[]>> {
+    return this.authGet<GenericResponse<PortfolioGraphPoint[]>>(
+      `/v1/portfolio/summary/graph?range=${range}`,
     )
   }
 

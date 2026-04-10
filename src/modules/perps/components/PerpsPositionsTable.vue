@@ -1,26 +1,52 @@
 <template>
   <div>
-    <div class="flex items-center justify-between mb-4">
-      <p class="font-bold text-s-28">Positions</p>
-      <div class="flex bg-surface rounded-full p-1">
-        <button
-          v-for="tab in tabs"
-          :key="tab.key"
-          :class="[
-            'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
-            activeTab === tab.key ? 'bg-white shadow-container' : 'hoverNoBG',
-          ]"
-          @click="activeTab = tab.key"
+    <div
+      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
+    >
+      <h1 class="text-s-24 xs:text-s-32 font-bold">Positions</h1>
+      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+        <app-btn-group
+          v-model:selected="selectedTab"
+          :btn-list="tabs"
+          size="large"
+          class="flex-wrap"
         >
-          {{ tab.label }}
-          <span
-            v-if="tab.key === 'positions' && positions.length > 0"
-            class="ml-1 text-info"
-          >
-            · {{ positions.length }}
-          </span>
-        </button>
+          <template #btn-content="{ data }">
+            <span class="px-2">
+              {{ data.label }}
+              <span
+                v-if="data.value === 'positions' && positions.length > 0"
+                class="ml-1 text-info"
+              >
+                · {{ positions.length }}
+              </span>
+            </span>
+          </template>
+        </app-btn-group>
       </div>
+      <app-select
+        v-model:selected="selectedTab"
+        :options="tabs"
+        position="right-0"
+        placeholder="Tab"
+        class="lg:hidden"
+      >
+        <template #select-button="{ toggleSelect }">
+          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+            <button
+              class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+              @click="toggleSelect"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-s-16 font-medium">{{
+                  selectedTab.label
+                }}</span>
+                <chevron-down-icon class="w-4 h-4 ml-1" />
+              </div>
+            </button>
+          </div>
+        </template>
+      </app-select>
     </div>
 
     <div class="bg-white rounded-20 p-6 sm:p-8">
@@ -412,6 +438,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppSelect from '@/components/AppSelect.vue'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
@@ -511,7 +540,15 @@ const combinedDW = computed(() => {
   return items
 })
 
-const activeTab = ref<string>('positions')
+const tabs = [
+  { label: 'Positions', value: 'positions' },
+  { label: 'Orders', value: 'orders' },
+  { label: 'Fills', value: 'fills' },
+  { label: 'Deposits & Withdrawals', value: 'deposits' },
+]
+
+const selectedTab = ref(tabs[0])
+const activeTab = computed(() => selectedTab.value.value)
 const orderFilter = ref<'pending' | 'all'>('pending')
 
 const pendingStatuses = new Set(['pending', 'untriggered', 'open'])
@@ -519,11 +556,4 @@ const filteredOrders = computed(() => {
   if (orderFilter.value === 'all') return orders.value
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
-
-const tabs = [
-  { key: 'positions', label: 'Positions' },
-  { key: 'orders', label: 'Orders' },
-  { key: 'fills', label: 'Fills' },
-  { key: 'deposits', label: 'Deposits & Withdrawals' },
-]
 </script>
