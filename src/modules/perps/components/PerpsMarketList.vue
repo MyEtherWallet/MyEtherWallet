@@ -3,7 +3,7 @@
     <div
       class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">Markets</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">Perpetuals Markets</h1>
       <!--Filter Lists-->
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
@@ -217,7 +217,9 @@
               <!-- Actions -->
               <th
                 class="lg:pl-6 lg:pr-4 py-2 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
-              ></th>
+              >
+                <p class="hidden lg:block font-bold">Actions</p>
+              </th>
             </tr>
           </thead>
           <tbody>

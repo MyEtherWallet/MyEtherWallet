@@ -1,63 +1,60 @@
 <template>
   <div>
-    <div
-      class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
-    >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">Positions</h1>
-      <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
-        <app-btn-group
-          v-model:selected="selectedTab"
-          :btn-list="tabs"
-          size="large"
-          class="flex-wrap"
-        >
-          <template #btn-content="{ data }">
-            <span class="px-2">
-              {{ data.label }}
-              <span
-                v-if="data.value === 'positions' && positions.length > 0"
-                class="ml-1 text-info"
-              >
-                · {{ positions.length }}
-              </span>
-            </span>
-          </template>
-        </app-btn-group>
-      </div>
-      <app-select
-        v-model:selected="selectedTab"
-        :options="tabs"
-        position="right-0"
-        placeholder="Tab"
-        class="lg:hidden"
+    <app-sheet class="!p-2 !py-6 !sm:py-8">
+      <div
+        class="flex flex-col xs:flex-row flex-wrap lg:justify-between lg:items-center gap-4 mb-5 xs:px-4"
       >
-        <template #select-button="{ toggleSelect }">
-          <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
-            <button
-              class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
-              @click="toggleSelect"
-            >
-              <div class="flex items-center justify-between">
-                <span class="text-s-16 font-medium">{{
-                  selectedTab.label
-                }}</span>
-                <chevron-down-icon class="w-4 h-4 ml-1" />
-              </div>
-            </button>
-          </div>
-        </template>
-      </app-select>
-    </div>
-
-    <div class="bg-white rounded-20 p-6 sm:p-8">
-      <!-- Not authenticated -->
-      <div v-if="!token" class="text-center py-8 text-info text-s-14">
-        Sign in to view positions
+        <h1 class="text-s-24 xs:text-s-20 font-bold hidden lg:block">
+          {{ selectedTab.label }}
+        </h1>
+        <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
+          <app-btn-group
+            v-model:selected="selectedTab"
+            :btn-list="tabs"
+            size="medium"
+            class="flex-wrap"
+          >
+            <template #btn-content="{ data }">
+              <span class="px-2">
+                {{ data.label }}
+                <span
+                  v-if="data.value === 'positions' && positions.length > 0"
+                  class="ml-1 text-info"
+                >
+                  · {{ positions.length }}
+                </span>
+              </span>
+            </template>
+          </app-btn-group>
+        </div>
+        <app-select
+          v-model:selected="selectedTab"
+          :options="tabs"
+          position="right-0"
+          placeholder="Tab"
+          class="lg:hidden"
+        >
+          <template #select-button="{ toggleSelect }">
+            <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
+              <button
+                class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+                @click="toggleSelect"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="text-s-16 font-medium">{{
+                    selectedTab.label
+                  }}</span>
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
+            </div>
+          </template>
+        </app-select>
       </div>
 
       <!-- Loading -->
       <div
-        v-else-if="loading && positions.length === 0"
+        v-if="loading && positions.length === 0"
         class="text-center py-8 text-info text-s-14"
       >
         Loading positions...
@@ -71,100 +68,193 @@
         >
           No open positions
         </div>
-        <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
-          <table class="w-full text-s-14 min-w-[900px]">
-            <thead>
-              <tr class="text-info uppercase text-s-11 tracking-wider">
-                <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
-                <th class="px-3 py-3 text-left font-medium">Leverage</th>
-                <th class="px-3 py-3 text-right font-medium">Value</th>
-                <th class="px-3 py-3 text-right font-medium">Unrealized PnL</th>
-                <th class="px-3 py-3 text-right font-medium">Entry Price</th>
-                <th class="px-3 py-3 text-right font-medium">Mark Price</th>
-                <th class="px-3 py-3 text-right font-medium">
-                  Liquidation Price
-                </th>
-                <th class="px-3 py-3 text-right font-medium">Margin Used</th>
-                <th class="px-3 py-3 text-right font-medium">Total Funding</th>
-                <th class="px-6 sm:px-8 py-3 text-right font-medium">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="pos in positions" :key="pos.market" class="">
-                <td class="px-6 sm:px-8 py-4">
-                  <div class="flex items-center gap-3">
-                    <img
-                      :src="getLogoUrl(getBase(pos.market))"
-                      :alt="pos.market"
-                      class="w-8 h-8 rounded-full"
-                    />
-                    <span class="font-bold">{{ getBase(pos.market) }}</span>
+        <table class="w-full text-s-14 table-fixed">
+          <thead>
+            <tr
+              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+            >
+              <th class="px-1 sm:pl-4 py-3 text-left font-bold">Market</th>
+              <!-- <th class="px-1 py-3 text-right font-bold hidden 3xl:table-cell">
+                Leverage
+              </th> -->
+              <th class="px-1 py-3 text-right font-bold">Value</th>
+              <th
+                class="px-1 py-3 text-right font-bold hidden xs:table-cell normal-case"
+              >
+                uPnl
+              </th>
+              <th class="px-1 py-3 text-right font-bold hidden 2xl:table-cell">
+                Entry Price
+              </th>
+              <th class="px-1 py-3 text-right font-bold hidden lg:table-cell">
+                Mark Price
+              </th>
+              <th class="px-1 py-3 text-right font-bold hidden sm:table-cell">
+                Liq Price
+              </th>
+              <th class="px-1 py-3 text-right font-bold hidden 2xl:table-cell">
+                Margin Used
+              </th>
+              <th class="px-1 py-3 text-right font-bold hidden 3xl:table-cell">
+                Total Funding
+              </th>
+              <th
+                class="px-1 sm:pr-4 py-3 text-right font-bold w-8 xs:w-10 md:w-12 lg:w-auto"
+              >
+                <p class="hidden lg:block font-bold">Actions</p>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="pos in positions"
+              :key="pos.market"
+              class="cursor-pointer hoverBGWhite"
+              @click="openPositionDialog(pos)"
+            >
+              <!-- Market -->
+              <td class="py-3 px-1 sm:pl-4 rounded-l-12">
+                <div class="flex items-center gap-3">
+                  <app-token-logo
+                    :url="getLogoUrl(getBase(pos.market))"
+                    :symbol="getBase(pos.market)"
+                    class="rounded-full"
+                  />
+                  <div>
+                    <p class="font-bold truncate">{{ getBase(pos.market) }}</p>
+                    <p
+                      :class="[
+                        pos.direction === 'long'
+                          ? 'text-success'
+                          : pos.direction === 'short'
+                            ? 'text-error'
+                            : 'text-info',
+                        'font-normal text-s-12 capitalize ',
+                      ]"
+                    >
+                      {{ pos.direction }} {{ pos.leverage }}x
+                    </p>
                   </div>
-                </td>
-                <td class="px-3 py-4">
-                  <span
-                    :class="[
-                      pos.direction === 'long'
-                        ? 'text-success'
-                        : pos.direction === 'short'
-                          ? 'text-error'
-                          : 'text-info',
-                      'font-bold capitalize',
-                    ]"
+                </div>
+              </td>
+              <!-- Leverage -->
+              <!-- <td class="px-1 py-3 hidden 3xl:table-cell text-right">
+                <span
+                  :class="[
+                    pos.direction === 'long'
+                      ? 'text-success'
+                      : pos.direction === 'short'
+                        ? 'text-error'
+                        : 'text-info',
+                    'font-normal text-s-12 sm:text-s-14 capitalize',
+                  ]"
+                >
+                  {{ pos.direction }} {{ pos.leverage }}x
+                </span>
+              </td> -->
+              <!-- Value -->
+              <td class="px-1 py-3 text-right font-normal text-s-14">
+                {{ formatUsd(pos.notionalValue) }}
+              </td>
+              <!-- Unrealized PnL -->
+              <td class="px-1 py-3 text-right hidden xs:table-cell">
+                <p
+                  :class="pnlColor(pos.unrealizedPnl)"
+                  class="font-normal text-s-14"
+                >
+                  {{ formatPnl(pos.unrealizedPnl) }}
+                  <span class="block text-s-12 3xl"
+                    >({{ formatRoe(pos.returnOnEquity) }})</span
                   >
-                    {{ pos.direction }} {{ pos.leverage }}x
-                  </span>
-                </td>
-                <td class="px-3 py-4 text-right font-bold">
-                  {{ formatUsd(pos.notionalValue) }}
-                </td>
-                <td class="px-3 py-4 text-right">
-                  <span :class="pnlColor(pos.unrealizedPnl)" class="font-bold">
-                    {{ formatPnl(pos.unrealizedPnl) }}
-                    ({{ formatRoe(pos.returnOnEquity) }})
-                  </span>
-                </td>
-                <td class="px-3 py-4 text-right font-bold">
-                  {{ formatPrice(pos.averageEntryPrice) }}
-                </td>
-                <td class="px-3 py-4 text-right font-bold">
-                  {{ formatPrice(pos.markPrice) }}
-                </td>
-                <td class="px-3 py-4 text-right">
-                  <span class="text-warning font-bold">{{
-                    formatPrice(pos.liquidationPrice)
-                  }}</span>
-                </td>
-                <td class="px-3 py-4 text-right font-bold">
-                  {{ formatUsd(pos.usedMargin) }}
-                </td>
-                <td class="px-3 py-4 text-right">
-                  <span
-                    :class="pnlColor(pos.netFundingSinceNeutral)"
-                    class="font-bold"
+                </p>
+              </td>
+              <!-- Entry Price -->
+              <td
+                class="px-1 py-3 text-right font-normal text-s-14 hidden 2xl:table-cell"
+              >
+                {{ formatPrice(pos.averageEntryPrice) }}
+              </td>
+              <!-- Mark Price -->
+              <td
+                class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
+              >
+                {{ formatPrice(pos.markPrice) }}
+              </td>
+              <!-- Liquidation Price -->
+              <td class="px-1 py-3 text-right hidden sm:table-cell">
+                <span class="text-warning font-normal text-s-14">{{
+                  formatPrice(pos.liquidationPrice)
+                }}</span>
+              </td>
+              <!-- Margin Used -->
+              <td
+                class="px-1 py-3 text-right font-normal text-s-14 hidden 2xl:table-cell"
+              >
+                {{ formatUsd(pos.usedMargin) }}
+              </td>
+              <!-- Total Funding -->
+              <td class="px-1 py-3 text-right hidden 3xl:table-cell">
+                <span
+                  :class="pnlColor(pos.netFundingSinceNeutral)"
+                  class="font-normal text-s-14"
+                >
+                  {{ formatPnl(pos.netFundingSinceNeutral) }}
+                </span>
+              </td>
+              <!-- Actions -->
+              <td class="px-1 py-3 text-right rounded-r-12">
+                <div class="flex items-center justify-end lg:hidden -mr-1">
+                  <app-pop-up-menu placeholder="actions menu" location="right">
+                    <template #menu-button="{ toggleMenu }">
+                      <app-btn-icon
+                        label="action menu"
+                        @click.stop="toggleMenu"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                      >
+                        <ellipsis-vertical-icon class="w-5 h-5" />
+                      </app-btn-icon>
+                    </template>
+                    <template #menu-content="{ toggleMenu }">
+                      <div
+                        class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                      >
+                        <ul>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              $emit('openPosition', pos.market),
+                            ]"
+                          >
+                            <p>Manage Position</p>
+                          </li>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              openPositionDialog(pos),
+                            ]"
+                          >
+                            <p>View Position</p>
+                          </li>
+                        </ul>
+                      </div>
+                    </template>
+                  </app-pop-up-menu>
+                </div>
+                <div class="hidden lg:flex flex-row gap-2 justify-end">
+                  <AppBaseButton
+                    size="small"
+                    @click.stop="$emit('openPosition', pos.market)"
                   >
-                    {{ formatPnl(pos.netFundingSinceNeutral) }}
-                  </span>
-                </td>
-                <td class="px-6 sm:px-8 py-4 text-right">
-                  <button
-                    class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white"
-                    :class="
-                      pos.direction === 'long' ? 'bg-success' : 'bg-error'
-                    "
-                    @click="$emit('openPosition', pos.market)"
-                  >
-                    {{
-                      pos.direction === 'long' ? 'Manage Long' : 'Manage Short'
-                    }}
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                    Manage
+                  </AppBaseButton>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </template>
 
       <!-- Orders tab -->
@@ -204,56 +294,64 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[800px]">
             <thead>
-              <tr class="text-info uppercase text-s-11 tracking-wider">
-                <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
-                <th class="px-3 py-3 text-left font-medium">Side</th>
-                <th class="px-3 py-3 text-left font-medium">Type</th>
-                <th class="px-3 py-3 text-right font-medium">Price</th>
-                <th class="px-3 py-3 text-right font-medium">Size</th>
-                <th class="px-3 py-3 text-right font-medium">Filled</th>
-                <th class="px-3 py-3 text-right font-medium">Fee</th>
-                <th class="px-3 py-3 text-left font-medium">Status</th>
-                <th class="px-3 py-3 text-right font-medium">Time</th>
-                <th class="px-6 sm:px-8 py-3 text-right font-medium"></th>
+              <tr
+                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              >
+                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Market</th>
+                <th class="px-1 py-3 text-left font-bold">Side</th>
+                <th class="px-1 py-3 text-left font-bold">Type</th>
+                <th class="px-1 py-3 text-right font-bold">Price</th>
+                <th class="px-1 py-3 text-right font-bold">Size</th>
+                <th class="px-1 py-3 text-right font-bold">Filled</th>
+                <th class="px-1 py-3 text-right font-bold">Fee</th>
+                <th class="px-1 py-3 text-left font-bold">Status</th>
+                <th class="px-1 py-3 text-right font-bold">Time</th>
+                <th class="px-1 sm:pr-4 py-3 text-right font-bold"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="order in filteredOrders" :key="order.orderId" class="">
-                <td class="px-6 sm:px-8 py-4">
+                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
                   <div class="flex items-center gap-3">
-                    <img
-                      :src="getLogoUrl(getBase(order.market))"
-                      :alt="order.market"
-                      class="w-8 h-8 rounded-full"
+                    <app-token-logo
+                      :url="getLogoUrl(getBase(order.market))"
+                      :symbol="getBase(order.market)"
+                      class="rounded-full"
                     />
-                    <span class="font-bold">{{ getBase(order.market) }}</span>
+                    <span class="font-bold truncate">{{
+                      getBase(order.market)
+                    }}</span>
                   </div>
                 </td>
-                <td class="px-3 py-4">
+                <td class="px-1 py-3">
                   <span
                     :class="[
                       order.side === 'buy' ? 'text-success' : 'text-error',
-                      'font-bold capitalize',
+                      'font-normal text-s-14 capitalize',
                     ]"
                   >
                     {{ order.side }}
                   </span>
                 </td>
-                <td class="px-3 py-4 capitalize font-bold">{{ order.type }}</td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 capitalize font-normal text-s-14">
+                  {{ order.type }}
+                </td>
+                <td class="px-1 py-3 text-right font-normal text-s-14">
                   {{ formatPrice(order.price) }}
                 </td>
-                <td class="px-3 py-4 text-right font-bold">{{ order.size }}</td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 text-right font-normal text-s-14">
+                  {{ order.size }}
+                </td>
+                <td class="px-1 py-3 text-right font-normal text-s-14">
                   {{ order.filledSize }}
                 </td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 text-right font-normal text-s-14">
                   {{ formatUsd(order.fee) }}
                 </td>
-                <td class="px-3 py-4">
+                <td class="px-1 py-3">
                   <span
                     :class="[
-                      'capitalize font-bold',
+                      'capitalize font-normal text-s-14',
                       order.status === 'open'
                         ? 'text-primary'
                         : order.status === 'fullyfilled'
@@ -266,10 +364,10 @@
                     {{ order.status }}
                   </span>
                 </td>
-                <td class="px-3 py-4 text-right text-info text-s-12">
+                <td class="px-1 py-3 text-right text-info text-s-12">
                   {{ formatDate(order.createdAt) }}
                 </td>
-                <td class="px-6 sm:px-8 py-4 text-right">
+                <td class="px-1 sm:pr-4 py-3 text-right rounded-r-12">
                   <button
                     v-if="
                       order.status === 'pending' ||
@@ -310,31 +408,35 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[800px]">
             <thead>
-              <tr class="text-info uppercase text-s-11 tracking-wider">
-                <th class="px-6 sm:px-8 py-3 text-left font-medium">Market</th>
-                <th class="px-3 py-3 text-left font-medium">Side</th>
-                <th class="px-3 py-3 text-right font-medium">Price</th>
-                <th class="px-3 py-3 text-right font-medium">Size</th>
-                <th class="px-3 py-3 text-right font-medium">Cost</th>
-                <th class="px-3 py-3 text-right font-medium">Fee</th>
-                <th class="px-3 py-3 text-right font-medium">PnL</th>
-                <th class="px-3 py-3 text-left font-medium">Role</th>
-                <th class="px-6 sm:px-8 py-3 text-right font-medium">Time</th>
+              <tr
+                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              >
+                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Market</th>
+                <th class="px-1 py-3 text-left font-bold">Side</th>
+                <th class="px-1 py-3 text-right font-bold">Price</th>
+                <th class="px-1 py-3 text-right font-bold">Size</th>
+                <th class="px-1 py-3 text-right font-bold">Cost</th>
+                <th class="px-1 py-3 text-right font-bold">Fee</th>
+                <th class="px-1 py-3 text-right font-bold">PnL</th>
+                <th class="px-1 py-3 text-left font-bold">Role</th>
+                <th class="px-1 sm:pr-4 py-3 text-right font-bold">Time</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="fill in fills" :key="fill.id" class="">
-                <td class="px-6 sm:px-8 py-4">
+                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
                   <div class="flex items-center gap-3">
-                    <img
-                      :src="getLogoUrl(getBase(fill.market))"
-                      :alt="fill.market"
-                      class="w-8 h-8 rounded-full"
+                    <app-token-logo
+                      :url="getLogoUrl(getBase(fill.market))"
+                      :symbol="getBase(fill.market)"
+                      class="rounded-full"
                     />
-                    <span class="font-bold">{{ getBase(fill.market) }}</span>
+                    <span class="font-bold truncate">{{
+                      getBase(fill.market)
+                    }}</span>
                   </div>
                 </td>
-                <td class="px-3 py-4">
+                <td class="px-1 py-3">
                   <span
                     :class="[
                       fill.side === 'buy' ? 'text-success' : 'text-error',
@@ -344,17 +446,17 @@
                     {{ fill.side }}
                   </span>
                 </td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 text-right font-bold">
                   {{ formatPrice(fill.price) }}
                 </td>
-                <td class="px-3 py-4 text-right font-bold">{{ fill.size }}</td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 text-right font-bold">{{ fill.size }}</td>
+                <td class="px-1 py-3 text-right font-bold">
                   {{ formatUsd(fill.filledCost) }}
                 </td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 text-right font-bold">
                   {{ formatUsd(fill.fee) }}
                 </td>
-                <td class="px-3 py-4 text-right">
+                <td class="px-1 py-3 text-right">
                   <span
                     v-if="fill.pnl"
                     :class="pnlColor(fill.pnl)"
@@ -364,10 +466,12 @@
                   </span>
                   <span v-else class="text-info">—</span>
                 </td>
-                <td class="px-3 py-4 font-bold">
+                <td class="px-1 py-3 font-bold">
                   {{ fill.isMaker ? 'Maker' : 'Taker' }}
                 </td>
-                <td class="px-6 sm:px-8 py-4 text-right text-info text-s-12">
+                <td
+                  class="px-1 sm:pr-4 py-3 text-right text-info text-s-12 rounded-r-12"
+                >
                   {{ formatDate(fill.time) }}
                 </td>
               </tr>
@@ -393,18 +497,20 @@
         <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
           <table class="w-full text-s-14 min-w-[700px]">
             <thead>
-              <tr class="text-info uppercase text-s-11 tracking-wider">
-                <th class="px-6 sm:px-8 py-3 text-left font-medium">Type</th>
-                <th class="px-3 py-3 text-left font-medium">Asset</th>
-                <th class="px-3 py-3 text-right font-medium">Amount</th>
-                <th class="px-3 py-3 text-right font-medium">USD Value</th>
-                <th class="px-3 py-3 text-left font-medium">Status</th>
-                <th class="px-6 sm:px-8 py-3 text-right font-medium">Time</th>
+              <tr
+                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+              >
+                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Type</th>
+                <th class="px-1 py-3 text-left font-bold">Asset</th>
+                <th class="px-1 py-3 text-right font-bold">Amount</th>
+                <th class="px-1 py-3 text-right font-bold">USD Value</th>
+                <th class="px-1 py-3 text-left font-bold">Status</th>
+                <th class="px-1 sm:pr-4 py-3 text-right font-bold">Time</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in combinedDW" :key="item.key" class="">
-                <td class="px-6 sm:px-8 py-4">
+                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
                   <span
                     :class="[
                       'font-bold',
@@ -414,17 +520,19 @@
                     {{ item.type }}
                   </span>
                 </td>
-                <td class="px-3 py-4 font-bold">{{ item.coin }}</td>
-                <td class="px-3 py-4 text-right font-bold">{{ item.size }}</td>
-                <td class="px-3 py-4 text-right font-bold">
+                <td class="px-1 py-3 font-bold">{{ item.coin }}</td>
+                <td class="px-1 py-3 text-right font-bold">{{ item.size }}</td>
+                <td class="px-1 py-3 text-right font-bold">
                   {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
                 </td>
-                <td class="px-3 py-4">
+                <td class="px-1 py-3">
                   <span :class="['capitalize font-bold', item.statusColor]">
                     {{ item.statusLabel }}
                   </span>
                 </td>
-                <td class="px-6 sm:px-8 py-4 text-right text-info text-s-12">
+                <td
+                  class="px-1 sm:pr-4 py-3 text-right text-info text-s-12 rounded-r-12"
+                >
                   {{ formatDate(item.time) }}
                 </td>
               </tr>
@@ -432,16 +540,27 @@
           </table>
         </div>
       </template>
-    </div>
+    </app-sheet>
+    <perps-position-dialog
+      v-if="selectedPosition"
+      :visible="showPositionDialog"
+      :position="selectedPosition"
+      @close="showPositionDialog = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import { ChevronDownIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
-import { usePerpsAuth } from '../composables/usePerpsAuth'
+import AppSheet from '@/components/AppSheet.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -458,13 +577,21 @@ import {
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
+import type { Position } from '../sdk/types'
 
 defineEmits<{
   openPosition: [market: string]
 }>()
 
-const { token } = usePerpsAuth()
 const { positions, loading } = usePerpsPositions()
+
+const showPositionDialog = ref(false)
+const selectedPosition = ref<Position | null>(null)
+
+function openPositionDialog(pos: Position) {
+  selectedPosition.value = pos
+  showPositionDialog.value = true
+}
 const {
   orders,
   loading: ordersLoading,
