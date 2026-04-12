@@ -405,25 +405,40 @@
         >
           No fills
         </div>
-        <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
-          <table class="w-full text-s-14 min-w-[800px]">
+        <div v-else class="overflow-x-auto">
+          <table class="w-full text-s-14 table-fixed">
             <thead>
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
               >
                 <th class="px-1 sm:pl-4 py-3 text-left font-bold">Market</th>
-                <th class="px-1 py-3 text-left font-bold">Side</th>
+                <th class="px-1 py-3 text-left font-bold hidden lg:table-cell">
+                  Direction
+                </th>
+                <th
+                  class="px-1 py-3 text-right lg:text-left font-bold hidden xs:table-cell"
+                >
+                  Time
+                </th>
+
                 <th class="px-1 py-3 text-right font-bold">Price</th>
-                <th class="px-1 py-3 text-right font-bold">Size</th>
-                <th class="px-1 py-3 text-right font-bold">Cost</th>
-                <th class="px-1 py-3 text-right font-bold">Fee</th>
-                <th class="px-1 py-3 text-right font-bold">PnL</th>
-                <th class="px-1 py-3 text-left font-bold">Role</th>
-                <th class="px-1 sm:pr-4 py-3 text-right font-bold">Time</th>
+                <th class="px-1 py-3 text-right font-bold hidden sm:table-cell">
+                  Size
+                </th>
+                <th class="px-1 py-3 text-right font-bold hidden md:table-cell">
+                  PnL
+                </th>
+                <th class="w-9 xs:w-12"></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="fill in fills" :key="fill.id" class="">
+              <tr
+                v-for="fill in fills"
+                :key="fill.id"
+                class="cursor-pointer hoverBGWhite"
+                @click="openFillDialog(fill)"
+              >
+                <!-- Market -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12">
                   <div class="flex items-center gap-3">
                     <app-token-logo
@@ -431,48 +446,71 @@
                       :symbol="getBase(fill.market)"
                       class="rounded-full"
                     />
-                    <span class="font-bold truncate">{{
-                      getBase(fill.market)
-                    }}</span>
+                    <div>
+                      <p class="font-bold truncate">
+                        {{ getBase(fill.market) }}
+                      </p>
+                      <p
+                        :class="[
+                          fill.direction?.toLowerCase().includes('long')
+                            ? 'text-success'
+                            : 'text-error',
+                          'capitalize text-s-12 lg:hidden',
+                        ]"
+                      >
+                        {{ formatDirection(fill.direction) }}
+                      </p>
+                    </div>
                   </div>
                 </td>
-                <td class="px-1 py-3">
+                <!-- Direction -->
+                <td class="px-1 py-3 hidden lg:table-cell">
                   <span
                     :class="[
-                      fill.side === 'buy' ? 'text-success' : 'text-error',
-                      'font-bold capitalize',
+                      fill.direction?.toLowerCase().includes('long')
+                        ? 'text-success'
+                        : 'text-error',
+                      'capitalize',
                     ]"
                   >
-                    {{ fill.side }}
+                    {{ formatDirection(fill.direction) }}
                   </span>
                 </td>
-                <td class="px-1 py-3 text-right font-bold">
-                  {{ formatPrice(fill.price) }}
+                <!-- Time -->
+                <td
+                  class="px-1 py-3 text-right text-s-12 lg:text-s-14 lg:text-left text-info hidden xs:table-cell"
+                >
+                  {{ formatDate(fill.time) }}
                 </td>
-                <td class="px-1 py-3 text-right font-bold">{{ fill.size }}</td>
-                <td class="px-1 py-3 text-right font-bold">
-                  {{ formatUsd(fill.filledCost) }}
-                </td>
-                <td class="px-1 py-3 text-right font-bold">
-                  {{ formatUsd(fill.fee) }}
-                </td>
+                <!-- Price -->
                 <td class="px-1 py-3 text-right">
-                  <span
-                    v-if="fill.pnl"
-                    :class="pnlColor(fill.pnl)"
-                    class="font-bold"
-                  >
+                  <p>{{ formatPrice(fill.price) }}</p>
+                  <p class="text-info text-s-12 xs:hidden">
+                    {{ formatDate(fill.time) }}
+                  </p>
+                </td>
+                <!-- Size -->
+                <td class="px-1 py-3 text-right hidden sm:table-cell">
+                  {{ fill.size }} {{ getBase(fill.market) }}
+                </td>
+                <!-- PnL -->
+                <td class="px-1 py-3 text-right hidden md:table-cell">
+                  <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
                     {{ formatPnl(fill.pnl) }}
                   </span>
                   <span v-else class="text-info">—</span>
                 </td>
-                <td class="px-1 py-3 font-bold">
-                  {{ fill.isMaker ? 'Maker' : 'Taker' }}
-                </td>
-                <td
-                  class="px-1 sm:pr-4 py-3 text-right text-info text-s-12 rounded-r-12"
-                >
-                  {{ formatDate(fill.time) }}
+                <!-- Actions -->
+                <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
+                  <app-btn-icon
+                    label="view fill details"
+                    height="h-7 xs:h-8"
+                    width="w-7 xs:w-8"
+                    class="ml-auto"
+                    @click="openFillDialog(fill)"
+                  >
+                    <ellipsis-vertical-icon class="w-5 h-5" />
+                  </app-btn-icon>
                 </td>
               </tr>
             </tbody>
@@ -547,6 +585,12 @@
       :position="selectedPosition"
       @close="showPositionDialog = false"
     />
+    <perps-fill-details-dialog
+      v-if="selectedFill"
+      :visible="showFillDialog"
+      :fill="selectedFill"
+      @close="showFillDialog = false"
+    />
   </div>
 </template>
 
@@ -561,6 +605,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import PerpsPositionDialog from './PerpsPositionDialog.vue'
+import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -578,6 +623,7 @@ import {
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
 import type { Position } from '../sdk/types'
+import type { ApiFill } from '../sdk/types'
 
 defineEmits<{
   openPosition: [market: string]
@@ -591,6 +637,18 @@ const selectedPosition = ref<Position | null>(null)
 function openPositionDialog(pos: Position) {
   selectedPosition.value = pos
   showPositionDialog.value = true
+}
+
+const showFillDialog = ref(false)
+const selectedFill = ref<ApiFill | null>(null)
+
+function openFillDialog(fill: ApiFill) {
+  selectedFill.value = fill
+  showFillDialog.value = true
+}
+
+function formatDirection(direction: string | undefined) {
+  return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
 }
 const {
   orders,

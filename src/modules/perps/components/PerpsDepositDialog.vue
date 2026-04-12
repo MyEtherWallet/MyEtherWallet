@@ -1,46 +1,31 @@
 <template>
-  <Teleport to="body">
-    <div
-      v-if="visible"
-      class="fixed inset-0 z-[9999] flex items-center justify-center"
-    >
-      <!-- Backdrop -->
-      <div
-        class="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        @click="$emit('close')"
-      />
-
-      <!-- Modal -->
-      <div
-        class="relative bg-white rounded-[28px] shadow-2xl w-[460px] max-w-[95vw] max-h-[90vh] overflow-y-auto p-8"
-      >
+  <app-dialog
+    v-model:is-open="isOpen"
+    :title="showDepositAddress ? '' : 'Deposit'"
+    has-content-gutter
+    class="sm:max-w-[460px] sm:mx-auto"
+    @close-dialog="$emit('close')"
+  >
+    <template v-if="showDepositAddress && IS_PERPS_LIVE" #title>
+      <div class="flex items-center w-full px-4 pt-4 sm:pt-5">
+        <button
+          class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-grey-5 transition-colors mr-2"
+          @click="showDepositAddress = false"
+        >
+          <chevron-left-icon class="w-5 h-5" />
+        </button>
+        <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
+          Ethereum deposit address
+        </h1>
+        <div class="w-9" />
+      </div>
+    </template>
+    <template #content>
+      <div class="pb-6">
         <!-- ===== PAGE 1: Deposit Form ===== -->
         <template v-if="!showDepositAddress">
-          <!-- Header -->
-          <div class="flex items-center justify-center mb-6 relative">
-            <h2 class="font-bold text-[24px] text-textDark">Deposit</h2>
-            <button
-              class="absolute right-0 w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#f3f4f6] transition-colors"
-              @click="$emit('close')"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
           <!-- Content Card -->
-          <div class="bg-[#edf2fa] rounded-[24px] p-5 mb-6">
+          <div class="bg-mewBg rounded-[24px] p-5 mb-6">
             <!-- Network Selector -->
             <div
               class="bg-white rounded-[18px] border border-[#e5e7eb] p-4 mb-5"
@@ -54,7 +39,7 @@
                 />
                 <div
                   v-else
-                  class="w-9 h-9 rounded-full bg-[#edf2fa] flex items-center justify-center text-[#0052ff] font-bold text-s-14"
+                  class="w-9 h-9 rounded-full bg-mewBg flex items-center justify-center text-[#0052ff] font-bold text-s-14"
                 >
                   S
                 </div>
@@ -154,26 +139,18 @@
           </div>
 
           <!-- Deposit Button -->
-          <button
+          <AppBaseButton
             v-if="!txHash"
-            class="w-full text-white rounded-full py-4 text-s-16 font-bold transition-all active:scale-[0.98]"
-            :class="
-              depositDisabled
-                ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed'
-                : 'bg-[#0052ff] hoverOpacity'
-            "
             :disabled="depositDisabled"
+            :is-loading="sending"
+            class="w-full"
             @click="sendDeposit"
           >
             {{ depositButtonLabel }}
-          </button>
-          <button
-            v-else
-            class="w-full bg-[#0052ff] text-white rounded-full py-4 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
-            @click="$emit('close')"
-          >
+          </AppBaseButton>
+          <AppBaseButton v-else class="w-full" @click="$emit('close')">
             Done
-          </button>
+          </AppBaseButton>
 
           <!-- Deposit Address Link -->
           <div
@@ -181,70 +158,17 @@
             class="text-center mt-5"
           >
             <button
-              class="text-[#0052ff] text-s-14 font-medium hover:underline inline-flex items-center gap-1"
+              class="text-primary text-s-14 font-medium hover:underline inline-flex items-center gap-1"
               @click="showDepositAddress = true"
             >
               Use a deposit address instead
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+              <chevron-right-icon class="w-3.5 h-3.5" />
             </button>
           </div>
         </template>
 
         <!-- ===== PAGE 2: Deposit Address (live only) ===== -->
         <template v-else-if="IS_PERPS_LIVE">
-          <!-- Header -->
-          <div class="flex items-center mb-6">
-            <button
-              class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#f3f4f6] transition-colors mr-2"
-              @click="showDepositAddress = false"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </button>
-            <h2 class="font-bold text-[20px] text-textDark flex-1 text-center">
-              Ethereum deposit address
-            </h2>
-            <button
-              class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#f3f4f6] transition-colors"
-              @click="$emit('close')"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
           <!-- Warning text -->
           <p class="text-textDark text-s-15 leading-relaxed mb-6">
             Only send USDC on Ethereum to this address. Other assets
@@ -299,67 +223,32 @@
             >
               {{ depositAddress }}
             </p>
-            <!-- Copy -->
-            <button
-              class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#f3f4f6] transition-colors text-[#0052ff] flex-shrink-0"
-              @click="copyAddress"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path
-                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                />
-              </svg>
-            </button>
+            <app-btn-copy :copy-value="depositAddress || ''" />
             <!-- Refresh -->
             <button
-              class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#f3f4f6] transition-colors text-[#0052ff] flex-shrink-0"
+              class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-grey-5 transition-colors text-primary flex-shrink-0"
               @click="fetchDepositAddress"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="23 4 23 10 17 10" />
-                <polyline points="1 20 1 14 7 14" />
-                <path
-                  d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
-                />
-              </svg>
+              <arrow-path-icon class="w-[18px] h-[18px]" />
             </button>
-          </div>
-
-          <!-- Copied toast -->
-          <div
-            v-if="copied"
-            class="text-center mt-3 text-[#00c896] text-s-13 font-medium"
-          >
-            Address copied!
           </div>
         </template>
       </div>
-    </div>
-  </Teleport>
+    </template>
+  </app-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ArrowPathIcon,
+} from '@heroicons/vue/24/solid'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppDialog from '@/components/AppDialog.vue'
 import { perpsClient, USDC_ADDRESS, IS_PERPS_LIVE } from '../configs'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 import { useWalletStore } from '@/stores/walletStore'
@@ -384,6 +273,11 @@ defineEmits<{
   close: []
 }>()
 
+const isOpen = computed({
+  get: () => props.visible,
+  set: () => {},
+})
+
 const { accountId, triggerRefresh } = usePerpsAuth()
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
@@ -399,30 +293,6 @@ const amount = ref('')
 const sending = ref(false)
 const txHash = ref<string | null>(null)
 const showDepositAddress = ref(false)
-const copied = ref(false)
-
-async function copyAddress() {
-  if (!depositAddress.value) return
-  try {
-    await navigator.clipboard.writeText(depositAddress.value)
-    copied.value = true
-    setTimeout(() => {
-      copied.value = false
-    }, 2000)
-  } catch {
-    // fallback
-    const el = document.createElement('textarea')
-    el.value = depositAddress.value
-    document.body.appendChild(el)
-    el.select()
-    document.execCommand('copy')
-    document.body.removeChild(el)
-    copied.value = true
-    setTimeout(() => {
-      copied.value = false
-    }, 2000)
-  }
-}
 
 // USDC balance
 const usdcBalance = computed(() => {
