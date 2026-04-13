@@ -27,13 +27,14 @@ export const fuzzySearchByKeys = <T>(
     let bestCategory = 3 // 0=prefix, 1=contains, 2=fuzzy, 3=no match
     let bestScore = Infinity
 
-    keyArray.forEach(key => {
+    for (const key of keyArray) {
       const value = getNestedValue(item, key)
-      if (!value) return
+      if (value == null) continue
       const valLC = String(value).toLowerCase()
 
       if (valLC.startsWith(searchLC)) {
-        bestCategory = Math.min(bestCategory, 0)
+        bestCategory = 0
+        break
       } else if (valLC.includes(searchLC)) {
         bestCategory = Math.min(bestCategory, 1)
       } else {
@@ -51,7 +52,7 @@ export const fuzzySearchByKeys = <T>(
           bestScore = Math.min(bestScore, dist)
         }
       }
-    })
+    }
 
     if (bestCategory < 3 && !seen.has(item)) {
       seen.add(item)
