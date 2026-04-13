@@ -103,7 +103,22 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       if (Number(rewardsLeft.value) <= 0) {
         stopPoolPoll()
       }
-    }, 15000)
+    }, 5000)
+  }
+
+  /** Schedule a pool fetch + restart polling at the beginning of each hour */
+  let hourResetTimeout: ReturnType<typeof setTimeout> | null = null
+
+  const scheduleHourReset = () => {
+    if (hourResetTimeout) clearTimeout(hourResetTimeout)
+    const target = nextHourStart.value
+    if (!target) return
+    const delay = Math.max(0, new Date(target).getTime() - Date.now())
+    hourResetTimeout = setTimeout(async () => {
+      await fetchPool()
+      startPoolPoll()
+      scheduleHourReset()
+    }, delay)
   }
 
   /** Eligibility */
@@ -243,6 +258,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     await Promise.all([fetchPool(), fetchEligibility(), fetchUserRewards()])
     hadInitialLoad.value = true
     startPoolPoll()
+    scheduleHourReset()
   }
 
   const canClaimReward = computed(() => {
