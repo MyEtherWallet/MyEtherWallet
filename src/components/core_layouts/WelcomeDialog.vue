@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="openWelcomeDialog"
-    class="max-w-screen xs:max-w-[500px] mx-auto !min-h-[300px] rounded-32"
+    class="max-w-screen xs:max-w-[500px] mx-auto !min-h-[300px] rounded-32 z-[9999]"
     title="Welcome to the new MEW Portfolio!"
   >
     <template #content>

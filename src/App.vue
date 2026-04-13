@@ -1,9 +1,6 @@
 <template>
   <div class="relative h-screen overflow-hidden">
-    <welcome-dialog
-      v-if="!isDevMode"
-      @close-welcome-dialog="showFeedbackToast"
-    />
+    <welcome-dialog v-if="!isDevMode" />
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
@@ -163,21 +160,21 @@ watch(
 
 const toastStore = useToastStore()
 
-const showFeedbackToast = () => {
-  setTimeout(() => {
-    toastStore.addToastMessage({
-      text: 'Your opinion matters!',
-      textSecondary: 'Let us know what you think of this new version of MEW. ',
-      type: ToastType.Info,
-      isInfinite: true,
-      link: {
-        title: 'Submit Feedback',
-        url: 'https://mewwallet.typeform.com/to/WtgSdMJr',
-        isButton: true,
-      },
-    })
-  }, 4000)
-}
+// const showFeedbackToast = () => {
+//   setTimeout(() => {
+//     toastStore.addToastMessage({
+//       text: 'Your opinion matters!',
+//       textSecondary: 'Let us know what you think of this new version of MEW. ',
+//       type: ToastType.Info,
+//       isInfinite: true,
+//       link: {
+//         title: 'Submit Feedback',
+//         url: 'https://mewwallet.typeform.com/to/WtgSdMJr',
+//         isButton: true,
+//       },
+//     })
+//   }, 4000)
+// }
 const rewardsStore = useRewardsStore()
 
 onMounted(() => {
