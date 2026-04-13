@@ -29,7 +29,7 @@
           </h3>
           <p class="text-s-14 text-info mt-3 leading-p-160">
             Complete a swap or trade on Ethereum over $10 and receive $5 USDC —
-            available to the first 100 users each day.
+            available to the first 5 users each hour.
           </p>
 
           <!-- How It Works -->
@@ -200,24 +200,27 @@ watch(isOpenModel, val => {
 const howItWorks = [
   {
     icon: 'swap',
-    text: 'Make a swap or trade of $10 or more on Ethereum network',
+    text: 'Make a swap or trade of $10 or more on the Ethereum network',
   },
   {
     icon: 'currency-dollar',
-    text: "If you're within the first 100, you earn $5 USDC",
+    text: 'The first 5 eligible swaps or trades every hour get $5 USDC',
   },
   {
     icon: 'gift',
-    text: 'One reward per wallet per day, sent directly to your wallet',
+    text: 'One reward per wallet per 24 hour period, sent directly to your wallet',
   },
 ]
 
 const availability = [
-  { icon: 'clock', text: 'Limited to 100 rewards per day (No Bots!)' },
+  {
+    icon: 'clock',
+    text: 'Limited to 5 rewards per hour, 120 total rewards per day (No Bots!)',
+  },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
   {
     icon: 'calendar',
-    text: 'If rewards run out, try again the next day, resets at midnight UTC.',
+    text: 'If rewards run out, try again the next hour, resets at midnight UTC.',
   },
   {
     icon: 'user',
