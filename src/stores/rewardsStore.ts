@@ -68,8 +68,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** Pool */
   const isPoolOpen = computed(() => pool.value?.open ?? false)
   const rewardsLeft = computed(
-    () => pool.value?.dailyRemainingRewardCount ?? '0',
+    () => pool.value?.hourlyRemainingRewardCount ?? '0',
   )
+  const nextHourStart = computed(() => pool.value?.nextHourStart ?? null)
   const poolReasons = computed(() => pool.value?.reasons ?? [])
 
   const fetchPool = async () => {
@@ -263,6 +264,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     pool,
     isPoolOpen,
     rewardsLeft,
+    nextHourStart,
     poolReasons,
     isLoadingPool,
     fetchPool,
