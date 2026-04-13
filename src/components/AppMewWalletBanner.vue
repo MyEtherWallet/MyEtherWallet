@@ -3,7 +3,7 @@
     <transition name="banner-slide">
       <div
         v-if="isVisible"
-        class="fixed left-0 bottom-0 z-50 flex justify-center overflow-hidden shadow-2xl banner-bg left-6 bottom-8 w-[550px] h-[245px] rounded-2xl justify-start"
+        class="fixed left-3 bottom-3 z-[9999] flex justify-start overflow-hidden shadow-lg banner-bg sm:left-6 sm:bottom-8 w-[calc(100%-1.5rem)] sm:w-[550px] h-[245px] rounded-2xl ring-1 ring-black/5"
       >
         <!-- Close button -->
         <button
@@ -14,15 +14,17 @@
           <XCircleIcon class="w-5 h-5" />
         </button>
 
-        <div class="block pl-7 pr-6 py-5 z-10 relative">
-          <p class="font-bold text-s-28 text-black leading-[60px] mb-1">
+        <div class="block pl-7 pr-6 py-3 sm:py-5 z-10 relative">
+          <p
+            class="font-bold text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
+          >
             Get MEW app
           </p>
           <p
             class="text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
             Earn tokenized stock rewards
-            <br />from a $100,000 pool
+            <br class="hidden sm:block" />from a $100,000 pool
           </p>
 
           <!-- Download button + QR -->
@@ -80,7 +82,7 @@
           </div>
         </div>
         <div
-          class="z-0 flex items-end overflow-hidden self-stretch absolute right-[-10px]"
+          class="z-0 hidden sm:flex items-end overflow-hidden self-stretch absolute right-[-10px]"
         >
           <img :src="mewBannerItem" alt="Mew wallet app" class="h-[245px]" />
         </div>
