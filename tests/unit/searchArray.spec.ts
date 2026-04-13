@@ -201,6 +201,16 @@ describe('fuzzySearchByKeys', () => {
       const symbols = results.map(s => s.primaryMarket.symbol)
       expect(symbols).toContain('GOOGL')
     })
+
+    it('finds typos in later words of stock names', () => {
+      const results = fuzzySearchByKeys(
+        stocks,
+        ['primaryMarket.symbol', 'underlyingMarket.name'],
+        'Corporaton',
+      )
+      const names = results.map(s => s.underlyingMarket.name)
+      expect(names).toContain('Microsoft Corporation')
+    })
   })
 
   // -- Edge cases -----------------------------------------------------------
@@ -209,6 +219,16 @@ describe('fuzzySearchByKeys', () => {
     it('returns full array for empty search term', () => {
       const results = fuzzySearchByKeys(tokens, ['name', 'symbol'], '')
       expect(results).toHaveLength(tokens.length)
+    })
+
+    it('returns full array for whitespace-only search term', () => {
+      const results = fuzzySearchByKeys(tokens, ['name', 'symbol'], '   ')
+      expect(results).toHaveLength(tokens.length)
+    })
+
+    it('trims whitespace from search term', () => {
+      const results = fuzzySearchByKeys(tokens, ['name', 'symbol'], '  ETH  ')
+      expect(results[0].symbol).toBe('ETH')
     })
 
     it('returns empty array when searching empty array', () => {

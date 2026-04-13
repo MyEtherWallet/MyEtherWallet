@@ -12,9 +12,9 @@ export const fuzzySearchByKeys = <T>(
   keys: string | string[],
   searchTerm: string,
 ): T[] => {
-  if (!searchTerm) return array
+  const searchLC = searchTerm.trim().toLowerCase()
+  if (!searchLC) return array
   const keyArray = Array.isArray(keys) ? keys : [keys]
-  const searchLC = searchTerm.toLowerCase()
 
   const prefixMatches: T[] = []
   const containsMatches: T[] = []
@@ -37,7 +37,15 @@ export const fuzzySearchByKeys = <T>(
       } else if (valLC.includes(searchLC)) {
         bestCategory = Math.min(bestCategory, 1)
       } else {
-        const dist = levenshtein(searchLC, valLC.slice(0, searchLC.length + 2))
+        const candidates = [
+          valLC,
+          ...valLC.split(/[\s._-]+/).filter(Boolean),
+        ]
+        const dist = Math.min(
+          ...candidates.map(candidate =>
+            levenshtein(searchLC, candidate.slice(0, searchLC.length + 2)),
+          ),
+        )
         if (dist <= maxDist) {
           bestCategory = Math.min(bestCategory, 2)
           bestScore = Math.min(bestScore, dist)
