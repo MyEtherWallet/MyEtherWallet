@@ -3,25 +3,25 @@
     <transition name="banner-slide">
       <div
         v-if="isVisible"
-        class="fixed left-3 bottom-3 z-[9999] flex justify-start overflow-hidden shadow-lg banner-bg sm:left-6 sm:bottom-8 w-[calc(100%-1.5rem)] sm:w-[550px] h-[245px] rounded-2xl ring-1 ring-black/5"
+        class="fixed left-3 bottom-3 z-[9999] flex justify-start overflow-hidden shadow-lg banner-bg sm:left-6 sm:bottom-8 w-[calc(100%-1.5rem)] sm:w-[550px] h-[200px] sm:h-[245px] rounded-2xl ring-1 ring-black/5"
       >
         <!-- Close button -->
         <button
-          class="absolute top-3 right-3 w-5 h-5 rounded-full flex items-center justify-center transition-colors z-10"
+          class="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/60 flex items-center justify-center transition-colors z-10 hover:bg-white/80"
           @click="dismiss"
           aria-label="Close banner"
         >
-          <XCircleIcon class="w-5 h-5" />
+          <XMarkIcon class="w-4 h-4 text-black/50" />
         </button>
 
         <div class="block pl-7 pr-6 py-3 sm:py-5 z-10 relative">
           <p
-            class="font-bold text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
+            class="font-bold text-s-24 sm:text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
           >
             Get MEW app
           </p>
           <p
-            class="text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
+            class="text-s-18 sm:text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
             Earn tokenized stock rewards
             <br class="hidden sm:block" />from a $100,000 pool
@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { QrCodeIcon, XCircleIcon } from '@heroicons/vue/24/solid'
+import { QrCodeIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import mewBannerItem from '@/assets/images/mew-banner-item.png'
 import appStoreIos from '@/assets/images/common/app-store-apple-grey.png'
