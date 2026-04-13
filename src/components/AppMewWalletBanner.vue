@@ -30,7 +30,7 @@
           <!-- Download button + QR -->
           <div class="flex items-center gap-3 mb-4">
             <a
-              href="https://mewwallet.com"
+              href="https://download.mewwallet.com"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center px-5 py-2 rounded-full bg-primary text-white font-medium text-s-16 whitespace-nowrap"
