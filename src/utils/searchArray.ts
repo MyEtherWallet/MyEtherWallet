@@ -29,7 +29,7 @@ export const fuzzySearchByKeys = <T>(
 
     keyArray.forEach(key => {
       const value = getNestedValue(item, key)
-      if (!value) return
+      if (value === null || value === undefined) return
       const valLC = String(value).toLowerCase()
 
       if (valLC.startsWith(searchLC)) {
