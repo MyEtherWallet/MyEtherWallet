@@ -263,7 +263,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
-import { searchArrayByKeysStr } from '@/utils/searchArray'
+import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
 import { useScroll } from '@vueuse/core'
@@ -473,7 +473,7 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       : sortObjectArrayNumber(allItems, key, activeSortDirection.value)
 
   if (searchInput.value) {
-    return searchArrayByKeysStr(sorted, ['name', 'symbol'], searchInput.value)
+    return fuzzySearchByKeys(sorted, ['name', 'symbol'], searchInput.value)
   }
 
   return sorted.slice(0, endingPagination.value)
