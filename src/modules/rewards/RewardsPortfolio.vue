@@ -257,6 +257,7 @@ function updateCountdown() {
 
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
+  rewardsStore.fetchPool()
   updateCountdown()
   resetTimer = setInterval(updateCountdown, 1_000)
 })
