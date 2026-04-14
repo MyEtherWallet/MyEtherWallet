@@ -8,12 +8,12 @@
     />
     <app-base-button
       variant="primary"
-      class="max-w-[200px] mx-auto"
+      class="max-w-[300px] mx-auto"
       @click="subscribe"
       :is-loading="isLoading"
       is-required
     >
-      Notify me
+      Subscribe to our newsletter
     </app-base-button>
   </div>
 </template>
