@@ -23,7 +23,7 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           TAG="v$VERSION"
           if gh release view "$TAG" > /dev/null 2>&1; then
-            gh release edit "$TAG" --generate-notes
+            gh release edit "$TAG" --target feat/v7 --generate-notes
           else
             gh release create "$TAG" \
               --draft \
