@@ -115,6 +115,8 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     if (!target) return
     const delay = Math.max(0, new Date(target).getTime() - Date.now())
     hourResetTimeout = setTimeout(async () => {
+      fetchEligibility()
+      fetchUserRewards()
       await fetchPool()
       startPoolPoll()
       scheduleHourReset()
