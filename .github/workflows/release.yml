@@ -22,11 +22,9 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           TAG="v$VERSION"
-          LAST_TAG=$(gh release list --exclude-drafts --limit 1 --json tagName --jq '.[0].tagName')
-
           gh api repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name="$TAG" \
-            -f previous_tag_name="$LAST_TAG" \
+            -f target_commitish="feat/v7" \
             --jq .body > release-notes.md
 
           if gh release view "$TAG" > /dev/null 2>&1; then
