@@ -95,13 +95,16 @@
   <!-- Default State -->
   <div
     v-else
-    class="rewards-bg rounded-16 h-full flex flex-col justify-center items-center xs:items-start lg-max:items-stretch 2xl:items-stretch px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 2xl:px-4 3xl:px-[33px] pt-5 pb-2 relative overflow-hidden max-h-[293px]"
-    :class="{ 'xl:items-stretch': !isOpenSideMenu }"
+    class="rewards-bg rounded-16 h-full flex flex-col justify-center items-center xs:items-start lg-max:items-stretch 2xl:items-stretch px-5 xs:px-[33px] lg-max:px-5 2xl:px-4 pt-4 pb-2 relative overflow-hidden max-h-[293px]"
+    :class="{
+      'xl:items-stretch xl:px-4 2xl:px-[33px]': !isOpenSideMenu,
+      'xl:px-[33px] 2xl:px-4': isOpenSideMenu,
+    }"
   >
     <!-- Top section: Text left, Astronaut right -->
     <div class="relative xs:w-full flex items-start justify-between">
       <div
-        class="xs:min-w-[122px] mt-[10px] xs:flex-none xs:w-[280px] md:w-[390px] lg:w-auto 2xl:w-[160px] 3xl:w-[194px]"
+        class="xs:min-w-[122px] mt-[10px] xs:flex-none xs:w-[280px] md:w-[390px] lg:w-auto 2xl:w-[194px]"
       >
         <h3
           class="text-s-24 md:text-s-32 lg-max:text-s-28 2xl:text-s-28 font-bold leading-p-100 mb-3 text-center xs:text-start"
@@ -117,9 +120,9 @@
         </h3>
         <p
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
-          :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[164px]']"
+          :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[180px]']"
         >
-          First 100 swaps or trades on Ethereum each day
+          First 5 swaps or trades on Ethereum each hour
           <br class="hidden 2xl:flex" />
           over $10 get $5 USDC
         </p>
@@ -134,43 +137,41 @@
       <div
         class="text-[10px] font-light text-info tracking-sp-06 uppercase text-center"
       >
-        {{ rewardsLeft }} rewards left today
-        <span v-if="rewardsLeft === 0 || rewardsLeft === '0'" class="mx-1"
-          >·</span
-        >
+        {{ rewardsLeft }} rewards left this hour
+        <span class="mx-1">·</span>
         Resets in {{ timeUntilReset }}
       </div>
 
       <!-- Actions -->
-      <app-base-button
-        v-if="canClaimReward && canSwap"
-        class="w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
-        :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
-        :disabled="!canClaimReward"
-        :is-loading="earnedPotentialReward"
-        @click="goToSwap"
-        size="medium"
-      >
-        {{ 'Swap Now' }}
-      </app-base-button>
-      <p
-        v-else-if="!canClaimReward && canSwap"
-        class="bg-white/60 rounded-full px-7 py-3 font-semibold xs:-ml-4 lg-max:ml-0 text-center"
-        :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
-      >
-        {{
-          isAccountTooNew
-            ? 'Account not eligible'
-            : 'Sorry, try again tomorrow!'
-        }}
-      </p>
-      <button
-        class="text-s-12 text-[#64748B] text-[10px] font-bold tracking-wider uppercase hoverOpacity cursor-pointer w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
-        :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu, 'pt-2': !canSwap }"
-        @click="onLearnMore"
-      >
-        Learn More
-      </button>
+      <div>
+        <app-base-button
+          v-if="canClaimReward && canSwap"
+          class="w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
+          :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
+          :disabled="!canClaimReward"
+          :is-loading="earnedPotentialReward"
+          @click="goToSwap"
+          size="medium"
+        >
+          {{ 'Swap Now' }}
+        </app-base-button>
+        <p
+          v-else-if="!canClaimReward && canSwap"
+          class="bg-white/60 rounded-full px-7 py-3 font-semibold xs:-ml-4 lg-max:ml-0 text-center"
+          :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu }"
+        >
+          {{
+            isAccountTooNew ? 'Account not eligible' : 'Sorry, try again later!'
+          }}
+        </p>
+        <button
+          class="text-s-12 text-[#64748B] text-[10px] font-bold tracking-wider uppercase hoverOpacity cursor-pointer w-full -mt-1 xs:-ml-4 lg-max:ml-0 max-w-[300px]"
+          :class="{ 'xl:-ml-4 2xl:ml-0': isOpenSideMenu, 'pt-2': !canSwap }"
+          @click="onLearnMore"
+        >
+          Learn More
+        </button>
+      </div>
       <rewards-learn-more
         v-model:is-open="isLearnMoreOpen"
         location="main-banner"
@@ -184,8 +185,12 @@
             alt=""
             width="160"
             height="167"
-            class="w-full h-full object-contain max-h-[180px] md:max-h-[200px] lg-max:max-h-[150px] 2xl:max-h-[156px]"
-            :class="[isOpenSideMenu ? 'xl:max-h-[200px]' : 'xl:max-h-[170px]']"
+            class="w-full h-full object-contain max-h-[180px] md:max-h-[200px] lg-max:max-h-[150px] 2xl:max-h-[100px]"
+            :class="[
+              isOpenSideMenu
+                ? 'xl:max-h-[200px] 2xl:max-h-[100px]'
+                : 'xl:max-h-[140px] 2xl:max-h-[150px]',
+            ]"
           />
         </div>
       </div>
@@ -229,6 +234,7 @@ const {
   todaysReward,
   eligibility,
   eligibilityReasons,
+  nextHourStart,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)
@@ -237,19 +243,21 @@ const timeUntilReset = ref('')
 let resetTimer: ReturnType<typeof setInterval> | null = null
 
 function updateCountdown() {
+  const target = nextHourStart.value
+  if (!target) {
+    timeUntilReset.value = '--:--'
+    return
+  }
   const now = new Date()
-  const midnightUTC = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
-  )
-  const diff = midnightUTC.getTime() - now.getTime()
-  const h = Math.floor(diff / 3_600_000)
-  const m = Math.floor((diff % 3_600_000) / 60_000)
+  const diff = Math.max(0, new Date(target).getTime() - now.getTime())
+  const m = Math.floor(diff / 60_000)
   const s = Math.floor((diff % 60_000) / 1_000)
-  timeUntilReset.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+  timeUntilReset.value = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
+  rewardsStore.fetchPool()
   updateCountdown()
   resetTimer = setInterval(updateCountdown, 1_000)
 })

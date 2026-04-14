@@ -1,4 +1,4 @@
 onlyBuiltDependencies:
   - node-hid
   - usb
-minimumReleaseAge: 7d
+minimumReleaseAge: 10080
