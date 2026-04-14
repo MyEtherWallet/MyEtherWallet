@@ -68,7 +68,7 @@
         >
           No open positions
         </div>
-        <table class="w-full text-s-14 table-fixed">
+        <table v-else class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -529,7 +529,7 @@
                 </td>
                 <!-- Time -->
                 <td
-                  class="px-1 py-3 text-right text-s-12 lg:text-s-14 lg:text-left text-info hidden xs:table-cell"
+                  class="px-1 py-3 text-right text-s-12 lg:text-left text-info hidden xs:table-cell"
                 >
                   {{ formatDate(fill.time) }}
                 </td>
