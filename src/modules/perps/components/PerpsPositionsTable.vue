@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-sheet class="!p-2 !py-6 !sm:py-8">
+    <app-sheet class="!p-2 !py-6 !sm:py-8" :is-elivated="false">
       <div
         class="flex flex-col xs:flex-row flex-wrap lg:justify-between lg:items-center gap-4 mb-5 xs:px-4"
       >
@@ -74,9 +74,6 @@
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
             >
               <th class="px-1 sm:pl-4 py-3 text-left font-bold">Market</th>
-              <!-- <th class="px-1 py-3 text-right font-bold hidden 3xl:table-cell">
-                Leverage
-              </th> -->
               <th class="px-1 py-3 text-right font-bold">Value</th>
               <th
                 class="px-1 py-3 text-right font-bold hidden xs:table-cell normal-case"
@@ -129,7 +126,7 @@
                           : pos.direction === 'short'
                             ? 'text-error'
                             : 'text-info',
-                        'font-normal text-s-12 capitalize ',
+                        'font-medium text-s-12 capitalize ',
                       ]"
                     >
                       {{ pos.direction }} {{ pos.leverage }}x
@@ -137,21 +134,6 @@
                   </div>
                 </div>
               </td>
-              <!-- Leverage -->
-              <!-- <td class="px-1 py-3 hidden 3xl:table-cell text-right">
-                <span
-                  :class="[
-                    pos.direction === 'long'
-                      ? 'text-success'
-                      : pos.direction === 'short'
-                        ? 'text-error'
-                        : 'text-info',
-                    'font-normal text-s-12 sm:text-s-14 capitalize',
-                  ]"
-                >
-                  {{ pos.direction }} {{ pos.leverage }}x
-                </span>
-              </td> -->
               <!-- Value -->
               <td class="px-1 py-3 text-right font-normal text-s-14">
                 {{ formatUsd(pos.notionalValue) }}
@@ -338,7 +320,7 @@
                     <p
                       :class="[
                         order.side === 'buy' ? 'text-success' : 'text-error',
-                        'font-normal text-s-12 capitalize xl:hidden',
+                        ' text-s-12 capitalize xl:hidden font-medium',
                       ]"
                     >
                       {{ order.side }}
@@ -351,7 +333,7 @@
                 <span
                   :class="[
                     order.side === 'buy' ? 'text-success' : 'text-error',
-                    'font-normal text-s-14 capitalize',
+                    'text-s-13 capitalize font-medium',
                   ]"
                 >
                   {{ order.side }}
@@ -365,7 +347,7 @@
               <td class="px-1 py-3 hidden lg:table-cell">
                 <span
                   :class="[
-                    'font-normal text-s-14 ',
+                    'text-s-13 font-medium',
                     order.status === 'open' || order.status === 'pending'
                       ? 'text-primary'
                       : order.status === 'fullyfilled'
@@ -524,7 +506,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-success'
                             : 'text-error',
-                          'capitalize text-s-12 lg:hidden',
+                          'capitalize text-s-12 font-medium lg:hidden',
                         ]"
                       >
                         {{ formatDirection(fill.direction) }}
@@ -539,7 +521,7 @@
                       fill.direction?.toLowerCase().includes('long')
                         ? 'text-success'
                         : 'text-error',
-                      'capitalize',
+                      'capitalize font-medium text-s-13',
                     ]"
                   >
                     {{ formatDirection(fill.direction) }}
@@ -601,46 +583,99 @@
         >
           No deposits or withdrawals
         </div>
-        <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
-          <table class="w-full text-s-14 min-w-[700px]">
+        <div v-else class="overflow-x-auto">
+          <table class="w-full text-s-14 table-fixed">
             <thead>
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
               >
-                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Type</th>
+                <th
+                  class="px-1 sm:pl-4 py-3 text-left font-bold hidden xs:table-cell"
+                >
+                  Type
+                </th>
                 <th class="px-1 py-3 text-left font-bold">Asset</th>
+                <th class="px-1 py-3 text-left font-bold hidden sm:table-cell">
+                  Time
+                </th>
+                <th class="px-1 py-3 text-right font-bold hidden md:table-cell">
+                  USD Value
+                </th>
                 <th class="px-1 py-3 text-right font-bold">Amount</th>
-                <th class="px-1 py-3 text-right font-bold">USD Value</th>
-                <th class="px-1 py-3 text-left font-bold">Status</th>
-                <th class="px-1 sm:pr-4 py-3 text-right font-bold">Time</th>
+
+                <th
+                  class="px-1 sm:pr-4 py-3 text-right font-bold hidden xs:table-cell"
+                >
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in combinedDW" :key="item.key" class="">
-                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
+                <!-- Type -->
+                <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
                     :class="[
-                      'font-bold',
                       item.type === 'Deposit' ? 'text-success' : 'text-warning',
+                      'font-medium text-s-13',
                     ]"
                   >
                     {{ item.type }}
                   </span>
                 </td>
-                <td class="px-1 py-3 font-bold">{{ item.coin }}</td>
-                <td class="px-1 py-3 text-right font-bold">{{ item.size }}</td>
-                <td class="px-1 py-3 text-right font-bold">
-                  {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
+                <!-- Asset -->
+                <td class="px-1 py-3 font-bold flex items-center">
+                  <app-token-logo
+                    :url="USDC_LOGO"
+                    symbol="item.coin"
+                    class="mr-2"
+                  />
+                  <div>
+                    <p>{{ item.coin }}</p>
+
+                    <p
+                      :class="[
+                        item.type === 'Deposit'
+                          ? 'text-success'
+                          : 'text-warning',
+                        'font-medium text-s-12 xs:hidden',
+                      ]"
+                    >
+                      {{ item.type }}
+                    </p>
+                  </div>
                 </td>
-                <td class="px-1 py-3">
-                  <span :class="['capitalize font-bold', item.statusColor]">
-                    {{ item.statusLabel }}
-                  </span>
-                </td>
+                <!-- Time -->
                 <td
-                  class="px-1 sm:pr-4 py-3 text-right text-info text-s-12 rounded-r-12"
+                  class="px-1 py-3 text-left text-info text-s-12 hidden sm:table-cell"
                 >
                   {{ formatDate(item.time) }}
+                </td>
+                <!-- USD Value -->
+                <td class="px-1 py-3 text-right hidden md:table-cell">
+                  {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
+                </td>
+                <!-- Amount -->
+                <td class="px-1 py-3 text-right">
+                  <p class="md:hidden">
+                    {{ item.usdValue ? formatUsd(item.usdValue) : '—' }}
+                  </p>
+                  <p class="text-info text-s-12 md:text-black md:text-s-14">
+                    {{ item.size }} {{ item.coin }}
+                  </p>
+                </td>
+                <!-- Status -->
+                <td
+                  class="px-1 py-3 sm:pr-4 rounded-r-12 text-right hidden xs:table-cell"
+                >
+                  <span
+                    :class="[
+                      'capitalize font-medium text-s-13',
+                      item.statusColor,
+                    ]"
+                  >
+                    {{ item.statusLabel }}
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -706,6 +741,8 @@ import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 
+const USDC_LOGO =
+  'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602'
 defineEmits<{
   openPosition: [market: string]
 }>()
