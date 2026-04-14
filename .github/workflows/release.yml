@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - feat/v7-develop
+      - feat/v7
+
+jobs:
+  draft-release:
+    if: github.event.pull_request.merged == true && github.base_ref == 'feat/v7-develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Draft release with generated notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          gh release create "$TAG" \
+            --draft \
+            --generate-notes \
+            --title "$TAG"
+
+  publish-release:
+    if: github.event.pull_request.merged == true && github.base_ref == 'feat/v7'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish drafted release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          gh release edit "$TAG" --draft=false
