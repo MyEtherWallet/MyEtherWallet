@@ -27,6 +27,7 @@ jobs:
           else
             gh release create "$TAG" \
               --draft \
+              --target feat/v7 \
               --generate-notes \
               --title "$TAG"
           fi
