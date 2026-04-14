@@ -38,7 +38,7 @@
               Download now
             </a>
             <button
-              class="relative"
+              class="relative hidden sm:block"
               @mouseenter="showQr = true"
               @mouseleave="showQr = false"
             >
