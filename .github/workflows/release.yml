@@ -6,6 +6,8 @@ on:
     branches:
       - feat/v7-develop
       - feat/v7
+permissions:
+  contents: write
 
 jobs:
   draft-release:
@@ -20,10 +22,14 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           TAG="v$VERSION"
-          gh release create "$TAG" \
-            --draft \
-            --generate-notes \
-            --title "$TAG"
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release edit "$TAG" --generate-notes
+          else
+            gh release create "$TAG" \
+              --draft \
+              --generate-notes \
+              --title "$TAG"
+          fi
 
   publish-release:
     if: github.event.pull_request.merged == true && github.base_ref == 'feat/v7'
