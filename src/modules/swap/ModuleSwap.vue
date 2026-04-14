@@ -1314,6 +1314,7 @@ watch(
     }
 
     if (
+      swapLoaded.value &&
       !BigNumber(fromAmount.value).isNaN() &&
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value
