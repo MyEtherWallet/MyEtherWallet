@@ -102,6 +102,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       await fetchPool()
       if (Number(rewardsLeft.value) <= 0) {
         stopPoolPoll()
+        setTimeout(() => fetchEligibility(), 20000)
       }
     }, 5000)
   }
@@ -252,6 +253,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         startRewardsPoll()
       } else {
         stopRewardsPoll()
+        setEarnedPotentialReward(false)
       }
     },
   )
