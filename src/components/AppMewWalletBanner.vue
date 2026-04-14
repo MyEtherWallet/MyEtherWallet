@@ -16,12 +16,12 @@
 
         <div class="block pl-7 pr-6 py-3 sm:py-5 z-10 relative">
           <p
-            class="font-bold text-s-28 sm:text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
+            class="font-bold text-s-24 sm:text-s-28 text-black leading-[30px] sm:leading-[60px] mb-1"
           >
             Get MEW app
           </p>
           <p
-            class="text-s-20 sm:text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
+            class="text-s-14 sm:text-s-22 leading-[110%] mb-4 font-medium banner-gradient-text"
           >
             Earn tokenized stock rewards
             <br />from a $100,000 pool
@@ -33,7 +33,7 @@
               href="https://download.mewwallet.com"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center px-5 py-2 rounded-full bg-primary text-white font-medium text-s-16 whitespace-nowrap"
+              class="inline-flex items-center px-7 py-1 rounded-full bg-primary text-white font-medium text-s-14 sm:text-s-16 whitespace-nowrap"
             >
               Download now
             </a>
@@ -70,14 +70,14 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img :src="appStoreIos" alt="App Store" class="h-5 mr-2" />
+              <img :src="appStoreIos" alt="App Store" class="h-4 sm:h-5 mr-2" />
             </a>
             <a
               href="https://play.google.com/store/apps/details?id=com.myetherwallet.mewwallet"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img :src="appStoreGoogle" alt="Google Play" class="h-5" />
+              <img :src="appStoreGoogle" alt="Google Play" class="h-4 sm:h-5" />
             </a>
           </div>
         </div>
