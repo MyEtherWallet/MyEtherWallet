@@ -402,9 +402,7 @@
               </td>
 
               <!--Actions-->
-              <td
-                class="pl-2 xs:pl-4 pr-0 rounded-r-12 flex justify-end items-center sm:pl-3 sm:pr-1 py-3"
-              >
+              <td class="pl-2 xs:pl-4 pr-0 rounded-r-12 sm:pl-3 sm:pr-1 py-3">
                 <app-pop-up-menu
                   v-if="showCancelButton(order)"
                   placeholder="actions menu"
