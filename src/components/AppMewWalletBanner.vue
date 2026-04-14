@@ -8,7 +8,7 @@
         <!-- Close button -->
         <button
           class="absolute top-3 right-3 w-4 h-4 rounded-full bg-black flex items-center justify-center transition-colors z-10 hover:bg-black/30"
-          @click="dismiss"
+          @click="dismissMewBanner"
           aria-label="Close banner"
         >
           <XMarkIcon class="w-3 h-3 text-white" />
@@ -102,35 +102,25 @@
 
 <script setup lang="ts">
 import { QrCodeIcon, XMarkIcon } from '@heroicons/vue/24/solid'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, ref } from 'vue'
 import mewBannerItem from '@/assets/images/mewwallet/mew-banner-item.png'
 import mewBannerItemMobile from '@/assets/images/mewwallet/mew-banner-item-mobile.png'
 import appStoreIos from '@/assets/images/common/app-store-apple-grey.png'
 import appStoreGoogle from '@/assets/images/common/app-store-google-grey.png'
 import qrCode from '@/assets/images/qr-code-mew-wallet-dl.png'
 
-const STORAGE_KEY = 'mew-app-banner-dismissed'
 const isVisible = ref(false)
 const showQr = ref(false)
 
-const checkVisibility = () => {
-  const dismissed = sessionStorage.getItem(STORAGE_KEY)
-  isVisible.value = !dismissed
-}
+onMounted(() => {
+  setTimeout(() => {
+    isVisible.value = true
+  }, 1500)
+})
 
-const dismiss = () => {
-  sessionStorage.setItem(STORAGE_KEY, '1')
+const dismissMewBanner = () => {
   isVisible.value = false
 }
-
-onMounted(() => {
-  checkVisibility()
-  window.addEventListener('resize', checkVisibility)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkVisibility)
-})
 </script>
 
 <style scoped>
