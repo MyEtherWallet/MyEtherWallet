@@ -7,11 +7,11 @@
       >
         <!-- Close button -->
         <button
-          class="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/60 flex items-center justify-center transition-colors z-10 hover:bg-white/80"
+          class="absolute top-3 right-3 w-4 h-4 rounded-full bg-black flex items-center justify-center transition-colors z-10 hover:bg-black/30"
           @click="dismiss"
           aria-label="Close banner"
         >
-          <XMarkIcon class="w-4 h-4 text-black/50" />
+          <XMarkIcon class="w-3 h-3 text-white" />
         </button>
 
         <div class="block pl-7 pr-6 py-3 sm:py-5 z-10 relative">
@@ -84,8 +84,16 @@
         <div
           class="z-0 flex items-end overflow-hidden self-stretch absolute right-[-10px]"
         >
-          <img :src="mewBannerItemMobile" alt="Mew wallet app" class="h-[200px] sm:hidden" />
-          <img :src="mewBannerItem" alt="Mew wallet app" class="h-[245px] hidden sm:block" />
+          <img
+            :src="mewBannerItemMobile"
+            alt="Mew wallet app"
+            class="h-[200px] sm:hidden"
+          />
+          <img
+            :src="mewBannerItem"
+            alt="Mew wallet app"
+            class="h-[245px] hidden sm:block"
+          />
         </div>
       </div>
     </transition>
