@@ -289,7 +289,7 @@ import {
 } from '@/providers/types'
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
-import { isSignableWallet } from '@/utils/walletUtils'
+import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
@@ -742,50 +742,42 @@ const proceedWithSwap = async (quoteId: string) => {
         : typeof e === 'string'
           ? e
           : t('swap.toast.tx-sign-failed')
-    if (errorMessage.includes('user rejected')) {
+
+    if (isUserRejectionError(e)) {
       toastStore.addToastMessage({
         type: ToastType.Info,
-        text: 'Swap canceled by user',
+        text: t('swap.toast.canceled-by-user'),
       })
       analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
         ...analyticsPayload,
         errorMsg: 'declined_by_user',
       })
+      return
+    }
+
+    // Only real errors reach this point
+    if (isDevMode) {
+      console.error('Error proceeding with swap:', e)
     } else {
-      if (isDevMode) {
-        console.error('Error proceeding with swap:', e)
-      } else {
-        analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
-          ...analyticsPayload,
-          errorMsg: errorMessage,
-        })
-        captureException(e, {
-          ...SENTRY_MODULE_TAGS.SWAP,
-          extra: {
-            title: 'SWAP: Error proceeding with swap',
-            errorMessage,
-          },
-        })
-      }
-      if (
-        errorMessage.includes('rejected') ||
-        errorMessage.includes('denied') ||
-        errorMessage.includes('cancelled')
-      ) {
-        toastStore.addToastMessage({
-          type: ToastType.Info,
-          text: 'Transaction canceled by user',
-        })
-        return
-      }
-      generalError.value = errorMessage
-      toastStore.addToastMessage({
-        type: ToastType.Error,
-        text: 'Swap Failed',
-        textSecondary: errorMessage,
-        duration: 10000,
+      analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
+        ...analyticsPayload,
+        errorMsg: errorMessage,
+      })
+      captureException(e instanceof Error ? e : new Error(errorMessage), {
+        ...SENTRY_MODULE_TAGS.SWAP,
+        extra: {
+          title: 'SWAP: Error proceeding with swap',
+          errorMessage,
+        },
       })
     }
+    generalError.value = errorMessage
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('swap.toast.failed'),
+      textSecondary: errorMessage,
+      duration: 10000,
+    })
   } finally {
     txProceeding.value = false
   }
