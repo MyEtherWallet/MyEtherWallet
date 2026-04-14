@@ -92,7 +92,7 @@ function formatDirection(direction: string | undefined) {
 const rows = computed(() => [
   {
     label: 'Market',
-    value: props.fill.market,
+    value: base.value,
   },
   {
     label: 'Price',

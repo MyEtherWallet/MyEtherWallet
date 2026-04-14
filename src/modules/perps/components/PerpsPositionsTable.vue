@@ -259,25 +259,16 @@
 
       <!-- Orders tab -->
       <template v-else-if="activeTab === 'orders'">
-        <div class="flex items-center gap-1 mb-4">
-          <button
-            :class="[
-              'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
-              orderFilter === 'pending' ? 'bg-primary text-white' : 'hoverNoBG',
-            ]"
-            @click="orderFilter = 'pending'"
+        <div class="mb-4 xs:pl-4">
+          <app-btn-group
+            v-model:selected="selectedOrderFilter"
+            :btn-list="orderFilterTabs"
+            size="xs"
           >
-            Pending
-          </button>
-          <button
-            :class="[
-              'px-4 py-1.5 rounded-full text-s-13 font-bold transition-colors',
-              orderFilter === 'all' ? 'bg-primary text-white' : 'hoverNoBG',
-            ]"
-            @click="orderFilter = 'all'"
-          >
-            All
-          </button>
+            <template #btn-content="{ data }">
+              <span class="px-2">{{ data.label }}</span>
+            </template>
+          </app-btn-group>
         </div>
         <div
           v-if="ordersLoading && orders.length === 0"
@@ -291,104 +282,184 @@
         >
           No orders
         </div>
-        <div v-else class="overflow-x-auto -mx-6 sm:-mx-8">
-          <table class="w-full text-s-14 min-w-[800px]">
-            <thead>
-              <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+
+        <table v-else class="w-full text-s-14 table-fixed">
+          <thead>
+            <tr
+              class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+            >
+              <th
+                class="px-1 sm:pl-4 py-3 text-left font-bold xs:w-[150px] 3xl:w-auto"
               >
-                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Market</th>
-                <th class="px-1 py-3 text-left font-bold">Side</th>
-                <th class="px-1 py-3 text-left font-bold">Type</th>
-                <th class="px-1 py-3 text-right font-bold">Price</th>
-                <th class="px-1 py-3 text-right font-bold">Size</th>
-                <th class="px-1 py-3 text-right font-bold">Filled</th>
-                <th class="px-1 py-3 text-right font-bold">Fee</th>
-                <th class="px-1 py-3 text-left font-bold">Status</th>
-                <th class="px-1 py-3 text-right font-bold">Time</th>
-                <th class="px-1 sm:pr-4 py-3 text-right font-bold"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="order in filteredOrders" :key="order.orderId" class="">
-                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                  <div class="flex items-center gap-3">
-                    <app-token-logo
-                      :url="getLogoUrl(getBase(order.market))"
-                      :symbol="getBase(order.market)"
-                      class="rounded-full"
-                    />
-                    <span class="font-bold truncate">{{
-                      getBase(order.market)
-                    }}</span>
+                Market
+              </th>
+              <th
+                class="px-1 py-3 text-left font-bold w-[100px] 3xl:w-[120px] hidden xl:table-cell"
+              >
+                Side
+              </th>
+              <th class="px-1 py-3 text-left font-bold hidden xs:table-cell">
+                Time
+              </th>
+              <th class="px-1 py-3 text-left font-bold hidden lg:table-cell">
+                Status
+              </th>
+              <th class="px-1 py-3 text-left font-bold hidden 2xl:table-cell">
+                Type
+              </th>
+              <th class="px-1 py-3 text-right font-bold 3xl:w-[120px]">
+                Price
+              </th>
+              <th class="px-1 py-3 text-right font-bold hidden sm:table-cell">
+                Filled / Size
+              </th>
+              <th class="w-9 xs:w-12"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="order in filteredOrders"
+              :key="order.orderId"
+              class="cursor-pointer hoverBGWhite"
+              @click="openOrderDialog(order)"
+            >
+              <!-- Market -->
+              <td class="px-1 sm:pl-4 py-3 rounded-l-12">
+                <div class="flex items-center gap-3">
+                  <app-token-logo
+                    :url="getLogoUrl(getBase(order.market))"
+                    :symbol="getBase(order.market)"
+                    class="rounded-full"
+                  />
+                  <div>
+                    <p class="font-bold truncate">
+                      {{ getBase(order.market) }}
+                    </p>
+                    <p
+                      :class="[
+                        order.side === 'buy' ? 'text-success' : 'text-error',
+                        'font-normal text-s-12 capitalize xl:hidden',
+                      ]"
+                    >
+                      {{ order.side }}
+                    </p>
                   </div>
-                </td>
-                <td class="px-1 py-3">
-                  <span
-                    :class="[
-                      order.side === 'buy' ? 'text-success' : 'text-error',
-                      'font-normal text-s-14 capitalize',
-                    ]"
-                  >
-                    {{ order.side }}
-                  </span>
-                </td>
-                <td class="px-1 py-3 capitalize font-normal text-s-14">
-                  {{ order.type }}
-                </td>
-                <td class="px-1 py-3 text-right font-normal text-s-14">
-                  {{ formatPrice(order.price) }}
-                </td>
-                <td class="px-1 py-3 text-right font-normal text-s-14">
-                  {{ order.size }}
-                </td>
-                <td class="px-1 py-3 text-right font-normal text-s-14">
-                  {{ order.filledSize }}
-                </td>
-                <td class="px-1 py-3 text-right font-normal text-s-14">
-                  {{ formatUsd(order.fee) }}
-                </td>
-                <td class="px-1 py-3">
-                  <span
-                    :class="[
-                      'capitalize font-normal text-s-14',
-                      order.status === 'open'
-                        ? 'text-primary'
-                        : order.status === 'fullyfilled'
-                          ? 'text-success'
-                          : order.status === 'canceled'
-                            ? 'text-info'
-                            : '',
-                    ]"
-                  >
-                    {{ order.status }}
-                  </span>
-                </td>
-                <td class="px-1 py-3 text-right text-info text-s-12">
+                </div>
+              </td>
+              <!-- Side -->
+              <td class="px-1 py-3 hidden xl:table-cell">
+                <span
+                  :class="[
+                    order.side === 'buy' ? 'text-success' : 'text-error',
+                    'font-normal text-s-14 capitalize',
+                  ]"
+                >
+                  {{ order.side }}
+                </span>
+              </td>
+              <!-- Time -->
+              <td class="px-1 py-3 text-info text-s-12 hidden xs:table-cell">
+                {{ formatDate(order.createdAt) }}
+              </td>
+              <!-- Status -->
+              <td class="px-1 py-3 hidden lg:table-cell">
+                <span
+                  :class="[
+                    'font-normal text-s-14 ',
+                    order.status === 'open' || order.status === 'pending'
+                      ? 'text-primary'
+                      : order.status === 'fullyfilled'
+                        ? 'text-success'
+                        : order.status === 'canceled' ||
+                            order.status === 'untriggered'
+                          ? 'text-info'
+                          : '',
+                  ]"
+                >
+                  {{ formatOrderStatus(order.status) }}
+                </span>
+              </td>
+              <!-- Type -->
+              <td class="px-1 py-3 font-normal text-s-14 hidden 2xl:table-cell">
+                {{ formatOrderType(order.type) }}
+              </td>
+              <!-- Price -->
+              <td class="px-1 py-3 text-right font-normal text-s-14">
+                <p>{{ formatPrice(order.price) }}</p>
+
+                <p class="text-s-12 text-info xs:hidden">
                   {{ formatDate(order.createdAt) }}
-                </td>
-                <td class="px-1 sm:pr-4 py-3 text-right rounded-r-12">
-                  <button
-                    v-if="
-                      order.status === 'pending' ||
-                      order.status === 'untriggered' ||
-                      order.status === 'open'
-                    "
-                    class="rounded-full px-4 py-1.5 text-s-12 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
-                    :disabled="cancellingOrderId === order.orderId"
-                    @click="cancelOrder(order.orderId)"
-                  >
-                    {{
-                      cancellingOrderId === order.orderId
-                        ? 'Cancelling...'
-                        : 'Cancel'
-                    }}
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                </p>
+              </td>
+              <!-- Filled Size  out of Size-->
+              <td
+                class="px-1 py-3 text-right font-normal text-s-14 hidden sm:table-cell"
+              >
+                <p>{{ order.filledSize }} {{ getBase(order.market) }}</p>
+                <p class="text-s-12 text-info">
+                  out of {{ order.size }} {{ getBase(order.market) }}
+                </p>
+              </td>
+
+              <!--Actions-->
+              <td
+                class="pl-2 xs:pl-4 pr-0 rounded-r-12 flex justify-end items-center sm:pl-3 sm:pr-1 py-3"
+              >
+                <app-pop-up-menu
+                  v-if="showCancelButton(order)"
+                  placeholder="actions menu"
+                  location="right"
+                >
+                  <template #menu-button="{ toggleMenu }">
+                    <app-btn-icon
+                      label="action menu"
+                      @click.stop="toggleMenu"
+                      height="h-7 xs:h-8"
+                      width="w-7 xs:w-8"
+                    >
+                      <ellipsis-vertical-icon class="w-5 h-5" />
+                    </app-btn-icon>
+                  </template>
+                  <template #menu-content="{ toggleMenu }">
+                    <div
+                      class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                    >
+                      <ul>
+                        <li
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                          @click.stop="[toggleMenu(), openOrderDialog(order)]"
+                        >
+                          <p>View Order</p>
+                        </li>
+                        <li
+                          class="p-2 flex items-center hoverBGWhite rounded-12"
+                          @click.stop="[cancelOrder(order.orderId)]"
+                        >
+                          {{
+                            cancellingOrderId === order.orderId
+                              ? 'Cancelling...'
+                              : 'Cancel'
+                          }}
+                        </li>
+                      </ul>
+                    </div>
+                  </template>
+                </app-pop-up-menu>
+                <!-- View order details button -->
+                <app-btn-icon
+                  v-else
+                  label="view order details"
+                  height="h-7 xs:h-8"
+                  width="w-7 xs:w-8"
+                  :class="{ 'ml-auto': !showCancelButton(order) }"
+                  @click.stop="openOrderDialog(order)"
+                >
+                  <chevron-right-icon class="w-5 h-5" />
+                </app-btn-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </template>
 
       <!-- Fills tab -->
@@ -509,7 +580,7 @@
                     class="ml-auto"
                     @click="openFillDialog(fill)"
                   >
-                    <ellipsis-vertical-icon class="w-5 h-5" />
+                    <chevron-right-icon class="w-5 h-5" />
                   </app-btn-icon>
                 </td>
               </tr>
@@ -591,12 +662,24 @@
       :fill="selectedFill"
       @close="showFillDialog = false"
     />
+    <perps-order-dialog
+      v-if="selectedOrder"
+      :visible="showOrderDialog"
+      :order="selectedOrder"
+      :cancelling="cancellingOrderId === selectedOrder.orderId"
+      @close="showOrderDialog = false"
+      @cancel="cancelOrder"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ChevronDownIcon, EllipsisVerticalIcon } from '@heroicons/vue/24/solid'
+import {
+  ChevronDownIcon,
+  EllipsisVerticalIcon,
+  ChevronRightIcon,
+} from '@heroicons/vue/24/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
@@ -606,6 +689,7 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
+import PerpsOrderDialog from './PerpsOrderDialog.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -622,8 +706,7 @@ import {
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
-import type { Position } from '../sdk/types'
-import type { ApiFill } from '../sdk/types'
+import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 
 defineEmits<{
   openPosition: [market: string]
@@ -647,6 +730,14 @@ function openFillDialog(fill: ApiFill) {
   showFillDialog.value = true
 }
 
+const showOrderDialog = ref(false)
+const selectedOrder = ref<ApiOrder | null>(null)
+
+function openOrderDialog(order: ApiOrder) {
+  selectedOrder.value = order
+  showOrderDialog.value = true
+}
+
 function formatDirection(direction: string | undefined) {
   return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
 }
@@ -655,6 +746,38 @@ const {
   loading: ordersLoading,
   refetch: refetchOrders,
 } = usePerpsOrders()
+
+const orderTypeLabels: Record<string, string> = {
+  limit: 'Limit',
+  market: 'Market',
+  stopMarket: 'Stop Market',
+  takeProfitMarket: 'Take Profit Market',
+}
+
+function formatOrderType(type: string): string {
+  return orderTypeLabels[type] ?? type
+}
+
+const orderStatusLabels: Record<string, string> = {
+  open: 'Open',
+  fullyfilled: 'Fully Filled',
+  canceled: 'Canceled',
+  pending: 'Pending',
+  untriggered: 'Untriggered',
+}
+
+function formatOrderStatus(status: string): string {
+  return orderStatusLabels[status] ?? status
+}
+
+const showCancelButton = (order: ApiOrder) => {
+  return (
+    order.status === 'pending' ||
+    order.status === 'untriggered' ||
+    order.status === 'open'
+  )
+}
+
 const { fills, loading: fillsLoading } = usePerpsFills()
 const {
   deposits,
@@ -666,6 +789,7 @@ const cancellingOrderId = ref<string | null>(null)
 
 async function cancelOrder(orderId: string) {
   cancellingOrderId.value = orderId
+  if (cancellingOrderId.value === orderId) return
   try {
     await perpsClient.cancelOrder(orderId)
     await refetchOrders()
@@ -734,11 +858,17 @@ const tabs = [
 
 const selectedTab = ref(tabs[0])
 const activeTab = computed(() => selectedTab.value.value)
-const orderFilter = ref<'pending' | 'all'>('pending')
+
+const orderFilterTabs = [
+  { label: 'All', value: 'all' },
+
+  { label: 'Pending', value: 'pending' },
+]
+const selectedOrderFilter = ref(orderFilterTabs[0])
 
 const pendingStatuses = new Set(['pending', 'untriggered', 'open'])
 const filteredOrders = computed(() => {
-  if (orderFilter.value === 'all') return orders.value
+  if (selectedOrderFilter.value.value === 'all') return orders.value
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
 </script>
