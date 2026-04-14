@@ -37,14 +37,14 @@
           <template #select-button="{ toggleSelect }">
             <div class="bg-surface rounded-full p-1 w-full xs:w-auto">
               <button
-                class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[180px] px-5 shadow-button"
+                class="rounded-full bg-white py-3 w-full xs:w-auto min-w-[200px] px-5 shadow-button"
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
                   <span class="text-s-16 font-medium">{{
                     selectedTab.label
                   }}</span>
-                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                  <chevron-down-icon class="w-4 h-4 ml-2" />
                 </div>
               </button>
             </div>
