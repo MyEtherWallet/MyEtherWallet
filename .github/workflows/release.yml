@@ -27,17 +27,17 @@ jobs:
           gh api repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name="$TAG" \
             -f previous_tag_name="$LAST_TAG" \
-            --jq '.body' > /tmp/release-notes.md
+            --jq .body > release-notes.md
 
           if gh release view "$TAG" > /dev/null 2>&1; then
             gh release edit "$TAG" \
               --target feat/v7 \
-              --notes-file /tmp/release-notes.md
+              --notes-file release-notes.md
           else
             gh release create "$TAG" \
               --draft \
               --target feat/v7 \
-              --notes-file /tmp/release-notes.md \
+              --notes-file release-notes.md \
               --title "$TAG"
           fi
 
