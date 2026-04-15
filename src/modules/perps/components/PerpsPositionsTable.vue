@@ -53,12 +53,11 @@
       </div>
 
       <!-- Loading -->
-      <div
+      <app-table-skeleton
         v-if="loading && positions.length === 0"
-        class="text-center py-8 text-info text-s-14"
-      >
-        Loading positions...
-      </div>
+        :rows="3"
+        :columns="positionsSkeletonColumns"
+      />
 
       <!-- Positions tab -->
       <template v-else-if="activeTab === 'positions'">
@@ -444,12 +443,11 @@
 
       <!-- Fills tab -->
       <template v-else-if="activeTab === 'fills'">
-        <div
+        <app-table-skeleton
           v-if="fillsLoading && fills.length === 0"
-          class="text-center py-8 text-info text-s-14"
-        >
-          Loading fills...
-        </div>
+          :rows="3"
+          :columns="fillsSkeletonColumns"
+        />
         <div
           v-else-if="fills.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -720,6 +718,9 @@ import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTableSkeleton, {
+  type SkeletonColumn,
+} from '@/components/AppTableSkeleton.vue'
 import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
@@ -746,6 +747,28 @@ const USDC_LOGO =
 defineEmits<{
   openPosition: [market: string]
 }>()
+
+const positionsSkeletonColumns: SkeletonColumn[] = [
+  { type: 'name', header: 'Market' },
+  { type: 'text', align: 'right', header: 'Value' },
+  { type: 'text', align: 'right', hidden: 'hidden xs:table-cell', header: 'uPnl' },
+  { type: 'text', align: 'right', hidden: 'hidden 2xl:table-cell', header: 'Entry Price' },
+  { type: 'text', align: 'right', hidden: 'hidden lg:table-cell', header: 'Mark Price' },
+  { type: 'text', align: 'right', hidden: 'hidden sm:table-cell', header: 'Liq Price' },
+  { type: 'text', align: 'right', hidden: 'hidden 2xl:table-cell', header: 'Margin Used' },
+  { type: 'text', align: 'right', hidden: 'hidden 3xl:table-cell', header: 'Total Funding' },
+  { type: 'action', hidden: 'hidden lg:table-cell', header: 'Actions', align: 'right' },
+]
+
+const fillsSkeletonColumns: SkeletonColumn[] = [
+  { type: 'name', header: 'Market' },
+  { type: 'text', align: 'left', hidden: 'hidden lg:table-cell', header: 'Direction' },
+  { type: 'text', align: 'right', hidden: 'hidden xs:table-cell', header: 'Time' },
+  { type: 'text', align: 'right', header: 'Price' },
+  { type: 'text', align: 'right', hidden: 'hidden sm:table-cell', header: 'Size' },
+  { type: 'text', align: 'right', hidden: 'hidden md:table-cell', header: 'PnL' },
+  { type: 'icon', width: '48px' },
+]
 
 const { positions, loading } = usePerpsPositions()
 
