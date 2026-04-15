@@ -45,6 +45,7 @@
       :top-data="activeSeries.has('invested') ? chartPointsInvested : []"
       :bottom-data="activeSeries.has('pnl') ? chartPointsPnl : []"
       :dispalay-y-axis="true"
+      :series-labels="tooltipLabels"
       class="h-full !shrink"
     />
     <div v-else class="text-center py-8 text-info text-s-14">
@@ -75,6 +76,11 @@ const seriesOptions: { key: SeriesKey; label: string; color: string }[] = [
   { key: 'invested', label: 'Net Invested', color: '#9D00FF' },
   { key: 'pnl', label: 'PnL', color: 'rgb(5,192,165)' },
 ]
+
+const tooltipLabels = seriesOptions.map(s => ({
+  label: s.label,
+  color: s.color,
+}))
 
 const activeSeries = reactive<Set<SeriesKey>>(
   new Set(['value', 'invested', 'pnl']),

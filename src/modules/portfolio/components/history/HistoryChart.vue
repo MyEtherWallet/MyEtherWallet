@@ -1,6 +1,24 @@
 <template>
-  <div class="flex">
+  <div class="chart-wrapper flex relative">
     <Line ref="historyChart" :data="chartData" :options="chartOptions" />
+    <div
+      v-if="customTooltip"
+      ref="tooltipEl"
+      class="chart-custom-tooltip"
+      :style="customTooltip.style"
+    >
+      <div class="tooltip-title">{{ customTooltip.title }}</div>
+      <div
+        v-for="row in customTooltip.rows"
+        :key="row.label"
+        class="tooltip-row"
+      >
+        <span class="tooltip-label">{{
+          row.label
+        }}</span>
+        <span class="tooltip-value">{{ row.value }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,12 +42,26 @@ interface DataPoint {
   timestamp: number
   value: number
 }
+
+interface SeriesLabel {
+  label: string
+  color: string
+}
+
+interface TooltipState {
+  title: string
+  rows: { label: string; value: string; color: string }[]
+  style: Record<string, string>
+}
+
 const props = defineProps<{
   /** 7 days * 24 hours = 168 values (oldest -> newest) */
   data: DataPoint[]
   topData?: DataPoint[]
   bottomData?: DataPoint[]
   dispalayYAxis?: boolean
+  /** Labels for [data, topData, bottomData] series in tooltip */
+  seriesLabels?: SeriesLabel[]
 }>()
 
 /**
@@ -52,6 +84,9 @@ const colors = {
   bgGrey: 'rgba(0,0,0,0.05)',
   tooltipBg: 'rgba(0,0,0,0.7)',
 }
+
+const customTooltip = ref<TooltipState | null>(null)
+const tooltipEl = ref<HTMLElement | null>(null)
 
 const points = computed(() => props.data.map(d => d.value))
 const labels = computed(() => props.data.map(d => d.timestamp))
@@ -145,50 +180,113 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    tooltip: {
-      filter: function (tooltipItem) {
-        // Disable tooltip for Dataset 2 (which has index 1)
-        return tooltipItem.datasetIndex !== 1
-      },
-      padding: 10,
-      backgroundColor: colors.tooltipBg,
-      boxPadding: 10,
-      bodySpacing: 3,
-      intersect: false,
-      titleSpacing: 3,
-      displayColors: false,
-      titleFont: {
-        size: 12,
-        fontFamily: 'Roboto , sans-serif',
-        weight: 'normal',
-      },
-      bodyFont: {
-        size: 16,
-        fontFamily: 'Roboto , sans-serif',
-      },
-      callbacks: {
-        label: function (context) {
-          let label = context.dataset.label || ''
-          if (label) {
-            label += ': '
-          }
-          if (context.parsed.y !== null) {
-            return '$' + formatFiatValue(context.parsed.y).value
-          }
-          return label
+    tooltip: props.seriesLabels
+      ? {
+          enabled: false,
+          intersect: false,
+          external: function (context) {
+            const { tooltip, chart } = context
+            if (tooltip.opacity === 0) {
+              customTooltip.value = null
+              return
+            }
+            const dataIndex = tooltip.dataPoints?.[0]?.dataIndex
+            if (dataIndex == null) return
+
+            const date = new Date(labels.value[dataIndex] || '')
+            const title = date.toLocaleDateString('en-US', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+
+            const allData = [
+              props.data,
+              props.topData,
+              props.bottomData,
+            ]
+            const rows: TooltipState['rows'] = []
+            props.seriesLabels!.forEach((s, i) => {
+              const seriesData = allData[i]
+              if (!seriesData || seriesData.length === 0) return
+              const val = seriesData[dataIndex]?.value
+              if (val == null) return
+              rows.push({
+                label: s.label,
+                color: s.color,
+                value: '$' + formatFiatValue(val).value,
+              })
+            })
+
+            const left = tooltip.caretX
+            const top = tooltip.caretY
+            const chartRect = chart.canvas.getBoundingClientRect()
+            const wrapperRect =
+              chart.canvas.parentElement?.getBoundingClientRect()
+            const offsetLeft = wrapperRect
+              ? chartRect.left - wrapperRect.left
+              : 0
+            const offsetTop = wrapperRect
+              ? chartRect.top - wrapperRect.top
+              : 0
+
+            customTooltip.value = {
+              title,
+              rows,
+              style: {
+                left: left + offsetLeft + 'px',
+                top: top + offsetTop + 'px',
+              },
+            }
+          },
+        }
+      : {
+          filter: function (tooltipItem) {
+            return tooltipItem.datasetIndex !== 1
+          },
+          padding: 10,
+          backgroundColor: colors.tooltipBg,
+          boxPadding: 10,
+          bodySpacing: 3,
+          intersect: false,
+          titleSpacing: 3,
+          displayColors: false,
+          titleFont: {
+            size: 12,
+            fontFamily: 'Roboto , sans-serif',
+            weight: 'normal',
+          },
+          bodyFont: {
+            size: 16,
+            fontFamily: 'Roboto , sans-serif',
+          },
+          callbacks: {
+            label: function (context) {
+              let label = context.dataset.label || ''
+              if (label) {
+                label += ': '
+              }
+              if (context.parsed.y !== null) {
+                return '$' + formatFiatValue(context.parsed.y).value
+              }
+              return label
+            },
+            title: function (context) {
+              if (context.length === 0) {
+                return ''
+              }
+              const date = new Date(
+                labels.value[context[0].dataIndex] || '',
+              )
+              return date.toLocaleDateString('en-US', {
+                minute: 'numeric',
+                hour: 'numeric',
+              })
+            },
+          },
         },
-        title: function (context) {
-          if (context.length === 0) {
-            return ''
-          }
-          const date = new Date(labels.value[context[0].dataIndex] || '')
-          return date.toLocaleDateString('en-US', {
-            minute: 'numeric',
-            hour: 'numeric',
-          })
-        },
-      },
-    },
   },
   scales: {
     x: {
@@ -243,5 +341,45 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
 /* Crisp lines in tiny canvases */
 canvas {
   image-rendering: -webkit-optimize-contrast;
+}
+
+.chart-wrapper {
+  position: relative;
+}
+
+.chart-custom-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  padding: 10px 14px;
+  transform: translate(-50%, calc(-100% - 12px));
+  white-space: nowrap;
+  z-index: 10;
+  font-family: Roboto, sans-serif;
+}
+
+.tooltip-title {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6px;
+}
+
+.tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.tooltip-label {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.tooltip-value {
+  color: #fff;
+  font-weight: 500;
 }
 </style>
