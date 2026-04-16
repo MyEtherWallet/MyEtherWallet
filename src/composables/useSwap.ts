@@ -244,7 +244,7 @@ export const useSwap = (): {
   const getQuote = async (
     params: QuoteParam,
   ): Promise<ProviderQuoteResponse[] | undefined> => {
-    if (!swapInstance.value) {
+    if (!swapInstance.value || !swapLoaded.value) {
       return undefined
     }
 
