@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="show"
-    class="fixed inset-x-0 bottom-0 flex w-screen items-end justify-center z-[50] bg-white shadow-[10px_3px_12px_rgba(0,0,0,0.32)]"
+    class="fixed inset-x-0 bottom-0 flex w-screen items-end justify-center z-[500] bg-white shadow-[10px_3px_12px_rgba(0,0,0,0.32)]"
   >
     <div
       class="max-w-[1392px] md-header:mx-6 2xl:mx-auto flex flex-wrap content-center py-8 px-4"
