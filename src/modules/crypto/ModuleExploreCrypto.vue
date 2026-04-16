@@ -291,7 +291,11 @@
                 </td>
                 <!-- Name & Symbol -->
                 <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
-                  <div class="flex items-center gap-3">
+                  <router-link
+                    :to="getTokenRoute(token)"
+                    class="flex items-center gap-3"
+                    @click.stop
+                  >
                     <app-token-logo
                       :url="token.logoUrl"
                       :symbol="token.symbol"
@@ -324,7 +328,7 @@
                         {{ token.name }}
                       </p>
                     </div>
-                  </div>
+                  </router-link>
                 </td>
                 <!-- Market Cap -->
                 <td
@@ -1360,18 +1364,20 @@ const getSparkLinePoints = (token: DisplayToken) => {
  --------------------------------*/
 const router = useRouter()
 
-const goToTokenPage = (token: DisplayToken) => {
+const getTokenRoute = (token: DisplayToken) => {
   if (token.ondo !== null && token.ondo.primaryMarket.symbol) {
-    router.push({
+    return {
       name: STOCK_INFO_ROUTE_NAMES.crypto,
       params: { symbol: token.ondo.primaryMarket.symbol },
-    })
-    return
-  } else {
-    router.push({
-      name: TOKEN_INFO_ROUTE_NAMES.crypto,
-      params: { tokenId: token.coinId },
-    })
+    }
   }
+  return {
+    name: TOKEN_INFO_ROUTE_NAMES.crypto,
+    params: { tokenId: token.coinId },
+  }
+}
+
+const goToTokenPage = (token: DisplayToken) => {
+  router.push(getTokenRoute(token))
 }
 </script>
