@@ -33,11 +33,19 @@
 
     <!-- Authenticated -->
     <template v-else>
-      <h1
-        class="text-s-24 xs:text-s-32 font-bold col-span-1 lg:col-span-2 px-2"
+      <div
+        class="flex items-center justify-between col-span-1 lg:col-span-2 px-2"
       >
-        Perpetuals Portfolio
-      </h1>
+        <h1 class="text-s-24 xs:text-s-32 font-bold">
+          Perpetuals Portfolio
+        </h1>
+        <button
+          class="text-error text-s-14 font-medium hoverOpacity"
+          @click="logout"
+        >
+          Sign Out
+        </button>
+      </div>
       <div class="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 -mt-2">
         <perps-portfolio-summary
           @deposit="showDeposit = true"
@@ -79,7 +87,7 @@ const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
-const { token, isWalletConnected, isAuthenticating, authError, login } =
+const { token, isWalletConnected, isAuthenticating, authError, login, logout } =
   usePerpsAuth()
 const connectWallet = () => accessStore.openAccessDialog()
 const showDeposit = ref(false)
