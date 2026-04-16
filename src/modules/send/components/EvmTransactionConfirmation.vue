@@ -275,7 +275,7 @@ import { Hardfork } from '@ethereumjs/common'
 import { hexToBytes, bytesToHex } from '@ethereumjs/util'
 import { fromWei } from 'web3-utils'
 import { useI18n } from 'vue-i18n'
-import { isSignableWallet } from '@/utils/walletUtils'
+import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
@@ -426,7 +426,14 @@ const confirmTransaction = async () => {
         emit('tx-sent', hash)
       })
       .catch(e => {
-        //TODO: implement error localization
+        if (isUserRejectionError(e)) {
+          toastStore.addToastMessage({
+            type: ToastType.Info,
+            text: t('common.error.user_canceled_request'),
+          })
+          return
+        }
+
         const msg =
           e instanceof Error && e.message
             ? e.message.toLowerCase()
@@ -435,41 +442,41 @@ const confirmTransaction = async () => {
               : typeof e === 'string'
                 ? e.toLowerCase()
                 : ''
-        
-        if (msg.includes('rejected') || msg.includes('denied')  || msg.includes('cancelled')) {
-          toastStore.addToastMessage({
-            type: ToastType.Info,
-            text: 'Transaction canceled by user',
-          })
-        } else {
-          const errorMessage = msg ? sanitizeErrorMessage(msg) : undefined
+        const errorMessage = msg ? sanitizeErrorMessage(msg) : undefined
 
-          analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
-            token: props.toToken?.symbol,
-            errorMsg: errorMessage || msg,
-          })
+        analytics.trackSendErrorEvent(SendEventError.SIGN_ERROR, {
+          token: props.toToken?.symbol,
+          errorMsg: errorMessage || msg,
+        })
 
-          toastStore.addToastMessage({
-            type: ToastType.Error,
-            text: t('send.toast.tx-send-failed'),
-            textSecondary: errorMessage,
-          })
+        toastStore.addToastMessage({
+          type: ToastType.Error,
+          text: t('send.toast.tx-send-failed'),
+          textSecondary: errorMessage,
+        })
 
-          captureException(e, {
-            ...SENTRY_MODULE_TAGS.SEND,
-            extra: {
-              title: 'Error sending transaction: TX Promise',
-              errorMessage: errorMessage,
-            },
-          })
-        }
+        captureException(e instanceof Error ? e : new Error(msg), {
+          ...SENTRY_MODULE_TAGS.SEND,
+          extra: {
+            title: 'Error sending transaction: TX Promise',
+            errorMessage: errorMessage,
+          },
+        })
       })
     signing.value = false
     showApproveMessage.value = false
   } catch (e) {
-    // possibly catch more errors
     signing.value = false
     showApproveMessage.value = false
+
+    if (isUserRejectionError(e)) {
+      toastStore.addToastMessage({
+        type: ToastType.Info,
+        text: t('common.error.user_canceled_request'),
+      })
+      return
+    }
+
     const errorMessage =
       e instanceof Error && e.message
         ? sanitizeErrorMessage(e.message.toLowerCase())
@@ -486,7 +493,7 @@ const confirmTransaction = async () => {
       text: t('send.toast.tx-send-failed'),
       textSecondary: errorMessage,
     })
-    captureException(e, {
+    captureException(e instanceof Error ? e : new Error(errorMessage || 'Unknown error'), {
       ...SENTRY_MODULE_TAGS.SEND,
       extra: {
         title: 'Error sending transaction',
