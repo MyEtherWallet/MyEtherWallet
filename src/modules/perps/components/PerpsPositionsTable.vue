@@ -251,12 +251,11 @@
             </template>
           </app-btn-group>
         </div>
-        <div
+        <app-table-skeleton
           v-if="ordersLoading && orders.length === 0"
-          class="text-center py-8 text-info text-s-14"
-        >
-          Loading orders...
-        </div>
+          :rows="5"
+          :columns="ordersSkeletonColumns"
+        />
         <div
           v-else-if="filteredOrders.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -569,12 +568,11 @@
 
       <!-- Deposits & Withdrawals tab -->
       <template v-else-if="activeTab === 'deposits'">
-        <div
+        <app-table-skeleton
           v-if="dwLoading && deposits.length === 0 && withdrawals.length === 0"
-          class="text-center py-8 text-info text-s-14"
-        >
-          Loading...
-        </div>
+          :rows="5"
+          :columns="dwSkeletonColumns"
+        />
         <div
           v-else-if="deposits.length === 0 && withdrawals.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -767,6 +765,26 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
   { header: 'Price', align: 'right' },
   { header: 'Size', align: 'right', hidden: 'hidden sm:table-cell' },
   { header: 'PnL', align: 'right', hidden: 'hidden md:table-cell' },
+]
+
+const ordersSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Market' },
+  { header: 'Side', hidden: 'hidden xl:table-cell', width: '100px' },
+  { header: 'Time', hidden: 'hidden xs:table-cell' },
+  { header: 'Status', hidden: 'hidden lg:table-cell' },
+  { header: 'Type', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Price', align: 'right' },
+  { header: 'Filled / Size', align: 'right', hidden: 'hidden sm:table-cell' },
+  { header: '', width: '48px' },
+]
+
+const dwSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Type', hidden: 'hidden xs:table-cell' },
+  { header: 'Asset' },
+  { header: 'Time', hidden: 'hidden sm:table-cell' },
+  { header: 'USD Value', align: 'right', hidden: 'hidden md:table-cell' },
+  { header: 'Amount', align: 'right' },
+  { header: 'Status', align: 'right', hidden: 'hidden xs:table-cell' },
 ]
 
 const { positions, loading } = usePerpsPositions()
