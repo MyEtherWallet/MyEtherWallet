@@ -749,25 +749,24 @@ defineEmits<{
 }>()
 
 const positionsSkeletonColumns: SkeletonColumn[] = [
-  { type: 'name', header: 'Market' },
-  { type: 'text', align: 'right', header: 'Value' },
-  { type: 'text', align: 'right', hidden: 'hidden xs:table-cell', header: 'uPnl' },
-  { type: 'text', align: 'right', hidden: 'hidden 2xl:table-cell', header: 'Entry Price' },
-  { type: 'text', align: 'right', hidden: 'hidden lg:table-cell', header: 'Mark Price' },
-  { type: 'text', align: 'right', hidden: 'hidden sm:table-cell', header: 'Liq Price' },
-  { type: 'text', align: 'right', hidden: 'hidden 2xl:table-cell', header: 'Margin Used' },
-  { type: 'text', align: 'right', hidden: 'hidden 3xl:table-cell', header: 'Total Funding' },
-  { type: 'action', hidden: 'hidden lg:table-cell', header: 'Actions', align: 'right' },
+  { header: 'Market' },
+  { header: 'Value', align: 'right' },
+  { header: 'uPnl', align: 'right', hidden: 'hidden xs:table-cell' },
+  { header: 'Entry Price', align: 'right', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Mark Price', align: 'right', hidden: 'hidden lg:table-cell' },
+  { header: 'Liq Price', align: 'right', hidden: 'hidden sm:table-cell' },
+  { header: 'Margin Used', align: 'right', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Total Funding', align: 'right', hidden: 'hidden 3xl:table-cell' },
+  { header: 'Actions', align: 'right' },
 ]
 
 const fillsSkeletonColumns: SkeletonColumn[] = [
-  { type: 'name', header: 'Market' },
-  { type: 'text', align: 'left', hidden: 'hidden lg:table-cell', header: 'Direction' },
-  { type: 'text', align: 'right', hidden: 'hidden xs:table-cell', header: 'Time' },
-  { type: 'text', align: 'right', header: 'Price' },
-  { type: 'text', align: 'right', hidden: 'hidden sm:table-cell', header: 'Size' },
-  { type: 'text', align: 'right', hidden: 'hidden md:table-cell', header: 'PnL' },
-  { type: 'icon', width: '48px' },
+  { header: 'Market' },
+  { header: 'Direction', hidden: 'hidden lg:table-cell' },
+  { header: 'Time', hidden: 'hidden xs:table-cell' },
+  { header: 'Price', align: 'right' },
+  { header: 'Size', align: 'right', hidden: 'hidden sm:table-cell' },
+  { header: 'PnL', align: 'right', hidden: 'hidden md:table-cell' },
 ]
 
 const { positions, loading } = usePerpsPositions()

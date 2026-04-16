@@ -527,19 +527,13 @@ function getPosition(market: string) {
 }
 
 const marketSkeletonColumns: SkeletonColumn[] = [
-  { type: 'icon', width: '40px', hidden: 'hidden xs:table-cell' },
-  { type: 'name', header: 'Name' },
-  { type: 'text', align: 'right', header: 'Price' },
-  { type: 'chart', align: 'right', hidden: 'hidden xs:table-cell', header: '24H' },
-  { type: 'text', align: 'right', hidden: 'hidden 2xl:table-cell', header: 'Volume' },
-  { type: 'text', align: 'right', hidden: 'hidden md:table-cell', header: 'Market Cap' },
-  {
-    type: 'buttons',
-    hidden: 'hidden lg:table-cell',
-    width: '200px',
-    header: 'Actions',
-    align: 'right',
-  },
+  { header: '', width: '40px', hidden: 'hidden xs:table-cell' },
+  { header: 'Name' },
+  { header: 'Price', align: 'right' },
+  { header: '24H', align: 'right', hidden: 'hidden xs:table-cell' },
+  { header: 'Volume', align: 'right', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Market Cap', align: 'right', hidden: 'hidden md:table-cell' },
+  { header: 'Actions', align: 'right', width: '200px', hidden: 'hidden lg:table-cell' },
 ]
 
 const searchQuery = ref('')
