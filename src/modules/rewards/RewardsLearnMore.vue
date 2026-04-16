@@ -28,8 +28,8 @@
             Earn $5 USDC on Every Eligible Swap
           </h3>
           <p class="text-s-14 text-info mt-3 leading-p-160">
-            Complete a swap or trade on Ethereum over $10 and receive $5 USDC —
-            available to the first 5 users each hour.
+            Complete a swap or trade on Ethereum over $25 and receive $5 USDC —
+            available to the first 10 users each hour.
           </p>
 
           <!-- How It Works -->
@@ -200,11 +200,11 @@ watch(isOpenModel, val => {
 const howItWorks = [
   {
     icon: 'swap',
-    text: 'Make a swap or trade of $10 or more on the Ethereum network',
+    text: 'Make a swap or trade of $25 or more on the Ethereum network',
   },
   {
     icon: 'currency-dollar',
-    text: 'The first 5 eligible swaps or trades every hour get $5 USDC',
+    text: 'The first 10 eligible swaps or trades every hour get $5 USDC',
   },
   {
     icon: 'gift',
@@ -215,7 +215,7 @@ const howItWorks = [
 const availability = [
   {
     icon: 'clock',
-    text: 'Limited to 5 rewards per hour, 120 total rewards per day (No Bots!)',
+    text: 'Limited to 10 rewards per hour, 240 total rewards per day (No Bots!)',
   },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
   {
