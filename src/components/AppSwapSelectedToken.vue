@@ -124,6 +124,7 @@
               <div
                 v-if="showSearchDropdown"
                 class="absolute bottom-0 left-0 w-full bg-white rounded-20 shadow-2xl border border-grey-outline px-4 py-4 translate-y-full z-30"
+                @mousedown.prevent
               >
                 <div v-if="trendingTokens.length" class="mb-3">
                   <p class="text-s-12 font-medium text-info mb-2">Trending</p>
