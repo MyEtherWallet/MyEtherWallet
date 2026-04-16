@@ -1,5 +1,5 @@
 <template>
-  <table class="w-full table-fixed">
+  <table class="w-full">
     <thead v-if="hasHeaders">
       <tr
         class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
