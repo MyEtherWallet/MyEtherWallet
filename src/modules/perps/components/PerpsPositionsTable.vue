@@ -52,9 +52,9 @@
         </app-select>
       </div>
 
-      <!-- Loading -->
+      <!-- Positions loading -->
       <app-table-skeleton
-        v-if="loading && positions.length === 0"
+        v-if="activeTab === 'positions' && loading && positions.length === 0"
         :rows="3"
         :columns="positionsSkeletonColumns"
       />

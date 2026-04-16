@@ -10,7 +10,11 @@
           class="px-1 py-2 font-bold"
           :class="[
             col.hidden,
-            col.align === 'right' ? 'text-right' : 'text-left',
+            col.align === 'right'
+              ? 'text-right'
+              : col.align === 'center'
+                ? 'text-center'
+                : 'text-left',
             i === 0 ? 'sm:pl-4' : '',
             i === columns.length - 1 ? 'sm:pr-4' : '',
           ]"
@@ -23,7 +27,7 @@
     <tbody>
       <tr v-for="row in rows" :key="row">
         <td
-          :colspan="columns.length"
+          :colspan="columns.length || 1"
           class="px-1 sm:px-4 py-2"
         >
           <div class="h-10 bg-grey-10 animate-pulse rounded-12"></div>
