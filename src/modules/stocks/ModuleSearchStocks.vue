@@ -279,6 +279,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import { type GetWebStocksSummaryResponse } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { fuzzySearchByKeys } from '@/utils/searchArray'
 
 const stocksStore = useStocksStore()
 const { trending: trendingTokens, isLoadingOverview } = storeToRefs(stocksStore)
@@ -297,24 +298,12 @@ const { data: searchData, isFetching } = useMEWFetch(searchUrl)
 const results = computed(() => {
   if (isLoading.value || !searchInput.value || searchInput.value === '')
     return []
-  const query = searchInput.value.toLowerCase()
   const data = searchData.value || []
-
-  const startsWithMatches: GetWebStocksSummaryResponse = []
-  const containsMatches: GetWebStocksSummaryResponse = []
-
-  data.forEach(item => {
-    const symbol = item.primaryMarket.symbol.toLowerCase()
-    const name = item.underlyingMarket.name.toLowerCase()
-
-    if (symbol.startsWith(query) || name.startsWith(query)) {
-      startsWithMatches.push(item)
-    } else if (symbol.includes(query) || name.includes(query)) {
-      containsMatches.push(item)
-    }
-  })
-
-  return [...startsWithMatches, ...containsMatches]
+  return fuzzySearchByKeys(
+    data,
+    ['primaryMarket.symbol', 'underlyingMarket.name'],
+    searchInput.value,
+  )
 })
 
 const showDropdown = ref(false)
