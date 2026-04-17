@@ -190,7 +190,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 10) {
+      if (fromUsdValue > 25) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
         canEarnReward = canEarn ? true : undefined
       }
@@ -205,8 +205,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const expectedToAmount = formatFloatingPointValue(
         formatUnits(
           currentQuote.value?.avgAmount ||
-            currentQuote.value?.startAmount ||
-            0n,
+          currentQuote.value?.startAmount ||
+          0n,
           toDecimals,
         ),
       ).value
@@ -227,8 +227,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fills: [],
         usdValue: fromTokenSelected.value.price
           ? (
-              parseFloat(fromAmount.value) * fromTokenSelected.value.price
-            ).toFixed(2)
+            parseFloat(fromAmount.value) * fromTokenSelected.value.price
+          ).toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
