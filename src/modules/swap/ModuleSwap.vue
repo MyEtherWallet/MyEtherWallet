@@ -753,6 +753,40 @@ const proceedWithSwap = async (quoteId: string) => {
         errorMsg: 'declined_by_user',
       })
       return
+    } else {
+      if (isDevMode) {
+        console.error('Error proceeding with swap:', e)
+      } else {
+        analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
+          ...analyticsPayload,
+          errorMsg: errorMessage,
+        })
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
+          extra: {
+            title: 'SWAP: Error proceeding with swap',
+            errorMessage,
+          },
+        })
+      }
+      if (
+        errorMessage.includes('rejected') ||
+        errorMessage.includes('denied') ||
+        errorMessage.includes('cancelled')
+      ) {
+        toastStore.addToastMessage({
+          type: ToastType.Info,
+          text: 'Transaction canceled by user',
+        })
+        return
+      }
+      generalError.value = errorMessage
+      toastStore.addToastMessage({
+        type: ToastType.Error,
+        text: 'Swap Failed',
+        textSecondary: errorMessage,
+        duration: 10000,
+      })
     }
 
     // Only real errors reach this point

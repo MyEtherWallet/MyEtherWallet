@@ -493,13 +493,16 @@ const confirmTransaction = async () => {
       text: t('send.toast.tx-send-failed'),
       textSecondary: errorMessage,
     })
-    captureException(e instanceof Error ? e : new Error(errorMessage || 'Unknown error'), {
-      ...SENTRY_MODULE_TAGS.SEND,
-      extra: {
-        title: 'Error sending transaction',
-        errorMessage,
+    captureException(
+      e instanceof Error ? e : new Error(errorMessage || 'Unknown error'),
+      {
+        ...SENTRY_MODULE_TAGS.SEND,
+        extra: {
+          title: 'Error sending transaction',
+          errorMessage,
+        },
       },
-    })
+    )
   }
 }
 
