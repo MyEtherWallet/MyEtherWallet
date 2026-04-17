@@ -44,6 +44,7 @@
               :tokens="parsedFromTokens"
               :show-balance="isWalletConnected"
               :is-pristine="isPristine"
+              sort-context="swap"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             />
           </div>
@@ -84,6 +85,7 @@
               :is-from-view="false"
               :network-name="selectedToChain?.name"
               :is-pristine="isPristine"
+              sort-context="swap"
               :class="
                 isSwapView &&
                 selectedChain?.name === selectedToChain?.name &&

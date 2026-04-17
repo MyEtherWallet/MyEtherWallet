@@ -23,6 +23,7 @@
 - store selected pair in swap and trade, and set it once user navigates back [#5335](https://github.com/MyEtherWallet/MyEtherWallet/pull/5335)
 - store chosen network on bridge [#5343](https://github.com/MyEtherWallet/MyEtherWallet/pull/5343)
 - fix error when watchlist tokens are cleared [#5336](https://github.com/MyEtherWallet/MyEtherWallet/pull/5336)
+- Add Amplitude tracking events for stock market, crypto market, trade, and swap sorting interactions [#5365](https://github.com/MyEtherWallet/MyEtherWallet/pull/5365)
 
 ### v7.0.2
 
