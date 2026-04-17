@@ -415,7 +415,7 @@
                   <app-base-button
                     v-if="getPosition(contract.market)"
                     size="small"
-                    @click.stop="$emit('openPosition', contract.market)"
+                    @click="$emit('openPosition', contract.market)"
                   >
                     Manage
                     {{
@@ -429,9 +429,7 @@
                       size="small"
                       class="min-w-[64px]"
                       theme="success"
-                      @click.stop="
-                        $emit('openPosition', contract.market, 'buy')
-                      "
+                      @click="$emit('openPosition', contract.market, 'buy')"
                     >
                       Long
                     </app-base-button>
@@ -439,9 +437,7 @@
                       size="small"
                       theme="error"
                       class="min-w-[64px]"
-                      @click.stop="
-                        $emit('openPosition', contract.market, 'sell')
-                      "
+                      @click="$emit('openPosition', contract.market, 'sell')"
                     >
                       Short
                     </app-base-button>
