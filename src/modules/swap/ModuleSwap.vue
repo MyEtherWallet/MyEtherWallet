@@ -289,7 +289,7 @@ import {
 } from '@/providers/types'
 import { ToastType } from '@/types/notification'
 import configs from '@/configs'
-import { isSignableWallet } from '@/utils/walletUtils'
+import { isSignableWallet, isUserRejectionError } from '@/utils/walletUtils'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
@@ -742,15 +742,17 @@ const proceedWithSwap = async (quoteId: string) => {
         : typeof e === 'string'
           ? e
           : t('swap.toast.tx-sign-failed')
-    if (errorMessage.includes('user rejected')) {
+
+    if (isUserRejectionError(e)) {
       toastStore.addToastMessage({
         type: ToastType.Info,
-        text: 'Swap canceled by user',
+        text: t('swap.toast.canceled-by-user'),
       })
       analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
         ...analyticsPayload,
         errorMsg: 'declined_by_user',
       })
+      return
     } else {
       if (isDevMode) {
         console.error('Error proceeding with swap:', e)
@@ -1313,6 +1315,7 @@ watch(
     }
 
     if (
+      swapLoaded.value &&
       !BigNumber(fromAmount.value).isNaN() &&
       !BigNumber(fromAmount.value).isZero() &&
       toTokenSelected.value

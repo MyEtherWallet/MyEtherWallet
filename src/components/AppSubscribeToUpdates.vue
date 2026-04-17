@@ -1,8 +1,11 @@
 <template>
   <div class="flex flex-col justify-center max-w-[490px] w-full">
+    <p class="text-s-16 text-info mb-4">
+      {{ $t('common.subscribe.cta') }}
+    </p>
     <app-input
       v-model="email"
-      placeholder="Enter your email"
+      :placeholder="$t('common.subscribe.email_placeholder')"
       type="email"
       :error-message="emailErrorMessage"
     />
@@ -13,7 +16,7 @@
       :is-loading="isLoading"
       is-required
     >
-      Subscribe to our newsletter
+      {{ $t('common.subscribe.button') }}
     </app-base-button>
   </div>
 </template>

@@ -22,6 +22,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { isUserRejectionError } from '@/utils/walletUtils'
 
 export const useConnectWallet = () => {
   const { t } = useI18n()
@@ -116,10 +117,7 @@ export const useConnectWallet = () => {
         })
         .catch(err => {
           let error = t('error_connecting')
-          if (
-            err.message &&
-            err.message.toLowerCase().includes('user rejected')
-          ) {
+          if (isUserRejectionError(err)) {
             error = t('common.error.user_canceled_request')
           }
           accessStore.setWeb3ConnectionError(error)
@@ -190,20 +188,15 @@ export const useConnectWallet = () => {
         })
         .catch(err => {
           let error = t('error_connecting')
-          if (
-            err.message &&
-            err.message.toLowerCase().includes('user rejected')
-          ) {
+          if (isUserRejectionError(err)) {
             error = t('common.error.user_canceled_request')
-          }
-          if (
+          } else if (
             err.message &&
             err.message.toLowerCase().includes('already pending')
           ) {
             error =
               'Request to connect already pending, please check your wallet extension'
-          }
-          if (
+          } else if (
             err.message &&
             err.message.toLowerCase().includes('unrecognized chain id')
           ) {
@@ -266,11 +259,14 @@ export const useConnectWallet = () => {
       .catch(err => {
         let error = t('error_connecting')
         let _type = ToastType.Warning
-        if (
-          err.message &&
-          err.message.toLowerCase().includes('user rejected')
-        ) {
+        if (isUserRejectionError(err)) {
           error = t('common.error.user_canceled_request')
+          _type = ToastType.Info
+        } else if (
+          err.message &&
+          err.message.toLowerCase().includes('proposal expired')
+        ) {
+          error = 'Connection timed out. Please try again.'
           _type = ToastType.Info
         }
         if (

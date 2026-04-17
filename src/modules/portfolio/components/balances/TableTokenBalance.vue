@@ -277,7 +277,11 @@
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
-              <div class="flex items-center gap-3">
+              <router-link
+                :to="getTokenRoute(token)"
+                class="flex items-center gap-3"
+                @click.stop="onTokenLinkClick(token)"
+              >
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
@@ -306,7 +310,7 @@
                     {{ getTokenName(token) }}
                   </p>
                 </div>
-              </div>
+              </router-link>
             </td>
             <!-- Market Cap -->
             <td
@@ -1091,19 +1095,28 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
 
-const goToTokenPage = (token: DisplayToken) => {
+const getTokenRoute = (token: DisplayToken) => {
   if (token.ondo !== undefined) {
-    router.push({
+    return {
       name: STOCK_INFO_ROUTE_NAMES.home,
       params: { symbol: token.ondo.primaryMarket.symbol },
-    })
-    return
+    }
   }
-  tokenInfoStore.setTokenInfo(token)
-  router.push({
+  return {
     name: TOKEN_INFO_ROUTE_NAMES.home,
     params: { tokenId: token.coinId || token.symbol },
-  })
+  }
+}
+
+const onTokenLinkClick = (token: DisplayToken) => {
+  if (token.ondo === undefined) {
+    tokenInfoStore.setTokenInfo(token)
+  }
+}
+
+const goToTokenPage = (token: DisplayToken) => {
+  onTokenLinkClick(token)
+  router.push(getTokenRoute(token))
 }
 
 const getWatchlistId = (token: DisplayToken): string => {
