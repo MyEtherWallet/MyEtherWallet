@@ -14,6 +14,9 @@ process.env.VITE_APP_VERSION = version
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    APP_VERSION: JSON.stringify(version),
+  },
   server: {
     port: 8080,
   },

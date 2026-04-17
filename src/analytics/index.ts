@@ -4,8 +4,7 @@ import { StoreConfigs } from '@/stores/configs'
 import type { AnalyticsState } from '@/stores/analyticsStore'
 import { captureException } from '@sentry/vue'
 
-const __TMP_VERSION__ = 'v7'
-const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
+const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${APP_VERSION}`
 
 // Check initial consent state from localStorage
 let consentToTrack: boolean = false
@@ -40,7 +39,7 @@ amplitude.init(__TMP_HASHED_VERSION__, {
     process.env.NODE_ENV === 'production'
       ? 'https://analytics-web-v7.mewwallet.dev/record'
       : 'https://analytics-web-development-v7.mewwallet.dev/record',
-  appVersion: __TMP_VERSION__,
+  appVersion: APP_VERSION,
   identityStorage: 'none',
   logLevel: Types.LogLevel.None,
   defaultTracking: {
