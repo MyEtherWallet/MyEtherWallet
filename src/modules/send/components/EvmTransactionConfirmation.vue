@@ -298,7 +298,9 @@ interface EvmTxType {
 
 const props = defineProps<EvmTxType>()
 const model = defineModel()
-const emit = defineEmits(['tx-sent'])
+const emit = defineEmits<{
+  'tx-sent': [txHash: string]
+}>()
 const chainsStore = useChainsStore()
 const tradeOrdersStore = useTradeOrdersStore()
 const { selectedChain } = storeToRefs(chainsStore)
@@ -420,7 +422,7 @@ const confirmTransaction = async () => {
         })
         openModal.value = false
         model.value = false
-        emit('tx-sent')
+        emit('tx-sent', hash)
       })
       .catch(e => {
         //TODO: implement error localization
