@@ -1,7 +1,7 @@
+import { BigNumber } from 'bignumber.js'
 /**
  * Common formatting utilities for the perps module.
  */
-
 export function formatUsd(val: string | number): string {
   const n = typeof val === 'number' ? val : parseFloat(val)
   if (isNaN(n)) return '$0.00'
@@ -64,6 +64,16 @@ export function pnlColor(val: string): string {
   if (n > 0) return 'text-success'
   if (n < 0) return 'text-error'
   return 'text-info'
+}
+
+export function marginRatioColor(val: string): string {
+  const n = new BigNumber(val)
+  const minthreshold = new BigNumber(0.9) // example threshold, adjust as needed
+  const maxThreshold = new BigNumber(0.95) // example threshold, adjust as needed
+
+  if (n.lt(minthreshold)) return 'text-black'
+  if (n.lt(maxThreshold)) return 'text-warning'
+  return 'text-error'
 }
 
 export function formatContractPrice(contract: {

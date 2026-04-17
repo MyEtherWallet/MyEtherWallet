@@ -260,6 +260,8 @@ import { mainnet } from 'viem/chains'
 import { type HexPrefixedString, WalletType } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 import type { EstimatesRequestBody, QuotesResponse } from '@/mew_api/types'
 import { isSignableWallet } from '@/utils/walletUtils'
 
@@ -282,9 +284,25 @@ const { accountId, triggerRefresh } = usePerpsAuth()
 const walletStore = useWalletStore()
 const { wallet } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
-const { selectedChain } = storeToRefs(chainsStore)
+const { selectedChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 const { gasPriceType: selectedFee } = storeToRefs(globalStore)
+const toastStore = useToastStore()
+
+watch(isOpen, (open) => {
+  if (!open) return
+  if (selectedChain.value?.name !== 'ETHEREUM') {
+    const ethChain = chains.value.find(c => c.name === 'ETHEREUM')
+    if (ethChain) {
+      globalStore.setSelectedNetwork('ETHEREUM')
+      toastStore.addToastMessage({
+        text: 'Network switched to Ethereum for deposits',
+        type: ToastType.Info,
+        duration: 3000,
+      })
+    }
+  }
+})
 
 const depositAddress = ref<string | null>(null)
 const loading = ref(false)
