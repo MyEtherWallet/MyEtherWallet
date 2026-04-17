@@ -47,12 +47,19 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
 import { ref, onMounted, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import configs from '@/configs'
+import { useGlobalStore } from '@/stores/globalStore'
+
+const globalStore = useGlobalStore()
+const { dismissWelcomeDialog } = globalStore
+const { welcomeDialogDismissed } = storeToRefs(globalStore)
 const openWelcomeDialog = ref(false)
 const emit = defineEmits<{
   (e: 'close-welcome-dialog'): void
 }>()
 onMounted(() => {
+  if (welcomeDialogDismissed.value) return
   setTimeout(() => {
     openWelcomeDialog.value = true
   }, 1000)
@@ -60,6 +67,7 @@ onMounted(() => {
 
 watch(openWelcomeDialog, newVal => {
   if (!newVal) {
+    dismissWelcomeDialog()
     emit('close-welcome-dialog')
   }
 })
