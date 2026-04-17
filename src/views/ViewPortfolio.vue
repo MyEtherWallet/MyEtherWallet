@@ -16,7 +16,7 @@
         isOpenSideMenu ? 'xl:grid-cols-2' : 'xl:grid-cols-3',
         'grid grid-cols-1 lg-max:grid-cols-3  2xl:grid-cols-3 gap-5 lg:mt-3',
       ]"
-      v-if="isLoadingBalances || hasBalances"
+      v-if="isWalletConnected && (isLoadingBalances || hasBalances)"
     >
       <portfolio-overview />
 

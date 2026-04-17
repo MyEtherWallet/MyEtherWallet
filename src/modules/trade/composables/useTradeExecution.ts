@@ -7,6 +7,7 @@ import { ToastType } from '@/types/notification'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import {
   analytics,
   TradeEvent,
@@ -121,6 +122,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         console.error('Error approving token:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error approving token',
             errorMessage,
@@ -188,7 +190,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 10) {
+      if (fromUsdValue > 25) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
         canEarnReward = canEarn ? true : undefined
       }
@@ -203,8 +205,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       const expectedToAmount = formatFloatingPointValue(
         formatUnits(
           currentQuote.value?.avgAmount ||
-            currentQuote.value?.startAmount ||
-            0n,
+          currentQuote.value?.startAmount ||
+          0n,
           toDecimals,
         ),
       ).value
@@ -225,8 +227,8 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         fills: [],
         usdValue: fromTokenSelected.value.price
           ? (
-              parseFloat(fromAmount.value) * fromTokenSelected.value.price
-            ).toFixed(2)
+            parseFloat(fromAmount.value) * fromTokenSelected.value.price
+          ).toFixed(2)
           : undefined,
         chainId,
         fromAddress: walletAddress.value!,
@@ -258,6 +260,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         console.error('Error submitting trade order:', e)
       } else {
         captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error submitting trade order',
             errorMessage,

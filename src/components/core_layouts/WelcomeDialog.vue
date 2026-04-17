@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="openWelcomeDialog"
-    class="max-w-screen xs:max-w-[500px] mx-auto !min-h-[300px] rounded-32"
+    class="max-w-screen xs:max-w-[500px] mx-auto !min-h-[300px] rounded-32 z-[9999]"
     title="Welcome to the new MEW Portfolio!"
   >
     <template #content>
@@ -47,12 +47,19 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
 import { ref, onMounted, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import configs from '@/configs'
+import { useGlobalStore } from '@/stores/globalStore'
+
+const globalStore = useGlobalStore()
+const { dismissWelcomeDialog } = globalStore
+const { welcomeDialogDismissed } = storeToRefs(globalStore)
 const openWelcomeDialog = ref(false)
 const emit = defineEmits<{
   (e: 'close-welcome-dialog'): void
 }>()
 onMounted(() => {
+  if (welcomeDialogDismissed.value) return
   setTimeout(() => {
     openWelcomeDialog.value = true
   }, 1000)
@@ -60,6 +67,7 @@ onMounted(() => {
 
 watch(openWelcomeDialog, newVal => {
   if (!newVal) {
+    dismissWelcomeDialog()
     emit('close-welcome-dialog')
   }
 })

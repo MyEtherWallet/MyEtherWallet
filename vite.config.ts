@@ -1,7 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
-import { readFileSync } from 'node:fs'
-const { version } = JSON.parse(readFileSync('./package.json', 'utf-8'))
+import { version } from './package.json'
 import vue from '@vitejs/plugin-vue'
 import nightwatchPlugin from 'vite-plugin-nightwatch'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -10,6 +9,8 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import wasm from 'vite-plugin-wasm'
 import tailwindcss from '@tailwindcss/vite'
+
+process.env.VITE_APP_VERSION = version
 
 // https://vite.dev/config/
 export default defineConfig({
