@@ -788,30 +788,6 @@ const proceedWithSwap = async (quoteId: string) => {
         duration: 10000,
       })
     }
-
-    // Only real errors reach this point
-    if (isDevMode) {
-      console.error('Error proceeding with swap:', e)
-    } else {
-      analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
-        ...analyticsPayload,
-        errorMsg: errorMessage,
-      })
-      captureException(e instanceof Error ? e : new Error(errorMessage), {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: Error proceeding with swap',
-          errorMessage,
-        },
-      })
-    }
-    generalError.value = errorMessage
-    toastStore.addToastMessage({
-      type: ToastType.Error,
-      text: t('swap.toast.failed'),
-      textSecondary: errorMessage,
-      duration: 10000,
-    })
   } finally {
     txProceeding.value = false
   }
