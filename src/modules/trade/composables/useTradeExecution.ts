@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { useToastStore } from '@/stores/toastStore'
@@ -17,6 +18,7 @@ import {
 } from '@/analytics'
 import Configs from '@/configs'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { isUserRejectionError } from '@/utils/walletUtils'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -49,6 +51,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
     needsApproval,
   } = options
 
+  const { t } = useI18n()
   const toastStore = useToastStore()
   const tradeOrdersStore = useTradeOrdersStore()
   const rewardsStore = useRewardsStore()
@@ -91,21 +94,14 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       needsApproval.value = false
 
       toastStore.addToastMessage({
-        text: 'Approval successful! ',
-        textSecondary: `You can now trade ${fromTokenSelected.value.symbol}.`,
+        text: t('trade.toast.approval-success'),
+        textSecondary: t('trade.toast.approval-success-secondary', { symbol: fromTokenSelected.value.symbol }),
         type: ToastType.Success,
       })
     } catch (e) {
-      const errorMessage = (e as any).message
-        ? (e as any).message.toLowerCase()
-        : (e as any).details
-          ? (e as any).details
-          : typeof e === 'string'
-            ? e
-            : 'Could not approve token'
-      if (errorMessage.includes('user rejected')) {
+      if (isUserRejectionError(e)) {
         toastStore.addToastMessage({
-          text: 'Approval cancelled by user',
+          text: t('common.error.user_canceled_request'),
           type: ToastType.Info,
         })
         analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
@@ -114,6 +110,15 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         })
         return
       }
+
+      const errorMessage = (e as any).message
+        ? (e as any).message.toLowerCase()
+        : (e as any).details
+          ? (e as any).details
+          : typeof e === 'string'
+            ? e
+            : t('trade.error.approval-failed')
+
       analytics.trackTradeEventError(TradeEventError.APPROVAL_ERROR, {
         ...getAnalyticsPayload(),
         errorMsg: errorMessage,
@@ -121,7 +126,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       if (isDevMode) {
         console.error('Error approving token:', e)
       } else {
-        captureException(e, {
+        captureException(e instanceof Error ? e : new Error(errorMessage), {
           ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error approving token',
@@ -131,7 +136,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       }
 
       toastStore.addToastMessage({
-        text: 'Could not approve token',
+        text: t('trade.error.approval-failed'),
         textSecondary: errorMessage,
         type: ToastType.Error,
       })
@@ -143,7 +148,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
   const openTradeModal = () => {
     if (!currentQuote.value) {
       toastStore.addToastMessage({
-        text: 'Please wait for quote to load',
+        text: t('trade.toast.quote-loading'),
       })
       return
     }
@@ -238,28 +243,30 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
         toTokenAddress: toTokenSelected.value.address,
       })
     } catch (e) {
+      if (isUserRejectionError(e)) {
+        analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
+          ...analyticsPayload,
+          errorMsg: 'declined_by_user',
+        })
+        toastStore.addToastMessage({
+          text: t('common.error.user_canceled_request'),
+          type: ToastType.Info,
+        })
+        return
+      }
+
       const errorMessage = (e as any).message
         ? (e as any).message.toLowerCase()
         : (e as any).details
           ? (e as any).details
           : typeof e === 'string'
             ? e
-            : 'Failed to submit trade order'
-      if (errorMessage.includes('user rejected')) {
-        analytics.trackTradeEventError(TradeEventError.SIGN_ERROR, {
-          ...analyticsPayload,
-          errorMsg: 'declined_by_user',
-        })
-        toastStore.addToastMessage({
-          text: 'Trade cancelled by user',
-          type: ToastType.Info,
-        })
-        return
-      }
+            : t('trade.error.submit-failed')
+
       if (isDevMode) {
         console.error('Error submitting trade order:', e)
       } else {
-        captureException(e, {
+        captureException(e instanceof Error ? e : new Error(errorMessage), {
           ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
             title: 'TRADE: Error submitting trade order',
@@ -273,7 +280,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       }
 
       toastStore.addToastMessage({
-        text: 'Failed to submit trade order',
+        text: t('trade.error.submit-failed'),
         textSecondary: errorMessage,
         type: ToastType.Error,
       })
