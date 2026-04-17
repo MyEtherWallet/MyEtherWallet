@@ -725,7 +725,7 @@ const proceedWithSwap = async (quoteId: string) => {
 
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 10) {
+      if (fromUsdValue > 25) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
         canEarnReward = canEarn ? true : undefined
       }
