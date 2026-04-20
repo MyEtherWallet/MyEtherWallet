@@ -39,6 +39,7 @@
     "from": "From",
     "to": "To",
     "amount": "Amount",
+    "max": "Max",
     "network_fee": "Network fee",
     "more_details": "More details",
     "nonce": "Nonce",
