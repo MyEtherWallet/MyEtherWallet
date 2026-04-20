@@ -31,6 +31,17 @@ export function formatPercent(val: number): string {
   return `${val >= 0 ? '+' : ''}${val.toFixed(2)}%`
 }
 
+export function formatPnlPercent(
+  pnl: string | number | undefined,
+  margin: string | number | undefined,
+): string {
+  const m = typeof margin === 'number' ? margin : parseFloat(margin ?? '')
+  const p = typeof pnl === 'number' ? pnl : parseFloat(pnl ?? '')
+  if (!m || isNaN(p)) return '0.00%'
+  if (p === 0) return '0.00%'
+  return formatPercent((p / m) * 100)
+}
+
 export function formatVolume(vol?: string): string {
   if (!vol) return '—'
   const num = parseFloat(vol)
@@ -55,8 +66,7 @@ export function formatDate(val: string): string {
 export function formatRoe(val: string): string {
   const n = parseFloat(val)
   if (isNaN(n)) return '0.00%'
-  const pct = n * 100
-  return `${pct >= 0 ? '' : ''}${pct.toFixed(2)}%`
+  return formatPercent(n * 100)
 }
 
 export function pnlColor(val: string): string {

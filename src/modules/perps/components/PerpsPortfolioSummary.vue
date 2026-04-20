@@ -82,7 +82,11 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import AppSheet from '@/components/AppSheet.vue'
 import PerpsBalanceDetailsDialog from './PerpsBalanceDetailsDialog.vue'
 import { usePerpsBalance } from '../composables/usePerpsAuth'
-import { pnlColor, marginRatioColor } from '../utils/formatters'
+import {
+  pnlColor,
+  marginRatioColor,
+  formatPnlPercent,
+} from '../utils/formatters'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 
 defineEmits<{
@@ -110,13 +114,9 @@ const usedMargin = computed(
 )
 const marginRatio = computed(() => balance.value?.marginRatio ?? '0')
 
-const pnlPercent = computed(() => {
-  const margin = parseFloat(marginBalance.value)
-  const pnl = parseFloat(unrealizedPnl.value)
-  if (!margin || isNaN(pnl)) return '0.00%'
-  const pct = (pnl / margin) * 100
-  return `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`
-})
+const pnlPercent = computed(() =>
+  formatPnlPercent(unrealizedPnl.value, balance.value?.marginBalance),
+)
 
 const pnlColorClass = computed(() => pnlColor(unrealizedPnl.value))
 const marginRatioColorClass = computed(() =>

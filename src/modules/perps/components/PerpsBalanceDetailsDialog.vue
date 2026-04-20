@@ -43,7 +43,12 @@ import {
   usePerpsBalance,
   usePerpsPortfolioSummary,
 } from '../composables/usePerpsAuth'
-import { pnlColor, marginRatioColor } from '../utils/formatters'
+import {
+  pnlColor,
+  marginRatioColor,
+  formatPnl,
+  formatPnlPercent,
+} from '../utils/formatters'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 
 const props = defineProps<{
@@ -77,12 +82,12 @@ const balanceRows = computed(() => [
   { label: 'Leverage', value: `${balance.value?.leverage ?? '0'}x` },
   {
     label: 'Unrealized PnL',
-    value: fmt(balance.value?.unrealizedPnl),
+    value: `${formatPnl(balance.value?.unrealizedPnl ?? '0')} (${formatPnlPercent(balance.value?.unrealizedPnl, balance.value?.marginBalance)})`,
     colorClass: pnlColor(balance.value?.unrealizedPnl ?? '0'),
   },
   {
     label: 'Realized PnL',
-    value: fmt(balance.value?.realizedPnl),
+    value: `${formatPnl(balance.value?.realizedPnl ?? '0')} (${formatPnlPercent(balance.value?.realizedPnl, balance.value?.marginBalance)})`,
     colorClass: pnlColor(balance.value?.realizedPnl ?? '0'),
   },
   {
