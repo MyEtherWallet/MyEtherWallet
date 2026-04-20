@@ -38,6 +38,7 @@ export function formatPnlPercent(
   const m = typeof margin === 'number' ? margin : parseFloat(margin ?? '')
   const p = typeof pnl === 'number' ? pnl : parseFloat(pnl ?? '')
   if (!m || isNaN(p)) return '0.00%'
+  if (p === 0) return '0.00%'
   return formatPercent((p / m) * 100)
 }
 
