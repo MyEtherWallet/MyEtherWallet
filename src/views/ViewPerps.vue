@@ -57,7 +57,7 @@
       <perps-positions-table @open-position="handleOpenPosition" />
     </template>
     <perps-market-list @open-position="handleOpenPosition" />
-    <perps-deposit-dialog :visible="showDeposit" @close="showDeposit = false" />
+    <perps-deposit-dialog v-model="showDeposit" />
     <perps-withdraw-dialog
       :visible="showWithdraw"
       @close="showWithdraw = false"

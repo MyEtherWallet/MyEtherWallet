@@ -1,12 +1,12 @@
 <template>
   <app-sheet :is-elivated="false" sheet-class="!p-4 sm:!p-6 lg:!w-[300px]">
-    <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between s">
+    <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between">
       <div>
         <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
-          Total account value
+          Perpetuals wallet balance
         </p>
         <p class="font-bold text-s-32 lg:text-s-40 mt-1">
-          {{ formatUsd(marginBalance) }}
+          {{ walletBalance }}
         </p>
         <p
           :class="pnlColorClass"
@@ -36,57 +36,79 @@
       <div class="flex flex-col gap-4 w-full max-w-[300px] lg:max-w-none">
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Perpetuals Value
+            Total Cross-Margin
           </p>
-          <p class="ml-2 font-medium">{{ formatUsd(walletBalance) }}</p>
-        </div>
-        <div class="flex items-center justify-between gap-4 w-full">
-          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Unrealized PnL
-          </p>
-          <p :class="pnlColorClass" class="ml-2 font-medium">
-            {{ formatPnl(unrealizedPnl) }}
-          </p>
+          <p class="ml-2 font-medium">{{ marginBalance }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
             Available Margin
           </p>
-          <p class="ml-2 font-medium">{{ formatUsd(availableMargin) }}</p>
+          <p class="ml-2 font-medium">{{ availableMargin }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Volume (30d)
+            Used Margin
           </p>
-          <p class="ml-2 font-medium">{{ formatUsd(volume30d) }}</p>
+          <p class="ml-2 font-medium">{{ usedMargin }}</p>
         </div>
+        <div class="flex items-center justify-between gap-4 w-full">
+          <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
+            Margin Ratio
+          </p>
+          <p :class="marginRatioColorClass" class="ml-2 font-medium">
+            {{ marginRatio }}
+          </p>
+        </div>
+        <app-btn-text
+          class="mt-1 text-s-13 text-primary mr-auto -ml-3"
+          @click="showBalanceDialog = true"
+        >
+          View More
+        </app-btn-text>
       </div>
     </div>
   </app-sheet>
+  <perps-balance-details-dialog
+    :visible="showBalanceDialog"
+    @close="showBalanceDialog = false"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import AppSheet from '@/components/AppSheet.vue'
-import {
-  usePerpsBalance,
-  usePerpsPortfolioSummary,
-} from '../composables/usePerpsAuth'
-import { formatUsd, formatPnl, pnlColor } from '../utils/formatters'
+import PerpsBalanceDetailsDialog from './PerpsBalanceDetailsDialog.vue'
+import { usePerpsBalance } from '../composables/usePerpsAuth'
+import { pnlColor, marginRatioColor } from '../utils/formatters'
+import { formatFiatValue } from '@/utils/numberFormatHelper'
 
 defineEmits<{
   deposit: []
   withdraw: []
 }>()
 
+const showBalanceDialog = ref(false)
+
 const { balance } = usePerpsBalance()
-const { summary } = usePerpsPortfolioSummary()
-const marginBalance = computed(() => balance.value?.marginBalance ?? '0')
+const marginBalance = computed(
+  () => `$${formatFiatValue(balance.value?.marginBalance ?? '0').value}`,
+)
 const unrealizedPnl = computed(() => balance.value?.unrealizedPnl ?? '0')
-const walletBalance = computed(() => balance.value?.walletBalance ?? '0')
-const availableMargin = computed(() => balance.value?.availableMargin ?? '0')
-const volume30d = computed(() => summary.value?.volume30d ?? '0')
+const walletBalance = computed(
+  () => `$${formatFiatValue(balance.value?.walletBalance ?? '0').value}`,
+)
+const availableMargin = computed(
+  () =>
+    `$${formatFiatValue(parseFloat(balance.value?.availableMargin ?? '0')).value}`,
+)
+const usedMargin = computed(
+  () =>
+    `$${formatFiatValue(parseFloat(balance.value?.usedMargin ?? '0')).value}`,
+)
+const marginRatio = computed(() => balance.value?.marginRatio ?? '0')
 
 const pnlPercent = computed(() => {
   const margin = parseFloat(marginBalance.value)
@@ -97,4 +119,7 @@ const pnlPercent = computed(() => {
 })
 
 const pnlColorClass = computed(() => pnlColor(unrealizedPnl.value))
+const marginRatioColorClass = computed(() =>
+  marginRatioColor(marginRatio.value),
+)
 </script>
