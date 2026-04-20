@@ -111,8 +111,6 @@
     "token_name": "Token Name",
     "token_symbol": "Token Symbol",
     "token_decimals": "Token Decimals",
-    "notify_me": "Notify me",
-    "enter_your_email": "Enter your email",
     "select_an_option": "Select an option",
     "show_password": "Show Password",
     "hide_password": "Hide Password",
@@ -123,7 +121,12 @@
       "name_min_length": "name must be at least 3 characters long",
       "name_already_exists": "name already exists"
     },
-    "and_tokens": "and {count} Tokens"
+    "and_tokens": "and {count} Tokens",
+    "subscribe": {
+      "cta": "Level up your skills with security tips, industry insights, news and more!",
+      "button": "Sign me up!",
+      "email_placeholder": "Enter your email"
+    }
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",

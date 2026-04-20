@@ -1,19 +1,22 @@
 <template>
   <div class="flex flex-col justify-center max-w-[490px] w-full">
+    <p class="text-s-16 text-info mb-4">
+      {{ $t('common.subscribe.cta') }}
+    </p>
     <app-input
       v-model="email"
-      :placeholder="$t('common.enter_your_email')"
+      :placeholder="$t('common.subscribe.email_placeholder')"
       type="email"
       :error-message="emailErrorMessage"
     />
     <app-base-button
       variant="primary"
-      class="max-w-[200px] mx-auto"
+      class="max-w-[300px] mx-auto"
       @click="subscribe"
       :is-loading="isLoading"
       is-required
     >
-      {{ $t('common.notify_me') }}
+      {{ $t('common.subscribe.button') }}
     </app-base-button>
   </div>
 </template>

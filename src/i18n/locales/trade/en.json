@@ -44,6 +44,15 @@
       "filled": "Filled",
       "cancelled": "Cancelled",
       "expired": "Expired"
+    },
+    "toast": {
+      "approval-success": "Approval successful!",
+      "approval-success-secondary": "You can now trade {symbol}.",
+      "quote-loading": "Please wait for quote to load"
+    },
+    "error": {
+      "approval-failed": "Could not approve token",
+      "submit-failed": "Failed to submit trade order"
     }
   }
 }
