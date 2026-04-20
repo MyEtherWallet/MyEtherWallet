@@ -52,13 +52,12 @@
         </app-select>
       </div>
 
-      <!-- Loading -->
-      <div
-        v-if="loading && positions.length === 0"
-        class="text-center py-8 text-info text-s-14"
-      >
-        Loading positions...
-      </div>
+      <!-- Positions loading -->
+      <app-table-skeleton
+        v-if="activeTab === 'positions' && loading && positions.length === 0"
+        :rows="3"
+        :columns="positionsSkeletonColumns"
+      />
 
       <!-- Positions tab -->
       <template v-else-if="activeTab === 'positions'">
@@ -252,12 +251,11 @@
             </template>
           </app-btn-group>
         </div>
-        <div
+        <app-table-skeleton
           v-if="ordersLoading && orders.length === 0"
-          class="text-center py-8 text-info text-s-14"
-        >
-          Loading orders...
-        </div>
+          :rows="5"
+          :columns="ordersSkeletonColumns"
+        />
         <div
           v-else-if="filteredOrders.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -444,12 +442,11 @@
 
       <!-- Fills tab -->
       <template v-else-if="activeTab === 'fills'">
-        <div
+        <app-table-skeleton
           v-if="fillsLoading && fills.length === 0"
-          class="text-center py-8 text-info text-s-14"
-        >
-          Loading fills...
-        </div>
+          :rows="3"
+          :columns="fillsSkeletonColumns"
+        />
         <div
           v-else-if="fills.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -571,12 +568,11 @@
 
       <!-- Deposits & Withdrawals tab -->
       <template v-else-if="activeTab === 'deposits'">
-        <div
+        <app-table-skeleton
           v-if="dwLoading && deposits.length === 0 && withdrawals.length === 0"
-          class="text-center py-8 text-info text-s-14"
-        >
-          Loading...
-        </div>
+          :rows="5"
+          :columns="dwSkeletonColumns"
+        />
         <div
           v-else-if="deposits.length === 0 && withdrawals.length === 0"
           class="text-center py-8 text-info text-s-14"
@@ -720,6 +716,9 @@ import AppSheet from '@/components/AppSheet.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppTableSkeleton, {
+  type SkeletonColumn,
+} from '@/components/AppTableSkeleton.vue'
 import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
@@ -746,6 +745,47 @@ const USDC_LOGO =
 defineEmits<{
   openPosition: [market: string]
 }>()
+
+const positionsSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Market' },
+  { header: 'Value', align: 'right' },
+  { header: 'uPnl', align: 'right', hidden: 'hidden xs:table-cell' },
+  { header: 'Entry Price', align: 'right', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Mark Price', align: 'right', hidden: 'hidden lg:table-cell' },
+  { header: 'Liq Price', align: 'right', hidden: 'hidden sm:table-cell' },
+  { header: 'Margin Used', align: 'right', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Total Funding', align: 'right', hidden: 'hidden 3xl:table-cell' },
+  { header: 'Actions', align: 'right' },
+]
+
+const fillsSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Market' },
+  { header: 'Direction', hidden: 'hidden lg:table-cell' },
+  { header: 'Time', hidden: 'hidden xs:table-cell' },
+  { header: 'Price', align: 'right' },
+  { header: 'Size', align: 'right', hidden: 'hidden sm:table-cell' },
+  { header: 'PnL', align: 'right', hidden: 'hidden md:table-cell' },
+]
+
+const ordersSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Market' },
+  { header: 'Side', hidden: 'hidden xl:table-cell', width: '100px' },
+  { header: 'Time', hidden: 'hidden xs:table-cell' },
+  { header: 'Status', hidden: 'hidden lg:table-cell' },
+  { header: 'Type', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Price', align: 'right' },
+  { header: 'Filled / Size', align: 'right', hidden: 'hidden sm:table-cell' },
+  { header: '', width: '48px' },
+]
+
+const dwSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Type', hidden: 'hidden xs:table-cell' },
+  { header: 'Asset' },
+  { header: 'Time', hidden: 'hidden sm:table-cell' },
+  { header: 'USD Value', align: 'right', hidden: 'hidden md:table-cell' },
+  { header: 'Amount', align: 'right' },
+  { header: 'Status', align: 'right', hidden: 'hidden xs:table-cell' },
+]
 
 const { positions, loading } = usePerpsPositions()
 

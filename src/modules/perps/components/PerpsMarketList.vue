@@ -57,9 +57,11 @@
       </div>
 
       <!-- Loading -->
-      <div v-if="contractsLoading" class="text-center py-8 text-info text-s-14">
-        Loading markets...
-      </div>
+      <app-table-skeleton
+        v-if="contractsLoading"
+        :rows="8"
+        :columns="marketSkeletonColumns"
+      />
 
       <!-- Error -->
       <div
@@ -489,6 +491,9 @@ import {
   ArrowLongDownIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/solid'
+import AppTableSkeleton, {
+  type SkeletonColumn,
+} from '@/components/AppTableSkeleton.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import TableSparkline from '@/components/TableSparkline.vue'
@@ -520,6 +525,16 @@ const { positions } = usePerpsPositions()
 function getPosition(market: string) {
   return positions.value.find(p => p.market === market) || null
 }
+
+const marketSkeletonColumns: SkeletonColumn[] = [
+  { header: '', hidden: 'hidden xs:table-cell xs:w-10' },
+  { header: 'Name' },
+  { header: 'Price', align: 'right' },
+  { header: '24H', align: 'right', hidden: 'hidden xs:table-cell' },
+  { header: 'Volume', align: 'right', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Market Cap', align: 'right', hidden: 'hidden md:table-cell' },
+  { header: '', align: 'right', hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-[240px]' },
+]
 
 const searchQuery = ref('')
 const watchlist = ref<Set<string>>(new Set())
