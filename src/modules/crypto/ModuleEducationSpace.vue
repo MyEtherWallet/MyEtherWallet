@@ -10,7 +10,7 @@
     <img
       src="@/assets/icons/mewtopia-dog.svg"
       class="w-[115px] absolute"
-      :alt="$t('crypto.mewtopia_dog')"
+      alt=""
       aria-hidden="true"
     />
     <div class="text-left pl-[35%] w-full">

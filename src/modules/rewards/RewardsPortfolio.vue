@@ -116,9 +116,7 @@
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
           :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[180px]']"
         >
-          {{ $t('rewards.reward_description_line_1') }}
-          <br class="hidden 2xl:flex" />
-          {{ $t('rewards.reward_description_line_2') }}
+          {{ $t('rewards.reward_description') }}
         </p>
       </div>
     </div>

@@ -48,7 +48,8 @@
                     v-if="chain.icon"
                     class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
                     :src="chain.icon"
-                    :alt="$t('select_chain.token_icon')"
+                    alt=""
+                    aria-hidden="true"
                   />
                   <div
                     v-else
@@ -87,7 +88,8 @@
                     v-if="chain.icon"
                     class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
                     :src="chain.icon"
-                    :alt="$t('select_chain.token_icon')"
+                    alt=""
+                    aria-hidden="true"
                   />
                   <div
                     v-else

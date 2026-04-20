@@ -2,11 +2,11 @@
   "create_wallet": {
     "title": "Create Wallet",
     "subtitle": "MEW is available on mobile and on desktop in your browser.",
-    "back_to_connect_options": "back to connect options",
+    "back_to_connect_options": "Back to connect options",
     "buy_hardware_wallet_title": "Buy a Hardware Wallet",
     "create_mnemonic_wallet_title": "Create a Mnemonic Wallet",
     "recommended": "Recommended",
-    "not_recommended": "not recommended",
+    "not_recommended": "Not recommended",
     "mew_mobile_app": "MEW Mobile App",
     "ratings_count": "13k+ ratings",
     "scan_to_download": "Scan to download",

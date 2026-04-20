@@ -17,6 +17,7 @@
         <a
           href="https://www.myetherwallet.com/privacy-policy"
           target="_blank"
+          rel="noopener noreferrer"
           class="text-primary"
           >{{ $t('gdpr.privacy_policy') }}</a
         >.

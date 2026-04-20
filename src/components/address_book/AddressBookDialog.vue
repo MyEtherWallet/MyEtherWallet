@@ -38,7 +38,7 @@
                 <app-search-input
                   v-model="searchInput"
                   class="grow"
-                  :placeholder="$t('common.search_by_name')"
+                  :placeholder="$t('common.search_by_name_or_address')"
                   bg-class="bg-surface"
                 />
                 <app-base-button
@@ -143,7 +143,7 @@
  *
  */
 import AddAddress from './AddAddress.vue'
-import { ref, computed, type PropType } from 'vue'
+import { ref, computed, watch, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppBaseButton from '../AppBaseButton.vue'
@@ -200,6 +200,11 @@ const addressList = computed<AddressListItem[]>(() => [
 ])
 
 const selectedListItem = ref<AddressListItem>(addressList.value[0])
+
+watch(addressList, newList => {
+  const refreshed = newList.find(item => item.id === selectedListItem.value.id)
+  if (refreshed) selectedListItem.value = refreshed
+})
 
 /**------------------------
  * Items

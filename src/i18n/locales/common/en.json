@@ -77,6 +77,7 @@
     "history": "History",
     "share": "Share",
     "search_by_name": "Search by Name",
+    "search_by_name_or_address": "Search by name or address",
     "previous_page": "previous page",
     "next_page": "next page",
     "action_menu": "action menu",
@@ -231,13 +232,12 @@
     "recent_transactions": "Recent Transactions",
     "chain_addresses": "{chain} Addresses",
     "non_compatible": "Non-{chain} Compatible Addresses",
-    "no_saved_addresses": "You do not have any saved addresses that are compatible with this network.",
+    "no_saved_addresses": "You do not have any saved addresses.",
     "incompatible_addresses": "Incompatible Addresses"
   },
   "select_chain": {
     "title": "Select Network",
     "search_placeholder": "Search by Name",
-    "token_icon": "token icon",
     "incompatible_tooltip": "To access these networks, use a different wallet or install the Enkrypt browser extension",
     "incompatible_title": "Networks incompatible with your wallet"
   }

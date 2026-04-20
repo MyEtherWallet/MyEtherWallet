@@ -7,7 +7,7 @@
     </p>
     <p class="text-s-16 mt-1 mb-10 text-center">
       {{ $t('coming_soon_page.access_staked') }}
-      <a :href="configs.VINATGE" target="_blank" class="underline group"
+      <a :href="configs.VINATGE" target="_blank" rel="noopener noreferrer" class="underline group"
         >{{ $t('coming_soon_page.previous_version') }}
         <arrow-long-right-icon
           class="w-5 h-5 text-black inline-block group-hover:translate-x-1 transition-transform"

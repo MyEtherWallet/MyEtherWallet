@@ -44,7 +44,7 @@
           <div class="flex justify-between items-center mx-3 gap-6">
             <div>
               <p class="text-s-28 font-semibold mb-2">
-                {{ $t('paper_wallet.my_address', { chain: selectedChain?.nameLong }) }}
+                {{ $t('paper_wallet.my_address', { chain: selectedChain?.nameLong || selectedChain?.name || '' }) }}
               </p>
               <div class="flex items-center justify-start mb-3">
                 <app-blockie

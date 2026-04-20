@@ -35,7 +35,7 @@
               {{ truncateHash(snapshot.toAddress) }}
             </span>
 
-            {{ t('swap.on') }} {{ toTokenChain }}
+            {{ t('swap.initiated.on-chain', { chain: toTokenChain }) }}
           </div>
 
           <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">

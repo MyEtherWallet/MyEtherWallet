@@ -19,10 +19,10 @@
     "filled_in_tx": "Filled in tx",
     "est": "est:",
     "order_status": {
-      "pending": "pending",
-      "filled": "filled",
-      "cancelled": "cancelled",
-      "expired": "expired"
+      "pending": "Pending",
+      "filled": "Filled",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
     },
     "pin_to_keep_open": "Pin to keep open",
     "unpin": "Unpin",

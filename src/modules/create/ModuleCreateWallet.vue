@@ -246,7 +246,7 @@
               <!-- Hardware -->
               <button
                 type="button"
-                :label="$t('create_wallet.buy_hardware_wallet')"
+                :aria-label="$t('create_wallet.buy_hardware_wallet')"
                 class="flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('buy')"
               >
@@ -278,7 +278,7 @@
               <!-- Software -->
               <button
                 type="button"
-                :label="$t('create_wallet.create_software_wallet')"
+                :aria-label="$t('create_wallet.create_software_wallet')"
                 class="relative flex flex-col lg:flex-row text-left gap-4 lg:gap-6 p-6 rounded-3xl bg-white shadow-button focus:ring-2 focus:ring-primary focus:border-primary transition-all cursor-pointer group outline-none w-full h-full"
                 @click="setView('mnemonic')"
               >

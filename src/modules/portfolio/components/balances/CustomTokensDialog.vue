@@ -106,7 +106,7 @@
           class="max-w-[340px] text-center mb-2"
         >
           <p class="text-s-16 text-black leading-relaxed">
-            {{ t('portfolio.custom_token.delete_confirm', { name: selectedToken?.name }) }}
+            {{ t('portfolio.custom_token.delete_confirm', { name: selectedToken?.name ?? '' }) }}
           </p>
         </div>
         <app-base-button

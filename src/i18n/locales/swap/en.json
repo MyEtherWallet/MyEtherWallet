@@ -49,6 +49,7 @@
       "failed": "Failed",
       "from-chain": "from {chain}",
       "to-chain": "to {chain}",
+      "on-chain": "on {chain}",
       "close-window": "You can close this window and",
       "track-progress": "Track progress in notifications",
       "check-explorer": "or check block explorer"
@@ -66,7 +67,6 @@
       "offers": "Offer | {count} other offers",
       "offer_from": "Offer from { provider }"
     },
-    "on": "on",
     "for": "for",
     "offer": "Offer"
   }

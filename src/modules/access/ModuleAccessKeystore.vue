@@ -41,7 +41,7 @@
               </div>
               <img
                 src="@/assets/images/access/keystore-file.jpg"
-                alt="Keystore File"
+                :alt="$t('access_wallet_keystore.keystore_file_alt')"
                 class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
                 width="300"
                 height="285"
