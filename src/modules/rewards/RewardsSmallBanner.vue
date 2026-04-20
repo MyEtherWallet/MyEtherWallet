@@ -4,9 +4,7 @@
       class="rewards-banner-bg flex items-center justify-between gap-1 rounded-full px-2 py-2 cursor-pointer text-[10px] mb-3 md:-mx-1"
       @click="onLearnMore"
     >
-      <p class="font-medium">
-        First 10 swaps or trades each hour over $25 get $5 USDC
-      </p>
+      <p class="font-medium">First 500 swaps or trades over $25 get $5 USDC</p>
       <button class="font-bold underline whitespace-nowrap hoverOpacity">
         Learn More
       </button>

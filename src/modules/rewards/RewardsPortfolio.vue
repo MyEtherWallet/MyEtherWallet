@@ -122,8 +122,7 @@
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
           :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[180px]']"
         >
-          First 10 swaps or trades on Ethereum each hour
-          <br class="hidden 2xl:flex" />
+          First 500 swaps in the next 72 hours <br class="hidden 2xl:flex" />
           over $25 get $5 USDC
         </p>
       </div>
@@ -137,7 +136,7 @@
       <div
         class="text-[10px] font-light text-info tracking-sp-06 uppercase text-center"
       >
-        {{ rewardsLeft }} rewards left this hour
+        {{ rewardsLeft }} rewards left
         <span class="mx-1">·</span>
         Resets in {{ timeUntilReset }}
       </div>
