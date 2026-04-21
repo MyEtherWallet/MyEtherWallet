@@ -28,8 +28,8 @@
             Earn $5 USDC on Every Eligible Swap
           </h3>
           <p class="text-s-14 text-info mt-3 leading-p-160">
-            Complete a swap or trade on Ethereum over $25 and receive $5 USDC —
-            available to the first 500 unique users.
+            Complete a swap or trade on Ethereum over $50 and receive $5 USDC —
+            available to the first 10 unique users each hour.
           </p>
 
           <!-- How It Works -->
@@ -200,24 +200,28 @@ watch(isOpenModel, val => {
 const howItWorks = [
   {
     icon: 'swap',
-    text: 'Make a swap or trade of $25 or more on the Ethereum network',
+    text: 'Make a swap or trade of $50 or more on the Ethereum network',
   },
   {
     icon: 'currency-dollar',
-    text: 'The first 500 eligible swaps or trades get $5 USDC',
+    text: 'The first 10 eligible swaps or trades every hour get $5 USDC',
   },
   {
     icon: 'gift',
-    text: 'One reward per wallet per 72 hour period, sent directly to your wallet',
+    text: 'One reward per wallet per campaign period, sent directly to your wallet',
   },
 ]
 
 const availability = [
   {
     icon: 'clock',
-    text: 'Limited to 500 rewards per 72 hour period (No Bots!)',
+    text: 'Limited to 10 rewards per hour (No Bots!)',
   },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
+  {
+    icon: 'calendar',
+    text: 'If rewards run out, try again the next hour. Campaign resets in 7 days, April 28 5pm PST',
+  },
   {
     icon: 'user',
     text: 'Minimum of 0.001 ETH balance required prior to March 31st, 2026',

@@ -164,7 +164,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** User Rewards */
   const todaysReward = computed(() => {
     const reward = rewards.value[0]
-    if (reward && isRewardFromToday(reward)) return reward
+    if (reward && isRewardEarnedDuringCampaign(reward)) return reward
     return null
   })
   const hasRewards = computed(() => rewards.value.length > 0)
@@ -197,15 +197,12 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** Poll rewards when eligible until today's reward is found */
   let rewardsPollInterval: ReturnType<typeof setInterval> | null = null
 
-  const isRewardFromToday = (reward: RewardItem): boolean => {
+  const isRewardEarnedDuringCampaign = (reward: RewardItem): boolean => {
+    const CAMPAIGN_START = new Date('2026-04-22T00:00:00.000Z')
+    const CAMPAIGN_END = new Date('2026-04-29T00:00:00.000Z')
     if (!reward.rewardBroadcastAt) return false
     const rewardDate = new Date(reward.rewardBroadcastAt)
-    const now = new Date()
-    return (
-      rewardDate.getUTCFullYear() === now.getUTCFullYear() &&
-      rewardDate.getUTCMonth() === now.getUTCMonth() &&
-      rewardDate.getUTCDate() === now.getUTCDate()
-    )
+    return rewardDate >= CAMPAIGN_START && rewardDate < CAMPAIGN_END
   }
 
   const stopRewardsPoll = () => {
@@ -219,14 +216,14 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     stopRewardsPoll()
     rewardsPollInterval = setInterval(async () => {
       await fetchUserRewards()
-      if (rewards.value[0] && isRewardFromToday(rewards.value[0])) {
+      if (rewards.value[0] && isRewardEarnedDuringCampaign(rewards.value[0])) {
         setEarnedPotentialReward(false)
         analytics.setUserProperties({ canClaimRewards: false })
         analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED)
       }
       if (
         rewards.value[0] &&
-        isRewardFromToday(rewards.value[0]) &&
+        isRewardEarnedDuringCampaign(rewards.value[0]) &&
         rewards.value[0].rewardStatus === 'SUCCESS'
       ) {
         const toastStore = useToastStore()
@@ -246,7 +243,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         // Check immediately if we already have today's reward
         if (
           rewards.value[0] &&
-          isRewardFromToday(rewards.value[0]) &&
+          isRewardEarnedDuringCampaign(rewards.value[0]) &&
           rewards.value[0].rewardStatus === 'SUCCESS'
         )
           return
@@ -311,6 +308,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     canClaimReward,
     isLoading,
     hadInitialLoad,
-    isRewardFromToday,
+    isRewardEarnedDuringCampaign,
   }
 })

@@ -14,7 +14,7 @@ import { useToastStore } from './toastStore'
 import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
-import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
+import { checkAddressRestriction, isTradingRestricted } from '@/modules/trade/providers/ondoHelpers'
 import {
   analytics,
   WalletStatus,
@@ -50,6 +50,8 @@ export const useWalletStore = defineStore('walletStore', () => {
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
+    const tradingRestricted = await isTradingRestricted()
+    userProperties.canTrade = tradingRestricted && !isRestricted
     if (!isRestricted) {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true
