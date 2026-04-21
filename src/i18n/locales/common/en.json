@@ -122,7 +122,7 @@
       "name_min_length": "name must be at least 3 characters long",
       "name_already_exists": "name already exists"
     },
-    "and_tokens": "and {count} Tokens",
+    "and_tokens": "and 1 token | and {count} tokens",
     "subscribe": {
       "cta": "Level up your skills with security tips, industry insights, news and more!",
       "button": "Sign me up!",

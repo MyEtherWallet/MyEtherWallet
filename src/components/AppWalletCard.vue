@@ -124,7 +124,7 @@
               {{ formattedBalance }} {{ safeMainTokenBalance?.symbol || '' }}
             </p>
             <p class="text-s-12 leading-p-150">
-              {{ t('common.and_tokens', { count: tokens.length }) }}
+              {{ t('common.and_tokens', tokens.length) }}
             </p>
           </div>
           <div
