@@ -81,6 +81,7 @@
     "share_on_reddit": "Share on Reddit",
     "copy_link": "Copy link",
     "copied": "Copied!",
+    "share_message": "Check out {ticker} {price} on MyEtherWallet",
     "search_by_name": "Search by Name",
     "search_by_name_or_address": "Search by name or address",
     "previous_page": "previous page",
