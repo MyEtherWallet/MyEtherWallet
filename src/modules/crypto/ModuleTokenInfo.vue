@@ -20,7 +20,12 @@
               <ul class="px-2 text-s-14">
                 <li
                   class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
-                  @click="shareOn('x'); toggleMenu()"
+                  @click="
+                    () => {
+                      shareOn('x')
+                      toggleMenu()
+                    }
+                  "
                 >
                   <svg
                     class="w-5 h-5 shrink-0"
@@ -35,7 +40,12 @@
                 </li>
                 <li
                   class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
-                  @click="shareOn('telegram'); toggleMenu()"
+                  @click="
+                    () => {
+                      shareOn('telegram')
+                      toggleMenu()
+                    }
+                  "
                 >
                   <svg
                     class="w-5 h-5 shrink-0"
@@ -50,7 +60,12 @@
                 </li>
                 <li
                   class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
-                  @click="shareOn('reddit'); toggleMenu()"
+                  @click="
+                    () => {
+                      shareOn('reddit')
+                      toggleMenu()
+                    }
+                  "
                 >
                   <svg
                     class="w-5 h-5 shrink-0"
@@ -65,7 +80,12 @@
                 </li>
                 <li
                   class="text-black p-2 rounded-8 hoverNoBG cursor-pointer flex items-center gap-2"
-                  @click="copyShareLink(); toggleMenu()"
+                  @click="
+                    () => {
+                      copyShareLink()
+                      toggleMenu()
+                    }
+                  "
                 >
                   <check-icon
                     v-if="linkCopied"
@@ -572,7 +592,7 @@ const shareText = computed(() => {
 
 const shareUrls: Record<string, (url: string, text: string) => string> = {
   x: (url, text) =>
-    `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+    `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
   telegram: (url, text) =>
     `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
   reddit: (url, text) =>
@@ -581,7 +601,11 @@ const shareUrls: Record<string, (url: string, text: string) => string> = {
 
 const shareOn = (platform: 'x' | 'telegram' | 'reddit') => {
   const url = window.location.href
-  window.open(shareUrls[platform](url, shareText.value), '_blank', 'noopener,noreferrer')
+  window.open(
+    shareUrls[platform](url, shareText.value),
+    '_blank',
+    'noopener,noreferrer',
+  )
 }
 
 const copyShareLink = async () => {
