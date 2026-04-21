@@ -60,7 +60,12 @@
     "not_enough_balance_to_cover_fee": "Not enough {symbol} to cover network fee.",
     "buy_more": "Buy more {symbol}",
     "allocation": "Allocation",
-    "retry": "Retry"
+    "retry": "Retry",
+    "subscribe": {
+      "cta": "Level up your skills with security tips, industry insights, news and more!",
+      "button": "Sign me up!",
+      "email_placeholder": "Enter your email"
+    }
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",

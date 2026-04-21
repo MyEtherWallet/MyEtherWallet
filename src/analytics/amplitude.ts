@@ -33,6 +33,20 @@ import type {
   ClickTokenTradeEvent,
   RewardsEvent,
   RewardsPayload,
+  StockMarketEvent,
+  StockMarketFilterPayload,
+  StockMarketSearchPayload,
+  StockMarketClickStockPayload,
+  StockMarketClickSortPayload,
+  CryptoMarketEvent,
+  CryptoMarketFilterPayload,
+  CryptoMarketSearchPayload,
+  CryptoMarketClickTokenPayload,
+  CryptoMarketClickSortPayload,
+  CryptoMarketSelectNetworkPayload,
+  TradeClickSortEvent,
+  SwapClickSortEvent,
+  ClickSortPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -493,6 +507,95 @@ export class Analytics {
   readonly trackRewardsEvent = (
     event: RewardsEvent,
     payload?: RewardsPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // STOCK MARKET
+  // =============================================================================
+
+  readonly trackStockMarketFilterEvent = (
+    event: typeof StockMarketEvent.SELECTED_FILTER,
+    payload: StockMarketFilterPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackStockMarketSearchEvent = (
+    event: typeof StockMarketEvent.SEARCH_STOCK,
+    payload: StockMarketSearchPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackStockMarketClickStockEvent = (
+    event: typeof StockMarketEvent.CLICK_STOCK,
+    payload: StockMarketClickStockPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackStockMarketClickSortEvent = (
+    event: typeof StockMarketEvent.CLICK_SORT,
+    payload: StockMarketClickSortPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // CRYPTO MARKET
+  // =============================================================================
+
+  readonly trackCryptoMarketFilterEvent = (
+    event: typeof CryptoMarketEvent.SELECTED_FILTER,
+    payload: CryptoMarketFilterPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackCryptoMarketSearchEvent = (
+    event: typeof CryptoMarketEvent.SEARCH_TOKEN,
+    payload: CryptoMarketSearchPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackCryptoMarketClickTokenEvent = (
+    event: typeof CryptoMarketEvent.CLICK_TOKEN,
+    payload: CryptoMarketClickTokenPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackCryptoMarketClickSortEvent = (
+    event: typeof CryptoMarketEvent.CLICK_SORT,
+    payload: CryptoMarketClickSortPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackCryptoMarketSelectNetworkEvent = (
+    event: typeof CryptoMarketEvent.SELECT_NETWORK,
+    payload: CryptoMarketSelectNetworkPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // TRADE / SWAP SORT
+  // =============================================================================
+
+  readonly trackTradeClickSortEvent = (
+    event: typeof TradeClickSortEvent,
+    payload: ClickSortPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackSwapClickSortEvent = (
+    event: typeof SwapClickSortEvent,
+    payload: ClickSortPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

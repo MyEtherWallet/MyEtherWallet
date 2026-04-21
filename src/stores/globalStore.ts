@@ -39,11 +39,24 @@ export const useGlobalStore = defineStore('global', () => {
   })
   const gasPriceType = ref<FeePriority>('REGULAR') // default gas price type
 
+  /**--------------------
+   * WELCOME DIALOG
+   --------------------*/
+  const welcomeDialogDismissed = useLocalStorage<boolean>(
+    'mew-welcome-dialog-dismissed',
+    false,
+  )
+  const dismissWelcomeDialog = () => {
+    welcomeDialogDismissed.value = true
+  }
+
   return {
     isEIP1559SupportedNetwork,
     eip1559,
     gasPriceType,
     selectedNetwork,
     setSelectedNetwork,
+    welcomeDialogDismissed,
+    dismissWelcomeDialog,
   }
 })

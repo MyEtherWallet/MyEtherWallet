@@ -24,7 +24,7 @@ const fetchRewards = async <T>(url: string): Promise<T> => {
     },
   })
   if (!response.ok) {
-    const error = await response.json()
+    const error = await response.json().catch(() => ({}))
     throw new Error(error.message || 'Rewards API fetch failed')
   }
   return (await response.json()) as T
@@ -102,6 +102,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       await fetchPool()
       if (Number(rewardsLeft.value) <= 0) {
         stopPoolPoll()
+        setTimeout(() => fetchEligibility(), 20000)
       }
     }, 5000)
   }
@@ -252,6 +253,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         startRewardsPoll()
       } else {
         stopRewardsPoll()
+        setEarnedPotentialReward(false)
       }
     },
   )
