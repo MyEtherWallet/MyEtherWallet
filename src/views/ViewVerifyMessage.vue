@@ -32,7 +32,7 @@
               signingAddress !== '' &&
               message !== '' &&
               signature !== '' &&
-              verifyMessageDesc !== ''
+              verifyStatusKey !== ''
             "
             class="p-5 rounded-20 border text-s-14 transition-all"
             :class="
@@ -41,14 +41,24 @@
                 : 'border-error/20 text-error bg-error/5'
             "
           >
-            <div class="flex items-center gap-3">
+            <div class="flex items-start gap-3">
               <div
-                class="w-2 h-2 rounded-full shrink-0"
+                class="w-2 h-2 mt-2 rounded-full shrink-0"
                 :class="verified ? 'bg-success' : 'bg-error'"
               ></div>
-              <p class="font-medium leading-relaxed">
-                {{ verifyMessageDesc }}
-              </p>
+              <i18n-t
+                :keypath="verifyStatusKey"
+                tag="p"
+                class="font-medium leading-relaxed break-words"
+              >
+                <template #message>
+                  <code class="break-all">{{ message }}</code>
+                </template>
+                <template #address>
+                  <code class="break-all">{{ signingAddress }}</code>
+                </template>
+                <template #chain>{{ selectedChain?.name ?? '' }}</template>
+              </i18n-t>
             </div>
           </div>
 
@@ -79,9 +89,6 @@ import { useAddressInput } from '@/composables/useAddressInput'
 import { storeToRefs } from 'pinia'
 import verifier from '@/utils/verifySignature'
 import { hexToString } from 'viem'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 interface VerifierObj {
   [key: string]: (params: {
@@ -99,7 +106,7 @@ const message = ref('')
 const verifying = ref(false)
 const signature = ref('')
 const verified = ref(false)
-const verifyMessageDesc = ref('')
+const verifyStatusKey = ref('')
 const {
   adrInput: signingAddress,
   resolvedAddress,
@@ -121,7 +128,7 @@ watch(
   [message, signature, signingAddress],
   ([newMessage, newSignature, newSigningAddress]) => {
     verified.value = false
-    verifyMessageDesc.value = ''
+    verifyStatusKey.value = ''
     const _messageJson = possibleJsonParse(newMessage)
       ? possibleJsonParse(newMessage)
       : possibleJsonParse(newSignature)
@@ -158,12 +165,12 @@ const verifyMessage = async () => {
         signature: signature.value,
       })
       if (!verified.value) throw new Error('Verification failed')
-      verifyMessageDesc.value = t('sign_message.message_signed_by', { message: message.value, address: signingAddress.value })
+      verifyStatusKey.value = 'sign_message.message_signed_by'
     } catch {
-      verifyMessageDesc.value = t('sign_message.message_not_signed_by', { message: message.value, address: signingAddress.value })
+      verifyStatusKey.value = 'sign_message.message_not_signed_by'
     }
   } else {
-    verifyMessageDesc.value = t('sign_message.verify_not_supported', { chain: selectedChain.value?.name })
+    verifyStatusKey.value = 'sign_message.verify_not_supported'
   }
   verifying.value = false
 }
@@ -180,7 +187,7 @@ const canVerifyMessage = computed(() => {
 
 watch([message.value, signingAddress.value, signature.value], () => {
   // reset fields when chain changes
-  verifyMessageDesc.value = ''
+  verifyStatusKey.value = ''
   verified.value = false
 })
 </script>

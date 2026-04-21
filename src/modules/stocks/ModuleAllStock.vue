@@ -451,7 +451,12 @@
             class="!text-s-12 xs:!text-s-14 text-info order-2 xs:order-1 mb-4 xs:mb-0"
             :class="isLoading ? 'invisible' : 'visible'"
           >
-            {{ getCurrentViewableItemsIndex }} {{ $t('stocks.of') }} {{ totalTokenCount }} {{ $t('stocks.results') }}
+            {{
+              $t('stocks.results_count', {
+                current: getCurrentViewableItemsIndex,
+                total: totalTokenCount,
+              })
+            }}
           </div>
           <div class="flex items-center gap-4 order-1 xs:order-2 mb-2 xs:mb-0">
             <app-btn-icon
@@ -462,9 +467,9 @@
               <chevron-left-icon class="w-4 h-4" />
             </app-btn-icon>
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
-              <span class="text-black tabular-nums">{{ page }}</span>
-              <span class="text-info">{{ $t('stocks.of') }}</span>
-              <span class="text-info tabular-nums">{{ totalPages }}</span>
+              <span class="text-info">
+                {{ $t('stocks.page_of', { current: page, total: totalPages }) }}
+              </span>
             </div>
             <app-btn-icon
               :disabled="!isLoading && page >= totalPages"
@@ -969,7 +974,7 @@ watch(
 )
 
 watch(
-  () => selectedCryptoFilter.value,
+  () => selectedCryptoFilter.value.value,
   () => {
     analytics.trackStockMarketFilterEvent(StockMarketEvent.SELECTED_FILTER, {
       value: selectedCryptoFilter.value.value,
@@ -979,7 +984,7 @@ watch(
 
 // Reset page to 1 when filter or items per page changes
 watch(
-  () => [selectedCryptoFilter.value, shownItems.value],
+  () => [selectedCryptoFilter.value.value, shownItems.value],
   () => {
     page.value = 1
   },
@@ -992,7 +997,7 @@ const prevWatchValues = ref({
   shownItems: shownItems.value,
   headerSort: headerSort.value,
   tableDirection: tableDirection.value,
-  cryptoFilter: selectedCryptoFilter.value,
+  cryptoFilter: selectedCryptoFilter.value.value,
 })
 
 watch(
@@ -1002,7 +1007,7 @@ watch(
     shownItems.value,
     headerSort.value,
     tableDirection.value,
-    selectedCryptoFilter.value,
+    selectedCryptoFilter.value.value,
   ],
   () => {
     const prev = prevWatchValues.value
@@ -1010,7 +1015,7 @@ watch(
       prev.chain === selectedChainFilter.value &&
       prev.page === page.value &&
       prev.shownItems === shownItems.value &&
-      prev.cryptoFilter === selectedCryptoFilter.value &&
+      prev.cryptoFilter === selectedCryptoFilter.value.value &&
       (prev.headerSort !== headerSort.value ||
         prev.tableDirection !== tableDirection.value)
 
@@ -1021,7 +1026,7 @@ watch(
       shownItems: shownItems.value,
       headerSort: headerSort.value,
       tableDirection: tableDirection.value,
-      cryptoFilter: selectedCryptoFilter.value,
+      cryptoFilter: selectedCryptoFilter.value.value,
     }
 
     // If on watchlist and only sort changed, just re-sort existing data

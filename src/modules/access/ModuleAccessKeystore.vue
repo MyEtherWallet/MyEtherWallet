@@ -129,8 +129,11 @@ const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
  * Steps
  -------------------------*/
 const activeStep = ref(0)
-const steps = [t('access_wallet_keystore.upload_keystore'), t('access_wallet_keystore.enter_password')]
-const stepDescription: StepDescription[] = [
+const steps = computed(() => [
+  t('access_wallet_keystore.upload_keystore'),
+  t('access_wallet_keystore.enter_password'),
+])
+const stepDescription = computed<StepDescription[]>(() => [
   {
     title: t('access_wallet_keystore.select_keystore_file_title'),
     description: t('access_wallet_keystore.select_keystore_file_description'),
@@ -139,7 +142,7 @@ const stepDescription: StepDescription[] = [
     title: t('access_wallet_keystore.enter_password_title'),
     description: t('access_wallet_keystore.enter_password_description'),
   },
-]
+])
 
 /**------------------------
  * Keystore Upload

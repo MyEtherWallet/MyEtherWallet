@@ -7,7 +7,7 @@
           class="w-5 h-5 xl:w-6 xl:h-6 text-white"
           dollar-icon-color="rgb(0,90,229,1)"
         />
-        <p>{{ $t('common.buy_currency', { currency: selectedChain?.currencyName }) }}</p>
+        <p>{{ $t('common.buy_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
       </div>
     </app-base-button>
     <app-btn-text
@@ -16,7 +16,7 @@
       @click="openDepositDialog = true"
     >
       <div class="flex gap-2 items-center justify-center group">
-        <p>{{ $t('common.or_deposit_currency', { currency: selectedChain?.currencyName }) }}</p>
+        <p>{{ $t('common.or_deposit_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
         <ArrowLongRightIcon
           class="w-4 h-4 xl:w-5 xl:h-5 group-hover:translate-x-1 transition-transform"
         />
@@ -29,7 +29,7 @@
     >
       <div class="flex gap-2 items-center justify-center">
         <QrCodeIcon class="w-4 h-4 xl:w-5 xl:h-5 text-white" />
-        <p>{{ $t('common.deposit_currency', { currency: selectedChain?.currencyName }) }}</p>
+        <p>{{ $t('common.deposit_currency', { currency: selectedChain?.currencyName ?? '' }) }}</p>
       </div>
     </app-base-button>
     <the-deposit-dialog v-model:open-dialog="openDepositDialog" />

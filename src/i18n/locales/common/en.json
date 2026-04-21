@@ -36,7 +36,7 @@
       "address_resolution_failed": "Address resolution failed",
       "invalid_private_key": "Invalid private key",
       "invalid_private_key_length": "Invalid private key length",
-      "invalid_keystore": "Invalid JSON Keystore",
+      "invalid_keystore": "Invalid JSON keystore",
       "verification_failed": "Verification failed",
       "no_wallet_address": "No wallet address to copy",
       "invalid_password": "Invalid password"

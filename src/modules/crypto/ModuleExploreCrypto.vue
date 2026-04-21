@@ -566,7 +566,12 @@
             class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
             :class="isLoading ? 'invisible' : 'visible'"
           >
-            {{ getCurrentViewableItemsIndex }} {{ $t('crypto.of') }} {{ totalTokenCount }} {{ $t('crypto.results') }}
+            {{
+              $t('crypto.results_count', {
+                current: getCurrentViewableItemsIndex,
+                total: totalTokenCount,
+              })
+            }}
           </div>
           <div
             class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0"
@@ -581,9 +586,9 @@
             </app-btn-icon>
 
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
-              <span class="text-black tabular-nums">{{ page }}</span>
-              <span class="text-info">{{ $t('crypto.of') }}</span>
-              <span class="text-info tabular-nums">{{ totalPages }}</span>
+              <span class="text-info">
+                {{ $t('crypto.page_of', { current: page, total: totalPages }) }}
+              </span>
             </div>
             <app-btn-icon
               :disabled="!isLoading && page >= totalPages"

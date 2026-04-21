@@ -8,7 +8,7 @@
     "upload_keystore": "Upload Keystore",
     "enter_password": "Enter Password",
     "select_keystore_file_title": "Select your Keystore File",
-    "select_keystore_file_description": "Please select keystore file that unlocks your wallet.",
+    "select_keystore_file_description": "Please select the keystore file that unlocks your wallet.",
     "enter_password_title": "Enter Password",
     "enter_password_description": "Enter your password to unlock your wallet.",
     "keystore_file_alt": "Keystore File",
@@ -18,9 +18,6 @@
     "invalid_keystore_file": "Invalid keystore file. Please try again.",
     "something_went_wrong": "Something went wrong",
     "error_accessing_wallet": "There was an error accessing the wallet. Please try again."
-  },
-  "access_wallet_mnemonic": {
-    "extra_word_known_as": "Also known as \"Passphrase\" or \"13th/25th word\""
   },
   "select_address_list": {
     "view_in_explorer": "view address in explorer",

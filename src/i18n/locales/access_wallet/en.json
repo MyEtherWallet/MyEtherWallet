@@ -33,6 +33,7 @@
     "invalid_phrase": "Invalid phrase",
     "do_you_have_an_extra_word": "Do you have an extra word?",
     "enter_extra_word": "Enter Extra Word",
+    "extra_word_known_as": "Also known as \"Passphrase\" or \"13th/25th word\"",
     "step": {
       "step1": {
         "short": "Enter phrase",
