@@ -28,7 +28,7 @@
       <div class="flex flex-col gap-2 min-w-[175px]">
         <h3 class="text-s-28 md:text-s-32 font-bold leading-p-100">{{ $t('rewards.hooray') }}</h3>
         <p class="text-s-16 font-semibold leading-tight mt-1">
-          {{ $t('rewards.rewarded_with') }}
+          {{ $t('rewards.rewarded_with', { amount: REWARD_AMOUNT }) }}
         </p>
         <p class="text-s-14 text-[#334155] leading-snug mt-2">
           {{ $t('rewards.earn_another_tomorrow') }}
@@ -110,13 +110,20 @@
           class="text-s-24 md:text-s-32 lg-max:text-s-28 2xl:text-s-28 font-bold leading-p-100 mb-3 text-center xs:text-start"
           :class="'text-s-32 '"
         >
-          {{ $t('rewards.earn_amount_usdc') }}
+          {{ $t('rewards.earn_amount_usdc', { amount: REWARD_AMOUNT }) }}
         </h3>
         <p
           class="text-s-16 text-[#334155] leading-p-110 mt-2 max-w-[240px] sm:max-w-none lg-max:max-w-[160px] 2xl:max-w-auto 3xl:max-w-auto 2xl:flex-1 text-center xs:text-start"
           :class="[isOpenSideMenu ? 'xl:max-w-none' : 'xl:max-w-[180px]']"
         >
-          {{ $t('rewards.reward_description') }}
+          {{
+            $t('rewards.reward_description', {
+              count: REWARD_TOTAL_COUNT,
+              hours: REWARD_WINDOW_HOURS,
+              min: REWARD_MIN_SWAP,
+              amount: REWARD_AMOUNT,
+            })
+          }}
         </p>
       </div>
     </div>
@@ -211,6 +218,11 @@ import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+const REWARD_AMOUNT = 5
+const REWARD_MIN_SWAP = 25
+const REWARD_TOTAL_COUNT = 500
+const REWARD_WINDOW_HOURS = 72
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
