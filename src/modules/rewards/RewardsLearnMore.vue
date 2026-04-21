@@ -29,7 +29,7 @@
           </h3>
           <p class="text-s-14 text-info mt-3 leading-p-160">
             Complete a swap or trade on Ethereum over $25 and receive $5 USDC —
-            available to the first 10 users each hour.
+            available to the first 500 unique users.
           </p>
 
           <!-- How It Works -->
@@ -204,24 +204,20 @@ const howItWorks = [
   },
   {
     icon: 'currency-dollar',
-    text: 'The first 10 eligible swaps or trades every hour get $5 USDC',
+    text: 'The first 500 eligible swaps or trades get $5 USDC',
   },
   {
     icon: 'gift',
-    text: 'One reward per wallet per 24 hour period, sent directly to your wallet',
+    text: 'One reward per wallet per 72 hour period, sent directly to your wallet',
   },
 ]
 
 const availability = [
   {
     icon: 'clock',
-    text: 'Limited to 10 rewards per hour, 240 total rewards per day (No Bots!)',
+    text: 'Limited to 500 rewards per 72 hour period (No Bots!)',
   },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
-  {
-    icon: 'calendar',
-    text: 'If rewards run out, try again the next hour, resets at midnight UTC.',
-  },
   {
     icon: 'user',
     text: 'Minimum of 0.001 ETH balance required prior to March 31st, 2026',

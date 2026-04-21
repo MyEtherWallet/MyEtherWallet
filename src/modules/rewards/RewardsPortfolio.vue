@@ -247,9 +247,13 @@ function updateCountdown() {
   }
   const now = new Date()
   const diff = Math.max(0, new Date(target).getTime() - now.getTime())
-  const m = Math.floor(diff / 60_000)
+  const h = Math.floor(diff / 3_600_000)
+  const m = Math.floor((diff % 3_600_000) / 60_000)
   const s = Math.floor((diff % 60_000) / 1_000)
-  timeUntilReset.value = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+  const mm = String(m).padStart(2, '0')
+  const ss = String(s).padStart(2, '0')
+  timeUntilReset.value =
+    h > 0 ? `${String(h).padStart(2, '0')}:${mm}:${ss}` : `${mm}:${ss}`
 }
 
 onMounted(() => {
