@@ -6,12 +6,15 @@ on:
     branches:
       - feat/v7-develop
       - feat/v7
+  push:
+    branches:
+      - feat/v7-develop
 permissions:
   contents: write
 
 jobs:
   draft-release:
-    if: github.event.pull_request.merged == true && github.base_ref == 'feat/v7-develop'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/feat/v7-develop') || (github.event.pull_request.merged == true && github.base_ref == 'feat/v7-develop')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
