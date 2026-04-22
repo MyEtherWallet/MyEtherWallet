@@ -9,7 +9,7 @@
     <!-- <app-mew-wallet-banner
       v-if="isLoadingComplete && !isTradingRestrictedInRegion"
     /> -->
-    <app-mew-wallet-banner v-if="false" />
+    <app-mew-wallet-banner />
   </div>
 </template>
 
