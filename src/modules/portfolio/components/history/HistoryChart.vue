@@ -19,9 +19,7 @@
         :key="row.label"
         class="tooltip-row"
       >
-        <span class="tooltip-label">{{
-          row.label
-        }}</span>
+        <span class="tooltip-label">{{ row.label }}</span>
         <span class="tooltip-value">{{ row.value }}</span>
       </div>
     </div>
@@ -235,20 +233,25 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
             const dataIndex = tooltip.dataPoints?.[0]?.dataIndex
             if (dataIndex == null) return
 
-            const date = new Date(labels.value[dataIndex] || '')
-            const title = date.toLocaleDateString('en-US', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })
+            const allData = [props.data, props.topData, props.bottomData]
 
-            const allData = [
-              props.data,
-              props.topData,
-              props.bottomData,
-            ]
+            const timestamp = allData
+              .map(series => series?.[dataIndex]?.timestamp)
+              .find(ts => ts != null)
+            let title = ''
+            if (timestamp != null) {
+              const date = new Date(timestamp)
+              if (!isNaN(date.getTime())) {
+                title = date.toLocaleString('en-US', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true,
+                })
+              }
+            }
             const rows: TooltipState['rows'] = []
             props.seriesLabels!.forEach((s, i) => {
               const seriesData = allData[i]
@@ -268,9 +271,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
             const offsetLeft = wrapperRect
               ? chartRect.left - wrapperRect.left
               : 0
-            const offsetTop = wrapperRect
-              ? chartRect.top - wrapperRect.top
-              : 0
+            const offsetTop = wrapperRect ? chartRect.top - wrapperRect.top : 0
 
             const estRowHeight = 22
             const estTooltipHeight = 46 + rows.length * estRowHeight
@@ -335,9 +336,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
               if (context.length === 0) {
                 return ''
               }
-              const date = new Date(
-                labels.value[context[0].dataIndex] || '',
-              )
+              const date = new Date(labels.value[context[0].dataIndex] || '')
               return date.toLocaleDateString('en-US', {
                 minute: 'numeric',
                 hour: 'numeric',
