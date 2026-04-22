@@ -816,6 +816,7 @@ watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
     toAmount.value = '' // Reset same token error on any change
     return
   }
+  displayGeneralError.value = ''
   fetchQuote()
 })
 
