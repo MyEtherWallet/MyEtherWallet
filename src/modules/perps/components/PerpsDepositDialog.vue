@@ -304,6 +304,7 @@ watch(isOpen, open => {
       // so toastFailedToSwitchNetwork does not apply here. This toast is intentionally
       // kept as an informational message about the automatic switch.
       globalStore.setSelectedNetwork('ETHEREUM')
+      // Direct toastStore call intentionally kept here; this is informational, not an error path.
       toastStore.addToastMessage({
         text: 'Switched network to Ethereum',
         textSecondary:
@@ -520,8 +521,16 @@ const sendSandboxDeposit = async () => {
     perpsToasts.toastDepositComplete(amount.value, 'USDC')
     clearAmount()
   } catch (e: any) {
-    error.value = e?.message || e?.toString() || 'Sandbox deposit failed'
-    perpsToasts.toastFailedToInitiateDeposit()
+    const msg = e?.message || e?.toString() || ''
+    const isRejection =
+      msg.toLowerCase().includes('user rejected') ||
+      msg.toLowerCase().includes('rejected')
+    if (isRejection) {
+      error.value = 'Transaction cancelled by user'
+    } else {
+      error.value = msg || 'Sandbox deposit failed'
+      perpsToasts.toastFailedToInitiateDeposit()
+    }
   } finally {
     sending.value = false
   }
@@ -595,15 +604,15 @@ const sendLiveDeposit = async () => {
     }
   } catch (e: any) {
     const msg = e?.message || e?.toString() || ''
-    if (
+    const isRejection =
       msg.toLowerCase().includes('user rejected') ||
       msg.toLowerCase().includes('rejected')
-    ) {
+    if (isRejection) {
       error.value = 'Transaction cancelled by user'
     } else {
       error.value = msg || 'Transaction failed'
+      perpsToasts.toastFailedToCreditAccount()
     }
-    perpsToasts.toastFailedToCreditAccount()
   } finally {
     sending.value = false
   }
