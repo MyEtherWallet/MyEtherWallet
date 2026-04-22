@@ -7,6 +7,7 @@ import { usePerpsAuth, usePerpsBalance } from './usePerpsAuth'
 import { usePerpsMarkets, usePerpsContracts } from './usePerpsMarkets'
 import { usePerpsPositions } from './usePerpsPositions'
 import { usePerpsMarkPrices } from './usePerpsMarkPrices'
+import { usePerpsToasts } from './usePerpsToasts'
 import { formatUsd } from '../utils/formatters'
 import { getCategory, midPrice } from '../utils/market'
 
@@ -26,6 +27,7 @@ export function usePerpsTradeForm() {
   const { contracts } = usePerpsContracts()
   const { positions, closePosition } = usePerpsPositions()
   const { markPriceData } = usePerpsMarkPrices()
+  const perpsToasts = usePerpsToasts()
 
   // ── State ──────────────────────────────────────────────────
 
@@ -655,6 +657,25 @@ export function usePerpsTradeForm() {
   async function confirmAndSubmitOrder() {
     if (submitDisabled.value) return
     isSubmitting.value = true
+    // Snapshot prior SL/TP state BEFORE the SDK call so "prior" reflects what
+    // the user was about to change. Reading it afterward would see the new
+    // values once positions re-poll.
+    const priorPosition = activePosition.value
+    const hadPriorStopLoss = !!priorPosition?.stopLossTriggerPrice
+    const hadPriorTakeProfit = !!priorPosition?.takeProfitTriggerPrice
+    const willSetStopLoss = stopLossPrice.value !== null
+    const willSetTakeProfit = takeProfitPrice.value !== null
+    // Direction describes the POSITION side (LONG/SHORT), not the order side —
+    // "LONG 0.5 PERPS: …" matches the position, including when placing a
+    // reduce-only counter-order to modify an existing long.
+    const positionDirection =
+      priorPosition?.direction ??
+      (orderSide.value === 'buy' ? 'long' : 'short')
+    const slTpBase = displaySymbol.value
+    const slTpQuote = fullMarketName.value.includes('-')
+      ? (fullMarketName.value.split('-')[1] ?? '')
+      : ''
+    const slTpNetQuantity = priorPosition?.netQuantity ?? orderSize.value
     try {
       const orderParams: Record<string, unknown> = {
         market: fullMarketName.value,
@@ -670,28 +691,70 @@ export function usePerpsTradeForm() {
           orderParams.price = limitPrice.value
         }
       }
-      if (takeProfitPrice.value !== null) {
+      if (willSetTakeProfit) {
         orderParams.takeProfit = {
-          triggerPrice: takeProfitPrice.value.toFixed(2),
+          triggerPrice: (takeProfitPrice.value as number).toFixed(2),
         }
       }
-      if (stopLossPrice.value !== null) {
+      if (willSetStopLoss) {
         orderParams.stopLoss = {
-          triggerPrice: stopLossPrice.value.toFixed(2),
+          triggerPrice: (stopLossPrice.value as number).toFixed(2),
         }
       }
       await perpsClient.createOrder(orderParams as any)
+      // Fire SL/TP toasts only after the SDK call succeeded.
+      if (willSetStopLoss && stopLossPrice.value !== null) {
+        const args = {
+          direction: positionDirection,
+          netQuantity: slTpNetQuantity,
+          base: slTpBase,
+          quote: slTpQuote,
+          triggerPrice: (stopLossPrice.value as number).toFixed(2),
+        }
+        if (hadPriorStopLoss) perpsToasts.toastStopLossModified(args)
+        else perpsToasts.toastStopLossAdded(args)
+      }
+      if (willSetTakeProfit && takeProfitPrice.value !== null) {
+        const args = {
+          direction: positionDirection,
+          netQuantity: slTpNetQuantity,
+          base: slTpBase,
+          quote: slTpQuote,
+          triggerPrice: (takeProfitPrice.value as number).toFixed(2),
+        }
+        if (hadPriorTakeProfit) perpsToasts.toastTakeProfitModified(args)
+        else perpsToasts.toastTakeProfitAdded(args)
+      }
       showConfirmModal.value = false
       inputAmount.value = ''
       sliderValue.value = 0
       triggerRefresh()
     } catch (error: any) {
+      // If SL/TP were part of the request and the API rejected them as
+      // invalid, surface dedicated Invalid toasts. These branches are
+      // mutually exclusive with the success toasts above (which only run
+      // after createOrder resolves).
+      const msg = (error?.message || error?.toString() || '').toLowerCase()
+      const isInvalid = msg.includes('invalid')
+      if (isInvalid && willSetStopLoss) {
+        perpsToasts.toastStopLossInvalid()
+      }
+      if (isInvalid && willSetTakeProfit) {
+        perpsToasts.toastTakeProfitInvalid()
+      }
       orderError.value =
         error?.message || error?.toString() || 'Order failed. Please try again.'
     } finally {
       isSubmitting.value = false
     }
   }
+
+  // NOTE(perps-toasts): Dedicated remove-stop-loss / remove-take-profit flows
+  // are not yet wired in this composable. The SDK client today exposes
+  // createOrder / cancelOrder / setLeverage only — SL/TP are created inline
+  // via createOrder. When a remove-SL/TP endpoint is added, wire
+  // toastStopLossRemoved / toastTakeProfitRemoved / toastFailedToRemoveSlTp
+  // into those paths.
 
   // ── Lifecycle & watchers ───────────────────────────────────
   onMounted(() => {
