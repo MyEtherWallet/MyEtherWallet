@@ -18,6 +18,13 @@ interface OrderSideButton {
   value: OrderSide
 }
 
+// Matches SDK error messages that specifically flag SL/TP as invalid, so
+// generic "invalid signature" / "invalid nonce" errors don't mislabel as
+// SL/TP validation failures. Revisit if/when the SDK exposes a structured
+// error code.
+const SL_TP_INVALID_PATTERN = /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
+const TRIGGER_PRICE_DECIMALS = 2
+
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
@@ -663,8 +670,10 @@ export function usePerpsTradeForm() {
     const priorPosition = activePosition.value
     const hadPriorStopLoss = !!priorPosition?.stopLossTriggerPrice
     const hadPriorTakeProfit = !!priorPosition?.takeProfitTriggerPrice
-    const willSetStopLoss = stopLossPrice.value !== null
-    const willSetTakeProfit = takeProfitPrice.value !== null
+    // Capture numeric SL/TP values once up front: used for the API payload,
+    // the formatted toast price, and as the null-guard for both branches.
+    const slPrice = stopLossPrice.value
+    const tpPrice = takeProfitPrice.value
     // Direction describes the POSITION side (LONG/SHORT), not the order side —
     // "LONG 0.5 PERPS: …" matches the position, including when placing a
     // reduce-only counter-order to modify an existing long.
@@ -676,6 +685,13 @@ export function usePerpsTradeForm() {
       ? (fullMarketName.value.split('-')[1] ?? '')
       : ''
     const slTpNetQuantity = priorPosition?.netQuantity ?? orderSize.value
+    const buildSlTpArgs = (triggerPrice: number) => ({
+      direction: positionDirection,
+      netQuantity: slTpNetQuantity,
+      base: slTpBase,
+      quote: slTpQuote,
+      triggerPrice: triggerPrice.toFixed(TRIGGER_PRICE_DECIMALS),
+    })
     try {
       const orderParams: Record<string, unknown> = {
         market: fullMarketName.value,
@@ -691,37 +707,25 @@ export function usePerpsTradeForm() {
           orderParams.price = limitPrice.value
         }
       }
-      if (willSetTakeProfit) {
+      if (tpPrice !== null) {
         orderParams.takeProfit = {
-          triggerPrice: (takeProfitPrice.value as number).toFixed(2),
+          triggerPrice: tpPrice.toFixed(TRIGGER_PRICE_DECIMALS),
         }
       }
-      if (willSetStopLoss) {
+      if (slPrice !== null) {
         orderParams.stopLoss = {
-          triggerPrice: (stopLossPrice.value as number).toFixed(2),
+          triggerPrice: slPrice.toFixed(TRIGGER_PRICE_DECIMALS),
         }
       }
       await perpsClient.createOrder(orderParams as any)
       // Fire SL/TP toasts only after the SDK call succeeded.
-      if (willSetStopLoss && stopLossPrice.value !== null) {
-        const args = {
-          direction: positionDirection,
-          netQuantity: slTpNetQuantity,
-          base: slTpBase,
-          quote: slTpQuote,
-          triggerPrice: (stopLossPrice.value as number).toFixed(2),
-        }
+      if (slPrice !== null) {
+        const args = buildSlTpArgs(slPrice)
         if (hadPriorStopLoss) perpsToasts.toastStopLossModified(args)
         else perpsToasts.toastStopLossAdded(args)
       }
-      if (willSetTakeProfit && takeProfitPrice.value !== null) {
-        const args = {
-          direction: positionDirection,
-          netQuantity: slTpNetQuantity,
-          base: slTpBase,
-          quote: slTpQuote,
-          triggerPrice: (takeProfitPrice.value as number).toFixed(2),
-        }
+      if (tpPrice !== null) {
+        const args = buildSlTpArgs(tpPrice)
         if (hadPriorTakeProfit) perpsToasts.toastTakeProfitModified(args)
         else perpsToasts.toastTakeProfitAdded(args)
       }
@@ -733,13 +737,15 @@ export function usePerpsTradeForm() {
       // If SL/TP were part of the request and the API rejected them as
       // invalid, surface dedicated Invalid toasts. These branches are
       // mutually exclusive with the success toasts above (which only run
-      // after createOrder resolves).
-      const msg = (error?.message || error?.toString() || '').toLowerCase()
-      const isInvalid = msg.includes('invalid')
-      if (isInvalid && willSetStopLoss) {
+      // after createOrder resolves). The regex targets SL/TP-scoped messages
+      // so generic "invalid signature" / "invalid nonce" errors don't
+      // mislabel as SL/TP validation failures.
+      const msg = error?.message || error?.toString() || ''
+      const isSlTpInvalid = SL_TP_INVALID_PATTERN.test(msg)
+      if (isSlTpInvalid && slPrice !== null) {
         perpsToasts.toastStopLossInvalid()
       }
-      if (isInvalid && willSetTakeProfit) {
+      if (isSlTpInvalid && tpPrice !== null) {
         perpsToasts.toastTakeProfitInvalid()
       }
       orderError.value =
