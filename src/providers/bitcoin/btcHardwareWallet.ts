@@ -3,7 +3,7 @@ import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType, NetworkNames } from '@enkryptcom/types'
-import HWwallet from '@enkryptcom/hw-wallets'
+import type { HWManager } from '@/providers/hw/types'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { hexToBuffer } from '@/utils/hexToBuffer'
 import { type PostSignedTransaction } from '../common/types'
@@ -20,7 +20,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   private index: string
   private path: PathType
   private walletType: HWwalletType
-  private hwWalletInstance: HWwallet
+  private hwWalletInstance: HWManager
 
   constructor(
     address: HexPrefixedString,
@@ -28,7 +28,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     index: string,
     path: PathType,
     walletType: HWwalletType,
-    hwWalletInstance: HWwallet,
+    hwWalletInstance: HWManager,
   ) {
     super(networkName)
     this.address = address
@@ -36,7 +36,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     this.index = index
     this.path = path
     this.walletType = walletType
-    this.hwWalletInstance = hwWalletInstance as HWwallet
+    this.hwWalletInstance = hwWalletInstance as HWManager
   }
 
   /**
@@ -111,7 +111,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 
-  getWalletInstance(): HWwallet | null {
+  getWalletInstance(): HWManager | null {
     return this.hwWalletInstance
   }
 

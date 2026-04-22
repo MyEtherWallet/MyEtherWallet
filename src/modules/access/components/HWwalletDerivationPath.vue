@@ -138,6 +138,7 @@ watch(
       selectedPath.value = newValue[0]
     }
   },
+  { immediate: true },
 )
 
 watch(

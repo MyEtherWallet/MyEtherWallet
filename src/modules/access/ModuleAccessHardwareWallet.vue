@@ -104,6 +104,8 @@ import { useI18n } from 'vue-i18n'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
+import LedgerManager from '@/providers/hw/ledger'
+import type { HWManager } from '@/providers/hw/types'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import type { PathType } from '@/stores/derivationStore'
@@ -138,13 +140,17 @@ const { t } = useI18n()
 const globalStore = useGlobalStore()
 const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
-// Wallet instance
-let hwWalletInstance: HWwallet | null = new HWwallet()
 /**------------------------
  * Access Store and Chain in the store
  -------------------------*/
 const accessStore = useAccessStore()
 const { currentView, selectedChain, isEvmChain } = storeToRefs(accessStore)
+
+const createHwManager = (): HWManager =>
+  currentView.value === 'ledger' ? new LedgerManager() : new HWwallet()
+
+// Wallet instance
+let hwWalletInstance: HWManager | null = createHwManager()
 
 const updateChain = (chain: Chain) => {
   accessStore.setSelectedChain(chain)
@@ -266,6 +272,9 @@ const unlockWallet = async () => {
   const networkName = chainToEnum[
     selectedChain.value?.name as string
   ] as NetworkNames
+
+  // Ensure the manager matches the current view (ledger vs trezor)
+  hwWalletInstance = createHwManager()
 
   try {
     if (!wallet.value) {
@@ -406,7 +415,7 @@ watch(
     if (newValue !== null) {
       paths.value = []
       isLoadingWalletList.value = true
-      hwWalletInstance = new HWwallet()
+      hwWalletInstance = createHwManager()
       const waiter = new Promise(r => setTimeout(r, 1000))
       waiter.then(() => loadList())
     }
@@ -420,7 +429,7 @@ watch(
     if (!oldValue || oldValue === '') return
     if (newValue) {
       isLoadingWalletList.value = true
-      hwWalletInstance = new HWwallet()
+      hwWalletInstance = createHwManager()
       const waiter = new Promise(r => setTimeout(r, 1000))
       waiter.then(() => loadList())
     }
