@@ -1,8 +1,9 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
+import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -145,6 +146,20 @@ export function usePerpsBalance() {
     }, 500)
 
     _sharedFetchBalance = fetchBalance
+
+    const perpsToasts = usePerpsToasts()
+    const previousUnderLiquidation = ref(false)
+
+    watch(
+      () => _sharedBalance.value?.underLiquidation ?? false,
+      (current) => {
+        if (current && !previousUnderLiquidation.value) {
+          perpsToasts.toastLiquidationInitiated()
+        }
+        previousUnderLiquidation.value = current
+      },
+      { immediate: false },
+    )
   }
 
   return { balance, loading, refetch: _sharedFetchBalance! }
