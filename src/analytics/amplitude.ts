@@ -114,6 +114,9 @@ export class Analytics {
     if (properties.canClaimRewards !== undefined) {
       identify.set('canClaimRewards', properties.canClaimRewards)
     }
+    if (properties.canTrade !== undefined) {
+      identify.set('canTrade', properties.canTrade)
+    }
 
     this.amplitude.identify(identify)
   }
