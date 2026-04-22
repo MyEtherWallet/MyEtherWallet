@@ -2,8 +2,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { formatPrice, formatUsd } from '@/modules/perps/utils/formatters'
 
-type Side = 'long' | 'short' | 'buy' | 'sell' | string
-type OrderCategory = 'market' | 'limit' | 'stopMarket' | 'takeProfitMarket' | string
+type Side = 'long' | 'short' | 'buy' | 'sell' | (string & {})
+type OrderCategory = 'market' | 'limit' | 'stopMarket' | 'takeProfitMarket' | (string & {})
 
 function humanSide(side: Side): string {
   const s = (side || '').toLowerCase()
@@ -38,6 +38,31 @@ function orderLine(args: {
   const isMarket = (args.category || '').toLowerCase() === 'market'
   if (isMarket || args.price == null || args.price === '') return base
   return `${base} at ${formatPrice(args.price)}`
+}
+
+export type SlTpArgs = {
+  direction: Side
+  netQuantity: string | number
+  base: string
+  quote: string
+  triggerPrice: string | number
+}
+
+export type OrderArgs = {
+  side: Side
+  size: string | number
+  category: OrderCategory
+  market: string
+  price?: string | number
+}
+
+export type FillArgs = {
+  side: Side
+  filledSize: string | number
+  size: string | number
+  category: OrderCategory
+  market: string
+  fillPrice: string | number
 }
 
 export function usePerpsToasts() {
@@ -107,14 +132,6 @@ export function usePerpsToasts() {
   }
 
   // --- Stop Loss & Take Profit ---
-  type SlTpArgs = {
-    direction: Side
-    netQuantity: string | number
-    base: string
-    quote: string
-    triggerPrice: string | number
-  }
-
   const slTpLine = (args: SlTpArgs) =>
     `${humanSide(args.direction).toUpperCase()} ${args.netQuantity} PERPS: ${args.base}${args.quote} at ${formatUsd(args.triggerPrice as string | number)}`
 
@@ -164,6 +181,9 @@ export function usePerpsToasts() {
     })
   }
 
+  // Spec classifies SL/TP Removed as `failure` type.
+  // Kept as ToastType.Error here for spec fidelity; revisit with design
+  // if Red UI on a user-initiated remove is wrong.
   const toastStopLossRemoved = (args: SlTpArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Error,
@@ -195,14 +215,6 @@ export function usePerpsToasts() {
   }
 
   // --- Orders & Trading (non-TWAP) ---
-  type OrderArgs = {
-    side: Side
-    size: string | number
-    category: OrderCategory
-    market: string
-    price?: string | number
-  }
-
   const toastOrderCanceled = (args: OrderArgs) => {
     toastStore.addToastMessage({
       type: ToastType.Success,
@@ -217,15 +229,6 @@ export function usePerpsToasts() {
       text: 'Order Placed',
       textSecondary: orderLine(args),
     })
-  }
-
-  type FillArgs = {
-    side: Side
-    filledSize: string | number
-    size: string | number
-    category: OrderCategory
-    market: string
-    fillPrice: string | number
   }
 
   const fillLine = (args: FillArgs) => {
