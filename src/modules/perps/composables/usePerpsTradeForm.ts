@@ -12,6 +12,10 @@ import { getCategory, midPrice } from '../utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
+interface OrderSideButton {
+  label: string
+  value: OrderSide
+}
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
@@ -24,9 +28,21 @@ export function usePerpsTradeForm() {
   const { markPriceData } = usePerpsMarkPrices()
 
   // ── State ──────────────────────────────────────────────────
+
+  const orderSideButtons: OrderSideButton[] = [
+    { label: 'Long', value: 'buy' },
+    { label: 'Short', value: 'sell' },
+  ]
+
   const orderSide = ref<OrderSide>(
     walletMenuStore.selectedTradeOrderSide ?? 'buy',
   )
+
+  const setOrderSide = (side: OrderSide) => {
+    orderSide.value = side
+    walletMenuStore.setSelectedTradeOrderSide(side)
+  }
+
   const orderType = ref<OrderType>('market')
   const showOrderTypeDropdown = ref(false)
   const limitPrice = ref('')
@@ -751,6 +767,7 @@ export function usePerpsTradeForm() {
     contracts,
     // Order form
     orderSide,
+    orderSideButtons,
     orderType,
     inputAmount,
     leverage,
@@ -759,6 +776,7 @@ export function usePerpsTradeForm() {
     estimatedLiquidation,
     orderSize,
     availableMargin,
+    setOrderSide,
     // Position
     activePosition,
     positionNotionalValue,

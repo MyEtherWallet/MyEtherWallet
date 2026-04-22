@@ -1,9 +1,10 @@
 <template>
   <div class="w-full max-w-[500px] mx-auto relative h-full flex flex-col">
     <!-- Header: Asset Info -->
-    <div class="flex items-center justify-between mb-4 px-4 pt-2">
+    <div class="flex items-center justify-between mb-2 px-4">
       <div>
-        <p class="font-bold text-s-28 tracking-tight">Perps</p>
+        <p class="font-bold text-s-28">Perpetuals</p>
+        <p class="text-info text-s-12 ml-1">Powered by Ondo Perps</p>
       </div>
     </div>
 
@@ -36,94 +37,125 @@
     </div>
 
     <!-- Active Trade Form -->
-    <div v-else class="flex flex-col flex-1 min-h-0">
+    <div v-else class="flex flex-col">
       <!-- Scrollable content -->
-      <div class="flex-1 overflow-y-auto">
-        <!-- Asset Selector & Price -->
-        <div class="flex items-center justify-between mb-4 px-4">
-          <div
-            class="flex items-center gap-2 border border-[#e5e7eb] rounded-full py-1.5 px-3 cursor-pointer hover:bg-greyLight transition-colors bg-white"
+      <div class="flex flex-col gap-4">
+        <!-- Asset Selector & Price & current Position Info if open -->
+        <div>
+          <!-- Token Selector -->
+          <button
+            :class="[
+              isLoading || !selectedToken
+                ? 'bg-grey-10 animate-pulse'
+                : 'bg-white hoverBGWhite py-2 px-4 rounded-20 w-full shadow-button shadow-button-elevated transition-all',
+              'rounded-20 px-1 transition-colors w-full flex items-center justify-between px-4 py-2',
+            ]"
+            type="button"
             @click="openTokenSelect"
+            :aria-label="$t('select_token.title')"
+            :disabled="isLoading || !selectedToken"
           >
-            <img
-              :src="getLogoUrl(displaySymbol)"
-              :alt="displaySymbol"
-              class="w-7 h-7 rounded-full"
-            />
-            <span class="font-bold text-s-16">{{ displaySymbol }}</span>
-            <img
-              src="@/assets/icons/chevron-down.svg"
-              class="w-4 h-4 opacity-50"
-            />
-          </div>
-          <div class="text-right">
-            <p class="font-bold text-s-16 mb-[2px]">
-              {{ formatUsd(currentPrice) }}
-            </p>
-            <p
-              :class="priceChange >= 0 ? 'text-[#00c896]' : 'text-[#ff5b5a]'"
-              class="text-s-12 font-medium text-right flex items-center justify-end gap-1"
+            <div
+              v-if="!isLoading && selectedToken"
+              class="flex items-center justify-start"
             >
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+              <app-token-logo
+                :url="selectedToken.logo_url"
+                :alt="selectedToken.symbol"
+                class="mr-2"
+                :is-stock="selectedToken.ondo !== undefined"
+              />
+              <div>
+                <app-token-symbol
+                  :symbol="selectedToken.symbol"
+                  :is-stock="selectedToken.ondo !== undefined"
+                  class="!font-bold text-left"
+                />
+                <p class="text-info text-s-12">
+                  {{ formatUsd(currentPrice) }}
+                  <span
+                    :class="priceChange >= 0 ? 'text-success' : 'text-error'"
+                    class="pl-1"
+                  >
+                    ({{ priceChange.toFixed(2) }}%)
+                  </span>
+                </p>
+              </div>
+            </div>
+            <chevron-down-icon
+              v-if="!isLoading"
+              class="text-info w-4 h-4 ml-4"
+            />
+          </button>
+
+          <!-- Position Info -->
+          <div v-if="activePosition" class="px-2 mt-3 flex flex-col gap-1">
+            <div class="flex justify-between text-s-14 font-medium">
+              <p class="text-info text-s-12">Position size</p>
+              <p class="text-textDark font-medium">
+                {{ formatUsd(positionNotionalValue) }}
+              </p>
+            </div>
+            <div class="flex justify-between text-s-14 font-medium">
+              <p class="text-info text-s-12">Current Profit</p>
+              <p
+                :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
+                class="font-medium"
               >
-                <template v-if="priceChange >= 0">
-                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                  <polyline points="16 7 22 7 22 13"></polyline>
-                </template>
-                <template v-else>
-                  <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline>
-                  <polyline points="16 17 22 17 22 11"></polyline>
-                </template>
-              </svg>
-              {{ priceChange.toFixed(2) }}%
-            </p>
+                {{ formatPnl(String(positionPnl)) }}
+                <span class="text-s-12"
+                  >({{ (positionRoe * 100).toFixed(2) }}%)</span
+                >
+              </p>
+            </div>
           </div>
         </div>
 
         <!-- Long / Short Toggle + Order Type on same row (no position) -->
         <template v-if="!activePosition">
-          <div class="flex items-center justify-between mb-4 px-4">
-            <div class="flex bg-[#eef1f8] rounded-full p-1 w-fit">
+          <div class="flex items-center justify-between">
+            <div class="flex bg-surface rounded-32 p-1 w-fit">
               <button
-                class="flex items-center gap-1.5 px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
-                :class="
-                  orderSide === 'buy'
-                    ? 'bg-[#00c896] text-white shadow-sm'
-                    : 'text-textDark hover:bg-[#e4e9f4]'
-                "
-                @click="orderSide = 'buy'"
+                v-for="side in orderSideButtons"
+                :key="side.value"
+                class="flex items-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 p-4"
+                :class="[
+                  orderSide === side.value
+                    ? 'text-white shadow-container'
+                    : ' hoverNoBG',
+                  {
+                    'bg-success':
+                      orderSide === side.value && side.value === 'buy',
+                    'bg-error':
+                      orderSide === side.value && side.value === 'sell',
+                  },
+                ]"
+                @click="setOrderSide(side.value)"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
-                  <polyline points="16 7 22 7 22 13"></polyline>
-                </svg>
-                Long
+                <arrow-trending-up-icon
+                  v-if="side.value === 'buy'"
+                  class="w-4 h-4"
+                  :class="
+                    orderSide === side.value ? 'text-white' : 'text-black'
+                  "
+                />
+                <arrow-trending-down-icon
+                  v-if="side.value === 'sell'"
+                  class="w-4 h-4"
+                  :class="
+                    orderSide === side.value ? 'text-white' : 'text-black'
+                  "
+                />
+                {{ side.label }}
               </button>
-              <button
+              <!-- <button
                 class="flex items-center gap-1.5 px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
                 :class="
                   orderSide === 'sell'
                     ? 'bg-[#ff5b5a] text-white shadow-sm'
                     : 'text-textDark hover:bg-[#e4e9f4]'
                 "
-                @click="orderSide = 'sell'"
+                @click="setOrderSide('sell')"
               >
                 <svg
                   width="14"
@@ -139,104 +171,96 @@
                   <polyline points="16 17 22 17 22 11"></polyline>
                 </svg>
                 Short
-              </button>
+              </button> -->
             </div>
-            <div class="relative">
-              <div
-                class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 text-textDark select-none"
-                @click="showOrderTypeDropdown = !showOrderTypeDropdown"
-              >
-                {{ orderType === 'market' ? 'Market' : 'Limit' }}
-                <img
-                  src="@/assets/icons/chevron-down.svg"
-                  class="w-5 h-5 opacity-50 transition-transform"
-                  :class="showOrderTypeDropdown ? 'rotate-180' : ''"
-                />
-              </div>
-              <!-- Dropdown -->
-              <div
-                v-if="showOrderTypeDropdown"
-                class="absolute right-0 top-full mt-2 bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] z-50 w-[260px] p-2 overflow-hidden"
-              >
+            <app-pop-up-menu
+              :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
+              location="right"
+            >
+              <template #menu-content="{ toggleMenu }">
                 <div
-                  class="flex items-start gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
-                  :class="
-                    orderType === 'market'
-                      ? 'bg-[#edf2fa]'
-                      : 'hover:bg-[#f8f9fb]'
-                  "
-                  @click="setOrderType('market')"
+                  class="bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] w-[260px] p-2 overflow-hidden"
                 >
-                  <span
-                    v-if="orderType === 'market'"
-                    class="text-textDark mt-0.5 text-s-16"
-                    >✓</span
+                  <div
+                    class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                    :class="
+                      orderType === 'market' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
+                    "
+                    @click="[setOrderType('market'), toggleMenu()]"
                   >
-                  <span v-else class="w-4 mt-0.5" />
-                  <div>
-                    <p class="font-bold text-s-14 text-textDark">
-                      Market Order
-                    </p>
-                    <p class="text-[#58595b] text-s-12 mt-0.5">
-                      Long or Short immediately
-                    </p>
+                    <div>
+                      <p class="font-bold text-s-14 text-textDark">
+                        Market Order
+                      </p>
+                      <p class="text-info text-s-12 mt-0.5">
+                        Long or Short immediately
+                      </p>
+                    </div>
+                    <check-icon
+                      v-if="orderType === 'market'"
+                      class="text-primary h-5 w-5"
+                    ></check-icon>
+
+                    <span v-else class="w-4 mt-0.5" />
+                  </div>
+                  <div
+                    class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                    :class="
+                      orderType === 'limit' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
+                    "
+                    @click="[setOrderType('limit'), toggleMenu()]"
+                  >
+                    <div>
+                      <p class="font-bold text-s-14 text-textDark">
+                        Limit Order
+                      </p>
+                      <p class="text-info text-s-12 mt-0.5">
+                        You set the price to enter a Long or Short
+                      </p>
+                    </div>
+                    <check-icon
+                      v-if="orderType === 'limit'"
+                      class="text-primary h-5 w-5"
+                    ></check-icon>
+                    <span v-else class="w-4 mt-0.5" />
                   </div>
                 </div>
-                <div
-                  class="flex items-start gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
-                  :class="
-                    orderType === 'limit'
-                      ? 'bg-[#edf2fa]'
-                      : 'hover:bg-[#f8f9fb]'
-                  "
-                  @click="setOrderType('limit')"
-                >
-                  <span
-                    v-if="orderType === 'limit'"
-                    class="text-textDark mt-0.5 text-s-16"
-                    >✓</span
-                  >
-                  <span v-else class="w-4 mt-0.5" />
-                  <div>
-                    <p class="font-bold text-s-14 text-textDark">Limit Order</p>
-                    <p class="text-[#58595b] text-s-12 mt-0.5">
-                      You set the price to enter a Long or Short
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </template>
+            </app-pop-up-menu>
           </div>
 
           <!-- Main Blue Wrapper -->
-          <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-4">
-            <!-- Position Size -->
-            <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
-              Position size
-            </p>
-
+          <div class="bg-mewBg rounded-20 px-4 pb-4 pt-3">
+            <!-- Margin Amount -->
+            <p class="text-s-12 mb-1 font-bold ml-3">Margin amount</p>
             <!-- Inner white card -->
             <div
-              class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
+              class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-5 p-3 transition-all min-h-[120px] flex flex-col justify-between mb-4"
             >
-              <p class="text-s-14 text-info mb-1 font-medium">
+              <p class="text-s-12 text-info mb-3">
                 Available
-                <span class="text-textDark font-bold ml-1"
+                <span class="text-textDark font-medium ml-1"
                   >{{ formatUsd(availableMargin) }}
-                  <span class="text-info font-normal"
+                  <!-- <span class="text-info font-normal"
                     >({{ leverage }}x
                     {{ formatUsd(availableMargin * leverage) }})</span
-                  ></span
-                >
+                  > -->
+                </span>
               </p>
-              <p
-                class="font-bold text-[36px] text-textDark mb-3 tracking-tight"
-              >
-                {{ inputAmount ? formatUsd(parseFloat(inputAmount)) : '$0.00' }}
-              </p>
+              <div class="flex justify-between items-center">
+                <p class="font-bold text-3xl text-textDark tracking-tight">
+                  {{
+                    inputAmount ? formatUsd(parseFloat(inputAmount)) : '$0.00'
+                  }}
+                </p>
+              </div>
+
+              <!-- <p class="text-info text-s-12 mb-3">
+                size: {{ formatUsd(availableMargin * leverage) }}
+              </p> -->
 
               <!-- Slider -->
-              <div class="relative mb-6 px-1">
+              <div class="relative mb-3 px-1">
                 <input
                   v-model="sliderValue"
                   type="range"
@@ -252,11 +276,11 @@
               </div>
 
               <!-- Size Pills -->
-              <div class="flex justify-between gap-2">
+              <div class="flex justify-start gap-2">
                 <button
                   v-for="pct in [10, 25, 50, 75, 100]"
                   :key="pct"
-                  class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover:text-textDark rounded-full text-xs sm:text-[13px] font-bold text-textDark transition-all flex items-center justify-center bg-white"
+                  class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                   @click="setPercentage(pct)"
                 >
                   {{ pct === 100 ? 'Max' : pct + '%' }}
@@ -297,130 +321,110 @@
                 </div>
               </div>
             </template>
-
-            <!-- Leverage -->
             <div
-              class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-4 flex justify-between items-center cursor-pointer shadow-sm"
-              @click="openLeverageModal"
+              class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-3 py-2 transition-all flex flex-col justify-between mb-4"
             >
-              <span class="text-s-16 font-medium text-textDark ml-1"
-                >Leverage</span
-              >
-              <div class="flex items-center gap-1">
-                <span class="text-s-20 font-bold text-textDark"
-                  >{{ leverage }}&times;</span
-                >
-                <img
-                  src="@/assets/icons/chevron-down.svg"
-                  class="w-5 h-5 opacity-40 mr-[-2px]"
-                />
-              </div>
-            </div>
-
-            <!-- Auto Close -->
-            <div
-              v-if="!hasAutoClose"
-              class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
-              @click="openAutoCloseModal"
-            >
-              <span class="text-s-16 font-medium text-textDark ml-1"
-                >Auto close</span
-              >
+              <!-- Leverage -->
               <button
-                class="flex items-center gap-1.5 text-[#0052ff] text-s-16 font-bold mr-1"
+                class="flex items-center hoverNoBG gap-2 justify-between py-2 px-2 rounded-12"
+                @click="openLeverageModal"
               >
-                <span class="text-s-20 font-medium">+</span> Add
+                <p class="font-medium text-s-14">Leverage</p>
+                <p class="ml-auto font-semibold">{{ leverage }}&times;</p>
+                <ChevronDownIcon class="w-4 h-4" />
               </button>
-            </div>
-            <div
-              v-else
-              class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 shadow-sm"
-            >
-              <div class="flex justify-between items-center mb-3">
-                <span class="text-s-16 font-medium text-textDark ml-1"
-                  >Auto close</span
-                >
-                <button
-                  class="flex items-center gap-1.5 text-[#0052ff] text-s-14 font-bold mr-1"
-                  @click="openAutoCloseModal"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path
-                      d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                    />
-                    <path
-                      d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                    />
-                  </svg>
-                  Edit
-                </button>
-              </div>
-              <div
-                v-if="takeProfitPrice !== null"
-                class="flex justify-between items-center text-s-14 mb-2 ml-1"
+              <hr class="border-t border-grey-5 my-1" />
+              <!-- Auto Close -->
+              <button
+                v-if="!hasAutoClose"
+                class="flex items-center hoverNoBG gap-2 justify-between p-2 rounded-12"
+                @click="openAutoCloseModal"
               >
-                <span class="font-medium text-textDark">Take Profit</span>
-                <div class="flex items-center gap-2">
-                  <span class="font-bold text-textDark">{{
-                    formatUsd(takeProfitPrice)
-                  }}</span>
-                  <span
-                    v-if="takeProfitPct !== null"
-                    class="text-[#00c896] font-bold text-s-12"
-                    >({{ takeProfitPct >= 0 ? '+' : ''
-                    }}{{ takeProfitPct.toFixed(0) }}%)</span
-                  >
-                  <button
-                    class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
-                    @click="clearTakeProfit"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-              <div
-                v-if="stopLossPrice !== null"
-                class="flex justify-between items-center text-s-14 ml-1"
-              >
-                <span class="font-medium text-textDark">Stop Loss</span>
-                <div class="flex items-center gap-2">
-                  <span class="font-bold text-textDark">{{
-                    formatUsd(stopLossPrice)
-                  }}</span>
-                  <span
-                    v-if="stopLossPct !== null"
-                    class="text-[#ff5b5a] font-bold text-s-12"
-                    >({{ stopLossPct >= 0 ? '+' : ''
-                    }}{{ stopLossPct.toFixed(0) }}%)</span
-                  >
-                  <button
-                    class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
-                    @click="clearStopLoss"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-            </div>
+                <p class="text-s-14 font-medium">Auto close</p>
 
+                <p class="font-medium ml-auto text-primary text-s-14">+ Add</p>
+              </button>
+              <div v-else class="flex flex-col gap-2 p-2">
+                <div class="flex justify-between items-center mb-1">
+                  <p class="text-s-14 font-medium">Auto close</p>
+                  <app-btn-text
+                    class="-mr-2 text-primary text-s-14 font-medium"
+                    text="Edit"
+                    @click="openAutoCloseModal"
+                  >
+                    <pencil-icon
+                      class="w-3 h-3 inline-flex align-middle mr-1"
+                    />
+                    Edit</app-btn-text
+                  >
+                </div>
+                <div
+                  v-if="takeProfitPrice !== null"
+                  class="flex justify-between items-center text-s-14"
+                >
+                  <span
+                    class="text-[10px] uppercase font-bold tracking-sp-06 text-info"
+                    >Take Profit</span
+                  >
+                  <div class="flex items-center gap-1 -mr-1">
+                    <span class="font-bold text-textDark">{{
+                      formatUsd(takeProfitPrice)
+                    }}</span>
+                    <span
+                      v-if="takeProfitPct !== null"
+                      class="text-success text-s-12"
+                      >({{ takeProfitPct >= 0 ? '+' : ''
+                      }}{{ takeProfitPct.toFixed(0) }}%)</span
+                    >
+                    <app-btn-icon
+                      label="delete take profit"
+                      @click="clearTakeProfit"
+                      height="h-5"
+                      width="w-5"
+                      class=""
+                      ><x-mark-icon
+                    /></app-btn-icon>
+                  </div>
+                </div>
+                <div
+                  v-if="stopLossPrice !== null"
+                  class="flex justify-between items-center text-s-14"
+                >
+                  <span
+                    class="text-[10px] uppercase font-bold tracking-sp-06 text-info"
+                    >Stop Loss</span
+                  >
+                  <div class="flex items-center gap-1 -mr-1">
+                    <span class="font-bold text-textDark">{{
+                      formatUsd(stopLossPrice)
+                    }}</span>
+                    <span
+                      v-if="stopLossPct !== null"
+                      class="text-error text-s-12"
+                      >({{ stopLossPct >= 0 ? '+' : ''
+                      }}{{ stopLossPct.toFixed(0) }}%)</span
+                    >
+                    <app-btn-icon
+                      label="delete stop loss"
+                      @click="clearStopLoss"
+                      height="h-5"
+                      width="w-5"
+                    >
+                      <x-mark-icon />
+                    </app-btn-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- Summary -->
             <div class="flex justify-between text-s-14 px-3 mb-3.5 font-medium">
-              <span class="text-[#58595b]">Position size</span>
+              <span class="text-info">Position size</span>
               <span class="text-textDark font-bold">{{
                 positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00'
               }}</span>
             </div>
             <div class="flex justify-between text-s-14 px-3 mb-2 font-medium">
-              <span class="text-[#58595b]">Estimated Liquidation</span>
+              <span class="text-info">Est. Liquidation</span>
               <span class="text-textDark font-bold">{{
                 estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
               }}</span>
@@ -493,9 +497,7 @@
                 <div
                   class="flex items-start gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
                   :class="
-                    orderType === 'market'
-                      ? 'bg-[#edf2fa]'
-                      : 'hover:bg-[#f8f9fb]'
+                    orderType === 'market' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
                   "
                   @click="setOrderType('market')"
                 >
@@ -509,7 +511,7 @@
                     <p class="font-bold text-s-14 text-textDark">
                       Market Order
                     </p>
-                    <p class="text-[#58595b] text-s-12 mt-0.5">
+                    <p class="text-info text-s-12 mt-0.5">
                       Long or Short immediately
                     </p>
                   </div>
@@ -517,9 +519,7 @@
                 <div
                   class="flex items-start gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
                   :class="
-                    orderType === 'limit'
-                      ? 'bg-[#edf2fa]'
-                      : 'hover:bg-[#f8f9fb]'
+                    orderType === 'limit' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
                   "
                   @click="setOrderType('limit')"
                 >
@@ -531,7 +531,7 @@
                   <span v-else class="w-4 mt-0.5" />
                   <div>
                     <p class="font-bold text-s-14 text-textDark">Limit Order</p>
-                    <p class="text-[#58595b] text-s-12 mt-0.5">
+                    <p class="text-info text-s-12 mt-0.5">
                       You set the price to enter a Long or Short
                     </p>
                   </div>
@@ -539,28 +539,9 @@
               </div>
             </div>
           </div>
-
-          <!-- Position Info -->
-          <div class="flex justify-between text-s-14 px-4 mb-1.5 font-medium">
-            <span class="text-[#58595b]">Position size</span>
-            <span class="text-textDark font-bold">{{
-              formatUsd(positionNotionalValue)
-            }}</span>
-          </div>
-          <div class="flex justify-between text-s-14 px-4 mb-4 font-medium">
-            <span class="text-[#58595b]">Current Profit</span>
-            <span
-              :class="positionPnl >= 0 ? 'text-[#00c896]' : 'text-[#ff5b5a]'"
-              class="font-bold"
-            >
-              {{ formatPnl(String(positionPnl)) }}
-              ({{ (positionRoe * 100).toFixed(2) }}%)
-            </span>
-          </div>
-
           <!-- ADD MODE -->
           <template v-if="manageMode === 'add'">
-            <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-4">
+            <div class="bg-mewBg rounded-[24px] pt-5 pb-5 px-4 mb-4">
               <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
                 Add margin
               </p>
@@ -672,9 +653,7 @@
                 class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
                 @click="openAutoCloseModal"
               >
-                <span class="text-s-16 font-medium text-textDark ml-1"
-                  >Auto close</span
-                >
+                <span class="text-info">Auto close</span>
                 <button
                   class="flex items-center gap-1.5 text-[#0052ff] text-s-16 font-bold mr-1"
                 >
@@ -724,7 +703,7 @@
                     }}</span>
                     <span
                       v-if="takeProfitPct !== null"
-                      class="text-[#00c896] font-bold text-s-12"
+                      class="text-success font-bold text-s-12"
                       >({{ takeProfitPct >= 0 ? '+' : ''
                       }}{{ takeProfitPct.toFixed(0) }}%)</span
                     >
@@ -747,7 +726,7 @@
                     }}</span>
                     <span
                       v-if="stopLossPct !== null"
-                      class="text-[#ff5b5a] font-bold text-s-12"
+                      class="text-error font-bold text-s-12"
                       >({{ stopLossPct >= 0 ? '+' : ''
                       }}{{ stopLossPct.toFixed(0) }}%)</span
                     >
@@ -781,7 +760,7 @@
 
           <!-- CLOSE MODE -->
           <template v-else>
-            <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-8">
+            <div class="bg-mewBg rounded-[24px] pt-5 pb-5 px-4 mb-8">
               <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
                 Amount to close
               </p>
@@ -833,7 +812,7 @@
 
             <!-- Target Price (Limit) for Close -->
             <template v-if="orderType === 'limit'">
-              <div class="bg-[#edf2fa] rounded-[24px] pt-5 pb-5 px-4 mb-4">
+              <div class="bg-mewBg rounded-[24px] pt-5 pb-5 px-4 mb-4">
                 <p class="text-s-14 font-bold text-textDark mb-3 ml-2">
                   Target {{ displaySymbol }} price
                 </p>
@@ -872,7 +851,7 @@
               v-if="closeError"
               class="mx-4 mb-4 bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
             >
-              <p class="text-[#ff5b5a] text-s-14 font-medium">
+              <p class="text-error text-s-14 font-medium">
                 {{ closeError }}
               </p>
             </div>
@@ -943,25 +922,23 @@
           </div>
 
           <!-- Order Details -->
-          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-5 space-y-3">
+          <div class="bg-mewBg rounded-[20px] p-5 mb-5 space-y-3">
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Side</span>
+              <span class="text-info font-medium">Side</span>
               <span
                 class="font-bold"
-                :class="
-                  orderSide === 'buy' ? 'text-[#00c896]' : 'text-[#ff5b5a]'
-                "
+                :class="orderSide === 'buy' ? 'text-success' : 'text-error'"
                 >{{ orderSide === 'buy' ? 'Long' : 'Short' }}</span
               >
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Order type</span>
+              <span class="text-info font-medium">Order type</span>
               <span class="text-textDark font-bold">{{
                 orderType === 'market' ? 'Market' : 'Limit'
               }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Market price</span>
+              <span class="text-info font-medium">Market price</span>
               <span class="text-textDark font-bold">{{
                 formatUsd(currentPrice)
               }}</span>
@@ -970,33 +947,33 @@
               v-if="orderType === 'limit'"
               class="flex justify-between text-s-14"
             >
-              <span class="text-[#58595b] font-medium">Limit price</span>
+              <span class="text-info font-medium">Limit price</span>
               <span class="text-textDark font-bold">${{ limitPrice }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Margin</span>
+              <span class="text-info font-medium">Margin</span>
               <span class="text-textDark font-bold">{{
                 formatUsd(parseFloat(inputAmount) || 0)
               }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Leverage</span>
+              <span class="text-info font-medium">Leverage</span>
               <span class="text-textDark font-bold">{{ leverage }}&times;</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Position size</span>
+              <span class="text-info font-medium">Position size</span>
               <span class="text-textDark font-bold">{{
                 formatUsd(positionSizeUsd)
               }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium"
+              <span class="text-info font-medium"
                 >Size ({{ displaySymbol }})</span
               >
               <span class="text-textDark font-bold">{{ orderSize }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Est. liquidation</span>
+              <span class="text-info font-medium">Est. liquidation</span>
               <span class="text-textDark font-bold">{{
                 estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
               }}</span>
@@ -1005,8 +982,8 @@
               v-if="takeProfitPrice !== null"
               class="flex justify-between text-s-14"
             >
-              <span class="text-[#58595b] font-medium">Take Profit</span>
-              <span class="text-[#00c896] font-bold">{{
+              <span class="text-info font-medium">Take Profit</span>
+              <span class="text-success font-bold">{{
                 formatUsd(takeProfitPrice)
               }}</span>
             </div>
@@ -1014,8 +991,8 @@
               v-if="stopLossPrice !== null"
               class="flex justify-between text-s-14"
             >
-              <span class="text-[#58595b] font-medium">Stop Loss</span>
-              <span class="text-[#ff5b5a] font-bold">{{
+              <span class="text-info font-medium">Stop Loss</span>
+              <span class="text-error font-bold">{{
                 formatUsd(stopLossPrice)
               }}</span>
             </div>
@@ -1026,7 +1003,7 @@
             v-if="orderError"
             class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
           >
-            <p class="text-[#ff5b5a] text-s-14 font-medium">{{ orderError }}</p>
+            <p class="text-error text-s-14 font-medium">{{ orderError }}</p>
           </div>
 
           <!-- Actions -->
@@ -1100,15 +1077,15 @@
           </div>
 
           <!-- Close Details -->
-          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-5 space-y-3">
+          <div class="bg-mewBg rounded-[20px] p-5 mb-5 space-y-3">
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Side</span>
+              <span class="text-info font-medium">Side</span>
               <span
                 class="font-bold"
                 :class="
                   activePosition?.direction === 'long'
-                    ? 'text-[#ff5b5a]'
-                    : 'text-[#00c896]'
+                    ? 'text-error'
+                    : 'text-success'
                 "
                 >{{
                   activePosition?.direction === 'long'
@@ -1118,38 +1095,38 @@
               >
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Order type</span>
+              <span class="text-info font-medium">Order type</span>
               <span class="text-textDark font-bold">Market</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Market price</span>
+              <span class="text-info font-medium">Market price</span>
               <span class="text-textDark font-bold">{{
                 formatUsd(currentPrice)
               }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Close amount</span>
+              <span class="text-info font-medium">Close amount</span>
               <span class="text-textDark font-bold">{{
                 formatUsd(parseFloat(closeAmount) || 0)
               }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium"
+              <span class="text-info font-medium"
                 >Size ({{ displaySymbol }})</span
               >
               <span class="text-textDark font-bold">{{ closeOrderSize }}</span>
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Close percentage</span>
+              <span class="text-info font-medium">Close percentage</span>
               <span class="text-textDark font-bold"
                 >{{ Math.round(closeSliderValue) }}%</span
               >
             </div>
             <div class="flex justify-between text-s-14">
-              <span class="text-[#58595b] font-medium">Current P&amp;L</span>
+              <span class="text-info font-medium">Current P&amp;L</span>
               <span
                 class="font-bold"
-                :class="positionPnl >= 0 ? 'text-[#00c896]' : 'text-[#ff5b5a]'"
+                :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
                 >{{ formatPnl(String(positionPnl)) }} ({{
                   (positionRoe * 100).toFixed(2)
                 }}%)</span
@@ -1162,7 +1139,7 @@
             v-if="closeError"
             class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
           >
-            <p class="text-[#ff5b5a] text-s-14 font-medium">{{ closeError }}</p>
+            <p class="text-error text-s-14 font-medium">{{ closeError }}</p>
           </div>
 
           <!-- Actions -->
@@ -1330,8 +1307,8 @@
                   class="text-s-12 font-medium"
                   :class="
                     parseFloat(contract.priceChangePercent ?? '0') >= 0
-                      ? 'text-[#00c896]'
-                      : 'text-[#ff5b5a]'
+                      ? 'text-success'
+                      : 'text-error'
                   "
                 >
                   {{ formatPriceChange(contract.priceChangePercent) }}
@@ -1396,7 +1373,7 @@
           </div>
 
           <!-- Leverage Card -->
-          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-5">
+          <div class="bg-mewBg rounded-[20px] p-5 mb-5">
             <!-- +/- Controls -->
             <div class="flex items-center justify-center gap-6 mb-5">
               <button
@@ -1451,7 +1428,7 @@
           </div>
 
           <!-- Description -->
-          <p class="text-s-14 text-[#58595b] mb-6 leading-relaxed">
+          <p class="text-s-14 text-info mb-6 leading-relaxed">
             Leverage increases both your potential profits and losses. Using
             higher leverage means higher risk of losing your position.
             <a href="#" class="text-[#0052ff] font-medium hover:underline"
@@ -1464,7 +1441,7 @@
             v-if="leverageError"
             class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
           >
-            <p class="text-[#ff5b5a] text-s-14 font-medium">
+            <p class="text-error text-s-14 font-medium">
               {{ leverageError }}
             </p>
           </div>
@@ -1528,7 +1505,7 @@
               }}</span>
             </div>
             <div class="text-right">
-              <span class="text-[#58595b] text-s-14 mr-2">Current price</span>
+              <span class="text-info text-s-14 mr-2">Current price</span>
               <span class="font-bold text-s-16 text-textDark">{{
                 formatUsd(currentPrice)
               }}</span>
@@ -1536,7 +1513,7 @@
           </div>
 
           <!-- Take Profit -->
-          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-4">
+          <div class="bg-mewBg rounded-[20px] p-5 mb-4">
             <div class="flex justify-between items-center mb-3 px-1">
               <p class="text-s-14 font-bold text-textDark">
                 Take profit if {{ displaySymbol }} reaches
@@ -1553,7 +1530,7 @@
             >
               <div class="flex items-center justify-between mb-4">
                 <div
-                  class="flex items-center gap-1 text-s-14 font-medium text-[#58595b]"
+                  class="flex items-center gap-1 text-s-14 font-medium text-info"
                 >
                   Price
                 </div>
@@ -1586,8 +1563,8 @@
                 "
                 class="text-right text-s-13 mt-2"
               >
-                <span class="text-[#58595b]">Projected profit</span>
-                <span class="text-[#00c896] font-bold ml-2"
+                <span class="text-info">Projected profit</span>
+                <span class="text-success font-bold ml-2"
                   >+{{ formatUsd(Math.abs(tempProjectedProfit)) }}</span
                 >
               </div>
@@ -1595,7 +1572,7 @@
           </div>
 
           <!-- Stop Loss -->
-          <div class="bg-[#edf2fa] rounded-[20px] p-5 mb-6">
+          <div class="bg-mewBg rounded-[20px] p-5 mb-6">
             <div class="flex justify-between items-center mb-3 px-1">
               <p class="text-s-14 font-bold text-textDark">
                 Stop loss if {{ displaySymbol }} reaches
@@ -1612,7 +1589,7 @@
             >
               <div class="flex items-center justify-between mb-4">
                 <div
-                  class="flex items-center gap-1 text-s-14 font-medium text-[#58595b]"
+                  class="flex items-center gap-1 text-s-14 font-medium text-info"
                 >
                   Price
                 </div>
@@ -1643,8 +1620,8 @@
                 v-if="tempProjectedLoss !== null && tempStopLossPrice !== null"
                 class="text-right text-s-13 mt-2"
               >
-                <span class="text-[#58595b]">Projected loss</span>
-                <span class="text-[#ff5b5a] font-bold ml-2"
+                <span class="text-info">Projected loss</span>
+                <span class="text-error font-bold ml-2"
                   >-{{ formatUsd(Math.abs(tempProjectedLoss)) }}</span
                 >
               </div>
@@ -1665,6 +1642,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import {
+  ChevronDownIcon,
+  CheckIcon,
+  ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+  PencilIcon,
+  XMarkIcon,
+} from '@heroicons/vue/24/solid'
 import {
   formatUsd,
   formatPnl,
@@ -1673,6 +1659,11 @@ import {
 } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
+import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { storeToRefs } from 'pinia'
@@ -1695,6 +1686,7 @@ const {
   priceChange,
   // Order form
   orderSide,
+  orderSideButtons,
   orderType,
   inputAmount,
   leverage,
@@ -1703,6 +1695,7 @@ const {
   estimatedLiquidation,
   orderSize,
   availableMargin,
+  setOrderSide,
   // Position
   activePosition,
   positionNotionalValue,
@@ -1778,10 +1771,18 @@ const {
   openLeverageModal,
   saveLeverage,
 } = usePerpsTradeForm()
+
+const isLoading = computed(() => false)
+
+const selectedToken = computed(() => ({
+  logo_url: getLogoUrl(displaySymbol.value),
+  symbol: displaySymbol.value,
+  ondo: undefined,
+}))
 </script>
 
 <style scoped>
-.slider-input::-webkit-slider-thumb {
+/* .slider-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
@@ -1792,9 +1793,9 @@ const {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: transform 0.1s;
-}
+} */
 
-.slider-input:active::-webkit-slider-thumb {
+/* .slider-input:active::-webkit-slider-thumb {
   transform: scale(1.1);
 }
 
@@ -1806,9 +1807,9 @@ const {
   border: 4px solid white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-}
+} */
 
-.leverage-slider::-webkit-slider-thumb {
+/* .leverage-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
@@ -1823,9 +1824,9 @@ const {
 
 .leverage-slider:active::-webkit-slider-thumb {
   transform: scale(1.1);
-}
+} */
 
-.leverage-slider::-moz-range-thumb {
+/* .leverage-slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -1833,28 +1834,28 @@ const {
   border: 4px solid white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-}
+} */
 
-.market-list-scroll::-webkit-scrollbar {
+/* .market-list-scroll::-webkit-scrollbar {
   width: 6px;
-}
+} */
 
-.market-list-scroll::-webkit-scrollbar-track {
+/* .market-list-scroll::-webkit-scrollbar-track {
   background: transparent;
   margin: 8px 0;
-}
+} */
 
-.market-list-scroll::-webkit-scrollbar-thumb {
+/* .market-list-scroll::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 3px;
-}
+} */
 
-.market-list-scroll::-webkit-scrollbar-thumb:hover {
+/* .market-list-scroll::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
-}
+} */
 
-.market-list-scroll {
+/* .market-list-scroll {
   scrollbar-width: thin;
   scrollbar-color: #d1d5db transparent;
-}
+} */
 </style>
