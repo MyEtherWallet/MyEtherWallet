@@ -1,10 +1,16 @@
 <template>
   <div class="chart-wrapper flex relative">
-    <Line ref="historyChart" :data="chartData" :options="chartOptions" />
+    <Line
+      ref="historyChart"
+      :data="chartData"
+      :options="chartOptions"
+      :plugins="plugins"
+    />
     <div
       v-if="customTooltip"
       ref="tooltipEl"
       class="chart-custom-tooltip"
+      :class="`chart-custom-tooltip--${customTooltip.placement}`"
       :style="customTooltip.style"
     >
       <div class="tooltip-title">{{ customTooltip.title }}</div>
@@ -52,6 +58,7 @@ interface TooltipState {
   title: string
   rows: { label: string; value: string; color: string }[]
   style: Record<string, string>
+  placement: 'top' | 'bottom'
 }
 
 const props = defineProps<{
@@ -97,10 +104,37 @@ const bottomPoints = computed(() => props.bottomData?.map(d => d.value) || [])
 const chartWidth = ref<number>(0)
 const chartHeight = ref<number>(0)
 const gradient = ref<CanvasGradient | null>(null)
+const plugins = [
+  {
+    id: 'verticalLine',
+    afterDraw: (chart: Chart) => {
+      if ((chart.tooltip?.opacity ?? 0) > 0) {
+        const x = chart.tooltip!.caretX
+        const ctx = chart.ctx
+        const topY = chart.chartArea.top
+        const bottomY = chart.chartArea.bottom
+
+        ctx.save()
+        ctx.setLineDash([5, 5])
+        ctx.beginPath()
+        ctx.moveTo(x, topY)
+        ctx.lineTo(x, bottomY)
+        ctx.lineWidth = 1
+        ctx.strokeStyle = 'rgba(0,90,229,0.65)'
+        ctx.stroke()
+        ctx.restore()
+      }
+    },
+  },
+]
+
 const chartData = computed<ChartData<'line'>>(() => {
   const lineSettings = {
     borderWidth: 1.5,
     pointRadius: 0,
+    pointHoverRadius: 5,
+    pointHoverBorderWidth: 2,
+    pointHoverBorderColor: '#fff',
     tension: 0.5, // low smoothing to keep detail
   }
   const dataSet: ChartData<'line'> = {
@@ -179,6 +213,14 @@ const yBounds = computed(() => {
 const chartOptions = computed<ChartOptions<'line'>>(() => ({
   responsive: true,
   maintainAspectRatio: false,
+  interaction: {
+    mode: 'index',
+    intersect: false,
+  },
+  hover: {
+    mode: 'index',
+    intersect: false,
+  },
   plugins: {
     tooltip: props.seriesLabels
       ? {
@@ -220,11 +262,9 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
               })
             })
 
-            const left = tooltip.caretX
-            const top = tooltip.caretY
             const chartRect = chart.canvas.getBoundingClientRect()
-            const wrapperRect =
-              chart.canvas.parentElement?.getBoundingClientRect()
+            const wrapperEl = chart.canvas.parentElement
+            const wrapperRect = wrapperEl?.getBoundingClientRect()
             const offsetLeft = wrapperRect
               ? chartRect.left - wrapperRect.left
               : 0
@@ -232,12 +272,30 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
               ? chartRect.top - wrapperRect.top
               : 0
 
+            const estRowHeight = 22
+            const estTooltipHeight = 46 + rows.length * estRowHeight
+            const estTooltipWidth = tooltipEl.value?.offsetWidth ?? 200
+            const gap = 12
+
+            const caretX = tooltip.caretX
+            const caretY = tooltip.caretY
+
+            const placement: 'top' | 'bottom' =
+              caretY - estTooltipHeight - gap < 0 ? 'bottom' : 'top'
+
+            const wrapperWidth = wrapperRect?.width ?? chartRect.width
+            const halfWidth = estTooltipWidth / 2
+            const minLeft = halfWidth - offsetLeft + 4
+            const maxLeft = wrapperWidth - halfWidth - offsetLeft - 4
+            const clampedCaretX = Math.min(Math.max(caretX, minLeft), maxLeft)
+
             customTooltip.value = {
               title,
               rows,
+              placement,
               style: {
-                left: left + offsetLeft + 'px',
-                top: top + offsetTop + 'px',
+                left: clampedCaretX + offsetLeft + 'px',
+                top: caretY + offsetTop + 'px',
               },
             }
           },
@@ -353,10 +411,17 @@ canvas {
   background: rgba(0, 0, 0, 0.85);
   border-radius: 8px;
   padding: 10px 14px;
-  transform: translate(-50%, calc(-100% - 12px));
   white-space: nowrap;
   z-index: 10;
   font-family: Roboto, sans-serif;
+}
+
+.chart-custom-tooltip--top {
+  transform: translate(-50%, calc(-100% - 12px));
+}
+
+.chart-custom-tooltip--bottom {
+  transform: translate(-50%, 12px);
 }
 
 .tooltip-title {
