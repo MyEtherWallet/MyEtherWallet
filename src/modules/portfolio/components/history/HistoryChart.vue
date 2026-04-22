@@ -19,6 +19,10 @@
         :key="row.label"
         class="tooltip-row"
       >
+        <span
+          class="tooltip-dot"
+          :style="{ backgroundColor: row.color }"
+        ></span>
         <span class="tooltip-label">{{ row.label }}</span>
         <span class="tooltip-value">{{ row.value }}</span>
       </div>
@@ -435,6 +439,14 @@ canvas {
   gap: 8px;
   font-size: 14px;
   line-height: 1.6;
+}
+
+.tooltip-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .tooltip-label {
