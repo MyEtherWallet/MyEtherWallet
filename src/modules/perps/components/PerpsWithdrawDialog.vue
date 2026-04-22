@@ -85,6 +85,7 @@ import { perpsClient } from '../configs'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 
 const props = defineProps<{
   visible: boolean
@@ -103,6 +104,7 @@ const { accountId, triggerRefresh } = usePerpsAuth()
 const { balance } = usePerpsBalance()
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
+const perpsToasts = usePerpsToasts()
 
 const amount = ref('')
 const sending = ref(false)
@@ -172,7 +174,9 @@ async function submitWithdraw() {
     })
     withdrawalSuccess.value = true
     triggerRefresh()
+    perpsToasts.toastWithdrawalComplete()
   } catch (e) {
+    // TODO(perps-toasts): spec has no withdrawal-failure toast; revisit with design if needed
     error.value = e instanceof Error ? e.message : 'Withdrawal failed'
   } finally {
     sending.value = false

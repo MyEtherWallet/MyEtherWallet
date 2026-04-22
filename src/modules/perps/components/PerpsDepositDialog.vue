@@ -263,6 +263,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import type { EstimatesRequestBody, QuotesResponse } from '@/mew_api/types'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { useI18n } from 'vue-i18n'
@@ -285,12 +286,23 @@ const { selectedChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 const { gasPriceType: selectedFee } = storeToRefs(globalStore)
 const toastStore = useToastStore()
+const perpsToasts = usePerpsToasts()
 
 watch(isOpen, open => {
+  // TODO(perps-toasts): confirm which cancel path should fire toastDepositCanceled.
+  // There is no explicit cancel button for an in-progress deposit; the user can only
+  // close the dialog via the app-dialog close control. Distinguishing "dialog closed
+  // while deposit was in-flight (sending=true)" from "dialog closed before starting"
+  // requires state tracking not present here. Add perpsToasts.toastDepositCanceled()
+  // to the "!open && sending.value" branch once that tracking is confirmed with design.
+
   if (!open) return
   if (selectedChain.value?.name !== 'ETHEREUM') {
     const ethChain = chains.value.find(c => c.name === 'ETHEREUM')
     if (ethChain) {
+      // Note: setSelectedNetwork is a synchronous store mutation (no user interaction),
+      // so toastFailedToSwitchNetwork does not apply here. This toast is intentionally
+      // kept as an informational message about the automatic switch.
       globalStore.setSelectedNetwork('ETHEREUM')
       toastStore.addToastMessage({
         text: 'Switched network to Ethereum',
@@ -505,18 +517,11 @@ const sendSandboxDeposit = async () => {
       chain_id: 'eth-sepolia',
     })
     triggerRefresh()
-    toastStore.addToastMessage({
-      text: 'Deposit submitted!',
-      textSecondary:
-        'Deposit of ' +
-        amount.value +
-        ' USDC submitted! Funds may take a few minutes to appear in your perps balance.',
-      type: ToastType.Success,
-      duration: 180000,
-    })
+    perpsToasts.toastDepositComplete(amount.value, 'USDC')
     clearAmount()
   } catch (e: any) {
     error.value = e?.message || e?.toString() || 'Sandbox deposit failed'
+    perpsToasts.toastFailedToInitiateDeposit()
   } finally {
     sending.value = false
   }
@@ -585,15 +590,7 @@ const sendLiveDeposit = async () => {
     const hash = await broadcastFn?.(signedTx as HexPrefixedString)
     if (hash) {
       triggerRefresh()
-      toastStore.addToastMessage({
-        text: 'Deposit submitted!',
-        textSecondary:
-          'Deposit of ' +
-          amount.value +
-          ' USDC submitted! Funds may take a few minutes to appear in your perps balance.',
-        type: ToastType.Success,
-        duration: 180000,
-      })
+      perpsToasts.toastDepositInitiated()
       clearAmount()
     }
   } catch (e: any) {
@@ -606,6 +603,7 @@ const sendLiveDeposit = async () => {
     } else {
       error.value = msg || 'Transaction failed'
     }
+    perpsToasts.toastFailedToCreditAccount()
   } finally {
     sending.value = false
   }
