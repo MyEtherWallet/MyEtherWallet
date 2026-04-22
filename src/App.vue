@@ -6,10 +6,9 @@
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <the-gdpr-banner v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
-    <!-- <app-mew-wallet-banner
+    <app-mew-wallet-banner
       v-if="isLoadingComplete && !isTradingRestrictedInRegion"
-    /> -->
-    <app-mew-wallet-banner />
+    />
   </div>
 </template>
 
@@ -43,8 +42,7 @@ import { useRewardsStore } from '@/stores/rewardsStore'
 import Intercom from '@intercom/messenger-js-sdk'
 import { useMarketStatus } from './modules/trade/composables'
 
-const { fetchMarketStatus } = useMarketStatus()
-// const { isTradingRestrictedInRegion, fetchMarketStatus } = useMarketStatus()
+const { isTradingRestrictedInRegion, fetchMarketStatus } = useMarketStatus()
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
