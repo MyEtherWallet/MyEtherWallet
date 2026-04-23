@@ -289,14 +289,15 @@ const toastStore = useToastStore()
 const perpsToasts = usePerpsToasts()
 
 watch(isOpen, open => {
-  // TODO(perps-toasts): confirm which cancel path should fire toastDepositCanceled.
-  // There is no explicit cancel button for an in-progress deposit; the user can only
-  // close the dialog via the app-dialog close control. Distinguishing "dialog closed
-  // while deposit was in-flight (sending=true)" from "dialog closed before starting"
-  // requires state tracking not present here. Add perpsToasts.toastDepositCanceled()
-  // to the "!open && sending.value" branch once that tracking is confirmed with design.
-
-  if (!open) return
+  if (!open) {
+    // Dialog closed mid-deposit: surface a single "Deposit Canceled" toast
+    // and flag the in-flight flow so it skips its own success/failure toasts.
+    if (sending.value) {
+      perpsToasts.toastDepositCanceled()
+      wasCanceledMidFlight.value = true
+    }
+    return
+  }
   if (selectedChain.value?.name !== 'ETHEREUM') {
     const ethChain = chains.value.find(c => c.name === 'ETHEREUM')
     if (ethChain) {
@@ -322,6 +323,25 @@ const error = ref<string | null>(null)
 const amount = ref('')
 const sending = ref(false)
 const showDepositAddress = ref(false)
+// Set to true when the dialog is closed mid-deposit; the in-flight deposit
+// flow checks this before firing success/failure toasts so the user only
+// sees a single "Deposit Canceled" toast in that case.
+const wasCanceledMidFlight = ref(false)
+
+// User-cancel phrases used to distinguish a wallet-prompt rejection (which
+// should yield "Deposit Canceled") from a generic RPC/API "rejected" error
+// (which should still surface as a failure toast).
+const USER_CANCEL_PATTERNS = [
+  'user rejected',
+  'user denied',
+  'rejected by user',
+  'cancelled by user',
+  'canceled by user',
+]
+const isUserCancelError = (e: unknown) => {
+  const msg = (e instanceof Error ? e.message : String(e ?? '')).toLowerCase()
+  return USER_CANCEL_PATTERNS.some(p => msg.includes(p))
+}
 
 /** --------------------------
  * AMOUNT
@@ -510,6 +530,7 @@ const sendSandboxDeposit = async () => {
   if (!amount.value || !accountId.value) return
   sending.value = true
   error.value = null
+  wasCanceledMidFlight.value = false
   try {
     await perpsClient.sandboxDeposit({
       amount: parseFloat(amount.value).toFixed(2),
@@ -518,18 +539,20 @@ const sendSandboxDeposit = async () => {
       chain_id: 'eth-sepolia',
     })
     triggerRefresh()
-    perpsToasts.toastDepositComplete(amount.value, 'USDC')
+    if (!wasCanceledMidFlight.value) {
+      perpsToasts.toastDepositComplete(amount.value, 'USDC')
+    }
     clearAmount()
-  } catch (e: any) {
-    const msg = e?.message || e?.toString() || ''
-    const isRejection =
-      msg.toLowerCase().includes('user rejected') ||
-      msg.toLowerCase().includes('rejected')
-    if (isRejection) {
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e ?? '')
+    if (isUserCancelError(e)) {
       error.value = 'Transaction cancelled by user'
+      if (!wasCanceledMidFlight.value) perpsToasts.toastDepositCanceled()
     } else {
       error.value = msg || 'Sandbox deposit failed'
-      perpsToasts.toastFailedToInitiateDeposit()
+      if (!wasCanceledMidFlight.value) {
+        perpsToasts.toastFailedToInitiateDeposit()
+      }
     }
   } finally {
     sending.value = false
@@ -546,6 +569,7 @@ const sendLiveDeposit = async () => {
     return
   sending.value = true
   error.value = null
+  wasCanceledMidFlight.value = false
   try {
     const usdcContract = USDC_CONTRACT
     const decimals = usdcBalance.value.decimals ?? 6
@@ -597,21 +621,24 @@ const sendLiveDeposit = async () => {
         : wallet.value.broadcastTransaction
 
     const hash = await broadcastFn?.(signedTx as HexPrefixedString)
-    if (hash) {
-      triggerRefresh()
-      perpsToasts.toastDepositInitiated()
-      clearAmount()
+    if (!hash) {
+      throw new Error('Transaction was not broadcast')
     }
-  } catch (e: any) {
-    const msg = e?.message || e?.toString() || ''
-    const isRejection =
-      msg.toLowerCase().includes('user rejected') ||
-      msg.toLowerCase().includes('rejected')
-    if (isRejection) {
+    triggerRefresh()
+    if (!wasCanceledMidFlight.value) {
+      perpsToasts.toastDepositInitiated()
+    }
+    clearAmount()
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e ?? '')
+    if (isUserCancelError(e)) {
       error.value = 'Transaction cancelled by user'
+      if (!wasCanceledMidFlight.value) perpsToasts.toastDepositCanceled()
     } else {
       error.value = msg || 'Transaction failed'
-      perpsToasts.toastFailedToCreditAccount()
+      if (!wasCanceledMidFlight.value) {
+        perpsToasts.toastFailedToCreditAccount()
+      }
     }
   } finally {
     sending.value = false
