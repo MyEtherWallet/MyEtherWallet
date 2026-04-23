@@ -148,15 +148,16 @@ export function usePerpsBalance() {
     _sharedFetchBalance = fetchBalance
 
     const perpsToasts = usePerpsToasts()
-    const previousUnderLiquidation = ref(false)
 
+    // Only fire on a genuine false→true transition. Watching the raw field
+    // (without `?? false`) keeps the initial observation as `undefined`, so
+    // a page reload of an already-liquidated account does NOT fire the toast.
     watch(
-      () => _sharedBalance.value?.underLiquidation ?? false,
-      (current) => {
-        if (current && !previousUnderLiquidation.value) {
+      () => _sharedBalance.value?.underLiquidation,
+      (current, previous) => {
+        if (current === true && previous === false) {
           perpsToasts.toastLiquidationInitiated()
         }
-        previousUnderLiquidation.value = current
       },
       { immediate: false },
     )
