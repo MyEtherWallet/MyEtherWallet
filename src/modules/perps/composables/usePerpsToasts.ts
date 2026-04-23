@@ -210,7 +210,7 @@ export function usePerpsToasts() {
   const toastFailedToRemoveOrder = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to remove order',
+      text: 'Failed to Remove Order',
     })
   }
 
@@ -232,7 +232,9 @@ export function usePerpsToasts() {
   }
 
   const fillLine = (args: FillArgs) => {
-    const verb = humanSide(args.side) === 'Long' ? 'Bought' : 'Sold'
+    const human = humanSide(args.side)
+    const verb =
+      human === 'Long' ? 'Bought' : human === 'Short' ? 'Sold' : human
     return `${verb} ${args.filledSize}/${args.size} ${humanCategory(args.category)}: ${args.market} at ${formatPrice(args.fillPrice)}`
   }
 
@@ -279,7 +281,7 @@ export function usePerpsToasts() {
   const toastFailedToCloseAllPositions = () => {
     toastStore.addToastMessage({
       type: ToastType.Error,
-      text: 'Failed to close all positions',
+      text: 'Failed to Close All Positions',
     })
   }
 
