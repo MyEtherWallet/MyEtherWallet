@@ -114,7 +114,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-grey-outline w-full mb-2"></div>
+          <div class="h-px bg-grey-5 w-full mb-2"></div>
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
