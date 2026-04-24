@@ -56,10 +56,18 @@ const devConfigUrl = inEU ? 'https://analytics-web-development-v7.mewwallet.dev/
 const prodSessionReplayUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-v7.mewwallet.dev/session-replay'
 const devSessionReplayUrl = inEU ? 'https://analytics-web-development-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-development-v7.mewwallet.dev/session-replay'
 
+const sessionId = amplitude.getSessionId()
+const deviceId = amplitude.getDeviceId()
+
 sessionReplay.init(__TMP_HASHED_VERSION__, {
-  configServerUrl: process.env.NODE_ENV === 'production' ? prodConfigUrl : prodConfigUrl,
-  trackServerUrl: process.env.NODE_ENV === 'production' ? prodSessionReplayUrl : prodSessionReplayUrl,
+  configServerUrl: process.env.NODE_ENV === 'production' ? prodConfigUrl : devConfigUrl,
+  trackServerUrl: process.env.NODE_ENV === 'production' ? prodSessionReplayUrl : devSessionReplayUrl,
   optOut: !consentToTrack,
+  sessionId: sessionId,
+  deviceId: deviceId,
+  serverZone: inEU ? 'EU' : 'US',
+  debugMode: process.env.NODE_ENV !== 'production',
+  sampleRate: 5
 })
 
 /**

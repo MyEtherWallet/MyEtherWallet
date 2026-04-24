@@ -74,7 +74,6 @@ watch(
   () => consent.value,
   (newVal, oldVal) => {
     if (newVal && !oldVal) {
-      console.log(userProperties.value)
       analytics.setUserProperties({
         ...userProperties.value,
         network: selectedChain.value?.name,
