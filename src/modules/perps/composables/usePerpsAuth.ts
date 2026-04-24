@@ -1,8 +1,9 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
+import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -145,6 +146,21 @@ export function usePerpsBalance() {
     }, 500)
 
     _sharedFetchBalance = fetchBalance
+
+    const perpsToasts = usePerpsToasts()
+
+    // Only fire on a genuine false→true transition. Watching the raw field
+    // (without `?? false`) keeps the initial observation as `undefined`, so
+    // a page reload of an already-liquidated account does NOT fire the toast.
+    watch(
+      () => _sharedBalance.value?.underLiquidation,
+      (current, previous) => {
+        if (current === true && previous === false) {
+          perpsToasts.toastLiquidationInitiated()
+        }
+      },
+      { immediate: false },
+    )
   }
 
   return { balance, loading, refetch: _sharedFetchBalance! }
