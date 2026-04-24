@@ -110,148 +110,196 @@
             </div>
           </div>
         </div>
+        <div class="flex items-center justify-between">
+          <div
+            v-if="!activePosition"
+            class="flex w-full gap-1 bg-white p-1 rounded-full shadow-button shadow-button-elevated"
+          >
+            <button
+              v-for="side in orderSideButtons"
+              :key="side.value"
+              class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 p-4 w-full"
+              :class="[
+                orderSide === side.value
+                  ? 'text-white  shadow-button shadow-button-elevated'
+                  : ' hoverNoBG ',
+                {
+                  'bg-success':
+                    orderSide === side.value && side.value === 'buy',
+                  'bg-error': orderSide === side.value && side.value === 'sell',
+                },
+              ]"
+              @click="setOrderSide(side.value)"
+            >
+              {{ side.label }}
+              <arrow-trending-up-icon
+                v-if="side.value === 'buy'"
+                class="w-4 h-4"
+                :class="orderSide === side.value ? 'text-white' : 'text-black'"
+              />
+              <arrow-trending-down-icon
+                v-if="side.value === 'sell'"
+                class="w-4 h-4"
+                :class="orderSide === side.value ? 'text-white' : 'text-black'"
+              />
+            </button>
+          </div>
+          <div
+            v-else
+            class="flex w-full gap-1 bg-white p-1 rounded-full shadow-button shadow-button-elevated"
+          >
+            <button
+              class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 w-full"
+              :class="[
+                manageMode === 'add'
+                  ? ' text-white shadow-button shadow-button-elevated'
+                  : 'hoverNoBG',
+                {
+                  'bg-success': orderSide === 'buy' && manageMode === 'add',
+                  'bg-error': orderSide === 'sell' && manageMode === 'add',
+                },
+              ]"
+              @click="manageMode = 'add'"
+            >
+              Add
+            </button>
+            <button
+              class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 w-full"
+              :class="[
+                manageMode === 'close'
+                  ? 'text-white shadow-button shadow-button-elevated'
+                  : 'hoverNoBG',
+                {
+                  'bg-success': orderSide === 'buy' && manageMode === 'close',
+                  'bg-error': orderSide === 'sell' && manageMode === 'close',
+                },
+              ]"
+              @click="manageMode = 'close'"
+            >
+              Close
+            </button>
+          </div>
+          <app-pop-up-menu
+            :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
+            location="right"
+            class="ml-3"
+          >
+            <template #menu-content="{ toggleMenu }">
+              <div
+                class="bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] w-[260px] p-2 overflow-hidden"
+              >
+                <div
+                  class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
+                  :class="
+                    orderType === 'market' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
+                  "
+                  @click="[setOrderType('market'), toggleMenu()]"
+                >
+                  <div>
+                    <p class="font-bold text-s-14">Market Order</p>
+                    <p class="text-info text-s-12 mt-0.5">
+                      Long or Short immediately
+                    </p>
+                  </div>
+                  <check-icon
+                    v-if="orderType === 'market'"
+                    class="text-primary h-5 w-5"
+                  ></check-icon>
+
+                  <span v-else class="w-4 mt-0.5" />
+                </div>
+                <div
+                  class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
+                  :class="
+                    orderType === 'limit' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
+                  "
+                  @click="[setOrderType('limit'), toggleMenu()]"
+                >
+                  <div>
+                    <p class="font-bold text-s-14">Limit Order</p>
+                    <p class="text-info text-s-12 mt-0.5">
+                      You set the price to enter a Long or Short
+                    </p>
+                  </div>
+                  <check-icon
+                    v-if="orderType === 'limit'"
+                    class="text-primary h-5 w-5"
+                  ></check-icon>
+                  <span v-else class="w-4 mt-0.5" />
+                </div>
+              </div>
+            </template>
+          </app-pop-up-menu>
+        </div>
+        <!-- Target Price (Limit Orders) -->
+        <div
+          v-if="orderType === 'limit'"
+          class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 py-3 transition-all flex flex-col justify-between"
+        >
+          <p class="font-semibold text-s-12 text-info">
+            Target {{ displaySymbol }} price
+          </p>
+          <div class="flex items-center py-1">
+            <span
+              class="font-bold text-s-20 tracking-tight"
+              :class="!limitPrice || limitPrice === '' ? 'opacity-50' : ''"
+              >$</span
+            >
+            <input
+              v-model="limitPrice"
+              type="text"
+              inputmode="decimal"
+              placeholder="0.00"
+              class="w-full font-bold text-s-20 tracking-tight outline-none bg-transparent"
+              @keydown="
+                e => {
+                  if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
+                }
+              "
+              @input="onLimitPriceInput"
+            />
+          </div>
+
+          <transition name="fade" mode="out-in">
+            <div
+              v-if="
+                limitPrice &&
+                (isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) <= 0)
+              "
+              class="text-error text-s-12 mb-1"
+            >
+              Invalid price
+            </div>
+            <div
+              v-else-if="limitPrice && parseFloat(limitPrice) >= 10000000"
+              class="text-error text-s-12 mb-1"
+            >
+              Price must be less than $10,000,000
+            </div>
+          </transition>
+
+          <div class="flex justify-start gap-2 mt-1">
+            <button
+              v-for="pct in [-10, -5, 0, 5, 10]"
+              :key="pct"
+              class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+              @click="setLimitPricePct(pct)"
+            >
+              {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
+            </button>
+          </div>
+        </div>
 
         <!-- Long / Short Toggle + Order Type on same row (no position) -->
-        <template v-if="!activePosition">
-          <div class="flex items-center justify-between">
-            <div
-              class="flex w-full gap-1 bg-white p-1 rounded-full shadow-button shadow-button-elevated"
-            >
-              <button
-                v-for="side in orderSideButtons"
-                :key="side.value"
-                class="flex items-center justify-center gap-1.5 px-5 py-2 text-s-14 font-bold transition-all duration-200 rounded-20 p-4 w-full"
-                :class="[
-                  orderSide === side.value
-                    ? 'text-white  shadow-button shadow-button-elevated'
-                    : ' hoverNoBG ',
-                  {
-                    'bg-success':
-                      orderSide === side.value && side.value === 'buy',
-                    'bg-error':
-                      orderSide === side.value && side.value === 'sell',
-                  },
-                ]"
-                @click="setOrderSide(side.value)"
-              >
-                {{ side.label }}
-                <arrow-trending-up-icon
-                  v-if="side.value === 'buy'"
-                  class="w-4 h-4"
-                  :class="
-                    orderSide === side.value ? 'text-white' : 'text-black'
-                  "
-                />
-                <arrow-trending-down-icon
-                  v-if="side.value === 'sell'"
-                  class="w-4 h-4"
-                  :class="
-                    orderSide === side.value ? 'text-white' : 'text-black'
-                  "
-                />
-              </button>
-            </div>
-            <app-pop-up-menu
-              :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
-              location="right"
-              class="ml-3"
-            >
-              <template #menu-content="{ toggleMenu }">
-                <div
-                  class="bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] w-[260px] p-2 overflow-hidden"
-                >
-                  <div
-                    class="flex items-center justify-between gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
-                    :class="
-                      orderType === 'market' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
-                    "
-                    @click="[setOrderType('market'), toggleMenu()]"
-                  >
-                    <div>
-                      <p class="font-bold text-s-14">Market Order</p>
-                      <p class="text-info text-s-12 mt-0.5">
-                        Long or Short immediately
-                      </p>
-                    </div>
-                    <check-icon
-                      v-if="orderType === 'market'"
-                      class="text-primary h-5 w-5"
-                    ></check-icon>
-
-                    <span v-else class="w-4 mt-0.5" />
-                  </div>
-                  <div
-                    class="flex items-center justify-between gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
-                    :class="
-                      orderType === 'limit' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
-                    "
-                    @click="[setOrderType('limit'), toggleMenu()]"
-                  >
-                    <div>
-                      <p class="font-bold text-s-14">Limit Order</p>
-                      <p class="text-info text-s-12 mt-0.5">
-                        You set the price to enter a Long or Short
-                      </p>
-                    </div>
-                    <check-icon
-                      v-if="orderType === 'limit'"
-                      class="text-primary h-5 w-5"
-                    ></check-icon>
-                    <span v-else class="w-4 mt-0.5" />
-                  </div>
-                </div>
-              </template>
-            </app-pop-up-menu>
-          </div>
-
-          <!-- Target Price (Limit Orders) -->
-          <div
-            v-if="orderType === 'limit'"
-            class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 py-3 transition-all flex flex-col justify-between"
-          >
-            <p class="font-semibold text-s-12 text-info">
-              Target {{ displaySymbol }} price
-            </p>
-            <div class="flex items-center py-1">
-              <span
-                class="font-bold text-s-20 tracking-tight"
-                :class="!limitPrice || limitPrice === '' ? 'opacity-50' : ''"
-                >$</span
-              >
-              <input
-                v-model="limitPrice"
-                type="text"
-                inputmode="decimal"
-                placeholder="0.00"
-                class="w-full font-bold text-s-20 tracking-tight outline-none bg-transparent"
-                @keydown="
-                  e => {
-                    if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
-                  }
-                "
-                @input="onLimitPriceInput"
-              />
-            </div>
-
-            <div class="flex justify-start gap-2 mt-1">
-              <button
-                v-for="pct in [-10, -5, 0, 5, 10]"
-                :key="pct"
-                class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                @click="setLimitPricePct(pct)"
-              >
-                {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
-              </button>
-            </div>
-          </div>
+        <template v-if="!activePosition || manageMode === 'add'">
           <!-- Margin -->
           <div
             class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between gap-2"
           >
-            <p class="text-s-12 text-info mr-3">
-              Available margin
-              <span class="font-medium ml-1"
-                >{{ formatUsd(availableMargin) }}
+            <p class="text-s-12 text-info mr-3 font-semibold">
+              Margin:
+              <span class="font-medium ml-1 font-normal">
+                available {{ formatUsd(availableMargin) }}
               </span>
             </p>
             <div class="flex items-center justify-between -mt-2">
@@ -270,7 +318,7 @@
                     min="0"
                     step="any"
                     placeholder="0.00"
-                    class="font-bold text-s-28 tracking-tight bg-transparent outline-none w-full"
+                    class="font-bold text-s-28 bg-transparent outline-none w-full"
                     @keydown="
                       e => {
                         if (['e', 'E', '+', '-'].includes(e.key))
@@ -341,6 +389,14 @@
               </button>
             </div>
             <hr class="border-t border-grey-5 mt-1" />
+            <!-- New size -->
+            <div class="flex justify-between text-s-14 py-1 font-medium">
+              <span class="font-bold text-s-12 text-info">New size</span>
+              <span class="font-bold">{{
+                formatUsd((positionNotionalValue || 0) + (positionSizeUsd || 0))
+              }}</span>
+            </div>
+            <!-- Est. Liquidation -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
               <span class="font-bold text-s-12 text-info"
                 >Est. Liquidation</span
@@ -349,11 +405,13 @@
                 estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
               }}</span>
             </div>
-
+            <!-- Margin Ratio -->
             <div class="flex justify-between text-s-14 py-1 font-medium">
-              <span class="font-bold text-s-12 text-info">Margin Ratio</span>
+              <span class="font-bold text-s-12 text-info"
+                >New Margin Ratio</span
+              >
               <span class="font-bold">{{
-                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+                newMarginRatio !== null ? newMarginRatio.toFixed(2) : '0.00'
               }}</span>
             </div>
           </div>
@@ -415,463 +473,110 @@
         </template>
 
         <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
-        <template v-else>
-          <!-- Add / Close Toggle + Order Type -->
-          <div class="flex items-center justify-between mb-4 px-4">
-            <div class="flex bg-[#eef1f8] rounded-full p-1 w-fit">
-              <button
-                class="px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
-                :class="
-                  manageMode === 'add'
-                    ? 'bg-white   shadow-sm'
-                    : '  hover:bg-[#e4e9f4]'
-                "
-                @click="manageMode = 'add'"
-              >
-                Add
-              </button>
-              <button
-                class="px-5 py-2 rounded-full text-s-14 font-bold transition-all duration-200"
-                :class="
-                  manageMode === 'close'
-                    ? 'bg-white   shadow-sm'
-                    : '  hover:bg-[#e4e9f4]'
-                "
-                @click="manageMode = 'close'"
-              >
-                Close
-              </button>
-            </div>
-            <div class="relative">
-              <div
-                class="flex items-center gap-1 cursor-pointer text-s-14 font-medium pr-1 select-none"
-                @click="showOrderTypeDropdown = !showOrderTypeDropdown"
-              >
-                {{ orderType === 'market' ? 'Market' : 'Limit' }}
-                <img
-                  src="@/assets/icons/chevron-down.svg"
-                  class="w-5 h-5 opacity-50 transition-transform"
-                  :class="showOrderTypeDropdown ? 'rotate-180' : ''"
-                />
-              </div>
-              <div
-                v-if="showOrderTypeDropdown"
-                class="absolute right-0 top-full mt-2 bg-white rounded-[20px] shadow-xl border border-[#e5e7eb] z-50 w-[260px] p-2 overflow-hidden"
-              >
-                <div
-                  class="flex items-start gap-3 px-4 py-3 rounded-[14px] cursor-pointer transition-colors"
-                  :class="
-                    orderType === 'market' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
-                  "
-                  @click="setOrderType('market')"
-                >
-                  <span v-if="orderType === 'market'" class="mt-0.5 text-s-16"
-                    >✓</span
-                  >
-                  <span v-else class="w-4 mt-0.5" />
-                  <div>
-                    <p class="font-bold text-s-14">Market Order</p>
-                    <p class="text-info text-s-12 mt-0.5">
-                      Long or Short immediately
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="flex items-start gap-3 px-4 py-3 mt-1 rounded-[14px] cursor-pointer transition-colors"
-                  :class="
-                    orderType === 'limit' ? 'bg-mewBg' : 'hover:bg-[#f8f9fb]'
-                  "
-                  @click="setOrderType('limit')"
-                >
-                  <span v-if="orderType === 'limit'" class="mt-0.5 text-s-16"
-                    >✓</span
-                  >
-                  <span v-else class="w-4 mt-0.5" />
-                  <div>
-                    <p class="font-bold text-s-14">Limit Order</p>
-                    <p class="text-info text-s-12 mt-0.5">
-                      You set the price to enter a Long or Short
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <template v-if="manageMode === 'close'">
           <!-- ADD MODE -->
-          <template v-if="manageMode === 'add'">
-            <div class="bg-mewBg rounded-[24px] pt-5 pb-5 px-4 mb-4">
-              <p class="text-s-14 font-bold mb-3 ml-2">Add margin</p>
-
-              <div
-                class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
-              >
-                <p class="text-s-14 text-info mb-1 font-medium">
-                  Available
-                  <span class="font-bold ml-1"
-                    >{{ formatUsd(availableMargin) }}
-                    <span class="text-info font-normal"
-                      >({{ leverage }}x
-                      {{ formatUsd(availableMargin * leverage) }})</span
-                    ></span
-                  >
-                </p>
-                <p class="font-bold text-[36px] mb-1 tracking-tight">
-                  {{
-                    inputAmount ? formatUsd(parseFloat(inputAmount)) : '$0.00'
-                  }}
-                </p>
-
-                <!-- Error State -->
-                <div
-                  v-if="
-                    Number(inputAmount || '0') > availableMargin ||
-                    isNaN(Number(inputAmount))
-                  "
-                  class="text-error text-s-12 mb-3"
-                >
-                  {{
-                    isNaN(Number(inputAmount))
-                      ? 'Invalid amount'
-                      : 'Insufficient margin available'
-                  }}
-                </div>
-
-                <div class="relative mb-6 px-1">
-                  <input
-                    v-model="sliderValue"
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="0.01"
-                    class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
-                    :style="{
-                      background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
-                    }"
-                    @input="onSliderInput"
-                  />
-                </div>
-
-                <div class="flex justify-between gap-2">
-                  <button
-                    v-for="pct in [10, 25, 50, 75, 100]"
-                    :key="pct"
-                    class="h-8 flex-1 border border-[#e5e7eb] hover:border-grey-300 hover: rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                    @click="setPercentage(pct)"
-                  >
-                    {{ pct === 100 ? 'Max' : pct + '%' }}
-                  </button>
-                </div>
-              </div>
-
-              <!-- Target Price (Limit) -->
-              <template v-if="orderType === 'limit'">
-                <p class="text-s-14 font-bold mb-3 ml-2">
-                  Target {{ displaySymbol }} price
-                </p>
-                <div
-                  class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb] mb-4"
-                >
-                  <div class="flex items-center justify-start">
-                    <span
-                      class="font-bold text-[36px] tracking-tight mr-1"
-                      :class="{
-                        'opacity-50': !limitPrice || limitPrice === '',
-                      }"
-                      >$</span
-                    >
-                    <input
-                      v-model="limitPrice"
-                      type="text"
-                      inputmode="decimal"
-                      placeholder="0.00"
-                      class="w-full font-bold text-[36px] tracking-tight outline-none bg-transparent"
-                      @keydown="
-                        e => {
-                          if (['-', '+', 'e', 'E'].includes(e.key))
-                            e.preventDefault()
-                        }
-                      "
-                      @input="onLimitPriceInput"
-                    />
-                  </div>
-                  <div class="flex justify-between gap-2 mt-3">
-                    <button
-                      v-for="pct in [-10, -5, 0, 5, 10]"
-                      :key="pct"
-                      class="h-8 flex-1 border rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                      :class="
-                        activeLimitPill === pct
-                          ? 'border-[#0052ff] text-[#0052ff]'
-                          : 'border-[#e5e7eb]   hover:border-grey-300'
-                      "
-                      @click="setLimitPricePct(pct)"
-                    >
-                      {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
-                    </button>
-                  </div>
-                </div>
-              </template>
-
-              <!-- Leverage -->
-              <div
-                class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-4 flex justify-between items-center cursor-pointer shadow-sm"
-                @click="openLeverageModal"
-              >
-                <span class="text-s-16 font-medium ml-1">Leverage</span>
-                <div class="flex items-center gap-1">
-                  <span class="text-s-20 font-bold">{{ leverage }}&times;</span>
-                  <img
-                    src="@/assets/icons/chevron-down.svg"
-                    class="w-5 h-5 opacity-40 mr-[-2px]"
-                  />
-                </div>
-              </div>
-
-              <!-- Auto Close -->
-              <div
-                v-if="!hasAutoClose"
-                class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 flex justify-between items-center cursor-pointer shadow-sm"
-                @click="openAutoCloseModal"
-              >
-                <span class="text-info">Auto close</span>
-                <button
-                  class="flex items-center gap-1.5 text-[#0052ff] text-s-16 font-bold mr-1"
-                >
-                  <span class="text-s-20 font-medium">+</span> Add
-                </button>
-              </div>
-              <div
-                v-else
-                class="bg-white rounded-[20px] border border-[#e5e7eb] p-4 mb-6 shadow-sm"
-              >
-                <div class="flex justify-between items-center mb-3">
-                  <span class="text-s-16 font-medium ml-1">Auto close</span>
-                  <button
-                    class="flex items-center gap-1.5 text-[#0052ff] text-s-14 font-bold mr-1"
-                    @click="openAutoCloseModal"
-                  >
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path
-                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
-                      />
-                      <path
-                        d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
-                      />
-                    </svg>
-                    Edit
-                  </button>
-                </div>
-                <div
-                  v-if="takeProfitPrice !== null"
-                  class="flex justify-between items-center text-s-14 mb-2 ml-1"
-                >
-                  <span class="font-medium">Take Profit</span>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold">{{
-                      formatUsd(takeProfitPrice)
-                    }}</span>
-                    <span
-                      v-if="takeProfitPct !== null"
-                      class="text-success font-bold text-s-12"
-                      >({{ takeProfitPct >= 0 ? '+' : ''
-                      }}{{ takeProfitPct.toFixed(0) }}%)</span
-                    >
-                    <button
-                      class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
-                      @click="clearTakeProfit"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-                <div
-                  v-if="stopLossPrice !== null"
-                  class="flex justify-between items-center text-s-14 ml-1"
-                >
-                  <span class="font-medium">Stop Loss</span>
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold">{{
-                      formatUsd(stopLossPrice)
-                    }}</span>
-                    <span
-                      v-if="stopLossPct !== null"
-                      class="text-error font-bold text-s-12"
-                      >({{ stopLossPct >= 0 ? '+' : ''
-                      }}{{ stopLossPct.toFixed(0) }}%)</span
-                    >
-                    <button
-                      class="text-[#0052ff] font-bold text-s-16 ml-1 hover:opacity-70"
-                      @click="clearStopLoss"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Add to Position Button -->
-            <div class="pb-10 px-4">
-              <button
-                class="w-full bg-[#00c896] text-white rounded-full py-4 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98] truncate px-4"
-                :class="
-                  submitDisabled
-                    ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed shadow-none opacity-80'
-                    : ''
-                "
-                :disabled="submitDisabled"
-                @click="showConfirmation"
-              >
-                {{ submitButtonLabel }}
-              </button>
-            </div>
-          </template>
 
           <!-- CLOSE MODE -->
-          <template v-else>
-            <div class="bg-mewBg rounded-[24px] pt-5 pb-5 px-4 mb-8">
-              <p class="text-s-14 font-bold mb-3 ml-2">Amount to close</p>
-
-              <div
-                class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb]"
-              >
-                <p class="font-bold text-[36px] mb-3 tracking-tight">
-                  {{
-                    closeAmount ? formatUsd(parseFloat(closeAmount)) : '$0.00'
-                  }}
-                </p>
-
-                <div class="relative mb-6 px-1">
-                  <input
-                    v-model="closeSliderValue"
-                    type="range"
-                    min="0"
-                    max="100"
-                    step="0.01"
-                    class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
-                    :style="{
-                      background: `linear-gradient(to right, #0052ff 0%, #0052ff ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,
-                    }"
-                    @input="onCloseSliderInput"
-                  />
-                </div>
-
-                <div class="flex justify-between gap-2">
-                  <button
-                    v-for="pct in [0, 25, 50, 75, 100]"
-                    :key="pct"
-                    :disabled="isClosePillDisabled(pct)"
-                    class="h-8 flex-1 border border-[#e5e7eb] rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                    :class="
-                      isClosePillDisabled(pct)
-                        ? 'opacity-40 cursor-not-allowed'
-                        : 'hover:border-grey-300 hover: '
-                    "
-                    @click="setClosePercentage(pct)"
-                  >
-                    {{ pct }}%
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Target Price (Limit) for Close -->
-            <template v-if="orderType === 'limit'">
-              <div class="bg-mewBg rounded-[24px] pt-5 pb-5 px-4 mb-4">
-                <p class="text-s-14 font-bold mb-3 ml-2">
-                  Target {{ displaySymbol }} price
-                </p>
-                <div
-                  class="bg-white rounded-[20px] p-4 shadow-sm border border-[#e5e7eb]"
-                >
-                  <div class="flex items-center justify-start">
-                    <span
-                      class="font-bold text-[36px] tracking-tight mr-1"
-                      :class="{
-                        'opacity-50': !limitPrice || limitPrice === '',
-                      }"
-                      >$</span
-                    >
-                    <input
-                      v-model="limitPrice"
-                      type="text"
-                      inputmode="decimal"
-                      placeholder="0.00"
-                      class="w-full font-bold text-[36px] tracking-tight outline-none bg-transparent"
-                      @keydown="
-                        e => {
-                          if (['-', '+', 'e', 'E'].includes(e.key))
-                            e.preventDefault()
-                        }
-                      "
-                      @input="onLimitPriceInput"
-                    />
-                  </div>
-                  <div class="flex justify-between gap-2 mt-3">
-                    <button
-                      v-for="pct in [-10, -5, 0, 5, 10]"
-                      :key="pct"
-                      class="h-8 flex-1 border rounded-full text-xs sm:text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                      :class="
-                        activeLimitPill === pct
-                          ? 'border-[#0052ff] text-[#0052ff]'
-                          : 'border-[#e5e7eb]   hover:border-grey-300'
-                      "
-                      @click="setLimitPricePct(pct)"
-                    >
-                      {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </template>
-
-            <!-- Close Error -->
+          <div
+            class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between"
+          >
+            <p class="font-semibold text-s-12 text-info mr-3">
+              Amount to close
+            </p>
+            <!-- input -->
             <div
-              v-if="closeError"
-              class="mx-4 mb-4 bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+              class="flex items-center before:content-['$'] before:font-bold before:text-[28px] before:tracking-tight before:mr-1"
+              :class="
+                !closeAmount || closeAmount === '' ? 'before:opacity-50' : ''
+              "
             >
-              <p class="text-error text-s-14 font-medium">
-                {{ closeError }}
-              </p>
-            </div>
-
-            <!-- Close Position Button -->
-            <div class="pb-10 px-4">
-              <button
-                class="w-full bg-[#00c896] text-white rounded-full py-4 text-s-18 font-bold hoverOpacity transition-all active:scale-[0.98]"
-                :class="
-                  closeDisabled
-                    ? 'bg-[#e5e7eb] text-grey-40 cursor-not-allowed shadow-none opacity-80'
-                    : ''
+              <input
+                v-model="closeAmount"
+                type="number"
+                min="0"
+                step="any"
+                placeholder="0.00"
+                class="font-bold text-s-28 bg-transparent outline-none w-full"
+                @keydown="
+                  e => {
+                    if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault()
+                  }
                 "
-                :disabled="closeDisabled"
-                @click="showCloseConfirmation"
+                @input="onCloseAmountInput"
+              />
+            </div>
+            <p class="text-info text-s-12 mb-2">
+              New Size
+              {{
+                formatUsd(
+                  Math.max(
+                    0,
+                    positionNotionalValue - (parseFloat(closeAmount) || 0),
+                  ),
+                )
+              }}
+            </p>
+            <!--slider -->
+            <input
+              v-model="closeSliderValue"
+              type="range"
+              min="0"
+              max="100"
+              step="0.01"
+              class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
+              :style="{
+                background: `linear-gradient(to right, #0052ff 0%, #0052ff ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,
+              }"
+              @input="onCloseSliderInput"
+            />
+            <!-- Size Pills -->
+            <div class="flex justify-start gap-2 mt-4 mb-2">
+              <button
+                v-for="pct in [0, 25, 50, 75, 100]"
+                :key="pct"
+                :disabled="isClosePillDisabled(pct)"
+                class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                :class="
+                  isClosePillDisabled(pct)
+                    ? 'opacity-40 cursor-not-allowed'
+                    : 'hover:border-grey-300 hover: '
+                "
+                @click="setClosePercentage(pct)"
               >
-                {{ closeButtonLabel }}
+                {{ pct }}%
               </button>
             </div>
-          </template>
+          </div>
+
+          <!-- Close Error -->
+          <div
+            v-if="closeError"
+            class="mx-4 mb-4 bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
+          >
+            <p class="text-error text-s-14 font-medium">
+              {{ closeError }}
+            </p>
+          </div>
         </template>
       </div>
       <!-- Submit Button -->
       <app-base-button
+        v-if="!activePosition || manageMode === 'add'"
         :disabled="submitDisabled"
         @click="showConfirmation"
         :theme="orderSide === 'buy' ? 'success' : 'error'"
         class="w-full mt-4"
       >
-        {{ orderSide === 'buy' ? 'Long' : 'Short' }}
-        {{ displaySymbol }}
+        {{ getMainBtnText }}
+      </app-base-button>
+      <app-base-button
+        v-if="manageMode === 'close'"
+        :theme="orderSide === 'buy' ? 'success' : 'error'"
+        :disabled="closeDisabled"
+        @click="showCloseConfirmation"
+        class="w-full mt-4"
+      >
+        {{ closeButtonLabel }}
       </app-base-button>
     </div>
 
@@ -1668,6 +1373,23 @@ const onInputAmount = (e: Event) => {
   if (Number(target.value) < 0) target.value = '0'
 }
 
+const onCloseAmountInput = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  let val = parseFloat(target.value)
+  const maxVal = positionNotionalValue.value
+  if (isNaN(val) || val <= 0) {
+    closeAmount.value = ''
+    closeSliderValue.value = 0
+    return
+  }
+  if (val > maxVal) {
+    val = maxVal
+    target.value = val.toFixed(2)
+    closeAmount.value = val.toFixed(2)
+  }
+  closeSliderValue.value = maxVal > 0 ? (val / maxVal) * 100 : 0
+}
+
 const onLimitPriceInput = (e: Event) => {
   const target = e.target as HTMLInputElement
   // Allow only digits and a single decimal point
@@ -1721,11 +1443,8 @@ const {
   showCloseConfirmation,
   // Auto Close
   showAutoCloseModal,
-  hasAutoClose,
   takeProfitPrice,
   stopLossPrice,
-  takeProfitPct,
-  stopLossPct,
   tempProjectedProfit,
   tempProjectedLoss,
   tempTakeProfitPrice,
@@ -1738,8 +1457,6 @@ const {
   clearTempTakeProfit,
   clearTempStopLoss,
   confirmAutoClose,
-  clearTakeProfit,
-  clearStopLoss,
   // Submit
   isSubmitting,
   submitDisabled,
@@ -1748,11 +1465,11 @@ const {
   showConfirmModal,
   showConfirmation,
   confirmAndSubmitOrder,
+  newMarginRatio,
   // Slider
   setPercentage,
   onSliderInput,
   setOrderType,
-  showOrderTypeDropdown,
   limitPrice,
   activeLimitPill,
   setLimitPricePct,
@@ -1782,83 +1499,15 @@ const selectedToken = computed(() => ({
   symbol: displaySymbol.value,
   ondo: undefined,
 }))
+
+const getMainBtnText = computed(() => {
+  if (!activePosition.value) {
+    const side = orderSide.value === 'buy' ? 'Long' : 'Short'
+    return `${side} ${displaySymbol.value}`
+  }
+  if (manageMode.value === 'close') {
+    return closeButtonLabel.value
+  }
+  return submitButtonLabel.value
+})
 </script>
-
-<style scoped>
-/* .slider-input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #0052ff;
-  border: 4px solid white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  transition: transform 0.1s;
-} */
-
-/* .slider-input:active::-webkit-slider-thumb {
-  transform: scale(1.1);
-}
-
-.slider-input::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #0052ff;
-  border: 4px solid white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-} */
-
-/* .leverage-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #0052ff;
-  border: 4px solid white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-
-.leverage-slider:active::-webkit-slider-thumb {
-  transform: scale(1.1);
-} */
-
-/* .leverage-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #0052ff;
-  border: 4px solid white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-} */
-
-/* .market-list-scroll::-webkit-scrollbar {
-  width: 6px;
-} */
-
-/* .market-list-scroll::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 8px 0;
-} */
-
-/* .market-list-scroll::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
-} */
-
-/* .market-list-scroll::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-} */
-
-/* .market-list-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
-} */
-</style>

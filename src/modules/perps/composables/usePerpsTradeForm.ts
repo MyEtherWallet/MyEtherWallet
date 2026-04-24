@@ -44,7 +44,6 @@ export function usePerpsTradeForm() {
   }
 
   const orderType = ref<OrderType>('market')
-  const showOrderTypeDropdown = ref(false)
   const limitPrice = ref('')
   const activeLimitPill = ref<number | null>(null)
   const inputAmount = ref('')
@@ -311,10 +310,27 @@ export function usePerpsTradeForm() {
     }
   }
 
+  // ── New margin ratio ────────────────────────────────────────
+  const newMarginRatio = computed<number | null>(() => {
+    const usedMargin = parseFloat(balance.value?.usedMargin || '0')
+    const marginBal = parseFloat(balance.value?.marginBalance || '0')
+    const additionalMargin = parseFloat(inputAmount.value || '0')
+    if (!marginBal || !additionalMargin) return null
+    return (usedMargin + additionalMargin) / marginBal
+  })
+
+  // ── Limit price validation ─────────────────────────────────
+  const limitPriceHasError = computed(() => {
+    if (orderType.value !== 'limit' || !limitPrice.value) return false
+    const price = parseFloat(limitPrice.value)
+    return isNaN(price) || price <= 0 || price >= 10_000_000
+  })
+
   // ── Submit validation ──────────────────────────────────────
   const submitDisabled = computed(() => {
     const amt = parseFloat(inputAmount.value)
     if (!amt || amt <= 0 || isSubmitting.value) return true
+    if (limitPriceHasError.value) return true
     if (availableMargin.value * leverage.value < minOrderAmount.value)
       return true
     if (amt > availableMargin.value) return true
@@ -403,7 +419,6 @@ export function usePerpsTradeForm() {
 
   function setOrderType(type: OrderType) {
     orderType.value = type
-    showOrderTypeDropdown.value = false
     if (type === 'limit' && currentPrice.value) {
       limitPrice.value = currentPrice.value.toFixed(2)
       activeLimitPill.value = null
@@ -516,9 +531,6 @@ export function usePerpsTradeForm() {
   }
 
   // ── Auto Close ─────────────────────────────────────────────
-  const hasAutoClose = computed(
-    () => takeProfitPrice.value !== null || stopLossPrice.value !== null,
-  )
 
   const takeProfitPct = computed(() => {
     if (takeProfitPrice.value == null || !currentPrice.value) return null
@@ -799,7 +811,7 @@ export function usePerpsTradeForm() {
     showCloseConfirmation,
     // Auto Close
     showAutoCloseModal,
-    hasAutoClose,
+
     takeProfitPrice,
     stopLossPrice,
     takeProfitPct,
@@ -824,6 +836,8 @@ export function usePerpsTradeForm() {
     isSubmitting,
     submitDisabled,
     submitButtonLabel,
+    limitPriceHasError,
+    newMarginRatio,
     orderError,
     showConfirmModal,
     showConfirmation,
@@ -833,7 +847,6 @@ export function usePerpsTradeForm() {
     onSliderInput,
     toggleOrderType,
     setOrderType,
-    showOrderTypeDropdown,
     limitPrice,
     activeLimitPill,
     setLimitPricePct,
