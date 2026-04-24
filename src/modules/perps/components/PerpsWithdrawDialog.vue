@@ -1,9 +1,12 @@
 <template>
-  <app-dialog v-model:is-open="isOpen" @close-dialog="$emit('close')">
-    <div class="p-6">
-      <p class="font-bold text-s-20 mb-4">Withdraw USDC</p>
-
-      <div v-if="walletAddress">
+  <app-dialog
+    v-model:is-open="isOpen"
+    title="Withdraw USDC"
+    has-content-gutter
+    @close-dialog="$emit('close')"
+  >
+    <template #content>
+      <div class="pb-6" v-if="walletAddress">
         <!-- Withdraw to -->
         <div class="bg-surface rounded-12 p-4 mb-4">
           <p
@@ -74,7 +77,7 @@
           Done
         </button>
       </div>
-    </div>
+    </template>
   </app-dialog>
 </template>
 
@@ -85,6 +88,7 @@ import { perpsClient } from '../configs'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 
 const props = defineProps<{
   visible: boolean
@@ -103,6 +107,7 @@ const { accountId, triggerRefresh } = usePerpsAuth()
 const { balance } = usePerpsBalance()
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
+const perpsToasts = usePerpsToasts()
 
 const amount = ref('')
 const sending = ref(false)
@@ -172,7 +177,9 @@ async function submitWithdraw() {
     })
     withdrawalSuccess.value = true
     triggerRefresh()
+    perpsToasts.toastWithdrawalComplete()
   } catch (e) {
+    // TODO(perps-toasts): spec has no withdrawal-failure toast; revisit with design if needed
     error.value = e instanceof Error ? e.message : 'Withdrawal failed'
   } finally {
     sending.value = false

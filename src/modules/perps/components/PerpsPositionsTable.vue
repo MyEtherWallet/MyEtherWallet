@@ -728,6 +728,7 @@ import {
   usePerpsFills,
   usePerpsDepositsWithdrawals,
 } from '../composables/usePerpsHistory'
+import { usePerpsToasts } from '../composables/usePerpsToasts'
 import {
   formatUsd,
   formatPrice,
@@ -861,6 +862,7 @@ const {
 } = usePerpsDepositsWithdrawals()
 
 const cancellingOrderId = ref<string | null>(null)
+const perpsToasts = usePerpsToasts()
 
 async function cancelOrder(orderId: string) {
   cancellingOrderId.value = orderId
@@ -870,6 +872,7 @@ async function cancelOrder(orderId: string) {
     await refetchOrders()
   } catch (e) {
     console.error('Failed to cancel order:', e)
+    perpsToasts.toastFailedToRemoveOrder()
   } finally {
     cancellingOrderId.value = null
   }
