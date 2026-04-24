@@ -594,10 +594,11 @@
           <!-- Header -->
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
-              <img
-                :src="getLogoUrl(displaySymbol)"
-                :alt="displaySymbol"
-                class="w-8 h-8 rounded-full"
+              <app-token-logo
+                :url="getLogoUrl(displaySymbol)"
+                :symbol="displaySymbol"
+                width="w-8"
+                height="h-8"
               />
               <span class="font-bold text-s-20"
                 >Confirm
@@ -743,10 +744,11 @@
           <!-- Header -->
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2.5">
-              <img
-                :src="getLogoUrl(displaySymbol)"
-                :alt="displaySymbol"
-                class="w-8 h-8 rounded-full"
+              <app-token-logo
+                :url="getLogoUrl(displaySymbol)"
+                :symbol="displaySymbol"
+                width="w-8"
+                height="h-8"
               />
               <span class="font-bold text-s-20"
                 >Confirm Close
@@ -975,10 +977,11 @@
               @click="selectMarket(contract)"
             >
               <div class="flex items-center gap-3">
-                <img
-                  :src="getLogoUrl(contract.baseCurrency)"
-                  :alt="contract.baseCurrency"
-                  class="w-10 h-10 rounded-full"
+                <app-token-logo
+                  :url="getLogoUrl(contract.baseCurrency)"
+                  :symbol="contract.baseCurrency"
+                  width="w-10"
+                  height="h-10"
                 />
                 <div>
                   <div class="flex items-center gap-2">
@@ -1022,137 +1025,15 @@
       </div>
     </Teleport>
 
-    <!-- Leverage Modal Overlay -->
-    <Teleport to="body">
-      <div
-        v-if="showLeverageModal"
-        class="fixed inset-0 z-[9999] flex items-center justify-center"
-        @click.self="showLeverageModal = false"
-      >
-        <!-- Backdrop -->
-        <div class="absolute inset-0 bg-black/40" />
-
-        <!-- Modal -->
-        <div
-          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
-        >
-          <!-- Header -->
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-2.5">
-              <img
-                :src="getLogoUrl(displaySymbol)"
-                :alt="displaySymbol"
-                class="w-8 h-8 rounded-full"
-              />
-              <span class="font-bold text-s-20"
-                >{{ displaySymbol }} Leverage</span
-              >
-            </div>
-            <button
-              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors"
-              @click="showLeverageModal = false"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Leverage Card -->
-          <div class="bg-mewBg rounded-[20px] p-5 mb-5">
-            <!-- +/- Controls -->
-            <div class="flex items-center justify-center gap-6 mb-5">
-              <button
-                class="w-10 h-10 rounded-full border border-[#e5e7eb] bg-white flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
-                :disabled="tempLeverage <= 1"
-                :class="{ 'opacity-30 cursor-not-allowed': tempLeverage <= 1 }"
-                @click="tempLeverage = Math.max(1, tempLeverage - 1)"
-              >
-                &minus;
-              </button>
-              <span
-                class="font-bold text-[40px] tracking-tight min-w-[100px] text-center"
-                >{{ tempLeverage }}&times;</span
-              >
-              <button
-                class="w-10 h-10 rounded-full border border-[#e5e7eb] bg-white flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
-                :disabled="tempLeverage >= 20"
-                :class="{
-                  'opacity-30 cursor-not-allowed': tempLeverage >= 20,
-                }"
-                @click="tempLeverage = Math.min(20, tempLeverage + 1)"
-              >
-                +
-              </button>
-            </div>
-
-            <!-- Tick Labels -->
-            <div class="flex justify-between px-1 mb-1.5">
-              <span
-                v-for="tick in [1, 5, 10, 15, 20]"
-                :key="tick"
-                class="text-[11px] font-medium"
-                :class="tempLeverage >= tick ? ' ' : 'text-grey-40'"
-                >{{ tick }}&times;</span
-              >
-            </div>
-
-            <!-- Slider -->
-            <div class="relative px-0">
-              <input
-                v-model.number="tempLeverage"
-                type="range"
-                min="1"
-                max="20"
-                step="1"
-                class="w-full h-2 rounded-full appearance-none cursor-pointer leverage-slider"
-                :style="{
-                  background: `linear-gradient(to right, #0052ff 0%, #0052ff ${((tempLeverage - 1) / 19) * 100}%, #e5e7eb ${((tempLeverage - 1) / 19) * 100}%, #e5e7eb 100%)`,
-                }"
-              />
-            </div>
-          </div>
-
-          <!-- Description -->
-          <p class="text-s-14 text-info mb-6 leading-relaxed">
-            Leverage increases both your potential profits and losses. Using
-            higher leverage means higher risk of losing your position.
-            <a href="#" class="text-[#0052ff] font-medium hover:underline"
-              >Learn more</a
-            >
-          </p>
-
-          <!-- Leverage Error -->
-          <div
-            v-if="leverageError"
-            class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
-          >
-            <p class="text-error text-s-14 font-medium">
-              {{ leverageError }}
-            </p>
-          </div>
-
-          <!-- Save Button -->
-          <button
-            class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
-            :disabled="isSavingLeverage"
-            @click="saveLeverage"
-          >
-            {{ isSavingLeverage ? 'Saving...' : 'Save' }}
-          </button>
-        </div>
-      </div>
-    </Teleport>
+    <!-- Leverage Dialog -->
+    <perps-select-leverage-dialog
+      v-model:is-open="showLeverageModal"
+      v-model="tempLeverage"
+      :symbol="displaySymbol"
+      :leverage-error="leverageError"
+      :is-saving="isSavingLeverage"
+      @save="saveLeverage"
+    />
 
     <!-- Auto Close Modal -->
     <Teleport to="body">
@@ -1191,10 +1072,11 @@
           <!-- Asset & Price -->
           <div class="flex items-center justify-between mb-5">
             <div class="flex items-center gap-2">
-              <img
-                :src="getLogoUrl(displaySymbol)"
-                :alt="displaySymbol"
-                class="w-7 h-7 rounded-full"
+              <app-token-logo
+                :url="getLogoUrl(displaySymbol)"
+                :symbol="displaySymbol"
+                width="w-7"
+                height="h-7"
               />
               <span class="font-bold text-s-16">{{ displaySymbol }}</span>
             </div>
@@ -1356,6 +1238,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { storeToRefs } from 'pinia'
