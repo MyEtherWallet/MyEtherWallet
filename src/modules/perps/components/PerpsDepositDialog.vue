@@ -290,12 +290,10 @@ const perpsToasts = usePerpsToasts()
 
 watch(isOpen, open => {
   if (!open) {
-    // Dialog closed mid-deposit: surface a single "Deposit Canceled" toast
-    // and flag the in-flight flow so it skips its own success/failure toasts.
-    if (sending.value) {
-      perpsToasts.toastDepositCanceled()
-      wasCanceledMidFlight.value = true
-    }
+    // TODO(perps): once the SDK exposes a way to cancel an in-flight deposit
+    // (sandbox API call / live broadcast), hook it up here and surface a
+    // single "Deposit Canceled" toast. For now the request runs to completion
+    // regardless of whether the dialog is closed.
     return
   }
   if (selectedChain.value?.name !== 'ETHEREUM') {
@@ -323,10 +321,6 @@ const error = ref<string | null>(null)
 const amount = ref('')
 const sending = ref(false)
 const showDepositAddress = ref(false)
-// Set to true when the dialog is closed mid-deposit; the in-flight deposit
-// flow checks this before firing success/failure toasts so the user only
-// sees a single "Deposit Canceled" toast in that case.
-const wasCanceledMidFlight = ref(false)
 
 // User-cancel phrases used to distinguish a wallet-prompt rejection (which
 // should yield "Deposit Canceled") from a generic RPC/API "rejected" error
@@ -530,7 +524,6 @@ const sendSandboxDeposit = async () => {
   if (!amount.value || !accountId.value) return
   sending.value = true
   error.value = null
-  wasCanceledMidFlight.value = false
   try {
     await perpsClient.sandboxDeposit({
       amount: parseFloat(amount.value).toFixed(2),
@@ -538,25 +531,17 @@ const sendSandboxDeposit = async () => {
       deposit_destination: { id: accountId.value, wallet: 'margin' },
       chain_id: 'eth-sepolia',
     })
-    // Clear `sending` before the success toast so a dialog-close mid-await
-    // can't cause the isOpen watcher to also fire a "Deposit Canceled" toast
-    // for the same flow. The finally block remains idempotent.
-    sending.value = false
     triggerRefresh()
-    if (!wasCanceledMidFlight.value) {
-      perpsToasts.toastDepositComplete(amount.value, 'USDC')
-    }
+    perpsToasts.toastDepositComplete(amount.value, 'USDC')
     clearAmount()
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e ?? '')
     if (isUserCancelError(e)) {
       error.value = 'Transaction cancelled by user'
-      if (!wasCanceledMidFlight.value) perpsToasts.toastDepositCanceled()
+      perpsToasts.toastDepositCanceled()
     } else {
       error.value = msg || 'Sandbox deposit failed'
-      if (!wasCanceledMidFlight.value) {
-        perpsToasts.toastFailedToInitiateDeposit()
-      }
+      perpsToasts.toastFailedToInitiateDeposit()
     }
   } finally {
     sending.value = false
@@ -573,7 +558,6 @@ const sendLiveDeposit = async () => {
     return
   sending.value = true
   error.value = null
-  wasCanceledMidFlight.value = false
   try {
     const usdcContract = USDC_CONTRACT
     const decimals = usdcBalance.value.decimals ?? 6
@@ -628,24 +612,17 @@ const sendLiveDeposit = async () => {
     if (!hash) {
       throw new Error('Transaction was not broadcast')
     }
-    // See sendSandboxDeposit: clear `sending` before the success toast to
-    // avoid a close-mid-await race that would also fire "Deposit Canceled".
-    sending.value = false
     triggerRefresh()
-    if (!wasCanceledMidFlight.value) {
-      perpsToasts.toastDepositInitiated()
-    }
+    perpsToasts.toastDepositInitiated()
     clearAmount()
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e ?? '')
     if (isUserCancelError(e)) {
       error.value = 'Transaction cancelled by user'
-      if (!wasCanceledMidFlight.value) perpsToasts.toastDepositCanceled()
+      perpsToasts.toastDepositCanceled()
     } else {
       error.value = msg || 'Transaction failed'
-      if (!wasCanceledMidFlight.value) {
-        perpsToasts.toastFailedToCreditAccount()
-      }
+      perpsToasts.toastFailedToCreditAccount()
     }
   } finally {
     sending.value = false
