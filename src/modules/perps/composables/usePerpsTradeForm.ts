@@ -23,7 +23,6 @@ interface OrderSideButton {
 // SL/TP validation failures. Revisit if/when the SDK exposes a structured
 // error code.
 const SL_TP_INVALID_PATTERN = /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
-const TRIGGER_PRICE_DECIMALS = 2
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
@@ -177,6 +176,17 @@ export function usePerpsTradeForm() {
     const market = markets.value.find(m => m.market === fullMarketName.value)
     return parseFloat(market?.baseIncrement || '0.0001')
   })
+
+  const activeMarketQuoteIncrement = computed(() => {
+    const market = markets.value.find(m => m.market === fullMarketName.value)
+    return parseFloat(market?.quoteIncrement || '0.01')
+  })
+
+  // API requires limit/trigger prices to align with quoteIncrement
+  // (/v1/markets). Using a hardcoded 2-decimal rounding rejects on markets
+  // with finer precision (e.g. quoteIncrement "0.0001").
+  const formatQuotePrice = (value: number): string =>
+    floorToIncrement(value, activeMarketQuoteIncrement.value)
 
   const orderSize = computed(() => {
     if (!currentPrice.value) return '0'
@@ -414,7 +424,7 @@ export function usePerpsTradeForm() {
     orderType.value = type
     showOrderTypeDropdown.value = false
     if (type === 'limit' && currentPrice.value) {
-      limitPrice.value = currentPrice.value.toFixed(2)
+      limitPrice.value = formatQuotePrice(currentPrice.value)
       activeLimitPill.value = null
     }
   }
@@ -423,7 +433,7 @@ export function usePerpsTradeForm() {
     if (!currentPrice.value) return
     activeLimitPill.value = pct
     const price = currentPrice.value * (1 + pct / 100)
-    limitPrice.value = price.toFixed(2)
+    limitPrice.value = formatQuotePrice(price)
   }
 
   // ── Market selector ────────────────────────────────────────
@@ -690,7 +700,7 @@ export function usePerpsTradeForm() {
       netQuantity: slTpNetQuantity,
       base: slTpBase,
       quote: slTpQuote,
-      triggerPrice: triggerPrice.toFixed(TRIGGER_PRICE_DECIMALS),
+      triggerPrice: formatQuotePrice(triggerPrice),
     })
     try {
       const orderParams: Record<string, unknown> = {
@@ -709,12 +719,12 @@ export function usePerpsTradeForm() {
       }
       if (tpPrice !== null) {
         orderParams.takeProfit = {
-          triggerPrice: tpPrice.toFixed(TRIGGER_PRICE_DECIMALS),
+          triggerPrice: formatQuotePrice(tpPrice),
         }
       }
       if (slPrice !== null) {
         orderParams.stopLoss = {
-          triggerPrice: slPrice.toFixed(TRIGGER_PRICE_DECIMALS),
+          triggerPrice: formatQuotePrice(slPrice),
         }
       }
       await perpsClient.createOrder(orderParams as any)
@@ -741,12 +751,21 @@ export function usePerpsTradeForm() {
       // so generic "invalid signature" / "invalid nonce" errors don't
       // mislabel as SL/TP validation failures.
       const msg = error?.message || error?.toString() || ''
-      const isSlTpInvalid = SL_TP_INVALID_PATTERN.test(msg)
-      if (isSlTpInvalid && slPrice !== null) {
-        perpsToasts.toastStopLossInvalid()
-      }
-      if (isSlTpInvalid && tpPrice !== null) {
-        perpsToasts.toastTakeProfitInvalid()
+      const match = msg.match(SL_TP_INVALID_PATTERN)
+      if (match) {
+        // The capture group is one of stop-loss / take-profit / trigger.
+        // "trigger" doesn't disambiguate, so fall back to firing both toasts
+        // (when both legs are present) to stay safe.
+        const kind = match[1].toLowerCase()
+        const mentionsSl = /stop/.test(kind)
+        const mentionsTp = /take/.test(kind)
+        const ambiguous = !mentionsSl && !mentionsTp
+        if (slPrice !== null && (mentionsSl || ambiguous)) {
+          perpsToasts.toastStopLossInvalid()
+        }
+        if (tpPrice !== null && (mentionsTp || ambiguous)) {
+          perpsToasts.toastTakeProfitInvalid()
+        }
       }
       orderError.value =
         error?.message || error?.toString() || 'Order failed. Please try again.'

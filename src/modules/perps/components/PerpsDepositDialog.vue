@@ -538,6 +538,10 @@ const sendSandboxDeposit = async () => {
       deposit_destination: { id: accountId.value, wallet: 'margin' },
       chain_id: 'eth-sepolia',
     })
+    // Clear `sending` before the success toast so a dialog-close mid-await
+    // can't cause the isOpen watcher to also fire a "Deposit Canceled" toast
+    // for the same flow. The finally block remains idempotent.
+    sending.value = false
     triggerRefresh()
     if (!wasCanceledMidFlight.value) {
       perpsToasts.toastDepositComplete(amount.value, 'USDC')
@@ -624,6 +628,9 @@ const sendLiveDeposit = async () => {
     if (!hash) {
       throw new Error('Transaction was not broadcast')
     }
+    // See sendSandboxDeposit: clear `sending` before the success toast to
+    // avoid a close-mid-await race that would also fire "Deposit Canceled".
+    sending.value = false
     triggerRefresh()
     if (!wasCanceledMidFlight.value) {
       perpsToasts.toastDepositInitiated()
