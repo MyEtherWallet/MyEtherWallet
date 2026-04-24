@@ -341,25 +341,25 @@
       :from-amount="fromAmount"
       :loading="txProceeding"
       :chain="selectedFromChain"
-      @confirm="confirmTrade"
+      @confirm="setInfoOnConfirm"
       @cancel="quoteModalOpen = false"
     />
 
     <!-- Trade Initiated Modal -->
     <trade-initiated-modal
       v-model:is-open="tradeInitiatedOpen"
-      :order-hash="orderHash"
-      :from-chain="selectedFromChain"
-      :from-token="fromTokenSelected"
-      :to-token="toTokenSelected"
-      :from-amount="fromAmount"
-      :to-amount="toAmount"
+      :order-hash="infoHolder.orderHash!"
+      :from-chain="infoHolder.selectedFromChain!"
+      :from-token="infoHolder.fromTokenSelected!"
+      :to-token="infoHolder.toTokenSelected!"
+      :from-amount="infoHolder.fromAmount!"
+      :to-amount="infoHolder.toAmount!"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, watch } from 'vue'
+import { ref, onBeforeMount, computed, watch, reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
 import { parseUnits, formatUnits } from 'viem'
@@ -406,6 +406,34 @@ import {
   ExclamationCircleIcon,
   ArrowLongRightIcon,
 } from '@heroicons/vue/24/solid'
+
+interface infoHolder {
+  orderHash: string | null
+  selectedFromChain: Chain | null
+  fromTokenSelected: NewTokenInfo | null
+  toTokenSelected: NewTokenInfo | null
+  fromAmount: string | null
+  toAmount: string | null
+}
+
+const infoHolder: infoHolder = reactive({
+  orderHash: null,
+  selectedFromChain: null,
+  fromTokenSelected: null,
+  toTokenSelected: null,
+  fromAmount: null,
+  toAmount: null,
+})
+
+const setInfoOnConfirm = () => {
+  confirmTrade()
+  infoHolder.orderHash = orderHash.value
+  infoHolder.selectedFromChain = selectedFromChain.value!
+  infoHolder.fromTokenSelected = fromTokenSelected.value
+  infoHolder.toTokenSelected = toTokenSelected.value
+  infoHolder.fromAmount = fromAmount.value
+  infoHolder.toAmount = toAmount.value
+}
 
 // --- Stores ---
 const pairStore = usePairStore()
@@ -807,6 +835,7 @@ watch(
   isOpen => {
     if (isOpen) {
       clearValues()
+    } else {
     }
   },
 )
