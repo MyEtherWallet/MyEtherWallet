@@ -390,7 +390,10 @@
             </div>
             <hr class="border-t border-grey-5 mt-1" />
             <!-- New size -->
-            <div class="flex justify-between text-s-14 py-1 font-medium">
+            <div
+              v-if="activePosition && manageMode === 'add'"
+              class="flex justify-between text-s-14 py-1 font-medium"
+            >
               <span class="font-bold text-s-12 text-info">New size</span>
               <span class="font-bold">{{
                 formatUsd((positionNotionalValue || 0) + (positionSizeUsd || 0))
