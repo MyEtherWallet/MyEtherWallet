@@ -277,16 +277,14 @@ const unlockWallet = async () => {
   hwWalletInstance = createHwManager()
 
   try {
-    if (!wallet.value) {
-      await hwWalletInstance!
-        .isConnected({
-          wallet: selectedHwWalletType.value as HWwalletType,
-          networkName: networkName as any,
-        })
-        .then(() => {
-          return new Promise(r => setTimeout(r, 1000))
-        })
-    }
+    await hwWalletInstance!
+      .isConnected({
+        wallet: selectedHwWalletType.value as HWwalletType,
+        networkName: networkName as any,
+      })
+      .then(() => {
+        return new Promise(r => setTimeout(r, 1000))
+      })
     paths.value = (await hwWalletInstance!.getSupportedPaths({
       wallet: selectedHwWalletType.value as HWwalletType,
       networkName: networkName as any,
@@ -410,12 +408,45 @@ const loadList = async (page: number = 0) => {
 
 watch(
   () => selectedChain.value,
-  (newValue, oldValue) => {
+  async (newValue, oldValue) => {
     if (!oldValue) return
     if (newValue !== null) {
       paths.value = []
       isLoadingWalletList.value = true
       hwWalletInstance = createHwManager()
+      if (activeStep.value === 1) {
+        const networkName = chainToEnum[
+          newValue.name as string
+        ] as NetworkNames
+        try {
+          await hwWalletInstance!.isConnected({
+            wallet: selectedHwWalletType.value as HWwalletType,
+            networkName: networkName as any,
+          })
+          const newPaths = (await hwWalletInstance!.getSupportedPaths({
+            wallet: selectedHwWalletType.value as HWwalletType,
+            networkName: networkName as any,
+          })) as PathType[]
+          paths.value = newPaths
+          if (
+            newPaths.length > 0 &&
+            (selectedDerivation.value?.path === '' ||
+              !newPaths.some(
+                p => p.path === selectedDerivation.value?.path,
+              ))
+          ) {
+            setSelectedDerivation(newPaths[0])
+          }
+        } catch (e) {
+          const errorMessage = e instanceof Error ? e.message : String(e)
+          toastStore.addToastMessage({
+            type: ToastType.Error,
+            text: t('error_connecting'),
+            textSecondary: errorMessage,
+          })
+          captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+        }
+      }
       const waiter = new Promise(r => setTimeout(r, 1000))
       waiter.then(() => loadList())
     }

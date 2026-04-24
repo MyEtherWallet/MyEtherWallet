@@ -24,6 +24,16 @@ function isUserCancelError(e: unknown): boolean {
   )
 }
 
+function isBleCancelError(e: unknown): boolean {
+  const msg = e instanceof Error ? e.message : String(e ?? '')
+  return (
+    isUserCancelError(e) ||
+    /NotAllowedError/i.test(msg) ||
+    /AbortError/i.test(msg) ||
+    /permission.*denied/i.test(msg)
+  )
+}
+
 function isTransientBleError(e: unknown): boolean {
   const msg = e instanceof Error ? e.message : String(e ?? '')
   return (
@@ -59,17 +69,32 @@ async function createWebBLEOnce(): Promise<Transport> {
   return TransportWebBLE.create(BLE_OPEN_TIMEOUT_MS, BLE_OPEN_TIMEOUT_MS)
 }
 
+const BLE_PICKER_TIMEOUT_MS = 60_000
+
 async function createWebBLE(): Promise<Transport | null> {
   if (!(await TransportWebBLE.isSupported())) return null
 
+  const timeout = new Promise<null>(r => setTimeout(() => r(null), BLE_PICKER_TIMEOUT_MS))
+  let transient = false
+  try {
+    // Some browsers dismiss the BLE picker silently (no throw) — timeout so USB fallback isn't blocked.
+    const result = await Promise.race([createWebBLEOnce(), timeout])
+    if (result !== null) return result
+  } catch (e) {
+    if (isBleCancelError(e)) return null  // cancelled — skip retry, fall through to USB
+    if (!isTransientBleError(e)) throw e
+    transient = true
+  }
+
+  if (!transient) return null  // timed out — skip retry, fall through to USB
+
+  // Transient BLE failures (GATT drops on first handshake) are common — retry once.
+  await sleep(BLE_RETRY_DELAY_MS)
   try {
     return await createWebBLEOnce()
   } catch (e) {
-    if (isUserCancelError(e)) throw e
-    if (!isTransientBleError(e)) throw e
-    // Transient BLE failures (GATT drops on first handshake) are common — retry once.
-    await sleep(BLE_RETRY_DELAY_MS)
-    return createWebBLEOnce()
+    if (isBleCancelError(e)) return null
+    throw e
   }
 }
 

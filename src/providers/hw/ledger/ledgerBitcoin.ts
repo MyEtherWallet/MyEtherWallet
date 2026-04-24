@@ -41,6 +41,14 @@ function bufferToHex(b: Buffer | Uint8Array): string {
   return Buffer.from(b).toString('hex')
 }
 
+function compressPubkey(pub: Buffer): Buffer {
+  if (pub.length === 33) return pub
+  if (pub.length !== 65 || pub[0] !== 0x04)
+    throw new Error('ledger-bitcoin: unexpected public key format')
+  const prefix = (pub[64] & 1) === 0 ? 0x02 : 0x03
+  return Buffer.concat([Buffer.from([prefix]), pub.slice(1, 33)])
+}
+
 export class LedgerBitcoin {
   readonly network: NetworkNames
   readonly isSegwit: boolean
@@ -85,7 +93,7 @@ export class LedgerBitcoin {
           format,
         })
         const hdKey = new HDKey()
-        hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex')
+        hdKey.publicKey = compressPubkey(Buffer.from(rootPub.publicKey, 'hex'))
         hdKey.chainCode = Buffer.from(rootPub.chainCode, 'hex')
         this.HDNodes[options.pathType.basePath] = hdKey
       }
@@ -95,13 +103,13 @@ export class LedgerBitcoin {
       if (!pubkey) {
         throw new Error('ledger-bitcoin: failed to derive public key')
       }
-      const hex = bufferToHex(pubkey)
+      const hex = bufferToHex(compressPubkey(pubkey))
       return { address: hex, publicKey: hex }
     }
 
     const fullPath = options.pathType.path.replace('{index}', options.pathIndex)
     const res = await btc.getWalletPublicKey(fullPath, { format })
-    const pubkeyHex = bufferToHex(Buffer.from(res.publicKey, 'hex'))
+    const pubkeyHex = bufferToHex(compressPubkey(Buffer.from(res.publicKey, 'hex')))
     return { address: pubkeyHex, publicKey: pubkeyHex }
   }
 
