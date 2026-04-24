@@ -1,9 +1,12 @@
 <template>
-  <app-dialog v-model:is-open="isOpen" @close-dialog="$emit('close')">
-    <div class="p-6">
-      <p class="font-bold text-s-20 mb-4">Withdraw USDC</p>
-
-      <div v-if="walletAddress">
+  <app-dialog
+    v-model:is-open="isOpen"
+    title="Withdraw USDC"
+    has-content-gutter
+    @close-dialog="$emit('close')"
+  >
+    <template #content>
+      <div class="pb-6" v-if="walletAddress">
         <!-- Withdraw to -->
         <div class="bg-surface rounded-12 p-4 mb-4">
           <p
@@ -74,7 +77,7 @@
           Done
         </button>
       </div>
-    </div>
+    </template>
   </app-dialog>
 </template>
 
