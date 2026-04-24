@@ -1,7 +1,7 @@
 <template>
   <app-dialog v-model:is-open="isOpen" class="w-full max-w-[440px]">
     <template #title>
-      <div class="flex items-center gap-2.5 px-4 pt-5">
+      <div class="flex items-center gap-2.5 mr-8 pt-5 pl-6">
         <app-token-logo
           :url="getLogoUrl(symbol)"
           :symbol="symbol"
@@ -18,40 +18,75 @@
           <!-- +/- Controls -->
           <div class="flex items-center justify-center gap-6 mb-5">
             <button
-              class="w-10 h-10 rounded-full border border-[#e5e7eb] bg-white flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
               :disabled="modelValue <= 1"
-              :class="{ 'opacity-30 cursor-not-allowed': modelValue <= 1 }"
+              :class="
+                modelValue <= 1
+                  ? '!bg-white/90'
+                  : 'shadow-button shadow-button-elevated'
+              "
               @click="$emit('update:modelValue', Math.max(1, modelValue - 1))"
             >
-              &minus;
+              <MinusIcon
+                class="w-5 h-5"
+                :class="{ '!opacity-30': modelValue <= 1 }"
+              />
             </button>
-            <span
-              class="font-bold text-[40px] tracking-tight min-w-[100px] text-center"
-              >{{ modelValue }}&times;</span
-            >
+            <div class="relative min-w-[50px] flex items-center justify-center">
+              <input
+                :value="modelValue"
+                type="number"
+                min="1"
+                max="20"
+                step="1"
+                class="font-bold text-[40px] tracking-tight w-[50px] text-center bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
+                @change="
+                  e => {
+                    const val = Math.round(
+                      Math.min(
+                        20,
+                        Math.max(
+                          1,
+                          Number((e.target as HTMLInputElement).value) || 1,
+                        ),
+                      ),
+                    )
+                    ;(e.target as HTMLInputElement).value = String(val)
+                    $emit('update:modelValue', val)
+                  }
+                "
+              />
+              <span class="font-bold text-[40px] tracking-tight">&times;</span>
+            </div>
             <button
-              class="w-10 h-10 rounded-full border border-[#e5e7eb] bg-white flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
+              class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
               :disabled="modelValue >= 20"
-              :class="{ 'opacity-30 cursor-not-allowed': modelValue >= 20 }"
+              :class="
+                modelValue >= 20
+                  ? '!bg-white/90'
+                  : 'shadow-button shadow-button-elevated'
+              "
               @click="$emit('update:modelValue', Math.min(20, modelValue + 1))"
             >
-              +
+              <PlusIcon class="w-5 h-5" />
             </button>
           </div>
 
           <!-- Tick Labels -->
-          <div class="flex justify-between px-1 mb-1.5">
-            <span
+          <div class="flex justify-between px-1">
+            <button
               v-for="tick in [1, 5, 10, 15, 20]"
               :key="tick"
-              class="text-[11px] font-medium"
-              :class="modelValue >= tick ? '' : 'text-grey-40'"
-              >{{ tick }}&times;</span
+              class="text-[11px] font-medium hoverNoBG rounded-full px-2 py-0.5"
+              :class="modelValue > tick ? 'text-info' : ''"
+              @click="$emit('update:modelValue', tick)"
             >
+              {{ tick }}&times;
+            </button>
           </div>
 
           <!-- Slider -->
-          <div class="relative px-0">
+          <div class="relative px-1">
             <input
               :value="modelValue"
               type="range"
@@ -106,6 +141,7 @@
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getLogoUrl } from '../utils/market'
+import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
 
 defineProps({
   symbol: {
