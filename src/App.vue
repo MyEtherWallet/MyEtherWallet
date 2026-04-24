@@ -72,11 +72,11 @@ const isLoadingComplete = ref(false)
 
 const popupStore = useAnalyticsStore()
 const { consent } = storeToRefs(popupStore)
-
 watch(
   () => consent.value,
   (newVal, oldVal) => {
     if (newVal && !oldVal) {
+      console.log(userProperties.value)
       analytics.setUserProperties({
         ...userProperties.value,
         network: selectedChain.value?.name,
