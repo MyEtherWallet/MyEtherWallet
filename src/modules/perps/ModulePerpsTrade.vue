@@ -583,155 +583,25 @@
       </app-base-button>
     </div>
 
-    <!-- Order Confirmation Overlay -->
-    <Teleport to="body">
-      <div
-        v-if="showConfirmModal"
-        class="fixed inset-0 z-[9999] flex items-center justify-center"
-        @click.self="showConfirmModal = false"
-      >
-        <div class="absolute inset-0 bg-black/40" />
-        <div
-          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
-        >
-          <!-- Header -->
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-2.5">
-              <app-token-logo
-                :url="getLogoUrl(displaySymbol)"
-                :symbol="displaySymbol"
-                width="w-8"
-                height="h-8"
-              />
-              <span class="font-bold text-s-20"
-                >Confirm
-                {{ orderSide === 'buy' ? 'Long' : 'Short' }}
-                {{ displaySymbol }}</span
-              >
-            </div>
-            <button
-              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors"
-              @click="showConfirmModal = false"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Order Details -->
-          <div class="bg-mewBg rounded-[20px] p-5 mb-5 space-y-3">
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Side</span>
-              <span
-                class="font-bold"
-                :class="orderSide === 'buy' ? 'text-success' : 'text-error'"
-                >{{ orderSide === 'buy' ? 'Long' : 'Short' }}</span
-              >
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Order type</span>
-              <span class="font-bold">{{
-                orderType === 'market' ? 'Market' : 'Limit'
-              }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Market price</span>
-              <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
-            </div>
-            <div
-              v-if="orderType === 'limit'"
-              class="flex justify-between text-s-14"
-            >
-              <span class="text-info font-medium">Limit price</span>
-              <span class="font-bold">${{ limitPrice }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Margin</span>
-              <span class="font-bold">{{
-                formatUsd(parseFloat(inputAmount) || 0)
-              }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Leverage</span>
-              <span class="font-bold">{{ leverage }}&times;</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Position size</span>
-              <span class="font-bold">{{ formatUsd(positionSizeUsd) }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium"
-                >Size ({{ displaySymbol }})</span
-              >
-              <span class="font-bold">{{ orderSize }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Est. liquidation</span>
-              <span class="font-bold">{{
-                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
-              }}</span>
-            </div>
-            <div
-              v-if="takeProfitPrice !== null"
-              class="flex justify-between text-s-14"
-            >
-              <span class="text-info font-medium">Take Profit</span>
-              <span class="text-success font-bold">{{
-                formatUsd(takeProfitPrice)
-              }}</span>
-            </div>
-            <div
-              v-if="stopLossPrice !== null"
-              class="flex justify-between text-s-14"
-            >
-              <span class="text-info font-medium">Stop Loss</span>
-              <span class="text-error font-bold">{{
-                formatUsd(stopLossPrice)
-              }}</span>
-            </div>
-          </div>
-
-          <!-- Error -->
-          <div
-            v-if="orderError"
-            class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
-          >
-            <p class="text-error text-s-14 font-medium">{{ orderError }}</p>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex gap-3">
-            <button
-              class="flex-1 border border-[#e5e7eb] rounded-full py-3.5 text-s-16 font-bold hover:bg-greyLight transition-colors"
-              :disabled="isSubmitting"
-              @click="showConfirmModal = false"
-            >
-              Cancel
-            </button>
-            <button
-              class="flex-1 text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
-              :class="orderSide === 'buy' ? 'bg-[#00c896]' : 'bg-[#ff5b5a]'"
-              :disabled="isSubmitting"
-              @click="confirmAndSubmitOrder"
-            >
-              <span v-if="isSubmitting">Processing...</span>
-              <span v-else>Confirm</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <!-- Order Confirmation Dialog -->
+    <perps-order-confirmation-dialog
+      v-model:is-open="showConfirmModal"
+      :order-side="orderSide"
+      :order-type="orderType"
+      :display-symbol="displaySymbol"
+      :current-price="currentPrice"
+      :limit-price="limitPrice"
+      :input-amount="inputAmount"
+      :leverage="leverage"
+      :position-size-usd="positionSizeUsd"
+      :order-size="orderSize"
+      :estimated-liquidation="estimatedLiquidation"
+      :take-profit-price="takeProfitPrice"
+      :stop-loss-price="stopLossPrice"
+      :order-error="orderError"
+      :is-submitting="isSubmitting"
+      @confirm="confirmAndSubmitOrder"
+    />
 
     <!-- Close Confirmation Modal -->
     <Teleport to="body">
@@ -887,185 +757,23 @@
       @save="saveLeverage"
     />
 
-    <!-- Auto Close Modal -->
-    <Teleport to="body">
-      <div
-        v-if="showAutoCloseModal"
-        class="fixed inset-0 z-[9999] flex items-center justify-center"
-        @click.self="showAutoCloseModal = false"
-      >
-        <div class="absolute inset-0 bg-black/40" />
-        <div
-          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
-        >
-          <!-- Header -->
-          <div class="flex items-center justify-between mb-5">
-            <span class="font-bold text-s-20">Auto close</span>
-            <button
-              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors"
-              @click="showAutoCloseModal = false"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Asset & Price -->
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-2">
-              <app-token-logo
-                :url="getLogoUrl(displaySymbol)"
-                :symbol="displaySymbol"
-                width="w-7"
-                height="h-7"
-              />
-              <span class="font-bold text-s-16">{{ displaySymbol }}</span>
-            </div>
-            <div class="text-right">
-              <span class="text-info text-s-14 mr-2">Current price</span>
-              <span class="font-bold text-s-16">{{
-                formatUsd(currentPrice)
-              }}</span>
-            </div>
-          </div>
-
-          <!-- Take Profit -->
-          <div class="bg-mewBg rounded-[20px] p-5 mb-4">
-            <div class="flex justify-between items-center mb-3 px-1">
-              <p class="text-s-14 font-bold">
-                Take profit if {{ displaySymbol }} reaches
-              </p>
-              <button
-                class="text-[#0052ff] text-s-14 font-bold hover:opacity-70"
-                @click="clearTempTakeProfit"
-              >
-                Clear
-              </button>
-            </div>
-            <div
-              class="bg-white rounded-[16px] p-5 shadow-sm border border-[#e5e7eb]"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <div
-                  class="flex items-center gap-1 text-s-14 font-medium text-info"
-                >
-                  Price
-                </div>
-                <p class="font-bold text-[28px] tracking-tight">
-                  {{
-                    tempTakeProfitPrice !== null
-                      ? formatUsd(tempTakeProfitPrice)
-                      : '—'
-                  }}
-                </p>
-              </div>
-              <div class="flex justify-between gap-2 mb-3">
-                <button
-                  v-for="pct in [10, 20, 30, 50, 100]"
-                  :key="pct"
-                  class="h-[34px] flex-1 border rounded-full text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                  :class="
-                    activeTpPill === pct
-                      ? 'border-[#0052ff] text-[#0052ff]'
-                      : 'border-[#e5e7eb]   hover:border-grey-300'
-                  "
-                  @click="setTakeProfitPct(pct)"
-                >
-                  +{{ pct }}%
-                </button>
-              </div>
-              <div
-                v-if="
-                  tempProjectedProfit !== null && tempTakeProfitPrice !== null
-                "
-                class="text-right text-s-13 mt-2"
-              >
-                <span class="text-info">Projected profit</span>
-                <span class="text-success font-bold ml-2"
-                  >+{{ formatUsd(Math.abs(tempProjectedProfit)) }}</span
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Stop Loss -->
-          <div class="bg-mewBg rounded-[20px] p-5 mb-6">
-            <div class="flex justify-between items-center mb-3 px-1">
-              <p class="text-s-14 font-bold">
-                Stop loss if {{ displaySymbol }} reaches
-              </p>
-              <button
-                class="text-[#0052ff] text-s-14 font-bold hover:opacity-70"
-                @click="clearTempStopLoss"
-              >
-                Clear
-              </button>
-            </div>
-            <div
-              class="bg-white rounded-[16px] p-5 shadow-sm border border-[#e5e7eb]"
-            >
-              <div class="flex items-center justify-between mb-4">
-                <div
-                  class="flex items-center gap-1 text-s-14 font-medium text-info"
-                >
-                  Price
-                </div>
-                <p class="font-bold text-[28px] tracking-tight">
-                  {{
-                    tempStopLossPrice !== null
-                      ? formatUsd(tempStopLossPrice)
-                      : '—'
-                  }}
-                </p>
-              </div>
-              <div class="flex justify-between gap-2 mb-3">
-                <button
-                  v-for="pct in [1, 2, 3, 4, 5]"
-                  :key="pct"
-                  class="h-[34px] flex-1 border rounded-full text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                  :class="
-                    activeSlPill === pct
-                      ? 'border-[#c9379d] text-[#c9379d]'
-                      : 'border-[#e5e7eb]   hover:border-grey-300'
-                  "
-                  @click="setStopLossPct(pct)"
-                >
-                  -{{ pct }}%
-                </button>
-              </div>
-              <div
-                v-if="tempProjectedLoss !== null && tempStopLossPrice !== null"
-                class="text-right text-s-13 mt-2"
-              >
-                <span class="text-info">Projected loss</span>
-                <span class="text-error font-bold ml-2"
-                  >-{{ formatUsd(Math.abs(tempProjectedLoss)) }}</span
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Add Button -->
-          <button
-            class="w-full bg-[#0052ff] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
-            @click="confirmAutoClose"
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </Teleport>
+    <!-- Take Profit / Stop Loss Dialog -->
+    <perps-take-profit-stop-loss-dialog
+      v-model:is-open="showAutoCloseModal"
+      :display-symbol="displaySymbol"
+      :current-price="currentPrice"
+      :temp-take-profit-price="tempTakeProfitPrice"
+      :temp-stop-loss-price="tempStopLossPrice"
+      :temp-projected-profit="tempProjectedProfit"
+      :temp-projected-loss="tempProjectedLoss"
+      :active-tp-pill="activeTpPill"
+      :active-sl-pill="activeSlPill"
+      @clear-take-profit="clearTempTakeProfit"
+      @clear-stop-loss="clearTempStopLoss"
+      @set-take-profit-pct="setTakeProfitPct"
+      @set-stop-loss-pct="setStopLossPct"
+      @confirm="confirmAutoClose"
+    />
   </div>
 </template>
 
@@ -1087,6 +795,8 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
+import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
+import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { storeToRefs } from 'pinia'
