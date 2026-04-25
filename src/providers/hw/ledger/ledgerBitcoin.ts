@@ -46,7 +46,7 @@ function compressPubkey(pub: Buffer): Buffer {
   if (pub.length !== 65 || pub[0] !== 0x04)
     throw new Error('ledger-bitcoin: unexpected public key format')
   const prefix = (pub[64] & 1) === 0 ? 0x02 : 0x03
-  return Buffer.concat([Buffer.from([prefix]), pub.slice(1, 33)])
+  return Buffer.concat([Buffer.from([prefix]), pub.subarray(1, 33)])
 }
 
 export class LedgerBitcoin {
@@ -68,7 +68,7 @@ export class LedgerBitcoin {
 
   async isConnected(): Promise<boolean> {
     if (!this.transport) await this.init()
-    await ensureLedgerApp(this.transport!, this.network)
+    this.transport = await ensureLedgerApp(this.transport!, this.network)
     return true
   }
 

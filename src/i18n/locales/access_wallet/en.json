@@ -73,7 +73,9 @@
         "title": "Select address and network"
       }
     },
-    "connect": "Connect your Ledger"
+    "connect": "Connect your Ledger",
+    "connect_usb": "Connect your Ledger via USB",
+    "connect_bluetooth": "or connect via Bluetooth"
   },
   "access_wallet_private_key": {
     "title": "Access Wallet with Private Key"

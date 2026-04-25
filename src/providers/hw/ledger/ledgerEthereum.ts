@@ -69,7 +69,7 @@ export class LedgerEthereum {
 
   async isConnected(): Promise<boolean> {
     if (!this.transport) await this.init()
-    await ensureLedgerApp(this.transport!, this.network)
+    this.transport = await ensureLedgerApp(this.transport!, this.network)
     return true
   }
 

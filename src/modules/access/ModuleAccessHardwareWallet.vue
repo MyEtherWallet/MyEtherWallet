@@ -15,14 +15,22 @@
                 :description="walletStepsDescription[0]"
                 :activeStep="activeStep"
               />
-              <div class="flex items-center justify-center mt-[40px]">
+              <div class="flex flex-col items-center justify-center mt-[40px] gap-3">
                 <app-base-button
-                  @click="unlockWallet"
+                  v-if="currentView !== 'ledger' || usbSupported"
+                  @click="currentView === 'ledger' ? connectViaUSB() : unlockWallet()"
                   :is-loading="connectingWallet"
                   :disabled="connectingWallet"
                 >
-                  {{ connectButtonText }}
+                  {{ currentView === 'ledger' ? t('access_wallet_ledger.connect_usb') : connectButtonText }}
                 </app-base-button>
+                <span
+                  v-if="currentView === 'ledger' && bleSupported"
+                  class="underline cursor-pointer text-sm"
+                  @click="!connectingWallet && connectViaBluetooth()"
+                >
+                  {{ t('access_wallet_ledger.connect_bluetooth') }}
+                </span>
               </div>
             </div>
             <!-- Select Network, Address, DP -->
@@ -82,7 +90,7 @@
 <script setup lang="ts">
 import AppSheet from '@/components/AppSheet.vue'
 import ButtonNoWallet from './components/ButtonNoWallet.vue'
-import { ref, watch, markRaw, computed } from 'vue'
+import { ref, watch, markRaw, computed, onMounted } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import AppStepper from '@/components/AppStepper.vue'
 import AppStepDescription from '@/components/AppStepDescription.vue'
@@ -106,6 +114,7 @@ import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
 import type { HWManager } from '@/providers/hw/types'
+import { getLedgerWebUSBTransport, getLedgerBLETransport, isWebUSBSupported, isWebBLESupported } from '@/providers/hw/ledger/transport'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import type { PathType } from '@/stores/derivationStore'
@@ -324,6 +333,28 @@ const unlockWallet = async () => {
   } finally {
     connectingWallet.value = false
   }
+}
+
+const usbSupported = ref(false)
+const bleSupported = ref(false)
+
+onMounted(async () => {
+  if (currentView.value === 'ledger') {
+    ;[usbSupported.value, bleSupported.value] = await Promise.all([
+      isWebUSBSupported(),
+      isWebBLESupported(),
+    ])
+  }
+})
+
+const connectViaUSB = async () => {
+  await getLedgerWebUSBTransport()
+  return unlockWallet()
+}
+
+const connectViaBluetooth = async () => {
+  await getLedgerBLETransport()
+  return unlockWallet()
 }
 
 /**------------------------

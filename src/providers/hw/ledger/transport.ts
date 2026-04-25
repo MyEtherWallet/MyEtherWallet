@@ -10,6 +10,7 @@ const BLE_RETRY_DELAY_MS = 600
 
 let cached: { transport: Transport; kind: LedgerTransportKind } | null = null
 let inflight: Promise<Transport> | null = null
+let lastKind: LedgerTransportKind | null = null
 
 function sleep(ms: number): Promise<void> {
   return new Promise(r => setTimeout(r, ms))
@@ -56,6 +57,7 @@ function attachLifecycle(t: Transport, kind: LedgerTransportKind) {
   }
   t.on('disconnect', onDisconnect)
   cached = { transport: t, kind }
+  lastKind = kind
 }
 
 async function createWebUSB(): Promise<Transport | null> {
@@ -98,35 +100,29 @@ async function createWebBLE(): Promise<Transport | null> {
   }
 }
 
-async function openPreferred(
-  preferred?: LedgerTransportKind,
-): Promise<Transport> {
-  const order: LedgerTransportKind[] =
-    preferred === 'webusb' ? ['webusb', 'webble'] : ['webble', 'webusb']
-
-  let lastError: unknown = null
-  for (let i = 0; i < order.length; i++) {
-    const kind = order[i]
-    const isLast = i === order.length - 1
-    try {
-      const t = kind === 'webusb' ? await createWebUSB() : await createWebBLE()
-      if (t) {
-        attachLifecycle(t, kind)
-        return t
-      }
-    } catch (e) {
-      lastError = e
-      // If the user cancelled the picker for the last transport we have left,
-      // surface that immediately instead of silently resolving without one.
-      // Otherwise, fall through so they still get the other transport's picker.
-      if (isUserCancelError(e) && isLast) throw e
+async function openPreferred(kind: LedgerTransportKind): Promise<Transport> {
+  try {
+    const t = kind === 'webusb' ? await createWebUSB() : await createWebBLE()
+    if (t) {
+      attachLifecycle(t, kind)
+      return t
     }
+  } catch (e) {
+    throw e
   }
-
-  if (lastError) throw lastError
   throw new Error(
-    'Ledger: no supported transport available. Web Bluetooth or WebUSB must be enabled in this browser (Chromium on HTTPS).',
+    kind === 'webusb'
+      ? 'Ledger: WebUSB is not supported in this browser.'
+      : 'Ledger: Web Bluetooth is not supported in this browser.',
   )
+}
+
+export async function isWebUSBSupported(): Promise<boolean> {
+  return TransportWebUSB.isSupported()
+}
+
+export async function isWebBLESupported(): Promise<boolean> {
+  return TransportWebBLE.isSupported()
 }
 
 export async function getLedgerTransport(
@@ -137,13 +133,33 @@ export async function getLedgerTransport(
 
   inflight = (async () => {
     try {
-      return await openPreferred(preferred)
+      const kind = preferred ?? lastKind
+      if (!kind) throw new Error('Ledger: no transport kind specified.')
+      return await openPreferred(kind)
     } finally {
       inflight = null
     }
   })()
 
   return inflight
+}
+
+export async function getLedgerWebUSBTransport(): Promise<Transport> {
+  cached = null
+  inflight = null
+  const t = await createWebUSB()
+  if (!t) throw new Error('WebUSB is not supported in this browser')
+  attachLifecycle(t, 'webusb')
+  return t
+}
+
+export async function getLedgerBLETransport(): Promise<Transport> {
+  cached = null
+  inflight = null
+  const t = await createWebBLE()
+  if (!t) throw new Error('Web Bluetooth is not supported or was cancelled')
+  attachLifecycle(t, 'webble')
+  return t
 }
 
 export async function closeLedgerTransport(): Promise<void> {
