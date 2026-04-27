@@ -543,7 +543,7 @@ enum SortValue {
   MARKET_CAP = 'MARKET_CAP',
 }
 
-const headerSort = ref<SortValue>(SortValue.MARKET_CAP)
+const headerSort = ref<SortValue>(SortValue.VOLUME)
 const tableDirection = ref<'asc' | 'desc'>('desc')
 
 function setHeaderSort(key: SortValue) {
