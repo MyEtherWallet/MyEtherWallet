@@ -135,7 +135,7 @@ export function usePerpsBalance() {
     }
 
     poll()
-    setInterval(poll, 5_000)
+    setInterval(poll, 1_000)
 
     let lastRefreshKey = refreshKey.value
     setInterval(() => {
