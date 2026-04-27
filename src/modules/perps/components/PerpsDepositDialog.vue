@@ -216,13 +216,15 @@
             </p>
             <app-btn-copy :copy-value="depositAddress || ''" />
             <!-- Refresh -->
-            <app-btn-icon
-              label="refresh"
-              :disabled="loading"
-              @click="fetchDepositAddress"
-            >
-              <arrow-path-icon class="w-[18px] h-[18px]" />
-            </app-btn-icon>
+            <app-tooltip text="Refresh deposit address" position="top-left">
+              <app-btn-icon
+                label="Refresh deposit address"
+                :disabled="loading"
+                @click="fetchDepositAddress"
+              >
+                <arrow-path-icon class="w-[18px] h-[18px]" />
+              </app-btn-icon>
+            </app-tooltip>
           </div>
         </template>
       </div>
@@ -242,6 +244,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
