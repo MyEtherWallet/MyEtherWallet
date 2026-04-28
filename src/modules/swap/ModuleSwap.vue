@@ -1080,7 +1080,6 @@ const setToToken = () => {
   // 2. Select Token Logic
   if (hasSwapValues.value) {
     // Deep link / restore values - use stored token
-
     const match = localToTokens.value.find(
       t =>
         t.address.toLowerCase() ===
@@ -1119,11 +1118,9 @@ const setToToken = () => {
     }
     // Selected token doesn't exist in new list, fall through to default selection
     if (toTokens.value && allToTokensRaw.length > 0) {
-      const allToTrending =
-        toTokens.value.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
-      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const allToTop =
+        toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.top]
+      const candidates = allToTop?.length ? allToTop : allToTokensRaw
       const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
@@ -1133,7 +1130,6 @@ const setToToken = () => {
               fromTokenSelected.value?.address.toLowerCase(),
           )
         : candidates[0]
-
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
@@ -1147,11 +1143,9 @@ const setToToken = () => {
   } else {
     // No token selected, no stored values - use default
     if (toTokens.value && allToTokensRaw.length > 0) {
-      const allToTrending =
-        toTokens.value.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
-      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const allToTop =
+        toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.trending]
+      const candidates = allToTop?.length ? allToTop : allToTokensRaw
       const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
@@ -1161,7 +1155,6 @@ const setToToken = () => {
               fromTokenSelected.value?.address.toLowerCase(),
           )
         : candidates[0]
-
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
@@ -1240,6 +1233,7 @@ watch(fromTokenSelected, token => {
 })
 
 watch(toTokenSelected, token => {
+  console.log(token, 'bruh')
   if (isSwapView.value) {
     setSwapToToken(token ?? null)
   } else {
@@ -1442,6 +1436,7 @@ watch(
         toTokenSelected.value.address.toLowerCase()
     ) {
       const alt = filteredToTokens.value[0]
+      console.log('sets it here first?')
       toTokenSelected.value = alt || null
     }
   },
@@ -1490,6 +1485,7 @@ onBeforeMount(async () => {
     if (isSwapView.value) {
       if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
       if (swapToToken.value) toTokenSelected.value = swapToToken.value
+      console.log(swapToToken.value, 'AAAAAA')
     } else {
       if (
         bridgeToChain.value &&
