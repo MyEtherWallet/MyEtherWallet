@@ -1,6 +1,7 @@
 import { ref, watchEffect, onUnmounted } from 'vue'
-import { perpsClient } from '../configs'
+import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
+import { useCursorPaginate } from './useCursorPaginate'
 import type {
   ApiOrder,
   ApiFill,
@@ -51,23 +52,15 @@ export function usePerpsOrders() {
 
 export function usePerpsFills() {
   const { token, refreshKey } = usePerpsAuth()
-  const fills = ref<ApiFill[]>([])
-  const loading = ref(false)
+  const pagination = useCursorPaginate<ApiFill>(
+    opts => perpsClient.getFills(opts),
+    PERPS_PAGE_SIZE,
+  )
   let pollTimer: ReturnType<typeof setInterval> | null = null
 
-  async function fetchFills() {
-    if (!token.value) {
-      fills.value = []
-      return
-    }
-    loading.value = true
-    try {
-      const res = await perpsClient.getFills({ limit: 100 })
-      fills.value = res.result ?? []
-    } catch {
-      fills.value = []
-    } finally {
-      loading.value = false
+  async function refreshFirstPageIfActive() {
+    if (pagination.currentPage.value === 0) {
+      await pagination.refetch()
     }
   }
 
@@ -75,10 +68,10 @@ export function usePerpsFills() {
     void refreshKey.value
     if (pollTimer) clearInterval(pollTimer)
     if (token.value) {
-      fetchFills()
-      pollTimer = setInterval(fetchFills, 10_000)
+      pagination.refetch()
+      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
     } else {
-      fills.value = []
+      pagination.reset()
       pollTimer = null
     }
   })
@@ -87,7 +80,16 @@ export function usePerpsFills() {
     if (pollTimer) clearInterval(pollTimer)
   })
 
-  return { fills, loading, refetch: fetchFills }
+  return {
+    fills: pagination.items,
+    loading: pagination.loading,
+    refetch: pagination.refetch,
+    currentPage: pagination.currentPage,
+    hasNext: pagination.hasNext,
+    hasPrev: pagination.hasPrev,
+    nextPage: pagination.nextPage,
+    prevPage: pagination.prevPage,
+  }
 }
 
 export function usePerpsDepositsWithdrawals() {

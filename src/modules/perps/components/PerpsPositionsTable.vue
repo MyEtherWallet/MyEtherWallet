@@ -103,7 +103,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="pos in positions"
+              v-for="pos in paginatedPositions"
               :key="pos.market"
               class="cursor-pointer hoverBGWhite"
               @click="openPositionDialog(pos)"
@@ -236,6 +236,17 @@
             </tr>
           </tbody>
         </table>
+        <div
+          v-if="positions.length > 0 && positionsTotalPages > 1"
+          class="flex justify-end mt-4 px-2"
+        >
+          <perps-pagination
+            :current-page="positionsCurrentPage"
+            :total-pages="positionsTotalPages"
+            @prev="positionsPrevPage"
+            @next="positionsNextPage"
+          />
+        </div>
       </template>
 
       <!-- Orders tab -->
@@ -448,7 +459,7 @@
           :columns="fillsSkeletonColumns"
         />
         <div
-          v-else-if="fills.length === 0"
+          v-else-if="fills.length === 0 && fillsCurrentPage === 0"
           class="text-center py-8 text-info text-s-14"
         >
           No fills
@@ -563,6 +574,19 @@
               </tr>
             </tbody>
           </table>
+          <div
+            v-if="fillsHasPrev || fillsHasNext"
+            class="flex justify-end mt-4 px-2"
+          >
+            <perps-pagination
+              :current-page="fillsCurrentPage"
+              :has-prev="fillsHasPrev"
+              :has-next="fillsHasNext"
+              :disabled="fillsLoading"
+              @prev="fillsPrevPage"
+              @next="fillsNextPage"
+            />
+          </div>
         </div>
       </template>
 
@@ -722,6 +746,7 @@ import AppTableSkeleton, {
 import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
+import PerpsPagination from './PerpsPagination.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -738,7 +763,8 @@ import {
   formatDate,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
-import { perpsClient } from '../configs'
+import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
+import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 
 const USDC_LOGO =
@@ -789,6 +815,14 @@ const dwSkeletonColumns: SkeletonColumn[] = [
 ]
 
 const { positions, loading } = usePerpsPositions()
+
+const {
+  currentPage: positionsCurrentPage,
+  paginatedArray: paginatedPositions,
+  totalPages: positionsTotalPages,
+  nextPage: positionsNextPage,
+  prevPage: positionsPrevPage,
+} = usePaginate<Position>(positions, PERPS_PAGE_SIZE)
 
 const showPositionDialog = ref(false)
 const selectedPosition = ref<Position | null>(null)
@@ -854,7 +888,15 @@ const showCancelButton = (order: ApiOrder) => {
   )
 }
 
-const { fills, loading: fillsLoading } = usePerpsFills()
+const {
+  fills,
+  loading: fillsLoading,
+  currentPage: fillsCurrentPage,
+  hasPrev: fillsHasPrev,
+  hasNext: fillsHasNext,
+  nextPage: fillsNextPage,
+  prevPage: fillsPrevPage,
+} = usePerpsFills()
 const {
   deposits,
   withdrawals,

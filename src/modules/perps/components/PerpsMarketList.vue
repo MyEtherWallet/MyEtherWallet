@@ -226,7 +226,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="contract in filteredContracts"
+              v-for="contract in paginatedContracts"
               :key="contract.market"
               class="h-14 hoverBGWhite cursor-pointer"
               @click="$emit('openPosition', contract.market)"
@@ -450,6 +450,17 @@
           </tbody>
         </table>
         <div
+          v-if="filteredContracts.length > 0 && totalPages > 1"
+          class="flex justify-end mt-4 px-2"
+        >
+          <perps-pagination
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @prev="prevPage"
+            @next="nextPage"
+          />
+        </div>
+        <div
           v-if="filteredContracts.length === 0"
           class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
         >
@@ -505,6 +516,9 @@ import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePaginate } from '@/composables/usePaginate'
+import { PERPS_PAGE_SIZE } from '../configs'
+import PerpsPagination from './PerpsPagination.vue'
 
 defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
@@ -653,4 +667,12 @@ function formatChange(pct?: string): string {
   if (!pct) return '—'
   return formatPercent(parseFloat(pct))
 }
+
+const {
+  currentPage,
+  paginatedArray: paginatedContracts,
+  totalPages,
+  nextPage,
+  prevPage,
+} = usePaginate<EnrichedContract>(filteredContracts, PERPS_PAGE_SIZE)
 </script>
