@@ -3,8 +3,6 @@ import { ref, computed } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import type { PurchaseInfo } from '@/types/buyToken'
 import configs from '@/configs'
-import { captureException } from '@sentry/vue'
-
 const isDevMode = configs.IS_DEV_MODE
 
 export const usePurchaseStore = defineStore('purchase', () => {
@@ -12,10 +10,10 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const isFetching = ref(false)
 
   const buyableCoinIds = computed(() => {
-    if (!purchaseInfo.value) return new Set<string>()
+    if (!purchaseInfo.value?.assets) return new Set<string>()
     const ids = new Set<string>()
     purchaseInfo.value.assets.forEach(chain => {
-      chain.assets.forEach(asset => {
+      chain.assets?.forEach(asset => {
         if (asset.coingecko_id) {
           ids.add(asset.coingecko_id)
         }
@@ -36,12 +34,6 @@ export const usePurchaseStore = defineStore('purchase', () => {
     } catch (error) {
       if (isDevMode) {
         console.error('Failed to fetch purchase info:', error)
-      } else {
-        captureException(error, {
-          extra: {
-            title: 'PURCHASE STORE: Failed to fetch purchase info',
-          },
-        })
       }
     } finally {
       isFetching.value = false

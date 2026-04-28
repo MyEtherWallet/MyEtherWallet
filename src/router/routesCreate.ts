@@ -14,11 +14,16 @@ const beforeRouteEnter = (
   if (
     to.query.type &&
     typeof to.query.type === 'string' &&
-    CREATE_WALLET_VIEWS.includes(to.query.type as (typeof CREATE_WALLET_VIEWS)[number])
+    CREATE_WALLET_VIEWS.includes(
+      to.query.type as (typeof CREATE_WALLET_VIEWS)[number],
+    )
   ) {
     next()
   } else {
-    next({ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME, query: { type: 'default' } })
+    next({
+      name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME,
+      query: { type: 'default' },
+    })
   }
 }
 type RouteOption = RouterOptions['routes'][0]

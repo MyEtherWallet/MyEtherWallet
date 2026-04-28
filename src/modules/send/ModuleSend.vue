@@ -46,7 +46,11 @@
         {{ $t('common.connect_wallet') }}</app-base-button
       >
       <div v-else class="flex w-full">
-        <app-no-chain-balance v-if="!hasChainBalance" source="send" class="mb-5 -mt-1" />
+        <app-no-chain-balance
+          v-if="!hasChainBalance"
+          source="send"
+          class="mb-5 -mt-1"
+        />
         <app-base-button
           v-else
           :disabled="!validSend"
@@ -77,7 +81,19 @@
       :to-amount-fiat="amountToFiat"
       :signed-tx="signedTx"
       v-model="openTxModal"
-      @tx-sent="saveToAddressBookAfterSending"
+      @tx-sent="onTxSent"
+    />
+    <send-initiated-modal
+      v-model:send-initiated-open="sendInitiatedOpen"
+      :chain="sendModalData.chain"
+      :tx-hash="sendModalData.txHash"
+      :to-address="sendModalData.toAddress"
+      :from-address="sendModalData.fromAddress"
+      :amount="sendModalData.amount"
+      :amount-fiat="sendModalData.amountFiat"
+      :token-symbol="sendModalData.tokenSymbol"
+      :token-icon="sendModalData.tokenIcon"
+      :token-address="sendModalData.tokenAddress"
     />
   </div>
 </template>
@@ -102,6 +118,7 @@ import { abi } from './tokenAbi'
 import { type HexPrefixedString } from '@/providers/types'
 import { hexToBigInt } from '@ethereumjs/util'
 import EvmTransactionConfirmation from './components/EvmTransactionConfirmation.vue'
+import SendInitiatedModal from './components/SendInitiatedModal.vue'
 import BigNumber from 'bignumber.js'
 import { useChainsStore } from '@/stores/chainsStore'
 import { WalletType } from '@/providers/types'
@@ -163,9 +180,22 @@ const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
 
 const openTxModal = ref(false)
+const sendInitiatedOpen = ref(false)
 const isLoadingFees = ref(false)
 
 const signedTx = ref<HexPrefixedString | string>('')
+const sentTxHash = ref<HexPrefixedString>('0x')
+const sendModalData = ref({
+  chain: undefined as typeof selectedChain.value,
+  txHash: '0x' as HexPrefixedString,
+  toAddress: '',
+  fromAddress: '',
+  amount: '',
+  amountFiat: '',
+  tokenSymbol: '',
+  tokenIcon: '',
+  tokenAddress: '',
+})
 const address = ref('')
 const foundNickName = ref('')
 
@@ -411,6 +441,24 @@ watch(
   },
 )
 
+const onTxSent = (txHash: string) => {
+  // Capture data for modal BEFORE reset
+  sendModalData.value = {
+    chain: selectedChain.value,
+    txHash: txHash as HexPrefixedString,
+    toAddress: toAddress.value || '',
+    fromAddress: walletAddress.value || '',
+    amount: new BigNumber(amount.value).toFixed(),
+    amountFiat: amountToFiat.value,
+    tokenSymbol: tokenSelected.value?.symbol || '',
+    tokenIcon: tokenSelected.value?.logo_url || '',
+    tokenAddress: tokenSelected.value?.contract || '',
+  }
+  sentTxHash.value = txHash as HexPrefixedString
+  sendInitiatedOpen.value = true
+  saveToAddressBookAfterSending()
+}
+
 const saveToAddressBookAfterSending = () => {
   if (toAddress.value) {
     const newAddress: Address = {
@@ -428,7 +476,6 @@ const saveToAddressBookAfterSending = () => {
 const toastStore = useToastStore()
 
 // Get quotes:
-
 const getGasFeeQuotes = async () => {
   try {
     const body = getTxRequestBody()
@@ -464,9 +511,14 @@ const getGasFeeQuotes = async () => {
         const isInsufficientFundsError = e.message
           .toLowerCase()
           .includes('insufficient funds')
+        const isERC20InsufficientBalance = e.message.includes(
+          'ERC20InsufficientBalance',
+        )
+        const tokenHasBalance = BigInt(balanceWei.value || '0') > BigInt(0)
         if (isInsufficientFundsError) {
           gasFeeError.value = 'NOT_ENOUGH_BALANCE'
-          isLoadingFees.value = false
+        } else if (isERC20InsufficientBalance && tokenHasBalance) {
+          gasFeeError.value = t('send.toast.frozen_token')
         } else {
           gasFeeError.value = e.message
         }
@@ -474,6 +526,7 @@ const getGasFeeQuotes = async () => {
         gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
       }
     }
+    isLoadingFees.value = false
   }
 }
 

@@ -21,15 +21,15 @@
         </div>
 
         <!-- Right Panel: Content -->
-        <div class="flex-1 px-6 sm:px-8 py-6 sm:pt-10 flex flex-col">
+        <div class="flex-1 px-6 py-6 sm:pt-10 flex flex-col">
           <h3
             class="text-s-24 sm:text-s-32 font-bold text-primary leading-p-120"
           >
             Earn $5 USDC on Every Eligible Swap
           </h3>
           <p class="text-s-14 text-info mt-3 leading-p-160">
-            Complete a swap or trade on Ethereum over $10 and receive $5 USDC —
-            available to the first 100 users each day.
+            Complete a swap or trade on Ethereum over $50 and receive $5 USDC —
+            available to the first 10 unique users each hour.
           </p>
 
           <!-- How It Works -->
@@ -94,6 +94,10 @@
                   v-else-if="item.icon === 'trending-down'"
                   class="w-4 h-4 text-violet"
                 />
+                <user-icon
+                  v-else-if="item.icon === 'user'"
+                  class="w-3 h-3 sm:w-4 sm:h-4 text-violet"
+                />
                 <span v-else class="text-s-14">{{ item.icon }}</span>
               </div>
               <p class="text-s-12 sm:text-s-14 text-info leading-snug pt-1">
@@ -110,6 +114,12 @@
           >
             Earn Your Reward
           </app-base-button>
+          <p
+            v-else-if="isAccountTooNew"
+            class="bg-surface rounded-full px-7 py-3 font-semibold text-info text-s-14 text-center mt-6"
+          >
+            Account not eligible
+          </p>
         </div>
       </div>
     </template>
@@ -127,6 +137,7 @@ import {
   CurrencyDollarIcon,
   ArrowTrendingDownIcon,
   ClockIcon,
+  UserIcon,
 } from '@heroicons/vue/24/solid'
 
 const props = defineProps<{
@@ -149,6 +160,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
 const walletMenu = useWalletMenuStore()
@@ -161,9 +173,19 @@ const chainsStore = useChainsStore()
 const { isBitcoinChain } = storeToRefs(chainsStore)
 const walletStore = useWalletStore()
 const { walletName } = storeToRefs(walletStore)
+const rewardsStore = useRewardsStore()
+const { eligibilityReasons } = storeToRefs(rewardsStore)
+
+const isAccountTooNew = computed(() => {
+  return eligibilityReasons.value.some(r => r.type === 'ACCOUNT_TOO_NEW')
+})
 
 const canEarn = computed(() => {
-  if (isBitcoinChain.value && walletName.value !== 'Enkrypt') return false
+  if (
+    isAccountTooNew.value ||
+    (isBitcoinChain.value && walletName.value !== 'Enkrypt')
+  )
+    return false
   return true
 })
 
@@ -178,22 +200,32 @@ watch(isOpenModel, val => {
 const howItWorks = [
   {
     icon: 'swap',
-    text: 'Make a swap or trade of $10 or more on Ethereum network',
+    text: 'Make a swap or trade of $50 or more on the Ethereum network',
   },
   {
     icon: 'currency-dollar',
-    text: "If you're within the first 100, you earn $5 USDC",
+    text: 'The first 10 eligible swaps or trades every hour get $5 USDC',
   },
   {
     icon: 'gift',
-    text: 'One reward per wallet per day, sent directly to your wallet',
+    text: 'One reward per wallet per campaign period, sent directly to your wallet',
   },
 ]
 
 const availability = [
-  { icon: 'clock', text: 'Limited to 100 rewards per day' },
+  {
+    icon: 'clock',
+    text: 'Limited to 10 rewards per hour (No Bots!)',
+  },
   { icon: 'trending-down', text: 'Live counter shows remaining rewards' },
-  { icon: 'calendar', text: 'If rewards run out, try again the next day' },
+  {
+    icon: 'calendar',
+    text: 'If rewards run out, try again the next hour. Campaign resets in 7 days, April 28 5pm PST',
+  },
+  {
+    icon: 'user',
+    text: 'Minimum of 0.001 ETH balance required prior to March 31st, 2026',
+  },
 ]
 
 const onEarnReward = () => {

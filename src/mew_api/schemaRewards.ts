@@ -169,7 +169,8 @@ export interface components {
              * @description Machine-readable reason code.
              * @enum {string}
              */
-            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED";
+            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED" | "HOURLY_REWARD_LIMIT_REACHED" | "ACCOUNT_TOO_NEW";
+            code: number;
             /** @description Human-readable explanation of the ineligibility reason. */
             message: string;
         };
@@ -205,7 +206,7 @@ export interface components {
              * @description Current status of the reward transaction.
              * @enum {string}
              */
-            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL";
+            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL" | "DROPPED";
             /** @description Address that sent the reward (0x-prefixed hex). */
             rewardSenderAddress: string;
             /** @description Address that received the reward (0x-prefixed hex). */
@@ -249,6 +250,11 @@ export interface components {
              */
             nextDayStart: string;
             /**
+             * Format: date-time
+             * @description Start of the next hour
+             */
+            nextHourStart: string;
+            /**
              * @description The number of rewards that can be granted in a day.
              * @example 100
              */
@@ -258,6 +264,16 @@ export interface components {
              * @example 100
              */
             dailyRemainingRewardCount: number;
+            /**
+             * @description The number of rewards that can be granted in an hour.
+             * @example 100
+             */
+            hourlyTotalRewardCount: number;
+            /**
+             * @description The number of rewards left for the hour.
+             * @example 100
+             */
+            hourlyRemainingRewardCount: number;
             /** @description List of reasons the pool is closed (empty if open). */
             reasons: components["schemas"]["IneligibilityReason"][];
         };

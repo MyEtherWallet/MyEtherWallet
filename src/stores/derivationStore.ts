@@ -27,7 +27,7 @@ export const useDerivationStore = defineStore('derivationStore', () => {
     selectedDerivation: {
       label: ethereum.label,
       path: ethereum.path,
-      type: 'EVM'
+      type: 'EVM',
     },
     customDerivations: [],
     trezorSelectedDerivation: { path: '', label: '', basePath: '' },

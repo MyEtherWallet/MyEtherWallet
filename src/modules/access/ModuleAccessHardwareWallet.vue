@@ -121,6 +121,7 @@ import { formatUnits } from 'viem'
 import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -266,34 +267,56 @@ const unlockWallet = async () => {
     selectedChain.value?.name as string
   ] as NetworkNames
 
-  if (!wallet.value) {
-    await hwWalletInstance!
-      .isConnected({
-        wallet: selectedHwWalletType.value as HWwalletType,
-        networkName: networkName as any,
-      })
-      .then(() => {
-        return new Promise(r => setTimeout(r, 1000))
-      })
-  }
-  activeStep.value = 1
-  paths.value = (await hwWalletInstance!.getSupportedPaths({
-    wallet: selectedHwWalletType.value as HWwalletType,
-    networkName: networkName as any,
-  })) as PathType[]
+  try {
+    if (!wallet.value) {
+      await hwWalletInstance!
+        .isConnected({
+          wallet: selectedHwWalletType.value as HWwalletType,
+          networkName: networkName as any,
+        })
+        .then(() => {
+          return new Promise(r => setTimeout(r, 1000))
+        })
+    }
+    paths.value = (await hwWalletInstance!.getSupportedPaths({
+      wallet: selectedHwWalletType.value as HWwalletType,
+      networkName: networkName as any,
+    })) as PathType[]
 
-  // if path is empty, set a path
-  // if currently selected path is not in the list, set the first one
-  if (
-    selectedDerivation.value?.path === '' ||
-    !paths.value.some(
-      // This handles Ledger case where user may have selected a different app or an app only supports certain paths
-      (path: PathType) => path.path === selectedDerivation.value?.path,
-    )
-  ) {
-    setSelectedDerivation(paths.value[0])
+    // Guard against empty paths array
+    if (paths.value.length === 0) {
+      throw new Error('No supported derivation paths found for this wallet')
+    }
+
+    // if path is empty, set a path
+    // if currently selected path is not in the list, set the first one
+    if (
+      selectedDerivation.value?.path === '' ||
+      !paths.value.some(
+        // This handles Ledger case where user may have selected a different app or an app only supports certain paths
+        (path: PathType) => path.path === selectedDerivation.value?.path,
+      )
+    ) {
+      setSelectedDerivation(paths.value[0])
+    }
+
+    // Only advance to step 2 after all validations pass
+    activeStep.value = 1
+    loadList()
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('error_connecting'),
+      textSecondary: errorMessage,
+    })
+    // Don't report expected user errors to Sentry
+    if (!errorMessage.includes('Make sure you have')) {
+      captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    }
+  } finally {
+    connectingWallet.value = false
   }
-  loadList()
 }
 
 /**------------------------
@@ -370,7 +393,7 @@ const loadList = async (page: number = 0) => {
       text: 'Something went wrong',
       textSecondary: e instanceof Error ? e.message : String(e),
     })
-    captureException(e)
+    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
   } finally {
     isLoadingWalletList.value = false
   }

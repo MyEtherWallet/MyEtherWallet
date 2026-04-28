@@ -1,4 +1,4 @@
-import { bytesToHex } from 'web3-utils';
+import { bytesToHex } from 'web3-utils'
 import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
@@ -6,15 +6,13 @@ import { HWwalletType, NetworkNames } from '@enkryptcom/types'
 import HWwallet from '@enkryptcom/hw-wallets'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { hexToBuffer } from '@/utils/hexToBuffer'
-import {
-  type PostSignedTransaction,
-} from '../common/types'
+import { type PostSignedTransaction } from '../common/types'
 
-import { INFO_MAP } from "../common/btcInfo";
+import { INFO_MAP } from '../common/btcInfo'
 import { Psbt } from 'bitcoinjs-lib'
 import { chainToEnum } from '../ethereum/chainToEnum'
 import reverseBytes from '@/utils/reverseBytes'
-import { NODE_MAP } from '../common/btcInfo';
+import { NODE_MAP } from '../common/btcInfo'
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
   private address: HexPrefixedString
@@ -51,34 +49,44 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     serializedTx: HexPrefixedString,
   ): Promise<PostSignedTransaction> {
     try {
-      const psbt = Psbt.fromHex(serializedTx, { network: INFO_MAP[this.getProvider()].network });
-      const transactionObj: { psbtTx: Psbt; rawTxs: string[] } = { psbtTx: psbt, rawTxs: [] }
+      const psbt = Psbt.fromHex(serializedTx, {
+        network: INFO_MAP[this.getProvider()].network,
+      })
+      const transactionObj: { psbtTx: Psbt; rawTxs: string[] } = {
+        psbtTx: psbt,
+        rawTxs: [],
+      }
       if (this.getWalletType() === WalletType.LEDGER) {
-        const fetchTxs = psbt.txInputs.map(async (u) => {
+        const fetchTxs = psbt.txInputs.map(async u => {
           const txID = bytesToHex(reverseBytes(u.hash)).replace('0x', '')
-          const isSS = this.getProvider() === 'DOGECOIN' || this.getProvider() === 'LITECOIN'
+          const isSS =
+            this.getProvider() === 'DOGECOIN' ||
+            this.getProvider() === 'LITECOIN'
           const node = NODE_MAP[this.getProvider()]
-          const url = isSS ? `${node}/api/v1/${txID}/raw` : `${node}transaction/${txID}/raw`
+          const url = isSS
+            ? `${node}/api/v1/${txID}/raw`
+            : `${node}transaction/${txID}/raw`
           const response = await fetch(url)
           const rawTx = await response.json()
-          return rawTx.result as string;
+          return rawTx.result as string
         })
         const txIds = await Promise.all(fetchTxs)
         transactionObj.rawTxs = txIds as string[]
       }
-      const walletSigned = (await this.hwWalletInstance.signTransaction({
+      const walletSigned = await this.hwWalletInstance.signTransaction({
         transaction: { ...transactionObj },
-        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+        networkName: (chainToEnum[this.getProvider()] ??
+          'BTC') as unknown as NetworkNames,
         pathIndex: this.index,
         pathType: {
           basePath: this.path.basePath ?? '',
           path: this.path.path,
         },
         wallet: this.walletType,
-      }))
-      return Promise.resolve(
-        { signed: `0x${walletSigned}` as HexPrefixedString, }
-      )
+      })
+      return Promise.resolve({
+        signed: `0x${walletSigned}` as HexPrefixedString,
+      })
     } catch (e) {
       return Promise.reject(e)
     }
@@ -96,7 +104,10 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   }
 
   override getAddress(): Promise<HexPrefixedString> {
-    const { address } = INFO_MAP[this.getProvider()].paymentType({ ...INFO_MAP[this.getProvider()], pubkey: hexToBuffer(this.address) })
+    const { address } = INFO_MAP[this.getProvider()].paymentType({
+      ...INFO_MAP[this.getProvider()],
+      pubkey: hexToBuffer(this.address),
+    })
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 
@@ -105,8 +116,8 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   }
 
   override async SignMessage(options: {
-    message: string;
-    options?: unknown;
+    message: string
+    options?: unknown
   }): Promise<HexPrefixedString> {
     try {
       const walletSigned = await this.hwWalletInstance.signPersonalMessage({
@@ -117,7 +128,8 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
           path: this.path.path,
         },
         wallet: this.walletType,
-        networkName: (chainToEnum[this.getProvider()] ?? "BTC") as unknown as NetworkNames,
+        networkName: (chainToEnum[this.getProvider()] ??
+          'BTC') as unknown as NetworkNames,
       })
       return walletSigned as HexPrefixedString
     } catch (e) {

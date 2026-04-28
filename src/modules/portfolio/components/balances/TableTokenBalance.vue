@@ -11,6 +11,51 @@
         >
           <app-search-input v-model="searchInput" class="grow" />
         </div>
+        <app-pop-up-menu placeholder="table options" location="right">
+          <template #menu-button="{ toggleMenu }">
+            <app-btn-icon
+              label="table options"
+              @click.stop="toggleMenu"
+              height="h-7"
+              width="w-7"
+            >
+              <ellipsis-vertical-icon class="w-5 h-5" />
+            </app-btn-icon>
+          </template>
+          <template #menu-content="{ toggleMenu }">
+            <div class="px-2 py-3 bg-white rounded-xl min-w-[230px]">
+              <button
+                class="flex items-center w-full p-2 hoverBGWhite rounded-12 text-s-14"
+                @click.stop="[toggleShowBalance(), toggleMenu()]"
+              >
+                <span class="grow text-left">Hide tokens with no value</span>
+                <span
+                  class="ml-2 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0"
+                  :class="
+                    !hideLowBalance
+                      ? 'bg-primary border-primary'
+                      : 'border-grey-30'
+                  "
+                >
+                  <svg
+                    v-if="!hideLowBalance"
+                    class="w-3 h-3 text-white"
+                    fill="none"
+                    viewBox="0 0 12 12"
+                  >
+                    <path
+                      d="M2 6l3 3 5-5"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </template>
+        </app-pop-up-menu>
         <div
           v-if="paginatedArray.length && props.view === 'custom'"
           class="flex-none"
@@ -21,22 +66,24 @@
         </div>
       </div>
       <!-- TOTAL VALUE-->
-      <div class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0">
-        <p
-          class="font-bold text-info uppercase tracking-sp-06 text-s-14 lg:text-right"
-        >
-          Total Value
-        </p>
-        <p
-          v-if="!isLoading"
-          class="text-s-24 font-bold rounded-12 leading-none text-black"
-        >
-          {{ totalValue }}
-        </p>
-        <div
-          v-else
-          class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
-        ></div>
+      <div
+        class="order-1 lg:order-2 mb-3 lg:mb-0 ml-2 lg:ml-0 flex items-center gap-2"
+      >
+        <div class="lg:text-right">
+          <p class="font-bold text-info uppercase tracking-sp-06 text-s-14">
+            Total Value
+          </p>
+          <p
+            v-if="!isLoading"
+            class="text-s-24 font-bold rounded-12 leading-none text-black"
+          >
+            {{ totalValue }}
+          </p>
+          <div
+            v-else
+            class="bg-grey-5 animate-pulse w-[100px] h-6 rounded-lg"
+          ></div>
+        </div>
       </div>
     </div>
     <div :class="['static', getTableHeight]" ref="tableContainer">
@@ -230,7 +277,11 @@
             </td>
             <!-- Name -->
             <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
-              <div class="flex items-center gap-3">
+              <router-link
+                :to="getTokenRoute(token)"
+                class="flex items-center gap-3"
+                @click.stop="onTokenLinkClick(token)"
+              >
                 <app-token-logo
                   :url="token.logo_url"
                   :symbol="token.symbol"
@@ -259,7 +310,7 @@
                     {{ getTokenName(token) }}
                   </p>
                 </div>
-              </div>
+              </router-link>
             </td>
             <!-- Market Cap -->
             <td
@@ -633,6 +684,7 @@ import {
   formatPercentageValue,
 } from '@/utils/numberFormatHelper'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 // Types & Routes
 import type {
@@ -691,8 +743,9 @@ const purchaseStore = usePurchaseStore()
 const { isBuyable } = purchaseStore
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
-const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
-const { isOpenSideMenu } = storeToRefs(walletMenu)
+const { setWalletPanel, setSelectedTradeTokenSymbol, toggleShowBalance } =
+  walletMenu
+const { isOpenSideMenu, hideLowBalance } = storeToRefs(walletMenu)
 const {
   isWalletConnected,
   formattedTotalFiatPortfolioValue,
@@ -825,6 +878,7 @@ watch(
           )
         } catch (e) {
           captureException(e, {
+            ...SENTRY_MODULE_TAGS.PORTFOLIO,
             extra: {
               title: 'Error fetching custom token balance',
               tokenAddress: token.address,
@@ -881,9 +935,11 @@ const tokens = computed<DisplayToken[]>(() => {
   )
 
   if (props.view === 'watchlist') {
+    // make sure that response is array, if not set to empty array
+    const watchlistTokenResponse = Array.isArray(tokensWatchlistData.value) ? tokensWatchlistData.value : []
     // Map tokens watchlist
     const tokensList =
-      (tokensWatchlistData.value || [])
+      watchlistTokenResponse
         .filter(token => watchListedTokens.value.includes(token.coinId))
         .map(token => {
           const balanceToken = coinIdMap.get(token.coinId)
@@ -966,6 +1022,10 @@ const tokens = computed<DisplayToken[]>(() => {
     list = allTokens.value.map(mapToDisplay)
   }
 
+  if (!hideLowBalance.value) {
+    list = list.filter(t => (t.fiatBalance ?? 0) > 0)
+  }
+
   if (searchInput.value) {
     list = searchArrayByKeysStr(list, ['name', 'symbol'], searchInput.value)
   }
@@ -1035,19 +1095,28 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
   window.open('https://ccswap.myetherwallet.com', '_blank')
 }
 
-const goToTokenPage = (token: DisplayToken) => {
+const getTokenRoute = (token: DisplayToken) => {
   if (token.ondo !== undefined) {
-    router.push({
+    return {
       name: STOCK_INFO_ROUTE_NAMES.home,
       params: { symbol: token.ondo.primaryMarket.symbol },
-    })
-    return
+    }
   }
-  tokenInfoStore.setTokenInfo(token)
-  router.push({
+  return {
     name: TOKEN_INFO_ROUTE_NAMES.home,
     params: { tokenId: token.coinId || token.symbol },
-  })
+  }
+}
+
+const onTokenLinkClick = (token: DisplayToken) => {
+  if (token.ondo === undefined) {
+    tokenInfoStore.setTokenInfo(token)
+  }
+}
+
+const goToTokenPage = (token: DisplayToken) => {
+  onTokenLinkClick(token)
+  router.push(getTokenRoute(token))
 }
 
 const getWatchlistId = (token: DisplayToken): string => {

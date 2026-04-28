@@ -11,6 +11,7 @@ export type WalletPanel =
   | 'perps'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
+  const hideLowBalance = ref(false)
   const hasShadow = ref(true)
   const isOpenSideMenu = ref(false)
 
@@ -36,6 +37,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     selectedTradeOrderSide.value = side
   }
 
+  const toggleShowBalance = () => {
+    hideLowBalance.value = !hideLowBalance.value
+  }
+
   return {
     isOpenSideMenu,
     setIsOpenSideMenu,
@@ -46,5 +51,7 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setSelectedTradeTokenSymbol,
     selectedTradeOrderSide,
     setSelectedTradeOrderSide,
+    hideLowBalance,
+    toggleShowBalance
   }
 })

@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - feat/v7-develop
+      - feat/v7
+permissions:
+  contents: write
+
+jobs:
+  draft-release:
+    if: github.event.pull_request.merged == true && github.base_ref == 'feat/v7-develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Draft release with generated notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          gh api repos/${{ github.repository }}/releases/generate-notes \
+            -f tag_name="$TAG" \
+            -f target_commitish="feat/v7" \
+            --jq .body > release-notes.md
+
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release edit "$TAG" \
+              --target feat/v7 \
+              --notes-file release-notes.md
+          else
+            gh release create "$TAG" \
+              --draft \
+              --target feat/v7 \
+              --notes-file release-notes.md \
+              --title "$TAG"
+          fi
+
+  publish-release:
+    if: github.event.pull_request.merged == true && github.base_ref == 'feat/v7'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish drafted release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          gh release edit "$TAG" --draft=false

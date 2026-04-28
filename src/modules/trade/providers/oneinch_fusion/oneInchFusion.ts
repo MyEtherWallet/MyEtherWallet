@@ -37,6 +37,7 @@ import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
   return {
@@ -124,6 +125,7 @@ class OneInchFusion {
         ((e as AxiosError).response?.data as any)?.description || null
 
       captureException(e, {
+        ...SENTRY_MODULE_TAGS.TRADE,
         extra: {
           title: 'TRADE: Error fetching quote from 1inch',
         },

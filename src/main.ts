@@ -29,6 +29,12 @@ if (dsn) {
   sentryInit({
     app,
     dsn,
+    release: 'myetherwallet@' + configs.APP_VERSION,
+    ignoreErrors: [
+      'TypeError: Failed to fetch',
+      'TypeError: NetworkError when attempting to fetch resource',
+      'TypeError: Load failed',
+    ],
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration(),

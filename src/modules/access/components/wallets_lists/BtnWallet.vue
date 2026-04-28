@@ -66,6 +66,7 @@ import { onMounted, ref } from 'vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
 import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const props = defineProps<{
   wallet: WalletConfig
@@ -112,6 +113,7 @@ const resolveImg = async (_img: () => Promise<string>) => {
     isLoadedImg.value = true
   } catch (error) {
     captureException(error, {
+      ...SENTRY_MODULE_TAGS.ACCESS,
       extra: {
         title: 'BTN WALLET: Error loading wallet image',
         walletName: props.wallet.name,

@@ -1,5 +1,3 @@
-
-
 import { payments, type PaymentCreator } from 'bitcoinjs-lib'
 const P2PKH_DUST = 546
 const P2SH_DUST = 540
@@ -7,7 +5,7 @@ const P2WPKH_DUST = 294
 const P2WSH_DUST = 330
 const P2TR_DUST = 330
 
-const { p2wpkh, p2pkh } = payments;
+const { p2wpkh, p2pkh } = payments
 interface InfoTemplate {
   name: string
   network: {
@@ -27,7 +25,7 @@ interface InfoTemplate {
 }
 
 const bitcoinInfo: InfoTemplate = {
-  name: "BTC",
+  name: 'BTC',
   network: {
     messagePrefix: '\x18Bitcoin Signed Message:\n',
     bech32: 'bc',
@@ -45,7 +43,7 @@ const bitcoinInfo: InfoTemplate = {
 }
 
 const bitcoinTestInfo: InfoTemplate = {
-  name: "BTCTest",
+  name: 'BTCTest',
   network: {
     messagePrefix: '\x18Bitcoin Signed Message:\n',
     bech32: 'tb',
@@ -63,7 +61,7 @@ const bitcoinTestInfo: InfoTemplate = {
 }
 
 const dogecoinInfo: InfoTemplate = {
-  name: "DOGE",
+  name: 'DOGE',
   network: {
     messagePrefix: '\x19Dogecoin Signed Message:\n',
     bech32: 'dc',
@@ -81,7 +79,7 @@ const dogecoinInfo: InfoTemplate = {
 }
 
 const litecoinInfo: InfoTemplate = {
-  name: "LTC",
+  name: 'LTC',
   network: {
     messagePrefix: '\x19Litecoin Signed Message:\n',
     bech32: 'ltc',
@@ -99,23 +97,37 @@ const litecoinInfo: InfoTemplate = {
 }
 
 const INFO_MAP: Record<string, InfoTemplate> = {
-  "BITCOIN": bitcoinInfo,
-  "BITCOIN_TEST": bitcoinTestInfo,
-  "DOGECOIN": dogecoinInfo,
-  "LITECOIN": litecoinInfo
-};
+  BITCOIN: bitcoinInfo,
+  BITCOIN_TEST: bitcoinTestInfo,
+  DOGECOIN: dogecoinInfo,
+  LITECOIN: litecoinInfo,
+}
 
 const NODE_MAP: Record<string, string> = {
-  "BITCOIN": "https://partners.mewapi.io/nodes/hk/btc/",
-  "BITCOIN_TEST": "https://partners.mewapi.io/nodes/hk/btct/",
-  "DOGECOIN": "https://partners.mewapi.io/nodes/ss/doge",
-  "LITECOIN": "https://partners.mewapi.io/nodes/ss/ltc",
+  BITCOIN: 'https://partners.mewapi.io/nodes/hk/btc/',
+  BITCOIN_TEST: 'https://partners.mewapi.io/nodes/hk/btct/',
+  DOGECOIN: 'https://partners.mewapi.io/nodes/ss/doge',
+  LITECOIN: 'https://partners.mewapi.io/nodes/ss/ltc',
 }
 
 const UNISAT_MAP: Record<string, string> = {
-  "BITCOIN": 'livenet',
-  "BITCOIN_TEST": 'testnet',
-  "LITECOIN": 'litecoin',
+  BITCOIN: 'livenet',
+  BITCOIN_TEST: 'testnet',
+  LITECOIN: 'litecoin',
 }
 
-export { bitcoinInfo, bitcoinTestInfo, type InfoTemplate, dogecoinInfo, litecoinInfo, INFO_MAP, P2PKH_DUST, P2SH_DUST, P2WPKH_DUST, P2WSH_DUST, P2TR_DUST, NODE_MAP, UNISAT_MAP };
+export {
+  bitcoinInfo,
+  bitcoinTestInfo,
+  type InfoTemplate,
+  dogecoinInfo,
+  litecoinInfo,
+  INFO_MAP,
+  P2PKH_DUST,
+  P2SH_DUST,
+  P2WPKH_DUST,
+  P2WSH_DUST,
+  P2TR_DUST,
+  NODE_MAP,
+  UNISAT_MAP,
+}

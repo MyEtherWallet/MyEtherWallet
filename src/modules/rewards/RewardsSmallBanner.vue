@@ -5,7 +5,7 @@
       @click="onLearnMore"
     >
       <p class="font-medium">
-        First 100 swaps or trades each day over $10 get $5 USDC
+        First 10 swaps or trades each hour over $50 get $5 USDC
       </p>
       <button class="font-bold underline whitespace-nowrap hoverOpacity">
         Learn More

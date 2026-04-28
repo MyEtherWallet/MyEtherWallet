@@ -24,7 +24,7 @@ const fetchRewards = async <T>(url: string): Promise<T> => {
     },
   })
   if (!response.ok) {
-    const error = await response.json()
+    const error = await response.json().catch(() => ({}))
     throw new Error(error.message || 'Rewards API fetch failed')
   }
   return (await response.json()) as T
@@ -68,8 +68,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** Pool */
   const isPoolOpen = computed(() => pool.value?.open ?? false)
   const rewardsLeft = computed(
-    () => pool.value?.dailyRemainingRewardCount ?? '0',
+    () => pool.value?.hourlyRemainingRewardCount ?? '0',
   )
+  const nextHourStart = computed(() => pool.value?.nextHourStart ?? null)
   const poolReasons = computed(() => pool.value?.reasons ?? [])
 
   const fetchPool = async () => {
@@ -101,8 +102,26 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       await fetchPool()
       if (Number(rewardsLeft.value) <= 0) {
         stopPoolPoll()
+        setTimeout(() => fetchEligibility(), 20000)
       }
-    }, 15000)
+    }, 5000)
+  }
+
+  /** Schedule a pool fetch + restart polling at the beginning of each hour */
+  let hourResetTimeout: ReturnType<typeof setTimeout> | null = null
+
+  const scheduleHourReset = () => {
+    if (hourResetTimeout) clearTimeout(hourResetTimeout)
+    const target = nextHourStart.value
+    if (!target) return
+    const delay = Math.max(0, new Date(target).getTime() - Date.now())
+    hourResetTimeout = setTimeout(async () => {
+      fetchEligibility()
+      fetchUserRewards()
+      await fetchPool()
+      startPoolPoll()
+      scheduleHourReset()
+    }, delay)
   }
 
   /** Eligibility */
@@ -145,7 +164,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** User Rewards */
   const todaysReward = computed(() => {
     const reward = rewards.value[0]
-    if (reward && isRewardFromToday(reward)) return reward
+    if (reward && isRewardEarnedDuringCampaign(reward)) return reward
     return null
   })
   const hasRewards = computed(() => rewards.value.length > 0)
@@ -178,15 +197,12 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** Poll rewards when eligible until today's reward is found */
   let rewardsPollInterval: ReturnType<typeof setInterval> | null = null
 
-  const isRewardFromToday = (reward: RewardItem): boolean => {
+  const isRewardEarnedDuringCampaign = (reward: RewardItem): boolean => {
+    const CAMPAIGN_START = new Date('2026-04-22T00:00:00.000Z')
+    const CAMPAIGN_END = new Date('2026-04-29T00:00:00.000Z')
     if (!reward.rewardBroadcastAt) return false
     const rewardDate = new Date(reward.rewardBroadcastAt)
-    const now = new Date()
-    return (
-      rewardDate.getUTCFullYear() === now.getUTCFullYear() &&
-      rewardDate.getUTCMonth() === now.getUTCMonth() &&
-      rewardDate.getUTCDate() === now.getUTCDate()
-    )
+    return rewardDate >= CAMPAIGN_START && rewardDate < CAMPAIGN_END
   }
 
   const stopRewardsPoll = () => {
@@ -200,14 +216,14 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     stopRewardsPoll()
     rewardsPollInterval = setInterval(async () => {
       await fetchUserRewards()
-      if (rewards.value[0] && isRewardFromToday(rewards.value[0])) {
+      if (rewards.value[0] && isRewardEarnedDuringCampaign(rewards.value[0])) {
         setEarnedPotentialReward(false)
         analytics.setUserProperties({ canClaimRewards: false })
         analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED)
       }
       if (
         rewards.value[0] &&
-        isRewardFromToday(rewards.value[0]) &&
+        isRewardEarnedDuringCampaign(rewards.value[0]) &&
         rewards.value[0].rewardStatus === 'SUCCESS'
       ) {
         const toastStore = useToastStore()
@@ -227,13 +243,14 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         // Check immediately if we already have today's reward
         if (
           rewards.value[0] &&
-          isRewardFromToday(rewards.value[0]) &&
+          isRewardEarnedDuringCampaign(rewards.value[0]) &&
           rewards.value[0].rewardStatus === 'SUCCESS'
         )
           return
         startRewardsPoll()
       } else {
         stopRewardsPoll()
+        setEarnedPotentialReward(false)
       }
     },
   )
@@ -242,6 +259,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     await Promise.all([fetchPool(), fetchEligibility(), fetchUserRewards()])
     hadInitialLoad.value = true
     startPoolPoll()
+    scheduleHourReset()
   }
 
   const canClaimReward = computed(() => {
@@ -263,6 +281,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     pool,
     isPoolOpen,
     rewardsLeft,
+    nextHourStart,
     poolReasons,
     isLoadingPool,
     fetchPool,
@@ -289,6 +308,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     canClaimReward,
     isLoading,
     hadInitialLoad,
-    isRewardFromToday,
+    isRewardEarnedDuringCampaign,
   }
 })

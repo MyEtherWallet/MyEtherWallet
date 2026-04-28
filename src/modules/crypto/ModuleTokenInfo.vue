@@ -5,10 +5,7 @@
       <div
         class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px]"
       >
-        <!--TODO: add link-->
-        <app-btn-icon label="Share" :disabled="isLoading">
-          <share-icon class="h-5 w-5" />
-        </app-btn-icon>
+        <app-share-button :share-text="shareText" :disabled="isLoading" />
         <app-btn-icon
           :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
           :disabled="isLoading"
@@ -140,10 +137,11 @@
 
 <script setup lang="ts">
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppShareButton from '@/components/AppShareButton.vue'
 import TokenInfoMarketData from './components/token_info/TokenInfoMarketData.vue'
 import TokenInfoSupportedChains from './components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoChart from './components/token_info/TokenInfoChart.vue'
-import { ShareIcon, StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
+import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
 import {
   StarIcon as StarOutlineIcon,
   ArrowTrendingDownIcon,
@@ -484,4 +482,15 @@ const toggleWatchlist = () => {
   if (!coinId) return
   setWatchlistItem(coinId, false) // false = not a stock
 }
+
+/** --------------------
+ * Share
+ --------------------*/
+const shareText = computed(() => {
+  const symbol = tokenData.value?.symbol?.toUpperCase() ?? ''
+  const price = tokenData.value?.currentPrice
+    ? `$${formatFiatValue(tokenData.value.currentPrice).value}`
+    : ''
+  return `Check out ${symbol} ${price} on MyEtherWallet`
+})
 </script>
