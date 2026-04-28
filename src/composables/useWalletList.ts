@@ -43,6 +43,13 @@ export const useWalletList = () => {
     if (wallet.rkDetails && wallet.rkDetails.name) return wallet.rkDetails.name
     return wallet.name
   }
+
+  const normalizeRdns = (
+    rdns?: string | readonly string[],
+  ): string | undefined => {
+    if (!rdns) return undefined
+    return Array.isArray(rdns) ? rdns[0] : (rdns as string)
+  }
   /** -------------------
    * Wallets
    * -------------------*/
@@ -77,6 +84,7 @@ export const useWalletList = () => {
           name: walletGetName(wallet),
           icon: walletGetIcon(wallet),
           type: _types,
+          rdns: normalizeRdns(wallet.rkDetails.rdns),
         })
       }
       // Ledger Mobile
@@ -87,6 +95,7 @@ export const useWalletList = () => {
           name: 'Ledger Mobile',
           icon: walletGetIcon(wallet),
           type: [WalletConfigType.MOBILE],
+          rdns: normalizeRdns(wallet.rkDetails.rdns),
         })
       }
       //Mock Wallet for testing
@@ -96,6 +105,7 @@ export const useWalletList = () => {
           id: wallet.id,
           icon: walletGetIcon(wallet),
           type: [WalletConfigType.MOCK],
+          rdns: normalizeRdns(wallet.rdns),
         })
       }
       //Injected Wallets
@@ -105,6 +115,7 @@ export const useWalletList = () => {
           id: wallet.id,
           name: walletGetName(wallet),
           icon: walletGetIcon(wallet),
+          rdns: normalizeRdns(wallet.rdns),
           type: [WalletConfigType.EXTENSION],
         })
       }
