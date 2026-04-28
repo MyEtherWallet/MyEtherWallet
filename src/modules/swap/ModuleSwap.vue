@@ -1233,7 +1233,6 @@ watch(fromTokenSelected, token => {
 })
 
 watch(toTokenSelected, token => {
-  console.log(token, 'bruh')
   if (isSwapView.value) {
     setSwapToToken(token ?? null)
   } else {
@@ -1436,7 +1435,6 @@ watch(
         toTokenSelected.value.address.toLowerCase()
     ) {
       const alt = filteredToTokens.value[0]
-      console.log('sets it here first?')
       toTokenSelected.value = alt || null
     }
   },
@@ -1485,7 +1483,6 @@ onBeforeMount(async () => {
     if (isSwapView.value) {
       if (swapFromToken.value) fromTokenSelected.value = swapFromToken.value
       if (swapToToken.value) toTokenSelected.value = swapToToken.value
-      console.log(swapToToken.value, 'AAAAAA')
     } else {
       if (
         bridgeToChain.value &&
