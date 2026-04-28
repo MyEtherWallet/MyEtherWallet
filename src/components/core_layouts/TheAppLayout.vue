@@ -129,6 +129,7 @@ const { isOverflowHidden } = storeToRefs(appLayoutStore)
 const scrollContainer = ref<HTMLElement | null>(null)
 
 const onHeaderWheel = (e: WheelEvent) => {
+  if (isOverflowHidden.value || !scrollContainer.value) return
   scrollContainer.value?.scrollBy({ top: e.deltaY, behavior: 'instant' })
 }
 </script>
