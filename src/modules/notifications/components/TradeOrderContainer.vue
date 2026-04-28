@@ -2,8 +2,8 @@
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
       <div class="basis-1/4">
-        <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
-          trade order
+        <p class="text-black capitalize text-s-12 tracking-sp-06 font-medium">
+          trades
         </p>
       </div>
       <span

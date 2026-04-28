@@ -2,8 +2,8 @@
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
       <div>
-        <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
-          transaction
+        <p class="text-black capitalize text-s-12 tracking-sp-06 font-medium">
+          transactions
         </p>
       </div>
       <div
