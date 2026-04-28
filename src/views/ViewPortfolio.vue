@@ -21,8 +21,14 @@
       <portfolio-overview />
 
       <portfolio-allocation class="h-full" />
-
-      <rewards-portfolio
+      <!-- <rewards-portfolio
+        class="h-full"
+        :class="[
+          { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
+          'col-span-1',
+        ]"
+      /> -->
+      <rewards-new-campaign-countdown
         class="h-full"
         :class="[
           { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
@@ -50,7 +56,8 @@ import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'
 import PortfolioGainsAndLosses from '@/modules/portfolio/PortfolioGainsAndLosses.vue'
 import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import ConnectWallet from '@/modules/portfolio/components/ConnectWallet.vue'
-import RewardsPortfolio from '@/modules/rewards/RewardsPortfolio.vue'
+// import RewardsPortfolio from '@/modules/rewards/RewardsPortfolio.vue'
+import RewardsNewCampaignCountdown from '@/modules/rewards/RewardsNewCampaignCountdown.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import NoBalance from '@/modules/portfolio/components/NoBalance.vue'
