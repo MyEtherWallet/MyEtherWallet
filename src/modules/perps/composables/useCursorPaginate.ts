@@ -14,39 +14,47 @@ export function useCursorPaginate<T>(
   const cursorStack = ref<(string | undefined)[]>([undefined])
   const nextCursor = ref<string | undefined>(undefined)
 
-  async function fetchPage(cursor: string | undefined) {
+  async function fetchPage(cursor: string | undefined): Promise<boolean> {
     loading.value = true
     try {
       const res = await fetcher({ limit: pageSize, cursor })
       items.value = res.result ?? []
       nextCursor.value = res.pageInfo?.nextCursor
+      return true
     } catch {
-      items.value = []
-      nextCursor.value = undefined
+      return false
     } finally {
       loading.value = false
     }
   }
 
   async function refetch() {
-    cursorStack.value = [undefined]
-    currentPage.value = 0
-    await fetchPage(undefined)
+    const ok = await fetchPage(undefined)
+    if (ok) {
+      cursorStack.value = [undefined]
+      currentPage.value = 0
+    }
   }
 
   async function nextPage() {
     if (!nextCursor.value) return
-    cursorStack.value.push(nextCursor.value)
-    currentPage.value += 1
-    await fetchPage(nextCursor.value)
+    const targetCursor = nextCursor.value
+    const ok = await fetchPage(targetCursor)
+    if (ok) {
+      cursorStack.value.push(targetCursor)
+      currentPage.value += 1
+    }
   }
 
   async function prevPage() {
     if (currentPage.value === 0) return
-    cursorStack.value.pop()
-    currentPage.value -= 1
-    const cursor = cursorStack.value[cursorStack.value.length - 1]
-    await fetchPage(cursor)
+    const candidateStack = cursorStack.value.slice(0, -1)
+    const cursor = candidateStack[candidateStack.length - 1]
+    const ok = await fetchPage(cursor)
+    if (ok) {
+      cursorStack.value = candidateStack
+      currentPage.value -= 1
+    }
   }
 
   function reset() {

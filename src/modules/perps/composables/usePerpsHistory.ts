@@ -57,10 +57,16 @@ export function usePerpsFills() {
     PERPS_PAGE_SIZE,
   )
   let pollTimer: ReturnType<typeof setInterval> | null = null
+  let isRefreshing = false
 
   async function refreshFirstPageIfActive() {
-    if (pagination.currentPage.value === 0) {
+    if (isRefreshing) return
+    if (pagination.currentPage.value !== 0) return
+    isRefreshing = true
+    try {
       await pagination.refetch()
+    } finally {
+      isRefreshing = false
     }
   }
 
