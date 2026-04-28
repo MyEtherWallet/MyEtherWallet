@@ -77,7 +77,6 @@ export type WalletConfig = {
   name: string
   icon: string | (() => Promise<string>)
   type: WalletConfigType[]
-  rdns?: string
   isDefault?: boolean
   isWC?: boolean
   isOfficial?: boolean
@@ -169,7 +168,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Enkrypt',
     icon: EnkryptLogo,
     type: [WalletConfigType.EXTENSION],
-    rdns: 'com.enkrypt',
     canSupport: enkryptSupportNetwork,
     isDefault: true,
     isOfficial: true,
@@ -183,7 +181,6 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'UniSat',
     icon: UnisatLogo,
     type: [WalletConfigType.EXTENSION],
-    rdns: 'io.unisat.wallet',
     canSupport: unisatSupportNetwork,
     isDefault: true,
     isOfficial: false,

@@ -128,15 +128,9 @@ export const useConnectWallet = () => {
         })
       return
     }
-    // Prefer EIP-6963 rdns (canonical, non-spoofable) over display name to avoid
-    // matching the wrong injected wallet when multiple extensions are installed.
-    const providerInjected = wallet.rdns
-      ? Eip6963Providers.value.find(p => p.info.rdns === wallet.rdns)
-      : Eip6963Providers.value.find(
-          p =>
-            p.info.name.toLowerCase() === wallet.name.toLowerCase() ||
-            p.info.name.toLowerCase() === wallet.id.toLowerCase(),
-        )
+    const providerInjected = Eip6963Providers.value.find(
+      p => p.info.name === wallet.name || p.info.name === wallet.id,
+    )
 
     if (!providerInjected) {
       if (wallet.type.includes(WalletConfigType.MOBILE)) {
