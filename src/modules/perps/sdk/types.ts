@@ -51,6 +51,7 @@ export interface TradingPair {
     quote: string
   }
   displayName: string
+  longName: string
   baseIncrement: string
   quoteIncrement: string
   defaultLeverage: string
