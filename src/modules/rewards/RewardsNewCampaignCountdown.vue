@@ -6,13 +6,13 @@
       <p class="text-s-20 font-bold text-black">Get ready!</p>
       <h2 class="text-s-32 xs:text-s-26 font-bold leading-p-110 text-primary">
         New rewards program
-        <br class="hidden sm:block lg:hidden xl:block" />begins in
-        {{ timeLabel }}
+        <br class="hidden sm:block lg:hidden xl:block" />{{ headingLabel }}
       </h2>
     </div>
     <img
       class="absolute bottom-0 right-4 w-[40%] max-w-[160px] min-w-[64px] hidden md:block"
       :src="usdcTokens"
+      alt="usdc tokens"
     />
     <p class="text-s-20 font-bold text-black">Stay tuned</p>
   </div>
@@ -26,6 +26,11 @@ const LAUNCH_DATE = new Date('2026-05-01T00:00:00.000Z')
 
 const now = ref(Date.now())
 let timer: ReturnType<typeof setInterval> | null = null
+
+const headingLabel = computed(() => {
+  const diff = LAUNCH_DATE.getTime() - now.value
+  return diff <= 0 ? 'begins soon' : `begins in ${timeLabel.value}`
+})
 
 onMounted(() => {
   timer = setInterval(() => {

@@ -28,7 +28,13 @@
           'col-span-1',
         ]"
       /> -->
-      <rewards-new-campaign-countdown />
+      <rewards-new-campaign-countdown
+        class="h-full"
+        :class="[
+          { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
+          'col-span-1',
+        ]"
+      />
     </div>
 
     <div v-if="isWalletConnected" class="flex flex-col lg-max:flex-row gap-5">
