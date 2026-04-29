@@ -1,7 +1,25 @@
 import { BigNumber } from 'bignumber.js'
+import type { ApiOrder } from '../sdk/types'
 /**
  * Common formatting utilities for the perps module.
  */
+
+// Market orders return an empty price from the API; derive it from
+// filledCost / filledSize once the order has filled.
+export function getOrderPrice(order: ApiOrder): string {
+  if (
+    order.type === 'market' &&
+    parseFloat(order.filledSize) > 0 &&
+    order.filledCost &&
+    !Number.isNaN(Number(order.filledCost)) &&
+    !Number.isNaN(Number(order.filledSize))
+  ) {
+    return new BigNumber(order.filledCost)
+      .dividedBy(order.filledSize)
+      .toString()
+  }
+  return order.price
+}
 export function formatUsd(val: string | number): string {
   const n = typeof val === 'number' ? val : parseFloat(val)
   if (isNaN(n)) return '$0.00'

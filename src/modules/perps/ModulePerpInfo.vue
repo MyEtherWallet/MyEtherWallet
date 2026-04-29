@@ -249,7 +249,7 @@
                     {{ order.type }}
                   </td>
                   <td class="py-3 px-4 text-right font-bold">
-                    {{ formatPrice(order.price) }}
+                    {{ formatPrice(getOrderPrice(order)) }}
                   </td>
                   <td class="py-3 px-4 text-right font-bold">
                     {{ order.size }}
@@ -495,6 +495,7 @@ import {
   pnlColor,
   formatPercent,
   formatVolume,
+  getOrderPrice,
 } from './utils/formatters'
 import {
   getLogoUrl,

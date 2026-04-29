@@ -365,7 +365,7 @@
               </td>
               <!-- Price -->
               <td class="px-1 py-3 text-right font-normal text-s-14">
-                <p>{{ formatPrice(order.price) }}</p>
+                <p>{{ formatPrice(getOrderPrice(order)) }}</p>
 
                 <p class="text-s-12 text-info xs:hidden">
                   {{ formatDate(order.createdAt) }}
@@ -736,6 +736,7 @@ import {
   formatRoe,
   pnlColor,
   formatDate,
+  getOrderPrice,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
