@@ -8,7 +8,7 @@
   >
     <template #content>
       <div class="flex flex-col">
-        <!-- Search -->
+        <!-- Search + Sort -->
         <div
           class="flex gap-2 justify-between items-center mb-2 mx-4 bg-surface rounded-full p-1"
         >
@@ -25,37 +25,36 @@
                 class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap justify-center gap-1"
                 @click="toggleMenu"
               >
-                <span>Name</span>
-                <arrow-long-up-icon v-if="sortAsc" class="w-4 h-4 shrink-0" />
+                <span>{{ activeSortLabel }}</span>
+                <arrow-long-up-icon
+                  v-if="sortDirection === 'asc'"
+                  class="w-4 h-4 shrink-0"
+                />
                 <arrow-long-down-icon v-else class="w-4 h-4 shrink-0" />
               </button>
             </template>
             <template #menu-content="{ toggleMenu }">
-              <div class="py-4 flex flex-col w-[160px] gap-1">
+              <div class="py-4 flex flex-col w-[200px] gap-1">
                 <div class="flex items-center justify-between mb-1 mx-3">
                   <p class="text-s-17 font-medium ml-3">Sort</p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
                 <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
                 <button
+                  v-for="option in sortOptions"
+                  :key="option.value"
                   class="flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 text-s-15 font-medium"
-                  :class="{ 'bg-grey-5': sortAsc }"
-                  @click="[$emit('update:sortAsc', true), toggleMenu()]"
+                  :class="{ 'bg-grey-5': sortValue === option.value }"
+                  @click="[$emit('setSort', option.value), toggleMenu()]"
                 >
-                  Name
-                  <arrow-long-up-icon
-                    v-if="sortAsc"
-                    class="ml-auto w-5 h-5 text-primary"
-                  />
-                </button>
-                <button
-                  class="flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 text-s-15 font-medium"
-                  :class="{ 'bg-grey-5': !sortAsc }"
-                  @click="[$emit('update:sortAsc', false), toggleMenu()]"
-                >
-                  Name
-                  <arrow-long-down-icon
-                    v-if="!sortAsc"
+                  {{ option.label }}
+                  <component
+                    :is="
+                      sortValue === option.value && sortDirection === 'asc'
+                        ? ArrowLongUpIcon
+                        : ArrowLongDownIcon
+                    "
+                    v-if="sortValue === option.value"
                     class="ml-auto w-5 h-5 text-primary"
                   />
                 </button>
@@ -85,7 +84,12 @@
           <button
             v-for="contract in contracts"
             :key="contract.market"
-            class="flex items-center justify-between w-full px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in bg-transparent hoverBGWhite"
+            class="flex items-center justify-between w-full px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
+            :class="
+              contract.market === selectedMarketName
+                ? '!bg-mewBg'
+                : 'bg-transparent hoverBGWhite'
+            "
             @click="$emit('select', contract)"
           >
             <div class="flex justify-between items-center w-full">
@@ -140,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 import { ArrowLongUpIcon, ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -151,8 +155,13 @@ import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { getLogoUrl } from '../utils/market'
 import { formatContractPrice, formatPriceChange } from '../utils/formatters'
 import type { Contract } from '../sdk/types'
+import type {
+  MarketSortValue,
+  SortDirection,
+  MarketSortOption,
+} from '../composables/usePerpsTradeForm'
 
-defineProps({
+const props = defineProps({
   contracts: {
     type: Array as PropType<Contract[]>,
     required: true,
@@ -169,9 +178,21 @@ defineProps({
     type: String,
     required: true,
   },
-  sortAsc: {
-    type: Boolean,
+  sortValue: {
+    type: String as PropType<MarketSortValue>,
     required: true,
+  },
+  sortDirection: {
+    type: String as PropType<SortDirection>,
+    required: true,
+  },
+  sortOptions: {
+    type: Array as PropType<MarketSortOption[]>,
+    required: true,
+  },
+  selectedMarketName: {
+    type: String,
+    default: '',
   },
   getMarketDisplayName: {
     type: Function as PropType<(contract: Contract) => string>,
@@ -187,7 +208,12 @@ const isOpen = defineModel('isOpen', {
 defineEmits<{
   'update:activeFilter': [value: string]
   'update:search': [value: string]
-  'update:sortAsc': [value: boolean]
+  setSort: [value: MarketSortValue]
   select: [contract: Contract]
 }>()
+
+const activeSortLabel = computed(
+  () =>
+    props.sortOptions.find(o => o.value === props.sortValue)?.label ?? 'Sort',
+)
 </script>

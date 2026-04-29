@@ -740,10 +740,14 @@
       v-model:is-open="showMarketModal"
       v-model:search="marketSearch"
       v-model:active-filter="marketFilter"
-      v-model:sort-asc="marketSortAsc"
+      :sort-value="marketSortValue"
+      :sort-direction="marketSortDirection"
+      :sort-options="marketSortOptions"
+      :selected-market-name="fullMarketName"
       :contracts="filteredMarketList"
       :filter-tabs="marketFilterTabs"
       :get-market-display-name="getMarketDisplayName"
+      @set-sort="setMarketSort"
       @select="selectMarket"
     />
 
@@ -918,9 +922,13 @@ const {
   showMarketModal,
   marketSearch,
   marketFilter,
-  marketSortAsc,
+  marketSortValue,
+  marketSortDirection,
+  marketSortOptions,
+  setMarketSort,
   marketFilterTabs,
   filteredMarketList,
+  fullMarketName,
   getMarketDisplayName,
   openTokenSelect,
   selectMarket,
