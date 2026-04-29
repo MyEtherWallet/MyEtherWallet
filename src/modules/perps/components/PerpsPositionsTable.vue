@@ -67,7 +67,11 @@
         >
           No open positions
         </div>
-        <table v-else class="w-full text-s-14 table-fixed">
+        <table
+          v-else
+          ref="positionsTable"
+          class="w-full text-s-14 table-fixed"
+        >
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -243,6 +247,7 @@
           <perps-pagination
             :current-page="positionsCurrentPage"
             :total-pages="positionsTotalPages"
+            :scroll-target="positionsTable"
             @prev="positionsPrevPage"
             @next="positionsNextPage"
           />
@@ -465,7 +470,7 @@
           No fills
         </div>
         <div v-else class="overflow-x-auto">
-          <table class="w-full text-s-14 table-fixed">
+          <table ref="fillsTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -583,6 +588,7 @@
               :has-prev="fillsHasPrev"
               :has-next="fillsHasNext"
               :disabled="fillsLoading"
+              :scroll-target="fillsTable"
               @prev="fillsPrevPage"
               @next="fillsNextPage"
             />
@@ -772,6 +778,9 @@ const USDC_LOGO =
 defineEmits<{
   openPosition: [market: string]
 }>()
+
+const positionsTable = ref<HTMLElement | null>(null)
+const fillsTable = ref<HTMLElement | null>(null)
 
 const positionsSkeletonColumns: SkeletonColumn[] = [
   { header: 'Market' },

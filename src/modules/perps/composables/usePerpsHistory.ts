@@ -73,11 +73,14 @@ export function usePerpsFills() {
   watchEffect(() => {
     void refreshKey.value
     if (pollTimer) clearInterval(pollTimer)
+    // Reset before fetching so any in-flight request from the previous auth
+    // context is invalidated and prior fills don't briefly remain visible
+    // after a wallet switch / logout.
+    pagination.reset()
     if (token.value) {
       pagination.refetch()
       pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
     } else {
-      pagination.reset()
       pollTimer = null
     }
   })

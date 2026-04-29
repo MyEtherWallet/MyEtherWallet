@@ -73,7 +73,7 @@
 
       <!-- Markets table -->
       <div v-else>
-        <table class="w-full text-sm table-fixed">
+        <table ref="marketsTable" class="w-full text-sm table-fixed">
           <thead class="bg-white">
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -456,6 +456,7 @@
           <perps-pagination
             :current-page="currentPage"
             :total-pages="totalPages"
+            :scroll-target="marketsTable"
             @prev="prevPage"
             @next="nextPage"
           />
@@ -523,6 +524,8 @@ import PerpsPagination from './PerpsPagination.vue'
 defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
 }>()
+
+const marketsTable = ref<HTMLElement | null>(null)
 
 const { markets } = usePerpsMarkets()
 const {

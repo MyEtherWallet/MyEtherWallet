@@ -13,18 +13,23 @@ export function useCursorPaginate<T>(
   const currentPage = ref(0)
   const cursorStack = ref<(string | undefined)[]>([undefined])
   const nextCursor = ref<string | undefined>(undefined)
+  // Bumped on reset() so any in-flight request started under a previous
+  // auth/wallet context is dropped instead of overwriting the new state.
+  let requestEpoch = 0
 
   async function fetchPage(cursor: string | undefined): Promise<boolean> {
+    const epoch = requestEpoch
     loading.value = true
     try {
       const res = await fetcher({ limit: pageSize, cursor })
+      if (epoch !== requestEpoch) return false
       items.value = res.result ?? []
       nextCursor.value = res.pageInfo?.nextCursor
       return true
     } catch {
       return false
     } finally {
-      loading.value = false
+      if (epoch === requestEpoch) loading.value = false
     }
   }
 
@@ -58,10 +63,12 @@ export function useCursorPaginate<T>(
   }
 
   function reset() {
+    requestEpoch += 1
     items.value = []
     cursorStack.value = [undefined]
     currentPage.value = 0
     nextCursor.value = undefined
+    loading.value = false
   }
 
   const hasNext = computed(() => !!nextCursor.value)
