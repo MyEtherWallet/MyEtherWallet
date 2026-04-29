@@ -258,12 +258,12 @@
                     class="rounded-full"
                   />
                   <div class="min-w-0">
-                    <div class="flex items-center gap-2 relative">
-                      <span class="font-bold truncate">{{
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="absolute -right-5 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
