@@ -37,7 +37,7 @@
     </div>
 
     <!-- Active Trade Form -->
-    <div v-else class="flex flex-col">
+    <div v-else class="flex flex-col pb-6">
       <!-- Scrollable content -->
       <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
         <!-- Asset Selector & Price & current Position Info if open -->
@@ -760,10 +760,10 @@
     <!-- Take Profit / Stop Loss Dialog -->
     <perps-take-profit-stop-loss-dialog
       v-model:is-open="showAutoCloseModal"
+      v-model:take-profit-price="tempTakeProfitPrice"
+      v-model:stop-loss-price="tempStopLossPrice"
       :display-symbol="displaySymbol"
       :current-price="currentPrice"
-      :temp-take-profit-price="tempTakeProfitPrice"
-      :temp-stop-loss-price="tempStopLossPrice"
       :temp-projected-profit="tempProjectedProfit"
       :temp-projected-loss="tempProjectedLoss"
       :active-tp-pill="activeTpPill"

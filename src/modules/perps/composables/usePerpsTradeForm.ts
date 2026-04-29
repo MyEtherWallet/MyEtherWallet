@@ -22,7 +22,8 @@ interface OrderSideButton {
 // generic "invalid signature" / "invalid nonce" errors don't mislabel as
 // SL/TP validation failures. Revisit if/when the SDK exposes a structured
 // error code.
-const SL_TP_INVALID_PATTERN = /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
+const SL_TP_INVALID_PATTERN =
+  /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
@@ -616,12 +617,6 @@ export function usePerpsTradeForm() {
     activeSlPill.value = null
 
     // Default to +30% TP and -3% SL if nothing is set yet
-    if (tempTakeProfitPrice.value == null && currentPrice.value) {
-      setTakeProfitPct(30)
-    }
-    if (tempStopLossPrice.value == null && currentPrice.value) {
-      setStopLossPct(3)
-    }
 
     showAutoCloseModal.value = true
   }
@@ -631,8 +626,9 @@ export function usePerpsTradeForm() {
     const isLong =
       activePosition.value?.direction === 'long' || orderSide.value === 'buy'
     tempTakeProfitPrice.value = isLong
-      ? currentPrice.value * (1 + pct / 100)
-      : currentPrice.value * (1 - pct / 100)
+      ? Number((currentPrice.value * (1 + pct / 100)).toFixed(2))
+      : Number((currentPrice.value * (1 - pct / 100)).toFixed(2))
+
     activeTpPill.value = pct
   }
 
@@ -641,8 +637,8 @@ export function usePerpsTradeForm() {
     const isLong =
       activePosition.value?.direction === 'long' || orderSide.value === 'buy'
     tempStopLossPrice.value = isLong
-      ? currentPrice.value * (1 - pct / 100)
-      : currentPrice.value * (1 + pct / 100)
+      ? Number((currentPrice.value * (1 - pct / 100)).toFixed(2))
+      : Number((currentPrice.value * (1 + pct / 100)).toFixed(2))
     activeSlPill.value = pct
   }
 
@@ -655,6 +651,24 @@ export function usePerpsTradeForm() {
     tempStopLossPrice.value = null
     activeSlPill.value = null
   }
+
+  // Reset pill highlight when user manually edits the price input.
+  // flush:'sync' ensures the reset fires before setTakeProfitPct/setStopLossPct
+  // re-applies the pill value on the very next line after setting the price.
+  watch(
+    tempTakeProfitPrice,
+    () => {
+      activeTpPill.value = null
+    },
+    { flush: 'sync' },
+  )
+  watch(
+    tempStopLossPrice,
+    () => {
+      activeSlPill.value = null
+    },
+    { flush: 'sync' },
+  )
 
   function confirmAutoClose() {
     takeProfitPrice.value = tempTakeProfitPrice.value
@@ -700,8 +714,7 @@ export function usePerpsTradeForm() {
     // "LONG 0.5 PERPS: …" matches the position, including when placing a
     // reduce-only counter-order to modify an existing long.
     const positionDirection =
-      priorPosition?.direction ??
-      (orderSide.value === 'buy' ? 'long' : 'short')
+      priorPosition?.direction ?? (orderSide.value === 'buy' ? 'long' : 'short')
     const slTpBase = displaySymbol.value
     const slTpQuote = fullMarketName.value.includes('-')
       ? (fullMarketName.value.split('-')[1] ?? '')

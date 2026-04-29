@@ -1,12 +1,16 @@
 <template>
-  <app-dialog v-model:is-open="isOpen" class="w-full max-w-[440px]">
-    <template #title>
+  <app-dialog
+    v-model:is-open="isOpen"
+    class="w-full max-w-[440px]"
+    title="Auto Close"
+  >
+    <!-- <template #title>
       <div class="mr-8 pt-5 pl-6">
-        <span class="font-bold text-s-20">Auto close</span>
+        <span class="font-bold sm:text-s-20"> Take Profit / Stop loss</span>
       </div>
-    </template>
+    </template> -->
     <template #content>
-      <div class="px-6 pb-6 pt-4 flex flex-col gap-4">
+      <div class="px-3 sm:px-6 pb-6 pt-4 flex flex-col gap-4">
         <!-- Asset & Price -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -27,124 +31,132 @@
         </div>
 
         <!-- Take Profit -->
-        <div class="bg-mewBg rounded-[20px] p-5">
-          <div class="flex justify-between items-center mb-3 px-1">
-            <p class="text-s-14 font-bold">
-              Take profit if {{ displaySymbol }} reaches
-            </p>
-            <button
-              class="text-[#0052ff] text-s-14 font-bold hover:opacity-70"
-              @click="$emit('clearTakeProfit')"
-            >
-              Clear
-            </button>
-          </div>
+        <transition name="fade" mode="out-in">
           <div
-            class="bg-white rounded-[16px] p-5 shadow-sm border border-[#e5e7eb]"
+            v-if="hasTakeProfit"
+            key="take-profit-input"
+            class="bg-mewBg rounded-20 px-4 py-3 sm:p-5"
           >
-            <div class="flex items-center justify-between mb-4">
-              <div
-                class="flex items-center gap-1 text-s-14 font-medium text-info"
-              >
-                Price
-              </div>
-              <p class="font-bold text-[28px] tracking-tight">
-                {{
-                  tempTakeProfitPrice !== null
-                    ? formatUsd(tempTakeProfitPrice)
-                    : '—'
-                }}
+            <div class="flex justify-between items-center pl-3">
+              <p class="text-s-12 sm:text-s-14 font-bold">
+                Take profit if {{ displaySymbol }} reaches
               </p>
-            </div>
-            <div class="flex justify-between gap-2 mb-3">
-              <button
-                v-for="pct in [10, 20, 30, 50, 100]"
-                :key="pct"
-                class="h-[34px] flex-1 border rounded-full text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                :class="
-                  activeTpPill === pct
-                    ? 'border-[#0052ff] text-[#0052ff]'
-                    : 'border-[#e5e7eb] hover:border-grey-300'
-                "
-                @click="$emit('setTakeProfitPct', pct)"
+              <app-btn-text
+                class="text-primary text-s-12 sm:text-s-14"
+                @click="removeTakeProfit"
               >
-                +{{ pct }}%
-              </button>
+                Remove
+              </app-btn-text>
             </div>
-            <div
-              v-if="
-                tempProjectedProfit !== null && tempTakeProfitPrice !== null
-              "
-              class="text-right text-s-13 mt-2"
+            <perps-enter-profit-loss-amount
+              v-model:amount="takeProfitPrice"
+              error=""
+              :validate-input="() => {}"
             >
+              <template #footer>
+                <div class="flex justify-start gap-2 mt-1">
+                  <button
+                    v-for="pct in [10, 20, 30, 50, 100]"
+                    :key="pct"
+                    class="px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    :class="
+                      activeTpPill === pct ? '!bg-mewBg text-primary' : ''
+                    "
+                    @click="$emit('setTakeProfitPct', pct)"
+                  >
+                    +{{ pct }}%
+                  </button>
+                </div>
+              </template>
+            </perps-enter-profit-loss-amount>
+            <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
               <span class="text-info">Projected profit</span>
-              <span class="text-success font-bold ml-2"
+              <span
+                v-if="tempProjectedProfit !== null && takeProfitPrice !== null"
+                class="text-success ml-2 font-medium"
                 >+{{ formatUsd(Math.abs(tempProjectedProfit)) }}</span
               >
+              <span v-else class="ml-2 font-medium"> - </span>
             </div>
           </div>
-        </div>
+          <button
+            v-else
+            key="add-take-profit"
+            class="bg-surface font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-primary text hover:bg-mewBg transition-all duration-300 group"
+            @click="setTempTakeProfitPrice"
+          >
+            <plus-circle-icon
+              class="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
+            />
+            Add Take Profit
+          </button>
+        </transition>
 
         <!-- Stop Loss -->
-        <div class="bg-mewBg rounded-[20px] p-5">
-          <div class="flex justify-between items-center mb-3 px-1">
-            <p class="text-s-14 font-bold">
-              Stop loss if {{ displaySymbol }} reaches
-            </p>
-            <button
-              class="text-[#0052ff] text-s-14 font-bold hover:opacity-70"
-              @click="$emit('clearStopLoss')"
-            >
-              Clear
-            </button>
-          </div>
+        <transition name="fade" mode="out-in">
           <div
-            class="bg-white rounded-[16px] p-5 shadow-sm border border-[#e5e7eb]"
+            v-if="hasStopLoss"
+            key="stop-loss-input"
+            class="bg-mewBg rounded-20 px-4 py-3 sm:p-5"
           >
-            <div class="flex items-center justify-between mb-4">
-              <div
-                class="flex items-center gap-1 text-s-14 font-medium text-info"
-              >
-                Price
-              </div>
-              <p class="font-bold text-[28px] tracking-tight">
-                {{
-                  tempStopLossPrice !== null
-                    ? formatUsd(tempStopLossPrice)
-                    : '—'
-                }}
+            <div class="flex justify-between items-center pl-3">
+              <p class="text-s-12 sm:text-s-14 font-bold">
+                Stop loss if {{ displaySymbol }} reaches
               </p>
-            </div>
-            <div class="flex justify-between gap-2 mb-3">
-              <button
-                v-for="pct in [1, 2, 3, 4, 5]"
-                :key="pct"
-                class="h-[34px] flex-1 border rounded-full text-[13px] font-bold transition-all flex items-center justify-center bg-white"
-                :class="
-                  activeSlPill === pct
-                    ? 'border-[#c9379d] text-[#c9379d]'
-                    : 'border-[#e5e7eb] hover:border-grey-300'
-                "
-                @click="$emit('setStopLossPct', pct)"
+              <app-btn-text
+                class="text-primary text-s-12 sm:text-s-14"
+                @click="removeStopLoss"
               >
-                -{{ pct }}%
-              </button>
+                Remove
+              </app-btn-text>
             </div>
-            <div
-              v-if="tempProjectedLoss !== null && tempStopLossPrice !== null"
-              class="text-right text-s-13 mt-2"
+            <perps-enter-profit-loss-amount
+              v-model:amount="stopLossPrice"
+              error=""
+              :validate-input="() => {}"
             >
+              <template #footer>
+                <div class="flex justify-start gap-2 mt-1">
+                  <button
+                    v-for="pct in [1, 2, 3, 4, 5]"
+                    :key="pct"
+                    class="px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    :class="
+                      activeSlPill === pct ? '!bg-mewBg text-primary' : ''
+                    "
+                    @click="$emit('setStopLossPct', pct)"
+                  >
+                    -{{ pct }}%
+                  </button>
+                </div>
+              </template>
+            </perps-enter-profit-loss-amount>
+            <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
               <span class="text-info">Projected loss</span>
-              <span class="text-error font-bold ml-2"
+              <span
+                v-if="tempProjectedLoss !== null && stopLossPrice !== null"
+                class="text-error font-medium ml-2"
                 >-{{ formatUsd(Math.abs(tempProjectedLoss)) }}</span
               >
+              <span v-else class="ml-2 font-medium"> - </span>
             </div>
           </div>
-        </div>
+          <button
+            v-else
+            key="add-stop-loss"
+            class="bg-surface font-medium rounded-20 px-3 pt-1 pb-2 sm:p-5 min-h-[199px] sm:min-h-[222px] hover:text-primary text hover:bg-mewBg transition-all duration-300 group"
+            @click="setTempStopLossPrice"
+          >
+            <plus-circle-icon
+              class="w-6 h-6 mx-auto mb-2 group-hover:scale-110 transition-transform duration-300"
+            />
+            Add Stop Loss
+          </button>
+        </transition>
 
         <!-- Add Button -->
         <app-base-button class="w-full" @click="$emit('confirm')">
-          Add
+          Save
         </app-base-button>
       </div>
     </template>
@@ -152,30 +164,77 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, type PropType } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
+import PerpsEnterProfitLossAmount from './PerpsEnterProfitLossAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
+import { PlusCircleIcon } from '@heroicons/vue/24/solid'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
 defineProps<{
   displaySymbol: string
   currentPrice: number
-  tempTakeProfitPrice: number | null
-  tempStopLossPrice: number | null
   tempProjectedProfit: number | null
   tempProjectedLoss: number | null
   activeTpPill: number | null
   activeSlPill: number | null
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   clearTakeProfit: []
   clearStopLoss: []
   setTakeProfitPct: [pct: number]
   setStopLossPct: [pct: number]
   confirm: []
 }>()
+
+const takeProfitPrice = defineModel('takeProfitPrice', {
+  type: [null, Number] as PropType<null | number>,
+  required: true,
+})
+
+const stopLossPrice = defineModel('stopLossPrice', {
+  type: [null, Number] as PropType<null | number>,
+  required: true,
+})
+
+const hasStopLoss = ref(false)
+const hasTakeProfit = ref(false)
+
+const setTempTakeProfitPrice = () => {
+  if (takeProfitPrice.value == null) {
+    emit('setTakeProfitPct', 30)
+  }
+  hasTakeProfit.value = true
+}
+
+const setTempStopLossPrice = () => {
+  if (stopLossPrice.value == null) {
+    emit('setStopLossPct', 3)
+  }
+  hasStopLoss.value = true
+}
+
+const removeTakeProfit = () => {
+  hasTakeProfit.value = false
+  emit('clearTakeProfit')
+}
+
+const removeStopLoss = () => {
+  hasStopLoss.value = false
+  emit('clearStopLoss')
+}
+
+watch(isOpen, () => {
+  if (isOpen.value) {
+    // Reset local state when dialog is closed
+    hasStopLoss.value = stopLossPrice.value !== null
+    hasTakeProfit.value = takeProfitPrice.value !== null
+  }
+})
 </script>
