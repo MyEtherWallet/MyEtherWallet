@@ -75,6 +75,7 @@ import {
   formatPnl,
   pnlColor,
   formatDate,
+  getOrderPrice,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 
@@ -142,7 +143,7 @@ const rows = computed(() => {
     },
     {
       label: 'Price',
-      value: formatPrice(props.order.price),
+      value: formatPrice(getOrderPrice(props.order)),
     },
     {
       label: 'Size',
