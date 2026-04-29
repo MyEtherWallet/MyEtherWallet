@@ -1,29 +1,22 @@
 <template>
   <div>
     <div
-      class="bg-white rounded-2xl flex items-center gap-3 px-4 pl-20 py-6 cursor-pointer shadow-lg relative"
+      class="bg-[#d6edff] rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative"
       @click="onLearnMore"
     >
-      <img
-        :src="usdcTokens"
-        alt=""
-        class="w-[70px] h-[70px] object-contain shrink-0 absolute left-[0px]"
-        width="70"
-        height="70"
-      />
       <div class="flex-1 min-w-0">
-        <p class="text-s-16 font-bold text-primary leading-tight">
+        <p class="text-s-14 font-semibold text-black leading-tight">
           {{
             props.location === 'small-banner-swap' ? 'SWAP $50+' : 'TRADE $25+'
           }}
+          and
+          <span class="text-primary"> Earn 5 USDC</span>
         </p>
-        <p class="text-s-14 font-semibold text-blue-500">Earn 5 USDC.</p>
       </div>
       <button
-        class="flex items-center gap-1 text-s-14 font-semibold text-primary whitespace-nowrap hoverOpacity shrink-0"
+        class="flex items-center gap-1 text-s-14 text-black underline whitespace-nowrap hoverOpacity shrink-0"
       >
         Learn more
-        <span aria-hidden="true">→</span>
       </button>
     </div>
     <rewards-learn-more
@@ -50,7 +43,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { storeToRefs } from 'pinia'
 import { useRewardsStore } from '@/stores/rewardsStore'
-import usdcTokens from '@/assets/images/rewards/usdc-tokens-curved.png'
 
 const props = defineProps<{
   location: 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
