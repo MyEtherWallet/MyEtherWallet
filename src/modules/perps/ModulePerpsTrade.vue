@@ -242,7 +242,10 @@
           <div class="flex items-center py-1">
             <span
               class="font-bold text-s-20 tracking-tight"
-              :class="!limitPrice || limitPrice === '' ? 'opacity-50' : ''"
+              :class="[
+                !limitPrice || limitPrice === '' ? 'opacity-50' : '',
+                limitPriceHasError ? 'text-error' : '',
+              ]"
               >$</span
             >
             <input
@@ -251,6 +254,7 @@
               inputmode="decimal"
               placeholder="0.00"
               class="w-full font-bold text-s-20 tracking-tight outline-none bg-transparent"
+              :class="{ 'text-error': limitPriceHasError }"
               @keydown="
                 e => {
                   if (['-', '+', 'e', 'E'].includes(e.key)) e.preventDefault()
@@ -275,6 +279,16 @@
               class="text-error text-s-12 mb-1"
             >
               Price must be less than $10,000,000
+            </div>
+            <div
+              v-else-if="limitPricePrecisionError"
+              class="text-error text-s-12 mb-1"
+            >
+              {{
+                quoteDecimals === 0
+                  ? 'Price must be a whole number'
+                  : `Price supports up to ${quoteDecimals} decimal place${quoteDecimals === 1 ? '' : 's'}`
+              }}
             </div>
           </transition>
 
@@ -306,11 +320,12 @@
               <div class="">
                 <div
                   class="flex items-center before:content-['$'] before:font-bold before:text-s-28 before:tracking-tight before:mr-1"
-                  :class="
+                  :class="[
                     !inputAmount || inputAmount === ''
                       ? 'before:opacity-50'
-                      : ''
-                  "
+                      : '',
+                    marginPrecisionError ? 'before:text-error' : '',
+                  ]"
                 >
                   <input
                     v-model="inputAmount"
@@ -319,6 +334,7 @@
                     step="any"
                     placeholder="0.00"
                     class="font-bold text-s-28 bg-transparent outline-none w-full"
+                    :class="{ 'text-error': marginPrecisionError }"
                     @keydown="
                       e => {
                         if (['e', 'E', '+', '-'].includes(e.key))
@@ -347,7 +363,13 @@
             <!-- Error State -->
             <transition name="fade" mode="out-in">
               <div
-                v-if="
+                v-if="marginPrecisionError"
+                class="text-error text-s-12 mb-1"
+              >
+                Margin supports up to 2 decimal places
+              </div>
+              <div
+                v-else-if="
                   Number(inputAmount || '0') > availableMargin ||
                   isNaN(Number(inputAmount))
                 "
@@ -489,9 +511,10 @@
             <!-- input -->
             <div
               class="flex items-center before:content-['$'] before:font-bold before:text-[28px] before:tracking-tight before:mr-1"
-              :class="
-                !closeAmount || closeAmount === '' ? 'before:opacity-50' : ''
-              "
+              :class="[
+                !closeAmount || closeAmount === '' ? 'before:opacity-50' : '',
+                closeAmountPrecisionError ? 'before:text-error' : '',
+              ]"
             >
               <input
                 v-model="closeAmount"
@@ -500,6 +523,7 @@
                 step="any"
                 placeholder="0.00"
                 class="font-bold text-s-28 bg-transparent outline-none w-full"
+                :class="{ 'text-error': closeAmountPrecisionError }"
                 @keydown="
                   e => {
                     if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault()
@@ -519,6 +543,14 @@
                 )
               }}
             </p>
+            <transition name="fade" mode="out-in">
+              <div
+                v-if="closeAmountPrecisionError"
+                class="text-error text-s-12 mb-1"
+              >
+                Amount supports up to 2 decimal places
+              </div>
+            </transition>
             <!--slider -->
             <input
               v-model="closeSliderValue"
@@ -768,6 +800,9 @@
       :temp-projected-loss="tempProjectedLoss"
       :active-tp-pill="activeTpPill"
       :active-sl-pill="activeSlPill"
+      :take-profit-error="takeProfitPrecisionError"
+      :stop-loss-error="stopLossPrecisionError"
+      :quote-decimals="quoteDecimals"
       @clear-take-profit="clearTempTakeProfit"
       @clear-stop-loss="clearTempStopLoss"
       @set-take-profit-pct="setTakeProfitPct"
@@ -902,6 +937,13 @@ const {
   isSubmitting,
   submitDisabled,
   submitButtonLabel,
+  limitPriceHasError,
+  limitPricePrecisionError,
+  marginPrecisionError,
+  closeAmountPrecisionError,
+  takeProfitPrecisionError,
+  stopLossPrecisionError,
+  quoteDecimals,
   orderError,
   showConfirmModal,
   showConfirmation,

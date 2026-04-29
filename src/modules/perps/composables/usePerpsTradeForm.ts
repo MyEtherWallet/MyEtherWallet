@@ -8,7 +8,7 @@ import { usePerpsMarkets, usePerpsContracts } from './usePerpsMarkets'
 import { usePerpsPositions } from './usePerpsPositions'
 import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
-import { formatUsd } from '../utils/formatters'
+import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
 import { getCategory, midPrice } from '../utils/market'
 
 type OrderSide = 'buy' | 'sell'
@@ -182,6 +182,17 @@ export function usePerpsTradeForm() {
     return parseFloat(market?.quoteIncrement || '0.01')
   })
 
+  // Decimal-place caps derived from market increments. Used by input-precision
+  // validators so values match what the API will accept.
+  const quoteDecimals = computed(() => {
+    const market = markets.value.find(m => m.market === fullMarketName.value)
+    return decimalPlaces(market?.quoteIncrement || '0.01')
+  })
+
+  // USDC collateral is stored to 2 decimals across the perps surface (margin
+  // and amount-to-close inputs).
+  const COLLATERAL_DECIMALS = 2
+
   // API requires limit/trigger prices to align with quoteIncrement
   // (/v1/markets). Using a hardcoded 2-decimal rounding rejects on markets
   // with finer precision (e.g. quoteIncrement "0.0001").
@@ -240,6 +251,8 @@ export function usePerpsTradeForm() {
     if (amt > 0 && amt < minOrderAmount.value) return true
     if (maxCloseSizeUsd.value !== null && amt > maxCloseSizeUsd.value)
       return true
+    if (closeAmountPrecisionError.value) return true
+    if (limitPriceHasError.value) return true
     return false
   })
 
@@ -339,11 +352,47 @@ export function usePerpsTradeForm() {
     return (usedMargin + additionalMargin) / marginBal
   })
 
+  // ── Precision validation ───────────────────────────────────
+  // Each input on the trade form must respect the precision the API enforces.
+  // Quote-priced fields (limit price, take-profit, stop-loss) use the market's
+  // quoteIncrement; collateral-denominated fields (margin, amount-to-close)
+  // use the USDC convention of 2 decimals.
+  const limitPricePrecisionError = computed(() => {
+    if (orderType.value !== 'limit') return false
+    return hasInvalidPrecision(limitPrice.value, quoteDecimals.value)
+  })
+
+  const marginPrecisionError = computed(() =>
+    hasInvalidPrecision(inputAmount.value, COLLATERAL_DECIMALS),
+  )
+
+  const closeAmountPrecisionError = computed(() =>
+    hasInvalidPrecision(closeAmount.value, COLLATERAL_DECIMALS),
+  )
+
+  const takeProfitPrecisionError = computed(() => {
+    if (tempTakeProfitPrice.value == null) return false
+    return hasInvalidPrecision(
+      String(tempTakeProfitPrice.value),
+      quoteDecimals.value,
+    )
+  })
+
+  const stopLossPrecisionError = computed(() => {
+    if (tempStopLossPrice.value == null) return false
+    return hasInvalidPrecision(
+      String(tempStopLossPrice.value),
+      quoteDecimals.value,
+    )
+  })
+
   // ── Limit price validation ─────────────────────────────────
   const limitPriceHasError = computed(() => {
     if (orderType.value !== 'limit' || !limitPrice.value) return false
     const price = parseFloat(limitPrice.value)
-    return isNaN(price) || price <= 0 || price >= 10_000_000
+    if (isNaN(price) || price <= 0 || price >= 10_000_000) return true
+    if (limitPricePrecisionError.value) return true
+    return false
   })
 
   // ── Submit validation ──────────────────────────────────────
@@ -351,6 +400,9 @@ export function usePerpsTradeForm() {
     const amt = parseFloat(inputAmount.value)
     if (!amt || amt <= 0 || isSubmitting.value) return true
     if (limitPriceHasError.value) return true
+    if (marginPrecisionError.value) return true
+    if (takeProfitPrecisionError.value || stopLossPrecisionError.value)
+      return true
     if (availableMargin.value * leverage.value < minOrderAmount.value)
       return true
     if (amt > availableMargin.value) return true
@@ -938,6 +990,12 @@ export function usePerpsTradeForm() {
     submitDisabled,
     submitButtonLabel,
     limitPriceHasError,
+    limitPricePrecisionError,
+    marginPrecisionError,
+    closeAmountPrecisionError,
+    takeProfitPrecisionError,
+    stopLossPrecisionError,
+    quoteDecimals,
     newMarginRatio,
     orderError,
     showConfirmModal,
