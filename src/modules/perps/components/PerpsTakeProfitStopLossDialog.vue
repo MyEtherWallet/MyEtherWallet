@@ -50,7 +50,7 @@
             </div>
             <perps-enter-profit-loss-amount
               v-model:amount="takeProfitPrice"
-              error=""
+              :error="takeProfitError ? precisionMessage : ''"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -69,6 +69,14 @@
                 </div>
               </template>
             </perps-enter-profit-loss-amount>
+            <transition name="fade" mode="out-in">
+              <div
+                v-if="takeProfitError"
+                class="text-error text-s-12 mt-1 pl-3"
+              >
+                {{ precisionMessage }}
+              </div>
+            </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
               <span class="text-info">Projected profit</span>
               <span
@@ -112,7 +120,7 @@
             </div>
             <perps-enter-profit-loss-amount
               v-model:amount="stopLossPrice"
-              error=""
+              :error="stopLossError ? precisionMessage : ''"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -131,6 +139,14 @@
                 </div>
               </template>
             </perps-enter-profit-loss-amount>
+            <transition name="fade" mode="out-in">
+              <div
+                v-if="stopLossError"
+                class="text-error text-s-12 mt-1 pl-3"
+              >
+                {{ precisionMessage }}
+              </div>
+            </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
               <span class="text-info">Projected loss</span>
               <span
@@ -164,7 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, type PropType } from 'vue'
+import { ref, watch, computed, type PropType } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -176,14 +192,23 @@ import { PlusCircleIcon } from '@heroicons/vue/24/solid'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-defineProps<{
+const props = defineProps<{
   displaySymbol: string
   currentPrice: number
   tempProjectedProfit: number | null
   tempProjectedLoss: number | null
   activeTpPill: number | null
   activeSlPill: number | null
+  takeProfitError?: boolean
+  stopLossError?: boolean
+  quoteDecimals?: number
 }>()
+
+const precisionMessage = computed(() => {
+  const dec = props.quoteDecimals ?? 2
+  if (dec === 0) return 'Price must be a whole number'
+  return `Price supports up to ${dec} decimal place${dec === 1 ? '' : 's'}`
+})
 
 const emit = defineEmits<{
   clearTakeProfit: []

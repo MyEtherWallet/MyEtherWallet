@@ -103,3 +103,30 @@ export function formatPriceChange(pct?: string): string {
   const num = parseFloat(pct)
   return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`
 }
+
+// Count decimal places from a numeric string. Used to validate user input
+// against per-market increments (quoteIncrement / baseIncrement) where the
+// API rejects values with more precision than the increment allows.
+export function decimalPlaces(value: string | number): number {
+  const s = String(value)
+  const dot = s.indexOf('.')
+  return dot < 0 ? 0 : s.length - dot - 1
+}
+
+// Returns true when `value` is non-numeric or carries more decimal places
+// than `maxDecimals` permits. Empty input is treated as not-yet-invalid so
+// the error doesn't flash on a fresh field.
+//
+// Accepts string or number because Vue 3's v-model on `<input type="number">`
+// auto-coerces to number (overriding string refs), while limit-price uses a
+// `type="text"` input that stays a string.
+export function hasInvalidPrecision(
+  value: string | number,
+  maxDecimals: number,
+): boolean {
+  if (value === '' || value === null || value === undefined) return false
+  const s = String(value)
+  if (!/^-?\d*\.?\d*$/.test(s)) return true
+  if (Number.isNaN(Number(s))) return true
+  return decimalPlaces(s) > maxDecimals
+}
