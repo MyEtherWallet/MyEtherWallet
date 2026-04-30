@@ -1,43 +1,58 @@
 <template>
-  <div class="flex flex-col gap-3 mt-3">
+  <div class="flex flex-col gap-5 xs:gap-3">
     <!-- Swap Row -->
-    <div class="flex items-center gap-3">
-      <div
-        class="rounded-lg p-1.5 shrink-0"
-        :class="[!swapClaimed && !swapNoRewards ? 'bg-blue-10' : 'bg-grey-5']"
-      >
-        <arrow-path-rounded-square-icon
-          class="w-5 h-5"
-          :class="[
-            !swapClaimed && !swapNoRewards ? ' text-primary' : 'text-[#64748b]',
-          ]"
-        />
-      </div>
-      <div class="flex-1 min-w-0">
-        <span class="text-s-14 font-semibold">Swap → Earn $5</span>
-        <template v-if="!swapClaimed && !swapNoRewards">
-          <div
-            class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
-          >
-            <div
-              class="h-full bg-primary rounded-full transition-all"
-              :style="{ width: `${swapRemainingPct}%` }"
-            />
-          </div>
-          <p class="text-s-12 text-primary mt-0.5">
-            <b>{{ swapRemainingCount ?? '—' }}/{{ swapTotal ?? '—' }}</b>
-            rewards left
-          </p>
-        </template>
-        <p
-          v-else-if="swapClaimed"
-          class="text-s-12 font-medium mt-0.5 text-success"
+    <div
+      class="flex items-center justify-between gap-3"
+      :class="{
+        'flex-wrap  items-start xs:items-center': isRewardsView,
+      }"
+    >
+      <div class="flex items-center gap-3 min-w-[160px]">
+        <div
+          class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
+          :class="[!swapClaimed && !swapNoRewards ? 'bg-blue-10' : 'bg-grey-5']"
         >
-          Reward claimed
-        </p>
-        <p v-else class="text-s-12 font-medium mt-0.5 text-error">
-          No rewards left
-        </p>
+          <icon-swap
+            class="w-6 h-6"
+            :class="[
+              !swapClaimed && !swapNoRewards
+                ? ' text-primary'
+                : 'text-[#A5A5A5]',
+            ]"
+          />
+        </div>
+        <div class="flex-1 min-w-0">
+          <span
+            class="text-s-14 font-semibold leading-[20px]"
+            :class="{
+              '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
+            }"
+            >Swap → Earn $5</span
+          >
+          <template v-if="!swapClaimed && !swapNoRewards">
+            <div
+              class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
+            >
+              <div
+                class="h-full bg-primary rounded-full transition-all"
+                :style="{ width: `${swapRemainingPct}%` }"
+              />
+            </div>
+            <p class="text-s-12 text-primary mt-0.5 leading-[18px]">
+              <b>{{ swapRemainingCount ?? '—' }}/{{ swapTotal ?? '—' }}</b>
+              rewards left
+            </p>
+          </template>
+          <p
+            v-else-if="swapClaimed"
+            class="text-s-12 font-medium mt-0.5 text-success"
+          >
+            Reward claimed
+          </p>
+          <p v-else class="text-s-12 font-medium mt-0.5 text-error">
+            No rewards left
+          </p>
+        </div>
       </div>
       <app-base-button
         v-if="!swapClaimed && !swapNoRewards"
@@ -48,52 +63,78 @@
       >
         Swap $50+
       </app-base-button>
-      <button v-else class="back-in-btn shrink-0">
+      <button
+        v-else
+        class="flex items-center gap-1 shrink-0 text-s-11 xs:text-s-14 text-[#A5A5A5] font-semibold px-3 py-2 xs:py-[10px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full"
+        :class="{
+          '2xl:text-s-11 3xl:text-s-14 2xl:py-2 3xl:py-[10px]': isOpenSideMenu,
+        }"
+      >
         Back in {{ swapClaimed ? timeUntilNextEligible : timeUntilHourReset }}
-        <clock-icon class="w-3.5 h-3.5" />
+        <clock-icon
+          class="w-3.5 h-3.5 ml-auto"
+          :class="{
+            '2xl:hidden 3xl:block': isOpenSideMenu,
+          }"
+        />
       </button>
     </div>
 
     <!-- Trade Row -->
-    <div class="flex items-center gap-3">
-      <div
-        class="rounded-lg p-1.5 shrink-0"
-        :class="[!tradeClaimed && !tradeNoRewards ? 'bg-blue-10' : 'bg-grey-5']"
-      >
-        <chart-bar-square-icon
-          class="w-5 h-5"
+    <div
+      class="flex items-center justify-between gap-3"
+      :class="{
+        'flex-wrap  items-start xs:items-center': isRewardsView,
+      }"
+    >
+      <div class="flex items-center gap-3 min-w-[160px]">
+        <div
+          class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
-            !tradeClaimed && !tradeNoRewards
-              ? 'text-primary'
-              : 'text-[#64748b]',
+            !tradeClaimed && !tradeNoRewards ? 'bg-blue-10' : 'bg-grey-5',
           ]"
-        />
-      </div>
-      <div class="flex-1 min-w-0">
-        <span class="text-s-14 font-semibold">Trade → Earn $5</span>
-        <template v-if="!tradeClaimed && !tradeNoRewards">
-          <div
-            class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
-          >
-            <div
-              class="h-full bg-primary rounded-full transition-all"
-              :style="{ width: `${tradeRemainingPct}%` }"
-            />
-          </div>
-          <p class="text-s-12 text-primary mt-0.5">
-            <b>{{ tradeRemainingCount ?? '—' }}/{{ tradeTotal ?? '—' }}</b>
-            rewards left
-          </p>
-        </template>
-        <p
-          v-else-if="tradeClaimed"
-          class="text-s-12 font-medium mt-0.5 text-success"
         >
-          Reward claimed
-        </p>
-        <p v-else class="text-s-12 font-medium mt-0.5 text-error">
-          No rewards left
-        </p>
+          <icon-trade
+            class="w-6 h-6"
+            :class="[
+              !tradeClaimed && !tradeNoRewards
+                ? 'text-primary'
+                : 'text-[#A5A5A5]',
+            ]"
+          />
+        </div>
+        <div class="flex-1 min-w-0">
+          <span
+            class="text-s-14 font-semibold leading-[20px]"
+            :class="{
+              '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
+            }"
+            >Trade → Earn $5</span
+          >
+          <template v-if="!tradeClaimed && !tradeNoRewards">
+            <div
+              class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
+            >
+              <div
+                class="h-full bg-primary rounded-full transition-all"
+                :style="{ width: `${tradeRemainingPct}%` }"
+              />
+            </div>
+            <p class="text-s-12 text-primary mt-0.5 leading-[18px]">
+              <b>{{ tradeRemainingCount ?? '—' }}/{{ tradeTotal ?? '—' }}</b>
+              rewards left
+            </p>
+          </template>
+          <p
+            v-else-if="tradeClaimed"
+            class="text-s-12 font-medium mt-0.5 text-success"
+          >
+            Reward claimed
+          </p>
+          <p v-else class="text-s-12 font-medium mt-0.5 text-error">
+            No rewards left
+          </p>
+        </div>
       </div>
       <app-base-button
         v-if="!tradeClaimed && !tradeNoRewards"
@@ -104,10 +145,21 @@
       >
         Trade $25+
       </app-base-button>
-      <button v-else class="back-in-btn shrink-0">
+      <button
+        v-else
+        class="flex items-center gap-1 shrink-0 text-s-11 xs:text-s-14 text-[#A5A5A5] font-semibold px-3 py-2 xs:py-[10px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full"
+        :class="{
+          '2xl:text-s-11 3xl:text-s-14 2xl:py-2 3xl:py-[10px]': isOpenSideMenu,
+        }"
+      >
         Back in
         {{ tradeClaimed ? timeUntilNextEligible : timeUntilHourReset }}
-        <clock-icon class="w-3.5 h-3.5" />
+        <clock-icon
+          class="w-3.5 h-3.5 ml-auto"
+          :class="{
+            '2xl:hidden 3xl:block': isOpenSideMenu,
+          }"
+        />
       </button>
     </div>
   </div>
@@ -115,11 +167,14 @@
 
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import {
-  ArrowPathRoundedSquareIcon,
-  ChartBarSquareIcon,
-  ClockIcon,
-} from '@heroicons/vue/24/outline'
+import { ClockIcon } from '@heroicons/vue/24/outline'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { storeToRefs } from 'pinia'
+import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
+import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+
+const walletMenuStore = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 
 defineProps<{
   swapClaimed: boolean
@@ -134,6 +189,7 @@ defineProps<{
   tradeTotal: number | null
   timeUntilHourReset: string
   timeUntilNextEligible: string
+  isRewardsView?: boolean
 }>()
 
 defineEmits<{
@@ -141,19 +197,3 @@ defineEmits<{
   trade: []
 }>()
 </script>
-
-<style scoped>
-.back-in-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  border: 1.5px dashed #94a3b8;
-  border-radius: 9999px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #64748b;
-  white-space: nowrap;
-  cursor: default;
-}
-</style>

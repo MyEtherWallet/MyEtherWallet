@@ -1,73 +1,90 @@
 <template>
   <!-- Claimed State -->
-  <div
-    v-if="!hadInitialLoad"
-    class="bg-white rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
-  >
-    <p class="text-center text-s-14 text-info">Loading Rewards</p>
-  </div>
-  <!-- Default State -->
-  <div
-    v-else
-    class="bg-white rounded-16 h-full flex flex-col px-5 xs:px-[33px] pt-4 pb-4 relative overflow-hidden max-h-[293px]"
-  >
-    <!-- Top: Title + Image -->
-    <div class="flex items-start justify-between gap-2">
-      <div class="flex flex-col">
-        <h3 class="text-s-20 font-bold leading-tight">Earn rewards</h3>
-        <p class="text-s-16 text-[#334155] leading-snug max-w-[200px] mt-1">
-          First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.
-        </p>
-        <button
-          class="text-s-16 font-semibold underline text-left w-fit mt-1 hoverOpacity text-[#334155]"
-          @click="onLearnMore"
-        >
-          Learn more
-        </button>
+  <div>
+    <div
+      v-if="!hadInitialLoad"
+      class="bg-white rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
+    >
+      <p class="text-center text-s-14 text-info">Loading Rewards</p>
+    </div>
+    <!-- Default State -->
+    <div
+      v-else
+      class="bg-white rounded-16 h-full flex flex-col justify-between px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
+    >
+      <!-- Top: Title + Image -->
+      <div class="flex items-start justify-between gap-2 mb-5">
+        <div class="flex flex-col pt-5">
+          <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
+          <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
+            First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.
+          </p>
+          <button
+            class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
+            @click="onLearnMore"
+          >
+            Learn more
+          </button>
+        </div>
+        <img
+          :src="verticalUsdc"
+          alt=""
+          width="92"
+          height="130"
+          class="shrink-0 object-contain w-[92px] h-[130px] flex-none -mt-2 hidden 3xl:w-[92px] 3xl:h-[130px]"
+          :class="
+            isOpenSideMenu
+              ? 'xl:hidden 2xl:block  2xl:w-[60px] 2xl:h-[90px]'
+              : 'xl:block 2xl:block'
+          "
+        />
       </div>
+
+      <!-- Reward Rows -->
+      <rewards-rows
+        :swap-claimed="swapClaimed"
+        :swap-no-rewards="swapNoRewards"
+        :swap-remaining-pct="swapRemainingPct"
+        :swap-remaining-count="swapRemainingCount"
+        :swap-total="swapTotal"
+        :trade-claimed="tradeClaimed"
+        :trade-no-rewards="tradeNoRewards"
+        :trade-remaining-pct="tradeRemainingPct"
+        :trade-remaining-count="tradeRemainingCount"
+        :trade-total="tradeTotal"
+        :time-until-hour-reset="timeUntilHourReset"
+        :time-until-next-eligible="timeUntilNextEligible"
+        @swap="goToSwap"
+        @trade="goToTrade"
+        class="max-w-[360px] mt-3 2xl:max-w-none"
+        is-rewards-view
+      />
       <img
-        :src="curvedUsdc"
+        :src="horizontalUsdc"
         alt=""
-        width="150"
-        height="150"
-        class="shrink-0 object-contain w-[80px] h-[80px] absolute right-[20px] top-[0px]"
+        width="650"
+        height="292"
+        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] sm:max-h-[225px] sm:max-w-[234px] 2xl:hidden"
+        :class="isOpenSideMenu ? '' : 'xl:hidden'"
+      />
+
+      <rewards-learn-more
+        v-model:is-open="isLearnMoreOpen"
+        location="main-banner"
+        :swap-claimed="swapClaimed"
+        :swap-no-rewards="swapNoRewards"
+        :swap-remaining-pct="swapRemainingPct"
+        :swap-remaining-count="swapRemainingCount"
+        :swap-total="swapTotal"
+        :trade-claimed="tradeClaimed"
+        :trade-no-rewards="tradeNoRewards"
+        :trade-remaining-pct="tradeRemainingPct"
+        :trade-remaining-count="tradeRemainingCount"
+        :trade-total="tradeTotal"
+        :time-until-hour-reset="timeUntilHourReset"
+        :time-until-next-eligible="timeUntilNextEligible"
       />
     </div>
-
-    <!-- Reward Rows -->
-    <rewards-rows
-      :swap-claimed="swapClaimed"
-      :swap-no-rewards="swapNoRewards"
-      :swap-remaining-pct="swapRemainingPct"
-      :swap-remaining-count="swapRemainingCount"
-      :swap-total="swapTotal"
-      :trade-claimed="tradeClaimed"
-      :trade-no-rewards="tradeNoRewards"
-      :trade-remaining-pct="tradeRemainingPct"
-      :trade-remaining-count="tradeRemainingCount"
-      :trade-total="tradeTotal"
-      :time-until-hour-reset="timeUntilHourReset"
-      :time-until-next-eligible="timeUntilNextEligible"
-      @swap="goToSwap"
-      @trade="goToTrade"
-    />
-
-    <rewards-learn-more
-      v-model:is-open="isLearnMoreOpen"
-      location="main-banner"
-      :swap-claimed="swapClaimed"
-      :swap-no-rewards="swapNoRewards"
-      :swap-remaining-pct="swapRemainingPct"
-      :swap-remaining-count="swapRemainingCount"
-      :swap-total="swapTotal"
-      :trade-claimed="tradeClaimed"
-      :trade-no-rewards="tradeNoRewards"
-      :trade-remaining-pct="tradeRemainingPct"
-      :trade-remaining-count="tradeRemainingCount"
-      :trade-total="tradeTotal"
-      :time-until-hour-reset="timeUntilHourReset"
-      :time-until-next-eligible="timeUntilNextEligible"
-    />
   </div>
 </template>
 
@@ -75,7 +92,8 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import curvedUsdc from '@/assets/images/rewards/usdc-tokens-curved.png'
+import verticalUsdc from '@/assets/images/rewards/usdc-rewards-group-vertical.png'
+import horizontalUsdc from '@/assets/images/rewards/usdc-rewards-group-horizontal.png'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
