@@ -273,6 +273,7 @@ export const RewardsEvent = {
   MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
   LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
   CLICK_SWAP: 'Rewards_Clicked_Swap',
+  CLICK_TRADE: 'Rewards_Clicked_Trade',
   REWARD_EARNED: 'Rewards_Earned',
 } as const
 

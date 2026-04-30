@@ -181,6 +181,9 @@ const goToSwap = () => {
 }
 
 const goToTrade = () => {
+  analytics.trackRewardsEvent(RewardsEvent.CLICK_TRADE, {
+    location: 'main-banner',
+  })
   navigateTo('trade')
 }
 

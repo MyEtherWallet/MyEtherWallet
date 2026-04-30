@@ -1,15 +1,15 @@
 <template>
   <div>
     <div
-      class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative"
+      class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
       @click="onLearnMore"
     >
       <div class="flex-1 min-w-0">
-        <p class="text-s-14 font-semibold text-black leading-tight">
+        <p class="text-s-11 font-semibold text-black leading-tight">
           {{
-            props.location === 'small-banner-swap' ? 'SWAP $50+' : 'TRADE $25+'
+            props.location === 'small-banner-swap' ? 'Swap $50+' : 'Trade $25+'
           }}
-          and
+          on Ethereum and
           <span class="text-primary"> Earn 5 USDC</span>
         </p>
       </div>
