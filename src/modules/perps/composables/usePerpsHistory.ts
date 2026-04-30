@@ -1,6 +1,7 @@
 import { ref, watchEffect, onUnmounted } from 'vue'
-import { perpsClient } from '../configs'
+import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
+import { useCursorPaginate } from './useCursorPaginate'
 import type {
   ApiOrder,
   ApiFill,
@@ -51,34 +52,36 @@ export function usePerpsOrders() {
 
 export function usePerpsFills() {
   const { token, refreshKey } = usePerpsAuth()
-  const fills = ref<ApiFill[]>([])
-  const loading = ref(false)
+  const pagination = useCursorPaginate<ApiFill>(
+    opts => perpsClient.getFills(opts),
+    PERPS_PAGE_SIZE,
+  )
   let pollTimer: ReturnType<typeof setInterval> | null = null
+  let isRefreshing = false
 
-  async function fetchFills() {
-    if (!token.value) {
-      fills.value = []
-      return
-    }
-    loading.value = true
+  async function refreshFirstPageIfActive() {
+    if (isRefreshing) return
+    if (pagination.loading.value) return
+    if (pagination.currentPage.value !== 0) return
+    isRefreshing = true
     try {
-      const res = await perpsClient.getFills({ limit: 100 })
-      fills.value = res.result ?? []
-    } catch {
-      fills.value = []
+      await pagination.refetch()
     } finally {
-      loading.value = false
+      isRefreshing = false
     }
   }
 
   watchEffect(() => {
     void refreshKey.value
     if (pollTimer) clearInterval(pollTimer)
+    // Reset before fetching so any in-flight request from the previous auth
+    // context is invalidated and prior fills don't briefly remain visible
+    // after a wallet switch / logout.
+    pagination.reset()
     if (token.value) {
-      fetchFills()
-      pollTimer = setInterval(fetchFills, 10_000)
+      pagination.refetch()
+      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
     } else {
-      fills.value = []
       pollTimer = null
     }
   })
@@ -87,7 +90,16 @@ export function usePerpsFills() {
     if (pollTimer) clearInterval(pollTimer)
   })
 
-  return { fills, loading, refetch: fetchFills }
+  return {
+    fills: pagination.items,
+    loading: pagination.loading,
+    refetch: pagination.refetch,
+    currentPage: pagination.currentPage,
+    hasNext: pagination.hasNext,
+    hasPrev: pagination.hasPrev,
+    nextPage: pagination.nextPage,
+    prevPage: pagination.prevPage,
+  }
 }
 
 export function usePerpsDepositsWithdrawals() {

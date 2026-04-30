@@ -24,6 +24,8 @@ const USDC_DECIMALS = {
 const BUILDER_CODE = 'myetherwallet'
 const MAINNET_ENABLED = false
 
+const PERPS_PAGE_SIZE = 10
+
 export {
   IS_PERPS_LIVE,
   PERPS_BASE_URL,
@@ -33,4 +35,5 @@ export {
   USDC_DECIMALS,
   MAINNET_ENABLED,
   BUILDER_CODE,
+  PERPS_PAGE_SIZE,
 }
