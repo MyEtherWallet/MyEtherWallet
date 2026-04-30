@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="bg-[#d6edff] rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative"
+      class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative"
       @click="onLearnMore"
     >
       <div class="flex-1 min-w-0">
