@@ -61,6 +61,7 @@ export function usePerpsFills() {
 
   async function refreshFirstPageIfActive() {
     if (isRefreshing) return
+    if (pagination.loading.value) return
     if (pagination.currentPage.value !== 0) return
     isRefreshing = true
     try {
