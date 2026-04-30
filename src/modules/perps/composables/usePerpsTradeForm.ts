@@ -13,6 +13,13 @@ import { getCategory, midPrice } from '../utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
+export type MarketSortValue = 'name' | 'volume' | 'price' | 'priceChange'
+export type SortDirection = 'asc' | 'desc'
+export interface MarketSortOption {
+  value: MarketSortValue
+  label: string
+  numeric: boolean
+}
 interface OrderSideButton {
   label: string
   value: OrderSide
@@ -70,7 +77,13 @@ export function usePerpsTradeForm() {
   const showMarketModal = ref(false)
   const marketSearch = ref('')
   const marketFilter = ref('all')
-  const marketSortAsc = ref(true)
+  const marketSortValue = ref<MarketSortValue>('name')
+  const marketSortDirection = ref<SortDirection>('asc')
+  // Tracks whether the user has explicitly chosen a sort. While false, the
+  // currently-selected market is pinned to the top of filteredMarketList so
+  // the user lands on it when reopening the dialog. The first explicit sort
+  // pick releases the pin.
+  const marketSortIsUserSet = ref(false)
   const manageMode = ref<'add' | 'close'>('add')
   const closeAmount = ref('')
   const closeSliderValue = ref(0)
@@ -512,6 +525,28 @@ export function usePerpsTradeForm() {
     { key: 'ETFs', label: 'ETFs' },
   ]
 
+  const marketSortOptions: MarketSortOption[] = [
+    { value: 'name', label: 'Name', numeric: false },
+    { value: 'volume', label: 'Volume', numeric: true },
+    { value: 'price', label: 'Price', numeric: true },
+    { value: 'priceChange', label: 'Price change', numeric: true },
+  ]
+
+  // Re-clicking the active sort flips its direction; a different sort jumps
+  // to the option's natural default (numeric → DESC, string → ASC). Mirrors
+  // the AppSwapSelectedToken sort popup so behavior is consistent app-wide.
+  function setMarketSort(value: MarketSortValue) {
+    marketSortIsUserSet.value = true
+    if (marketSortValue.value === value) {
+      marketSortDirection.value =
+        marketSortDirection.value === 'asc' ? 'desc' : 'asc'
+      return
+    }
+    const option = marketSortOptions.find(o => o.value === value)
+    marketSortValue.value = value
+    marketSortDirection.value = option?.numeric ? 'desc' : 'asc'
+  }
+
   const filteredMarketList = computed(() => {
     let list = [...contracts.value]
     if (marketFilter.value !== 'all') {
@@ -525,10 +560,37 @@ export function usePerpsTradeForm() {
           c.market.toLowerCase().includes(q),
       )
     }
+    const dir = marketSortDirection.value === 'asc' ? 1 : -1
+    const toSafeNumber = (value?: string | number) => {
+      const n = typeof value === 'number' ? value : Number(value)
+      return Number.isFinite(n) ? n : 0
+    }
     list.sort((a, b) => {
-      const cmp = a.baseCurrency.localeCompare(b.baseCurrency)
-      return marketSortAsc.value ? cmp : -cmp
+      switch (marketSortValue.value) {
+        case 'volume':
+          return (toSafeNumber(a.usdVolume) - toSafeNumber(b.usdVolume)) * dir
+        case 'price':
+          return (toSafeNumber(midPrice(a)) - toSafeNumber(midPrice(b))) * dir
+        case 'priceChange':
+          return (
+            (toSafeNumber(a.priceChangePercent) -
+              toSafeNumber(b.priceChangePercent)) *
+            dir
+          )
+        case 'name':
+        default:
+          return a.baseCurrency.localeCompare(b.baseCurrency) * dir
+      }
     })
+    // Pin the active market on top until the user explicitly picks a sort,
+    // so the dialog opens on the row they just left.
+    if (!marketSortIsUserSet.value && fullMarketName.value) {
+      const idx = list.findIndex(c => c.market === fullMarketName.value)
+      if (idx > 0) {
+        const [selected] = list.splice(idx, 1)
+        list.unshift(selected)
+      }
+    }
     return list
   })
 
@@ -540,6 +602,9 @@ export function usePerpsTradeForm() {
   function openTokenSelect() {
     marketSearch.value = ''
     marketFilter.value = 'all'
+    marketSortValue.value = 'volume'
+    marketSortDirection.value = 'desc'
+    marketSortIsUserSet.value = false
     showMarketModal.value = true
   }
 
@@ -1013,9 +1078,13 @@ export function usePerpsTradeForm() {
     showMarketModal,
     marketSearch,
     marketFilter,
-    marketSortAsc,
+    marketSortValue,
+    marketSortDirection,
+    marketSortOptions,
+    setMarketSort,
     marketFilterTabs,
     filteredMarketList,
+    fullMarketName,
     getMarketDisplayName,
     openTokenSelect,
     selectMarket,
