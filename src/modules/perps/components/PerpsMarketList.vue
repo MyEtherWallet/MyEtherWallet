@@ -620,7 +620,8 @@ const filteredContracts = computed(() => {
       c =>
         c.baseCurrency.toLowerCase().includes(q) ||
         c.market.toLowerCase().includes(q) ||
-        c.displayName.toLowerCase().includes(q),
+        c.displayName.toLowerCase().includes(q) ||
+        c.longName.toLowerCase().includes(q),
     )
   }
 
