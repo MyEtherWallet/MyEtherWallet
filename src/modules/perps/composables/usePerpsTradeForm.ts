@@ -596,7 +596,7 @@ export function usePerpsTradeForm() {
 
   function getMarketDisplayName(contract: any): string {
     const match = markets.value.find(m => m.market === contract.market)
-    return match?.displayName ?? contract.baseCurrency
+    return match?.longName ?? match?.displayName ?? contract.baseCurrency
   }
 
   function openTokenSelect() {

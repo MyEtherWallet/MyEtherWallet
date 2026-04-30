@@ -258,18 +258,18 @@
                     class="rounded-full"
                   />
                   <div class="min-w-0">
-                    <div class="flex items-center gap-2 relative">
-                      <span class="font-bold truncate">{{
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="absolute -right-5 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
                     </div>
                     <span class="text-info text-s-12 truncate block">{{
-                      contract.displayName
+                      contract.longName
                     }}</span>
                   </div>
                 </div>
@@ -598,6 +598,7 @@ const selectedFilter = ref<FilterOption>(filterOptions[0])
 
 interface EnrichedContract extends Contract {
   displayName: string
+  longName: string
   defaultLeverage: string
 }
 
@@ -606,11 +607,15 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
   for (const m of markets.value) {
     marketMap.set(m.market, m)
   }
-  return contracts.value.map(c => ({
-    ...c,
-    displayName: marketMap.get(c.market)?.displayName ?? c.baseCurrency,
-    defaultLeverage: marketMap.get(c.market)?.defaultLeverage ?? '',
-  }))
+  return contracts.value.map(c => {
+    const pair = marketMap.get(c.market)
+    return {
+      ...c,
+      displayName: pair?.displayName ?? c.baseCurrency,
+      longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
+      defaultLeverage: pair?.defaultLeverage ?? '',
+    }
+  })
 })
 
 const filteredContracts = computed(() => {
@@ -632,7 +637,8 @@ const filteredContracts = computed(() => {
       c =>
         c.baseCurrency.toLowerCase().includes(q) ||
         c.market.toLowerCase().includes(q) ||
-        c.displayName.toLowerCase().includes(q),
+        c.displayName.toLowerCase().includes(q) ||
+        c.longName.toLowerCase().includes(q),
     )
   }
 
