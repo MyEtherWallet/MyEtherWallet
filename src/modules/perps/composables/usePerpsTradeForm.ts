@@ -509,19 +509,20 @@ export function usePerpsTradeForm() {
       )
     }
     const dir = marketSortDirection.value === 'asc' ? 1 : -1
+    const toSafeNumber = (value?: string | number) => {
+      const n = typeof value === 'number' ? value : Number(value)
+      return Number.isFinite(n) ? n : 0
+    }
     list.sort((a, b) => {
       switch (marketSortValue.value) {
         case 'volume':
-          return (
-            (parseFloat(a.usdVolume ?? '0') - parseFloat(b.usdVolume ?? '0')) *
-            dir
-          )
+          return (toSafeNumber(a.usdVolume) - toSafeNumber(b.usdVolume)) * dir
         case 'price':
-          return (midPrice(a) - midPrice(b)) * dir
+          return (toSafeNumber(midPrice(a)) - toSafeNumber(midPrice(b))) * dir
         case 'priceChange':
           return (
-            (parseFloat(a.priceChangePercent ?? '0') -
-              parseFloat(b.priceChangePercent ?? '0')) *
+            (toSafeNumber(a.priceChangePercent) -
+              toSafeNumber(b.priceChangePercent)) *
             dir
           )
         case 'name':

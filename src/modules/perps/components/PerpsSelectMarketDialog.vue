@@ -90,6 +90,8 @@
                 ? '!bg-mewBg'
                 : 'bg-transparent hoverBGWhite'
             "
+            :aria-pressed="contract.market === selectedMarketName"
+            :aria-label="`${getMarketDisplayName(contract)}${contract.market === selectedMarketName ? ' (selected)' : ''}`"
             @click="$emit('select', contract)"
           >
             <div class="flex justify-between items-center w-full">
