@@ -529,7 +529,11 @@ const marketSkeletonColumns: SkeletonColumn[] = [
   { header: '24H', align: 'right', hidden: 'hidden xs:table-cell' },
   { header: 'Volume', align: 'right', hidden: 'hidden 2xl:table-cell' },
   { header: 'Market Cap', align: 'right', hidden: 'hidden md:table-cell' },
-  { header: '', align: 'right', hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-[240px]' },
+  {
+    header: '',
+    align: 'right',
+    hidden: 'hidden lg:table-cell lg:w-[200px] 2xl:w-[240px]',
+  },
 ]
 
 const searchQuery = ref('')

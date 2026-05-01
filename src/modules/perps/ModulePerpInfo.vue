@@ -99,45 +99,69 @@
       </div>
       <div
         v-if="isWalletConnected && marketPosition"
-        class="flex flex-col items-start gap-3 pt-6 bg-appBackground rounded-20 mx-2 px-2 lg:mx-6 lg:px-6 py-6 mb-6 mt-2"
+        class="flex flex-col items-start gap-3 pt-6 bg-appBackground rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6 mt-2"
       >
-        <h2 class="basis-full sm:basis-auto font-bold text-s-20 leading-p-150">
-          Open Position
-        </h2>
-
         <div
-          class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-6 w-full mt-2 px-2"
+          class="flex flex-wrap items-center justify-between xs:justify-start px-2 gap-x-3 gap-y-1 w-full"
         >
-          <div class="flex items-center gap-4">
-            <app-token-logo
-              :url="getLogoUrl(baseCurrency)"
-              :symbol="baseCurrency"
-              width="w-9"
-              height="h-9"
-            />
-            <div>
-              <p class="text-s-17 font-bold">
-                {{ baseCurrency.toUpperCase() }}
-              </p>
-              <p
-                :class="[
-                  marketPosition.direction === 'long'
-                    ? 'text-success'
-                    : 'text-error',
-                  'font-medium capitalize',
-                ]"
-              >
-                {{ marketPosition.direction }}
-                {{ marketPosition.leverage }}x
-              </p>
-            </div>
+          <h2 class="font-bold text-s-17 sm:text-s-20 leading-p-150 order-1">
+            Open Position:
+          </h2>
+          <div
+            class="order-3 xs:order-2 basis-full xs:basis-auto -ml-1 xs:ml-0"
+          >
+            <span
+              :class="[
+                marketPosition.direction === 'long'
+                  ? 'text-success'
+                  : 'text-error',
+                ' capitalize bg-surface px-3 rounded-full sm:ml-2 text-s-17 sm:text-s-20 font-bold ',
+              ]"
+            >
+              {{ marketPosition.direction }}
+              {{ marketPosition.leverage }}x
+            </span>
           </div>
 
+          <app-select
+            v-if="showManagePosition"
+            v-model:selected="selectedManageAction"
+            :options="manageOptions"
+            position="right-0"
+            placeholder="Manage"
+            class="ml-auto order-1 xs:order-3"
+          >
+            <template #select-button="{ toggleSelect }">
+              <button
+                class="hidden xs:block rounded-full bg-white py-2 px-4 shadow-button text-s-14 font-medium"
+                @click="toggleSelect"
+              >
+                <div class="flex items-center">
+                  <span>Manage</span>
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
+              <app-btn-icon
+                class="block xs:hidden ml-auto bg-white shadow-button shadow-button-elevated"
+                label="Manage Position"
+                height="h-7 xs:h-8"
+                width="w-7 xs:w-8"
+                @click="toggleSelect"
+              >
+                <ellipsis-vertical-icon class="w-5 h-5" />
+              </app-btn-icon>
+            </template>
+          </app-select>
+        </div>
+
+        <div
+          class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6 w-full mt-2 px-2"
+        >
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
-              Size
+              Value
             </p>
             <p class="text-s-14 font-bold">
               {{ formatUsd(marketPosition.notionalValue) }}
@@ -145,7 +169,7 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               uPnL
             </p>
@@ -158,7 +182,7 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Liquidation
             </p>
@@ -168,12 +192,12 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Quantity
             </p>
             <p class="text-s-14 font-bold">
-              {{ marketPosition.netQuantity }}
+              {{ marketPosition.netQuantity }} {{ baseCurrency.toUpperCase() }}
             </p>
           </div>
         </div>
@@ -182,24 +206,49 @@
         v-if="isWalletConnected && marketPosition"
         class="flex flex-col items-start gap-3 bg-appBackground rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
       >
-        <app-btn-group
+        <div class="hidden lg:flex lg:items-center">
+          <app-btn-group
+            v-model:selected="activeInfoTabObj"
+            :btn-list="infoTabs"
+            size="medium"
+            class="ml-2"
+          >
+            <template #btn-content="{ data }">
+              {{ data.label }}
+            </template>
+          </app-btn-group>
+        </div>
+        <app-select
           v-model:selected="activeInfoTabObj"
-          :btn-list="infoTabs"
-          size="medium"
-          class="ml-2"
+          :options="infoTabs"
+          position="left-0"
+          placeholder="Tab"
+          class="lg:hidden sm:mx-2 w-full sm:w-auto"
         >
-          <template #btn-content="{ data }">
-            {{ data.label }}
+          <template #select-button="{ toggleSelect }">
+            <div class="bg-surface rounded-full p-1">
+              <button
+                class="rounded-full bg-white py-3 w-full sm:w-auto min-w-[180px] px-5 shadow-button"
+                @click="toggleSelect"
+              >
+                <div class="flex items-center justify-between">
+                  <span class="text-s-16 font-medium">{{
+                    activeInfoTabObj.label
+                  }}</span>
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </div>
+              </button>
+            </div>
           </template>
-        </app-btn-group>
+        </app-select>
 
         <div
           v-if="activeInfoTab === 'more'"
-          class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-6 w-full mt-3 px-2"
+          class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6 w-full mt-3 px-2 sm:px-4"
         >
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               ROE
             </p>
@@ -214,7 +263,7 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Entry Price
             </p>
@@ -224,7 +273,7 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Mark Price
             </p>
@@ -235,7 +284,7 @@
 
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Used Margin
             </p>
@@ -246,7 +295,7 @@
 
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Bankruptcy
             </p>
@@ -256,7 +305,7 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Maint. Margin
             </p>
@@ -266,7 +315,7 @@
           </div>
           <div>
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Funding
             </p>
@@ -277,7 +326,7 @@
 
           <div v-if="marketPosition.takeProfitTriggerPrice">
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Take Profit
             </p>
@@ -287,7 +336,7 @@
           </div>
           <div v-if="marketPosition.stopLossTriggerPrice">
             <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
             >
               Stop Loss
             </p>
@@ -568,10 +617,10 @@
     <!-- Positions for this market -->
     <!-- Market Stats -->
     <div class="px-4 lg:px-10 py-6">
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+      <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Price
           </p>
@@ -581,7 +630,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Mark Price
           </p>
@@ -591,7 +640,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             24hr Trade Vol
           </p>
@@ -601,7 +650,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Open Interest
           </p>
@@ -611,7 +660,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Funding Countdown
           </p>
@@ -639,10 +688,10 @@
     <!-- Instrument Info -->
     <div class="px-4 lg:px-10 py-6">
       <h3 class="text-s-20 font-bold mb-3">Instrument Information</h3>
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+      <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Asset Name
           </p>
@@ -650,7 +699,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Ticker
           </p>
@@ -658,7 +707,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             Category
           </p>
@@ -666,7 +715,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             24H High
           </p>
@@ -676,7 +725,7 @@
         </div>
         <div>
           <p
-            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
           >
             24H Low
           </p>
@@ -708,6 +757,7 @@ import { ref, computed, watch, onUnmounted } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppSelect from '@/components/AppSelect.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
@@ -717,6 +767,7 @@ import ChartPrice from '@/components/ChartPrice.vue'
 import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
+  ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
 import { perpsClient } from './configs'
 import {
@@ -727,6 +778,7 @@ import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { useWalletStore } from '@/stores/walletStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import {
@@ -951,9 +1003,9 @@ onUnmounted(() => {
 // Tabs
 const activeInfoTab = ref('positions')
 const infoTabs = [
-  { key: 'orders', label: 'Orders' },
-  { key: 'fills', label: 'Fills' },
-  { key: 'more', label: 'More' },
+  { key: 'orders', value: 'orders', label: 'Orders' },
+  { key: 'fills', value: 'fills', label: 'Fills' },
+  { key: 'more', value: 'more', label: 'More' },
 ]
 const activeInfoTabObj = computed({
   get: () => infoTabs.find(t => t.key === activeInfoTab.value) ?? infoTabs[0],
@@ -962,6 +1014,29 @@ const activeInfoTabObj = computed({
   },
 })
 
+// Close / Add Buttons
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
+
+const showManagePosition = computed(() => {
+  if (!marketPosition.value) return false
+  if (isOpenSideMenu.value && walletPanel.value === 'perps') return false
+  return true
+})
+
+const manageOptions = [
+  { value: 'add', label: 'Add to Position' },
+  { value: 'leverage', label: 'Change Leverage' },
+  { value: 'close', label: 'Close' },
+]
+const selectedManageAction = ref<{ value: string; label: string } | undefined>(
+  undefined,
+)
+watch(selectedManageAction, action => {
+  if (!action) return
+  // TODO: handle action.value ('add' | 'leverage' | 'close')
+  selectedManageAction.value = undefined
+})
 // const closingMarket = ref<string | null>(null)
 
 // async function handleClose(pos: Position) {
