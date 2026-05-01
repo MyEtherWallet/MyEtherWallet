@@ -97,9 +97,74 @@
           </div>
         </div>
       </div>
+      <!-- Market Stats -->
+      <div class="px-4 lg:px-10 pt-6">
+        <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
+          <div>
+            <p
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            >
+              Price
+            </p>
+            <p class="text-s-14 font-bold">
+              {{ formatPrice(currentPrice) }}
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            >
+              Mark Price
+            </p>
+            <p class="text-s-14 font-bold">
+              {{ formatPrice(markPrice) }}
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            >
+              24hr Trade Vol
+            </p>
+            <p class="text-s-14 font-bold">
+              {{ formatVolume(contractData?.usdVolume) }}
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            >
+              Open Interest
+            </p>
+            <p class="text-s-14 font-bold">
+              {{ formatVolume(contractData?.openInterestUsd) }}
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+            >
+              Funding Countdown
+            </p>
+            <p class="text-s-14 font-bold">
+              {{
+                contractData?.fundingRate
+                  ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
+                  : '—'
+              }}
+              <span v-if="fundingCountdown" class="text-info text-s-12">
+                in {{ fundingCountdown }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Position -->
+    <div v-if="isWalletConnected && marketPosition" class="py-6">
+      <!-- Position Info -->
       <div
-        v-if="isWalletConnected && marketPosition"
-        class="flex flex-col items-start gap-3 pt-6 bg-appBackground rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6 mt-2"
+        class="flex flex-col items-start gap-3 pt-6 bg-appBackground rounded-20 mx-2 px-2 sm:px-4 lg:mx-6 lg:px-6 py-6 mb-6"
       >
         <div
           class="flex flex-wrap items-center justify-between xs:justify-start px-2 gap-x-3 gap-y-1 w-full"
@@ -202,8 +267,8 @@
           </div>
         </div>
       </div>
+      <!-- Market Position Info Tabs -->
       <div
-        v-if="isWalletConnected && marketPosition"
         class="flex flex-col items-start gap-3 bg-appBackground rounded-20 mx-2 px-2 lg:mx-6 py-6 mt-6"
       >
         <div class="hidden lg:flex lg:items-center">
@@ -614,69 +679,6 @@
         </div>
       </div>
     </div>
-    <!-- Positions for this market -->
-    <!-- Market Stats -->
-    <div class="px-4 lg:px-10 py-6">
-      <div class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6">
-        <div>
-          <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-          >
-            Price
-          </p>
-          <p class="text-s-14 font-bold">
-            {{ formatPrice(currentPrice) }}
-          </p>
-        </div>
-        <div>
-          <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-          >
-            Mark Price
-          </p>
-          <p class="text-s-14 font-bold">
-            {{ formatPrice(markPrice) }}
-          </p>
-        </div>
-        <div>
-          <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-          >
-            24hr Trade Vol
-          </p>
-          <p class="text-s-14 font-bold">
-            {{ formatVolume(contractData?.usdVolume) }}
-          </p>
-        </div>
-        <div>
-          <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-          >
-            Open Interest
-          </p>
-          <p class="text-s-14 font-bold">
-            {{ formatVolume(contractData?.openInterestUsd) }}
-          </p>
-        </div>
-        <div>
-          <p
-            class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-          >
-            Funding Countdown
-          </p>
-          <p class="text-s-14 font-bold">
-            {{
-              contractData?.fundingRate
-                ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
-                : '—'
-            }}
-            <span v-if="fundingCountdown" class="text-info text-s-12">
-              in {{ fundingCountdown }}
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
     <!-- About -->
     <div class="px-4 lg:px-10 py-6">
       <h3 class="text-s-20 font-bold mb-3">About {{ baseCurrency }}</h3>
@@ -1037,16 +1039,6 @@ watch(selectedManageAction, action => {
   // TODO: handle action.value ('add' | 'leverage' | 'close')
   selectedManageAction.value = undefined
 })
-// const closingMarket = ref<string | null>(null)
-
-// async function handleClose(pos: Position) {
-//   closingMarket.value = marketPosition.value?.market ?? null
-//   try {
-//     await closePosition(pos)
-//   } finally {
-//     closingMarket.value = null
-//   }
-// }
 
 // Chart
 const chartIntervals = [
