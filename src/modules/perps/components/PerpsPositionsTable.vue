@@ -345,7 +345,7 @@
               <td class="px-1 py-3 hidden lg:table-cell">
                 <p
                   :class="[
-                    'text-s-11 uppercase font-semibold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                    'text-s-11 uppercase font-bold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
                     order.status === 'open' || order.status === 'pending'
                       ? 'text-primary'
                       : order.status === 'fullyfilled'
@@ -503,7 +503,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-success'
                             : 'text-error',
-                          'text-s-11 uppercase font-semibold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
+                          'text-s-11 uppercase font-bold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
                         ]"
                       >
                         {{ formatDirection(fill.direction) }}
@@ -518,7 +518,7 @@
                       fill.direction?.toLowerCase().includes('long')
                         ? 'text-success'
                         : 'text-error',
-                      'text-s-11 uppercase font-semibold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
+                      'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
                     ]"
                   >
                     {{ formatDirection(fill.direction) }}
@@ -739,6 +739,7 @@ import {
   getOrderPrice,
   formatOrderStatus,
   formatOrderType,
+  formatDirection,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
@@ -817,9 +818,6 @@ function openOrderDialog(order: ApiOrder) {
   showOrderDialog.value = true
 }
 
-function formatDirection(direction: string | undefined) {
-  return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
-}
 const {
   orders,
   loading: ordersLoading,

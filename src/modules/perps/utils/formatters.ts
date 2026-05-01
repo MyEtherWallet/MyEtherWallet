@@ -170,3 +170,6 @@ export const orderTypeLabels: Record<string, string> = {
 export const formatOrderType = (type: string): string => {
   return orderTypeLabels[type] ?? type
 }
+export const formatDirection = (direction: string | undefined) => {
+  return direction?.replace(/([A-Z])/g, ' $1').trim() ?? ''
+}

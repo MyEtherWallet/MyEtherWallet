@@ -61,7 +61,7 @@
     </div>
 
     <!-- Chart -->
-    <div class="">
+    <div class="pb-6">
       <div class="flex items-center gap-1 mb-4 px-4 lg:px-10 py-6">
         <button
           v-for="interval in chartIntervals"
@@ -307,7 +307,7 @@
           <table v-else class="w-full text-s-14 table-fixed">
             <thead>
               <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
               >
                 <th class="px-1 sm:pl-4 py-3 text-left font-bold">Side</th>
                 <th class="px-1 py-3 text-left font-bold hidden 2xl:table-cell">
@@ -334,8 +334,10 @@
                 @click="openOrderDialog(order)"
               >
                 <!-- Side -->
-
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12">
+                  <p class="text-info text-s-12 mb-[2px]">
+                    {{ formatDate(order.createdAt) }}
+                  </p>
                   <p
                     :class="[
                       order.side === 'buy' ? 'text-success' : 'text-error',
@@ -344,15 +346,12 @@
                   >
                     {{ order.side }}
                   </p>
-                  <p class="text-info text-s-12">
-                    {{ formatDate(order.createdAt) }}
-                  </p>
                 </td>
                 <!-- Status -->
                 <td class="px-1 py-3 hidden 2xl:table-cell">
                   <p
                     :class="[
-                      'text-s-11 uppercase  font-semibold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                      'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
                       order.status === 'open' || order.status === 'pending'
                         ? 'text-primary '
                         : order.status === 'fullyfilled'
@@ -374,7 +373,7 @@
 
                   <p
                     :class="[
-                      'text-s-11 uppercase  font-semibold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
+                      'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
                       order.status === 'open' || order.status === 'pending'
                         ? 'text-primary '
                         : order.status === 'fullyfilled'
@@ -476,51 +475,88 @@
           >
             No fills for {{ baseCurrency }}
           </div>
-          <div v-else class="w-full text-s-14 table-fixed">
-            <table class="w-full text-s-14">
+          <div v-else class="w-full">
+            <table class="w-full text-s-14 table-fixed">
               <thead>
                 <tr
-                  class="border-b border-grey-10 text-info uppercase text-s-11 tracking-wider"
+                  class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
                 >
-                  <th class="py-2 text-left font-medium">Side</th>
-                  <th class="py-2 text-right font-medium">Price</th>
-                  <th class="py-2 text-right font-medium">Size</th>
-                  <th class="py-2 text-right font-medium">Fee</th>
-                  <th class="py-2 text-right font-medium">PnL</th>
+                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">
+                    Direction
+                  </th>
+                  <th class="px-1 py-3 text-right font-bold">Price</th>
+                  <th
+                    class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                  >
+                    Size
+                  </th>
+                  <th
+                    class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                  >
+                    Fee
+                  </th>
+                  <th
+                    class="px-1 py-3 text-right font-bold hidden lg:table-cell"
+                  >
+                    PnL
+                  </th>
+                  <th class="w-9 xs:w-12"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="fill in marketFills"
                   :key="fill.id"
-                  class="border-b border-grey-10 last:border-0"
+                  class="cursor-pointer hoverBGWhite"
+                  @click="openFillDialog(fill)"
                 >
-                  <td class="py-3">
-                    <span
+                  <td class="px-1 sm:pl-4 py-3 rounded-l-12">
+                    <p class="text-s-12 text-info mb-1">
+                      {{ formatDate(fill.time) }}
+                    </p>
+                    <p
                       :class="[
-                        fill.side === 'buy' ? 'text-success' : 'text-error',
-                        'font-bold capitalize',
+                        fill.direction?.toLowerCase().includes('long')
+                          ? 'text-success'
+                          : 'text-error',
+                        'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
                       ]"
                     >
-                      {{ fill.side }}
-                    </span>
+                      {{ formatDirection(fill.direction) }}
+                    </p>
                   </td>
-                  <td class="py-3 text-right font-bold">
-                    {{ formatPrice(fill.price) }}
+                  <td class="px-1 py-3 text-right font-normal text-s-14">
+                    <p>{{ formatPrice(fill.price) }}</p>
                   </td>
-                  <td class="py-3 text-right font-bold">{{ fill.size }}</td>
-                  <td class="py-3 text-right font-bold">
+                  <td
+                    class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
+                  >
+                    {{ fill.size }} {{ baseCurrency }}
+                  </td>
+                  <td
+                    class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
+                  >
                     {{ formatUsd(fill.fee) }}
                   </td>
-                  <td class="py-3 text-right">
-                    <span
-                      v-if="fill.pnl"
-                      :class="pnlColor(fill.pnl)"
-                      class="font-bold"
-                    >
+                  <td
+                    class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
+                  >
+                    <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
                       {{ formatPnl(fill.pnl) }}
                     </span>
                     <span v-else class="text-info">—</span>
+                  </td>
+                  <!-- Actions -->
+                  <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
+                    <app-btn-icon
+                      label="view fill details"
+                      height="h-7 xs:h-8"
+                      width="w-7 xs:w-8"
+                      class="ml-auto"
+                      @click="openFillDialog(fill)"
+                    >
+                      <chevron-right-icon class="w-5 h-5" />
+                    </app-btn-icon>
                   </td>
                 </tr>
               </tbody>
@@ -528,72 +564,70 @@
           </div>
         </div>
       </div>
-
-      <!-- Market Stats -->
-      <div class="px-4 lg:px-10 py-6">
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-          <div>
-            <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
-            >
-              Price
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(currentPrice) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
-            >
-              Mark Price
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(markPrice) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
-            >
-              24hr Trade Vol
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatVolume(contractData?.usdVolume) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
-            >
-              Open Interest
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatVolume(contractData?.openInterestUsd) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
-            >
-              Funding Countdown
-            </p>
-            <p class="text-s-14 font-bold">
-              {{
-                contractData?.fundingRate
-                  ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
-                  : '—'
-              }}
-              <span v-if="fundingCountdown" class="text-info text-s-12">
-                in {{ fundingCountdown }}
-              </span>
-            </p>
-          </div>
+    </div>
+    <!-- Positions for this market -->
+    <!-- Market Stats -->
+    <div class="px-4 lg:px-10 py-6">
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div>
+          <p
+            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+          >
+            Price
+          </p>
+          <p class="text-s-14 font-bold">
+            {{ formatPrice(currentPrice) }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+          >
+            Mark Price
+          </p>
+          <p class="text-s-14 font-bold">
+            {{ formatPrice(markPrice) }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+          >
+            24hr Trade Vol
+          </p>
+          <p class="text-s-14 font-bold">
+            {{ formatVolume(contractData?.usdVolume) }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+          >
+            Open Interest
+          </p>
+          <p class="text-s-14 font-bold">
+            {{ formatVolume(contractData?.openInterestUsd) }}
+          </p>
+        </div>
+        <div>
+          <p
+            class="text-info uppercase text-s-11 tracking-wider font-medium mb-1"
+          >
+            Funding Countdown
+          </p>
+          <p class="text-s-14 font-bold">
+            {{
+              contractData?.fundingRate
+                ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
+                : '—'
+            }}
+            <span v-if="fundingCountdown" class="text-info text-s-12">
+              in {{ fundingCountdown }}
+            </span>
+          </p>
         </div>
       </div>
     </div>
-    <!-- Positions for this market -->
-
     <!-- About -->
     <div class="px-4 lg:px-10 py-6">
       <h3 class="text-s-20 font-bold mb-3">About {{ baseCurrency }}</h3>
@@ -661,6 +695,12 @@
     @close="showOrderDialog = false"
     @cancel="cancelInfoOrder"
   />
+  <perps-fill-details-dialog
+    v-if="selectedFill"
+    :visible="showFillDialog"
+    :fill="selectedFill"
+    @close="showFillDialog = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -669,6 +709,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
+import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
@@ -699,6 +740,7 @@ import {
   formatDate,
   formatOrderStatus,
   formatOrderType,
+  formatDirection,
 } from './utils/formatters'
 import {
   getLogoUrl,
@@ -786,6 +828,14 @@ const marketOrders = ref<ApiOrder[]>([])
 const marketFills = ref<ApiFill[]>([])
 
 const cancellingOrderId = ref<string | null>(null)
+
+const showFillDialog = ref(false)
+const selectedFill = ref<ApiFill | null>(null)
+
+const openFillDialog = (fill: ApiFill) => {
+  selectedFill.value = fill
+  showFillDialog.value = true
+}
 
 const showOrderDialog = ref(false)
 const selectedOrder = ref<ApiOrder | null>(null)
