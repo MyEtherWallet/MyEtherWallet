@@ -52,6 +52,7 @@
         <hr class="my-6 border-t border-grey-10" />
 
         <rewards-rows
+          v-if="!isBanned"
           :swap-claimed="swapClaimed"
           :swap-no-rewards="swapNoRewards"
           :swap-remaining-pct="swapRemainingPct"
@@ -87,6 +88,7 @@ import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
@@ -120,6 +122,9 @@ const { setWalletPanel } = walletMenu
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
+
+const rewardsStore = useRewardsStore()
+const { isBanned } = storeToRefs(rewardsStore)
 
 watch(isOpenModel, val => {
   if (val) {
