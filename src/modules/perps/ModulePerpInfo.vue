@@ -412,8 +412,13 @@
         </div>
         <!--Orders tab -->
         <div v-else-if="activeInfoTab === 'orders'" class="w-full">
+          <app-table-skeleton
+            v-if="ordersLoading && marketOrders.length === 0"
+            :rows="3"
+            :columns="ordersSkeletonColumns"
+          />
           <div
-            v-if="marketOrders.length === 0"
+            v-else-if="marketOrders.length === 0"
             class="text-center py-8 text-info text-s-14"
           >
             No orders for {{ baseCurrency }}
@@ -583,8 +588,13 @@
         </div>
         <!--Fills tab -->
         <div v-else-if="activeInfoTab === 'fills'" class="w-full">
+          <app-table-skeleton
+            v-if="fillsLoading && marketFills.length === 0"
+            :rows="3"
+            :columns="fillsSkeletonColumns"
+          />
           <div
-            v-if="marketFills.length === 0"
+            v-else-if="marketFills.length === 0"
             class="text-center py-6 text-info text-s-14"
           >
             No fills for {{ baseCurrency }}
@@ -760,6 +770,9 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
+import AppTableSkeleton, {
+  type SkeletonColumn,
+} from '@/components/AppTableSkeleton.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
@@ -889,6 +902,8 @@ const markPrice = computed(() => {
 // Orders and fills for this market
 const marketOrders = ref<ApiOrder[]>([])
 const marketFills = ref<ApiFill[]>([])
+const ordersLoading = ref(false)
+const fillsLoading = ref(false)
 
 const cancellingOrderId = ref<string | null>(null)
 
@@ -918,11 +933,14 @@ const showCancelButton = (order: ApiOrder) => {
 
 const fetchMarketOrders = async () => {
   if (!token.value) return
+  ordersLoading.value = true
   try {
     const res = await perpsClient.getOrders({ market: props.market })
     marketOrders.value = res.result ?? []
   } catch {
     marketOrders.value = []
+  } finally {
+    ordersLoading.value = false
   }
 }
 
@@ -940,13 +958,34 @@ const cancelInfoOrder = async (orderId: string) => {
 
 const fetchMarketFills = async () => {
   if (!token.value) return
+  fillsLoading.value = true
   try {
     const res = await perpsClient.getFills({ market: props.market })
     marketFills.value = res.result ?? []
   } catch {
     marketFills.value = []
+  } finally {
+    fillsLoading.value = false
   }
 }
+
+const ordersSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Side' },
+  { header: 'Status', hidden: 'hidden 2xl:table-cell' },
+  { header: 'Type', hidden: 'hidden xl:table-cell' },
+  { header: 'Price', align: 'right' },
+  { header: 'Filled / Size', align: 'right', hidden: 'hidden lg:table-cell' },
+  { header: '', width: '40px' },
+]
+
+const fillsSkeletonColumns: SkeletonColumn[] = [
+  { header: 'Direction' },
+  { header: 'Price', align: 'right' },
+  { header: 'Size', align: 'right', hidden: 'hidden xl:table-cell' },
+  { header: 'Fee', align: 'right', hidden: 'hidden xl:table-cell' },
+  { header: 'PnL', align: 'right', hidden: 'hidden lg:table-cell' },
+  { header: '', width: '36px' },
+]
 
 watch(
   () => token.value,
@@ -1012,7 +1051,7 @@ onUnmounted(() => {
 })
 
 // Tabs
-const activeInfoTab = ref('positions')
+const activeInfoTab = ref('orders')
 const infoTabs = [
   { key: 'orders', value: 'orders', label: 'Orders' },
   { key: 'fills', value: 'fills', label: 'Fills' },
