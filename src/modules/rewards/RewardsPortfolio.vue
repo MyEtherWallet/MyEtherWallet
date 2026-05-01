@@ -56,7 +56,8 @@
         :time-until-next-eligible="timeUntilNextEligible"
         @swap="goToSwap"
         @trade="goToTrade"
-        class="max-w-[360px] mt-3 2xl:max-w-none"
+        class="max-w-[360px] 2xl:max-w-none"
+        :class="isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : ''"
         is-rewards-view
       />
       <img
