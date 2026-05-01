@@ -73,7 +73,7 @@
 
       <!-- Markets table -->
       <div v-else>
-        <table class="w-full text-sm table-fixed">
+        <table ref="marketsTable" class="w-full text-sm table-fixed">
           <thead class="bg-white">
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -226,7 +226,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="contract in filteredContracts"
+              v-for="contract in paginatedContracts"
               :key="contract.market"
               class="h-14 hoverBGWhite cursor-pointer"
               @click="$emit('openPosition', contract.market)"
@@ -258,18 +258,18 @@
                     class="rounded-full"
                   />
                   <div class="min-w-0">
-                    <div class="flex items-center gap-2 relative">
-                      <span class="font-bold truncate">{{
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold whitespace-nowrap">{{
                         contract.baseCurrency
                       }}</span>
                       <span
-                        class="absolute -right-5 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                        class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
                       >
                         {{ contract.defaultLeverage }}x
                       </span>
                     </div>
                     <span class="text-info text-s-12 truncate block">{{
-                      contract.displayName
+                      contract.longName
                     }}</span>
                   </div>
                 </div>
@@ -450,6 +450,18 @@
           </tbody>
         </table>
         <div
+          v-if="filteredContracts.length > 0 && totalPages > 1"
+          class="flex justify-end mt-4 px-2"
+        >
+          <perps-pagination
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            :scroll-target="marketsTable"
+            @prev="prevPage"
+            @next="nextPage"
+          />
+        </div>
+        <div
           v-if="filteredContracts.length === 0"
           class="w-full flex flex-col items-center justify-center mx-auto text-info py-10 text-s-14"
         >
@@ -505,10 +517,15 @@ import type { Contract, TradingPair } from '../sdk/types'
 import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
+import { usePaginate } from '@/composables/usePaginate'
+import { PERPS_PAGE_SIZE } from '../configs'
+import PerpsPagination from './PerpsPagination.vue'
 
 defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
 }>()
+
+const marketsTable = ref<HTMLElement | null>(null)
 
 const { markets } = usePerpsMarkets()
 const {
@@ -585,6 +602,7 @@ const selectedFilter = ref<FilterOption>(filterOptions[0])
 
 interface EnrichedContract extends Contract {
   displayName: string
+  longName: string
   defaultLeverage: string
 }
 
@@ -593,11 +611,15 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
   for (const m of markets.value) {
     marketMap.set(m.market, m)
   }
-  return contracts.value.map(c => ({
-    ...c,
-    displayName: marketMap.get(c.market)?.displayName ?? c.baseCurrency,
-    defaultLeverage: marketMap.get(c.market)?.defaultLeverage ?? '',
-  }))
+  return contracts.value.map(c => {
+    const pair = marketMap.get(c.market)
+    return {
+      ...c,
+      displayName: pair?.displayName ?? c.baseCurrency,
+      longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
+      defaultLeverage: pair?.defaultLeverage ?? '',
+    }
+  })
 })
 
 const filteredContracts = computed(() => {
@@ -619,7 +641,8 @@ const filteredContracts = computed(() => {
       c =>
         c.baseCurrency.toLowerCase().includes(q) ||
         c.market.toLowerCase().includes(q) ||
-        c.displayName.toLowerCase().includes(q),
+        c.displayName.toLowerCase().includes(q) ||
+        c.longName.toLowerCase().includes(q),
     )
   }
 
@@ -657,4 +680,12 @@ function formatChange(pct?: string): string {
   if (!pct) return '—'
   return formatPercent(parseFloat(pct))
 }
+
+const {
+  currentPage,
+  paginatedArray: paginatedContracts,
+  totalPages,
+  nextPage,
+  prevPage,
+} = usePaginate<EnrichedContract>(filteredContracts, PERPS_PAGE_SIZE)
 </script>

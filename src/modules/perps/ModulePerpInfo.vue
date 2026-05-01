@@ -22,7 +22,7 @@
           >
             {{ baseCurrency.toUpperCase() }}
             <span class="text-s-17 xs:text-s-20 mr-1 font-semibold"
-              >({{ displayName }})</span
+              >({{ longName }})</span
             >
           </h1>
           <div>
@@ -697,7 +697,7 @@
           >
             Asset Name
           </p>
-          <p class="text-s-14 font-bold">{{ displayName }}</p>
+          <p class="text-s-14 font-bold">{{ assetName }}</p>
         </div>
         <div>
           <p
@@ -824,6 +824,15 @@ const displayName = computed(() => {
   const pair = markets.value.find(m => m.market === props.market)
   return pair?.displayName ?? baseCurrency.value
 })
+
+const longName = computed(() => {
+  const pair = markets.value.find(m => m.market === props.market)
+  return pair?.longName ?? pair?.displayName ?? baseCurrency.value
+})
+
+const assetName = computed(
+  () => perpInfo.value?.underlyingName ?? longName.value,
+)
 
 const contractData = computed(() =>
   contracts.value.find(c => c.market === props.market),
