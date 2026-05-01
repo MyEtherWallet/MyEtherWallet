@@ -849,7 +849,7 @@ const category = computed(() => {
 // Fetch perpetual info from Ondo API
 const perpInfo = ref<MarketInfoData | undefined>(undefined)
 
-async function fetchPerpetualInfo() {
+const fetchPerpetualInfo = async () => {
   try {
     const res = await perpsClient.getPerpetualInfo(props.market)
     if (res.success) perpInfo.value = res.result
@@ -894,12 +894,12 @@ const openFillDialog = (fill: ApiFill) => {
 const showOrderDialog = ref(false)
 const selectedOrder = ref<ApiOrder | null>(null)
 
-function openOrderDialog(order: ApiOrder) {
+const openOrderDialog = (order: ApiOrder) => {
   selectedOrder.value = order
   showOrderDialog.value = true
 }
 
-function showCancelButton(order: ApiOrder) {
+const showCancelButton = (order: ApiOrder) => {
   return (
     order.status === 'pending' ||
     order.status === 'untriggered' ||
@@ -907,7 +907,7 @@ function showCancelButton(order: ApiOrder) {
   )
 }
 
-async function fetchMarketOrders() {
+const fetchMarketOrders = async () => {
   if (!token.value) return
   try {
     const res = await perpsClient.getOrders({ market: props.market })
@@ -917,7 +917,7 @@ async function fetchMarketOrders() {
   }
 }
 
-async function cancelInfoOrder(orderId: string) {
+const cancelInfoOrder = async (orderId: string) => {
   cancellingOrderId.value = orderId
   try {
     await perpsClient.cancelOrder(orderId)
@@ -929,7 +929,7 @@ async function cancelInfoOrder(orderId: string) {
   }
 }
 
-async function fetchMarketFills() {
+const fetchMarketFills = async () => {
   if (!token.value) return
   try {
     const res = await perpsClient.getFills({ market: props.market })
@@ -977,7 +977,7 @@ watch(refreshKey, () => {
 const fundingCountdown = ref('')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
 
-function updateFundingCountdown() {
+const updateFundingCountdown = () => {
   const ts = contractData.value?.nextFundingRateTimestamp
   if (!ts) {
     fundingCountdown.value = ''
@@ -1066,13 +1066,13 @@ const chartTimeFrame = computed(() => {
   return '1M' as const
 })
 
-function getResolutionSeconds(res: string): number {
+const getResolutionSeconds = (res: string): number => {
   if (res === '1D') return 86400
   if (res === '1W') return 604800
   return parseInt(res) * 60
 }
 
-async function fetchChart() {
+const fetchChart = async () => {
   const cacheKey = `${props.market}-${selectedInterval.value}`
   const cached = chartCache.get(cacheKey)
   if (cached) {
