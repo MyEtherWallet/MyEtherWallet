@@ -343,9 +343,9 @@
               </td>
               <!-- Status -->
               <td class="px-1 py-3 hidden lg:table-cell">
-                <span
+                <p
                   :class="[
-                    'text-s-13 font-medium',
+                    'text-s-11 uppercase font-semibold tracking-sp-06 -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
                     order.status === 'open' || order.status === 'pending'
                       ? 'text-primary'
                       : order.status === 'fullyfilled'
@@ -357,7 +357,7 @@
                   ]"
                 >
                   {{ formatOrderStatus(order.status) }}
-                </span>
+                </p>
               </td>
               <!-- Type -->
               <td class="px-1 py-3 font-normal text-s-14 hidden 2xl:table-cell">
@@ -503,7 +503,7 @@
                           fill.direction?.toLowerCase().includes('long')
                             ? 'text-success'
                             : 'text-error',
-                          'capitalize text-s-12 font-medium lg:hidden',
+                          'text-s-11 uppercase font-semibold tracking-sp-06  -ml-1  mt-1 rounded-full w-max px-2 py-[1px] bg-surface lg:hidden',
                         ]"
                       >
                         {{ formatDirection(fill.direction) }}
@@ -518,7 +518,7 @@
                       fill.direction?.toLowerCase().includes('long')
                         ? 'text-success'
                         : 'text-error',
-                      'capitalize font-medium text-s-13',
+                      'text-s-11 uppercase font-semibold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface',
                     ]"
                   >
                     {{ formatDirection(fill.direction) }}
@@ -737,6 +737,8 @@ import {
   pnlColor,
   formatDate,
   getOrderPrice,
+  formatOrderStatus,
+  formatOrderType,
 } from '../utils/formatters'
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient } from '../configs'
@@ -823,29 +825,6 @@ const {
   loading: ordersLoading,
   refetch: refetchOrders,
 } = usePerpsOrders()
-
-const orderTypeLabels: Record<string, string> = {
-  limit: 'Limit',
-  market: 'Market',
-  stopMarket: 'Stop Market',
-  takeProfitMarket: 'Take Profit Market',
-}
-
-function formatOrderType(type: string): string {
-  return orderTypeLabels[type] ?? type
-}
-
-const orderStatusLabels: Record<string, string> = {
-  open: 'Open',
-  fullyfilled: 'Fully Filled',
-  canceled: 'Canceled',
-  pending: 'Pending',
-  untriggered: 'Untriggered',
-}
-
-function formatOrderStatus(status: string): string {
-  return orderStatusLabels[status] ?? status
-}
 
 const showCancelButton = (order: ApiOrder) => {
   return (

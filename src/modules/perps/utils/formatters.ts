@@ -148,3 +148,25 @@ export function hasInvalidPrecision(
   if (Number.isNaN(Number(s))) return true
   return decimalPlaces(s) > maxDecimals
 }
+
+export const orderStatusLabels: Record<string, string> = {
+  open: 'Open',
+  fullyfilled: 'Fully Filled',
+  canceled: 'Canceled',
+  pending: 'Pending',
+  untriggered: 'Untriggered',
+}
+export const formatOrderStatus = (status: string): string => {
+  return orderStatusLabels[status] ?? status
+}
+
+export const orderTypeLabels: Record<string, string> = {
+  limit: 'Limit',
+  market: 'Market',
+  stopMarket: 'Stop Market',
+  takeProfitMarket: 'Take Profit Market',
+}
+
+export const formatOrderType = (type: string): string => {
+  return orderTypeLabels[type] ?? type
+}
