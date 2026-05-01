@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!isBanned">
     <div
       class="bg-mewBg rounded-2xl flex items-center gap-3 px-3 py-3 cursor-pointer shadow-sm relative mb-3"
       @click="onLearnMore"
@@ -62,6 +62,7 @@ const {
   tradeRemainingPct,
   tradeRemainingCount,
   nextHourStart,
+  isBanned,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)

@@ -13,7 +13,10 @@
       class="bg-white rounded-16 h-full flex flex-col justify-between px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
     >
       <!-- Top: Title + Image -->
-      <div class="flex items-start justify-between gap-2 mb-5">
+      <div
+        class="flex items-start justify-between gap-2 mb-5"
+        :class="{ 'opacity-20 pointer-events-none': isBanned }"
+      >
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
@@ -56,16 +59,35 @@
         :time-until-next-eligible="timeUntilNextEligible"
         @swap="goToSwap"
         @trade="goToTrade"
-        class="max-w-[360px] mt-3 2xl:max-w-none"
+        class="max-w-[360px] 2xl:max-w-none"
+        :class="[
+          isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : '',
+          { 'opacity-20 pointer-events-none': isBanned },
+        ]"
         is-rewards-view
       />
+      <div
+        v-if="isBanned"
+        class="text-center font-medium text-s-16 p-5 bg-appBackground rounded-20 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-1 xl:min-w-[300px]"
+      >
+        <p>You are not eligible for rewards at this time</p>
+        <button
+          class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
+          @click="onLearnMore"
+        >
+          Learn more
+        </button>
+      </div>
       <img
         :src="horizontalUsdc"
         alt=""
         width="650"
         height="292"
         class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] sm:max-h-[225px] sm:max-w-[234px] 2xl:hidden"
-        :class="isOpenSideMenu ? '' : 'xl:hidden'"
+        :class="[
+          isOpenSideMenu ? '' : 'xl:hidden',
+          { 'opacity-20 pointer-events-none': isBanned },
+        ]"
       />
 
       <rewards-learn-more
@@ -122,6 +144,7 @@ const {
   tradeRemainingPct,
   tradeRemainingCount,
   nextHourStart,
+  isBanned,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)

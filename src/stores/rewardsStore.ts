@@ -179,8 +179,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
 
   const swapNoRewards = computed(
     () =>
-      !swapPool.value?.open ||
-      swapPool.value?.hourlyRemainingRewardCount === 0,
+      !swapPool.value?.open || swapPool.value?.hourlyRemainingRewardCount === 0,
   )
   const tradeNoRewards = computed(
     () =>
@@ -336,6 +335,24 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     scheduleHourReset()
   }
 
+  const isBanned = computed(() => {
+    if (eligibility.value?.reasons.some(r => r.type === 'ACCOUNT_TOO_NEW'))
+      return true
+
+    const userRecentlyRewarded = eligibility.value?.reasons.some(
+      r => r.type === 'USER_RECENTLY_REWARDED',
+    )
+    if (!userRecentlyRewarded) {
+      return eligibility.value?.reasons.some(
+        r =>
+          r.type === 'REWARDS_DISABLED' ||
+          r.type === 'POOL_LOW_ETH' ||
+          r.type === 'POOL_LOW_USDC',
+      )
+    }
+    return false
+  })
+
   const canClaimReward = computed(() => {
     if (isBitcoinChain.value) return true
     if (!eligibility.value) return false
@@ -395,5 +412,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     isLoading,
     hadInitialLoad,
     isRewardEarnedDuringCampaign,
+    isBanned,
   }
 })

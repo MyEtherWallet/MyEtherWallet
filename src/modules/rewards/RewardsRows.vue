@@ -4,7 +4,7 @@
     <div
       class="flex items-center justify-between gap-3"
       :class="{
-        'flex-wrap  items-start xs:items-center': isRewardsView,
+        'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
       }"
     >
       <div class="flex items-center gap-3 min-w-[160px]">
@@ -65,9 +65,9 @@
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 shrink-0 text-s-11 xs:text-s-14 text-[#A5A5A5] font-semibold px-3 py-2 xs:py-[10px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-[6px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
         :class="{
-          '2xl:text-s-11 3xl:text-s-14 2xl:py-2 3xl:py-[10px]': isOpenSideMenu,
+          '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
       >
         Back in {{ swapClaimed ? timeUntilNextEligible : timeUntilHourReset }}
@@ -84,7 +84,7 @@
     <div
       class="flex items-center justify-between gap-3"
       :class="{
-        'flex-wrap  items-start xs:items-center': isRewardsView,
+        'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
       }"
     >
       <div class="flex items-center gap-3 min-w-[160px]">
@@ -140,16 +140,16 @@
         v-if="!tradeClaimed && !tradeNoRewards"
         size="small"
         is-outline
-        class="shrink-0"
+        class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
         Trade $25+
       </app-base-button>
       <button
         v-else
-        class="flex items-center gap-1 shrink-0 text-s-11 xs:text-s-14 text-[#A5A5A5] font-semibold px-3 py-2 xs:py-[10px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full"
+        class="flex items-center gap-1 grow text-s-11 xs:text-s-13 text-[#A5A5A5] font-medium px-3 py-[6px] border-[1.5px] border-dashed border-[#A5A5A5] rounded-full max-w-[150px]"
         :class="{
-          '2xl:text-s-11 3xl:text-s-14 2xl:py-2 3xl:py-[10px]': isOpenSideMenu,
+          '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
       >
         Back in
