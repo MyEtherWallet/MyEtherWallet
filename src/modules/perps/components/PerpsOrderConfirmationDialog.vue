@@ -105,11 +105,15 @@
             :is-loading="isSubmitting"
             class="flex-1"
             @click="$emit('confirm')"
-            >{{ isSubmitting ? 'Processing...' : 'Confirm' }}</app-base-button
+            >{{
+              isSubmitting
+                ? 'Processing...'
+                : `Confirm ${orderSide === 'buy' ? 'Long' : 'Short'}`
+            }}</app-base-button
           >
           <app-btn-text
             :disabled="isSubmitting"
-            class="mx-auto w-full text-error"
+            class="mx-auto w-full"
             is-large
             @click="isOpen = false"
             >Cancel</app-btn-text
