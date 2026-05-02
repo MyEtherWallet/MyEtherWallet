@@ -296,7 +296,7 @@
             <button
               v-for="pct in [-10, -5, 0, 5, 10]"
               :key="pct"
-              class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+              class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
             >
               {{ pct === 0 ? 'Mid' : (pct > 0 ? '+' : '') + pct + '%' }}
@@ -311,43 +311,35 @@
             class="w-full rounded-20 shadow-button shadow-button-elevated bg-white px-4 pt-4 pb-2 transition-all min-h-[120px] flex flex-col justify-between gap-2"
           >
             <p class="text-s-12 text-info mr-3 font-semibold">
-              Margin:
+              Margin available:
               <span class="font-medium ml-1 font-normal">
-                available {{ formatUsd(availableMargin) }}
+                {{ formatUsd(availableMargin) }}
               </span>
             </p>
             <div class="flex items-center justify-between -mt-2">
-              <div class="">
-                <div
-                  class="flex items-center before:content-['$'] before:font-bold before:text-s-28 before:tracking-tight before:mr-1"
-                  :class="[
-                    !inputAmount || inputAmount === ''
-                      ? 'before:opacity-50'
-                      : '',
-                    marginPrecisionError ? 'before:text-error' : '',
-                  ]"
-                >
-                  <input
-                    v-model="inputAmount"
-                    type="number"
-                    min="0"
-                    step="any"
-                    placeholder="0.00"
-                    class="font-bold text-s-28 bg-transparent outline-none w-full"
-                    :class="{ 'text-error': marginPrecisionError }"
-                    @keydown="
-                      e => {
-                        if (['e', 'E', '+', '-'].includes(e.key))
-                          e.preventDefault()
-                      }
-                    "
-                    @input="onInputAmount"
-                  />
-                </div>
-                <p class="text-info text-s-12">
-                  Size
-                  {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
-                </p>
+              <div
+                class="flex items-center before:content-['$'] before:font-bold before:text-s-28 before:tracking-tight before:mr-1"
+                :class="[
+                  !inputAmount || inputAmount === '' ? 'before:opacity-50' : '',
+                  marginPrecisionError ? 'before:text-error' : '',
+                ]"
+              >
+                <input
+                  v-model="inputAmount"
+                  type="number"
+                  min="0"
+                  step="any"
+                  placeholder="0.00"
+                  class="font-bold text-s-28 bg-transparent outline-none w-full"
+                  :class="{ 'text-error': marginPrecisionError }"
+                  @keydown="
+                    e => {
+                      if (['e', 'E', '+', '-'].includes(e.key))
+                        e.preventDefault()
+                    }
+                  "
+                  @input="onInputAmount"
+                />
               </div>
               <button
                 class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-surface min-w-15"
@@ -359,6 +351,10 @@
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
             </div>
+            <p class="text-info text-s-12 -mt-2">
+              Size
+              {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
+            </p>
 
             <!-- Error State -->
             <transition name="fade" mode="out-in">
@@ -393,7 +389,11 @@
                 step="0.01"
                 class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
                 :style="{
-                  background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
+                  background: `linear-gradient(to right, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} 0%, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} ${sliderValue}%, #e5e7eb ${sliderValue}%, #e5e7eb 100%)`,
+                  '--thumb-color':
+                    orderSide === 'buy'
+                      ? 'rgba(5,192,165,1)'
+                      : 'rgba(228,12,91,1)',
                 }"
                 @input="onSliderInput"
               />
@@ -404,10 +404,10 @@
               <button
                 v-for="pct in [10, 25, 50, 75, 100]"
                 :key="pct"
-                class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                 @click="setPercentage(pct)"
               >
-                {{ pct === 100 ? 'Max' : pct + '%' }}
+                {{ pct + '%' }}
               </button>
             </div>
             <hr class="border-t border-grey-5 mt-1" />
@@ -560,7 +560,11 @@
               step="0.01"
               class="w-full h-2 rounded-full appearance-none cursor-pointer slider-input"
               :style="{
-                background: `linear-gradient(to right, #0052ff 0%, #0052ff ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,
+                background: `linear-gradient(to right, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} 0%, ${orderSide === 'buy' ? 'rgba(5,192,165,1)' : 'rgba(228,12,91,1)'} ${closeSliderValue}%, #e5e7eb ${closeSliderValue}%, #e5e7eb 100%)`,
+                '--thumb-color':
+                  orderSide === 'buy'
+                    ? 'rgba(5,192,165,1)'
+                    : 'rgba(228,12,91,1)',
               }"
               @input="onCloseSliderInput"
             />
@@ -570,7 +574,7 @@
                 v-for="pct in [0, 25, 50, 75, 100]"
                 :key="pct"
                 :disabled="isClosePillDisabled(pct)"
-                class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                 :class="
                   isClosePillDisabled(pct)
                     ? 'opacity-40 cursor-not-allowed'
@@ -1002,3 +1006,25 @@ const getMainBtnText = computed(() => {
   return submitButtonLabel.value
 })
 </script>
+<style scoped>
+.slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--thumb-color, #0052ff);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.slider-input::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--thumb-color, #0052ff);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+</style>

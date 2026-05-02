@@ -3,36 +3,44 @@
     <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between">
       <div>
         <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
-          Perpetuals wallet balance
+          Perpetuals account balance
         </p>
         <p class="font-bold text-s-32 lg:text-s-40 mt-1">
           {{ walletBalance }}
         </p>
         <p
-          :class="pnlColorClass"
-          class="inline-flex text-s-20 align-middle ml-1"
+          class="text-info font-bold tracking-sp-06 uppercase text-s-11 mt-3 mb-2"
         >
-          {{ pnlPercent }}
+          Realized PnL
         </p>
-        <div class="flex items-center gap-3 justify-start mt-3">
-          <AppBaseButton
-            @click="$emit('deposit')"
-            class="min-w-[120px]"
-            size="medium"
-          >
+        <p class="text-s-16 leading-none" :class="pnlColorClass">
+          {{ formattedRealizedPnl }}
+          <span class="text-s-13 ml-2 leading-[16px]">({{ pnlPercent }})</span>
+        </p>
+        <p
+          class="text-info font-bold tracking-sp-06 uppercase text-s-11 mt-5 mb-2"
+        >
+          Unrealized PnL
+        </p>
+        <p class="text-s-16 leading-none" :class="uPnlColorClass">
+          {{ formattedUPnl }}
+          <span class="text-s-13 ml-2 leading-[16px]">({{ uPnlPercent }})</span>
+        </p>
+        <div class="flex items-center gap-3 justify-start mt-5 -mx-1">
+          <AppBaseButton @click="$emit('deposit')" class="w-full" size="medium">
             Deposit
           </AppBaseButton>
           <AppBaseButton
             is-outline
             @click="$emit('withdraw')"
-            class="min-w-[120px]"
+            class="w-full"
             size="medium"
           >
             Withdraw
           </AppBaseButton>
         </div>
       </div>
-      <hr class="my-6 border-t-1 border-grey-5 sm:hidden lg:flex" />
+      <hr class="my-5 border-t-1 border-grey-5 sm:hidden lg:flex" />
       <div class="flex flex-col gap-4 w-full max-w-[300px] lg:max-w-none">
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
@@ -86,6 +94,7 @@ import {
   pnlColor,
   marginRatioColor,
   formatPnlPercent,
+  formatPnl,
 } from '../utils/formatters'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 
@@ -100,7 +109,10 @@ const { balance } = usePerpsBalance()
 const marginBalance = computed(
   () => `$${formatFiatValue(balance.value?.marginBalance ?? '0').value}`,
 )
-const unrealizedPnl = computed(() => balance.value?.unrealizedPnl ?? '0')
+const realizedPnl = computed(() => balance.value?.realizedPnl ?? '0')
+const formattedRealizedPnl = computed(() =>
+  formatPnl(balance.value?.realizedPnl ?? '0'),
+)
 const walletBalance = computed(
   () => `$${formatFiatValue(balance.value?.walletBalance ?? '0').value}`,
 )
@@ -115,10 +127,23 @@ const usedMargin = computed(
 const marginRatio = computed(() => balance.value?.marginRatio ?? '0')
 
 const pnlPercent = computed(() =>
-  formatPnlPercent(unrealizedPnl.value, balance.value?.marginBalance),
+  formatPnlPercent(realizedPnl.value, balance.value?.walletBalance),
 )
 
-const pnlColorClass = computed(() => pnlColor(unrealizedPnl.value))
+const pnlColorClass = computed(() => pnlColor(realizedPnl.value))
+
+const uPnlColorClass = computed(() =>
+  pnlColor(balance.value?.unrealizedPnl ?? '0'),
+)
+const formattedUPnl = computed(() =>
+  formatPnl(balance.value?.unrealizedPnl ?? '0'),
+)
+const uPnlPercent = computed(() =>
+  formatPnlPercent(
+    balance.value?.unrealizedPnl ?? '0',
+    balance.value?.walletBalance,
+  ),
+)
 const marginRatioColorClass = computed(() =>
   marginRatioColor(marginRatio.value),
 )

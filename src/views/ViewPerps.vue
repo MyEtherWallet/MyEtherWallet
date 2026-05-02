@@ -36,9 +36,7 @@
       <div
         class="flex items-center justify-between col-span-1 lg:col-span-2 px-2"
       >
-        <h1 class="text-s-24 xs:text-s-32 font-bold">
-          Perpetuals Portfolio
-        </h1>
+        <h1 class="text-s-24 xs:text-s-32 font-bold">Perpetuals Portfolio</h1>
         <button
           class="text-error text-s-14 font-medium hoverOpacity"
           @click="logout"

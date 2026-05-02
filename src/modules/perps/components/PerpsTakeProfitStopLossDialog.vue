@@ -58,7 +58,7 @@
                   <button
                     v-for="pct in [10, 20, 30, 50, 100]"
                     :key="pct"
-                    class="px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
                       activeTpPill === pct ? '!bg-mewBg text-primary' : ''
                     "
@@ -128,7 +128,7 @@
                   <button
                     v-for="pct in [1, 2, 3, 4, 5]"
                     :key="pct"
-                    class="px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    class="w-full px-2 sm:px-[10px] py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                     :class="
                       activeSlPill === pct ? '!bg-mewBg text-primary' : ''
                     "
@@ -140,10 +140,7 @@
               </template>
             </perps-enter-profit-loss-amount>
             <transition name="fade" mode="out-in">
-              <div
-                v-if="stopLossError"
-                class="text-error text-s-12 mt-1 pl-3"
-              >
+              <div v-if="stopLossError" class="text-error text-s-12 mt-1 pl-3">
                 {{ precisionMessage }}
               </div>
             </transition>
