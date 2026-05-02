@@ -43,10 +43,10 @@
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium"
-              >Size ({{ displaySymbol }})</span
+            <span class="text-info font-medium">Size </span>
+            <span class="font-bold"
+              >{{ closeOrderSize }} {{ displaySymbol }}</span
             >
-            <span class="font-bold">{{ closeOrderSize }}</span>
           </div>
           <div class="flex justify-between text-s-14">
             <span class="text-info font-medium">Close percentage</span>
@@ -75,7 +75,6 @@
         <!-- Actions -->
         <div class="flex flex-col gap-1">
           <app-base-button
-            :theme="direction === 'long' ? 'error' : 'success'"
             :disabled="isClosing"
             :is-loading="isClosing"
             class="flex-1"
