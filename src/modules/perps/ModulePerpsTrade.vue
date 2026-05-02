@@ -639,137 +639,21 @@
       @confirm="confirmAndSubmitOrder"
     />
 
-    <!-- Close Confirmation Modal -->
-    <Teleport to="body">
-      <div
-        v-if="showCloseConfirmModal"
-        class="fixed inset-0 z-[9999] flex items-center justify-center"
-        @click.self="showCloseConfirmModal = false"
-      >
-        <div class="absolute inset-0 bg-black/40" />
-        <div
-          class="relative bg-white rounded-[24px] w-full max-w-[440px] mx-4 p-6 shadow-xl z-10"
-        >
-          <!-- Header -->
-          <div class="flex items-center justify-between mb-5">
-            <div class="flex items-center gap-2.5">
-              <app-token-logo
-                :url="getLogoUrl(displaySymbol)"
-                :symbol="displaySymbol"
-                width="w-8"
-                height="h-8"
-              />
-              <span class="font-bold text-s-20"
-                >Confirm Close
-                {{ displaySymbol }}
-                {{
-                  activePosition?.direction === 'long' ? 'Long' : 'Short'
-                }}</span
-              >
-            </div>
-            <button
-              class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-greyLight transition-colors"
-              @click="showCloseConfirmModal = false"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Close Details -->
-          <div class="bg-mewBg rounded-[20px] p-5 mb-5 space-y-3">
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Side</span>
-              <span
-                class="font-bold"
-                :class="
-                  activePosition?.direction === 'long'
-                    ? 'text-error'
-                    : 'text-success'
-                "
-                >{{
-                  activePosition?.direction === 'long'
-                    ? 'Sell (Close Long)'
-                    : 'Buy (Close Short)'
-                }}</span
-              >
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Order type</span>
-              <span class="font-bold">Market</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Market price</span>
-              <span class="font-bold">{{ formatUsd(currentPrice) }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Close amount</span>
-              <span class="font-bold">{{
-                formatUsd(parseFloat(closeAmount) || 0)
-              }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium"
-                >Size ({{ displaySymbol }})</span
-              >
-              <span class="font-bold">{{ closeOrderSize }}</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Close percentage</span>
-              <span class="font-bold">{{ Math.round(closeSliderValue) }}%</span>
-            </div>
-            <div class="flex justify-between text-s-14">
-              <span class="text-info font-medium">Current P&amp;L</span>
-              <span
-                class="font-bold"
-                :class="positionPnl >= 0 ? 'text-success' : 'text-error'"
-                >{{ formatPnl(String(positionPnl)) }} ({{
-                  (positionRoe * 100).toFixed(2)
-                }}%)</span
-              >
-            </div>
-          </div>
-
-          <!-- Error -->
-          <div
-            v-if="closeError"
-            class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4 mb-5"
-          >
-            <p class="text-error text-s-14 font-medium">{{ closeError }}</p>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex gap-3">
-            <button
-              class="flex-1 border border-[#e5e7eb] rounded-full py-3.5 text-s-16 font-bold hover:bg-greyLight transition-colors"
-              :disabled="isClosing"
-              @click="showCloseConfirmModal = false"
-            >
-              Cancel
-            </button>
-            <button
-              class="flex-1 bg-[#ff5b5a] text-white rounded-full py-3.5 text-s-16 font-bold hoverOpacity transition-all active:scale-[0.98]"
-              :disabled="isClosing"
-              @click="confirmAndClosePosition"
-            >
-              <span v-if="isClosing">Closing...</span>
-              <span v-else>Confirm</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
+    <!-- Close Confirmation Dialog -->
+    <perps-close-confirmation-dialog
+      v-model:is-open="showCloseConfirmModal"
+      :display-symbol="displaySymbol"
+      :direction="activePosition?.direction ?? 'long'"
+      :current-price="currentPrice"
+      :close-amount="closeAmount"
+      :close-order-size="closeOrderSize"
+      :close-slider-value="closeSliderValue"
+      :position-pnl="positionPnl"
+      :position-roe="positionRoe"
+      :close-error="closeError"
+      :is-closing="isClosing"
+      @confirm="confirmAndClosePosition"
+    />
 
     <!-- Market Selector Dialog -->
     <perps-select-market-dialog
@@ -839,6 +723,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
+import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDialog.vue'
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
