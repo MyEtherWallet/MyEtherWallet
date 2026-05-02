@@ -61,21 +61,36 @@
     </div>
 
     <!-- Chart -->
-    <div class="pb-6">
-      <div class="flex items-center gap-1 mb-4 px-4 lg:px-10 py-6">
-        <button
-          v-for="interval in chartIntervals"
-          :key="interval.value"
-          :class="[
-            'px-3 py-1 rounded-full text-s-12 font-medium transition-colors',
-            selectedInterval === interval.value
-              ? 'bg-primary text-white'
-              : 'text-info hoverNoBG',
-          ]"
-          @click="selectedInterval = interval.value"
+    <div class="py-6">
+      <div class="flex items-center justify-end mb-4 px-4 lg:px-10 sm:mb-4">
+        <app-btn-group
+          v-model:selected="selectedInterval"
+          :btn-list="isXS ? chartIntervals.slice(0, 2) : chartIntervals"
+          size="xs"
         >
-          {{ interval.label }}
-        </button>
+          <template #btn-content="{ data }">
+            {{ data.label }}
+          </template>
+          <template #custom>
+            <app-select
+              v-if="isXS"
+              v-model:selected="selectedInterval"
+              :options="chartIntervals.slice(2)"
+              position="-right-1"
+              class="text-s-12"
+            >
+              <template #select-button="{ toggleSelect }">
+                <button
+                  class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
+                  @click="toggleSelect"
+                >
+                  <p>More</p>
+                  <chevron-down-icon class="w-4 h-4 ml-1" />
+                </button>
+              </template>
+            </app-select>
+          </template>
+        </app-btn-group>
       </div>
       <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6">
         <chart-price
@@ -795,6 +810,7 @@ import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import {
   formatUsd,
@@ -824,6 +840,8 @@ const props = defineProps({
 
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
+
+const { isXS } = useAppBreakpoints()
 
 const { token, refreshKey } = usePerpsAuth()
 const { markets } = usePerpsMarkets()
@@ -1090,14 +1108,14 @@ watch(selectedManageAction, action => {
 
 // Chart
 const chartIntervals = [
-  { label: '1M', value: '1' },
-  { label: '5M', value: '5' },
-  { label: '1H', value: '60' },
-  { label: '4H', value: '240' },
-  { label: '1D', value: '1D' },
-  { label: '1W', value: '1W' },
+  { label: '1m', value: '1' },
+  { label: '5m', value: '5' },
+  { label: '1h', value: '60' },
+  { label: '4h', value: '240' },
+  { label: '1d', value: '1D' },
+  { label: '1w', value: '1W' },
 ]
-const selectedInterval = ref('15')
+const selectedInterval = ref(chartIntervals[2])
 const chartLoading = ref(false)
 const chartLabels = ref<number[]>([])
 const chartPoints = ref<number[]>([])
@@ -1105,7 +1123,7 @@ const chartPoints = ref<number[]>([])
 const chartCache = new Map<string, { labels: number[]; points: number[] }>()
 
 const chartTimeFrame = computed(() => {
-  const v = selectedInterval.value
+  const v = selectedInterval.value.value
   if (v === '1D') return '1D' as const
   if (v === '1W') return '7D' as const
   const mins = parseInt(v)
@@ -1121,7 +1139,7 @@ const getResolutionSeconds = (res: string): number => {
 }
 
 const fetchChart = async () => {
-  const cacheKey = `${props.market}-${selectedInterval.value}`
+  const cacheKey = `${props.market}-${selectedInterval.value.value}`
   const cached = chartCache.get(cacheKey)
   if (cached) {
     chartLabels.value = cached.labels
@@ -1132,11 +1150,11 @@ const fetchChart = async () => {
   chartLoading.value = true
   try {
     const to = Math.floor(Date.now() / 1000)
-    const resSecs = getResolutionSeconds(selectedInterval.value)
+    const resSecs = getResolutionSeconds(selectedInterval.value.value)
     const from = to - resSecs * 200
     const data = await perpsClient.getHistory(
       props.market,
-      selectedInterval.value,
+      selectedInterval.value.value,
       from,
       to,
     )
