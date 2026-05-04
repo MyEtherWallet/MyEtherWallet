@@ -84,7 +84,10 @@ export function usePerpsTradeForm() {
   // the user lands on it when reopening the dialog. The first explicit sort
   // pick releases the pin.
   const marketSortIsUserSet = ref(false)
-  const manageMode = ref<'add' | 'close'>('add')
+  const manageMode = computed({
+    get: () => walletMenuStore.selectedTradeManageMode,
+    set: (v) => walletMenuStore.setSelectedTradeManageMode(v),
+  })
   const closeAmount = ref('')
   const closeSliderValue = ref(0)
   const isClosing = ref(false)
@@ -874,6 +877,7 @@ export function usePerpsTradeForm() {
         }
       }
       await perpsClient.createOrder(orderParams as any)
+
       // Fire SL/TP toasts only after the SDK call succeeded.
       if (slPrice !== null) {
         const args = buildSlTpArgs(slPrice)
@@ -959,7 +963,7 @@ export function usePerpsTradeForm() {
       inputAmount.value = ''
       sliderValue.value = 0
       maxOrderSize.value = null
-      manageMode.value = 'add'
+      // manageMode.value = 'add'
       closeAmount.value = ''
       closeSliderValue.value = 0
       closeError.value = ''

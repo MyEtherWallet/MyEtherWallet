@@ -159,7 +159,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'add',
                 },
               ]"
-              @click="manageMode = 'add'"
+              @click="setSelectedTradeManageMode('add')"
             >
               Add
             </button>
@@ -174,7 +174,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'close',
                 },
               ]"
-              @click="manageMode = 'close'"
+              @click="setSelectedTradeManageMode('close')"
             >
               Close
             </button>
@@ -728,11 +728,13 @@ import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDia
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
+const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
   accessStore.openAccessDialog()
 }

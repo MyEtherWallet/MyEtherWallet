@@ -222,7 +222,7 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              $emit('openPosition', pos.market),
+                              openPositionAdd(pos, 'add'),
                             ]"
                           >
                             <p>Add to position</p>
@@ -231,7 +231,7 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              $emit('openPosition', pos.market),
+                              openPositionAdd(pos, 'close'),
                             ]"
                           >
                             <p>Close Position</p>
@@ -240,20 +240,11 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              $emit('openPosition', pos.market),
+                              openPositionAdd(pos, 'add'),
                             ]"
                           >
                             <p>View Position</p>
                           </li>
-                          <!-- <li
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              openPositionDialog(pos),
-                            ]"
-                          >
-                            <p>View Position</p>
-                          </li> -->
                         </ul>
                       </div>
                     </template>
@@ -787,7 +778,6 @@ import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
 import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
-
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -810,7 +800,10 @@ import {
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePaginate } from '@/composables/usePaginate'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
+
+const walletMenuStore = useWalletMenuStore()
 
 const localLeverage = ref(1)
 const leverageError = ref('')
@@ -852,9 +845,14 @@ watch(
 
 const USDC_LOGO =
   'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602'
-defineEmits<{
+const emits = defineEmits<{
   openPosition: [market: string]
 }>()
+
+const openPositionAdd = (pos: Position, type: 'add' | 'close') => {
+  walletMenuStore.setSelectedTradeManageMode(type)
+  emits('openPosition', pos.market)
+}
 
 const positionsTable = ref<HTMLElement | null>(null)
 const fillsTable = ref<HTMLElement | null>(null)
