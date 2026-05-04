@@ -616,9 +616,13 @@ export function usePerpsTradeForm() {
 
   // ── Leverage modal ─────────────────────────────────────────
   function openLeverageModal() {
-    tempLeverage.value = leverage.value
+    tempLeverage.value = tempLeverage.value !== 1 ? tempLeverage.value : leverage.value // keep temp levarage if not 1
     leverageError.value = ''
     showLeverageModal.value = true
+  }
+
+  function closeLeverageModal() {
+    showLeverageModal.value = false
   }
 
   async function saveLeverage() {
@@ -1094,6 +1098,7 @@ export function usePerpsTradeForm() {
     isSavingLeverage,
     leverageError,
     openLeverageModal,
+    closeLeverageModal,
     saveLeverage,
   }
 }
