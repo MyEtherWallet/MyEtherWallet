@@ -678,6 +678,7 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :mode="manageMode === 'add' ? 'add' : 'create'"
       @save="saveLeverage"
     />
 
