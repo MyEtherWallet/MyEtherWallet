@@ -2,6 +2,7 @@
   <app-dialog
     v-model:is-open="isOpen"
     title="Withdraw USDC"
+    class="sm:max-w-[460px] sm:mx-auto"
     has-content-gutter
     @close-dialog="$emit('close')"
   >
@@ -61,6 +62,13 @@
           </p>
         </div>
 
+        <app-warning
+          v-if="!withdrawalSuccess && hasOpenPositions"
+          title="Liquidation Risk"
+          text="You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk."
+          class="mb-4"
+        />
+
         <button
           v-if="!withdrawalSuccess"
           :disabled="sending || !isValidAmount"
@@ -84,8 +92,10 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
+import AppWarning from '@/components/AppWarning.vue'
 import { perpsClient } from '../configs'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
+import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
@@ -105,9 +115,12 @@ const isOpen = computed({
 
 const { accountId, triggerRefresh } = usePerpsAuth()
 const { balance } = usePerpsBalance()
+const { positions } = usePerpsPositions()
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const perpsToasts = usePerpsToasts()
+
+const hasOpenPositions = computed(() => positions.value.length > 0)
 
 const amount = ref('')
 const sending = ref(false)
