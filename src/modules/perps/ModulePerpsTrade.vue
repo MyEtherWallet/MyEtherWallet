@@ -761,7 +761,9 @@ const onCloseAmountInput = (e: Event) => {
 
 const confirmAndSubmitAndSetLeverage = async () => {
   await confirmAndSubmitOrder()
-  await saveLeverage()
+  if (manageMode.value === 'add' && tempLeverage.value !== leverage.value) {
+    await saveLeverage()
+  }
 }
 
 const onLimitPriceInput = (e: Event) => {
