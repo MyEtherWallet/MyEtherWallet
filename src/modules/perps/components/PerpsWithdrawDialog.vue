@@ -27,29 +27,32 @@
 
         <!-- Amount -->
         <div class="mb-4">
-          <label
-            class="text-info text-s-11 uppercase tracking-wider font-medium mb-1.5 block"
+          <perps-amount
+            v-model:amount="amount"
+            v-model:error="amountError"
+            title="Amount"
+            :validate-input="validateAmount"
           >
-            Amount
-          </label>
-          <div class="flex items-center gap-2">
-            <input
-              v-model="amount"
-              type="text"
-              placeholder="0.00"
-              class="flex-1 bg-surface rounded-12 px-4 py-3 text-s-14 outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button
-              class="text-primary text-s-13 font-medium"
-              @click="amount = withdrawableMargin"
-            >
-              MAX
-            </button>
-          </div>
+            <template #footer>
+              <div class="flex justify-start mt-1">
+                <button
+                  class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                  @click="setMax"
+                >
+                  MAX
+                </button>
+              </div>
+            </template>
+          </perps-amount>
         </div>
 
         <!-- Error -->
-        <p v-if="error" class="text-error text-s-12 mb-4">{{ error }}</p>
+        <p
+          v-if="amountError || error"
+          class="text-error text-s-12 mb-4"
+        >
+          {{ amountError || error }}
+        </p>
 
         <!-- Success -->
         <div
@@ -84,11 +87,14 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
-import { perpsClient } from '../configs'
+import PerpsAmount from './PerpsAmount.vue'
+import { perpsClient, USDC_DECIMALS } from '../configs'
+import { mainnet } from 'viem/chains'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
+import { hasInvalidPrecision } from '../utils/formatters'
 
 const props = defineProps<{
   visible: boolean
@@ -109,7 +115,8 @@ const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const perpsToasts = usePerpsToasts()
 
-const amount = ref('')
+const amount = ref<number | null>(null)
+const amountError = ref('')
 const sending = ref(false)
 const error = ref<string | null>(null)
 const withdrawalSuccess = ref(false)
@@ -120,16 +127,39 @@ const withdrawableMargin = computed(
 )
 
 const isValidAmount = computed(() => {
-  if (!amount.value) return false
-  const n = parseFloat(amount.value)
-  return !isNaN(n) && n > 0 && n <= parseFloat(withdrawableMargin.value)
+  if (amount.value === null || amount.value <= 0) return false
+  if (amountError.value) return false
+  return amount.value <= parseFloat(withdrawableMargin.value)
 })
+
+const validateAmount = () => {
+  if (amount.value === null) {
+    amountError.value = ''
+    return
+  }
+  if (hasInvalidPrecision(amount.value, USDC_DECIMALS[mainnet.id])) {
+    amountError.value = `Amount supports up to ${USDC_DECIMALS[mainnet.id]} decimal places`
+    return
+  }
+  if (amount.value > parseFloat(withdrawableMargin.value)) {
+    amountError.value = 'Amount exceeds available balance'
+    return
+  }
+  amountError.value = ''
+}
+
+const setMax = () => {
+  const max = parseFloat(withdrawableMargin.value)
+  amount.value = isNaN(max) ? null : max
+  validateAmount()
+}
 
 watch(
   () => props.visible,
   async visible => {
     if (!visible) return
-    amount.value = ''
+    amount.value = null
+    amountError.value = ''
     error.value = null
     withdrawalSuccess.value = false
     if (wallet.value) {
@@ -171,7 +201,7 @@ async function submitWithdraw() {
       customer_withdrawal_id: `withdraw-${Date.now()}`,
       symbol: 'USDC',
       network: 'ethereum',
-      amount: amount.value,
+      amount: String(amount.value),
       address: walletAddress.value,
       from: { id: accountId.value, wallet: 'margin' },
     })

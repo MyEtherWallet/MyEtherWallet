@@ -7,7 +7,7 @@
     }"
     @click="setInFocusInput"
   >
-    <p class="font-semibold text-s-12 text-info">Price</p>
+    <p class="font-semibold text-s-12 text-info">{{ title }}</p>
     <div class="flex justify-start items-center w-full gap-1">
       <span
         class="font-medium text-s-28 tracking-tight shrink-0"
@@ -40,6 +40,10 @@ import { onClickOutside } from '@vueuse/core'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 
 const props = defineProps({
+  title: {
+    type: String,
+    default: 'Price',
+  },
   validateInput: {
     type: Function as PropType<() => void>,
     default: () => {},
