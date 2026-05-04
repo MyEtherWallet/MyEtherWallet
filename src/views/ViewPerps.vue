@@ -52,7 +52,10 @@
         <perps-portfolio-chart />
       </div>
 
-      <perps-positions-table @open-position="handleOpenPosition" />
+      <perps-positions-table
+        @open-position="handleOpenPosition"
+        @open-side-menu="handleOpenSideWithType"
+      />
     </template>
     <perps-market-list @open-position="handleOpenPosition" />
     <perps-deposit-dialog v-model="showDeposit" />
@@ -90,6 +93,16 @@ const { token, isWalletConnected, isAuthenticating, authError, login, logout } =
 const connectWallet = () => accessStore.openAccessDialog()
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
+
+function handleOpenSideWithType(
+  market: string,
+  type: 'add' | 'close' | undefined,
+) {
+  walletMenu.setWalletPanel('perps')
+  walletMenu.setIsOpenSideMenu(true)
+  walletMenu.setSelectedTradeTokenSymbol(market)
+  walletMenu.setSelectedTradeManageMode(type ?? 'add')
+}
 
 function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
   walletMenu.setWalletPanel('perps')

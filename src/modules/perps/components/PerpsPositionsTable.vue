@@ -240,7 +240,7 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              openPositionAdd(pos, 'add'),
+                              $emit('openPosition', pos.market),
                             ]"
                           >
                             <p>View Position</p>
@@ -800,10 +800,7 @@ import {
 import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePaginate } from '@/composables/usePaginate'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
-
-const walletMenuStore = useWalletMenuStore()
 
 const localLeverage = ref(1)
 const leverageError = ref('')
@@ -847,11 +844,11 @@ const USDC_LOGO =
   'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602'
 const emits = defineEmits<{
   openPosition: [market: string]
+  openSideMenu: [market: string, type: 'add' | 'close' | undefined]
 }>()
 
-const openPositionAdd = (pos: Position, type: 'add' | 'close') => {
-  walletMenuStore.setSelectedTradeManageMode(type)
-  emits('openPosition', pos.market)
+const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
+  emits('openSideMenu', pos.market, type)
 }
 
 const positionsTable = ref<HTMLElement | null>(null)
