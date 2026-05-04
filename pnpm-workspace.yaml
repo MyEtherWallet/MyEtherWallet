@@ -1,3 +1,6 @@
+packages:
+  - '.'
 onlyBuiltDependencies:
   - node-hid
   - usb
+minimumReleaseAge: 10080

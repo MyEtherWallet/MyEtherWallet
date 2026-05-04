@@ -6,7 +6,10 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner :class="blurClass" location="small-banner-trade" />
+        <rewards-small-banner
+          :class="blurClass"
+          location="small-banner-trade"
+        />
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
@@ -52,6 +55,7 @@
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
                 :is-pristine="isPristine"
+                sort-context="trade"
                 class="mt-2"
               >
                 <!-- Percentage Buttons -->
@@ -112,6 +116,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :is-pristine="isPristine"
+              sort-context="trade"
               class="mt-2"
             />
           </div>
@@ -378,6 +383,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { usePairStore } from '@/stores/pairStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
 // Composables
@@ -402,6 +408,9 @@ import {
 } from '@heroicons/vue/24/solid'
 
 // --- Stores ---
+const pairStore = usePairStore()
+const { tradeFromSymbol, tradeToSymbol } = storeToRefs(pairStore)
+const { setTradeFromSymbol, setTradeToSymbol } = pairStore
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
@@ -426,6 +435,7 @@ const {
   supportedChainNames,
   tradableAssets,
   additionalBuyAssets,
+  hardcodedTokensInfo,
   isLoading,
   loadTradableAssets,
 } = useTrade()
@@ -437,6 +447,7 @@ const { initSwapper, fromTokens: swapFromTokens, swapLoaded } = useSwap()
 // Initialize selectedFromChain immediately from the store to prevent defaulting to Ethereum
 const selectedFromChain = ref<Chain | undefined>(chainsStore.selectedChain)
 const fromTokenSelected = ref<NewTokenInfo | null>(null)
+const fromTokenManuallySelected = ref(false)
 const toTokenSelected = ref<NewTokenInfo | null>(null)
 const fromAmount = ref<string>('')
 const toAmount = ref<string>('')
@@ -611,6 +622,7 @@ const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
     toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
+    hardcodedTokensInfo,
   })
 
 // --- Trade Quote ---
@@ -674,8 +686,37 @@ const {
 })
 
 // --- Methods ---
+const restoreToToken = () => {
+  if (!toTokens.value.length) return
+  const storedToSymbol = tradeToSymbol.value
+  if (selectedTradeTokenSymbol.value) {
+    const matchingToken = toTokens.value.find(
+      (t: NewTokenInfo) =>
+        t.symbol.toUpperCase() ===
+        selectedTradeTokenSymbol.value!.toUpperCase(),
+    )
+    toTokenSelected.value = matchingToken ?? toTokens.value[0] ?? null
+  } else if (storedToSymbol) {
+    const restoredTo =
+      toTokens.value.find(
+        (t: NewTokenInfo) =>
+          t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
+      ) ?? null
+    if (restoredTo) {
+      toTokenSelected.value = restoredTo
+    } else {
+      const defaultTo = toTokens.value[0] ?? null
+      toTokenSelected.value = defaultTo
+      setTradeToSymbol(defaultTo?.symbol ?? null)
+    }
+  } else {
+    toTokenSelected.value = toTokens.value[0] ?? null
+  }
+}
+
 const clearValues = () => {
   isPristine.value = true // Reset to pristine state
+  fromTokenManuallySelected.value = false
   fromAmount.value = ''
   toAmount.value = ''
   toAmountError.value = ''
@@ -694,6 +735,7 @@ const clearValues = () => {
 
 const setFromChain = (chain: Chain) => {
   selectedFromChain.value = chain
+  fromTokenManuallySelected.value = false
   // Update the global network - useSwap has a watcher that will reinitialize
   globalStore.setSelectedNetwork(chain.name)
   // Clear current selections - they'll be repopulated when swapLoaded becomes true
@@ -799,8 +841,8 @@ watch(
     if (loaded && !fromTokenSelected.value && fromTokens.value.length > 0) {
       fromTokenSelected.value = getDefaultFromToken()
     }
-    if (loaded && !toTokenSelected.value && toTokens.value.length > 0) {
-      toTokenSelected.value = toTokens.value[0] || null
+    if (loaded && !toTokenSelected.value) {
+      restoreToToken()
     }
   },
 )
@@ -834,6 +876,9 @@ watch([additionalBuyAssets, () => isWalletConnected.value], () => {
   // Check if we should update the from token selection
   if (!fromTokens.value.length || !isWalletConnected.value) return
 
+  // Never override a token the user explicitly picked
+  if (fromTokenManuallySelected.value) return
+
   const currentAddress = fromTokenSelected.value?.address?.toLowerCase()
   const isMainToken =
     !currentAddress || currentAddress === MAIN_TOKEN_CONTRACT.toLowerCase()
@@ -847,25 +892,25 @@ watch([additionalBuyAssets, () => isWalletConnected.value], () => {
   }
 })
 
-// Watch for selected trade token from store
-watch(
-  [selectedTradeTokenSymbol, toTokens],
-  ([symbol, tokens]) => {
-    if (symbol && tokens.length > 0) {
-      const matchingToken = tokens.find(
-        (t: NewTokenInfo) => t.symbol.toUpperCase() === symbol.toUpperCase(),
-      )
-      if (matchingToken) {
-        // Guard: only set if different to avoid reactive loop
-        const currentAddress = toTokenSelected.value?.address?.toLowerCase()
-        if (matchingToken.address?.toLowerCase() !== currentAddress) {
-          toTokenSelected.value = matchingToken
-        }
-      }
-    }
-  },
-  { immediate: true },
-)
+// Watch for selected trade token symbol being set externally (e.g. navigating from portfolio)
+watch(selectedTradeTokenSymbol, symbol => {
+  if (symbol && toTokens.value.length > 0) {
+    restoreToToken()
+  }
+})
+
+// Sync trade pair to pairStore; detect manual user selection
+watch(fromTokenSelected, token => {
+  setTradeFromSymbol(token?.symbol ?? null)
+  // If the token changed and it wasn't a programmatic reset (null), treat as manual
+  if (token !== null) {
+    fromTokenManuallySelected.value = true
+  }
+})
+
+watch(toTokenSelected, token => {
+  setTradeToSymbol(token?.symbol ?? null)
+})
 
 // Mark form as not pristine when user starts typing
 watch(
@@ -887,26 +932,29 @@ onBeforeMount(async () => {
 
   // Only set tokens if the network is supported
   if (isCurrentNetworkSupported.value) {
-    // Set initial from token - prefer highest balance additional asset
+    // Restore from token: check pairStore first, then fall back to default
     if (fromTokens.value.length > 0) {
-      fromTokenSelected.value = getDefaultFromToken()
+      const storedFromSymbol = tradeFromSymbol.value
+      if (storedFromSymbol) {
+        const restoredFrom =
+          fromTokens.value.find(
+            (t: NewTokenInfo) =>
+              t.symbol.toUpperCase() === storedFromSymbol.toUpperCase(),
+          ) ?? null
+        if (restoredFrom) {
+          fromTokenSelected.value = restoredFrom
+        } else {
+          const defaultFrom = getDefaultFromToken()
+          fromTokenSelected.value = defaultFrom
+          setTradeFromSymbol(defaultFrom?.symbol ?? null)
+        }
+      } else {
+        fromTokenSelected.value = getDefaultFromToken()
+      }
     }
 
-    // Set initial to token
-    if (selectedTradeTokenSymbol.value && toTokens.value.length > 0) {
-      const matchingToken = toTokens.value.find(
-        (t: NewTokenInfo) =>
-          t.symbol.toUpperCase() ===
-          selectedTradeTokenSymbol.value!.toUpperCase(),
-      )
-      if (matchingToken) {
-        toTokenSelected.value = matchingToken
-      } else if (toTokens.value.length > 0) {
-        toTokenSelected.value = toTokens.value[0] || null
-      }
-    } else if (toTokens.value.length > 0) {
-      toTokenSelected.value = toTokens.value[0] || null
-    }
+    // Restore to token: selectedTradeTokenSymbol takes priority, then pairStore, then first
+    restoreToToken()
   }
 })
 
