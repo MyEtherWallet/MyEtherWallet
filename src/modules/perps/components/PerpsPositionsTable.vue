@@ -106,7 +106,7 @@
               v-for="pos in paginatedPositions"
               :key="pos.market"
               class="cursor-pointer hoverBGWhite"
-              @click="openPositionDialog(pos)"
+              @click="$emit('viewMarket', pos.market)"
             >
               <!-- Market -->
               <td class="py-3 px-1 sm:pl-4 rounded-l-12">
@@ -243,12 +243,20 @@
                               $emit('openPosition', pos.market),
                             ]"
                           >
-                            <p>View Position</p>
+                            <p>View Chart</p>
                           </li>
                         </ul>
                       </div>
                     </template>
                   </app-pop-up-menu>
+                </div>
+                <div class="hidden lg:flex flex-row gap-2 justify-end">
+                  <AppBaseButton
+                    size="small"
+                    @click.stop="$emit('openPosition', pos.market)"
+                  >
+                    Manage
+                  </AppBaseButton>
                 </div>
               </td>
             </tr>
@@ -723,12 +731,6 @@
         </div>
       </template>
     </app-sheet>
-    <perps-position-dialog
-      v-if="selectedPosition"
-      :visible="showPositionDialog"
-      :position="selectedPosition"
-      @close="showPositionDialog = false"
-    />
     <perps-fill-details-dialog
       v-if="selectedFill"
       :visible="showFillDialog"
@@ -773,7 +775,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
-import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
@@ -845,6 +846,7 @@ const USDC_LOGO =
 const emits = defineEmits<{
   openPosition: [market: string]
   openSideMenu: [market: string, type: 'add' | 'close' | undefined]
+  viewMarket: [market: string]
 }>()
 
 const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
@@ -904,14 +906,6 @@ const {
   nextPage: positionsNextPage,
   prevPage: positionsPrevPage,
 } = usePaginate<Position>(positions, PERPS_PAGE_SIZE)
-
-const showPositionDialog = ref(false)
-const selectedPosition = ref<Position | null>(null)
-
-function openPositionDialog(pos: Position) {
-  selectedPosition.value = pos
-  showPositionDialog.value = true
-}
 
 const showFillDialog = ref(false)
 const selectedFill = ref<ApiFill | null>(null)

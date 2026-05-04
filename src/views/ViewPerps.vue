@@ -55,9 +55,13 @@
       <perps-positions-table
         @open-position="handleOpenPosition"
         @open-side-menu="handleOpenSideWithType"
+        @view-market="handleViewMarket"
       />
     </template>
-    <perps-market-list @open-position="handleOpenPosition" />
+    <perps-market-list
+      @open-position="handleOpenPosition"
+      @view-market="handleViewMarket"
+    />
     <perps-deposit-dialog v-model="showDeposit" />
     <perps-withdraw-dialog
       :visible="showWithdraw"
@@ -110,6 +114,13 @@ function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
   walletMenu.setSelectedTradeTokenSymbol(market)
   walletMenu.setSelectedTradeOrderSide(side ?? null)
 
+  router.push({
+    name: PERP_INFO_ROUTE_NAME,
+    params: { market },
+  })
+}
+
+function handleViewMarket(market: string) {
   router.push({
     name: PERP_INFO_ROUTE_NAME,
     params: { market },
