@@ -316,7 +316,7 @@
                 {{ formatUsd(availableMargin) }}
               </span>
             </p>
-            <div class="flex items-center justify-between -mt-2">
+            <div class="flex items-center justify-between -mt-1">
               <div
                 class="flex items-center before:content-['$'] before:font-bold before:text-s-28 before:tracking-tight before:mr-1"
                 :class="[
@@ -351,7 +351,7 @@
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
             </div>
-            <p class="text-info text-s-12 -mt-2">
+            <p class="text-info text-s-12 -mt-2 mb-2">
               Size
               {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
             </p>

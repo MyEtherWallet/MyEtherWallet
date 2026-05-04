@@ -204,7 +204,6 @@
           </div>
 
           <app-select
-            v-if="showManagePosition"
             v-model:selected="selectedManageAction"
             :options="manageOptions"
             position="right-0"
@@ -808,7 +807,6 @@ import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { useWalletStore } from '@/stores/walletStore'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
@@ -1083,14 +1081,6 @@ const activeInfoTabObj = computed({
 })
 
 // Close / Add Buttons
-const walletMenu = useWalletMenuStore()
-const { isOpenSideMenu, walletPanel } = storeToRefs(walletMenu)
-
-const showManagePosition = computed(() => {
-  if (!marketPosition.value) return false
-  if (isOpenSideMenu.value && walletPanel.value === 'perps') return false
-  return true
-})
 
 const manageOptions = [
   { value: 'add', label: 'Add to Position' },
