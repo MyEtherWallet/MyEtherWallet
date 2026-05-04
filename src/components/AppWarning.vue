@@ -1,5 +1,6 @@
 <template>
   <div
+    role="alert"
     class="p-4 sm:p-6 bg-warning-10 border-1 border-warning rounded-16 w-full"
   >
     <div class="flex items-center">
