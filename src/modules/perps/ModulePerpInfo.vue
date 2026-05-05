@@ -236,7 +236,7 @@
         </div>
 
         <div
-          class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6 w-full mt-2 px-2"
+          class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full mt-2 px-2"
         >
           <div>
             <p
@@ -282,6 +282,121 @@
             </p>
           </div>
         </div>
+        <app-btn-text
+          size="medium"
+          class="font-medium mt-3 -ml-1"
+          @click="showPositionMore = !showPositionMore"
+          >More
+          <chevron-down-icon
+            class="w-4 h-4 ml-1 inline-block align-middle"
+            :class="{ 'rotate-180 ': showPositionMore }"
+          />
+        </app-btn-text>
+        <transition name="fade" mode="out-in">
+          <div
+            v-if="showPositionMore"
+            class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full px-2 border-t border-grey-10 pt-3 -mt-2"
+          >
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                ROE
+              </p>
+              <p
+                class="text-s-14 font-bold"
+                :class="pnlColor(marketPosition.returnOnEquity)"
+              >
+                {{
+                  formatPercent(parseFloat(marketPosition.returnOnEquity) * 100)
+                }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Entry Price
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatPrice(marketPosition.averageEntryPrice) }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Mark Price
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatPrice(marketPosition.markPrice) }}
+              </p>
+            </div>
+
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Used Margin
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatUsd(marketPosition.usedMargin) }}
+              </p>
+            </div>
+
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Bankruptcy
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatPrice(marketPosition.bankruptcyPrice) }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Maint. Margin
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatUsd(marketPosition.maintenanceMargin) }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Funding
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatUsd(marketPosition.netFundingSinceNeutral) }}
+              </p>
+            </div>
+
+            <div v-if="marketPosition.takeProfitTriggerPrice">
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Take Profit
+              </p>
+              <p class="text-s-14 font-bold text-success">
+                {{ formatPrice(marketPosition.takeProfitTriggerPrice) }}
+              </p>
+            </div>
+            <div v-if="marketPosition.stopLossTriggerPrice">
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Stop Loss
+              </p>
+              <p class="text-s-14 font-bold text-error">
+                {{ formatPrice(marketPosition.stopLossTriggerPrice) }}
+              </p>
+            </div>
+          </div>
+        </transition>
       </div>
       <!-- Market Position Info Tabs -->
       <div
@@ -322,387 +437,301 @@
             </div>
           </template>
         </app-select>
-
-        <div
-          v-if="activeInfoTab === 'more'"
-          class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6 w-full mt-3 px-2 sm:px-4"
-        >
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              ROE
-            </p>
-            <p
-              class="text-s-14 font-bold"
-              :class="pnlColor(marketPosition.returnOnEquity)"
-            >
-              {{
-                formatPercent(parseFloat(marketPosition.returnOnEquity) * 100)
-              }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Entry Price
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(marketPosition.averageEntryPrice) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Mark Price
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(marketPosition.markPrice) }}
-            </p>
-          </div>
-
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Used Margin
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatUsd(marketPosition.usedMargin) }}
-            </p>
-          </div>
-
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Bankruptcy
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(marketPosition.bankruptcyPrice) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Maint. Margin
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatUsd(marketPosition.maintenanceMargin) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Funding
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatUsd(marketPosition.netFundingSinceNeutral) }}
-            </p>
-          </div>
-
-          <div v-if="marketPosition.takeProfitTriggerPrice">
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Take Profit
-            </p>
-            <p class="text-s-14 font-bold text-success">
-              {{ formatPrice(marketPosition.takeProfitTriggerPrice) }}
-            </p>
-          </div>
-          <div v-if="marketPosition.stopLossTriggerPrice">
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Stop Loss
-            </p>
-            <p class="text-s-14 font-bold text-error">
-              {{ formatPrice(marketPosition.stopLossTriggerPrice) }}
-            </p>
-          </div>
-        </div>
-        <!--Orders tab -->
-        <div v-else-if="activeInfoTab === 'orders'" class="w-full">
-          <app-table-skeleton
-            v-if="ordersLoading && marketOrders.length === 0"
-            :rows="3"
-            :columns="ordersSkeletonColumns"
-          />
+        <transition name="fade" mode="out-in">
+          <!--Orders tab -->
           <div
-            v-else-if="marketOrders.length === 0"
-            class="text-center py-8 text-info text-s-14"
+            v-if="activeInfoTab === 'orders'"
+            class="w-full"
+            key="position-orders"
           >
-            No orders for {{ baseCurrency }}
-          </div>
-          <table v-else class="w-full text-s-14 table-fixed">
-            <thead>
-              <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
-              >
-                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Side</th>
-                <th class="px-1 py-3 text-left font-bold hidden 2xl:table-cell">
-                  Status
-                </th>
-                <th class="px-1 py-3 text-left font-bold hidden xl:table-cell">
-                  Type
-                </th>
-                <th class="px-1 py-3 text-right font-bold">Price</th>
-                <th class="px-1 py-3 text-right font-bold hidden lg:table-cell">
-                  Filled / Size
-                </th>
-                <!--Actions -->
-                <th
-                  class="pr-1 sm:pr-4 py-3 text-right font-bold w-10 xl:w-12 2xl:w-[100px]"
-                ></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="order in marketOrders"
-                :key="order.orderId"
-                class="hoverBGWhite"
-                @click="openOrderDialog(order)"
-              >
-                <!-- Side -->
-                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                  <p class="text-info text-s-12 mb-[2px]">
-                    {{ formatDate(order.createdAt) }}
-                  </p>
-                  <p
-                    :class="[
-                      order.side === 'buy' ? 'text-success' : 'text-error',
-                      'text-s-13 capitalize font-medium',
-                    ]"
-                  >
-                    {{ order.side }}
-                  </p>
-                </td>
-                <!-- Status -->
-                <td class="px-1 py-3 hidden 2xl:table-cell">
-                  <p
-                    :class="[
-                      'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
-                      order.status === 'open' || order.status === 'pending'
-                        ? 'text-primary '
-                        : order.status === 'fullyfilled'
-                          ? ' text-success'
-                          : order.status === 'canceled' ||
-                              order.status === 'untriggered'
-                            ? ' text-info'
-                            : '',
-                    ]"
-                  >
-                    {{ formatOrderStatus(order.status) }}
-                  </p>
-                </td>
-                <!-- Type -->
-                <td
-                  class="px-1 py-3 font-normal text-s-14 hidden xl:table-cell capitalize"
-                >
-                  <p>{{ formatOrderType(order.type) }}</p>
-
-                  <p
-                    :class="[
-                      'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
-                      order.status === 'open' || order.status === 'pending'
-                        ? 'text-primary '
-                        : order.status === 'fullyfilled'
-                          ? ' text-success'
-                          : order.status === 'canceled' ||
-                              order.status === 'untriggered'
-                            ? ' text-info'
-                            : '',
-                    ]"
-                  >
-                    {{ formatOrderStatus(order.status) }}
-                  </p>
-                </td>
-                <!-- Price -->
-                <td class="px-1 py-3 text-right font-normal text-s-14">
-                  <p>{{ formatPrice(getOrderPrice(order)) }}</p>
-                </td>
-                <!-- Filled / Size -->
-                <td
-                  class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
-                >
-                  <p>{{ order.filledSize }} {{ baseCurrency }}</p>
-                  <p class="text-s-12 text-info">
-                    out of {{ order.size }} {{ baseCurrency }}
-                  </p>
-                </td>
-                <!-- Actions -->
-                <td class="pl-2 xs:pl-4 pr-0 rounded-r-12 sm:pl-3 sm:pr-1 py-3">
-                  <!-- Small screens: popup menu -->
-                  <div class="flex items-center justify-end -mr-1 sm:mr-0">
-                    <app-pop-up-menu
-                      v-if="showCancelButton(order)"
-                      placeholder="actions menu"
-                      location="right"
-                    >
-                      <template #menu-button="{ toggleMenu }">
-                        <app-btn-icon
-                          label="action menu"
-                          height="h-7 xs:h-8"
-                          width="w-7 xs:w-8"
-                          @click.stop="toggleMenu"
-                        >
-                          <ellipsis-vertical-icon class="w-5 h-5" />
-                        </app-btn-icon>
-                      </template>
-                      <template #menu-content="{ toggleMenu }">
-                        <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
-                        >
-                          <ul>
-                            <li
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                              @click.stop="[
-                                toggleMenu(),
-                                openOrderDialog(order),
-                              ]"
-                            >
-                              <p>View Order</p>
-                            </li>
-                            <li
-                              v-if="showCancelButton(order)"
-                              class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
-                              @click.stop="[
-                                toggleMenu(),
-                                cancelInfoOrder(order),
-                              ]"
-                            >
-                              {{
-                                cancellingOrderId === order.orderId
-                                  ? 'Cancelling...'
-                                  : 'Cancel'
-                              }}
-                            </li>
-                          </ul>
-                        </div>
-                      </template>
-                    </app-pop-up-menu>
-                    <app-btn-icon
-                      v-else
-                      label="view order details"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
-                      :class="{ 'ml-auto': !showCancelButton(order) }"
-                      @click.stop="openOrderDialog(order)"
-                    >
-                      <chevron-right-icon class="w-5 h-5" />
-                    </app-btn-icon>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!--Fills tab -->
-        <div v-else-if="activeInfoTab === 'fills'" class="w-full">
-          <app-table-skeleton
-            v-if="fillsLoading && marketFills.length === 0"
-            :rows="3"
-            :columns="fillsSkeletonColumns"
-          />
-          <div
-            v-else-if="marketFills.length === 0"
-            class="text-center py-6 text-info text-s-14"
-          >
-            No fills for {{ baseCurrency }}
-          </div>
-          <div v-else class="w-full">
-            <table class="w-full text-s-14 table-fixed">
+            <app-table-skeleton
+              v-if="ordersLoading && marketOrders.length === 0"
+              :rows="3"
+              :columns="ordersSkeletonColumns"
+            />
+            <div
+              v-else-if="marketOrders.length === 0"
+              class="text-center py-8 text-info text-s-14"
+            >
+              No orders for {{ baseCurrency }}
+            </div>
+            <table v-else class="w-full text-s-14 table-fixed">
               <thead>
                 <tr
                   class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
                 >
-                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">
-                    Direction
+                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">Side</th>
+                  <th
+                    class="px-1 py-3 text-left font-bold hidden 2xl:table-cell"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="px-1 py-3 text-left font-bold hidden xl:table-cell"
+                  >
+                    Type
                   </th>
                   <th class="px-1 py-3 text-right font-bold">Price</th>
                   <th
-                    class="px-1 py-3 text-right font-bold hidden xl:table-cell"
-                  >
-                    Size
-                  </th>
-                  <th
-                    class="px-1 py-3 text-right font-bold hidden xl:table-cell"
-                  >
-                    Fee
-                  </th>
-                  <th
                     class="px-1 py-3 text-right font-bold hidden lg:table-cell"
                   >
-                    PnL
+                    Filled / Size
                   </th>
-                  <th class="w-9 xs:w-12"></th>
+                  <!--Actions -->
+                  <th
+                    class="pr-1 sm:pr-4 py-3 text-right font-bold w-10 xl:w-12 2xl:w-[100px]"
+                  ></th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  v-for="fill in marketFills"
-                  :key="fill.id"
-                  class="cursor-pointer hoverBGWhite"
-                  @click="openFillDialog(fill)"
+                  v-for="order in marketOrders"
+                  :key="order.orderId"
+                  class="hoverBGWhite"
+                  @click="openOrderDialog(order)"
                 >
+                  <!-- Side -->
                   <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                    <p class="text-s-12 text-info mb-1">
-                      {{ formatDate(fill.time) }}
+                    <p class="text-info text-s-12 mb-[2px]">
+                      {{ formatDate(order.createdAt) }}
                     </p>
                     <p
                       :class="[
-                        fill.direction?.toLowerCase().includes('long')
-                          ? 'text-success'
-                          : 'text-error',
-                        'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
+                        order.side === 'buy' ? 'text-success' : 'text-error',
+                        'text-s-13 capitalize font-medium',
                       ]"
                     >
-                      {{ formatDirection(fill.direction) }}
+                      {{ order.side }}
                     </p>
                   </td>
+                  <!-- Status -->
+                  <td class="px-1 py-3 hidden 2xl:table-cell">
+                    <p
+                      :class="[
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                        order.status === 'open' || order.status === 'pending'
+                          ? 'text-primary '
+                          : order.status === 'fullyfilled'
+                            ? ' text-success'
+                            : order.status === 'canceled' ||
+                                order.status === 'untriggered'
+                              ? ' text-info'
+                              : '',
+                      ]"
+                    >
+                      {{ formatOrderStatus(order.status) }}
+                    </p>
+                  </td>
+                  <!-- Type -->
+                  <td
+                    class="px-1 py-3 font-normal text-s-14 hidden xl:table-cell capitalize"
+                  >
+                    <p>{{ formatOrderType(order.type) }}</p>
+
+                    <p
+                      :class="[
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
+                        order.status === 'open' || order.status === 'pending'
+                          ? 'text-primary '
+                          : order.status === 'fullyfilled'
+                            ? ' text-success'
+                            : order.status === 'canceled' ||
+                                order.status === 'untriggered'
+                              ? ' text-info'
+                              : '',
+                      ]"
+                    >
+                      {{ formatOrderStatus(order.status) }}
+                    </p>
+                  </td>
+                  <!-- Price -->
                   <td class="px-1 py-3 text-right font-normal text-s-14">
-                    <p>{{ formatPrice(fill.price) }}</p>
+                    <p>{{ formatPrice(getOrderPrice(order)) }}</p>
                   </td>
-                  <td
-                    class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
-                  >
-                    {{ fill.size }} {{ baseCurrency }}
-                  </td>
-                  <td
-                    class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
-                  >
-                    {{ formatUsd(fill.fee) }}
-                  </td>
+                  <!-- Filled / Size -->
                   <td
                     class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
                   >
-                    <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
-                      {{ formatPnl(fill.pnl) }}
-                    </span>
-                    <span v-else class="text-info">—</span>
+                    <p>{{ order.filledSize }} {{ baseCurrency }}</p>
+                    <p class="text-s-12 text-info">
+                      out of {{ order.size }} {{ baseCurrency }}
+                    </p>
                   </td>
                   <!-- Actions -->
-                  <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
-                    <app-btn-icon
-                      label="view fill details"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
-                      class="ml-auto"
-                      @click="openFillDialog(fill)"
-                    >
-                      <chevron-right-icon class="w-5 h-5" />
-                    </app-btn-icon>
+                  <td
+                    class="pl-2 xs:pl-4 pr-0 rounded-r-12 sm:pl-3 sm:pr-1 py-3"
+                  >
+                    <!-- Small screens: popup menu -->
+                    <div class="flex items-center justify-end -mr-1 sm:mr-0">
+                      <app-pop-up-menu
+                        v-if="showCancelButton(order)"
+                        placeholder="actions menu"
+                        location="right"
+                      >
+                        <template #menu-button="{ toggleMenu }">
+                          <app-btn-icon
+                            label="action menu"
+                            height="h-7 xs:h-8"
+                            width="w-7 xs:w-8"
+                            @click.stop="toggleMenu"
+                          >
+                            <ellipsis-vertical-icon class="w-5 h-5" />
+                          </app-btn-icon>
+                        </template>
+                        <template #menu-content="{ toggleMenu }">
+                          <div
+                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                          >
+                            <ul>
+                              <li
+                                class="p-2 flex items-center hoverBGWhite rounded-12"
+                                @click.stop="[
+                                  toggleMenu(),
+                                  openOrderDialog(order),
+                                ]"
+                              >
+                                <p>View Order</p>
+                              </li>
+                              <li
+                                v-if="showCancelButton(order)"
+                                class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
+                                @click.stop="[
+                                  toggleMenu(),
+                                  cancelInfoOrder(order),
+                                ]"
+                              >
+                                {{
+                                  cancellingOrderId === order.orderId
+                                    ? 'Cancelling...'
+                                    : 'Cancel'
+                                }}
+                              </li>
+                            </ul>
+                          </div>
+                        </template>
+                      </app-pop-up-menu>
+                      <app-btn-icon
+                        v-else
+                        label="view order details"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                        :class="{ 'ml-auto': !showCancelButton(order) }"
+                        @click.stop="openOrderDialog(order)"
+                      >
+                        <chevron-right-icon class="w-5 h-5" />
+                      </app-btn-icon>
+                    </div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
+          <!--Fills tab -->
+          <div
+            v-else-if="activeInfoTab === 'fills'"
+            class="w-full"
+            key="position-fills"
+          >
+            <app-table-skeleton
+              v-if="fillsLoading && marketFills.length === 0"
+              :rows="3"
+              :columns="fillsSkeletonColumns"
+            />
+            <div
+              v-else-if="marketFills.length === 0"
+              class="text-center py-6 text-info text-s-14"
+            >
+              No fills for {{ baseCurrency }}
+            </div>
+            <div v-else class="w-full">
+              <table class="w-full text-s-14 table-fixed">
+                <thead>
+                  <tr
+                    class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+                  >
+                    <th class="px-1 sm:pl-4 py-3 text-left font-bold">
+                      Direction
+                    </th>
+                    <th class="px-1 py-3 text-right font-bold">Price</th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                    >
+                      Size
+                    </th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                    >
+                      Fee
+                    </th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden lg:table-cell"
+                    >
+                      PnL
+                    </th>
+                    <th class="w-9 xs:w-12"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="fill in marketFills"
+                    :key="fill.id"
+                    class="cursor-pointer hoverBGWhite"
+                    @click="openFillDialog(fill)"
+                  >
+                    <td class="px-1 sm:pl-4 py-3 rounded-l-12">
+                      <p class="text-s-12 text-info mb-1">
+                        {{ formatDate(fill.time) }}
+                      </p>
+                      <p
+                        :class="[
+                          fill.direction?.toLowerCase().includes('long')
+                            ? 'text-success'
+                            : 'text-error',
+                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
+                        ]"
+                      >
+                        {{ formatDirection(fill.direction) }}
+                      </p>
+                    </td>
+                    <td class="px-1 py-3 text-right font-normal text-s-14">
+                      <p>{{ formatPrice(fill.price) }}</p>
+                    </td>
+                    <td
+                      class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
+                    >
+                      {{ fill.size }} {{ baseCurrency }}
+                    </td>
+                    <td
+                      class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
+                    >
+                      {{ formatUsd(fill.fee) }}
+                    </td>
+                    <td
+                      class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
+                    >
+                      <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
+                        {{ formatPnl(fill.pnl) }}
+                      </span>
+                      <span v-else class="text-info">—</span>
+                    </td>
+                    <!-- Actions -->
+                    <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
+                      <app-btn-icon
+                        label="view fill details"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                        class="ml-auto"
+                        @click="openFillDialog(fill)"
+                      >
+                        <chevron-right-icon class="w-5 h-5" />
+                      </app-btn-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
     <!-- About -->
@@ -793,6 +822,7 @@ import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 
 import {
@@ -968,8 +998,7 @@ const cancelInfoOrder = async (order: ApiOrder) => {
   if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
-  const displayMarket =
-    market?.longName ?? market?.displayName ?? order.market
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
     await perpsClient.cancelOrder(order.orderId)
     perpsToasts.toastOrderCanceled({
@@ -1094,11 +1123,12 @@ onUnmounted(() => {
 })
 
 // Tabs
+const showPositionMore = ref<boolean>(false)
 const activeInfoTab = ref('orders')
 const infoTabs = [
   { key: 'orders', value: 'orders', label: 'Orders' },
   { key: 'fills', value: 'fills', label: 'Fills' },
-  { key: 'more', value: 'more', label: 'More' },
+  // { key: 'more', value: 'more', label: 'More' },
 ]
 const activeInfoTabObj = computed({
   get: () => infoTabs.find(t => t.key === activeInfoTab.value) ?? infoTabs[0],
