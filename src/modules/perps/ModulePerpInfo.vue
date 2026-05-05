@@ -793,6 +793,15 @@
       </div>
     </div>
   </div>
+  <perps-select-leverage-dialog
+    v-model:is-open="showLeverageDialog"
+    v-model="tempLeverage"
+    :symbol="baseCurrency"
+    :leverage-error="leverageError"
+    :is-saving="isSavingLeverage"
+    mode="submit"
+    @save="saveLeverage"
+  />
   <perps-order-dialog
     v-if="selectedOrder"
     :visible="showOrderDialog"
@@ -820,6 +829,7 @@ import AppTableSkeleton, {
 } from '@/components/AppTableSkeleton.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
+import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -838,11 +848,14 @@ import {
 import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
+import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsToasts } from './composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+const { setSelectedTradeManageMode } = useWalletMenuStore()
 import {
   formatUsd,
   formatPrice,
@@ -879,6 +892,7 @@ const { markets } = usePerpsMarkets()
 const { contracts } = usePerpsContracts()
 const { positions } = usePerpsPositions()
 const { markPriceData } = usePerpsMarkPrices()
+const { leverage } = usePerpsTradeForm()
 const perpsToasts = usePerpsToasts()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
@@ -1147,9 +1161,38 @@ const manageOptions = [
 const selectedManageAction = ref<{ value: string; label: string } | undefined>(
   undefined,
 )
+
+const showLeverageDialog = ref(false)
+const tempLeverage = ref(1)
+const isSavingLeverage = ref(false)
+const leverageError = ref('')
+
+const saveLeverage = async () => {
+  isSavingLeverage.value = true
+  leverageError.value = ''
+  try {
+    await perpsClient.setLeverage(props.market, tempLeverage.value)
+    showLeverageDialog.value = false
+    leverage.value = tempLeverage.value
+  } catch (e) {
+    leverageError.value =
+      e instanceof Error ? e.message : 'Failed to set leverage'
+  } finally {
+    isSavingLeverage.value = false
+  }
+}
+
 watch(selectedManageAction, action => {
   if (!action) return
-  // TODO: handle action.value ('add' | 'leverage' | 'close')
+  if (action.value === 'add') {
+    setSelectedTradeManageMode('add')
+  } else if (action.value === 'close') {
+    setSelectedTradeManageMode('close')
+  } else if (action.value === 'leverage') {
+    tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
+    leverageError.value = ''
+    showLeverageDialog.value = true
+  }
   selectedManageAction.value = undefined
 })
 

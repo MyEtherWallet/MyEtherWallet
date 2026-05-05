@@ -884,6 +884,16 @@ const {
 
 const localLeverage = ref(leverage)
 
+// if this changed, it means that the marketinfo page changed leverage and should reflect
+watch(
+  () => leverage.value,
+  val => {
+    console.log(val)
+    if (!val) localLeverage.value = val
+  },
+  { deep: true },
+)
+
 watch(
   () => showLeverageModal.value,
   val => {

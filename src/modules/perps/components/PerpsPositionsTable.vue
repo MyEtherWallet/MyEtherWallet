@@ -203,6 +203,7 @@
                         class="hidden lg:flex"
                         size="small"
                         @click="toggleMenu"
+                        :theme="pos.direction === 'long' ? 'success' : 'error'"
                       >
                         Manage
                       </AppBaseButton>
