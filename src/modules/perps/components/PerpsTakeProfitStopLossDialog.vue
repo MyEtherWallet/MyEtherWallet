@@ -48,7 +48,7 @@
                 Remove
               </app-btn-text>
             </div>
-            <perps-enter-profit-loss-amount
+            <perps-amount
               v-model:amount="takeProfitPrice"
               :error="takeProfitError ? precisionMessage : ''"
               :validate-input="() => {}"
@@ -68,7 +68,7 @@
                   </button>
                 </div>
               </template>
-            </perps-enter-profit-loss-amount>
+            </perps-amount>
             <transition name="fade" mode="out-in">
               <div
                 v-if="takeProfitError"
@@ -118,7 +118,7 @@
                 Remove
               </app-btn-text>
             </div>
-            <perps-enter-profit-loss-amount
+            <perps-amount
               v-model:amount="stopLossPrice"
               :error="stopLossError ? precisionMessage : ''"
               :validate-input="() => {}"
@@ -138,7 +138,7 @@
                   </button>
                 </div>
               </template>
-            </perps-enter-profit-loss-amount>
+            </perps-amount>
             <transition name="fade" mode="out-in">
               <div v-if="stopLossError" class="text-error text-s-12 mt-1 pl-3">
                 {{ precisionMessage }}
@@ -182,7 +182,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import PerpsEnterProfitLossAmount from './PerpsEnterProfitLossAmount.vue'
+import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 import { PlusCircleIcon } from '@heroicons/vue/24/solid'
