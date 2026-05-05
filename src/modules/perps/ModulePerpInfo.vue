@@ -573,7 +573,7 @@
                               class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
                               @click.stop="[
                                 toggleMenu(),
-                                cancelInfoOrder(order.orderId),
+                                cancelInfoOrder(order),
                               ]"
                             >
                               {{
@@ -808,6 +808,7 @@ import {
 import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
+import { usePerpsToasts } from './composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -848,6 +849,7 @@ const { markets } = usePerpsMarkets()
 const { contracts } = usePerpsContracts()
 const { positions } = usePerpsPositions()
 const { markPriceData } = usePerpsMarkPrices()
+const perpsToasts = usePerpsToasts()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 
@@ -962,13 +964,36 @@ const fetchMarketOrders = async () => {
   }
 }
 
-const cancelInfoOrder = async (orderId: string) => {
-  cancellingOrderId.value = orderId
+const cancelInfoOrder = async (order: ApiOrder) => {
+  if (cancellingOrderId.value === order.orderId) return
+  cancellingOrderId.value = order.orderId
+  const market = markets.value.find(m => m.market === order.market)
+  const displayMarket =
+    market?.longName ?? market?.displayName ?? order.market
   try {
-    await perpsClient.cancelOrder(orderId)
+    await perpsClient.cancelOrder(order.orderId)
+    perpsToasts.toastOrderCanceled({
+      side: order.side,
+      size: order.size,
+      category: order.type,
+      market: displayMarket,
+      price: order.price,
+    })
+    showOrderDialog.value = false
     await fetchMarketOrders()
   } catch (e) {
     console.error('Failed to cancel order:', e)
+    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    if (
+      msg.includes('invalid') &&
+      (msg.includes('order') || msg.includes('id'))
+    ) {
+      perpsToasts.toastCancelFailedInvalidOrderId()
+    } else if (msg.startsWith('http ')) {
+      perpsToasts.toastCancelFailed()
+    } else {
+      perpsToasts.toastCancelFailedGeneric()
+    }
   } finally {
     cancellingOrderId.value = null
   }

@@ -427,7 +427,7 @@
                         </li>
                         <li
                           class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[cancelOrder(order.orderId)]"
+                          @click.stop="[toggleMenu(), cancelOrder(order)]"
                         >
                           {{
                             cancellingOrderId === order.orderId
@@ -753,6 +753,7 @@ import {
   usePerpsDepositsWithdrawals,
 } from '../composables/usePerpsHistory'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
+import { usePerpsMarkets } from '../composables/usePerpsMarkets'
 import {
   formatUsd,
   formatPrice,
@@ -878,16 +879,38 @@ const {
 
 const cancellingOrderId = ref<string | null>(null)
 const perpsToasts = usePerpsToasts()
+const { markets } = usePerpsMarkets()
 
-async function cancelOrder(orderId: string) {
-  cancellingOrderId.value = orderId
-  if (cancellingOrderId.value === orderId) return
+async function cancelOrder(order: ApiOrder) {
+  if (cancellingOrderId.value === order.orderId) return
+  cancellingOrderId.value = order.orderId
+  const market = markets.value.find(m => m.market === order.market)
+  const displayMarket =
+    market?.longName ?? market?.displayName ?? order.market
   try {
-    await perpsClient.cancelOrder(orderId)
+    await perpsClient.cancelOrder(order.orderId)
+    perpsToasts.toastOrderCanceled({
+      side: order.side,
+      size: order.size,
+      category: order.type,
+      market: displayMarket,
+      price: order.price,
+    })
+    showOrderDialog.value = false
     await refetchOrders()
   } catch (e) {
     console.error('Failed to cancel order:', e)
-    perpsToasts.toastFailedToRemoveOrder()
+    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    if (
+      msg.includes('invalid') &&
+      (msg.includes('order') || msg.includes('id'))
+    ) {
+      perpsToasts.toastCancelFailedInvalidOrderId()
+    } else if (msg.startsWith('http ')) {
+      perpsToasts.toastCancelFailed()
+    } else {
+      perpsToasts.toastCancelFailedGeneric()
+    }
   } finally {
     cancellingOrderId.value = null
   }

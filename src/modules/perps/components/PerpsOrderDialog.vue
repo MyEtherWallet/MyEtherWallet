@@ -48,7 +48,7 @@
           v-if="isCancellable"
           class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
           :disabled="cancelling"
-          @click="$emit('cancel', order.orderId)"
+          @click="$emit('cancel', order)"
         >
           {{ cancelling ? 'Cancelling...' : 'Cancel Order' }}
         </button>
@@ -102,7 +102,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  cancel: [orderId: string]
+  cancel: [order: ApiOrder]
 }>()
 
 const isOpen = computed({
