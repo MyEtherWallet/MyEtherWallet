@@ -28,8 +28,6 @@ onMounted(() => {
   if (isMDAndUp.value) {
     walletMenu.setWalletPanel('perps')
     walletMenu.setIsOpenSideMenu(true)
-  } else {
-    walletMenu.setIsOpenSideMenu(false)
   }
 })
 </script>

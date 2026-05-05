@@ -110,7 +110,7 @@
               v-for="pos in paginatedPositions"
               :key="pos.market"
               class="cursor-pointer hoverBGWhite"
-              @click="openPositionDialog(pos)"
+              @click="$emit('viewMarket', pos.market)"
             >
               <!-- Market -->
               <td class="py-3 px-1 sm:pl-4 rounded-l-12">
@@ -218,10 +218,10 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              openPositionDialog(pos),
+                              $emit('viewMarket', pos.market),
                             ]"
                           >
-                            <p>View Position</p>
+                            <p>View Chart</p>
                           </li>
                         </ul>
                       </div>
@@ -709,12 +709,6 @@
         </div>
       </template>
     </app-sheet>
-    <perps-position-dialog
-      v-if="selectedPosition"
-      :visible="showPositionDialog"
-      :position="selectedPosition"
-      @close="showPositionDialog = false"
-    />
     <perps-fill-details-dialog
       v-if="selectedFill"
       :visible="showFillDialog"
@@ -749,7 +743,6 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
-import PerpsPositionDialog from './PerpsPositionDialog.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
@@ -781,6 +774,7 @@ const USDC_LOGO =
   'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602'
 defineEmits<{
   openPosition: [market: string]
+  viewMarket: [market: string]
 }>()
 
 const positionsTable = ref<HTMLElement | null>(null)
@@ -836,14 +830,6 @@ const {
   nextPage: positionsNextPage,
   prevPage: positionsPrevPage,
 } = usePaginate<Position>(positions, PERPS_PAGE_SIZE)
-
-const showPositionDialog = ref(false)
-const selectedPosition = ref<Position | null>(null)
-
-function openPositionDialog(pos: Position) {
-  selectedPosition.value = pos
-  showPositionDialog.value = true
-}
 
 const showFillDialog = ref(false)
 const selectedFill = ref<ApiFill | null>(null)

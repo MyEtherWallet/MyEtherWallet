@@ -52,9 +52,15 @@
         <perps-portfolio-chart />
       </div>
 
-      <perps-positions-table @open-position="handleOpenPosition" />
+      <perps-positions-table
+        @open-position="handleOpenPosition"
+        @view-market="handleViewMarket"
+      />
     </template>
-    <perps-market-list @open-position="handleOpenPosition" />
+    <perps-market-list
+      @open-position="handleOpenPosition"
+      @view-market="handleViewMarket"
+    />
     <perps-deposit-dialog v-model="showDeposit" />
     <perps-withdraw-dialog
       :visible="showWithdraw"
@@ -79,6 +85,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
+import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
@@ -87,6 +94,7 @@ const { isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
 const { token, isWalletConnected, isAuthenticating, authError, login, logout } =
   usePerpsAuth()
+const { isDesktopAndUp } = useAppBreakpoints()
 const connectWallet = () => accessStore.openAccessDialog()
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
@@ -97,6 +105,17 @@ function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
   walletMenu.setSelectedTradeTokenSymbol(market)
   walletMenu.setSelectedTradeOrderSide(side ?? null)
 
+  // Mobile/tablet: drawer covers the chart, so skip the route push to avoid
+  // landing the user on the chart page when they close the drawer.
+  if (isDesktopAndUp.value) {
+    router.push({
+      name: PERP_INFO_ROUTE_NAME,
+      params: { market },
+    })
+  }
+}
+
+function handleViewMarket(market: string) {
   router.push({
     name: PERP_INFO_ROUTE_NAME,
     params: { market },

@@ -229,7 +229,7 @@
               v-for="contract in paginatedContracts"
               :key="contract.market"
               class="h-14 hoverBGWhite cursor-pointer"
-              @click="$emit('openPosition', contract.market)"
+              @click="$emit('viewMarket', contract.market)"
             >
               <!-- Watchlist -->
               <td class="hidden xs:table-cell xs:w-10 rounded-l-12 text-center">
@@ -408,6 +408,15 @@
                               <p>Short</p>
                             </li>
                           </template>
+                          <li
+                            @click.stop="[
+                              toggleMenu(),
+                              $emit('viewMarket', contract.market),
+                            ]"
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                          >
+                            <p>View Chart</p>
+                          </li>
                         </ul>
                       </div>
                     </template>
@@ -529,6 +538,7 @@ import PerpsPagination from './PerpsPagination.vue'
 
 defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
+  viewMarket: [market: string]
 }>()
 
 const marketsTable = ref<HTMLElement | null>(null)
