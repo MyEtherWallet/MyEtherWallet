@@ -165,6 +165,21 @@ export function usePerpsTradeForm() {
     parseFloat(balance.value?.availableMargin || '0'),
   )
 
+  const marginBalance = computed(() =>
+    parseFloat(balance.value?.marginBalance || '0'),
+  )
+
+  const DEFAULT_MAINTENANCE_MARGIN_RATE = 0.03
+
+  const maintenanceMarginRate = computed(() => {
+    if (activePosition.value) {
+      const mm = parseFloat(activePosition.value.maintenanceMargin || '0')
+      const nv = parseFloat(activePosition.value.notionalValue || '0')
+      if (nv > 0) return mm / nv
+    }
+    return DEFAULT_MAINTENANCE_MARGIN_RATE
+  })
+
   // ── Order sizing ───────────────────────────────────────────
   const positionSizeUsd = computed(() => {
     const amt = parseFloat(inputAmount.value) || 0
@@ -172,11 +187,23 @@ export function usePerpsTradeForm() {
   })
 
   const estimatedLiquidation = computed(() => {
-    if (!positionSizeUsd.value || !currentPrice.value) return 0
-    const dir = orderSide.value === 'buy' ? -1 : 1
-    return (
-      currentPrice.value + dir * (currentPrice.value / leverage.value) * 0.9
-    )
+    const netQuantity = parseFloat(orderSize.value)
+    if (!netQuantity || !currentPrice.value) return 0
+
+    const maintenanceMarginOtherPositions =
+      parseFloat(balance.value?.maintenanceMarginRequirement || '0') -
+      parseFloat(activePosition.value?.maintenanceMargin || '0')
+
+    const sideVal = orderSide.value === 'buy' ? 1 : -1
+    const sideNotionalValue = positionSizeUsd.value * sideVal
+    const sideQuantity = netQuantity * sideVal
+    const numerator =
+      marginBalance.value - maintenanceMarginOtherPositions - sideNotionalValue
+    const denominator = netQuantity * maintenanceMarginRate.value - sideQuantity
+    if (denominator === 0) return 0
+
+    const price = numerator / denominator
+    return Number.isFinite(price) ? Math.max(price, 0) : 0
   })
 
   function floorToIncrement(value: number, increment: number): string {
@@ -359,10 +386,9 @@ export function usePerpsTradeForm() {
   // ── New margin ratio ────────────────────────────────────────
   const newMarginRatio = computed<number | null>(() => {
     const usedMargin = parseFloat(balance.value?.usedMargin || '0')
-    const marginBal = parseFloat(balance.value?.marginBalance || '0')
     const additionalMargin = parseFloat(inputAmount.value || '0')
-    if (!marginBal || !additionalMargin) return null
-    return (usedMargin + additionalMargin) / marginBal
+    if (!marginBalance.value || !additionalMargin) return null
+    return (usedMargin + additionalMargin) / marginBalance.value
   })
 
   // ── Precision validation ───────────────────────────────────
