@@ -426,6 +426,12 @@
                   <app-base-button
                     v-if="getPosition(contract.market)"
                     size="small"
+                    class="min-w-[136px]"
+                    :theme="
+                      getPosition(contract.market)!.direction === 'long'
+                        ? 'success'
+                        : 'error'
+                    "
                     @click.stop="$emit('openPosition', contract.market)"
                   >
                     Manage

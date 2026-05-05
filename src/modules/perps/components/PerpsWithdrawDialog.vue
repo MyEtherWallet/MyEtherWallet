@@ -2,54 +2,69 @@
   <app-dialog
     v-model:is-open="isOpen"
     title="Withdraw USDC"
+    class="sm:max-w-[460px] sm:mx-auto"
     has-content-gutter
     @close-dialog="$emit('close')"
   >
     <template #content>
-      <div class="pb-6" v-if="walletAddress">
-        <!-- Withdraw to -->
-        <div class="bg-surface rounded-12 p-4 mb-4">
-          <p
-            class="text-info text-s-11 uppercase tracking-wider font-medium mb-1"
-          >
-            Withdraw To
-          </p>
-          <p class="text-s-13 break-all font-mono">{{ walletAddress }}</p>
-        </div>
-
-        <!-- Available balance -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-info text-s-13">Available Balance</span>
-          <span class="font-medium text-s-13">
-            {{ formatUsd(withdrawableMargin) }} USDC
-          </span>
-        </div>
-
-        <!-- Amount -->
-        <div class="mb-4">
-          <label
-            class="text-info text-s-11 uppercase tracking-wider font-medium mb-1.5 block"
-          >
-            Amount
-          </label>
-          <div class="flex items-center gap-2">
-            <input
-              v-model="amount"
-              type="text"
-              placeholder="0.00"
-              class="flex-1 bg-surface rounded-12 px-4 py-3 text-s-14 outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button
-              class="text-primary text-s-13 font-medium"
-              @click="amount = withdrawableMargin"
+      <div v-if="walletAddress" class="mb-6">
+        <div class="bg-mewBg rounded-20 p-4 bg-mewBg mb-4">
+          <!-- Amount -->
+          <div class="mb-4">
+            <perps-amount
+              v-model:amount="amount"
+              v-model:error="amountError"
+              title="Amount"
+              :validate-input="validateAmount"
             >
-              MAX
-            </button>
+              <template #footer>
+                <div class="relative">
+                  <!-- Error -->
+                  <transition name="fade">
+                    <p
+                      v-if="amountError"
+                      class="text-error text-s-12 absolute -top-2.5 left-0"
+                    >
+                      {{ amountError }}
+                    </p>
+                  </transition>
+
+                  <div class="flex justify-start justify-between mt-3">
+                    <button
+                      class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      @click="setMax"
+                    >
+                      MAX
+                    </button>
+                    <!-- Available balance -->
+                    <div class="ml-auto text-left">
+                      <span class="text-info text-s-13">available:</span>
+                      <span class="font-medium text-s-13 ml-1">
+                        {{ formatUsd(withdrawableMargin) }} USDC
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </perps-amount>
+          </div>
+          <!-- Withdraw to -->
+          <div class="mb-4">
+            <p
+              class="text-info text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
+            >
+              Withdraw To
+            </p>
+            <div class="flex items-center mb-1">
+              <app-blockie :address="walletAddress" class="mr-2" :size="6" />
+              <p
+                class="font-medium text-s-12 tracking-sp-06 text-wrap break-all"
+              >
+                {{ walletAddress }}
+              </p>
+            </div>
           </div>
         </div>
-
-        <!-- Error -->
-        <p v-if="error" class="text-error text-s-12 mb-4">{{ error }}</p>
 
         <!-- Success -->
         <div
@@ -61,21 +76,28 @@
           </p>
         </div>
 
-        <button
+        <app-warning
+          v-if="!withdrawalSuccess && hasOpenPositions"
+          title="Liquidation Risk"
+          text="You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk."
+          class="mb-4"
+        />
+        <transition name="fade">
+          <p v-if="error" class="text-error text-s-12 absolute -top-3 left-0">
+            {{ error }}
+          </p>
+        </transition>
+        <app-base-button
           v-if="!withdrawalSuccess"
           :disabled="sending || !isValidAmount"
-          class="w-full bg-black text-white rounded-full py-3 text-s-14 font-medium hoverOpacity disabled:opacity-50"
+          :is-loading="sending"
+          class="w-full"
           @click="submitWithdraw"
+          >Withdraw</app-base-button
         >
-          {{ sending ? 'Processing...' : 'Withdraw' }}
-        </button>
-        <button
-          v-else
-          class="w-full bg-black text-white rounded-full py-3 text-s-14 font-medium hoverOpacity"
-          @click="$emit('close')"
+        <app-base-button v-else class="w-full" @click="$emit('close')"
+          >Done</app-base-button
         >
-          Done
-        </button>
       </div>
     </template>
   </app-dialog>
@@ -84,12 +106,18 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
-import { perpsClient } from '../configs'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import PerpsAmount from './PerpsAmount.vue'
+import { perpsClient, USDC_DECIMALS } from '../configs'
+import { mainnet } from 'viem/chains'
+import AppWarning from '@/components/AppWarning.vue'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
+import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
-
+import { hasInvalidPrecision } from '../utils/formatters'
+import AppBlockie from '@/components/AppBlockie.vue'
 const props = defineProps<{
   visible: boolean
 }>()
@@ -105,11 +133,15 @@ const isOpen = computed({
 
 const { accountId, triggerRefresh } = usePerpsAuth()
 const { balance } = usePerpsBalance()
+const { positions } = usePerpsPositions()
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const perpsToasts = usePerpsToasts()
 
-const amount = ref('')
+const amount = ref<number | null>(null)
+const amountError = ref('')
+const hasOpenPositions = computed(() => positions.value.length > 0)
+
 const sending = ref(false)
 const error = ref<string | null>(null)
 const withdrawalSuccess = ref(false)
@@ -120,16 +152,39 @@ const withdrawableMargin = computed(
 )
 
 const isValidAmount = computed(() => {
-  if (!amount.value) return false
-  const n = parseFloat(amount.value)
-  return !isNaN(n) && n > 0 && n <= parseFloat(withdrawableMargin.value)
+  if (amount.value === null || amount.value <= 0) return false
+  if (amountError.value) return false
+  return amount.value <= parseFloat(withdrawableMargin.value)
 })
+
+const validateAmount = () => {
+  if (amount.value === null) {
+    amountError.value = ''
+    return
+  }
+  if (hasInvalidPrecision(amount.value, USDC_DECIMALS[mainnet.id])) {
+    amountError.value = `Amount supports up to ${USDC_DECIMALS[mainnet.id]} decimal places`
+    return
+  }
+  if (amount.value > parseFloat(withdrawableMargin.value)) {
+    amountError.value = 'Amount exceeds available balance'
+    return
+  }
+  amountError.value = ''
+}
+
+const setMax = () => {
+  const max = parseFloat(withdrawableMargin.value)
+  amount.value = isNaN(max) ? null : max
+  validateAmount()
+}
 
 watch(
   () => props.visible,
   async visible => {
     if (!visible) return
-    amount.value = ''
+    amount.value = null
+    amountError.value = ''
     error.value = null
     withdrawalSuccess.value = false
     if (wallet.value) {
@@ -171,7 +226,7 @@ async function submitWithdraw() {
       customer_withdrawal_id: `withdraw-${Date.now()}`,
       symbol: 'USDC',
       network: 'ethereum',
-      amount: amount.value,
+      amount: String(amount.value),
       address: walletAddress.value,
       from: { id: accountId.value, wallet: 'margin' },
     })
