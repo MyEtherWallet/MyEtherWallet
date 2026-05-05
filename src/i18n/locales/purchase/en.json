@@ -1,0 +1,46 @@
+{
+  "purchase": {
+    "buy": {
+      "title": "Buy",
+      "youre_buying": "You're buying",
+      "enter_amount": "Enter amount",
+      "continue": "Continue",
+      "connect_wallet": "Connect wallet",
+      "need_help": "Need help buying?",
+      "error": {
+        "min": "Minimum {min} allowed",
+        "max": "Maximum {max} allowed"
+      }
+    },
+    "sell": {
+      "title": "Sell"
+    },
+    "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
+    "select_token": {
+      "title": "Tokens",
+      "subtitle": "Select one from the list",
+      "search_placeholder": "Search",
+      "filter_all_networks": "All networks",
+      "filter_title": "Filter by network",
+      "filter_subtitle": "Select a network from the list",
+      "no_results": "No tokens match"
+    },
+    "select_currency": {
+      "title": "Currency",
+      "subtitle": "Select a currency from the list",
+      "search_placeholder": "Search",
+      "no_results": "No currencies match"
+    },
+    "select_provider": {
+      "title": "You'll pay {amount}",
+      "subtitle": "Select one of the following providers to define how much {crypto} you'll be receiving.",
+      "best_value": "Best value",
+      "youll_pay": "You'll pay",
+      "youll_receive": "You'll receive",
+      "continue": "Continue",
+      "error": {
+        "no_quotes": "No providers available for this selection. Try a different amount or currency."
+      }
+    }
+  }
+}

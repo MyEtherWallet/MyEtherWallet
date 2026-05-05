@@ -1092,7 +1092,7 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
     token: token?.symbol,
     isMobile,
   })
-  window.open('https://ccswap.myetherwallet.com', '_blank')
+  walletMenu.openPanel('purchase')
 }
 
 const getTokenRoute = (token: DisplayToken) => {
