@@ -36,6 +36,8 @@ export default {
       transparent: 'transparent',
       current: 'currentColor',
       appBackground: '#f5f5f7',
+      bgBase: '#f5f5f5',
+      bgMuted: '#e5e5e5',
       gold: '#FFD700', // used in watchlist
       'side-menu': '#07385f',
       titleColor: '#222222',
@@ -126,8 +128,9 @@ export default {
         1: '1px',
       },
       borderRadius: {
-        20: '20px',
         32: '32px',
+        24: '24px',
+        20: '20px',
         16: '16px',
         12: '12px',
         8: '8px',

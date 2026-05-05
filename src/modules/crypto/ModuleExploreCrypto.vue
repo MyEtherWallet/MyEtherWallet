@@ -807,11 +807,7 @@ const buyBtn = (token: DisplayToken, isMobile = false) => {
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
-  window.open(
-    'https://ccswap.myetherwallet.com/',
-    '_blank',
-    'noopener,noreferrer',
-  )
+  walletMenu.openPanel('purchase')
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BRIDGE, {
