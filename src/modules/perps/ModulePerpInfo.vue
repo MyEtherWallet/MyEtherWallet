@@ -162,11 +162,13 @@
               Funding Countdown
             </p>
             <p class="text-s-14 font-bold">
-              {{
-                contractData?.fundingRate
-                  ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
-                  : '—'
-              }}
+              <span :class="pnlColor(contractData?.fundingRate || '0')">
+                {{
+                  contractData?.fundingRate
+                    ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
+                    : '—'
+                }}
+              </span>
               <span v-if="fundingCountdown" class="text-info text-s-12">
                 in {{ fundingCountdown }}
               </span>
