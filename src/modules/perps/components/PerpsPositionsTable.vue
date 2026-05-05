@@ -231,7 +231,7 @@
                 <div class="hidden lg:flex flex-row gap-2 justify-end">
                   <AppBaseButton
                     size="small"
-                    @click.stop="$emit('openPosition', pos.market)"
+                    @click="$emit('openPosition', pos.market)"
                   >
                     Manage
                   </AppBaseButton>
