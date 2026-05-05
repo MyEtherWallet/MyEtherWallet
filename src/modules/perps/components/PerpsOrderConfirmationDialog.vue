@@ -101,7 +101,7 @@
         <div class="flex flex-col gap-1">
           <app-base-button
             :theme="orderSide === 'buy' ? 'success' : 'error'"
-            :disabled="isSubmitting"
+            :disabled="isSubmitting || !!orderError"
             :is-loading="isSubmitting"
             class="flex-1"
             @click="$emit('confirm')"

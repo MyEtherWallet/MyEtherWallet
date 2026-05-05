@@ -212,14 +212,29 @@ export function usePerpsTradeForm() {
   const formatQuotePrice = (value: number): string =>
     floorToIncrement(value, activeMarketQuoteIncrement.value)
 
+  // For limit orders the order size in base units is determined by the user's
+  // chosen limit price, not the live mark price — quoting against mark would
+  // produce a wildly different base quantity (e.g. 500 USDC margin × 20x at a
+  // $5,000 limit should be 2 NVDA, not ~50 NVDA quoted against a $200 mark)
+  // and make the open order reserve maintenance margin against the wrong
+  // notional. Falls back to currentPrice while the limit field is empty or
+  // invalid so the displayed size stays defined.
+  const effectivePrice = computed(() => {
+    if (orderType.value === 'limit') {
+      const lp = parseFloat(limitPrice.value)
+      if (!isNaN(lp) && lp > 0) return lp
+    }
+    return currentPrice.value
+  })
+
   const orderSize = computed(() => {
-    if (!currentPrice.value) return '0'
-    const rawSize = positionSizeUsd.value / currentPrice.value
+    if (!effectivePrice.value) return '0'
+    const rawSize = positionSizeUsd.value / effectivePrice.value
     return floorToIncrement(rawSize, activeMarketIncrement.value)
   })
 
   const minOrderAmount = computed(
-    () => activeMarketIncrement.value * currentPrice.value,
+    () => activeMarketIncrement.value * effectivePrice.value,
   )
 
   // ── Max-order-size helpers ─────────────────────────────────
@@ -271,8 +286,8 @@ export function usePerpsTradeForm() {
 
   const closeOrderSize = computed(() => {
     const amt = parseFloat(closeAmount.value) || 0
-    if (!currentPrice.value || amt <= 0) return '0'
-    const rawSize = amt / currentPrice.value
+    if (!effectivePrice.value || amt <= 0) return '0'
+    const rawSize = amt / effectivePrice.value
     return floorToIncrement(rawSize, activeMarketIncrement.value)
   })
 
@@ -323,7 +338,7 @@ export function usePerpsTradeForm() {
         } else {
           const closeUsd = parseFloat(closeAmount.value) || 0
           if (closeUsd <= 0) return
-          const rawSize = closeUsd / currentPrice.value
+          const rawSize = closeUsd / effectivePrice.value
           placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
         }
 
