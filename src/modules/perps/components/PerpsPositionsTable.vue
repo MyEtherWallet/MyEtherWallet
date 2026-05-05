@@ -243,20 +243,12 @@
                               $emit('openPosition', pos.market),
                             ]"
                           >
-                            <p>View Chart</p>
+                            <p>View Market Info</p>
                           </li>
                         </ul>
                       </div>
                     </template>
                   </app-pop-up-menu>
-                </div>
-                <div class="hidden lg:flex flex-row gap-2 justify-end">
-                  <AppBaseButton
-                    size="small"
-                    @click="$emit('openPosition', pos.market)"
-                  >
-                    Manage
-                  </AppBaseButton>
                 </div>
               </td>
             </tr>
@@ -961,8 +953,7 @@ async function cancelOrder(order: ApiOrder) {
   if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
-  const displayMarket =
-    market?.longName ?? market?.displayName ?? order.market
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
     await perpsClient.cancelOrder(order.orderId)
     perpsToasts.toastOrderCanceled({

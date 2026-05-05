@@ -415,7 +415,7 @@
                             ]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <p>View Chart</p>
+                            <p>View Market Info</p>
                           </li>
                         </ul>
                       </div>
