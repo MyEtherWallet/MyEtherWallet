@@ -2,57 +2,69 @@
   <app-dialog
     v-model:is-open="isOpen"
     title="Withdraw USDC"
+    class="sm:max-w-[460px] sm:mx-auto"
     has-content-gutter
     @close-dialog="$emit('close')"
   >
     <template #content>
-      <div class="pb-6" v-if="walletAddress">
-        <!-- Withdraw to -->
-        <div class="bg-surface rounded-12 p-4 mb-4">
-          <p
-            class="text-info text-s-11 uppercase tracking-wider font-medium mb-1"
-          >
-            Withdraw To
-          </p>
-          <p class="text-s-13 break-all font-mono">{{ walletAddress }}</p>
-        </div>
+      <div v-if="walletAddress" class="mb-6">
+        <div class="bg-mewBg rounded-20 p-4 bg-mewBg mb-4">
+          <!-- Amount -->
+          <div class="mb-4">
+            <perps-amount
+              v-model:amount="amount"
+              v-model:error="amountError"
+              title="Amount"
+              :validate-input="validateAmount"
+            >
+              <template #footer>
+                <div class="relative">
+                  <!-- Error -->
+                  <transition name="fade">
+                    <p
+                      v-if="amountError"
+                      class="text-error text-s-12 absolute -top-2.5 left-0"
+                    >
+                      {{ amountError }}
+                    </p>
+                  </transition>
 
-        <!-- Available balance -->
-        <div class="flex items-center justify-between mb-4">
-          <span class="text-info text-s-13">Available Balance</span>
-          <span class="font-medium text-s-13">
-            {{ formatUsd(withdrawableMargin) }} USDC
-          </span>
+                  <div class="flex justify-start justify-between mt-3">
+                    <button
+                      class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                      @click="setMax"
+                    >
+                      MAX
+                    </button>
+                    <!-- Available balance -->
+                    <div class="ml-auto text-left">
+                      <span class="text-info text-s-13">available:</span>
+                      <span class="font-medium text-s-13 ml-1">
+                        {{ formatUsd(withdrawableMargin) }} USDC
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </perps-amount>
+          </div>
+          <!-- Withdraw to -->
+          <div class="mb-4">
+            <p
+              class="text-info text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
+            >
+              Withdraw To
+            </p>
+            <div class="flex items-center mb-1">
+              <app-blockie :address="walletAddress" class="mr-2" :size="6" />
+              <p
+                class="font-medium text-s-12 tracking-sp-06 text-wrap break-all"
+              >
+                {{ walletAddress }}
+              </p>
+            </div>
+          </div>
         </div>
-
-        <!-- Amount -->
-        <div class="mb-4">
-          <perps-amount
-            v-model:amount="amount"
-            v-model:error="amountError"
-            title="Amount"
-            :validate-input="validateAmount"
-          >
-            <template #footer>
-              <div class="flex justify-start mt-1">
-                <button
-                  class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                  @click="setMax"
-                >
-                  MAX
-                </button>
-              </div>
-            </template>
-          </perps-amount>
-        </div>
-
-        <!-- Error -->
-        <p
-          v-if="amountError || error"
-          class="text-error text-s-12 mb-4"
-        >
-          {{ amountError || error }}
-        </p>
 
         <!-- Success -->
         <div
@@ -64,21 +76,28 @@
           </p>
         </div>
 
-        <button
+        <app-warning
+          v-if="!withdrawalSuccess && hasOpenPositions"
+          title="Liquidation Risk"
+          text="You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk."
+          class="mb-4"
+        />
+        <transition name="fade">
+          <p v-if="error" class="text-error text-s-12 absolute -top-3 left-0">
+            {{ error }}
+          </p>
+        </transition>
+        <app-base-button
           v-if="!withdrawalSuccess"
           :disabled="sending || !isValidAmount"
-          class="w-full bg-black text-white rounded-full py-3 text-s-14 font-medium hoverOpacity disabled:opacity-50"
+          :is-loading="sending"
+          class="w-full"
           @click="submitWithdraw"
+          >Withdraw</app-base-button
         >
-          {{ sending ? 'Processing...' : 'Withdraw' }}
-        </button>
-        <button
-          v-else
-          class="w-full bg-black text-white rounded-full py-3 text-s-14 font-medium hoverOpacity"
-          @click="$emit('close')"
+        <app-base-button v-else class="w-full" @click="$emit('close')"
+          >Done</app-base-button
         >
-          Done
-        </button>
       </div>
     </template>
   </app-dialog>
@@ -87,15 +106,18 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsAmount from './PerpsAmount.vue'
 import { perpsClient, USDC_DECIMALS } from '../configs'
 import { mainnet } from 'viem/chains'
+import AppWarning from '@/components/AppWarning.vue'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
+import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { hasInvalidPrecision } from '../utils/formatters'
-
+import AppBlockie from '@/components/AppBlockie.vue'
 const props = defineProps<{
   visible: boolean
 }>()
@@ -111,12 +133,15 @@ const isOpen = computed({
 
 const { accountId, triggerRefresh } = usePerpsAuth()
 const { balance } = usePerpsBalance()
+const { positions } = usePerpsPositions()
 const store = useWalletStore()
 const { wallet } = storeToRefs(store)
 const perpsToasts = usePerpsToasts()
 
 const amount = ref<number | null>(null)
 const amountError = ref('')
+const hasOpenPositions = computed(() => positions.value.length > 0)
+
 const sending = ref(false)
 const error = ref<string | null>(null)
 const withdrawalSuccess = ref(false)
