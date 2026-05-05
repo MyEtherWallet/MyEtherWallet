@@ -308,27 +308,30 @@ export function usePerpsTradeForm() {
     try {
       const closePct = closeSliderValue.value
       const isLimit = orderType.value === 'limit'
+      const closeSide: 'buy' | 'sell' =
+        activePosition.value.direction === 'long' ? 'sell' : 'buy'
+      let placedSize: string
 
       if (closePct >= 100 && !isLimit) {
         // Full close via market order
+        placedSize = activePosition.value.netQuantity
         await closePosition(activePosition.value)
       } else {
-        let size: string
         if (closePct >= 100) {
           // Full close via limit
-          size = activePosition.value.netQuantity
+          placedSize = activePosition.value.netQuantity
         } else {
           const closeUsd = parseFloat(closeAmount.value) || 0
           if (closeUsd <= 0) return
           const rawSize = closeUsd / currentPrice.value
-          size = floorToIncrement(rawSize, activeMarketIncrement.value)
+          placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
         }
 
         const orderParams: Record<string, unknown> = {
           market: fullMarketName.value,
-          side: activePosition.value.direction === 'long' ? 'sell' : 'buy',
+          side: closeSide,
           type: isLimit ? 'limit' : 'market',
-          size,
+          size: placedSize,
           postOnly: false,
           reduceOnly: false,
         }
@@ -338,6 +341,20 @@ export function usePerpsTradeForm() {
         }
         await perpsClient.createOrder(orderParams as any)
       }
+      const closeMarketMatch = markets.value.find(
+        m => m.market === fullMarketName.value,
+      )
+      const closeDisplayMarket =
+        closeMarketMatch?.longName ??
+        closeMarketMatch?.displayName ??
+        fullMarketName.value
+      perpsToasts.toastOrderPlaced({
+        side: closeSide,
+        size: placedSize,
+        category: isLimit ? 'limit' : 'market',
+        market: closeDisplayMarket,
+        price: isLimit ? (limitPrice.value ?? undefined) : undefined,
+      })
       closeAmount.value = ''
       closeSliderValue.value = 0
       triggerRefresh()
@@ -870,7 +887,21 @@ export function usePerpsTradeForm() {
         }
       }
       await perpsClient.createOrder(orderParams as any)
-      // Fire SL/TP toasts only after the SDK call succeeded.
+      // Fire Order Placed + SL/TP toasts only after the SDK call succeeded.
+      const marketMatch = markets.value.find(
+        m => m.market === fullMarketName.value,
+      )
+      const displayMarket =
+        marketMatch?.longName ??
+        marketMatch?.displayName ??
+        fullMarketName.value
+      perpsToasts.toastOrderPlaced({
+        side: orderSide.value,
+        size: orderSize.value,
+        category: orderType.value,
+        market: displayMarket,
+        price: orderType.value === 'limit' ? (limitPrice.value ?? undefined) : undefined,
+      })
       if (slPrice !== null) {
         const args = buildSlTpArgs(slPrice)
         if (hadPriorStopLoss) perpsToasts.toastStopLossModified(args)

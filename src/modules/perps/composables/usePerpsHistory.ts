@@ -1,6 +1,8 @@
 import { ref, watchEffect, onUnmounted } from 'vue'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
+import { usePerpsMarkets } from './usePerpsMarkets'
+import { usePerpsToasts } from './usePerpsToasts'
 import { useCursorPaginate } from './useCursorPaginate'
 import type {
   ApiOrder,
@@ -9,11 +11,86 @@ import type {
   WalletWithdrawal,
 } from '../sdk/types'
 
+type OrderSnapshot = Pick<
+  ApiOrder,
+  'orderId' | 'filledSize' | 'filledCost' | 'size' | 'status'
+>
+
 export function usePerpsOrders() {
   const { token, refreshKey } = usePerpsAuth()
+  const { markets } = usePerpsMarkets()
+  const perpsToasts = usePerpsToasts()
   const orders = ref<ApiOrder[]>([])
   const loading = ref(false)
+  // Snapshot keyed by orderId — used to diff filledSize between polls so we
+  // can fire Order Filled / Order Partially Filled exactly on the transition.
+  // First poll after login seeds the snapshot without firing toasts to avoid
+  // re-announcing orders that already had fills before the user opened the page.
+  let prevOrdersById = new Map<string, OrderSnapshot>()
+  let isSeedFetch = true
   let pollTimer: ReturnType<typeof setInterval> | null = null
+
+  function resolveDisplayMarket(market: string): string {
+    const m = markets.value.find(x => x.market === market)
+    return m?.longName ?? m?.displayName ?? market
+  }
+
+  function detectFillsAndToast(next: ApiOrder[]) {
+    if (isSeedFetch) {
+      isSeedFetch = false
+      prevOrdersById = new Map(
+        next.map(o => [
+          o.orderId,
+          {
+            orderId: o.orderId,
+            filledSize: o.filledSize,
+            filledCost: o.filledCost,
+            size: o.size,
+            status: o.status,
+          },
+        ]),
+      )
+      return
+    }
+    for (const curr of next) {
+      const prev = prevOrdersById.get(curr.orderId)
+      const prevFilled = prev ? Number(prev.filledSize || '0') : 0
+      const currFilled = Number(curr.filledSize || '0')
+      if (currFilled > prevFilled) {
+        const prevCost = prev ? Number(prev.filledCost || '0') : 0
+        const currCost = Number(curr.filledCost || '0')
+        const deltaSize = currFilled - prevFilled
+        const deltaCost = currCost - prevCost
+        const fillPrice = deltaSize > 0 ? deltaCost / deltaSize : 0
+        const totalSize = Number(curr.size || '0')
+        const isFullyFilled =
+          curr.status === 'fullyfilled' ||
+          (totalSize > 0 && currFilled >= totalSize)
+        const args = {
+          side: curr.side,
+          filledSize: curr.filledSize,
+          size: curr.size,
+          category: curr.type,
+          market: resolveDisplayMarket(curr.market),
+          fillPrice,
+        }
+        if (isFullyFilled) perpsToasts.toastOrderFilled(args)
+        else perpsToasts.toastOrderPartiallyFilled(args)
+      }
+    }
+    prevOrdersById = new Map(
+      next.map(o => [
+        o.orderId,
+        {
+          orderId: o.orderId,
+          filledSize: o.filledSize,
+          filledCost: o.filledCost,
+          size: o.size,
+          status: o.status,
+        },
+      ]),
+    )
+  }
 
   async function fetchOrders() {
     if (!token.value) {
@@ -23,7 +100,9 @@ export function usePerpsOrders() {
     loading.value = true
     try {
       const res = await perpsClient.getOrders({ limit: 100 })
-      orders.value = res.result ?? []
+      const next = res.result ?? []
+      detectFillsAndToast(next)
+      orders.value = next
     } catch {
       orders.value = []
     } finally {
@@ -34,6 +113,10 @@ export function usePerpsOrders() {
   watchEffect(() => {
     void refreshKey.value
     if (pollTimer) clearInterval(pollTimer)
+    // Reset diff state on auth change so a fresh login doesn't replay stale
+    // snapshots and a logout doesn't leak prior fills into the next session.
+    prevOrdersById = new Map()
+    isSeedFetch = true
     if (token.value) {
       fetchOrders()
       pollTimer = setInterval(fetchOrders, 10_000)
