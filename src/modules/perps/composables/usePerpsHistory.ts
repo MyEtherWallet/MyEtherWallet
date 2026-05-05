@@ -28,6 +28,10 @@ export function usePerpsOrders() {
   // re-announcing orders that already had fills before the user opened the page.
   let prevOrdersById = new Map<string, OrderSnapshot>()
   let isSeedFetch = true
+  let lastToken: string | null | undefined = undefined
+  // Monotonic sequence so an out-of-order in-flight response doesn't roll the
+  // diff snapshot backward and replay or drop fill toasts.
+  let fetchSeq = 0
   let pollTimer: ReturnType<typeof setInterval> | null = null
 
   function resolveDisplayMarket(market: string): string {
@@ -97,26 +101,34 @@ export function usePerpsOrders() {
       orders.value = []
       return
     }
+    const seq = ++fetchSeq
     loading.value = true
     try {
       const res = await perpsClient.getOrders({ limit: 100 })
+      if (seq !== fetchSeq) return
       const next = res.result ?? []
       detectFillsAndToast(next)
       orders.value = next
     } catch {
+      if (seq !== fetchSeq) return
       orders.value = []
     } finally {
-      loading.value = false
+      if (seq === fetchSeq) loading.value = false
     }
   }
 
   watchEffect(() => {
     void refreshKey.value
     if (pollTimer) clearInterval(pollTimer)
-    // Reset diff state on auth change so a fresh login doesn't replay stale
-    // snapshots and a logout doesn't leak prior fills into the next session.
-    prevOrdersById = new Map()
-    isSeedFetch = true
+    // Reset diff state only on actual auth changes. triggerRefresh() bumps
+    // refreshKey for any post-mutation refetch (place/cancel/close) and must
+    // not silently re-seed the snapshot — otherwise the next poll's fills
+    // would be swallowed instead of toasted.
+    if (token.value !== lastToken) {
+      prevOrdersById = new Map()
+      isSeedFetch = true
+      lastToken = token.value
+    }
     if (token.value) {
       fetchOrders()
       pollTimer = setInterval(fetchOrders, 10_000)

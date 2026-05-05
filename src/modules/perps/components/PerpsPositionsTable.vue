@@ -427,7 +427,7 @@
                         </li>
                         <li
                           class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[cancelOrder(order)]"
+                          @click.stop="[toggleMenu(), cancelOrder(order)]"
                         >
                           {{
                             cancellingOrderId === order.orderId

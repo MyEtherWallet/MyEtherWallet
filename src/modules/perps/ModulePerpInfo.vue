@@ -963,6 +963,7 @@ const fetchMarketOrders = async () => {
 }
 
 const cancelInfoOrder = async (order: ApiOrder) => {
+  if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
   const displayMarket =

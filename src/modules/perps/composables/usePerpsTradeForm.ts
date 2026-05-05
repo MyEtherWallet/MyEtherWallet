@@ -333,7 +333,7 @@ export function usePerpsTradeForm() {
           type: isLimit ? 'limit' : 'market',
           size: placedSize,
           postOnly: false,
-          reduceOnly: false,
+          reduceOnly: true,
         }
         if (isLimit && limitPrice.value) {
           orderParams.price = limitPrice.value
