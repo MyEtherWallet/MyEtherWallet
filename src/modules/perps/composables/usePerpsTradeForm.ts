@@ -32,7 +32,7 @@ interface OrderSideButton {
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
-const leverage = ref(1)
+const leverage = ref(20)
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
