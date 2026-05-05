@@ -231,7 +231,7 @@
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
                 class="h-14 hoverBGWhite cursor-pointer"
-                @click="goToTokenPage(token)"
+                @click="onRowClick(token)"
               >
                 <!-- Watchlist -->
                 <td class="sm:w-10 hidden sm:table-cell rounded-l-12 pl-1">
@@ -556,7 +556,7 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { ALL_CHAINS } from '@/components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
-import { analytics, ClickTokenTradeEvent } from '@/analytics'
+import { analytics, ClickTokenTradeEvent, StockMarketEvent } from '@/analytics'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
@@ -639,6 +639,11 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
     stock: token.name,
     isMobile,
   })
+  analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
+    location: 'trade_button',
+    stockName: token.name,
+    stockSymbol: token.symbol,
+  })
   setSelectedTradeTokenSymbol(token.symbol)
   setWalletPanel('trade')
   if (!isOpenSideMenu.value) {
@@ -650,6 +655,9 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
 }
 
 const setHeaderSort = (key: string) => {
+  analytics.trackStockMarketClickSortEvent(StockMarketEvent.CLICK_SORT, {
+    sortOption: key.toLowerCase(),
+  })
   if (headerSort.value === key) {
     tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
@@ -926,9 +934,18 @@ const getPercentClass = (val: number | null): string => {
   return 'text-primary'
 }
 
+const debounceTrackSearch = useDebounceFn((value: string) => {
+  if (value) {
+    analytics.trackStockMarketSearchEvent(StockMarketEvent.SEARCH_STOCK, {
+      searchValue: value,
+    })
+  }
+}, 500)
+
 watch(
   () => searchInput.value,
   () => {
+    debounceTrackSearch(searchInput.value)
     page.value = 1
     isLoading.value = true
     tokens.value = []
@@ -942,6 +959,15 @@ watch(
     } else {
       debounceFetchTokens()
     }
+  },
+)
+
+watch(
+  () => selectedCryptoFilter.value,
+  () => {
+    analytics.trackStockMarketFilterEvent(StockMarketEvent.SELECTED_FILTER, {
+      value: selectedCryptoFilter.value.value,
+    })
   },
 )
 
@@ -1037,6 +1063,15 @@ const getSparkLinePoints = (token: DisplayToken) => {
  * Token Link
  --------------------------------*/
 const router = useRouter()
+
+const onRowClick = (token: DisplayToken) => {
+  analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
+    location: 'token_row',
+    stockName: token.name,
+    stockSymbol: token.symbol,
+  })
+  goToTokenPage(token)
+}
 
 const goToTokenPage = (token: DisplayToken) => {
   router.push({

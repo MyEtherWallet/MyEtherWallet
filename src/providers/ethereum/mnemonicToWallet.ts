@@ -23,7 +23,11 @@ class MnemonicToWallet {
     const seed = await mnemonicToSeed(this.mnemonic, this.extraWord)
     const hdkey = HDkey.fromMasterSeed(seed)
     const derived = hdkey.derive(`${this.basePath}/${index}`)
-    return new PrivateKeyWallet(derived.privateKey!, this.chainId, WalletType.MNEMONIC)
+    return new PrivateKeyWallet(
+      derived.privateKey!,
+      this.chainId,
+      WalletType.MNEMONIC,
+    )
   }
 }
 

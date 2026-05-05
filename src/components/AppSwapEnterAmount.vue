@@ -58,6 +58,7 @@
         :chain-tokens="tokens || []"
         :is-from-view="isFromView"
         :network-name="networkName"
+        :sort-context="sortContext"
         @open:select-token="setIsOpenSelectToken"
       />
     </div>
@@ -159,6 +160,10 @@ const props = defineProps({
   isPristine: {
     type: Boolean,
     default: false,
+  },
+  sortContext: {
+    type: String as () => 'trade' | 'swap' | undefined,
+    default: undefined,
   },
 })
 

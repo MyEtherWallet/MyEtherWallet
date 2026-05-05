@@ -14,16 +14,15 @@
     <div
       :class="[
         isOpenSideMenu ? 'xl:grid-cols-2' : 'xl:grid-cols-3',
-        'grid grid-cols-1 lg-max:grid-cols-3  2xl:grid-cols-3 gap-5 lg:mt-3',
+        'grid grid-cols-1 lg:grid-cols-2  2xl:grid-cols-3 gap-5 lg:mt-3',
       ]"
-      v-if="isLoadingBalances || hasBalances"
+      v-if="isWalletConnected && (isLoadingBalances || hasBalances)"
     >
       <portfolio-overview />
 
       <portfolio-allocation class="h-full" />
-
       <rewards-portfolio
-        class="h-full"
+        class="h-full lg:col-span-2 xl:col-span-1"
         :class="[
           { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
           'col-span-1',
@@ -51,6 +50,7 @@ import PortfolioGainsAndLosses from '@/modules/portfolio/PortfolioGainsAndLosses
 import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import ConnectWallet from '@/modules/portfolio/components/ConnectWallet.vue'
 import RewardsPortfolio from '@/modules/rewards/RewardsPortfolio.vue'
+// import RewardsNewCampaignCountdown from '@/modules/rewards/RewardsNewCampaignCountdown.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import NoBalance from '@/modules/portfolio/components/NoBalance.vue'

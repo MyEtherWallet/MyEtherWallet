@@ -27,4 +27,20 @@ router.beforeEach((to, from, next) => {
     }
   }
 })
+
+router.onError((error, to) => {
+  const message = error instanceof Error ? error.message : String(error)
+  const isChunkError =
+    message.includes('Failed to fetch dynamically imported module') ||
+    message.includes('Unable to preload CSS')
+
+  if (isChunkError) {
+    const reloadKey = `chunk-reload:${to.fullPath}`
+    if (!sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, '1')
+      window.location.href = to.fullPath
+    }
+  }
+})
+
 export default router

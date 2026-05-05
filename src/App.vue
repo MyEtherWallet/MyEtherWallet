@@ -1,14 +1,12 @@
 <template>
   <div class="relative h-screen overflow-hidden">
-    <welcome-dialog
-      v-if="!isDevMode"
-      @close-welcome-dialog="showFeedbackToast"
-    />
+    <welcome-dialog v-if="!isDevMode" />
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <module-create-wallet v-if="isLoadingComplete" :aria-selected="true" />
     <the-gdpr-banner v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
+    <app-mew-wallet-banner v-if="false" />
   </div>
 </template>
 
@@ -28,6 +26,7 @@ import { ToastType } from '@/types/notification'
 import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
+import AppMewWalletBanner from '@/components/AppMewWalletBanner.vue'
 import configs from './configs'
 import { useDialogStore } from '@/stores/dialogStore'
 import { useTimeoutFn } from '@vueuse/core'
@@ -39,6 +38,10 @@ import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { analytics } from '@/analytics'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import Intercom from '@intercom/messenger-js-sdk'
+import { useMarketStatus } from './modules/trade/composables'
+
+// const { isTradingRestrictedInRegion, fetchMarketStatus } = useMarketStatus()
+const { fetchMarketStatus } = useMarketStatus()
 
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
@@ -66,11 +69,11 @@ const isLoadingComplete = ref(false)
 
 const popupStore = useAnalyticsStore()
 const { consent } = storeToRefs(popupStore)
-
 watch(
   () => consent.value,
   (newVal, oldVal) => {
     if (newVal && !oldVal) {
+      console.log(userProperties.value)
       analytics.setUserProperties({
         ...userProperties.value,
         network: selectedChain.value?.name,
@@ -156,24 +159,25 @@ watch(
 
 const toastStore = useToastStore()
 
-const showFeedbackToast = () => {
-  setTimeout(() => {
-    toastStore.addToastMessage({
-      text: 'Your opinion matters!',
-      textSecondary: 'Let us know what you think of this new version of MEW. ',
-      type: ToastType.Info,
-      isInfinite: true,
-      link: {
-        title: 'Submit Feedback',
-        url: 'https://mewwallet.typeform.com/to/WtgSdMJr',
-        isButton: true,
-      },
-    })
-  }, 4000)
-}
+// const showFeedbackToast = () => {
+//   setTimeout(() => {
+//     toastStore.addToastMessage({
+//       text: 'Your opinion matters!',
+//       textSecondary: 'Let us know what you think of this new version of MEW. ',
+//       type: ToastType.Info,
+//       isInfinite: true,
+//       link: {
+//         title: 'Submit Feedback',
+//         url: 'https://mewwallet.typeform.com/to/WtgSdMJr',
+//         isButton: true,
+//       },
+//     })
+//   }, 4000)
+// }
 const rewardsStore = useRewardsStore()
 
 onMounted(() => {
+  fetchMarketStatus()
   fetchPurchaseInfo()
   fetchStocksAddresses()
   rewardsStore.fetchAll()
@@ -183,7 +187,6 @@ onMounted(() => {
     addProvider(provider)
   })
   initSwapper()
-  console.log('INTERCOME_TEST', configs.INTERCOM_APP_ID)
   if (configs.INTERCOM_APP_ID) {
     Intercom({
       app_id: configs.INTERCOM_APP_ID,

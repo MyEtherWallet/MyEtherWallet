@@ -18,12 +18,13 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
    * Fetch tokens watchlist data
    */
   const fetchWatchListUrl = computed(() => {
+    if (watchListedTokens.value.length === 0) return ''
     const coins = watchListedTokens.value.join(',')
 
     const filterChainParam =
       filterChain.value &&
-      filterChain.value.name !== 'all' &&
-      filterChain.value.name !== ''
+        filterChain.value.name !== 'all' &&
+        filterChain.value.name !== ''
         ? `&filterChain=${filterChain.value.name}`
         : ''
     return `/v1/web/tokens-watchlist?coins=${coins}${filterChainParam}`
@@ -47,8 +48,8 @@ export const useFetchWatchlist = (filterChain: Ref<Chain | null>) => {
     const symbols = watchListedStocks.value.join(',')
     const filterChainParam =
       filterChain.value &&
-      filterChain.value.name !== 'all' &&
-      filterChain.value.name !== ''
+        filterChain.value.name !== 'all' &&
+        filterChain.value.name !== ''
         ? `&filterChain=${filterChain.value.name}`
         : ''
     return `/v1/web/pages/stocks/watchlist?symbols=${symbols}${filterChainParam}`

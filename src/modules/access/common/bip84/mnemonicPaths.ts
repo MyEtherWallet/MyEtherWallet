@@ -1,7 +1,3 @@
-import {
-  bip84Segwit
-} from '../configs/configPaths'
+import { bip84Segwit } from '../configs/configPaths'
 
-export default [
-  bip84Segwit
-]
+export default [bip84Segwit]
