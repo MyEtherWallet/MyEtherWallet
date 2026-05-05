@@ -58,6 +58,7 @@ import { QrCodeIcon } from '@heroicons/vue/24/outline'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
 import { ref, computed } from 'vue'
@@ -68,6 +69,7 @@ const { isXLAndUp } = useAppBreakpoints()
 const openDepositDialog = ref(false)
 const chainsStore = useChainsStore()
 const purchaseStore = usePurchaseStore()
+const walletMenu = useWalletMenuStore()
 const { selectedChain } = storeToRefs(chainsStore)
 const { isBuyable } = purchaseStore
 const { isFetching: isFetchingBuyableCoins } = storeToRefs(purchaseStore)
@@ -82,11 +84,7 @@ const buyBtn = () => {
     location: 'portfolio_no_balance',
     token: selectedChain.value?.currencyName,
   })
-  window.open(
-    'https://ccswap.myetherwallet.com/',
-    '_blank',
-    'noopener,noreferrer',
-  )
+  walletMenu.openPanel('purchase')
 }
 </script>
 <style scoped>

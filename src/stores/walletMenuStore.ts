@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export type WalletPanel = 'trade' | 'swap' | 'send' | 'buy' | 'sell' | 'bridge'
+export type WalletPanel = 'trade' | 'swap' | 'send' | 'bridge' | 'purchase'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const hideLowBalance = ref(false)
@@ -21,6 +21,11 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     walletPanel.value = value
   }
 
+  const openPanel = (panel: WalletPanel) => {
+    walletPanel.value = panel
+    isOpenSideMenu.value = true
+  }
+
   const setSelectedTradeTokenSymbol = (symbol: string | null) => {
     selectedTradeTokenSymbol.value = symbol
   }
@@ -34,10 +39,11 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setIsOpenSideMenu,
     walletPanel,
     setWalletPanel,
+    openPanel,
     hasShadow,
     selectedTradeTokenSymbol,
     setSelectedTradeTokenSymbol,
     hideLowBalance,
-    toggleShowBalance
+    toggleShowBalance,
   }
 })
