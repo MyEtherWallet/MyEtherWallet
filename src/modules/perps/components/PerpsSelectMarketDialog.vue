@@ -102,12 +102,12 @@
                   class="shrink-0 mr-4"
                 />
                 <div class="text-left">
-                  <div class="flex items-center gap-2 relative">
-                    <span class="font-bold text-s-15">{{
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-s-15 whitespace-nowrap">{{
                       contract.baseCurrency
                     }}</span>
                     <span
-                      class="absolute -right-5 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
+                      class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
                       >20x</span
                     >
                   </div>

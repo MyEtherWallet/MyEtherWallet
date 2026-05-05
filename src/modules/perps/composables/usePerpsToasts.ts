@@ -215,9 +215,11 @@ export function usePerpsToasts() {
   }
 
   // --- Orders & Trading (non-TWAP) ---
+  // Spec classifies Order Canceled as `failure` type (red).
+  // Kept as ToastType.Error for spec fidelity — same precedent as SL/TP Removed.
   const toastOrderCanceled = (args: OrderArgs) => {
     toastStore.addToastMessage({
-      type: ToastType.Success,
+      type: ToastType.Error,
       text: 'Order Canceled',
       textSecondary: orderLine(args),
     })
