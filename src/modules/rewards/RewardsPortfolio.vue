@@ -55,8 +55,9 @@
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilHourReset"
-        :time-until-next-eligible="timeUntilNextEligible"
+        :time-until-hour-reset="timeUntilRewardHourReset"
+        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
         @swap="goToSwap"
         @trade="goToTrade"
         class="max-w-[360px] 2xl:max-w-none"
@@ -103,8 +104,9 @@
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilHourReset"
-        :time-until-next-eligible="timeUntilNextEligible"
+        :time-until-hour-reset="timeUntilRewardHourReset"
+        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
       />
     </div>
   </div>
@@ -132,7 +134,7 @@ const toastStore = useToastStore()
 const rewardsStore = useRewardsStore()
 const {
   hadInitialLoad,
-  eligibility,
+  eligibilityV2,
   swapClaimed,
   tradeClaimed,
   swapNoRewards,
@@ -148,8 +150,10 @@ const {
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)
-const timeUntilHourReset = ref('--')
-const timeUntilNextEligible = ref('--')
+const timeUntilRewardHourReset = ref('--')
+const timeUntilSwapNextEligible = ref('--')
+const timeUntilTradeNextEligible = ref('--')
+
 let countdownTimer: ReturnType<typeof setInterval> | null = null
 
 function formatDiff(ms: number): string {
@@ -163,13 +167,27 @@ function formatDiff(ms: number): string {
 
 function updateCountdowns() {
   const hourTarget = nextHourStart.value
-  timeUntilHourReset.value = hourTarget
+  timeUntilRewardHourReset.value = hourTarget
     ? formatDiff(Math.max(0, new Date(hourTarget).getTime() - Date.now()))
     : '--'
 
-  const eligibleTarget = eligibility.value?.nextEligibleDate
-  timeUntilNextEligible.value = eligibleTarget
-    ? formatDiff(Math.max(0, new Date(eligibleTarget).getTime() - Date.now()))
+  timeUntilSwapNextEligible.value = eligibilityV2.value?.swap.nextEligibleDate
+    ? formatDiff(
+        Math.max(
+          0,
+          new Date(eligibilityV2.value?.swap.nextEligibleDate).getTime() -
+            Date.now(),
+        ),
+      )
+    : '--'
+  timeUntilTradeNextEligible.value = eligibilityV2.value?.trade.nextEligibleDate
+    ? formatDiff(
+        Math.max(
+          0,
+          new Date(eligibilityV2.value?.trade.nextEligibleDate).getTime() -
+            Date.now(),
+        ),
+      )
     : '--'
 }
 

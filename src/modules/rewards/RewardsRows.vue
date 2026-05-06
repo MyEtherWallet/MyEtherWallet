@@ -70,7 +70,8 @@
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
       >
-        Back in {{ swapClaimed ? timeUntilNextEligible : timeUntilHourReset }}
+        Back in
+        {{ swapClaimed ? timeUntilSwapNextEligible : timeUntilHourReset }}
         <clock-icon
           class="w-3.5 h-3.5 ml-auto"
           :class="{
@@ -153,7 +154,7 @@
         }"
       >
         Back in
-        {{ tradeClaimed ? timeUntilNextEligible : timeUntilHourReset }}
+        {{ tradeClaimed ? timeUntilTradeNextEligible : timeUntilHourReset }}
         <clock-icon
           class="w-3.5 h-3.5 ml-auto"
           :class="{
@@ -188,7 +189,8 @@ defineProps<{
   tradeRemainingCount: number | null
   tradeTotal: number | null
   timeUntilHourReset: string
-  timeUntilNextEligible: string
+  timeUntilSwapNextEligible: string
+  timeUntilTradeNextEligible: string
   isRewardsView?: boolean
 }>()
 

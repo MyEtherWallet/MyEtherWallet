@@ -64,7 +64,8 @@
           :trade-remaining-count="tradeRemainingCount"
           :trade-total="tradeTotal"
           :time-until-hour-reset="timeUntilHourReset"
-          :time-until-next-eligible="timeUntilNextEligible"
+          :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+          :time-until-trade-next-eligible="timeUntilTradeNextEligible"
           class="mt-0"
           @swap="onNavigate('swap')"
           @trade="onNavigate('trade')"
@@ -108,7 +109,8 @@ const props = defineProps<{
   tradeRemainingCount: number | null
   tradeTotal: number | null
   timeUntilHourReset: string
-  timeUntilNextEligible: string
+  timeUntilSwapNextEligible: string
+  timeUntilTradeNextEligible: string
 }>()
 
 const isOpenModel = defineModel('isOpen', {
