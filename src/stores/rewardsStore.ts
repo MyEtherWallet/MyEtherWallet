@@ -343,7 +343,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         r.type === 'POOL_LOW_USDC',
     )
 
-    if (!tradeRecentlyRewarded || swapRecentlyRewarded) {
+    if (!tradeRecentlyRewarded || !swapRecentlyRewarded) {
       return tradeGeneric || swapGeneric
     }
     return false
