@@ -58,7 +58,7 @@
         v-if="!swapClaimed && !swapNoRewards"
         size="small"
         is-outline
-        class="shrink-0"
+        class="grow max-w-[150px]"
         @click="$emit('swap')"
       >
         Swap $50+
