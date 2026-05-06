@@ -34,6 +34,10 @@ if (initialPopupStateJson) {
 // Create and initialize Amplitude instance
 const amplitude = createInstance()
 
+// const serverUrl = process.env.NODE_ENV === 'production'
+//   ? 'https://analytics-web-v7.mewwallet.dev/record'
+//   : 'https://analytics-web-development-v7.mewwallet.dev/record',
+
 amplitude.init(__TMP_HASHED_VERSION__, {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
