@@ -9,7 +9,7 @@ import { usePerpsPositions } from './usePerpsPositions'
 import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
 import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
-import { getCategory, midPrice } from '../utils/market'
+import { getCategory, midPrice, resolveEffectivePrice } from '../utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -212,20 +212,14 @@ export function usePerpsTradeForm() {
   const formatQuotePrice = (value: number): string =>
     floorToIncrement(value, activeMarketQuoteIncrement.value)
 
-  // For limit orders the order size in base units is determined by the user's
-  // chosen limit price, not the live mark price — quoting against mark would
-  // produce a wildly different base quantity (e.g. 500 USDC margin × 20x at a
-  // $5,000 limit should be 2 NVDA, not ~50 NVDA quoted against a $200 mark)
-  // and make the open order reserve maintenance margin against the wrong
-  // notional. Falls back to currentPrice while the limit field is empty or
-  // invalid so the displayed size stays defined.
-  const effectivePrice = computed(() => {
-    if (orderType.value === 'limit') {
-      const lp = parseFloat(limitPrice.value)
-      if (!isNaN(lp) && lp > 0) return lp
-    }
-    return currentPrice.value
-  })
+  const effectivePrice = computed(() =>
+    resolveEffectivePrice({
+      orderType: orderType.value,
+      orderSide: orderSide.value,
+      limitPrice: limitPrice.value,
+      currentPrice: currentPrice.value,
+    }),
+  )
 
   const orderSize = computed(() => {
     if (!effectivePrice.value) return '0'
