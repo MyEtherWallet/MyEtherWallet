@@ -143,7 +143,11 @@ const infoItems = [
   },
   {
     icon: 'trophy',
-    text: 'Be among the first 10 users per hour, per action.',
+    text: 'Be among the first 10 users per hour, per swap.',
+  },
+  {
+    icon: 'graph',
+    text: 'Be among the first 15 users per hour, per trade.',
   },
   {
     icon: 'currency-dollar',

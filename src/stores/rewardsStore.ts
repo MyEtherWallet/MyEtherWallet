@@ -222,6 +222,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
 
   /** User Rewards */
   const todaysReward = computed(() => {
+    const reward = rewards.value[0]
+    if (reward && isRewardEarnedDuringCampaign(reward)) return reward
+    return null
   })
   const hasRewards = computed(() => rewards.value.length > 0)
 

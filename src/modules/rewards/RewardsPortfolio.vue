@@ -20,7 +20,7 @@
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.
+            First trades of $25+ and swaps of $50+ earn 5 USDC each hour.
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
