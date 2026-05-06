@@ -100,7 +100,7 @@ const connectWallet = () => accessStore.openAccessDialog()
 watch(
   () => wallet.value,
   (newVal, oldVal) => {
-    if (newVal && !isWatchOnly.value && oldVal) {
+    if (newVal && oldVal && !isWatchOnly.value && !isAuthenticating.value) {
       login()
     }
   },
