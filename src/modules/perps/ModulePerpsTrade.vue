@@ -9,7 +9,7 @@
     </div>
 
     <div
-      v-if="!isWalletConnected || isWatchOnly"
+      v-if="!isWalletConnected"
       class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
     >
       <p class="text-info text-s-14 mb-4">
@@ -24,7 +24,7 @@
     </div>
 
     <div
-      v-else-if="!token"
+      v-else-if="!token && !isWatchOnly"
       class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
     >
       <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
@@ -599,24 +599,38 @@
         </template>
       </div>
       <!-- Submit Button -->
-      <app-base-button
-        v-if="!activePosition || manageMode === 'add'"
-        :disabled="submitDisabled"
-        @click="showConfirmation"
-        :theme="orderSide === 'buy' ? 'success' : 'error'"
-        class="w-full mt-4"
-      >
-        {{ getMainBtnText }}
-      </app-base-button>
-      <app-base-button
-        v-if="manageMode === 'close'"
-        :theme="orderSide === 'buy' ? 'success' : 'error'"
-        :disabled="closeDisabled"
-        @click="showCloseConfirmation"
-        class="w-full mt-4"
-      >
-        {{ closeButtonLabel }}
-      </app-base-button>
+      <template v-if="isWatchOnly">
+        <app-base-button
+          :disabled="true"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          class="w-full mt-4"
+        >
+          {{ getMainBtnText }}
+        </app-base-button>
+        <p class="text-center text-info text-s-12 mt-2">
+          This is a view-only wallet. Sign in to trade.
+        </p>
+      </template>
+      <template v-else>
+        <app-base-button
+          v-if="!activePosition || manageMode === 'add'"
+          :disabled="submitDisabled"
+          @click="showConfirmation"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          class="w-full mt-4"
+        >
+          {{ getMainBtnText }}
+        </app-base-button>
+        <app-base-button
+          v-if="manageMode === 'close'"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          :disabled="closeDisabled"
+          @click="showCloseConfirmation"
+          class="w-full mt-4"
+        >
+          {{ closeButtonLabel }}
+        </app-base-button>
+      </template>
     </div>
 
     <!-- Order Confirmation Dialog -->
