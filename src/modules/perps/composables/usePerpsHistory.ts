@@ -105,8 +105,8 @@ export function usePerpsOrders() {
     if (pagination.currentPage.value !== 0) return
     isRefreshing = true
     try {
-      await pagination.refetch()
-      if (pagination.currentPage.value === 0) {
+      const ok = await pagination.refetch()
+      if (ok && pagination.currentPage.value === 0) {
         detectFillsAndToast(pagination.items.value)
       }
     } finally {
@@ -129,8 +129,8 @@ export function usePerpsOrders() {
     pagination.reset()
     if (token.value) {
       void (async () => {
-        await pagination.refetch()
-        detectFillsAndToast(pagination.items.value)
+        const ok = await pagination.refetch()
+        if (ok) detectFillsAndToast(pagination.items.value)
       })()
       pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
     } else {
