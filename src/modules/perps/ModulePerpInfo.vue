@@ -418,8 +418,12 @@
                   "
                   class="ml-1 text-info"
                 >
-                  · {{ openOrdersCountForMarket
-                  }}{{ openOrdersCountIsCapped ? '+' : '' }}
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${OPEN_COUNT_LIMIT}+`
+                      : openOrdersCountForMarket
+                  }}
                 </span>
               </span>
             </template>
@@ -439,9 +443,23 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium">{{
-                    activeInfoTabObj.label
-                  }}</span>
+                  <span class="text-s-16 font-medium">
+                    {{ activeInfoTabObj.label }}
+                    <span
+                      v-if="
+                        activeInfoTab === 'orders' &&
+                        openOrdersCountForMarket > 0
+                      "
+                      class="ml-1 text-info"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${OPEN_COUNT_LIMIT}+`
+                          : openOrdersCountForMarket
+                      }}
+                    </span>
+                  </span>
                   <chevron-down-icon class="w-4 h-4 ml-1" />
                 </div>
               </button>
@@ -1035,6 +1053,7 @@ const OPEN_COUNT_LIMIT = 50
 const PENDING_STATUSES = new Set(['pending', 'untriggered', 'open'])
 const openOrdersCountForMarket = ref(0)
 const openOrdersCountIsCapped = ref(false)
+let openOrdersFetchSeq = 0
 
 async function fetchOpenOrdersCount() {
   if (!token.value) {
@@ -1042,11 +1061,16 @@ async function fetchOpenOrdersCount() {
     openOrdersCountIsCapped.value = false
     return
   }
+  // Snapshot context so a slow response from a previous market can't overwrite
+  // the badge after the user has switched markets.
+  const seq = ++openOrdersFetchSeq
+  const market = props.market
   try {
     const res = await perpsClient.getOrders({
-      market: props.market,
+      market,
       limit: OPEN_COUNT_LIMIT,
     })
+    if (seq !== openOrdersFetchSeq || market !== props.market) return
     const list = res.result ?? []
     openOrdersCountForMarket.value = list.filter(o =>
       PENDING_STATUSES.has(o.status),
@@ -1054,6 +1078,7 @@ async function fetchOpenOrdersCount() {
     openOrdersCountIsCapped.value =
       !!res.pageInfo?.nextCursor && list.length >= OPEN_COUNT_LIMIT
   } catch {
+    if (seq !== openOrdersFetchSeq || market !== props.market) return
     openOrdersCountForMarket.value = 0
     openOrdersCountIsCapped.value = false
   }

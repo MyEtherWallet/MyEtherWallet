@@ -27,7 +27,12 @@
                   v-else-if="data.value === 'orders' && openOrdersCount > 0"
                   class="ml-1 text-info"
                 >
-                  · {{ openOrdersCount }}{{ openOrdersCountIsCapped ? '+' : '' }}
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
                 </span>
               </span>
             </template>
@@ -47,9 +52,26 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium">{{
-                    selectedTab.label
-                  }}</span>
+                  <span class="text-s-16 font-medium">
+                    {{ selectedTab.label }}
+                    <span
+                      v-if="activeTab === 'positions' && positions.length > 0"
+                      class="ml-1 text-info"
+                    >
+                      · {{ positions.length }}
+                    </span>
+                    <span
+                      v-else-if="activeTab === 'orders' && openOrdersCount > 0"
+                      class="ml-1 text-info"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${ORDERS_FETCH_LIMIT}+`
+                          : openOrdersCount
+                      }}
+                    </span>
+                  </span>
                   <chevron-down-icon class="w-4 h-4 ml-2" />
                 </div>
               </button>
