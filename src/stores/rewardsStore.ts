@@ -208,13 +208,13 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     () => tradePool.value?.hourlyRemainingRewardCount ?? null,
   )
 
-  const checkAvailabilityAfterTransaction = async () => {
+  const checkAvailabilityAfterTransaction = async (type: 'swap' | 'trade') => {
     // This function can be called after a transaction to check if user has earned a potential reward, and if so, set the badge immediately without waiting for the next eligibility fetch
     if (eligibilityV2.value === null || (eligibilityV2.value.swap.eligible ?? eligibilityV2.value.trade.eligible)) {
       await fetchEligibility()
       if (eligibilityV2.value?.swap.eligible || eligibilityV2.value?.trade.eligible) {
         earnedPotentialRewardAddresses.value.push(walletAddress.value!)
-        return true
+        return eligibilityV2.value[type].eligible
       }
     }
     return false
@@ -222,9 +222,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
 
   /** User Rewards */
   const todaysReward = computed(() => {
-    const reward = rewards.value[0]
-    if (reward && isRewardEarnedDuringCampaign(reward)) return reward
-    return null
   })
   const hasRewards = computed(() => rewards.value.length > 0)
 
