@@ -19,13 +19,13 @@
                 {{ data.label }}
                 <span
                   v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-info"
+                  class="ml-1 text-info text-s-12"
                 >
                   · {{ positions.length }}
                 </span>
                 <span
                   v-else-if="data.value === 'orders' && openOrdersCount > 0"
-                  class="ml-1 text-info"
+                  class="ml-1 text-info text-s-12"
                 >
                   ·
                   {{
@@ -95,11 +95,7 @@
         >
           No open positions
         </div>
-        <table
-          v-else
-          ref="positionsTable"
-          class="w-full text-s-14 table-fixed"
-        >
+        <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -291,7 +287,20 @@
             size="xs"
           >
             <template #btn-content="{ data }">
-              <span class="px-2">{{ data.label }}</span>
+              <span class="px-2"
+                >{{ data.label }}
+                <span
+                  v-if="data.value === 'pending' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-11"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
+                </span></span
+              >
             </template>
           </app-btn-group>
         </div>
@@ -914,8 +923,7 @@ async function cancelOrder(order: ApiOrder) {
   if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
-  const displayMarket =
-    market?.longName ?? market?.displayName ?? order.market
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
     await perpsClient.cancelOrder(order.orderId)
     perpsToasts.toastOrderCanceled({
