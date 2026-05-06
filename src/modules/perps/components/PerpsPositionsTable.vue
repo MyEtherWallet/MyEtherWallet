@@ -23,6 +23,12 @@
                 >
                   · {{ positions.length }}
                 </span>
+                <span
+                  v-else-if="data.value === 'orders' && openOrdersCount > 0"
+                  class="ml-1 text-info"
+                >
+                  · {{ openOrdersCount }}{{ openOrdersCountIsCapped ? '+' : '' }}
+                </span>
               </span>
             </template>
           </app-btn-group>
@@ -987,4 +993,15 @@ const filteredOrders = computed(() => {
   if (selectedOrderFilter.value.value === 'all') return orders.value
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
+
+// Open-orders count for the Orders tab badge. Source is the polled orders
+// list (limit 100 in usePerpsOrders); count saturates at 100 and is flagged
+// with "+" when so.
+const ORDERS_FETCH_LIMIT = 100
+const openOrdersCount = computed(
+  () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
+)
+const openOrdersCountIsCapped = computed(
+  () => orders.value.length >= ORDERS_FETCH_LIMIT,
+)
 </script>

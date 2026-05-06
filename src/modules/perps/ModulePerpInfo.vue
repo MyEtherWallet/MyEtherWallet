@@ -410,7 +410,18 @@
             class="ml-2"
           >
             <template #btn-content="{ data }">
-              {{ data.label }}
+              <span>
+                {{ data.label }}
+                <span
+                  v-if="
+                    data.value === 'orders' && openOrdersCountForMarket > 0
+                  "
+                  class="ml-1 text-info"
+                >
+                  · {{ openOrdersCountForMarket
+                  }}{{ openOrdersCountIsCapped ? '+' : '' }}
+                </span>
+              </span>
             </template>
           </app-btn-group>
         </div>
@@ -450,12 +461,18 @@
               :columns="ordersSkeletonColumns"
             />
             <div
-              v-else-if="marketOrders.length === 0"
+              v-else-if="
+                marketOrders.length === 0 && ordersCurrentPage === 0
+              "
               class="text-center py-8 text-info text-s-14"
             >
               No orders for {{ baseCurrency }}
             </div>
-            <table v-else class="w-full text-s-14 table-fixed">
+            <table
+              v-else
+              ref="ordersTable"
+              class="w-full text-s-14 table-fixed"
+            >
               <thead>
                 <tr
                   class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
@@ -625,6 +642,20 @@
                 </tr>
               </tbody>
             </table>
+            <div
+              v-if="ordersHasPrev || ordersHasNext"
+              class="flex justify-end mt-4 px-2"
+            >
+              <perps-pagination
+                :current-page="ordersCurrentPage"
+                :has-prev="ordersHasPrev"
+                :has-next="ordersHasNext"
+                :disabled="ordersLoading"
+                :scroll-target="ordersTable"
+                @prev="ordersPrevPage"
+                @next="ordersNextPage"
+              />
+            </div>
           </div>
           <!--Fills tab -->
           <div
@@ -638,13 +669,13 @@
               :columns="fillsSkeletonColumns"
             />
             <div
-              v-else-if="marketFills.length === 0"
+              v-else-if="marketFills.length === 0 && fillsCurrentPage === 0"
               class="text-center py-6 text-info text-s-14"
             >
               No fills for {{ baseCurrency }}
             </div>
             <div v-else class="w-full">
-              <table class="w-full text-s-14 table-fixed">
+              <table ref="fillsTable" class="w-full text-s-14 table-fixed">
                 <thead>
                   <tr
                     class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
@@ -729,6 +760,20 @@
                   </tr>
                 </tbody>
               </table>
+              <div
+                v-if="fillsHasPrev || fillsHasNext"
+                class="flex justify-end mt-4 px-2"
+              >
+                <perps-pagination
+                  :current-page="fillsCurrentPage"
+                  :has-prev="fillsHasPrev"
+                  :has-next="fillsHasNext"
+                  :disabled="fillsLoading"
+                  :scroll-target="fillsTable"
+                  @prev="fillsPrevPage"
+                  @next="fillsNextPage"
+                />
+              </div>
             </div>
           </div>
         </transition>
@@ -810,7 +855,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted } from 'vue'
+import { ref, computed, watch, watchEffect, onUnmounted } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -820,6 +865,7 @@ import AppTableSkeleton, {
 } from '@/components/AppTableSkeleton.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
+import PerpsPagination from './components/PerpsPagination.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
@@ -830,7 +876,8 @@ import {
   ArrowTrendingUpIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
-import { perpsClient } from './configs'
+import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
+import { useCursorPaginate } from './composables/useCursorPaginate'
 import {
   usePerpsMarkets,
   usePerpsContracts,
@@ -949,11 +996,68 @@ const markPrice = computed(() => {
   return mp?.price
 })
 
-// Orders and fills for this market
-const marketOrders = ref<ApiOrder[]>([])
-const marketFills = ref<ApiFill[]>([])
-const ordersLoading = ref(false)
-const fillsLoading = ref(false)
+// Cursor-paginated orders & fills for this market (page size 5).
+const ordersTable = ref<HTMLElement | null>(null)
+const fillsTable = ref<HTMLElement | null>(null)
+
+const ordersPagination = useCursorPaginate<ApiOrder>(
+  opts => perpsClient.getOrders({ ...opts, market: props.market }),
+  PERPS_INFO_PAGE_SIZE,
+)
+const {
+  items: marketOrders,
+  loading: ordersLoading,
+  currentPage: ordersCurrentPage,
+  hasPrev: ordersHasPrev,
+  hasNext: ordersHasNext,
+  nextPage: ordersNextPage,
+  prevPage: ordersPrevPage,
+} = ordersPagination
+
+const fillsPagination = useCursorPaginate<ApiFill>(
+  opts => perpsClient.getFills({ ...opts, market: props.market }),
+  PERPS_INFO_PAGE_SIZE,
+)
+const {
+  items: marketFills,
+  loading: fillsLoading,
+  currentPage: fillsCurrentPage,
+  hasPrev: fillsHasPrev,
+  hasNext: fillsHasNext,
+  nextPage: fillsNextPage,
+  prevPage: fillsPrevPage,
+} = fillsPagination
+
+// Open-orders count for the tab badge. The cursor-paginated table only loads
+// 5 orders per page, so a separate fetch is needed to know how many open
+// orders exist for this market. Limit caps the count at 50 ("50+" if more).
+const OPEN_COUNT_LIMIT = 50
+const PENDING_STATUSES = new Set(['pending', 'untriggered', 'open'])
+const openOrdersCountForMarket = ref(0)
+const openOrdersCountIsCapped = ref(false)
+
+async function fetchOpenOrdersCount() {
+  if (!token.value) {
+    openOrdersCountForMarket.value = 0
+    openOrdersCountIsCapped.value = false
+    return
+  }
+  try {
+    const res = await perpsClient.getOrders({
+      market: props.market,
+      limit: OPEN_COUNT_LIMIT,
+    })
+    const list = res.result ?? []
+    openOrdersCountForMarket.value = list.filter(o =>
+      PENDING_STATUSES.has(o.status),
+    ).length
+    openOrdersCountIsCapped.value =
+      !!res.pageInfo?.nextCursor && list.length >= OPEN_COUNT_LIMIT
+  } catch {
+    openOrdersCountForMarket.value = 0
+    openOrdersCountIsCapped.value = false
+  }
+}
 
 const cancellingOrderId = ref<string | null>(null)
 
@@ -981,19 +1085,6 @@ const showCancelButton = (order: ApiOrder) => {
   )
 }
 
-const fetchMarketOrders = async () => {
-  if (!token.value) return
-  ordersLoading.value = true
-  try {
-    const res = await perpsClient.getOrders({ market: props.market })
-    marketOrders.value = res.result ?? []
-  } catch {
-    marketOrders.value = []
-  } finally {
-    ordersLoading.value = false
-  }
-}
-
 const cancelInfoOrder = async (order: ApiOrder) => {
   if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
@@ -1009,7 +1100,7 @@ const cancelInfoOrder = async (order: ApiOrder) => {
       price: order.price,
     })
     showOrderDialog.value = false
-    await fetchMarketOrders()
+    await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
   } catch (e) {
     console.error('Failed to cancel order:', e)
     const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
@@ -1025,19 +1116,6 @@ const cancelInfoOrder = async (order: ApiOrder) => {
     }
   } finally {
     cancellingOrderId.value = null
-  }
-}
-
-const fetchMarketFills = async () => {
-  if (!token.value) return
-  fillsLoading.value = true
-  try {
-    const res = await perpsClient.getFills({ market: props.market })
-    marketFills.value = res.result ?? []
-  } catch {
-    marketFills.value = []
-  } finally {
-    fillsLoading.value = false
   }
 }
 
@@ -1059,37 +1137,54 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
   { header: '', width: '36px' },
 ]
 
-watch(
-  () => token.value,
-  t => {
-    if (t) {
-      fetchMarketOrders()
-      fetchMarketFills()
-    }
-  },
-  { immediate: true },
-)
-
 let ordersPollTimer: ReturnType<typeof setInterval> | null = null
-if (token.value) {
-  ordersPollTimer = setInterval(fetchMarketOrders, 10_000)
-}
-watch(
-  () => token.value,
-  t => {
-    if (ordersPollTimer) {
-      clearInterval(ordersPollTimer)
-      ordersPollTimer = null
-    }
-    if (t) {
-      ordersPollTimer = setInterval(fetchMarketOrders, 10_000)
-    }
-  },
-)
+let fillsPollTimer: ReturnType<typeof setInterval> | null = null
+let ordersIsRefreshing = false
+let fillsIsRefreshing = false
 
-watch(refreshKey, () => {
+async function refreshOrdersPageZero() {
+  if (ordersIsRefreshing) return
+  if (ordersLoading.value) return
+  if (ordersCurrentPage.value !== 0) return
+  ordersIsRefreshing = true
+  try {
+    await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
+  } finally {
+    ordersIsRefreshing = false
+  }
+}
+
+async function refreshFillsPageZero() {
+  if (fillsIsRefreshing) return
+  if (fillsLoading.value) return
+  if (fillsCurrentPage.value !== 0) return
+  fillsIsRefreshing = true
+  try {
+    await fillsPagination.refetch()
+  } finally {
+    fillsIsRefreshing = false
+  }
+}
+
+watchEffect(() => {
+  void refreshKey.value
+  void props.market
+  if (ordersPollTimer) clearInterval(ordersPollTimer)
+  if (fillsPollTimer) clearInterval(fillsPollTimer)
+  ordersPagination.reset()
+  fillsPagination.reset()
+  openOrdersCountForMarket.value = 0
+  openOrdersCountIsCapped.value = false
   if (token.value) {
-    fetchMarketOrders()
+    void (async () => {
+      await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
+    })()
+    void fillsPagination.refetch()
+    ordersPollTimer = setInterval(refreshOrdersPageZero, 10_000)
+    fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
+  } else {
+    ordersPollTimer = null
+    fillsPollTimer = null
   }
 })
 
@@ -1120,6 +1215,7 @@ updateFundingCountdown()
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
   if (ordersPollTimer) clearInterval(ordersPollTimer)
+  if (fillsPollTimer) clearInterval(fillsPollTimer)
 })
 
 // Tabs

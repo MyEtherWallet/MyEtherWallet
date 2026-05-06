@@ -25,6 +25,7 @@ const BUILDER_CODE = 'myetherwallet'
 const MAINNET_ENABLED = false
 
 const PERPS_PAGE_SIZE = 10
+const PERPS_INFO_PAGE_SIZE = 5
 
 export {
   IS_PERPS_LIVE,
@@ -36,4 +37,5 @@ export {
   MAINNET_ENABLED,
   BUILDER_CODE,
   PERPS_PAGE_SIZE,
+  PERPS_INFO_PAGE_SIZE,
 }
