@@ -144,7 +144,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         )
       eligibilityV2.value = result
       const eligible = result?.swap.eligible ?? result?.trade.eligible ?? false
-      analytics.setUserProperties({ canClaimRewards: eligible })
+      analytics.setUserProperties({ canClaimRewards: eligible, canClaimSwap: result?.trade.eligible, canClaimTrade: result?.swap.eligible })
     } catch (error) {
       console.error('Failed to fetch reward eligibility:', error)
     } finally {
