@@ -879,6 +879,7 @@ function openOrderDialog(order: ApiOrder) {
 const {
   orders,
   loading: ordersLoading,
+  hasMore: ordersHasMore,
   refetch: refetchOrders,
 } = usePerpsOrders()
 
@@ -1017,13 +1018,11 @@ const filteredOrders = computed(() => {
 })
 
 // Open-orders count for the Orders tab badge. Source is the polled orders
-// list (limit 100 in usePerpsOrders); count saturates at 100 and is flagged
-// with "+" when so.
+// list (limit 100 in usePerpsOrders); when the server signals more pages
+// beyond the fetched window the badge saturates and is flagged with "+".
 const ORDERS_FETCH_LIMIT = 100
 const openOrdersCount = computed(
   () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
 )
-const openOrdersCountIsCapped = computed(
-  () => orders.value.length >= ORDERS_FETCH_LIMIT,
-)
+const openOrdersCountIsCapped = computed(() => ordersHasMore.value)
 </script>

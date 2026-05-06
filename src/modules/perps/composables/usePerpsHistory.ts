@@ -22,6 +22,10 @@ export function usePerpsOrders() {
   const perpsToasts = usePerpsToasts()
   const orders = ref<ApiOrder[]>([])
   const loading = ref(false)
+  // True when the server signals more orders beyond the fetched window via
+  // pageInfo.nextCursor. Lets callers distinguish "exactly N orders" from
+  // "N orders fetched and more exist" without guessing from list length.
+  const hasMore = ref(false)
   // Snapshot keyed by orderId — used to diff filledSize between polls so we
   // can fire Order Filled / Order Partially Filled exactly on the transition.
   // First poll after login seeds the snapshot without firing toasts to avoid
@@ -109,9 +113,11 @@ export function usePerpsOrders() {
       const next = res.result ?? []
       detectFillsAndToast(next)
       orders.value = next
+      hasMore.value = !!res.pageInfo?.nextCursor
     } catch {
       if (seq !== fetchSeq) return
       orders.value = []
+      hasMore.value = false
     } finally {
       if (seq === fetchSeq) loading.value = false
     }
@@ -134,6 +140,7 @@ export function usePerpsOrders() {
       pollTimer = setInterval(fetchOrders, 10_000)
     } else {
       orders.value = []
+      hasMore.value = false
       pollTimer = null
     }
   })
@@ -142,7 +149,7 @@ export function usePerpsOrders() {
     if (pollTimer) clearInterval(pollTimer)
   })
 
-  return { orders, loading, refetch: fetchOrders }
+  return { orders, loading, hasMore, refetch: fetchOrders }
 }
 
 export function usePerpsFills() {
