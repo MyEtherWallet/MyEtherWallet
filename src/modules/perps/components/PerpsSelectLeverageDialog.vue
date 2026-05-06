@@ -115,10 +115,10 @@
             >Learn more</a
           >
         </p>
-        <app-not-recommended
+        <app-warning
           v-if="mode === 'add'"
-          title="Changing leverage will affect your entire position"
-          :description="`You're adding to an existing position at a different leverage. This will change the leverage for your full ${symbol} position, not just the amount you're adding. Your liquidation price and required margin will be recalculated.`"
+          title="Position leverage will change"
+          :text="`You're adding to an existing position at a different leverage. This will change the leverage for your full ${symbol} position, not just the amount you're adding. Your liquidation price and required margin will be recalculated.`"
         />
 
         <!-- Leverage Error -->
@@ -148,7 +148,7 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getLogoUrl } from '../utils/market'
 import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
 import { computed } from 'vue'
-import AppNotRecommended from '@/components/AppNotRecommended.vue'
+import AppWarning from '@/components/AppWarning.vue'
 
 interface Props {
   symbol: string

@@ -192,7 +192,7 @@
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
                         label="action menu"
-                        @click.stop="toggleMenu"
+                        @click="toggleMenu"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                         class="flex lg:hidden"
@@ -202,7 +202,7 @@
                       <AppBaseButton
                         class="hidden lg:flex"
                         size="small"
-                        @click.stop="toggleMenu"
+                        @click="toggleMenu"
                         :theme="pos.direction === 'long' ? 'success' : 'error'"
                       >
                         Manage

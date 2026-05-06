@@ -61,6 +61,7 @@
     <perps-market-list
       @open-position="handleOpenPosition"
       @view-market="handleViewMarket"
+      @open-side-menu="handleOpenSideWithType"
     />
     <perps-deposit-dialog v-model="showDeposit" />
     <perps-withdraw-dialog

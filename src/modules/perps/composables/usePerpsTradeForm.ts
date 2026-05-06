@@ -637,7 +637,7 @@ export function usePerpsTradeForm() {
 
   // ── Leverage modal ─────────────────────────────────────────
   function openLeverageModal() {
-    tempLeverage.value = tempLeverage.value !== 1 ? tempLeverage.value : leverage.value // keep temp levarage if not 1
+    tempLeverage.value = leverage.value
     leverageError.value = ''
     showLeverageModal.value = true
   }
@@ -671,8 +671,9 @@ export function usePerpsTradeForm() {
     if (!token.value || !markets.value.length) return
     try {
       const res = await perpsClient.getLeverage(fullMarketName.value)
+
       if (res.success && res.result?.length) {
-        leverage.value = parseInt(res.result[0].leverage) || 1
+        leverage.value = parseInt(res.result[0].leverage) || 20
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)

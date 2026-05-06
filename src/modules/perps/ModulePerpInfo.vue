@@ -1156,7 +1156,7 @@ const activeInfoTabObj = computed({
 const manageOptions = [
   { value: 'add', label: 'Add to Position' },
   { value: 'leverage', label: 'Change Leverage' },
-  { value: 'close', label: 'Close' },
+  { value: 'close', label: 'Close Position' },
 ]
 const selectedManageAction = ref<{ value: string; label: string } | undefined>(
   undefined,

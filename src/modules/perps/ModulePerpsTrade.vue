@@ -888,10 +888,8 @@ const localLeverage = ref(leverage)
 watch(
   () => leverage.value,
   val => {
-    console.log(val)
-    if (!val) localLeverage.value = val
+    if (val) localLeverage.value = val
   },
-  { deep: true },
 )
 
 watch(
