@@ -180,6 +180,7 @@
             </button>
           </div>
           <app-pop-up-menu
+            v-if="!activePosition || manageMode === 'add'"
             :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
             location="right"
             class="ml-3"
@@ -498,7 +499,7 @@
         </template>
 
         <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
-        <template v-if="manageMode === 'close'">
+        <template v-if="activePosition && manageMode === 'close'">
           <!-- ADD MODE -->
 
           <!-- CLOSE MODE -->
@@ -609,7 +610,7 @@
         {{ getMainBtnText }}
       </app-base-button>
       <app-base-button
-        v-if="manageMode === 'close'"
+        v-if="activePosition && manageMode === 'close'"
         :theme="orderSide === 'buy' ? 'success' : 'error'"
         :disabled="closeDisabled"
         @click="showCloseConfirmation"

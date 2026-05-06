@@ -997,6 +997,33 @@ export function usePerpsTradeForm() {
     },
   )
 
+  // Close orders are market-only — switching into close mode forces market so
+  // the (now hidden) order-type selector can't leave a stale 'limit' selection
+  // that would route handleClosePosition() down the limit branch.
+  watch(
+    () => manageMode.value,
+    mode => {
+      if (mode === 'close' && orderType.value !== 'market') {
+        orderType.value = 'market'
+      }
+    },
+  )
+
+  // When the active position disappears (full close) the close form has nothing
+  // to act on; flip back to 'add' so reopening a position doesn't land in a
+  // close UI that referenced the now-gone position.
+  watch(
+    () => activePosition.value,
+    (pos, prev) => {
+      if (prev && !pos && manageMode.value === 'close') {
+        manageMode.value = 'add'
+        closeAmount.value = ''
+        closeSliderValue.value = 0
+        closeError.value = ''
+      }
+    },
+  )
+
   watch(
     () => token.value,
     () => {
