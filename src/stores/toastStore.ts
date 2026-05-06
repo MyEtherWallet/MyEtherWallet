@@ -81,11 +81,19 @@ export const useToastStore = defineStore('toastStore', () => {
     showRewardToast.value = value
   }
 
+  const showRewardFailToast = ref(false)
+
+  const toggleRewardFailToast = (value: boolean) => {
+    showRewardFailToast.value = value
+  }
+
   return {
     messages,
     addToastMessage,
     removeToastMessage,
     showRewardToast,
     toggleRewardToast,
+    showRewardFailToast,
+    toggleRewardFailToast,
   }
 })

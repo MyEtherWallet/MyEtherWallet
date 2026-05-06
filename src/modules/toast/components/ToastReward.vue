@@ -4,21 +4,22 @@
     role="alert"
     :class="[
       isXS ? 'w-[95%] mx-auto' : 'w-[400px]',
-      'rewards-toast-bg min-h-[60px] rounded-2xl shadow-[0px_12px_32px_-4px_rgba(0,0,0,0.32)] mt-4',
+      'relative flex gap-5 items-start p-5 overflow-hidden bg-[#d6edff] rounded-[20px] shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.3)] mt-4',
     ]"
   >
-    <div class="flex w-full items-center py-3 px-3">
-      <img
-        :src="peggyUsdc"
-        alt=""
-        class="w-16 h-16 object-contain shrink-0 -ml-1"
-      />
-      <div class="flex-1 px-3">
-        <p class="font-bold text-s-16">Congratulations!</p>
-        <p class="text-s-14 text-info mt-0.5">You received your reward</p>
-      </div>
-      <app-btn-icon-close @close="toggleRewardToast(false)" />
+    <img :src="usdcTokens" alt="" class="w-12 shrink-0 object-contain" />
+    <div class="flex flex-col gap-2 flex-1 min-w-0">
+      <p class="font-bold text-[20px] leading-[22px] tracking-[-0.4px]">
+        Reward earned!
+      </p>
+      <p class="text-[16px] leading-[22px]">
+        5 USDC will be added to your balance shortly.
+      </p>
     </div>
+    <app-btn-icon-close
+      class="absolute top-2 right-2 shrink-0"
+      @close="toggleRewardToast(false)"
+    />
   </div>
 </template>
 
@@ -28,7 +29,7 @@ import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { watch, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { storeToRefs } from 'pinia'
-import peggyUsdc from '@/assets/images/peggy/peggy-holding-usdc.png'
+import usdcTokens from '@/assets/images/rewards/usdc-coin.png'
 
 const { isXS } = useAppBreakpoints()
 const toastStore = useToastStore()
@@ -50,14 +51,6 @@ watch(showRewardToast, val => {
 })
 
 onBeforeUnmount(() => {
-  if (timeout.value) {
-    clearTimeout(timeout.value)
-  }
+  if (timeout.value) clearTimeout(timeout.value)
 })
 </script>
-
-<style scoped>
-.rewards-toast-bg {
-  background: linear-gradient(90deg, #c7b8ff 0%, #d1e1ff 100%);
-}
-</style>
