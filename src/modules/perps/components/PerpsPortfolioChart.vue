@@ -41,9 +41,11 @@
     ></div>
     <HistoryChart
       v-else-if="chartPointsBalance.length > 0"
-      :data="activeSeries.has('value') ? chartPointsBalance : []"
-      :top-data="activeSeries.has('invested') ? chartPointsInvested : []"
-      :bottom-data="activeSeries.has('pnl') ? chartPointsPnl : []"
+      :data="[
+        activeSeries.has('value') ? chartPointsBalance : [],
+        activeSeries.has('invested') ? chartPointsInvested : [],
+        activeSeries.has('pnl') ? chartPointsPnl : [],
+      ]"
       :dispalay-y-axis="true"
       :series-labels="tooltipLabels"
       class="h-full !shrink"
@@ -92,6 +94,7 @@ function toggleSeries(key: SeriesKey) {
   } else {
     activeSeries.add(key)
   }
+  console.log(activeSeries)
 }
 
 interface RangeOption {
