@@ -1018,11 +1018,15 @@ const filteredOrders = computed(() => {
 })
 
 // Open-orders count for the Orders tab badge. Source is the polled orders
-// list (limit 100 in usePerpsOrders); when the server signals more pages
-// beyond the fetched window the badge saturates and is flagged with "+".
+// list (limit 100 in usePerpsOrders). The badge only saturates ("100+") when
+// more total orders exist beyond the fetched window AND that window is itself
+// full of open orders — `ordersHasMore` alone says nothing about open orders,
+// so a few open + many older closed would otherwise mis-render as "3+".
 const ORDERS_FETCH_LIMIT = 100
 const openOrdersCount = computed(
   () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
 )
-const openOrdersCountIsCapped = computed(() => ordersHasMore.value)
+const openOrdersCountIsCapped = computed(
+  () => ordersHasMore.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
+)
 </script>

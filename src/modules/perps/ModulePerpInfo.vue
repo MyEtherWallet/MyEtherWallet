@@ -873,7 +873,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, onUnmounted } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -1063,8 +1063,9 @@ async function fetchOpenOrdersCount() {
   }
   // Snapshot context so a slow response from a previous market or auth
   // session can't overwrite the badge after the user has switched markets
-  // or logged out. The token guard covers logout, where watchEffect clears
-  // values but doesn't kick off a new fetch (and so doesn't bump the seq).
+  // or logged out. The token guard covers logout, where the auth/market
+  // watcher clears values but doesn't kick off a new fetch (so doesn't
+  // bump the seq).
   const seq = ++openOrdersFetchSeq
   const market = props.market
   const startToken = token.value
@@ -1080,11 +1081,14 @@ async function fetchOpenOrdersCount() {
     )
       return
     const list = res.result ?? []
-    openOrdersCountForMarket.value = list.filter(o =>
+    // Cap on the pending count, not list.length — the fetch returns all order
+    // statuses, so 50 fetched with only 5 pending must not render as "5 · 50+".
+    const pendingCount = list.filter(o =>
       PENDING_STATUSES.has(o.status),
     ).length
+    openOrdersCountForMarket.value = pendingCount
     openOrdersCountIsCapped.value =
-      !!res.pageInfo?.nextCursor && list.length >= OPEN_COUNT_LIMIT
+      !!res.pageInfo?.nextCursor && pendingCount >= OPEN_COUNT_LIMIT
   } catch {
     if (
       seq !== openOrdersFetchSeq ||
@@ -1186,7 +1190,7 @@ async function refreshOrdersPageZero() {
   if (ordersCurrentPage.value !== 0) return
   ordersIsRefreshing = true
   try {
-    await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
+    await ordersPagination.refetch()
   } finally {
     ordersIsRefreshing = false
   }
@@ -1204,26 +1208,39 @@ async function refreshFillsPageZero() {
   }
 }
 
-watchEffect(() => {
-  void refreshKey.value
-  void props.market
-  if (ordersPollTimer) clearInterval(ordersPollTimer)
-  if (fillsPollTimer) clearInterval(fillsPollTimer)
-  ordersPagination.reset()
-  fillsPagination.reset()
-  openOrdersCountForMarket.value = 0
-  openOrdersCountIsCapped.value = false
-  if (token.value) {
-    void (async () => {
-      await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
-    })()
+// Hard reset only on auth or market change — those genuinely invalidate the
+// current view. triggerRefresh() (place/cancel/close) bumps refreshKey but
+// must not yank the user back to page 0; that mutation-driven path falls
+// through to the in-place refetch below.
+watch(
+  [token, () => props.market],
+  () => {
+    if (ordersPollTimer) clearInterval(ordersPollTimer)
+    if (fillsPollTimer) clearInterval(fillsPollTimer)
+    ordersPagination.reset()
+    fillsPagination.reset()
+    openOrdersCountForMarket.value = 0
+    openOrdersCountIsCapped.value = false
+    if (!token.value) return
+    void ordersPagination.refetch()
     void fillsPagination.refetch()
-    ordersPollTimer = setInterval(refreshOrdersPageZero, 10_000)
+    void fetchOpenOrdersCount()
+    ordersPollTimer = setInterval(() => {
+      void refreshOrdersPageZero()
+      void fetchOpenOrdersCount()
+    }, 10_000)
     fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
-  } else {
-    ordersPollTimer = null
-    fillsPollTimer = null
-  }
+  },
+  { immediate: true },
+)
+
+// Post-mutation refresh: refetch first page in place if visible, and update
+// the badge regardless of which page the user is on.
+watch(refreshKey, () => {
+  if (!token.value) return
+  void refreshOrdersPageZero()
+  void refreshFillsPageZero()
+  void fetchOpenOrdersCount()
 })
 
 // Funding countdown timer
