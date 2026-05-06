@@ -1061,16 +1061,24 @@ async function fetchOpenOrdersCount() {
     openOrdersCountIsCapped.value = false
     return
   }
-  // Snapshot context so a slow response from a previous market can't overwrite
-  // the badge after the user has switched markets.
+  // Snapshot context so a slow response from a previous market or auth
+  // session can't overwrite the badge after the user has switched markets
+  // or logged out. The token guard covers logout, where watchEffect clears
+  // values but doesn't kick off a new fetch (and so doesn't bump the seq).
   const seq = ++openOrdersFetchSeq
   const market = props.market
+  const startToken = token.value
   try {
     const res = await perpsClient.getOrders({
       market,
       limit: OPEN_COUNT_LIMIT,
     })
-    if (seq !== openOrdersFetchSeq || market !== props.market) return
+    if (
+      seq !== openOrdersFetchSeq ||
+      market !== props.market ||
+      startToken !== token.value
+    )
+      return
     const list = res.result ?? []
     openOrdersCountForMarket.value = list.filter(o =>
       PENDING_STATUSES.has(o.status),
@@ -1078,7 +1086,12 @@ async function fetchOpenOrdersCount() {
     openOrdersCountIsCapped.value =
       !!res.pageInfo?.nextCursor && list.length >= OPEN_COUNT_LIMIT
   } catch {
-    if (seq !== openOrdersFetchSeq || market !== props.market) return
+    if (
+      seq !== openOrdersFetchSeq ||
+      market !== props.market ||
+      startToken !== token.value
+    )
+      return
     openOrdersCountForMarket.value = 0
     openOrdersCountIsCapped.value = false
   }
