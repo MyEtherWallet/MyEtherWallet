@@ -728,7 +728,8 @@ const proceedWithSwap = async (quoteId: string) => {
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
       if (fromUsdValue > 50) {
-        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
+        const canEarn =
+          await rewardsStore.checkAvailabilityAfterTransaction('swap')
         canEarnReward = canEarn ? true : undefined
       }
       analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {
