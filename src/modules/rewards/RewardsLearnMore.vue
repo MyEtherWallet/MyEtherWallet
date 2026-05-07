@@ -29,6 +29,10 @@
                 v-else-if="item.icon === 'trophy'"
                 class="w-4 h-4 text-primary"
               />
+              <trade-icon
+                v-else-if="item.icon === 'trade'"
+                class="w-4 h-4 text-primary"
+              />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar'"
                 class="w-4 h-4 text-primary"
@@ -84,6 +88,7 @@ import {
   CalendarIcon,
   CurrencyDollarIcon,
 } from '@heroicons/vue/24/solid'
+import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
 import { ArrowPathRoundedSquareIcon } from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -146,7 +151,7 @@ const infoItems = [
     text: 'Be among the first 10 users per hour, per swap.',
   },
   {
-    icon: 'graph',
+    icon: 'trade',
     text: 'Be among the first 15 users per hour, per trade.',
   },
   {
