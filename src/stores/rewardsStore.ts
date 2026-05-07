@@ -4,7 +4,7 @@ import type { components } from '@/mew_api/schemaRewards'
 import Configs from '@/configs'
 import { useWalletStore } from './walletStore'
 import { useChainsStore } from './chainsStore'
-import { useToastStore } from './toastStore'
+// import { useToastStore } from './toastStore'
 import { analytics, RewardsEvent } from '@/analytics'
 import useBalanceHandler from '@/utils/balanceHandler'
 import type { TokenBalancesRaw } from '@/mew_api/types'
@@ -252,11 +252,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   }
 
   /** User Rewards */
-  const todaysReward = computed(() => {
-    const reward = rewards.value[0]
-    if (reward && isRewardEarnedDuringCampaign(reward)) return reward
-    return null
-  })
+  const todaysRewardSwap = ref<V2RewardItem | null>(null)
+  const todayTradeReward = ref<V2RewardItem | null>(null)
+
   const hasRewards = computed(() => rewards.value.length > 0)
 
   const fetchUserRewards = async () => {
@@ -288,8 +286,11 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   let rewardsPollInterval: ReturnType<typeof setInterval> | null = null
 
   const isRewardEarnedDuringCampaign = (reward: V2RewardItem): boolean => {
-    const CAMPAIGN_START = new Date('2026-04-22T00:00:00.000Z')
-    const CAMPAIGN_END = new Date('2026-04-29T00:00:00.000Z')
+    if (!poolV2.value) return false
+    const CAMPAIGN_START = new Date(poolV2.value.campaignStartDate)
+    const CAMPAIGN_END = new Date(
+      CAMPAIGN_START.getTime() + 7 * 24 * 60 * 60 * 1000,
+    )
     if (!reward.rewardBroadcastAt) return false
     const rewardDate = new Date(reward.rewardBroadcastAt)
     return rewardDate >= CAMPAIGN_START && rewardDate < CAMPAIGN_END
@@ -306,22 +307,39 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     stopRewardsPoll()
     rewardsPollInterval = setInterval(async () => {
       await fetchUserRewards()
-      if (rewards.value[0] && isRewardEarnedDuringCampaign(rewards.value[0])) {
-        setEarnedPotentialReward(false)
+      const _rewards = rewards.value.slice(0, 2)
+      if (_rewards.length === 0) return
+      _rewards.forEach(r => {
+        if (
+          todaysRewardSwap.value == null &&
+          r.swapType === 'SWAP' &&
+          isRewardEarnedDuringCampaign(r)
+        ) {
+          todaysRewardSwap.value = r
+          analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
+            type: 'swap',
+          })
+          wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
+            useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+          })
+        } else if (
+          todayTradeReward.value == null &&
+          r.swapType === 'TRADE' &&
+          isRewardEarnedDuringCampaign(r)
+        ) {
+          todayTradeReward.value = r
+          analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
+            type: 'trade',
+          })
+          wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
+            useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+          })
+        }
+      })
+
+      if (todayTradeReward.value && todaysRewardSwap.value) {
         analytics.setUserProperties({ canClaimRewards: false })
-        analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED)
-      }
-      if (
-        rewards.value[0] &&
-        isRewardEarnedDuringCampaign(rewards.value[0]) &&
-        rewards.value[0].rewardStatus === 'SUCCESS'
-      ) {
-        const toastStore = useToastStore()
-        toastStore.toggleRewardToast(true)
         stopRewardsPoll()
-        wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-          useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-        })
       }
     }, 5000)
   }
@@ -331,12 +349,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     eligible => {
       if (eligible) {
         // Check immediately if we already have today's reward
-        if (
-          rewards.value[0] &&
-          isRewardEarnedDuringCampaign(rewards.value[0]) &&
-          rewards.value[0].rewardStatus === 'SUCCESS'
-        )
-          return
         startRewardsPoll()
       } else {
         stopRewardsPoll()
@@ -428,7 +440,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     checkAvailabilityAfterTransaction,
     // User Rewards
     rewards,
-    todaysReward,
     hasRewards,
     isLoadingRewards,
     fetchUserRewards,
