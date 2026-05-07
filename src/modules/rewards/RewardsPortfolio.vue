@@ -13,9 +13,7 @@
       class="bg-white rounded-16 h-full flex flex-col justify-between px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
     >
       <!-- Top: Title + Image -->
-      <div
-        class="flex items-start justify-between gap-2 mb-5"
-      >
+      <div class="flex items-start justify-between gap-2 mb-5">
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
@@ -37,7 +35,7 @@
           :class="
             isOpenSideMenu
               ? 'xl:hidden 2xl:block 2xl:w-[60px] 2xl:h-[90px]'
-              : 'xl:block 2xl:block'
+              : 'xl:block xl:w-[80px] xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
           "
         />
       </div>
@@ -72,7 +70,10 @@
         <p class="text-s-14 font-semibold text-error leading-5">
           Not eligible for rewards
         </p>
-        <p class="text-s-14 text-[#575757] leading-5 mt-1">
+        <p
+          class="text-s-14 text-[#575757] leading-5 mt-1"
+          :class="{ '2xl:hidden ': isOpenSideMenu }"
+        >
           Wallets created after March 31st are not eligible for rewards. Try
           connecting an older wallet.
         </p>
