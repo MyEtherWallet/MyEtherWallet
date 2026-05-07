@@ -171,18 +171,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     }
   }
 
-  const swapClaimed = computed(() => {
-    const e = eligibilityV2.value?.swap
-    if (!e || e.eligible) return false
-    return e.reasons.some(r => r.type === 'USER_RECENTLY_REWARDED')
-  })
-
-  const tradeClaimed = computed(() => {
-    const e = eligibilityV2.value?.trade
-    if (!e || e.eligible) return false
-    return e.reasons.some(r => r.type === 'USER_RECENTLY_REWARDED')
-  })
-
   const swapNoRewards = computed(
     () =>
       !swapPool.value?.open || swapPool.value?.hourlyRemainingRewardCount === 0,
@@ -254,6 +242,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   /** User Rewards */
   const todaysRewardSwap = ref<V2RewardItem | null>(null)
   const todayTradeReward = ref<V2RewardItem | null>(null)
+
+  const swapClaimed = computed(() => todaysRewardSwap.value !== null)
+  const tradeClaimed = computed(() => todayTradeReward.value !== null)
 
   const hasRewards = computed(() => rewards.value.length > 0)
 
