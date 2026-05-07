@@ -34,19 +34,15 @@ if (initialPopupStateJson) {
 // Create and initialize Amplitude instance
 const amplitude = createInstance()
 
-// const serverUrl = process.env.NODE_ENV === 'production'
-//   ? 'https://analytics-web-v7.mewwallet.dev/record'
-//   : 'https://analytics-web-development-v7.mewwallet.dev/record',
+const serverUrl = process.env.NODE_ENV === 'production'
+  ? 'https://analytics-web-v7.mewwallet.dev/record'
+  : 'https://analytics-web-development-v7.mewwallet.dev/record'
 
 amplitude.init(__TMP_HASHED_VERSION__, {
   instanceName:
     process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
   optOut: !consentToTrack,
-  // serverUrl:
-  serverUrl: 'https://analytics-web-development-v7.mewwallet.dev/record',
-  //   process.env.NODE_ENV === 'production'
-  //     ? 'https://analytics-web-v7.mewwallet.dev/record'
-  //     : 'https://analytics-web-development-v7.mewwallet.dev/record',
+  serverUrl: serverUrl,
   appVersion: __TMP_VERSION__,
   identityStorage: 'none',
   logLevel: Types.LogLevel.None,
@@ -56,17 +52,17 @@ amplitude.init(__TMP_HASHED_VERSION__, {
 })
 
 const inEU = await isEU();
-// const prodConfigUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/config-eu' : 'https://analytics-web-v7.mewwallet.dev/config'
+const prodConfigUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/config-eu' : 'https://analytics-web-v7.mewwallet.dev/config'
 const devConfigUrl = inEU ? 'https://analytics-web-development-v7.mewwallet.dev/config-eu' : 'https://analytics-web-development-v7.mewwallet.dev/config'
-// const prodSessionReplayUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-v7.mewwallet.dev/session-replay'
+const prodSessionReplayUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-v7.mewwallet.dev/session-replay'
 const devSessionReplayUrl = inEU ? 'https://analytics-web-development-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-development-v7.mewwallet.dev/session-replay'
 
 const sessionId = amplitude.getSessionId()
 const deviceId = amplitude.getDeviceId()
 
 sessionReplay.init(__TMP_HASHED_VERSION__, {
-  configServerUrl: devConfigUrl,
-  trackServerUrl: devSessionReplayUrl,
+  configServerUrl: process.env.NODE_ENV === 'production' ? prodConfigUrl : devConfigUrl,
+  trackServerUrl: process.env.NODE_ENV === 'production' ? prodSessionReplayUrl : devSessionReplayUrl,
   optOut: !consentToTrack,
   sessionId: sessionId,
   deviceId: deviceId,
