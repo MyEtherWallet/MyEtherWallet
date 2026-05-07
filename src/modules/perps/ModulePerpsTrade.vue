@@ -180,10 +180,13 @@
             </button>
           </div>
           <app-pop-up-menu
-            v-if="!activePosition || manageMode === 'add'"
             :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
             location="right"
             class="ml-3"
+            :class="{
+              'opacity-0 pointer-events-none':
+                activePosition && manageMode === 'close',
+            }"
           >
             <template #menu-content="{ toggleMenu }">
               <div
@@ -572,7 +575,7 @@
             <!-- Size Pills -->
             <div class="flex justify-start gap-2 mt-4 mb-2">
               <button
-                v-for="pct in [0, 25, 50, 75, 100]"
+                v-for="pct in [5, 25, 50, 75, 100]"
                 :key="pct"
                 :disabled="isClosePillDisabled(pct)"
                 class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
