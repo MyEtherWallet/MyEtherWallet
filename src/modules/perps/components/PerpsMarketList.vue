@@ -616,6 +616,7 @@ import { usePaginate } from '@/composables/usePaginate'
 import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
 import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
+import { usePerpsToasts } from '../composables/usePerpsToasts'
 
 const emits = defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
@@ -629,6 +630,7 @@ const isSavingLeverage = ref(false)
 const leverageError = ref('')
 const leverageMarket = ref('')
 const leverageSymbol = ref('')
+const perpsToasts = usePerpsToasts()
 
 const openLeverage = (
   market: string,
@@ -648,9 +650,11 @@ const saveLeverage = async () => {
   try {
     await perpsClient.setLeverage(leverageMarket.value, tempLeverage.value)
     showLeverageDialog.value = false
+    perpsToasts.toastLeverageUpdated(tempLeverage.value, leverageMarket.value)
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
+    perpsToasts.toastFailedToSetLeverage()
   } finally {
     isSavingLeverage.value = false
   }

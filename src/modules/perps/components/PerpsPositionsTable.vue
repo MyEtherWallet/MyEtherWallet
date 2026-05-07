@@ -192,7 +192,7 @@
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
                         label="action menu"
-                        @click="toggleMenu"
+                        @click.stop="toggleMenu"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
                         class="flex lg:hidden"
@@ -808,8 +808,10 @@ const saveLeverage = async () => {
   try {
     await perpsClient.setLeverage(fullMarketName.value, localLeverage.value)
     showLeverageModal.value = false
+    perpsToasts.toastLeverageUpdated(localLeverage.value, fullMarketName.value)
   } catch (e: unknown) {
     leverageError.value = (e as Error).message
+    perpsToasts.toastFailedToSetLeverage()
   } finally {
     isSavingLeverage.value = false
   }

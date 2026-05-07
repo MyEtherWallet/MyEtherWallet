@@ -656,11 +656,13 @@ export function usePerpsTradeForm() {
       leverage.value = tempLeverage.value
       showLeverageModal.value = false
       fetchMaxOrderSize()
+      perpsToasts.toastLeverageUpdated(tempLeverage.value, fullMarketName.value)
     } catch (e: any) {
       leverageError.value =
         e?.message ||
         e?.toString() ||
         'Failed to save leverage. Please try again.'
+      perpsToasts.toastFailedToSetLeverage()
     } finally {
       isSavingLeverage.value = false
     }

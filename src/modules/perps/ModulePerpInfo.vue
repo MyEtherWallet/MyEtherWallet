@@ -1174,9 +1174,11 @@ const saveLeverage = async () => {
     await perpsClient.setLeverage(props.market, tempLeverage.value)
     showLeverageDialog.value = false
     leverage.value = tempLeverage.value
+    perpsToasts.toastLeverageUpdated(tempLeverage.value, props.market)
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
+    perpsToasts.toastFailedToSetLeverage()
   } finally {
     isSavingLeverage.value = false
   }
