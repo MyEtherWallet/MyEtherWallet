@@ -422,7 +422,11 @@
             >
               <span class="font-bold text-s-12 text-info">New size</span>
               <span class="font-bold">{{
-                formatUsd((positionNotionalValue || 0) + (positionSizeUsd || 0))
+                submitDisabled
+                  ? '-'
+                  : formatUsd(
+                      (positionNotionalValue || 0) + (positionSizeUsd || 0),
+                    )
               }}</span>
             </div>
             <!-- Est. Liquidation -->
@@ -431,7 +435,11 @@
                 >Est. Liquidation</span
               >
               <span class="font-bold">{{
-                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+                submitDisabled
+                  ? '-'
+                  : estimatedLiquidation
+                    ? formatUsd(estimatedLiquidation)
+                    : '$0.00'
               }}</span>
             </div>
             <!-- Margin Ratio -->
@@ -440,7 +448,11 @@
                 >New Margin Ratio</span
               >
               <span class="font-bold">{{
-                newMarginRatio !== null ? newMarginRatio.toFixed(2) : '0.00'
+                submitDisabled
+                  ? '-'
+                  : newMarginRatio !== null
+                    ? newMarginRatio.toFixed(2)
+                    : '0'
               }}</span>
             </div>
           </div>
