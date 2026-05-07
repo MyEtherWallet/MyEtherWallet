@@ -9,7 +9,7 @@ import { usePerpsPositions } from './usePerpsPositions'
 import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
 import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
-import { getCategory, midPrice } from '../utils/market'
+import { getCategory, midPrice, resolveEffectivePrice } from '../utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -212,14 +212,23 @@ export function usePerpsTradeForm() {
   const formatQuotePrice = (value: number): string =>
     floorToIncrement(value, activeMarketQuoteIncrement.value)
 
+  const effectivePrice = computed(() =>
+    resolveEffectivePrice({
+      orderType: orderType.value,
+      orderSide: orderSide.value,
+      limitPrice: limitPrice.value,
+      currentPrice: currentPrice.value,
+    }),
+  )
+
   const orderSize = computed(() => {
-    if (!currentPrice.value) return '0'
-    const rawSize = positionSizeUsd.value / currentPrice.value
+    if (!effectivePrice.value) return '0'
+    const rawSize = positionSizeUsd.value / effectivePrice.value
     return floorToIncrement(rawSize, activeMarketIncrement.value)
   })
 
   const minOrderAmount = computed(
-    () => activeMarketIncrement.value * currentPrice.value,
+    () => activeMarketIncrement.value * effectivePrice.value,
   )
 
   // ── Max-order-size helpers ─────────────────────────────────
@@ -271,8 +280,8 @@ export function usePerpsTradeForm() {
 
   const closeOrderSize = computed(() => {
     const amt = parseFloat(closeAmount.value) || 0
-    if (!currentPrice.value || amt <= 0) return '0'
-    const rawSize = amt / currentPrice.value
+    if (!effectivePrice.value || amt <= 0) return '0'
+    const rawSize = amt / effectivePrice.value
     return floorToIncrement(rawSize, activeMarketIncrement.value)
   })
 
@@ -323,7 +332,7 @@ export function usePerpsTradeForm() {
         } else {
           const closeUsd = parseFloat(closeAmount.value) || 0
           if (closeUsd <= 0) return
-          const rawSize = closeUsd / currentPrice.value
+          const rawSize = closeUsd / effectivePrice.value
           placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
         }
 
@@ -994,6 +1003,33 @@ export function usePerpsTradeForm() {
       stopLossPrice.value = null
       fetchLeverage()
       fetchMaxOrderSize()
+    },
+  )
+
+  // Close orders are market-only — switching into close mode forces market so
+  // the (now hidden) order-type selector can't leave a stale 'limit' selection
+  // that would route handleClosePosition() down the limit branch.
+  watch(
+    () => manageMode.value,
+    mode => {
+      if (mode === 'close' && orderType.value !== 'market') {
+        orderType.value = 'market'
+      }
+    },
+  )
+
+  // When the active position disappears (full close) the close form has nothing
+  // to act on; flip back to 'add' so reopening a position doesn't land in a
+  // close UI that referenced the now-gone position.
+  watch(
+    () => activePosition.value,
+    (pos, prev) => {
+      if (prev && !pos && manageMode.value === 'close') {
+        manageMode.value = 'add'
+        closeAmount.value = ''
+        closeSliderValue.value = 0
+        closeError.value = ''
+      }
     },
   )
 

@@ -20,19 +20,22 @@ export function usePerpsOrders() {
   const { token, refreshKey } = usePerpsAuth()
   const { markets } = usePerpsMarkets()
   const perpsToasts = usePerpsToasts()
-  const orders = ref<ApiOrder[]>([])
-  const loading = ref(false)
+  const pagination = useCursorPaginate<ApiOrder>(
+    opts => perpsClient.getOrders(opts),
+    PERPS_PAGE_SIZE,
+  )
   // Snapshot keyed by orderId — used to diff filledSize between polls so we
   // can fire Order Filled / Order Partially Filled exactly on the transition.
   // First poll after login seeds the snapshot without firing toasts to avoid
   // re-announcing orders that already had fills before the user opened the page.
+  // With cursor pagination, fill detection only runs while the user is on
+  // page 0; fills on orders that have scrolled past page 0 won't toast — same
+  // trade-off the Fills tab already accepts.
   let prevOrdersById = new Map<string, OrderSnapshot>()
   let isSeedFetch = true
   let lastToken: string | null | undefined = undefined
-  // Monotonic sequence so an out-of-order in-flight response doesn't roll the
-  // diff snapshot backward and replay or drop fill toasts.
-  let fetchSeq = 0
   let pollTimer: ReturnType<typeof setInterval> | null = null
+  let isRefreshing = false
 
   function resolveDisplayMarket(market: string): string {
     const m = markets.value.find(x => x.market === market)
@@ -96,24 +99,18 @@ export function usePerpsOrders() {
     )
   }
 
-  async function fetchOrders() {
-    if (!token.value) {
-      orders.value = []
-      return
-    }
-    const seq = ++fetchSeq
-    loading.value = true
+  async function refreshFirstPageIfActive() {
+    if (isRefreshing) return
+    if (pagination.loading.value) return
+    if (pagination.currentPage.value !== 0) return
+    isRefreshing = true
     try {
-      const res = await perpsClient.getOrders({ limit: 100 })
-      if (seq !== fetchSeq) return
-      const next = res.result ?? []
-      detectFillsAndToast(next)
-      orders.value = next
-    } catch {
-      if (seq !== fetchSeq) return
-      orders.value = []
+      const ok = await pagination.refetch()
+      if (ok && pagination.currentPage.value === 0) {
+        detectFillsAndToast(pagination.items.value)
+      }
     } finally {
-      if (seq === fetchSeq) loading.value = false
+      isRefreshing = false
     }
   }
 
@@ -129,11 +126,14 @@ export function usePerpsOrders() {
       isSeedFetch = true
       lastToken = token.value
     }
+    pagination.reset()
     if (token.value) {
-      fetchOrders()
-      pollTimer = setInterval(fetchOrders, 10_000)
+      void (async () => {
+        const ok = await pagination.refetch()
+        if (ok) detectFillsAndToast(pagination.items.value)
+      })()
+      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
     } else {
-      orders.value = []
       pollTimer = null
     }
   })
@@ -142,7 +142,16 @@ export function usePerpsOrders() {
     if (pollTimer) clearInterval(pollTimer)
   })
 
-  return { orders, loading, refetch: fetchOrders }
+  return {
+    orders: pagination.items,
+    loading: pagination.loading,
+    refetch: pagination.refetch,
+    currentPage: pagination.currentPage,
+    hasNext: pagination.hasNext,
+    hasPrev: pagination.hasPrev,
+    nextPage: pagination.nextPage,
+    prevPage: pagination.prevPage,
+  }
 }
 
 export function usePerpsFills() {

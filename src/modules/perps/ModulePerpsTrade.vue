@@ -8,36 +8,8 @@
       </div>
     </div>
 
-    <div
-      v-if="!isWalletConnected"
-      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
-    >
-      <p class="text-info text-s-14 mb-4">
-        Connect your wallet to start trading
-      </p>
-      <button
-        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-        @click="connectWallet"
-      >
-        Connect Wallet
-      </button>
-    </div>
-
-    <div
-      v-else-if="!token && !isWatchOnly"
-      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
-    >
-      <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
-      <button
-        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-        @click="login"
-      >
-        Sign in to Perps
-      </button>
-    </div>
-
     <!-- Active Trade Form -->
-    <div v-else class="flex flex-col pb-6">
+    <div class="flex flex-col pb-6">
       <!-- Scrollable content -->
       <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
         <!-- Asset Selector & Price & current Position Info if open -->
@@ -180,6 +152,7 @@
             </button>
           </div>
           <app-pop-up-menu
+            v-if="!activePosition || manageMode === 'add'"
             :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
             location="right"
             class="ml-3"
@@ -498,7 +471,7 @@
         </template>
 
         <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
-        <template v-if="manageMode === 'close'">
+        <template v-if="activePosition && manageMode === 'close'">
           <!-- ADD MODE -->
 
           <!-- CLOSE MODE -->
@@ -601,15 +574,25 @@
       <!-- Submit Button -->
       <template v-if="isWatchOnly">
         <app-base-button
-          :disabled="true"
-          :theme="orderSide === 'buy' ? 'success' : 'error'"
-          class="w-full mt-4"
+          v-if="!isWalletConnected || isWatchOnly"
+          :class="['mx-auto w-full max-w-[340px] mt-4']"
+          @click="connectWallet"
         >
-          {{ getMainBtnText }}
-        </app-base-button>
-        <p class="text-center text-info text-s-12 mt-2">
-          This is a view-only wallet. Sign in to trade.
-        </p>
+          {{ t('connect_wallet') }}</app-base-button
+        >
+      </template>
+      <template v-else-if="!token && !isWatchOnly">
+        <div
+          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+        >
+          <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
+          <button
+            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+            @click="login"
+          >
+            Sign in to Perps
+          </button>
+        </div>
       </template>
       <template v-else>
         <app-base-button
@@ -622,7 +605,7 @@
           {{ getMainBtnText }}
         </app-base-button>
         <app-base-button
-          v-if="manageMode === 'close'"
+          v-if="activePosition && manageMode === 'close'"
           :theme="orderSide === 'buy' ? 'success' : 'error'"
           :disabled="closeDisabled"
           @click="showCloseConfirmation"
@@ -742,10 +725,12 @@ import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossD
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
+const { t } = useI18n()
 
 const connectWallet = () => {
   accessStore.openAccessDialog()
