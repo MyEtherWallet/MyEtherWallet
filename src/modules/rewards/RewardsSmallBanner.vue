@@ -29,12 +29,14 @@
       :swap-total="swapTotal"
       :trade-claimed="tradeClaimed"
       :trade-no-rewards="tradeNoRewards"
+      :trade-market-closed="tradeMarketClosed"
       :trade-remaining-pct="tradeRemainingPct"
       :trade-remaining-count="tradeRemainingCount"
       :trade-total="tradeTotal"
       :time-until-hour-reset="timeUntilRewardHourReset"
       :time-until-swap-next-eligible="timeUntilSwapNextEligible"
       :time-until-trade-next-eligible="timeUntilTradeNextEligible"
+      :time-until-market-open="timeUntilMarketOpen"
     />
   </div>
 </template>
@@ -44,6 +46,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
 import { storeToRefs } from 'pinia'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
 
 const props = defineProps<{
   location: 'small-banner-swap' | 'small-banner-trade' | 'small-banner-bridge'
@@ -56,6 +59,7 @@ const {
   tradeClaimed,
   swapNoRewards,
   tradeNoRewards,
+  tradeMarketClosed,
   swapTotal,
   swapRemainingPct,
   swapRemainingCount,
@@ -68,10 +72,12 @@ const {
 
 const isLearnMoreOpen = ref(false)
 const timeUntilRewardHourReset = ref('--')
-
 const timeUntilSwapNextEligible = ref('--')
 const timeUntilTradeNextEligible = ref('--')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
+
+const { countdownText: timeUntilMarketOpen, fetchMarketStatus } =
+  useMarketStatus()
 
 function formatDiff(ms: number): string {
   const d = Math.floor(ms / 86_400_000)
@@ -109,6 +115,7 @@ function updateCountdowns() {
 }
 
 onMounted(() => {
+  fetchMarketStatus()
   updateCountdowns()
   countdownTimer = setInterval(updateCountdowns, 60_000)
 })

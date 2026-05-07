@@ -174,6 +174,12 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       tradePool.value?.hourlyRemainingRewardCount === 0,
   )
 
+  const tradeMarketClosed = computed(
+    () =>
+      tradePool.value?.reasons.some(r => r.type === 'TRADE_REWARDS_DISABLED') ??
+      false,
+  )
+
   const swapTotal = computed(() => {
     const p = swapPool.value
     if (!p || p.hourlyRemainingRewardCount === null) return null
@@ -331,16 +337,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     const swapRecentlyRewarded = eligibilityV2.value?.swap.reasons.some(r => r.type === 'USER_RECENTLY_REWARDED')
 
     const tradeGeneric = eligibilityV2.value?.trade.reasons.some(
-      r =>
-        r.type === 'REWARDS_DISABLED' ||
-        r.type === 'POOL_LOW_ETH' ||
-        r.type === 'POOL_LOW_USDC',
+      r => r.type === 'REWARDS_DISABLED',
     )
     const swapGeneric = eligibilityV2.value?.swap.reasons.some(
-      r =>
-        r.type === 'REWARDS_DISABLED' ||
-        r.type === 'POOL_LOW_ETH' ||
-        r.type === 'POOL_LOW_USDC',
+      r => r.type === 'REWARDS_DISABLED',
     )
 
     if (!tradeRecentlyRewarded || !swapRecentlyRewarded) {
@@ -382,6 +382,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     tradeClaimed,
     swapNoRewards,
     tradeNoRewards,
+    tradeMarketClosed,
     swapTotal,
     swapRemainingPct,
     swapRemainingCount,

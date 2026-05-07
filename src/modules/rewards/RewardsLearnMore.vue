@@ -64,12 +64,14 @@
           :swap-total="swapTotal"
           :trade-claimed="tradeClaimed"
           :trade-no-rewards="tradeNoRewards"
+          :trade-market-closed="tradeMarketClosed"
           :trade-remaining-pct="tradeRemainingPct"
           :trade-remaining-count="tradeRemainingCount"
           :trade-total="tradeTotal"
           :time-until-hour-reset="timeUntilHourReset"
           :time-until-swap-next-eligible="timeUntilSwapNextEligible"
           :time-until-trade-next-eligible="timeUntilTradeNextEligible"
+          :time-until-market-open="timeUntilMarketOpen"
           class="mt-0"
           @swap="onNavigate('swap')"
           @trade="onNavigate('trade')"
@@ -110,12 +112,14 @@ const props = defineProps<{
   swapTotal: number | null
   tradeClaimed: boolean
   tradeNoRewards: boolean
+  tradeMarketClosed: boolean
   tradeRemainingPct: number
   tradeRemainingCount: number | null
   tradeTotal: number | null
   timeUntilHourReset: string
   timeUntilSwapNextEligible: string
   timeUntilTradeNextEligible: string
+  timeUntilMarketOpen: string
 }>()
 
 const isOpenModel = defineModel('isOpen', {
