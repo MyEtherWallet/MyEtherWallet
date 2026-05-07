@@ -67,11 +67,7 @@
         >
           No open positions
         </div>
-        <table
-          v-else
-          ref="positionsTable"
-          class="w-full text-s-14 table-fixed"
-        >
+        <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -427,12 +423,12 @@
                         </li>
                         <li
                           class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[toggleMenu(), cancelOrder(order)]"
+                          @click.stop="[toggleMenu(), openCancelConfirmation(order)]"
                         >
                           {{
                             cancellingOrderId === order.orderId
                               ? 'Cancelling...'
-                              : 'Cancel'
+                              : 'Cancel Order'
                           }}
                         </li>
                       </ul>
@@ -720,10 +716,7 @@
               </tr>
             </tbody>
           </table>
-          <div
-            v-if="dwTotalPages > 1"
-            class="flex justify-end mt-4 px-2"
-          >
+          <div v-if="dwTotalPages > 1" class="flex justify-end mt-4 px-2">
             <perps-pagination
               :current-page="dwCurrentPage"
               :total-pages="dwTotalPages"
@@ -748,7 +741,15 @@
       :order="selectedOrder"
       :cancelling="cancellingOrderId === selectedOrder.orderId"
       @close="showOrderDialog = false"
-      @cancel="cancelOrder"
+      @cancel="openCancelConfirmation"
+    />
+    <perps-cancel-order-confirmation-dialog
+      v-if="orderPendingCancel"
+      v-model:is-open="showCancelConfirmation"
+      :order="orderPendingCancel"
+      :display-symbol="getBase(orderPendingCancel.market)"
+      :is-cancelling="cancellingOrderId === orderPendingCancel.orderId"
+      @confirm="confirmCancelOrder"
     />
   </div>
 </template>
@@ -772,6 +773,7 @@ import AppTableSkeleton, {
 } from '@/components/AppTableSkeleton.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
+import PerpsCancelOrderConfirmationDialog from './PerpsCancelOrderConfirmationDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
@@ -912,15 +914,27 @@ const {
 } = usePerpsDepositsWithdrawals()
 
 const cancellingOrderId = ref<string | null>(null)
+const orderPendingCancel = ref<ApiOrder | null>(null)
+const showCancelConfirmation = ref(false)
 const perpsToasts = usePerpsToasts()
 const { markets } = usePerpsMarkets()
+
+function openCancelConfirmation(order: ApiOrder) {
+  orderPendingCancel.value = order
+  showCancelConfirmation.value = true
+}
+
+async function confirmCancelOrder() {
+  if (!orderPendingCancel.value) return
+  await cancelOrder(orderPendingCancel.value)
+  showCancelConfirmation.value = false
+}
 
 async function cancelOrder(order: ApiOrder) {
   if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
-  const displayMarket =
-    market?.longName ?? market?.displayName ?? order.market
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
     await perpsClient.cancelOrder(order.orderId)
     perpsToasts.toastOrderCanceled({
