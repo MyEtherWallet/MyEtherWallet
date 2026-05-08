@@ -917,7 +917,6 @@ function openOrderDialog(order: ApiOrder) {
 const {
   orders,
   loading: ordersLoading,
-  hasMore: ordersHasMore,
   refetch: refetchOrders,
   currentPage: ordersCurrentPage,
   hasPrev: ordersHasPrev,
@@ -1069,16 +1068,16 @@ const filteredOrders = computed(() => {
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
 
-// Open-orders count for the Orders tab badge. Source is the polled orders
-// list (limit 100 in usePerpsOrders). The badge only saturates ("100+") when
-// more total orders exist beyond the fetched window AND that window is itself
-// full of open orders — `ordersHasMore` alone says nothing about open orders,
-// so a few open + many older closed would otherwise mis-render as "3+".
+// Open-orders count for the Orders tab badge. Source is the current cursor
+// page of orders. The badge only saturates ("100+") when a next page exists
+// AND the current page is itself full of open orders — `ordersHasNext` alone
+// says nothing about open orders, so a few open + many older closed would
+// otherwise mis-render as "3+".
 const ORDERS_FETCH_LIMIT = 100
 const openOrdersCount = computed(
   () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
 )
 const openOrdersCountIsCapped = computed(
-  () => ordersHasMore.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
+  () => ordersHasNext.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
 )
 </script>
