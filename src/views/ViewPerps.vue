@@ -1,8 +1,23 @@
 <template>
   <div class="flex flex-col gap-6">
+    <div v-if="!isSupportedNetwork" class="text-center py-8 bg-white">
+      <p class="text-info text-s-14 mb-4">
+        Perps is only available on Ethereum
+      </p>
+      <select-chain-for-app>
+        <template #network-button="{ openNetworkDialog }">
+          <button
+            class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
+            @click="openNetworkDialog(true)"
+          >
+            Switch to Ethereum
+          </button>
+        </template>
+      </select-chain-for-app>
+    </div>
     <!-- Not authenticated -->
     <div
-      v-if="!isWalletConnected || isWatchOnly"
+      v-else-if="!isWalletConnected || isWatchOnly"
       class="text-center py-8 bg-white"
     >
       <p class="text-info text-s-14 mb-4">
@@ -71,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
@@ -81,11 +96,13 @@ import PerpsPositionsTable from '@/modules/perps/components/PerpsPositionsTable.
 import PerpsMarketList from '@/modules/perps/components/PerpsMarketList.vue'
 import PerpsDepositDialog from '@/modules/perps/components/PerpsDepositDialog.vue'
 import PerpsWithdrawDialog from '@/modules/perps/components/PerpsWithdrawDialog.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
@@ -96,6 +113,11 @@ const { token, isWalletConnected, isAuthenticating, authError, login, logout } =
   usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
 const connectWallet = () => accessStore.openAccessDialog()
+
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+
+const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
 
@@ -114,7 +136,6 @@ function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
     })
   }
 }
-
 function handleViewMarket(market: string) {
   router.push({
     name: PERP_INFO_ROUTE_NAME,
