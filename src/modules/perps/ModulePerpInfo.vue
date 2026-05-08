@@ -413,10 +413,8 @@
               <span>
                 {{ data.label }}
                 <span
-                  v-if="
-                    data.value === 'orders' && openOrdersCountForMarket > 0
-                  "
-                  class="ml-1 text-info"
+                  v-if="data.value === 'orders' && openOrdersCountForMarket > 0"
+                  class="ml-1 text-info text-s-12"
                 >
                   ·
                   {{
@@ -450,7 +448,7 @@
                         activeInfoTab === 'orders' &&
                         openOrdersCountForMarket > 0
                       "
-                      class="ml-1 text-info"
+                      class="ml-1 text-info text-s-12"
                     >
                       ·
                       {{
@@ -479,9 +477,7 @@
               :columns="ordersSkeletonColumns"
             />
             <div
-              v-else-if="
-                marketOrders.length === 0 && ordersCurrentPage === 0
-              "
+              v-else-if="marketOrders.length === 0 && ordersCurrentPage === 0"
               class="text-center py-8 text-info text-s-14"
             >
               No orders for {{ baseCurrency }}
@@ -1083,9 +1079,7 @@ async function fetchOpenOrdersCount() {
     const list = res.result ?? []
     // Cap on the pending count, not list.length — the fetch returns all order
     // statuses, so 50 fetched with only 5 pending must not render as "5 · 50+".
-    const pendingCount = list.filter(o =>
-      PENDING_STATUSES.has(o.status),
-    ).length
+    const pendingCount = list.filter(o => PENDING_STATUSES.has(o.status)).length
     openOrdersCountForMarket.value = pendingCount
     openOrdersCountIsCapped.value =
       !!res.pageInfo?.nextCursor && pendingCount >= OPEN_COUNT_LIMIT
