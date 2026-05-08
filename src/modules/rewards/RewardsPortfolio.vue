@@ -13,14 +13,11 @@
       class="bg-white rounded-16 h-full flex flex-col justify-between px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
     >
       <!-- Top: Title + Image -->
-      <div
-        class="flex items-start justify-between gap-2 mb-5"
-        :class="{ 'opacity-20 pointer-events-none': isBanned }"
-      >
+      <div class="flex items-start justify-between gap-2 mb-5">
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.
+            First trades of $25+ and swaps of $50+ earn 5 USDC each hour.
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
@@ -37,14 +34,15 @@
           class="shrink-0 object-contain w-[92px] h-[130px] flex-none -mt-2 hidden 3xl:w-[92px] 3xl:h-[130px]"
           :class="
             isOpenSideMenu
-              ? 'xl:hidden 2xl:block  2xl:w-[60px] 2xl:h-[90px]'
-              : 'xl:block 2xl:block'
+              ? 'xl:hidden 2xl:block 2xl:w-[60px] 2xl:h-[90px]'
+              : 'xl:block xl:w-[80px] xl:h-[120px] 2xl:w-[92px] 2xl:h-[130px]'
           "
         />
       </div>
 
       <!-- Reward Rows -->
       <rewards-rows
+        v-if="!isBanned"
         :swap-claimed="swapClaimed"
         :swap-no-rewards="swapNoRewards"
         :swap-remaining-pct="swapRemainingPct"
@@ -52,30 +50,38 @@
         :swap-total="swapTotal"
         :trade-claimed="tradeClaimed"
         :trade-no-rewards="tradeNoRewards"
+        :trade-market-closed="tradeMarketClosed"
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilHourReset"
-        :time-until-next-eligible="timeUntilNextEligible"
+        :time-until-hour-reset="timeUntilRewardHourReset"
+        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
+        :time-until-market-open="timeUntilMarketOpen"
         @swap="goToSwap"
         @trade="goToTrade"
         class="max-w-[360px] 2xl:max-w-none"
-        :class="[
-          isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : '',
-          { 'opacity-20 pointer-events-none': isBanned },
-        ]"
+        :class="[isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : '']"
         is-rewards-view
       />
-      <div
-        v-if="isBanned"
-        class="text-center font-medium text-s-16 p-5 bg-appBackground rounded-20 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-1 xl:min-w-[300px]"
-      >
-        <p>You are not eligible for rewards at this time</p>
-        <button
-          class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
-          @click="onLearnMore"
+
+      <!-- Not Eligible State -->
+      <div v-else class="border-t border-grey-10 pt-4 pb-1">
+        <p class="text-s-14 font-semibold text-error leading-5">
+          Not eligible for rewards
+        </p>
+        <p
+          class="text-s-14 text-[#575757] leading-5 mt-1"
+          :class="{ '2xl:hidden ': isOpenSideMenu }"
         >
-          Learn more
+          Wallets created after March 31st are not eligible for rewards. Try
+          connecting an older wallet.
+        </p>
+        <button
+          class="mt-4 bg-grey-5 text-black font-medium text-s-16 rounded-full py-2 px-5 hoverOpacity"
+          @click="onConnectAddress"
+        >
+          Connect another address
         </button>
       </div>
       <img
@@ -83,11 +89,8 @@
         alt=""
         width="650"
         height="292"
-        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] sm:max-h-[225px] sm:max-w-[234px] 2xl:hidden"
-        :class="[
-          isOpenSideMenu ? '' : 'xl:hidden',
-          { 'opacity-20 pointer-events-none': isBanned },
-        ]"
+        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute top-0 right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] 2xl:hidden"
+        :class="[isOpenSideMenu ? '' : 'xl:hidden']"
       />
 
       <rewards-learn-more
@@ -100,11 +103,14 @@
         :swap-total="swapTotal"
         :trade-claimed="tradeClaimed"
         :trade-no-rewards="tradeNoRewards"
+        :trade-market-closed="tradeMarketClosed"
         :trade-remaining-pct="tradeRemainingPct"
         :trade-remaining-count="tradeRemainingCount"
         :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilHourReset"
-        :time-until-next-eligible="timeUntilNextEligible"
+        :time-until-hour-reset="timeUntilRewardHourReset"
+        :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+        :time-until-trade-next-eligible="timeUntilTradeNextEligible"
+        :time-until-market-open="timeUntilMarketOpen"
       />
     </div>
   </div>
@@ -122,6 +128,8 @@ import { storeToRefs } from 'pinia'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useToastStore } from '@/stores/toastStore'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { useMarketStatus } from '@/modules/trade/composables/useMarketStatus'
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
@@ -132,11 +140,12 @@ const toastStore = useToastStore()
 const rewardsStore = useRewardsStore()
 const {
   hadInitialLoad,
-  eligibility,
+  eligibilityV2,
   swapClaimed,
   tradeClaimed,
   swapNoRewards,
   tradeNoRewards,
+  tradeMarketClosed,
   swapTotal,
   swapRemainingPct,
   swapRemainingCount,
@@ -148,9 +157,13 @@ const {
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)
-const timeUntilHourReset = ref('--')
-const timeUntilNextEligible = ref('--')
+const timeUntilRewardHourReset = ref('--')
+const timeUntilSwapNextEligible = ref('--')
+const timeUntilTradeNextEligible = ref('--')
 let countdownTimer: ReturnType<typeof setInterval> | null = null
+
+const { countdownText: timeUntilMarketOpen, fetchMarketStatus } =
+  useMarketStatus()
 
 function formatDiff(ms: number): string {
   const d = Math.floor(ms / 86_400_000)
@@ -163,19 +176,34 @@ function formatDiff(ms: number): string {
 
 function updateCountdowns() {
   const hourTarget = nextHourStart.value
-  timeUntilHourReset.value = hourTarget
+  timeUntilRewardHourReset.value = hourTarget
     ? formatDiff(Math.max(0, new Date(hourTarget).getTime() - Date.now()))
     : '--'
 
-  const eligibleTarget = eligibility.value?.nextEligibleDate
-  timeUntilNextEligible.value = eligibleTarget
-    ? formatDiff(Math.max(0, new Date(eligibleTarget).getTime() - Date.now()))
+  timeUntilSwapNextEligible.value = eligibilityV2.value?.swap.nextEligibleDate
+    ? formatDiff(
+        Math.max(
+          0,
+          new Date(eligibilityV2.value?.swap.nextEligibleDate).getTime() -
+            Date.now(),
+        ),
+      )
+    : '--'
+  timeUntilTradeNextEligible.value = eligibilityV2.value?.trade.nextEligibleDate
+    ? formatDiff(
+        Math.max(
+          0,
+          new Date(eligibilityV2.value?.trade.nextEligibleDate).getTime() -
+            Date.now(),
+        ),
+      )
     : '--'
 }
 
 onMounted(() => {
   analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
   rewardsStore.fetchPool()
+  fetchMarketStatus()
   updateCountdowns()
   countdownTimer = setInterval(updateCountdowns, 60_000)
 })
@@ -212,6 +240,11 @@ const goToTrade = () => {
 
 const onLearnMore = () => {
   isLearnMoreOpen.value = true
+}
+
+const accessStore = useAccessStore()
+const onConnectAddress = () => {
+  accessStore.openAccessDialog()
 }
 </script>
 

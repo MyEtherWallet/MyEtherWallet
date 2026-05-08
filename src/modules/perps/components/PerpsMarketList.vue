@@ -733,7 +733,7 @@ const filterOptions: FilterOption[] = [
   { label: 'All Markets', value: 'all' },
   { label: 'Stocks', value: 'stocks' },
   { label: 'Commodities', value: 'commodities' },
-  { label: 'ETFs', value: 'etfs' },
+  { label: 'Indices', value: 'indices' },
   { label: 'Watchlist', value: 'watchlist' },
 ]
 
@@ -768,10 +768,10 @@ const filteredContracts = computed(() => {
     list = list.filter(c => watchlist.value.has(c.baseCurrency))
   } else if (selectedFilter.value.value === 'commodities') {
     list = list.filter(c => hasTag(c, 'commodity'))
-  } else if (selectedFilter.value.value === 'etfs') {
-    list = list.filter(c => hasTag(c, 'etf'))
+  } else if (selectedFilter.value.value === 'indices') {
+    list = list.filter(c => hasTag(c, 'index'))
   } else if (selectedFilter.value.value === 'stocks') {
-    list = list.filter(c => !hasTag(c, 'commodity') && !hasTag(c, 'etf'))
+    list = list.filter(c => !hasTag(c, 'commodity') && !hasTag(c, 'index'))
   }
 
   if (searchQuery.value) {

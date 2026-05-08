@@ -19,9 +19,20 @@
                 {{ data.label }}
                 <span
                   v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-info"
+                  class="ml-1 text-info text-s-12"
                 >
                   · {{ positions.length }}
+                </span>
+                <span
+                  v-else-if="data.value === 'orders' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-12"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
                 </span>
               </span>
             </template>
@@ -41,9 +52,26 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium">{{
-                    selectedTab.label
-                  }}</span>
+                  <span class="text-s-16 font-medium">
+                    {{ selectedTab.label }}
+                    <span
+                      v-if="activeTab === 'positions' && positions.length > 0"
+                      class="ml-1 text-info"
+                    >
+                      · {{ positions.length }}
+                    </span>
+                    <span
+                      v-else-if="activeTab === 'orders' && openOrdersCount > 0"
+                      class="ml-1 text-info"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${ORDERS_FETCH_LIMIT}+`
+                          : openOrdersCount
+                      }}
+                    </span>
+                  </span>
                   <chevron-down-icon class="w-4 h-4 ml-2" />
                 </div>
               </button>
@@ -278,7 +306,20 @@
             size="xs"
           >
             <template #btn-content="{ data }">
-              <span class="px-2">{{ data.label }}</span>
+              <span class="px-2"
+                >{{ data.label }}
+                <span
+                  v-if="data.value === 'pending' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-11"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
+                </span></span
+              >
             </template>
           </app-btn-group>
         </div>
@@ -288,13 +329,13 @@
           :columns="ordersSkeletonColumns"
         />
         <div
-          v-else-if="filteredOrders.length === 0"
+          v-else-if="filteredOrders.length === 0 && ordersCurrentPage === 0"
           class="text-center py-8 text-info text-s-14"
         >
           No orders
         </div>
 
-        <table v-else class="w-full text-s-14 table-fixed">
+        <table v-else ref="ordersTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -469,6 +510,20 @@
             </tr>
           </tbody>
         </table>
+        <div
+          v-if="ordersHasPrev || ordersHasNext"
+          class="flex justify-end mt-4 px-2"
+        >
+          <perps-pagination
+            :current-page="ordersCurrentPage"
+            :has-prev="ordersHasPrev"
+            :has-next="ordersHasNext"
+            :disabled="ordersLoading"
+            :scroll-target="ordersTable"
+            @prev="ordersPrevPage"
+            @next="ordersNextPage"
+          />
+        </div>
       </template>
 
       <!-- Fills tab -->
@@ -625,7 +680,7 @@
           No deposits or withdrawals
         </div>
         <div v-else class="overflow-x-auto">
-          <table class="w-full text-s-14 table-fixed">
+          <table ref="dwTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -652,7 +707,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in combinedDW" :key="item.key" class="">
+              <tr v-for="item in paginatedDW" :key="item.key" class="">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
@@ -721,6 +776,19 @@
               </tr>
             </tbody>
           </table>
+          <div
+            v-if="dwTotalPages > 1"
+            class="flex justify-end mt-4 px-2"
+          >
+            <perps-pagination
+              :current-page="dwCurrentPage"
+              :total-pages="dwTotalPages"
+              :disabled="dwLoading"
+              :scroll-target="dwTable"
+              @prev="dwPrevPage"
+              @next="dwNextPage"
+            />
+          </div>
         </div>
       </template>
     </app-sheet>
@@ -851,6 +919,8 @@ const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
 
 const positionsTable = ref<HTMLElement | null>(null)
 const fillsTable = ref<HTMLElement | null>(null)
+const ordersTable = ref<HTMLElement | null>(null)
+const dwTable = ref<HTMLElement | null>(null)
 
 const positionsSkeletonColumns: SkeletonColumn[] = [
   { header: 'Market' },
@@ -923,6 +993,11 @@ const {
   orders,
   loading: ordersLoading,
   refetch: refetchOrders,
+  currentPage: ordersCurrentPage,
+  hasPrev: ordersHasPrev,
+  hasNext: ordersHasNext,
+  nextPage: ordersNextPage,
+  prevPage: ordersPrevPage,
 } = usePerpsOrders()
 
 const showCancelButton = (order: ApiOrder) => {
@@ -986,17 +1061,19 @@ async function cancelOrder(order: ApiOrder) {
   }
 }
 
-const combinedDW = computed(() => {
-  const items: Array<{
-    key: string
-    type: string
-    coin: string
-    size: string
-    usdValue?: string
-    statusLabel: string
-    statusColor: string
-    time: string
-  }> = []
+type CombinedDWRow = {
+  key: string
+  type: string
+  coin: string
+  size: string
+  usdValue?: string
+  statusLabel: string
+  statusColor: string
+  time: string
+}
+
+const combinedDW = computed<CombinedDWRow[]>(() => {
+  const items: CombinedDWRow[] = []
   for (const d of deposits.value) {
     items.push({
       key: `d-${d.txid ?? d.time}`,
@@ -1035,6 +1112,14 @@ const combinedDW = computed(() => {
   return items
 })
 
+const {
+  currentPage: dwCurrentPage,
+  paginatedArray: paginatedDW,
+  totalPages: dwTotalPages,
+  nextPage: dwNextPage,
+  prevPage: dwPrevPage,
+} = usePaginate<CombinedDWRow>(combinedDW, PERPS_PAGE_SIZE)
+
 const tabs = [
   { label: 'Positions', value: 'positions' },
   { label: 'Orders', value: 'orders' },
@@ -1057,4 +1142,17 @@ const filteredOrders = computed(() => {
   if (selectedOrderFilter.value.value === 'all') return orders.value
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
+
+// Open-orders count for the Orders tab badge. Source is the current cursor
+// page of orders. The badge only saturates ("100+") when a next page exists
+// AND the current page is itself full of open orders — `ordersHasNext` alone
+// says nothing about open orders, so a few open + many older closed would
+// otherwise mis-render as "3+".
+const ORDERS_FETCH_LIMIT = 100
+const openOrdersCount = computed(
+  () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
+)
+const openOrdersCountIsCapped = computed(
+  () => ordersHasNext.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
+)
 </script>
