@@ -19,9 +19,20 @@
                 {{ data.label }}
                 <span
                   v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-info"
+                  class="ml-1 text-info text-s-12"
                 >
                   · {{ positions.length }}
+                </span>
+                <span
+                  v-else-if="data.value === 'orders' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-12"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
                 </span>
               </span>
             </template>
@@ -41,9 +52,26 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium">{{
-                    selectedTab.label
-                  }}</span>
+                  <span class="text-s-16 font-medium">
+                    {{ selectedTab.label }}
+                    <span
+                      v-if="activeTab === 'positions' && positions.length > 0"
+                      class="ml-1 text-info"
+                    >
+                      · {{ positions.length }}
+                    </span>
+                    <span
+                      v-else-if="activeTab === 'orders' && openOrdersCount > 0"
+                      class="ml-1 text-info"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${ORDERS_FETCH_LIMIT}+`
+                          : openOrdersCount
+                      }}
+                    </span>
+                  </span>
                   <chevron-down-icon class="w-4 h-4 ml-2" />
                 </div>
               </button>
@@ -67,11 +95,7 @@
         >
           No open positions
         </div>
-        <table
-          v-else
-          ref="positionsTable"
-          class="w-full text-s-14 table-fixed"
-        >
+        <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -263,7 +287,20 @@
             size="xs"
           >
             <template #btn-content="{ data }">
-              <span class="px-2">{{ data.label }}</span>
+              <span class="px-2"
+                >{{ data.label }}
+                <span
+                  v-if="data.value === 'pending' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-11"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
+                </span></span
+              >
             </template>
           </app-btn-group>
         </div>
@@ -919,8 +956,7 @@ async function cancelOrder(order: ApiOrder) {
   if (cancellingOrderId.value === order.orderId) return
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
-  const displayMarket =
-    market?.longName ?? market?.displayName ?? order.market
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
     await perpsClient.cancelOrder(order.orderId)
     perpsToasts.toastOrderCanceled({
@@ -1031,4 +1067,17 @@ const filteredOrders = computed(() => {
   if (selectedOrderFilter.value.value === 'all') return orders.value
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
+
+// Open-orders count for the Orders tab badge. Source is the current cursor
+// page of orders. The badge only saturates ("100+") when a next page exists
+// AND the current page is itself full of open orders — `ordersHasNext` alone
+// says nothing about open orders, so a few open + many older closed would
+// otherwise mis-render as "3+".
+const ORDERS_FETCH_LIMIT = 100
+const openOrdersCount = computed(
+  () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
+)
+const openOrdersCountIsCapped = computed(
+  () => ordersHasNext.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
+)
 </script>
