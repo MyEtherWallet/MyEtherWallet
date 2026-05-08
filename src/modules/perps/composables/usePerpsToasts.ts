@@ -294,6 +294,22 @@ export function usePerpsToasts() {
     })
   }
 
+  // --- Leverage ---
+  const toastLeverageUpdated = (leverage: number, market: string) => {
+    toastStore.addToastMessage({
+      type: ToastType.Success,
+      text: 'Leverage Updated',
+      textSecondary: `${market} set to ${leverage}x`,
+    })
+  }
+
+  const toastFailedToSetLeverage = () => {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: 'Failed to Set Leverage',
+    })
+  }
+
   return {
     // Deposits & Withdrawals
     toastDepositComplete,
@@ -326,5 +342,8 @@ export function usePerpsToasts() {
     toastCancelFailedGeneric,
     toastFailedToCloseAllPositions,
     toastFailedToCancelOrders,
+    // Leverage
+    toastLeverageUpdated,
+    toastFailedToSetLeverage,
   }
 }
