@@ -29,6 +29,10 @@
                 v-else-if="item.icon === 'trophy'"
                 class="w-4 h-4 text-primary"
               />
+              <trade-icon
+                v-else-if="item.icon === 'trade'"
+                class="w-4 h-4 text-primary"
+              />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar'"
                 class="w-4 h-4 text-primary"
@@ -60,11 +64,14 @@
           :swap-total="swapTotal"
           :trade-claimed="tradeClaimed"
           :trade-no-rewards="tradeNoRewards"
+          :trade-market-closed="tradeMarketClosed"
           :trade-remaining-pct="tradeRemainingPct"
           :trade-remaining-count="tradeRemainingCount"
           :trade-total="tradeTotal"
           :time-until-hour-reset="timeUntilHourReset"
-          :time-until-next-eligible="timeUntilNextEligible"
+          :time-until-swap-next-eligible="timeUntilSwapNextEligible"
+          :time-until-trade-next-eligible="timeUntilTradeNextEligible"
+          :time-until-market-open="timeUntilMarketOpen"
           class="mt-0"
           @swap="onNavigate('swap')"
           @trade="onNavigate('trade')"
@@ -83,6 +90,7 @@ import {
   CalendarIcon,
   CurrencyDollarIcon,
 } from '@heroicons/vue/24/solid'
+import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
 import { ArrowPathRoundedSquareIcon } from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -104,11 +112,14 @@ const props = defineProps<{
   swapTotal: number | null
   tradeClaimed: boolean
   tradeNoRewards: boolean
+  tradeMarketClosed: boolean
   tradeRemainingPct: number
   tradeRemainingCount: number | null
   tradeTotal: number | null
   timeUntilHourReset: string
-  timeUntilNextEligible: string
+  timeUntilSwapNextEligible: string
+  timeUntilTradeNextEligible: string
+  timeUntilMarketOpen: string
 }>()
 
 const isOpenModel = defineModel('isOpen', {
@@ -141,7 +152,11 @@ const infoItems = [
   },
   {
     icon: 'trophy',
-    text: 'Be among the first 10 users per hour, per action.',
+    text: 'Be among the first 10 users per hour, per swap.',
+  },
+  {
+    icon: 'trade',
+    text: 'Be among the first 15 users per hour, per trade.',
   },
   {
     icon: 'currency-dollar',
