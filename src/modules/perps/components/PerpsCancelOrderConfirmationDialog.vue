@@ -1,5 +1,10 @@
 <template>
-  <app-dialog v-model:is-open="isOpen" class="w-full max-w-[440px]">
+  <app-dialog
+    v-model:is-open="isOpen"
+    class="w-full max-w-[440px]"
+    z-index-container="200"
+    z-index-overlay="201"
+  >
     <template #title>
       <div class="flex items-center gap-2.5 mr-8 pt-5 pl-6">
         <app-token-logo
@@ -120,9 +125,9 @@ function humanCategory(type: ApiOrder['type']): string {
     case 'limit':
       return 'Limit'
     case 'stopMarket':
-      return 'Stop Market'
+      return 'Stop Loss'
     case 'takeProfitMarket':
-      return 'Take Profit Market'
+      return 'Take Profit'
     default:
       return type
   }

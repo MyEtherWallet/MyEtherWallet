@@ -483,7 +483,10 @@
                         </li>
                         <li
                           class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[toggleMenu(), openCancelConfirmation(order)]"
+                          @click.stop="[
+                            toggleMenu(),
+                            openCancelConfirmation(order),
+                          ]"
                         >
                           {{
                             cancellingOrderId === order.orderId
@@ -1039,6 +1042,10 @@ function openCancelConfirmation(order: ApiOrder) {
   orderPendingCancel.value = order
   showCancelConfirmation.value = true
 }
+
+watch(showCancelConfirmation, isOpen => {
+  if (isOpen) showOrderDialog.value = false
+})
 
 async function confirmCancelOrder() {
   if (!orderPendingCancel.value) return
