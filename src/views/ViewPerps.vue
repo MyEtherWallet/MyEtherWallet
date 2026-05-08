@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
@@ -92,12 +92,21 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
-const { isWatchOnly } = storeToRefs(walletStore)
+const { isWatchOnly, wallet } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
 const { token, isWalletConnected, isAuthenticating, authError, login, logout } =
   usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
 const connectWallet = () => accessStore.openAccessDialog()
+
+watch(
+  () => wallet.value,
+  (newVal, oldVal) => {
+    if (newVal && oldVal && !isWatchOnly.value && !isAuthenticating.value) {
+      login()
+    }
+  },
+)
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
 
