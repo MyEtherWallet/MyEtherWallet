@@ -183,6 +183,10 @@
             :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
             location="right"
             class="ml-3"
+            :class="{
+              'opacity-0 pointer-events-none':
+                activePosition && manageMode === 'close',
+            }"
           >
             <template #menu-content="{ toggleMenu }">
               <div
@@ -418,7 +422,11 @@
             >
               <span class="font-bold text-s-12 text-info">New size</span>
               <span class="font-bold">{{
-                formatUsd((positionNotionalValue || 0) + (positionSizeUsd || 0))
+                submitDisabled
+                  ? '-'
+                  : formatUsd(
+                      (positionNotionalValue || 0) + (positionSizeUsd || 0),
+                    )
               }}</span>
             </div>
             <!-- Est. Liquidation -->
@@ -427,7 +435,11 @@
                 >Est. Liquidation</span
               >
               <span class="font-bold">{{
-                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+                submitDisabled
+                  ? '-'
+                  : estimatedLiquidation
+                    ? formatUsd(estimatedLiquidation)
+                    : '$0.00'
               }}</span>
             </div>
             <!-- Margin Ratio -->
@@ -436,7 +448,11 @@
                 >New Margin Ratio</span
               >
               <span class="font-bold">{{
-                newMarginRatio !== null ? newMarginRatio.toFixed(2) : '0.00'
+                submitDisabled
+                  ? '-'
+                  : newMarginRatio !== null
+                    ? newMarginRatio.toFixed(2)
+                    : '0'
               }}</span>
             </div>
           </div>
@@ -498,7 +514,7 @@
         </template>
 
         <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
-        <template v-if="manageMode === 'close'">
+        <template v-if="activePosition && manageMode === 'close'">
           <!-- ADD MODE -->
 
           <!-- CLOSE MODE -->
@@ -571,7 +587,7 @@
             <!-- Size Pills -->
             <div class="flex justify-start gap-2 mt-4 mb-2">
               <button
-                v-for="pct in [0, 25, 50, 75, 100]"
+                v-for="pct in [5, 25, 50, 75, 100]"
                 :key="pct"
                 :disabled="isClosePillDisabled(pct)"
                 class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
@@ -609,7 +625,7 @@
         {{ getMainBtnText }}
       </app-base-button>
       <app-base-button
-        v-if="manageMode === 'close'"
+        v-if="activePosition && manageMode === 'close'"
         :theme="orderSide === 'buy' ? 'success' : 'error'"
         :disabled="closeDisabled"
         @click="showCloseConfirmation"

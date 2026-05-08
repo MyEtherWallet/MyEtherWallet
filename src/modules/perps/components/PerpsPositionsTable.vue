@@ -301,13 +301,13 @@
           :columns="ordersSkeletonColumns"
         />
         <div
-          v-else-if="filteredOrders.length === 0"
+          v-else-if="filteredOrders.length === 0 && ordersCurrentPage === 0"
           class="text-center py-8 text-info text-s-14"
         >
           No orders
         </div>
 
-        <table v-else class="w-full text-s-14 table-fixed">
+        <table v-else ref="ordersTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -482,6 +482,20 @@
             </tr>
           </tbody>
         </table>
+        <div
+          v-if="ordersHasPrev || ordersHasNext"
+          class="flex justify-end mt-4 px-2"
+        >
+          <perps-pagination
+            :current-page="ordersCurrentPage"
+            :has-prev="ordersHasPrev"
+            :has-next="ordersHasNext"
+            :disabled="ordersLoading"
+            :scroll-target="ordersTable"
+            @prev="ordersPrevPage"
+            @next="ordersNextPage"
+          />
+        </div>
       </template>
 
       <!-- Fills tab -->
@@ -638,7 +652,7 @@
           No deposits or withdrawals
         </div>
         <div v-else class="overflow-x-auto">
-          <table class="w-full text-s-14 table-fixed">
+          <table ref="dwTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -665,7 +679,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in combinedDW" :key="item.key" class="">
+              <tr v-for="item in paginatedDW" :key="item.key" class="">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
@@ -734,6 +748,19 @@
               </tr>
             </tbody>
           </table>
+          <div
+            v-if="dwTotalPages > 1"
+            class="flex justify-end mt-4 px-2"
+          >
+            <perps-pagination
+              :current-page="dwCurrentPage"
+              :total-pages="dwTotalPages"
+              :disabled="dwLoading"
+              :scroll-target="dwTable"
+              @prev="dwPrevPage"
+              @next="dwNextPage"
+            />
+          </div>
         </div>
       </template>
     </app-sheet>
@@ -808,6 +835,8 @@ defineEmits<{
 
 const positionsTable = ref<HTMLElement | null>(null)
 const fillsTable = ref<HTMLElement | null>(null)
+const ordersTable = ref<HTMLElement | null>(null)
+const dwTable = ref<HTMLElement | null>(null)
 
 const positionsSkeletonColumns: SkeletonColumn[] = [
   { header: 'Market' },
@@ -881,6 +910,11 @@ const {
   loading: ordersLoading,
   hasMore: ordersHasMore,
   refetch: refetchOrders,
+  currentPage: ordersCurrentPage,
+  hasPrev: ordersHasPrev,
+  hasNext: ordersHasNext,
+  nextPage: ordersNextPage,
+  prevPage: ordersPrevPage,
 } = usePerpsOrders()
 
 const showCancelButton = (order: ApiOrder) => {
@@ -945,17 +979,19 @@ async function cancelOrder(order: ApiOrder) {
   }
 }
 
-const combinedDW = computed(() => {
-  const items: Array<{
-    key: string
-    type: string
-    coin: string
-    size: string
-    usdValue?: string
-    statusLabel: string
-    statusColor: string
-    time: string
-  }> = []
+type CombinedDWRow = {
+  key: string
+  type: string
+  coin: string
+  size: string
+  usdValue?: string
+  statusLabel: string
+  statusColor: string
+  time: string
+}
+
+const combinedDW = computed<CombinedDWRow[]>(() => {
+  const items: CombinedDWRow[] = []
   for (const d of deposits.value) {
     items.push({
       key: `d-${d.txid ?? d.time}`,
@@ -993,6 +1029,14 @@ const combinedDW = computed(() => {
   items.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
   return items
 })
+
+const {
+  currentPage: dwCurrentPage,
+  paginatedArray: paginatedDW,
+  totalPages: dwTotalPages,
+  nextPage: dwNextPage,
+  prevPage: dwPrevPage,
+} = usePaginate<CombinedDWRow>(combinedDW, PERPS_PAGE_SIZE)
 
 const tabs = [
   { label: 'Positions', value: 'positions' },
