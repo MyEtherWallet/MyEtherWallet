@@ -548,7 +548,7 @@ export function usePerpsTradeForm() {
     { key: 'all', label: 'All' },
     { key: 'Equities', label: 'Equities' },
     { key: 'Commodities', label: 'Commodities' },
-    { key: 'ETFs', label: 'ETFs' },
+    { key: 'Indices', label: 'Indices' },
   ]
 
   const marketSortOptions: MarketSortOption[] = [

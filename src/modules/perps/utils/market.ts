@@ -27,7 +27,7 @@ export function hasTag(contract: Contract, tag: string): boolean {
 
 export function getCategory(contract: Contract): string {
   if (hasTag(contract, 'commodity')) return 'Commodities'
-  if (hasTag(contract, 'etf')) return 'ETFs'
+  if (hasTag(contract, 'index')) return 'Indices'
   return 'Equities'
 }
 
