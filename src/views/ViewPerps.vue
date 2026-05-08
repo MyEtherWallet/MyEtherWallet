@@ -54,12 +54,14 @@
 
       <perps-positions-table
         @open-position="handleOpenPosition"
+        @open-side-menu="handleOpenSideWithType"
         @view-market="handleViewMarket"
       />
     </template>
     <perps-market-list
       @open-position="handleOpenPosition"
       @view-market="handleViewMarket"
+      @open-side-menu="handleOpenSideWithType"
     />
     <perps-deposit-dialog v-model="showDeposit" />
     <perps-withdraw-dialog
@@ -98,6 +100,16 @@ const { isDesktopAndUp } = useAppBreakpoints()
 const connectWallet = () => accessStore.openAccessDialog()
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
+
+function handleOpenSideWithType(
+  market: string,
+  type: 'add' | 'close' | undefined,
+) {
+  walletMenu.setWalletPanel('perps')
+  walletMenu.setIsOpenSideMenu(true)
+  walletMenu.setSelectedTradeTokenSymbol(market)
+  walletMenu.setSelectedTradeManageMode(type ?? 'add')
+}
 
 function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
   walletMenu.setWalletPanel('perps')

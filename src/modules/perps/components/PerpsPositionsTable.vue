@@ -153,8 +153,9 @@
                           : pos.direction === 'short'
                             ? 'text-error'
                             : 'text-info',
-                        'font-medium text-s-12 capitalize ',
+                        'font-medium text-s-12 capitalize hooverOpacity cursor-pointer',
                       ]"
+                      @click.stop="openLeverage(pos)"
                     >
                       {{ pos.direction }} {{ pos.leverage }}x
                     </p>
@@ -212,7 +213,9 @@
               </td>
               <!-- Actions -->
               <td class="px-1 py-3 text-right rounded-r-12">
-                <div class="flex items-center justify-end lg:hidden -mr-1">
+                <div
+                  class="flex items-center justify-end -mr-1 lg:mr-0 lg:flex-row lg:gap-2"
+                >
                   <app-pop-up-menu placeholder="actions menu" location="right">
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
@@ -220,9 +223,18 @@
                         @click.stop="toggleMenu"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
+                        class="flex lg:hidden"
                       >
                         <ellipsis-vertical-icon class="w-5 h-5" />
                       </app-btn-icon>
+                      <AppBaseButton
+                        class="hidden lg:flex"
+                        size="small"
+                        @click="toggleMenu"
+                        :theme="pos.direction === 'long' ? 'success' : 'error'"
+                      >
+                        Manage
+                      </AppBaseButton>
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
@@ -231,34 +243,41 @@
                         <ul>
                           <li
                             class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              $emit('openPosition', pos.market),
-                            ]"
+                            @click.stop="[toggleMenu(), openLeverage(pos)]"
                           >
-                            <p>Manage Position</p>
+                            <p>Change Leverage</p>
                           </li>
                           <li
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              $emit('viewMarket', pos.market),
+                              openPositionAdd(pos, 'add'),
                             ]"
                           >
-                            <p>View Chart</p>
+                            <p>Add to position</p>
+                          </li>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              openPositionAdd(pos, 'close'),
+                            ]"
+                          >
+                            <p>Close Position</p>
+                          </li>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              $emit('openPosition', pos.market),
+                            ]"
+                          >
+                            <p>View Market Info</p>
                           </li>
                         </ul>
                       </div>
                     </template>
                   </app-pop-up-menu>
-                </div>
-                <div class="hidden lg:flex flex-row gap-2 justify-end">
-                  <AppBaseButton
-                    size="small"
-                    @click="$emit('openPosition', pos.market)"
-                  >
-                    Manage
-                  </AppBaseButton>
                 </div>
               </td>
             </tr>
@@ -787,11 +806,21 @@
       @close="showOrderDialog = false"
       @cancel="cancelOrder"
     />
+
+    <perps-select-leverage-dialog
+      v-model:is-open="showLeverageModal"
+      v-model="localLeverage"
+      :symbol="displaySymbol"
+      :leverage-error="leverageError"
+      :is-saving="isSavingLeverage"
+      mode="submit"
+      @save="saveLeverage"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import {
   ChevronDownIcon,
   EllipsisVerticalIcon,
@@ -810,6 +839,7 @@ import AppTableSkeleton, {
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
+import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -835,12 +865,57 @@ import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 
+const localLeverage = ref(1)
+const leverageError = ref('')
+const isSavingLeverage = ref(false)
+const fullMarketName = ref('')
+const showLeverageModal = ref(false)
+
+const saveLeverage = async () => {
+  isSavingLeverage.value = true
+  try {
+    await perpsClient.setLeverage(fullMarketName.value, localLeverage.value)
+    showLeverageModal.value = false
+    perpsToasts.toastLeverageUpdated(localLeverage.value, fullMarketName.value)
+  } catch (e: unknown) {
+    leverageError.value = (e as Error).message
+    perpsToasts.toastFailedToSetLeverage()
+  } finally {
+    isSavingLeverage.value = false
+  }
+}
+
+const displaySymbol = computed(() => fullMarketName.value.split('-')[0])
+
+const openLeverage = (pos: Position) => {
+  showLeverageModal.value = true
+  localLeverage.value = Number(pos.leverage) // temp
+  fullMarketName.value = pos.market
+}
+
+watch(
+  () => showLeverageModal.value,
+  val => {
+    if (!val) {
+      localLeverage.value = 1
+      leverageError.value = ''
+      isSavingLeverage.value = false
+      fullMarketName.value = ''
+    }
+  },
+)
+
 const USDC_LOGO =
   'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602'
-defineEmits<{
+const emits = defineEmits<{
   openPosition: [market: string]
+  openSideMenu: [market: string, type: 'add' | 'close' | undefined]
   viewMarket: [market: string]
 }>()
+
+const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
+  emits('openSideMenu', pos.market, type)
+}
 
 const positionsTable = ref<HTMLElement | null>(null)
 const fillsTable = ref<HTMLElement | null>(null)

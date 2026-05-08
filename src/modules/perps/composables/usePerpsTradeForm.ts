@@ -32,6 +32,8 @@ interface OrderSideButton {
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
+const leverage = ref(20)
+
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
@@ -63,7 +65,6 @@ export function usePerpsTradeForm() {
   const limitPrice = ref('')
   const activeLimitPill = ref<number | null>(null)
   const inputAmount = ref('')
-  const leverage = ref(1)
   const sliderValue = ref(0)
 
   const isSubmitting = ref(false)
@@ -84,7 +85,10 @@ export function usePerpsTradeForm() {
   // the user lands on it when reopening the dialog. The first explicit sort
   // pick releases the pin.
   const marketSortIsUserSet = ref(false)
-  const manageMode = ref<'add' | 'close'>('add')
+  const manageMode = computed({
+    get: () => walletMenuStore.selectedTradeManageMode,
+    set: (v) => walletMenuStore.setSelectedTradeManageMode(v),
+  })
   const closeAmount = ref('')
   const closeSliderValue = ref(0)
   const isClosing = ref(false)
@@ -647,6 +651,10 @@ export function usePerpsTradeForm() {
     showLeverageModal.value = true
   }
 
+  function closeLeverageModal() {
+    showLeverageModal.value = false
+  }
+
   async function saveLeverage() {
     isSavingLeverage.value = true
     leverageError.value = ''
@@ -657,11 +665,13 @@ export function usePerpsTradeForm() {
       leverage.value = tempLeverage.value
       showLeverageModal.value = false
       fetchMaxOrderSize()
+      perpsToasts.toastLeverageUpdated(tempLeverage.value, fullMarketName.value)
     } catch (e: any) {
       leverageError.value =
         e?.message ||
         e?.toString() ||
         'Failed to save leverage. Please try again.'
+      perpsToasts.toastFailedToSetLeverage()
     } finally {
       isSavingLeverage.value = false
     }
@@ -672,8 +682,9 @@ export function usePerpsTradeForm() {
     if (!token.value || !markets.value.length) return
     try {
       const res = await perpsClient.getLeverage(fullMarketName.value)
+
       if (res.success && res.result?.length) {
-        leverage.value = parseInt(res.result[0].leverage) || 1
+        leverage.value = parseInt(res.result[0].leverage) || 20
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)
@@ -995,7 +1006,6 @@ export function usePerpsTradeForm() {
       inputAmount.value = ''
       sliderValue.value = 0
       maxOrderSize.value = null
-      manageMode.value = 'add'
       closeAmount.value = ''
       closeSliderValue.value = 0
       closeError.value = ''
@@ -1161,6 +1171,7 @@ export function usePerpsTradeForm() {
     isSavingLeverage,
     leverageError,
     openLeverageModal,
+    closeLeverageModal,
     saveLeverage,
   }
 }

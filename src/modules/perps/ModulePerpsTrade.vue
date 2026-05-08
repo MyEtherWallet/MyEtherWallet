@@ -159,7 +159,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'add',
                 },
               ]"
-              @click="manageMode = 'add'"
+              @click="setSelectedTradeManageMode('add')"
             >
               Add
             </button>
@@ -174,7 +174,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'close',
                 },
               ]"
-              @click="manageMode = 'close'"
+              @click="setSelectedTradeManageMode('close')"
             >
               Close
             </button>
@@ -350,7 +350,7 @@
                 @click="openLeverageModal"
               >
                 <p class="ml-auto font-semibold text-s-14">
-                  {{ leverage }}&times;
+                  {{ manageMode === 'add' ? localLeverage : leverage }}&times;
                 </p>
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
@@ -644,7 +644,7 @@
       :current-price="currentPrice"
       :limit-price="limitPrice"
       :input-amount="inputAmount"
-      :leverage="leverage"
+      :leverage="manageMode === 'add' ? tempLeverage : leverage"
       :position-size-usd="positionSizeUsd"
       :order-size="orderSize"
       :estimated-liquidation="estimatedLiquidation"
@@ -652,7 +652,7 @@
       :stop-loss-price="stopLossPrice"
       :order-error="orderError"
       :is-submitting="isSubmitting"
-      @confirm="confirmAndSubmitOrder"
+      @confirm="confirmAndSubmitAndSetLeverage"
     />
 
     <!-- Close Confirmation Dialog -->
@@ -694,7 +694,8 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
-      @save="saveLeverage"
+      :mode="manageMode === 'add' ? 'add' : 'create'"
+      @save="manageMode === 'add' ? closeLeverageModal() : saveLeverage()"
     />
 
     <!-- Take Profit / Stop Loss Dialog -->
@@ -721,7 +722,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import {
   ChevronDownIcon,
   CheckIcon,
@@ -743,12 +744,13 @@ import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDia
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
-
+const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
   accessStore.openAccessDialog()
 }
@@ -773,6 +775,13 @@ const onCloseAmountInput = (e: Event) => {
     closeAmount.value = val.toFixed(2)
   }
   closeSliderValue.value = maxVal > 0 ? (val / maxVal) * 100 : 0
+}
+
+const confirmAndSubmitAndSetLeverage = async () => {
+  await confirmAndSubmitOrder()
+  if (manageMode.value === 'add' && tempLeverage.value !== leverage.value) {
+    await saveLeverage()
+  }
 }
 
 const onLimitPriceInput = (e: Event) => {
@@ -886,7 +895,25 @@ const {
   leverageError,
   openLeverageModal,
   saveLeverage,
+  closeLeverageModal,
 } = usePerpsTradeForm()
+
+const localLeverage = ref(leverage)
+
+// if this changed, it means that the marketinfo page changed leverage and should reflect
+watch(
+  () => leverage.value,
+  val => {
+    if (val) localLeverage.value = val
+  },
+)
+
+watch(
+  () => showLeverageModal.value,
+  val => {
+    if (!val) localLeverage.value = tempLeverage.value
+  },
+)
 
 const isLoading = computed(() => false)
 

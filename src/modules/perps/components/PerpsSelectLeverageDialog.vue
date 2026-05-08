@@ -108,13 +108,18 @@
         </div>
 
         <!-- Description -->
-        <p class="text-s-14 text-info leading-relaxed">
+        <p class="text-s-14 text-info leading-relaxed" v-if="mode === 'create'">
           Leverage increases both your potential profits and losses. Using
           higher leverage means higher risk of losing your position.
           <a href="#" class="text-[#0052ff] font-medium hover:underline"
             >Learn more</a
           >
         </p>
+        <app-warning
+          v-if="mode === 'add'"
+          title="Position leverage will change"
+          :text="`You're adding to an existing position at a different leverage. This will change the leverage for your full ${symbol} position, not just the amount you're adding. Your liquidation price and required margin will be recalculated.`"
+        />
 
         <!-- Leverage Error -->
         <div
@@ -130,7 +135,7 @@
           :disabled="isSaving"
           @click="$emit('save')"
         >
-          {{ isSaving ? 'Saving...' : 'Save' }}
+          {{ buttonText }}
         </button>
       </div>
     </template>
@@ -142,25 +147,18 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getLogoUrl } from '../utils/market'
 import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
+import { computed } from 'vue'
+import AppWarning from '@/components/AppWarning.vue'
 
-defineProps({
-  symbol: {
-    type: String,
-    required: true,
-  },
-  modelValue: {
-    type: Number,
-    required: true,
-  },
-  leverageError: {
-    type: String,
-    default: '',
-  },
-  isSaving: {
-    type: Boolean,
-    default: false,
-  },
-})
+interface Props {
+  symbol: string
+  modelValue: number
+  leverageError: string
+  isSaving: boolean
+  mode: 'add' | 'create' | 'submit'
+}
+
+const props = defineProps<Props>()
 
 const isOpen = defineModel('isOpen', {
   type: Boolean,
@@ -171,6 +169,13 @@ defineEmits<{
   'update:modelValue': [value: number]
   save: []
 }>()
+
+const buttonText = computed(() => {
+  if (props.mode === 'submit') {
+    return props.isSaving ? 'Submitting...' : 'Submit'
+  }
+  return props.isSaving ? 'Saving...' : 'Save'
+})
 </script>
 
 <style scoped>

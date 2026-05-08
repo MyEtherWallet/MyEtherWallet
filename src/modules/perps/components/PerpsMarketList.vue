@@ -370,29 +370,44 @@
                           class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
                         />
                         <ul>
-                          <li
-                            v-if="getPosition(contract.market)"
-                            @click.stop="[
-                              toggleMenu(),
-                              $emit('openPosition', contract.market),
-                            ]"
-                            class="p-2 flex items-center hoverBGWhite rounded-12"
-                          >
-                            <p>
-                              Manage
-                              {{
-                                getPosition(contract.market)!.direction ===
-                                'long'
-                                  ? 'Long'
-                                  : 'Short'
-                              }}
-                            </p>
-                          </li>
+                          <template v-if="getPosition(contract.market)">
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openLeverage(
+                                  contract.market,
+                                  contract.baseCurrency,
+                                  getPosition(contract.market)!.leverage,
+                                ),
+                              ]"
+                            >
+                              <p>Change Leverage</p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'add'),
+                              ]"
+                            >
+                              <p>Add to Position</p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'close'),
+                              ]"
+                            >
+                              <p>Close Position</p>
+                            </li>
+                          </template>
                           <template v-else>
                             <li
                               @click.stop="[
                                 toggleMenu(),
-                                $emit('openPosition', contract.market, 'buy'),
+                                emits('openPosition', contract.market, 'buy'),
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -401,7 +416,7 @@
                             <li
                               @click.stop="[
                                 toggleMenu(),
-                                $emit('openPosition', contract.market, 'sell'),
+                                emits('openPosition', contract.market, 'sell'),
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -411,11 +426,11 @@
                           <li
                             @click.stop="[
                               toggleMenu(),
-                              $emit('viewMarket', contract.market),
+                              emits('viewMarket', contract.market),
                             ]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <p>View Chart</p>
+                            <p>View Market Info</p>
                           </li>
                         </ul>
                       </div>
@@ -423,30 +438,86 @@
                   </app-pop-up-menu>
                 </div>
                 <div class="hidden lg:flex flex-row gap-2 justify-end">
-                  <app-base-button
-                    v-if="getPosition(contract.market)"
-                    size="small"
-                    class="min-w-[136px]"
-                    :theme="
-                      getPosition(contract.market)!.direction === 'long'
-                        ? 'success'
-                        : 'error'
-                    "
-                    @click="$emit('openPosition', contract.market)"
-                  >
-                    Manage
-                    {{
-                      getPosition(contract.market)!.direction === 'long'
-                        ? 'Long'
-                        : 'Short'
-                    }}
-                  </app-base-button>
+                  <template v-if="getPosition(contract.market)">
+                    <app-pop-up-menu
+                      placeholder="actions menu"
+                      location="right"
+                    >
+                      <template #menu-button="{ toggleMenu }">
+                        <app-base-button
+                          size="small"
+                          class="min-w-[136px]"
+                          :theme="
+                            getPosition(contract.market)!.direction === 'long'
+                              ? 'success'
+                              : 'error'
+                          "
+                          @click="toggleMenu"
+                        >
+                          Manage
+                          {{
+                            getPosition(contract.market)!.direction === 'long'
+                              ? 'Long'
+                              : 'Short'
+                          }}
+                        </app-base-button>
+                      </template>
+                      <template #menu-content="{ toggleMenu }">
+                        <div
+                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                        >
+                          <ul>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openLeverage(
+                                  contract.market,
+                                  contract.baseCurrency,
+                                  getPosition(contract.market)!.leverage,
+                                ),
+                              ]"
+                            >
+                              <p>Change Leverage</p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'add'),
+                              ]"
+                            >
+                              <p>Add to Position</p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                openPositionAdd(contract.market, 'close'),
+                              ]"
+                            >
+                              <p>Close Position</p>
+                            </li>
+                            <li
+                              class="p-2 flex items-center hoverBGWhite rounded-12"
+                              @click.stop="[
+                                toggleMenu(),
+                                emits('viewMarket', contract.market),
+                              ]"
+                            >
+                              <p>View Market Info</p>
+                            </li>
+                          </ul>
+                        </div>
+                      </template>
+                    </app-pop-up-menu>
+                  </template>
                   <template v-else>
                     <app-base-button
                       size="small"
                       class="min-w-[64px]"
                       theme="success"
-                      @click="$emit('openPosition', contract.market, 'buy')"
+                      @click="emits('openPosition', contract.market, 'buy')"
                     >
                       Long
                     </app-base-button>
@@ -454,7 +525,7 @@
                       size="small"
                       theme="error"
                       class="min-w-[64px]"
-                      @click="$emit('openPosition', contract.market, 'sell')"
+                      @click="emits('openPosition', contract.market, 'sell')"
                     >
                       Short
                     </app-base-button>
@@ -501,6 +572,15 @@
       </div>
     </div>
   </div>
+  <perps-select-leverage-dialog
+    v-model:is-open="showLeverageDialog"
+    v-model="tempLeverage"
+    :symbol="leverageSymbol"
+    :leverage-error="leverageError"
+    :is-saving="isSavingLeverage"
+    mode="submit"
+    @save="saveLeverage"
+  />
 </template>
 
 <script setup lang="ts">
@@ -533,13 +613,56 @@ import { formatPrice, formatPercent, formatVolume } from '../utils/formatters'
 import { getLogoUrl, midPrice, hasTag } from '../utils/market'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import { usePaginate } from '@/composables/usePaginate'
-import { PERPS_PAGE_SIZE } from '../configs'
+import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
+import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
+import { usePerpsToasts } from '../composables/usePerpsToasts'
 
-defineEmits<{
+const emits = defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
+  openSideMenu: [market: string, type: 'add' | 'close' | undefined]
   viewMarket: [market: string]
 }>()
+
+const showLeverageDialog = ref(false)
+const tempLeverage = ref(1)
+const isSavingLeverage = ref(false)
+const leverageError = ref('')
+const leverageMarket = ref('')
+const leverageSymbol = ref('')
+const perpsToasts = usePerpsToasts()
+
+const openLeverage = (
+  market: string,
+  symbol: string,
+  currentLeverage: string,
+) => {
+  leverageMarket.value = market
+  leverageSymbol.value = symbol
+  tempLeverage.value = parseInt(currentLeverage) || 1
+  leverageError.value = ''
+  showLeverageDialog.value = true
+}
+
+const saveLeverage = async () => {
+  isSavingLeverage.value = true
+  leverageError.value = ''
+  try {
+    await perpsClient.setLeverage(leverageMarket.value, tempLeverage.value)
+    showLeverageDialog.value = false
+    perpsToasts.toastLeverageUpdated(tempLeverage.value, leverageMarket.value)
+  } catch (e) {
+    leverageError.value =
+      e instanceof Error ? e.message : 'Failed to set leverage'
+    perpsToasts.toastFailedToSetLeverage()
+  } finally {
+    isSavingLeverage.value = false
+  }
+}
+
+const openPositionAdd = (market: string, type: 'add' | 'close') => {
+  emits('openSideMenu', market, type)
+}
 
 const marketsTable = ref<HTMLElement | null>(null)
 
