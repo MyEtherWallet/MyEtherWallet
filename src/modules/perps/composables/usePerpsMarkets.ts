@@ -44,12 +44,17 @@ const contractsError = ref<string | null>(null)
 let contractsInitialized = false
 
 async function fetchContracts() {
-  contractsLoading.value = true
+  if (!contractsInitialized) {
+    contractsLoading.value = true
+  }
   contractsError.value = null
   try {
     const data = await perpsClient.getContracts(true)
     if (data.success) {
-      contracts.value = data.result
+      const next = JSON.stringify(data.result)
+      if (next !== JSON.stringify(contracts.value)) {
+        contracts.value = data.result
+      }
     }
   } catch (e) {
     contractsError.value =
@@ -63,6 +68,7 @@ export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
     fetchContracts()
+    setInterval(fetchContracts, 500)
   }
   return {
     contracts,
