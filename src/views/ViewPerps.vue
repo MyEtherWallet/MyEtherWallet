@@ -1,10 +1,7 @@
 <template>
   <div class="flex flex-col gap-6">
     <!-- Not authenticated -->
-    <div
-      v-if="!isWalletConnected || isWatchOnly"
-      class="text-center py-8 bg-white"
-    >
+    <div v-if="!isWalletConnected" class="text-center py-8 bg-white">
       <p class="text-info text-s-14 mb-4">
         Connect your wallet to view your perps portfolio
       </p>
@@ -48,6 +45,8 @@
         <perps-portfolio-summary
           @deposit="showDeposit = true"
           @withdraw="showWithdraw = true"
+          @access="connectWallet"
+          :watch-only="isWatchOnly"
         />
         <perps-portfolio-chart />
       </div>

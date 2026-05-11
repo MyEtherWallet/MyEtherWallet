@@ -211,6 +211,7 @@
             position="right-0"
             placeholder="Manage"
             class="ml-auto order-1 xs:order-3"
+            v-if="!isWatchOnly"
           >
             <template #select-button="{ toggleSelect }">
               <button
@@ -233,6 +234,11 @@
               </app-btn-icon>
             </template>
           </app-select>
+          <div v-else class="ml-auto order-1 xs:order-3">
+            <app-base-button @click="connectWallet" size="medium">
+              Connect wallet</app-base-button
+            >
+          </div>
         </div>
 
         <div
@@ -883,6 +889,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -916,7 +923,8 @@ import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-const { setSelectedTradeManageMode } = useWalletMenuStore()
+import { useAccessStore } from '@/stores/accessStore'
+
 import {
   formatUsd,
   formatPrice,
@@ -936,6 +944,9 @@ import {
   midPrice as computeMidPrice,
 } from './utils/market'
 
+const connectWallet = () => useAccessStore().openAccessDialog()
+
+const { setSelectedTradeManageMode } = useWalletMenuStore()
 const props = defineProps({
   market: {
     type: String,
@@ -944,7 +955,7 @@ const props = defineProps({
 })
 
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 
 const { isXS } = useAppBreakpoints()
 
