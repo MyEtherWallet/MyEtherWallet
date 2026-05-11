@@ -587,7 +587,26 @@
         </template>
       </div>
       <!-- Submit Button -->
-      <template v-if="isWatchOnly">
+      <template v-if="!isSupportedNetwork">
+        <div
+          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+        >
+          <p class="text-info text-s-14 mb-4">
+            Perps is only available on Ethereum
+          </p>
+          <select-chain-for-app>
+            <template #network-button="{ openNetworkDialog }">
+              <button
+                class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+                @click="openNetworkDialog(true)"
+              >
+                Switch to Ethereum
+              </button>
+            </template>
+          </select-chain-for-app>
+        </div>
+      </template>
+      <template v-else-if="isWatchOnly">
         <app-base-button
           v-if="!isWalletConnected || isWatchOnly"
           :class="['mx-auto w-full max-w-[340px] mt-4']"
@@ -739,15 +758,20 @@ import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
 import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDialog.vue'
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
 const { t } = useI18n()
 
 const { setSelectedTradeManageMode } = useWalletMenuStore()
