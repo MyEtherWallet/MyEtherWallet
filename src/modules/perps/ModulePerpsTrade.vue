@@ -708,6 +708,7 @@
       :take-profit-error="takeProfitPrecisionError"
       :stop-loss-error="stopLossPrecisionError"
       :quote-decimals="quoteDecimals"
+      :has-edits="hasAutoCloseEdits"
       @clear-take-profit="clearTempTakeProfit"
       @clear-stop-loss="clearTempStopLoss"
       @set-take-profit-pct="setTakeProfitPct"
@@ -850,6 +851,7 @@ const {
   clearTempTakeProfit,
   clearTempStopLoss,
   confirmAutoClose,
+  hasAutoCloseEdits,
   // Submit
   isSubmitting,
   submitDisabled,
