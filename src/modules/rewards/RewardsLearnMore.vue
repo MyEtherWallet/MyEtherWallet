@@ -168,7 +168,7 @@ const infoItems = [
   },
   {
     icon: 'currency-dollar-gray',
-    text: 'You must have at least 0.001 ETH before March 31st',
+    text: 'You must have at least 0.001 ETH before April 20th',
   },
 ]
 
