@@ -110,8 +110,17 @@
             Connect Wallet
           </app-base-button>
         </template>
+        <template v-else-if="isBitcoinChain && isUnisatWallet">
+          <app-base-button
+            class="w-full lg:w-auto lg:px-10"
+            @click="onDownloadEnkrypt"
+            @mouseenter="isHoveringCta = true"
+            @mouseleave="isHoveringCta = false"
+          >
+            Download Enkrypt
+          </app-base-button>
+        </template>
         <template v-else-if="isBitcoinChain">
-          <!-- TODO: MEW-1741 — distinguish unisat (unsupported, prompt to download Enkrypt) vs enkrypt-with-EVM-already-connected (auto-switch) per spec -->
           <app-base-button
             class="w-full lg:w-auto lg:px-10"
             @click="onSwitchToEthereum"
@@ -134,7 +143,14 @@
         </template>
       </div>
 
-      <p v-if="isBitcoinChain" class="text-info text-s-12 mt-3">
+      <p
+        v-if="isBitcoinChain && isUnisatWallet"
+        class="text-info text-s-12 mt-3"
+      >
+        UniSat doesn't support Perpetuals. Install Enkrypt or connect a
+        different wallet to continue.
+      </p>
+      <p v-else-if="isBitcoinChain" class="text-info text-s-12 mt-3">
         Perpetuals are available on Ethereum. Switch network to continue.
       </p>
     </div>
@@ -142,7 +158,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import amazonLogo from '@/assets/icons/perps-banner/amazon.svg'
@@ -160,7 +176,7 @@ import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 
 const walletStore = useWalletStore()
-const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly, walletName } = storeToRefs(walletStore)
 const chainsStore = useChainsStore()
 const { isBitcoinChain } = storeToRefs(chainsStore)
 const accessStore = useAccessStore()
@@ -169,6 +185,10 @@ const toastStore = useToastStore()
 const { login, isAuthenticating } = usePerpsAuth()
 
 const isHoveringCta = ref(false)
+
+const isUnisatWallet = computed(
+  () => walletName.value?.toLowerCase() === 'unisat',
+)
 
 const onConnectWallet = () => {
   accessStore.openAccessDialog()
@@ -181,5 +201,9 @@ const onSwitchToEthereum = () => {
     textSecondary: 'Perpetuals are only available on Ethereum.',
     type: ToastType.Info,
   })
+}
+
+const onDownloadEnkrypt = () => {
+  window.open('https://enkrypt.com', '_blank', 'noopener,noreferrer')
 }
 </script>
