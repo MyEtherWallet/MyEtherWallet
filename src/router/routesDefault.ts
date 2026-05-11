@@ -10,6 +10,7 @@ import { PERP_INFO_ROUTE } from './routePerpInfo'
 import { ACCESS_ROUTES } from './routesAccess'
 import { CREATE_ROUTES } from './routesCreate'
 import { type RouterOptions } from 'vue-router'
+import { fetchTradingRestriction } from '@/composables/useTradingRestriction'
 
 const TempView = () => import('@/views/ViewTemp.vue')
 const SignMessageView = () => import('@/views/ViewSignMessage.vue')
@@ -90,6 +91,14 @@ const DefaultRoutes = <RouteNameCollection>[
     component: ViewPerps,
     meta: {
       noAuth: true,
+    },
+    beforeEnter: async (_to, _from, next) => {
+      const restricted = await fetchTradingRestriction()
+      if (restricted) {
+        next({ name: ROUTES_MAIN.HOME.NAME })
+      } else {
+        next()
+      }
     },
     children: [
       {
