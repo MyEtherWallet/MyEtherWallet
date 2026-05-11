@@ -6,7 +6,7 @@ import Configs from '@/configs'
 
 const isDevMode = Configs.IS_DEV_MODE
 
-const isTradingRestrictedInRegion = ref<boolean>(false)
+const isTradingRestrictedInRegion = ref<boolean>(true)
 let fetchPromise: Promise<boolean> | null = null
 
 export function fetchTradingRestriction(): Promise<boolean> {
