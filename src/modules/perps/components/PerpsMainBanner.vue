@@ -35,11 +35,7 @@
             : 'translateY(0)',
         }"
       >
-        <img
-          :src="appleLogo"
-          alt=""
-          class="absolute -top-8 left-0 w-32 h-32"
-        />
+        <img :src="appleLogo" alt="" class="absolute -top-8 left-0 w-32 h-32" />
         <img
           :src="coinbaseLogo"
           alt=""
@@ -83,20 +79,18 @@
       </div>
     </div>
 
-    <div class="relative text-center max-w-[560px] mx-auto">
-      <p
-        class="text-primary font-bold text-s-11 uppercase tracking-sp-06 mb-3"
-      >
+    <div class="relative text-center mx-auto">
+      <p class="text-primary font-bold text-s-11 uppercase tracking-sp-06 mb-3">
         – Sign in to your portfolio –
       </p>
       <h2
-        class="font-bold text-s-24 sm:text-s-28 xl:text-s-32 mb-3 leading-p-110"
+        class="font-bold text-s-28 lg:text-s-32 xl:text-s-40 mb-3 leading-p-110"
       >
         Trade Perpetual Futures
       </h2>
-      <p class="text-info text-s-14 sm:text-s-16 mb-6">
-        Up to 20x leverage, 24/7 on leading U.S. stocks, ETFs, and
-        commodities. Powered by Ondo perps.
+      <p class="text-info text-s-14 sm:text-s-16 mb-6 max-w-[445px] mx-auto">
+        Up to 20x leverage, 24/7 on leading U.S. stocks, ETFs, and commodities.
+        Powered by Ondo perps.
       </p>
 
       <div class="flex justify-center">
