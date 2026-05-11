@@ -167,10 +167,23 @@
           </button>
         </transition>
 
-        <!-- Add Button -->
-        <app-base-button class="w-full" @click="$emit('confirm')">
-          Save
-        </app-base-button>
+        <!-- Actions -->
+        <div class="flex flex-col gap-1">
+          <app-base-button
+            :disabled="!hasEdits"
+            class="w-full"
+            @click="$emit('confirm')"
+          >
+            Save
+          </app-base-button>
+          <app-btn-text
+            class="mx-auto w-full"
+            is-large
+            @click="isOpen = false"
+          >
+            Cancel
+          </app-btn-text>
+        </div>
       </div>
     </template>
   </app-dialog>
@@ -199,6 +212,7 @@ const props = defineProps<{
   takeProfitError?: boolean
   stopLossError?: boolean
   quoteDecimals?: number
+  hasEdits?: boolean
 }>()
 
 const precisionMessage = computed(() => {

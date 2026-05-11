@@ -830,6 +830,12 @@ export function usePerpsTradeForm() {
     showAutoCloseModal.value = false
   }
 
+  const hasAutoCloseEdits = computed(
+    () =>
+      tempTakeProfitPrice.value !== takeProfitPrice.value ||
+      tempStopLossPrice.value !== stopLossPrice.value,
+  )
+
   function clearTakeProfit() {
     takeProfitPrice.value = null
   }
@@ -1125,6 +1131,7 @@ export function usePerpsTradeForm() {
     clearTempTakeProfit,
     clearTempStopLoss,
     confirmAutoClose,
+    hasAutoCloseEdits,
     clearTakeProfit,
     clearStopLoss,
     // Submit
