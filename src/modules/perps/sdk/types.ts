@@ -341,6 +341,9 @@ export interface ApiOrder {
   timeInForce?: 'GTC' | 'IOC'
   reduceOnly?: boolean
   realizedPnl?: string
+  triggerPrice?: string
+  stopOrderType?: 'stopLoss' | 'takeProfit'
+  closePosition?: boolean
 }
 
 export interface ApiFill {

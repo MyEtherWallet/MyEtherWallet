@@ -84,8 +84,8 @@ import { getBase, getLogoUrl } from '../utils/market'
 const orderTypeLabels: Record<string, string> = {
   limit: 'Limit',
   market: 'Market',
-  stopMarket: 'Stop Market',
-  takeProfitMarket: 'Take Profit Market',
+  stopMarket: 'Stop Loss',
+  takeProfitMarket: 'Take Profit',
 }
 
 const orderStatusLabels: Record<string, string> = {

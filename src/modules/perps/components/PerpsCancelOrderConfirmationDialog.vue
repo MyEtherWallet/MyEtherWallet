@@ -41,7 +41,9 @@
             class="flex justify-between text-s-14"
           >
             <span class="text-info font-medium">Price</span>
-            <span class="font-bold">{{ formatPrice(order.price) }}</span>
+            <span class="font-bold">{{
+              formatPrice(getOrderPrice(order))
+            }}</span>
           </div>
           <div class="flex justify-between text-s-14">
             <span class="text-info font-medium">Size</span>
@@ -91,7 +93,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import { formatPrice } from '../utils/formatters'
+import { formatPrice, getOrderPrice } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 import type { ApiOrder } from '../sdk/types'
 import { computed } from 'vue'
@@ -114,7 +116,9 @@ defineEmits<{
 
 const orderSizeInUsd = computed(() => {
   return formatPrice(
-    BigNumber(props.order.price).times(BigNumber(props.order.size)).toString(),
+    BigNumber(getOrderPrice(props.order))
+      .times(BigNumber(props.order.size))
+      .toString(),
   )
 })
 
