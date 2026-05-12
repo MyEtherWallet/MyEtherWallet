@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "7.0.4-hotfix.3",
+  "version": "7.0.5",
   "private": true,
   "type": "module",
   "engines": {
