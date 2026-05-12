@@ -4,8 +4,8 @@
     has-content-gutter
     class="sm:w-[440px] sm:mx-auto"
     @close-dialog="$emit('close')"
-    z-index-container="110"
-    z-index-overlay="111"
+    z-index-overlay="z-[110]"
+    z-index-container="z-[111]"
   >
     <template #content>
       <div class="flex items-center gap-3 w-full mt-5 px-4">
