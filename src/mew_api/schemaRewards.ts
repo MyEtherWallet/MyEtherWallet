@@ -231,7 +231,7 @@ export interface components {
              * @description Machine-readable reason code.
              * @enum {string}
              */
-            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED" | "HOURLY_REWARD_LIMIT_REACHED" | "WEEKLY_REWARD_LIMIT_REACHED" | "ROLLING_REWARD_LIMIT_REACHED" | "ACCOUNT_TOO_NEW" | "REWARDS_DISABLED" | "SWAP_REWARDS_DISABLED" | "TRADE_REWARDS_DISABLED";
+            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED" | "HOURLY_REWARD_LIMIT_REACHED" | "WEEKLY_REWARD_LIMIT_REACHED" | "THREE_DAY_REWARD_LIMIT_REACHED" | "ROLLING_REWARD_LIMIT_REACHED" | "ACCOUNT_TOO_NEW" | "REWARDS_DISABLED" | "SWAP_REWARDS_DISABLED" | "TRADE_REWARDS_DISABLED";
             code: number;
             /** @description Human-readable explanation of the ineligibility reason. */
             message: string;
@@ -387,6 +387,11 @@ export interface components {
              * @description Start date of the current campaign.
              */
             campaignStartDate: string;
+            /**
+             * Format: date-time
+             * @description End date of the current campaign.
+             */
+            campaignEndDate: string;
             /**
              * Format: date-time
              * @description Start of the next weekly period.

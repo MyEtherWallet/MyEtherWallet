@@ -54,6 +54,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         earnedPotentialRewardAddresses.value.filter(
           a => a !== walletAddress.value,
         )
+      console.log(earnedPotentialRewardAddresses.value)
     }
   }
 
@@ -132,11 +133,14 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   }
 
   /** Eligibility */
-  const isEligible = computed(() =>
-    eligibilityV2.value
+  const isEligible = computed(() => {
+    console.log(eligibilityV2.value, 'eligible', eligibilityV2.value
       ? eligibilityV2.value.swap.eligible || eligibilityV2.value.trade.eligible
-      : false,
-  )
+      : false)
+    return eligibilityV2.value
+      ? eligibilityV2.value.swap.eligible || eligibilityV2.value.trade.eligible
+      : false
+  })
   const nextEligibleDate = computed(
     () =>
       eligibilityV2.value?.swap.nextEligibleDate ??
@@ -157,6 +161,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       const result = await fetchRewards<V2EligibilityResponse>(
         `/v2/addresses/${walletAddress.value}/rewards/eligibility`,
       )
+      console.log(result, 'aaaaa')
       eligibilityV2.value = result
       const eligible = result?.swap.eligible ?? result?.trade.eligible ?? false
       analytics.setUserProperties({
@@ -243,8 +248,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   const todaysRewardSwap = ref<V2RewardItem | null>(null)
   const todayTradeReward = ref<V2RewardItem | null>(null)
 
-  const swapClaimed = computed(() => todaysRewardSwap.value !== null)
-  const tradeClaimed = computed(() => todayTradeReward.value !== null)
+  // once isEligible is false, todaysRewardSwap isn't assigned because the poll for eligibility depends on isEligible
+  const swapClaimed = computed(() => isEligible.value ? todaysRewardSwap.value !== null : !isEligible.value)
+  const tradeClaimed = computed(() => isEligible.value ? todayTradeReward.value !== null : !isEligible.value)
 
   const hasRewards = computed(() => rewards.value.length > 0)
 
@@ -280,7 +286,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     if (!poolV2.value) return false
     const CAMPAIGN_START = new Date(poolV2.value.campaignStartDate)
     const CAMPAIGN_END = new Date(
-      CAMPAIGN_START.getTime() + 7 * 24 * 60 * 60 * 1000,
+      new Date(poolV2.value.campaignEndDate)
     )
     if (!reward.rewardBroadcastAt) return false
     const rewardDate = new Date(reward.rewardBroadcastAt)
@@ -301,6 +307,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       const _rewards = rewards.value.slice(0, 2)
       if (_rewards.length === 0) return
       _rewards.forEach(r => {
+        console.log(isRewardEarnedDuringCampaign(r), r, 'here then')
         if (
           todaysRewardSwap.value == null &&
           r.swapType === 'SWAP' &&
@@ -339,9 +346,11 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     () => isEligible.value,
     eligible => {
       if (eligible) {
+        console.log('then here again', eligible)
         // Check immediately if we already have today's reward
         startRewardsPoll()
       } else {
+        console.log('huh')
         stopRewardsPoll()
         setEarnedPotentialReward(false)
       }
