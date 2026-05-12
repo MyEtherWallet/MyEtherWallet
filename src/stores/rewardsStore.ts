@@ -54,7 +54,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         earnedPotentialRewardAddresses.value.filter(
           a => a !== walletAddress.value,
         )
-      console.log(earnedPotentialRewardAddresses.value)
     }
   }
 
@@ -134,9 +133,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
 
   /** Eligibility */
   const isEligible = computed(() => {
-    console.log(eligibilityV2.value, 'eligible', eligibilityV2.value
-      ? eligibilityV2.value.swap.eligible || eligibilityV2.value.trade.eligible
-      : false)
     return eligibilityV2.value
       ? eligibilityV2.value.swap.eligible || eligibilityV2.value.trade.eligible
       : false
@@ -161,7 +157,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       const result = await fetchRewards<V2EligibilityResponse>(
         `/v2/addresses/${walletAddress.value}/rewards/eligibility`,
       )
-      console.log(result, 'aaaaa')
       eligibilityV2.value = result
       const eligible = result?.swap.eligible ?? result?.trade.eligible ?? false
       analytics.setUserProperties({
@@ -307,7 +302,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       const _rewards = rewards.value.slice(0, 2)
       if (_rewards.length === 0) return
       _rewards.forEach(r => {
-        console.log(isRewardEarnedDuringCampaign(r), r, 'here then')
         if (
           todaysRewardSwap.value == null &&
           r.swapType === 'SWAP' &&
@@ -346,11 +340,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     () => isEligible.value,
     eligible => {
       if (eligible) {
-        console.log('then here again', eligible)
         // Check immediately if we already have today's reward
         startRewardsPoll()
       } else {
-        console.log('huh')
         stopRewardsPoll()
         setEarnedPotentialReward(false)
       }
