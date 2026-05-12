@@ -471,13 +471,41 @@
             class="w-full"
             key="position-orders"
           >
+            <div class="mb-4 xs:pl-4">
+              <app-btn-group
+                v-model:selected="selectedOrderFilter"
+                :btn-list="orderFilterTabs"
+                size="xs"
+              >
+                <template #btn-content="{ data }">
+                  <span class="px-2"
+                    >{{ data.label }}
+                    <span
+                      v-if="
+                        data.value === 'pending' && openOrdersCountForMarket > 0
+                      "
+                      class="ml-1 text-info text-s-11"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${OPEN_COUNT_LIMIT}+`
+                          : openOrdersCountForMarket
+                      }}
+                    </span></span
+                  >
+                </template>
+              </app-btn-group>
+            </div>
             <app-table-skeleton
               v-if="ordersLoading && marketOrders.length === 0"
               :rows="3"
               :columns="ordersSkeletonColumns"
             />
             <div
-              v-else-if="marketOrders.length === 0 && ordersCurrentPage === 0"
+              v-else-if="
+                filteredMarketOrders.length === 0 && ordersCurrentPage === 0
+              "
               class="text-center py-8 text-info text-s-14"
             >
               No orders for {{ baseCurrency }}
@@ -516,7 +544,7 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="order in marketOrders"
+                  v-for="order in filteredMarketOrders"
                   :key="order.orderId"
                   class="hoverBGWhite"
                   @click="openOrderDialog(order)"
@@ -1064,6 +1092,17 @@ const PENDING_STATUSES = new Set(['pending', 'untriggered', 'open'])
 const openOrdersCountForMarket = ref(0)
 const openOrdersCountIsCapped = ref(false)
 let openOrdersFetchSeq = 0
+
+const orderFilterTabs = [
+  { label: 'All', value: 'all' },
+  { label: 'Pending', value: 'pending' },
+]
+const selectedOrderFilter = ref(orderFilterTabs[0])
+
+const filteredMarketOrders = computed(() => {
+  if (selectedOrderFilter.value.value === 'all') return marketOrders.value
+  return marketOrders.value.filter(o => PENDING_STATUSES.has(o.status))
+})
 
 async function fetchOpenOrdersCount() {
   if (!token.value) {
