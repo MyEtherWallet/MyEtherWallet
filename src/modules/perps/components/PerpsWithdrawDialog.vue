@@ -137,6 +137,7 @@ const hasOpenPositions = computed(() => positions.value.length > 0)
 const sending = ref(false)
 const error = ref<string | null>(null)
 const walletAddress = ref<string | null>(null)
+// TODO: revisit using accountRes.result.withdrawalFeeUSD once the API value is reliable.
 const DEFAULT_WITHDRAWAL_FEE_USD = '1'
 const withdrawalFeeUSD = ref(DEFAULT_WITHDRAWAL_FEE_USD)
 
@@ -181,13 +182,6 @@ watch(
     error.value = null
     if (wallet.value) {
       walletAddress.value = await wallet.value.getAddress()
-    }
-    try {
-      const accountRes = await perpsClient.getAccount()
-      withdrawalFeeUSD.value =
-        accountRes?.result?.withdrawalFeeUSD ?? DEFAULT_WITHDRAWAL_FEE_USD
-    } catch {
-      // Keep the default fee shown if the lookup fails.
     }
   },
 )
