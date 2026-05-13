@@ -65,6 +65,11 @@
               </p>
             </div>
           </div>
+          <!-- Withdrawal fee -->
+          <div class="flex justify-between text-s-13">
+            <span class="text-info">Withdrawal fee:</span>
+            <span class="font-medium">${{ formatUsd(withdrawalFeeUSD) }}</span>
+          </div>
         </div>
 
         <app-warning
@@ -132,6 +137,7 @@ const hasOpenPositions = computed(() => positions.value.length > 0)
 const sending = ref(false)
 const error = ref<string | null>(null)
 const walletAddress = ref<string | null>(null)
+const withdrawalFeeUSD = ref('1')
 
 const withdrawableMargin = computed(
   () => balance.value?.withdrawableMargin ?? '0',
@@ -174,6 +180,12 @@ watch(
     error.value = null
     if (wallet.value) {
       walletAddress.value = await wallet.value.getAddress()
+    }
+    try {
+      const accountRes = await perpsClient.getAccount()
+      withdrawalFeeUSD.value = accountRes.result.withdrawalFeeUSD
+    } catch {
+      // Keep the default fee shown if the lookup fails.
     }
   },
 )
