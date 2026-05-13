@@ -46,14 +46,14 @@ function startPolling() {
 
   // The singleton is often initialised by PerpsMarketList (mounted before auth)
   // so the first poll() runs with no token and never sets loading=true. React
-  // to login/logout immediately so PerpsPositionsTable sees a loading state on
-  // mount instead of an empty-state flash until the 5s interval ticks.
+  // to any token change immediately so PerpsPositionsTable sees a loading state
+  // on mount instead of an empty-state flash until the 5s interval ticks. Drop
+  // stale data on the way out — covers logout and wallet-switch (A->B without
+  // an intermediate clearAuth), where the previous account's positions would
+  // otherwise linger on screen.
   watch(token, (newToken, oldToken) => {
-    if (newToken && !oldToken) {
-      poll()
-    } else if (!newToken && oldToken) {
-      positions.value = []
-    }
+    if (oldToken) positions.value = []
+    if (newToken) poll()
   })
 
   // Watch for refreshKey changes by storing last seen value
