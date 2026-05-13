@@ -67,18 +67,8 @@
           </div>
         </div>
 
-        <!-- Success -->
-        <div
-          v-if="withdrawalSuccess"
-          class="bg-light-green-1 rounded-12 p-4 mb-4"
-        >
-          <p class="text-success font-medium text-s-14">
-            Withdrawal submitted!
-          </p>
-        </div>
-
         <app-warning
-          v-if="!withdrawalSuccess && hasOpenPositions"
+          v-if="hasOpenPositions"
           title="Liquidation Risk"
           text="You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk."
           class="mb-4"
@@ -89,15 +79,11 @@
           </p>
         </transition>
         <app-base-button
-          v-if="!withdrawalSuccess"
           :disabled="sending || !isValidAmount"
           :is-loading="sending"
           class="w-full"
           @click="submitWithdraw"
           >Withdraw</app-base-button
-        >
-        <app-base-button v-else class="w-full" @click="$emit('close')"
-          >Done</app-base-button
         >
       </div>
     </template>
@@ -123,7 +109,7 @@ const props = defineProps<{
   visible: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   close: []
 }>()
 
@@ -145,7 +131,6 @@ const hasOpenPositions = computed(() => positions.value.length > 0)
 
 const sending = ref(false)
 const error = ref<string | null>(null)
-const withdrawalSuccess = ref(false)
 const walletAddress = ref<string | null>(null)
 
 const withdrawableMargin = computed(
@@ -187,7 +172,6 @@ watch(
     amount.value = null
     amountError.value = ''
     error.value = null
-    withdrawalSuccess.value = false
     if (wallet.value) {
       walletAddress.value = await wallet.value.getAddress()
     }
@@ -231,9 +215,9 @@ async function submitWithdraw() {
       address: walletAddress.value,
       from: { id: accountId.value, wallet: 'margin' },
     })
-    withdrawalSuccess.value = true
     triggerRefresh()
     perpsToasts.toastWithdrawalComplete()
+    emit('close')
   } catch (e) {
     // TODO(perps-toasts): spec has no withdrawal-failure toast; revisit with design if needed
     error.value = e instanceof Error ? e.message : 'Withdrawal failed'
