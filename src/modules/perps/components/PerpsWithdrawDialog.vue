@@ -79,7 +79,7 @@
           class="mb-4"
         />
         <transition name="fade">
-          <p v-if="error" class="text-error text-s-12 absolute -top-3 left-0">
+          <p v-if="error" class="text-error text-s-12 mb-2">
             {{ error }}
           </p>
         </transition>
