@@ -88,7 +88,8 @@ function formatDiff(ms: number): string {
   return `${m} min`
 }
 
-function updateCountdowns() {
+const updateCountdowns = () => {
+  console.log(eligibilityV2.value)
   const hourTarget = nextHourStart.value
   timeUntilRewardHourReset.value = hourTarget
     ? formatDiff(Math.max(0, new Date(hourTarget).getTime() - Date.now()))
@@ -115,9 +116,10 @@ function updateCountdowns() {
 }
 
 onMounted(() => {
+  console.log('huh')
   fetchMarketStatus()
   updateCountdowns()
-  countdownTimer = setInterval(updateCountdowns, 60_000)
+  countdownTimer = setInterval(updateCountdowns, 1000)
 })
 
 onUnmounted(() => {

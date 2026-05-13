@@ -240,12 +240,16 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   }
 
   /** User Rewards */
-  const todaysRewardSwap = ref<V2RewardItem | null>(null)
-  const todayTradeReward = ref<V2RewardItem | null>(null)
-
-  // once isEligible is false, todaysRewardSwap isn't assigned because the poll for eligibility depends on isEligible
-  const swapClaimed = computed(() => isEligible.value ? todaysRewardSwap.value !== null : !isEligible.value)
-  const tradeClaimed = computed(() => isEligible.value ? todayTradeReward.value !== null : !isEligible.value)
+  const swapClaimed = computed(() => {
+    return eligibilityV2.value ? !eligibilityV2.value.swap.eligible && eligibilityV2.value?.swap.reasons.some(
+      r => r.type === 'USER_RECENTLY_REWARDED',
+    ) : null
+  })
+  const tradeClaimed = computed(() => {
+    return eligibilityV2.value ? !eligibilityV2.value.trade.eligible && eligibilityV2.value?.trade.reasons.some(
+      r => r.type === 'USER_RECENTLY_REWARDED',
+    ) : null
+  })
 
   const hasRewards = computed(() => rewards.value.length > 0)
 
@@ -303,11 +307,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
       if (_rewards.length === 0) return
       _rewards.forEach(r => {
         if (
-          todaysRewardSwap.value == null &&
           r.swapType === 'SWAP' &&
           isRewardEarnedDuringCampaign(r)
         ) {
-          todaysRewardSwap.value = r
           analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
             type: 'swap',
           })
@@ -315,11 +317,9 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
             useBalanceHandler(balances, setTokens, setIsLoadingBalances)
           })
         } else if (
-          todayTradeReward.value == null &&
           r.swapType === 'TRADE' &&
           isRewardEarnedDuringCampaign(r)
         ) {
-          todayTradeReward.value = r
           analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
             type: 'trade',
           })
@@ -329,7 +329,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         }
       })
 
-      if (todayTradeReward.value && todaysRewardSwap.value) {
+      if (tradeClaimed.value && swapClaimed.value) {
         analytics.setUserProperties({ canClaimRewards: false })
         stopRewardsPoll()
       }
@@ -347,6 +347,7 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
         setEarnedPotentialReward(false)
       }
     },
+    { immediate: true }
   )
 
   const fetchAll = async () => {

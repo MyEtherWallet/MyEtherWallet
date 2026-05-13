@@ -105,12 +105,12 @@ const props = defineProps<{
     | 'small-banner-swap'
     | 'small-banner-trade'
     | 'small-banner-bridge'
-  swapClaimed: boolean
+  swapClaimed: boolean | null
   swapNoRewards: boolean
   swapRemainingPct: number
   swapRemainingCount: number | null
   swapTotal: number | null
-  tradeClaimed: boolean
+  tradeClaimed: boolean | null
   tradeNoRewards: boolean
   tradeMarketClosed: boolean
   tradeRemainingPct: number
