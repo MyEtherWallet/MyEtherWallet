@@ -42,10 +42,12 @@ const contracts = ref<Contract[]>([])
 const contractsLoading = ref(false)
 const contractsError = ref<string | null>(null)
 let contractsInitialized = false
+let isFirstContractsFetch = true
 
 async function fetchContracts() {
-  if (!contractsInitialized) {
+  if (isFirstContractsFetch) {
     contractsLoading.value = true
+    isFirstContractsFetch = false
   }
   contractsError.value = null
   try {
