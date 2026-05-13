@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { perpsClient } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
 import type { Position } from '../sdk/types'
@@ -43,6 +43,18 @@ function startPolling() {
 
   poll()
   setInterval(poll, 5_000)
+
+  // The singleton is often initialised by PerpsMarketList (mounted before auth)
+  // so the first poll() runs with no token and never sets loading=true. React
+  // to login/logout immediately so PerpsPositionsTable sees a loading state on
+  // mount instead of an empty-state flash until the 5s interval ticks.
+  watch(token, (newToken, oldToken) => {
+    if (newToken && !oldToken) {
+      poll()
+    } else if (!newToken && oldToken) {
+      positions.value = []
+    }
+  })
 
   // Watch for refreshKey changes by storing last seen value
   let lastRefreshKey = refreshKey.value
