@@ -79,9 +79,14 @@
           class="mb-4"
         />
         <transition name="fade">
-          <p v-if="error" class="text-error text-s-12 mb-2">
-            {{ error }}
-          </p>
+          <div
+            v-if="error"
+            class="w-full p-4 bg-error-10 border border-error rounded-12 mb-2"
+          >
+            <p class="text-error text-s-14 text-center">
+              {{ error }}
+            </p>
+          </div>
         </transition>
         <app-base-button
           :disabled="sending || !isValidAmount"
