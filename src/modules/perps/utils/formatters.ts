@@ -5,7 +5,9 @@ import type { ApiOrder } from '../sdk/types'
  */
 
 // Market orders return an empty price from the API; derive it from
-// filledCost / filledSize once the order has filled.
+// filledCost / filledSize once the order has filled. Stop/take-profit
+// orders carry their target in `triggerPrice` and leave `price` empty
+// until they trigger.
 export function getOrderPrice(order: ApiOrder): string {
   if (
     order.type === 'market' &&
@@ -17,6 +19,12 @@ export function getOrderPrice(order: ApiOrder): string {
     return new BigNumber(order.filledCost)
       .dividedBy(order.filledSize)
       .toString()
+  }
+  if (
+    (order.type === 'stopMarket' || order.type === 'takeProfitMarket') &&
+    order.triggerPrice
+  ) {
+    return order.triggerPrice
   }
   return order.price
 }
@@ -163,8 +171,8 @@ export const formatOrderStatus = (status: string): string => {
 export const orderTypeLabels: Record<string, string> = {
   limit: 'Limit',
   market: 'Market',
-  stopMarket: 'Stop Market',
-  takeProfitMarket: 'Take Profit Market',
+  stopMarket: 'Stop Loss',
+  takeProfitMarket: 'Take Profit',
 }
 
 export const formatOrderType = (type: string): string => {

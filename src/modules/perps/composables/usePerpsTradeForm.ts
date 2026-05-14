@@ -9,7 +9,7 @@ import { usePerpsPositions } from './usePerpsPositions'
 import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
 import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
-import { getCategory, midPrice } from '../utils/market'
+import { getCategory, midPrice, resolveEffectivePrice } from '../utils/market'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -31,6 +31,8 @@ interface OrderSideButton {
 // error code.
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
+
+const leverage = ref(20)
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
@@ -63,7 +65,6 @@ export function usePerpsTradeForm() {
   const limitPrice = ref('')
   const activeLimitPill = ref<number | null>(null)
   const inputAmount = ref('')
-  const leverage = ref(1)
   const sliderValue = ref(0)
 
   const isSubmitting = ref(false)
@@ -84,7 +85,10 @@ export function usePerpsTradeForm() {
   // the user lands on it when reopening the dialog. The first explicit sort
   // pick releases the pin.
   const marketSortIsUserSet = ref(false)
-  const manageMode = ref<'add' | 'close'>('add')
+  const manageMode = computed({
+    get: () => walletMenuStore.selectedTradeManageMode,
+    set: (v) => walletMenuStore.setSelectedTradeManageMode(v),
+  })
   const closeAmount = ref('')
   const closeSliderValue = ref(0)
   const isClosing = ref(false)
@@ -239,14 +243,23 @@ export function usePerpsTradeForm() {
   const formatQuotePrice = (value: number): string =>
     floorToIncrement(value, activeMarketQuoteIncrement.value)
 
+  const effectivePrice = computed(() =>
+    resolveEffectivePrice({
+      orderType: orderType.value,
+      orderSide: orderSide.value,
+      limitPrice: limitPrice.value,
+      currentPrice: currentPrice.value,
+    }),
+  )
+
   const orderSize = computed(() => {
-    if (!currentPrice.value) return '0'
-    const rawSize = positionSizeUsd.value / currentPrice.value
+    if (!effectivePrice.value) return '0'
+    const rawSize = positionSizeUsd.value / effectivePrice.value
     return floorToIncrement(rawSize, activeMarketIncrement.value)
   })
 
   const minOrderAmount = computed(
-    () => activeMarketIncrement.value * currentPrice.value,
+    () => activeMarketIncrement.value * effectivePrice.value,
   )
 
   // ── Max-order-size helpers ─────────────────────────────────
@@ -298,8 +311,8 @@ export function usePerpsTradeForm() {
 
   const closeOrderSize = computed(() => {
     const amt = parseFloat(closeAmount.value) || 0
-    if (!currentPrice.value || amt <= 0) return '0'
-    const rawSize = amt / currentPrice.value
+    if (!effectivePrice.value || amt <= 0) return '0'
+    const rawSize = amt / effectivePrice.value
     return floorToIncrement(rawSize, activeMarketIncrement.value)
   })
 
@@ -335,29 +348,32 @@ export function usePerpsTradeForm() {
     try {
       const closePct = closeSliderValue.value
       const isLimit = orderType.value === 'limit'
+      const closeSide: 'buy' | 'sell' =
+        activePosition.value.direction === 'long' ? 'sell' : 'buy'
+      let placedSize: string
 
       if (closePct >= 100 && !isLimit) {
         // Full close via market order
+        placedSize = activePosition.value.netQuantity
         await closePosition(activePosition.value)
       } else {
-        let size: string
         if (closePct >= 100) {
           // Full close via limit
-          size = activePosition.value.netQuantity
+          placedSize = activePosition.value.netQuantity
         } else {
           const closeUsd = parseFloat(closeAmount.value) || 0
           if (closeUsd <= 0) return
-          const rawSize = closeUsd / currentPrice.value
-          size = floorToIncrement(rawSize, activeMarketIncrement.value)
+          const rawSize = closeUsd / effectivePrice.value
+          placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
         }
 
         const orderParams: Record<string, unknown> = {
           market: fullMarketName.value,
-          side: activePosition.value.direction === 'long' ? 'sell' : 'buy',
+          side: closeSide,
           type: isLimit ? 'limit' : 'market',
-          size,
+          size: placedSize,
           postOnly: false,
-          reduceOnly: false,
+          reduceOnly: true,
         }
         if (isLimit && limitPrice.value) {
           orderParams.price = limitPrice.value
@@ -365,6 +381,20 @@ export function usePerpsTradeForm() {
         }
         await perpsClient.createOrder(orderParams as any)
       }
+      const closeMarketMatch = markets.value.find(
+        m => m.market === fullMarketName.value,
+      )
+      const closeDisplayMarket =
+        closeMarketMatch?.longName ??
+        closeMarketMatch?.displayName ??
+        fullMarketName.value
+      perpsToasts.toastOrderPlaced({
+        side: closeSide,
+        size: placedSize,
+        category: isLimit ? 'limit' : 'market',
+        market: closeDisplayMarket,
+        price: isLimit ? (limitPrice.value ?? undefined) : undefined,
+      })
       closeAmount.value = ''
       closeSliderValue.value = 0
       triggerRefresh()
@@ -548,7 +578,7 @@ export function usePerpsTradeForm() {
     { key: 'all', label: 'All' },
     { key: 'Equities', label: 'Equities' },
     { key: 'Commodities', label: 'Commodities' },
-    { key: 'ETFs', label: 'ETFs' },
+    { key: 'Indices', label: 'Indices' },
   ]
 
   const marketSortOptions: MarketSortOption[] = [
@@ -647,6 +677,10 @@ export function usePerpsTradeForm() {
     showLeverageModal.value = true
   }
 
+  function closeLeverageModal() {
+    showLeverageModal.value = false
+  }
+
   async function saveLeverage() {
     isSavingLeverage.value = true
     leverageError.value = ''
@@ -657,11 +691,13 @@ export function usePerpsTradeForm() {
       leverage.value = tempLeverage.value
       showLeverageModal.value = false
       fetchMaxOrderSize()
+      perpsToasts.toastLeverageUpdated(tempLeverage.value, fullMarketName.value)
     } catch (e: any) {
       leverageError.value =
         e?.message ||
         e?.toString() ||
         'Failed to save leverage. Please try again.'
+      perpsToasts.toastFailedToSetLeverage()
     } finally {
       isSavingLeverage.value = false
     }
@@ -672,8 +708,9 @@ export function usePerpsTradeForm() {
     if (!token.value || !markets.value.length) return
     try {
       const res = await perpsClient.getLeverage(fullMarketName.value)
+
       if (res.success && res.result?.length) {
-        leverage.value = parseInt(res.result[0].leverage) || 1
+        leverage.value = parseInt(res.result[0].leverage) || 20
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)
@@ -819,6 +856,12 @@ export function usePerpsTradeForm() {
     showAutoCloseModal.value = false
   }
 
+  const hasAutoCloseEdits = computed(
+    () =>
+      tempTakeProfitPrice.value !== takeProfitPrice.value ||
+      tempStopLossPrice.value !== stopLossPrice.value,
+  )
+
   function clearTakeProfit() {
     takeProfitPrice.value = null
   }
@@ -896,7 +939,21 @@ export function usePerpsTradeForm() {
         }
       }
       await perpsClient.createOrder(orderParams as any)
-      // Fire SL/TP toasts only after the SDK call succeeded.
+      // Fire Order Placed + SL/TP toasts only after the SDK call succeeded.
+      const marketMatch = markets.value.find(
+        m => m.market === fullMarketName.value,
+      )
+      const displayMarket =
+        marketMatch?.longName ??
+        marketMatch?.displayName ??
+        fullMarketName.value
+      perpsToasts.toastOrderPlaced({
+        side: orderSide.value,
+        size: orderSize.value,
+        category: orderType.value,
+        market: displayMarket,
+        price: orderType.value === 'limit' ? (limitPrice.value ?? undefined) : undefined,
+      })
       if (slPrice !== null) {
         const args = buildSlTpArgs(slPrice)
         if (hadPriorStopLoss) perpsToasts.toastStopLossModified(args)
@@ -981,7 +1038,6 @@ export function usePerpsTradeForm() {
       inputAmount.value = ''
       sliderValue.value = 0
       maxOrderSize.value = null
-      manageMode.value = 'add'
       closeAmount.value = ''
       closeSliderValue.value = 0
       closeError.value = ''
@@ -989,6 +1045,33 @@ export function usePerpsTradeForm() {
       stopLossPrice.value = null
       fetchLeverage()
       fetchMaxOrderSize()
+    },
+  )
+
+  // Close orders are market-only — switching into close mode forces market so
+  // the (now hidden) order-type selector can't leave a stale 'limit' selection
+  // that would route handleClosePosition() down the limit branch.
+  watch(
+    () => manageMode.value,
+    mode => {
+      if (mode === 'close' && orderType.value !== 'market') {
+        orderType.value = 'market'
+      }
+    },
+  )
+
+  // When the active position disappears (full close) the close form has nothing
+  // to act on; flip back to 'add' so reopening a position doesn't land in a
+  // close UI that referenced the now-gone position.
+  watch(
+    () => activePosition.value,
+    (pos, prev) => {
+      if (prev && !pos && manageMode.value === 'close') {
+        manageMode.value = 'add'
+        closeAmount.value = ''
+        closeSliderValue.value = 0
+        closeError.value = ''
+      }
     },
   )
 
@@ -1074,6 +1157,7 @@ export function usePerpsTradeForm() {
     clearTempTakeProfit,
     clearTempStopLoss,
     confirmAutoClose,
+    hasAutoCloseEdits,
     clearTakeProfit,
     clearStopLoss,
     // Submit
@@ -1120,6 +1204,7 @@ export function usePerpsTradeForm() {
     isSavingLeverage,
     leverageError,
     openLeverageModal,
+    closeLeverageModal,
     saveLeverage,
   }
 }

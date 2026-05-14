@@ -44,7 +44,9 @@ const contractsError = ref<string | null>(null)
 let contractsInitialized = false
 
 async function fetchContracts() {
-  contractsLoading.value = true
+  if (!contractsInitialized) {
+    contractsLoading.value = true
+  }
   contractsError.value = null
   try {
     const data = await perpsClient.getContracts(true)

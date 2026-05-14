@@ -4,6 +4,8 @@
     has-content-gutter
     class="sm:w-[440px] sm:mx-auto"
     @close-dialog="$emit('close')"
+    z-index-overlay="z-[110]"
+    z-index-container="z-[111]"
   >
     <template #content>
       <div class="flex items-center gap-3 w-full mt-5 px-4">
@@ -48,7 +50,7 @@
           v-if="isCancellable"
           class="rounded-full w-full mt-4 py-3 text-s-14 font-medium hoverOpacity text-white bg-error disabled:opacity-50"
           :disabled="cancelling"
-          @click="$emit('cancel', order.orderId)"
+          @click="$emit('cancel', order)"
         >
           {{ cancelling ? 'Cancelling...' : 'Cancel Order' }}
         </button>
@@ -82,8 +84,8 @@ import { getBase, getLogoUrl } from '../utils/market'
 const orderTypeLabels: Record<string, string> = {
   limit: 'Limit',
   market: 'Market',
-  stopMarket: 'Stop Market',
-  takeProfitMarket: 'Take Profit Market',
+  stopMarket: 'Stop Loss',
+  takeProfitMarket: 'Take Profit',
 }
 
 const orderStatusLabels: Record<string, string> = {
@@ -102,7 +104,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  cancel: [orderId: string]
+  cancel: [order: ApiOrder]
 }>()
 
 const isOpen = computed({

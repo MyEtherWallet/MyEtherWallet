@@ -147,6 +147,7 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
+import { useTradingRestriction } from '@/composables/useTradingRestriction'
 import { storeToRefs } from 'pinia'
 import { WalletType, type HexPrefixedString } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -161,9 +162,10 @@ const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWallet, setWatchOnlyIfExist } = store
+const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+const { isTradingRestrictedInRegion } = useTradingRestriction()
 
 /** ------------------------------
  * Breakpoints determine menu visibility
@@ -175,7 +177,7 @@ const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
  * Menu Items
  ------------------------------*/
 const coreMenuList = computed<AppMenuListItem[]>(() => {
-  return [
+  const items: AppMenuListItem[] = [
     {
       title: t('home'),
       routeName: ROUTES_MAIN.HOME.NAME,
@@ -191,17 +193,20 @@ const coreMenuList = computed<AppMenuListItem[]>(() => {
       routeName: ROUTES_MAIN.CRYPTO.NAME,
       iconID: ICON_IDS.CRYPTO,
     },
-    {
+  ]
+  if (!isTradingRestrictedInRegion.value) {
+    items.push({
       title: t('perpetuals'),
       routeName: ROUTES_MAIN.PERPS.NAME,
       iconID: ICON_IDS.PERPS,
-    },
-    {
-      title: t('earn'),
-      routeName: ROUTES_MAIN.EARN.NAME,
-      iconID: ICON_IDS.STAKE,
-    },
-  ]
+    })
+  }
+  items.push({
+    title: t('earn'),
+    routeName: ROUTES_MAIN.EARN.NAME,
+    iconID: ICON_IDS.STAKE,
+  })
+  return items
 })
 const toolsMenuList = computed<AppMenuListItem[]>(() => {
   return [
@@ -260,6 +265,10 @@ watch(
         injectedInfo?.provider.on(
           'accountsChanged',
           async (accounts: unknown) => {
+            if(accounts && (accounts as string[]).length === 0) {
+              disconnectWallet()
+              return
+            }
             if (
               (accounts as string[])[0] !== (await wallet.value?.getAddress())
             ) {

@@ -149,6 +149,68 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v2/rewards/pool": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get reward pool status (v2)
+         * @description Returns the current status of the reward pool with swap and trade
+         *     counts tracked separately. Each type has its own independent cap.
+         */
+        get: operations["getRewardPoolV2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v2/addresses/{address}/rewards/eligibility": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Check reward eligibility (v2)
+         * @description Determines whether a given address is eligible to receive swap and
+         *     trade rewards, reported separately.
+         */
+        get: operations["getRewardEligibilityV2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v2/addresses/{address}/rewards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get user rewards (v2)
+         * @description Returns the most recent rewards (up to 10) for a given address, including the swap type of each reward.
+         */
+        get: operations["getUserRewardsV2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -169,7 +231,8 @@ export interface components {
              * @description Machine-readable reason code.
              * @enum {string}
              */
-            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED";
+            type: "POOL_LOW_ETH" | "POOL_LOW_USDC" | "USER_RECENTLY_REWARDED" | "DAILY_REWARD_LIMIT_REACHED" | "HOURLY_REWARD_LIMIT_REACHED" | "WEEKLY_REWARD_LIMIT_REACHED" | "ROLLING_REWARD_LIMIT_REACHED" | "ACCOUNT_TOO_NEW" | "REWARDS_DISABLED" | "SWAP_REWARDS_DISABLED" | "TRADE_REWARDS_DISABLED";
+            code: number;
             /** @description Human-readable explanation of the ineligibility reason. */
             message: string;
         };
@@ -205,7 +268,7 @@ export interface components {
              * @description Current status of the reward transaction.
              * @enum {string}
              */
-            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL";
+            rewardStatus: "GRANTED" | "BROADCAST" | "SUCCESS" | "FAIL" | "DROPPED";
             /** @description Address that sent the reward (0x-prefixed hex). */
             rewardSenderAddress: string;
             /** @description Address that received the reward (0x-prefixed hex). */
@@ -249,6 +312,16 @@ export interface components {
              */
             nextDayStart: string;
             /**
+             * Format: date-time
+             * @description Start of the next hour
+             */
+            nextHourStart: string;
+            /**
+             * Format: date-time
+             * @description Start date of the current campaign
+             */
+            campaignStartDate: string;
+            /**
              * @description The number of rewards that can be granted in a day.
              * @example 100
              */
@@ -258,9 +331,99 @@ export interface components {
              * @example 100
              */
             dailyRemainingRewardCount: number;
+            /**
+             * @description The number of rewards that can be granted in an hour.
+             * @example 100
+             */
+            hourlyTotalRewardCount: number;
+            /**
+             * @description The number of rewards left for the hour.
+             * @example 100
+             */
+            hourlyRemainingRewardCount: number;
             /** @description List of reasons the pool is closed (empty if open). */
             reasons: components["schemas"]["IneligibilityReason"][];
         };
+        TypePoolStatus: {
+            /** @description Whether rewards for this type are enabled. */
+            enabled: boolean;
+            /** @description Whether the pool is currently accepting this reward type. */
+            open: boolean;
+            /** @description Number of this type of rewards distributed this week. */
+            weeklyRewardCount: number;
+            /** @description Remaining rewards of this type for the week. Null if no weekly cap. */
+            weeklyRemainingRewardCount: number | null;
+            /** @description Number of this type of rewards distributed today. */
+            dailyRewardCount: number;
+            /** @description Remaining rewards of this type for today. Null if no daily cap. */
+            dailyRemainingRewardCount: number | null;
+            /** @description Number of this type of rewards distributed this hour. */
+            hourlyRewardCount: number;
+            /** @description Remaining rewards of this type for the current hour. Null if no hourly cap. */
+            hourlyRemainingRewardCount: number | null;
+            /**
+             * @description Minimum USD spend required to qualify for this reward type.
+             * @example 49.75
+             */
+            minSpendUsd: number;
+            /** @description Reasons this type is closed (empty if open). */
+            reasons: components["schemas"]["IneligibilityReason"][];
+        };
+        V2PoolStatusResponse: {
+            /** @description Whether either reward type is currently open. */
+            open: boolean;
+            /**
+             * @description Current ETH balance of the distributor in USD.
+             * @example $1234.56
+             */
+            eth: string;
+            /**
+             * @description Current USDC balance of the distributor in USD.
+             * @example $5678.90
+             */
+            usdc: string;
+            /**
+             * Format: date-time
+             * @description Start date of the current campaign.
+             */
+            campaignStartDate: string;
+            /**
+             * Format: date-time
+             * @description Start of the next weekly period.
+             */
+            nextWeekStart: string;
+            /**
+             * Format: date-time
+             * @description Start of the next hour.
+             */
+            nextHourStart: string;
+            swap: components["schemas"]["TypePoolStatus"];
+            trade: components["schemas"]["TypePoolStatus"];
+            /** @description Shared reasons the pool is closed (applies to both types). */
+            reasons: components["schemas"]["IneligibilityReason"][];
+        };
+        TypeEligibility: {
+            /** @description Whether the address is currently eligible for this reward type. */
+            eligible: boolean;
+            /**
+             * Format: date-time
+             * @description Earliest date the address will become eligible again. Null if not determinable.
+             */
+            nextEligibleDate: string | null;
+            /** @description Reasons the address is ineligible (empty if eligible). */
+            reasons: components["schemas"]["IneligibilityReason"][];
+        };
+        V2EligibilityResponse: {
+            swap: components["schemas"]["TypeEligibility"];
+            trade: components["schemas"]["TypeEligibility"];
+        };
+        V2RewardItem: {
+            /**
+             * @description The type of the original transaction. Null for legacy rewards created before type tracking.
+             * @enum {string|null}
+             */
+            swapType: "SWAP" | "TRADE" | null;
+        } & components["schemas"]["RewardItem"];
         ErrorResponse: {
             /**
              * @description Machine-readable error code.
@@ -448,6 +611,90 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PoolStatusResponse"];
+                };
+            };
+        };
+    };
+    getRewardPoolV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Pool status */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["V2PoolStatusResponse"];
+                };
+            };
+        };
+    };
+    getRewardEligibilityV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description An Ethereum address (hex string with 0x prefix and 40 hex characters). */
+                address: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Eligibility result split by swap type */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["V2EligibilityResponse"];
+                };
+            };
+            /** @description Invalid or missing address parameter */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getUserRewardsV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description An Ethereum address (hex string with 0x prefix and 40 hex characters). */
+                address: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of rewards for the address */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["V2RewardItem"][];
+                };
+            };
+            /** @description Invalid or missing address parameter */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
         };

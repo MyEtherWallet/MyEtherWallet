@@ -33,12 +33,13 @@ export function useCursorPaginate<T>(
     }
   }
 
-  async function refetch() {
+  async function refetch(): Promise<boolean> {
     const ok = await fetchPage(undefined)
     if (ok) {
       cursorStack.value = [undefined]
       currentPage.value = 0
     }
+    return ok
   }
 
   async function nextPage() {

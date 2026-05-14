@@ -25,10 +25,16 @@ const app = createApp(App)
 
 const dsn = configs.MEW_SENTRY_DSN
 
-if (dsn) {
+if (dsn && process.env.NODE_ENV === 'production') {
   sentryInit({
     app,
     dsn,
+    release: 'myetherwallet@' + configs.APP_VERSION,
+    ignoreErrors: [
+      'TypeError: Failed to fetch',
+      'TypeError: NetworkError when attempting to fetch resource',
+      'TypeError: Load failed',
+    ],
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration(),

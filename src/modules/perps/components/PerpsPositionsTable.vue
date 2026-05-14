@@ -19,9 +19,20 @@
                 {{ data.label }}
                 <span
                   v-if="data.value === 'positions' && positions.length > 0"
-                  class="ml-1 text-info"
+                  class="ml-1 text-info text-s-12"
                 >
                   · {{ positions.length }}
+                </span>
+                <span
+                  v-else-if="data.value === 'orders' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-12"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
                 </span>
               </span>
             </template>
@@ -41,9 +52,26 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium">{{
-                    selectedTab.label
-                  }}</span>
+                  <span class="text-s-16 font-medium">
+                    {{ selectedTab.label }}
+                    <span
+                      v-if="activeTab === 'positions' && positions.length > 0"
+                      class="ml-1 text-info"
+                    >
+                      · {{ positions.length }}
+                    </span>
+                    <span
+                      v-else-if="activeTab === 'orders' && openOrdersCount > 0"
+                      class="ml-1 text-info"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${ORDERS_FETCH_LIMIT}+`
+                          : openOrdersCount
+                      }}
+                    </span>
+                  </span>
                   <chevron-down-icon class="w-4 h-4 ml-2" />
                 </div>
               </button>
@@ -67,11 +95,7 @@
         >
           No open positions
         </div>
-        <table
-          v-else
-          ref="positionsTable"
-          class="w-full text-s-14 table-fixed"
-        >
+        <table v-else ref="positionsTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -129,8 +153,9 @@
                           : pos.direction === 'short'
                             ? 'text-error'
                             : 'text-info',
-                        'font-medium text-s-12 capitalize ',
+                        'font-medium text-s-12 capitalize hooverOpacity cursor-pointer',
                       ]"
+                      @click.stop="openLeverage(pos)"
                     >
                       {{ pos.direction }} {{ pos.leverage }}x
                     </p>
@@ -188,7 +213,9 @@
               </td>
               <!-- Actions -->
               <td class="px-1 py-3 text-right rounded-r-12">
-                <div class="flex items-center justify-end lg:hidden -mr-1">
+                <div
+                  class="flex items-center justify-end -mr-1 lg:mr-0 lg:flex-row lg:gap-2"
+                >
                   <app-pop-up-menu placeholder="actions menu" location="right">
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
@@ -196,9 +223,18 @@
                         @click.stop="toggleMenu"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
+                        class="flex lg:hidden"
                       >
                         <ellipsis-vertical-icon class="w-5 h-5" />
                       </app-btn-icon>
+                      <AppBaseButton
+                        class="hidden lg:flex"
+                        size="small"
+                        @click="toggleMenu"
+                        :theme="pos.direction === 'long' ? 'success' : 'error'"
+                      >
+                        Manage
+                      </AppBaseButton>
                     </template>
                     <template #menu-content="{ toggleMenu }">
                       <div
@@ -207,34 +243,41 @@
                         <ul>
                           <li
                             class="p-2 flex items-center hoverBGWhite rounded-12"
-                            @click.stop="[
-                              toggleMenu(),
-                              $emit('openPosition', pos.market),
-                            ]"
+                            @click.stop="[toggleMenu(), openLeverage(pos)]"
                           >
-                            <p>Manage Position</p>
+                            <p>Change Leverage</p>
                           </li>
                           <li
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                             @click.stop="[
                               toggleMenu(),
-                              $emit('viewMarket', pos.market),
+                              openPositionAdd(pos, 'add'),
                             ]"
                           >
-                            <p>View Chart</p>
+                            <p>Add to position</p>
+                          </li>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              openPositionAdd(pos, 'close'),
+                            ]"
+                          >
+                            <p>Close Position</p>
+                          </li>
+                          <li
+                            class="p-2 flex items-center hoverBGWhite rounded-12"
+                            @click.stop="[
+                              toggleMenu(),
+                              $emit('openPosition', pos.market),
+                            ]"
+                          >
+                            <p>View Market Info</p>
                           </li>
                         </ul>
                       </div>
                     </template>
                   </app-pop-up-menu>
-                </div>
-                <div class="hidden lg:flex flex-row gap-2 justify-end">
-                  <AppBaseButton
-                    size="small"
-                    @click="$emit('openPosition', pos.market)"
-                  >
-                    Manage
-                  </AppBaseButton>
                 </div>
               </td>
             </tr>
@@ -263,7 +306,20 @@
             size="xs"
           >
             <template #btn-content="{ data }">
-              <span class="px-2">{{ data.label }}</span>
+              <span class="px-2"
+                >{{ data.label }}
+                <span
+                  v-if="data.value === 'pending' && openOrdersCount > 0"
+                  class="ml-1 text-info text-s-11"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${ORDERS_FETCH_LIMIT}+`
+                      : openOrdersCount
+                  }}
+                </span></span
+              >
             </template>
           </app-btn-group>
         </div>
@@ -273,13 +329,13 @@
           :columns="ordersSkeletonColumns"
         />
         <div
-          v-else-if="filteredOrders.length === 0"
+          v-else-if="filteredOrders.length === 0 && ordersCurrentPage === 0"
           class="text-center py-8 text-info text-s-14"
         >
           No orders
         </div>
 
-        <table v-else class="w-full text-s-14 table-fixed">
+        <table v-else ref="ordersTable" class="w-full text-s-14 table-fixed">
           <thead>
             <tr
               class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -427,12 +483,15 @@
                         </li>
                         <li
                           class="p-2 flex items-center hoverBGWhite rounded-12"
-                          @click.stop="[cancelOrder(order.orderId)]"
+                          @click.stop="[
+                            toggleMenu(),
+                            openCancelConfirmation(order),
+                          ]"
                         >
                           {{
                             cancellingOrderId === order.orderId
                               ? 'Cancelling...'
-                              : 'Cancel'
+                              : 'Cancel Order'
                           }}
                         </li>
                       </ul>
@@ -454,6 +513,20 @@
             </tr>
           </tbody>
         </table>
+        <div
+          v-if="ordersHasPrev || ordersHasNext"
+          class="flex justify-end mt-4 px-2"
+        >
+          <perps-pagination
+            :current-page="ordersCurrentPage"
+            :has-prev="ordersHasPrev"
+            :has-next="ordersHasNext"
+            :disabled="ordersLoading"
+            :scroll-target="ordersTable"
+            @prev="ordersPrevPage"
+            @next="ordersNextPage"
+          />
+        </div>
       </template>
 
       <!-- Fills tab -->
@@ -610,7 +683,7 @@
           No deposits or withdrawals
         </div>
         <div v-else class="overflow-x-auto">
-          <table class="w-full text-s-14 table-fixed">
+          <table ref="dwTable" class="w-full text-s-14 table-fixed">
             <thead>
               <tr
                 class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold"
@@ -637,7 +710,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in combinedDW" :key="item.key" class="">
+              <tr v-for="item in paginatedDW" :key="item.key" class="">
                 <!-- Type -->
                 <td class="px-1 sm:pl-4 py-3 rounded-l-12 hidden xs:table-cell">
                   <span
@@ -706,6 +779,16 @@
               </tr>
             </tbody>
           </table>
+          <div v-if="dwTotalPages > 1" class="flex justify-end mt-4 px-2">
+            <perps-pagination
+              :current-page="dwCurrentPage"
+              :total-pages="dwTotalPages"
+              :disabled="dwLoading"
+              :scroll-target="dwTable"
+              @prev="dwPrevPage"
+              @next="dwNextPage"
+            />
+          </div>
         </div>
       </template>
     </app-sheet>
@@ -721,13 +804,31 @@
       :order="selectedOrder"
       :cancelling="cancellingOrderId === selectedOrder.orderId"
       @close="showOrderDialog = false"
-      @cancel="cancelOrder"
+      @cancel="openCancelConfirmation"
+    />
+    <perps-cancel-order-confirmation-dialog
+      v-if="orderPendingCancel"
+      v-model:is-open="showCancelConfirmation"
+      :order="orderPendingCancel"
+      :display-symbol="getBase(orderPendingCancel.market)"
+      :is-cancelling="cancellingOrderId === orderPendingCancel.orderId"
+      @confirm="confirmCancelOrder"
+    />
+
+    <perps-select-leverage-dialog
+      v-model:is-open="showLeverageModal"
+      v-model="localLeverage"
+      :symbol="displaySymbol"
+      :leverage-error="leverageError"
+      :is-saving="isSavingLeverage"
+      mode="submit"
+      @save="saveLeverage"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import {
   ChevronDownIcon,
   EllipsisVerticalIcon,
@@ -745,7 +846,9 @@ import AppTableSkeleton, {
 } from '@/components/AppTableSkeleton.vue'
 import PerpsFillDetailsDialog from './PerpsFillDetailsDialog.vue'
 import PerpsOrderDialog from './PerpsOrderDialog.vue'
+import PerpsCancelOrderConfirmationDialog from './PerpsCancelOrderConfirmationDialog.vue'
 import PerpsPagination from './PerpsPagination.vue'
+import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsPositions } from '../composables/usePerpsPositions'
 import {
   usePerpsOrders,
@@ -753,6 +856,7 @@ import {
   usePerpsDepositsWithdrawals,
 } from '../composables/usePerpsHistory'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
+import { usePerpsMarkets } from '../composables/usePerpsMarkets'
 import {
   formatUsd,
   formatPrice,
@@ -770,15 +874,62 @@ import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 
+const localLeverage = ref(1)
+const leverageError = ref('')
+const isSavingLeverage = ref(false)
+const fullMarketName = ref('')
+const showLeverageModal = ref(false)
+
+const saveLeverage = async () => {
+  isSavingLeverage.value = true
+  try {
+    await perpsClient.setLeverage(fullMarketName.value, localLeverage.value)
+    showLeverageModal.value = false
+    perpsToasts.toastLeverageUpdated(localLeverage.value, fullMarketName.value)
+  } catch (e: unknown) {
+    leverageError.value = (e as Error).message
+    perpsToasts.toastFailedToSetLeverage()
+  } finally {
+    isSavingLeverage.value = false
+  }
+}
+
+const displaySymbol = computed(() => fullMarketName.value.split('-')[0])
+
+const openLeverage = (pos: Position) => {
+  showLeverageModal.value = true
+  localLeverage.value = Number(pos.leverage) // temp
+  fullMarketName.value = pos.market
+}
+
+watch(
+  () => showLeverageModal.value,
+  val => {
+    if (!val) {
+      localLeverage.value = 1
+      leverageError.value = ''
+      isSavingLeverage.value = false
+      fullMarketName.value = ''
+    }
+  },
+)
+
 const USDC_LOGO =
   'https://coin-images.coingecko.com/coins/images/6319/large/USDC.png?1769615602'
-defineEmits<{
+const emits = defineEmits<{
   openPosition: [market: string]
+  openSideMenu: [market: string, type: 'add' | 'close' | undefined]
   viewMarket: [market: string]
 }>()
 
+const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
+  emits('openSideMenu', pos.market, type)
+}
+
 const positionsTable = ref<HTMLElement | null>(null)
 const fillsTable = ref<HTMLElement | null>(null)
+const ordersTable = ref<HTMLElement | null>(null)
+const dwTable = ref<HTMLElement | null>(null)
 
 const positionsSkeletonColumns: SkeletonColumn[] = [
   { header: 'Market' },
@@ -851,6 +1002,11 @@ const {
   orders,
   loading: ordersLoading,
   refetch: refetchOrders,
+  currentPage: ordersCurrentPage,
+  hasPrev: ordersHasPrev,
+  hasNext: ordersHasNext,
+  nextPage: ordersNextPage,
+  prevPage: ordersPrevPage,
 } = usePerpsOrders()
 
 const showCancelButton = (order: ApiOrder) => {
@@ -877,33 +1033,73 @@ const {
 } = usePerpsDepositsWithdrawals()
 
 const cancellingOrderId = ref<string | null>(null)
+const orderPendingCancel = ref<ApiOrder | null>(null)
+const showCancelConfirmation = ref(false)
 const perpsToasts = usePerpsToasts()
+const { markets } = usePerpsMarkets()
 
-async function cancelOrder(orderId: string) {
-  cancellingOrderId.value = orderId
-  if (cancellingOrderId.value === orderId) return
+function openCancelConfirmation(order: ApiOrder) {
+  orderPendingCancel.value = order
+  showCancelConfirmation.value = true
+}
+
+watch(showCancelConfirmation, isOpen => {
+  if (isOpen) showOrderDialog.value = false
+})
+
+async function confirmCancelOrder() {
+  if (!orderPendingCancel.value) return
+  await cancelOrder(orderPendingCancel.value)
+  showCancelConfirmation.value = false
+}
+
+async function cancelOrder(order: ApiOrder) {
+  if (cancellingOrderId.value === order.orderId) return
+  cancellingOrderId.value = order.orderId
+  const market = markets.value.find(m => m.market === order.market)
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
-    await perpsClient.cancelOrder(orderId)
+    await perpsClient.cancelOrder(order.orderId)
+    perpsToasts.toastOrderCanceled({
+      side: order.side,
+      size: order.size,
+      category: order.type,
+      market: displayMarket,
+      price: order.price,
+    })
+    showOrderDialog.value = false
     await refetchOrders()
   } catch (e) {
     console.error('Failed to cancel order:', e)
-    perpsToasts.toastFailedToRemoveOrder()
+    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    if (
+      msg.includes('invalid') &&
+      (msg.includes('order') || msg.includes('id'))
+    ) {
+      perpsToasts.toastCancelFailedInvalidOrderId()
+    } else if (msg.startsWith('http ')) {
+      perpsToasts.toastCancelFailed()
+    } else {
+      perpsToasts.toastCancelFailedGeneric()
+    }
   } finally {
     cancellingOrderId.value = null
   }
 }
 
-const combinedDW = computed(() => {
-  const items: Array<{
-    key: string
-    type: string
-    coin: string
-    size: string
-    usdValue?: string
-    statusLabel: string
-    statusColor: string
-    time: string
-  }> = []
+type CombinedDWRow = {
+  key: string
+  type: string
+  coin: string
+  size: string
+  usdValue?: string
+  statusLabel: string
+  statusColor: string
+  time: string
+}
+
+const combinedDW = computed<CombinedDWRow[]>(() => {
+  const items: CombinedDWRow[] = []
   for (const d of deposits.value) {
     items.push({
       key: `d-${d.txid ?? d.time}`,
@@ -942,6 +1138,14 @@ const combinedDW = computed(() => {
   return items
 })
 
+const {
+  currentPage: dwCurrentPage,
+  paginatedArray: paginatedDW,
+  totalPages: dwTotalPages,
+  nextPage: dwNextPage,
+  prevPage: dwPrevPage,
+} = usePaginate<CombinedDWRow>(combinedDW, PERPS_PAGE_SIZE)
+
 const tabs = [
   { label: 'Positions', value: 'positions' },
   { label: 'Orders', value: 'orders' },
@@ -964,4 +1168,17 @@ const filteredOrders = computed(() => {
   if (selectedOrderFilter.value.value === 'all') return orders.value
   return orders.value.filter(o => pendingStatuses.has(o.status))
 })
+
+// Open-orders count for the Orders tab badge. Source is the current cursor
+// page of orders. The badge only saturates ("100+") when a next page exists
+// AND the current page is itself full of open orders — `ordersHasNext` alone
+// says nothing about open orders, so a few open + many older closed would
+// otherwise mis-render as "3+".
+const ORDERS_FETCH_LIMIT = 100
+const openOrdersCount = computed(
+  () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
+)
+const openOrdersCountIsCapped = computed(
+  () => ordersHasNext.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
+)
 </script>

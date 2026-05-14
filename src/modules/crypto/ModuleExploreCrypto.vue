@@ -266,7 +266,7 @@
                 v-for="token in tokens"
                 :key="token.name + token.marketCap"
                 class="h-14 cursor-pointer hoverBGWhite"
-                @click="goToTokenPage(token)"
+                @click="onRowClick(token)"
               >
                 <!-- Watchlist -->
                 <td
@@ -291,7 +291,11 @@
                 </td>
                 <!-- Name & Symbol -->
                 <td class="px-1 py-1 rounded-l-12 xs:rounded-none" colspan="2">
-                  <div class="flex items-center gap-3">
+                  <router-link
+                    :to="getTokenRoute(token)"
+                    class="flex items-center gap-3"
+                    @click.stop
+                  >
                     <app-token-logo
                       :url="token.logoUrl"
                       :symbol="token.symbol"
@@ -324,7 +328,7 @@
                         {{ token.name }}
                       </p>
                     </div>
-                  </div>
+                  </router-link>
                 </td>
                 <!-- Market Cap -->
                 <td
@@ -430,10 +434,7 @@
                           <ul>
                             <li
                               v-if="isBuyable(token.coinId)"
-                              @click.stop="[
-                                toggleMenu(),
-                                buyBtn(token.symbol, true),
-                              ]"
+                              @click.stop="[toggleMenu(), buyBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-buy class="text-primary w-4 h-4 mr-2" />
@@ -516,7 +517,7 @@
                     <app-base-button
                       v-if="isBuyable(token.coinId)"
                       size="small"
-                      @click="buyBtn(token.symbol)"
+                      @click="buyBtn(token)"
                       is-outline
                       class="min-w-[60px]"
                       >Buy</app-base-button
@@ -689,7 +690,7 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
-import { analytics, ClickTokenTradeEvent } from '@/analytics'
+import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
@@ -801,11 +802,16 @@ const getIsBridgeable = (token: DisplayToken): boolean => {
   }
   return isNativeToken && !isAvailableOnCurrentChain && hasSwapSupportChain
 }
-const buyBtn = (symbol: string, isMobile = false) => {
+const buyBtn = (token: DisplayToken, isMobile = false) => {
   analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
     location: 'crypto_table',
-    token: symbol,
+    token: token.symbol,
     isMobile,
+  })
+  analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
+    location: 'buy_button',
+    tokenName: token.name,
+    tokenSymbol: token.symbol,
   })
   window.open(
     'https://ccswap.myetherwallet.com/',
@@ -818,6 +824,11 @@ const bridgeBtn = (token: DisplayToken, isMobile = false) => {
     location: 'crypto_table',
     token: token.symbol,
     isMobile,
+  })
+  analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
+    location: 'bridge_button',
+    tokenName: token.name,
+    tokenSymbol: token.symbol,
   })
   const selectedChain = (
     selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
@@ -865,6 +876,11 @@ const swapBtn = (token: DisplayToken, isMobile = false) => {
     location: 'crypto_table',
     token: token.symbol,
     isMobile,
+  })
+  analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
+    location: 'swap_button',
+    tokenName: token.name,
+    tokenSymbol: token.symbol,
   })
   const selectedChain = (
     selectedChainFilter.value && selectedChainFilter.value.name !== 'all'
@@ -929,6 +945,9 @@ const tradeBtn = (token: DisplayToken, isMobile = false) => {
 }
 
 const setHeaderSort = (key: string) => {
+  analytics.trackCryptoMarketClickSortEvent(CryptoMarketEvent.CLICK_SORT, {
+    sortOption: key.toLowerCase(),
+  })
   if (headerSort.value === key) {
     tableDirection.value = tableDirection.value === 'asc' ? 'desc' : 'asc'
   } else {
@@ -938,6 +957,13 @@ const setHeaderSort = (key: string) => {
 }
 
 const setSelectedChain = (chain: Chain) => {
+  analytics.trackCryptoMarketSelectNetworkEvent(
+    CryptoMarketEvent.SELECT_NETWORK,
+    {
+      networkName: chain.name,
+      networkNameLong: chain.nameLong,
+    },
+  )
   activeSort.value = { label: chain.nameLong, value: chain.name }
   selectedChainFilter.value = chain
   openChainDialog.value = false
@@ -1207,9 +1233,18 @@ const getPercentClass = (val: number | null): string => {
   return 'text-primary'
 }
 
+const debounceTrackSearch = useDebounceFn((value: string) => {
+  if (value) {
+    analytics.trackCryptoMarketSearchEvent(CryptoMarketEvent.SEARCH_TOKEN, {
+      searchValue: value,
+    })
+  }
+}, 500)
+
 watch(
   () => searchInput.value,
   () => {
+    debounceTrackSearch(searchInput.value)
     page.value = 1
     isLoading.value = true
     tokens.value = []
@@ -1223,6 +1258,15 @@ watch(
     } else {
       debounceFetchTokens()
     }
+  },
+)
+
+watch(
+  () => selectedCryptoFilter.value,
+  () => {
+    analytics.trackCryptoMarketFilterEvent(CryptoMarketEvent.SELECTED_FILTER, {
+      value: selectedCryptoFilter.value.value,
+    })
   },
 )
 
@@ -1366,18 +1410,29 @@ const getSparkLinePoints = (token: DisplayToken) => {
  --------------------------------*/
 const router = useRouter()
 
-const goToTokenPage = (token: DisplayToken) => {
+const onRowClick = (token: DisplayToken) => {
+  analytics.trackCryptoMarketClickTokenEvent(CryptoMarketEvent.CLICK_TOKEN, {
+    location: 'token_row',
+    tokenName: token.name,
+    tokenSymbol: token.symbol,
+  })
+  goToTokenPage(token)
+}
+
+const getTokenRoute = (token: DisplayToken) => {
   if (token.ondo !== null && token.ondo.primaryMarket.symbol) {
-    router.push({
+    return {
       name: STOCK_INFO_ROUTE_NAMES.crypto,
       params: { symbol: token.ondo.primaryMarket.symbol },
-    })
-    return
-  } else {
-    router.push({
-      name: TOKEN_INFO_ROUTE_NAMES.crypto,
-      params: { tokenId: token.coinId },
-    })
+    }
   }
+  return {
+    name: TOKEN_INFO_ROUTE_NAMES.crypto,
+    params: { tokenId: token.coinId },
+  }
+}
+
+const goToTokenPage = (token: DisplayToken) => {
+  router.push(getTokenRoute(token))
 }
 </script>

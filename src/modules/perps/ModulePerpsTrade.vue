@@ -159,7 +159,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'add',
                 },
               ]"
-              @click="manageMode = 'add'"
+              @click="setSelectedTradeManageMode('add')"
             >
               Add
             </button>
@@ -174,7 +174,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'close',
                 },
               ]"
-              @click="manageMode = 'close'"
+              @click="setSelectedTradeManageMode('close')"
             >
               Close
             </button>
@@ -183,6 +183,10 @@
             :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
             location="right"
             class="ml-3"
+            :class="{
+              'opacity-0 pointer-events-none':
+                activePosition && manageMode === 'close',
+            }"
           >
             <template #menu-content="{ toggleMenu }">
               <div
@@ -346,7 +350,7 @@
                 @click="openLeverageModal"
               >
                 <p class="ml-auto font-semibold text-s-14">
-                  {{ leverage }}&times;
+                  {{ manageMode === 'add' ? localLeverage : leverage }}&times;
                 </p>
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
@@ -418,7 +422,11 @@
             >
               <span class="font-bold text-s-12 text-info">New size</span>
               <span class="font-bold">{{
-                formatUsd((positionNotionalValue || 0) + (positionSizeUsd || 0))
+                submitDisabled
+                  ? '-'
+                  : formatUsd(
+                      (positionNotionalValue || 0) + (positionSizeUsd || 0),
+                    )
               }}</span>
             </div>
             <!-- Est. Liquidation -->
@@ -427,7 +435,11 @@
                 >Est. Liquidation</span
               >
               <span class="font-bold">{{
-                estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
+                submitDisabled
+                  ? '-'
+                  : estimatedLiquidation
+                    ? formatUsd(estimatedLiquidation)
+                    : '$0.00'
               }}</span>
             </div>
             <!-- Margin Ratio -->
@@ -436,7 +448,11 @@
                 >New Margin Ratio</span
               >
               <span class="font-bold">{{
-                newMarginRatio !== null ? newMarginRatio.toFixed(2) : '0.00'
+                submitDisabled
+                  ? '-'
+                  : newMarginRatio !== null
+                    ? newMarginRatio.toFixed(2)
+                    : '0'
               }}</span>
             </div>
           </div>
@@ -498,7 +514,7 @@
         </template>
 
         <!-- ========== ADD / CLOSE POSITION VIEW (has position) ========== -->
-        <template v-if="manageMode === 'close'">
+        <template v-if="activePosition && manageMode === 'close'">
           <!-- ADD MODE -->
 
           <!-- CLOSE MODE -->
@@ -571,7 +587,7 @@
             <!-- Size Pills -->
             <div class="flex justify-start gap-2 mt-4 mb-2">
               <button
-                v-for="pct in [0, 25, 50, 75, 100]"
+                v-for="pct in [5, 25, 50, 75, 100]"
                 :key="pct"
                 :disabled="isClosePillDisabled(pct)"
                 class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
@@ -609,7 +625,7 @@
         {{ getMainBtnText }}
       </app-base-button>
       <app-base-button
-        v-if="manageMode === 'close'"
+        v-if="activePosition && manageMode === 'close'"
         :theme="orderSide === 'buy' ? 'success' : 'error'"
         :disabled="closeDisabled"
         @click="showCloseConfirmation"
@@ -628,7 +644,7 @@
       :current-price="currentPrice"
       :limit-price="limitPrice"
       :input-amount="inputAmount"
-      :leverage="leverage"
+      :leverage="manageMode === 'add' ? tempLeverage : leverage"
       :position-size-usd="positionSizeUsd"
       :order-size="orderSize"
       :estimated-liquidation="estimatedLiquidation"
@@ -636,7 +652,7 @@
       :stop-loss-price="stopLossPrice"
       :order-error="orderError"
       :is-submitting="isSubmitting"
-      @confirm="confirmAndSubmitOrder"
+      @confirm="confirmAndSubmitAndSetLeverage"
     />
 
     <!-- Close Confirmation Dialog -->
@@ -678,7 +694,8 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
-      @save="saveLeverage"
+      :mode="manageMode === 'add' ? 'add' : 'create'"
+      @save="manageMode === 'add' ? closeLeverageModal() : saveLeverage()"
     />
 
     <!-- Take Profit / Stop Loss Dialog -->
@@ -695,6 +712,7 @@
       :take-profit-error="takeProfitPrecisionError"
       :stop-loss-error="stopLossPrecisionError"
       :quote-decimals="quoteDecimals"
+      :has-edits="hasAutoCloseEdits"
       @clear-take-profit="clearTempTakeProfit"
       @clear-stop-loss="clearTempStopLoss"
       @set-take-profit-pct="setTakeProfitPct"
@@ -705,7 +723,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import {
   ChevronDownIcon,
   CheckIcon,
@@ -727,12 +745,13 @@ import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDia
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
-
+const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
   accessStore.openAccessDialog()
 }
@@ -757,6 +776,13 @@ const onCloseAmountInput = (e: Event) => {
     closeAmount.value = val.toFixed(2)
   }
   closeSliderValue.value = maxVal > 0 ? (val / maxVal) * 100 : 0
+}
+
+const confirmAndSubmitAndSetLeverage = async () => {
+  await confirmAndSubmitOrder()
+  if (manageMode.value === 'add' && tempLeverage.value !== leverage.value) {
+    await saveLeverage()
+  }
 }
 
 const onLimitPriceInput = (e: Event) => {
@@ -826,6 +852,7 @@ const {
   clearTempTakeProfit,
   clearTempStopLoss,
   confirmAutoClose,
+  hasAutoCloseEdits,
   // Submit
   isSubmitting,
   submitDisabled,
@@ -870,7 +897,25 @@ const {
   leverageError,
   openLeverageModal,
   saveLeverage,
+  closeLeverageModal,
 } = usePerpsTradeForm()
+
+const localLeverage = ref(leverage)
+
+// if this changed, it means that the marketinfo page changed leverage and should reflect
+watch(
+  () => leverage.value,
+  val => {
+    if (val) localLeverage.value = val
+  },
+)
+
+watch(
+  () => showLeverageModal.value,
+  val => {
+    if (!val) localLeverage.value = tempLeverage.value
+  },
+)
 
 const isLoading = computed(() => false)
 

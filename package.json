@@ -1,13 +1,13 @@
 {
   "name": "myetherwallet",
-  "version": "7.0.2",
+  "version": "7.0.4-hotfix.3",
   "private": true,
   "type": "module",
   "engines": {
     "pnpm": ">=10.28.2",
     "node": ">=v22.11.0"
   },
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build:only {@}\" --",
@@ -54,7 +54,7 @@
     "@wagmi/core": "^3.1.0",
     "@web3-name-sdk/core": "^0.4.2",
     "animejs": "^4.2.2",
-    "axios": "^1.13.3",
+    "axios": "1.14.0",
     "bignumber.js": "^9.3.1",
     "bip39": "^3.1.0",
     "bitcoinjs-lib": "^6.1.7",
@@ -121,5 +121,10 @@
     "vitest": "^4.0.16",
     "vue-tsc": "^3.2.2",
     "web3-eth-abi": "^4.4.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "axios": "1.14.0"
+    }
   }
 }

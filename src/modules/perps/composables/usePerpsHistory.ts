@@ -1,6 +1,8 @@
 import { ref, watchEffect, onUnmounted } from 'vue'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
+import { usePerpsMarkets } from './usePerpsMarkets'
+import { usePerpsToasts } from './usePerpsToasts'
 import { useCursorPaginate } from './useCursorPaginate'
 import type {
   ApiOrder,
@@ -9,36 +11,129 @@ import type {
   WalletWithdrawal,
 } from '../sdk/types'
 
+type OrderSnapshot = Pick<
+  ApiOrder,
+  'orderId' | 'filledSize' | 'filledCost' | 'size' | 'status'
+>
+
 export function usePerpsOrders() {
   const { token, refreshKey } = usePerpsAuth()
-  const orders = ref<ApiOrder[]>([])
-  const loading = ref(false)
+  const { markets } = usePerpsMarkets()
+  const perpsToasts = usePerpsToasts()
+  const pagination = useCursorPaginate<ApiOrder>(
+    opts => perpsClient.getOrders(opts),
+    PERPS_PAGE_SIZE,
+  )
+  // Snapshot keyed by orderId — used to diff filledSize between polls so we
+  // can fire Order Filled / Order Partially Filled exactly on the transition.
+  // First poll after login seeds the snapshot without firing toasts to avoid
+  // re-announcing orders that already had fills before the user opened the page.
+  // With cursor pagination, fill detection only runs while the user is on
+  // page 0; fills on orders that have scrolled past page 0 won't toast — same
+  // trade-off the Fills tab already accepts.
+  let prevOrdersById = new Map<string, OrderSnapshot>()
+  let isSeedFetch = true
+  let lastToken: string | null | undefined = undefined
   let pollTimer: ReturnType<typeof setInterval> | null = null
+  let isRefreshing = false
 
-  async function fetchOrders() {
-    if (!token.value) {
-      orders.value = []
+  function resolveDisplayMarket(market: string): string {
+    const m = markets.value.find(x => x.market === market)
+    return m?.longName ?? m?.displayName ?? market
+  }
+
+  function detectFillsAndToast(next: ApiOrder[]) {
+    if (isSeedFetch) {
+      isSeedFetch = false
+      prevOrdersById = new Map(
+        next.map(o => [
+          o.orderId,
+          {
+            orderId: o.orderId,
+            filledSize: o.filledSize,
+            filledCost: o.filledCost,
+            size: o.size,
+            status: o.status,
+          },
+        ]),
+      )
       return
     }
-    loading.value = true
+    for (const curr of next) {
+      const prev = prevOrdersById.get(curr.orderId)
+      const prevFilled = prev ? Number(prev.filledSize || '0') : 0
+      const currFilled = Number(curr.filledSize || '0')
+      if (currFilled > prevFilled) {
+        const prevCost = prev ? Number(prev.filledCost || '0') : 0
+        const currCost = Number(curr.filledCost || '0')
+        const deltaSize = currFilled - prevFilled
+        const deltaCost = currCost - prevCost
+        const fillPrice = deltaSize > 0 ? deltaCost / deltaSize : 0
+        const totalSize = Number(curr.size || '0')
+        const isFullyFilled =
+          curr.status === 'fullyfilled' ||
+          (totalSize > 0 && currFilled >= totalSize)
+        const args = {
+          side: curr.side,
+          filledSize: curr.filledSize,
+          size: curr.size,
+          category: curr.type,
+          market: resolveDisplayMarket(curr.market),
+          fillPrice,
+        }
+        if (isFullyFilled) perpsToasts.toastOrderFilled(args)
+        else perpsToasts.toastOrderPartiallyFilled(args)
+      }
+    }
+    prevOrdersById = new Map(
+      next.map(o => [
+        o.orderId,
+        {
+          orderId: o.orderId,
+          filledSize: o.filledSize,
+          filledCost: o.filledCost,
+          size: o.size,
+          status: o.status,
+        },
+      ]),
+    )
+  }
+
+  async function refreshFirstPageIfActive() {
+    if (isRefreshing) return
+    if (pagination.loading.value) return
+    if (pagination.currentPage.value !== 0) return
+    isRefreshing = true
     try {
-      const res = await perpsClient.getOrders({ limit: 100 })
-      orders.value = res.result ?? []
-    } catch {
-      orders.value = []
+      const ok = await pagination.refetch()
+      if (ok && pagination.currentPage.value === 0) {
+        detectFillsAndToast(pagination.items.value)
+      }
     } finally {
-      loading.value = false
+      isRefreshing = false
     }
   }
 
   watchEffect(() => {
     void refreshKey.value
     if (pollTimer) clearInterval(pollTimer)
+    // Reset diff state only on actual auth changes. triggerRefresh() bumps
+    // refreshKey for any post-mutation refetch (place/cancel/close) and must
+    // not silently re-seed the snapshot — otherwise the next poll's fills
+    // would be swallowed instead of toasted.
+    if (token.value !== lastToken) {
+      prevOrdersById = new Map()
+      isSeedFetch = true
+      lastToken = token.value
+    }
+    pagination.reset()
     if (token.value) {
-      fetchOrders()
-      pollTimer = setInterval(fetchOrders, 10_000)
+      void (async () => {
+        const ok = await pagination.refetch()
+        if (ok) detectFillsAndToast(pagination.items.value)
+      })()
+      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
     } else {
-      orders.value = []
       pollTimer = null
     }
   })
@@ -47,7 +142,16 @@ export function usePerpsOrders() {
     if (pollTimer) clearInterval(pollTimer)
   })
 
-  return { orders, loading, refetch: fetchOrders }
+  return {
+    orders: pagination.items,
+    loading: pagination.loading,
+    refetch: pagination.refetch,
+    currentPage: pagination.currentPage,
+    hasNext: pagination.hasNext,
+    hasPrev: pagination.hasPrev,
+    nextPage: pagination.nextPage,
+    prevPage: pagination.prevPage,
+  }
 }
 
 export function usePerpsFills() {

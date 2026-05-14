@@ -215,9 +215,11 @@ export function usePerpsToasts() {
   }
 
   // --- Orders & Trading (non-TWAP) ---
+  // Spec classifies Order Canceled as `failure` type (red).
+  // Kept as ToastType.Error for spec fidelity — same precedent as SL/TP Removed.
   const toastOrderCanceled = (args: OrderArgs) => {
     toastStore.addToastMessage({
-      type: ToastType.Success,
+      type: ToastType.Error,
       text: 'Order Canceled',
       textSecondary: orderLine(args),
     })
@@ -292,6 +294,22 @@ export function usePerpsToasts() {
     })
   }
 
+  // --- Leverage ---
+  const toastLeverageUpdated = (leverage: number, market: string) => {
+    toastStore.addToastMessage({
+      type: ToastType.Success,
+      text: 'Leverage Updated',
+      textSecondary: `${market} set to ${leverage}x`,
+    })
+  }
+
+  const toastFailedToSetLeverage = () => {
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: 'Failed to Set Leverage',
+    })
+  }
+
   return {
     // Deposits & Withdrawals
     toastDepositComplete,
@@ -324,5 +342,8 @@ export function usePerpsToasts() {
     toastCancelFailedGeneric,
     toastFailedToCloseAllPositions,
     toastFailedToCancelOrders,
+    // Leverage
+    toastLeverageUpdated,
+    toastFailedToSetLeverage,
   }
 }

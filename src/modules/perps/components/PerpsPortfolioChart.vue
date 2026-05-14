@@ -18,11 +18,11 @@
         </template>
       </app-btn-group>
 
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <button
           v-for="s in seriesOptions"
           :key="s.key"
-          class="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-s-12 font-medium transition-colors hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+          class="flex p items-center gap-1.5 rounded-full px-4 py-1.5 text-s-11 xs:text-s-12 font-medium transition-colors hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
           :class="activeSeries.has(s.key) ? 'bg-mewBg ' : 'bg-white'"
           @click="toggleSeries(s.key)"
         >
@@ -41,9 +41,11 @@
     ></div>
     <HistoryChart
       v-else-if="chartPointsBalance.length > 0"
-      :data="activeSeries.has('value') ? chartPointsBalance : []"
-      :top-data="activeSeries.has('invested') ? chartPointsInvested : []"
-      :bottom-data="activeSeries.has('pnl') ? chartPointsPnl : []"
+      :data="[
+        activeSeries.has('value') ? chartPointsBalance : [],
+        activeSeries.has('invested') ? chartPointsInvested : [],
+        activeSeries.has('pnl') ? chartPointsPnl : [],
+      ]"
       :dispalay-y-axis="true"
       :series-labels="tooltipLabels"
       class="h-full !shrink"
@@ -92,6 +94,7 @@ function toggleSeries(key: SeriesKey) {
   } else {
     activeSeries.add(key)
   }
+  console.log(activeSeries)
 }
 
 interface RangeOption {

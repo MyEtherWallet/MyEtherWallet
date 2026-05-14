@@ -273,6 +273,7 @@ export const RewardsEvent = {
   MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
   LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
   CLICK_SWAP: 'Rewards_Clicked_Swap',
+  CLICK_TRADE: 'Rewards_Clicked_Trade',
   REWARD_EARNED: 'Rewards_Earned',
 } as const
 
@@ -285,4 +286,85 @@ export type RewardsPayload = {
     | 'small-banner-trade'
     | 'small-banner-bridge'
     | 'learn-more-dialog'
+  type?: 'swap' | 'trade'
+}
+
+// =============================================================================
+// STOCK MARKET
+// =============================================================================
+
+export const StockMarketEvent = {
+  SELECTED_FILTER: 'Stock_Market_Selected_Filter',
+  SEARCH_STOCK: 'Stock_Market_Search_Stock',
+  CLICK_STOCK: 'Stock_Market_Click_Stock',
+  CLICK_SORT: 'Stock_Market_Click_Sort',
+} as const
+export type StockMarketEvent =
+  (typeof StockMarketEvent)[keyof typeof StockMarketEvent]
+
+export type StockMarketFilterPayload = {
+  value: string
+}
+
+export type StockMarketSearchPayload = {
+  searchValue: string
+}
+
+export type StockMarketClickStockPayload = {
+  location: 'token_row' | 'trade_button'
+  stockName: string
+  stockSymbol: string
+}
+
+export type StockMarketClickSortPayload = {
+  sortOption: string
+}
+
+// =============================================================================
+// CRYPTO MARKET
+// =============================================================================
+
+export const CryptoMarketEvent = {
+  SELECTED_FILTER: 'Crypto_Market_Selected_Filter',
+  SEARCH_TOKEN: 'Crypto_Market_Search_Token',
+  CLICK_TOKEN: 'Crypto_Market_Click_Token',
+  CLICK_SORT: 'Crypto_Market_Click_Sort',
+  SELECT_NETWORK: 'Crypto_Market_Select_Network',
+} as const
+export type CryptoMarketEvent =
+  (typeof CryptoMarketEvent)[keyof typeof CryptoMarketEvent]
+
+export type CryptoMarketFilterPayload = {
+  value: string
+}
+
+export type CryptoMarketSearchPayload = {
+  searchValue: string
+}
+
+export type CryptoMarketClickTokenPayload = {
+  location: 'token_row' | 'buy_button' | 'swap_button' | 'bridge_button'
+  tokenName: string
+  tokenSymbol: string
+}
+
+export type CryptoMarketClickSortPayload = {
+  sortOption: string
+}
+
+export type CryptoMarketSelectNetworkPayload = {
+  networkName: string
+  networkNameLong: string
+}
+
+// =============================================================================
+// TRADE / SWAP SORT
+// =============================================================================
+
+export const TradeClickSortEvent = 'Trade_Click_Sort' as const
+export const SwapClickSortEvent = 'Swap_Click_Sort' as const
+
+export type ClickSortPayload = {
+  sortOption: string
+  isFromView?: boolean
 }

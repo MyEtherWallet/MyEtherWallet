@@ -97,6 +97,5 @@ const balanceRows = computed(() => [
   { label: 'Total Trading Fees', value: fmt(balance.value?.totalTradingFees) },
   { label: 'Volume (7d)', value: fmt(summary.value?.volume7d) },
   { label: 'Volume (30d)', value: fmt(summary.value?.volume30d) },
-  { label: 'Volume (All Time)', value: fmt(summary.value?.volumeAllTime) },
 ])
 </script>

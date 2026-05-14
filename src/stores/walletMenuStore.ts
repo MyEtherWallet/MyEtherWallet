@@ -11,6 +11,7 @@ export type WalletPanel =
   | 'perps'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
+  const hideLowBalance = ref(false)
   const hasShadow = ref(true)
   const isOpenSideMenu = ref(false)
 
@@ -19,6 +20,7 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   // Selected token symbol for Trade module (set from stocks view)
   const selectedTradeTokenSymbol = ref<string | null>(null)
   const selectedTradeOrderSide = ref<'buy' | 'sell' | null>(null)
+  const selectedTradeManageMode = ref<'add' | 'close' | undefined>('add')
 
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value
@@ -36,6 +38,13 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     selectedTradeOrderSide.value = side
   }
 
+  const setSelectedTradeManageMode = (mode: 'add' | 'close' | undefined) => {
+    selectedTradeManageMode.value = mode
+  }
+  const toggleShowBalance = () => {
+    hideLowBalance.value = !hideLowBalance.value
+  }
+
   return {
     isOpenSideMenu,
     setIsOpenSideMenu,
@@ -46,5 +55,9 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setSelectedTradeTokenSymbol,
     selectedTradeOrderSide,
     setSelectedTradeOrderSide,
+    selectedTradeManageMode,
+    setSelectedTradeManageMode,
+    hideLowBalance,
+    toggleShowBalance,
   }
 })

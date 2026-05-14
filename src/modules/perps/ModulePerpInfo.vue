@@ -162,11 +162,13 @@
               Funding Countdown
             </p>
             <p class="text-s-14 font-bold">
-              {{
-                contractData?.fundingRate
-                  ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
-                  : '—'
-              }}
+              <span :class="pnlColor(contractData?.fundingRate || '0')">
+                {{
+                  contractData?.fundingRate
+                    ? `${(parseFloat(contractData.fundingRate) * 100).toFixed(4)}%`
+                    : '—'
+                }}
+              </span>
               <span v-if="fundingCountdown" class="text-info text-s-12">
                 in {{ fundingCountdown }}
               </span>
@@ -234,7 +236,7 @@
         </div>
 
         <div
-          class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6 w-full mt-2 px-2"
+          class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full mt-2 px-2"
         >
           <div>
             <p
@@ -280,6 +282,121 @@
             </p>
           </div>
         </div>
+        <app-btn-text
+          size="medium"
+          class="font-medium mt-3 -ml-1"
+          @click="showPositionMore = !showPositionMore"
+          >More
+          <chevron-down-icon
+            class="w-4 h-4 ml-1 inline-block align-middle"
+            :class="{ 'rotate-180 ': showPositionMore }"
+          />
+        </app-btn-text>
+        <transition name="fade" mode="out-in">
+          <div
+            v-if="showPositionMore"
+            class="grid grid-cols-2 xl:grid-cols-4 gap-x-4 gap-y-6 w-full px-2 border-t border-grey-10 pt-3 -mt-2"
+          >
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                ROE
+              </p>
+              <p
+                class="text-s-14 font-bold"
+                :class="pnlColor(marketPosition.returnOnEquity)"
+              >
+                {{
+                  formatPercent(parseFloat(marketPosition.returnOnEquity) * 100)
+                }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Entry Price
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatPrice(marketPosition.averageEntryPrice) }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Mark Price
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatPrice(marketPosition.markPrice) }}
+              </p>
+            </div>
+
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Used Margin
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatUsd(marketPosition.usedMargin) }}
+              </p>
+            </div>
+
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Bankruptcy
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatPrice(marketPosition.bankruptcyPrice) }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Maint. Margin
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatUsd(marketPosition.maintenanceMargin) }}
+              </p>
+            </div>
+            <div>
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Funding
+              </p>
+              <p class="text-s-14 font-bold">
+                {{ formatUsd(marketPosition.netFundingSinceNeutral) }}
+              </p>
+            </div>
+
+            <div v-if="marketPosition.takeProfitTriggerPrice">
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Take Profit
+              </p>
+              <p class="text-s-14 font-bold text-success">
+                {{ formatPrice(marketPosition.takeProfitTriggerPrice) }}
+              </p>
+            </div>
+            <div v-if="marketPosition.stopLossTriggerPrice">
+              <p
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
+              >
+                Stop Loss
+              </p>
+              <p class="text-s-14 font-bold text-error">
+                {{ formatPrice(marketPosition.stopLossTriggerPrice) }}
+              </p>
+            </div>
+          </div>
+        </transition>
       </div>
       <!-- Market Position Info Tabs -->
       <div
@@ -293,7 +410,20 @@
             class="ml-2"
           >
             <template #btn-content="{ data }">
-              {{ data.label }}
+              <span>
+                {{ data.label }}
+                <span
+                  v-if="data.value === 'orders' && openOrdersCountForMarket > 0"
+                  class="ml-1 text-info text-s-12"
+                >
+                  ·
+                  {{
+                    openOrdersCountIsCapped
+                      ? `${OPEN_COUNT_LIMIT}+`
+                      : openOrdersCountForMarket
+                  }}
+                </span>
+              </span>
             </template>
           </app-btn-group>
         </div>
@@ -311,396 +441,384 @@
                 @click="toggleSelect"
               >
                 <div class="flex items-center justify-between">
-                  <span class="text-s-16 font-medium">{{
-                    activeInfoTabObj.label
-                  }}</span>
+                  <span class="text-s-16 font-medium">
+                    {{ activeInfoTabObj.label }}
+                    <span
+                      v-if="
+                        activeInfoTab === 'orders' &&
+                        openOrdersCountForMarket > 0
+                      "
+                      class="ml-1 text-info text-s-12"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${OPEN_COUNT_LIMIT}+`
+                          : openOrdersCountForMarket
+                      }}
+                    </span>
+                  </span>
                   <chevron-down-icon class="w-4 h-4 ml-1" />
                 </div>
               </button>
             </div>
           </template>
         </app-select>
-
-        <div
-          v-if="activeInfoTab === 'more'"
-          class="grid grid-cols-2 xl:grid-cols-5 gap-x-4 gap-y-6 w-full mt-3 px-2 sm:px-4"
-        >
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              ROE
-            </p>
-            <p
-              class="text-s-14 font-bold"
-              :class="pnlColor(marketPosition.returnOnEquity)"
-            >
-              {{
-                formatPercent(parseFloat(marketPosition.returnOnEquity) * 100)
-              }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Entry Price
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(marketPosition.averageEntryPrice) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Mark Price
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(marketPosition.markPrice) }}
-            </p>
-          </div>
-
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Used Margin
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatUsd(marketPosition.usedMargin) }}
-            </p>
-          </div>
-
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Bankruptcy
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatPrice(marketPosition.bankruptcyPrice) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Maint. Margin
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatUsd(marketPosition.maintenanceMargin) }}
-            </p>
-          </div>
-          <div>
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Funding
-            </p>
-            <p class="text-s-14 font-bold">
-              {{ formatUsd(marketPosition.netFundingSinceNeutral) }}
-            </p>
-          </div>
-
-          <div v-if="marketPosition.takeProfitTriggerPrice">
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Take Profit
-            </p>
-            <p class="text-s-14 font-bold text-success">
-              {{ formatPrice(marketPosition.takeProfitTriggerPrice) }}
-            </p>
-          </div>
-          <div v-if="marketPosition.stopLossTriggerPrice">
-            <p
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold mb-1"
-            >
-              Stop Loss
-            </p>
-            <p class="text-s-14 font-bold text-error">
-              {{ formatPrice(marketPosition.stopLossTriggerPrice) }}
-            </p>
-          </div>
-        </div>
-        <!--Orders tab -->
-        <div v-else-if="activeInfoTab === 'orders'" class="w-full">
-          <app-table-skeleton
-            v-if="ordersLoading && marketOrders.length === 0"
-            :rows="3"
-            :columns="ordersSkeletonColumns"
-          />
+        <transition name="fade" mode="out-in">
+          <!--Orders tab -->
           <div
-            v-else-if="marketOrders.length === 0"
-            class="text-center py-8 text-info text-s-14"
+            v-if="activeInfoTab === 'orders'"
+            class="w-full"
+            key="position-orders"
           >
-            No orders for {{ baseCurrency }}
-          </div>
-          <table v-else class="w-full text-s-14 table-fixed">
-            <thead>
-              <tr
-                class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+            <div class="mb-4 xs:pl-4">
+              <app-btn-group
+                v-model:selected="selectedOrderFilter"
+                :btn-list="orderFilterTabs"
+                size="xs"
               >
-                <th class="px-1 sm:pl-4 py-3 text-left font-bold">Side</th>
-                <th class="px-1 py-3 text-left font-bold hidden 2xl:table-cell">
-                  Status
-                </th>
-                <th class="px-1 py-3 text-left font-bold hidden xl:table-cell">
-                  Type
-                </th>
-                <th class="px-1 py-3 text-right font-bold">Price</th>
-                <th class="px-1 py-3 text-right font-bold hidden lg:table-cell">
-                  Filled / Size
-                </th>
-                <!--Actions -->
-                <th
-                  class="pr-1 sm:pr-4 py-3 text-right font-bold w-10 xl:w-12 2xl:w-[100px]"
-                ></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="order in marketOrders"
-                :key="order.orderId"
-                class="hoverBGWhite"
-                @click="openOrderDialog(order)"
-              >
-                <!-- Side -->
-                <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                  <p class="text-info text-s-12 mb-[2px]">
-                    {{ formatDate(order.createdAt) }}
-                  </p>
-                  <p
-                    :class="[
-                      order.side === 'buy' ? 'text-success' : 'text-error',
-                      'text-s-13 capitalize font-medium',
-                    ]"
-                  >
-                    {{ order.side }}
-                  </p>
-                </td>
-                <!-- Status -->
-                <td class="px-1 py-3 hidden 2xl:table-cell">
-                  <p
-                    :class="[
-                      'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
-                      order.status === 'open' || order.status === 'pending'
-                        ? 'text-primary '
-                        : order.status === 'fullyfilled'
-                          ? ' text-success'
-                          : order.status === 'canceled' ||
-                              order.status === 'untriggered'
-                            ? ' text-info'
-                            : '',
-                    ]"
-                  >
-                    {{ formatOrderStatus(order.status) }}
-                  </p>
-                </td>
-                <!-- Type -->
-                <td
-                  class="px-1 py-3 font-normal text-s-14 hidden xl:table-cell capitalize"
-                >
-                  <p>{{ formatOrderType(order.type) }}</p>
-
-                  <p
-                    :class="[
-                      'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
-                      order.status === 'open' || order.status === 'pending'
-                        ? 'text-primary '
-                        : order.status === 'fullyfilled'
-                          ? ' text-success'
-                          : order.status === 'canceled' ||
-                              order.status === 'untriggered'
-                            ? ' text-info'
-                            : '',
-                    ]"
-                  >
-                    {{ formatOrderStatus(order.status) }}
-                  </p>
-                </td>
-                <!-- Price -->
-                <td class="px-1 py-3 text-right font-normal text-s-14">
-                  <p>{{ formatPrice(getOrderPrice(order)) }}</p>
-                </td>
-                <!-- Filled / Size -->
-                <td
-                  class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
-                >
-                  <p>{{ order.filledSize }} {{ baseCurrency }}</p>
-                  <p class="text-s-12 text-info">
-                    out of {{ order.size }} {{ baseCurrency }}
-                  </p>
-                </td>
-                <!-- Actions -->
-                <td class="pl-2 xs:pl-4 pr-0 rounded-r-12 sm:pl-3 sm:pr-1 py-3">
-                  <!-- Small screens: popup menu -->
-                  <div class="flex items-center justify-end -mr-1 sm:mr-0">
-                    <app-pop-up-menu
-                      v-if="showCancelButton(order)"
-                      placeholder="actions menu"
-                      location="right"
+                <template #btn-content="{ data }">
+                  <span class="px-2"
+                    >{{ data.label }}
+                    <span
+                      v-if="
+                        data.value === 'pending' && openOrdersCountForMarket > 0
+                      "
+                      class="ml-1 text-info text-s-11"
                     >
-                      <template #menu-button="{ toggleMenu }">
-                        <app-btn-icon
-                          label="action menu"
-                          height="h-7 xs:h-8"
-                          width="w-7 xs:w-8"
-                          @click.stop="toggleMenu"
-                        >
-                          <ellipsis-vertical-icon class="w-5 h-5" />
-                        </app-btn-icon>
-                      </template>
-                      <template #menu-content="{ toggleMenu }">
-                        <div
-                          class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
-                        >
-                          <ul>
-                            <li
-                              class="p-2 flex items-center hoverBGWhite rounded-12"
-                              @click.stop="[
-                                toggleMenu(),
-                                openOrderDialog(order),
-                              ]"
-                            >
-                              <p>View Order</p>
-                            </li>
-                            <li
-                              v-if="showCancelButton(order)"
-                              class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
-                              @click.stop="[
-                                toggleMenu(),
-                                cancelInfoOrder(order.orderId),
-                              ]"
-                            >
-                              {{
-                                cancellingOrderId === order.orderId
-                                  ? 'Cancelling...'
-                                  : 'Cancel'
-                              }}
-                            </li>
-                          </ul>
-                        </div>
-                      </template>
-                    </app-pop-up-menu>
-                    <app-btn-icon
-                      v-else
-                      label="view order details"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
-                      :class="{ 'ml-auto': !showCancelButton(order) }"
-                      @click.stop="openOrderDialog(order)"
-                    >
-                      <chevron-right-icon class="w-5 h-5" />
-                    </app-btn-icon>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!--Fills tab -->
-        <div v-else-if="activeInfoTab === 'fills'" class="w-full">
-          <app-table-skeleton
-            v-if="fillsLoading && marketFills.length === 0"
-            :rows="3"
-            :columns="fillsSkeletonColumns"
-          />
-          <div
-            v-else-if="marketFills.length === 0"
-            class="text-center py-6 text-info text-s-14"
-          >
-            No fills for {{ baseCurrency }}
-          </div>
-          <div v-else class="w-full">
-            <table class="w-full text-s-14 table-fixed">
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${OPEN_COUNT_LIMIT}+`
+                          : openOrdersCountForMarket
+                      }}
+                    </span></span
+                  >
+                </template>
+              </app-btn-group>
+            </div>
+            <app-table-skeleton
+              v-if="ordersLoading && marketOrders.length === 0"
+              :rows="3"
+              :columns="ordersSkeletonColumns"
+            />
+            <div
+              v-else-if="
+                filteredMarketOrders.length === 0 && ordersCurrentPage === 0
+              "
+              class="text-center py-8 text-info text-s-14"
+            >
+              No orders for {{ baseCurrency }}
+            </div>
+            <table
+              v-else
+              ref="ordersTable"
+              class="w-full text-s-14 table-fixed"
+            >
               <thead>
                 <tr
                   class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
                 >
-                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">
-                    Direction
+                  <th class="px-1 sm:pl-4 py-3 text-left font-bold">Side</th>
+                  <th
+                    class="px-1 py-3 text-left font-bold hidden 2xl:table-cell"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="px-1 py-3 text-left font-bold hidden xl:table-cell"
+                  >
+                    Type
                   </th>
                   <th class="px-1 py-3 text-right font-bold">Price</th>
                   <th
-                    class="px-1 py-3 text-right font-bold hidden xl:table-cell"
-                  >
-                    Size
-                  </th>
-                  <th
-                    class="px-1 py-3 text-right font-bold hidden xl:table-cell"
-                  >
-                    Fee
-                  </th>
-                  <th
                     class="px-1 py-3 text-right font-bold hidden lg:table-cell"
                   >
-                    PnL
+                    Filled / Size
                   </th>
-                  <th class="w-9 xs:w-12"></th>
+                  <!--Actions -->
+                  <th
+                    class="pr-1 sm:pr-4 py-3 text-right font-bold w-10 xl:w-12 2xl:w-[100px]"
+                  ></th>
                 </tr>
               </thead>
               <tbody>
                 <tr
-                  v-for="fill in marketFills"
-                  :key="fill.id"
-                  class="cursor-pointer hoverBGWhite"
-                  @click="openFillDialog(fill)"
+                  v-for="order in filteredMarketOrders"
+                  :key="order.orderId"
+                  class="hoverBGWhite"
+                  @click="openOrderDialog(order)"
                 >
+                  <!-- Side -->
                   <td class="px-1 sm:pl-4 py-3 rounded-l-12">
-                    <p class="text-s-12 text-info mb-1">
-                      {{ formatDate(fill.time) }}
+                    <p class="text-info text-s-12 mb-[2px]">
+                      {{ formatDate(order.createdAt) }}
                     </p>
                     <p
                       :class="[
-                        fill.direction?.toLowerCase().includes('long')
-                          ? 'text-success'
-                          : 'text-error',
-                        'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
+                        order.side === 'buy' ? 'text-success' : 'text-error',
+                        'text-s-13 capitalize font-medium',
                       ]"
                     >
-                      {{ formatDirection(fill.direction) }}
+                      {{ order.side }}
                     </p>
                   </td>
+                  <!-- Status -->
+                  <td class="px-1 py-3 hidden 2xl:table-cell">
+                    <p
+                      :class="[
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 py-[1px] bg-surface',
+                        order.status === 'open' || order.status === 'pending'
+                          ? 'text-primary '
+                          : order.status === 'fullyfilled'
+                            ? ' text-success'
+                            : order.status === 'canceled' ||
+                                order.status === 'untriggered'
+                              ? ' text-info'
+                              : '',
+                      ]"
+                    >
+                      {{ formatOrderStatus(order.status) }}
+                    </p>
+                  </td>
+                  <!-- Type -->
+                  <td
+                    class="px-1 py-3 font-normal text-s-14 hidden xl:table-cell capitalize"
+                  >
+                    <p>{{ formatOrderType(order.type) }}</p>
+
+                    <p
+                      :class="[
+                        'text-s-11 uppercase  font-bold tracking-sp-06  -ml-2 mt-1 rounded-full w-max px-2 2xl:hidden py-[1px] bg-surface',
+                        order.status === 'open' || order.status === 'pending'
+                          ? 'text-primary '
+                          : order.status === 'fullyfilled'
+                            ? ' text-success'
+                            : order.status === 'canceled' ||
+                                order.status === 'untriggered'
+                              ? ' text-info'
+                              : '',
+                      ]"
+                    >
+                      {{ formatOrderStatus(order.status) }}
+                    </p>
+                  </td>
+                  <!-- Price -->
                   <td class="px-1 py-3 text-right font-normal text-s-14">
-                    <p>{{ formatPrice(fill.price) }}</p>
+                    <p>{{ formatPrice(getOrderPrice(order)) }}</p>
                   </td>
-                  <td
-                    class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
-                  >
-                    {{ fill.size }} {{ baseCurrency }}
-                  </td>
-                  <td
-                    class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
-                  >
-                    {{ formatUsd(fill.fee) }}
-                  </td>
+                  <!-- Filled / Size -->
                   <td
                     class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
                   >
-                    <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
-                      {{ formatPnl(fill.pnl) }}
-                    </span>
-                    <span v-else class="text-info">—</span>
+                    <p>{{ order.filledSize }} {{ baseCurrency }}</p>
+                    <p class="text-s-12 text-info">
+                      out of {{ order.size }} {{ baseCurrency }}
+                    </p>
                   </td>
                   <!-- Actions -->
-                  <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
-                    <app-btn-icon
-                      label="view fill details"
-                      height="h-7 xs:h-8"
-                      width="w-7 xs:w-8"
-                      class="ml-auto"
-                      @click="openFillDialog(fill)"
-                    >
-                      <chevron-right-icon class="w-5 h-5" />
-                    </app-btn-icon>
+                  <td
+                    class="pl-2 xs:pl-4 pr-0 rounded-r-12 sm:pl-3 sm:pr-1 py-3"
+                  >
+                    <!-- Small screens: popup menu -->
+                    <div class="flex items-center justify-end -mr-1 sm:mr-0">
+                      <app-pop-up-menu
+                        v-if="showCancelButton(order)"
+                        placeholder="actions menu"
+                        location="right"
+                      >
+                        <template #menu-button="{ toggleMenu }">
+                          <app-btn-icon
+                            label="action menu"
+                            height="h-7 xs:h-8"
+                            width="w-7 xs:w-8"
+                            @click.stop="toggleMenu"
+                          >
+                            <ellipsis-vertical-icon class="w-5 h-5" />
+                          </app-btn-icon>
+                        </template>
+                        <template #menu-content="{ toggleMenu }">
+                          <div
+                            class="px-2 py-3 max-w-full bg-white rounded-xl min-w-[240px]"
+                          >
+                            <ul>
+                              <li
+                                class="p-2 flex items-center hoverBGWhite rounded-12"
+                                @click.stop="[
+                                  toggleMenu(),
+                                  openOrderDialog(order),
+                                ]"
+                              >
+                                <p>View Order</p>
+                              </li>
+                              <li
+                                v-if="showCancelButton(order)"
+                                class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
+                                @click.stop="[
+                                  toggleMenu(),
+                                  cancelInfoOrder(order),
+                                ]"
+                              >
+                                {{
+                                  cancellingOrderId === order.orderId
+                                    ? 'Cancelling...'
+                                    : 'Cancel'
+                                }}
+                              </li>
+                            </ul>
+                          </div>
+                        </template>
+                      </app-pop-up-menu>
+                      <app-btn-icon
+                        v-else
+                        label="view order details"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                        :class="{ 'ml-auto': !showCancelButton(order) }"
+                        @click.stop="openOrderDialog(order)"
+                      >
+                        <chevron-right-icon class="w-5 h-5" />
+                      </app-btn-icon>
+                    </div>
                   </td>
                 </tr>
               </tbody>
             </table>
+            <div
+              v-if="ordersHasPrev || ordersHasNext"
+              class="flex justify-end mt-4 px-2"
+            >
+              <perps-pagination
+                :current-page="ordersCurrentPage"
+                :has-prev="ordersHasPrev"
+                :has-next="ordersHasNext"
+                :disabled="ordersLoading"
+                :scroll-target="ordersTable"
+                @prev="ordersPrevPage"
+                @next="ordersNextPage"
+              />
+            </div>
           </div>
-        </div>
+          <!--Fills tab -->
+          <div
+            v-else-if="activeInfoTab === 'fills'"
+            class="w-full"
+            key="position-fills"
+          >
+            <app-table-skeleton
+              v-if="fillsLoading && marketFills.length === 0"
+              :rows="3"
+              :columns="fillsSkeletonColumns"
+            />
+            <div
+              v-else-if="marketFills.length === 0 && fillsCurrentPage === 0"
+              class="text-center py-6 text-info text-s-14"
+            >
+              No fills for {{ baseCurrency }}
+            </div>
+            <div v-else class="w-full">
+              <table ref="fillsTable" class="w-full text-s-14 table-fixed">
+                <thead>
+                  <tr
+                    class="text-left text-s-11 uppercase text-info tracking-sp-06 font-bold border-b border-grey-10"
+                  >
+                    <th class="px-1 sm:pl-4 py-3 text-left font-bold">
+                      Direction
+                    </th>
+                    <th class="px-1 py-3 text-right font-bold">Price</th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                    >
+                      Size
+                    </th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden xl:table-cell"
+                    >
+                      Fee
+                    </th>
+                    <th
+                      class="px-1 py-3 text-right font-bold hidden lg:table-cell"
+                    >
+                      PnL
+                    </th>
+                    <th class="w-9 xs:w-12"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="fill in marketFills"
+                    :key="fill.id"
+                    class="cursor-pointer hoverBGWhite"
+                    @click="openFillDialog(fill)"
+                  >
+                    <td class="px-1 sm:pl-4 py-3 rounded-l-12">
+                      <p class="text-s-12 text-info mb-1">
+                        {{ formatDate(fill.time) }}
+                      </p>
+                      <p
+                        :class="[
+                          fill.direction?.toLowerCase().includes('long')
+                            ? 'text-success'
+                            : 'text-error',
+                          'text-s-11 uppercase font-bold tracking-sp-06 rounded-full w-max px-2 py-[1px] bg-surface -ml-1',
+                        ]"
+                      >
+                        {{ formatDirection(fill.direction) }}
+                      </p>
+                    </td>
+                    <td class="px-1 py-3 text-right font-normal text-s-14">
+                      <p>{{ formatPrice(fill.price) }}</p>
+                    </td>
+                    <td
+                      class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
+                    >
+                      {{ fill.size }} {{ baseCurrency }}
+                    </td>
+                    <td
+                      class="px-1 py-3 text-right font-normal text-s-14 hidden xl:table-cell"
+                    >
+                      {{ formatUsd(fill.fee) }}
+                    </td>
+                    <td
+                      class="px-1 py-3 text-right font-normal text-s-14 hidden lg:table-cell"
+                    >
+                      <span v-if="fill.pnl" :class="pnlColor(fill.pnl)">
+                        {{ formatPnl(fill.pnl) }}
+                      </span>
+                      <span v-else class="text-info">—</span>
+                    </td>
+                    <!-- Actions -->
+                    <td class="pl-2 xs:pl-4 pr-0 sm:pl-3 sm:pr-1 rounded-r-12">
+                      <app-btn-icon
+                        label="view fill details"
+                        height="h-7 xs:h-8"
+                        width="w-7 xs:w-8"
+                        class="ml-auto"
+                        @click="openFillDialog(fill)"
+                      >
+                        <chevron-right-icon class="w-5 h-5" />
+                      </app-btn-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div
+                v-if="fillsHasPrev || fillsHasNext"
+                class="flex justify-end mt-4 px-2"
+              >
+                <perps-pagination
+                  :current-page="fillsCurrentPage"
+                  :has-prev="fillsHasPrev"
+                  :has-next="fillsHasNext"
+                  :disabled="fillsLoading"
+                  :scroll-target="fillsTable"
+                  @prev="fillsPrevPage"
+                  @next="fillsNextPage"
+                />
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
     <!-- About -->
@@ -762,6 +880,15 @@
       </div>
     </div>
   </div>
+  <perps-select-leverage-dialog
+    v-model:is-open="showLeverageDialog"
+    v-model="tempLeverage"
+    :symbol="baseCurrency"
+    :leverage-error="leverageError"
+    :is-saving="isSavingLeverage"
+    mode="submit"
+    @save="saveLeverage"
+  />
   <perps-order-dialog
     v-if="selectedOrder"
     :visible="showOrderDialog"
@@ -789,8 +916,11 @@ import AppTableSkeleton, {
 } from '@/components/AppTableSkeleton.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
+import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
+import PerpsPagination from './components/PerpsPagination.vue'
 import { EllipsisVerticalIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppBtnText from '@/components/AppBtnText.vue'
 import ChartPrice from '@/components/ChartPrice.vue'
 
 import {
@@ -798,7 +928,8 @@ import {
   ArrowTrendingUpIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
-import { perpsClient } from './configs'
+import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
+import { useCursorPaginate } from './composables/useCursorPaginate'
 import {
   usePerpsMarkets,
   usePerpsContracts,
@@ -806,10 +937,14 @@ import {
 import { usePerpsPositions } from './composables/usePerpsPositions'
 import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
+import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
+import { usePerpsToasts } from './composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+const { setSelectedTradeManageMode } = useWalletMenuStore()
 import {
   formatUsd,
   formatPrice,
@@ -846,6 +981,8 @@ const { markets } = usePerpsMarkets()
 const { contracts } = usePerpsContracts()
 const { positions } = usePerpsPositions()
 const { markPriceData } = usePerpsMarkPrices()
+const { leverage } = usePerpsTradeForm()
+const perpsToasts = usePerpsToasts()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 
@@ -915,11 +1052,101 @@ const markPrice = computed(() => {
   return mp?.price
 })
 
-// Orders and fills for this market
-const marketOrders = ref<ApiOrder[]>([])
-const marketFills = ref<ApiFill[]>([])
-const ordersLoading = ref(false)
-const fillsLoading = ref(false)
+// Cursor-paginated orders & fills for this market (page size 5).
+const ordersTable = ref<HTMLElement | null>(null)
+const fillsTable = ref<HTMLElement | null>(null)
+
+const ordersPagination = useCursorPaginate<ApiOrder>(
+  opts => perpsClient.getOrders({ ...opts, market: props.market }),
+  PERPS_INFO_PAGE_SIZE,
+)
+const {
+  items: marketOrders,
+  loading: ordersLoading,
+  currentPage: ordersCurrentPage,
+  hasPrev: ordersHasPrev,
+  hasNext: ordersHasNext,
+  nextPage: ordersNextPage,
+  prevPage: ordersPrevPage,
+} = ordersPagination
+
+const fillsPagination = useCursorPaginate<ApiFill>(
+  opts => perpsClient.getFills({ ...opts, market: props.market }),
+  PERPS_INFO_PAGE_SIZE,
+)
+const {
+  items: marketFills,
+  loading: fillsLoading,
+  currentPage: fillsCurrentPage,
+  hasPrev: fillsHasPrev,
+  hasNext: fillsHasNext,
+  nextPage: fillsNextPage,
+  prevPage: fillsPrevPage,
+} = fillsPagination
+
+// Open-orders count for the tab badge. The cursor-paginated table only loads
+// 5 orders per page, so a separate fetch is needed to know how many open
+// orders exist for this market. Limit caps the count at 50 ("50+" if more).
+const OPEN_COUNT_LIMIT = 50
+const PENDING_STATUSES = new Set(['pending', 'untriggered', 'open'])
+const openOrdersCountForMarket = ref(0)
+const openOrdersCountIsCapped = ref(false)
+let openOrdersFetchSeq = 0
+
+const orderFilterTabs = [
+  { label: 'All', value: 'all' },
+  { label: 'Pending', value: 'pending' },
+]
+const selectedOrderFilter = ref(orderFilterTabs[0])
+
+const filteredMarketOrders = computed(() => {
+  if (selectedOrderFilter.value.value === 'all') return marketOrders.value
+  return marketOrders.value.filter(o => PENDING_STATUSES.has(o.status))
+})
+
+async function fetchOpenOrdersCount() {
+  if (!token.value) {
+    openOrdersCountForMarket.value = 0
+    openOrdersCountIsCapped.value = false
+    return
+  }
+  // Snapshot context so a slow response from a previous market or auth
+  // session can't overwrite the badge after the user has switched markets
+  // or logged out. The token guard covers logout, where the auth/market
+  // watcher clears values but doesn't kick off a new fetch (so doesn't
+  // bump the seq).
+  const seq = ++openOrdersFetchSeq
+  const market = props.market
+  const startToken = token.value
+  try {
+    const res = await perpsClient.getOrders({
+      market,
+      limit: OPEN_COUNT_LIMIT,
+    })
+    if (
+      seq !== openOrdersFetchSeq ||
+      market !== props.market ||
+      startToken !== token.value
+    )
+      return
+    const list = res.result ?? []
+    // Cap on the pending count, not list.length — the fetch returns all order
+    // statuses, so 50 fetched with only 5 pending must not render as "5 · 50+".
+    const pendingCount = list.filter(o => PENDING_STATUSES.has(o.status)).length
+    openOrdersCountForMarket.value = pendingCount
+    openOrdersCountIsCapped.value =
+      !!res.pageInfo?.nextCursor && pendingCount >= OPEN_COUNT_LIMIT
+  } catch {
+    if (
+      seq !== openOrdersFetchSeq ||
+      market !== props.market ||
+      startToken !== token.value
+    )
+      return
+    openOrdersCountForMarket.value = 0
+    openOrdersCountIsCapped.value = false
+  }
+}
 
 const cancellingOrderId = ref<string | null>(null)
 
@@ -947,41 +1174,37 @@ const showCancelButton = (order: ApiOrder) => {
   )
 }
 
-const fetchMarketOrders = async () => {
-  if (!token.value) return
-  ordersLoading.value = true
+const cancelInfoOrder = async (order: ApiOrder) => {
+  if (cancellingOrderId.value === order.orderId) return
+  cancellingOrderId.value = order.orderId
+  const market = markets.value.find(m => m.market === order.market)
+  const displayMarket = market?.longName ?? market?.displayName ?? order.market
   try {
-    const res = await perpsClient.getOrders({ market: props.market })
-    marketOrders.value = res.result ?? []
-  } catch {
-    marketOrders.value = []
-  } finally {
-    ordersLoading.value = false
-  }
-}
-
-const cancelInfoOrder = async (orderId: string) => {
-  cancellingOrderId.value = orderId
-  try {
-    await perpsClient.cancelOrder(orderId)
-    await fetchMarketOrders()
+    await perpsClient.cancelOrder(order.orderId)
+    perpsToasts.toastOrderCanceled({
+      side: order.side,
+      size: order.size,
+      category: order.type,
+      market: displayMarket,
+      price: order.price,
+    })
+    showOrderDialog.value = false
+    await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
   } catch (e) {
     console.error('Failed to cancel order:', e)
+    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    if (
+      msg.includes('invalid') &&
+      (msg.includes('order') || msg.includes('id'))
+    ) {
+      perpsToasts.toastCancelFailedInvalidOrderId()
+    } else if (msg.startsWith('http ')) {
+      perpsToasts.toastCancelFailed()
+    } else {
+      perpsToasts.toastCancelFailedGeneric()
+    }
   } finally {
     cancellingOrderId.value = null
-  }
-}
-
-const fetchMarketFills = async () => {
-  if (!token.value) return
-  fillsLoading.value = true
-  try {
-    const res = await perpsClient.getFills({ market: props.market })
-    marketFills.value = res.result ?? []
-  } catch {
-    marketFills.value = []
-  } finally {
-    fillsLoading.value = false
   }
 }
 
@@ -1003,38 +1226,68 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
   { header: '', width: '36px' },
 ]
 
+let ordersPollTimer: ReturnType<typeof setInterval> | null = null
+let fillsPollTimer: ReturnType<typeof setInterval> | null = null
+let ordersIsRefreshing = false
+let fillsIsRefreshing = false
+
+async function refreshOrdersPageZero() {
+  if (ordersIsRefreshing) return
+  if (ordersLoading.value) return
+  if (ordersCurrentPage.value !== 0) return
+  ordersIsRefreshing = true
+  try {
+    await ordersPagination.refetch()
+  } finally {
+    ordersIsRefreshing = false
+  }
+}
+
+async function refreshFillsPageZero() {
+  if (fillsIsRefreshing) return
+  if (fillsLoading.value) return
+  if (fillsCurrentPage.value !== 0) return
+  fillsIsRefreshing = true
+  try {
+    await fillsPagination.refetch()
+  } finally {
+    fillsIsRefreshing = false
+  }
+}
+
+// Hard reset only on auth or market change — those genuinely invalidate the
+// current view. triggerRefresh() (place/cancel/close) bumps refreshKey but
+// must not yank the user back to page 0; that mutation-driven path falls
+// through to the in-place refetch below.
 watch(
-  () => token.value,
-  t => {
-    if (t) {
-      fetchMarketOrders()
-      fetchMarketFills()
-    }
+  [token, () => props.market],
+  () => {
+    if (ordersPollTimer) clearInterval(ordersPollTimer)
+    if (fillsPollTimer) clearInterval(fillsPollTimer)
+    ordersPagination.reset()
+    fillsPagination.reset()
+    openOrdersCountForMarket.value = 0
+    openOrdersCountIsCapped.value = false
+    if (!token.value) return
+    void ordersPagination.refetch()
+    void fillsPagination.refetch()
+    void fetchOpenOrdersCount()
+    ordersPollTimer = setInterval(() => {
+      void refreshOrdersPageZero()
+      void fetchOpenOrdersCount()
+    }, 10_000)
+    fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
   },
   { immediate: true },
 )
 
-let ordersPollTimer: ReturnType<typeof setInterval> | null = null
-if (token.value) {
-  ordersPollTimer = setInterval(fetchMarketOrders, 10_000)
-}
-watch(
-  () => token.value,
-  t => {
-    if (ordersPollTimer) {
-      clearInterval(ordersPollTimer)
-      ordersPollTimer = null
-    }
-    if (t) {
-      ordersPollTimer = setInterval(fetchMarketOrders, 10_000)
-    }
-  },
-)
-
+// Post-mutation refresh: refetch first page in place if visible, and update
+// the badge regardless of which page the user is on.
 watch(refreshKey, () => {
-  if (token.value) {
-    fetchMarketOrders()
-  }
+  if (!token.value) return
+  void refreshOrdersPageZero()
+  void refreshFillsPageZero()
+  void fetchOpenOrdersCount()
 })
 
 // Funding countdown timer
@@ -1064,14 +1317,16 @@ updateFundingCountdown()
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
   if (ordersPollTimer) clearInterval(ordersPollTimer)
+  if (fillsPollTimer) clearInterval(fillsPollTimer)
 })
 
 // Tabs
+const showPositionMore = ref<boolean>(false)
 const activeInfoTab = ref('orders')
 const infoTabs = [
   { key: 'orders', value: 'orders', label: 'Orders' },
   { key: 'fills', value: 'fills', label: 'Fills' },
-  { key: 'more', value: 'more', label: 'More' },
+  // { key: 'more', value: 'more', label: 'More' },
 ]
 const activeInfoTabObj = computed({
   get: () => infoTabs.find(t => t.key === activeInfoTab.value) ?? infoTabs[0],
@@ -1085,14 +1340,45 @@ const activeInfoTabObj = computed({
 const manageOptions = [
   { value: 'add', label: 'Add to Position' },
   { value: 'leverage', label: 'Change Leverage' },
-  { value: 'close', label: 'Close' },
+  { value: 'close', label: 'Close Position' },
 ]
 const selectedManageAction = ref<{ value: string; label: string } | undefined>(
   undefined,
 )
+
+const showLeverageDialog = ref(false)
+const tempLeverage = ref(1)
+const isSavingLeverage = ref(false)
+const leverageError = ref('')
+
+const saveLeverage = async () => {
+  isSavingLeverage.value = true
+  leverageError.value = ''
+  try {
+    await perpsClient.setLeverage(props.market, tempLeverage.value)
+    showLeverageDialog.value = false
+    leverage.value = tempLeverage.value
+    perpsToasts.toastLeverageUpdated(tempLeverage.value, props.market)
+  } catch (e) {
+    leverageError.value =
+      e instanceof Error ? e.message : 'Failed to set leverage'
+    perpsToasts.toastFailedToSetLeverage()
+  } finally {
+    isSavingLeverage.value = false
+  }
+}
+
 watch(selectedManageAction, action => {
   if (!action) return
-  // TODO: handle action.value ('add' | 'leverage' | 'close')
+  if (action.value === 'add') {
+    setSelectedTradeManageMode('add')
+  } else if (action.value === 'close') {
+    setSelectedTradeManageMode('close')
+  } else if (action.value === 'leverage') {
+    tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
+    leverageError.value = ''
+    showLeverageDialog.value = true
+  }
   selectedManageAction.value = undefined
 })
 

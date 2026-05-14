@@ -5,9 +5,7 @@
       <div
         class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px]"
       >
-        <app-btn-icon label="Share" :disabled="isLoading">
-          <ShareIcon class="h-5 w-5" />
-        </app-btn-icon>
+        <app-share-button :share-text="shareText" :disabled="isLoading" />
         <app-btn-icon
           :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
           :disabled="isLoading"
@@ -166,6 +164,7 @@
 import { computed, ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppShareButton from '@/components/AppShareButton.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
@@ -175,7 +174,6 @@ import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
 import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
 import {
-  ShareIcon,
   StarIcon as StarOutlineIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
@@ -274,5 +272,16 @@ const existsOnCurrentChain = computed(() => {
     )
   }
   return false
+})
+
+/** --------------------
+ * Share
+ --------------------*/
+const shareText = computed(() => {
+  const ticker = stockData.value?.stockAlias || props.symbol
+  const price = stockData.value?.primaryMarket?.price
+    ? `$${formatFiatValue(stockData.value.primaryMarket.price).value}`
+    : ''
+  return `Check out ${ticker} ${price} on MyEtherWallet`
 })
 </script>

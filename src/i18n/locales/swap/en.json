@@ -7,7 +7,9 @@
       "select-chain": "Please select a chain.",
       "unsupported-chain": "Selected chain is not supported.",
       "tx-sign-failed": "Transaction signing failed. Please try again.",
-      "tx-send-success": "Swap executed successfully."
+      "tx-send-success": "Swap executed successfully.",
+      "canceled-by-user": "Swap canceled by user.",
+      "failed": "Swap failed."
     },
     "error": {
       "amount-required": "Amount is required.",

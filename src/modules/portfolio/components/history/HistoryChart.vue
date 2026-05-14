@@ -44,7 +44,7 @@ import {
   type ChartOptions,
   type ChartData,
 } from 'chart.js'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { formatFiatValueAbsolute } from '@/utils/numberFormatHelper'
 
 interface DataPoint {
   timestamp: number
@@ -65,9 +65,7 @@ interface TooltipState {
 
 const props = defineProps<{
   /** 7 days * 24 hours = 168 values (oldest -> newest) */
-  data: DataPoint[]
-  topData?: DataPoint[]
-  bottomData?: DataPoint[]
+  data: DataPoint[] | Array<DataPoint[]>
   dispalayYAxis?: boolean
   /** Labels for [data, topData, bottomData] series in tooltip */
   seriesLabels?: SeriesLabel[]
@@ -97,11 +95,32 @@ const colors = {
 const customTooltip = ref<TooltipState | null>(null)
 const tooltipEl = ref<HTMLElement | null>(null)
 
-const points = computed(() => props.data.map(d => d.value))
-const labels = computed(() => props.data.map(d => d.timestamp))
+const isMultiSeries = computed(() => Array.isArray(props.data[0]))
+const primaryData = computed(() =>
+  isMultiSeries.value
+    ? (props.data[0] as DataPoint[])
+    : (props.data as DataPoint[]),
+)
+const topData = computed(() =>
+  isMultiSeries.value ? ((props.data as DataPoint[][])[1] ?? []) : [],
+)
+const bottomData = computed(() =>
+  isMultiSeries.value ? ((props.data as DataPoint[][])[2] ?? []) : [],
+)
+const points = computed(() => primaryData.value.map(d => d.value))
+const topPoints = computed(() => topData.value.map(d => d.value))
+const bottomPoints = computed(() => bottomData.value.map(d => d.value))
 
-const topPoints = computed(() => props.topData?.map(d => d.value) || [])
-const bottomPoints = computed(() => props.bottomData?.map(d => d.value) || [])
+// Use the first non-empty series as the source of x-axis labels
+const labels = computed(() => {
+  const source =
+    primaryData.value.length > 0
+      ? primaryData.value
+      : topData.value.length > 0
+        ? topData.value
+        : bottomData.value
+  return source.map(d => d.timestamp)
+})
 
 const chartWidth = ref<number>(0)
 const chartHeight = ref<number>(0)
@@ -237,7 +256,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
             const dataIndex = tooltip.dataPoints?.[0]?.dataIndex
             if (dataIndex == null) return
 
-            const allData = [props.data, props.topData, props.bottomData]
+            const allData = [primaryData.value, topData.value, bottomData.value]
 
             const timestamp = allData
               .map(series => series?.[dataIndex]?.timestamp)
@@ -265,7 +284,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
               rows.push({
                 label: s.label,
                 color: s.color,
-                value: '$' + formatFiatValue(val).value,
+                value: formatFiatValueAbsolute(val).value,
               })
             })
 
@@ -332,7 +351,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
                 label += ': '
               }
               if (context.parsed.y !== null) {
-                return '$' + formatFiatValue(context.parsed.y).value
+                return formatFiatValueAbsolute(context.parsed.y).value
               }
               return label
             },
@@ -379,17 +398,27 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       ticks: {
         count: 3,
         callback: function (value) {
-          return '$' + formatFiatValue(value).value
+          return formatFiatValueAbsolute(value).value
         },
         font: {
           size: 10,
         },
         color: 'rgba(0, 0, 0, 0.65)',
       },
+      afterBuildTicks: function (axis) {
+        if (!axis.ticks.some(t => t.value === 0)) {
+          axis.ticks.push({ value: 0 })
+          axis.ticks.sort((a, b) => a.value - b.value)
+        }
+      },
       suggestedMin: yBounds.value.min,
       suggestedMax: yBounds.value.max,
       grid: {
-        display: false, // Set display to false to remove vertical grid lines
+        display: true,
+        color: function (context) {
+          if (context.tick.value === 0) return 'rgba(0,0,0,0.1)'
+          return 'transparent'
+        },
       },
       position: 'right',
     },
