@@ -82,7 +82,7 @@
 
       <!-- Positions loading -->
       <app-table-skeleton
-        v-if="activeTab === 'positions' && loading && positions.length === 0"
+        v-if="activeTab === 'positions' && !positionsHasLoaded"
         :rows="3"
         :columns="positionsSkeletonColumns"
       />
@@ -972,7 +972,7 @@ const dwSkeletonColumns: SkeletonColumn[] = [
   { header: 'Status', align: 'right', hidden: 'hidden xs:table-cell' },
 ]
 
-const { positions, loading } = usePerpsPositions()
+const { positions, hasLoaded: positionsHasLoaded } = usePerpsPositions()
 
 const {
   currentPage: positionsCurrentPage,

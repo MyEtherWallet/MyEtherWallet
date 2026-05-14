@@ -5,6 +5,7 @@ import type { Position } from '../sdk/types'
 
 const positions = ref<Position[]>([])
 const loading = ref(false)
+const hasLoaded = ref(false)
 const error = ref<string | null>(null)
 let initialized = false
 
@@ -23,6 +24,7 @@ async function fetchPositions() {
     error.value = e instanceof Error ? e.message : 'Failed to load positions'
   } finally {
     loading.value = false
+    hasLoaded.value = true
   }
 }
 
@@ -52,7 +54,10 @@ function startPolling() {
   // an intermediate clearAuth), where the previous account's positions would
   // otherwise linger on screen.
   watch(token, (newToken, oldToken) => {
-    if (oldToken) positions.value = []
+    if (oldToken) {
+      positions.value = []
+      hasLoaded.value = false
+    }
     if (newToken) poll()
   })
 
@@ -79,5 +84,12 @@ async function closePosition(pos: Position) {
 
 export function usePerpsPositions() {
   startPolling()
-  return { positions, loading, error, refetch: fetchPositions, closePosition }
+  return {
+    positions,
+    loading,
+    hasLoaded,
+    error,
+    refetch: fetchPositions,
+    closePosition,
+  }
 }
