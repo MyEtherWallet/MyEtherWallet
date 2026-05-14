@@ -110,6 +110,8 @@ import { storeToRefs } from 'pinia'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { hasInvalidPrecision } from '../utils/formatters'
 import AppBlockie from '@/components/AppBlockie.vue'
+import { captureException } from '@sentry/vue'
+import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 const props = defineProps<{
   visible: boolean
 }>()
@@ -186,8 +188,14 @@ watch(
       const accountRes = await perpsClient.getAccount()
       withdrawalFeeUSD.value =
         accountRes?.result?.withdrawalFeeUSD ?? DEFAULT_WITHDRAWAL_FEE_USD
-    } catch {
+    } catch (e) {
       // Keep the default fee shown if the lookup fails.
+      captureException(e, {
+        ...SENTRY_MODULE_TAGS.PERPS,
+        extra: {
+          title: 'PERPS: Error fetching withdrawal fee',
+        },
+      })
     }
   },
 )
