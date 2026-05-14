@@ -105,6 +105,7 @@ export function usePerpsAuth() {
   }
 
   async function login() {
+    if (_authRestored) return;
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
