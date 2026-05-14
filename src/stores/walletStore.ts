@@ -51,7 +51,9 @@ export const useWalletStore = defineStore('walletStore', () => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
     const tradingRestricted = await isTradingRestricted()
+    const canTrade = tradingRestricted && !isRestricted;
     userProperties.canTrade = tradingRestricted && !isRestricted
+    analytics.setUserProperties({ ...userProperties, canTrade: canTrade });
     if (!isRestricted) {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true

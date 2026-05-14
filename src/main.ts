@@ -37,7 +37,9 @@ if (dsn) {
     ],
     integrations: [
       browserTracingIntegration({ router }),
-      replayIntegration(),
+      replayIntegration({
+        block: ['[data-private]'],
+      }),
       vueIntegration({
         tracingOptions: {
           trackComponents: true,
