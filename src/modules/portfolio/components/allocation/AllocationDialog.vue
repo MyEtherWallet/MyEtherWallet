@@ -43,7 +43,7 @@
                     </p>
                     <app-btn-icon-close @click="toggleMenu" />
                   </div>
-                  <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
+                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"

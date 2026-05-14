@@ -79,7 +79,7 @@
             the icon when sending to this wallet. And please keep your paper
             wallet at a Safe Place!
           </p>
-          <hr class="h-px bg-grey-outline border-0 w-full my-6" />
+          <hr class="h-px bg-grey-10 border-0 w-full my-6" />
           <!-- TODO:  add privatekey option-->
           <div class="flex justify-between items-center mx-6 mb-6">
             <img
