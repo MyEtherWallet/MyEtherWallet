@@ -163,6 +163,14 @@ const walletStore = useWalletStore()
 const toastStore = useToastStore()
 const { walletAddress, wallet } = storeToRefs(walletStore)
 const { setTokens, setIsLoadingBalances } = walletStore
+const rewardsStore = useRewardsStore()
+const {
+  fetchUserRewards,
+  setEarnedPotentialReward,
+  checkRewards,
+  fetchEligibility,
+} = rewardsStore
+const { earnedPotentialReward } = storeToRefs(rewardsStore)
 
 // Get notifications count based on selected category
 const notificationsCount = computed(() => {
@@ -378,16 +386,15 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     }
 
     // Refresh balances after trade order is filled
-    fetchBalances()
+    consolidatedCall()
   }
 
   if (status.status === 'cancelled' || status.status === 'expired') {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
-    const rewardsStore = useRewardsStore()
-    if (rewardsStore.earnedPotentialReward) {
-      rewardsStore.setEarnedPotentialReward(false)
+    if (earnedPotentialReward) {
+      setEarnedPotentialReward(false)
     }
     const event =
       status.status === 'cancelled'
@@ -555,9 +562,8 @@ const updateNotificationStatus = (
     })
     stopStatusPolling(hash)
     if (newStatus !== 'confirmed') {
-      const rewardsStore = useRewardsStore()
-      if (rewardsStore.earnedPotentialReward) {
-        rewardsStore.setEarnedPotentialReward(false)
+      if (earnedPotentialReward) {
+        setEarnedPotentialReward(false)
       }
     }
     if (newStatus === 'confirmed' || newStatus === 'failed') {
@@ -656,7 +662,18 @@ const updateNotificationStatus = (
       })
     }
   }
-  fetchBalances()
+  consolidatedCall()
+}
+
+const consolidatedCall = async () => {
+  await fetchBalances()
+  console.log('fetchBalances called')
+  await fetchUserRewards()
+  console.log('fetchUserRewards called')
+  await fetchEligibility()
+  console.log('fetchEligibility called')
+  await checkRewards()
+  console.log('checkRewards called')
 }
 
 // Get the correct transaction status URL based on chain
