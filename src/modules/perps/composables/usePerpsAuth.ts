@@ -35,15 +35,19 @@ async function tryRestoreAuth(address: string) {
       const decryptedToken = await decrypt(storedTokens[i], address)
       token.value = decryptedToken
       perpsClient.setToken(decryptedToken)
+      _authRestored = true
       try {
         accountId.value = storedAccounts[i]
           ? await decrypt(storedAccounts[i], address)
           : null
+
       } catch {
+        _authRestored = false
         accountId.value = null
       }
       break
     } catch {
+      _authRestored = false
       // token belongs to a different address, try next
     }
   }
@@ -88,7 +92,6 @@ export function usePerpsAuth() {
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
 
   if (!_authRestored) {
-    _authRestored = true
     watch(
       walletAddress,
       async address => {

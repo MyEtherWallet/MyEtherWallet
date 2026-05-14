@@ -84,7 +84,7 @@ import { useAccessStore } from '@/stores/accessStore'
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
-const { isWatchOnly, walletAddress } = storeToRefs(walletStore)
+const { isWatchOnly, wallet } = storeToRefs(walletStore)
 const { token, isAuthenticating, login, logout } = usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
 const accessStore = useAccessStore()
@@ -92,7 +92,7 @@ const accessStore = useAccessStore()
 const connectWallet = () => accessStore.openAccessDialog()
 
 watch(
-  () => walletAddress.value,
+  () => wallet.value,
   (newVal, oldVal) => {
     if (
       newVal &&
@@ -103,6 +103,9 @@ watch(
     ) {
       login()
     }
+  },
+  {
+    deep: true,
   },
 )
 const globalStore = useGlobalStore()
