@@ -1,4 +1,4 @@
-import { ref, watchEffect, onUnmounted } from 'vue'
+import { ref, watchEffect, onUnmounted, type Ref } from 'vue'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
 import { usePerpsMarkets } from './usePerpsMarkets'
@@ -11,17 +11,28 @@ import type {
   WalletWithdrawal,
 } from '../sdk/types'
 
+export type OrdersStatusFilter = 'all' | 'pending'
+
 type OrderSnapshot = Pick<
   ApiOrder,
   'orderId' | 'filledSize' | 'filledCost' | 'size' | 'status'
 >
 
-export function usePerpsOrders() {
+export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
   const { token, refreshKey } = usePerpsAuth()
   const { markets } = usePerpsMarkets()
   const perpsToasts = usePerpsToasts()
+  const filter = statusFilter ?? ref<OrdersStatusFilter>('all')
+  // The Pending sub-tab paginates over only open orders so empty middle pages
+  // can't appear. The API's status filter only accepts 'open' | 'canceled' |
+  // 'fullyfilled', so 'untriggered' (stop orders) and the transient 'pending'
+  // state aren't shown under the Pending filter — acceptable trade-off.
   const pagination = useCursorPaginate<ApiOrder>(
-    opts => perpsClient.getOrders(opts),
+    opts =>
+      perpsClient.getOrders({
+        ...opts,
+        status: filter.value === 'pending' ? 'open' : undefined,
+      }),
     PERPS_PAGE_SIZE,
   )
   // Snapshot keyed by orderId — used to diff filledSize between polls so we
@@ -114,17 +125,21 @@ export function usePerpsOrders() {
     }
   }
 
+  let lastFilter: OrdersStatusFilter | null = null
   watchEffect(() => {
     void refreshKey.value
+    void filter.value
     if (pollTimer) clearInterval(pollTimer)
     // Reset diff state only on actual auth changes. triggerRefresh() bumps
     // refreshKey for any post-mutation refetch (place/cancel/close) and must
     // not silently re-seed the snapshot — otherwise the next poll's fills
-    // would be swallowed instead of toasted.
-    if (token.value !== lastToken) {
+    // would be swallowed instead of toasted. Filter changes also re-seed since
+    // the result set differs and stale snapshots would generate false diffs.
+    if (token.value !== lastToken || filter.value !== lastFilter) {
       prevOrdersById = new Map()
       isSeedFetch = true
       lastToken = token.value
+      lastFilter = filter.value
     }
     pagination.reset()
     if (token.value) {
