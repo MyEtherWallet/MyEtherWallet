@@ -173,16 +173,23 @@ export function usePerpsTradeForm() {
     parseFloat(balance.value?.marginBalance || '0'),
   )
 
-  const DEFAULT_MAINTENANCE_MARGIN_RATE = 0.03
-
-  const maintenanceMarginRate = computed(() => {
-    if (activePosition.value) {
-      const mm = parseFloat(activePosition.value.maintenanceMargin || '0')
-      const nv = parseFloat(activePosition.value.notionalValue || '0')
-      if (nv > 0) return mm / nv
-    }
-    return DEFAULT_MAINTENANCE_MARGIN_RATE
+  const maintenanceMarginOtherPositions = computed(() => {
+    const positionsWithoutActive = positions.value.filter((item) => {
+      return item.market !== activePosition.value?.market
+    })
+    return positionsWithoutActive.reduce((acc, currentValue) => acc + parseFloat(currentValue.maintenanceMargin || '0'), 0)
   })
+
+  // const DEFAULT_MAINTENANCE_MARGIN_RATE = 0.03
+
+  // const maintenanceMarginRate = computed(() => {
+  //   if (activePosition.value) {
+  //     const mm = parseFloat(activePosition.value.maintenanceMargin || '0')
+  //     const nv = parseFloat(activePosition.value.notionalValue || '0')
+  //     if (nv > 0) return mm / nv
+  //   }
+  //   return DEFAULT_MAINTENANCE_MARGIN_RATE
+  // })
 
   // ── Order sizing ───────────────────────────────────────────
   const positionSizeUsd = computed(() => {
@@ -190,19 +197,26 @@ export function usePerpsTradeForm() {
     return amt * leverage.value
   })
 
+  const maintenanceMarginRate = computed(() => {
+    if (activePosition.value) {
+      const findInMarkets = markets.value.find(asset => {
+        return asset.market === activePosition.value?.market
+      })
+      if (findInMarkets && findInMarkets.marginInfo && findInMarkets.marginInfo.length > 0)
+        return parseFloat(findInMarkets.marginInfo[0].maintenanceMarginRate)
+    }
+    return .03 // DEFAULT
+  })
+
   const estimatedLiquidation = computed(() => {
     const netQuantity = parseFloat(orderSize.value)
     if (!netQuantity || !currentPrice.value) return 0
-
-    const maintenanceMarginOtherPositions =
-      parseFloat(balance.value?.maintenanceMarginRequirement || '0') -
-      parseFloat(activePosition.value?.maintenanceMargin || '0')
 
     const sideVal = orderSide.value === 'buy' ? 1 : -1
     const sideNotionalValue = positionSizeUsd.value * sideVal
     const sideQuantity = netQuantity * sideVal
     const numerator =
-      marginBalance.value - maintenanceMarginOtherPositions - sideNotionalValue
+      marginBalance.value - maintenanceMarginOtherPositions.value - sideNotionalValue
     const denominator = netQuantity * maintenanceMarginRate.value - sideQuantity
     if (denominator === 0) return 0
 

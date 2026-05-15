@@ -70,7 +70,7 @@ export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
     fetchContracts()
-    setInterval(fetchContracts, 500)
+    setInterval(fetchContracts, 2500)
   }
   return {
     contracts,
