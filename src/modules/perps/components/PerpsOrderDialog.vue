@@ -66,11 +66,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import type { ApiOrder } from '../sdk/types'
+import { perpsClient } from '../configs'
 import {
   formatUsd,
   formatPrice,
@@ -118,6 +119,27 @@ const isCancellable = computed(() =>
   ['pending', 'untriggered', 'open'].includes(props.order.status),
 )
 
+const fetchedFee = ref<string | null>(null)
+
+watch(
+  () => [props.visible, props.order?.orderId] as const,
+  async ([visible, orderId]) => {
+    if (!visible || !orderId) {
+      fetchedFee.value = null
+      return
+    }
+    try {
+      const res = await perpsClient.getOrder(orderId)
+      if (res?.success) fetchedFee.value = res.result.fee
+    } catch {
+      fetchedFee.value = null
+    }
+  },
+  { immediate: true },
+)
+
+const displayFee = computed(() => fetchedFee.value ?? props.order.fee)
+
 const rows = computed(() => {
   const items = [
     {
@@ -157,7 +179,7 @@ const rows = computed(() => {
     },
     {
       label: 'Fee',
-      value: formatUsd(props.order.fee),
+      value: formatUsd(displayFee.value),
     },
   ]
 
