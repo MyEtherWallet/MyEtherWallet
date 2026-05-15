@@ -944,7 +944,8 @@ import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-const { setSelectedTradeManageMode } = useWalletMenuStore()
+const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
+  useWalletMenuStore()
 import {
   formatUsd,
   formatPrice,
@@ -1370,10 +1371,10 @@ const saveLeverage = async () => {
 
 watch(selectedManageAction, action => {
   if (!action) return
-  if (action.value === 'add') {
-    setSelectedTradeManageMode('add')
-  } else if (action.value === 'close') {
-    setSelectedTradeManageMode('close')
+  if (action.value === 'add' || action.value === 'close') {
+    setSelectedTradeManageMode(action.value)
+    setWalletPanel('perps')
+    setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
     tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
     leverageError.value = ''
