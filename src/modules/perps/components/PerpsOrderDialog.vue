@@ -120,18 +120,26 @@ const isCancellable = computed(() =>
 )
 
 const fetchedFee = ref<string | null>(null)
+const currentFetchToken = ref(0)
 
 watch(
   () => [props.visible, props.order?.orderId] as const,
   async ([visible, orderId]) => {
+    const token = ++currentFetchToken.value
     if (!visible || !orderId) {
       fetchedFee.value = null
       return
     }
     try {
       const res = await perpsClient.getOrder(orderId)
-      if (res?.success) fetchedFee.value = res.result.fee
+      if (token !== currentFetchToken.value) return
+      if (res?.success) {
+        fetchedFee.value = res.result.fee
+      } else {
+        fetchedFee.value = null
+      }
     } catch {
+      if (token !== currentFetchToken.value) return
       fetchedFee.value = null
     }
   },
