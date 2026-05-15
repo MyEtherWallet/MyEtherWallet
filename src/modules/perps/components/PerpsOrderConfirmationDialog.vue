@@ -91,11 +91,15 @@
 
         <!-- Error -->
         <div
-          v-if="orderError || leverageError"
+          v-if="orderError || leverageError || limitPriceOutOfTolerance"
           class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
         >
           <p class="text-error text-s-14 font-medium">
-            {{ orderError || leverageError }}
+            {{
+              orderError ||
+              leverageError ||
+              'Price must be within +/- 10% tolerance'
+            }}
           </p>
         </div>
 
@@ -103,7 +107,12 @@
         <div class="flex flex-col gap-1">
           <app-base-button
             :theme="orderSide === 'buy' ? 'success' : 'error'"
-            :disabled="isSubmitting || !!orderError || !!leverageError"
+            :disabled="
+              isSubmitting ||
+              !!orderError ||
+              !!leverageError ||
+              limitPriceOutOfTolerance
+            "
             :is-loading="isSubmitting"
             class="flex-1"
             @click="$emit('confirm')"
@@ -152,6 +161,7 @@ defineProps<{
   orderError: string | null
   isSubmitting: boolean
   leverageError: string | null
+  limitPriceOutOfTolerance: boolean
 }>()
 
 defineEmits<{

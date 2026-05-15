@@ -430,11 +430,27 @@ export function usePerpsTradeForm() {
   })
 
   // ── Limit price validation ─────────────────────────────────
+  // Backend rejects orders whose price drifts more than 10% from mid; mirror
+  // that bound on the client so the order button disables before submit and
+  // again at confirm time if the live price moves while the modal is open.
+  const LIMIT_PRICE_TOLERANCE = 0.1
+
+  const limitPriceOutOfTolerance = computed(() => {
+    if (orderType.value !== 'limit' || !limitPrice.value) return false
+    const price = parseFloat(limitPrice.value)
+    if (isNaN(price) || price <= 0 || !currentPrice.value) return false
+    return (
+      Math.abs(price - currentPrice.value) / currentPrice.value >
+      LIMIT_PRICE_TOLERANCE
+    )
+  })
+
   const limitPriceHasError = computed(() => {
     if (orderType.value !== 'limit' || !limitPrice.value) return false
     const price = parseFloat(limitPrice.value)
     if (isNaN(price) || price <= 0 || price >= 10_000_000) return true
     if (limitPricePrecisionError.value) return true
+    if (limitPriceOutOfTolerance.value) return true
     return false
   })
 
@@ -1139,6 +1155,7 @@ export function usePerpsTradeForm() {
     submitDisabled,
     submitButtonLabel,
     limitPriceHasError,
+    limitPriceOutOfTolerance,
     limitPricePrecisionError,
     marginPrecisionError,
     closeAmountPrecisionError,
