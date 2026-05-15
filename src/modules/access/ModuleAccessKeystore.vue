@@ -59,6 +59,7 @@
             />
             <app-input
               v-model="password"
+              data-private
               placeholder="Enter Password"
               type="password"
               :error-message="errorPassword"
