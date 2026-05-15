@@ -91,17 +91,19 @@
 
         <!-- Error -->
         <div
-          v-if="orderError"
+          v-if="orderError || leverageError"
           class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
         >
-          <p class="text-error text-s-14 font-medium">{{ orderError }}</p>
+          <p class="text-error text-s-14 font-medium">
+            {{ orderError || leverageError }}
+          </p>
         </div>
 
         <!-- Actions -->
         <div class="flex flex-col gap-1">
           <app-base-button
             :theme="orderSide === 'buy' ? 'success' : 'error'"
-            :disabled="isSubmitting || !!orderError"
+            :disabled="isSubmitting || !!orderError || !!leverageError"
             :is-loading="isSubmitting"
             class="flex-1"
             @click="$emit('confirm')"
@@ -149,6 +151,7 @@ defineProps<{
   stopLossPrice: number | null
   orderError: string | null
   isSubmitting: boolean
+  leverageError: string | null
 }>()
 
 defineEmits<{

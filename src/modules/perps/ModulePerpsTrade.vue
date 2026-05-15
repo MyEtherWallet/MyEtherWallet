@@ -666,6 +666,7 @@
       :take-profit-price="takeProfitPrice"
       :stop-loss-price="stopLossPrice"
       :order-error="orderError"
+      :leverage-error="leverageError"
       :is-submitting="isSubmitting"
       @confirm="confirmAndSubmitAndSetLeverage"
     />
@@ -802,9 +803,11 @@ const onCloseAmountInput = (e: Event) => {
 }
 
 const confirmAndSubmitAndSetLeverage = async () => {
-  await confirmAndSubmitOrder()
   if (manageMode.value === 'add' && tempLeverage.value !== leverage.value) {
     await saveLeverage()
+    if (!leverageError.value) await confirmAndSubmitOrder()
+  } else {
+    await confirmAndSubmitOrder()
   }
 }
 
@@ -923,7 +926,7 @@ const {
   closeLeverageModal,
 } = usePerpsTradeForm()
 
-const localLeverage = ref(leverage)
+const localLeverage = ref(leverage.value)
 
 // if this changed, it means that the marketinfo page changed leverage and should reflect
 watch(

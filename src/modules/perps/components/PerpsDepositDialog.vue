@@ -216,7 +216,7 @@
             </p>
             <app-btn-copy :copy-value="depositAddress || ''" />
             <!-- Refresh -->
-            <app-tooltip text="Refresh deposit address" position="top-left">
+            <!-- <app-tooltip text="Refresh deposit address" position="top-left">
               <app-btn-icon
                 label="Refresh deposit address"
                 :disabled="loading"
@@ -224,7 +224,7 @@
               >
                 <arrow-path-icon class="w-[18px] h-[18px]" />
               </app-btn-icon>
-            </app-tooltip>
+            </app-tooltip> -->
           </div>
         </template>
       </div>
@@ -235,16 +235,10 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowPathIcon,
-} from '@heroicons/vue/24/solid'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
@@ -395,8 +389,8 @@ const checkAmountForError = () => {
     : BigInt(0)
   // if (amount.value === undefined || amount.value === '')
   //   amountError.value = t('error.amount.required') // amount is undefined or blank
-  if (baseAmount < 0)
-    amountError.value = t('error.amount.less_than_zero') // amount less than 0
+  if (amount.value !== '' && baseAmount <= BigInt(0))
+    amountError.value = t('error.amount.less_than_zero') // amount is 0 or negative
   else if (BigInt(baseTokenBalance) < baseAmount) {
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
   } else if (
@@ -634,6 +628,8 @@ const sendLiveDeposit = async () => {
 }
 
 function sendDeposit() {
+  const amt = parseFloat(amount.value)
+  if (!amt || amt <= 0) return
   if (showIsLive.value) {
     sendLiveDeposit()
   } else {
