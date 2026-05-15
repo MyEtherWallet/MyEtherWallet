@@ -177,7 +177,9 @@ export function usePerpsTradeForm() {
     const positionsWithoutActive = positions.value.filter((item) => {
       return item.market !== activePosition.value?.market
     })
-    return positionsWithoutActive.reduce((acc, currentValue) => acc + parseFloat(currentValue.maintenanceMargin || '0'), 0)
+    const margin = positionsWithoutActive.reduce((acc, currentValue) => acc + parseFloat(currentValue.maintenanceMargin || '0'), 0)
+    console.log(margin)
+    return margin
   })
 
   // const DEFAULT_MAINTENANCE_MARGIN_RATE = 0.03
@@ -199,21 +201,24 @@ export function usePerpsTradeForm() {
 
   const maintenanceMarginRate = computed(() => {
     if (activePosition.value) {
-      const findInMarkets = markets.value.find(asset => {
-        return asset.market === activePosition.value?.market
-      })
-      if (findInMarkets && findInMarkets.marginInfo && findInMarkets.marginInfo.length > 0)
-        return parseFloat(findInMarkets.marginInfo[0].maintenanceMarginRate)
+      const market = markets.value.find(asset => asset.market === activePosition.value?.market)
+      if (market?.marginInfo?.length) {
+        return parseFloat(market.marginInfo[0].maintenanceMarginRate)
+      }
     }
-    return .03 // DEFAULT
+    return 0.03
   })
 
   const estimatedLiquidation = computed(() => {
-    const netQuantity = parseFloat(orderSize.value)
-    if (!netQuantity || !currentPrice.value) return 0
+    if (!activePosition.value) return 0
 
-    const sideVal = orderSide.value === 'buy' ? 1 : -1
-    const sideNotionalValue = positionSizeUsd.value * sideVal
+    const { direction } = activePosition.value
+    const netQuantity = parseFloat(activePosition.value.netQuantity)
+
+    if (direction === 'neutral' || netQuantity === 0) return 0
+
+    const sideVal = direction === 'short' ? -1 : 1
+    const sideNotionalValue = positionNotionalValue.value * sideVal
     const sideQuantity = netQuantity * sideVal
     const numerator =
       marginBalance.value - maintenanceMarginOtherPositions.value - sideNotionalValue
