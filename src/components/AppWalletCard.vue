@@ -167,6 +167,7 @@ import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { ACCESS_WALLET_VIEWS } from '@/modules/access/common/walletConfigs'
 import { ToastType } from '@/types/notification'
 import {
@@ -283,6 +284,7 @@ const deleteWallet = () => {
     walletAddress.value as string,
     selectedChain.value!,
   )
+  usePerpsAuth().logout()
   disconnectWallet()
   emit('close')
 }
