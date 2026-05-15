@@ -389,8 +389,8 @@ const checkAmountForError = () => {
     : BigInt(0)
   // if (amount.value === undefined || amount.value === '')
   //   amountError.value = t('error.amount.required') // amount is undefined or blank
-  if (baseAmount < 0)
-    amountError.value = t('error.amount.less_than_zero') // amount less than 0
+  if (amount.value !== '' && baseAmount <= BigInt(0))
+    amountError.value = t('error.amount.less_than_zero') // amount is 0 or negative
   else if (BigInt(baseTokenBalance) < baseAmount) {
     amountError.value = t('error.balance.insufficient') // amount greater than selected balance
   } else if (
@@ -627,6 +627,8 @@ const sendLiveDeposit = async () => {
 }
 
 function sendDeposit() {
+  const amt = parseFloat(amount.value)
+  if (!amt || amt <= 0) return
   if (showIsLive.value) {
     sendLiveDeposit()
   } else {
