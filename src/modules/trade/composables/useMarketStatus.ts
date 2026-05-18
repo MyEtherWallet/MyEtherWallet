@@ -94,7 +94,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
           },
         })
       }
-      isTradingRestrictedInRegion.value = false
+      isTradingRestrictedInRegion.value = true
     }
   }
 
