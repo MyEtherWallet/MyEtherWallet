@@ -39,8 +39,6 @@ import { analytics } from '@/analytics'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import Intercom from '@intercom/messenger-js-sdk'
 import { useMarketStatus } from './modules/trade/composables'
-
-// const { isTradingRestrictedInRegion, fetchMarketStatus } = useMarketStatus()
 const { fetchMarketStatus } = useMarketStatus()
 
 const dialogStore = useDialogStore()

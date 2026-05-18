@@ -50,6 +50,12 @@ export const useGlobalStore = defineStore('global', () => {
     welcomeDialogDismissed.value = true
   }
 
+  /**--------------------
+   * TRADE
+   --------------------*/
+  const fetchedTradingThisSession = ref(false)
+  const isTradingRestrictedInRegion = ref(false)
+
   return {
     isEIP1559SupportedNetwork,
     eip1559,
@@ -58,5 +64,7 @@ export const useGlobalStore = defineStore('global', () => {
     setSelectedNetwork,
     welcomeDialogDismissed,
     dismissWelcomeDialog,
+    fetchedTradingThisSession,
+    isTradingRestrictedInRegion,
   }
 })
