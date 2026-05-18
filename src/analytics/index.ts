@@ -5,8 +5,9 @@ import { StoreConfigs } from '@/stores/configs'
 import type { AnalyticsState } from '@/stores/analyticsStore'
 import { captureException } from '@sentry/vue'
 import * as sessionReplay from '@amplitude/session-replay-browser'
+import configs from '@/configs';
 
-const __TMP_VERSION__ = 'v7'
+const __TMP_VERSION__ = configs.APP_VERSION
 const __TMP_HASHED_VERSION__ = `tmp_local_mew_web_${__TMP_VERSION__}`
 
 // Check initial consent state from localStorage
