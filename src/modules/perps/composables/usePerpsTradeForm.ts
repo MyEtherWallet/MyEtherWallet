@@ -177,8 +177,7 @@ export function usePerpsTradeForm() {
     const positionsWithoutActive = positions.value.filter((item) => {
       return item.market !== activePosition.value?.market
     })
-    const margin = positionsWithoutActive.reduce((acc, currentValue) => acc + parseFloat(currentValue.maintenanceMargin || '0'), 0)
-    console.log(margin)
+    const margin = positionsWithoutActive.reduce((acc, currentValue) => acc + parseFloat(Number(currentValue.maintenanceMargin).toFixed(2) || '0'), 0)
     return margin
   })
 
