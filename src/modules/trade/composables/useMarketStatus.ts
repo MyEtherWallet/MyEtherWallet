@@ -1,4 +1,5 @@
 import { ref, computed, onUnmounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import {
   getMarketStatus,
@@ -8,6 +9,7 @@ import {
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -18,9 +20,8 @@ interface UseMarketStatusOptions {
 
 export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
-  const fetchedTradingThisSession = ref(false);
+  const { fetchedTradingThisSession, isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
-  const isTradingRestrictedInRegion = ref<boolean>(false)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
   let wasMarketClosed = false
@@ -74,7 +75,9 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
 
   const fetchTradingRestriction = async () => {
     // should only fetch this once in the session
-    if (fetchedTradingThisSession.value) return;
+    if (fetchedTradingThisSession.value) {
+      return fetchedTradingThisSession.value;
+    }
     try {
       isTradingRestrictedInRegion.value = await isTradingRestricted()
       fetchedTradingThisSession.value = true;
