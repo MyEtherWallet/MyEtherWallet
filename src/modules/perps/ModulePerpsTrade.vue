@@ -294,6 +294,12 @@
                   : `Price supports up to ${quoteDecimals} decimal place${quoteDecimals === 1 ? '' : 's'}`
               }}
             </div>
+            <div
+              v-else-if="limitPriceOutOfTolerance"
+              class="text-error text-s-12 mb-1"
+            >
+              Price must be within +/- 10% tolerance
+            </div>
           </transition>
 
           <div class="flex justify-start gap-2 mt-1">
@@ -653,6 +659,7 @@
       :order-error="orderError"
       :leverage-error="leverageError"
       :is-submitting="isSubmitting"
+      :limit-price-out-of-tolerance="limitPriceOutOfTolerance"
       @confirm="confirmAndSubmitAndSetLeverage"
     />
 
@@ -861,6 +868,7 @@ const {
   submitDisabled,
   submitButtonLabel,
   limitPriceHasError,
+  limitPriceOutOfTolerance,
   limitPricePrecisionError,
   marginPrecisionError,
   closeAmountPrecisionError,
