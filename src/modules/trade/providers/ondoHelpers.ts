@@ -1,4 +1,4 @@
-// import configs from '@/configs'
+import configs from '@/configs'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { throttle } from 'underscore'
@@ -28,7 +28,7 @@ const getRestrictedTokenAddresses = (): Promise<string[]> => {
 }
 
 const isTradingRestricted = async (): Promise<boolean> => {
-  // if (!configs.MEW_LIVE_URLS.includes(window.location.hostname)) return false
+  if (!configs.MEW_LIVE_URLS.includes(window.location.hostname)) return false
   return fetch(`https://partners.mewapi.io/o/ipcomply`)
     .then(async res => {
       if (!res.ok) return false
