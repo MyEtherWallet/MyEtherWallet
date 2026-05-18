@@ -667,13 +667,9 @@ const updateNotificationStatus = (
 
 const consolidatedCall = async () => {
   await fetchBalances()
-  console.log('fetchBalances called')
   await fetchUserRewards()
-  console.log('fetchUserRewards called')
   await fetchEligibility()
-  console.log('fetchEligibility called')
   await checkRewards()
-  console.log('checkRewards called')
 }
 
 // Get the correct transaction status URL based on chain

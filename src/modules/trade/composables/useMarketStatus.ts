@@ -79,7 +79,8 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
       return fetchedTradingThisSession.value;
     }
     try {
-      isTradingRestrictedInRegion.value = await isTradingRestricted()
+      const res = await isTradingRestricted()
+      isTradingRestrictedInRegion.value = res
       fetchedTradingThisSession.value = true;
     } catch (e) {
       if (isDevMode) {
