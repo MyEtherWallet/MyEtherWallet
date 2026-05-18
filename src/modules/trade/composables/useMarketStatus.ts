@@ -15,9 +15,10 @@ interface UseMarketStatusOptions {
   onMarketOpen?: () => void | Promise<void>
 }
 
+
 export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
-
+  const fetchedTradingThisSession = ref(false);
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const isTradingRestrictedInRegion = ref<boolean>(false)
   const countdownText = ref<string>('')
@@ -72,8 +73,11 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   }
 
   const fetchTradingRestriction = async () => {
+    // should only fetch this once in the session
+    if (fetchedTradingThisSession.value) return;
     try {
       isTradingRestrictedInRegion.value = await isTradingRestricted()
+      fetchedTradingThisSession.value = true;
     } catch (e) {
       if (isDevMode) {
         console.error('Failed to check trading restriction:', e)
