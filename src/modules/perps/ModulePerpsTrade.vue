@@ -660,6 +660,8 @@
       :leverage-error="leverageError"
       :is-submitting="isSubmitting"
       :limit-price-out-of-tolerance="limitPriceOutOfTolerance"
+      :maker-fee="activeContract?.makerFee"
+      :taker-fee="activeContract?.takerFee"
       @confirm="confirmAndSubmitAndSetLeverage"
     />
 
@@ -898,6 +900,7 @@ const {
   marketFilterTabs,
   filteredMarketList,
   fullMarketName,
+  contracts,
   getMarketDisplayName,
   openTokenSelect,
   selectMarket,
@@ -926,6 +929,10 @@ watch(
   val => {
     if (!val) localLeverage.value = tempLeverage.value
   },
+)
+
+const activeContract = computed(() =>
+  contracts.value.find(c => c.market === fullMarketName.value),
 )
 
 const isLoading = computed(() => false)
