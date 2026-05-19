@@ -189,7 +189,7 @@ const rows = computed(() => {
       label: 'Time in Force',
       value: props.order.timeInForce,
       tooltip:
-        'The order remains active until the order is completely filled or you manually cancel it',
+        'The order remains active until the order is completely filled or you manually cancel it.',
     })
   }
 
