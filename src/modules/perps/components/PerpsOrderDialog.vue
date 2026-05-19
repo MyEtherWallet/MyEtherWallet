@@ -73,7 +73,7 @@ import AppBtnText from '@/components/AppBtnText.vue'
 import type { ApiOrder } from '../sdk/types'
 import { perpsClient } from '../configs'
 import {
-  formatUsd,
+  formatUsdc,
   formatPrice,
   formatPnl,
   pnlColor,
@@ -187,7 +187,7 @@ const rows = computed(() => {
     },
     {
       label: 'Fee',
-      value: formatUsd(displayFee.value),
+      value: formatUsdc(displayFee.value),
     },
   ]
 
