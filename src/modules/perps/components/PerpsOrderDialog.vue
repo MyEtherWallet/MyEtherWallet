@@ -73,14 +73,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
+import { perpsClient } from '../configs'
 import {
-  formatUsd,
+  formatUsdc,
   formatPrice,
   formatPnl,
   pnlColor,
@@ -133,6 +134,35 @@ type Row = {
   tooltip?: string
 }
 
+const fetchedFee = ref<string | null>(null)
+const currentFetchToken = ref(0)
+
+watch(
+  () => [props.visible, props.order?.orderId] as const,
+  async ([visible, orderId]) => {
+    const token = ++currentFetchToken.value
+    if (!visible || !orderId) {
+      fetchedFee.value = null
+      return
+    }
+    try {
+      const res = await perpsClient.getOrder(orderId)
+      if (token !== currentFetchToken.value) return
+      if (res?.success) {
+        fetchedFee.value = res.result.fee
+      } else {
+        fetchedFee.value = null
+      }
+    } catch {
+      if (token !== currentFetchToken.value) return
+      fetchedFee.value = null
+    }
+  },
+  { immediate: true },
+)
+
+const displayFee = computed(() => fetchedFee.value ?? props.order.fee)
+
 const rows = computed(() => {
   const items: Row[] = [
     {
@@ -172,7 +202,7 @@ const rows = computed(() => {
     },
     {
       label: 'Fee',
-      value: formatUsd(props.order.fee),
+      value: formatUsdc(displayFee.value),
     },
   ]
 
