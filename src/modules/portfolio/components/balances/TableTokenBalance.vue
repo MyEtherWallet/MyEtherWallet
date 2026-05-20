@@ -422,7 +422,7 @@
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
+                        class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -936,7 +936,9 @@ const tokens = computed<DisplayToken[]>(() => {
 
   if (props.view === 'watchlist') {
     // make sure that response is array, if not set to empty array
-    const watchlistTokenResponse = Array.isArray(tokensWatchlistData.value) ? tokensWatchlistData.value : []
+    const watchlistTokenResponse = Array.isArray(tokensWatchlistData.value)
+      ? tokensWatchlistData.value
+      : []
     // Map tokens watchlist
     const tokensList =
       watchlistTokenResponse

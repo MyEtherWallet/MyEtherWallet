@@ -14,7 +14,7 @@ import { useToastStore } from './toastStore'
 import { ToastType } from '@/types/notification'
 import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type { WalletType } from '@/providers/types'
-import { checkAddressRestriction, isTradingRestricted } from '@/modules/trade/providers/ondoHelpers'
+import { checkAddressRestriction } from '@/modules/trade/providers/ondoHelpers'
 import {
   analytics,
   WalletStatus,
@@ -23,6 +23,7 @@ import {
 } from '@/analytics'
 import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
+import { useMarketStatus } from '@/modules/trade/composables'
 
 const PARTNER = 'ondo-finance'
 
@@ -39,6 +40,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
   const userProperties = reactive<UserProperties>({})
+  const { isTradingRestrictedInRegion } = useMarketStatus()
 
   /** -------------------------------
   * The Wallet
@@ -50,8 +52,10 @@ export const useWalletStore = defineStore('walletStore', () => {
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
     const isRestricted = await checkAddressRestriction(_address)
-    const tradingRestricted = await isTradingRestricted()
-    userProperties.canTrade = tradingRestricted && !isRestricted
+    const tradingRestricted = isTradingRestrictedInRegion.value
+    const canTrade = !tradingRestricted && !isRestricted;
+    userProperties.canTrade = canTrade
+    analytics.setUserProperties({ ...userProperties, canTrade: canTrade });
     if (!isRestricted) {
       if (newWallet instanceof WatchOnlyWallet) {
         isWatchOnly.value = true

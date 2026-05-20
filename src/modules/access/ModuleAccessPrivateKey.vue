@@ -8,6 +8,7 @@
         <div class="mt-5 flex flex-col align-center">
           <app-input
             v-model="privateKeyInput"
+            data-private
             placeholder="Enter your private key"
             type="password"
             is-required

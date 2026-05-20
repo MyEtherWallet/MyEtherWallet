@@ -6,8 +6,6 @@ import { useWalletStore } from './walletStore'
 import { useChainsStore } from './chainsStore'
 // import { useToastStore } from './toastStore'
 import { analytics, RewardsEvent } from '@/analytics'
-import useBalanceHandler from '@/utils/balanceHandler'
-import type { TokenBalancesRaw } from '@/mew_api/types'
 
 type V2PoolStatusResponse = components['schemas']['V2PoolStatusResponse']
 type V2EligibilityResponse = components['schemas']['V2EligibilityResponse']
@@ -32,8 +30,7 @@ const fetchRewards = async <T>(url: string): Promise<T> => {
 
 export const useRewardsStore = defineStore('rewardsStore', () => {
   const walletStore = useWalletStore()
-  const { walletAddress, wallet } = storeToRefs(walletStore)
-  const { setTokens, setIsLoadingBalances } = walletStore
+  const { walletAddress } = storeToRefs(walletStore)
   const chainsStore = useChainsStore()
   const { isBitcoinChain } = storeToRefs(chainsStore)
   const earnedPotentialRewardAddresses = ref<string[]>([]) // to track if user has earned a potential reward in the current eligibility period. This is needed to show the "Earned Potential Reward" badge immediately after user becomes eligible, without waiting for the next eligibility fetch.
@@ -108,8 +105,8 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     poolPollInterval = setInterval(async () => {
       await fetchPool()
       if (Number(rewardsLeft.value) <= 0) {
-        stopPoolPoll()
         setTimeout(() => fetchEligibility(), 20000)
+        stopPoolPoll()
       }
     }, 5000)
   }
@@ -132,11 +129,11 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   }
 
   /** Eligibility */
-  const isEligible = computed(() =>
-    eligibilityV2.value
+  const isEligible = computed(() => {
+    return eligibilityV2.value
       ? eligibilityV2.value.swap.eligible || eligibilityV2.value.trade.eligible
-      : false,
-  )
+      : false
+  })
   const nextEligibleDate = computed(
     () =>
       eligibilityV2.value?.swap.nextEligibleDate ??
@@ -240,11 +237,16 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
   }
 
   /** User Rewards */
-  const todaysRewardSwap = ref<V2RewardItem | null>(null)
-  const todayTradeReward = ref<V2RewardItem | null>(null)
-
-  const swapClaimed = computed(() => todaysRewardSwap.value !== null)
-  const tradeClaimed = computed(() => todayTradeReward.value !== null)
+  const swapClaimed = computed(() => {
+    return eligibilityV2.value ? !eligibilityV2.value.swap.eligible && eligibilityV2.value?.swap.reasons.some(
+      r => r.type === 'USER_RECENTLY_REWARDED',
+    ) : null
+  })
+  const tradeClaimed = computed(() => {
+    return eligibilityV2.value ? !eligibilityV2.value.trade.eligible && eligibilityV2.value?.trade.reasons.some(
+      r => r.type === 'USER_RECENTLY_REWARDED',
+    ) : null
+  })
 
   const hasRewards = computed(() => rewards.value.length > 0)
 
@@ -273,79 +275,55 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     }
   })
 
-  /** Poll rewards when eligible until today's reward is found */
-  let rewardsPollInterval: ReturnType<typeof setInterval> | null = null
-
   const isRewardEarnedDuringCampaign = (reward: V2RewardItem): boolean => {
     if (!poolV2.value) return false
     const CAMPAIGN_START = new Date(poolV2.value.campaignStartDate)
     const CAMPAIGN_END = new Date(
-      CAMPAIGN_START.getTime() + 7 * 24 * 60 * 60 * 1000,
+      new Date(poolV2.value.campaignEndDate)
     )
     if (!reward.rewardBroadcastAt) return false
     const rewardDate = new Date(reward.rewardBroadcastAt)
     return rewardDate >= CAMPAIGN_START && rewardDate < CAMPAIGN_END
   }
 
-  const stopRewardsPoll = () => {
-    if (rewardsPollInterval) {
-      clearInterval(rewardsPollInterval)
-      rewardsPollInterval = null
-    }
-  }
-
-  const startRewardsPoll = () => {
-    stopRewardsPoll()
-    rewardsPollInterval = setInterval(async () => {
-      await fetchUserRewards()
-      const _rewards = rewards.value.slice(0, 2)
-      if (_rewards.length === 0) return
-      _rewards.forEach(r => {
-        if (
-          todaysRewardSwap.value == null &&
-          r.swapType === 'SWAP' &&
-          isRewardEarnedDuringCampaign(r)
-        ) {
-          todaysRewardSwap.value = r
-          analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
-            type: 'swap',
-          })
-          wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-            useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-          })
-        } else if (
-          todayTradeReward.value == null &&
-          r.swapType === 'TRADE' &&
-          isRewardEarnedDuringCampaign(r)
-        ) {
-          todayTradeReward.value = r
-          analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
-            type: 'trade',
-          })
-          wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-            useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-          })
-        }
-      })
-
-      if (todayTradeReward.value && todaysRewardSwap.value) {
-        analytics.setUserProperties({ canClaimRewards: false })
-        stopRewardsPoll()
+  const checkRewards = () => {
+    const _rewards = rewards.value.slice(0, 2)
+    if (_rewards.length === 0) return
+    _rewards.forEach(r => {
+      if (
+        r.swapType === 'SWAP' &&
+        isRewardEarnedDuringCampaign(r)
+      ) {
+        analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
+          type: 'swap',
+        })
+      } else if (
+        r.swapType === 'TRADE' &&
+        isRewardEarnedDuringCampaign(r)
+      ) {
+        analytics.trackRewardsEvent(RewardsEvent.REWARD_EARNED, {
+          type: 'trade',
+        })
       }
-    }, 5000)
+    })
+
+    if (tradeClaimed.value && swapClaimed.value) {
+      analytics.setUserProperties({ canClaimRewards: false })
+    }
   }
 
   watch(
     () => isEligible.value,
     eligible => {
-      if (eligible) {
-        // Check immediately if we already have today's reward
-        startRewardsPoll()
-      } else {
-        stopRewardsPoll()
+      if (!eligible) {
+        //   // Check immediately if we already have today's reward
+        //   startRewardsPoll()
+        // } else {
+        //   stopRewardsPoll()
         setEarnedPotentialReward(false)
       }
     },
+    { immediate: true }
   )
 
   const fetchAll = async () => {
@@ -445,5 +423,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     hadInitialLoad,
     isRewardEarnedDuringCampaign,
     isBanned,
+    checkRewards
   }
 })

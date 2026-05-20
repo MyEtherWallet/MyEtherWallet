@@ -38,6 +38,7 @@
               </app-btn-text>
             </div>
             <div
+              data-private
               class="grow rounded-20 lg:rounded-32 text-s-17 rounded-24 p-6 sm:p-8 flex justify-center bg-appBackground/50"
             >
               <div
