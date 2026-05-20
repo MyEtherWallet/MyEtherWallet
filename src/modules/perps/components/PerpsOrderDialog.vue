@@ -37,10 +37,17 @@
             :key="row.label"
             class="flex items-center justify-between px-5 py-4"
           >
-            <span
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
-              >{{ row.label }}</span
-            >
+            <div class="flex items-center gap-1">
+              <span
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                >{{ row.label }}</span
+              >
+              <app-tooltip
+                v-if="row.tooltip"
+                :text="row.tooltip"
+                position="top-right"
+              />
+            </div>
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
               {{ row.value }}
             </span>
@@ -70,6 +77,7 @@ import { computed } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
 import {
   formatUsd,
@@ -118,8 +126,15 @@ const isCancellable = computed(() =>
   ['pending', 'untriggered', 'open'].includes(props.order.status),
 )
 
+type Row = {
+  label: string
+  value: string
+  colorClass?: string
+  tooltip?: string
+}
+
 const rows = computed(() => {
-  const items = [
+  const items: Row[] = [
     {
       label: 'Market',
       value: base.value,
@@ -173,6 +188,8 @@ const rows = computed(() => {
     items.push({
       label: 'Time in Force',
       value: props.order.timeInForce,
+      tooltip:
+        'The order remains active until the order is completely filled or you manually cancel it.',
     })
   }
 
