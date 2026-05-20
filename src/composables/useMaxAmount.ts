@@ -12,6 +12,7 @@ export interface UseMaxAmountOptions {
   isTokenSelected: () => boolean
   amountRef: Ref<string | number>
   isPristineRef: Ref<boolean>
+  getTokenIdentifier: () => string | undefined
   getDependencies: () => unknown[]
   onMaxApplied?: () => void
 }
@@ -29,6 +30,7 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
     isTokenSelected,
     amountRef,
     isPristineRef,
+    getTokenIdentifier,
     getDependencies,
     onMaxApplied,
   } = options
@@ -38,6 +40,8 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
 
   const isMaxSelected = ref(false)
   const isApplyingMaxAmount = ref(false)
+  const preMaxAmount = ref<string | number>('')
+  const isFreshMaxClick = ref(false)
 
   const isInternalWallet = (): boolean => {
     const walletType = wallet.value?.getWalletType()
@@ -61,11 +65,21 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   const applyMaxAmount = async (): Promise<void> => {
     if (!isTokenSelected()) return
 
+    const isFresh = isFreshMaxClick.value
+    isFreshMaxClick.value = false
+
     isApplyingMaxAmount.value = true
     try {
       const maxAmount = getMaxAmount()
+      const currentAmount = String(amountRef.value)
 
-      if (String(amountRef.value) !== maxAmount) {
+      // On automatic recalculations (fee/balance changed), don't zero out a positive
+      // amount the user set — fee validation surfaces the insufficient-gas error.
+      // On an explicit Max click (isFresh), always apply regardless.
+      const shouldUpdate =
+        isFresh || maxAmount !== '0' || currentAmount === '' || currentAmount === '0'
+
+      if (shouldUpdate && currentAmount !== maxAmount) {
         amountRef.value = maxAmount
       }
 
@@ -77,19 +91,44 @@ export function useMaxAmount(options: UseMaxAmountOptions) {
   }
 
   const setMaxAmount = (): void => {
+    // Max can only be activated once. Subsequent clicks are no-ops until the
+    // user modifies the amount (which deactivates max via the amount watcher).
+    if (isMaxSelected.value) return
+
     isPristineRef.value = false
-
-    if (isMaxSelected.value) {
-      void applyMaxAmount()
-      return
-    }
-
+    isFreshMaxClick.value = true
+    preMaxAmount.value = amountRef.value
     isMaxSelected.value = true
   }
 
   const resetMaxState = (): void => {
     isMaxSelected.value = false
+    isFreshMaxClick.value = false
+    preMaxAmount.value = ''
   }
+
+  // When the user switches tokens after clicking Max, restore the amount that
+  // was in the input before Max was applied (empty if they never typed) and
+  // clear the Max selection so it doesn't auto-apply for the new token.
+  // Registered before the apply-max watch so it fires first.
+  watch(
+    () => getTokenIdentifier(),
+    (newToken, oldToken) => {
+      if (newToken !== oldToken && isMaxSelected.value) {
+        isMaxSelected.value = false
+        amountRef.value = preMaxAmount.value
+        // If nothing was typed before max, go back to pristine so no validation error shows
+        if (
+          preMaxAmount.value === '' ||
+          preMaxAmount.value === 0 ||
+          preMaxAmount.value === '0'
+        ) {
+          isPristineRef.value = true
+        }
+        preMaxAmount.value = ''
+      }
+    },
+  )
 
   watch(
     () => amountRef.value,

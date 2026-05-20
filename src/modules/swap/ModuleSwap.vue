@@ -52,7 +52,7 @@
                   <button
                     type="button"
                     class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
-                    @click="setMaxAmount"
+                    @click="handleMaxClick"
                   >
                     {{ $t('common.max') }}
                   </button>
@@ -629,19 +629,28 @@ const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxA
     return tokenParams.totalBalance
   },
   getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
-  getEstimatedFee: () => getSwapFee(),
+  getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
   isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
   isTokenSelected: () => !!fromTokenSelected.value,
   amountRef: fromAmount,
   isPristineRef: isPristine,
+  getTokenIdentifier: () => fromTokenSelected.value?.address,
   getDependencies: () => [
-    fromTokenSelected.value?.address,
     fromTokenSelected.value?.balance,
     swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
       swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
     selectedQuote.value?.additionalNativeFees?.toString(),
   ],
 })
+
+const handleMaxClick = (): void => {
+  if (isMaxSelected.value) return
+  // Discard any prior quote/fee so the new max is calculated against the full
+  // balance, not against a fee that was estimated for a smaller manual amount.
+  selectedQuote.value = undefined
+  swapGasFeeQuote.value = undefined
+  setMaxAmount()
+}
 
 const switchGlobalNetwork = (chain: Chain) => {
   globalStore.setSelectedNetwork(chain.name)
@@ -1518,6 +1527,7 @@ watch(
 watch(
   () => fromTokenSelected.value?.address,
   () => {
+    swapGasFeeQuote.value = undefined
     if (
       fromTokenSelected.value &&
       toTokenSelected.value &&

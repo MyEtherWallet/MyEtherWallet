@@ -31,7 +31,7 @@
           v-if="isLoading"
           class="h-5 flex bg-grey-10 rounded-full w-1/2"
         ></div>
-        <div v-else class="flex justify-between items-end gap-2">
+        <div v-else class="flex justify-between items-center gap-2">
           <div
             :class="[
               !!error && !isOpenSelectToken && !isPristine
@@ -44,7 +44,7 @@
           </div>
           <div
             v-if="isWalletConnected"
-            class="flex items-center gap-2 text-s-12 text-info font-medium whitespace-nowrap"
+            class="flex items-baseline gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
           >
             <div>
               {{ $t('common.balance') }}:

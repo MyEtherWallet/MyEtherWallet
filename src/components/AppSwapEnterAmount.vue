@@ -68,7 +68,7 @@
           v-if="isLoading"
           class="h-5 flex bg-grey-10 rounded-full w-1/2"
         ></div>
-        <div v-else class="flex justify-between items-start">
+        <div v-else class="flex justify-between items-center">
           <div
             class="text-sm"
             :class="[
@@ -81,10 +81,10 @@
           </div>
           <div
             v-if="showBalance && isFromView"
-            class="flex items-center gap-2 whitespace-nowrap"
+            class="flex items-baseline gap-2 whitespace-nowrap"
           >
             <div
-              class="text-s-12 text-info transition-colors"
+              class="text-s-12 leading-p-120 text-info transition-colors"
               :class="{
                 'text-primary':
                   (inFocusInput || isOpenSelectToken) &&

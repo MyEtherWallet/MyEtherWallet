@@ -267,8 +267,8 @@ const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxA
   isTokenSelected: () => !!tokenSelected.value,
   amountRef: amount,
   isPristineRef: isPristine,
+  getTokenIdentifier: () => tokenSelectedContract.value,
   getDependencies: () => [
-    tokenSelectedContract.value,
     tokenSelected.value?.balanceWei,
     selectedFeeNativeValue.value,
   ],
