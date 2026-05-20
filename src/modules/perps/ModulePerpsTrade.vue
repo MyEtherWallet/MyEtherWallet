@@ -387,6 +387,15 @@
                     : 'Insufficient margin available'
                 }}
               </div>
+              <div
+                v-else-if="
+                  Number(inputAmount || '0') > 0 &&
+                  positionSizeUsd < minOrderAmount
+                "
+                class="text-error text-s-12 mb-1"
+              >
+                Min. amount {{ formatUsd(minOrderAmount) }}
+              </div>
             </transition>
 
             <!-- Slider -->
@@ -822,6 +831,7 @@ const {
   leverage,
   sliderValue,
   positionSizeUsd,
+  minOrderAmount,
   estimatedLiquidation,
   orderSize,
   availableMargin,
@@ -937,10 +947,6 @@ const selectedToken = computed(() => ({
 }))
 
 const getMainBtnText = computed(() => {
-  if (!activePosition.value) {
-    const side = orderSide.value === 'buy' ? 'Long' : 'Short'
-    return `${side} ${displaySymbol.value}`
-  }
   if (manageMode.value === 'close') {
     return closeButtonLabel.value
   }

@@ -479,7 +479,7 @@ export function usePerpsTradeForm() {
     if (availableMargin.value * leverage.value < minOrderAmount.value) {
       return `Min. margin required ${formatUsd(minOrderAmount.value)}`
     }
-    if (positionSizeUsd.value < minOrderAmount.value) {
+    if (amt > 0 && positionSizeUsd.value < minOrderAmount.value) {
       return `Min. amount ${formatUsd(minOrderAmount.value)}`
     }
     if (amt > availableMargin.value) {
@@ -1102,6 +1102,7 @@ export function usePerpsTradeForm() {
     leverage,
     sliderValue,
     positionSizeUsd,
+    minOrderAmount,
     estimatedLiquidation,
     orderSize,
     availableMargin,
