@@ -47,6 +47,8 @@
       {{ t('purchase.buy.need_help') }}
     </a>
 
+    <purchase-footer class="pt-2" />
+
     <purchase-token-modal
       v-model:is-open="showTokenModal"
       :networks="buyNetworks"
@@ -60,7 +62,7 @@
       :selected="selectedFiat"
       @update:selected="selectedFiat = $event"
     />
-    <purchase-provider-modal
+    <buy-provider-modal
       v-model:is-open="showProviderModal"
       :quotes="buyQuotes"
       :fiat-amount="fiatAmount"
@@ -82,7 +84,8 @@ import PurchaseTokenSelectCard from './components/PurchaseTokenSelectCard.vue'
 import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
-import PurchaseProviderModal from './components/PurchaseProviderModal.vue'
+import BuyProviderModal from './components/BuyProviderModal.vue'
+import PurchaseFooter from './components/PurchaseFooter.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'

@@ -279,6 +279,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const clearSellQuote = () => {
     sellQuote.value = null
     sellQuoteError.value = ''
+    isFetchingSellQuote.value = false
   }
 
   const isBuyable = (coinId: string | undefined): boolean => {
