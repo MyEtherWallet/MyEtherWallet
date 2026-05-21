@@ -57,7 +57,7 @@
       :width="130"
       :height="130"
       :class="isOpenSideMenu ? 'min-[1440px]:hidden block' : ''"
-      class="absolute bottom-0 right-4 object-contain pointer-events-none opacity-90 max-[1350px]:w-[120px]!"
+      class="absolute bottom-0 right-4 object-contain pointer-events-none opacity-90 max-[1350px]:w-[120px]! hidden min-[500px]:block"
     />
   </div>
 </template>
