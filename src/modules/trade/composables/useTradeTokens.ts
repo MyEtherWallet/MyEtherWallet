@@ -5,6 +5,7 @@ import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
 } from '@/mew_api/types'
+import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 
 // Individual asset type from the response arrays
@@ -18,6 +19,7 @@ interface UseTradeTokensOptions {
   toTokenSelected: Ref<NewTokenInfo | null>
   tradableAssets: Ref<GetWebSwapOndoAssetsResponse | null>
   additionalBuyAssets: Ref<GetWebSwapOndoSupportingAssetsResponse | null>
+  hardcodedTokensInfo: Ref<HardcodedTokenInfo[]>
 }
 
 export function useTradeTokens(options: UseTradeTokensOptions) {
@@ -28,6 +30,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
+    hardcodedTokensInfo,
   } = options
 
   // Check if selected from token is a tradable asset (stock token)
@@ -119,6 +122,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       tradableAssets.value,
       chainName,
       fromTokensMap,
+      hardcodedTokensInfo.value,
     )
 
     // If selling a tradable asset, add additional buy assets
@@ -164,8 +168,9 @@ function mapTradableAssetsToTokens(
   assets: TradableAsset[],
   chainName: string,
   fromTokensMap: Map<string, NewTokenInfo>,
+  hardcodedTokensInfo: HardcodedTokenInfo[],
 ): NewTokenInfo[] {
-  return assets
+  const mappedAssets = assets
     .filter(asset =>
       asset.addresses.some(addr => addr.chainName?.toUpperCase() === chainName),
     )
@@ -199,6 +204,39 @@ function mapTradableAssetsToTokens(
         },
       }
     }) as unknown as NewTokenInfo[]
+
+  if (
+    chainName.toUpperCase() === 'ETHEREUM' &&
+    hardcodedTokensInfo.length > 0
+  ) {
+    const existingAddresses = new Set(
+      mappedAssets.map(t => (t as NewTokenInfo).address?.toLowerCase()),
+    )
+    const hardcodedTokens = hardcodedTokensInfo
+      .filter(t => !existingAddresses.has(t.address.toLowerCase()))
+      .map(t => {
+        const matchingFromToken = fromTokensMap.get(t.address.toLowerCase())
+        return {
+          name: t.name,
+          symbol: t.symbol,
+          decimals: t.decimals,
+          address: t.address,
+          logoURI: t.logoURI,
+          cgId: t.cgId,
+          type: 'erc20',
+          rank: matchingFromToken?.rank || 0,
+          balance: matchingFromToken?.balance || '0',
+          price: t.price,
+          networkInfo: {
+            name: 'ETHEREUM',
+            isAddress: t.address,
+          },
+        }
+      }) as unknown as NewTokenInfo[]
+    return [...mappedAssets, ...hardcodedTokens]
+  }
+
+  return mappedAssets
 }
 
 // Helper to map supporting assets to token format

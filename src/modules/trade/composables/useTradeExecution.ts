@@ -195,7 +195,7 @@ export function useTradeExecution(options: UseTradeExecutionOptions) {
       let canEarnReward: undefined | boolean = undefined
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
-      if (fromUsdValue > 25) {
+      if (fromUsdValue > 50) {
         const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
         canEarnReward = canEarn ? true : undefined
       }

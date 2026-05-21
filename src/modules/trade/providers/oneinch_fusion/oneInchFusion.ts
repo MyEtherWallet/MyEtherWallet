@@ -32,12 +32,46 @@ import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
+  GetWebTokenInfo,
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+export type HardcodedTokenInfo = {
+  address: string
+  cgId: string
+  name: string
+  symbol: string
+  decimals: number
+  logoURI: string
+  price: number
+}
+
+const HARDCODED_ETH_TOKENS: Array<{ address: string; cgId: string }> = [
+  {
+    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    cgId: 'weth',
+  },
+  {
+    address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+    cgId: 'wrapped-bitcoin',
+  },
+  {
+    address: '0x514910771AF9Ca656af840dff83E8264EcF986CA',
+    cgId: 'chainlink',
+  },
+  {
+    address: '0x455e53CBB86018Ac2B8092FdCd39d8444aFFC3F6',
+    cgId: 'polygon-ecosystem-token',
+  },
+  {
+    address: '0x56072C95FAA701256059aa122697B133aDEd9279',
+    cgId: 'sky',
+  },
+]
+
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
   return {
@@ -72,6 +106,34 @@ class OneInchFusion {
     return fetch(getAPIPath(`/v1/web/swap/ondo/supporting-assets`)).then(
       res => res.json() as Promise<GetWebSwapOndoSupportingAssetsResponse>,
     )
+  }
+
+  public static async getHardcodedTokensInfo(): Promise<HardcodedTokenInfo[]> {
+    const results = await Promise.all(
+      HARDCODED_ETH_TOKENS.map(async token => {
+        const res = await fetch(
+          getAPIPath(`/v1/web/pages/token-info/coins/${token.cgId}`),
+        )
+        const data = (await res.json()) as GetWebTokenInfo
+        const ethChain = data.chainBalances.find(
+          c => c.chainName === 'ETHEREUM',
+        )
+        const decimals =
+          ethChain?.result.ok && ethChain.result.value.decimals != null
+            ? ethChain.result.value.decimals
+            : 18
+        return {
+          address: token.address,
+          cgId: token.cgId,
+          name: data.name,
+          symbol: data.symbol.toUpperCase(),
+          decimals,
+          logoURI: data.iconUrl ?? '',
+          price: data.currentPrice ?? 0,
+        }
+      }),
+    )
+    return results
   }
 
   constructor(wallet: BaseEvmWallet, chainId: number) {
