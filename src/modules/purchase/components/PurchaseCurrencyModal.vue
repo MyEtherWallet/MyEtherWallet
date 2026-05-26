@@ -4,18 +4,27 @@
     class="w-[calc(100vw-40px)] sm:w-full sm:max-w-[480px] sm:mx-auto h-[calc(100dvh-40px)] sm:h-[calc(100dvh-312px)] rounded-20! sm:rounded-32!"
   >
     <template #content>
-      <div class="flex flex-col gap-8 h-full p-5 sm:p-8">
-        <h2
-          id="dialogTitle"
-          class="text-s-28 font-bold leading-[32px] tracking-[-0.84px] pr-12 flex-none"
+      <div class="flex flex-col gap-8 h-full pt-5 px-5 sm:pt-8 sm:px-8">
+        <div class="flex flex-col gap-1 pr-12 flex-none">
+          <h2
+            id="dialogTitle"
+            class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
+          >
+            {{ $t('purchase.select_currency.title') }}
+          </h2>
+          <p class="text-s-16 text-info leading-[22px]">
+            {{ $t('purchase.select_currency.subtitle') }}
+          </p>
+        </div>
+        <div
+          class="flex items-center gap-2.5 h-12 px-3 bg-white border-4 border-grey-10 rounded-24 flex-none"
         >
-          {{ $t('purchase.select_currency.title') }}
-        </h2>
-        <div class="bg-bgBase rounded-full flex-none">
-          <app-search-input
+          <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
+          <input
             v-model="searchInput"
+            type="text"
             :placeholder="$t('purchase.select_currency.search_placeholder')"
-            bg-class="bg-transparent"
+            class="flex-1 min-w-0 bg-transparent outline-none border-none p-0 text-s-15 text-black placeholder:text-info"
           />
         </div>
         <ul role="listbox" class="flex flex-col flex-1 overflow-y-auto">
@@ -24,7 +33,7 @@
               type="button"
               :class="[
                 currency === selected ? '!bg-mewBg' : '',
-                'flex items-center w-full gap-3 px-3 py-3 rounded-12 hoverBGWhite transition-colors text-left',
+                'flex items-center w-full gap-3 py-3 rounded-12 hoverBGWhite transition-colors text-left',
               ]"
               @click="onSelect(currency)"
             >
@@ -60,8 +69,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 
 const props = defineProps<{

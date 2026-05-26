@@ -19,7 +19,7 @@
     </div>
 
     <div
-      class="flex items-center gap-2.5 h-12 px-3 bg-white rounded-24 border border-grey-10 flex-none"
+      class="flex items-center gap-2.5 h-12 px-3 bg-white border-4 border-grey-10 rounded-24 flex-none"
     >
       <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
       <input
@@ -30,18 +30,18 @@
       />
     </div>
 
-    <ul role="listbox" class="flex-1 overflow-y-auto -mx-2 px-2">
+    <ul role="listbox" class="flex-1 overflow-y-auto">
       <li>
         <button
           type="button"
-          class="flex items-center w-full gap-3 px-2 py-2 rounded-12 hoverBGWhite transition-colors text-left"
+          class="flex items-center w-full gap-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
           @click="emit('select-network', null)"
         >
           <div
             class="w-10 h-10 flex-none rounded-full bg-bgBase"
             aria-hidden="true"
           />
-          <span class="text-s-15 font-bold text-black flex-1">
+          <span class="text-s-16 font-semibold text-black flex-1">
             {{ $t('purchase.select_token.filter_all_networks') }}
           </span>
           <check-circle-icon
@@ -53,7 +53,7 @@
       <li v-for="network in filteredNetworks" :key="network.chain">
         <button
           type="button"
-          class="flex items-center w-full gap-3 px-2 py-2 rounded-12 hoverBGWhite transition-colors text-left"
+          class="flex items-center w-full gap-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
           @click="emit('select-network', network.chain)"
         >
           <app-token-logo
@@ -62,7 +62,7 @@
             width="w-10"
             height="h-10"
           />
-          <span class="text-s-15 font-bold text-black flex-1 truncate">
+          <span class="text-s-16 font-semibold text-black flex-1 truncate">
             {{ network.name }}
           </span>
           <check-circle-icon

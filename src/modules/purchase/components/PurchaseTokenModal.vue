@@ -18,7 +18,7 @@
         >
           <div
             :inert="view !== 'tokens'"
-            class="flex-none h-full p-5 sm:p-8"
+            class="flex-none h-full pt-5 px-5 sm:pt-8 sm:px-8"
             :style="{
               width: `calc(50% - ${GAP / 2}px)`,
               opacity: view === 'tokens' ? 1 : 0,
@@ -43,7 +43,7 @@
 
           <div
             :inert="view !== 'networks'"
-            class="flex-none h-full p-5 sm:p-8"
+            class="flex-none h-full pt-5 px-5 sm:pt-8 sm:px-8"
             :style="{
               width: `calc(50% - ${GAP / 2}px)`,
               opacity: view === 'networks' ? 1 : 0,

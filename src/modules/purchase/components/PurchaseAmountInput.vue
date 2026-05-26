@@ -1,8 +1,8 @@
 <template>
   <div
     :class="[
-      isFocused ? 'bg-white border border-grey-10' : 'bg-bgBase',
-      'rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
+      isFocused ? 'bg-white border-grey-10' : 'bg-bgBase border-transparent',
+      'border rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
     ]"
   >
     <!-- Header -->
@@ -111,13 +111,13 @@
         :class="[
           isFocused ? 'bg-bgBase' : 'bg-white',
           selectedPreset === preset
-            ? 'border-2 border-black'
-            : 'border-2 border-transparent',
+            ? 'outline-2 outline-black -outline-offset-2'
+            : '',
           'flex-1 min-w-0 flex items-center justify-center px-3 py-2 rounded-8 hoverNoBG transition-colors',
         ]"
         @click="onSelectPreset(preset)"
       >
-        <span class="text-s-11 font-bold tracking-sp-06 uppercase">
+        <span class="text-s-11 leading-[15px] font-bold tracking-sp-06 uppercase">
           {{ currencySymbol }}{{ preset }}
         </span>
       </button>
@@ -273,4 +273,3 @@ onMounted(() => {
   if (props.autofocus) focus()
 })
 </script>
-

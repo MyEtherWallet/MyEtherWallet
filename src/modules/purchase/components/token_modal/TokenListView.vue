@@ -38,11 +38,11 @@
       </button>
     </div>
 
-    <ul role="listbox" class="flex-1 overflow-y-auto -mx-2 px-2">
+    <ul role="listbox" class="flex-1 overflow-y-auto">
       <li v-for="entry in filteredEntries" :key="entry.key">
         <button
           type="button"
-          class="flex items-center w-full gap-3 px-2 py-2 rounded-12 hoverBGWhite transition-colors text-left"
+          class="flex items-center w-full gap-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
           @click="emit('select-token', entry.token)"
         >
           <div class="relative w-10 h-10 flex-none">
@@ -64,7 +64,7 @@
             </span>
           </div>
           <div class="min-w-0 flex-1 flex flex-col">
-            <p class="text-s-15 font-bold text-black truncate">
+            <p class="text-s-16 font-semibold text-black truncate">
               {{ entry.token.symbol }}
             </p>
             <p class="text-s-12 text-info truncate">

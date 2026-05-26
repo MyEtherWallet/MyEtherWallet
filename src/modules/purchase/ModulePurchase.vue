@@ -1,25 +1,25 @@
 <template>
   <div class="flex flex-col h-full min-h-[640px]">
     <!-- Topbar -->
-    <div
-      class="flex items-center gap-4 pb-2 border-b border-grey-10 px-3 -mx-3"
-    >
-      <button
-        v-for="tab in tabs"
-        :key="tab.value"
-        type="button"
-        :class="[
-          'px-1 pb-2 border-b-2 transition-colors',
-          currentTab === tab.value
-            ? 'border-black text-black'
-            : 'border-transparent text-grey-30',
-        ]"
-        @click="currentTab = tab.value"
-      >
-        <span class="text-s-24 font-bold leading-[26px] tracking-[-0.48px]">
-          {{ tab.label }}
-        </span>
-      </button>
+    <div class="border-b border-grey-10 -mx-4">
+      <div class="flex items-center gap-4 px-4 -mb-px">
+        <button
+          v-for="tab in tabs"
+          :key="tab.value"
+          type="button"
+          :class="[
+            'px-1 pb-2 border-b-2 transition-colors',
+            currentTab === tab.value
+              ? 'border-black text-black'
+              : 'border-transparent text-grey-30',
+          ]"
+          @click="currentTab = tab.value"
+        >
+          <span class="text-s-24 font-bold leading-[26px] tracking-[-0.48px]">
+            {{ tab.label }}
+          </span>
+        </button>
+      </div>
     </div>
 
     <!-- Tab content -->

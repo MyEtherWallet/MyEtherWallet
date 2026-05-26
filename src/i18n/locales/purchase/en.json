@@ -44,6 +44,7 @@
     },
     "select_currency": {
       "title": "Currency",
+      "subtitle": "Select a currency from the list",
       "search_placeholder": "Search",
       "no_results": "No currencies match"
     },

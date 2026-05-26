@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="bg-bgBase hoverNoBG transition-colors w-full flex items-center gap-2 p-4 rounded-20"
+    class="bg-bgBase border border-bgBase hover:border-grey-10 transition-colors w-full flex items-center gap-2 p-4 rounded-20"
     @click="emit('click')"
   >
     <div class="relative w-10 h-10 flex-none">

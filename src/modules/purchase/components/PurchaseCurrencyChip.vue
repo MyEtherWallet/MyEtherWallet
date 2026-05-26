@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="flex items-center gap-1.5 hoverNoBG rounded-full -mr-2 pl-1 pr-2 py-1"
+    class="flex items-center gap-1.5 text-black hover:text-info transition-colors duration-300 -mr-2 pl-1 pr-2 py-1"
     @click="emit('click')"
   >
     <img
@@ -15,7 +15,7 @@
     <span class="text-s-11 font-bold tracking-sp-06 uppercase">
       {{ currency }}
     </span>
-    <chevron-right-icon class="w-[15px] h-[15px] text-black flex-none" />
+    <chevron-right-icon class="w-[15px] h-[15px] flex-none" />
   </button>
 </template>
 
