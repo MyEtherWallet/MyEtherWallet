@@ -821,6 +821,7 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :max-leverage="localMaxLeverage"
       mode="submit"
       @save="saveLeverage"
     />
@@ -876,6 +877,7 @@ import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 
 const localLeverage = ref(1)
+const localMaxLeverage = ref(20)
 const leverageError = ref('')
 const isSavingLeverage = ref(false)
 const fullMarketName = ref('')
@@ -898,9 +900,15 @@ const saveLeverage = async () => {
 const displaySymbol = computed(() => fullMarketName.value.split('-')[0])
 
 const openLeverage = (pos: Position) => {
-  showLeverageModal.value = true
-  localLeverage.value = Number(pos.leverage) // temp
+  const pair = markets.value.find(m => m.market === pos.market)
+  const parsedMax = parseInt(pair?.defaultLeverage ?? '')
+  const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
+  localMaxLeverage.value = maxLev
+  const parsedPos = Number(pos.leverage)
+  const initial = Number.isFinite(parsedPos) && parsedPos > 0 ? parsedPos : maxLev
+  localLeverage.value = Math.min(initial, maxLev)
   fullMarketName.value = pos.market
+  showLeverageModal.value = true
 }
 
 watch(
@@ -908,6 +916,7 @@ watch(
   val => {
     if (!val) {
       localLeverage.value = 1
+      localMaxLeverage.value = 20
       leverageError.value = ''
       isSavingLeverage.value = false
       fullMarketName.value = ''
