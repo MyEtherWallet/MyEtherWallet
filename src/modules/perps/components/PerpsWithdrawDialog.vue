@@ -89,11 +89,20 @@
           </div>
         </transition>
         <app-base-button
+          v-if="isAddressAuthorized"
           :disabled="sending || !isValidAmount"
           :is-loading="sending"
           class="w-full"
           @click="submitWithdraw"
           >Withdraw</app-base-button
+        >
+        <app-base-button
+          v-else
+          :disabled="authorizing || addressBookLoading"
+          :is-loading="authorizing"
+          class="w-full"
+          @click="submitAuthorize"
+          >Authorize Withdrawals</app-base-button
         >
       </div>
     </template>
@@ -142,6 +151,9 @@ const amountError = ref('')
 const hasOpenPositions = computed(() => positions.value.length > 0)
 
 const sending = ref(false)
+const authorizing = ref(false)
+const addressBookLoading = ref(false)
+const isAddressAuthorized = ref(false)
 const error = ref<string | null>(null)
 const walletAddress = ref<string | null>(null)
 const DEFAULT_WITHDRAWAL_FEE_USD = '1'
@@ -179,6 +191,32 @@ const setMax = () => {
   validateAmount()
 }
 
+async function refreshAddressBookStatus() {
+  if (!walletAddress.value) {
+    isAddressAuthorized.value = false
+    return
+  }
+  addressBookLoading.value = true
+  try {
+    const bookRes = await perpsClient.getAddressBook()
+    isAddressAuthorized.value = bookRes.result.addressBook.some(
+      entry =>
+        entry.withdrawalAddress.toLowerCase() ===
+        walletAddress.value!.toLowerCase(),
+    )
+  } catch (e) {
+    isAddressAuthorized.value = false
+    captureException(e, {
+      ...SENTRY_MODULE_TAGS.PERPS,
+      extra: {
+        title: 'PERPS: Error fetching address book',
+      },
+    })
+  } finally {
+    addressBookLoading.value = false
+  }
+}
+
 watch(
   () => props.visible,
   async visible => {
@@ -186,9 +224,11 @@ watch(
     amount.value = null
     amountError.value = ''
     error.value = null
+    isAddressAuthorized.value = false
     if (wallet.value) {
       walletAddress.value = await wallet.value.getAddress()
     }
+    await refreshAddressBookStatus()
     try {
       const accountRes = await perpsClient.getAccount()
       withdrawalFeeUSD.value =
@@ -205,35 +245,39 @@ watch(
   },
 )
 
+async function submitAuthorize() {
+  if (!walletAddress.value || !wallet.value) return
+  authorizing.value = true
+  error.value = null
+  try {
+    const challenge = await perpsClient.getAddressBookChallenge({
+      walletAddress: walletAddress.value,
+      chainId: '1',
+      withdrawalAddress: walletAddress.value,
+    })
+    const signature = await wallet.value.SignMessage({
+      message: challenge.result.message,
+    })
+    await perpsClient.completeAddressBookChallenge({
+      id: challenge.result.id,
+      signature,
+      addressLabel: 'wallet',
+    })
+    perpsToasts.toastWithdrawalAddressAdded(walletAddress.value)
+    emit('close')
+  } catch (e) {
+    error.value =
+      e instanceof Error ? e.message : 'Failed to authorize withdrawal address'
+  } finally {
+    authorizing.value = false
+  }
+}
+
 async function submitWithdraw() {
   if (!isValidAmount.value || !walletAddress.value || !accountId.value) return
   sending.value = true
   error.value = null
   try {
-    // Check address book
-    const bookRes = await perpsClient.getAddressBook()
-    const found = bookRes.result.addressBook.some(
-      entry =>
-        entry.withdrawalAddress.toLowerCase() ===
-        walletAddress.value!.toLowerCase(),
-    )
-    if (!found && wallet.value) {
-      // Add to address book
-      const challenge = await perpsClient.getAddressBookChallenge({
-        walletAddress: walletAddress.value,
-        chainId: '1',
-        withdrawalAddress: walletAddress.value,
-      })
-      const signature = await wallet.value.SignMessage({
-        message: challenge.result.message,
-      })
-      await perpsClient.completeAddressBookChallenge({
-        id: challenge.result.id,
-        signature,
-        addressLabel: 'wallet',
-      })
-    }
-    // Execute withdrawal
     await perpsClient.withdraw({
       customer_withdrawal_id: `withdraw-${Date.now()}`,
       symbol: 'USDC',
