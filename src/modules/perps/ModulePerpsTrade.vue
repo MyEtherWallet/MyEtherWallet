@@ -713,6 +713,7 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :max-leverage="marketMaxLeverage"
       :mode="manageMode === 'add' ? 'add' : 'create'"
       @save="manageMode === 'add' ? closeLeverageModal() : saveLeverage()"
     />
@@ -922,6 +923,7 @@ const {
   openLeverageModal,
   saveLeverage,
   closeLeverageModal,
+  marketMaxLeverage,
 } = usePerpsTradeForm()
 
 const localLeverage = ref(leverage.value)

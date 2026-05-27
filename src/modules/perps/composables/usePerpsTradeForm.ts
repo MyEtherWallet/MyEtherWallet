@@ -125,6 +125,12 @@ export function usePerpsTradeForm() {
     return match?.market || activeMarket.value
   })
 
+  const marketMaxLeverage = computed(() => {
+    const match = markets.value.find(m => m.market === fullMarketName.value)
+    const parsed = parseInt(match?.defaultLeverage ?? '')
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+  })
+
   const activePosition = computed(
     () => positions.value.find(p => p.market === fullMarketName.value) || null,
   )
@@ -662,7 +668,7 @@ export function usePerpsTradeForm() {
 
   // ── Leverage modal ─────────────────────────────────────────
   function openLeverageModal() {
-    tempLeverage.value = leverage.value
+    tempLeverage.value = Math.min(leverage.value, marketMaxLeverage.value)
     leverageError.value = ''
     showLeverageModal.value = true
   }
@@ -700,7 +706,8 @@ export function usePerpsTradeForm() {
       const res = await perpsClient.getLeverage(fullMarketName.value)
 
       if (res.success && res.result?.length) {
-        leverage.value = parseInt(res.result[0].leverage) || 20
+        const parsed = parseInt(res.result[0].leverage) || marketMaxLeverage.value
+        leverage.value = Math.min(parsed, marketMaxLeverage.value)
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)
@@ -1033,8 +1040,22 @@ export function usePerpsTradeForm() {
       closeError.value = ''
       takeProfitPrice.value = null
       stopLossPrice.value = null
+      // Seed leverage from the market's per-token max before the saved
+      // leverage resolves, so callsites reading the singleton (sidepanel /
+      // order modal) don't show a stale value from the previous market or
+      // the default 20 on a market capped lower.
+      leverage.value = Math.min(leverage.value, marketMaxLeverage.value)
       fetchLeverage()
       fetchMaxOrderSize()
+    },
+  )
+
+  // When markets list arrives, clamp the singleton to the active market's
+  // per-token max so the default 20 doesn't exceed a 10x-capped market.
+  watch(
+    () => marketMaxLeverage.value,
+    max => {
+      if (leverage.value > max) leverage.value = max
     },
   )
 
@@ -1198,5 +1219,6 @@ export function usePerpsTradeForm() {
     openLeverageModal,
     closeLeverageModal,
     saveLeverage,
+    marketMaxLeverage,
   }
 }
