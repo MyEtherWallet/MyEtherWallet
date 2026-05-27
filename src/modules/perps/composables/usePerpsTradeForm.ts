@@ -195,6 +195,12 @@ export function usePerpsTradeForm() {
     return floored.toFixed(decimals)
   }
 
+  function ceilToIncrement(value: number, increment: number): string {
+    const ceiled = Math.ceil(value / increment) * increment
+    const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
+    return ceiled.toFixed(decimals)
+  }
+
   const activeMarketIncrement = computed(() => {
     const market = markets.value.find(m => m.market === fullMarketName.value)
     return parseFloat(market?.baseIncrement || '0.0001')
@@ -566,7 +572,15 @@ export function usePerpsTradeForm() {
     if (!currentPrice.value) return
     activeLimitPill.value = pct
     const price = currentPrice.value * (1 + pct / 100)
-    limitPrice.value = formatQuotePrice(price)
+    // Round toward currentPrice so the snapped value stays inside the
+    // backend's +/-10% tolerance band: floor for non-negative pct, ceil for
+    // negative pct. Flooring a -10% raw value lands just outside the band on
+    // markets with non-trivial quoteIncrement.
+    const increment = activeMarketQuoteIncrement.value
+    limitPrice.value =
+      pct < 0
+        ? ceilToIncrement(price, increment)
+        : floorToIncrement(price, increment)
   }
 
   // ── Market selector ────────────────────────────────────────
