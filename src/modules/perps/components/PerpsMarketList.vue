@@ -447,6 +447,7 @@
                         <app-base-button
                           size="small"
                           class="min-w-[136px]"
+                          :disabled="isWatchOnly"
                           :theme="
                             getPosition(contract.market)!.direction === 'long'
                               ? 'success'
@@ -618,6 +619,11 @@ import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
 import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWatchOnly } = storeToRefs(walletStore)
 
 const emits = defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']

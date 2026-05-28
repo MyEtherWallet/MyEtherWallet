@@ -4,29 +4,83 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
+import { decrypt, encrypt } from '@/utils/crypto'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
 
-const savedToken = localStorage.getItem(STORAGE_KEY_TOKEN)
-const savedAccount = localStorage.getItem(STORAGE_KEY_ACCOUNT)
+function getStoredArray(key: string): string[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(key) ?? '[]')
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
 
-const token = ref<string | null>(savedToken)
-const accountId = ref<string | null>(savedAccount)
+const token = ref<string | null>(null)
+const accountId = ref<string | null>(null)
 const isAuthenticating = ref(false)
 const authError = ref<string | null>(null)
 const refreshKey = ref(0)
 
-if (savedToken) {
-  perpsClient.setToken(savedToken)
+let _authRestored = false
+let _currentAddress: string | null = null
+
+async function tryRestoreAuth(address: string) {
+  const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
+  const storedAccounts: string[] = getStoredArray(STORAGE_KEY_ACCOUNT)
+  for (let i = 0; i < storedTokens.length; i++) {
+    try {
+      const decryptedToken = await decrypt(storedTokens[i], address)
+      token.value = decryptedToken
+      perpsClient.setToken(decryptedToken)
+      _authRestored = true
+      try {
+        accountId.value = storedAccounts[i]
+          ? await decrypt(storedAccounts[i], address)
+          : null
+
+      } catch {
+        _authRestored = false
+        accountId.value = null
+      }
+      break
+    } catch {
+      _authRestored = false
+      // token belongs to a different address, try next
+    }
+  }
 }
 
-function clearAuth() {
+async function clearAuth() {
+  const store = useWalletStore()
+  const { wallet } = storeToRefs(store)
   token.value = null
   accountId.value = null
   perpsClient.setToken(null)
-  localStorage.removeItem(STORAGE_KEY_TOKEN)
-  localStorage.removeItem(STORAGE_KEY_ACCOUNT)
+
+  if (!wallet.value) return;
+  const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
+  const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+
+  const address = await wallet.value!.getAddress();
+  const results = await Promise.all(
+    storedTokens.map(async (eToken: string, i: number) => {
+      try {
+        await decrypt(eToken, address)
+        return null
+      } catch {
+        return { token: eToken, account: storedAccId[i] ?? null }
+      }
+    }),
+  )
+  const kept = results.filter(Boolean) as { token: string; account: string | null }[]
+  const filteredStoredTokens = kept.map(e => e.token)
+  const filteredStoredAccounts = kept.map(e => e.account)
+
+  localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(filteredStoredTokens))
+  localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(filteredStoredAccounts))
 }
 
 perpsClient.setOnUnauthorized(() => {
@@ -35,9 +89,26 @@ perpsClient.setOnUnauthorized(() => {
 
 export function usePerpsAuth() {
   const store = useWalletStore()
-  const { wallet, isWalletConnected } = storeToRefs(store)
+  const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
+
+  if (!_authRestored) {
+    watch(
+      walletAddress,
+      async address => {
+        if (!address || address === _currentAddress) return
+        _currentAddress = address
+        token.value = null
+        accountId.value = null
+        perpsClient.setToken(null)
+        await tryRestoreAuth(address)
+        if (token.value) refreshKey.value++
+      },
+      { immediate: true },
+    )
+  }
 
   async function login() {
+    if (_authRestored) return;
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
@@ -60,9 +131,19 @@ export function usePerpsAuth() {
       })
       token.value = complete.result.token
       accountId.value = complete.result.accountId
+
+
       perpsClient.setToken(token.value)
-      localStorage.setItem(STORAGE_KEY_TOKEN, token.value)
-      localStorage.setItem(STORAGE_KEY_ACCOUNT, accountId.value)
+
+      const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
+      const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
+      const encryptedToken = await encrypt(token.value, address)
+      const encryptedAcc = await encrypt(accountId.value, address)
+
+      storedTokens.push(encryptedToken)
+      storedAccId.push(encryptedAcc)
+      localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify(storedTokens))
+      localStorage.setItem(STORAGE_KEY_ACCOUNT, JSON.stringify(storedAccId))
 
       await perpsClient.acceptAgreement({
         termsVersion: 1,

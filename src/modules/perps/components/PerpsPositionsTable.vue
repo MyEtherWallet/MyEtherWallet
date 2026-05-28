@@ -230,6 +230,7 @@
                       <AppBaseButton
                         class="hidden lg:flex"
                         size="small"
+                        :disabled="isWatchOnly"
                         @click="toggleMenu"
                         :theme="pos.direction === 'long' ? 'success' : 'error'"
                       >
@@ -875,6 +876,11 @@ import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWatchOnly } = storeToRefs(walletStore)
 
 const localLeverage = ref(1)
 const localMaxLeverage = ref(20)
