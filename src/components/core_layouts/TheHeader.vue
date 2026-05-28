@@ -82,6 +82,8 @@
           </template>
         </app-select>
       </div>
+      <!-- GLOBAL SEARCH -->
+      <module-global-search class="ml-auto xl-min:ml-0" />
       <!-- RIGHT SIDE -->
       <div class="flex items-center justify-end gap-2 ml-auto">
         <!-- Create wallet button -->
@@ -130,6 +132,7 @@ import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
 import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
+import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
