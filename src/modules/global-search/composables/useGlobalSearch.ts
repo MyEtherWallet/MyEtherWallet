@@ -1,6 +1,6 @@
 // src/modules/global-search/composables/useGlobalSearch.ts
 import { ref, computed, watch } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
+import { refDebounced } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
@@ -14,7 +14,6 @@ import type { SearchResultItem, SectionKey } from '../types'
 // Module-level singleton state
 const isOpen = ref(false)
 const query = ref('')
-const debouncedQuery = ref('')
 
 const stocks = ref<SearchResultItem[]>([])
 const crypto = ref<SearchResultItem[]>([])
@@ -29,11 +28,8 @@ const expanded = {
 const DEBOUNCE_MS = 300
 const PER_PAGE = 20
 
-const updateDebouncedQuery = useDebounceFn((q: string) => {
-  debouncedQuery.value = q
-}, DEBOUNCE_MS)
-
-watch(query, q => updateDebouncedQuery(q))
+// Tied to query's lifecycle; settles to query's current value after the delay.
+const debouncedQuery = refDebounced(query, DEBOUNCE_MS)
 
 const stocksUrl = computed(() => {
   const url = new URL(`${Configs.MEW_API_URL}/v1/web/pages/stocks/table`)
@@ -59,17 +55,20 @@ const cryptoUrl = computed(() => {
 const { useMEWFetch: useStocksFetch } = useFetchMewApi(0, true)
 const { useMEWFetch: useCryptoFetch } = useFetchMewApi(0, true)
 
+// No `immediate: true` — fetches only fire when the popover is opened.
 const {
   data: rawStocks,
   isFetching: isFetchingStocks,
-} = useStocksFetch(stocksUrl, { refetch: true, immediate: true })
+  execute: executeStocksFetch,
+} = useStocksFetch(stocksUrl, { refetch: true, immediate: false })
   .get()
   .json<GetWebStocksTableResponse>()
 
 const {
   data: rawCrypto,
   isFetching: isFetchingCrypto,
-} = useCryptoFetch(cryptoUrl, { refetch: true, immediate: true })
+  execute: executeCryptoFetch,
+} = useCryptoFetch(cryptoUrl, { refetch: true, immediate: false })
   .get()
   .json<GetWebTokensTableResponse>()
 
@@ -82,17 +81,19 @@ watch(isFetchingCrypto, v => {
 
 watch(rawStocks, data => {
   const list = data?.items ?? []
-  stocks.value = list.map(s => ({
-    id: s.primaryMarket.symbol,
-    symbol: s.primaryMarket.symbol,
-    name: s.underlyingMarket.name,
-    icon: s.iconPngUrl ?? s.iconSvgUrl,
-    priceUsd: s.primaryMarket.price ? parseFloat(s.primaryMarket.price) || null : null,
-    change24hPct: s.primaryMarket.priceChangePercentage24h
-      ? parseFloat(s.primaryMarket.priceChangePercentage24h) || null
-      : null,
-    isStock: true,
-  }))
+  stocks.value = list.map(s => {
+    const price = parseFloat(s.primaryMarket.price)
+    const change = parseFloat(s.primaryMarket.priceChangePercentage24h)
+    return {
+      id: s.primaryMarket.symbol,
+      symbol: s.primaryMarket.symbol,
+      name: s.underlyingMarket.name,
+      icon: s.iconPngUrl ?? s.iconSvgUrl,
+      priceUsd: Number.isFinite(price) ? price : null,
+      change24hPct: Number.isFinite(change) ? change : null,
+      isStock: true,
+    }
+  })
 })
 
 watch(rawCrypto, data => {
@@ -107,6 +108,14 @@ watch(rawCrypto, data => {
     change24hPct: t.priceChangePercentage24h,
     isStock: false,
   }))
+})
+
+// Bootstrap fetches on (re)open. Query-driven refetches are handled by
+// `refetch: true` on the underlying useFetch instances.
+watch(isOpen, open => {
+  if (!open) return
+  executeStocksFetch()
+  executeCryptoFetch()
 })
 
 export function useGlobalSearch() {
@@ -133,9 +142,13 @@ export function useGlobalSearch() {
   const close = () => {
     isOpen.value = false
     query.value = ''
-    debouncedQuery.value = ''
     expanded.stocks.value = false
     expanded.crypto.value = false
+    // Clear cached results so a re-open starts from a clean slate.
+    stocks.value = []
+    crypto.value = []
+    isLoadingStocks.value = false
+    isLoadingCrypto.value = false
   }
 
   const toggleExpand = (key: SectionKey) => {
@@ -161,8 +174,8 @@ export function useGlobalSearch() {
     isOpen,
     query,
     debouncedQuery,
-    stocks: computed(() => stocks.value),
-    crypto: computed(() => crypto.value),
+    stocks,
+    crypto,
     isLoadingStocks,
     isLoadingCrypto,
     expanded,
