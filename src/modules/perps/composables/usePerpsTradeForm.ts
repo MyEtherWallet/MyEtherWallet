@@ -183,20 +183,12 @@ export function usePerpsTradeForm() {
     const positionsWithoutActive = positions.value.filter((item) => {
       return item.market !== activePosition.value?.market
     })
-    const margin = positionsWithoutActive.reduce((acc, currentValue) => acc + parseFloat(Number(currentValue.maintenanceMargin).toFixed(2) || '0'), 0)
+    const margin = positionsWithoutActive.reduce((acc, currentValue) => {
+      const maintenanceMargin = parseFloat(currentValue.maintenanceMargin || '0')
+      return acc + (Number.isFinite(maintenanceMargin) ? maintenanceMargin : 0)
+    }, 0)
     return margin
   })
-
-  // const DEFAULT_MAINTENANCE_MARGIN_RATE = 0.03
-
-  // const maintenanceMarginRate = computed(() => {
-  //   if (activePosition.value) {
-  //     const mm = parseFloat(activePosition.value.maintenanceMargin || '0')
-  //     const nv = parseFloat(activePosition.value.notionalValue || '0')
-  //     if (nv > 0) return mm / nv
-  //   }
-  //   return DEFAULT_MAINTENANCE_MARGIN_RATE
-  // })
 
   // ── Order sizing ───────────────────────────────────────────
   const positionSizeUsd = computed(() => {
@@ -215,7 +207,22 @@ export function usePerpsTradeForm() {
   })
 
   const estimatedLiquidation = computed(() => {
-    if (!activePosition.value) return 0
+    if (!activePosition.value) {
+      const inputAmountNum = parseFloat(inputAmount.value) || 0
+      const entryPrice = effectivePrice.value
+      if (!inputAmountNum || !entryPrice || !positionSizeUsd.value) return 0
+
+      const sideVal = orderSide.value === 'buy' ? 1 : -1
+      const newQuantity = positionSizeUsd.value / entryPrice
+      const sideNotionalValue = positionSizeUsd.value * sideVal
+      const sideQuantity = newQuantity * sideVal
+      const numerator = inputAmountNum - sideNotionalValue
+      const denominator = newQuantity * maintenanceMarginRate.value - sideQuantity
+      if (denominator === 0) return 0
+
+      const price = numerator / denominator
+      return Number.isFinite(price) ? Math.max(price, 0) : 0
+    }
 
     const { direction } = activePosition.value
     const netQuantity = parseFloat(activePosition.value.netQuantity)
