@@ -14,11 +14,7 @@
 
       <global-search-section
         :title="$t('search.ondo_stocks')"
-        :subtitle="
-          query
-            ? $t('search.n_results', { count: stocks.length })
-            : $t('search.by_market_cap')
-        "
+        :subtitle="$t('search.by_market_cap')"
         :items="stocks"
         :expanded="expanded.stocks"
         :hide-when-empty="!!query && stocks.length === 0"
@@ -28,11 +24,7 @@
 
       <global-search-section
         :title="$t('search.crypto')"
-        :subtitle="
-          query
-            ? $t('search.n_results', { count: crypto.length })
-            : $t('search.by_market_cap')
-        "
+        :subtitle="$t('search.by_market_cap')"
         :items="crypto"
         :expanded="expanded.crypto"
         :hide-when-empty="!!query && crypto.length === 0"
