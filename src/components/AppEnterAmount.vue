@@ -44,7 +44,7 @@
           </div>
           <div
             v-if="isWalletConnected"
-            class="flex items-baseline gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
+            class="flex items-center gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
           >
             <div>
               {{ $t('common.balance') }}:
