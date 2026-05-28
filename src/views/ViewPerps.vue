@@ -87,9 +87,6 @@ const walletStore = useWalletStore()
 const { isWatchOnly, wallet } = storeToRefs(walletStore)
 const { token, isAuthenticating, login, logout } = usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
-const accessStore = useAccessStore()
-
-const connectWallet = () => accessStore.openAccessDialog()
 
 watch(
   () => wallet.value,
