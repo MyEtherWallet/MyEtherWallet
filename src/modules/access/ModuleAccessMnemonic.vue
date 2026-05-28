@@ -19,6 +19,7 @@
             />
             <app-text-field
               v-model="mnemonic"
+              data-private
               :placeholder="$t('access_wallet_recovery_phrase.enter_phrase')"
               class="mt-4"
               is-required
@@ -53,6 +54,7 @@
               <div v-if="hasExtraWord" class="mb-8">
                 <app-input
                   v-model="extraWord"
+                  data-private
                   :placeholder="
                     $t('access_wallet_recovery_phrase.enter_extra_word')
                   "

@@ -4,8 +4,8 @@
     has-content-gutter
     class="sm:w-[440px] sm:mx-auto"
     @close-dialog="$emit('close')"
-    z-index-container="110"
-    z-index-overlay="111"
+    z-index-overlay="z-[110]"
+    z-index-container="z-[111]"
   >
     <template #content>
       <div class="flex items-center gap-3 w-full mt-5 px-4">
@@ -37,10 +37,17 @@
             :key="row.label"
             class="flex items-center justify-between px-5 py-4"
           >
-            <span
-              class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
-              >{{ row.label }}</span
-            >
+            <div class="flex items-center gap-1">
+              <span
+                class="text-s-11 uppercase text-info tracking-sp-06 font-bold"
+                >{{ row.label }}</span
+              >
+              <app-tooltip
+                v-if="row.tooltip"
+                :text="row.tooltip"
+                position="top-right"
+              />
+            </div>
             <span class="text-s-14 font-medium" :class="row.colorClass ?? ''">
               {{ row.value }}
             </span>
@@ -66,13 +73,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
 import type { ApiOrder } from '../sdk/types'
+import { perpsClient } from '../configs'
 import {
-  formatUsd,
+  formatUsdc,
   formatPrice,
   formatPnl,
   pnlColor,
@@ -84,8 +93,8 @@ import { getBase, getLogoUrl } from '../utils/market'
 const orderTypeLabels: Record<string, string> = {
   limit: 'Limit',
   market: 'Market',
-  stopMarket: 'Stop Market',
-  takeProfitMarket: 'Take Profit Market',
+  stopMarket: 'Stop Loss',
+  takeProfitMarket: 'Take Profit',
 }
 
 const orderStatusLabels: Record<string, string> = {
@@ -118,8 +127,44 @@ const isCancellable = computed(() =>
   ['pending', 'untriggered', 'open'].includes(props.order.status),
 )
 
+type Row = {
+  label: string
+  value: string
+  colorClass?: string
+  tooltip?: string
+}
+
+const fetchedFee = ref<string | null>(null)
+const currentFetchToken = ref(0)
+
+watch(
+  () => [props.visible, props.order?.orderId] as const,
+  async ([visible, orderId]) => {
+    const token = ++currentFetchToken.value
+    if (!visible || !orderId) {
+      fetchedFee.value = null
+      return
+    }
+    try {
+      const res = await perpsClient.getOrder(orderId)
+      if (token !== currentFetchToken.value) return
+      if (res?.success) {
+        fetchedFee.value = res.result.fee
+      } else {
+        fetchedFee.value = null
+      }
+    } catch {
+      if (token !== currentFetchToken.value) return
+      fetchedFee.value = null
+    }
+  },
+  { immediate: true },
+)
+
+const displayFee = computed(() => fetchedFee.value ?? props.order.fee)
+
 const rows = computed(() => {
-  const items = [
+  const items: Row[] = [
     {
       label: 'Market',
       value: base.value,
@@ -157,7 +202,7 @@ const rows = computed(() => {
     },
     {
       label: 'Fee',
-      value: formatUsd(props.order.fee),
+      value: formatUsdc(displayFee.value),
     },
   ]
 
@@ -173,6 +218,8 @@ const rows = computed(() => {
     items.push({
       label: 'Time in Force',
       value: props.order.timeInForce,
+      tooltip:
+        'The order remains active until the order is completely filled or you manually cancel it.',
     })
   }
 

@@ -105,12 +105,12 @@ const props = defineProps<{
     | 'small-banner-swap'
     | 'small-banner-trade'
     | 'small-banner-bridge'
-  swapClaimed: boolean
+  swapClaimed: boolean | null
   swapNoRewards: boolean
   swapRemainingPct: number
   swapRemainingCount: number | null
   swapTotal: number | null
-  tradeClaimed: boolean
+  tradeClaimed: boolean | null
   tradeNoRewards: boolean
   tradeMarketClosed: boolean
   tradeRemainingPct: number
@@ -168,7 +168,7 @@ const infoItems = [
   },
   {
     icon: 'currency-dollar-gray',
-    text: 'You must have at least 0.001 ETH before March 31st',
+    text: 'You must have at least 0.001 ETH before April 20th',
   },
 ]
 

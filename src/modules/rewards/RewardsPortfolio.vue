@@ -74,7 +74,7 @@
           class="text-s-14 text-[#575757] leading-5 mt-1"
           :class="{ '2xl:hidden ': isOpenSideMenu }"
         >
-          Wallets created after March 31st are not eligible for rewards. Try
+          Wallets created after April 20th are not eligible for rewards. Try
           connecting an older wallet.
         </p>
         <button

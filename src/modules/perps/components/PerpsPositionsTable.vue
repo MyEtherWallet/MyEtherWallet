@@ -30,7 +30,7 @@
                   ·
                   {{
                     openOrdersCountIsCapped
-                      ? `${ORDERS_FETCH_LIMIT}+`
+                      ? `${PERPS_PAGE_SIZE}+`
                       : openOrdersCount
                   }}
                 </span>
@@ -67,7 +67,7 @@
                       ·
                       {{
                         openOrdersCountIsCapped
-                          ? `${ORDERS_FETCH_LIMIT}+`
+                          ? `${PERPS_PAGE_SIZE}+`
                           : openOrdersCount
                       }}
                     </span>
@@ -82,7 +82,7 @@
 
       <!-- Positions loading -->
       <app-table-skeleton
-        v-if="activeTab === 'positions' && loading && positions.length === 0"
+        v-if="activeTab === 'positions' && !positionsHasLoaded"
         :rows="3"
         :columns="positionsSkeletonColumns"
       />
@@ -316,7 +316,7 @@
                   ·
                   {{
                     openOrdersCountIsCapped
-                      ? `${ORDERS_FETCH_LIMIT}+`
+                      ? `${PERPS_PAGE_SIZE}+`
                       : openOrdersCount
                   }}
                 </span></span
@@ -330,7 +330,7 @@
           :columns="ordersSkeletonColumns"
         />
         <div
-          v-else-if="filteredOrders.length === 0 && ordersCurrentPage === 0"
+          v-else-if="orders.length === 0 && ordersCurrentPage === 0"
           class="text-center py-8 text-info text-s-14"
         >
           No orders
@@ -371,7 +371,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="order in filteredOrders"
+              v-for="order in orders"
               :key="order.orderId"
               class="cursor-pointer hoverBGWhite"
               @click="openOrderDialog(order)"
@@ -822,6 +822,7 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :max-leverage="localMaxLeverage"
       mode="submit"
       @save="saveLeverage"
     />
@@ -855,6 +856,7 @@ import {
   usePerpsOrders,
   usePerpsFills,
   usePerpsDepositsWithdrawals,
+  type OrdersStatusFilter,
 } from '../composables/usePerpsHistory'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { usePerpsMarkets } from '../composables/usePerpsMarkets'
@@ -881,6 +883,7 @@ const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
 
 const localLeverage = ref(1)
+const localMaxLeverage = ref(20)
 const leverageError = ref('')
 const isSavingLeverage = ref(false)
 const fullMarketName = ref('')
@@ -903,9 +906,15 @@ const saveLeverage = async () => {
 const displaySymbol = computed(() => fullMarketName.value.split('-')[0])
 
 const openLeverage = (pos: Position) => {
-  showLeverageModal.value = true
-  localLeverage.value = Number(pos.leverage) // temp
+  const pair = markets.value.find(m => m.market === pos.market)
+  const parsedMax = parseInt(pair?.defaultLeverage ?? '')
+  const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
+  localMaxLeverage.value = maxLev
+  const parsedPos = Number(pos.leverage)
+  const initial = Number.isFinite(parsedPos) && parsedPos > 0 ? parsedPos : maxLev
+  localLeverage.value = Math.min(initial, maxLev)
   fullMarketName.value = pos.market
+  showLeverageModal.value = true
 }
 
 watch(
@@ -913,6 +922,7 @@ watch(
   val => {
     if (!val) {
       localLeverage.value = 1
+      localMaxLeverage.value = 20
       leverageError.value = ''
       isSavingLeverage.value = false
       fullMarketName.value = ''
@@ -978,7 +988,7 @@ const dwSkeletonColumns: SkeletonColumn[] = [
   { header: 'Status', align: 'right', hidden: 'hidden xs:table-cell' },
 ]
 
-const { positions, loading } = usePerpsPositions()
+const { positions, hasLoaded: positionsHasLoaded } = usePerpsPositions()
 
 const {
   currentPage: positionsCurrentPage,
@@ -1004,6 +1014,16 @@ function openOrderDialog(order: ApiOrder) {
   showOrderDialog.value = true
 }
 
+const orderFilterTabs = [
+  { label: 'All', value: 'all' },
+
+  { label: 'Pending', value: 'pending' },
+]
+const selectedOrderFilter = ref(orderFilterTabs[0])
+const ordersStatusFilter = computed<OrdersStatusFilter>(() =>
+  selectedOrderFilter.value.value === 'pending' ? 'pending' : 'all',
+)
+
 const {
   orders,
   loading: ordersLoading,
@@ -1013,7 +1033,7 @@ const {
   hasNext: ordersHasNext,
   nextPage: ordersNextPage,
   prevPage: ordersPrevPage,
-} = usePerpsOrders()
+} = usePerpsOrders(ordersStatusFilter)
 
 const showCancelButton = (order: ApiOrder) => {
   return (
@@ -1162,29 +1182,21 @@ const tabs = [
 const selectedTab = ref(tabs[0])
 const activeTab = computed(() => selectedTab.value.value)
 
-const orderFilterTabs = [
-  { label: 'All', value: 'all' },
-
-  { label: 'Pending', value: 'pending' },
-]
-const selectedOrderFilter = ref(orderFilterTabs[0])
-
-const pendingStatuses = new Set(['pending', 'untriggered', 'open'])
-const filteredOrders = computed(() => {
-  if (selectedOrderFilter.value.value === 'all') return orders.value
-  return orders.value.filter(o => pendingStatuses.has(o.status))
+// Open-orders count for the Orders tab badge. Sourced from the current cursor
+// page. When the Pending filter is active the API already restricts the page
+// to open orders, so the count is just the page length. When "All" is active
+// the page mixes open + closed orders so we filter client-side. The "+" cap
+// only triggers when the page is full AND a next page exists.
+const openOrdersCount = computed(() => {
+  if (ordersStatusFilter.value === 'pending') return orders.value.length
+  return orders.value.filter(
+    o =>
+      o.status === 'pending' ||
+      o.status === 'untriggered' ||
+      o.status === 'open',
+  ).length
 })
-
-// Open-orders count for the Orders tab badge. Source is the current cursor
-// page of orders. The badge only saturates ("100+") when a next page exists
-// AND the current page is itself full of open orders — `ordersHasNext` alone
-// says nothing about open orders, so a few open + many older closed would
-// otherwise mis-render as "3+".
-const ORDERS_FETCH_LIMIT = 100
-const openOrdersCount = computed(
-  () => orders.value.filter(o => pendingStatuses.has(o.status)).length,
-)
 const openOrdersCountIsCapped = computed(
-  () => ordersHasNext.value && openOrdersCount.value >= ORDERS_FETCH_LIMIT,
+  () => ordersHasNext.value && openOrdersCount.value >= PERPS_PAGE_SIZE,
 )
 </script>

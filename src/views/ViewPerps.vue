@@ -16,32 +16,7 @@
       </select-chain-for-app>
     </div>
     <!-- Not authenticated -->
-    <div v-if="!isWalletConnected" class="text-center py-8 bg-white">
-      <p class="text-info text-s-14 mb-4">
-        Connect your wallet to view your perps portfolio
-      </p>
-      <button
-        class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
-        @click="connectWallet"
-      >
-        Connect Wallet
-      </button>
-    </div>
-    <div v-else-if="!token" class="text-center py-8">
-      <p class="text-info text-s-14 mb-4">
-        Sign in to view your perps portfolio
-      </p>
-      <button
-        :disabled="isAuthenticating"
-        class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
-        @click="login"
-      >
-        {{ isAuthenticating ? 'Signing in...' : 'Sign in to Perps' }}
-      </button>
-      <p v-if="authError" class="text-error text-s-12 mt-2">
-        {{ authError }}
-      </p>
-    </div>
+    <perps-main-banner v-if="!token" />
 
     <!-- Authenticated -->
     <template v-else>
@@ -98,22 +73,20 @@ import PerpsMarketList from '@/modules/perps/components/PerpsMarketList.vue'
 import PerpsDepositDialog from '@/modules/perps/components/PerpsDepositDialog.vue'
 import PerpsWithdrawDialog from '@/modules/perps/components/PerpsWithdrawDialog.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import PerpsMainBanner from '@/modules/perps/components/PerpsMainBanner.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
-import { useAccessStore } from '@/stores/accessStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useAccessStore } from '@/stores/accessStore'
 
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
 const { isWatchOnly, wallet } = storeToRefs(walletStore)
-const accessStore = useAccessStore()
-const { token, isWalletConnected, isAuthenticating, authError, login, logout } =
-  usePerpsAuth()
+const { token, isAuthenticating, login, logout } = usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
-const connectWallet = () => accessStore.openAccessDialog()
 
 watch(
   () => wallet.value,
@@ -123,6 +96,9 @@ watch(
     }
   },
 )
+
+const connectWallet = () => useAccessStore().openAccessDialog()
+
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 

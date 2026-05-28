@@ -477,13 +477,41 @@
             class="w-full"
             key="position-orders"
           >
+            <div class="mb-4 xs:pl-4">
+              <app-btn-group
+                v-model:selected="selectedOrderFilter"
+                :btn-list="orderFilterTabs"
+                size="xs"
+              >
+                <template #btn-content="{ data }">
+                  <span class="px-2"
+                    >{{ data.label }}
+                    <span
+                      v-if="
+                        data.value === 'pending' && openOrdersCountForMarket > 0
+                      "
+                      class="ml-1 text-info text-s-11"
+                    >
+                      ·
+                      {{
+                        openOrdersCountIsCapped
+                          ? `${OPEN_COUNT_LIMIT}+`
+                          : openOrdersCountForMarket
+                      }}
+                    </span></span
+                  >
+                </template>
+              </app-btn-group>
+            </div>
             <app-table-skeleton
               v-if="ordersLoading && marketOrders.length === 0"
               :rows="3"
               :columns="ordersSkeletonColumns"
             />
             <div
-              v-else-if="marketOrders.length === 0 && ordersCurrentPage === 0"
+              v-else-if="
+                filteredMarketOrders.length === 0 && ordersCurrentPage === 0
+              "
               class="text-center py-8 text-info text-s-14"
             >
               No orders for {{ baseCurrency }}
@@ -522,7 +550,7 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="order in marketOrders"
+                  v-for="order in filteredMarketOrders"
                   :key="order.orderId"
                   class="hoverBGWhite"
                   @click="openOrderDialog(order)"
@@ -864,6 +892,7 @@
     :symbol="baseCurrency"
     :leverage-error="leverageError"
     :is-saving="isSavingLeverage"
+    :max-leverage="marketMaxLeverage"
     mode="submit"
     @save="saveLeverage"
   />
@@ -925,6 +954,8 @@ import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
 
+const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
+  useWalletMenuStore()
 import {
   formatUsd,
   formatPrice,
@@ -946,7 +977,6 @@ import {
 
 const connectWallet = () => useAccessStore().openAccessDialog()
 
-const { setSelectedTradeManageMode } = useWalletMenuStore()
 const props = defineProps({
   market: {
     type: String,
@@ -1075,6 +1105,17 @@ const PENDING_STATUSES = new Set(['pending', 'untriggered', 'open'])
 const openOrdersCountForMarket = ref(0)
 const openOrdersCountIsCapped = ref(false)
 let openOrdersFetchSeq = 0
+
+const orderFilterTabs = [
+  { label: 'All', value: 'all' },
+  { label: 'Pending', value: 'pending' },
+]
+const selectedOrderFilter = ref(orderFilterTabs[0])
+
+const filteredMarketOrders = computed(() => {
+  if (selectedOrderFilter.value.value === 'all') return marketOrders.value
+  return marketOrders.value.filter(o => PENDING_STATUSES.has(o.status))
+})
 
 async function fetchOpenOrdersCount() {
   if (!token.value) {
@@ -1323,6 +1364,12 @@ const tempLeverage = ref(1)
 const isSavingLeverage = ref(false)
 const leverageError = ref('')
 
+const marketMaxLeverage = computed(() => {
+  const pair = markets.value.find(m => m.market === props.market)
+  const parsed = parseInt(pair?.defaultLeverage ?? '')
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+})
+
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
@@ -1342,12 +1389,16 @@ const saveLeverage = async () => {
 
 watch(selectedManageAction, action => {
   if (!action) return
-  if (action.value === 'add') {
-    setSelectedTradeManageMode('add')
-  } else if (action.value === 'close') {
-    setSelectedTradeManageMode('close')
+  if (action.value === 'add' || action.value === 'close') {
+    setSelectedTradeManageMode(action.value)
+    setWalletPanel('perps')
+    setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
-    tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
+    const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
+    const initial = Number.isFinite(parsedPosition) && parsedPosition > 0
+      ? parsedPosition
+      : leverage.value || marketMaxLeverage.value
+    tempLeverage.value = Math.min(initial, marketMaxLeverage.value)
     leverageError.value = ''
     showLeverageDialog.value = true
   }
