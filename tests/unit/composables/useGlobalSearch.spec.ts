@@ -51,7 +51,7 @@ vi.mock('@/composables/useFetchMewApi', () => {
   ]
   return {
     useFetchMewApi: () => ({
-      useMEWFetch: (..._args: unknown[]) => {
+      useMEWFetch: () => {
         const next = queue.shift()
         if (!next) {
           throw new Error('useMEWFetch called more times than expected')
@@ -64,7 +64,7 @@ vi.mock('@/composables/useFetchMewApi', () => {
 
 // Import after mocks are set up.
 const { useGlobalSearch } = await import(
-  '@/modules/global-search/composables/useGlobalSearch'
+  '@/modules/global_search/composables/useGlobalSearch'
 )
 
 const flush = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
