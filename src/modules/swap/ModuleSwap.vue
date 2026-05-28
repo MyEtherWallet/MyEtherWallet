@@ -13,13 +13,13 @@
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <p class="font-bold text-s-28">
-            {{ isSwapView ? 'Swap' : 'Bridge' }}
+            {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}
           </p>
           <app-btn-text
             v-if="supportedNetwork"
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
-            >Clear all</app-btn-text
+            >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
         <div :class="['relative transition-all duration-300', blurClass]">
@@ -29,7 +29,7 @@
               class="text-s-12 font-bold ml-3"
               :class="{ 'mb-1': !isSwapView }"
             >
-              You are selling
+              {{ $t('swap.you-are-selling') }}
             </p>
             <select-chain-for-app
               v-if="!isSwapView"
@@ -60,7 +60,7 @@
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 font-bold ml-3">You are buying</p>
+            <p class="text-s-12 font-bold ml-3">{{ $t('swap.you-are-buying') }}</p>
             <select-chain-for-app
               :can-store="false"
               :passed-chains="parsedToChains"
@@ -122,13 +122,13 @@
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-warning" />
               <p class="text-warning font-medium text-s-16">
-                Network Not Supported
+                {{ $t('swap.network-not-supported') }}
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ isSwapView ? 'Swapping' : 'Bridging' }} is not available on
-              {{ selectedChain?.nameLong || selectedChain?.name }}. Please
-              switch to a supported network.
+              {{ isSwapView
+                ? $t('swap.swapping-not-available', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') })
+                : $t('swap.bridging-not-available', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
             </p>
 
             <select-chain-for-app
@@ -150,7 +150,7 @@
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
-          Price impact is too high {{ priceImpact.toFixed(2) }}%
+          {{ t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) }) }}
         </p>
       </div>
       <div
@@ -182,13 +182,13 @@
             @click="swapButton"
             class="w-full"
           >
-            {{ isSwapView ? 'Swap' : 'Bridge' }}</app-base-button
+            {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}</app-base-button
           >
         </transition>
       </div>
 
       <app-need-help
-        title="Need help swaping?"
+        :title="t('swap.need-help-swapping')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
         :class="blurClass"
@@ -621,13 +621,13 @@ const validateToAddress = async () => {
     return
   }
   if (!userToAddress.value) {
-    toAddressError.value = 'Recipient address is required for bridging'
+    toAddressError.value = t('swap.error.recipient-required')
     return
   }
   const valid = await toTokenSelected.value?.networkInfo.isAddress(
     userToAddress.value,
   )
-  toAddressError.value = valid ? '' : 'invalid address'
+  toAddressError.value = valid ? '' : t('swap.error.invalid-address')
 }
 const getAnalyticsShared = (): SwapPayloadShared => {
   return {
@@ -749,7 +749,7 @@ const proceedWithSwap = async (quoteId: string) => {
     if (isUserRejectionError(e)) {
       toastStore.addToastMessage({
         type: ToastType.Info,
-        text: t('swap.toast.canceled-by-user'),
+        text: t('swap.toast.swap-canceled'),
       })
       analytics.trackSwapEventError(SwapEventError.SIGN_ERROR, {
         ...analyticsPayload,
@@ -779,14 +779,14 @@ const proceedWithSwap = async (quoteId: string) => {
       ) {
         toastStore.addToastMessage({
           type: ToastType.Info,
-          text: 'Transaction canceled by user',
+          text: t('swap.toast.swap-canceled'),
         })
         return
       }
       generalError.value = errorMessage
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Swap Failed',
+        text: t('swap.toast.swap-failed'),
         textSecondary: errorMessage,
         duration: 10000,
       })
@@ -897,6 +897,9 @@ const swapForEvm = async () => {
   try {
     await debounceFetchQuotes()
 
+    if (!swapInfo.value) {
+      throw new Error(t('swap.error.pair-not-available'))
+    }
     const res = await generateEVMGasFeeQuote()
 
     swapGasFeeQuote.value = res || undefined
@@ -1081,7 +1084,6 @@ const setToToken = () => {
   // 2. Select Token Logic
   if (hasSwapValues.value) {
     // Deep link / restore values - use stored token
-
     const match = localToTokens.value.find(
       t =>
         t.address.toLowerCase() ===
@@ -1120,11 +1122,9 @@ const setToToken = () => {
     }
     // Selected token doesn't exist in new list, fall through to default selection
     if (toTokens.value && allToTokensRaw.length > 0) {
-      const allToTrending =
-        toTokens.value.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
-      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const allToTop =
+        toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.top]
+      const candidates = allToTop?.length ? allToTop : allToTokensRaw
       const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
@@ -1134,7 +1134,6 @@ const setToToken = () => {
               fromTokenSelected.value?.address.toLowerCase(),
           )
         : candidates[0]
-
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
@@ -1148,11 +1147,9 @@ const setToToken = () => {
   } else {
     // No token selected, no stored values - use default
     if (toTokens.value && allToTokensRaw.length > 0) {
-      const allToTrending =
-        toTokens.value.trending[
-          enkryptEnum as keyof typeof toTokens.value.trending
-        ]
-      const candidates = allToTrending?.length ? allToTrending : allToTokensRaw
+      const allToTop =
+        toTokens.value.top[enkryptEnum as keyof typeof toTokens.value.trending]
+      const candidates = allToTop?.length ? allToTop : allToTokensRaw
       const sameNetworks = currentToChain.name === selectedChain.value?.name
 
       const defaultToken = sameNetworks
@@ -1162,7 +1159,6 @@ const setToToken = () => {
               fromTokenSelected.value?.address.toLowerCase(),
           )
         : candidates[0]
-
       if (defaultToken) {
         toTokenSelected.value = {
           ...defaultToken,
@@ -1325,7 +1321,7 @@ watch(
     ) {
       if (isCrossChain.value && !toAddress.value && !isPristine.value) {
         // Highlight the missing address instead of silently returning
-        toAddressError.value = 'Recipient address is required for bridging'
+        toAddressError.value = t('swap.error.recipient-required')
         return
       }
       debounceFetchQuotes()

@@ -6,23 +6,20 @@
     <div
       class="max-w-[1392px] md-header:mx-6 2xl:mx-auto flex flex-wrap content-center py-8 px-4"
     >
-      <p class="basis-3/4 text6 mb-4 h-fit">Help improve MEW?</p>
+      <p class="basis-3/4 text6 mb-4 h-fit">{{ $t('gdpr.help_improve') }}</p>
       <div class="flex justify-end basis-1/4">
         <AppBtnIconClose @close="handleReject" />
       </div>
       <p
         class="basis-full md:basis-3/4 md:pr-5 text-s-14 lg:text-s-16 text-info mb-6 h-fit"
       >
-        We use cookies and similar technologies to enhance your experience,
-        analyze site usage, and support our operations. By continuing to use our
-        site, you agree to our use of cookies and our data processing practices
-        as detailed in our Privacy and Cookie Policy. You can choose to decline
-        or withdraw your consent at any time. For more information see our
+        {{ $t('gdpr.cookie_notice') }}
         <a
           href="https://www.myetherwallet.com/privacy-policy"
           target="_blank"
+          rel="noopener noreferrer"
           class="text-primary"
-          >Privacy Policy</a
+          >{{ $t('gdpr.privacy_policy') }}</a
         >.
       </p>
       <div
@@ -33,14 +30,14 @@
           class="border border-primary border-2 text-primary rounded-3xl py-2 px-5 h-fit hoverOpacity"
           @click="handleReject"
         >
-          Reject
+          {{ $t('gdpr.reject') }}
         </button>
         <button
           type="button"
           class="bg-primary text-white rounded-3xl py-2 px-5 h-fit hoverOpacityHasBG"
           @click="handleAccept"
         >
-          Accept
+          {{ $t('gdpr.accept') }}
         </button>
       </div>
     </div>

@@ -6,16 +6,16 @@
   >
     <div class="flex items-start justify-between mb-auto px-5">
       <div class="flex items-center gap-1.5">
-        <h2 class="text-s-20 font-bold leading-none">History</h2>
+        <h2 class="text-s-20 font-bold leading-none">{{ t('portfolio.history.title') }}</h2>
         <app-tooltip
-          text="Approximate values based on current token holdings."
+          :text="t('portfolio.history.tooltip')"
         />
       </div>
       <div class="text-right">
         <p
           class="font-bold text-s-11 tracking-sp-06 uppercase text-info leading-none mb-1"
         >
-          Last 24h
+          {{ t('portfolio.history.last_24h') }}
         </p>
         <div v-if="!isLoadingBalances">
           <p class="text-s-20 font-semibold text-black leading-none mt-2">
@@ -51,7 +51,7 @@
       <div
         class="flex-1 flex items-center justify-center bg-grey-5 rounded-xl min-h-[140px] w-full"
       >
-        <p class="text-info text-center text-s-13">No chart data available</p>
+        <p class="text-info text-center text-s-13">{{ t('portfolio.history.no_chart_data') }}</p>
       </div>
     </div>
     <history-chart v-else :data="chartData" class="-ml-[3px]" />
@@ -59,6 +59,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import HistoryChart from './components/history/HistoryChart.vue'
@@ -73,6 +74,7 @@ import {
 } from '@/utils/numberFormatHelper'
 import { type PortfolioHistoryResponse } from '@/mew_api/types'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { isWalletConnected, allTokens, walletAddress, isLoadingBalances } =
   storeToRefs(walletStore)

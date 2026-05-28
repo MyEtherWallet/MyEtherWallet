@@ -5,7 +5,7 @@
       v-if="!isLoading && supportedChains?.length"
       :class="[isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10', 'px-4 py-6']"
     >
-      <h3 class="text-s-20 xs:text-s-24 font-bold mb-2">Supported Chains</h3>
+      <h3 class="text-s-20 xs:text-s-24 font-bold mb-2">{{ $t('crypto.supported_chains') }}</h3>
       <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
         <div
           v-for="i in supportedChains"
@@ -48,7 +48,7 @@
                   {{ truncateAddress(i.contract, 8) }}
                 </p>
                 <p v-else class="text-info text-s-12 tracking-sp-06 italic">
-                  Native Token
+                  {{ $t('crypto.native_token') }}
                 </p>
                 <app-btn-copy
                   v-if="i.contract && i.contract !== 'N/A'"
@@ -68,7 +68,7 @@
             <span
               class="uppercase text-[8px] font-bold text-primary leading-none tracking-sp-06"
             >
-              current chain
+              {{ $t('crypto.current_chain') }}
             </span>
           </div>
           <app-base-button
@@ -77,7 +77,7 @@
             class="shrink-0 hidden sm:block ml-auto"
             @click="bridgeBtn(i)"
           >
-            Bridge
+            {{ $t('crypto.bridge') }}
           </app-base-button>
         </div>
       </div>
