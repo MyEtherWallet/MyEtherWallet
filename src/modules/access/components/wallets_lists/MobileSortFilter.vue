@@ -28,7 +28,7 @@
           </button>
         </div>
         <!-- DIVIDER -->
-        <hr class="h-px bg-grey-outline border-0 w-full mt-7 mb-6" />
+        <hr class="h-px bg-grey-10 border-0 w-full mt-7 mb-6" />
         <!-- Sort -->
         <p class="text7 ml-3 mb-2 !font-bold">{{ $t('common.sort_by') }}:</p>
         <div class="flex flex-wrap gap-x-2 gap-y-3">

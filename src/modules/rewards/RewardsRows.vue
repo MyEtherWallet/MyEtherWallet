@@ -27,7 +27,7 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Swap → Earn $5</span
+            >Swap and Earn $5</span
           >
           <template v-if="!swapClaimed && !swapNoRewards">
             <div
@@ -58,7 +58,7 @@
         v-if="!swapClaimed && !swapNoRewards"
         size="small"
         is-outline
-        class="shrink-0"
+        class="grow max-w-[150px]"
         @click="$emit('swap')"
       >
         Swap $50+
@@ -70,7 +70,8 @@
           '2xl:text-s-11 3xl:text-s-13': isOpenSideMenu,
         }"
       >
-        Back in {{ swapClaimed ? timeUntilNextEligible : timeUntilHourReset }}
+        Back in
+        {{ swapClaimed ? timeUntilSwapNextEligible : timeUntilHourReset }}
         <clock-icon
           class="w-3.5 h-3.5 ml-auto"
           :class="{
@@ -91,13 +92,15 @@
         <div
           class="rounded-lg p-1.5 flex-none h-10 w-10 flex items-center justify-center"
           :class="[
-            !tradeClaimed && !tradeNoRewards ? 'bg-blue-10' : 'bg-grey-5',
+            !tradeClaimed && !tradeNoRewards && !tradeMarketClosed
+              ? 'bg-blue-10'
+              : 'bg-grey-5',
           ]"
         >
           <icon-trade
             class="w-6 h-6"
             :class="[
-              !tradeClaimed && !tradeNoRewards
+              !tradeClaimed && !tradeNoRewards && !tradeMarketClosed
                 ? 'text-primary'
                 : 'text-[#A5A5A5]',
             ]"
@@ -109,9 +112,11 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Trade → Earn $5</span
+            >Trade and Earn $5</span
           >
-          <template v-if="!tradeClaimed && !tradeNoRewards">
+          <template
+            v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
+          >
             <div
               class="w-full h-1.5 bg-blue-10 rounded-full overflow-hidden mt-1 flex"
             >
@@ -131,13 +136,19 @@
           >
             Reward claimed
           </p>
+          <p
+            v-else-if="tradeMarketClosed"
+            class="text-s-12 font-medium mt-0.5 text-error"
+          >
+            Market is closed
+          </p>
           <p v-else class="text-s-12 font-medium mt-0.5 text-error">
             No rewards left
           </p>
         </div>
       </div>
       <app-base-button
-        v-if="!tradeClaimed && !tradeNoRewards"
+        v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
         size="small"
         is-outline
         class="grow max-w-[150px]"
@@ -153,7 +164,13 @@
         }"
       >
         Back in
-        {{ tradeClaimed ? timeUntilNextEligible : timeUntilHourReset }}
+        {{
+          tradeClaimed
+            ? timeUntilTradeNextEligible
+            : tradeMarketClosed
+              ? timeUntilMarketOpen
+              : timeUntilHourReset
+        }}
         <clock-icon
           class="w-3.5 h-3.5 ml-auto"
           :class="{
@@ -177,18 +194,21 @@ const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 
 defineProps<{
-  swapClaimed: boolean
+  swapClaimed: boolean | null
   swapNoRewards: boolean
   swapRemainingPct: number
   swapRemainingCount: number | null
   swapTotal: number | null
-  tradeClaimed: boolean
+  tradeClaimed: boolean | null
   tradeNoRewards: boolean
+  tradeMarketClosed: boolean
   tradeRemainingPct: number
   tradeRemainingCount: number | null
   tradeTotal: number | null
   timeUntilHourReset: string
-  timeUntilNextEligible: string
+  timeUntilSwapNextEligible: string
+  timeUntilTradeNextEligible: string
+  timeUntilMarketOpen: string
   isRewardsView?: boolean
 }>()
 

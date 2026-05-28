@@ -23,7 +23,7 @@
               bg-class="bg-transparent"
             />
           </div>
-          <div class="h-px bg-grey-outline w-full mb-2"></div>
+          <div class="h-px bg-grey-10 w-full mb-2"></div>
         </div>
         <!-- Search Result-->
         <div

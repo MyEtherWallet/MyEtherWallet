@@ -6,10 +6,10 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner
+        <!-- <rewards-small-banner
           :class="blurClass"
           :location="'small-banner-swap'"
-        />
+        /> -->
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <p class="font-bold text-s-28">
@@ -249,7 +249,7 @@ import SwapOfferModal from './components/SwapOfferModal.vue'
 import SwapInitiatedModal from './components/SwapInitiatedModal.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
@@ -788,7 +788,8 @@ const proceedWithSwap = async (quoteId: string) => {
       const fromUsdValue =
         parseFloat(fromAmount.value) * (fromTokenSelected.value?.price || 0)
       if (fromUsdValue > 50) {
-        const canEarn = await rewardsStore.checkAvailabilityAfterTransaction()
+        const canEarn =
+          await rewardsStore.checkAvailabilityAfterTransaction('swap')
         canEarnReward = canEarn ? true : undefined
       }
       analytics.trackSwapEventStatus(SwapEventStatus.INITIATED, {

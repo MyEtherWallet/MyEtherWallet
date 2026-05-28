@@ -286,6 +286,7 @@ export type RewardsPayload = {
     | 'small-banner-trade'
     | 'small-banner-bridge'
     | 'learn-more-dialog'
+  type?: 'swap' | 'trade'
 }
 
 // =============================================================================

@@ -1,251 +1,72 @@
 <template>
-  <!-- Claimed State -->
-  <div>
+  <div
+    class="bg-white rounded-16 flex flex-col px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden min-h-[250px]"
+  >
     <div
-      v-if="!hadInitialLoad"
-      class="bg-white rounded-16 h-full flex flex-col justify-center px-5 xs:px-[33px] lg-max:px-5 xl:px-[33px] 3xl:px-[33px] pt-8 pb-6 relative overflow-hidden max-h-[293px] animate-pulse"
+      :class="
+        isOpenSideMenu ? 'xl:max-w-[450px] min-[1050px]:max-w-[450px]' : ''
+      "
     >
-      <p class="text-center text-s-14 text-info">Loading Rewards</p>
-    </div>
-    <!-- Default State -->
-    <div
-      v-else
-      class="bg-white rounded-16 h-full flex flex-col justify-between px-5 pb-5 relative overflow-hidden xl:max-h-[293px]"
-    >
-      <!-- Top: Title + Image -->
-      <div
-        class="flex items-start justify-between gap-2 mb-5"
-        :class="{ 'opacity-20 pointer-events-none': isBanned }"
-      >
-        <div class="flex flex-col pt-5">
-          <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
-          <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.
-          </p>
-          <button
-            class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
-            @click="onLearnMore"
-          >
-            Learn more
-          </button>
-        </div>
-        <img
-          :src="verticalUsdc"
-          alt=""
-          width="92"
-          height="130"
-          class="shrink-0 object-contain w-[92px] h-[130px] flex-none -mt-2 hidden 3xl:w-[92px] 3xl:h-[130px]"
-          :class="
-            isOpenSideMenu
-              ? 'xl:hidden 2xl:block  2xl:w-[60px] 2xl:h-[90px]'
-              : 'xl:block 2xl:block'
-          "
-        />
+      <!-- Top: icon + title -->
+      <div class="flex items-start gap-3 mb-3">
+        <h3 class="text-s-20 font-bold text-primary leading-tight pt-1">
+          Rewards coming soon
+        </h3>
       </div>
 
-      <!-- Reward Rows -->
-      <rewards-rows
-        :swap-claimed="swapClaimed"
-        :swap-no-rewards="swapNoRewards"
-        :swap-remaining-pct="swapRemainingPct"
-        :swap-remaining-count="swapRemainingCount"
-        :swap-total="swapTotal"
-        :trade-claimed="tradeClaimed"
-        :trade-no-rewards="tradeNoRewards"
-        :trade-remaining-pct="tradeRemainingPct"
-        :trade-remaining-count="tradeRemainingCount"
-        :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilHourReset"
-        :time-until-next-eligible="timeUntilNextEligible"
-        @swap="goToSwap"
-        @trade="goToTrade"
-        class="max-w-[360px] 2xl:max-w-none"
-        :class="[
-          isOpenSideMenu ? '2xl:-ml-2 2xl:-mr-2' : '',
-          { 'opacity-20 pointer-events-none': isBanned },
-        ]"
-        is-rewards-view
-      />
-      <div
-        v-if="isBanned"
-        class="text-center font-medium text-s-16 p-5 bg-appBackground rounded-20 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-1 xl:min-w-[300px]"
-      >
-        <p>You are not eligible for rewards at this time</p>
-        <button
-          class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
-          @click="onLearnMore"
+      <!-- Body text -->
+      <p class="text-s-14 text-[#575757] leading-[22px] mb-6">
+        We're preparing the next rewards campaign. Follow @myetherwallet on X
+        for updates and upcoming announcements.
+      </p>
+
+      <!-- CTA -->
+      <div class="absolute bottom-[20px] flex items-center gap-2">
+        <a
+          href="https://x.com/myetherwallet"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 border border-primary text-primary text-s-14 font-medium rounded-full px-4 py-2 hoverOpacity"
         >
-          Learn more
-        </button>
+          Follow @myetherwallet
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+            />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
       </div>
-      <img
-        :src="horizontalUsdc"
-        alt=""
-        width="650"
-        height="292"
-        class="shrink-0 object-contain hidden xs:block 3xl:hidden flex-none absolute right-[20px] mx-auto pointer-events-none max-h-[140px] max-w-[140px] sm:max-h-[225px] sm:max-w-[234px] 2xl:hidden"
-        :class="[
-          isOpenSideMenu ? '' : 'xl:hidden',
-          { 'opacity-20 pointer-events-none': isBanned },
-        ]"
-      />
-
-      <rewards-learn-more
-        v-model:is-open="isLearnMoreOpen"
-        location="main-banner"
-        :swap-claimed="swapClaimed"
-        :swap-no-rewards="swapNoRewards"
-        :swap-remaining-pct="swapRemainingPct"
-        :swap-remaining-count="swapRemainingCount"
-        :swap-total="swapTotal"
-        :trade-claimed="tradeClaimed"
-        :trade-no-rewards="tradeNoRewards"
-        :trade-remaining-pct="tradeRemainingPct"
-        :trade-remaining-count="tradeRemainingCount"
-        :trade-total="tradeTotal"
-        :time-until-hour-reset="timeUntilHourReset"
-        :time-until-next-eligible="timeUntilNextEligible"
-      />
     </div>
+
+    <!-- Bottom-right coin image -->
+    <img
+      :src="coinsIcon"
+      alt=""
+      :width="130"
+      :height="130"
+      :class="isOpenSideMenu ? 'min-[1440px]:hidden block' : ''"
+      class="absolute bottom-0 right-4 object-contain pointer-events-none opacity-90 max-[1350px]:w-[120px]! hidden min-[500px]:block"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import RewardsLearnMore from '@/modules/rewards/RewardsLearnMore.vue'
-import RewardsRows from '@/modules/rewards/RewardsRows.vue'
-import verticalUsdc from '@/assets/images/rewards/usdc-rewards-group-vertical.png'
-import horizontalUsdc from '@/assets/images/rewards/usdc-rewards-group-horizontal.png'
-import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
-import { analytics, RewardsEvent } from '@/analytics'
-import { useToastStore } from '@/stores/toastStore'
-import { useRewardsStore } from '@/stores/rewardsStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import coinsIcon from '@/assets/images/rewards/usdc-disable.png'
 
-const walletMenuStore = useWalletMenuStore()
-const { isOpenSideMenu } = storeToRefs(walletMenuStore)
-const { setWalletPanel } = walletMenuStore
-const globalStore = useGlobalStore()
-const { selectedNetwork } = storeToRefs(globalStore)
-const toastStore = useToastStore()
-const rewardsStore = useRewardsStore()
-const {
-  hadInitialLoad,
-  eligibility,
-  swapClaimed,
-  tradeClaimed,
-  swapNoRewards,
-  tradeNoRewards,
-  swapTotal,
-  swapRemainingPct,
-  swapRemainingCount,
-  tradeTotal,
-  tradeRemainingPct,
-  tradeRemainingCount,
-  nextHourStart,
-  isBanned,
-} = storeToRefs(rewardsStore)
-
-const isLearnMoreOpen = ref(false)
-const timeUntilHourReset = ref('--')
-const timeUntilNextEligible = ref('--')
-let countdownTimer: ReturnType<typeof setInterval> | null = null
-
-function formatDiff(ms: number): string {
-  const d = Math.floor(ms / 86_400_000)
-  if (d > 0) return `${d} d`
-  const h = Math.floor(ms / 3_600_000)
-  if (h > 0) return `${h}h`
-  const m = Math.floor(ms / 60_000)
-  return `${m} min`
-}
-
-function updateCountdowns() {
-  const hourTarget = nextHourStart.value
-  timeUntilHourReset.value = hourTarget
-    ? formatDiff(Math.max(0, new Date(hourTarget).getTime() - Date.now()))
-    : '--'
-
-  const eligibleTarget = eligibility.value?.nextEligibleDate
-  timeUntilNextEligible.value = eligibleTarget
-    ? formatDiff(Math.max(0, new Date(eligibleTarget).getTime() - Date.now()))
-    : '--'
-}
-
-onMounted(() => {
-  analytics.trackRewardsEvent(RewardsEvent.MAIN_BANNER_SHOWN)
-  rewardsStore.fetchPool()
-  updateCountdowns()
-  countdownTimer = setInterval(updateCountdowns, 60_000)
-})
-
-onUnmounted(() => {
-  if (countdownTimer) clearInterval(countdownTimer)
-})
-
-const navigateTo = (panel: 'swap' | 'trade') => {
-  const ETH_NETWORK_NAME = 'ETHEREUM'
-  if (selectedNetwork.value !== ETH_NETWORK_NAME) {
-    globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
-    toastStore.addToastMessage({ text: 'Switched app network to Ethereum' })
-  }
-  setWalletPanel(panel)
-  if (!isOpenSideMenu.value) {
-    walletMenuStore.setIsOpenSideMenu(true)
-  }
-}
-
-const goToSwap = () => {
-  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
-    location: 'main-banner',
-  })
-  navigateTo('swap')
-}
-
-const goToTrade = () => {
-  analytics.trackRewardsEvent(RewardsEvent.CLICK_TRADE, {
-    location: 'main-banner',
-  })
-  navigateTo('trade')
-}
-
-const onLearnMore = () => {
-  isLearnMoreOpen.value = true
-}
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 </script>
-
-<style scoped>
-.rewards-bg {
-  background: linear-gradient(135deg, rgba(141, 66, 255, 0.4) 0%, #c7d8ff 100%);
-}
-
-.confetti-piece {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-}
-
-.confetti-piece:nth-child(3n) {
-  background: #7b61ff;
-  width: 6px;
-  height: 12px;
-  border-radius: 1px;
-  transform: rotate(45deg);
-}
-
-.confetti-piece:nth-child(3n + 1) {
-  background: #3b82f6;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.confetti-piece:nth-child(3n + 2) {
-  background: #fbbf24;
-  width: 5px;
-  height: 14px;
-  border-radius: 1px;
-  transform: rotate(-30deg);
-}
-</style>

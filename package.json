@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "7.0.4-hotfix.3",
+  "version": "7.0.6",
   "private": true,
   "type": "module",
   "engines": {
@@ -28,6 +28,7 @@
     "@1inch/fusion-sdk": "^2.4.5",
     "@1inch/limit-order-sdk": "^5.2.3",
     "@amplitude/analytics-browser": "^2.36.2",
+    "@amplitude/session-replay-browser": "^1.36.2",
     "@commitlint/config-conventional": "^20.3.1",
     "@enkryptcom/hw-wallets": "^0.0.16",
     "@enkryptcom/name-resolution": "^0.0.8",
@@ -123,7 +124,11 @@
   },
   "pnpm": {
     "overrides": {
-      "axios": "1.14.0"
+      "axios": "1.14.0",
+      "@amplitude/analytics-core": "2.46.0"
+    },
+    "patchedDependencies": {
+      "@amplitude/analytics-core@2.46.0": "patches/@amplitude__analytics-core@2.46.0.patch"
     }
   }
 }

@@ -39,8 +39,6 @@ import { analytics } from '@/analytics'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import Intercom from '@intercom/messenger-js-sdk'
 import { useMarketStatus } from './modules/trade/composables'
-
-// const { isTradingRestrictedInRegion, fetchMarketStatus } = useMarketStatus()
 const { fetchMarketStatus } = useMarketStatus()
 
 const dialogStore = useDialogStore()
@@ -73,7 +71,6 @@ watch(
   () => consent.value,
   (newVal, oldVal) => {
     if (newVal && !oldVal) {
-      console.log(userProperties.value)
       analytics.setUserProperties({
         ...userProperties.value,
         network: selectedChain.value?.name,
