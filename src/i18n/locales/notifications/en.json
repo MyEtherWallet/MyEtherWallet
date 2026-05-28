@@ -3,10 +3,10 @@
     "title": "Notifications",
     "no_notifications_yet": "No notifications yet",
     "default_empty_text": "Your recent orders, swaps, bridges and transactions will appear here.",
-    "swap": "swap",
+    "swap": "swaps",
     "bridge": "bridge",
-    "transaction": "transaction",
-    "trade_order": "trade order",
+    "transaction": "transactions",
+    "trade_order": "trades",
     "status": {
       "pending": "Pending",
       "possibly_dropped": "Possibly Dropped",

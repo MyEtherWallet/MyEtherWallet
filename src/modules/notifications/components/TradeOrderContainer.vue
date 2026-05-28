@@ -73,7 +73,9 @@
             class="flex flex-col"
           >
             <span class="text-s-12 text-info">
-              <span class="uppercase text-s-9 mr-1 opacity-80">{{ $t('notifications_module.est') }}</span>
+              <span class="uppercase text-s-9 mr-1 opacity-80">{{
+                $t('notifications_module.est')
+              }}</span>
               <span class="opacity-70"
                 >{{ formatFloatingPointValue(order.expectedToAmount).value }}
                 <app-token-symbol

@@ -198,13 +198,29 @@ const txStatus = computed(() => {
 
   if (status === 'sent') {
     if (isOlderThan48Hours) {
-      return { key: 'possibly_dropped', labelKey: 'notifications_module.status.possibly_dropped', color: 'bg-surface' }
+      return {
+        key: 'possibly_dropped',
+        labelKey: 'notifications_module.status.possibly_dropped',
+        color: 'bg-surface',
+      }
     }
-    return { key: 'pending', labelKey: 'notifications_module.status.pending', color: 'bg-primary' }
+    return {
+      key: 'pending',
+      labelKey: 'notifications_module.status.pending',
+      color: 'bg-primary',
+    }
   } else if (status === 'failed') {
-    return { key: 'failed', labelKey: 'notifications_module.status.failed', color: 'bg-error' }
+    return {
+      key: 'failed',
+      labelKey: 'notifications_module.status.failed',
+      color: 'bg-error',
+    }
   } else {
-    return { key: 'successful', labelKey: 'notifications_module.status.successful', color: 'bg-success' }
+    return {
+      key: 'successful',
+      labelKey: 'notifications_module.status.successful',
+      color: 'bg-success',
+    }
   }
 })
 </script>
