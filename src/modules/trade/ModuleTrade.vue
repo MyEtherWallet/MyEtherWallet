@@ -435,6 +435,7 @@ const {
   supportedChainNames,
   tradableAssets,
   additionalBuyAssets,
+  hardcodedTokensInfo,
   isLoading,
   loadTradableAssets,
 } = useTrade()
@@ -621,6 +622,7 @@ const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
     toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
+    hardcodedTokensInfo,
   })
 
 // --- Trade Quote ---
@@ -690,13 +692,16 @@ const restoreToToken = () => {
   if (selectedTradeTokenSymbol.value) {
     const matchingToken = toTokens.value.find(
       (t: NewTokenInfo) =>
-        t.symbol.toUpperCase() === selectedTradeTokenSymbol.value!.toUpperCase(),
+        t.symbol.toUpperCase() ===
+        selectedTradeTokenSymbol.value!.toUpperCase(),
     )
     toTokenSelected.value = matchingToken ?? toTokens.value[0] ?? null
   } else if (storedToSymbol) {
-    const restoredTo = toTokens.value.find(
-      (t: NewTokenInfo) => t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
-    ) ?? null
+    const restoredTo =
+      toTokens.value.find(
+        (t: NewTokenInfo) =>
+          t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
+      ) ?? null
     if (restoredTo) {
       toTokenSelected.value = restoredTo
     } else {
@@ -931,10 +936,11 @@ onBeforeMount(async () => {
     if (fromTokens.value.length > 0) {
       const storedFromSymbol = tradeFromSymbol.value
       if (storedFromSymbol) {
-        const restoredFrom = fromTokens.value.find(
-          (t: NewTokenInfo) =>
-            t.symbol.toUpperCase() === storedFromSymbol.toUpperCase(),
-        ) ?? null
+        const restoredFrom =
+          fromTokens.value.find(
+            (t: NewTokenInfo) =>
+              t.symbol.toUpperCase() === storedFromSymbol.toUpperCase(),
+          ) ?? null
         if (restoredFrom) {
           fromTokenSelected.value = restoredFrom
         } else {
