@@ -87,7 +87,7 @@
                     </p>
                     <app-btn-icon-close @close="toggleMenu" />
                   </div>
-                  <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
+                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
                   <button
                     v-for="option in sortOptions"
                     :key="option.value"
@@ -114,7 +114,7 @@
               </template>
             </app-pop-up-menu>
           </div>
-          <div class="h-px bg-grey-5 w-full mb-2"></div>
+          <div class="h-px bg-grey-10 w-full mb-2"></div>
         </div>
 
         <div v-if="searchResults.length" class="flex flex-col gap-1">
@@ -330,7 +330,12 @@ const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
   if (!props.isFromView || !isWalletConnected.value) {
-    activeSortValue.value = SortValueString.RANK
+    if (props.sortContext !== 'trade') {
+      activeSortValue.value = SortValueString.RANK
+    } else {
+      activeSortValue.value = SortValueString.PRICE
+      activeSortDirection.value = SortDirection.DESC
+    }
   }
 })
 
@@ -373,10 +378,6 @@ enum SortValueString {
 const sortOptions = computed(() => {
   const shared = [
     {
-      value: SortValueString.RANK,
-      label: t('common.rank'),
-    },
-    {
       value: SortValueString.NAME,
       label: t('common.name'),
     },
@@ -385,7 +386,13 @@ const sortOptions = computed(() => {
       label: t('common.symbol'),
     },
   ]
-  if (isWalletConnected.value) {
+  if (props.isFromView || props.sortContext !== 'trade') {
+    shared.unshift({
+      value: SortValueString.RANK,
+      label: t('common.rank'),
+    })
+  }
+  if (isWalletConnected.value && props.isFromView) {
     return [
       ...shared,
       {
@@ -398,6 +405,7 @@ const sortOptions = computed(() => {
       },
     ]
   }
+
   return [
     ...shared,
     {
@@ -448,11 +456,10 @@ const setActiveSort = (value: SortValueString) => {
 
 interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
-  rank: number
 }
 
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
-  const allItems = tokens.value.map((token, index) => {
+  const allItems = tokens.value.map(token => {
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(
         BigNumber(
@@ -466,7 +473,6 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
-      rank: index,
     }
   })
 

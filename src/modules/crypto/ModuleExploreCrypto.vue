@@ -428,7 +428,7 @@
                               token.chains.length > 0 ||
                               getTokenIsCurrentNative(token)
                             "
-                            class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
+                            class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
                           />
 
                           <ul>

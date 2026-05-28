@@ -24,8 +24,8 @@ import { parseUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import { useMarketStatus } from '@/modules/trade/composables'
 import {
-  isTradingRestricted,
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
 import * as Sentry from '@sentry/vue'
@@ -68,6 +68,7 @@ export const useSwap = (): {
     quote: ProviderQuoteResponse,
   ) => Promise<ProviderSwapResponse | null>
 } => {
+  const { isTradingRestrictedInRegion } = useMarketStatus();
   const toastStore = useToastStore()
   const { t } = useI18n()
   const chainsStore = useChainsStore()
@@ -114,17 +115,14 @@ export const useSwap = (): {
       let swapToTokens = swapInstance.value.getToTokens()
 
       // Check if trading is restricted and filter out restricted token addresses
-      const [isRestricted, restrictedAddresses] = await Promise.all([
-        isTradingRestricted(),
-        getRestrictedTokenAddresses(),
-      ])
+      const restrictedAddresses = await getRestrictedTokenAddresses()
 
       const restrictedAddressesLower = restrictedAddresses.map(addr =>
         addr.toLowerCase(),
       )
 
       // Filter toTokens if trading is restricted
-      if (isRestricted && restrictedAddressesLower.length > 0) {
+      if (isTradingRestrictedInRegion.value && restrictedAddressesLower.length > 0) {
         const filterTokenArray = (tokens: TokenTypeTo[]) =>
           tokens.filter(
             token =>
@@ -209,7 +207,7 @@ export const useSwap = (): {
         ? fromAllTokensToWalletTokens
         : allFromTokensWithBalance
 
-      if (isRestricted && restrictedAddressesLower.length > 0) {
+      if (isTradingRestrictedInRegion.value && restrictedAddressesLower.length > 0) {
         finalFromTokens = finalFromTokens.filter(
           token =>
             !restrictedAddressesLower.includes(token.address.toLowerCase()),

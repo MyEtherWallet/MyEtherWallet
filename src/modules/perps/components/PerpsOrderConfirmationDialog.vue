@@ -69,6 +69,12 @@
               estimatedLiquidation ? formatUsd(estimatedLiquidation) : '$0.00'
             }}</span>
           </div>
+          <div class="flex justify-between text-s-14">
+            <span class="text-info font-medium"
+              >Est. fee ({{ isMaker ? 'Maker' : 'Taker' }})</span
+            >
+            <span class="font-bold">{{ formatUsdc(estimatedFee) }}</span>
+          </div>
           <div
             v-if="takeProfitPrice !== null"
             class="flex justify-between text-s-14"
@@ -91,11 +97,15 @@
 
         <!-- Error -->
         <div
-          v-if="orderError || leverageError"
+          v-if="orderError || leverageError || limitPriceOutOfTolerance"
           class="bg-[#fff0f0] border border-[#ffcccc] rounded-[16px] p-4"
         >
           <p class="text-error text-s-14 font-medium">
-            {{ orderError || leverageError }}
+            {{
+              orderError ||
+              leverageError ||
+              'Price must be within +/- 10% tolerance'
+            }}
           </p>
         </div>
 
@@ -103,7 +113,12 @@
         <div class="flex flex-col gap-1">
           <app-base-button
             :theme="orderSide === 'buy' ? 'success' : 'error'"
-            :disabled="isSubmitting || !!orderError || !!leverageError"
+            :disabled="
+              isSubmitting ||
+              !!orderError ||
+              !!leverageError ||
+              limitPriceOutOfTolerance
+            "
             :is-loading="isSubmitting"
             class="flex-1"
             @click="$emit('confirm')"
@@ -127,16 +142,17 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
-import { formatUsd } from '../utils/formatters'
+import { formatUsd, formatUsdc } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-defineProps<{
+const props = defineProps<{
   orderSide: 'buy' | 'sell'
   orderType: 'market' | 'limit'
   displaySymbol: string
@@ -152,9 +168,37 @@ defineProps<{
   orderError: string | null
   isSubmitting: boolean
   leverageError: string | null
+  limitPriceOutOfTolerance: boolean
+  makerFee?: string
+  takerFee?: string
 }>()
 
 defineEmits<{
   confirm: []
 }>()
+
+// Per-ticket maker/taker rules: market orders are always taker; limit orders
+// classify by whether they would rest on the book (maker) or cross it (taker).
+const isMaker = computed(() => {
+  if (props.orderType !== 'limit') return false
+  const limit = parseFloat(props.limitPrice)
+  if (!Number.isFinite(limit) || !props.currentPrice) return false
+  return props.orderSide === 'buy'
+    ? limit < props.currentPrice
+    : limit > props.currentPrice
+})
+
+const estimatedFee = computed(() => {
+  const rate = parseFloat(
+    (isMaker.value ? props.makerFee : props.takerFee) ?? '',
+  )
+  const size = parseFloat(props.orderSize)
+  const price =
+    props.orderType === 'limit'
+      ? parseFloat(props.limitPrice)
+      : props.currentPrice
+  if (!Number.isFinite(rate) || !Number.isFinite(size) || !Number.isFinite(price))
+    return 0
+  return size * price * rate
+})
 </script>

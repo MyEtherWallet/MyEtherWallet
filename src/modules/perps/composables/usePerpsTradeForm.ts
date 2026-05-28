@@ -125,6 +125,12 @@ export function usePerpsTradeForm() {
     return match?.market || activeMarket.value
   })
 
+  const marketMaxLeverage = computed(() => {
+    const match = markets.value.find(m => m.market === fullMarketName.value)
+    const parsed = parseInt(match?.defaultLeverage ?? '')
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+  })
+
   const activePosition = computed(
     () => positions.value.find(p => p.market === fullMarketName.value) || null,
   )
@@ -232,6 +238,12 @@ export function usePerpsTradeForm() {
     const floored = Math.floor(value / increment) * increment
     const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
     return floored.toFixed(decimals)
+  }
+
+  function ceilToIncrement(value: number, increment: number): string {
+    const ceiled = Math.ceil(value / increment) * increment
+    const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
+    return ceiled.toFixed(decimals)
   }
 
   const activeMarketIncrement = computed(() => {
@@ -474,11 +486,27 @@ export function usePerpsTradeForm() {
   })
 
   // ── Limit price validation ─────────────────────────────────
+  // Backend rejects orders whose price drifts more than 10% from mid; mirror
+  // that bound on the client so the order button disables before submit and
+  // again at confirm time if the live price moves while the modal is open.
+  const LIMIT_PRICE_TOLERANCE = 0.1
+
+  const limitPriceOutOfTolerance = computed(() => {
+    if (orderType.value !== 'limit' || !limitPrice.value) return false
+    const price = parseFloat(limitPrice.value)
+    if (isNaN(price) || price <= 0 || !currentPrice.value) return false
+    return (
+      Math.abs(price - currentPrice.value) / currentPrice.value >
+      LIMIT_PRICE_TOLERANCE
+    )
+  })
+
   const limitPriceHasError = computed(() => {
     if (orderType.value !== 'limit' || !limitPrice.value) return false
     const price = parseFloat(limitPrice.value)
     if (isNaN(price) || price <= 0 || price >= 10_000_000) return true
     if (limitPricePrecisionError.value) return true
+    if (limitPriceOutOfTolerance.value) return true
     return false
   })
 
@@ -507,7 +535,7 @@ export function usePerpsTradeForm() {
     if (availableMargin.value * leverage.value < minOrderAmount.value) {
       return `Min. margin required ${formatUsd(minOrderAmount.value)}`
     }
-    if (positionSizeUsd.value < minOrderAmount.value) {
+    if (amt > 0 && positionSizeUsd.value < minOrderAmount.value) {
       return `Min. amount ${formatUsd(minOrderAmount.value)}`
     }
     if (amt > availableMargin.value) {
@@ -588,7 +616,15 @@ export function usePerpsTradeForm() {
     if (!currentPrice.value) return
     activeLimitPill.value = pct
     const price = currentPrice.value * (1 + pct / 100)
-    limitPrice.value = formatQuotePrice(price)
+    // Round toward currentPrice so the snapped value stays inside the
+    // backend's +/-10% tolerance band: floor for non-negative pct, ceil for
+    // negative pct. Flooring a -10% raw value lands just outside the band on
+    // markets with non-trivial quoteIncrement.
+    const increment = activeMarketQuoteIncrement.value
+    limitPrice.value =
+      pct < 0
+        ? ceilToIncrement(price, increment)
+        : floorToIncrement(price, increment)
   }
 
   // ── Market selector ────────────────────────────────────────
@@ -690,7 +726,7 @@ export function usePerpsTradeForm() {
 
   // ── Leverage modal ─────────────────────────────────────────
   function openLeverageModal() {
-    tempLeverage.value = leverage.value
+    tempLeverage.value = Math.min(leverage.value, marketMaxLeverage.value)
     leverageError.value = ''
     showLeverageModal.value = true
   }
@@ -728,7 +764,8 @@ export function usePerpsTradeForm() {
       const res = await perpsClient.getLeverage(fullMarketName.value)
 
       if (res.success && res.result?.length) {
-        leverage.value = parseInt(res.result[0].leverage) || 20
+        const parsed = parseInt(res.result[0].leverage) || marketMaxLeverage.value
+        leverage.value = Math.min(parsed, marketMaxLeverage.value)
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)
@@ -1061,8 +1098,22 @@ export function usePerpsTradeForm() {
       closeError.value = ''
       takeProfitPrice.value = null
       stopLossPrice.value = null
+      // Seed leverage from the market's per-token max before the saved
+      // leverage resolves, so callsites reading the singleton (sidepanel /
+      // order modal) don't show a stale value from the previous market or
+      // the default 20 on a market capped lower.
+      leverage.value = Math.min(leverage.value, marketMaxLeverage.value)
       fetchLeverage()
       fetchMaxOrderSize()
+    },
+  )
+
+  // When markets list arrives, clamp the singleton to the active market's
+  // per-token max so the default 20 doesn't exceed a 10x-capped market.
+  watch(
+    () => marketMaxLeverage.value,
+    max => {
+      if (leverage.value > max) leverage.value = max
     },
   )
 
@@ -1130,6 +1181,7 @@ export function usePerpsTradeForm() {
     leverage,
     sliderValue,
     positionSizeUsd,
+    minOrderAmount,
     estimatedLiquidation,
     orderSize,
     availableMargin,
@@ -1183,6 +1235,7 @@ export function usePerpsTradeForm() {
     submitDisabled,
     submitButtonLabel,
     limitPriceHasError,
+    limitPriceOutOfTolerance,
     limitPricePrecisionError,
     marginPrecisionError,
     closeAmountPrecisionError,
@@ -1224,5 +1277,6 @@ export function usePerpsTradeForm() {
     openLeverageModal,
     closeLeverageModal,
     saveLeverage,
+    marketMaxLeverage,
   }
 }

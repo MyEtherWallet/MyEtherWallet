@@ -37,7 +37,9 @@ if (dsn && process.env.NODE_ENV === 'production') {
     ],
     integrations: [
       browserTracingIntegration({ router }),
-      replayIntegration(),
+      replayIntegration({
+        block: ['[data-private]'],
+      }),
       vueIntegration({
         tracingOptions: {
           trackComponents: true,

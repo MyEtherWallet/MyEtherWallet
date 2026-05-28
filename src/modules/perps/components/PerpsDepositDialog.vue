@@ -216,7 +216,7 @@
             </p>
             <app-btn-copy :copy-value="depositAddress || ''" />
             <!-- Refresh -->
-            <app-tooltip text="Refresh deposit address" position="top-left">
+            <!-- <app-tooltip text="Refresh deposit address" position="top-left">
               <app-btn-icon
                 label="Refresh deposit address"
                 :disabled="loading"
@@ -224,7 +224,7 @@
               >
                 <arrow-path-icon class="w-[18px] h-[18px]" />
               </app-btn-icon>
-            </app-tooltip>
+            </app-tooltip> -->
           </div>
         </template>
       </div>
@@ -235,16 +235,10 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowPathIcon,
-} from '@heroicons/vue/24/solid'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppDialog from '@/components/AppDialog.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppEnterAmount from '@/components/AppEnterAmount.vue'
 import AppBlockie from '@/components/AppBlockie.vue'

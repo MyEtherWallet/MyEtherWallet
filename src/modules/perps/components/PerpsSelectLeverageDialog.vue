@@ -37,14 +37,14 @@
                 :value="modelValue"
                 type="number"
                 min="1"
-                max="20"
+                :max="maxLeverage"
                 step="1"
                 class="font-bold text-[40px] tracking-tight w-[50px] text-center bg-transparent outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [-moz-appearance:textfield]"
                 @change="
                   e => {
                     const val = Math.round(
                       Math.min(
-                        20,
+                        maxLeverage,
                         Math.max(
                           1,
                           Number((e.target as HTMLInputElement).value) || 1,
@@ -60,13 +60,15 @@
             </div>
             <button
               class="w-10 h-10 rounded-full bg-white hoverBGWhite flex items-center justify-center hover:bg-greyLight transition-colors text-s-20"
-              :disabled="modelValue >= 20"
+              :disabled="modelValue >= maxLeverage"
               :class="
-                modelValue >= 20
+                modelValue >= maxLeverage
                   ? '!bg-white/90'
                   : 'shadow-button shadow-button-elevated'
               "
-              @click="$emit('update:modelValue', Math.min(20, modelValue + 1))"
+              @click="
+                $emit('update:modelValue', Math.min(maxLeverage, modelValue + 1))
+              "
             >
               <PlusIcon class="w-5 h-5" />
             </button>
@@ -75,7 +77,7 @@
           <!-- Tick Labels -->
           <div class="flex justify-between px-1">
             <button
-              v-for="tick in [1, 5, 10, 15, 20]"
+              v-for="tick in tickValues"
               :key="tick"
               class="text-[11px] font-medium hoverNoBG rounded-full px-2 py-0.5"
               :class="modelValue > tick ? 'text-info' : ''"
@@ -91,11 +93,11 @@
               :value="modelValue"
               type="range"
               min="1"
-              max="20"
+              :max="maxLeverage"
               step="1"
               class="w-full h-2 rounded-full appearance-none cursor-pointer leverage-slider"
               :style="{
-                background: `linear-gradient(to right, #0052ff 0%, #0052ff ${((modelValue - 1) / 19) * 100}%, #e5e7eb ${((modelValue - 1) / 19) * 100}%, #e5e7eb 100%)`,
+                background: `linear-gradient(to right, #0052ff 0%, #0052ff ${sliderFillPct}%, #e5e7eb ${sliderFillPct}%, #e5e7eb 100%)`,
               }"
               @input="
                 $emit(
@@ -156,9 +158,12 @@ interface Props {
   leverageError: string
   isSaving: boolean
   mode: 'add' | 'create' | 'submit'
+  maxLeverage?: number
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  maxLeverage: 20,
+})
 
 const isOpen = defineModel('isOpen', {
   type: Boolean,
@@ -175,6 +180,23 @@ const buttonText = computed(() => {
     return props.isSaving ? 'Submitting...' : 'Submit'
   }
   return props.isSaving ? 'Saving...' : 'Save'
+})
+
+const tickValues = computed(() => {
+  const max = Math.max(1, Math.floor(props.maxLeverage))
+  if (max <= 1) return [1]
+  const count = Math.min(5, max)
+  const ticks = new Set<number>()
+  for (let i = 0; i < count; i++) {
+    const v = Math.round(1 + ((max - 1) * i) / (count - 1))
+    ticks.add(v)
+  }
+  return Array.from(ticks).sort((a, b) => a - b)
+})
+
+const sliderFillPct = computed(() => {
+  const max = Math.max(2, props.maxLeverage)
+  return ((props.modelValue - 1) / (max - 1)) * 100
 })
 </script>
 
