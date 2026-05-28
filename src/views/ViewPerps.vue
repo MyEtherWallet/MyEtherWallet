@@ -108,6 +108,9 @@ watch(
     deep: true,
   },
 )
+
+const connectWallet = () => useAccessStore().openAccessDialog()
+
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 
