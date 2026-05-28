@@ -45,4 +45,7 @@ export type UserProperties = {
   isPartnerHolder?: boolean
   hasBalance?: boolean
   canClaimRewards?: boolean
+  canClaimTrade?: boolean
+  canClaimSwap?: boolean
+  canTrade?: boolean
 }
