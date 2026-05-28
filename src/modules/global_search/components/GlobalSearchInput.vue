@@ -1,5 +1,8 @@
 <template>
-  <div class="relative w-full max-w-[360px]">
+  <div
+    class="relative w-full max-w-[360px]"
+    :class="isOpen ? 'z-40' : ''"
+  >
     <div class="flex items-center gap-2 px-4 py-2 bg-mewBg rounded-full">
       <magnifying-glass-icon class="w-4 h-4 text-info" />
       <input
@@ -20,5 +23,5 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchPopover from './GlobalSearchPopover.vue'
 
-const { query, open } = useGlobalSearch()
+const { query, open, isOpen } = useGlobalSearch()
 </script>
