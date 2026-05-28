@@ -94,7 +94,6 @@ function toggleSeries(key: SeriesKey) {
   } else {
     activeSeries.add(key)
   }
-  console.log(activeSeries)
 }
 
 interface RangeOption {

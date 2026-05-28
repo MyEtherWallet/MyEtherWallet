@@ -175,18 +175,70 @@ export function usePerpsTradeForm() {
     parseFloat(balance.value?.availableMargin || '0'),
   )
 
+  const marginBalance = computed(() =>
+    parseFloat(balance.value?.marginBalance || '0'),
+  )
+
+  const maintenanceMarginOtherPositions = computed(() => {
+    const positionsWithoutActive = positions.value.filter((item) => {
+      return item.market !== activePosition.value?.market
+    })
+    const margin = positionsWithoutActive.reduce((acc, currentValue) => {
+      const maintenanceMargin = parseFloat(currentValue.maintenanceMargin || '0')
+      return acc + (Number.isFinite(maintenanceMargin) ? maintenanceMargin : 0)
+    }, 0)
+    return margin
+  })
+
   // ── Order sizing ───────────────────────────────────────────
   const positionSizeUsd = computed(() => {
     const amt = parseFloat(inputAmount.value) || 0
     return amt * leverage.value
   })
 
+  const maintenanceMarginRate = computed(() => {
+    if (activePosition.value) {
+      const market = markets.value.find(asset => asset.market === activePosition.value?.market)
+      if (market?.marginInfo?.length) {
+        return parseFloat(market.marginInfo[0].maintenanceMarginRate)
+      }
+    }
+    return 0.03
+  })
+
   const estimatedLiquidation = computed(() => {
-    if (!positionSizeUsd.value || !currentPrice.value) return 0
-    const dir = orderSide.value === 'buy' ? -1 : 1
-    return (
-      currentPrice.value + dir * (currentPrice.value / leverage.value) * 0.9
-    )
+    if (!activePosition.value) {
+      const inputAmountNum = parseFloat(inputAmount.value) || 0
+      const entryPrice = effectivePrice.value
+      if (!inputAmountNum || !entryPrice || !positionSizeUsd.value) return 0
+
+      const sideVal = orderSide.value === 'buy' ? 1 : -1
+      const newQuantity = positionSizeUsd.value / entryPrice
+      const sideNotionalValue = positionSizeUsd.value * sideVal
+      const sideQuantity = newQuantity * sideVal
+      const numerator = inputAmountNum - sideNotionalValue
+      const denominator = newQuantity * maintenanceMarginRate.value - sideQuantity
+      if (denominator === 0) return 0
+
+      const price = numerator / denominator
+      return Number.isFinite(price) ? Math.max(price, 0) : 0
+    }
+
+    const { direction } = activePosition.value
+    const netQuantity = parseFloat(activePosition.value.netQuantity)
+
+    if (direction === 'neutral' || netQuantity === 0) return 0
+
+    const sideVal = direction === 'short' ? -1 : 1
+    const sideNotionalValue = positionNotionalValue.value * sideVal
+    const sideQuantity = netQuantity * sideVal
+    const numerator =
+      marginBalance.value - maintenanceMarginOtherPositions.value - sideNotionalValue
+    const denominator = netQuantity * maintenanceMarginRate.value - sideQuantity
+    if (denominator === 0) return 0
+
+    const price = numerator / denominator
+    return Number.isFinite(price) ? Math.max(price, 0) : 0
   })
 
   function floorToIncrement(value: number, increment: number): string {
@@ -401,10 +453,9 @@ export function usePerpsTradeForm() {
   // ── New margin ratio ────────────────────────────────────────
   const newMarginRatio = computed<number | null>(() => {
     const usedMargin = parseFloat(balance.value?.usedMargin || '0')
-    const marginBal = parseFloat(balance.value?.marginBalance || '0')
     const additionalMargin = parseFloat(inputAmount.value || '0')
-    if (!marginBal || !additionalMargin) return null
-    return (usedMargin + additionalMargin) / marginBal
+    if (!marginBalance.value || !additionalMargin) return null
+    return (usedMargin + additionalMargin) / marginBalance.value
   })
 
   // ── Precision validation ───────────────────────────────────

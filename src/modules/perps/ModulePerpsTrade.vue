@@ -8,36 +8,8 @@
       </div>
     </div>
 
-    <div
-      v-if="!isWalletConnected || isWatchOnly"
-      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
-    >
-      <p class="text-info text-s-14 mb-4">
-        Connect your wallet to start trading
-      </p>
-      <button
-        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-        @click="connectWallet"
-      >
-        Connect Wallet
-      </button>
-    </div>
-
-    <div
-      v-else-if="!token"
-      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
-    >
-      <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
-      <button
-        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-        @click="login"
-      >
-        Sign in to Perps
-      </button>
-    </div>
-
     <!-- Active Trade Form -->
-    <div v-else class="flex flex-col pb-6">
+    <div class="flex flex-col pb-6">
       <!-- Scrollable content -->
       <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
         <!-- Asset Selector & Price & current Position Info if open -->
@@ -630,24 +602,67 @@
         </template>
       </div>
       <!-- Submit Button -->
-      <app-base-button
-        v-if="!activePosition || manageMode === 'add'"
-        :disabled="submitDisabled"
-        @click="showConfirmation"
-        :theme="orderSide === 'buy' ? 'success' : 'error'"
-        class="w-full mt-4"
-      >
-        {{ getMainBtnText }}
-      </app-base-button>
-      <app-base-button
-        v-if="activePosition && manageMode === 'close'"
-        :theme="orderSide === 'buy' ? 'success' : 'error'"
-        :disabled="closeDisabled"
-        @click="showCloseConfirmation"
-        class="w-full mt-4"
-      >
-        {{ closeButtonLabel }}
-      </app-base-button>
+      <template v-if="!isSupportedNetwork">
+        <div
+          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+        >
+          <p class="text-info text-s-14 mb-4">
+            Perps is only available on Ethereum
+          </p>
+          <select-chain-for-app>
+            <template #network-button="{ openNetworkDialog }">
+              <button
+                class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+                @click="openNetworkDialog(true)"
+              >
+                Switch to Ethereum
+              </button>
+            </template>
+          </select-chain-for-app>
+        </div>
+      </template>
+      <template v-else-if="isWatchOnly">
+        <app-base-button
+          v-if="!isWalletConnected || isWatchOnly"
+          :class="['mx-auto w-full max-w-[340px] mt-4']"
+          @click="connectWallet"
+        >
+          {{ t('connect_wallet') }}</app-base-button
+        >
+      </template>
+      <template v-else-if="!token && !isWatchOnly">
+        <div
+          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+        >
+          <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
+          <button
+            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+            @click="login"
+          >
+            Sign in to Perps
+          </button>
+        </div>
+      </template>
+      <template v-else>
+        <app-base-button
+          v-if="!activePosition || manageMode === 'add'"
+          :disabled="submitDisabled"
+          @click="showConfirmation"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          class="w-full mt-4"
+        >
+          {{ getMainBtnText }}
+        </app-base-button>
+        <app-base-button
+          v-if="activePosition && manageMode === 'close'"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          :disabled="closeDisabled"
+          @click="showCloseConfirmation"
+          class="w-full mt-4"
+        >
+          {{ closeButtonLabel }}
+        </app-base-button>
+      </template>
     </div>
 
     <!-- Order Confirmation Dialog -->
@@ -763,14 +778,22 @@ import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
 import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDialog.vue'
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
+import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
+const { t } = useI18n()
+
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
   accessStore.openAccessDialog()
