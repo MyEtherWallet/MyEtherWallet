@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!hideWhenEmpty" class="py-2">
+  <div v-if="items.length > 0" class="py-2">
     <div class="px-4 py-2 flex items-baseline gap-2">
       <span class="text-s-11 font-bold uppercase tracking-sp-06">
         {{ title }}
@@ -44,7 +44,6 @@ const props = defineProps<{
   subtitle: string
   items: SearchResultItem[]
   expanded: boolean
-  hideWhenEmpty?: boolean
 }>()
 
 defineEmits<{

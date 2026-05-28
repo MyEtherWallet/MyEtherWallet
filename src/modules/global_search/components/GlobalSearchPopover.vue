@@ -17,7 +17,6 @@
         :subtitle="$t('search.by_market_cap')"
         :items="stocks"
         :expanded="expanded.stocks"
-        :hide-when-empty="!!query && stocks.length === 0"
         @select="selectAsset"
         @toggle-expand="toggleExpand('stocks')"
       />
@@ -27,7 +26,6 @@
         :subtitle="$t('search.by_market_cap')"
         :items="crypto"
         :expanded="expanded.crypto"
-        :hide-when-empty="!!query && crypto.length === 0"
         @select="selectAsset"
         @toggle-expand="toggleExpand('crypto')"
       />
