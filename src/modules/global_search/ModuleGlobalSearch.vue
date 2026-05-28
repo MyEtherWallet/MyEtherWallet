@@ -3,7 +3,7 @@
     <transition name="fade">
       <div
         v-if="isOpen && isDesktop"
-        class="fixed inset-0 z-30 bg-black/40"
+        class="fixed inset-0 z-[200] bg-black/40"
         @click="close"
       />
     </transition>
