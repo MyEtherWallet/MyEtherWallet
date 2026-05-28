@@ -10,12 +10,12 @@
     <img
       src="@/assets/icons/mewtopia-dog.svg"
       class="w-[115px] absolute"
-      alt="Mewtopia Dog"
+      alt=""
       aria-hidden="true"
     />
     <div class="text-left pl-[35%] w-full">
-      <h3 class="text-white text-s-24">MEWtopia</h3>
-      <p class="text-white text-s-12" v-if="full">A Blog by MyEtherWallet</p>
+      <h3 class="text-white text-s-24">{{ $t('crypto.mewtopia') }}</h3>
+      <p class="text-white text-s-12" v-if="full">{{ $t('crypto.mewtopia_subtitle') }}</p>
     </div>
   </section>
 </template>

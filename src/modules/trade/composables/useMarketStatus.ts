@@ -1,5 +1,6 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import {
   getMarketStatus,
@@ -21,6 +22,8 @@ interface UseMarketStatusOptions {
 export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
   const { fetchedTradingThisSession, isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+  const { t } = useI18n()
+
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
@@ -39,7 +42,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     const diff = nextOpen - now
 
     if (diff <= 0) {
-      countdownText.value = 'Opening soon...'
+      countdownText.value = t('trade.opening_soon')
       // Refresh market status when countdown reaches zero
       fetchMarketStatus()
       return

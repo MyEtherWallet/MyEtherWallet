@@ -1,4 +1,5 @@
 import { ref, computed, type Ref, unref, watch } from 'vue'
+import i18n from '@/i18n'
 import { type Chain } from '@/mew_api/types'
 import { toChecksumAddress, isAddress } from '@/utils/addressUtils'
 import { useDebounceFn } from '@vueuse/core'
@@ -86,7 +87,7 @@ export const useAddressInput = (
       if (locResolvedAddr && locResolvedAddr !== '') {
         resolvedAddress.value = locResolvedAddr
       } else {
-        throw new Error('Address resolution failed')
+        throw new Error(i18n.global.t('common.error.address_resolution_failed'))
       }
     } catch {
       if (!validateAddressInput()) {

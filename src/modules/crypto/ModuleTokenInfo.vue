@@ -74,6 +74,9 @@ import type { Chain, TokenSupportedChain } from '@/mew_api/types'
 import type { NewTokenInfo } from '@/composables/useSwap'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   tokenId: {
@@ -396,10 +399,10 @@ const toggleWatchlist = () => {
  * Share
  --------------------*/
 const shareText = computed(() => {
-  const symbol = tokenData.value?.symbol?.toUpperCase() ?? ''
+  const ticker = tokenData.value?.symbol?.toUpperCase() ?? ''
   const price = tokenData.value?.currentPrice
     ? `$${formatFiatValue(tokenData.value.currentPrice).value}`
     : ''
-  return `Check out ${symbol} ${price} on MyEtherWallet`
+  return t('common.share_message', { ticker, price })
 })
 </script>

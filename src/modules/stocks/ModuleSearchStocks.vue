@@ -7,10 +7,10 @@
     <div class="w-full flex flex-col gap-6 lg:gap-10 lg:py-8">
       <div class="lg:ml-4 lg:mt-3 text-center">
         <h1 class="text-s-28 lg:text-s-40 font-bold">
-          Explore Tokenized Stocks
+          {{ $t('stocks.explore_tokenized_stocks') }}
         </h1>
         <p class="text-s-14 lg:text-s-16 text-info">
-          200+ tokenized stocks and ETFs, powered by Ondo
+          {{ $t('stocks.explore_subtitle') }}
         </p>
       </div>
       <div class="flex items-center justify-center flex-col">
@@ -21,7 +21,7 @@
           <app-search-input
             v-model="searchInput"
             class="grow"
-            placeholder="Search stock name or ticker"
+            :placeholder="$t('stocks.search_stock_name_or_ticker')"
             @keyup.enter="handleEnter"
           />
           <transition name="fade" mode="out-in">
@@ -125,8 +125,7 @@
                     <exclamation-circle-icon
                       class="inline-block w-5 h-5 text-grey-50 mr-1"
                     />
-                    No results found for:
-                    {{ searchInput }}
+                    {{ $t('stocks.no_results_found_for', { query: searchInput }) }}
                   </p>
                   <!-- Suggestions Trending and Recently Viewed -->
                   <div
@@ -138,7 +137,7 @@
                       v-if="recentlyViewedStocks.length > 0"
                       class="text-s-12 font-medium text-info ml-3 mb-1"
                     >
-                      Recently Viewed
+                      {{ $t('stocks.recently_viewed') }}
                     </p>
                     <div
                       v-if="recentlyViewedStocks.length > 0"
@@ -181,7 +180,7 @@
                       "
                     >
                       <p class="text-s-12 font-medium text-info ml-3 mb-1">
-                        Trending
+                        {{ $t('common.trending') }}
                       </p>
                       <div
                         class="flex items-center justify-start gap-1 flex-wrap mb-2"
@@ -222,7 +221,7 @@
           </transition>
         </div>
         <div class="mt-4 flex gap-1 flex-wrap items-center justify-center">
-          <p class="font-semibold text-s-14">Trending:</p>
+          <p class="font-semibold text-s-14">{{ $t('stocks.trending_colon') }}</p>
           <div v-for="(stock, i) in trendingTokens.slice(0, 4)" :key="i">
             <app-tooltip :text="stock.stockAlias">
               <router-link

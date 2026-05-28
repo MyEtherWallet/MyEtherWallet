@@ -15,7 +15,7 @@
       <h2
         class="basis-full xs:basis-auto font-bold text-s-20 xs:text-s-24 leading-p-150 mb-6 flex items-center"
       >
-        Statistics
+        {{ $t('crypto.statistics') }}
       </h2>
       <div
         class="grid grid-cols-1 xs:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-6"
@@ -43,6 +43,9 @@ import { formatFiatValue } from '@/utils/numberFormatHelper'
 import { type GetWebTokenInfo } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)
@@ -72,51 +75,51 @@ const marketData = computed<Item[]>(() => {
   }
   return [
     {
-      label: 'Market Cap',
+      label: t('crypto.market_cap'),
       value: props.tokenData.marketCap
         ? `$${formatFiatValue(props.tokenData.marketCap).value}`
         : '--',
     },
 
     {
-      label: 'Total Supply',
+      label: t('crypto.total_supply'),
       value: props.tokenData.totalSupply
         ? `$${formatFiatValue(props.tokenData.totalSupply).value}`
         : '--',
     },
     {
-      label: 'Max Supply',
+      label: t('crypto.max_supply'),
       value: props.tokenData.maxSupply
         ? `$${formatFiatValue(props.tokenData.maxSupply).value}`
         : '--',
     },
 
     {
-      label: 'Circulating Supply',
+      label: t('crypto.circulating_supply'),
       value: props.tokenData.circulatingSupply
         ? `$${formatFiatValue(props.tokenData.circulatingSupply).value}`
         : '--',
     },
     {
-      label: 'Total Volume',
+      label: t('crypto.total_volume'),
       value: props.tokenData.totalVolume
         ? `$${formatFiatValue(props.tokenData.totalVolume).value}`
         : '--',
     },
     {
-      label: 'Fully Diluted Valuation',
+      label: t('crypto.fully_diluted_valuation'),
       value: props.tokenData.fullyDilutedValuation
         ? `$${formatFiatValue(props.tokenData.fullyDilutedValuation).value}`
         : '--',
     },
     {
-      label: '24h High',
+      label: t('crypto.twenty_four_h_high'),
       value: props.tokenData.high24h
         ? `$${formatFiatValue(props.tokenData.high24h).value}`
         : '--',
     },
     {
-      label: '24h Low',
+      label: t('crypto.twenty_four_h_low'),
       value: props.tokenData.low24h
         ? `$${formatFiatValue(props.tokenData.low24h).value}`
         : '--',

@@ -86,6 +86,9 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   symbol: {
@@ -178,6 +181,6 @@ const shareText = computed(() => {
   const price = stockData.value?.primaryMarket?.price
     ? `$${formatFiatValue(stockData.value.primaryMarket.price).value}`
     : ''
-  return `Check out ${ticker} ${price} on MyEtherWallet`
+  return t('common.share_message', { ticker, price })
 })
 </script>

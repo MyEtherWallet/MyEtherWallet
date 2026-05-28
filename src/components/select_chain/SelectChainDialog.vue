@@ -7,7 +7,7 @@
     z-index-overlay="z-[200]"
     z-index-container="z-[201]"
     has-content-gutter
-    title="Select Network"
+    :title="$t('select_chain.title')"
   >
     <template #content>
       <div
@@ -19,7 +19,7 @@
             <app-search-input
               v-model="searchInput"
               class="grow"
-              placeholder="Search by Name"
+              :placeholder="$t('select_chain.search_placeholder')"
               bg-class="bg-transparent"
             />
           </div>
@@ -48,7 +48,8 @@
                     v-if="chain.icon"
                     class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
                     :src="chain.icon"
-                    alt="token icon"
+                    alt=""
+                    aria-hidden="true"
                   />
                   <div
                     v-else
@@ -68,10 +69,10 @@
             class="flex items-center gap-1 pl-5 pt-5 pb-1"
           >
             <app-tooltip
-              text="To access these networks, use a different wallet or install the Enkrypt browser extension"
+              :text="$t('select_chain.incompatible_tooltip')"
             >
               <p class="text-s-16 font-medium text-info">
-                Networks incompatible with your wallet
+                {{ $t('select_chain.incompatible_title') }}
               </p></app-tooltip
             >
           </div>
@@ -87,7 +88,8 @@
                     v-if="chain.icon"
                     class="w-9 h-9 rounded-full object-contain shadow-button bg-white"
                     :src="chain.icon"
-                    alt="token icon"
+                    alt=""
+                    aria-hidden="true"
                   />
                   <div
                     v-else

@@ -3,7 +3,7 @@
     <div
       class="flex flex-col sm:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-3 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">Explore Tokens</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">{{ $t('crypto.explore_tokens') }}</h1>
 
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
@@ -28,7 +28,7 @@
                   class="min-h-10 rounded-full hoverNoBG px-3 flex items-center gap-1"
                   @click="toggleSelect"
                 >
-                  <span class="font-medium text-s-17">More</span>
+                  <span class="font-medium text-s-17">{{ $t('common.more') }}</span>
                   <chevron-down-icon class="w-4 h-4" />
                 </button>
               </template>
@@ -41,7 +41,7 @@
         v-model:selected="selectedCryptoFilter"
         :options="cryptoFilterOptions"
         position="right-0"
-        placeholder="Category Menu"
+        :placeholder="$t('crypto.category_menu')"
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
@@ -94,7 +94,7 @@
             <app-search-input
               v-model="searchInput"
               class="grow"
-              placeholder="Search"
+              :placeholder="$t('crypto.search')"
             />
             <button
               class="hidden xs:block rounded-full hoverNoBG p-2 flex h-10"
@@ -143,7 +143,7 @@
                     }"
                     @click="setHeaderSort('NAME')"
                   >
-                    TOKEN
+                    {{ $t('crypto.token') }}
                     <arrow-long-up-icon
                       class="w-3.5 h-3.5"
                       v-if="headerSort === 'NAME' && tableDirection === 'asc'"
@@ -166,7 +166,7 @@
                     }"
                     @click="setHeaderSort('MARKET_CAP')"
                   >
-                    MARKET CAP
+                    {{ $t('crypto.market_cap') }}
                     <arrow-long-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
@@ -193,7 +193,7 @@
                     }"
                     @click="setHeaderSort('TOTAL_VOLUME')"
                   >
-                    Volume
+                    {{ $t('crypto.volume') }}
                     <arrow-long-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="
@@ -242,7 +242,7 @@
                     }"
                     @click="setHeaderSort('PRICE')"
                   >
-                    Price
+                    {{ $t('crypto.price') }}
                     <arrow-long-up-icon
                       class="w-3.5 h-3.5 absolute -right-4"
                       v-if="headerSort === 'PRICE' && tableDirection === 'asc'"
@@ -275,8 +275,8 @@
                   <button
                     :aria-label="
                       isWatchListed(getWatchlistId(token))
-                        ? 'Remove from Watchlist'
-                        : 'Add to Watchlist'
+                        ? $t('common.remove_from_watchlist')
+                        : $t('common.add_to_watchlist')
                     "
                     @click.stop="setWatchlistToken(token)"
                     class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
@@ -375,12 +375,12 @@
                     class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
                   >
                     <app-pop-up-menu
-                      placeholder="actions menu"
+                      :placeholder="$t('common.action_menu')"
                       location="right"
                     >
                       <template #menu-button="{ toggleMenu }">
                         <app-btn-icon
-                          label="action menu"
+                          :label="$t('common.action_menu')"
                           @click.stop="toggleMenu"
                           height="h-7 xs:h-8"
                           width="w-7 xs:w-8"
@@ -410,8 +410,8 @@
                             />
                             <span class="ml-2">{{
                               isWatchListed(getWatchlistId(token))
-                                ? 'Remove from Watchlist'
-                                : 'Add to Watchlist'
+                                ? $t('common.remove_from_watchlist')
+                                : $t('common.add_to_watchlist')
                             }}</span>
                           </button>
                           <hr
@@ -432,7 +432,7 @@
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-buy class="text-primary w-4 h-4 mr-2" />
-                              <p>Buy</p>
+                              <p>{{ $t('buy') }}</p>
                             </li>
                             <template v-if="token.ondo !== null">
                               <li
@@ -443,7 +443,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
                                 <icon-trade class="text-primary w-4 h-4 mr-2" />
-                                <p>Trade</p>
+                                <p>{{ $t('crypto.trade') }}</p>
                               </li>
                             </template>
                             <template v-else>
@@ -458,7 +458,7 @@
                                 <icon-bridge
                                   class="text-primary w-4 h-4 mr-2"
                                 />
-                                <p>Bridge</p>
+                                <p>{{ $t('crypto.bridge') }}</p>
                               </li>
                               <li
                                 v-else-if="
@@ -473,7 +473,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
                                 <icon-swap class="text-primary w-4 h-4 mr-2" />
-                                <p>Swap</p>
+                                <p>{{ $t('swap') }}</p>
                               </li>
                             </template>
                           </ul>
@@ -487,14 +487,14 @@
                       size="small"
                       @click="tradeBtn(token)"
                       class="min-w-[64px]"
-                      >Trade
+                      >{{ $t('crypto.trade') }}
                     </app-base-button>
                     <app-base-button
                       v-else-if="getIsBridgeable(token)"
                       size="small"
                       @click="bridgeBtn(token)"
                       class="min-w-[64px]"
-                      >Bridge
+                      >{{ $t('crypto.bridge') }}
                     </app-base-button>
                     <app-base-button
                       v-else-if="
@@ -505,7 +505,7 @@
                       size="small"
                       @click="swapBtn(token)"
                       class="min-w-[64px]"
-                      >Swap
+                      >{{ $t('swap') }}
                     </app-base-button>
 
                     <app-base-button
@@ -514,7 +514,7 @@
                       @click="buyBtn(token)"
                       is-outline
                       class="min-w-[60px]"
-                      >Buy</app-base-button
+                      >{{ $t('buy') }}</app-base-button
                     >
                     <div v-else class="w-[60px]"></div>
                   </div>
@@ -530,17 +530,17 @@
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
               class="mb-1 text-center lg:mt-10"
             >
-              You dont have any watchlisted tokens.
+              {{ $t('crypto.no_watchlisted_tokens') }}
             </p>
             <p v-if="searchInput" class="mb-1 text-center lg:my-10">
-              No results found for "{{ searchInput }}".
+              {{ $t('crypto.no_results_for', { search: searchInput }) }}
             </p>
             <button
               v-if="selectedCryptoFilter.value === 'watchlist' && !searchInput"
               class="underline lg:mb-10"
               @click="selectedCryptoFilter = cryptoFilterOptions[0]"
             >
-              Discover more tokens
+              {{ $t('crypto.discover_more_tokens') }}
               <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
             </button>
           </div>
@@ -566,7 +566,12 @@
             class="text-info order-3 xs:order-1 mb-4 xs:mb-0"
             :class="isLoading ? 'invisible' : 'visible'"
           >
-            {{ getCurrentViewableItemsIndex }} of {{ totalTokenCount }} results
+            {{
+              $t('crypto.results_count', {
+                current: getCurrentViewableItemsIndex,
+                total: totalTokenCount,
+              })
+            }}
           </div>
           <div
             class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0"
@@ -574,20 +579,20 @@
           >
             <app-btn-icon
               :disabled="!isLoading && page === 1"
-              label="previous page"
+              :label="$t('common.previous_page')"
               @click="previousPage"
             >
               <ChevronLeftIcon class="w-4 h-4" />
             </app-btn-icon>
 
             <div class="flex items-center justify-center gap-2 min-w-[70px]">
-              <span class="text-black tabular-nums">{{ page }}</span>
-              <span class="text-info">of</span>
-              <span class="text-info tabular-nums">{{ totalPages }}</span>
+              <span class="text-info">
+                {{ $t('crypto.page_of', { current: page, total: totalPages }) }}
+              </span>
             </div>
             <app-btn-icon
               :disabled="!isLoading && page >= totalPages"
-              label="next page"
+              :label="$t('common.next_page')"
               @click="nextPage"
             >
               <ChevronRightIcon class="w-4 h-4" />
@@ -685,6 +690,9 @@ import type { NewTokenInfo } from '@/composables/useSwap'
 import { useInputStore } from '@/stores/inputStore'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { analytics, ClickTokenTradeEvent, CryptoMarketEvent } from '@/analytics'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const walletMenu = useWalletMenuStore()
 const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
@@ -963,18 +971,24 @@ const setSelectedChain = (chain: Chain) => {
   openChainDialog.value = false
 }
 
-const cryptoFilterOptions = ref([
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Top Gainers', value: 'topGainers' },
-  { label: 'Top Losers', value: 'topLosers' },
-  { label: 'Watchlist', value: 'watchlist' },
-  { label: 'Stablecoins', value: 'stablecoins' },
-  { label: 'DeFi', value: 'defi-index' },
-  { label: 'MEME', value: 'meme-token' },
-  { label: 'TikTok', value: 'tiktok-meme' },
+const cryptoFilterOptions = computed(() => [
+  { label: t('crypto.all_tokens'), value: 'all' },
+  { label: t('crypto.top_gainers'), value: 'topGainers' },
+  { label: t('crypto.top_losers'), value: 'topLosers' },
+  { label: t('crypto.watchlist'), value: 'watchlist' },
+  { label: t('crypto.stablecoins'), value: 'stablecoins' },
+  { label: t('crypto.defi'), value: 'defi-index' },
+  { label: t('crypto.meme'), value: 'meme-token' },
+  { label: t('crypto.tiktok'), value: 'tiktok-meme' },
 ])
 
 const selectedCryptoFilter = ref(cryptoFilterOptions.value[0])
+
+watch(cryptoFilterOptions, options => {
+  selectedCryptoFilter.value =
+    options.find(opt => opt.value === selectedCryptoFilter.value.value) ||
+    options[0]
+})
 
 interface DisplayToken extends Omit<
   GetWebTokensTableResponseToken,
