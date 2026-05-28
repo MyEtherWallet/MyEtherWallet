@@ -579,6 +579,7 @@
     :symbol="leverageSymbol"
     :leverage-error="leverageError"
     :is-saving="isSavingLeverage"
+    :max-leverage="leverageMaxLeverage"
     mode="submit"
     @save="saveLeverage"
   />
@@ -636,6 +637,7 @@ const isSavingLeverage = ref(false)
 const leverageError = ref('')
 const leverageMarket = ref('')
 const leverageSymbol = ref('')
+const leverageMaxLeverage = ref(20)
 const perpsToasts = usePerpsToasts()
 
 const openLeverage = (
@@ -645,7 +647,15 @@ const openLeverage = (
 ) => {
   leverageMarket.value = market
   leverageSymbol.value = symbol
-  tempLeverage.value = parseInt(currentLeverage) || 1
+  const tradingPair = markets.value.find(m => m.market === market)
+  const parsedMax = parseInt(tradingPair?.defaultLeverage ?? '')
+  const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
+  leverageMaxLeverage.value = maxLev
+  const parsedCurrent = parseInt(currentLeverage)
+  const initial = Number.isFinite(parsedCurrent) && parsedCurrent > 0
+    ? parsedCurrent
+    : maxLev
+  tempLeverage.value = Math.min(initial, maxLev)
   leverageError.value = ''
   showLeverageDialog.value = true
 }

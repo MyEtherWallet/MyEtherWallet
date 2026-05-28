@@ -316,6 +316,12 @@ export class PerpsClient {
     )
   }
 
+  async getOrder(orderId: string): Promise<GenericResponse<ApiOrder>> {
+    return this.authGet<GenericResponse<ApiOrder>>(
+      `/v1/perps/orders/${encodeURIComponent(orderId)}`,
+    )
+  }
+
   async getFills(opts?: {
     market?: string
     limit?: number

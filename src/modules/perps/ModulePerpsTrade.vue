@@ -266,6 +266,12 @@
                   : `Price supports up to ${quoteDecimals} decimal place${quoteDecimals === 1 ? '' : 's'}`
               }}
             </div>
+            <div
+              v-else-if="limitPriceOutOfTolerance"
+              class="text-error text-s-12 mb-1"
+            >
+              Price must be within +/- 10% tolerance
+            </div>
           </transition>
 
           <div class="flex justify-start gap-2 mt-1">
@@ -352,6 +358,15 @@
                     ? 'Invalid amount'
                     : 'Insufficient margin available'
                 }}
+              </div>
+              <div
+                v-else-if="
+                  Number(inputAmount || '0') > 0 &&
+                  positionSizeUsd < minOrderAmount
+                "
+                class="text-error text-s-12 mb-1"
+              >
+                Min. amount {{ formatUsd(minOrderAmount) }}
               </div>
             </transition>
 
@@ -668,6 +683,9 @@
       :order-error="orderError"
       :leverage-error="leverageError"
       :is-submitting="isSubmitting"
+      :limit-price-out-of-tolerance="limitPriceOutOfTolerance"
+      :maker-fee="activeContract?.makerFee"
+      :taker-fee="activeContract?.takerFee"
       @confirm="confirmAndSubmitAndSetLeverage"
     />
 
@@ -710,6 +728,7 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :max-leverage="marketMaxLeverage"
       :mode="manageMode === 'add' ? 'add' : 'create'"
       @save="manageMode === 'add' ? closeLeverageModal() : saveLeverage()"
     />
@@ -838,6 +857,7 @@ const {
   leverage,
   sliderValue,
   positionSizeUsd,
+  minOrderAmount,
   estimatedLiquidation,
   orderSize,
   availableMargin,
@@ -884,6 +904,7 @@ const {
   submitDisabled,
   submitButtonLabel,
   limitPriceHasError,
+  limitPriceOutOfTolerance,
   limitPricePrecisionError,
   marginPrecisionError,
   closeAmountPrecisionError,
@@ -913,6 +934,7 @@ const {
   marketFilterTabs,
   filteredMarketList,
   fullMarketName,
+  contracts,
   getMarketDisplayName,
   openTokenSelect,
   selectMarket,
@@ -924,6 +946,7 @@ const {
   openLeverageModal,
   saveLeverage,
   closeLeverageModal,
+  marketMaxLeverage,
 } = usePerpsTradeForm()
 
 const localLeverage = ref(leverage.value)
@@ -943,6 +966,10 @@ watch(
   },
 )
 
+const activeContract = computed(() =>
+  contracts.value.find(c => c.market === fullMarketName.value),
+)
+
 const isLoading = computed(() => false)
 
 const selectedToken = computed(() => ({
@@ -952,10 +979,6 @@ const selectedToken = computed(() => ({
 }))
 
 const getMainBtnText = computed(() => {
-  if (!activePosition.value) {
-    const side = orderSide.value === 'buy' ? 'Long' : 'Short'
-    return `${side} ${displaySymbol.value}`
-  }
   if (manageMode.value === 'close') {
     return closeButtonLabel.value
   }

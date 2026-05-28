@@ -892,6 +892,7 @@
     :symbol="baseCurrency"
     :leverage-error="leverageError"
     :is-saving="isSavingLeverage"
+    :max-leverage="marketMaxLeverage"
     mode="submit"
     @save="saveLeverage"
   />
@@ -1363,6 +1364,12 @@ const tempLeverage = ref(1)
 const isSavingLeverage = ref(false)
 const leverageError = ref('')
 
+const marketMaxLeverage = computed(() => {
+  const pair = markets.value.find(m => m.market === props.market)
+  const parsed = parseInt(pair?.defaultLeverage ?? '')
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+})
+
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
@@ -1387,7 +1394,11 @@ watch(selectedManageAction, action => {
     setWalletPanel('perps')
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
-    tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
+    const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
+    const initial = Number.isFinite(parsedPosition) && parsedPosition > 0
+      ? parsedPosition
+      : leverage.value || marketMaxLeverage.value
+    tempLeverage.value = Math.min(initial, marketMaxLeverage.value)
     leverageError.value = ''
     showLeverageDialog.value = true
   }

@@ -54,7 +54,7 @@
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-outline border-0 w-full my-2" />
+                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"

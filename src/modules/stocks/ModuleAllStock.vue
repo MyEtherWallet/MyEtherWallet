@@ -380,7 +380,7 @@
                             }}</span>
                           </button>
                           <hr
-                            class="h-px bg-grey-outline border-0 w-full my-2 sm:hidden"
+                            class="h-px bg-grey-10 border-0 w-full my-2 sm:hidden"
                           />
 
                           <ul>
