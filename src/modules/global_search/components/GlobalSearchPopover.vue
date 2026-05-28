@@ -6,7 +6,7 @@
       :class="[
         'bg-white rounded-20 shadow-popup z-20 overflow-hidden',
         isMobile
-          ? 'fixed inset-0 m-2'
+          ? 'fixed inset-x-2 top-16 bottom-2 overflow-y-auto'
           : 'absolute top-full left-0 right-0 mt-2 max-h-[80vh] overflow-y-auto',
       ]"
     >
@@ -20,7 +20,7 @@
             : $t('search.by_market_cap')
         "
         :items="stocks"
-        :expanded="expanded.stocks.value"
+        :expanded="expanded.stocks"
         :hide-when-empty="!!query && stocks.length === 0"
         @select="selectAsset"
         @toggle-expand="toggleExpand('stocks')"
@@ -34,7 +34,7 @@
             : $t('search.by_market_cap')
         "
         :items="crypto"
-        :expanded="expanded.crypto.value"
+        :expanded="expanded.crypto"
         :hide-when-empty="!!query && crypto.length === 0"
         @select="selectAsset"
         @toggle-expand="toggleExpand('crypto')"
@@ -69,7 +69,9 @@ onClickOutside(popoverEl, () => {
 })
 
 const route = useRoute()
-watch(() => route.fullPath, () => close())
+watch(() => route.fullPath, () => {
+  if (isOpen.value) close()
+})
 
 const { isXLMinAndUp } = useAppBreakpoints()
 const isMobile = computed(() => !isXLMinAndUp.value)

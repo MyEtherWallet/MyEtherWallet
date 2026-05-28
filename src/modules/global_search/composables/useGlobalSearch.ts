@@ -1,5 +1,5 @@
-// src/modules/global-search/composables/useGlobalSearch.ts
-import { ref, computed, watch } from 'vue'
+// src/modules/global_search/composables/useGlobalSearch.ts
+import { ref, reactive, computed, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -20,10 +20,10 @@ const crypto = ref<SearchResultItem[]>([])
 const isLoadingStocks = ref(false)
 const isLoadingCrypto = ref(false)
 
-const expanded = {
-  stocks: ref(false),
-  crypto: ref(false),
-}
+const expanded = reactive<Record<SectionKey, boolean>>({
+  stocks: false,
+  crypto: false,
+})
 
 const DEBOUNCE_MS = 300
 const PER_PAGE = 20
@@ -142,8 +142,8 @@ export function useGlobalSearch() {
   const close = () => {
     isOpen.value = false
     query.value = ''
-    expanded.stocks.value = false
-    expanded.crypto.value = false
+    expanded.stocks = false
+    expanded.crypto = false
     // Clear cached results so a re-open starts from a clean slate.
     stocks.value = []
     crypto.value = []
@@ -152,7 +152,7 @@ export function useGlobalSearch() {
   }
 
   const toggleExpand = (key: SectionKey) => {
-    expanded[key].value = !expanded[key].value
+    expanded[key] = !expanded[key]
   }
 
   const selectAsset = (item: SearchResultItem) => {

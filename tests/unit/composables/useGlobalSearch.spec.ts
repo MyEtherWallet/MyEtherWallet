@@ -173,10 +173,10 @@ describe('useGlobalSearch', () => {
 
   it('toggleExpand flips the per-section flag', () => {
     const { expanded, toggleExpand } = useGlobalSearch()
-    expect(expanded.stocks.value).toBe(false)
+    expect(expanded.stocks).toBe(false)
     toggleExpand('stocks')
-    expect(expanded.stocks.value).toBe(true)
-    expect(expanded.crypto.value).toBe(false)
+    expect(expanded.stocks).toBe(true)
+    expect(expanded.crypto).toBe(false)
   })
 
   it('recentlyViewedTop6 returns first 6 from the store, mixed', () => {
