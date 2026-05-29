@@ -4,31 +4,33 @@
       v-if="isOpen"
       ref="popoverEl"
       :class="[
-        'bg-white rounded-20 shadow-popup z-20 overflow-hidden',
+        'bg-white rounded-20 shadow-popup z-20 overflow-hidden flex flex-col',
         isMobile
-          ? 'fixed inset-x-2 top-16 bottom-2 overflow-y-auto'
-          : 'absolute top-full left-0 right-0 mt-2 max-h-[80vh] overflow-y-auto',
+          ? 'fixed inset-x-2 top-16 bottom-2'
+          : 'absolute top-full left-0 right-0 mt-2 max-h-[80vh]',
       ]"
     >
-      <recently-viewed-chips v-if="!query" />
+      <div class="overflow-y-auto flex-1 min-h-0 pb-2">
+        <recently-viewed-chips v-if="!query" />
 
-      <global-search-section
-        :title="$t('search.ondo_stocks')"
-        :subtitle="$t('search.by_market_cap')"
-        :items="stocks"
-        :expanded="expanded.stocks"
-        @select="selectAsset"
-        @toggle-expand="toggleExpand('stocks')"
-      />
+        <global-search-section
+          :title="$t('search.ondo_stocks')"
+          :subtitle="$t('search.by_market_cap')"
+          :items="stocks"
+          :expanded="expanded.stocks"
+          @select="selectAsset"
+          @toggle-expand="toggleExpand('stocks')"
+        />
 
-      <global-search-section
-        :title="$t('search.crypto')"
-        :subtitle="$t('search.by_market_cap')"
-        :items="crypto"
-        :expanded="expanded.crypto"
-        @select="selectAsset"
-        @toggle-expand="toggleExpand('crypto')"
-      />
+        <global-search-section
+          :title="$t('search.crypto')"
+          :subtitle="$t('search.by_market_cap')"
+          :items="crypto"
+          :expanded="expanded.crypto"
+          @select="selectAsset"
+          @toggle-expand="toggleExpand('crypto')"
+        />
+      </div>
     </div>
   </transition>
 </template>

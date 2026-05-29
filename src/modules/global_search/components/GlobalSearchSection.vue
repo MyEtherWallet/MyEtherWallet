@@ -61,7 +61,7 @@ const onGrowEnter = (el: Element) => {
   const h = (el as HTMLElement).scrollHeight
   ;(el as HTMLElement).style.height = '0px'
   void (el as HTMLElement).offsetHeight
-  ;(el as HTMLElement).style.transition = 'height 220ms ease'
+  ;(el as HTMLElement).style.transition = 'height 140ms cubic-bezier(0.4, 0, 0.2, 1)'
   ;(el as HTMLElement).style.height = `${h}px`
 }
 const onGrowAfterEnter = (el: Element) => {
@@ -72,7 +72,7 @@ const onGrowLeave = (el: Element) => {
   const h = (el as HTMLElement).scrollHeight
   ;(el as HTMLElement).style.height = `${h}px`
   void (el as HTMLElement).offsetHeight
-  ;(el as HTMLElement).style.transition = 'height 220ms ease'
+  ;(el as HTMLElement).style.transition = 'height 140ms cubic-bezier(0.4, 0, 0.2, 1)'
   ;(el as HTMLElement).style.height = '0px'
 }
 const onGrowAfterLeave = (el: Element) => {
