@@ -43,10 +43,9 @@ const stocksUrl = computed(() => {
 const cryptoUrl = computed(() => {
   const base = getAPIPath('/v1/web/tokens-table')
   const params = new URLSearchParams({
-    filterChain: 'all',
     page: '1',
     perPage: String(PER_PAGE),
-    sort: 'NAME_ASC',
+    sort: 'MARKET_CAP_DESC',
   })
   if (debouncedQuery.value) params.set('search', debouncedQuery.value)
   return `${base}?${params.toString()}`

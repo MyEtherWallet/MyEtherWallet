@@ -83,15 +83,15 @@
           </template>
         </app-select>
       </div>
-      <!-- GLOBAL SEARCH -->
-      <module-global-search class="ml-auto xl-min:ml-0" />
       <!-- RIGHT SIDE -->
-      <div class="flex items-center justify-end gap-2 ml-auto">
+      <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
+        <!-- GLOBAL SEARCH -->
+        <module-global-search />
         <!-- Create wallet button -->
         <router-link
           v-if="!isWalletConnected"
           :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
-          class="hidden xs:flex px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+          class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
           @click="
             analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
               source: 'Header_Create',
@@ -109,7 +109,7 @@
               source: 'Header_Connect',
             })
           "
-          class="px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+          class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
         >
           {{ $t('connect_wallet') }}
         </router-link>

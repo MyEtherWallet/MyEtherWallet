@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length > 0" class="py-2">
+  <div v-if="items.length > 0 || isLoading" class="py-2">
     <div class="px-4 py-2 flex items-baseline gap-2">
       <span class="text-s-11 font-bold uppercase tracking-sp-06">
         {{ title }}
@@ -7,7 +7,26 @@
       <span class="text-s-11 text-info">· {{ subtitle }}</span>
     </div>
 
+    <template v-if="items.length === 0 && isLoading">
+      <div
+        v-for="i in collapsedLimit"
+        :key="`skeleton-${i}`"
+        class="flex items-center gap-3 px-4 py-2"
+      >
+        <div class="w-8 h-8 rounded-full bg-mewBg animate-pulse" />
+        <div class="flex-1 flex flex-col gap-1">
+          <div class="h-3 w-20 rounded bg-mewBg animate-pulse" />
+          <div class="h-2 w-28 rounded bg-mewBg animate-pulse" />
+        </div>
+        <div class="flex flex-col items-end gap-1">
+          <div class="h-3 w-14 rounded bg-mewBg animate-pulse" />
+          <div class="h-2 w-10 rounded bg-mewBg animate-pulse" />
+        </div>
+      </div>
+    </template>
+
     <transition
+      v-else
       name="grow"
       @enter="onGrowEnter"
       @after-enter="onGrowAfterEnter"
@@ -39,12 +58,16 @@ import { computed } from 'vue'
 import GlobalSearchResultRow from './GlobalSearchResultRow.vue'
 import type { SearchResultItem } from '../types'
 
-const props = defineProps<{
-  title: string
-  subtitle: string
-  items: SearchResultItem[]
-  expanded: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    title: string
+    subtitle: string
+    items: SearchResultItem[]
+    expanded: boolean
+    isLoading?: boolean
+  }>(),
+  { isLoading: false },
+)
 
 defineEmits<{
   select: [item: SearchResultItem]

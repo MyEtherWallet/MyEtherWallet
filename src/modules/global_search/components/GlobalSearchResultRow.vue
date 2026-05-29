@@ -12,9 +12,9 @@
     />
     <div v-else class="w-8 h-8 rounded-full bg-surface flex-none" />
     <div class="flex-1 min-w-0">
-      <div class="font-semibold text-s-14 truncate">
+      <div class="font-semibold text-s-14 truncate uppercase">
         {{ item.symbol }}
-        <span v-if="item.isStock" class="text-info font-normal">on</span>
+        <span v-if="item.isStock" class="text-info font-normal lowercase">on</span>
       </div>
       <div class="text-s-12 text-info truncate">{{ item.name }}</div>
     </div>
