@@ -7,6 +7,7 @@
     <button
       v-if="isCompact"
       type="button"
+      :aria-label="$t('search.placeholder')"
       class="w-9 h-9 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
       :class="isOpen ? 'bg-white' : 'bg-mewBg'"
       @click="open"

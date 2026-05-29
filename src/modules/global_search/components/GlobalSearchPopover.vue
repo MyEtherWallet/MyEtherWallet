@@ -26,7 +26,10 @@
         </button>
       </div>
       <div v-auto-animate class="overflow-y-auto flex-1 min-h-0 pb-2">
-        <recently-viewed-chips v-if="!query" />
+        <!-- Gate on debouncedQuery so the chips remain visible during the
+             debounce window — avoids a brief blank panel between keystroke
+             and the first refetch. -->
+        <recently-viewed-chips v-if="!debouncedQuery" />
 
         <global-search-section
           :title="$t('search.ondo_stocks')"

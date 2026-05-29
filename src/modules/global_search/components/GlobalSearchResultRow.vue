@@ -40,5 +40,10 @@ defineProps<{ item: SearchResultItem }>()
 defineEmits<{ select: [item: SearchResultItem] }>()
 
 const formatUsd = (n: number) =>
-  n.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+  n.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    // Widen precision for sub-dollar magnitudes so sub-penny tokens don't render as $0.00.
+    maximumFractionDigits: n !== 0 && Math.abs(n) < 1 ? 6 : 2,
+  })
 </script>

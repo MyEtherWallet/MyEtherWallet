@@ -67,8 +67,6 @@ const { useGlobalSearch } = await import(
   '@/modules/global_search/composables/useGlobalSearch'
 )
 
-const flush = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms))
-
 describe('useGlobalSearch', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -83,15 +81,18 @@ describe('useGlobalSearch', () => {
     close()
   })
 
-  it('debounces query updates by 300ms', async () => {
+  it('debounces query updates by the configured window', async () => {
+    vi.useFakeTimers()
     const { query, debouncedQuery } = useGlobalSearch()
     query.value = 'a'
     query.value = 'ab'
     query.value = 'abc'
     await nextTick()
     expect(debouncedQuery.value).toBe('')
-    await flush(350)
+    vi.advanceTimersByTime(180)
+    await nextTick()
     expect(debouncedQuery.value).toBe('abc')
+    vi.useRealTimers()
   })
 
   it('selectAsset routes stocks via STOCK_INFO_ROUTE_NAMES.stocks', () => {
