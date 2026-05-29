@@ -6,7 +6,7 @@
         'bg-white rounded-20 shadow-popup z-20 overflow-hidden flex flex-col max-h-[80vh]',
         isCompact
           ? 'fixed left-2 right-2 top-[72px] max-w-[420px] mx-auto'
-          : 'absolute top-full left-0 right-0 mt-2',
+          : 'absolute top-full left-0 mt-2 w-[480px]',
       ]"
     >
       <div
