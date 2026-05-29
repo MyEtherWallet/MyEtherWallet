@@ -83,10 +83,74 @@ export const useSwap = (): {
   const toTokens = ref<ToTokenType | null>(null)
   const fromTokens = ref<NewTokenInfo[] | null>(null)
   const swapLoaded = ref<boolean>(false)
+  // Cached raw data used to update balances without re-fetching swaplists
+  const rawFromTokens = ref<TokenType[]>([])
+  const restrictedAddressesLower = ref<string[]>([])
+  // Per-instance guard: deduplicates concurrent initSwapper calls
+  let inflightInit: Promise<void> | null = null
+
+  // Updates fromTokens with current wallet balances without re-fetching swaplists.
+  // Called after init and when wallet tokens/native balance change reactively.
+  const applyTokenBalances = () => {
+    if (!swapInstance.value || !swapLoaded.value || !rawFromTokens.value.length) return
+
+    const allFromTokensWithBalance = rawFromTokens.value.map(token => {
+      let tokenBalance = '0'
+      let tokenPrice = token.price
+      if (tokens.value.length > 0 || balanceWei.value !== '0') {
+        if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
+          tokenBalance = balanceWei.value
+          tokenPrice = tokenPrice || selectedChain.value?.price || 0
+        } else {
+          const found = tokens.value.find(
+            t => t.contract.toLowerCase() === token.address.toLowerCase(),
+          )
+          if (found) {
+            tokenBalance = found.balanceWei
+            tokenPrice = tokenPrice || (found as any).price || 0
+          }
+        }
+      }
+      return Object.freeze({
+        ...token,
+        balance: tokenBalance,
+        price: tokenPrice,
+      }) as NewTokenInfo
+    })
+
+    const fromAllTokensToWalletTokens = allFromTokensWithBalance.filter(
+      token => {
+        if (
+          tokens.value.find(
+            t => t.contract.toLowerCase() === token.address.toLowerCase(),
+          )
+        ) {
+          return true
+        }
+        if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
+          return true
+        }
+        return false
+      },
+    )
+
+    let finalFromTokens = isWalletConnected.value
+      ? fromAllTokensToWalletTokens
+      : allFromTokensWithBalance
+
+    if (isTradingRestrictedInRegion.value && restrictedAddressesLower.value.length > 0) {
+      finalFromTokens = finalFromTokens.filter(
+        token =>
+          !restrictedAddressesLower.value.includes(token.address.toLowerCase()),
+      )
+    }
+
+    fromTokens.value = finalFromTokens
+  }
 
   // Initialize the Swapper instance
   // parses tokens and to networks available for swapping
-  const initSwapper = async () => {
+  const doInitSwapper = async () => {
     try {
       swapLoaded.value = false
       const rpc = selectedChain.value?.rpcUrls?.[0] || ''
@@ -112,40 +176,40 @@ export const useSwap = (): {
       await swapInstance.value.initPromise
       const allFromTokens = swapInstance.value.getFromTokens()
       supportedNetwork.value = allFromTokens.all.length > 0
+      rawFromTokens.value = allFromTokens.all
       let swapToTokens = swapInstance.value.getToTokens()
 
       // Check if trading is restricted and filter out restricted token addresses
-      const restrictedAddresses = await getRestrictedTokenAddresses()
-
-      const restrictedAddressesLower = restrictedAddresses.map(addr =>
+      const fetchedRestrictedAddresses = await getRestrictedTokenAddresses()
+      restrictedAddressesLower.value = fetchedRestrictedAddresses.map(addr =>
         addr.toLowerCase(),
       )
 
       // Filter toTokens if trading is restricted
-      if (isTradingRestrictedInRegion.value && restrictedAddressesLower.length > 0) {
-        const filterTokenArray = (tokens: TokenTypeTo[]) =>
-          tokens.filter(
+      if (isTradingRestrictedInRegion.value && restrictedAddressesLower.value.length > 0) {
+        const filterTokenArray = (tkns: TokenTypeTo[]) =>
+          tkns.filter(
             token =>
-              !restrictedAddressesLower.includes(token.address.toLowerCase()),
+              !restrictedAddressesLower.value.includes(token.address.toLowerCase()),
           )
 
         swapToTokens = {
           top: Object.fromEntries(
-            Object.entries(swapToTokens.top).map(([network, tokens]) => [
+            Object.entries(swapToTokens.top).map(([network, tkns]) => [
               network,
-              filterTokenArray(tokens as TokenTypeTo[]),
+              filterTokenArray(tkns as TokenTypeTo[]),
             ]),
           ) as typeof swapToTokens.top,
           trending: Object.fromEntries(
-            Object.entries(swapToTokens.trending).map(([network, tokens]) => [
+            Object.entries(swapToTokens.trending).map(([network, tkns]) => [
               network,
-              filterTokenArray(tokens as TokenTypeTo[]),
+              filterTokenArray(tkns as TokenTypeTo[]),
             ]),
           ) as typeof swapToTokens.trending,
           all: Object.fromEntries(
-            Object.entries(swapToTokens.all).map(([network, tokens]) => [
+            Object.entries(swapToTokens.all).map(([network, tkns]) => [
               network,
-              filterTokenArray(tokens as TokenTypeTo[]),
+              filterTokenArray(tkns as TokenTypeTo[]),
             ]),
           ) as typeof swapToTokens.all,
         }
@@ -162,60 +226,9 @@ export const useSwap = (): {
         })
         .filter((chain): chain is Chain => chain !== undefined)
       swapChains.value = toChains.value
-      const allFromTokensWithBalance = allFromTokens.all.map(token => {
-        let tokenBalance = '0'
-        let tokenPrice = token.price
-        if (tokens.value.length > 0 || balanceWei.value !== '0') {
-          if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
-            tokenBalance = balanceWei.value
-            tokenPrice = tokenPrice || selectedChain.value?.price || 0
-          } else {
-            const found = tokens.value.find(
-              t => t.contract.toLowerCase() === token.address.toLowerCase(),
-            )
-            if (found) {
-              tokenBalance = found.balanceWei
-              tokenPrice = tokenPrice || (found as any).price || 0
-            }
-          }
-        }
-        return Object.freeze({
-          ...token,
-          balance: tokenBalance,
-          price: tokenPrice,
-        }) as NewTokenInfo
-      })
 
-      const fromAllTokensToWalletTokens = allFromTokensWithBalance.filter(
-        token => {
-          if (
-            tokens.value.find(
-              t => t.contract.toLowerCase() === token.address.toLowerCase(),
-            )
-          ) {
-            return true
-          }
-          if (token.address.toLowerCase() === MAIN_TOKEN_CONTRACT) {
-            return true
-          }
-          return false
-        },
-      )
-
-      // Filter out restricted addresses from fromTokens if trading is restricted
-      let finalFromTokens = isWalletConnected.value
-        ? fromAllTokensToWalletTokens
-        : allFromTokensWithBalance
-
-      if (isTradingRestrictedInRegion.value && restrictedAddressesLower.length > 0) {
-        finalFromTokens = finalFromTokens.filter(
-          token =>
-            !restrictedAddressesLower.includes(token.address.toLowerCase()),
-        )
-      }
-
-      fromTokens.value = finalFromTokens
       swapLoaded.value = true
+      applyTokenBalances()
       return Promise.resolve()
     } catch (e) {
       if (
@@ -285,14 +298,31 @@ export const useSwap = (): {
     }
   }
 
+  // Deduplicates concurrent calls — if initialization is already in progress,
+  // returns the same promise rather than starting a second fetch of swaplists.
+  const initSwapper = async (): Promise<void> => {
+    if (inflightInit) return inflightInit
+    inflightInit = doInitSwapper() as Promise<void>
+    inflightInit.finally(() => { inflightInit = null })
+    return inflightInit
+  }
+
+  // Re-initialize swapper only when the network changes, not on every token/balance update.
   watch(
-    () => [selectedChain.value?.name, tokens.value],
-    async newChainName => {
-      if (newChainName) {
+    () => selectedChain.value?.name,
+    async chainName => {
+      if (chainName) {
         await initSwapper()
       }
     },
     { immediate: true },
+  )
+
+  // Update fromTokens balances reactively when wallet tokens or native balance change,
+  // without re-fetching swaplists from the network.
+  watch(
+    () => [tokens.value, balanceWei.value] as const,
+    () => applyTokenBalances(),
   )
 
   return {

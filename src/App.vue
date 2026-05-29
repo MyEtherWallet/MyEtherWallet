@@ -60,7 +60,7 @@ const {
   userProperties,
 } = storeToRefs(store)
 const chainStore = useChainsStore()
-const { initSwapper } = useSwap()
+useSwap()
 const { selectedChain } = storeToRefs(chainStore)
 const { setTokens, setIsLoadingBalances } = store
 const isLoadingComplete = ref(false)
@@ -183,7 +183,6 @@ onMounted(() => {
     const provider = customEvent.detail
     addProvider(provider)
   })
-  initSwapper()
   if (configs.INTERCOM_APP_ID) {
     Intercom({
       app_id: configs.INTERCOM_APP_ID,
