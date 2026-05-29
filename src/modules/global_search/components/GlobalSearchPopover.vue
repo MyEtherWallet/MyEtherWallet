@@ -25,7 +25,7 @@
           {{ $t('search.cancel') }}
         </button>
       </div>
-      <div class="overflow-y-auto flex-1 min-h-0 pb-2">
+      <div v-auto-animate class="overflow-y-auto flex-1 min-h-0 pb-2">
         <recently-viewed-chips v-if="!query" />
 
         <global-search-section

@@ -38,6 +38,7 @@
     "@ethereumjs/tx": "^5.4.0",
     "@ethereumjs/util": "^9.1.0",
     "@ethereumjs/wallet": "^2.0.4",
+    "@formkit/auto-animate": "^0.9.0",
     "@heroicons/vue": "^2.2.0",
     "@intercom/messenger-js-sdk": "^0.0.18",
     "@ledgerhq/hw-app-btc": "^10.21.0",

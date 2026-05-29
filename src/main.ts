@@ -15,6 +15,7 @@ import router from './router'
 import { Provider } from './providers'
 import { analytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
 
 const app = createApp(App)
@@ -74,6 +75,7 @@ app.use(pinia)
 app.use(router)
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
+app.use(autoAnimatePlugin)
 
 // Provide analytics for legacy inject() usage in Vue components
 app.provide(Provider.ANALYTICS, analytics)

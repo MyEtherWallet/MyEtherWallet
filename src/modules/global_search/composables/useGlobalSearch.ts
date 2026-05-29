@@ -25,7 +25,7 @@ const expanded = reactive<Record<SectionKey, boolean>>({
   crypto: false,
 })
 
-const DEBOUNCE_MS = 300
+const DEBOUNCE_MS = 180
 const PER_PAGE = 20
 
 // Tied to query's lifecycle; settles to query's current value after the delay.
