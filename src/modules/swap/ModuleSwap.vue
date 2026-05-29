@@ -46,7 +46,19 @@
               :is-pristine="isPristine"
               sort-context="swap"
               :class="isSwapView ? 'mt-1' : 'mt-3'"
-            />
+            >
+              <template #balance-action>
+                <div v-if="isWalletConnected && !isWatchOnly && fromTokenSelected && isInternalWallet()">
+                  <button
+                    type="button"
+                    class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                    @click="handleMaxClick"
+                  >
+                    {{ $t('common.max') }}
+                  </button>
+                </div>
+              </template>
+            </app-swap-enter-amount>
           </div>
 
           <!-- Arrow Button -->
@@ -246,6 +258,7 @@ import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
 // Stores and Composables
 import { useWalletStore, MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 import { useSwap, type NewTokenInfo } from '@/composables/useSwap'
+import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useInputStore } from '@/stores/inputStore'
@@ -492,7 +505,10 @@ const fromAmountError = computed(() => {
 
   // Balance Check
   const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-  const remainingBalance = tokenParams.totalBalance - baseAmount
+  const isMainToken = isMainTokenAddress(fromTokenSelected.value.address)
+  const remainingNativeBalance = isMainToken
+    ? tokenParams.totalBalance - baseAmount
+    : tokenParams.baseNetworkBalance
 
   // Insufficient Balance Error
   if (isWalletConnected.value && tokenParams.baseBalance < baseAmount) {
@@ -506,7 +522,7 @@ const fromAmountError = computed(() => {
     const fees = BigInt(
       selectedQuote.value.additionalNativeFees?.toString() || '0',
     )
-    if (isWalletConnected.value && fees > remainingBalance) {
+    if (isWalletConnected.value && fees > remainingNativeBalance) {
       return t('swap.error.insufficient-balance-for-fees', {
         symbol: selectedChain.value?.currencyName,
       })
@@ -575,7 +591,7 @@ const isSwapDisabled = computed(
 // --- Helper Methods ---
 
 const getTokenBalanceParams = (token: NewTokenInfo) => {
-  const isMainToken = token.address === MAIN_TOKEN_CONTRACT
+  const isMainToken = isMainTokenAddress(token.address)
   const balance = token.balance || '0'
   const baseTokenBalance = walletStore.getTokenBalance(MAIN_TOKEN_CONTRACT)
   const baseNetworkBalance = parseUnits(
@@ -593,12 +609,56 @@ const getTokenBalanceParams = (token: NewTokenInfo) => {
   return { baseBalance, totalBalance, baseNetworkBalance }
 }
 
+const isMainTokenAddress = (address?: string) => {
+  return address?.toLowerCase() === MAIN_TOKEN_CONTRACT.toLowerCase()
+}
+
+const getSwapFee = (): bigint => {
+  const feeData = swapGasFeeQuote.value?.fees?.[gasPriceType.value]
+  const gasFee = BigInt(feeData?.nativeValue || feeData?.nativeFeeTotal || '0')
+  const additionalFees = BigInt(
+    selectedQuote.value?.additionalNativeFees?.toString() || '0',
+  )
+  return gasFee + additionalFees
+}
+
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxAmount({
+  getBalance: () => {
+    if (!fromTokenSelected.value) return 0n
+    const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+    return tokenParams.totalBalance
+  },
+  getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
+  getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
+  isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
+  isTokenSelected: () => !!fromTokenSelected.value,
+  amountRef: fromAmount,
+  isPristineRef: isPristine,
+  getTokenIdentifier: () => fromTokenSelected.value?.address,
+  getDependencies: () => [
+    fromTokenSelected.value?.balance,
+    swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
+      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
+    selectedQuote.value?.additionalNativeFees?.toString(),
+  ],
+})
+
+const handleMaxClick = (): void => {
+  if (isMaxSelected.value) return
+  // Discard any prior quote/fee so the new max is calculated against the full
+  // balance, not against a fee that was estimated for a smaller manual amount.
+  selectedQuote.value = undefined
+  swapGasFeeQuote.value = undefined
+  setMaxAmount()
+}
+
 const switchGlobalNetwork = (chain: Chain) => {
   globalStore.setSelectedNetwork(chain.name)
 }
 
 const clearValues = () => {
   isPristine.value = true // Reset to pristine state
+  resetMaxState()
   toAddressError.value = '' // Clear error immediately
   generalError.value = '' // Clear general error
   clearSwapValues()
@@ -806,7 +866,7 @@ const swapFeeError = computed<string | undefined>(() => {
   ) {
     return undefined
   }
-  const isMainToken = fromTokenSelected.value.address === MAIN_TOKEN_CONTRACT
+  const isMainToken = isMainTokenAddress(fromTokenSelected.value.address)
   const fee = BigInt(
     swapGasFeeQuote.value?.fees[gasPriceType.value]?.nativeValue || '0',
   )
@@ -1296,6 +1356,11 @@ watch(
 )
 
 // Fetch Quote Trigger
+const prevFromToken = ref<string | null>(null)
+const prevToToken = ref<string | null>(null)
+const prevUserAddress = ref<string | null>(null)
+const prevToAddress = ref<string | null>(null)
+
 watch(
   () => [
     fromAmount.value,
@@ -1306,10 +1371,38 @@ watch(
   ],
   () => {
     generalError.value = ''
-
     qoutesError.value = false
+
+    const currentFromToken = fromTokenSelected.value?.address || null
+    const currentToToken = toTokenSelected.value?.address || null
+    const currentUserAddress = userAddress.value || null
+    const currentToAddress = toAddress.value || null
+    const onlyAmountChanged =
+      prevFromToken.value === currentFromToken &&
+      prevToToken.value === currentToToken &&
+      prevUserAddress.value === currentUserAddress &&
+      prevToAddress.value === currentToAddress &&
+      prevFromToken.value !== null
+
+    prevFromToken.value = currentFromToken
+    prevToToken.value = currentToToken
+    prevUserAddress.value = currentUserAddress
+    prevToAddress.value = currentToAddress
+
     if (isSameToken.value) {
       toAmount.value = ''
+      return
+    }
+
+    const isNativeToken =
+      fromTokenSelected.value?.address?.toLowerCase() ===
+      MAIN_TOKEN_CONTRACT.toLowerCase()
+    if (
+      isMaxSelected.value &&
+      onlyAmountChanged &&
+      isNativeToken &&
+      selectedQuote.value
+    ) {
       return
     }
 
@@ -1431,6 +1524,7 @@ watch(
 watch(
   () => fromTokenSelected.value?.address,
   () => {
+    swapGasFeeQuote.value = undefined
     if (
       fromTokenSelected.value &&
       toTokenSelected.value &&

@@ -17,7 +17,19 @@
             v-model:error="amountError"
             :validate-input="checkAmountForError"
             :is-pristine="isPristine"
-          />
+          >
+            <template #balance-action>
+              <div v-if="isWalletConnected && !isWatchOnly && tokenSelected && isInternalWallet()">
+                <button
+                  type="button"
+                  class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
+                  @click="setMaxAmount"
+                >
+                  {{ $t('common.max') }}
+                </button>
+              </div>
+            </template>
+          </app-enter-amount>
           <address-input
             v-model:adr-input="adrInput"
             :resolved-address="toAddress"
@@ -34,6 +46,7 @@
             :is-loading-fees="isLoadingFees"
             :txRequestBody="gasFeeTxEstimate"
             v-model:gas-fee-error="gasFeeError"
+            v-model:selected-fee-native-value="selectedFeeNativeValue"
             @fee-is-loading="setDefaultFee"
           />
         </div>
@@ -129,6 +142,7 @@ import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
+import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useAccessStore } from '@/stores/accessStore'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import {
@@ -178,6 +192,7 @@ const gasFeeTxEstimate = ref<
 >(undefined)
 const gasFees: Ref<QuotesResponse | undefined> = ref(undefined)
 const gasFeeError = ref('')
+const selectedFeeNativeValue = ref('0')
 
 const openTxModal = ref(false)
 const sendInitiatedOpen = ref(false)
@@ -232,6 +247,32 @@ const tokenSelected = computed(() => {
     return null
   }
   return walletStore.getTokenBalance(tokenSelectedContract.value)
+})
+
+const isNativeTokenSelected = computed(() => {
+  return (
+    tokenSelected.value?.contract.toLowerCase() ===
+    MAIN_TOKEN_CONTRACT.toLowerCase()
+  )
+})
+
+/** ----------------
+ * Max Amount
+ ------------------*/
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxAmount({
+  getBalance: () => BigInt(tokenSelected.value?.balanceWei || '0'),
+  getDecimals: () => tokenSelected.value?.decimals ?? 18,
+  getEstimatedFee: () => BigInt(selectedFeeNativeValue.value || '0'),
+  isNativeToken: () => isNativeTokenSelected.value,
+  isTokenSelected: () => !!tokenSelected.value,
+  amountRef: amount,
+  isPristineRef: isPristine,
+  getTokenIdentifier: () => tokenSelectedContract.value,
+  getDependencies: () => [
+    tokenSelected.value?.balanceWei,
+    selectedFeeNativeValue.value,
+  ],
+  onMaxApplied: () => checkAmountForError(),
 })
 
 const checkAmountForError = () => {
@@ -387,11 +428,29 @@ const getTxRequestBody = ():
 }
 
 // Get Estimates
+const prevToken = ref<string | null>(null)
+const prevToAddress = ref<string | null>(null)
+
 watchDebounced(
   () => [tokenSelected.value, amount.value, toAddress.value],
   async () => {
     gasFeeError.value = ''
     foundNickName.value = ''
+
+    const currentToken = tokenSelected.value?.contract || null
+    const currentToAddress = toAddress.value || null
+    const onlyAmountChanged =
+      prevToken.value === currentToken &&
+      prevToAddress.value === currentToAddress &&
+      prevToken.value !== null
+
+    prevToken.value = currentToken
+    prevToAddress.value = currentToAddress
+
+    if (isMaxSelected.value && onlyAmountChanged && isNativeTokenSelected.value) {
+      return
+    }
+
     const body = getTxRequestBody()
     const foundAddress = inAddressBook(
       toAddress.value || '',
@@ -407,6 +466,7 @@ watchDebounced(
 const resetSendModule = () => {
   isPristine.value = true // Reset to pristine state
   amountError.value = '' // Clear error immediately
+  resetMaxState()
   amount.value = ''
   toAddress.value = ''
   signedTx.value = ''
@@ -478,8 +538,9 @@ const toastStore = useToastStore()
 // Get quotes:
 const getGasFeeQuotes = async () => {
   try {
+    gasFeeError.value = ''
     const body = getTxRequestBody()
-    if (!body || !tokenSelected.value || !validSend.value) return
+    if (!body || !tokenSelected.value) return
     gasFeeTxEstimate.value = body
     isLoadingFees.value = true
     if (isEvmChain.value) {
@@ -505,6 +566,7 @@ const getGasFeeQuotes = async () => {
       gasFeeError.value = t('send.toast.failed_to_fetch_gas_fees')
     }
     isLoadingFees.value = false
+    return gasFees.value
   } catch (e) {
     if (e instanceof Error) {
       if (e.message) {
@@ -527,6 +589,7 @@ const getGasFeeQuotes = async () => {
       }
     }
     isLoadingFees.value = false
+    return undefined
   }
 }
 
@@ -534,13 +597,12 @@ const handleSubmit = async () => {
   analytics.trackSendEvent(SendEvent.CLICK_SEND, {
     token: tokenSelected.value?.symbol,
   })
-  gasFeeError.value = ''
-  await getGasFeeQuotes()
-  if (!wallet.value || !gasFees.value) return
+  const latestGasFees = await getGasFeeQuotes()
+  if (!wallet.value || !latestGasFees || gasFeeError.value) return
   // generate signable transaction
   const signableTx = await wallet.value?.getSignableTransaction({
     priority: selectedFee.value,
-    quoteId: gasFees.value.quoteId,
+    quoteId: latestGasFees.quoteId,
   })
 
   if (
