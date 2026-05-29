@@ -47,13 +47,26 @@
           @select="selectAsset"
           @toggle-expand="toggleExpand('crypto')"
         />
+
+        <div
+          v-if="showEmptyState"
+          class="flex flex-col items-center justify-center gap-1 px-4 py-10 text-center"
+        >
+          <magnifying-glass-icon class="w-8 h-8 text-info mb-1" />
+          <p class="text-s-14 font-semibold">
+            {{ $t('search.no_results_title') }}
+          </p>
+          <p class="text-s-12 text-info">
+            {{ $t('search.no_results_subtitle') }}
+          </p>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
@@ -68,6 +81,7 @@ const props = withDefaults(
 const {
   isOpen,
   query,
+  debouncedQuery,
   stocks,
   crypto,
   isLoadingStocks,
@@ -77,6 +91,12 @@ const {
   selectAsset,
   close,
 } = useGlobalSearch()
+
+const showEmptyState = computed(() => {
+  if (!debouncedQuery.value) return false
+  if (isLoadingStocks.value || isLoadingCrypto.value) return false
+  return stocks.value.length === 0 && crypto.value.length === 0
+})
 
 const compactInputEl = ref<HTMLInputElement | null>(null)
 watch(isOpen, async open => {

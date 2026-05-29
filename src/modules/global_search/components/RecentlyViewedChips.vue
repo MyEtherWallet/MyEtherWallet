@@ -18,7 +18,7 @@
           class="w-5 h-5 rounded-full flex-none"
         />
         <div v-else class="w-5 h-5 rounded-full bg-surface flex-none" />
-        <span class="text-s-12 font-medium truncate">{{ item.symbol }}</span>
+        <span class="text-s-12 font-medium truncate uppercase">{{ item.symbol }}</span>
       </button>
     </div>
   </div>

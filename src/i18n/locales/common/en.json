@@ -265,6 +265,8 @@
     "show_more": "Show more",
     "show_less": "Show less",
     "opened_recently": "Opened recently",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "no_results_title": "No matches found",
+    "no_results_subtitle": "Try a different symbol or name."
   }
 }
