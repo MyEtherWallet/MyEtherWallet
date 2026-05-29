@@ -153,6 +153,10 @@ const withdrawableMargin = computed(
 
 const isValidAmount = computed(() => {
   if (amount.value === null || amount.value <= 0) return false
+  // Don't trust amountError alone — its watcher is debounced 500ms, so a fast
+  // submit could otherwise sneak past a stale-but-empty error string.
+  if (!Number.isFinite(amount.value)) return false
+  if (hasInvalidPrecision(amount.value, USDC_DECIMALS[mainnet.id])) return false
   if (amountError.value) return false
   return amount.value <= parseFloat(withdrawableMargin.value)
 })
@@ -160,6 +164,10 @@ const isValidAmount = computed(() => {
 const validateAmount = () => {
   if (amount.value === null) {
     amountError.value = ''
+    return
+  }
+  if (!Number.isFinite(amount.value)) {
+    amountError.value = 'Amount is too large'
     return
   }
   if (hasInvalidPrecision(amount.value, USDC_DECIMALS[mainnet.id])) {
