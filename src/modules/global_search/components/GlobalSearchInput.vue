@@ -2,19 +2,21 @@
   <div
     ref="wrapperEl"
     class="relative flex-1 min-w-0 max-w-[360px]"
-    :class="isOpen ? 'z-40' : ''"
+    :class="isOpen ? 'z-[2]' : ''"
   >
     <button
       v-if="isCompact"
       type="button"
-      class="w-9 h-9 ml-auto flex items-center justify-center rounded-full bg-mewBg"
+      class="w-9 h-9 ml-auto flex items-center justify-center rounded-full transition-colors duration-500"
+      :class="isOpen ? 'bg-white' : 'bg-mewBg'"
       @click="open"
     >
       <magnifying-glass-icon class="w-5 h-5 text-info" />
     </button>
     <div
       v-else
-      class="flex items-center gap-2 px-4 py-2 bg-mewBg rounded-full"
+      class="flex items-center gap-2 px-4 py-2 rounded-full transition-colors duration-500"
+      :class="isOpen ? 'bg-white' : 'bg-mewBg'"
     >
       <magnifying-glass-icon class="w-4 h-4 text-info" />
       <input

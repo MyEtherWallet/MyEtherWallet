@@ -5,7 +5,7 @@
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
-      <div class="flex items-center gap-2 relative">
+      <div class="flex items-center gap-2 relative z-[0]">
         <router-link
           :to="{ name: ROUTES_MAIN.HOME.NAME }"
           class="cursor-pointer mr-1 sm:mr-4 xl:mr-10"
@@ -87,42 +87,53 @@
       <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
         <!-- GLOBAL SEARCH -->
         <module-global-search />
-        <!-- Create wallet button -->
-        <router-link
-          v-if="!isWalletConnected"
-          :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
-          class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
-          @click="
-            analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
-              source: 'Header_Create',
-            })
-          "
-        >
-          {{ $t('common.create_wallet') }}
-        </router-link>
-        <!-- Connect wallet button -->
-        <router-link
-          v-if="!isWalletConnected"
-          :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
-          @click="
-            analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-              source: 'Header_Connect',
-            })
-          "
-          class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
-        >
-          {{ $t('connect_wallet') }}
-        </router-link>
-        <the-current-network />
-        <!-- Address Menu -->
-        <the-address-menu v-if="isWalletConnected" />
-        <!-- Settings + Notifications group -->
-        <div class="flex items-center gap-2 ml-2">
+        <!-- Wallet area, trapped in its own stacking context so internal z-index
+             can't escape and paint over the search overlay -->
+        <div class="relative z-[0] flex items-center gap-2">
+          <!-- Create wallet button -->
+          <router-link
+            v-if="!isWalletConnected"
+            :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
+            class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+            @click="
+              analytics.trackCreateWalletEvent(CreateWalletEvent.CLICKED, {
+                source: 'Header_Create',
+              })
+            "
+          >
+            {{ $t('common.create_wallet') }}
+          </router-link>
+          <!-- Connect wallet button -->
+          <router-link
+            v-if="!isWalletConnected"
+            :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
+            @click="
+              analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+                source: 'Header_Connect',
+              })
+            "
+            class="shrink-0 px-3 xl:px-4 bg-black text-white h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
+          >
+            {{ $t('connect_wallet') }}
+          </router-link>
+          <the-current-network />
+          <!-- Address Menu -->
+          <the-address-menu v-if="isWalletConnected" />
           <the-settings-popup />
           <the-notifications-popup v-if="isWalletConnected" />
         </div>
       </div>
     </div>
+    <!-- Single dim overlay covering the viewport, lives inside header's stacking context -->
+    <div
+      class="fixed inset-0 bg-black/40 z-[1] transition-opacity duration-500"
+      :class="
+        isSearchOpen
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none'
+      "
+      @click="closeSearch"
+    />
   </div>
 </template>
 
@@ -164,7 +175,7 @@ const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
-const { isOpen: isSearchOpen } = useGlobalSearch()
+const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
  * Breakpoints determine menu visibility
