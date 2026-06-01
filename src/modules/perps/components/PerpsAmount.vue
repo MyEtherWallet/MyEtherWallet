@@ -103,13 +103,21 @@ onClickOutside(targetValue, () => {
 })
 
 const handleInput = (e: Event) => {
-  const raw = (e.target as HTMLInputElement).value
+  const input = e.target as HTMLInputElement
+  const raw = input.value
   if (raw === '') {
     amount.value = null
-  } else {
-    const num = parseFloat(raw)
-    amount.value = isNaN(num) ? null : num
+    return
   }
+  const num = parseFloat(raw)
+  // Reject non-finite parses (e.g. very long inputs that overflow Number.MAX_VALUE
+  // to Infinity) — otherwise Vue would stringify amount back into the input as
+  // the literal "Infinity" and downstream consumers would submit it.
+  if (!Number.isFinite(num)) {
+    input.value = amount.value === null ? '' : String(amount.value)
+    return
+  }
+  amount.value = num
 }
 
 const checkIfNumber = (e: KeyboardEvent) => {
