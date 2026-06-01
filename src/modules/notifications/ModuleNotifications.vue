@@ -22,6 +22,7 @@
         <transaction-container
           v-if="isTransaction(item)"
           :transaction="item"
+          :seen="item.seen"
           @remove="removeNotification"
         />
 
@@ -29,6 +30,7 @@
         <swap-container
           v-else-if="isSwap(item)"
           :swap="item"
+          :seen="item.seen"
           @remove="removeNotification"
         />
 
@@ -36,6 +38,7 @@
         <bridge-container
           v-else-if="isBridge(item)"
           :bridge="item"
+          :seen="item.seen"
           @remove="removeNotification"
         />
 
@@ -43,15 +46,12 @@
         <trade-order-container
           v-else
           :order="item as SavedTradeOrder"
+          :seen="item.seen"
           :remaining-time="
             getOrderWithRemainingTime(item as SavedTradeOrder).remainingTime
           "
           @remove="removeNotification"
         />
-        <div
-          v-if="item.seen === false"
-          class="absolute top-0 left-0 -translate-x-1/2 -translate-y-[70%] rounded-full bg-primary w-2 h-2"
-        ></div>
         <hr
           v-if="index < filteredNotifications.length - 1"
           class="border-t border-grey-10 mt-4"

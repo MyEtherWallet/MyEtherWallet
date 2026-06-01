@@ -1,10 +1,14 @@
 <template>
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
-      <div>
-        <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
+      <div class="flex items-center gap-1">
+        <p class="text-info uppercase text-s-9 font-bold">
           {{ $t('notifications_module.transaction') }}
         </p>
+        <div
+          v-if="seen === false"
+          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+        ></div>
       </div>
       <div
         :class="txStatus.color"
@@ -168,6 +172,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 // Props
 const props = defineProps<{
   transaction: TransactionNotification
+  seen?: boolean
 }>()
 
 // Emits

@@ -1,10 +1,14 @@
 <template>
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
-      <div class="basis-1/4">
-        <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
+      <div class="flex items-center gap-1 basis-1/4">
+        <p class="text-info uppercase text-s-9 font-bold">
           {{ $t('notifications_module.trade_order') }}
         </p>
+        <div
+          v-if="seen"
+          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+        ></div>
       </div>
       <span
         v-if="order.status === 'pending'"
@@ -240,6 +244,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 const props = defineProps<{
   order: SavedTradeOrder
   remainingTime: number
+  seen?: boolean
 }>()
 
 // Emits
