@@ -325,9 +325,14 @@
               </div>
               <button
                 class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-surface min-w-15"
-                @click="openLeverageModal"
+                :disabled="isLoadingLeverage"
+                @click="openLeverage"
               >
-                <p class="ml-auto font-semibold text-s-14">
+                <span
+                  v-if="isLoadingLeverage"
+                  class="ml-auto bg-grey-10 animate-pulse rounded-full h-4 w-8"
+                />
+                <p v-else class="ml-auto font-semibold text-s-14">
                   {{ manageMode === 'add' ? localLeverage : leverage }}&times;
                 </p>
                 <ChevronDownIcon class="w-3 h-3" />
@@ -730,7 +735,7 @@
       :is-saving="isSavingLeverage"
       :max-leverage="marketMaxLeverage"
       :mode="manageMode === 'add' ? 'add' : 'create'"
-      @save="manageMode === 'add' ? closeLeverageModal() : saveLeverage()"
+      @save="onSaveLeverage"
     />
 
     <!-- Take Profit / Stop Loss Dialog -->
@@ -942,6 +947,7 @@ const {
   showLeverageModal,
   tempLeverage,
   isSavingLeverage,
+  isLoadingLeverage,
   leverageError,
   openLeverageModal,
   saveLeverage,
@@ -959,10 +965,40 @@ watch(
   },
 )
 
+// 'add' mode doesn't persist via the API on save — it stages a leverage for
+// the next add order. Only commit to localLeverage on explicit save (never on
+// dismiss). Non-add modes go through saveLeverage(), which updates the
+// `leverage` singleton and the watcher above syncs localLeverage.
+const onSaveLeverage = () => {
+  if (manageMode.value === 'add') {
+    localLeverage.value = tempLeverage.value
+    closeLeverageModal()
+  } else {
+    saveLeverage()
+  }
+}
+
+// Seed tempLeverage from localLeverage in add mode (which tracks the open
+// position's leverage and any staged-but-unapplied change) instead of the
+// singleton. The composable's openLeverageModal seeds from the singleton,
+// which would jump the slider back to the user's preferred leverage and
+// drop a staged add-mode value.
+const openLeverage = () => {
+  if (manageMode.value === 'add') {
+    tempLeverage.value = Math.min(localLeverage.value, marketMaxLeverage.value)
+    leverageError.value = ''
+    showLeverageModal.value = true
+  } else {
+    openLeverageModal()
+  }
+}
+
+// Reset tempLeverage on dismiss so the confirm modal and submit-path leverage
+// check don't fire on an abandoned slider value.
 watch(
   () => showLeverageModal.value,
   val => {
-    if (!val) localLeverage.value = tempLeverage.value
+    if (!val) tempLeverage.value = localLeverage.value
   },
 )
 

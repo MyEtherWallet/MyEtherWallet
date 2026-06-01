@@ -1395,10 +1395,10 @@ watch(selectedManageAction, action => {
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
     const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
-    const initial = Number.isFinite(parsedPosition) && parsedPosition > 0
-      ? parsedPosition
-      : leverage.value || marketMaxLeverage.value
-    tempLeverage.value = Math.min(initial, marketMaxLeverage.value)
+    tempLeverage.value =
+      Number.isFinite(parsedPosition) && parsedPosition > 0
+        ? Math.min(parsedPosition, marketMaxLeverage.value)
+        : marketMaxLeverage.value
     leverageError.value = ''
     showLeverageDialog.value = true
   }
