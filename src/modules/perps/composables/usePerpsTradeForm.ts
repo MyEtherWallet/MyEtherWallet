@@ -32,6 +32,16 @@ interface OrderSideButton {
 const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
+// The Ondo backend rejects market orders whose expected fill would exceed a
+// price tolerance (~10% from fair price), surfacing a raw "Rejecting market
+// order because … reasonable price …" string. Replace it with a UX-friendly
+// slippage explanation; otherwise users see backend jargon ("Fair price",
+// "Max reasonable Price") without context.
+const SLIPPAGE_REJECTION_PATTERN =
+  /rejecting\s+market\s+order.*reasonable\s+price/i
+const SLIPPAGE_REJECTION_MESSAGE =
+  'Order rejected: the market moved too far from fair price (slippage protection). Try again, or place a limit order instead.'
+
 const leverage = ref(20)
 
 export function usePerpsTradeForm() {
@@ -436,8 +446,10 @@ export function usePerpsTradeForm() {
       closeSliderValue.value = 0
       triggerRefresh()
     } catch (e: any) {
-      closeError.value =
-        e?.message || e?.toString() || 'Failed to close position.'
+      const rawMsg = e?.message || e?.toString() || ''
+      closeError.value = SLIPPAGE_REJECTION_PATTERN.test(rawMsg)
+        ? SLIPPAGE_REJECTION_MESSAGE
+        : rawMsg || 'Failed to close position.'
     } finally {
       isClosing.value = false
     }
@@ -1054,8 +1066,9 @@ export function usePerpsTradeForm() {
           perpsToasts.toastTakeProfitInvalid()
         }
       }
-      orderError.value =
-        error?.message || error?.toString() || 'Order failed. Please try again.'
+      orderError.value = SLIPPAGE_REJECTION_PATTERN.test(msg)
+        ? SLIPPAGE_REJECTION_MESSAGE
+        : error?.message || error?.toString() || 'Order failed. Please try again.'
     } finally {
       isSubmitting.value = false
     }
