@@ -2,7 +2,7 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="mew-card-readable relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
       >
         <img
           ref="mewCard"
@@ -13,6 +13,10 @@
           class="rounded-16 drop-shadow absolute z-0 h-full w-full object-cover"
           @load="animateMewCard"
         />
+        <div
+          aria-hidden="true"
+          class="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-black/40 via-black/15 to-black/40"
+        ></div>
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
           <div class="">
@@ -331,6 +335,17 @@ const switchAddress = () => {
   filter:
     drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.24)),
     drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.24));
+}
+/* MEW-1644: keep white text legible when the generated mewcard background
+   happens to be very light. The gradient overlay handles most cases; the
+   shadow is a belt-and-suspenders pass for the brightest cards. */
+.mew-card-readable p,
+.mew-card-readable button,
+.mew-card-readable a {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+.mew-card-readable .text-black {
+  text-shadow: none;
 }
 .mew-card {
   opacity: 0;
