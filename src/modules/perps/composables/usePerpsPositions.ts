@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import { perpsClient } from '../configs'
+import { gatedPoll } from './usePerpsActive'
 import { usePerpsAuth } from './usePerpsAuth'
 import type { Position } from '../sdk/types'
 
@@ -44,7 +45,7 @@ function startPolling() {
   }
 
   poll()
-  setInterval(poll, 5_000)
+  gatedPoll(poll, 5_000)
 
   // The singleton is often initialised by PerpsMarketList (mounted before auth)
   // so the first poll() runs with no token and never sets loading=true. React
