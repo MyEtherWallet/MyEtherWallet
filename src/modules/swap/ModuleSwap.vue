@@ -48,7 +48,14 @@
               :class="isSwapView ? 'mt-1' : 'mt-3'"
             >
               <template #balance-action>
-                <div v-if="isWalletConnected && !isWatchOnly && fromTokenSelected && isInternalWallet()">
+                <div
+                  v-if="
+                    isWalletConnected &&
+                    !isWatchOnly &&
+                    fromTokenSelected &&
+                    isInternalWallet()
+                  "
+                >
                   <button
                     type="button"
                     class="px-2.5 py-0.5 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
@@ -72,7 +79,9 @@
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 font-bold ml-3">{{ $t('swap.you-are-buying') }}</p>
+            <p class="text-s-12 font-bold ml-3">
+              {{ $t('swap.you-are-buying') }}
+            </p>
             <select-chain-for-app
               :can-store="false"
               :passed-chains="parsedToChains"
@@ -138,9 +147,21 @@
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ isSwapView
-                ? $t('swap.swapping-not-available', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') })
-                : $t('swap.bridging-not-available', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
+              {{
+                isSwapView
+                  ? $t('swap.swapping-not-available', {
+                      network:
+                        selectedChain?.nameLong ||
+                        selectedChain?.name ||
+                        $t('common.network'),
+                    })
+                  : $t('swap.bridging-not-available', {
+                      network:
+                        selectedChain?.nameLong ||
+                        selectedChain?.name ||
+                        $t('common.network'),
+                    })
+              }}
             </p>
 
             <select-chain-for-app
@@ -162,7 +183,9 @@
         class="w-full max-w-[340px] p-4 bg-error-10 border border-error rounded-12 mb-2"
       >
         <p class="text-error text-s-14 text-center">
-          {{ t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) }) }}
+          {{
+            t('swap.price-impact-too-high', { percent: priceImpact.toFixed(2) })
+          }}
         </p>
       </div>
       <div
@@ -194,7 +217,9 @@
             @click="swapButton"
             class="w-full"
           >
-            {{ isSwapView ? $t('common.swap') : $t('common.bridge') }}</app-base-button
+            {{
+              isSwapView ? $t('common.swap') : $t('common.bridge')
+            }}</app-base-button
           >
         </transition>
       </div>
@@ -622,26 +647,27 @@ const getSwapFee = (): bigint => {
   return gasFee + additionalFees
 }
 
-const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } = useMaxAmount({
-  getBalance: () => {
-    if (!fromTokenSelected.value) return 0n
-    const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
-    return tokenParams.totalBalance
-  },
-  getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
-  getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
-  isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
-  isTokenSelected: () => !!fromTokenSelected.value,
-  amountRef: fromAmount,
-  isPristineRef: isPristine,
-  getTokenIdentifier: () => fromTokenSelected.value?.address,
-  getDependencies: () => [
-    fromTokenSelected.value?.balance,
-    swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
-      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
-    selectedQuote.value?.additionalNativeFees?.toString(),
-  ],
-})
+const { setMaxAmount, resetMaxState, isInternalWallet, isMaxSelected } =
+  useMaxAmount({
+    getBalance: () => {
+      if (!fromTokenSelected.value) return 0n
+      const tokenParams = getTokenBalanceParams(fromTokenSelected.value)
+      return tokenParams.totalBalance
+    },
+    getDecimals: () => fromTokenSelected.value?.decimals ?? 18,
+    getEstimatedFee: () => (selectedQuote.value ? getSwapFee() : 0n),
+    isNativeToken: () => isMainTokenAddress(fromTokenSelected.value?.address),
+    isTokenSelected: () => !!fromTokenSelected.value,
+    amountRef: fromAmount,
+    isPristineRef: isPristine,
+    getTokenIdentifier: () => fromTokenSelected.value?.address,
+    getDependencies: () => [
+      fromTokenSelected.value?.balance,
+      swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeValue ||
+        swapGasFeeQuote.value?.fees?.[gasPriceType.value]?.nativeFeeTotal,
+      selectedQuote.value?.additionalNativeFees?.toString(),
+    ],
+  })
 
 const handleMaxClick = (): void => {
   if (isMaxSelected.value) return
@@ -670,8 +696,8 @@ const clearValues = () => {
   // Reset token selections so setToToken/setFromToken will set defaults
   fromTokenSelected.value = null
   toTokenSelected.value = null
-  setToToken()
   setFromToken()
+  setToToken()
 }
 
 const validateToAddress = async () => {
@@ -1150,9 +1176,11 @@ const setToToken = () => {
         swapValues.value.toToken.address.toLowerCase(),
     )
     if (match) {
+      console.log('here?', match)
       toTokenSelected.value = match
     } else if (localToTokens.value.length > 0) {
       const fallback = localToTokens.value[0]
+      console.log('buh?', fallback)
       toTokenSelected.value = {
         ...fallback,
         balance: formatUnits(
@@ -1177,6 +1205,7 @@ const setToToken = () => {
 
     if (existsInList && !collidesWithFrom) {
       // Update with fresh data but keep selection
+      console.log('hello?', existsInList)
       toTokenSelected.value = existsInList as NewTokenInfo
       return
     }
@@ -1195,6 +1224,7 @@ const setToToken = () => {
           )
         : candidates[0]
       if (defaultToken) {
+        console.log('breh?', defaultToken)
         toTokenSelected.value = {
           ...defaultToken,
           balance: formatUnits(
@@ -1220,6 +1250,7 @@ const setToToken = () => {
           )
         : candidates[0]
       if (defaultToken) {
+        console.log('huh?', defaultToken)
         toTokenSelected.value = {
           ...defaultToken,
           balance: formatUnits(
