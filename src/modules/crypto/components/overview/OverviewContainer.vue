@@ -6,14 +6,14 @@
       <div class="flex">
         <app-btn-icon
           :disabled="isLoading || currentPage === 0"
-          label="previous page"
+          :label="$t('common.previous_page')"
           @click="previousPage"
         >
           <ChevronLeftIcon class="w-4 h-4" />
         </app-btn-icon>
         <app-btn-icon
           :disabled="isLoading || currentPage + 1 >= totalPages"
-          label="next page"
+          :label="$t('common.next_page')"
           @click="nextPage"
         >
           <ChevronRightIcon class="w-4 h-4" />

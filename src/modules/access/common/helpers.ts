@@ -1,6 +1,7 @@
 import { Wallet, thirdparty } from '@ethereumjs/wallet'
 import { bigIntToHex, hexToBigInt, isHexString } from '@ethereumjs/util'
 import { bytesToHex, toBigInt, toWei } from 'web3-utils'
+import i18n from '@/i18n'
 
 import type {
   EthSaleKeystore,
@@ -163,7 +164,7 @@ const calculateChainIdFromV = (v: string) => {
 
 const fromMyEtherWalletV2 = (json: MEWKeystore) => {
   if (json.privKey.length !== 64) {
-    throw new Error('Invalid private key length')
+    throw new Error(i18n.global.t('common.error.invalid_private_key_length'))
   }
   const privKey = Buffer.from(json.privKey, 'hex')
   return new Wallet(privKey)
@@ -186,7 +187,7 @@ const getWalletFromPrivKeyFile = (
     return thirdparty.fromEtherWallet(json as EtherWalletOptions, password)
   } else if ((json as MEWKeystore).publisher == 'MyEtherwallet') {
     return fromMyEtherWalletV2(json as MEWKeystore)
-  } else throw new Error('Invalid JSON Keystore')
+  } else throw new Error(i18n.global.t('common.error.invalid_keystore'))
 }
 
 const unlockKeystore = async (

@@ -2,14 +2,13 @@
   <app-dialog
     v-model:is-open="model"
     class="sm:max-w-[420px] sm:mx-auto"
-    title="Trade Order Submitted"
+    :title="$t('trade.initiated_modal.title')"
   >
     <template #content>
       <div class="px-4 lg:px-6 pb-8 pt-2">
         <div class="flex flex-col items-center pt-8 text-center">
           <p class="text-s-13 lg:text-s-14 text-info px-4 leading-p-160">
-            Your trade order has been submitted to the 1inch Fusion network. The
-            order is being filled.
+            {{ $t('trade.initiated_modal.order_submitted') }}
           </p>
 
           <div class="flex flex-col gap-0 w-full mt-4 lg:mt-8">
@@ -166,7 +165,7 @@
               <div class="flex justify-between items-center">
                 <span
                   class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
-                  >Order Hash</span
+                  >{{ $t('trade.initiated_modal.order_hash') }}</span
                 >
                 <div class="flex items-center gap-2">
                   <span class="text-s-12 font-mono truncate max-w-[150px]">
@@ -178,7 +177,7 @@
               <div class="flex justify-between items-center mt-4">
                 <span
                   class="text-s-11 uppercase tracking-sp-06 font-bold text-info"
-                  >Network</span
+                  >{{ $t('trade.initiated_modal.network') }}</span
                 >
                 <div class="flex items-center gap-2">
                   <app-token-logo
@@ -201,13 +200,13 @@
           <p
             class="text-center text-s-13 lg:text-s-14 text-info px-4 leading-p-160"
           >
-            You can close this window and
+            {{ $t('trade.initiated_modal.close_window_message') }}
           </p>
           <app-base-button
             class="group border-2 mt-2 w-full"
             @click="openNotifications"
           >
-            Track progress in notifications
+            {{ $t('trade.initiated_modal.track_progress') }}
           </app-base-button>
         </div>
       </div>
@@ -217,6 +216,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -239,6 +239,8 @@ import {
   formatFiatValue,
   formatFloatingPointValue,
 } from '@/utils/numberFormatHelper'
+
+const { t } = useI18n()
 
 const model = defineModel<boolean>('isOpen', { default: false })
 
@@ -305,15 +307,15 @@ const notificationStatus = computed(() => {
 const statusText = computed(() => {
   switch (notificationStatus.value) {
     case 'pending':
-      return 'Pending'
+      return t('trade.status.pending')
     case 'filled':
-      return 'Filled'
+      return t('trade.status.filled')
     case 'cancelled':
-      return 'Cancelled'
+      return t('trade.status.cancelled')
     case 'expired':
-      return 'Expired'
+      return t('trade.status.expired')
     default:
-      return 'Pending'
+      return t('trade.status.pending')
   }
 })
 </script>

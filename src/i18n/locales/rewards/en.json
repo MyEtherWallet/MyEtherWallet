@@ -1,0 +1,26 @@
+{
+  "rewards": {
+    "loading": "Loading Rewards",
+    "hooray": "Hooray!",
+    "rewarded_with": "You've been rewarded with ${amount} USDC",
+    "earn_another_tomorrow": "Remember to earn another reward tomorrow!",
+    "reward_on_its_way": "Reward is on its way",
+    "reward_in_wallet": "Reward is in your wallet",
+    "see_reward_tx": "See Reward Tx",
+    "earn_amount_usdc": "Earn ${amount} USDC",
+    "reward_description": "First {count} swaps in the next {hours} hours over ${min} get ${amount} USDC",
+    "rewards_left": "1 reward left | {count} rewards left",
+    "resets_in": "Resets in {time}",
+    "swap_now": "Swap Now",
+    "account_not_eligible": "Account not eligible",
+    "try_again_later": "Sorry, try again later!",
+    "learn_more": "Learn More",
+    "earn_rewards_title": "Earn rewards",
+    "earn_rewards_description": "First 10 trades of $25+ and swaps of $50+ earn 5 USDC each hour.",
+    "not_eligible_at_this_time": "You are not eligible for rewards at this time",
+    "switched_to_ethereum": "Switched app network to Ethereum",
+    "congratulations": "Congratulations!",
+    "you_received_reward": "You received your reward",
+    "toggle_full_text": "Toggle full text"
+  }
+}

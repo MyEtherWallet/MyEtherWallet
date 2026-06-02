@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen relative flex overflow-hidden">
-    <the-header class="basis-full" />
+    <the-header class="basis-full" @wheel="onHeaderWheel" />
 
     <!-- Background -->
     <teleport to="#app">
@@ -22,6 +22,7 @@
       </transition>
     </teleport>
     <div
+      ref="scrollContainer"
       :class="[
         isOpenSideMenu ? 'xl:mr-[455px]' : 'xl:mr-[80px]',
         backgroundClass,
@@ -76,7 +77,7 @@
 import { MewFooter } from '@myetherwallet/vue-common-components'
 import { RouterLink, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { inject, computed } from 'vue'
+import { inject, computed, ref } from 'vue'
 import type { Analytics } from '@/analytics/amplitude'
 import { Provider } from '@/providers'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
@@ -124,6 +125,13 @@ const backgroundClass = computed(() => {
 
 const appLayoutStore = useAppLayoutStore()
 const { isOverflowHidden } = storeToRefs(appLayoutStore)
+
+const scrollContainer = ref<HTMLElement | null>(null)
+
+const onHeaderWheel = (e: WheelEvent) => {
+  if (isOverflowHidden.value || !scrollContainer.value) return
+  scrollContainer.value?.scrollBy({ top: e.deltaY, behavior: 'instant' })
+}
 </script>
 
 <style scoped>
