@@ -96,7 +96,7 @@
       <div class="flex justify-center">
         <template v-if="!isWalletConnected || isWatchOnly">
           <app-base-button
-            class="w-full lg:w-auto lg:px-10"
+            class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             @click="onConnectWallet"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
@@ -106,7 +106,7 @@
         </template>
         <template v-else-if="isBitcoinChain && isUnisatWallet">
           <app-base-button
-            class="w-full lg:w-auto lg:px-10"
+            class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             @click="onDownloadEnkrypt"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
@@ -116,7 +116,7 @@
         </template>
         <template v-else-if="isBitcoinChain">
           <app-base-button
-            class="w-full lg:w-auto lg:px-10"
+            class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             @click="onSwitchToEthereum"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
@@ -126,7 +126,7 @@
         </template>
         <template v-else>
           <app-base-button
-            class="w-full lg:w-auto lg:px-10"
+            class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             :is-loading="isAuthenticating"
             @click="login"
             @mouseenter="isHoveringCta = true"
