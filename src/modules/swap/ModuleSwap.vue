@@ -1176,11 +1176,9 @@ const setToToken = () => {
         swapValues.value.toToken.address.toLowerCase(),
     )
     if (match) {
-      console.log('here?', match)
       toTokenSelected.value = match
     } else if (localToTokens.value.length > 0) {
       const fallback = localToTokens.value[0]
-      console.log('buh?', fallback)
       toTokenSelected.value = {
         ...fallback,
         balance: formatUnits(
@@ -1205,7 +1203,6 @@ const setToToken = () => {
 
     if (existsInList && !collidesWithFrom) {
       // Update with fresh data but keep selection
-      console.log('hello?', existsInList)
       toTokenSelected.value = existsInList as NewTokenInfo
       return
     }
@@ -1224,7 +1221,6 @@ const setToToken = () => {
           )
         : candidates[0]
       if (defaultToken) {
-        console.log('breh?', defaultToken)
         toTokenSelected.value = {
           ...defaultToken,
           balance: formatUnits(
@@ -1250,7 +1246,6 @@ const setToToken = () => {
           )
         : candidates[0]
       if (defaultToken) {
-        console.log('huh?', defaultToken)
         toTokenSelected.value = {
           ...defaultToken,
           balance: formatUnits(
