@@ -6,7 +6,7 @@
           {{ $t('notifications_module.swap') }}
         </p>
         <div
-          v-if="seen"
+          v-if="!seen"
           class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
         ></div>
       </div>
