@@ -15,7 +15,7 @@
         />
         <div
           aria-hidden="true"
-          class="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-black/40 via-black/15 to-black/40"
+          class="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-black/25 via-black/5 to-black/30"
         ></div>
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
