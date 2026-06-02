@@ -77,7 +77,10 @@
     "connect": "Connect your Ledger"
   },
   "access_wallet_private_key": {
-    "title": "Access Wallet with Private Key"
+    "title": "Access Wallet with Private Key",
+    "enter_private_key": "Enter your private key",
+    "private_key_input_label": "private key input",
+    "invalid_private_key": "Invalid private key"
   },
   "wc_dialog": {
     "title": "Connect to MEW portfolio",
