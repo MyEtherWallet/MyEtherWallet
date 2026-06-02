@@ -50,28 +50,56 @@ describe('usePerpsActive', () => {
     expect(isPerpsActive.value).toBe(true)
   })
 
-  it('returns true when side panel is perps on any route', async () => {
+  it('returns true when side panel is perps AND drawer is open on any route', async () => {
     const { usePerpsActive } = await import(
       '@/modules/perps/composables/usePerpsActive'
     )
     const store = useWalletMenuStore()
     store.setWalletPanel('perps')
+    store.setIsOpenSideMenu(true)
     routePath.value = '/stocks'
     const { isPerpsActive } = usePerpsActive()
     expect(isPerpsActive.value).toBe(true)
   })
 
-  it('reacts to walletPanel changes', async () => {
+  it('returns false when perps panel is selected but drawer is closed', async () => {
+    const { usePerpsActive } = await import(
+      '@/modules/perps/composables/usePerpsActive'
+    )
+    const store = useWalletMenuStore()
+    store.setWalletPanel('perps')
+    store.setIsOpenSideMenu(false)
+    routePath.value = '/stocks'
+    const { isPerpsActive } = usePerpsActive()
+    expect(isPerpsActive.value).toBe(false)
+  })
+
+  it('reacts to walletPanel changes while drawer stays open', async () => {
     const { usePerpsActive } = await import(
       '@/modules/perps/composables/usePerpsActive'
     )
     const store = useWalletMenuStore()
     store.setWalletPanel('swap')
+    store.setIsOpenSideMenu(true)
     routePath.value = '/'
     const { isPerpsActive } = usePerpsActive()
     expect(isPerpsActive.value).toBe(false)
     store.setWalletPanel('perps')
     expect(isPerpsActive.value).toBe(true)
+  })
+
+  it('reacts to drawer close while perps panel remains selected', async () => {
+    const { usePerpsActive } = await import(
+      '@/modules/perps/composables/usePerpsActive'
+    )
+    const store = useWalletMenuStore()
+    store.setWalletPanel('perps')
+    store.setIsOpenSideMenu(true)
+    routePath.value = '/'
+    const { isPerpsActive } = usePerpsActive()
+    expect(isPerpsActive.value).toBe(true)
+    store.setIsOpenSideMenu(false)
+    expect(isPerpsActive.value).toBe(false)
   })
 })
 
@@ -117,12 +145,14 @@ describe('gatedPoll', () => {
     )
     const store = useWalletMenuStore()
     store.setWalletPanel('swap')
+    store.setIsOpenSideMenu(false)
     routePath.value = '/'
     const fn = vi.fn()
     gatedPoll(fn, 5000)
     vi.advanceTimersByTime(1000)
     expect(fn).not.toHaveBeenCalled()
     store.setWalletPanel('perps')
+    store.setIsOpenSideMenu(true)
     await vi.advanceTimersByTimeAsync(0)
     expect(fn).toHaveBeenCalledTimes(1)
   })

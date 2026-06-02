@@ -8,9 +8,11 @@ let _isPerpsActive: ComputedRef<boolean> | null = null
 export function usePerpsActive() {
   if (!_isPerpsActive) {
     const route = useRoute()
-    const { walletPanel } = storeToRefs(useWalletMenuStore())
+    const { walletPanel, isOpenSideMenu } = storeToRefs(useWalletMenuStore())
     _isPerpsActive = computed(
-      () => route.path.startsWith('/perps') || walletPanel.value === 'perps',
+      () =>
+        route.path.startsWith('/perps') ||
+        (walletPanel.value === 'perps' && isOpenSideMenu.value),
     )
   }
   return { isPerpsActive: _isPerpsActive }
