@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { perpsClient } from '../configs'
+import { gatedPoll } from './usePerpsActive'
 
 const markPriceData = ref<Record<string, any>>({})
 let initialized = false
@@ -17,7 +18,7 @@ export function usePerpsMarkPrices() {
   if (!initialized) {
     initialized = true
     fetchMarkPrices()
-    setInterval(fetchMarkPrices, 5_000)
+    gatedPoll(fetchMarkPrices, 5_000)
   }
   return { markPriceData, refetch: fetchMarkPrices }
 }
