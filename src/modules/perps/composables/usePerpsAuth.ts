@@ -4,6 +4,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
+import { gatedPoll } from '@/modules/perps/composables/usePerpsActive'
 import { decrypt, encrypt } from '@/utils/crypto'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
@@ -216,7 +217,7 @@ export function usePerpsBalance() {
     }
 
     poll()
-    setInterval(poll, 1_000)
+    gatedPoll(poll, 1_000)
 
     let lastRefreshKey = refreshKey.value
     setInterval(() => {
@@ -286,7 +287,7 @@ export function usePerpsPortfolioSummary() {
     }
 
     poll()
-    setInterval(poll, 300_000) // refresh every 5 minutes
+    gatedPoll(poll, 300_000) // refresh every 5 minutes
 
     _sharedFetchSummary = fetchSummary
   }
