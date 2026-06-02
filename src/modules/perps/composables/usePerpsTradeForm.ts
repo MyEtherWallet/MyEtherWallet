@@ -33,15 +33,20 @@ const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
 const leverage = ref(20)
+const isFetchingLeverage = ref(false)
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
   const { token, login, triggerRefresh } = usePerpsAuth()
   const { balance } = usePerpsBalance()
-  const { markets } = usePerpsMarkets()
+  const { markets, isLoading: marketsLoading } = usePerpsMarkets()
   const { contracts } = usePerpsContracts()
-  const { positions, closePosition } = usePerpsPositions()
+  const {
+    positions,
+    hasLoaded: positionsHasLoaded,
+    closePosition,
+  } = usePerpsPositions()
   const { markPriceData } = usePerpsMarkPrices()
   const perpsToasts = usePerpsToasts()
 
@@ -70,7 +75,7 @@ export function usePerpsTradeForm() {
   const isSubmitting = ref(false)
   const maxOrderSize = ref<MaxOrderSizeResult | null>(null)
   const showLeverageModal = ref(false)
-  const tempLeverage = ref(1)
+  const tempLeverage = ref(leverage.value)
   const isSavingLeverage = ref(false)
   const leverageError = ref('')
   const showConfirmModal = ref(false)
@@ -133,6 +138,43 @@ export function usePerpsTradeForm() {
 
   const activePosition = computed(
     () => positions.value.find(p => p.market === fullMarketName.value) || null,
+  )
+
+  // Reset the singleton to match the current market synchronously on every
+  // composable instantiation. The leverage singleton is module-scope and
+  // persists across mounts; the activeMarket watcher only fires on subsequent
+  // market changes, so mounting in a market the store was already pointed at
+  // would otherwise render the leverage button with the previously-viewed
+  // market's value until something else triggers a re-sync.
+  {
+    const initialPos = positions.value.find(
+      p => p.market === fullMarketName.value,
+    )
+    const initialParsedPos = initialPos ? parseInt(initialPos.leverage) : NaN
+    leverage.value =
+      Number.isFinite(initialParsedPos) && initialParsedPos > 0
+        ? Math.min(initialParsedPos, marketMaxLeverage.value)
+        : marketMaxLeverage.value
+    // Flag loading when fetchLeverage is expected to fire on mount so consumers
+    // render a skeleton instead of the synced placeholder, avoiding a flash
+    // between the synced value and the user's saved preference.
+    if (token.value && markets.value.length) {
+      isFetchingLeverage.value = true
+    }
+  }
+
+  // Aggregate every async source that can mutate the leverage singleton:
+  // - fetchLeverage (saved preference)
+  // - markets list (drives marketMaxLeverage; can clamp leverage when it
+  //   arrives)
+  // - first positions load (activePosition watcher updates leverage)
+  // Consumers render a skeleton off this until everything has settled so the
+  // displayed value doesn't rotate as each source resolves.
+  const isLoadingLeverage = computed(
+    () =>
+      isFetchingLeverage.value ||
+      marketsLoading.value ||
+      (!!token.value && !positionsHasLoaded.value),
   )
 
   const positionNotionalValue = computed(() => {
@@ -766,7 +808,11 @@ export function usePerpsTradeForm() {
 
   // ── API fetchers ───────────────────────────────────────────
   async function fetchLeverage() {
-    if (!token.value || !markets.value.length) return
+    if (!token.value || !markets.value.length) {
+      isFetchingLeverage.value = false
+      return
+    }
+    isFetchingLeverage.value = true
     try {
       const res = await perpsClient.getLeverage(fullMarketName.value)
 
@@ -776,6 +822,8 @@ export function usePerpsTradeForm() {
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)
+    } finally {
+      isFetchingLeverage.value = false
     }
   }
 
@@ -1084,6 +1132,25 @@ export function usePerpsTradeForm() {
     { immediate: true },
   )
 
+  // Sync the singleton to the position's leverage when the position appears
+  // or its leverage changes. The activeMarket watcher already covers market
+  // switches, but positions can arrive after that watcher runs, leaving the
+  // singleton on its default. Comparing prev/current leverage prevents
+  // routine positions polling from clobbering a leverage the user has staged
+  // (e.g., via Change Leverage) but not yet applied through an add order.
+  watch(
+    () => activePosition.value,
+    (pos, prev) => {
+      if (pos && pos.leverage !== prev?.leverage) {
+        const parsed = parseInt(pos.leverage)
+        if (Number.isFinite(parsed) && parsed > 0) {
+          leverage.value = Math.min(parsed, marketMaxLeverage.value)
+        }
+      }
+    },
+    { immediate: true },
+  )
+
   watch(
     () => walletMenuStore.selectedTradeOrderSide,
     side => {
@@ -1105,11 +1172,17 @@ export function usePerpsTradeForm() {
       closeError.value = ''
       takeProfitPrice.value = null
       stopLossPrice.value = null
-      // Seed leverage from the market's per-token max before the saved
-      // leverage resolves, so callsites reading the singleton (sidepanel /
-      // order modal) don't show a stale value from the previous market or
-      // the default 20 on a market capped lower.
-      leverage.value = Math.min(leverage.value, marketMaxLeverage.value)
+      // Reset leverage to the new market's open-position leverage if there is
+      // one, otherwise to its per-token max. Prevents callsites reading the
+      // singleton (sidepanel / order modal / leverage dialog) from showing a
+      // stale value carried over from the previous market until the async
+      // fetchLeverage resolves.
+      const pos = positions.value.find(p => p.market === fullMarketName.value)
+      const parsedPos = pos ? parseInt(pos.leverage) : NaN
+      leverage.value =
+        Number.isFinite(parsedPos) && parsedPos > 0
+          ? Math.min(parsedPos, marketMaxLeverage.value)
+          : marketMaxLeverage.value
       fetchLeverage()
       fetchMaxOrderSize()
     },
@@ -1121,6 +1194,16 @@ export function usePerpsTradeForm() {
     () => marketMaxLeverage.value,
     max => {
       if (leverage.value > max) leverage.value = max
+    },
+  )
+
+  // Keep tempLeverage tracking the saved leverage while the modal is closed
+  // so the order confirmation dialog displays the same value as the info
+  // drawer when the user opens it without ever interacting with the modal.
+  watch(
+    () => leverage.value,
+    val => {
+      if (!showLeverageModal.value) tempLeverage.value = val
     },
   )
 
@@ -1280,6 +1363,7 @@ export function usePerpsTradeForm() {
     showLeverageModal,
     tempLeverage,
     isSavingLeverage,
+    isLoadingLeverage,
     leverageError,
     openLeverageModal,
     closeLeverageModal,
