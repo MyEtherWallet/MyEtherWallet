@@ -29,6 +29,7 @@
         <module-sell v-else key="sell" class="flex-1" />
       </transition>
     </div>
+
   </div>
 </template>
 

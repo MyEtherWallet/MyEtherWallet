@@ -20,6 +20,8 @@
       "continue": "Continue",
       "connect_wallet": "Connect wallet",
       "need_help": "Need help selling?",
+      "network_fee": "Network fee",
+      "network_fee_tooltip": "Fees in the {chain} network are charged in {symbol}",
       "error": {
         "min": "Minimum {min} allowed",
         "max": "Maximum {max} allowed",

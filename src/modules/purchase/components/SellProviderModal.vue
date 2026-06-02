@@ -106,10 +106,10 @@ import AppDialog from '@/components/AppDialog.vue'
 import { formatFloatingPointValue, formatFiatValue } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import { getProviderLogo } from '../helpers/purchaseProviders'
-import type { BuyQuote } from '@/types/buyToken'
+import type { SellQuote } from '@/types/buyToken'
 
 const props = defineProps<{
-  quote: BuyQuote | null
+  quote: SellQuote | null
   cryptoAmount: string
   cryptoSymbol: string
   isLoading: boolean

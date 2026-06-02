@@ -62,7 +62,7 @@
       :selected="selectedFiat"
       @update:selected="selectedFiat = $event"
     />
-    <buy-provider-modal
+    <purchase-provider-modal
       v-model:is-open="showProviderModal"
       :quotes="buyQuotes"
       :fiat-amount="fiatAmount"
@@ -84,7 +84,7 @@ import PurchaseTokenSelectCard from './components/PurchaseTokenSelectCard.vue'
 import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
-import BuyProviderModal from './components/BuyProviderModal.vue'
+import PurchaseProviderModal from './components/PurchaseProviderModal.vue'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'

@@ -24,6 +24,52 @@
       @blur="isInputFocused = false"
     />
 
+    <!-- Network fee -->
+    <div class="flex items-center justify-between h-16 px-4 rounded-20 bg-bgBase border border-transparent">
+      <span class="flex items-center gap-1.5 text-s-12 text-info leading-[18px]">
+        {{ t('purchase.sell.network_fee') }}
+        <span
+          ref="infoIconRef"
+          class="flex items-center cursor-default"
+          @mouseenter="onInfoIconEnter"
+          @mouseleave="onInfoIconLeave"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="7" cy="7" r="6.5" stroke="currentColor"/>
+            <path d="M7 6.5V10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="7" cy="4.5" r="0.75" fill="currentColor"/>
+          </svg>
+        </span>
+      </span>
+
+      <button
+        v-if="networkFeeDisplay"
+        type="button"
+        class="flex items-center gap-1 text-s-12 leading-[18px]"
+        @click="feeSelector?.openFeeModal()"
+      >
+        <span class="text-info font-normal">≈</span>
+        <span class="text-black font-semibold tracking-[-0.24px]">{{ networkFeeDisplay }}</span>
+        <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="text-info">
+          <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <span v-else class="text-s-12 text-info leading-[18px]">---</span>
+    </div>
+
+    <teleport to="#app">
+      <div
+        v-if="showNetworkFeeTooltip"
+        class="pointer-events-none fixed z-[200] whitespace-nowrap rounded-12 bg-white px-3 py-2 shadow-[0_0_1px_0_rgba(0,0,0,0.25),0_1.5px_4px_0_rgba(0,0,0,0.12)]"
+        :style="{ left: `${tooltipPos.left}px`, top: `${tooltipPos.top}px`, transform: 'translate(-50%, calc(-100% - 9px))' }"
+      >
+        <p class="text-s-12 font-semibold text-black leading-[18px] tracking-[-0.24px] text-center">
+          {{ t('purchase.sell.network_fee_tooltip', { symbol: tokenSymbol, chain: displayChain?.name ?? '' }) }}
+        </p>
+        <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white" />
+      </div>
+    </teleport>
+
     <button
       type="button"
       :class="[
@@ -50,6 +96,10 @@
     >
       {{ t('purchase.sell.need_help') }}
     </a>
+
+    <div class="hidden">
+      <app-select-tx-fee ref="feeSelector" />
+    </div>
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -86,6 +136,7 @@ import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import SellProviderModal from './components/SellProviderModal.vue'
+import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -289,6 +340,37 @@ const balanceDisplay = computed(() => {
  * used on submit). Reads `sellQuote.fiat_amount` for the estimate
  * display and `sellQuote.url` later for the Moonpay redirect.
  * ------------------------------------------------------------------ */
+
+const feeSelector = ref<InstanceType<typeof AppSelectTxFee> | null>(null)
+
+const infoIconRef = ref<HTMLElement | null>(null)
+const showNetworkFeeTooltip = ref(false)
+const tooltipPos = ref({ left: 0, top: 0 })
+
+const onInfoIconEnter = () => {
+  if (infoIconRef.value) {
+    const rect = infoIconRef.value.getBoundingClientRect()
+    tooltipPos.value = { left: rect.left + rect.width / 2, top: rect.top }
+  }
+  showNetworkFeeTooltip.value = true
+}
+
+const onInfoIconLeave = () => {
+  showNetworkFeeTooltip.value = false
+}
+
+const networkFeeDisplay = computed(() => {
+  if (isAmountEmpty.value || !amountIsValid.value || isFetchingSellQuote.value) return null
+  const sel = feeSelector.value
+  if (!sel || !sel.hasFees) return null
+  const native = sel.selectedFeeNative as string
+  if (!native) return null
+  if (sel.hasFiatEstimates) {
+    const fiat = (sel.selectedFeeFiat as string).trim()
+    return `${native} (${fiat})`
+  }
+  return native
+})
 
 const formattedFiatEstimate = computed(() => {
   const symbol = getCurrencySymbol(selectedFiat.value)

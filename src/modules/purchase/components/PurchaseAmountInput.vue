@@ -95,7 +95,7 @@
       {{ $t('purchase.sell.your_balance') }}
       <span
         :class="[
-          'font-semibold',
+          'font-semibold tracking-[-0.24px]',
           balance.hasError ? 'text-error' : 'text-black',
         ]"
       >{{ balance.value }}</span>
