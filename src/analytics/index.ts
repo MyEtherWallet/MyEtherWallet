@@ -69,7 +69,7 @@ sessionReplay.init(__TMP_HASHED_VERSION__, {
   deviceId: deviceId,
   serverZone: inEU ? 'EU' : 'US',
   debugMode: process.env.NODE_ENV !== 'production',
-  sampleRate: 1,
+  sampleRate: .8,
   privacyConfig: {
     maskSelector: ['[data-private]'],
     defaultMaskLevel: 'light',

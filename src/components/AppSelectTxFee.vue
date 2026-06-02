@@ -516,6 +516,9 @@ const displayFees = computed<DisplayFee[]>(() => {
 })
 
 const hasFees = computed(() => {
+  if (props.fees) {
+    return Object.keys(props.fees.fees).length > 0 && !props.isLoadingFees
+  }
   return (
     feesReady.value &&
     data.value &&
