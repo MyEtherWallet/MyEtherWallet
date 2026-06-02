@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { gatedPoll } from './usePerpsActive'
 
 // Singleton state for markets
 const markets = ref<TradingPair[]>([])
@@ -70,7 +71,7 @@ export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
     fetchContracts()
-    setInterval(fetchContracts, 2500)
+    gatedPoll(fetchContracts, 2500)
   }
   return {
     contracts,
