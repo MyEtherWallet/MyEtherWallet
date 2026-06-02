@@ -1,3 +1,5 @@
+import type { components } from '../api/schema'
+
 export interface GenericResponse<T> {
   success: boolean
   result: T
@@ -44,17 +46,22 @@ export interface AgreementRequest {
   privacyVersion: number
 }
 
-export interface TradingPair {
-  market: string
+interface MarginInfo {
+  maintenanceAmount: string
+  maintenanceMarginRate: string
+  maxLeverage: string
+  positionBracketUsd: string
+}
+
+export type TradingPair = Required<components['schemas']['PerpsTradingPair']> & {
   pair: {
     base: string
     quote: string
   }
   displayName: string
   longName?: string
-  baseIncrement: string
-  quoteIncrement: string
   defaultLeverage: string
+  marginInfo?: MarginInfo[]
 }
 
 export interface MarketsResult {

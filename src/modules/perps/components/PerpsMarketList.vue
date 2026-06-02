@@ -447,6 +447,7 @@
                         <app-base-button
                           size="small"
                           class="min-w-[136px]"
+                          :disabled="isWatchOnly"
                           :theme="
                             getPosition(contract.market)!.direction === 'long'
                               ? 'success'
@@ -578,6 +579,7 @@
     :symbol="leverageSymbol"
     :leverage-error="leverageError"
     :is-saving="isSavingLeverage"
+    :max-leverage="leverageMaxLeverage"
     mode="submit"
     @save="saveLeverage"
   />
@@ -617,6 +619,11 @@ import { PERPS_PAGE_SIZE, perpsClient } from '../configs'
 import PerpsPagination from './PerpsPagination.vue'
 import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+
+const walletStore = useWalletStore()
+const { isWatchOnly } = storeToRefs(walletStore)
 
 const emits = defineEmits<{
   openPosition: [market: string, side?: 'buy' | 'sell']
@@ -630,6 +637,7 @@ const isSavingLeverage = ref(false)
 const leverageError = ref('')
 const leverageMarket = ref('')
 const leverageSymbol = ref('')
+const leverageMaxLeverage = ref(20)
 const perpsToasts = usePerpsToasts()
 
 const openLeverage = (
@@ -639,7 +647,15 @@ const openLeverage = (
 ) => {
   leverageMarket.value = market
   leverageSymbol.value = symbol
-  tempLeverage.value = parseInt(currentLeverage) || 1
+  const tradingPair = markets.value.find(m => m.market === market)
+  const parsedMax = parseInt(tradingPair?.defaultLeverage ?? '')
+  const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
+  leverageMaxLeverage.value = maxLev
+  const parsedCurrent = parseInt(currentLeverage)
+  const initial = Number.isFinite(parsedCurrent) && parsedCurrent > 0
+    ? parsedCurrent
+    : maxLev
+  tempLeverage.value = Math.min(initial, maxLev)
   leverageError.value = ''
   showLeverageDialog.value = true
 }

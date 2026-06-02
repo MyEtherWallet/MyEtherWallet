@@ -39,6 +39,18 @@ export function formatUsd(val: string | number): string {
   })
 }
 
+// USDC-denominated values (e.g. fees) can be much smaller than $0.01 and would
+// round to "$0.00" with the standard 2-decimal USD formatter. Show up to 6
+// decimals (USDC's native precision) and suffix with "USDC".
+export function formatUsdc(val: string | number): string {
+  const n = typeof val === 'number' ? val : parseFloat(val)
+  if (isNaN(n)) return '0.00 USDC'
+  return `${n.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6,
+  })} USDC`
+}
+
 export function formatPrice(val?: string | number): string {
   if (val === undefined || val === null) return '—'
   const n = typeof val === 'number' ? val : parseFloat(val)

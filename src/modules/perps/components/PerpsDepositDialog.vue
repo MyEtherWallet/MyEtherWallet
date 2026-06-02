@@ -499,6 +499,7 @@ const fetchDepositAddress = async () => {
       network: 'ethereum',
       depositDestination: { id: accountId.value, wallet: 'margin' },
     })
+
     if (res.result && res.result.length > 0) {
       depositAddress.value = res.result[0].address
     } else {

@@ -17,7 +17,10 @@
           {{ formattedRealizedPnl }}
           <span class="text-s-13 ml-2 leading-[16px]">({{ pnlPercent }})</span>
         </p>
-        <div class="flex items-center gap-3 justify-start mt-5 -mx-1">
+        <div
+          class="flex items-center gap-3 justify-start mt-5 -mx-1"
+          v-if="!watchOnly"
+        >
           <AppBaseButton @click="$emit('deposit')" class="w-full" size="medium">
             Deposit
           </AppBaseButton>
@@ -28,6 +31,11 @@
             size="medium"
           >
             Withdraw
+          </AppBaseButton>
+        </div>
+        <div class="flex items-center gap-3 justify-start mt-5 -mx-1" v-else>
+          <AppBaseButton @click="$emit('access')" class="w-full" size="medium">
+            Connect your wallet
           </AppBaseButton>
         </div>
       </div>
@@ -105,9 +113,17 @@ import {
 } from '../utils/formatters'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 
+defineProps({
+  watchOnly: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 defineEmits<{
   deposit: []
   withdraw: []
+  access: []
 }>()
 
 const showBalanceDialog = ref(false)

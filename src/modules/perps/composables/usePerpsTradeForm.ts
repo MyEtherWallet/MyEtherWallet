@@ -33,15 +33,20 @@ const SL_TP_INVALID_PATTERN =
   /invalid\s+(stop[\s-]?loss|take[\s-]?profit|trigger)/i
 
 const leverage = ref(20)
+const isFetchingLeverage = ref(false)
 
 export function usePerpsTradeForm() {
   const walletMenuStore = useWalletMenuStore()
   const router = useRouter()
   const { token, login, triggerRefresh } = usePerpsAuth()
   const { balance } = usePerpsBalance()
-  const { markets } = usePerpsMarkets()
+  const { markets, isLoading: marketsLoading } = usePerpsMarkets()
   const { contracts } = usePerpsContracts()
-  const { positions, closePosition } = usePerpsPositions()
+  const {
+    positions,
+    hasLoaded: positionsHasLoaded,
+    closePosition,
+  } = usePerpsPositions()
   const { markPriceData } = usePerpsMarkPrices()
   const perpsToasts = usePerpsToasts()
 
@@ -70,7 +75,7 @@ export function usePerpsTradeForm() {
   const isSubmitting = ref(false)
   const maxOrderSize = ref<MaxOrderSizeResult | null>(null)
   const showLeverageModal = ref(false)
-  const tempLeverage = ref(1)
+  const tempLeverage = ref(leverage.value)
   const isSavingLeverage = ref(false)
   const leverageError = ref('')
   const showConfirmModal = ref(false)
@@ -125,8 +130,51 @@ export function usePerpsTradeForm() {
     return match?.market || activeMarket.value
   })
 
+  const marketMaxLeverage = computed(() => {
+    const match = markets.value.find(m => m.market === fullMarketName.value)
+    const parsed = parseInt(match?.defaultLeverage ?? '')
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+  })
+
   const activePosition = computed(
     () => positions.value.find(p => p.market === fullMarketName.value) || null,
+  )
+
+  // Reset the singleton to match the current market synchronously on every
+  // composable instantiation. The leverage singleton is module-scope and
+  // persists across mounts; the activeMarket watcher only fires on subsequent
+  // market changes, so mounting in a market the store was already pointed at
+  // would otherwise render the leverage button with the previously-viewed
+  // market's value until something else triggers a re-sync.
+  {
+    const initialPos = positions.value.find(
+      p => p.market === fullMarketName.value,
+    )
+    const initialParsedPos = initialPos ? parseInt(initialPos.leverage) : NaN
+    leverage.value =
+      Number.isFinite(initialParsedPos) && initialParsedPos > 0
+        ? Math.min(initialParsedPos, marketMaxLeverage.value)
+        : marketMaxLeverage.value
+    // Flag loading when fetchLeverage is expected to fire on mount so consumers
+    // render a skeleton instead of the synced placeholder, avoiding a flash
+    // between the synced value and the user's saved preference.
+    if (token.value && markets.value.length) {
+      isFetchingLeverage.value = true
+    }
+  }
+
+  // Aggregate every async source that can mutate the leverage singleton:
+  // - fetchLeverage (saved preference)
+  // - markets list (drives marketMaxLeverage; can clamp leverage when it
+  //   arrives)
+  // - first positions load (activePosition watcher updates leverage)
+  // Consumers render a skeleton off this until everything has settled so the
+  // displayed value doesn't rotate as each source resolves.
+  const isLoadingLeverage = computed(
+    () =>
+      isFetchingLeverage.value ||
+      marketsLoading.value ||
+      (!!token.value && !positionsHasLoaded.value),
   )
 
   const positionNotionalValue = computed(() => {
@@ -169,24 +217,82 @@ export function usePerpsTradeForm() {
     parseFloat(balance.value?.availableMargin || '0'),
   )
 
+  const marginBalance = computed(() =>
+    parseFloat(balance.value?.marginBalance || '0'),
+  )
+
+  const maintenanceMarginOtherPositions = computed(() => {
+    const positionsWithoutActive = positions.value.filter((item) => {
+      return item.market !== activePosition.value?.market
+    })
+    const margin = positionsWithoutActive.reduce((acc, currentValue) => {
+      const maintenanceMargin = parseFloat(currentValue.maintenanceMargin || '0')
+      return acc + (Number.isFinite(maintenanceMargin) ? maintenanceMargin : 0)
+    }, 0)
+    return margin
+  })
+
   // ── Order sizing ───────────────────────────────────────────
   const positionSizeUsd = computed(() => {
     const amt = parseFloat(inputAmount.value) || 0
     return amt * leverage.value
   })
 
+  const maintenanceMarginRate = computed(() => {
+    if (activePosition.value) {
+      const market = markets.value.find(asset => asset.market === activePosition.value?.market)
+      if (market?.marginInfo?.length) {
+        return parseFloat(market.marginInfo[0].maintenanceMarginRate)
+      }
+    }
+    return 0.03
+  })
+
   const estimatedLiquidation = computed(() => {
-    if (!positionSizeUsd.value || !currentPrice.value) return 0
-    const dir = orderSide.value === 'buy' ? -1 : 1
-    return (
-      currentPrice.value + dir * (currentPrice.value / leverage.value) * 0.9
-    )
+    if (!activePosition.value) {
+      const inputAmountNum = parseFloat(inputAmount.value) || 0
+      const entryPrice = effectivePrice.value
+      if (!inputAmountNum || !entryPrice || !positionSizeUsd.value) return 0
+
+      const sideVal = orderSide.value === 'buy' ? 1 : -1
+      const newQuantity = positionSizeUsd.value / entryPrice
+      const sideNotionalValue = positionSizeUsd.value * sideVal
+      const sideQuantity = newQuantity * sideVal
+      const numerator = inputAmountNum - sideNotionalValue
+      const denominator = newQuantity * maintenanceMarginRate.value - sideQuantity
+      if (denominator === 0) return 0
+
+      const price = numerator / denominator
+      return Number.isFinite(price) ? Math.max(price, 0) : 0
+    }
+
+    const { direction } = activePosition.value
+    const netQuantity = parseFloat(activePosition.value.netQuantity)
+
+    if (direction === 'neutral' || netQuantity === 0) return 0
+
+    const sideVal = direction === 'short' ? -1 : 1
+    const sideNotionalValue = positionNotionalValue.value * sideVal
+    const sideQuantity = netQuantity * sideVal
+    const numerator =
+      marginBalance.value - maintenanceMarginOtherPositions.value - sideNotionalValue
+    const denominator = netQuantity * maintenanceMarginRate.value - sideQuantity
+    if (denominator === 0) return 0
+
+    const price = numerator / denominator
+    return Number.isFinite(price) ? Math.max(price, 0) : 0
   })
 
   function floorToIncrement(value: number, increment: number): string {
     const floored = Math.floor(value / increment) * increment
     const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
     return floored.toFixed(decimals)
+  }
+
+  function ceilToIncrement(value: number, increment: number): string {
+    const ceiled = Math.ceil(value / increment) * increment
+    const decimals = Math.max(0, -Math.floor(Math.log10(increment)))
+    return ceiled.toFixed(decimals)
   }
 
   const activeMarketIncrement = computed(() => {
@@ -389,10 +495,9 @@ export function usePerpsTradeForm() {
   // ── New margin ratio ────────────────────────────────────────
   const newMarginRatio = computed<number | null>(() => {
     const usedMargin = parseFloat(balance.value?.usedMargin || '0')
-    const marginBal = parseFloat(balance.value?.marginBalance || '0')
     const additionalMargin = parseFloat(inputAmount.value || '0')
-    if (!marginBal || !additionalMargin) return null
-    return (usedMargin + additionalMargin) / marginBal
+    if (!marginBalance.value || !additionalMargin) return null
+    return (usedMargin + additionalMargin) / marginBalance.value
   })
 
   // ── Precision validation ───────────────────────────────────
@@ -560,7 +665,15 @@ export function usePerpsTradeForm() {
     if (!currentPrice.value) return
     activeLimitPill.value = pct
     const price = currentPrice.value * (1 + pct / 100)
-    limitPrice.value = formatQuotePrice(price)
+    // Round toward currentPrice so the snapped value stays inside the
+    // backend's +/-10% tolerance band: floor for non-negative pct, ceil for
+    // negative pct. Flooring a -10% raw value lands just outside the band on
+    // markets with non-trivial quoteIncrement.
+    const increment = activeMarketQuoteIncrement.value
+    limitPrice.value =
+      pct < 0
+        ? ceilToIncrement(price, increment)
+        : floorToIncrement(price, increment)
   }
 
   // ── Market selector ────────────────────────────────────────
@@ -662,7 +775,7 @@ export function usePerpsTradeForm() {
 
   // ── Leverage modal ─────────────────────────────────────────
   function openLeverageModal() {
-    tempLeverage.value = leverage.value
+    tempLeverage.value = Math.min(leverage.value, marketMaxLeverage.value)
     leverageError.value = ''
     showLeverageModal.value = true
   }
@@ -695,15 +808,22 @@ export function usePerpsTradeForm() {
 
   // ── API fetchers ───────────────────────────────────────────
   async function fetchLeverage() {
-    if (!token.value || !markets.value.length) return
+    if (!token.value || !markets.value.length) {
+      isFetchingLeverage.value = false
+      return
+    }
+    isFetchingLeverage.value = true
     try {
       const res = await perpsClient.getLeverage(fullMarketName.value)
 
       if (res.success && res.result?.length) {
-        leverage.value = parseInt(res.result[0].leverage) || 20
+        const parsed = parseInt(res.result[0].leverage) || marketMaxLeverage.value
+        leverage.value = Math.min(parsed, marketMaxLeverage.value)
       }
     } catch (e) {
       console.error('Failed to fetch leverage:', e)
+    } finally {
+      isFetchingLeverage.value = false
     }
   }
 
@@ -1012,6 +1132,25 @@ export function usePerpsTradeForm() {
     { immediate: true },
   )
 
+  // Sync the singleton to the position's leverage when the position appears
+  // or its leverage changes. The activeMarket watcher already covers market
+  // switches, but positions can arrive after that watcher runs, leaving the
+  // singleton on its default. Comparing prev/current leverage prevents
+  // routine positions polling from clobbering a leverage the user has staged
+  // (e.g., via Change Leverage) but not yet applied through an add order.
+  watch(
+    () => activePosition.value,
+    (pos, prev) => {
+      if (pos && pos.leverage !== prev?.leverage) {
+        const parsed = parseInt(pos.leverage)
+        if (Number.isFinite(parsed) && parsed > 0) {
+          leverage.value = Math.min(parsed, marketMaxLeverage.value)
+        }
+      }
+    },
+    { immediate: true },
+  )
+
   watch(
     () => walletMenuStore.selectedTradeOrderSide,
     side => {
@@ -1033,8 +1172,38 @@ export function usePerpsTradeForm() {
       closeError.value = ''
       takeProfitPrice.value = null
       stopLossPrice.value = null
+      // Reset leverage to the new market's open-position leverage if there is
+      // one, otherwise to its per-token max. Prevents callsites reading the
+      // singleton (sidepanel / order modal / leverage dialog) from showing a
+      // stale value carried over from the previous market until the async
+      // fetchLeverage resolves.
+      const pos = positions.value.find(p => p.market === fullMarketName.value)
+      const parsedPos = pos ? parseInt(pos.leverage) : NaN
+      leverage.value =
+        Number.isFinite(parsedPos) && parsedPos > 0
+          ? Math.min(parsedPos, marketMaxLeverage.value)
+          : marketMaxLeverage.value
       fetchLeverage()
       fetchMaxOrderSize()
+    },
+  )
+
+  // When markets list arrives, clamp the singleton to the active market's
+  // per-token max so the default 20 doesn't exceed a 10x-capped market.
+  watch(
+    () => marketMaxLeverage.value,
+    max => {
+      if (leverage.value > max) leverage.value = max
+    },
+  )
+
+  // Keep tempLeverage tracking the saved leverage while the modal is closed
+  // so the order confirmation dialog displays the same value as the info
+  // drawer when the user opens it without ever interacting with the modal.
+  watch(
+    () => leverage.value,
+    val => {
+      if (!showLeverageModal.value) tempLeverage.value = val
     },
   )
 
@@ -1194,9 +1363,11 @@ export function usePerpsTradeForm() {
     showLeverageModal,
     tempLeverage,
     isSavingLeverage,
+    isLoadingLeverage,
     leverageError,
     openLeverageModal,
     closeLeverageModal,
     saveLeverage,
+    marketMaxLeverage,
   }
 }

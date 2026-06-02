@@ -211,6 +211,7 @@
             position="right-0"
             placeholder="Manage"
             class="ml-auto order-1 xs:order-3"
+            v-if="!isWatchOnly"
           >
             <template #select-button="{ toggleSelect }">
               <button
@@ -233,6 +234,11 @@
               </app-btn-icon>
             </template>
           </app-select>
+          <div v-else class="ml-auto order-1 xs:order-3">
+            <app-base-button @click="connectWallet" size="medium">
+              Connect wallet</app-base-button
+            >
+          </div>
         </div>
 
         <div
@@ -886,6 +892,7 @@
     :symbol="baseCurrency"
     :leverage-error="leverageError"
     :is-saving="isSavingLeverage"
+    :max-leverage="marketMaxLeverage"
     mode="submit"
     @save="saveLeverage"
   />
@@ -911,6 +918,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -944,6 +952,8 @@ import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAccessStore } from '@/stores/accessStore'
+
 const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
   useWalletMenuStore()
 import {
@@ -965,6 +975,8 @@ import {
   midPrice as computeMidPrice,
 } from './utils/market'
 
+const connectWallet = () => useAccessStore().openAccessDialog()
+
 const props = defineProps({
   market: {
     type: String,
@@ -973,7 +985,7 @@ const props = defineProps({
 })
 
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 
 const { isXS } = useAppBreakpoints()
 
@@ -1352,6 +1364,12 @@ const tempLeverage = ref(1)
 const isSavingLeverage = ref(false)
 const leverageError = ref('')
 
+const marketMaxLeverage = computed(() => {
+  const pair = markets.value.find(m => m.market === props.market)
+  const parsed = parseInt(pair?.defaultLeverage ?? '')
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+})
+
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
@@ -1376,7 +1394,11 @@ watch(selectedManageAction, action => {
     setWalletPanel('perps')
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
-    tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
+    const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
+    tempLeverage.value =
+      Number.isFinite(parsedPosition) && parsedPosition > 0
+        ? Math.min(parsedPosition, marketMaxLeverage.value)
+        : marketMaxLeverage.value
     leverageError.value = ''
     showLeverageDialog.value = true
   }
