@@ -1,4 +1,4 @@
-import { computed, type ComputedRef } from 'vue'
+import { computed, watch, type ComputedRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -14,4 +14,14 @@ export function usePerpsActive() {
     )
   }
   return { isPerpsActive: _isPerpsActive }
+}
+
+export function gatedPoll(fn: () => void, intervalMs: number) {
+  const { isPerpsActive } = usePerpsActive()
+  setInterval(() => {
+    if (isPerpsActive.value) fn()
+  }, intervalMs)
+  watch(isPerpsActive, on => {
+    if (on) fn()
+  })
 }
