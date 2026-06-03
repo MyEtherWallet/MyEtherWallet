@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { perpsWs } from '../sdk/ws'
+import { gatedPoll } from './usePerpsActive'
 
 // Singleton state for markets
 const markets = ref<TradingPair[]>([])
@@ -121,6 +122,10 @@ export function usePerpsContracts() {
         })
       },
     )
+
+    // 30s REST refresh keeps non-WS fields (sparkline, volumes, OI, high/low,
+    // priceChangePercent, tags) fresh while perps is active.
+    gatedPoll(fetchContracts, 30_000)
   }
   return {
     contracts,
