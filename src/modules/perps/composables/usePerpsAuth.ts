@@ -127,7 +127,7 @@ export function usePerpsAuth() {
       const complete = await perpsClient.completeLoginChallenge({
         id: challenge.result.id,
         signature,
-        builderCode: BUILDER_CODE,
+        builderCode: BUILDER_CODE
       })
       token.value = complete.result.token
       accountId.value = complete.result.accountId
