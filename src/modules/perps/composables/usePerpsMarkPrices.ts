@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { perpsClient } from '../configs'
 import { gatedPoll } from './usePerpsActive'
+import { perpsWs } from '../sdk/ws'
 
 const markPriceData = ref<Record<string, any>>({})
 let initialized = false
@@ -17,8 +18,17 @@ async function fetchMarkPrices() {
 export function usePerpsMarkPrices() {
   if (!initialized) {
     initialized = true
+    // Initial snapshot.
     fetchMarkPrices()
-    gatedPoll(fetchMarkPrices, 5_000)
+    // Realtime updates via WS.
+    perpsWs.subscribe('markPricesPerps', {}, (data: { market: string; markPrice: string; indexPrice?: string }) => {
+      if (!data?.market) return
+      const next = { ...markPriceData.value }
+      next[data.market] = { ...(next[data.market] ?? {}), markPrice: data.markPrice, indexPrice: data.indexPrice }
+      markPriceData.value = next
+    })
+    // Degraded fallback: full REST refresh every 30 s, gated to perps-active windows.
+    gatedPoll(fetchMarkPrices, 30_000)
   }
   return { markPriceData, refetch: fetchMarkPrices }
 }
