@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import { perpsClient } from '../configs'
+import { perpsWs } from '../sdk/ws'
 import { gatedPoll } from './usePerpsActive'
 import { usePerpsAuth } from './usePerpsAuth'
 import type { Position } from '../sdk/types'
@@ -9,6 +10,20 @@ const loading = ref(false)
 const hasLoaded = ref(false)
 const error = ref<string | null>(null)
 let initialized = false
+
+function upsertByMarket(next: Position) {
+  const idx = positions.value.findIndex(p => p.market === next.market)
+  if (idx < 0) {
+    positions.value = [...positions.value, next]
+  } else {
+    positions.value = [
+      ...positions.value.slice(0, idx),
+      { ...positions.value[idx], ...next },
+      ...positions.value.slice(idx + 1),
+    ]
+  }
+  hasLoaded.value = true
+}
 
 async function fetchPositions() {
   const { token } = usePerpsAuth()
@@ -45,7 +60,18 @@ function startPolling() {
   }
 
   poll()
-  gatedPoll(poll, 5_000)
+  perpsWs.subscribe('positionsPerps', {}, (data: unknown) => {
+    if (!token.value) return
+    if (Array.isArray(data)) {
+      positions.value = data as Position[]
+      hasLoaded.value = true
+      return
+    }
+    if (data && typeof data === 'object' && 'market' in data) {
+      upsertByMarket(data as Position)
+    }
+  })
+  gatedPoll(poll, 60_000)
 
   // The singleton is often initialised by PerpsMarketList (mounted before auth)
   // so the first poll() runs with no token and never sets loading=true. React
