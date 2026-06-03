@@ -106,6 +106,8 @@ function replaySubscriptions() {
 
 function open() {
   if (status.value === 'connecting' || status.value === 'open') return
+  // Cancel any pending reconnect — we're connecting now.
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null }
   manualDisconnect = false
   status.value = 'connecting'
   socket = new WebSocket(perpsWsUrl)
@@ -133,14 +135,23 @@ function open() {
 function close() {
   manualDisconnect = true
   outboundQueue.length = 0
-  subscriptions.clear()
+  // Keep subscriptions registered so they replay when the user re-enters /perps.
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null }
   reconnectAttempt = 0
+  stopHeartbeat()
   if (socket) {
-    try { socket.close() } catch { /* ignore */ }
-  } else {
-    status.value = 'closed'
+    // Detach handlers so the async onclose can't flip state back after a fast
+    // re-connect (real-browser WebSocket.close() is async; without this, a
+    // subsequent connect() short-circuits on status==='open').
+    const s = socket
+    socket = null
+    s.onopen = null
+    s.onclose = null
+    s.onerror = null
+    s.onmessage = null
+    try { s.close() } catch { /* ignore */ }
   }
+  status.value = 'closed'
 }
 
 function subscribe(

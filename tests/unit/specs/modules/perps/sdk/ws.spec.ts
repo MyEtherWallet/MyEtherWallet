@@ -221,3 +221,41 @@ describe('perpsWs — reconnect', () => {
     expect(MockWebSocket.instances).toHaveLength(1)
   })
 })
+
+describe('perpsWs — re-entry after disconnect', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.resetModules()
+  })
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('disconnect() transitions status to closed synchronously', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    expect(perpsWs.status.value).toBe('open')
+    // Detach onclose to simulate the real-browser race where WebSocket.close()
+    // is async and onclose has not fired yet by the time the user re-enters.
+    MockWebSocket.instances[0].onclose = null
+    perpsWs.disconnect()
+    expect(perpsWs.status.value).toBe('closed')
+  })
+
+  it('replays subscriptions when connect() is called after disconnect()', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.subscribe('topOfBooksPerps', { markets: ['ETH-USD'] }, vi.fn())
+    perpsWs.disconnect()
+    perpsWs.connect()
+    expect(MockWebSocket.instances).toHaveLength(2)
+    MockWebSocket.instances[1]._open()
+    const sent = MockWebSocket.instances[1].sent.map(s => JSON.parse(s))
+    expect(sent).toContainEqual({
+      op: 'subscribe', channel: 'topOfBooksPerps', markets: ['ETH-USD'],
+    })
+  })
+})
