@@ -64,7 +64,7 @@
         :style="{ left: `${tooltipPos.left}px`, top: `${tooltipPos.top}px`, transform: 'translate(-50%, calc(-100% - 9px))' }"
       >
         <p class="text-s-12 font-semibold text-black leading-[18px] tracking-[-0.24px] text-center">
-          {{ t('purchase.sell.network_fee_tooltip', { symbol: tokenSymbol, chain: displayChain?.name ?? '' }) }}
+          {{ t('purchase.sell.network_fee_tooltip', { symbol: displayChain?.currencyName ?? '', chain: displayChain?.nameLong ?? '' }) }}
         </p>
         <div class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white" />
       </div>
@@ -273,7 +273,7 @@ const tokenBalance = computed<string | null>(() => {
     walletChain.value?.currencyName === selectedToken.value.symbol
   if (isNativeOfWalletChain) return nativeBalance.value
   const found = tokens.value.find(
-    t => t.symbol === selectedToken.value?.symbol,
+    t => t.contract.toLowerCase() === selectedToken.value?.contract_address.toLowerCase(),
   )
   return found?.balance ?? null
 })

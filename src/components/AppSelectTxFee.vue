@@ -388,14 +388,13 @@ const setFee = (fee: FeePriority) => {
   //TODO: add amplitude
 }
 
-const selectedFeeNative = computed(() => {
-  if (hasFees.value && data.value) {
-    return formatFee(data.value.fees[gasPriceType.value])
-  }
-  return ''
-})
 const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
   return props.fees ? props.fees.fees : feeEstmates.value
+})
+
+const selectedFeeNative = computed(() => {
+  const fees = usedFeeToDisplay.value
+  return hasFees.value && fees ? formatFee(fees[gasPriceType.value]) : ''
 })
 
 const hasFiatEstimates = computed(() => {
@@ -497,11 +496,12 @@ const displayFees = computed<DisplayFee[]>(() => {
 })
 
 const hasFees = computed(() => {
-  return (
-    feesReady.value &&
-    data.value &&
-    Object.keys(data.value.fees).length > 0 &&
-    !props.isLoadingFees
+  const fees = usedFeeToDisplay.value
+  return Boolean(
+    fees &&
+      Object.keys(fees).length > 0 &&
+      !props.isLoadingFees &&
+      (props.fees || feesReady.value),
   )
 })
 

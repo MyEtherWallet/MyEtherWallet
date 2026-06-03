@@ -45,6 +45,7 @@
           @input="onInput"
           @focus="onFocus"
           @blur="onBlur"
+          @scroll="(e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)"
         />
         <span
           v-if="amount === ''"
