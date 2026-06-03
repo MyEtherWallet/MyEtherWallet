@@ -1,7 +1,8 @@
+import configs from '@/configs'
 import { PerpsClient } from './sdk'
 import { mainnet } from 'viem/chains'
 
-const IS_PERPS_LIVE = false
+const IS_PERPS_LIVE = true
 
 const PERPS_BASE_URL = {
   sandbox: { url: `https://api.ondoperps-sandbox.xyz` },
@@ -9,7 +10,7 @@ const PERPS_BASE_URL = {
 }
 
 const perpsClient = new PerpsClient(
-  IS_PERPS_LIVE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
+  !configs.IS_DEV_MODE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
 )
 
 const SUPPORTED_NETWORK = [mainnet]
