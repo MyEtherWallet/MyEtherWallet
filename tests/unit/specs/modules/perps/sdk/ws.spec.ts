@@ -370,3 +370,36 @@ describe('perpsWs — re-login on reconnect', () => {
     expect(lateSent.find((f: any) => f.channel === 'positionsPerps' && f.op === 'subscribe')).toBeDefined()
   })
 })
+
+describe('perpsWs — unauthorized handling', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.resetModules()
+  })
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('on unauthorized error: fires callback, drops auth, keeps socket', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const cb = vi.fn()
+    perpsWs.onUnauthorized(cb)
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.login('tok-1')
+    MockWebSocket.instances[0]._message({ type: 'loggedIn' })
+    MockWebSocket.instances[0]._message({ type: 'error', code: 'unauthorized' })
+    expect(cb).toHaveBeenCalledTimes(1)
+    expect(perpsWs.authStatus.value).toBe('anonymous')
+    expect(perpsWs.status.value).toBe('open')
+  })
+
+  it('ignores generic error frames', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const cb = vi.fn()
+    perpsWs.onUnauthorized(cb)
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    MockWebSocket.instances[0]._message({ type: 'error', code: 'rate_limited' })
+    expect(cb).not.toHaveBeenCalled()
+  })
+})

@@ -43,6 +43,13 @@ function isPrivate(channel: ChannelName): boolean {
 
 const privateOutboundQueue: ClientFrame[] = []
 
+type UnauthorizedCallback = () => void
+let onUnauthorizedCb: UnauthorizedCallback | null = null
+
+function onUnauthorized(cb: UnauthorizedCallback) {
+  onUnauthorizedCb = cb
+}
+
 function flushPrivateOutbound() {
   if (authStatus.value !== 'authenticated') return
   if (!socket || socket.readyState !== WebSocket.OPEN) return
@@ -104,6 +111,16 @@ function handleMessage(ev: MessageEvent) {
   }
   if (frame.type === 'loggedOut') {
     authStatus.value = 'anonymous'
+    return
+  }
+  if (frame.type === 'error') {
+    const code = (frame as { code?: string }).code
+    if (code === 'unauthorized' || code === '401') {
+      pendingToken = null
+      authStatus.value = 'anonymous'
+      privateOutboundQueue.length = 0
+      onUnauthorizedCb?.()
+    }
     return
   }
   const list = subscriptions.get(frame.type as ChannelName)
@@ -257,4 +274,5 @@ export const perpsWs = {
   subscribe,
   login,
   logout,
+  onUnauthorized,
 }
