@@ -72,3 +72,61 @@ describe('perpsWs — connect/disconnect', () => {
     expect(MockWebSocket.instances).toHaveLength(1)
   })
 })
+
+describe('perpsWs — subscribe/unsubscribe', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.resetModules()
+  })
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('queues subscribes before open, flushes on open', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const handler = vi.fn()
+    perpsWs.connect()
+    perpsWs.subscribe('topOfBooksPerps', { markets: ['ETH-USD'] }, handler)
+    expect(MockWebSocket.instances[0].sent).toEqual([])
+    MockWebSocket.instances[0]._open()
+    expect(JSON.parse(MockWebSocket.instances[0].sent[0])).toEqual({
+      op: 'subscribe', channel: 'topOfBooksPerps', markets: ['ETH-USD'],
+    })
+  })
+
+  it('routes server events to matching handlers by channel', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const handler = vi.fn()
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.subscribe('topOfBooksPerps', { markets: ['ETH-USD'] }, handler)
+    MockWebSocket.instances[0]._message({
+      type: 'topOfBooksPerps', data: { market: 'ETH-USD', bid: '1', ask: '2' },
+    })
+    expect(handler).toHaveBeenCalledWith({ market: 'ETH-USD', bid: '1', ask: '2' })
+  })
+
+  it('unsubscribe() removes the handler and sends unsubscribe frame', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const handler = vi.fn()
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    const off = perpsWs.subscribe('markPricesPerps', { markets: ['ETH-USD'] }, handler)
+    off()
+    expect(JSON.parse(MockWebSocket.instances[0].sent.at(-1)!)).toEqual({
+      op: 'unsubscribe', channel: 'markPricesPerps', markets: ['ETH-USD'],
+    })
+    MockWebSocket.instances[0]._message({
+      type: 'markPricesPerps', data: { market: 'ETH-USD', markPrice: '3' },
+    })
+    expect(handler).not.toHaveBeenCalled()
+  })
+
+  it('ignores frames whose type has no registered handler', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    expect(() => {
+      MockWebSocket.instances[0]._message({ type: 'tradesPerps', data: { market: 'X' } })
+    }).not.toThrow()
+  })
+})
