@@ -259,3 +259,49 @@ describe('perpsWs — re-entry after disconnect', () => {
     })
   })
 })
+
+describe('perpsWs — login/logout', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.resetModules()
+  })
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('authStatus starts as anonymous', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    expect(perpsWs.authStatus.value).toBe('anonymous')
+  })
+
+  it('login() queues the frame before open, sends it on open', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    perpsWs.login('tok-1')
+    expect(perpsWs.authStatus.value).toBe('authenticating')
+    expect(MockWebSocket.instances[0].sent).toEqual([])
+    MockWebSocket.instances[0]._open()
+    expect(JSON.parse(MockWebSocket.instances[0].sent[0])).toEqual({
+      op: 'login', args: { token: 'tok-1' },
+    })
+  })
+
+  it('authStatus flips to authenticated on {type:"loggedIn"}', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.login('tok-1')
+    MockWebSocket.instances[0]._message({ type: 'loggedIn' })
+    expect(perpsWs.authStatus.value).toBe('authenticated')
+  })
+
+  it('logout() sends {op:"logout"} and resets authStatus', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.login('tok-1')
+    MockWebSocket.instances[0]._message({ type: 'loggedIn' })
+    perpsWs.logout()
+    expect(JSON.parse(MockWebSocket.instances[0].sent.at(-1)!)).toEqual({ op: 'logout' })
+    expect(perpsWs.authStatus.value).toBe('anonymous')
+  })
+})

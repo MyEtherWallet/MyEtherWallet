@@ -1,6 +1,7 @@
 import { ref, type Ref } from 'vue'
 import { perpsWsUrl } from '../configs'
 import type {
+  AuthStatus,
   ChannelName,
   ClientFrame,
   ConnectionStatus,
@@ -15,6 +16,8 @@ interface SubscribeParams {
 }
 
 const status: Ref<ConnectionStatus> = ref('idle')
+const authStatus: Ref<AuthStatus> = ref('anonymous')
+let pendingToken: string | null = null
 let socket: WebSocket | null = null
 let manualDisconnect = false
 
@@ -70,6 +73,14 @@ function handleMessage(ev: MessageEvent) {
   resetStaleTimer()
   let frame: ServerFrame
   try { frame = JSON.parse(ev.data as string) as ServerFrame } catch { return }
+  if (frame.type === 'loggedIn') {
+    authStatus.value = 'authenticated'
+    return
+  }
+  if (frame.type === 'loggedOut') {
+    authStatus.value = 'anonymous'
+    return
+  }
   const list = subscriptions.get(frame.type as ChannelName)
   if (!list) return
   if ('data' in frame) {
@@ -174,9 +185,24 @@ function subscribe(
   }
 }
 
+function login(token: string) {
+  pendingToken = token
+  authStatus.value = 'authenticating'
+  sendOrQueue({ op: 'login', args: { token } })
+}
+
+function logout() {
+  pendingToken = null
+  authStatus.value = 'anonymous'
+  sendOrQueue({ op: 'logout' })
+}
+
 export const perpsWs = {
   status,
+  authStatus,
   connect: open,
   disconnect: close,
   subscribe,
+  login,
+  logout,
 }
