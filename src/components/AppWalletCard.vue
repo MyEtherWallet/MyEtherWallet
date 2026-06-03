@@ -2,21 +2,19 @@
   <div class="h-full">
     <div v-if="isWalletConnected && walletAddress" class="h-full">
       <div
-        class="mew-card-readable relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        class="relative bg-grey-50 rounded-16 overflow-hidden h-full min-h-[241px] grid grid-rows-3 px-6 py-5 content-between text-white shadow-button"
+        :class="{ 'mew-card-readable': !useDynamicContrast }"
+        :style="useDynamicContrast ? { color: textColor } : undefined"
       >
         <img
           ref="mewCard"
-          :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
+          :src="mewCardUrl"
           :alt="t('common.my_wallet')"
           width="500"
           height="424"
           class="rounded-16 drop-shadow absolute z-0 h-full w-full object-cover"
-          @load="animateMewCard"
+          @load="onMewCardLoad"
         />
-        <div
-          aria-hidden="true"
-          class="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-black/25 via-black/5 to-black/30"
-        ></div>
         <!-- wallet address, wallet menu, link to explorer-->
         <div class="flex items-start justify-between relative">
           <div class="">
@@ -167,6 +165,7 @@ import { useI18n } from 'vue-i18n'
 import { useChainsStore } from '@/stores/chainsStore'
 import useBalanceHandler from '@/utils/balanceHandler'
 import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
+import { useImageContrastTextColor } from '@/composables/useImageContrastTextColor'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { WalletType } from '@/providers/types'
 import { useAccessStore } from '@/stores/accessStore'
@@ -241,9 +240,8 @@ const setOpenPaperWalletDialog = (value: boolean) => {
 /**
  * Animates wallet card
  */
-const animateMewCard = (event: Event) => {
+const animateMewCard = (el: HTMLElement) => {
   if (walletCardWasAnimated.value) return
-  const el = event.currentTarget as HTMLElement
   el.style.opacity = '0'
   animate(el, {
     opacity: 1,
@@ -252,6 +250,22 @@ const animateMewCard = (event: Event) => {
     easing: 'easeInOutQuad',
   })
   walletCardWasAnimated.value = true
+}
+
+// Visible <img> loads without crossorigin so the card always renders. The
+// composable separately requests an anonymous copy for CORS-enabled pixel
+// sampling; if mewcard.mewapi.io does not yet return CORS headers the sampler
+// fails silently and we keep the static text-shadow fallback.
+const { textColor, isDynamic: useDynamicContrast, sampleFromUrl } =
+  useImageContrastTextColor()
+
+const mewCardUrl = computed(
+  () => `https://mewcard.mewapi.io/?address=${walletAddress.value ?? ''}`,
+)
+
+const onMewCardLoad = (event: Event) => {
+  animateMewCard(event.currentTarget as HTMLImageElement)
+  if (walletAddress.value) sampleFromUrl(mewCardUrl.value)
 }
 
 const getExplorerLink = computed(() => {
