@@ -10,7 +10,7 @@
         <div v-if="currentView === 'add'" class="w-full flex flex-col gap-4">
           <address-input
             v-model:adr-input="adrInput"
-            label="Token Address"
+            :label="t('portfolio.custom_token.token_address')"
             :resolved-address="resolvedAddress"
             :address-error-messages="addressError"
             :chain="selectedChain"
@@ -27,7 +27,7 @@
             <app-input
               v-if="fetchedInfoViaAddress"
               key="name"
-              placeholder="Token Name"
+              :placeholder="t('portfolio.custom_token.token_name_placeholder')"
               v-model="tokenName"
               :is-disabled="fetchingDetails"
               :error-message="nameError"
@@ -35,7 +35,7 @@
             <app-input
               v-if="fetchedInfoViaAddress"
               key="symbol"
-              placeholder="Token Symbol"
+              :placeholder="t('portfolio.custom_token.token_symbol_placeholder')"
               v-model="tokenSymbol"
               :is-disabled="fetchingDetails"
               :error-message="symbolError"
@@ -43,7 +43,7 @@
             <app-input
               v-if="fetchedInfoViaAddress"
               key="decimals"
-              placeholder="Token Decimals"
+              :placeholder="t('portfolio.custom_token.token_decimals_placeholder')"
               v-model="tokenDecimals"
               :is-disabled="fetchingDetails"
               :error-message="decimalsError"
@@ -79,23 +79,23 @@
         <div v-if="currentView === 'edit'" class="w-full flex flex-col gap-4">
           <address-input
             v-model:adr-input="adrInput"
-            label="Token Address"
+            :label="t('portfolio.custom_token.token_address')"
             :is-disabled="true"
             :resolved-address="resolvedAddress"
             :chain="selectedChain"
           />
           <app-input
-            placeholder="Token Name"
+            :placeholder="t('portfolio.custom_token.token_name_placeholder')"
             v-model="tokenName"
             :error-message="nameError"
           />
           <app-input
-            placeholder="Token Symbol"
+            :placeholder="t('portfolio.custom_token.token_symbol_placeholder')"
             v-model="tokenSymbol"
             :error-message="symbolError"
           />
           <app-input
-            placeholder="Token Decimals"
+            :placeholder="t('portfolio.custom_token.token_decimals_placeholder')"
             v-model="tokenDecimals"
             :is-disabled="true"
             :error-message="decimalsError"
@@ -106,10 +106,7 @@
           class="max-w-[340px] text-center mb-2"
         >
           <p class="text-s-16 text-black leading-relaxed">
-            Are you sure you want to delete "<span class="font-bold">{{
-              selectedToken?.name
-            }}</span
-            >"? You can re-add this token if you change your mind.
+            {{ t('portfolio.custom_token.delete_confirm', { name: selectedToken?.name ?? '' }) }}
           </p>
         </div>
         <app-base-button
@@ -126,6 +123,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import AppInput from '@/components/AppInput.vue'
 import AddressInput from '@/components/address_book/AddressInput.vue'
@@ -141,6 +139,7 @@ import type { GetErc20ContractMetadataResponse } from '@/mew_api/types'
 import { getAPIPath } from '@/utils/constructAPIPath'
 
 // --- Store & State ---
+const { t } = useI18n()
 const chainStore = useChainsStore()
 const toastStore = useToastStore()
 const customTokenStore = useCustomTokenStore()
@@ -162,23 +161,23 @@ const localAddressError = ref('')
 const nameError = computed(() => {
   if (currentView.value === 'delete') return ''
   if (fetchedInfoViaAddress.value && !tokenName.value.trim())
-    return 'Token name is required'
+    return t('portfolio.custom_token.name_required')
   return ''
 })
 
 const symbolError = computed(() => {
   if (currentView.value === 'delete') return ''
   if (fetchedInfoViaAddress.value && !tokenSymbol.value.trim())
-    return 'Token symbol is required'
+    return t('portfolio.custom_token.symbol_required')
   return ''
 })
 
 const decimalsError = computed(() => {
   if (currentView.value === 'delete') return ''
   if (fetchedInfoViaAddress.value) {
-    if (!tokenDecimals.value.trim()) return 'Decimals are required'
+    if (!tokenDecimals.value.trim()) return t('portfolio.custom_token.decimals_required')
     const d = parseInt(tokenDecimals.value)
-    if (isNaN(d) || d < 0 || d > 36) return 'Must be between 0 and 36'
+    if (isNaN(d) || d < 0 || d > 36) return t('portfolio.custom_token.decimals_range')
   }
   return ''
 })
@@ -196,18 +195,18 @@ const {
 // --- Computed ---
 const title = computed(() => {
   const titles = {
-    add: 'Add Custom Token',
-    edit: 'Edit Custom Token',
-    delete: 'Delete Custom Token',
+    add: t('portfolio.custom_token.add_title'),
+    edit: t('portfolio.custom_token.edit_title'),
+    delete: t('portfolio.custom_token.delete_title'),
   }
   return titles[currentView.value] || ''
 })
 
 const buttonTitle = computed(() => {
   const labels = {
-    add: 'Add Token',
-    edit: 'Save Changes',
-    delete: 'Delete Token',
+    add: t('portfolio.custom_token.add_button'),
+    edit: t('portfolio.custom_token.save_button'),
+    delete: t('portfolio.custom_token.delete_button'),
   }
   return labels[currentView.value] || ''
 })
@@ -254,7 +253,7 @@ const handleAdd = () => {
     symbol: tokenSymbol.value,
   })
   toastStore.addToastMessage({
-    text: 'Custom token was added',
+    text: t('portfolio.custom_token.toast_added'),
     type: ToastType.Success,
   })
 }
@@ -272,7 +271,7 @@ const handleEdit = () => {
     },
   )
   toastStore.addToastMessage({
-    text: 'Custom token was updated',
+    text: t('portfolio.custom_token.toast_updated'),
     type: ToastType.Success,
   })
 }
@@ -284,7 +283,7 @@ const handleDelete = () => {
     selectedToken.value.address,
   )
   toastStore.addToastMessage({
-    text: 'Custom token was deleted',
+    text: t('portfolio.custom_token.toast_deleted'),
     type: ToastType.Success,
   })
 }
@@ -331,7 +330,7 @@ watch(adrInput, async () => {
   }
 
   if (isStoredToken(selectedChain.value?.name ?? '', adrInput.value)) {
-    localAddressError.value = 'This token is already added.'
+    localAddressError.value = t('portfolio.custom_token.already_added')
     fetchedInfoViaAddress.value = false
     return
   }
@@ -345,7 +344,7 @@ watch(adrInput, async () => {
     fetchedInfoViaAddress.value = true
   } catch {
     localAddressError.value =
-      'Failed to fetch token details. Please check the address.'
+      t('portfolio.custom_token.fetch_failed')
     fetchedInfoViaAddress.value = true
   } finally {
     fetchingDetails.value = false

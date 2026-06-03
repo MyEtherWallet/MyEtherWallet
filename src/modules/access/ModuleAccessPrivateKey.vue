@@ -8,10 +8,13 @@
         <div class="mt-5 flex flex-col align-center">
           <app-input
             v-model="privateKeyInput"
-            placeholder="Enter your private key"
+            data-private
+            :placeholder="$t('access_wallet_private_key.enter_private_key')"
             type="password"
             is-required
-            aria-label="private key input"
+            :aria-label="
+              $t('access_wallet_private_key.private_key_input_label')
+            "
             @keyup.enter="unlock"
             :error-message="errorMessages"
           />
@@ -21,7 +24,7 @@
               :disabled="submitIsDisabled"
               class="w-full xs:w-auto xs:min-w-[250px]"
             >
-              Connect
+              {{ $t('create_wallet.connect') }}
             </app-base-button>
           </div>
         </div>
@@ -59,6 +62,9 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const toastStore = useToastStore()
 const { addToastMessage } = toastStore
@@ -85,7 +91,7 @@ const errorMessages = computed<string>(() => {
   }
 
   if (!isValidPrivateKey.value) {
-    return 'Invalid private key'
+    return t('access_wallet_private_key.invalid_private_key')
   }
 
   return ''
@@ -146,10 +152,10 @@ const unlock = () => {
     accessStore.closeAccessDialog()
   } catch (error) {
     addToastMessage({
-      text: 'Something went wrong',
+      text: t('access_wallet_keystore.something_went_wrong'),
       textSecondary: (error as Error).message
         ? (error as Error).message
-        : 'There was an error accessing the wallet. Please try again.',
+        : t('access_wallet_keystore.error_accessing_wallet'),
       type: ToastType.Error,
     })
     captureException(error, SENTRY_MODULE_TAGS.ACCESS)

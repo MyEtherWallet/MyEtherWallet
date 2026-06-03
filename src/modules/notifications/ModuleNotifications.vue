@@ -1,62 +1,64 @@
 <template>
-  <div class="space-y-3">
-    <!-- Category Filter -->
-    <app-btn-group
-      v-model:selected="selectedCategory"
-      :btn-list="categories"
-      size="xs"
-      class="mb-5"
-    >
-      <template #btn-content="{ data }">
-        {{ data.label }}
-      </template>
-    </app-btn-group>
+  <div>
+    <div class="space-y-3 overflow-scroll max-h-[500px]">
+      <!-- Category Filter -->
+      <app-btn-group
+        v-model:selected="selectedCategory"
+        :btn-list="categories"
+        size="xs"
+        class="mb-5"
+      >
+        <template #btn-content="{ data }">
+          {{ data.label }}
+        </template>
+      </app-btn-group>
 
-    <div
-      v-for="(item, index) in filteredNotifications"
-      :key="item.hash"
-      class="relative"
-    >
-      <!-- Transaction Notification -->
-      <transaction-container
-        v-if="isTransaction(item)"
-        :transaction="item"
-        @remove="removeNotification"
-      />
-
-      <!-- Swap Notification -->
-      <swap-container
-        v-else-if="isSwap(item)"
-        :swap="item"
-        @remove="removeNotification"
-      />
-
-      <!-- Bridge Notification -->
-      <bridge-container
-        v-else-if="isBridge(item)"
-        :bridge="item"
-        @remove="removeNotification"
-      />
-
-      <!-- Trade Order Notification -->
-      <trade-order-container
-        v-else
-        :order="item as SavedTradeOrder"
-        :remaining-time="
-          getOrderWithRemainingTime(item as SavedTradeOrder).remainingTime
-        "
-        @remove="removeNotification"
-      />
       <div
-        v-if="item.seen === false"
-        class="absolute top-0 left-0 -translate-x-1/2 -translate-y-[70%] rounded-full bg-primary w-2 h-2"
-      ></div>
-      <hr
-        v-if="index < filteredNotifications.length - 1"
-        class="border-t border-grey-10 mt-4"
-      />
+        v-for="(item, index) in filteredNotifications"
+        :key="item.hash"
+        class="relative"
+      >
+        <!-- Transaction Notification -->
+        <transaction-container
+          v-if="isTransaction(item)"
+          :transaction="item"
+          :seen="item.seen"
+          @remove="removeNotification"
+        />
+
+        <!-- Swap Notification -->
+        <swap-container
+          v-else-if="isSwap(item)"
+          :swap="item"
+          :seen="item.seen"
+          @remove="removeNotification"
+        />
+
+        <!-- Bridge Notification -->
+        <bridge-container
+          v-else-if="isBridge(item)"
+          :bridge="item"
+          :seen="item.seen"
+          @remove="removeNotification"
+        />
+
+        <!-- Trade Order Notification -->
+        <trade-order-container
+          v-else
+          :order="item as SavedTradeOrder"
+          :seen="item.seen"
+          :remaining-time="
+            getOrderWithRemainingTime(item as SavedTradeOrder).remainingTime
+          "
+          @remove="removeNotification"
+        />
+        <hr
+          v-if="index < filteredNotifications.length - 1"
+          class="border-t border-grey-10 mt-4"
+        />
+      </div>
+      <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
     </div>
-    <empty-container v-if="!filteredNotifications.length" :text="emptyText" />
     <div class="flex justify-center">
       <app-btn-text
         v-if="notificationsCount > 1"
@@ -163,6 +165,14 @@ const walletStore = useWalletStore()
 const toastStore = useToastStore()
 const { walletAddress, wallet } = storeToRefs(walletStore)
 const { setTokens, setIsLoadingBalances } = walletStore
+const rewardsStore = useRewardsStore()
+const {
+  fetchUserRewards,
+  setEarnedPotentialReward,
+  checkRewards,
+  fetchEligibility,
+} = rewardsStore
+const { earnedPotentialReward } = storeToRefs(rewardsStore)
 
 // Get notifications count based on selected category
 const notificationsCount = computed(() => {
@@ -378,16 +388,15 @@ const updateOrderStatus = (hash: string, status: OrderStatusOutputType) => {
     }
 
     // Refresh balances after trade order is filled
-    fetchBalances()
+    consolidatedCall()
   }
 
   if (status.status === 'cancelled' || status.status === 'expired') {
     // Mark as unseen when status changes
     updates.seen = false
     stopPolling(hash)
-    const rewardsStore = useRewardsStore()
-    if (rewardsStore.earnedPotentialReward) {
-      rewardsStore.setEarnedPotentialReward(false)
+    if (earnedPotentialReward) {
+      setEarnedPotentialReward(false)
     }
     const event =
       status.status === 'cancelled'
@@ -555,9 +564,8 @@ const updateNotificationStatus = (
     })
     stopStatusPolling(hash)
     if (newStatus !== 'confirmed') {
-      const rewardsStore = useRewardsStore()
-      if (rewardsStore.earnedPotentialReward) {
-        rewardsStore.setEarnedPotentialReward(false)
+      if (earnedPotentialReward) {
+        setEarnedPotentialReward(false)
       }
     }
     if (newStatus === 'confirmed' || newStatus === 'failed') {
@@ -656,7 +664,14 @@ const updateNotificationStatus = (
       })
     }
   }
-  fetchBalances()
+  consolidatedCall()
+}
+
+const consolidatedCall = async () => {
+  await fetchBalances()
+  await fetchUserRewards()
+  await fetchEligibility()
+  await checkRewards()
 }
 
 // Get the correct transaction status URL based on chain

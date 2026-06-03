@@ -68,7 +68,7 @@
           v-if="isLoading"
           class="h-5 flex bg-grey-10 rounded-full w-1/2"
         ></div>
-        <div v-else class="flex justify-between items-start">
+        <div v-else class="flex justify-between items-center">
           <div
             class="text-sm"
             :class="[
@@ -81,15 +81,20 @@
           </div>
           <div
             v-if="showBalance && isFromView"
-            class="text-s-12 text-info transition-colors h-5"
-            :class="{
-              'text-primary':
-                (inFocusInput || isOpenSelectToken) &&
-                (!hasError || isPristine),
-            }"
+            class="flex items-baseline gap-2 whitespace-nowrap"
           >
-            {{ $t('common.balance') }}:
-            <span class="text-black">{{ balance }}</span>
+            <div
+              class="text-s-12 leading-p-120 text-info transition-colors"
+              :class="{
+                'text-primary':
+                  (inFocusInput || isOpenSelectToken) &&
+                  (!hasError || isPristine),
+              }"
+            >
+              {{ $t('common.balance') }}:
+              <span class="text-black">{{ balance }}</span>
+            </div>
+            <slot name="balance-action" />
           </div>
           <div v-else class="text-s-12 text-info transition-colors h-5">
             {{ $t('common.price') }}:

@@ -1,10 +1,14 @@
 <template>
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
-      <div class="basis-1/4">
-        <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
-          trade order
+      <div class="flex items-center gap-1 basis-1/4">
+        <p class="text-info uppercase text-s-9 font-bold">
+          {{ $t('notifications_module.trade_order') }}
         </p>
+        <div
+          v-if="!seen"
+          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+        ></div>
       </div>
       <span
         v-if="order.status === 'pending'"
@@ -20,7 +24,7 @@
           v-if="order.status === 'pending'"
           class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
-        {{ order.status }}
+        {{ orderStatusLabel }}
       </div>
     </div>
 
@@ -73,7 +77,9 @@
             class="flex flex-col"
           >
             <span class="text-s-12 text-info">
-              <span class="uppercase text-s-9 mr-1 opacity-80">est:</span>
+              <span class="uppercase text-s-9 mr-1 opacity-80">{{
+                $t('notifications_module.est')
+              }}</span>
               <span class="opacity-70"
                 >{{ formatFloatingPointValue(order.expectedToAmount).value }}
                 <app-token-symbol
@@ -130,7 +136,7 @@
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
-        More details
+        {{ $t('common.more_details') }}
         <chevron-down-icon
           :class="[
             'transition-transform w-3 h-3 ml-2',
@@ -140,7 +146,7 @@
       </app-btn-text>
       <!-- delete Button -->
       <app-btn-icon
-        label="delete notification"
+        :label="$t('common.delete_notification')"
         @click="$emit('remove', order.hash)"
         class="ml-auto -mr-2"
       >
@@ -157,7 +163,7 @@
         >
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Price difference</span
+            >{{ $t('notifications_module.price_difference') }}</span
           >
           <span
             :class="[
@@ -174,7 +180,7 @@
         <div class="flex items-center justify-between mt-3">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Created at</span
+            >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
             {{ formatTime(order.createdAt) }}
@@ -185,7 +191,7 @@
         <div class="flex items-center justify-between mt-3">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Order hash</span
+            >{{ $t('common.order_hash') }}</span
           >
           <span class="font-mono text-s-12">
             {{ truncateHash(order.hash) }}
@@ -199,7 +205,7 @@
         >
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Filled in tx</span
+            >{{ $t('notifications_module.filled_in_tx') }}</span
           >
           <a
             :href="explorerLink"
@@ -218,6 +224,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   ArrowLongRightIcon,
   ArrowUpRightIcon,
@@ -237,6 +244,7 @@ import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 const props = defineProps<{
   order: SavedTradeOrder
   remainingTime: number
+  seen?: boolean
 }>()
 
 // Emits
@@ -244,7 +252,17 @@ defineEmits<{
   remove: [hash: string]
 }>()
 
+const { t } = useI18n()
+
 const showMoreDetails = ref(false)
+
+const orderStatusLabel = computed(() => {
+  const status = props.order.status.toLowerCase()
+  const key = `notifications_module.order_status.${status}`
+  const translated = t(key)
+  // If no translation found (key returned as-is), fall back to raw status
+  return translated !== key ? translated : props.order.status
+})
 
 // Computed classes
 const statusBadgeClass = computed(() => {

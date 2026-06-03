@@ -15,7 +15,7 @@
           <icon-watch-only
             v-if="isXS"
             class="absolute w-3 h-3 p-[1px] inline-block text-info/50 bottom-[-2px] right-0 bg-white rounded-full shadow-button"
-            label="Watch Only Wallet"
+            :label="$t('watch_only_wallet')"
           />
         </div>
 
@@ -28,7 +28,7 @@
               <icon-watch-only
                 class="w-3 h-3 inline-block text-info/50 mr-[3px]"
               /> </span
-            >Watch only
+            >{{ $t('common.watch_only') }}
           </p>
           <div
             class="mr-2 ml-1 font-medium text-s-14 leading-p-100"
