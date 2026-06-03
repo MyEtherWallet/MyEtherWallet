@@ -9,20 +9,27 @@
             :active-step="activeStep"
             @update:active-step="backStep"
           >
-            <!-- Enter Mnemonic -->
             <div v-if="activeStep === 0">
               <app-step-description
                 :description="walletStepsDescription[0]"
                 :activeStep="activeStep"
               />
-              <div class="flex flex-col items-center justify-center mt-[40px] gap-3">
+              <div
+                class="flex flex-col items-center justify-center mt-[40px] gap-3"
+              >
                 <app-base-button
                   v-if="currentView !== 'ledger' || usbSupported"
-                  @click="currentView === 'ledger' ? connectViaUSB() : unlockWallet()"
+                  @click="
+                    currentView === 'ledger' ? connectViaUSB() : unlockWallet()
+                  "
                   :is-loading="connectingWallet"
                   :disabled="connectingWallet"
                 >
-                  {{ currentView === 'ledger' ? t('access_wallet_ledger.connect_usb') : connectButtonText }}
+                  {{
+                    currentView === 'ledger'
+                      ? t('access_wallet_ledger.connect_usb')
+                      : connectButtonText
+                  }}
                 </app-base-button>
                 <span
                   v-if="currentView === 'ledger' && bleSupported"
@@ -114,7 +121,12 @@ import { storeToRefs } from 'pinia'
 import HWwallet from '@enkryptcom/hw-wallets'
 import LedgerManager from '@/providers/hw/ledger'
 import type { HWManager } from '@/providers/hw/types'
-import { getLedgerWebUSBTransport, getLedgerBLETransport, isWebUSBSupported, isWebBLESupported } from '@/providers/hw/ledger/transport'
+import {
+  getLedgerWebUSBTransport,
+  getLedgerBLETransport,
+  isWebUSBSupported,
+  isWebBLESupported,
+} from '@/providers/hw/ledger/transport'
 import { HWwalletType } from '@enkryptcom/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
 import type { PathType } from '@/stores/derivationStore'
@@ -133,6 +145,10 @@ import BtcHardwareWallet from '@/providers/bitcoin/btcHardwareWallet'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import {
+  evmSupportedPaths,
+  btcSupportedPaths,
+} from '@/providers/hw/ledger/configs'
 
 // store instantiation needs to be at the top level
 // to avoid late initialization issues
@@ -169,6 +185,7 @@ const updateChain = (chain: Chain) => {
  * Derivation Path
  -------------------------*/
 const paths = ref<PathType[]>([])
+let isChainSwitching = false
 
 /**------------------------
  * Steps
@@ -366,7 +383,10 @@ const selectedIndex = ref(0)
 const page = ref(0)
 const toastStore = useToastStore()
 
+let loadListGeneration = 0
+
 const loadList = async (page: number = 0) => {
+  const generation = ++loadListGeneration
   isLoadingWalletList.value = true
   walletList.value = []
   const startIndex = page * 5
@@ -382,6 +402,7 @@ const loadList = async (page: number = 0) => {
   try {
     for (let i = startIndex; i < startIndex + 5; i++) {
       if (selectedDerivation.value?.basePath === '') return
+      if (generation !== loadListGeneration) return
       const addressResponse = await instance!.getAddress({
         confirmAddress: false,
         networkName: networkName as any,
@@ -389,6 +410,7 @@ const loadList = async (page: number = 0) => {
         pathIndex: i.toString(),
         wallet: selectedHwWalletType.value as HWwalletType,
       })
+      if (generation !== loadListGeneration) return
 
       const hardwareWalletInstance = isEvmChain.value
         ? new EvmHardwareWallet(
@@ -402,13 +424,14 @@ const loadList = async (page: number = 0) => {
           )
         : new BtcHardwareWallet(
             addressResponse.address as HexPrefixedString,
-            networkName,
+            chainName,
             i.toString(),
             selectedDerivation.value as PathType,
             selectedHwWalletType.value as HWwalletType,
             instance!,
           )
       const fetchBalance = await hardwareWalletInstance.getBalance()
+      if (generation !== loadListGeneration) return
 
       const mainToken = (fetchBalance as TokenBalancesRaw).result.find(
         token => token.contract === MAIN_TOKEN_CONTRACT,
@@ -426,6 +449,7 @@ const loadList = async (page: number = 0) => {
       }
     }
   } catch (e) {
+    if (generation !== loadListGeneration) return
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: 'Something went wrong',
@@ -433,7 +457,9 @@ const loadList = async (page: number = 0) => {
     })
     captureException(e, SENTRY_MODULE_TAGS.ACCESS)
   } finally {
-    isLoadingWalletList.value = false
+    if (generation === loadListGeneration) {
+      isLoadingWalletList.value = false
+    }
   }
 }
 
@@ -446,9 +472,25 @@ watch(
       isLoadingWalletList.value = true
       hwWalletInstance = createHwManager()
       if (activeStep.value === 1) {
-        const networkName = chainToEnum[
-          newValue.name as string
-        ] as NetworkNames
+        const networkName = chainToEnum[newValue.name as string] as NetworkNames
+
+        // For Ledger, pre-populate paths from local config immediately — no transport needed.
+        // This avoids the UI showing empty paths while isConnected switches the Ledger app (~6s).
+        if (currentView.value === 'ledger') {
+          const localPaths = (evmSupportedPaths[networkName] ??
+            btcSupportedPaths[networkName] ??
+            []) as PathType[]
+          if (localPaths.length > 0) {
+            isChainSwitching = true
+            paths.value = localPaths
+            if (
+              !localPaths.some(p => p.path === selectedDerivation.value?.path)
+            ) {
+              setSelectedDerivation(localPaths[0])
+            }
+          }
+        }
+
         try {
           await hwWalletInstance!.isConnected({
             wallet: selectedHwWalletType.value as HWwalletType,
@@ -462,9 +504,7 @@ watch(
           if (
             newPaths.length > 0 &&
             (selectedDerivation.value?.path === '' ||
-              !newPaths.some(
-                p => p.path === selectedDerivation.value?.path,
-              ))
+              !newPaths.some(p => p.path === selectedDerivation.value?.path))
           ) {
             setSelectedDerivation(newPaths[0])
           }
@@ -476,6 +516,8 @@ watch(
             textSecondary: errorMessage,
           })
           captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+        } finally {
+          isChainSwitching = false
         }
       }
       const waiter = new Promise(r => setTimeout(r, 1000))
@@ -489,6 +531,8 @@ watch(
   (newValue: string | undefined, oldValue: string | undefined) => {
     // if old value was empty or undefined, it means this is the first time the path is set
     if (!oldValue || oldValue === '') return
+    // skip while the chain watcher is mid-switch to avoid a premature loadList()
+    if (isChainSwitching) return
     if (newValue) {
       isLoadingWalletList.value = true
       hwWalletInstance = createHwManager()

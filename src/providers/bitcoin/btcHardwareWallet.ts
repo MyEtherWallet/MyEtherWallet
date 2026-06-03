@@ -16,7 +16,6 @@ import { NODE_MAP } from '../common/btcInfo'
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
   private address: HexPrefixedString
-  private networkName: string
   private index: string
   private path: PathType
   private walletType: HWwalletType
@@ -24,15 +23,14 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
 
   constructor(
     address: HexPrefixedString,
-    networkName: string,
+    chainName: string,
     index: string,
     path: PathType,
     walletType: HWwalletType,
     hwWalletInstance: HWManager,
   ) {
-    super(networkName)
+    super(chainName)
     this.address = address
-    this.networkName = networkName
     this.index = index
     this.path = path
     this.walletType = walletType
@@ -101,6 +99,10 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
       default:
         throw new Error(`Unsupported hardware wallet type: ${this.walletType}`)
     }
+  }
+
+  override getProvider(): string {
+    return this.chainName
   }
 
   override getAddress(): Promise<HexPrefixedString> {
