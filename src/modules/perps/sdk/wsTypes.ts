@@ -7,7 +7,15 @@ export type PublicChannelName =
   | 'tradesPerps'
   | 'fundingRatesPerps'
 
-export type ChannelName = PublicChannelName
+export type PrivateChannelName =
+  | 'ordersPerps'
+  | 'fillsPerps'
+  | 'positionsPerps'
+  | 'balancePerps'
+  | 'deposits'
+  | 'withdrawals'
+
+export type ChannelName = PublicChannelName | PrivateChannelName
 
 /** Outbound frames (op envelopes). */
 export interface SubscribeFrame {
@@ -28,7 +36,16 @@ export interface PingFrame {
   op: 'ping'
 }
 
-export type ClientFrame = SubscribeFrame | UnsubscribeFrame | PingFrame
+export interface LoginFrame {
+  op: 'login'
+  args: { token: string }
+}
+
+export interface LogoutFrame {
+  op: 'logout'
+}
+
+export type ClientFrame = SubscribeFrame | UnsubscribeFrame | PingFrame | LoginFrame | LogoutFrame
 
 /** Inbound frames. The server emits one event per channel name in `type`. */
 export interface PongFrame {
@@ -77,6 +94,44 @@ export interface FundingRateUpdate {
   }
 }
 
+export interface LoggedInFrame {
+  type: 'loggedIn'
+}
+
+export interface LoggedOutFrame {
+  type: 'loggedOut'
+}
+
+export interface OrderUpdate {
+  type: 'ordersPerps'
+  data: { orderId: string; [k: string]: unknown }
+}
+
+export interface FillUpdate {
+  type: 'fillsPerps'
+  data: { fillId?: string; orderId?: string; [k: string]: unknown }
+}
+
+export interface PositionUpdate {
+  type: 'positionsPerps'
+  data: { market: string; [k: string]: unknown }
+}
+
+export interface BalanceUpdate {
+  type: 'balancePerps'
+  data: { [k: string]: unknown }
+}
+
+export interface DepositUpdate {
+  type: 'deposits'
+  data: { id?: string; txHash?: string; [k: string]: unknown }
+}
+
+export interface WithdrawalUpdate {
+  type: 'withdrawals'
+  data: { id?: string; txHash?: string; [k: string]: unknown }
+}
+
 export type ServerFrame =
   | PongFrame
   | SubscribedFrame
@@ -86,5 +141,15 @@ export type ServerFrame =
   | MarkPriceUpdate
   | TradeUpdate
   | FundingRateUpdate
+  | LoggedInFrame
+  | LoggedOutFrame
+  | OrderUpdate
+  | FillUpdate
+  | PositionUpdate
+  | BalanceUpdate
+  | DepositUpdate
+  | WithdrawalUpdate
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'open' | 'reconnecting' | 'closed'
+
+export type AuthStatus = 'anonymous' | 'authenticating' | 'authenticated'
