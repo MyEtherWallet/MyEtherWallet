@@ -5,6 +5,7 @@ import type {
   ChannelName,
   ClientFrame,
   ConnectionStatus,
+  PrivateChannelName,
   ServerFrame,
 } from './wsTypes'
 
@@ -26,6 +27,29 @@ const outboundQueue: ClientFrame[] = []
 // Subscription registry: stores handler + params so frames can be replayed on reconnect.
 interface ActiveSub { handler: AnyHandler; params: SubscribeParams }
 const subscriptions = new Map<ChannelName, ActiveSub[]>()
+
+const PRIVATE_CHANNELS: ReadonlySet<PrivateChannelName> = new Set([
+  'ordersPerps',
+  'fillsPerps',
+  'positionsPerps',
+  'balancePerps',
+  'deposits',
+  'withdrawals',
+])
+
+function isPrivate(channel: ChannelName): boolean {
+  return PRIVATE_CHANNELS.has(channel as PrivateChannelName)
+}
+
+const privateOutboundQueue: ClientFrame[] = []
+
+function flushPrivateOutbound() {
+  if (authStatus.value !== 'authenticated') return
+  if (!socket || socket.readyState !== WebSocket.OPEN) return
+  while (privateOutboundQueue.length) {
+    socket.send(JSON.stringify(privateOutboundQueue.shift()!))
+  }
+}
 
 const PING_INTERVAL_MS = 30_000
 const STALE_TIMEOUT_MS = 60_000
@@ -75,6 +99,7 @@ function handleMessage(ev: MessageEvent) {
   try { frame = JSON.parse(ev.data as string) as ServerFrame } catch { return }
   if (frame.type === 'loggedIn') {
     authStatus.value = 'authenticated'
+    flushPrivateOutbound()
     return
   }
   if (frame.type === 'loggedOut') {
@@ -146,6 +171,7 @@ function open() {
 function close() {
   manualDisconnect = true
   outboundQueue.length = 0
+  privateOutboundQueue.length = 0
   // Keep subscriptions registered so they replay when the user re-enters /perps.
   if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null }
   reconnectAttempt = 0
@@ -173,7 +199,14 @@ function subscribe(
   let list = subscriptions.get(channel)
   if (!list) { list = []; subscriptions.set(channel, list) }
   list.push({ handler, params })
-  sendOrQueue({ op: 'subscribe', channel, ...params })
+
+  const frame: ClientFrame = { op: 'subscribe', channel, ...params }
+  if (isPrivate(channel) && authStatus.value !== 'authenticated') {
+    privateOutboundQueue.push(frame)
+  } else {
+    sendOrQueue(frame)
+  }
+
   return () => {
     const cur = subscriptions.get(channel)
     if (cur) {
@@ -181,7 +214,15 @@ function subscribe(
       if (idx >= 0) cur.splice(idx, 1)
       if (cur.length === 0) subscriptions.delete(channel)
     }
-    sendOrQueue({ op: 'unsubscribe', channel, ...params })
+    if (isPrivate(channel) && authStatus.value !== 'authenticated') {
+      // No point sending unsubscribe for a sub we never sent — just drop the queued subscribe.
+      const i = privateOutboundQueue.findIndex(
+        f => f.op === 'subscribe' && (f as { channel?: string }).channel === channel,
+      )
+      if (i >= 0) privateOutboundQueue.splice(i, 1)
+    } else {
+      sendOrQueue({ op: 'unsubscribe', channel, ...params })
+    }
   }
 }
 

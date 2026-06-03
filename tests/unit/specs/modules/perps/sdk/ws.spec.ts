@@ -305,3 +305,34 @@ describe('perpsWs — login/logout', () => {
     expect(perpsWs.authStatus.value).toBe('anonymous')
   })
 })
+
+describe('perpsWs — private subscribe queue', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.resetModules()
+  })
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('holds a private subscribe until loggedIn arrives', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.subscribe('balancePerps', {}, vi.fn())
+    const beforeLogin = MockWebSocket.instances[0].sent.map(s => JSON.parse(s))
+    expect(beforeLogin.find((f: any) => f.channel === 'balancePerps')).toBeUndefined()
+    perpsWs.login('tok-1')
+    MockWebSocket.instances[0]._message({ type: 'loggedIn' })
+    const afterLogin = MockWebSocket.instances[0].sent.map(s => JSON.parse(s))
+    expect(afterLogin.find((f: any) => f.channel === 'balancePerps' && f.op === 'subscribe')).toBeDefined()
+  })
+
+  it('sends public subscribes immediately even without auth', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.subscribe('topOfBooksPerps', { markets: ['ETH-USD'] }, vi.fn())
+    const sent = MockWebSocket.instances[0].sent.map(s => JSON.parse(s))
+    expect(sent.find((f: any) => f.channel === 'topOfBooksPerps')).toBeDefined()
+  })
+})
