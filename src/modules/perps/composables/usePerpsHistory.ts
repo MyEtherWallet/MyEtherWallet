@@ -4,6 +4,7 @@ import { usePerpsAuth } from './usePerpsAuth'
 import { usePerpsMarkets } from './usePerpsMarkets'
 import { usePerpsToasts } from './usePerpsToasts'
 import { useCursorPaginate } from './useCursorPaginate'
+import { perpsWs } from '../sdk/ws'
 import type {
   ApiOrder,
   ApiFill,
@@ -12,6 +13,9 @@ import type {
 } from '../sdk/types'
 
 export type OrdersStatusFilter = 'all' | 'pending'
+
+let _ordersWsSubscribed = false
+let _ordersWsUnsubscribe: (() => void) | null = null
 
 type OrderSnapshot = Pick<
   ApiOrder,
@@ -147,11 +151,34 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
         const ok = await pagination.refetch()
         if (ok) detectFillsAndToast(pagination.items.value)
       })()
-      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
+      pollTimer = setInterval(refreshFirstPageIfActive, 60_000)
     } else {
       pollTimer = null
     }
   })
+
+  if (!_ordersWsSubscribed) {
+    _ordersWsSubscribed = true
+    _ordersWsUnsubscribe = perpsWs.subscribe('ordersPerps', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      const next = data as ApiOrder
+      if (!next.orderId) return
+      if (pagination.currentPage.value !== 0) return
+      const items = pagination.items.value
+      const idx = items.findIndex(o => o.orderId === next.orderId)
+      if (idx >= 0) {
+        pagination.items.value = [
+          ...items.slice(0, idx),
+          { ...items[idx], ...next },
+          ...items.slice(idx + 1),
+        ]
+      } else {
+        pagination.items.value = [next, ...items].slice(0, PERPS_PAGE_SIZE)
+      }
+      detectFillsAndToast([next])
+    })
+  }
 
   onUnmounted(() => {
     if (pollTimer) clearInterval(pollTimer)
