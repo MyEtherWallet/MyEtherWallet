@@ -17,6 +17,9 @@ export type OrdersStatusFilter = 'all' | 'pending'
 let _ordersWsSubscribed = false
 let _ordersWsUnsubscribe: (() => void) | null = null
 
+let _fillsWsSubscribed = false
+let _fillsWsUnsubscribe: (() => void) | null = null
+
 type OrderSnapshot = Pick<
   ApiOrder,
   'orderId' | 'filledSize' | 'filledCost' | 'size' | 'status'
@@ -226,11 +229,34 @@ export function usePerpsFills() {
     pagination.reset()
     if (token.value) {
       pagination.refetch()
-      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
+      pollTimer = setInterval(refreshFirstPageIfActive, 60_000)
     } else {
       pollTimer = null
     }
   })
+
+  if (!_fillsWsSubscribed) {
+    _fillsWsSubscribed = true
+    _fillsWsUnsubscribe = perpsWs.subscribe('fillsPerps', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      const next = data as ApiFill
+      if (pagination.currentPage.value !== 0) return
+      const key = (f: ApiFill) =>
+        (f as { fillId?: string }).fillId ?? `${f.orderId ?? ''}:${(f as { ts?: number }).ts ?? ''}`
+      const items = pagination.items.value
+      const idx = items.findIndex(f => key(f) === key(next))
+      if (idx >= 0) {
+        pagination.items.value = [
+          ...items.slice(0, idx),
+          { ...items[idx], ...next },
+          ...items.slice(idx + 1),
+        ]
+      } else {
+        pagination.items.value = [next, ...items].slice(0, PERPS_PAGE_SIZE)
+      }
+    })
+  }
 
   onUnmounted(() => {
     if (pollTimer) clearInterval(pollTimer)
