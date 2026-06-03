@@ -2,8 +2,10 @@ import { computed, watch, effectScope, type ComputedRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { perpsWs } from '@/modules/perps/sdk/ws'
 
 let _isPerpsActive: ComputedRef<boolean> | null = null
+let _wsWired = false
 
 export function usePerpsActive() {
   if (!_isPerpsActive) {
@@ -14,6 +16,19 @@ export function usePerpsActive() {
         route.path.startsWith('/perps') ||
         (walletPanel.value === 'perps' && isOpenSideMenu.value),
     )
+  }
+  if (!_wsWired) {
+    _wsWired = true
+    effectScope(true).run(() => {
+      watch(
+        _isPerpsActive!,
+        on => {
+          if (on) perpsWs.connect()
+          else perpsWs.disconnect()
+        },
+        { immediate: true },
+      )
+    })
   }
   return { isPerpsActive: _isPerpsActive }
 }

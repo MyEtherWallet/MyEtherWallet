@@ -183,3 +183,39 @@ describe('gatedPoll', () => {
     expect(fn).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('usePerpsActive — ws lifecycle', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    routePath.value = '/'
+    vi.resetModules()
+  })
+
+  it('calls perpsWs.connect() when isPerpsActive becomes true', async () => {
+    const connect = vi.fn()
+    const disconnect = vi.fn()
+    vi.doMock('@/modules/perps/sdk/ws', () => ({
+      perpsWs: { connect, disconnect, subscribe: vi.fn(), status: { value: 'idle' } },
+    }))
+    const { usePerpsActive } = await import('@/modules/perps/composables/usePerpsActive')
+    routePath.value = '/perps'
+    usePerpsActive()
+    expect(connect).toHaveBeenCalled()
+  })
+
+  it('calls perpsWs.disconnect() when isPerpsActive becomes false', async () => {
+    const connect = vi.fn()
+    const disconnect = vi.fn()
+    vi.doMock('@/modules/perps/sdk/ws', () => ({
+      perpsWs: { connect, disconnect, subscribe: vi.fn(), status: { value: 'idle' } },
+    }))
+    const { usePerpsActive } = await import('@/modules/perps/composables/usePerpsActive')
+    routePath.value = '/perps'
+    usePerpsActive()
+    expect(connect).toHaveBeenCalled()
+    routePath.value = '/'
+    // Vue reactive flush
+    await Promise.resolve()
+    expect(disconnect).toHaveBeenCalled()
+  })
+})
