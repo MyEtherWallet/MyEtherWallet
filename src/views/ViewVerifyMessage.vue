@@ -6,7 +6,7 @@
           <select-chain-for-app v-if="!isWalletConnected" class="mb-8" />
           <app-text-field
             v-model="message"
-            placeholder="Enter the message to verify"
+            :placeholder="$t('sign_message.enter_message_to_verify')"
             class="w-full"
           />
           <address-input
@@ -17,13 +17,13 @@
             :is-raised="false"
             @validate:address="validateAddressInput"
             @immediate-update:resolved-address="onInput"
-            label="Signing Address"
+            :label="$t('sign_message.signing_address')"
             class="w-full mb-4"
           />
 
           <app-text-field
             v-model="signature"
-            placeholder="Enter the signature to verify"
+            :placeholder="$t('sign_message.enter_signature_to_verify')"
             class="w-full"
           />
 
@@ -32,7 +32,7 @@
               signingAddress !== '' &&
               message !== '' &&
               signature !== '' &&
-              verifyMessageDesc !== ''
+              verifyStatusKey !== ''
             "
             class="p-5 rounded-20 border text-s-14 transition-all"
             :class="
@@ -41,14 +41,24 @@
                 : 'border-error/20 text-error bg-error/5'
             "
           >
-            <div class="flex items-center gap-3">
+            <div class="flex items-start gap-3">
               <div
-                class="w-2 h-2 rounded-full shrink-0"
+                class="w-2 h-2 mt-2 rounded-full shrink-0"
                 :class="verified ? 'bg-success' : 'bg-error'"
               ></div>
-              <p class="font-medium leading-relaxed">
-                {{ verifyMessageDesc }}
-              </p>
+              <i18n-t
+                :keypath="verifyStatusKey"
+                tag="p"
+                class="font-medium leading-relaxed break-words"
+              >
+                <template #message>
+                  <code class="break-all">{{ message }}</code>
+                </template>
+                <template #address>
+                  <code class="break-all">{{ signingAddress }}</code>
+                </template>
+                <template #chain>{{ selectedChain?.name ?? '' }}</template>
+              </i18n-t>
             </div>
           </div>
 
@@ -96,7 +106,7 @@ const message = ref('')
 const verifying = ref(false)
 const signature = ref('')
 const verified = ref(false)
-const verifyMessageDesc = ref('')
+const verifyStatusKey = ref('')
 const {
   adrInput: signingAddress,
   resolvedAddress,
@@ -118,7 +128,7 @@ watch(
   [message, signature, signingAddress],
   ([newMessage, newSignature, newSigningAddress]) => {
     verified.value = false
-    verifyMessageDesc.value = ''
+    verifyStatusKey.value = ''
     const _messageJson = possibleJsonParse(newMessage)
       ? possibleJsonParse(newMessage)
       : possibleJsonParse(newSignature)
@@ -155,12 +165,12 @@ const verifyMessage = async () => {
         signature: signature.value,
       })
       if (!verified.value) throw new Error('Verification failed')
-      verifyMessageDesc.value = `Message ${message.value} is signed by ${signingAddress.value}.`
+      verifyStatusKey.value = 'sign_message.message_signed_by'
     } catch {
-      verifyMessageDesc.value = `Message ${message.value} is NOT signed by ${signingAddress.value}.`
+      verifyStatusKey.value = 'sign_message.message_not_signed_by'
     }
   } else {
-    verifyMessageDesc.value = `Verify message not supported for ${selectedChain.value?.name}`
+    verifyStatusKey.value = 'sign_message.verify_not_supported'
   }
   verifying.value = false
 }
@@ -177,7 +187,7 @@ const canVerifyMessage = computed(() => {
 
 watch([message.value, signingAddress.value, signature.value], () => {
   // reset fields when chain changes
-  verifyMessageDesc.value = ''
+  verifyStatusKey.value = ''
   verified.value = false
 })
 </script>
