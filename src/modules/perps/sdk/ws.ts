@@ -25,6 +25,33 @@ const outboundQueue: ClientFrame[] = []
 // Registered handlers per channel. Multiple handlers per channel are allowed.
 const handlers = new Map<ChannelName, Set<AnyHandler>>()
 
+const PING_INTERVAL_MS = 30_000
+const STALE_TIMEOUT_MS = 60_000
+let pingTimer: ReturnType<typeof setInterval> | null = null
+let staleTimer: ReturnType<typeof setTimeout> | null = null
+
+function resetStaleTimer() {
+  if (staleTimer) clearTimeout(staleTimer)
+  staleTimer = setTimeout(() => {
+    if (socket) {
+      try { socket.close() } catch { /* ignore */ }
+    }
+  }, STALE_TIMEOUT_MS)
+}
+
+function startHeartbeat() {
+  stopHeartbeat()
+  pingTimer = setInterval(() => {
+    sendOrQueue({ op: 'ping' })
+  }, PING_INTERVAL_MS)
+  resetStaleTimer()
+}
+
+function stopHeartbeat() {
+  if (pingTimer) { clearInterval(pingTimer); pingTimer = null }
+  if (staleTimer) { clearTimeout(staleTimer); staleTimer = null }
+}
+
 function sendOrQueue(frame: ClientFrame) {
   if (socket && socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(frame))
@@ -41,6 +68,7 @@ function flushOutbound() {
 }
 
 function handleMessage(ev: MessageEvent) {
+  resetStaleTimer()
   let frame: ServerFrame
   try { frame = JSON.parse(ev.data as string) as ServerFrame } catch { return }
   const set = handlers.get(frame.type as ChannelName)
@@ -56,9 +84,11 @@ function open() {
   socket = new WebSocket(perpsWsUrl)
   socket.onopen = () => {
     status.value = 'open'
+    startHeartbeat()
     flushOutbound()
   }
   socket.onclose = () => {
+    stopHeartbeat()
     socket = null
     status.value = manualDisconnect ? 'closed' : 'reconnecting'
   }

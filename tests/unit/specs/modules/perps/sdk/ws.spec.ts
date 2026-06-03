@@ -130,3 +130,45 @@ describe('perpsWs — subscribe/unsubscribe', () => {
     }).not.toThrow()
   })
 })
+
+describe('perpsWs — heartbeat', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.useFakeTimers()
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.resetModules()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+  })
+
+  it('sends a ping every 30s while open', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    vi.advanceTimersByTime(30_000)
+    const sent = MockWebSocket.instances[0].sent.map(s => JSON.parse(s))
+    expect(sent.some(f => f.op === 'ping')).toBe(true)
+  })
+
+  it('force-closes the socket if no message received in 60s', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    const closeSpy = vi.spyOn(MockWebSocket.instances[0], 'close')
+    vi.advanceTimersByTime(60_001)
+    expect(closeSpy).toHaveBeenCalled()
+  })
+
+  it('resets the staleness timer on any inbound message', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    const closeSpy = vi.spyOn(MockWebSocket.instances[0], 'close')
+    vi.advanceTimersByTime(50_000)
+    MockWebSocket.instances[0]._message({ type: 'pong' })
+    vi.advanceTimersByTime(50_000)
+    expect(closeSpy).not.toHaveBeenCalled()
+  })
+})
