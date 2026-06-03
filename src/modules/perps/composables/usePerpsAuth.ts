@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
+import { perpsWs } from '../sdk/ws'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
@@ -37,6 +38,7 @@ async function tryRestoreAuth(address: string) {
       token.value = decryptedToken
       perpsClient.setToken(decryptedToken)
       _authRestored = true
+      perpsWs.login(decryptedToken)
       try {
         accountId.value = storedAccounts[i]
           ? await decrypt(storedAccounts[i], address)
@@ -55,6 +57,7 @@ async function tryRestoreAuth(address: string) {
 }
 
 async function clearAuth() {
+  perpsWs.logout()
   const store = useWalletStore()
   const { wallet } = storeToRefs(store)
   token.value = null
@@ -85,6 +88,10 @@ async function clearAuth() {
 }
 
 perpsClient.setOnUnauthorized(() => {
+  clearAuth()
+})
+
+perpsWs.onUnauthorized(() => {
   clearAuth()
 })
 
@@ -135,6 +142,7 @@ export function usePerpsAuth() {
 
 
       perpsClient.setToken(token.value)
+      perpsWs.login(token.value!)
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
@@ -217,7 +225,12 @@ export function usePerpsBalance() {
     }
 
     poll()
-    gatedPoll(poll, 1_000)
+    perpsWs.subscribe('balancePerps', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      balance.value = data as PerpsBalance
+    })
+    gatedPoll(poll, 60_000)
 
     let lastRefreshKey = refreshKey.value
     setInterval(() => {
