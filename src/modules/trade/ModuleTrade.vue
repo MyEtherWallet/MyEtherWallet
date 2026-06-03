@@ -80,7 +80,7 @@
                       }"
                       @click="setPercentageAmount(pct)"
                     >
-                      {{ pct === 100 ? $t('trade.max') : `${pct}%` }}
+                      {{ pct === 100 ? $t('common.max') : `${pct}%` }}
                     </button>
                   </div></template
                 ></app-swap-enter-amount
@@ -279,7 +279,7 @@
           :disabled="!supportedNetwork"
           @click="connectWalletForTrade"
         >
-          {{ $t('trade.connect_wallet') }}
+          {{ $t('connect_wallet') }}
         </app-base-button>
         <div v-else>
           <transition name="fade" mode="out-in">

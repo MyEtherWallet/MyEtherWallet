@@ -13,7 +13,6 @@
       "failed": "Failed",
       "successful": "Successful"
     },
-    "more_details": "More details",
     "destination_address": "Destination Address",
     "price_difference": "Price difference",
     "filled_in_tx": "Filled in tx",
