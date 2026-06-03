@@ -1303,32 +1303,19 @@ watch(refreshKey, () => {
   void fetchOpenOrdersCount()
 })
 
-// Funding countdown timer
-const fundingCountdown = ref('')
-let countdownTimer: ReturnType<typeof setInterval> | null = null
-
-const updateFundingCountdown = () => {
+// Funding countdown — derived from reactive contractData; no client timer needed.
+const fundingCountdown = computed(() => {
   const ts = contractData.value?.nextFundingRateTimestamp
-  if (!ts) {
-    fundingCountdown.value = ''
-    return
-  }
+  if (!ts) return ''
   const diff = new Date(ts).getTime() - Date.now()
-  if (diff <= 0) {
-    fundingCountdown.value = 'now'
-    return
-  }
+  if (diff <= 0) return 'now'
   const mins = Math.floor(diff / 60000)
   const secs = Math.floor((diff % 60000) / 1000)
-  fundingCountdown.value = `${mins} min`
-  if (mins === 0) fundingCountdown.value = `${secs}s`
-}
-
-countdownTimer = setInterval(updateFundingCountdown, 5000)
-updateFundingCountdown()
+  if (mins === 0) return `${secs}s`
+  return `${mins} min`
+})
 
 onUnmounted(() => {
-  if (countdownTimer) clearInterval(countdownTimer)
   if (ordersPollTimer) clearInterval(ordersPollTimer)
   if (fillsPollTimer) clearInterval(fillsPollTimer)
 })
