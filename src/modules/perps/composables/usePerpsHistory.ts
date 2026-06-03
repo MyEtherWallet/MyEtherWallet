@@ -20,6 +20,10 @@ let _ordersWsUnsubscribe: (() => void) | null = null
 let _fillsWsSubscribed = false
 let _fillsWsUnsubscribe: (() => void) | null = null
 
+let _depWsSubscribed = false
+let _depWsUnsubscribeDeposits: (() => void) | null = null
+let _depWsUnsubscribeWithdrawals: (() => void) | null = null
+
 type OrderSnapshot = Pick<
   ApiOrder,
   'orderId' | 'filledSize' | 'filledCost' | 'size' | 'status'
@@ -274,6 +278,16 @@ export function usePerpsFills() {
   }
 }
 
+function upsertById<T>(arr: T[], next: T, keyFn: (item: T) => string | undefined): T[] {
+  const id = keyFn(next)
+  if (!id) return [next, ...arr]
+  const idx = arr.findIndex(x => keyFn(x) === id)
+  if (idx >= 0) {
+    return [...arr.slice(0, idx), { ...arr[idx], ...next }, ...arr.slice(idx + 1)]
+  }
+  return [next, ...arr]
+}
+
 export function usePerpsDepositsWithdrawals() {
   const { token, refreshKey } = usePerpsAuth()
   const deposits = ref<WalletDeposit[]>([])
@@ -308,13 +322,27 @@ export function usePerpsDepositsWithdrawals() {
     if (pollTimer) clearInterval(pollTimer)
     if (token.value) {
       fetchAll()
-      pollTimer = setInterval(fetchAll, 15_000)
+      pollTimer = setInterval(fetchAll, 60_000)
     } else {
       deposits.value = []
       withdrawals.value = []
       pollTimer = null
     }
   })
+
+  if (!_depWsSubscribed) {
+    _depWsSubscribed = true
+    _depWsUnsubscribeDeposits = perpsWs.subscribe('deposits', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      deposits.value = upsertById(deposits.value, data as WalletDeposit, d => d.txid)
+    })
+    _depWsUnsubscribeWithdrawals = perpsWs.subscribe('withdrawals', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      withdrawals.value = upsertById(withdrawals.value, data as WalletWithdrawal, w => w.withdrawal_id)
+    })
+  }
 
   onUnmounted(() => {
     if (pollTimer) clearInterval(pollTimer)
