@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { perpsWs } from '../sdk/ws'
 
 // Singleton state for markets
 const markets = ref<TradingPair[]>([])
@@ -84,7 +85,42 @@ export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
     fetchContracts()
-    // WS subscriptions + REST fallback wired in Task 10/11.
+
+    perpsWs.subscribe(
+      'topOfBooksPerps',
+      {},
+      (d: { market: string; bid: string; ask: string }) => {
+        if (!d?.market) return
+        updateContract(d.market, { bid: d.bid, ask: d.ask })
+      },
+    )
+
+    perpsWs.subscribe(
+      'tradesPerps',
+      {},
+      (d: { market: string; price: string }) => {
+        if (!d?.market) return
+        updateContract(d.market, { lastPrice: d.price })
+      },
+    )
+
+    perpsWs.subscribe(
+      'fundingRatesPerps',
+      {},
+      (d: {
+        market: string
+        fundingRate: string
+        nextFundingRate?: string
+        nextFundingRateTimestamp?: string
+      }) => {
+        if (!d?.market) return
+        updateContract(d.market, {
+          fundingRate: d.fundingRate,
+          nextFundingRate: d.nextFundingRate,
+          nextFundingRateTimestamp: d.nextFundingRateTimestamp,
+        })
+      },
+    )
   }
   return {
     contracts,
