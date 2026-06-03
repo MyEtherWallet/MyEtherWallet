@@ -5,8 +5,6 @@ import type {
   ClientFrame,
   ConnectionStatus,
   ServerFrame,
-  SubscribeFrame,
-  UnsubscribeFrame,
 } from './wsTypes'
 
 type AnyHandler = (data: any) => void
@@ -22,8 +20,9 @@ let manualDisconnect = false
 
 // Outbound frames buffered while the socket is not yet open.
 const outboundQueue: ClientFrame[] = []
-// Registered handlers per channel. Multiple handlers per channel are allowed.
-const handlers = new Map<ChannelName, Set<AnyHandler>>()
+// Subscription registry: stores handler + params so frames can be replayed on reconnect.
+interface ActiveSub { handler: AnyHandler; params: SubscribeParams }
+const subscriptions = new Map<ChannelName, ActiveSub[]>()
 
 const PING_INTERVAL_MS = 30_000
 const STALE_TIMEOUT_MS = 60_000
@@ -71,10 +70,38 @@ function handleMessage(ev: MessageEvent) {
   resetStaleTimer()
   let frame: ServerFrame
   try { frame = JSON.parse(ev.data as string) as ServerFrame } catch { return }
-  const set = handlers.get(frame.type as ChannelName)
-  if (!set) return
-  // For data-carrying frames pass `.data`; control frames are ignored above.
-  if ('data' in frame) set.forEach(h => h((frame as { data: unknown }).data))
+  const list = subscriptions.get(frame.type as ChannelName)
+  if (!list) return
+  if ('data' in frame) {
+    const payload = (frame as { data: unknown }).data
+    list.forEach(({ handler }) => handler(payload))
+  }
+}
+
+const BACKOFF_MAX_MS = 30_000
+let reconnectAttempt = 0
+let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+
+function scheduleReconnect() {
+  const base = Math.min(1000 * 2 ** reconnectAttempt, BACKOFF_MAX_MS)
+  const jitter = base * 0.2 * (Math.random() * 2 - 1)
+  const delay = Math.max(0, base + jitter)
+  reconnectAttempt += 1
+  reconnectTimer = setTimeout(() => {
+    reconnectTimer = null
+    // Don't call open() — it short-circuits when status is 'reconnecting'.
+    // Re-enter the open path explicitly.
+    status.value = 'idle'
+    open()
+  }, delay)
+}
+
+function replaySubscriptions() {
+  subscriptions.forEach((list, channel) => {
+    list.forEach(({ params }) => {
+      sendOrQueue({ op: 'subscribe', channel, ...params })
+    })
+  })
 }
 
 function open() {
@@ -84,13 +111,20 @@ function open() {
   socket = new WebSocket(perpsWsUrl)
   socket.onopen = () => {
     status.value = 'open'
+    reconnectAttempt = 0
     startHeartbeat()
     flushOutbound()
+    replaySubscriptions()
   }
   socket.onclose = () => {
     stopHeartbeat()
     socket = null
-    status.value = manualDisconnect ? 'closed' : 'reconnecting'
+    if (manualDisconnect) {
+      status.value = 'closed'
+    } else {
+      status.value = 'reconnecting'
+      scheduleReconnect()
+    }
   }
   socket.onerror = () => {}
   socket.onmessage = handleMessage
@@ -99,6 +133,9 @@ function open() {
 function close() {
   manualDisconnect = true
   outboundQueue.length = 0
+  subscriptions.clear()
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null }
+  reconnectAttempt = 0
   if (socket) {
     try { socket.close() } catch { /* ignore */ }
   } else {
@@ -111,22 +148,18 @@ function subscribe(
   params: SubscribeParams,
   handler: AnyHandler,
 ): () => void {
-  let set = handlers.get(channel)
-  if (!set) {
-    set = new Set()
-    handlers.set(channel, set)
-  }
-  set.add(handler)
-  const frame: SubscribeFrame = { op: 'subscribe', channel, ...params }
-  sendOrQueue(frame)
+  let list = subscriptions.get(channel)
+  if (!list) { list = []; subscriptions.set(channel, list) }
+  list.push({ handler, params })
+  sendOrQueue({ op: 'subscribe', channel, ...params })
   return () => {
-    const s = handlers.get(channel)
-    if (s) {
-      s.delete(handler)
-      if (s.size === 0) handlers.delete(channel)
+    const cur = subscriptions.get(channel)
+    if (cur) {
+      const idx = cur.findIndex(s => s.handler === handler)
+      if (idx >= 0) cur.splice(idx, 1)
+      if (cur.length === 0) subscriptions.delete(channel)
     }
-    const off: UnsubscribeFrame = { op: 'unsubscribe', channel, ...params }
-    sendOrQueue(off)
+    sendOrQueue({ op: 'unsubscribe', channel, ...params })
   }
 }
 

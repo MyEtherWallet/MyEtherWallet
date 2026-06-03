@@ -172,3 +172,52 @@ describe('perpsWs — heartbeat', () => {
     expect(closeSpy).not.toHaveBeenCalled()
   })
 })
+
+describe('perpsWs — reconnect', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.useFakeTimers()
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    // Stable jitter for deterministic tests.
+    vi.spyOn(Math, 'random').mockReturnValue(0.5)
+    vi.resetModules()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('reconnects after an unexpected close', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    MockWebSocket.instances[0].close() // server-side close (manualDisconnect = false)
+    expect(perpsWs.status.value).toBe('reconnecting')
+    vi.advanceTimersByTime(2_000) // 1s base + jitter window
+    expect(MockWebSocket.instances).toHaveLength(2)
+  })
+
+  it('replays subscribe frames on reconnect', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.subscribe('topOfBooksPerps', { markets: ['ETH-USD'] }, vi.fn())
+    MockWebSocket.instances[0].close()
+    vi.advanceTimersByTime(2_000)
+    MockWebSocket.instances[1]._open()
+    const sent = MockWebSocket.instances[1].sent.map(s => JSON.parse(s))
+    expect(sent).toContainEqual({
+      op: 'subscribe', channel: 'topOfBooksPerps', markets: ['ETH-USD'],
+    })
+  })
+
+  it('does not reconnect after manual disconnect()', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.disconnect()
+    vi.advanceTimersByTime(60_000)
+    expect(MockWebSocket.instances).toHaveLength(1)
+  })
+})
