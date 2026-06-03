@@ -135,7 +135,12 @@ function scheduleReconnect() {
 function replaySubscriptions() {
   subscriptions.forEach((list, channel) => {
     list.forEach(({ params }) => {
-      sendOrQueue({ op: 'subscribe', channel, ...params })
+      const frame: ClientFrame = { op: 'subscribe', channel, ...params }
+      if (isPrivate(channel)) {
+        privateOutboundQueue.push(frame)
+      } else {
+        sendOrQueue(frame)
+      }
     })
   })
 }
@@ -153,6 +158,10 @@ function open() {
     startHeartbeat()
     flushOutbound()
     replaySubscriptions()
+    if (pendingToken) {
+      authStatus.value = 'authenticating'
+      sendOrQueue({ op: 'login', args: { token: pendingToken } })
+    }
   }
   socket.onclose = () => {
     stopHeartbeat()
@@ -160,6 +169,7 @@ function open() {
     if (manualDisconnect) {
       status.value = 'closed'
     } else {
+      if (authStatus.value === 'authenticated') authStatus.value = 'authenticating'
       status.value = 'reconnecting'
       scheduleReconnect()
     }
@@ -235,6 +245,7 @@ function login(token: string) {
 function logout() {
   pendingToken = null
   authStatus.value = 'anonymous'
+  privateOutboundQueue.length = 0
   sendOrQueue({ op: 'logout' })
 }
 

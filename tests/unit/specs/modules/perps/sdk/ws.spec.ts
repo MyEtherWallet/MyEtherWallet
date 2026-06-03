@@ -336,3 +336,37 @@ describe('perpsWs — private subscribe queue', () => {
     expect(sent.find((f: any) => f.channel === 'topOfBooksPerps')).toBeDefined()
   })
 })
+
+describe('perpsWs — re-login on reconnect', () => {
+  beforeEach(() => {
+    MockWebSocket.instances = []
+    vi.useFakeTimers()
+    vi.stubGlobal('WebSocket', MockWebSocket as unknown as typeof WebSocket)
+    vi.spyOn(Math, 'random').mockReturnValue(0.5)
+    vi.resetModules()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('re-sends login on reconnect and holds private subs until loggedIn', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.login('tok-1')
+    MockWebSocket.instances[0]._message({ type: 'loggedIn' })
+    perpsWs.subscribe('positionsPerps', {}, vi.fn())
+    // Drop the connection unexpectedly.
+    MockWebSocket.instances[0].close()
+    vi.advanceTimersByTime(2_000)
+    MockWebSocket.instances[1]._open()
+    const earlySent = MockWebSocket.instances[1].sent.map(s => JSON.parse(s))
+    expect(earlySent.find((f: any) => f.op === 'login')).toBeDefined()
+    expect(earlySent.find((f: any) => f.channel === 'positionsPerps')).toBeUndefined()
+    MockWebSocket.instances[1]._message({ type: 'loggedIn' })
+    const lateSent = MockWebSocket.instances[1].sent.map(s => JSON.parse(s))
+    expect(lateSent.find((f: any) => f.channel === 'positionsPerps' && f.op === 'subscribe')).toBeDefined()
+  })
+})
