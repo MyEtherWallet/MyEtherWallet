@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
-import { gatedPoll } from './usePerpsActive'
 
 // Singleton state for markets
 const markets = ref<TradingPair[]>([])
@@ -67,16 +66,31 @@ async function fetchContracts() {
   }
 }
 
+/**
+ * Apply a partial patch to one contract by market. No-op if the market is not
+ * present — REST snapshot is authoritative for the initial set.
+ */
+function updateContract(market: string, patch: Partial<Contract>) {
+  const idx = contracts.value.findIndex(c => c.market === market)
+  if (idx < 0) return
+  contracts.value = [
+    ...contracts.value.slice(0, idx),
+    { ...contracts.value[idx], ...patch },
+    ...contracts.value.slice(idx + 1),
+  ]
+}
+
 export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
     fetchContracts()
-    gatedPoll(fetchContracts, 2500)
+    // WS subscriptions + REST fallback wired in Task 10/11.
   }
   return {
     contracts,
     isLoading: contractsLoading,
     error: contractsError,
     refetch: fetchContracts,
+    updateContract,
   }
 }
