@@ -44,9 +44,9 @@ export const useImageContrastTextColor = (
     let b = 0
     const pixels = data.length / 4
     for (let i = 0; i < data.length; i += 4) {
-      r += data[i]
-      g += data[i + 1]
-      b += data[i + 2]
+      r += toLinear(data[i])
+      g += toLinear(data[i + 1])
+      b += toLinear(data[i + 2])
     }
     return { r: r / pixels, g: g / pixels, b: b / pixels }
   }
@@ -54,8 +54,7 @@ export const useImageContrastTextColor = (
   const computeFromImage = (img: HTMLImageElement) => {
     try {
       const { r, g, b } = sampleAverageColor(img)
-      const luminance =
-        0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b)
+      const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
       const contrastWithWhite = 1.05 / (luminance + 0.05)
       textColor.value = contrastWithWhite >= threshold ? lightColor : darkColor
       isDynamic.value = true

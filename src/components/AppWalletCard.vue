@@ -7,7 +7,6 @@
         :style="useDynamicContrast ? { color: textColor } : undefined"
       >
         <img
-          ref="mewCard"
           :src="mewCardUrl"
           :alt="t('common.my_wallet')"
           width="500"
