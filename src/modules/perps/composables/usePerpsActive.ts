@@ -1,4 +1,4 @@
-import { computed, watch, type ComputedRef } from 'vue'
+import { computed, watch, effectScope, type ComputedRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -23,7 +23,11 @@ export function gatedPoll(fn: () => void, intervalMs: number) {
   setInterval(() => {
     if (isPerpsActive.value) fn()
   }, intervalMs)
-  watch(isPerpsActive, on => {
-    if (on) fn()
+  // Detached scope so the watcher survives the unmount of whichever
+  // component happens to call gatedPoll first.
+  effectScope(true).run(() => {
+    watch(isPerpsActive, on => {
+      if (on) fn()
+    })
   })
 }

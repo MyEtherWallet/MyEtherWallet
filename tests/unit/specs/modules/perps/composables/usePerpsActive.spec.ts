@@ -2,9 +2,10 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
-const { routePath } = vi.hoisted(() => ({
-  routePath: { value: '/' },
-}))
+const { routePath } = await vi.hoisted(async () => {
+  const { ref } = await import('vue')
+  return { routePath: ref('/') }
+})
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({
@@ -101,6 +102,17 @@ describe('usePerpsActive', () => {
     store.setIsOpenSideMenu(false)
     expect(isPerpsActive.value).toBe(false)
   })
+
+  it('reacts to route navigation /stocks → /perps', async () => {
+    const { usePerpsActive } = await import(
+      '@/modules/perps/composables/usePerpsActive'
+    )
+    routePath.value = '/stocks'
+    const { isPerpsActive } = usePerpsActive()
+    expect(isPerpsActive.value).toBe(false)
+    routePath.value = '/perps'
+    expect(isPerpsActive.value).toBe(true)
+  })
 })
 
 describe('gatedPoll', () => {
@@ -153,6 +165,20 @@ describe('gatedPoll', () => {
     expect(fn).not.toHaveBeenCalled()
     store.setWalletPanel('perps')
     store.setIsOpenSideMenu(true)
+    await vi.advanceTimersByTimeAsync(0)
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  it('fires fn on route navigation into /perps', async () => {
+    const { gatedPoll } = await import(
+      '@/modules/perps/composables/usePerpsActive'
+    )
+    routePath.value = '/stocks'
+    const fn = vi.fn()
+    gatedPoll(fn, 5000)
+    vi.advanceTimersByTime(1000)
+    expect(fn).not.toHaveBeenCalled()
+    routePath.value = '/perps'
     await vi.advanceTimersByTimeAsync(0)
     expect(fn).toHaveBeenCalledTimes(1)
   })
