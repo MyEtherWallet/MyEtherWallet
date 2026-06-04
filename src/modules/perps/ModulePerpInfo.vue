@@ -92,14 +92,18 @@
           </template>
         </app-btn-group>
       </div>
-      <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6">
-        <chart-price
+      <div class="h-[200px] sm:h-[320px] px-4 lg:px-10 py-6 flex">
+        <div
           v-if="!chartLoading && chartLabels.length > 0"
-          :labels="chartLabels"
-          :points="chartPoints"
-          :time-frame="chartTimeFrame"
           class="w-full h-full"
-        />
+        >
+          <chart-price
+            :labels="chartLabels"
+            :points="chartPoints"
+            :time-frame="chartTimeFrame"
+            class="w-full h-full"
+          />
+        </div>
         <div
           v-else
           class="w-full bg-surface h-full rounded-lg"
@@ -939,6 +943,7 @@ import {
 import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
 import { perpsWs } from './sdk/ws'
 import { useCursorPaginate } from './composables/useCursorPaginate'
+import { useChartHistoryCache } from './composables/useChartHistoryCache'
 import {
   usePerpsMarkets,
   usePerpsContracts,
@@ -1455,11 +1460,11 @@ const chartIntervals = [
   { label: '1w', value: '1W' },
 ]
 const selectedInterval = ref(chartIntervals[2])
-const chartLoading = ref(false)
+const chartLoading = ref(true)
 const chartLabels = ref<number[]>([])
 const chartPoints = ref<number[]>([])
 
-const chartCache = new Map<string, { labels: number[]; points: number[] }>()
+const chartHistoryCache = useChartHistoryCache()
 
 const chartTimeFrame = computed(() => {
   const v = selectedInterval.value.value
@@ -1477,47 +1482,68 @@ const getResolutionSeconds = (res: string): number => {
   return parseInt(res) * 60
 }
 
+let chartAbortController: AbortController | null = null
+
 const fetchChart = async () => {
-  const cacheKey = `${props.market}-${selectedInterval.value.value}`
-  const cached = chartCache.get(cacheKey)
+  const market = props.market
+  const intervalValue = selectedInterval.value.value
+  const cacheKey = `${market}-${intervalValue}`
+
+  // Cancel any in-flight fetch from the previous market/interval. Without
+  // this, a quick A->B market switch leaves A's response racing B's, the
+  // late winner overwrites B's chart, and we waste bandwidth.
+  chartAbortController?.abort()
+  chartAbortController = new AbortController()
+  const localController = chartAbortController
+
+  const cached = chartHistoryCache.get(cacheKey)
   if (cached) {
     chartLabels.value = cached.labels
     chartPoints.value = cached.points
+    chartLoading.value = false
     return
   }
 
   chartLoading.value = true
+
   try {
     const to = Math.floor(Date.now() / 1000)
-    const resSecs = getResolutionSeconds(selectedInterval.value.value)
+    const resSecs = getResolutionSeconds(intervalValue)
     const from = to - resSecs * 200
     const data = await perpsClient.getHistory(
-      props.market,
-      selectedInterval.value.value,
+      market,
+      intervalValue,
       from,
       to,
+      localController.signal,
     )
+    // Bail out if a newer fetch superseded us between request and response.
+    if (localController.signal.aborted) return
     if (data.s === 'ok' && data.t.length > 0) {
       const labels = data.t.map(t => t * 1000)
       chartLabels.value = labels
       chartPoints.value = data.c
-      chartCache.set(cacheKey, { labels, points: data.c })
+      chartHistoryCache.set(cacheKey, { labels, points: data.c })
     } else {
       chartLabels.value = []
       chartPoints.value = []
     }
-  } catch {
+  } catch (err) {
+    if ((err as { name?: string })?.name === 'AbortError') return
     chartLabels.value = []
     chartPoints.value = []
   } finally {
-    chartLoading.value = false
+    if (!localController.signal.aborted) {
+      chartLoading.value = false
+    }
   }
 }
 
 watch(selectedInterval, fetchChart)
 watch(() => props.market, fetchChart, { immediate: true })
 
-// Clear chart cache every 5 minutes
-const cacheClearTimer = setInterval(() => chartCache.clear(), 5 * 60 * 1000)
-onUnmounted(() => clearInterval(cacheClearTimer))
+onUnmounted(() => {
+  chartAbortController?.abort()
+  chartAbortController = null
+})
 </script>
