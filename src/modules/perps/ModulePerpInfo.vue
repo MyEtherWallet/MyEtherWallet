@@ -1365,6 +1365,12 @@ const fundingCountdown = computed(() => {
 onUnmounted(() => {
   if (ordersPollTimer) clearInterval(ordersPollTimer)
   if (fillsPollTimer) clearInterval(fillsPollTimer)
+  // Release WS handlers — the market/auth watcher only swaps them when its
+  // deps change, so without an explicit teardown each drawer mount leaks one
+  // orders + one fills handler. Leaked entries inflate per-frame fan-out and
+  // multiply the subscribe replay payload on every reconnect.
+  if (ordersWsUnsubscribe) { ordersWsUnsubscribe(); ordersWsUnsubscribe = null }
+  if (fillsWsUnsubscribe) { fillsWsUnsubscribe(); fillsWsUnsubscribe = null }
 })
 
 // Tabs
