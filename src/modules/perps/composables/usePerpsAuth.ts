@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { decrypt, encrypt } from '@/utils/crypto'
+import { WalletType } from '@/providers/types'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -23,6 +24,9 @@ const accountId = ref<string | null>(null)
 const isAuthenticating = ref(false)
 const authError = ref<string | null>(null)
 const refreshKey = ref(0)
+const showSigningPrompt = ref(false)
+const signingMessage = ref<string | null>(null)
+const isHardwareWalletSigning = ref(false)
 
 let _authRestored = false
 let _currentAddress: string | null = null
@@ -121,6 +125,13 @@ export function usePerpsAuth() {
         walletAddress: address,
         chainId: '1',
       })
+      const walletType = wallet.value.getWalletType()
+      const isInjected = walletType === WalletType.WAGMI || walletType === WalletType.INJECTED
+      if (!isInjected) {
+        isHardwareWalletSigning.value = walletType === WalletType.LEDGER || walletType === WalletType.TREZOR
+        signingMessage.value = challenge.result.message
+        showSigningPrompt.value = true
+      }
       const signature = await wallet.value.SignMessage({
         message: challenge.result.message,
       })
@@ -152,6 +163,9 @@ export function usePerpsAuth() {
     } catch (e) {
       authError.value = e instanceof Error ? e.message : 'Authentication failed'
     } finally {
+      showSigningPrompt.value = false
+      signingMessage.value = null
+      isHardwareWalletSigning.value = false
       isAuthenticating.value = false
     }
   }
@@ -174,6 +188,9 @@ export function usePerpsAuth() {
     logout,
     refreshKey,
     triggerRefresh,
+    showSigningPrompt,
+    signingMessage,
+    isHardwareWalletSigning,
   }
 }
 

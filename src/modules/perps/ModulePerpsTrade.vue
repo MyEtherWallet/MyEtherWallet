@@ -1,5 +1,10 @@
 <template>
   <div class="w-full max-w-[500px] mx-auto relative h-full flex flex-col pb-6">
+    <perps-signing-prompt
+      :show="showSigningPrompt"
+      :message="signingMessage"
+      :is-hardware-wallet="isHardwareWalletSigning"
+    />
     <!-- Header: Asset Info -->
     <div class="flex items-center justify-between mb-2 px-4 -mt-2">
       <div>
@@ -773,6 +778,8 @@ import {
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
+import { usePerpsAuth } from './composables/usePerpsAuth'
+import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -792,6 +799,7 @@ import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
+const { showSigningPrompt, signingMessage, isHardwareWalletSigning } = usePerpsAuth()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
