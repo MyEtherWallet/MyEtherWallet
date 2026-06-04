@@ -57,7 +57,7 @@ class UnisatInjectWallet extends BaseBtcWallet {
 
   override async getAddress(): Promise<string> {
     return new Promise(resolve => {
-      resolve('1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9')
+      resolve(this.address)
     })
   }
 
