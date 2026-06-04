@@ -758,6 +758,11 @@ export function usePerpsTradeForm() {
     return match?.longName ?? match?.displayName ?? contract.baseCurrency
   }
 
+  function getMarketLeverage(contract: any): string {
+    const match = markets.value.find(m => m.market === contract.market)
+    return match?.defaultLeverage ?? ''
+  }
+
   function openTokenSelect() {
     marketSearch.value = ''
     marketFilter.value = 'all'
@@ -1357,6 +1362,7 @@ export function usePerpsTradeForm() {
     filteredMarketList,
     fullMarketName,
     getMarketDisplayName,
+    getMarketLeverage,
     openTokenSelect,
     selectMarket,
     // Leverage

@@ -108,7 +108,7 @@
                     }}</span>
                     <span
                       class="shrink-0 bg-surface text-info font-bold rounded px-[6px] py-[1px] text-s-9"
-                      >20x</span
+                      >{{ getMarketLeverage(contract) }}x</span
                     >
                   </div>
                   <span class="text-info text-s-12">{{
@@ -197,6 +197,10 @@ const props = defineProps({
     default: '',
   },
   getMarketDisplayName: {
+    type: Function as PropType<(contract: Contract) => string>,
+    required: true,
+  },
+  getMarketLeverage: {
     type: Function as PropType<(contract: Contract) => string>,
     required: true,
   },
