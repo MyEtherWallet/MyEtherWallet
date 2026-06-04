@@ -937,6 +937,7 @@ import {
   ChevronDownIcon,
 } from '@heroicons/vue/24/outline'
 import { perpsClient, PERPS_INFO_PAGE_SIZE } from './configs'
+import { perpsWs } from './sdk/ws'
 import { useCursorPaginate } from './composables/useCursorPaginate'
 import {
   usePerpsMarkets,
@@ -1243,6 +1244,8 @@ let ordersPollTimer: ReturnType<typeof setInterval> | null = null
 let fillsPollTimer: ReturnType<typeof setInterval> | null = null
 let ordersIsRefreshing = false
 let fillsIsRefreshing = false
+let ordersWsUnsubscribe: (() => void) | null = null
+let fillsWsUnsubscribe: (() => void) | null = null
 
 async function refreshOrdersPageZero() {
   if (ordersIsRefreshing) return
@@ -1274,9 +1277,11 @@ async function refreshFillsPageZero() {
 // through to the in-place refetch below.
 watch(
   [token, () => props.market],
-  () => {
+  ([, currentMarket]) => {
     if (ordersPollTimer) clearInterval(ordersPollTimer)
     if (fillsPollTimer) clearInterval(fillsPollTimer)
+    if (ordersWsUnsubscribe) { ordersWsUnsubscribe(); ordersWsUnsubscribe = null }
+    if (fillsWsUnsubscribe) { fillsWsUnsubscribe(); fillsWsUnsubscribe = null }
     ordersPagination.reset()
     fillsPagination.reset()
     openOrdersCountForMarket.value = 0
@@ -1285,11 +1290,53 @@ watch(
     void ordersPagination.refetch()
     void fillsPagination.refetch()
     void fetchOpenOrdersCount()
+    // Real-time updates via WS, filtered to the active market. Pending-count
+    // badge is refreshed on every order event because status transitions
+    // (pending→fullyfilled / cancelled) change the count.
+    ordersWsUnsubscribe = perpsWs.subscribe('ordersPerps', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      const next = data as ApiOrder
+      if (!next.orderId || next.market !== currentMarket) return
+      void fetchOpenOrdersCount()
+      if (ordersCurrentPage.value !== 0) return
+      const items = ordersPagination.items.value
+      const idx = items.findIndex(o => o.orderId === next.orderId)
+      if (idx >= 0) {
+        ordersPagination.items.value = [
+          ...items.slice(0, idx),
+          { ...items[idx], ...next },
+          ...items.slice(idx + 1),
+        ]
+      } else {
+        ordersPagination.items.value = [next, ...items].slice(0, PERPS_INFO_PAGE_SIZE)
+      }
+    })
+    fillsWsUnsubscribe = perpsWs.subscribe('fillsPerps', {}, (data: unknown) => {
+      if (!token.value) return
+      if (!data || typeof data !== 'object') return
+      const next = data as ApiFill
+      if (!next.id || next.market !== currentMarket) return
+      if (fillsCurrentPage.value !== 0) return
+      const items = fillsPagination.items.value
+      const idx = items.findIndex(f => f.id === next.id)
+      if (idx >= 0) {
+        fillsPagination.items.value = [
+          ...items.slice(0, idx),
+          { ...items[idx], ...next },
+          ...items.slice(idx + 1),
+        ]
+      } else {
+        fillsPagination.items.value = [next, ...items].slice(0, PERPS_INFO_PAGE_SIZE)
+      }
+    })
+    // 60s REST fallback for missed WS updates, aligned with the global
+    // history singleton in usePerpsHistory.
     ordersPollTimer = setInterval(() => {
       void refreshOrdersPageZero()
       void fetchOpenOrdersCount()
-    }, 10_000)
-    fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
+    }, 60_000)
+    fillsPollTimer = setInterval(refreshFillsPageZero, 60_000)
   },
   { immediate: true },
 )
