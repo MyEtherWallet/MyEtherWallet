@@ -71,15 +71,44 @@ async function fetchContracts() {
 /**
  * Apply a partial patch to one contract by market. No-op if the market is not
  * present — REST snapshot is authoritative for the initial set.
+ *
+ * Patches are coalesced through a microtask: WS frames arrive in bursts (the
+ * dispatcher fans an array of items into per-item handler calls), and each
+ * `contracts.value = [...]` reassignment retriggers PerpsMarketList's
+ * enriched/filtered/sorted/paginated computed chain plus a full row re-render.
+ * Without batching, a 30-market frame burns ~30 full cascades back-to-back and
+ * saturates the main thread (clicks queue, drawer never opens). Coalescing
+ * collapses one frame into a single reassignment.
  */
+const pendingContractPatches = new Map<string, Partial<Contract>>()
+let contractFlushScheduled = false
+
+function flushContractPatches() {
+  contractFlushScheduled = false
+  if (pendingContractPatches.size === 0) return
+  const next = contracts.value.slice()
+  let mutated = false
+  for (const [market, patch] of pendingContractPatches) {
+    const idx = next.findIndex(c => c.market === market)
+    if (idx >= 0) {
+      next[idx] = { ...next[idx], ...patch }
+      mutated = true
+    }
+  }
+  pendingContractPatches.clear()
+  if (mutated) contracts.value = next
+}
+
 function updateContract(market: string, patch: Partial<Contract>) {
-  const idx = contracts.value.findIndex(c => c.market === market)
-  if (idx < 0) return
-  contracts.value = [
-    ...contracts.value.slice(0, idx),
-    { ...contracts.value[idx], ...patch },
-    ...contracts.value.slice(idx + 1),
-  ]
+  const prev = pendingContractPatches.get(market)
+  pendingContractPatches.set(
+    market,
+    prev ? { ...prev, ...patch } : { ...patch },
+  )
+  if (!contractFlushScheduled) {
+    contractFlushScheduled = true
+    queueMicrotask(flushContractPatches)
+  }
 }
 
 export function usePerpsContracts() {

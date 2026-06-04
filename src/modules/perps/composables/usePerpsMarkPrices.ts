@@ -15,6 +15,24 @@ async function fetchMarkPrices() {
   }
 }
 
+// Coalesce WS-driven patches: the server fans out one frame as N items, so
+// without batching each item reassigns `markPriceData.value` and retriggers
+// every consumer (trade form `currentPrice`, drawer header). Flushing once per
+// microtask collapses a frame into a single reactive notification.
+const pendingMarkPricePatches = new Map<string, { price: string; indexPrice?: string }>()
+let markPriceFlushScheduled = false
+
+function flushMarkPricePatches() {
+  markPriceFlushScheduled = false
+  if (pendingMarkPricePatches.size === 0) return
+  const next = { ...markPriceData.value }
+  for (const [market, patch] of pendingMarkPricePatches) {
+    next[market] = { ...(next[market] ?? {}), ...patch }
+  }
+  pendingMarkPricePatches.clear()
+  markPriceData.value = next
+}
+
 export function usePerpsMarkPrices() {
   if (!initialized) {
     initialized = true
@@ -26,13 +44,15 @@ export function usePerpsMarkPrices() {
     // `indexPrice` alongside for any future consumer.
     perpsWs.subscribe('markPricesPerps', {}, (data: { market: string; markPrice: string; indexPrice?: string }) => {
       if (!data?.market) return
-      const next = { ...markPriceData.value }
-      next[data.market] = {
-        ...(next[data.market] ?? {}),
+      const prev = pendingMarkPricePatches.get(data.market)
+      pendingMarkPricePatches.set(data.market, {
         price: data.markPrice,
-        indexPrice: data.indexPrice,
+        indexPrice: data.indexPrice ?? prev?.indexPrice,
+      })
+      if (!markPriceFlushScheduled) {
+        markPriceFlushScheduled = true
+        queueMicrotask(flushMarkPricePatches)
       }
-      markPriceData.value = next
     })
     // Degraded fallback: full REST refresh every 30 s, gated to perps-active windows.
     gatedPoll(fetchMarkPrices, 30_000)
