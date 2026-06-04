@@ -577,7 +577,8 @@ const toAmountError = computed(() => {
     qoutesError.value &&
     fromAmount.value !== '0' &&
     fromAmount.value !== '' &&
-    fromAmountError.value === ''
+    fromAmountError.value === '' &&
+    generalError.value === ''
   ) {
     return t('swap.error.no-quotes')
   }
@@ -1058,10 +1059,14 @@ const fetchQuotes = async () => {
           quote =>
             BigInt(quote.minMax.minimumFrom.toString()) <= fromAmountBase,
         )
-
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
         qoutesError.value = true
+        // if no providers were selected after filter minimum
+        // fromValue is probably too low
+        if (quotes.length > 0) {
+          generalError.value = t('swap.error.minimum-amount')
+        }
         const event = bestSwapLoadingOpen.value
           ? SwapEventError.OFFER_ERROR
           : SwapEventError.PRELIMINARY_ERROR
