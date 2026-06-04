@@ -20,11 +20,18 @@ export function usePerpsMarkPrices() {
     initialized = true
     // Initial snapshot.
     fetchMarkPrices()
-    // Realtime updates via WS.
+    // Realtime updates via WS. Server payload uses `markPrice`/`indexPrice`,
+    // but the REST snapshot — and every consumer (`mp.price`) — keys on `price`.
+    // Write under `price` so WS updates actually reach the UI; preserve
+    // `indexPrice` alongside for any future consumer.
     perpsWs.subscribe('markPricesPerps', {}, (data: { market: string; markPrice: string; indexPrice?: string }) => {
       if (!data?.market) return
       const next = { ...markPriceData.value }
-      next[data.market] = { ...(next[data.market] ?? {}), markPrice: data.markPrice, indexPrice: data.indexPrice }
+      next[data.market] = {
+        ...(next[data.market] ?? {}),
+        price: data.markPrice,
+        indexPrice: data.indexPrice,
+      }
       markPriceData.value = next
     })
     // Degraded fallback: full REST refresh every 30 s, gated to perps-active windows.
