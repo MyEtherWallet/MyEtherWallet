@@ -123,12 +123,21 @@ function handleMessage(ev: MessageEvent) {
     }
     return
   }
-  const list = subscriptions.get(frame.type as ChannelName)
+  // Data frames arrive as { type: 'update', channel: <name>, data: ... }.
+  // Route by `channel` (NOT `type`, which is always 'update' for data frames).
+  const channelName = (frame as { channel?: string }).channel
+  if (!channelName) return
+  const list = subscriptions.get(channelName as ChannelName)
   if (!list) return
-  if ('data' in frame) {
-    const payload = (frame as { data: unknown }).data
-    list.forEach(({ handler }) => handler(payload))
-  }
+  if (!('data' in frame)) return
+  // Server batches per-channel updates as an array; deliver each item to handlers
+  // individually so they can stay simple (single-item, REST-shaped). balancePerps
+  // is the only channel that sends a non-array payload (one balance object).
+  const raw = (frame as { data: unknown }).data
+  const items: unknown[] = Array.isArray(raw) ? raw : [raw]
+  list.forEach(({ handler }) => {
+    items.forEach(item => handler(item))
+  })
 }
 
 const BACKOFF_MAX_MS = 30_000

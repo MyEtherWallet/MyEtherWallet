@@ -245,11 +245,10 @@ export function usePerpsFills() {
       if (!token.value) return
       if (!data || typeof data !== 'object') return
       const next = data as ApiFill
+      if (!next.id) return
       if (pagination.currentPage.value !== 0) return
-      const key = (f: ApiFill) =>
-        (f as { fillId?: string }).fillId ?? `${f.orderId ?? ''}:${(f as { ts?: number }).ts ?? ''}`
       const items = pagination.items.value
-      const idx = items.findIndex(f => key(f) === key(next))
+      const idx = items.findIndex(f => f.id === next.id)
       if (idx >= 0) {
         pagination.items.value = [
           ...items.slice(0, idx),

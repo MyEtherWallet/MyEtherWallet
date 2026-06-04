@@ -68,32 +68,6 @@ export interface ErrorFrame {
   message?: string
 }
 
-export interface TopOfBookUpdate {
-  type: 'topOfBooksPerps'
-  data: { market: string; bid: string; ask: string }
-}
-
-export interface MarkPriceUpdate {
-  type: 'markPricesPerps'
-  data: { market: string; markPrice: string; indexPrice?: string }
-}
-
-export interface TradeUpdate {
-  type: 'tradesPerps'
-  data: { market: string; price: string; size: string; ts: number; side?: 'buy' | 'sell' }
-}
-
-export interface FundingRateUpdate {
-  type: 'fundingRatesPerps'
-  data: {
-    market: string
-    fundingRate: string
-    nextFundingRate?: string
-    nextFundingRateTimestamp?: string
-    premiums?: { mark: string; bid: string; ask: string; premiumIndex: string }[]
-  }
-}
-
 export interface LoggedInFrame {
   type: 'loggedIn'
 }
@@ -102,34 +76,13 @@ export interface LoggedOutFrame {
   type: 'loggedOut'
 }
 
-export interface OrderUpdate {
-  type: 'ordersPerps'
-  data: { orderId: string; [k: string]: unknown }
-}
-
-export interface FillUpdate {
-  type: 'fillsPerps'
-  data: { fillId?: string; orderId?: string; [k: string]: unknown }
-}
-
-export interface PositionUpdate {
-  type: 'positionsPerps'
-  data: { market: string; [k: string]: unknown }
-}
-
-export interface BalanceUpdate {
-  type: 'balancePerps'
-  data: { [k: string]: unknown }
-}
-
-export interface DepositUpdate {
-  type: 'deposits'
-  data: { id?: string; txHash?: string; [k: string]: unknown }
-}
-
-export interface WithdrawalUpdate {
-  type: 'withdrawals'
-  data: { id?: string; txHash?: string; [k: string]: unknown }
+// All channel data updates share this envelope; the per-item shape depends on
+// `channel` and is cast by individual handlers.
+export interface ChannelDataFrame {
+  type: 'update'
+  channel: ChannelName
+  timestamp?: string
+  data: unknown
 }
 
 export type ServerFrame =
@@ -137,18 +90,9 @@ export type ServerFrame =
   | SubscribedFrame
   | UnsubscribedFrame
   | ErrorFrame
-  | TopOfBookUpdate
-  | MarkPriceUpdate
-  | TradeUpdate
-  | FundingRateUpdate
   | LoggedInFrame
   | LoggedOutFrame
-  | OrderUpdate
-  | FillUpdate
-  | PositionUpdate
-  | BalanceUpdate
-  | DepositUpdate
-  | WithdrawalUpdate
+  | ChannelDataFrame
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'open' | 'reconnecting' | 'closed'
 

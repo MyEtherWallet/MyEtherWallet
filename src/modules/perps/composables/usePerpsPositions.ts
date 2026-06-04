@@ -62,14 +62,8 @@ function startPolling() {
   poll()
   perpsWs.subscribe('positionsPerps', {}, (data: unknown) => {
     if (!token.value) return
-    if (Array.isArray(data)) {
-      positions.value = data as Position[]
-      hasLoaded.value = true
-      return
-    }
-    if (data && typeof data === 'object' && 'market' in data) {
-      upsertByMarket(data as Position)
-    }
+    if (!data || typeof data !== 'object' || !('market' in data)) return
+    upsertByMarket(data as Position)
   })
   gatedPoll(poll, 60_000)
 

@@ -87,12 +87,21 @@ export function usePerpsContracts() {
     contractsInitialized = true
     fetchContracts()
 
+    // Order-book frames carry { market, asks: [[price, size], ...], bids: [[price, size], ...] }
+    // Best ask/bid are the first tuple on each side; empty sides leave that side
+    // unchanged so a one-sided book doesn't blank out the REST-seeded value.
     perpsWs.subscribe(
       'topOfBooksPerps',
       {},
-      (d: { market: string; bid: string; ask: string }) => {
+      (d: { market: string; bids?: [string, string][]; asks?: [string, string][] }) => {
         if (!d?.market) return
-        updateContract(d.market, { bid: d.bid, ask: d.ask })
+        const patch: Partial<Contract> = {}
+        const topBid = d.bids?.[0]?.[0]
+        const topAsk = d.asks?.[0]?.[0]
+        if (topBid !== undefined) patch.bid = topBid
+        if (topAsk !== undefined) patch.ask = topAsk
+        if (Object.keys(patch).length === 0) return
+        updateContract(d.market, patch)
       },
     )
 

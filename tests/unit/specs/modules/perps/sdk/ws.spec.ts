@@ -100,9 +100,43 @@ describe('perpsWs — subscribe/unsubscribe', () => {
     MockWebSocket.instances[0]._open()
     perpsWs.subscribe('topOfBooksPerps', { markets: ['ETH-USD'] }, handler)
     MockWebSocket.instances[0]._message({
-      type: 'topOfBooksPerps', data: { market: 'ETH-USD', bid: '1', ask: '2' },
+      type: 'update', channel: 'topOfBooksPerps',
+      data: [{ market: 'ETH-USD', bids: [['1', '5']], asks: [['2', '5']] }],
     })
-    expect(handler).toHaveBeenCalledWith({ market: 'ETH-USD', bid: '1', ask: '2' })
+    expect(handler).toHaveBeenCalledWith({ market: 'ETH-USD', bids: [['1', '5']], asks: [['2', '5']] })
+  })
+
+  it('delivers each item of an array data payload separately', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const handler = vi.fn()
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.subscribe('topOfBooksPerps', {}, handler)
+    MockWebSocket.instances[0]._message({
+      type: 'update', channel: 'topOfBooksPerps',
+      data: [
+        { market: 'A', bids: [['1', '5']], asks: [['2', '5']] },
+        { market: 'B', bids: [['3', '5']], asks: [['4', '5']] },
+      ],
+    })
+    expect(handler).toHaveBeenCalledTimes(2)
+    expect(handler).toHaveBeenNthCalledWith(1, { market: 'A', bids: [['1', '5']], asks: [['2', '5']] })
+    expect(handler).toHaveBeenNthCalledWith(2, { market: 'B', bids: [['3', '5']], asks: [['4', '5']] })
+  })
+
+  it('passes a single-object data payload through unchanged (balancePerps)', async () => {
+    const { perpsWs } = await import('@/modules/perps/sdk/ws')
+    const handler = vi.fn()
+    perpsWs.connect()
+    MockWebSocket.instances[0]._open()
+    perpsWs.login('tok-1')
+    MockWebSocket.instances[0]._message({ type: 'loggedIn' })
+    perpsWs.subscribe('balancePerps', {}, handler)
+    MockWebSocket.instances[0]._message({
+      type: 'update', channel: 'balancePerps', data: { walletBalance: '100' },
+    })
+    expect(handler).toHaveBeenCalledTimes(1)
+    expect(handler).toHaveBeenCalledWith({ walletBalance: '100' })
   })
 
   it('unsubscribe() removes the handler and sends unsubscribe frame', async () => {
@@ -116,17 +150,20 @@ describe('perpsWs — subscribe/unsubscribe', () => {
       op: 'unsubscribe', channel: 'markPricesPerps', markets: ['ETH-USD'],
     })
     MockWebSocket.instances[0]._message({
-      type: 'markPricesPerps', data: { market: 'ETH-USD', markPrice: '3' },
+      type: 'update', channel: 'markPricesPerps',
+      data: [{ market: 'ETH-USD', markPrice: '3' }],
     })
     expect(handler).not.toHaveBeenCalled()
   })
 
-  it('ignores frames whose type has no registered handler', async () => {
+  it('ignores frames whose channel has no registered handler', async () => {
     const { perpsWs } = await import('@/modules/perps/sdk/ws')
     perpsWs.connect()
     MockWebSocket.instances[0]._open()
     expect(() => {
-      MockWebSocket.instances[0]._message({ type: 'tradesPerps', data: { market: 'X' } })
+      MockWebSocket.instances[0]._message({
+        type: 'update', channel: 'tradesPerps', data: [{ market: 'X' }],
+      })
     }).not.toThrow()
   })
 })
