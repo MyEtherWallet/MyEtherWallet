@@ -5,8 +5,9 @@
         v-if="show"
         class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-4"
       >
-        <div class="bg-white rounded-20 shadow-2xl w-full max-w-sm flex flex-col gap-5 p-6">
-
+        <div
+          class="bg-white rounded-20 shadow-2xl w-full max-w-sm flex flex-col gap-5 p-6"
+        >
           <!-- Header -->
           <div class="flex flex-col items-center gap-1 text-center">
             <p class="font-bold text-s-20">Confirm Sign In</p>
@@ -19,9 +20,7 @@
             >
               Check your device to approve
             </p>
-            <p v-else class="text-info text-s-13 animate-pulse">
-              Signing…
-            </p>
+            <p v-else class="text-info text-s-13 animate-pulse">Signing…</p>
           </div>
 
           <!-- Message box -->
@@ -31,7 +30,8 @@
             </p>
             <pre
               class="bg-mewBg rounded-12 p-3 text-s-12 text-black font-mono break-all whitespace-pre-wrap max-h-44 overflow-y-auto"
-            >{{ message }}</pre>
+              >{{ message }}</pre
+            >
           </div>
 
           <!-- Hardware wallet hint -->
@@ -44,20 +44,20 @@
 
           <!-- Actions (only while waiting for user click) -->
           <div v-if="isWaitingForConfirm" class="flex gap-3">
-            <button
+            <AppBaseButton
               class="flex-1 rounded-full border border-grey-30 py-2.5 text-s-14 font-medium text-grey-70 hoverOpacity"
               @click="$emit('cancel')"
+              is-outline
             >
               Cancel
-            </button>
-            <button
+            </AppBaseButton>
+            <AppBaseButton
               class="flex-1 rounded-full bg-primary text-white py-2.5 text-s-14 font-medium hoverOpacity"
               @click="$emit('confirm')"
             >
               Sign
-            </button>
+            </AppBaseButton>
           </div>
-
         </div>
       </div>
     </transition>
@@ -65,6 +65,8 @@
 </template>
 
 <script setup lang="ts">
+import AppBaseButton from '@/components/AppBaseButton.vue'
+
 defineProps<{
   show: boolean
   message: string | null
