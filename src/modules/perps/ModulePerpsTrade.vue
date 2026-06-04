@@ -4,6 +4,9 @@
       :show="showSigningPrompt"
       :message="signingMessage"
       :is-hardware-wallet="isHardwareWalletSigning"
+      :is-waiting-for-confirm="isWaitingForConfirm"
+      @confirm="confirmSign"
+      @cancel="cancelSign"
     />
     <!-- Header: Asset Info -->
     <div class="flex items-center justify-between mb-2 px-4 -mt-2">
@@ -799,7 +802,7 @@ import { useI18n } from 'vue-i18n'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
-const { showSigningPrompt, signingMessage, isHardwareWalletSigning } = usePerpsAuth()
+const { showSigningPrompt, signingMessage, isHardwareWalletSigning, isWaitingForConfirm, confirmSign, cancelSign } = usePerpsAuth()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
