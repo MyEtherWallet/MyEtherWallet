@@ -158,6 +158,7 @@ export class PerpsClient {
     resolution: string,
     from: number,
     to: number,
+    signal?: AbortSignal,
   ): Promise<HistoryResult> {
     const params = new URLSearchParams({
       symbol: symbol.replace(`-`, ''),
@@ -165,7 +166,10 @@ export class PerpsClient {
       from: from.toString(),
       to: to.toString(),
     })
-    return this.request<HistoryResult>(`/v1/perps/history?${params.toString()}`)
+    return this.request<HistoryResult>(
+      `/v1/perps/history?${params.toString()}`,
+      signal ? { signal } : undefined,
+    )
   }
 
   async listDepositAddresses(
