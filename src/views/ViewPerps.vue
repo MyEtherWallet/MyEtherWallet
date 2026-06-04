@@ -80,8 +80,7 @@ import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { useChainsStore } from '@/stores/chainsStore'
-import type { Chain } from '@/mew_api/types'
+import { useEthOnlyChains } from '@/composables/useEthOnlyChains'
 
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
@@ -89,11 +88,7 @@ const walletStore = useWalletStore()
 const { isWatchOnly, wallet } = storeToRefs(walletStore)
 const { token, isAuthenticating, login, logout } = usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
-const { chains } = storeToRefs(useChainsStore())
-const ethOnlyChains = computed<Chain[]>(() => {
-  const eth = chains.value.find(c => c.name === 'ETHEREUM')
-  return eth ? [eth] : []
-})
+const { ethOnlyChains } = useEthOnlyChains()
 
 watch(
   () => wallet.value,

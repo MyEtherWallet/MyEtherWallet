@@ -33,17 +33,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { useChainsStore } from '@/stores/chainsStore'
+import { useEthOnlyChains } from '@/composables/useEthOnlyChains'
 import { ROUTES_MAIN, PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
-import type { Chain } from '@/mew_api/types'
 
 const { isXS } = useAppBreakpoints()
 const route = useRoute()
-const { chains } = storeToRefs(useChainsStore())
+const { ethOnlyChains } = useEthOnlyChains()
 
 const isPerpsRoute = computed(
   () =>
@@ -51,9 +49,7 @@ const isPerpsRoute = computed(
     route.name === PERP_INFO_ROUTE_NAME,
 )
 
-const restrictedChains = computed<Chain[]>(() => {
-  if (!isPerpsRoute.value) return []
-  const eth = chains.value.find(c => c.name === 'ETHEREUM')
-  return eth ? [eth] : []
-})
+const restrictedChains = computed(() =>
+  isPerpsRoute.value ? ethOnlyChains.value : [],
+)
 </script>

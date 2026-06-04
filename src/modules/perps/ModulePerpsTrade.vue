@@ -787,8 +787,7 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useChainsStore } from '@/stores/chainsStore'
-import type { Chain } from '@/mew_api/types'
+import { useEthOnlyChains } from '@/composables/useEthOnlyChains'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
@@ -797,12 +796,8 @@ const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
-const { chains } = storeToRefs(useChainsStore())
+const { ethOnlyChains } = useEthOnlyChains()
 const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
-const ethOnlyChains = computed<Chain[]>(() => {
-  const eth = chains.value.find(c => c.name === 'ETHEREUM')
-  return eth ? [eth] : []
-})
 const { t } = useI18n()
 
 const { setSelectedTradeManageMode } = useWalletMenuStore()
