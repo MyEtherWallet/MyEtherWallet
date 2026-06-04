@@ -614,7 +614,7 @@
           <p class="text-info text-s-14 mb-4">
             Perps is only available on Ethereum
           </p>
-          <select-chain-for-app>
+          <select-chain-for-app :passed-chains="ethOnlyChains">
             <template #network-button="{ openNetworkDialog }">
               <button
                 class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
@@ -787,6 +787,8 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import type { Chain } from '@/mew_api/types'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
@@ -795,7 +797,12 @@ const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
+const { chains } = storeToRefs(useChainsStore())
 const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
+const ethOnlyChains = computed<Chain[]>(() => {
+  const eth = chains.value.find(c => c.name === 'ETHEREUM')
+  return eth ? [eth] : []
+})
 const { t } = useI18n()
 
 const { setSelectedTradeManageMode } = useWalletMenuStore()

@@ -1,6 +1,6 @@
 <template>
   <!-- App Select Chain -->
-  <select-chain-for-app :has-label="false">
+  <select-chain-for-app :has-label="false" :passed-chains="restrictedChains">
     <template #network-button="{ openNetworkDialog, selectedChain }">
       <button
         class="hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full max-w-[178px] shadow-button shadow-button-elevated"
@@ -31,9 +31,29 @@
   </select-chain-for-app>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useChainsStore } from '@/stores/chainsStore'
+import { ROUTES_MAIN, PERP_INFO_ROUTE_NAME } from '@/router/routeNames'
+import type { Chain } from '@/mew_api/types'
 
 const { isXS } = useAppBreakpoints()
+const route = useRoute()
+const { chains } = storeToRefs(useChainsStore())
+
+const isPerpsRoute = computed(
+  () =>
+    route.name === ROUTES_MAIN.PERPS.NAME ||
+    route.name === PERP_INFO_ROUTE_NAME,
+)
+
+const restrictedChains = computed<Chain[]>(() => {
+  if (!isPerpsRoute.value) return []
+  const eth = chains.value.find(c => c.name === 'ETHEREUM')
+  return eth ? [eth] : []
+})
 </script>

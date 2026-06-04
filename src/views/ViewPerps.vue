@@ -4,7 +4,7 @@
       <p class="text-info text-s-14 mb-4">
         Perps is only available on Ethereum
       </p>
-      <select-chain-for-app>
+      <select-chain-for-app :passed-chains="ethOnlyChains">
         <template #network-button="{ openNetworkDialog }">
           <button
             class="bg-black text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity"
@@ -80,6 +80,8 @@ import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import type { Chain } from '@/mew_api/types'
 
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
@@ -87,6 +89,11 @@ const walletStore = useWalletStore()
 const { isWatchOnly, wallet } = storeToRefs(walletStore)
 const { token, isAuthenticating, login, logout } = usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
+const { chains } = storeToRefs(useChainsStore())
+const ethOnlyChains = computed<Chain[]>(() => {
+  const eth = chains.value.find(c => c.name === 'ETHEREUM')
+  return eth ? [eth] : []
+})
 
 watch(
   () => wallet.value,
