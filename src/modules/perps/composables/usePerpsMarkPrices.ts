@@ -1,23 +1,56 @@
-import { ref } from 'vue'
+import { ref, effectScope } from 'vue'
 import { perpsClient } from '../configs'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 
-const markPriceData = ref<Record<string, any>>({})
+type MarkPriceRow = { market: string; markPrice?: string; price?: string }
+
+const markPriceData = ref<Record<string, { price: string }>>({})
 let initialized = false
 
-async function fetchMarkPrices() {
+let _pendingPatch: Map<string, { price: string }> | null = null
+function _queuePatch(rows: MarkPriceRow[]) {
+  if (!_pendingPatch) {
+    _pendingPatch = new Map()
+    queueMicrotask(() => {
+      if (!_pendingPatch) return
+      const next = { ...markPriceData.value }
+      for (const [m, v] of _pendingPatch) next[m] = v
+      markPriceData.value = next
+      _pendingPatch = null
+    })
+  }
+  for (const r of rows) {
+    if (!r?.market) continue
+    const p = r.markPrice ?? r.price
+    if (p == null) continue
+    _pendingPatch.set(r.market, { price: String(p) })
+  }
+}
+
+async function seedFromRest() {
   try {
     const res = await perpsClient.getMarkPrices()
-    markPriceData.value = res.result ?? {}
-  } catch (e) {
-    console.error('Failed to fetch mark prices:', e)
+    const seed: Record<string, { price: string }> = {}
+    const result = (res.result ?? {}) as unknown as Record<string, MarkPriceRow>
+    for (const [m, v] of Object.entries(result)) {
+      const p = v.markPrice ?? v.price
+      if (p != null) seed[m] = { price: String(p) }
+    }
+    markPriceData.value = { ...seed, ...markPriceData.value }
+  } catch {
+    // ignore — WS will populate
   }
 }
 
 export function usePerpsMarkPrices() {
   if (!initialized) {
     initialized = true
-    fetchMarkPrices()
-    setInterval(fetchMarkPrices, 5_000)
+    ensurePerpsWsLifecycle()
+    effectScope(true).run(() => {
+      perpsWs.subscribe<MarkPriceRow>('markPricesPerps', _queuePatch)
+    })
+    void seedFromRest()
   }
-  return { markPriceData, refetch: fetchMarkPrices }
+  return { markPriceData }
 }
