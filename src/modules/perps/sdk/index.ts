@@ -43,3 +43,16 @@ export type {
   WalletDeposit,
   WalletWithdrawal,
 } from './types'
+
+export type {
+  WsPublicChannel,
+  WsPrivateChannel,
+  WsChannel,
+  WsOutboundOp,
+  WsOutboundFrame,
+  WsInboundType,
+  WsInboundFrame,
+  WsConnectionState,
+  WsAuthStatus,
+  WsFrameHandler,
+} from './wsTypes'
