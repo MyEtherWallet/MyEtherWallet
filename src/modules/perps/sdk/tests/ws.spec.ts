@@ -181,3 +181,70 @@ describe('perpsWs — heartbeat', () => {
     expect(FakeSocket.instances[0].readyState).toBe(1) // still open
   })
 })
+
+describe('perpsWs — reconnect', () => {
+  let ws: PerpsWs
+  beforeEach(() => {
+    vi.useFakeTimers()
+    FakeSocket.instances = []
+    ws = createPerpsWs({
+      url: 'wss://test',
+      wsFactory: (u) => new FakeSocket(u) as unknown as WebSocket,
+      // Disable jitter for deterministic backoff in tests
+      backoffJitter: 0,
+      backoffBaseMs: 1000,
+      backoffMaxMs: 30000,
+    })
+  })
+  afterEach(() => vi.useRealTimers())
+
+  it('on unexpected close, schedules reconnect with exponential backoff', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    FakeSocket.instances[0].onclose?.({
+      code: 1006,
+      reason: '',
+      wasClean: false,
+    } as CloseEvent)
+    expect(ws.state.value).toBe('reconnecting')
+
+    vi.advanceTimersByTime(1000)
+    expect(FakeSocket.instances).toHaveLength(2)
+  })
+
+  it('replays subscribed channels after reconnect', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.subscribe('markPricesPerps', () => {})
+    FakeSocket.instances[0].onclose?.({
+      code: 1006,
+      wasClean: false,
+    } as CloseEvent)
+    vi.advanceTimersByTime(1000)
+    FakeSocket.instances[1].open()
+    expect(FakeSocket.instances[1].sent).toContainEqual(
+      JSON.stringify({ op: 'subscribe', channel: 'markPricesPerps' }),
+    )
+  })
+
+  it('explicit disconnect() does NOT trigger reconnect', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.disconnect()
+    vi.advanceTimersByTime(60_000)
+    expect(FakeSocket.instances).toHaveLength(1)
+  })
+
+  it('reconnect attempt resets backoff after a successful open', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    // close, reconnect attempt #1 at 1s
+    FakeSocket.instances[0].onclose?.({ wasClean: false } as CloseEvent)
+    vi.advanceTimersByTime(1000)
+    FakeSocket.instances[1].open()
+    // close again — should backoff from 1s again, NOT 2s
+    FakeSocket.instances[1].onclose?.({ wasClean: false } as CloseEvent)
+    vi.advanceTimersByTime(1000)
+    expect(FakeSocket.instances).toHaveLength(3)
+  })
+})

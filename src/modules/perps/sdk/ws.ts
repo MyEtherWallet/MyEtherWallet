@@ -13,6 +13,9 @@ export interface PerpsWsOptions {
   wsFactory?: (url: string) => WebSocket
   pingIntervalMs?: number
   staleAfterMs?: number
+  backoffBaseMs?: number
+  backoffMaxMs?: number
+  backoffJitter?: number // 0 = deterministic; 0.2 = ±20%
 }
 
 export interface PerpsWs {
@@ -35,6 +38,26 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   const staleAfterMs = opts.staleAfterMs ?? 60_000
   let pingTimer: ReturnType<typeof setInterval> | null = null
   let staleTimer: ReturnType<typeof setTimeout> | null = null
+
+  const backoffBaseMs = opts.backoffBaseMs ?? 1_000
+  const backoffMaxMs = opts.backoffMaxMs ?? 30_000
+  const backoffJitter = opts.backoffJitter ?? 0.2
+  let backoffAttempt = 0
+  let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+  let userClosed = false
+
+  function _scheduleReconnect() {
+    if (userClosed) return
+    state.value = 'reconnecting'
+    const base = Math.min(backoffBaseMs * 2 ** backoffAttempt, backoffMaxMs)
+    const jitter = base * backoffJitter
+    const delay = base + (Math.random() * 2 - 1) * jitter
+    backoffAttempt++
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null
+      connect()
+    }, delay)
+  }
 
   function _stopTimers() {
     if (pingTimer) {
@@ -65,10 +88,12 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
 
   function connect() {
     if (state.value === 'connecting' || state.value === 'open') return
+    userClosed = false
     state.value = 'connecting'
     const s = wsFactory(url)
     socket = s
     s.onopen = () => {
+      backoffAttempt = 0
       state.value = 'open'
       _startTimers()
       // Replay every active channel sub (handles reconnect — runbook §6).
@@ -79,8 +104,12 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     }
     s.onclose = () => {
       _stopTimers()
-      state.value = 'closed'
       socket = null
+      if (userClosed) {
+        state.value = 'closed'
+        return
+      }
+      _scheduleReconnect()
     }
     s.onerror = () => {}
     s.onmessage = (e: MessageEvent) => {
@@ -89,6 +118,11 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   }
 
   function disconnect() {
+    userClosed = true
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer)
+      reconnectTimer = null
+    }
     _stopTimers()
     if (!socket) {
       if (state.value !== 'idle') state.value = 'closed'
