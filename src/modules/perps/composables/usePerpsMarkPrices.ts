@@ -8,11 +8,19 @@ type MarkPriceRow = { market: string; markPrice?: string; price?: string }
 const markPriceData = ref<Record<string, { price: string }>>({})
 let initialized = false
 
+// rAF (not microtask) so multiple high-frequency WS messages within a frame
+// coalesce into a SINGLE render. queueMicrotask fires once per macrotask —
+// and each onmessage is its own macrotask, so it doesn't coalesce in practice.
+const _schedule: (cb: () => void) => void =
+  typeof requestAnimationFrame === 'function'
+    ? (cb) => requestAnimationFrame(cb)
+    : (cb) => queueMicrotask(cb)
+
 let _pendingPatch: Map<string, { price: string }> | null = null
 function _queuePatch(rows: MarkPriceRow[]) {
   if (!_pendingPatch) {
     _pendingPatch = new Map()
-    queueMicrotask(() => {
+    _schedule(() => {
       if (!_pendingPatch) return
       const next = { ...markPriceData.value }
       for (const [m, v] of _pendingPatch) next[m] = v

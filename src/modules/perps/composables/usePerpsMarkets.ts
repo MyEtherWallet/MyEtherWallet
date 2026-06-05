@@ -69,11 +69,19 @@ async function fetchContracts() {
 }
 
 type ContractPatch = Partial<Contract>
+// rAF (not microtask): see usePerpsMarkPrices.ts for the rationale —
+// high-frequency channels (topOfBooks, fundingRates) saturate the main
+// thread with one full array.map per WS message under microtask scheduling.
+const _scheduleContract: (cb: () => void) => void =
+  typeof requestAnimationFrame === 'function'
+    ? (cb) => requestAnimationFrame(cb)
+    : (cb) => queueMicrotask(cb)
+
 let _pendingContractPatch: Map<string, ContractPatch> | null = null
 function _queueContractPatch(rows: ContractPatch[]) {
   if (!_pendingContractPatch) {
     _pendingContractPatch = new Map()
-    queueMicrotask(() => {
+    _scheduleContract(() => {
       const patch = _pendingContractPatch
       _pendingContractPatch = null
       if (!patch) return
