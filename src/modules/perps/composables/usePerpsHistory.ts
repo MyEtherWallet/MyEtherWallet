@@ -205,11 +205,11 @@ export function usePerpsFills() {
 }
 
 export function usePerpsDepositsWithdrawals() {
+  ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
   const deposits = ref<WalletDeposit[]>([])
   const withdrawals = ref<WalletWithdrawal[]>([])
   const loading = ref(false)
-  let pollTimer: ReturnType<typeof setInterval> | null = null
 
   async function fetchAll() {
     if (!token.value) {
@@ -233,21 +233,26 @@ export function usePerpsDepositsWithdrawals() {
     }
   }
 
+  const unsubscribeDepositsWs = perpsWs.subscribe<WalletDeposit>('deposits', () => {
+    if (token.value) void fetchAll()
+  })
+  const unsubscribeWithdrawalsWs = perpsWs.subscribe<WalletWithdrawal>('withdrawals', () => {
+    if (token.value) void fetchAll()
+  })
+
   watchEffect(() => {
     void refreshKey.value
-    if (pollTimer) clearInterval(pollTimer)
     if (token.value) {
-      fetchAll()
-      pollTimer = setInterval(fetchAll, 15_000)
+      void fetchAll()
     } else {
       deposits.value = []
       withdrawals.value = []
-      pollTimer = null
     }
   })
 
   onUnmounted(() => {
-    if (pollTimer) clearInterval(pollTimer)
+    unsubscribeDepositsWs()
+    unsubscribeWithdrawalsWs()
   })
 
   return { deposits, withdrawals, loading, refetch: fetchAll }
