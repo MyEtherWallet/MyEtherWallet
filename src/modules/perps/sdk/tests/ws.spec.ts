@@ -266,3 +266,54 @@ describe('perpsWs — reconnect', () => {
     expect(FakeSocket.instances).toHaveLength(3)
   })
 })
+
+describe('perpsWs — auth', () => {
+  let ws: PerpsWs
+  beforeEach(() => {
+    FakeSocket.instances = []
+    ws = createPerpsWs({
+      url: 'wss://test',
+      wsFactory: (u) => new FakeSocket(u) as unknown as WebSocket,
+    })
+  })
+
+  it('starts as unauthenticated', () => {
+    expect(ws.authStatus.value).toBe('unauthenticated')
+  })
+
+  it('login(token) sends a login frame and flips to authenticating', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    FakeSocket.instances[0].sent.length = 0
+    ws.login('tok-1')
+    expect(ws.authStatus.value).toBe('authenticating')
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'login', args: { token: 'tok-1' } }),
+    )
+  })
+
+  it('loggedIn inbound frame flips authStatus to authenticated', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.login('tok-1')
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'loggedIn' }),
+    } as MessageEvent)
+    expect(ws.authStatus.value).toBe('authenticated')
+  })
+
+  it('logout() sends a logout frame and clears authStatus', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.login('tok-1')
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'loggedIn' }),
+    } as MessageEvent)
+    FakeSocket.instances[0].sent.length = 0
+    ws.logout()
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'logout' }),
+    )
+    expect(ws.authStatus.value).toBe('unauthenticated')
+  })
+})

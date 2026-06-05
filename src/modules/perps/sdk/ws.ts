@@ -1,5 +1,6 @@
 import { ref, type Ref } from 'vue'
 import type {
+  WsAuthStatus,
   WsChannel,
   WsConnectionState,
   WsFrameHandler,
@@ -20,12 +21,15 @@ export interface PerpsWsOptions {
 
 export interface PerpsWs {
   state: Ref<WsConnectionState>
+  authStatus: Ref<WsAuthStatus>
   connect: () => void
   disconnect: () => void
   subscribe: <T = unknown>(
     channel: WsChannel,
     handler: WsFrameHandler<T[]>,
   ) => () => void
+  login: (token: string) => void
+  logout: () => void
 }
 
 export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
@@ -45,6 +49,21 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   let backoffAttempt = 0
   let reconnectTimer: ReturnType<typeof setTimeout> | null = null
   let userClosed = false
+
+  const authStatus = ref<WsAuthStatus>('unauthenticated')
+  let pendingToken: string | null = null
+
+  function login(token: string) {
+    pendingToken = token
+    authStatus.value = 'authenticating'
+    _send({ op: 'login', args: { token } })
+  }
+
+  function logout() {
+    pendingToken = null
+    authStatus.value = 'unauthenticated'
+    _send({ op: 'logout' })
+  }
 
   function _scheduleReconnect() {
     if (userClosed) return
@@ -119,6 +138,8 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
 
   function disconnect() {
     userClosed = true
+    pendingToken = null
+    authStatus.value = 'unauthenticated'
     if (reconnectTimer) {
       clearTimeout(reconnectTimer)
       reconnectTimer = null
@@ -168,6 +189,14 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     } catch {
       return
     }
+    if (frame.type === 'loggedIn') {
+      authStatus.value = 'authenticated'
+      return
+    }
+    if (frame.type === 'loggedOut') {
+      authStatus.value = 'unauthenticated'
+      return
+    }
     // Route by channel — frame.type is always 'update' for data frames.
     // (See runbook §5 — earlier attempt routed by frame.type and broke fan-out.)
     if (!frame.channel) return
@@ -198,7 +227,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     }
   }
 
-  return { state, connect, disconnect, subscribe }
+  return { state, authStatus, connect, disconnect, subscribe, login, logout }
 }
 
 export const perpsWs: PerpsWs = createPerpsWs()
