@@ -346,4 +346,16 @@ describe('perpsWs — auth', () => {
       JSON.stringify({ op: 'subscribe', channel: 'markPricesPerps' }),
     )
   })
+
+  it('setOnUnauthorized callback fires on auth error frame', () => {
+    let called = 0
+    ws.setOnUnauthorized(() => { called++ })
+    ws.connect()
+    FakeSocket.instances[0].open()
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'error', message: 'unauthorized' }),
+    } as MessageEvent)
+    expect(called).toBe(1)
+    expect(ws.authStatus.value).toBe('unauthenticated')
+  })
 })

@@ -43,6 +43,7 @@ export interface PerpsWs {
   ) => () => void
   login: (token: string) => void
   logout: () => void
+  setOnUnauthorized: (cb: (() => void) | null) => void
 }
 
 export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
@@ -65,6 +66,9 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
 
   const authStatus = ref<WsAuthStatus>('unauthenticated')
   let pendingToken: string | null = null
+
+  let onUnauthorized: (() => void) | null = null
+  function setOnUnauthorized(cb: (() => void) | null) { onUnauthorized = cb }
 
   function login(token: string) {
     pendingToken = token
@@ -225,6 +229,15 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
       authStatus.value = 'unauthenticated'
       return
     }
+    if (frame.type === 'error') {
+      const msg = String(frame.message ?? '').toLowerCase()
+      if (msg.includes('unauthorized') || msg.includes('invalid token')) {
+        pendingToken = null
+        authStatus.value = 'unauthenticated'
+        if (onUnauthorized) onUnauthorized()
+      }
+      return
+    }
     // Route by channel — frame.type is always 'update' for data frames.
     // (See runbook §5 — earlier attempt routed by frame.type and broke fan-out.)
     if (!frame.channel) return
@@ -260,7 +273,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     }
   }
 
-  return { state, authStatus, connect, disconnect, subscribe, login, logout }
+  return { state, authStatus, connect, disconnect, subscribe, login, logout, setOnUnauthorized }
 }
 
 export const perpsWs: PerpsWs = createPerpsWs()
