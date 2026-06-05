@@ -107,6 +107,7 @@ export function usePerpsAuth() {
         token.value = null
         accountId.value = null
         perpsClient.setToken(null)
+        perpsWs.logout()
         await tryRestoreAuth(address)
         if (token.value) refreshKey.value++
       },
