@@ -56,3 +56,6 @@ export type {
   WsAuthStatus,
   WsFrameHandler,
 } from './wsTypes'
+
+export { perpsWs, createPerpsWs } from './ws'
+export type { PerpsWs, PerpsWsOptions } from './ws'
