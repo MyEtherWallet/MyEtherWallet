@@ -316,4 +316,34 @@ describe('perpsWs — auth', () => {
     )
     expect(ws.authStatus.value).toBe('unauthenticated')
   })
+
+  it('subscribing to a private channel defers the subscribe until loggedIn', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.subscribe('positionsPerps', () => {})
+    // Before login, no subscribe frame sent for private channel
+    const subs1 = FakeSocket.instances[0].sent.filter(
+      (s) => s.includes('"channel":"positionsPerps"') && s.includes('subscribe'),
+    )
+    expect(subs1).toHaveLength(0)
+
+    ws.login('tok')
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'loggedIn' }),
+    } as MessageEvent)
+
+    const subs2 = FakeSocket.instances[0].sent.filter(
+      (s) => s.includes('"channel":"positionsPerps"') && s.includes('subscribe'),
+    )
+    expect(subs2).toHaveLength(1)
+  })
+
+  it('public channels subscribe immediately regardless of auth', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.subscribe('markPricesPerps', () => {})
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'subscribe', channel: 'markPricesPerps' }),
+    )
+  })
 })

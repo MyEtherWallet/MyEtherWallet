@@ -9,6 +9,19 @@ import type {
 } from './wsTypes'
 import { perpsWsUrl } from '../configs'
 
+const PRIVATE_CHANNELS = new Set<WsChannel>([
+  'balancePerps',
+  'positionsPerps',
+  'ordersPerps',
+  'fillsPerps',
+  'deposits',
+  'withdrawals',
+])
+
+function isPrivate(ch: WsChannel) {
+  return PRIVATE_CHANNELS.has(ch)
+}
+
 export interface PerpsWsOptions {
   url?: string
   wsFactory?: (url: string) => WebSocket
@@ -115,9 +128,19 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
       backoffAttempt = 0
       state.value = 'open'
       _startTimers()
-      // Replay every active channel sub (handles reconnect — runbook §6).
+      // Replay every active PUBLIC channel sub (handles reconnect — runbook §6).
+      // Private channels wait for `loggedIn` so their auth context is fresh.
       for (const ch of subscribedChannels) {
-        socket?.send(JSON.stringify({ op: 'subscribe', channel: ch }))
+        if (!isPrivate(ch as WsChannel)) {
+          socket?.send(JSON.stringify({ op: 'subscribe', channel: ch }))
+        }
+      }
+      // Re-login if we have a token — `loggedIn` handler will then replay private subs.
+      if (pendingToken) {
+        socket?.send(
+          JSON.stringify({ op: 'login', args: { token: pendingToken } }),
+        )
+        authStatus.value = 'authenticating'
       }
       _flush()
     }
@@ -191,6 +214,11 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     }
     if (frame.type === 'loggedIn') {
       authStatus.value = 'authenticated'
+      for (const ch of subscribedChannels) {
+        if (isPrivate(ch as WsChannel)) {
+          _send({ op: 'subscribe', channel: ch as WsChannel })
+        }
+      }
       return
     }
     if (frame.type === 'loggedOut') {
@@ -216,13 +244,18 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     set.add(wrapped)
     if (!subscribedChannels.has(channel)) {
       subscribedChannels.add(channel)
-      _send({ op: 'subscribe', channel })
+      if (!isPrivate(channel) || authStatus.value === 'authenticated') {
+        _send({ op: 'subscribe', channel })
+      }
+      // private + not-yet-authenticated → wait for loggedIn handler below
     }
     return () => {
       set!.delete(wrapped)
       if (set!.size === 0) {
         subscribedChannels.delete(channel)
-        _send({ op: 'unsubscribe', channel })
+        if (!isPrivate(channel) || authStatus.value === 'authenticated') {
+          _send({ op: 'unsubscribe', channel })
+        }
       }
     }
   }
