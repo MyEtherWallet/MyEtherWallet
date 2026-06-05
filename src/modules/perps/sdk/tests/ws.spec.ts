@@ -63,6 +63,24 @@ describe('perpsWs — connect / disconnect', () => {
     expect(() => ws.disconnect()).not.toThrow()
     expect(ws.state.value).toBe('idle')
   })
+
+  it('detaches handlers before close() — late onmessage from old socket is ignored', () => {
+    ws.connect()
+    const s = FakeSocket.instances[0]
+    s.open()
+    const calls: unknown[] = []
+    ws.subscribe('markPricesPerps', (d) => calls.push(d))
+    ws.disconnect()
+    // Old socket fires a late message AFTER disconnect — must be no-op
+    s.onmessage?.({
+      data: JSON.stringify({
+        type: 'update',
+        channel: 'markPricesPerps',
+        data: [{ market: 'X' }],
+      }),
+    } as MessageEvent)
+    expect(calls).toEqual([])
+  })
 })
 
 describe('perpsWs — subscribe / routing', () => {
