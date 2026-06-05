@@ -1,4 +1,4 @@
-import { ref, watchEffect, onUnmounted, effectScope, type Ref } from 'vue'
+import { ref, watchEffect, onUnmounted, type Ref } from 'vue'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
 import { usePerpsMarkets } from './usePerpsMarkets'
@@ -116,11 +116,8 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
     }
   }
 
-  const scope = effectScope(true)
-  scope.run(() => {
-    perpsWs.subscribe<ApiOrder>('ordersPerps', () => {
-      if (token.value) void refreshFirstPageIfActive()
-    })
+  const unsubscribeOrdersWs = perpsWs.subscribe<ApiOrder>('ordersPerps', () => {
+    if (token.value) void refreshFirstPageIfActive()
   })
 
   let lastFilter: OrdersStatusFilter | null = null
@@ -143,7 +140,7 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
   })
 
   onUnmounted(() => {
-    scope.stop()
+    unsubscribeOrdersWs()
   })
 
   return {
