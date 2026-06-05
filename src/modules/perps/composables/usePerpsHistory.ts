@@ -156,12 +156,12 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
 }
 
 export function usePerpsFills() {
+  ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
   const pagination = useCursorPaginate<ApiFill>(
     opts => perpsClient.getFills(opts),
     PERPS_PAGE_SIZE,
   )
-  let pollTimer: ReturnType<typeof setInterval> | null = null
   let isRefreshing = false
 
   async function refreshFirstPageIfActive() {
@@ -176,23 +176,20 @@ export function usePerpsFills() {
     }
   }
 
+  const unsubscribeFillsWs = perpsWs.subscribe<ApiFill>('fillsPerps', () => {
+    if (token.value) void refreshFirstPageIfActive()
+  })
+
   watchEffect(() => {
     void refreshKey.value
-    if (pollTimer) clearInterval(pollTimer)
-    // Reset before fetching so any in-flight request from the previous auth
-    // context is invalidated and prior fills don't briefly remain visible
-    // after a wallet switch / logout.
     pagination.reset()
     if (token.value) {
-      pagination.refetch()
-      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
-    } else {
-      pollTimer = null
+      void pagination.refetch()
     }
   })
 
   onUnmounted(() => {
-    if (pollTimer) clearInterval(pollTimer)
+    unsubscribeFillsWs()
   })
 
   return {
