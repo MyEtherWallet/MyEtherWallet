@@ -95,8 +95,20 @@ function _queueContractPatch(rows: ContractPatch[]) {
   for (const r of rows) {
     const market = (r as { market?: string }).market
     if (!market) continue
+    // topOfBooksPerps emits bids/asks as [[price,size]] tuples, but Contract
+    // (and midPrice()) consume flat `bid`/`ask` strings. Lift the best level
+    // from each side so the table actually updates.
+    const raw = r as ContractPatch & {
+      bids?: [string, string][]
+      asks?: [string, string][]
+    }
+    const patch: ContractPatch = { ...r }
+    const bestBid = raw.bids?.[0]?.[0]
+    const bestAsk = raw.asks?.[0]?.[0]
+    if (bestBid != null) patch.bid = bestBid
+    if (bestAsk != null) patch.ask = bestAsk
     const existing = _pendingContractPatch.get(market) ?? {}
-    _pendingContractPatch.set(market, { ...existing, ...r })
+    _pendingContractPatch.set(market, { ...existing, ...patch })
   }
 }
 
