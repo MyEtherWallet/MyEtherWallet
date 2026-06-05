@@ -1,6 +1,8 @@
-import { ref } from 'vue'
+import { ref, effectScope } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 
 // Singleton state for markets
 const markets = ref<TradingPair[]>([])
@@ -66,11 +68,39 @@ async function fetchContracts() {
   }
 }
 
+type ContractPatch = Partial<Contract>
+let _pendingContractPatch: Map<string, ContractPatch> | null = null
+function _queueContractPatch(rows: ContractPatch[]) {
+  if (!_pendingContractPatch) {
+    _pendingContractPatch = new Map()
+    queueMicrotask(() => {
+      const patch = _pendingContractPatch
+      _pendingContractPatch = null
+      if (!patch) return
+      const next = contracts.value.map(c => {
+        const p = patch.get(c.market)
+        return p ? { ...c, ...p } : c
+      })
+      contracts.value = next
+    })
+  }
+  for (const r of rows) {
+    const market = (r as { market?: string }).market
+    if (!market) continue
+    const existing = _pendingContractPatch.get(market) ?? {}
+    _pendingContractPatch.set(market, { ...existing, ...r })
+  }
+}
+
 export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
+    ensurePerpsWsLifecycle()
     fetchContracts()
-    setInterval(fetchContracts, 2500)
+    effectScope(true).run(() => {
+      perpsWs.subscribe<Partial<Contract>>('topOfBooksPerps', _queueContractPatch)
+      perpsWs.subscribe<Partial<Contract>>('fundingRatesPerps', _queueContractPatch)
+    })
   }
   return {
     contracts,
