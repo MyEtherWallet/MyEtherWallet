@@ -22,7 +22,8 @@ export interface WsOutboundFrame {
   op: WsOutboundOp
   channel?: WsChannel
   markets?: string[]
-  token?: string
+  // Login payload — Ondo wire format: { op:'login', args:{ token } }
+  args?: { token?: string }
 }
 
 export type WsInboundType =
