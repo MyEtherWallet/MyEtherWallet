@@ -11,6 +11,8 @@ import { perpsWsUrl } from '../configs'
 export interface PerpsWsOptions {
   url?: string
   wsFactory?: (url: string) => WebSocket
+  pingIntervalMs?: number
+  staleAfterMs?: number
 }
 
 export interface PerpsWs {
@@ -29,6 +31,38 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   const state = ref<WsConnectionState>('idle')
   let socket: WebSocket | null = null
 
+  const pingIntervalMs = opts.pingIntervalMs ?? 30_000
+  const staleAfterMs = opts.staleAfterMs ?? 60_000
+  let pingTimer: ReturnType<typeof setInterval> | null = null
+  let staleTimer: ReturnType<typeof setTimeout> | null = null
+
+  function _stopTimers() {
+    if (pingTimer) {
+      clearInterval(pingTimer)
+      pingTimer = null
+    }
+    if (staleTimer) {
+      clearTimeout(staleTimer)
+      staleTimer = null
+    }
+  }
+
+  function _armStale() {
+    if (staleTimer) clearTimeout(staleTimer)
+    staleTimer = setTimeout(() => {
+      if (socket) socket.close()
+    }, staleAfterMs)
+  }
+
+  function _startTimers() {
+    _stopTimers()
+    pingTimer = setInterval(() => {
+      if (state.value === 'open' && socket)
+        socket.send(JSON.stringify({ op: 'ping' }))
+    }, pingIntervalMs)
+    _armStale()
+  }
+
   function connect() {
     if (state.value === 'connecting' || state.value === 'open') return
     state.value = 'connecting'
@@ -36,6 +70,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     socket = s
     s.onopen = () => {
       state.value = 'open'
+      _startTimers()
       // Replay every active channel sub (handles reconnect — runbook §6).
       for (const ch of subscribedChannels) {
         socket?.send(JSON.stringify({ op: 'subscribe', channel: ch }))
@@ -43,6 +78,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
       _flush()
     }
     s.onclose = () => {
+      _stopTimers()
       state.value = 'closed'
       socket = null
     }
@@ -53,6 +89,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   }
 
   function disconnect() {
+    _stopTimers()
     if (!socket) {
       if (state.value !== 'idle') state.value = 'closed'
       return
@@ -90,6 +127,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
   }
 
   function _handleMessage(raw: string) {
+    _armStale()
     let frame: WsInboundFrame
     try {
       frame = JSON.parse(raw) as WsInboundFrame

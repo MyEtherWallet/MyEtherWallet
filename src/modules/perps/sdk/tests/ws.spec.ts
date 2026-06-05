@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPerpsWs, type PerpsWs } from '../ws'
 
 class FakeSocket {
@@ -136,5 +136,48 @@ describe('perpsWs — subscribe / routing', () => {
       s.includes('"op":"subscribe"'),
     )
     expect(subs).toHaveLength(1)
+  })
+})
+
+describe('perpsWs — heartbeat', () => {
+  let ws: PerpsWs
+  beforeEach(() => {
+    vi.useFakeTimers()
+    FakeSocket.instances = []
+    ws = createPerpsWs({
+      url: 'wss://test',
+      wsFactory: (u) => new FakeSocket(u) as unknown as WebSocket,
+      pingIntervalMs: 30_000,
+      staleAfterMs: 60_000,
+    })
+  })
+  afterEach(() => vi.useRealTimers())
+
+  it('sends a ping every 30s once open', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    FakeSocket.instances[0].sent.length = 0
+    vi.advanceTimersByTime(30_000)
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'ping' }),
+    )
+  })
+
+  it('closes the socket after 60s of inbound silence', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    vi.advanceTimersByTime(60_001)
+    expect(FakeSocket.instances[0].readyState).toBe(3)
+  })
+
+  it('any inbound frame (incl. pong) resets the stale timer', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    vi.advanceTimersByTime(50_000)
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({ type: 'pong' }),
+    } as MessageEvent)
+    vi.advanceTimersByTime(50_000) // total 100s, but reset at 50s
+    expect(FakeSocket.instances[0].readyState).toBe(1) // still open
   })
 })
