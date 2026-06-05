@@ -64,3 +64,77 @@ describe('perpsWs — connect / disconnect', () => {
     expect(ws.state.value).toBe('idle')
   })
 })
+
+describe('perpsWs — subscribe / routing', () => {
+  let ws: PerpsWs
+  beforeEach(() => {
+    FakeSocket.instances = []
+    ws = createPerpsWs({
+      url: 'wss://test',
+      wsFactory: (u) => new FakeSocket(u) as unknown as WebSocket,
+    })
+  })
+
+  it('subscribe() sends a subscribe frame after socket opens', () => {
+    ws.connect()
+    ws.subscribe('markPricesPerps', () => {})
+    expect(FakeSocket.instances[0].sent).toHaveLength(0) // not yet open
+    FakeSocket.instances[0].open()
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'subscribe', channel: 'markPricesPerps' }),
+    )
+  })
+
+  it('routes by frame.channel, not frame.type — handler receives array always', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    const calls: unknown[][] = []
+    ws.subscribe('markPricesPerps', (rows) => calls.push(rows as unknown[]))
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({
+        type: 'update',
+        channel: 'markPricesPerps',
+        data: [{ market: 'AAPL-PERP', markPrice: '100' }],
+      }),
+    } as MessageEvent)
+    expect(calls).toHaveLength(1)
+    expect(calls[0]).toEqual([{ market: 'AAPL-PERP', markPrice: '100' }])
+  })
+
+  it('unwraps single-object payloads (balancePerps) to a 1-length array', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    const calls: unknown[][] = []
+    ws.subscribe('balancePerps', (rows) => calls.push(rows as unknown[]))
+    FakeSocket.instances[0].onmessage?.({
+      data: JSON.stringify({
+        type: 'update',
+        channel: 'balancePerps',
+        data: { equity: '1000' },
+      }),
+    } as MessageEvent)
+    expect(calls[0]).toEqual([{ equity: '1000' }])
+  })
+
+  it('unsubscribe() removes handler and sends unsubscribe when last handler leaves', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    const unsub = ws.subscribe('markPricesPerps', () => {})
+    FakeSocket.instances[0].sent.length = 0
+    unsub()
+    expect(FakeSocket.instances[0].sent).toContainEqual(
+      JSON.stringify({ op: 'unsubscribe', channel: 'markPricesPerps' }),
+    )
+  })
+
+  it('multiple subscribers to same channel only send one subscribe frame', () => {
+    ws.connect()
+    FakeSocket.instances[0].open()
+    ws.subscribe('markPricesPerps', () => {})
+    ws.subscribe('markPricesPerps', () => {})
+    const subs = FakeSocket.instances[0].sent.filter((s) =>
+      s.includes('"op":"subscribe"'),
+    )
+    expect(subs).toHaveLength(1)
+  })
+})
