@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 const routeRef = ref({ path: '/' })
 vi.mock('vue-router', () => ({
-  useRoute: () => routeRef.value,
+  useRoute: () => ({ get path() { return routeRef.value.path } }),
 }))
 
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -41,5 +41,21 @@ describe('usePerpsActive', () => {
     menu.setIsOpenSideMenu(false)
     const active = usePerpsActive()
     expect(active.value).toBe(false)
+  })
+
+  it('re-evaluates reactively when route changes after composable creation', async () => {
+    const active = usePerpsActive()
+    expect(active.value).toBe(false)
+    routeRef.value = { path: '/perps/BTC-PERP' }
+    expect(active.value).toBe(true)
+  })
+
+  it('re-evaluates reactively when wallet menu opens after composable creation', () => {
+    const menu = useWalletMenuStore()
+    menu.setWalletPanel('perps')
+    const active = usePerpsActive()
+    expect(active.value).toBe(false)
+    menu.setIsOpenSideMenu(true)
+    expect(active.value).toBe(true)
   })
 })
