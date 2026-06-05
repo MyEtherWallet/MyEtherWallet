@@ -47,7 +47,9 @@ export interface PerpsWs {
 }
 
 export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
-  const url = opts.url ?? perpsWsUrl
+  // URL resolved lazily at connect() time to avoid a circular-import TDZ:
+  // configs.ts → sdk/index.ts → ws.ts → configs.ts (perpsWsUrl not yet initialised).
+  const getUrl = () => opts.url ?? perpsWsUrl
   const wsFactory = opts.wsFactory ?? ((u) => new WebSocket(u))
   const state = ref<WsConnectionState>('idle')
   let socket: WebSocket | null = null
@@ -126,7 +128,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     if (state.value === 'connecting' || state.value === 'open') return
     userClosed = false
     state.value = 'connecting'
-    const s = wsFactory(url)
+    const s = wsFactory(getUrl())
     socket = s
     s.onopen = () => {
       backoffAttempt = 0
