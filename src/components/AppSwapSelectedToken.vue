@@ -305,7 +305,7 @@ const emit = defineEmits<{
 }>()
 
 const store = useWalletStore()
-const { isLoadingBalances, isWalletConnected } = storeToRefs(store)
+const { isLoadingBalances, isWalletConnected, allTokens: walletTokens } = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
@@ -371,6 +371,8 @@ enum SortValueString {
   NAME = 'Name',
   SYMBOL = 'Symbol',
   PRICE = 'Price',
+  MARKET_CAP = 'Market Cap',
+  VOLUME = '24H Volume',
   USD = 'USD Balance',
   BALANCE = 'Balance',
 }
@@ -392,27 +394,22 @@ const sortOptions = computed(() => {
       label: t('common.rank'),
     })
   }
+  const marketOptions = [
+    { value: SortValueString.PRICE, label: t('common.price') },
+    { value: SortValueString.MARKET_CAP, label: t('common.market_cap') },
+    { value: SortValueString.VOLUME, label: t('common.volume_24h') },
+  ]
+
   if (isWalletConnected.value && props.isFromView) {
     return [
       ...shared,
-      {
-        value: SortValueString.USD,
-        label: t('common.usd_balance'),
-      },
-      {
-        value: SortValueString.BALANCE,
-        label: t('common.balance'),
-      },
+      { value: SortValueString.USD, label: t('common.usd_balance') },
+      { value: SortValueString.BALANCE, label: t('common.balance') },
+      ...marketOptions,
     ]
   }
 
-  return [
-    ...shared,
-    {
-      value: SortValueString.PRICE,
-      label: t('common.price'),
-    },
-  ]
+  return [...shared, ...marketOptions]
 })
 
 enum SortDirection {
@@ -445,6 +442,8 @@ const setActiveSort = (value: SortValueString) => {
     const isNumericSort = [
       SortValueString.RANK,
       SortValueString.PRICE,
+      SortValueString.MARKET_CAP,
+      SortValueString.VOLUME,
       SortValueString.USD,
       SortValueString.BALANCE,
     ].includes(value)
@@ -456,10 +455,12 @@ const setActiveSort = (value: SortValueString) => {
 
 interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
+  market_cap: number
+  volume24h: number
 }
 
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
-  const allItems = tokens.value.map(token => {
+  const allItems: TokenBalanceWithUsd[] = tokens.value.map(token => {
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(
         BigNumber(
@@ -473,6 +474,10 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
+      market_cap: walletTokens.value.find(
+        wt => wt.contract?.toLowerCase() === token.address?.toLowerCase()
+      )?.market_cap ?? 0,
+      volume24h: (token as any).volume24h ?? 0,
     }
   })
 
@@ -484,6 +489,8 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     [SortValueString.NAME]: { key: 'name', type: 'string' },
     [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
     [SortValueString.PRICE]: { key: 'price', type: 'number' },
+    [SortValueString.MARKET_CAP]: { key: 'market_cap', type: 'number' },
+    [SortValueString.VOLUME]: { key: 'volume24h', type: 'number' },
     [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
     [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
   }

@@ -63,6 +63,8 @@
     "symbol": "symbol",
     "rank": "rank",
     "price": "price",
+    "market_cap": "Market Cap",
+    "volume_24h": "24H Volume",
     "usd_balance": "USD Balance",
     "fee": "Fee",
     "copy_failed": "Copy failed",
