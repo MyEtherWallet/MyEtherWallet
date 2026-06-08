@@ -5,10 +5,12 @@
   >
     <template #content>
       <div class="flex items-center justify-center pt-12">
-        <img
-          :src="bestOfferIcon"
-          class="w-[175px]"
-          alt="Looking for the best offer"
+        <DotLottieVue
+          :src="bestOfferAnimation"
+          class="w-[175px] aspect-square"
+          autoplay
+          loop
+          aria-label="Looking for the best offer"
         />
       </div>
       <div class="p-8 pb-12 flex flex-col items-center">
@@ -25,7 +27,8 @@
 
 <script lang="ts" setup>
 import AppDialog from '@/components/AppDialog.vue'
-import bestOfferIcon from '@/assets/images/swap/looking-for-best-offer.svg'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+import bestOfferAnimation from '@/assets/images/swap/looking-for-best-offer.lottie?url'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
