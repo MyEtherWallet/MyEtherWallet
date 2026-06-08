@@ -245,6 +245,7 @@ export function createPerpsWs(opts: PerpsWsOptions = {}): PerpsWs {
     if (!frame.channel) return
     const set = handlers.get(frame.channel)
     if (!set || set.size === 0) return
+    if (frame.data === undefined) return
     const rows = Array.isArray(frame.data) ? frame.data : [frame.data]
     for (const h of set) h(rows)
   }

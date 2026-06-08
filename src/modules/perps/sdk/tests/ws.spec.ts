@@ -323,7 +323,7 @@ describe('perpsWs — auth', () => {
     ws.subscribe('positionsPerps', () => {})
     // Before login, no subscribe frame sent for private channel
     const subs1 = FakeSocket.instances[0].sent.filter(
-      (s) => s.includes('"channel":"positionsPerps"') && s.includes('subscribe'),
+      (s) => s.includes('"channel":"positionsPerps"') && s.includes('"op":"subscribe"'),
     )
     expect(subs1).toHaveLength(0)
 
@@ -333,7 +333,7 @@ describe('perpsWs — auth', () => {
     } as MessageEvent)
 
     const subs2 = FakeSocket.instances[0].sent.filter(
-      (s) => s.includes('"channel":"positionsPerps"') && s.includes('subscribe'),
+      (s) => s.includes('"channel":"positionsPerps"') && s.includes('"op":"subscribe"'),
     )
     expect(subs2).toHaveLength(1)
   })
