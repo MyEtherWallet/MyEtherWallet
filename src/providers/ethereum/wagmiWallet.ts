@@ -113,7 +113,6 @@ class WagmiWallet extends BaseEvmWallet {
     options?: unknown
   }): Promise<HexPrefixedString> {
     try {
-      console.log(options.message, 'hello?')
       const message = await signMessage(this.config, {
         connector: this.connector,
         account: this.address,
