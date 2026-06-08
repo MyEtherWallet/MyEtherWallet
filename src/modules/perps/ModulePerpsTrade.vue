@@ -276,7 +276,7 @@
 
           <div class="flex justify-start gap-2 mt-1">
             <button
-              v-for="pct in [-10, -5, 0, 5, 10]"
+              v-for="pct in [-5, -2.5, 0, 2.5, 5]"
               :key="pct"
               class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
