@@ -10,6 +10,7 @@
           class="w-[175px] aspect-square"
           autoplay
           loop
+          role="img"
           aria-label="Looking for the best offer"
         />
       </div>
