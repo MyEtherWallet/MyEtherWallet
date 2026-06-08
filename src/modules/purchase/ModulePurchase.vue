@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full min-h-[640px]">
+  <div class="flex flex-col h-full">
     <!-- Topbar -->
     <div class="border-b border-grey-10 -mx-4">
       <div class="flex items-center gap-4 px-4 -mb-px">

@@ -103,6 +103,7 @@
       <span class="text-info"> ({{ balance.fiat }})</span>
     </p>
 
+
     <!-- Quick amount buttons -->
     <div class="flex items-center justify-center gap-1 w-full">
       <button
@@ -143,6 +144,7 @@ interface AmountBalance {
   /** When true, the value portion is rendered in the error color. */
   hasError?: boolean
 }
+
 
 const props = withDefaults(
   defineProps<{
@@ -201,6 +203,7 @@ const currencySymbol = computed(() => getCurrencySymbol(props.currency))
 const effectiveSymbol = computed(
   () => props.amountSymbol ?? currencySymbol.value,
 )
+
 
 const selectedPreset = computed(() => {
   if (props.amount === '') return null

@@ -91,6 +91,7 @@ export interface SellQuote extends BuyQuote {
   network_fee_fiat?: string
 }
 
+
 export interface FetchBuyQuotesParams {
   address: string
   fiatCurrency: string

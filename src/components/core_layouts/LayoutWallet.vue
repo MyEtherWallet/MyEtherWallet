@@ -161,28 +161,30 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-grey-10 border-l-1',
         ]"
-        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide"
+        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           label="close side menu"
-          class="md:hidden ml-3 rounded-12 hoverNoBG"
+          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
           <ChevronDoubleRightIcon class="w-5 h-5" />
         </app-btn-icon>
-        <transition name="fade" mode="out-in">
-          <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
-          <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
-          <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
-          <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
-          <ModulePurchase
-            v-else-if="walletPanel === 'purchase'"
-            key="purchase"
-          />
-          <div v-else key="coming-soon" class="mt-6 text-center font-medium">
-            {{ comingSoon }}
-          </div>
-        </transition>
+        <div class="flex-1 min-h-0">
+          <transition name="fade" mode="out-in">
+            <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
+            <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
+            <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
+            <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
+            <ModulePurchase
+              v-else-if="walletPanel === 'purchase'"
+              key="purchase"
+            />
+            <div v-else key="coming-soon" class="mt-6 text-center font-medium">
+              {{ comingSoon }}
+            </div>
+          </transition>
+        </div>
       </div>
     </transition>
   </div>
