@@ -106,7 +106,6 @@ const resolveImg = async (_img: () => Promise<string>) => {
   try {
     const image = await _img()
     img.value = image
-    isLoadedImg.value = true
   } catch (error) {
     captureException(error, {
       ...SENTRY_MODULE_TAGS.ACCESS,
@@ -116,7 +115,8 @@ const resolveImg = async (_img: () => Promise<string>) => {
         errorMessage: error,
       },
     })
-    return ''
+  } finally {
+    isLoadedImg.value = true
   }
 }
 onMounted(() => {
