@@ -83,12 +83,12 @@ interface Item {
   value: StockPriceChartInterval
 }
 const chartFilterOptions = computed<Item[]>(() => [
-  { label: t('stocks.chart_1d'), value: '1D' },
-  { label: t('stocks.chart_7d'), value: '7D' },
-  { label: t('stocks.chart_1m'), value: '1M' },
-  { label: t('stocks.chart_3m'), value: '3M' },
-  { label: t('stocks.chart_1y'), value: '1Y' },
-  { label: t('stocks.chart_all'), value: 'ALL' },
+  { label: t('common.chart_1d'), value: '1D' },
+  { label: t('common.chart_7d'), value: '7D' },
+  { label: t('common.chart_1m'), value: '1M' },
+  { label: t('common.chart_3m'), value: '3M' },
+  { label: t('common.chart_1y'), value: '1Y' },
+  { label: t('common.chart_all'), value: 'ALL' },
 ])
 
 const selectedChartFilter = ref<Item>(chartFilterOptions.value[0])

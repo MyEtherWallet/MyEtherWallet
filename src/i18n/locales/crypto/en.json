@@ -48,13 +48,6 @@
     "solana_staking_title": "Solana staking is here",
     "solana_staking_subtitle": "Stake SOL and earn up to 7.6% APR",
     "mewtopia": "MEWtopia",
-    "mewtopia_subtitle": "A Blog by MyEtherWallet",
-    "no_data_available": "No data available",
-    "chart_1d": "1d",
-    "chart_7d": "7d",
-    "chart_1m": "1m",
-    "chart_3m": "3m",
-    "chart_1y": "1y",
-    "chart_all": "all"
+    "mewtopia_subtitle": "A Blog by MyEtherWallet"
   }
 }

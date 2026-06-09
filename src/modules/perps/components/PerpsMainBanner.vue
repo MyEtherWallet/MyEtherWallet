@@ -102,17 +102,7 @@
       </p>
 
       <div class="flex justify-center">
-        <template v-if="!isWalletConnected || isWatchOnly">
-          <app-base-button
-            class="w-full lg:w-auto lg:px-10"
-            @click="onConnectWallet"
-            @mouseenter="isHoveringCta = true"
-            @mouseleave="isHoveringCta = false"
-          >
-            Connect Wallet
-          </app-base-button>
-        </template>
-        <template v-else-if="isBitcoinChain && isUnisatWallet">
+        <template v-if="!isOnEthereum && isUnisatWallet">
           <app-base-button
             class="w-full lg:w-auto lg:px-10"
             @click="onDownloadEnkrypt"
@@ -122,7 +112,7 @@
             Download Enkrypt
           </app-base-button>
         </template>
-        <template v-else-if="isBitcoinChain">
+        <template v-else-if="!isOnEthereum">
           <app-base-button
             class="w-full lg:w-auto lg:px-10"
             @click="onSwitchToEthereum"
@@ -130,6 +120,16 @@
             @mouseleave="isHoveringCta = false"
           >
             Switch to Ethereum
+          </app-base-button>
+        </template>
+        <template v-else-if="!isWalletConnected || isWatchOnly">
+          <app-base-button
+            class="w-full lg:w-auto lg:px-10"
+            @click="onConnectWallet"
+            @mouseenter="isHoveringCta = true"
+            @mouseleave="isHoveringCta = false"
+          >
+            Connect Wallet
           </app-base-button>
         </template>
         <template v-else>
@@ -146,14 +146,14 @@
       </div>
 
       <p
-        v-if="isBitcoinChain && isUnisatWallet"
+        v-if="!isOnEthereum && isUnisatWallet"
         class="text-info text-s-12 mt-3"
       >
         UniSat doesn't support Perpetuals. Install Enkrypt or connect a
         different wallet to continue.
       </p>
-      <p v-else-if="isBitcoinChain" class="text-info text-s-12 mt-3">
-        Perpetuals are available on Ethereum. Switch network to continue.
+      <p v-else-if="!isOnEthereum" class="text-info text-s-13 mt-3">
+        Perpetuals feature is only available on the Ethereum network
       </p>
     </div>
   </div>
@@ -171,7 +171,6 @@ import coinbaseLogo from '@/assets/icons/perps-banner/coinbase.svg'
 import googleLogo from '@/assets/icons/perps-banner/google.svg'
 import hoodLogo from '@/assets/icons/perps-banner/hood.svg'
 import { useWalletStore } from '@/stores/walletStore'
-import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -180,12 +179,13 @@ import { usePerpsAuth } from '../composables/usePerpsAuth'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly, walletName } = storeToRefs(walletStore)
-const chainsStore = useChainsStore()
-const { isBitcoinChain } = storeToRefs(chainsStore)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
 const { login, isAuthenticating, showSigningPrompt, signingMessage, isHardwareWalletSigning, isWaitingForConfirm, confirmSign, cancelSign } = usePerpsAuth()
+
+const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
 
 const isHoveringCta = ref(false)
 
