@@ -717,6 +717,7 @@
       :contracts="filteredMarketList"
       :filter-tabs="marketFilterTabs"
       :get-market-display-name="getMarketDisplayName"
+      :get-market-leverage="getMarketLeverage"
       @set-sort="setMarketSort"
       @select="selectMarket"
     />
@@ -947,6 +948,7 @@ const {
   fullMarketName,
   contracts,
   getMarketDisplayName,
+  getMarketLeverage,
   openTokenSelect,
   selectMarket,
   // Leverage
