@@ -477,7 +477,9 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       market_cap: walletTokens.value.find(
         wt => wt.contract?.toLowerCase() === token.address?.toLowerCase()
       )?.market_cap ?? 0,
-      volume24h: (token as any).volume24h ?? 0,
+      volume24h: walletTokens.value.find(
+        wt => wt.contract?.toLowerCase() === token.address?.toLowerCase()
+      )?.volume_24h ?? 0,
     }
   })
 
