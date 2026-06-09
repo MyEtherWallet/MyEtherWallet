@@ -947,6 +947,8 @@ import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsToasts } from './composables/usePerpsToasts'
+import { perpsWs } from './sdk/ws'
+import { ensurePerpsWsLifecycle } from './composables/usePerpsWsLifecycle'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -996,6 +998,7 @@ const { positions } = usePerpsPositions()
 const { markPriceData } = usePerpsMarkPrices()
 const { leverage } = usePerpsTradeForm()
 const perpsToasts = usePerpsToasts()
+ensurePerpsWsLifecycle()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 
@@ -1239,8 +1242,6 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
   { header: '', width: '36px' },
 ]
 
-let ordersPollTimer: ReturnType<typeof setInterval> | null = null
-let fillsPollTimer: ReturnType<typeof setInterval> | null = null
 let ordersIsRefreshing = false
 let fillsIsRefreshing = false
 
@@ -1275,8 +1276,6 @@ async function refreshFillsPageZero() {
 watch(
   [token, () => props.market],
   () => {
-    if (ordersPollTimer) clearInterval(ordersPollTimer)
-    if (fillsPollTimer) clearInterval(fillsPollTimer)
     ordersPagination.reset()
     fillsPagination.reset()
     openOrdersCountForMarket.value = 0
@@ -1285,11 +1284,6 @@ watch(
     void ordersPagination.refetch()
     void fillsPagination.refetch()
     void fetchOpenOrdersCount()
-    ordersPollTimer = setInterval(() => {
-      void refreshOrdersPageZero()
-      void fetchOpenOrdersCount()
-    }, 10_000)
-    fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
   },
   { immediate: true },
 )
@@ -1301,6 +1295,16 @@ watch(refreshKey, () => {
   void refreshOrdersPageZero()
   void refreshFillsPageZero()
   void fetchOpenOrdersCount()
+})
+
+const unsubscribeOrdersWs = perpsWs.subscribe<ApiOrder>('ordersPerps', () => {
+  if (!token.value) return
+  void refreshOrdersPageZero()
+  void fetchOpenOrdersCount()
+})
+const unsubscribeFillsWs = perpsWs.subscribe<ApiFill>('fillsPerps', () => {
+  if (!token.value) return
+  void refreshFillsPageZero()
 })
 
 // Funding countdown timer
@@ -1329,8 +1333,8 @@ updateFundingCountdown()
 
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
-  if (ordersPollTimer) clearInterval(ordersPollTimer)
-  if (fillsPollTimer) clearInterval(fillsPollTimer)
+  unsubscribeOrdersWs()
+  unsubscribeFillsWs()
 })
 
 // Tabs

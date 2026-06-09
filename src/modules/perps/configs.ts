@@ -8,9 +8,16 @@ const PERPS_BASE_URL = {
   live: { url: `https://api.ondoperps.xyz` },
 }
 
+const PERPS_WS_URL = {
+  sandbox: `wss://api.ondoperps-sandbox.xyz/ws`,
+  live: `wss://api.ondoperps.xyz/ws`,
+}
+
 const perpsClient = new PerpsClient(
   IS_PERPS_LIVE ? PERPS_BASE_URL.live.url : PERPS_BASE_URL.sandbox.url,
 )
+
+const perpsWsUrl = IS_PERPS_LIVE ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
 
 const SUPPORTED_NETWORK = [mainnet]
 const USDC_ADDRESS = {
@@ -30,7 +37,9 @@ const PERPS_INFO_PAGE_SIZE = 5
 export {
   IS_PERPS_LIVE,
   PERPS_BASE_URL,
+  PERPS_WS_URL,
   perpsClient,
+  perpsWsUrl,
   SUPPORTED_NETWORK,
   USDC_ADDRESS,
   USDC_DECIMALS,
