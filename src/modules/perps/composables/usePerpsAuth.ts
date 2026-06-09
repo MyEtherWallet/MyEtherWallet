@@ -28,6 +28,7 @@ const refreshKey = ref(0)
 
 let _authRestored = false
 let _currentAddress: string | null = null
+let _walletWatcherRegistered = false
 
 async function tryRestoreAuth(address: string) {
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
@@ -63,6 +64,11 @@ async function clearAuth() {
   accountId.value = null
   perpsClient.setToken(null)
   perpsWs.logout()
+  // Reset module-scope guards so a subsequent Sign In click is not silently
+  // blocked by a stale auth-restored flag from a previous session.
+  _authRestored = false
+  _currentAddress = null
+  isAuthenticating.value = false
 
   if (!wallet.value) return;
   const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
@@ -98,7 +104,13 @@ export function usePerpsAuth() {
   const store = useWalletStore()
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
 
-  if (!_authRestored) {
+  // Register the walletAddress watcher exactly once for the lifetime of the
+  // module. Re-registering after a sign-out would race with `clearAuth()`'s
+  // localStorage filtering — the fresh watcher's `immediate: true` fire would
+  // call `tryRestoreAuth` against the unfiltered localStorage and re-hydrate
+  // the token we just cleared.
+  if (!_walletWatcherRegistered) {
+    _walletWatcherRegistered = true
     watch(
       walletAddress,
       async address => {

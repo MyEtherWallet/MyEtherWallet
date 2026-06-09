@@ -276,7 +276,7 @@
 
           <div class="flex justify-start gap-2 mt-1">
             <button
-              v-for="pct in [-10, -5, 0, 5, 10]"
+              v-for="pct in [-5, -2.5, 0, 2.5, 5]"
               :key="pct"
               class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
@@ -614,16 +614,12 @@
           <p class="text-info text-s-14 mb-4">
             Perps is only available on Ethereum
           </p>
-          <select-chain-for-app>
-            <template #network-button="{ openNetworkDialog }">
-              <button
-                class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-                @click="openNetworkDialog(true)"
-              >
-                Switch to Ethereum
-              </button>
-            </template>
-          </select-chain-for-app>
+          <button
+            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+            @click="onSwitchToEthereum"
+          >
+            Switch to Ethereum
+          </button>
         </div>
       </template>
       <template v-else-if="isWatchOnly">
@@ -721,6 +717,7 @@
       :contracts="filteredMarketList"
       :filter-tabs="marketFilterTabs"
       :get-market-display-name="getMarketDisplayName"
+      :get-market-leverage="getMarketLeverage"
       @set-sort="setMarketSort"
       @select="selectMarket"
     />
@@ -782,11 +779,12 @@ import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
 import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDialog.vue'
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
@@ -795,8 +793,18 @@ const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
+const toastStore = useToastStore()
 const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
 const { t } = useI18n()
+
+const onSwitchToEthereum = () => {
+  globalStore.setSelectedNetwork('ETHEREUM')
+  toastStore.addToastMessage({
+    text: 'Switched to Ethereum',
+    textSecondary: 'Perpetuals are only available on Ethereum.',
+    type: ToastType.Info,
+  })
+}
 
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
@@ -940,6 +948,7 @@ const {
   fullMarketName,
   contracts,
   getMarketDisplayName,
+  getMarketLeverage,
   openTokenSelect,
   selectMarket,
   // Leverage

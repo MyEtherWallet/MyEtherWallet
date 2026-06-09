@@ -758,6 +758,11 @@ export function usePerpsTradeForm() {
     return match?.longName ?? match?.displayName ?? contract.baseCurrency
   }
 
+  function getMarketLeverage(contract: any): string {
+    const match = markets.value.find(m => m.market === contract.market)
+    return match?.defaultLeverage ?? ''
+  }
+
   function openTokenSelect() {
     marketSearch.value = ''
     marketFilter.value = 'all'
@@ -1172,6 +1177,16 @@ export function usePerpsTradeForm() {
       closeError.value = ''
       takeProfitPrice.value = null
       stopLossPrice.value = null
+      // Reset the target price + re-apply the previously-selected pill against
+      // the new market's currentPrice. Without this the absolute USD value
+      // computed from the prior market (e.g. +10% of AAPL ~ $264) carried over
+      // to the new token, even though the label reads "Target <new symbol>".
+      const previousLimitPill = activeLimitPill.value
+      limitPrice.value = ''
+      activeLimitPill.value = null
+      if (previousLimitPill !== null) {
+        setLimitPricePct(previousLimitPill)
+      }
       // Reset leverage to the new market's open-position leverage if there is
       // one, otherwise to its per-token max. Prevents callsites reading the
       // singleton (sidepanel / order modal / leverage dialog) from showing a
@@ -1357,6 +1372,7 @@ export function usePerpsTradeForm() {
     filteredMarketList,
     fullMarketName,
     getMarketDisplayName,
+    getMarketLeverage,
     openTokenSelect,
     selectMarket,
     // Leverage
