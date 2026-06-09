@@ -100,10 +100,6 @@ const getBadge = (type: WalletConfigType) => {
   }
   return undefined
 }
-const checkIfIsString = (value: string | (() => Promise<string>)) => {
-  return typeof value === 'string'
-}
-
 const isLoadedImg = ref(false)
 const img = ref<string | undefined>(undefined)
 const resolveImg = async (_img: () => Promise<string>) => {
@@ -124,11 +120,14 @@ const resolveImg = async (_img: () => Promise<string>) => {
   }
 }
 onMounted(() => {
-  if (checkIfIsString(props.wallet.icon)) {
-    img.value = props.wallet.icon as string
+  const icon = props.wallet.icon
+  if (typeof icon === 'string') {
+    img.value = icon
     isLoadedImg.value = true
+  } else if (typeof icon === 'function') {
+    resolveImg(icon)
   } else {
-    resolveImg(props.wallet.icon as () => Promise<string>)
+    isLoadedImg.value = true
   }
 })
 </script>

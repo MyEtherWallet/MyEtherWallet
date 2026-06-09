@@ -157,7 +157,11 @@ export const useWalletList = () => {
       const wallet = walletConfigs[key]
       if (wallet.isWC) {
         const wcWallet = connectors.find(w => w.id === wallet.id)
-        defaultWallets.push(Object.assign({}, wallet, wcWallet))
+        // Merge wcWallet first so the static walletConfigs UI metadata
+        // (icon, name, type) wins. The wagmi connector can expose `icon`
+        // as undefined or a non-function value, which used to overwrite
+        // the static MewLogo and crash BtnWallet's resolveImg.
+        defaultWallets.push(Object.assign({}, wcWallet, wallet))
       } else {
         defaultWallets.push(wallet)
       }
