@@ -1,117 +1,23 @@
 <template>
   <div class="flex flex-col mb-10 w-full divide-y divide-grey-10">
-    <div class="pb-3 xs:pb-5">
-      <!-- Header: Share and Watchlist (Placeholders) -->
-      <div
-        class="flex items-center justify-end gap-3 mt-2 sm:mt-4 mb-2 mr-[72px] xs:mr-[80px]"
-      >
-        <app-btn-icon label="Share" :disabled="isLoading">
-          <ShareIcon class="h-5 w-5" />
-        </app-btn-icon>
-        <app-btn-icon
-          :label="isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist'"
-          :disabled="isLoading"
-          @click="toggleWatchlist"
-        >
-          <StarSolidIcon v-if="isWatchlisted" class="h-5 w-5" />
-          <StarOutlineIcon v-else class="h-5 w-5" />
-        </app-btn-icon>
-      </div>
-
-      <!-- Stock info: Logo, Name, Price -->
-      <div
-        v-if="isLoading || !stockData"
-        class="mx-3 xs:mx-6 md:mx-4 lg:mx-10 h-[63px] lg:h-[65px] xl:h-[67px] animate-pulse bg-surface rounded-12 w-[60%]"
-      ></div>
-      <div
-        v-else
-        :class="[
-          isOpenSideMenu ? 'lg:px-6 2xl:px-10' : 'lg:px-10',
-          'px-4 py-0 flex items-start gap-4',
-        ]"
-      >
-        <div class="relative">
-          <app-token-logo
-            :url="stockData.iconPngUrl || stockData.iconSvgUrl"
-            :symbol="stockData.stockAlias || symbol"
-            :is-stock="true"
-            width="w-10 xs:w-[56px]"
-            height="h-10 xs:h-[56px]"
-          />
-          <div
-            class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4"
-          >
-            <app-token-logo
-              v-if="selectedChain && existsOnCurrentChain"
-              :url="selectedChain.icon"
-              :symbol="selectedChain.name"
-              width="w-5"
-              height="h-5"
-            />
-          </div>
-        </div>
-
-        <div class="flex flex-col">
-          <div class="flex flex-row flex-wrap items-end gap-2">
-            <AppTokenSymbol
-              :symbol="symbol"
-              :is-stock="true"
-              class="text-s-20 xs:text-s-24 xl:text-s-28 !font-bold !leading-p-110"
-            />
-            <h1 class="text-s-17 xs:text-s-20 leading-p-110 font-semibold">
-              ({{ stockData.stockAlias }})
-            </h1>
-          </div>
-
-          <div v-if="stockData.primaryMarket">
-            <p class="text-s-20 xs:text-s-24 inline">
-              ${{ formatFiatValue(stockData.primaryMarket.price).value }}
-            </p>
-            <div
-              v-if="stockData.primaryMarket.priceChangePercentage24h"
-              class="inline-block ml-2"
-            >
-              <ArrowTrendingDownIcon
-                v-if="
-                  Number(stockData.primaryMarket.priceChangePercentage24h) < 0
-                "
-                class="w-4 h-4 inline-block text-error"
-              />
-              <ArrowTrendingUpIcon
-                v-else
-                class="w-4 h-4 inline-block text-success"
-              />
-              <span
-                :class="[
-                  {
-                    'text-success':
-                      Number(
-                        stockData.primaryMarket.priceChangePercentage24h,
-                      ) >= 0,
-                    'text-error':
-                      Number(stockData.primaryMarket.priceChangePercentage24h) <
-                      0,
-                  },
-                  'ml-1 text-s-14 xs:text-s-17 ',
-                ]"
-              >
-                {{
-                  formatPercentageValue(
-                    stockData.primaryMarket.priceChangePercentage24h,
-                  ).value
-                }}
-              </span>
-            </div>
-          </div>
-          <p
-            v-if="!isLoading && existsOnCurrentChain"
-            class="text-s-8 xs:text-s-11 tracking-sp-06 font-bold uppercase text-info"
-          >
-            on {{ selectedChain?.name }}
-          </p>
-        </div>
-      </div>
-    </div>
+    <app-asset-info-header
+      :is-loading="isLoading"
+      :has-data="!!stockData"
+      :share-text="shareText"
+      :is-watchlisted="isWatchlisted"
+      :icon-url="stockData?.iconPngUrl || stockData?.iconSvgUrl || undefined"
+      :symbol="stockData?.stockAlias || symbol"
+      :name="stockData?.stockAlias || ''"
+      :current-price="stockData?.primaryMarket?.price ?? null"
+      :price-change-percentage="
+        stockData?.primaryMarket?.priceChangePercentage24h ?? null
+      "
+      :selected-chain="selectedChain"
+      :exists-on-current-chain="existsOnCurrentChain"
+      :is-open-side-menu="isOpenSideMenu"
+      :is-stock="true"
+      @toggle-watchlist="toggleWatchlist"
+    />
 
     <!-- Chart -->
     <div class="flex flex-col py-6">
@@ -165,26 +71,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
 import ModuleStockInfoChart from './ModuleStockInfoChart.vue'
 import StockUnderlyingAsset from './components/stock_info/StockInfoUnderlyingAsset.vue'
 import StockInfoAbout from './components/stock_info/StockInfoAbout.vue'
 import StockInfoPrice from './components/stock_info/StockInfoPrice.vue'
 import TokenInfoSupportedChains from '../crypto/components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoBalance from '../crypto/components/token_info/TokenInfoBalance.vue'
-import {
-  ShareIcon,
-  StarIcon as StarOutlineIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
-} from '@heroicons/vue/24/outline'
-import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatFiatValue } from '@/utils/numberFormatHelper'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
@@ -192,6 +86,9 @@ import { useWalletStore } from '@/stores/walletStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   symbol: {
@@ -274,5 +171,16 @@ const existsOnCurrentChain = computed(() => {
     )
   }
   return false
+})
+
+/** --------------------
+ * Share
+ --------------------*/
+const shareText = computed(() => {
+  const ticker = stockData.value?.stockAlias || props.symbol
+  const price = stockData.value?.primaryMarket?.price
+    ? `$${formatFiatValue(stockData.value.primaryMarket.price).value}`
+    : ''
+  return t('common.share_message', { ticker, price })
 })
 </script>

@@ -200,6 +200,10 @@ const gasFeeError = defineModel<string>('gasFeeError', {
   type: String,
   default: '',
 })
+const selectedFeeNativeValue = defineModel<string>('selectedFeeNativeValue', {
+  type: String,
+  default: '0',
+})
 
 const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
 const isNotEnoughBalance = computed(() => {
@@ -387,14 +391,32 @@ const setFee = (fee: FeePriority) => {
   closeFeeModal()
   //TODO: add amplitude
 }
-
 const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
   return props.fees ? props.fees.fees : feeEstmates.value
 })
 
+const selectedFeeNativeBaseValue = computed(() => {
+  return (
+    usedFeeToDisplay.value?.[gasPriceType.value]?.nativeValue ||
+    usedFeeToDisplay.value?.[gasPriceType.value]?.nativeFeeTotal ||
+    '0'
+  )
+})
+
+watch(
+  () => selectedFeeNativeBaseValue.value,
+  value => {
+    selectedFeeNativeValue.value = value || '0'
+  },
+  { immediate: true },
+)
+
 const selectedFeeNative = computed(() => {
-  const fees = usedFeeToDisplay.value
-  return hasFees.value && fees ? formatFee(fees[gasPriceType.value]) : ''
+  const fee = usedFeeToDisplay.value?.[gasPriceType.value]
+  if (hasFees.value && fee) {
+    return formatFee(fee)
+  }
+  return ''
 })
 
 const hasFiatEstimates = computed(() => {
@@ -496,12 +518,14 @@ const displayFees = computed<DisplayFee[]>(() => {
 })
 
 const hasFees = computed(() => {
-  const fees = usedFeeToDisplay.value
-  return Boolean(
-    fees &&
-      Object.keys(fees).length > 0 &&
-      !props.isLoadingFees &&
-      (props.fees || feesReady.value),
+  if (props.fees) {
+    return Object.keys(props.fees.fees).length > 0 && !props.isLoadingFees
+  }
+  return (
+    feesReady.value &&
+    data.value &&
+    Object.keys(data.value.fees).length > 0 &&
+    !props.isLoadingFees
   )
 })
 

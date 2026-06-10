@@ -29,6 +29,7 @@
               :networks="networks"
               :selected-token="selectedToken"
               :network-filter="networkFilter"
+              :compatible-chains="compatibleChains"
               @open-networks="view = 'networks'"
               @select-token="onSelectToken"
             />
@@ -53,6 +54,8 @@
             <network-list-view
               :networks="networks"
               :current-filter="networkFilter"
+              :compatible-chains="compatibleChains"
+              :incompatible-chains="incompatibleChains"
               @back="view = 'tokens'"
               @select-network="onSelectNetwork"
             />
@@ -75,6 +78,8 @@ const props = defineProps<{
   networks: BuyNetwork[]
   defaultChainCode: string | null
   selectedToken: PurchaseAsset | null
+  compatibleChains?: string[]
+  incompatibleChains?: string[]
 }>()
 
 const emit = defineEmits<{

@@ -42,6 +42,7 @@
             letterSpacing: 'inherit',
             width: inputWidth,
           }"
+          @keydown="onKeyDown"
           @input="onInput"
           @focus="onFocus"
           @blur="onBlur"
@@ -103,7 +104,6 @@
       <span class="text-info"> ({{ balance.fiat }})</span>
     </p>
 
-
     <!-- Quick amount buttons -->
     <div class="flex items-center justify-center gap-1 w-full">
       <button
@@ -144,7 +144,6 @@ interface AmountBalance {
   /** When true, the value portion is rendered in the error color. */
   hasError?: boolean
 }
-
 
 const props = withDefaults(
   defineProps<{
@@ -198,12 +197,18 @@ const onBlur = () => {
   emit('blur')
 }
 
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.ctrlKey || event.metaKey) return
+  if (event.key.length === 1 && /[^\d.]/.test(event.key)) {
+    event.preventDefault()
+  }
+}
+
 const currencySymbol = computed(() => getCurrencySymbol(props.currency))
 
 const effectiveSymbol = computed(
   () => props.amountSymbol ?? currencySymbol.value,
 )
-
 
 const selectedPreset = computed(() => {
   if (props.amount === '') return null

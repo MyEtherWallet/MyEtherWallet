@@ -14,6 +14,7 @@
       :is-loading="isFetchingEstimate"
       :error-message="amountError"
       :helper-message="amountHelper"
+      :preset-amounts="presetAmounts"
       @update:amount="onFiatAmountChange"
       @open-currency="showCurrencyModal = true"
       @focus="isInputFocused = true"
@@ -54,6 +55,8 @@
       :networks="buyNetworks"
       :default-chain-code="purchaseChainCode"
       :selected-token="selectedToken"
+      :compatible-chains="compatibleChainCodes"
+      :incompatible-chains="incompatibleChainCodes"
       @update:selected="selectedToken = $event"
     />
     <purchase-currency-modal
@@ -99,6 +102,7 @@ import {
   purchaseChainToChain,
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
+import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
@@ -107,6 +111,7 @@ const { t } = useI18n()
 
 const purchaseStore = usePurchaseStore()
 const {
+  purchaseInfo,
   buyNetworks,
   buyFiats,
   buyQuotes,
@@ -130,6 +135,8 @@ const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
 const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
+
+const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(buyNetworks, walletChain, chains)
 
 const accessStore = useAccessStore()
 
@@ -171,12 +178,26 @@ onMounted(() => {
   fetchPurchaseInfo()
 })
 
-const currencyOptions = computed(() => Array.from(buyFiats.value.keys()))
+const currencyOptions = computed(() => {
+  const tokenProviders = selectedToken.value?.providers
+  if (!tokenProviders?.length || !purchaseInfo.value?.providers) {
+    return Array.from(buyFiats.value.keys())
+  }
+  const supportedFiats = new Set<string>()
+  purchaseInfo.value.providers
+    .filter(p => tokenProviders.includes(p.provider))
+    .forEach(p => p.fiats_list.forEach(f => supportedFiats.add(f)))
+  return Array.from(supportedFiats).filter(f => buyFiats.value.has(f))
+})
 
 const fiatLimits = computed(() => {
   const fiat = buyFiats.value.get(selectedFiat.value)
   return fiat?.limits ?? { min: 0, max: 0 }
 })
+
+const presetAmounts = computed(() =>
+  selectedFiat.value === 'USD' ? [15, 50, 100, 250] : [],
+)
 
 const formattedCryptoEstimate = computed(() => {
   if (!cryptoEstimate.value) return `0.00 ${tokenSymbol.value}`.trim()
@@ -250,6 +271,12 @@ const onFiatAmountChange = (value: string) => {
   isFetchingEstimate.value = numericAmount.value > 0 && !amountError.value
   debouncedFetchEstimate()
 }
+
+watch(compatibleChainCodes, codes => {
+  if (selectedToken.value && !codes.includes(selectedToken.value.chain)) {
+    selectedToken.value = null
+  }
+})
 
 watch(
   () => [purchaseChainCode.value, tokenSymbol.value, selectedFiat.value],

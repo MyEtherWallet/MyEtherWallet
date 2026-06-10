@@ -42,7 +42,7 @@
       <li v-for="entry in filteredEntries" :key="entry.key">
         <button
           type="button"
-          class="flex items-center w-full gap-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
+          class="flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
           @click="emit('select-token', entry.token)"
         >
           <div class="relative w-10 h-10 flex-none">
@@ -110,6 +110,7 @@ const props = defineProps<{
   networks: BuyNetwork[]
   selectedToken: PurchaseAsset | null
   networkFilter: string | null
+  compatibleChains?: string[]
 }>()
 
 const emit = defineEmits<{
@@ -149,6 +150,9 @@ const allEntries = computed<Entry[]>(() =>
 const filteredEntries = computed<Entry[]>(() => {
   const term = searchInput.value.trim().toLowerCase()
   return allEntries.value.filter(entry => {
+    if (props.compatibleChains?.length && !props.compatibleChains.includes(entry.network.chain)) {
+      return false
+    }
     if (props.networkFilter && entry.network.chain !== props.networkFilter) {
       return false
     }

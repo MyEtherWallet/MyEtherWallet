@@ -37,7 +37,7 @@
 
       <app-btn-icon
         v-if="!allIsVisible"
-        label="previous page"
+        :label="$t('common.previous_page')"
         class="ml-auto"
         @click="scrollToPreviousGroup"
       >
@@ -46,7 +46,7 @@
       <app-btn-icon
         v-if="!allIsVisible"
         class="-mr-2"
-        label="next page"
+        :label="$t('common.next_page')"
         @click="scrollToNextGroup"
       >
         <ChevronRightIcon class="w-4 h-4" />

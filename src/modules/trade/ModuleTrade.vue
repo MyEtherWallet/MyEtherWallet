@@ -6,16 +6,16 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <rewards-small-banner
+        <!-- <rewards-small-banner
           :class="blurClass"
           location="small-banner-trade"
-        />
+        /> -->
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
-            <p class="font-bold text-s-28">Trade</p>
+            <p class="font-bold text-s-28">{{ $t('trade.title') }}</p>
             <p class="text-info text-s-12 ml-1">
-              Buy/Sell Ondo Tokenized stocks
+              {{ $t('trade.subtitle') }}
             </p>
           </div>
           <app-btn-text
@@ -26,7 +26,7 @@
             "
             class="text-primary text-s-14 pb-1"
             @click="clearValues"
-            >Clear all</app-btn-text
+            >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
         <div :class="['relative transition-all duration-300', blurClass]">
@@ -43,7 +43,7 @@
             v-if="supportedNetwork"
             class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
           >
-            <p class="text-s-12 mb-1 font-bold ml-3">You are selling</p>
+            <p class="text-s-12 mb-1 font-bold ml-3">{{ $t('trade.you_are_selling') }}</p>
 
             <div>
               <app-swap-enter-amount
@@ -80,7 +80,7 @@
                       }"
                       @click="setPercentageAmount(pct)"
                     >
-                      {{ pct === 100 ? 'Max' : `${pct}%` }}
+                      {{ pct === 100 ? $t('common.max') : `${pct}%` }}
                     </button>
                   </div></template
                 ></app-swap-enter-amount
@@ -91,7 +91,7 @@
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
             <button
-              label="Swap From/To stocks"
+              :aria-label="$t('trade.swap_from_to')"
               :class="[
                 'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
               ]"
@@ -103,7 +103,7 @@
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 mb-1 font-bold ml-3">You are buying</p>
+            <p class="text-s-12 mb-1 font-bold ml-3">{{ $t('trade.you_are_buying') }}</p>
             <app-swap-enter-amount
               v-model:amount="toAmount"
               v-model:selected-token="toTokenSelected!"
@@ -137,7 +137,7 @@
           >
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-primary" />
-              <p class="text-primary font-medium text-s-16">Market Closed</p>
+              <p class="text-primary font-medium text-s-16">{{ $t('trade.market_closed') }}</p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
               {{ marketStatus.reason?.message }}
@@ -147,7 +147,7 @@
                 v-if="countdownText"
                 class="font-medium text-s-16 mb-1 tabular-nums"
               >
-                Opens in {{ countdownText }}
+                {{ $t('trade.opens_in', { countdown: countdownText }) }}
               </p>
               <p class="text-grey-50 text-s-11 mt-1">
                 {{ formatNextOpen(marketStatus.nextOpen) }}
@@ -167,13 +167,11 @@
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-warning" />
               <p class="text-warning font-medium text-s-16">
-                Network Not Supported
+                {{ $t('trade.network_not_supported') }}
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              Trading is not available on
-              {{ selectedChain?.nameLong || selectedChain?.name }}. Please
-              switch to a supported network.
+              {{ $t('trade.trading_not_available_on', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
             </p>
             <div class="flex flex-col items-center justify-center">
               <div class="">
@@ -212,11 +210,11 @@
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-warning" />
               <p class="text-warning font-medium text-s-16">
-                Trading Not Available
+                {{ $t('trade.trading_not_available') }}
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              Access to trading is restricted in your jurisdiction.
+              {{ $t('trade.trading_restricted') }}
             </p>
             <div class="flex justify-center">
               <a
@@ -225,7 +223,7 @@
                 rel="noopener noreferrer"
                 class="text-s-14 font-medium hover:underline"
               >
-                Learn more
+                {{ $t('trade.learn_more') }}
                 <arrow-long-right-icon class="w-4 h-4 inline-block" />
               </a>
             </div>
@@ -268,8 +266,7 @@
             :has-gradient="false"
             class="inline-flex !text-s-14"
           />
-          is currently not tradable due to
-          {{ nonTradeableAssetMessage }}
+          {{ $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage }) }}
         </p>
       </div>
 
@@ -282,7 +279,7 @@
           :disabled="!supportedNetwork"
           @click="connectWalletForTrade"
         >
-          Connect wallet
+          {{ $t('connect_wallet') }}
         </app-base-button>
         <div v-else>
           <transition name="fade" mode="out-in">
@@ -317,15 +314,15 @@
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
-                Approving...
+                {{ $t('trade.approving') }}
               </span>
-              <span v-else>{{ needsApproval ? 'Approve' : 'Trade' }}</span>
+              <span v-else>{{ needsApproval ? $t('common.approve') : $t('trade.trade_button') }}</span>
             </app-base-button>
           </transition>
         </div>
       </div>
       <app-need-help
-        title="Need help trading?"
+        :title="$t('trade.need_help')"
         help-link="https://help.myetherwallet.com/en/article/what-is-gas"
         class="mx-auto"
         :class="blurClass"
@@ -360,6 +357,7 @@
 
 <script setup lang="ts">
 import { ref, onBeforeMount, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
 import { parseUnits, formatUnits } from 'viem'
@@ -368,7 +366,7 @@ import { parseUnits, formatUnits } from 'viem'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
@@ -407,6 +405,8 @@ import {
   ArrowLongRightIcon,
 } from '@heroicons/vue/24/solid'
 
+const { t } = useI18n()
+
 // --- Stores ---
 const pairStore = usePairStore()
 const { tradeFromSymbol, tradeToSymbol } = storeToRefs(pairStore)
@@ -435,6 +435,7 @@ const {
   supportedChainNames,
   tradableAssets,
   additionalBuyAssets,
+  hardcodedTokensInfo,
   isLoading,
   loadTradableAssets,
 } = useTrade()
@@ -604,8 +605,7 @@ watch(generalError, newVal => {
     } else if (
       generalError.value.toLowerCase().includes('internal server error')
     ) {
-      displayGeneralError.value =
-        'One or more tokens are currently not tradable. Try again later or select different tokens.'
+      displayGeneralError.value = t('trade.service_unavailable')
     } else {
       displayGeneralError.value = newVal
     }
@@ -621,6 +621,7 @@ const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
     toTokenSelected,
     tradableAssets,
     additionalBuyAssets,
+    hardcodedTokensInfo,
   })
 
 // --- Trade Quote ---
@@ -690,13 +691,16 @@ const restoreToToken = () => {
   if (selectedTradeTokenSymbol.value) {
     const matchingToken = toTokens.value.find(
       (t: NewTokenInfo) =>
-        t.symbol.toUpperCase() === selectedTradeTokenSymbol.value!.toUpperCase(),
+        t.symbol.toUpperCase() ===
+        selectedTradeTokenSymbol.value!.toUpperCase(),
     )
     toTokenSelected.value = matchingToken ?? toTokens.value[0] ?? null
   } else if (storedToSymbol) {
-    const restoredTo = toTokens.value.find(
-      (t: NewTokenInfo) => t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
-    ) ?? null
+    const restoredTo =
+      toTokens.value.find(
+        (t: NewTokenInfo) =>
+          t.symbol.toUpperCase() === storedToSymbol.toUpperCase(),
+      ) ?? null
     if (restoredTo) {
       toTokenSelected.value = restoredTo
     } else {
@@ -798,11 +802,11 @@ const connectWalletForTrade = () => {
 
 // --- Watchers ---
 
-// Reset state when Trade Initiated Modal closes
+// Reset state when Trade Initiated Modal is opened
 watch(
   () => tradeInitiatedOpen.value,
   isOpen => {
-    if (!isOpen) {
+    if (isOpen) {
       clearValues()
     }
   },
@@ -813,6 +817,7 @@ watch([fromAmount, fromTokenSelected, toTokenSelected], () => {
     toAmount.value = '' // Reset same token error on any change
     return
   }
+  displayGeneralError.value = ''
   fetchQuote()
 })
 
@@ -931,10 +936,11 @@ onBeforeMount(async () => {
     if (fromTokens.value.length > 0) {
       const storedFromSymbol = tradeFromSymbol.value
       if (storedFromSymbol) {
-        const restoredFrom = fromTokens.value.find(
-          (t: NewTokenInfo) =>
-            t.symbol.toUpperCase() === storedFromSymbol.toUpperCase(),
-        ) ?? null
+        const restoredFrom =
+          fromTokens.value.find(
+            (t: NewTokenInfo) =>
+              t.symbol.toUpperCase() === storedFromSymbol.toUpperCase(),
+          ) ?? null
         if (restoredFrom) {
           fromTokenSelected.value = restoredFrom
         } else {

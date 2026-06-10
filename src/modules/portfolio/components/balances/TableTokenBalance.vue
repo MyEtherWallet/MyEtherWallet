@@ -61,7 +61,7 @@
           class="flex-none"
         >
           <app-base-button size="medium" @click="openAddCustom"
-            >+ Add
+            >{{ $t('portfolio.table.add_button') }}
           </app-base-button>
         </div>
       </div>
@@ -71,7 +71,7 @@
       >
         <div class="lg:text-right">
           <p class="font-bold text-info uppercase tracking-sp-06 text-s-14">
-            Total Value
+            {{ $t('portfolio.table.total_value') }}
           </p>
           <p
             v-if="!isLoading"
@@ -109,7 +109,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.NAME)"
               >
-                TOKEN
+                {{ $t('portfolio.table.token_header') }}
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5"
                   v-if="
@@ -138,7 +138,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.MARKET_CAP)"
               >
-                MARKET CAP
+                {{ $t('portfolio.table.market_cap_header') }}
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -166,7 +166,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.PRICE)"
               >
-                Price
+                {{ $t('portfolio.table.price_header') }}
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -194,7 +194,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.PERCENT)"
               >
-                24H
+                {{ $t('portfolio.table.24h_header') }}
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -223,7 +223,7 @@
                 }"
                 @click="setHeaderSort(SortValueString.VALUE)"
               >
-                Balance
+                {{ $t('portfolio.table.balance_header') }}
                 <arrow-long-down-icon
                   class="w-3.5 h-3.5 absolute -right-4"
                   v-if="
@@ -381,10 +381,10 @@
               <div
                 class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
               >
-                <app-pop-up-menu placeholder="actions menu" location="right">
+                <app-pop-up-menu :placeholder="$t('common.action_menu')" location="right">
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
-                      label="actions menu"
+                      :label="$t('common.action_menu')"
                       @click.stop="toggleMenu"
                       height="h-7 xs:h-8"
                       width="w-7 xs:w-8"
@@ -411,8 +411,8 @@
                         />
                         <span class="ml-2">{{
                           isWatchListed(getWatchlistId(token))
-                            ? 'Remove from Watchlist'
-                            : 'Add to Watchlist'
+                            ? $t('portfolio.table.remove_from_watchlist')
+                            : $t('portfolio.table.add_to_watchlist')
                         }}</span>
                       </button>
                       <hr
@@ -422,7 +422,7 @@
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
-                        class="h-px bg-grey-outline border-0 w-full my-2 xs:hidden"
+                        class="h-px bg-grey-10 border-0 w-full my-2 xs:hidden"
                       />
 
                       <ul v-if="props.view !== 'custom'">
@@ -432,7 +432,7 @@
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <icon-buy class="text-primary w-4 h-4 mr-2" />
-                          <p>Buy</p>
+                          <p>{{ $t('buy') }}</p>
                         </li>
                         <template v-if="token.ondo !== undefined">
                           <li
@@ -440,7 +440,7 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
                             <icon-trade class="text-primary w-4 h-4 mr-2" />
-                            <p>Trade</p>
+                            <p>{{ $t('portfolio.table.trade') }}</p>
                           </li>
                         </template>
                         <template v-else-if="currentChainhasSwapSupport">
@@ -449,7 +449,7 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
                             <icon-swap class="text-primary w-4 h-4 mr-2" />
-                            <p>Swap</p>
+                            <p>{{ $t('swap') }}</p>
                           </li>
                         </template>
                       </ul>
@@ -462,7 +462,7 @@
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <pencil-icon class="w-4 h-4 mr-2" />
-                          <p>Edit</p>
+                          <p>{{ $t('common.edit') }}</p>
                         </li>
                         <li
                           @click.stop="[
@@ -472,7 +472,7 @@
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <trash-icon class="w-4 h-4 mr-2" />
-                          <p>Delete</p>
+                          <p>{{ $t('common.delete') }}</p>
                         </li>
                       </ul>
                     </div>
@@ -488,14 +488,14 @@
                   size="small"
                   @click="tradeBtn(token)"
                   class="min-w-[60px]"
-                  >Trade
+                  >{{ $t('portfolio.table.trade') }}
                 </app-base-button>
                 <app-base-button
                   v-else-if="currentChainhasSwapSupport"
                   size="small"
                   @click="swapBtn(token)"
                   class="min-w-[60px]"
-                  >Swap
+                  >{{ $t('swap') }}
                 </app-base-button>
                 <app-base-button
                   v-if="isBuyable(token.coinId)"
@@ -503,7 +503,7 @@
                   @click="buyBtn(token)"
                   is-outline
                   class="min-w-[60px]"
-                  >Buy
+                  >{{ $t('buy') }}
                 </app-base-button>
                 <div v-else class="w-[60px]"></div>
               </div>
@@ -512,13 +512,13 @@
                 v-else
               >
                 <app-btn-icon
-                  label="edit"
+                  :label="$t('common.edit')"
                   @click.stop="customTokenAction('edit', token)"
                 >
                   <pencil-icon class="w-4 h-4" />
                 </app-btn-icon>
                 <app-btn-icon
-                  label="delete"
+                  :label="$t('common.delete')"
                   @click.stop="customTokenAction('delete', token)"
                 >
                   <trash-icon class="w-5 h-5" />
@@ -536,9 +536,9 @@
         "
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
-        <p class="mb-1 lg:mt-10">You don't have any watchlisted tokens.</p>
+        <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.empty_watchlist') }}</p>
         <router-link :to="{ name: ROUTES_MAIN.CRYPTO.NAME }" class="underline"
-          >Discover more tokens
+          >{{ $t('portfolio.table.discover_more_tokens') }}
           <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
         </router-link>
       </div>
@@ -546,9 +546,9 @@
         v-if="paginatedArray.length === 0 && props.view === 'custom'"
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
-        <p class="mb-6 lg:mt-10">You don't have any custom tokens.</p>
+        <p class="mb-6 lg:mt-10">{{ $t('portfolio.table.empty_custom') }}</p>
         <app-base-button size="medium" @click="openAddCustom"
-          >+ Add Custom Token</app-base-button
+          >{{ $t('portfolio.table.add_custom_token') }}</app-base-button
         >
       </div>
       <div
@@ -556,19 +556,19 @@
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
         <p class="mb-6 lg:mt-10">
-          You don't have any tokenized stocks or ETFS in your portfolio yet.
+          {{ $t('portfolio.table.empty_stocks') }}
         </p>
         <app-base-button
           size="medium"
           @click="$router.push({ name: ROUTES_MAIN.STOCKS.NAME })"
-          >Explore stocks</app-base-button
+          >{{ $t('common.explore_stocks') }}</app-base-button
         >
       </div>
       <div
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
-        <p class="mb-1 lg:mt-10">No results found for "{{ searchInput }}".</p>
+        <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.no_results', { query: searchInput }) }}</p>
       </div>
       <!-- Loading State -->
       <div v-if="isLoading" class="">
@@ -588,24 +588,24 @@
       class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
     >
       <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
-        {{ getCurrentViewableItemsIndex }} of {{ tokens.length }} results
+        {{ $t('portfolio.table.results_of', { count: getCurrentViewableItemsIndex, total: tokens.length }) }}
       </div>
       <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
         <app-btn-icon
           :disabled="!isLoading && currentPage === 0"
-          label="previous page"
+          :label="$t('common.previous_page')"
           @click.stop="prevPage"
         >
           <chevron-left-icon class="w-4 h-4" />
         </app-btn-icon>
         <div class="flex items-center gap-2">
           <span class="text-black">{{ currentPage + 1 }}</span>
-          <span class="text-info">of</span>
+          <span class="text-info">{{ $t('portfolio.table.page_of') }}</span>
           <span class="text-info">{{ totalPages }}</span>
         </div>
         <app-btn-icon
           :disabled="!isLoading && currentPage + 1 >= totalPages"
-          label="next page"
+          :label="$t('common.next_page')"
           @click.stop="nextPage"
         >
           <chevron-right-icon class="w-4 h-4" />
@@ -936,7 +936,9 @@ const tokens = computed<DisplayToken[]>(() => {
 
   if (props.view === 'watchlist') {
     // make sure that response is array, if not set to empty array
-    const watchlistTokenResponse = Array.isArray(tokensWatchlistData.value) ? tokensWatchlistData.value : []
+    const watchlistTokenResponse = Array.isArray(tokensWatchlistData.value)
+      ? tokensWatchlistData.value
+      : []
     // Map tokens watchlist
     const tokensList =
       watchlistTokenResponse

@@ -7,7 +7,7 @@
         <img
           ref="mewCard"
           :src="'https://mewcard.mewapi.io/?address=' + walletAddress"
-          alt="MEW Card"
+          :alt="t('common.my_wallet')"
           width="500"
           height="424"
           class="rounded-16 drop-shadow absolute z-0 h-full w-full object-cover"
@@ -23,10 +23,10 @@
                   @click="toggleMenu"
                 >
                   <!-- TODO: add ens resolution-->
-                  <p v-if="!isWatchOnly">My wallet</p>
+                  <p v-if="!isWatchOnly">{{ t('common.my_wallet') }}</p>
                   <p v-else>
                     <IconWatchOnly class="inline-block w-[12px] h-[12px]" />
-                    Watch only
+                    {{ t('common.watch_only') }}
                   </p>
                   <chevron-down-icon class="w-[10px] h-[10px] ml-1" />
                 </button>
@@ -54,7 +54,7 @@
                       {{ $t('switch_connected_address') }}
                     </li>
                   </ul>
-                  <hr class="h-px bg-grey-outline border-0 w-full my-2" />
+                  <hr class="h-px bg-grey-10 border-0 w-full my-2" />
                   <ul class="px-2 text-s-14">
                     <li
                       @click="deleteWallet"
@@ -124,7 +124,7 @@
               {{ formattedBalance }} {{ safeMainTokenBalance?.symbol || '' }}
             </p>
             <p class="text-s-12 leading-p-150">
-              and {{ tokens.length }} Tokens
+              {{ t('common.and_tokens', tokens.length) }}
             </p>
           </div>
           <div
@@ -135,7 +135,7 @@
             class="uppercase text-s-12 tracking-sp-06 font-medium rounded-full border-2 py-[6px] px-3 bg-white/[0.15] backdrop-blur-sm hover:bg-white/15 transition-all duration-300"
             @click="isWatchOnly ? openAccess() : disconnectWallet()"
           >
-            {{ isWatchOnly ? 'connect' : 'disconnect' }}
+            {{ isWatchOnly ? t('common.connect') : t('common.disconnect') }}
           </button>
         </div>
       </div>
@@ -211,7 +211,7 @@ const fetchBalances = () => {
  */
 const copyClick = async () => {
   try {
-    if (!walletAddress.value) throw new Error('No wallet address to copy')
+    if (!walletAddress.value) throw new Error(t('common.error.no_wallet_address'))
     await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,

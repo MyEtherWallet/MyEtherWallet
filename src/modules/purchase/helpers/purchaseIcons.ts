@@ -20,6 +20,19 @@ export const getPurchaseChainIcon = (
   return nativeAsset?.market_data?.icon
 }
 
+const bundledTokenIconModules = import.meta.glob<string>(
+  '@/assets/icons/tokens/*.{png,jpg}',
+  { eager: true, query: '?url', import: 'default' },
+)
+
+const bundledTokenIconMap: Record<string, string> = Object.fromEntries(
+  Object.entries(bundledTokenIconModules).map(([path, url]) => {
+    const filename = path.split('/').pop() ?? ''
+    const id = filename.replace(/\.(png|jpg)$/, '')
+    return [id, url]
+  }),
+)
+
 export const getPurchaseTokenIcon = (
   asset: PurchaseAsset,
   purchaseChainAssets: PurchaseAsset[],
@@ -31,7 +44,7 @@ export const getPurchaseTokenIcon = (
   if (isNative) {
     return getPurchaseChainIcon(asset.chain, purchaseChainAssets, chainsStore)
   }
-  return asset.market_data?.icon
+  return asset.market_data?.icon ?? bundledTokenIconMap[asset.coingecko_id]
 }
 
 const fiatIconModules = import.meta.glob<string>(

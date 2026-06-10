@@ -1,0 +1,28 @@
+diff --git a/lib/cjs/remote-config/remote-config.js b/lib/cjs/remote-config/remote-config.js
+index e839a8a2c0d3e7bede603f695552dd57ac7e64d4..578b4ebee4a445410bb7ff748f893e231b9bac92 100644
+--- a/lib/cjs/remote-config/remote-config.js
++++ b/lib/cjs/remote-config/remote-config.js
+@@ -370,6 +370,9 @@ var RemoteConfigClient = /** @class */ (function () {
+         var encodedApiKey = encodeURIComponent(this.apiKey);
+         var urlParams = new URLSearchParams();
+         urlParams.append('config_group', RemoteConfigClient.CONFIG_GROUP);
++        if (this.serverUrl.includes('mewwallet')) {
++            return "".concat(this.serverUrl, "?").concat(urlParams.toString());
++        }
+         return "".concat(this.serverUrl, "/").concat(encodedApiKey, "?").concat(urlParams.toString());
+     };
+     RemoteConfigClient.CONFIG_GROUP = 'browser';
+diff --git a/lib/esm/remote-config/remote-config.js b/lib/esm/remote-config/remote-config.js
+index 9ff8c946948f7dc314b4b252a278ccdf7c8aee5e..42200c526cae08ba5774602e27bef9e396b5f09f 100644
+--- a/lib/esm/remote-config/remote-config.js
++++ b/lib/esm/remote-config/remote-config.js
+@@ -367,6 +367,9 @@ var RemoteConfigClient = /** @class */ (function () {
+         var encodedApiKey = encodeURIComponent(this.apiKey);
+         var urlParams = new URLSearchParams();
+         urlParams.append('config_group', RemoteConfigClient.CONFIG_GROUP);
++        if (this.serverUrl.includes('mewwallet')) {
++            return "".concat(this.serverUrl, "?").concat(urlParams.toString());
++        }
+         return "".concat(this.serverUrl, "/").concat(encodedApiKey, "?").concat(urlParams.toString());
+     };
+     RemoteConfigClient.CONFIG_GROUP = 'browser';

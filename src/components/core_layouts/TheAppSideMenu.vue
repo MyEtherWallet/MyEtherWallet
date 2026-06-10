@@ -118,7 +118,7 @@
                 <!--  DIVIDER -->
                 <hr
                   v-if="!isWalletConnected"
-                  class="h-px bg-grey-outline border-0 w-full my-3"
+                  class="h-px bg-grey-10 border-0 w-full my-3"
                   key="app-menu-divider-2"
                 />
                 <!--  OTHER MENU (Settings, etc) -->

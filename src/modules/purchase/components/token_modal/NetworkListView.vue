@@ -31,10 +31,11 @@
     </div>
 
     <ul role="listbox" class="flex-1 overflow-y-auto">
+      <!-- All networks -->
       <li>
         <button
           type="button"
-          class="flex items-center w-full gap-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
+          class="flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
           @click="emit('select-network', null)"
         >
           <div
@@ -50,10 +51,12 @@
           />
         </button>
       </li>
-      <li v-for="network in filteredNetworks" :key="network.chain">
+
+      <!-- Compatible networks -->
+      <li v-for="network in compatibleNetworks" :key="network.chain">
         <button
           type="button"
-          class="flex items-center w-full gap-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
+          class="flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left"
           @click="emit('select-network', network.chain)"
         >
           <app-token-logo
@@ -71,8 +74,33 @@
           />
         </button>
       </li>
+
+      <!-- Incompatible networks section -->
+      <template v-if="incompatibleNetworks.length">
+        <li class="px-1 pt-5 pb-1">
+          <p class="text-s-14 font-medium text-info">
+            Networks incompatible with your wallet
+          </p>
+        </li>
+        <li
+          v-for="network in incompatibleNetworks"
+          :key="network.chain"
+          class="flex items-center w-full gap-3 px-3 py-2 rounded-12 opacity-50"
+        >
+          <app-token-logo
+            :url="getChainIcon(network)"
+            :symbol="network.chain"
+            width="w-10"
+            height="h-10"
+          />
+          <span class="text-s-16 font-semibold text-black flex-1 truncate">
+            {{ network.name }}
+          </span>
+        </li>
+      </template>
+
       <li
-        v-if="filteredNetworks.length === 0"
+        v-if="compatibleNetworks.length === 0 && incompatibleNetworks.length === 0"
         class="text-info text-s-14 text-center py-10"
       >
         {{ $t('common.not_found.chains') }}
@@ -93,6 +121,8 @@ import type { BuyNetwork } from '@/stores/purchaseStore'
 const props = defineProps<{
   networks: BuyNetwork[]
   currentFilter: string | null
+  compatibleChains?: string[]
+  incompatibleChains?: string[]
 }>()
 
 const emit = defineEmits<{
@@ -107,13 +137,24 @@ const searchInput = ref('')
 const getChainIcon = (network: BuyNetwork) =>
   getPurchaseChainIcon(network.chain, network.tokens, chainsStore)
 
-const filteredNetworks = computed<BuyNetwork[]>(() => {
+const compatibleNetworks = computed<BuyNetwork[]>(() => {
   const term = searchInput.value.trim().toLowerCase()
-  if (!term) return props.networks
-  return props.networks.filter(
-    n =>
-      n.name.toLowerCase().includes(term) ||
-      n.chain.toLowerCase().includes(term),
+  const base = props.compatibleChains?.length
+    ? props.networks.filter(n => props.compatibleChains!.includes(n.chain))
+    : props.networks
+  if (!term) return base
+  return base.filter(
+    n => n.name.toLowerCase().includes(term) || n.chain.toLowerCase().includes(term),
+  )
+})
+
+const incompatibleNetworks = computed<BuyNetwork[]>(() => {
+  if (!props.incompatibleChains?.length) return []
+  const term = searchInput.value.trim().toLowerCase()
+  const base = props.networks.filter(n => props.incompatibleChains!.includes(n.chain))
+  if (!term) return base
+  return base.filter(
+    n => n.name.toLowerCase().includes(term) || n.chain.toLowerCase().includes(term),
   )
 })
 </script>
