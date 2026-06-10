@@ -1,20 +1,24 @@
 <template>
   <div class="relative px-2 rounded-16 bg-white">
     <div class="flex items-center justify-between gap-2">
-      <div>
-        <p class="text-info uppercase text-s-9 tracking-sp-06 font-bold">
-          transaction
+      <div class="flex items-center gap-1">
+        <p class="text-info uppercase text-s-9 font-bold">
+          {{ $t('notifications_module.transaction') }}
         </p>
+        <div
+          v-if="!seen"
+          class="rounded-full bg-primary w-[9px] h-[9px] flex-shrink-0"
+        ></div>
       </div>
       <div
         :class="txStatus.color"
         class="ml-2 px-[10px] py-[3px] rounded-full text-white uppercase text-s-9 tracking-sp-06 font-semibold"
       >
         <div
-          v-if="txStatus.label === 'Pending'"
+          v-if="txStatus.key === 'pending'"
           class="bg-white w-[6px] h-[6px] rounded-full inline-flex animate-pulse"
         ></div>
-        {{ txStatus.label }}
+        {{ $t(txStatus.labelKey) }}
       </div>
     </div>
 
@@ -57,7 +61,7 @@
         @click="showMoreDetails = !showMoreDetails"
         class="text-s-12 flex items-center -ml-2"
       >
-        More details
+        {{ $t('common.more_details') }}
         <chevron-down-icon
           :class="[
             'transition-transform w-3 h-3  ml-2',
@@ -67,7 +71,7 @@
       </app-btn-text>
       <!-- delete Button -->
       <app-btn-icon
-        label="delete notification"
+        :label="$t('common.delete_notification')"
         @click="$emit('remove', transaction.hash)"
         class="ml-auto -mr-2"
       >
@@ -81,7 +85,7 @@
         <div class="flex items-center justify-between pt-2">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Chain</span
+            >{{ $t('common.chain') }}</span
           >
           <div class="flex items-center gap-1">
             <app-token-logo
@@ -97,7 +101,7 @@
         <div class="flex items-center justify-between mt-3">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Created at</span
+            >{{ $t('common.created_at') }}</span
           >
           <p class="text-s-12">
             {{ formatTime(transaction.createdAt) }}
@@ -107,7 +111,7 @@
         <div class="flex items-center justify-between mt-3">
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Tx hash</span
+            >{{ $t('common.tx_hash') }}</span
           >
           <a
             :href="transaction.blockExplorerUrl"
@@ -127,7 +131,7 @@
         >
           <span
             class="text-s-9 text-info uppercase font-semibold tracking-sp-06"
-            >Network Fee</span
+            >{{ $t('common.network_fee') }}</span
           >
           <div class="text-right">
             <p class="text-s-13 text-black">
@@ -168,6 +172,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 // Props
 const props = defineProps<{
   transaction: TransactionNotification
+  seen?: boolean
 }>()
 
 // Emits
@@ -198,13 +203,29 @@ const txStatus = computed(() => {
 
   if (status === 'sent') {
     if (isOlderThan48Hours) {
-      return { label: 'Possibly Dropped', color: 'bg-surface' }
+      return {
+        key: 'possibly_dropped',
+        labelKey: 'notifications_module.status.possibly_dropped',
+        color: 'bg-surface',
+      }
     }
-    return { label: 'Pending', color: 'bg-primary' }
+    return {
+      key: 'pending',
+      labelKey: 'notifications_module.status.pending',
+      color: 'bg-primary',
+    }
   } else if (status === 'failed') {
-    return { label: 'Failed', color: 'bg-error' }
+    return {
+      key: 'failed',
+      labelKey: 'notifications_module.status.failed',
+      color: 'bg-error',
+    }
   } else {
-    return { label: 'Successful', color: 'bg-success' }
+    return {
+      key: 'successful',
+      labelKey: 'notifications_module.status.successful',
+      color: 'bg-success',
+    }
   }
 })
 </script>

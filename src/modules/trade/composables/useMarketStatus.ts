@@ -1,4 +1,6 @@
 import { ref, computed, onUnmounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import type { GetWebSwapOndoMarketStatusResponse } from '@/mew_api/types'
 import {
   getMarketStatus,
@@ -8,6 +10,7 @@ import {
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
+import { useGlobalStore } from '@/stores/globalStore'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -15,11 +18,13 @@ interface UseMarketStatusOptions {
   onMarketOpen?: () => void | Promise<void>
 }
 
+
 export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const { onMarketOpen } = options
+  const { fetchedTradingThisSession, isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+  const { t } = useI18n()
 
   const marketStatus = ref<GetWebSwapOndoMarketStatusResponse | null>(null)
-  const isTradingRestrictedInRegion = ref<boolean>(false)
   const countdownText = ref<string>('')
   let countdownInterval: ReturnType<typeof setInterval> | null = null
   let wasMarketClosed = false
@@ -37,7 +42,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     const diff = nextOpen - now
 
     if (diff <= 0) {
-      countdownText.value = 'Opening soon...'
+      countdownText.value = t('trade.opening_soon')
       // Refresh market status when countdown reaches zero
       fetchMarketStatus()
       return
@@ -72,8 +77,14 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   }
 
   const fetchTradingRestriction = async () => {
+    // should only fetch this once in the session
+    if (fetchedTradingThisSession.value) {
+      return fetchedTradingThisSession.value;
+    }
     try {
-      isTradingRestrictedInRegion.value = await isTradingRestricted()
+      const res = await isTradingRestricted()
+      isTradingRestrictedInRegion.value = res
+      fetchedTradingThisSession.value = true;
     } catch (e) {
       if (isDevMode) {
         console.error('Failed to check trading restriction:', e)
@@ -86,7 +97,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
           },
         })
       }
-      isTradingRestrictedInRegion.value = false
+      isTradingRestrictedInRegion.value = true
     }
   }
 

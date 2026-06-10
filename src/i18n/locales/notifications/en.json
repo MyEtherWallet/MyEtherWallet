@@ -1,0 +1,30 @@
+{
+  "notifications_module": {
+    "title": "Notifications",
+    "no_notifications_yet": "No notifications yet",
+    "default_empty_text": "Your recent orders, swaps, bridges and transactions will appear here.",
+    "swap": "swaps",
+    "bridge": "bridge",
+    "transaction": "transactions",
+    "trade_order": "trades",
+    "status": {
+      "pending": "Pending",
+      "possibly_dropped": "Possibly Dropped",
+      "failed": "Failed",
+      "successful": "Successful"
+    },
+    "destination_address": "Destination Address",
+    "price_difference": "Price difference",
+    "filled_in_tx": "Filled in tx",
+    "est": "est:",
+    "order_status": {
+      "pending": "Pending",
+      "filled": "Filled",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "pin_to_keep_open": "Pin to keep open",
+    "unpin": "Unpin",
+    "pin": "Pin"
+  }
+}

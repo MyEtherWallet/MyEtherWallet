@@ -20,7 +20,7 @@
                 />
                 <img
                   src="@/assets/images/access/keystore-file.jpg"
-                  alt="Keystore File"
+                  :alt="$t('access_wallet_keystore.keystore_file_alt')"
                   class="xs:hidden xs:mt-0 w-3/5 xs:w-3/4 mx-auto"
                   width="300"
                   height="285"
@@ -29,7 +29,7 @@
                   @click="clickUpload"
                   class="mt-5 mx-auto xs:mt-8 w-full xs:w-auto"
                 >
-                  Select Keystore
+                  {{ $t('access_wallet_keystore.select_keystore') }}
                 </app-base-button>
                 <input
                   ref="jsonInput"
@@ -41,7 +41,7 @@
               </div>
               <img
                 src="@/assets/images/access/keystore-file.jpg"
-                alt="Keystore File"
+                :alt="$t('access_wallet_keystore.keystore_file_alt')"
                 class="hidden xs:block w-2/3 lg:w-3/4 ml-auto mt-5"
                 width="300"
                 height="285"
@@ -59,7 +59,8 @@
             />
             <app-input
               v-model="password"
-              placeholder="Enter Password"
+              data-private
+              :placeholder="$t('access_wallet_keystore.enter_password')"
               type="password"
               :error-message="errorPassword"
               is-required
@@ -72,7 +73,7 @@
                 is-outline
                 class="!min-w-[120px]"
               >
-                Back
+                {{ $t('common.back') }}
               </app-base-button>
               <app-base-button
                 @click="enterPassword"
@@ -80,7 +81,7 @@
                 :disabled="submitIsDisabled"
                 :is-loading="isUnlockingKeystore"
               >
-                Connect
+                {{ $t('create_wallet.connect') }}
               </app-base-button>
             </div>
           </div>
@@ -117,6 +118,9 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import AppSheet from '@/components/AppSheet.vue'
 import { analytics, ConnectWalletEvent } from '@/analytics'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const accessStore = useAccessStore()
 const { selectedChain } = storeToRefs(accessStore)
@@ -126,17 +130,20 @@ const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
  * Steps
  -------------------------*/
 const activeStep = ref(0)
-const steps = ['Upload Keystore', 'Enter Password']
-const stepDescription: StepDescription[] = [
+const steps = computed(() => [
+  t('access_wallet_keystore.upload_keystore'),
+  t('access_wallet_keystore.enter_password'),
+])
+const stepDescription = computed<StepDescription[]>(() => [
   {
-    title: 'Select your Keystore File',
-    description: 'Please select keystore file that unlocks your wallet.',
+    title: t('access_wallet_keystore.select_keystore_file_title'),
+    description: t('access_wallet_keystore.select_keystore_file_description'),
   },
   {
-    title: 'Enter Password',
-    description: 'Enter your password to unlock your wallet.',
+    title: t('access_wallet_keystore.enter_password_title'),
+    description: t('access_wallet_keystore.enter_password_description'),
   },
-]
+])
 
 /**------------------------
  * Keystore Upload
@@ -162,7 +169,7 @@ const uploadKeystoreFile = async (evt: Event) => {
     const file = input.files[0]
     const reader = new FileReader()
     reader.onerror = () => {
-      fileError.description = 'Error reading file. Please try again.'
+      fileError.description = t('access_wallet_keystore.error_reading_file')
       fileError.value = true
     }
 
@@ -174,7 +181,9 @@ const uploadKeystoreFile = async (evt: Event) => {
         activeStep.value = 1
         if (jsonInput.value) jsonInput.value.value = '' // clear file input
       } catch {
-        fileError.description = 'Invalid keystore file. Please try again.'
+        fileError.description = t(
+          'access_wallet_keystore.invalid_keystore_file',
+        )
         fileError.value = true
       }
     }
@@ -234,7 +243,7 @@ const enterPassword = async () => {
       accessStore.closeAccessDialog()
     }
   } catch {
-    errorPassword.value = 'Invalid password'
+    errorPassword.value = t('access_wallet_keystore.invalid_password')
     isUnlockingKeystore.value = false
   }
 }

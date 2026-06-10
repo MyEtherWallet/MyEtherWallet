@@ -51,7 +51,7 @@
                     >{{ $t('common.add') }}</app-base-button
                   >
                 </div>
-                <hr class="h-px bg-grey-outline border-0 w-full" />
+                <hr class="h-px bg-grey-10 border-0 w-full" />
               </div>
               <!-- Seacrh Result-->
               <div v-if="searchResults.length" class="flex flex-col px-2 mt-2">

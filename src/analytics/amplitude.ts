@@ -114,6 +114,15 @@ export class Analytics {
     if (properties.canClaimRewards !== undefined) {
       identify.set('canClaimRewards', properties.canClaimRewards)
     }
+    if (properties.canClaimTrade !== undefined) {
+      identify.set('canClaimTrade', properties.canClaimTrade)
+    }
+    if (properties.canClaimSwap !== undefined) {
+      identify.set('canClaimSwap', properties.canClaimSwap)
+    }
+    if (properties.canTrade !== undefined) {
+      identify.set('canTrade', properties.canTrade)
+    }
 
     this.amplitude.identify(identify)
   }

@@ -32,12 +32,24 @@ import type BaseEvmWallet from '@/providers/ethereum/baseEvmWallet'
 import type {
   GetWebSwapOndoAssetsResponse,
   GetWebSwapOndoSupportingAssetsResponse,
+  GetWebTokenInfo,
 } from '@/mew_api/types'
 import { prepareTransactionRequest } from 'viem/actions'
 import { isSignableWallet } from '@/utils/walletUtils'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+export type HardcodedTokenInfo = {
+  address: string
+  cgId: string
+  name: string
+  symbol: string
+  decimals: number
+  logoURI: string
+  price: number
+}
+
+const HARDCODED_ETH_TOKENS: Array<{ address: string; cgId: string }> = []
 const getFusionParams = (config: QuoteInputType): QuoteParams | OrderParams => {
   const { fromTokenAddress, toTokenAddress, amount, fromAddress } = config
   return {
@@ -72,6 +84,34 @@ class OneInchFusion {
     return fetch(getAPIPath(`/v1/web/swap/ondo/supporting-assets`)).then(
       res => res.json() as Promise<GetWebSwapOndoSupportingAssetsResponse>,
     )
+  }
+
+  public static async getHardcodedTokensInfo(): Promise<HardcodedTokenInfo[]> {
+    const results = await Promise.all(
+      HARDCODED_ETH_TOKENS.map(async token => {
+        const res = await fetch(
+          getAPIPath(`/v1/web/pages/token-info/coins/${token.cgId}`),
+        )
+        const data = (await res.json()) as GetWebTokenInfo
+        const ethChain = data.chainBalances.find(
+          c => c.chainName === 'ETHEREUM',
+        )
+        const decimals =
+          ethChain?.result.ok && ethChain.result.value.decimals != null
+            ? ethChain.result.value.decimals
+            : 18
+        return {
+          address: token.address,
+          cgId: token.cgId,
+          name: data.name,
+          symbol: data.symbol.toUpperCase(),
+          decimals,
+          logoURI: data.iconUrl ?? '',
+          price: data.currentPrice ?? 0,
+        }
+      }),
+    )
+    return results
   }
 
   constructor(wallet: BaseEvmWallet, chainId: number) {

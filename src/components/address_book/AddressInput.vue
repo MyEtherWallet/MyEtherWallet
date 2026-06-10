@@ -60,7 +60,7 @@
       <!-- Action Buttons  -->
       <div class="absolute top-3 right-3 flex items-center gap-1">
         <app-btn-icon
-          label="clear search"
+          :label="$t('common.clear_search')"
           @click="clearAdrInput"
           v-if="adrInput !== ''"
           class="text-primary"
@@ -68,7 +68,7 @@
           <x-circle-icon class="w-6 h-6" />
         </app-btn-icon>
         <app-btn-icon
-          label="open address book"
+          :label="$t('common.open_address_book')"
           @click="isAddressBookOpen = true"
           class="text-primary"
         >

@@ -1,5 +1,48 @@
 {
   "trade": {
+    "title": "Trade",
+    "subtitle": "Buy/Sell Ondo Tokenized Stocks",
+    "you_are_selling": "You are selling",
+    "you_are_buying": "You are buying",
+    "swap_from_to": "Swap From/To stocks",
+    "market_closed": "Market Closed",
+    "opens_in": "Opens in {countdown}",
+    "opening_soon": "Opening soon...",
+    "network_not_supported": "Network Not Supported",
+    "trading_not_available_on": "Trading is not available on {network}. Please switch to a supported network.",
+    "trading_not_available": "Trading Not Available",
+    "trading_restricted": "Access to trading is restricted in your jurisdiction.",
+    "learn_more": "Learn more",
+    "approving": "Approving...",
+    "trade_button": "Trade",
+    "need_help": "Need help trading?",
+    "tokens_not_tradable": "One or more tokens are currently not tradable. Try again later or select different tokens.",
+    "service_unavailable": "Trading service is temporarily unavailable. Please try again later.",
+    "asset_not_tradable": "is currently not tradable due to {reason}",
+    "quote_modal": {
+      "title": "Trade Quote",
+      "quote_from": "Trade Quote from 1inch Fusion",
+      "for": "For",
+      "you_will_get": "you will get:",
+      "estimated_amount": "Estimated Amount",
+      "min_amount": "Min Amount",
+      "limit_order_warning": "This is a limit order trade. The final amount may vary slightly based on market conditions.",
+      "confirm_trade": "Confirm Trade"
+    },
+    "initiated_modal": {
+      "title": "Trade Order Submitted",
+      "order_submitted": "Your trade order has been submitted to the 1inch Fusion network. The order is being filled.",
+      "order_hash": "Order Hash",
+      "network": "Network",
+      "close_window_message": "You can close this window and",
+      "track_progress": "Track progress in notifications"
+    },
+    "status": {
+      "pending": "Pending",
+      "filled": "Filled",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
     "toast": {
       "approval-success": "Approval successful!",
       "approval-success-secondary": "You can now trade {symbol}.",
