@@ -2,6 +2,14 @@
   <div
     class="bg-white rounded-20 overflow-hidden relative p-5 sm:py-14 lg:py-20 lg:px-10"
   >
+    <perps-signing-prompt
+      :show="showSigningPrompt"
+      :message="signingMessage"
+      :is-hardware-wallet="isHardwareWalletSigning"
+      :is-waiting-for-confirm="isWaitingForConfirm"
+      @confirm="confirmSign"
+      @cancel="cancelSign"
+    />
     <!-- Mobile / tablet: logos in a centered row above the content -->
     <div class="flex items-center justify-center gap-2 mb-6 sm:mb-10 lg:hidden">
       <img :src="amazonLogo" alt="" class="w-7 h-7" />
@@ -155,6 +163,7 @@
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import PerpsSigningPrompt from './PerpsSigningPrompt.vue'
 import amazonLogo from '@/assets/icons/perps-banner/amazon.svg'
 import amdLogo from '@/assets/icons/perps-banner/amd.svg'
 import appleLogo from '@/assets/icons/perps-banner/apple.svg'
@@ -174,7 +183,7 @@ const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
-const { login, isAuthenticating } = usePerpsAuth()
+const { login, isAuthenticating, showSigningPrompt, signingMessage, isHardwareWalletSigning, isWaitingForConfirm, confirmSign, cancelSign } = usePerpsAuth()
 
 const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
 

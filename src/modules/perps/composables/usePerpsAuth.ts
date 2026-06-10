@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { decrypt, encrypt } from '@/utils/crypto'
+import { WalletType } from '@/providers/types'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 
@@ -25,9 +26,22 @@ const accountId = ref<string | null>(null)
 const isAuthenticating = ref(false)
 const authError = ref<string | null>(null)
 const refreshKey = ref(0)
+const showSigningPrompt = ref(false)
+const signingMessage = ref<string | null>(null)
+const isHardwareWalletSigning = ref(false)
+const isWaitingForConfirm = ref(false)
 
 let _authRestored = false
 let _currentAddress: string | null = null
+let _resolveSign: (() => void) | null = null
+let _rejectSign: ((reason?: unknown) => void) | null = null
+
+function _waitForSignConfirmation(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    _resolveSign = resolve
+    _rejectSign = reject
+  })
+}
 let _walletWatcherRegistered = false
 
 async function tryRestoreAuth(address: string) {
@@ -128,7 +142,7 @@ export function usePerpsAuth() {
   }
 
   async function login() {
-    if (_authRestored) return;
+    if (_authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
@@ -141,6 +155,22 @@ export function usePerpsAuth() {
         walletAddress: address,
         chainId: '1',
       })
+      const walletType = wallet.value.getWalletType()
+      const isInjected = walletType === WalletType.WAGMI || walletType === WalletType.INJECTED
+
+      if (!isInjected) {
+        isHardwareWalletSigning.value = walletType === WalletType.LEDGER || walletType === WalletType.TREZOR
+        signingMessage.value = challenge.result.message
+        isWaitingForConfirm.value = true
+        showSigningPrompt.value = true
+        isAuthenticating.value = false
+
+        await _waitForSignConfirmation()
+
+        isWaitingForConfirm.value = false
+        isAuthenticating.value = true
+      }
+
       const signature = await wallet.value.SignMessage({
         message: challenge.result.message,
       })
@@ -151,7 +181,6 @@ export function usePerpsAuth() {
       })
       token.value = complete.result.token
       accountId.value = complete.result.accountId
-
 
       perpsClient.setToken(token.value)
       perpsWs.login(token.value)
@@ -171,10 +200,28 @@ export function usePerpsAuth() {
         privacyVersion: 1,
       })
     } catch (e) {
-      authError.value = e instanceof Error ? e.message : 'Authentication failed'
+      if ((e as Error)?.message !== 'cancelled') {
+        authError.value = e instanceof Error ? e.message : 'Authentication failed'
+      }
     } finally {
+      showSigningPrompt.value = false
+      signingMessage.value = null
+      isHardwareWalletSigning.value = false
+      isWaitingForConfirm.value = false
       isAuthenticating.value = false
     }
+  }
+
+  function confirmSign() {
+    _resolveSign?.()
+    _resolveSign = null
+    _rejectSign = null
+  }
+
+  function cancelSign() {
+    _rejectSign?.(new Error('cancelled'))
+    _resolveSign = null
+    _rejectSign = null
   }
 
   function logout() {
@@ -195,6 +242,12 @@ export function usePerpsAuth() {
     logout,
     refreshKey,
     triggerRefresh,
+    showSigningPrompt,
+    signingMessage,
+    isHardwareWalletSigning,
+    isWaitingForConfirm,
+    confirmSign,
+    cancelSign,
   }
 }
 
