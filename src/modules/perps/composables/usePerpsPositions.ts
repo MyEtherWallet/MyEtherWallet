@@ -1,6 +1,8 @@
-import { ref, watch } from 'vue'
+import { ref, watch, effectScope } from 'vue'
 import { perpsClient } from '../configs'
 import { usePerpsAuth } from './usePerpsAuth'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 import type { Position } from '../sdk/types'
 
 const positions = ref<Position[]>([])
@@ -28,47 +30,30 @@ async function fetchPositions() {
   }
 }
 
-function startPolling() {
+function startWs() {
   if (initialized) return
   initialized = true
+  ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
 
-  // Use a simple watch via watchEffect-like pattern at module level
-  // We check token on each poll cycle
-  function poll() {
-    if (token.value) {
-      fetchPositions()
-    } else {
-      positions.value = []
-    }
-  }
-
-  poll()
-  setInterval(poll, 5_000)
-
-  // The singleton is often initialised by PerpsMarketList (mounted before auth)
-  // so the first poll() runs with no token and never sets loading=true. React
-  // to any token change immediately so PerpsPositionsTable sees a loading state
-  // on mount instead of an empty-state flash until the 5s interval ticks. Drop
-  // stale data on the way out — covers logout and wallet-switch (A->B without
-  // an intermediate clearAuth), where the previous account's positions would
-  // otherwise linger on screen.
   watch(token, (newToken, oldToken) => {
     if (oldToken) {
       positions.value = []
       hasLoaded.value = false
     }
-    if (newToken) poll()
+    if (newToken) void fetchPositions()
+  }, { immediate: true })
+
+  watch(refreshKey, () => {
+    if (token.value) void fetchPositions()
   })
 
-  // Watch for refreshKey changes by storing last seen value
-  let lastRefreshKey = refreshKey.value
-  setInterval(() => {
-    if (refreshKey.value !== lastRefreshKey) {
-      lastRefreshKey = refreshKey.value
-      poll()
-    }
-  }, 500)
+  effectScope(true).run(() => {
+    perpsWs.subscribe<Position>('positionsPerps', (rows) => {
+      positions.value = rows
+      hasLoaded.value = true
+    })
+  })
 }
 
 async function closePosition(pos: Position) {
@@ -83,7 +68,7 @@ async function closePosition(pos: Position) {
 }
 
 export function usePerpsPositions() {
-  startPolling()
+  startWs()
   return {
     positions,
     loading,

@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, effectScope } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
@@ -6,6 +6,8 @@ import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { decrypt, encrypt } from '@/utils/crypto'
 import { WalletType } from '@/providers/types'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -50,6 +52,7 @@ async function tryRestoreAuth(address: string) {
       const decryptedToken = await decrypt(storedTokens[i], address)
       token.value = decryptedToken
       perpsClient.setToken(decryptedToken)
+      perpsWs.login(decryptedToken)
       _authRestored = true
       try {
         accountId.value = storedAccounts[i]
@@ -74,6 +77,7 @@ async function clearAuth() {
   token.value = null
   accountId.value = null
   perpsClient.setToken(null)
+  perpsWs.logout()
   // Reset module-scope guards so a subsequent Sign In click is not silently
   // blocked by a stale auth-restored flag from a previous session.
   _authRestored = false
@@ -106,6 +110,9 @@ async function clearAuth() {
 perpsClient.setOnUnauthorized(() => {
   clearAuth()
 })
+perpsWs.setOnUnauthorized(() => {
+  clearAuth()
+})
 
 export function usePerpsAuth() {
   const store = useWalletStore()
@@ -126,6 +133,7 @@ export function usePerpsAuth() {
         token.value = null
         accountId.value = null
         perpsClient.setToken(null)
+        perpsWs.logout()
         await tryRestoreAuth(address)
         if (token.value) refreshKey.value++
       },
@@ -175,6 +183,7 @@ export function usePerpsAuth() {
       accountId.value = complete.result.accountId
 
       perpsClient.setToken(token.value)
+      perpsWs.login(token.value)
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
@@ -255,6 +264,7 @@ export function usePerpsBalance() {
 
   if (!_balanceInitialized) {
     _balanceInitialized = true
+    ensurePerpsWsLifecycle()
 
     async function fetchBalance() {
       if (!token.value) {
@@ -272,32 +282,31 @@ export function usePerpsBalance() {
       }
     }
 
-    function poll() {
-      if (token.value) {
-        fetchBalance()
-      } else {
-        balance.value = null
-      }
-    }
-
-    poll()
-    setInterval(poll, 1_000)
-
-    let lastRefreshKey = refreshKey.value
-    setInterval(() => {
-      if (refreshKey.value !== lastRefreshKey) {
-        lastRefreshKey = refreshKey.value
-        poll()
-      }
-    }, 500)
-
     _sharedFetchBalance = fetchBalance
 
-    const perpsToasts = usePerpsToasts()
+    watch(
+      token,
+      (now, prev) => {
+        if (prev && !now) {
+          balance.value = null
+        }
+        if (now) void fetchBalance()
+      },
+      { immediate: true },
+    )
 
-    // Only fire on a genuine false→true transition. Watching the raw field
-    // (without `?? false`) keeps the initial observation as `undefined`, so
-    // a page reload of an already-liquidated account does NOT fire the toast.
+    watch(refreshKey, () => {
+      if (token.value) void fetchBalance()
+    })
+
+    effectScope(true).run(() => {
+      perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
+        if (rows.length === 0) return
+        balance.value = rows[0]
+      })
+    })
+
+    const perpsToasts = usePerpsToasts()
     watch(
       () => _sharedBalance.value?.underLiquidation,
       (current, previous) => {
