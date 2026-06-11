@@ -55,12 +55,14 @@
       :selected-token="selectedToken"
       :compatible-chains="compatibleChainCodes"
       :incompatible-chains="incompatibleChainCodes"
+      :is-loading="isFetching"
       @update:selected="selectedToken = $event"
     />
     <purchase-currency-modal
       v-model:is-open="showCurrencyModal"
       :currencies="currencyOptions"
       :selected="selectedFiat"
+      :is-loading="isFetching"
       @update:selected="selectedFiat = $event"
     />
     <purchase-provider-modal
@@ -109,6 +111,7 @@ const { t } = useI18n()
 const purchaseStore = usePurchaseStore()
 const {
   purchaseInfo,
+  isFetching,
   buyNetworks,
   buyFiats,
   buyQuotes,

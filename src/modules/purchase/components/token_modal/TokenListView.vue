@@ -38,7 +38,16 @@
       </button>
     </div>
 
-    <ul role="listbox" class="flex-1 overflow-y-auto">
+    <div
+      v-if="isLoading"
+      class="flex flex-1 items-center justify-center py-16"
+      aria-live="polite"
+    >
+      <span
+        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+      />
+    </div>
+    <ul v-else role="listbox" class="flex-1 overflow-y-auto">
       <li v-for="entry in filteredEntries" :key="entry.key">
         <button
           type="button"
@@ -53,13 +62,13 @@
               height="h-10"
             />
             <span
-              v-if="entry.chainIcon"
               class="absolute -bottom-0.5 -right-0.5 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-white bg-white"
             >
-              <img
-                :src="entry.chainIcon"
-                :alt="entry.network.chain"
-                class="w-full h-full object-cover"
+              <app-token-logo
+                :url="entry.chainIcon"
+                :symbol="entry.network.chain"
+                width="w-full"
+                height="h-full"
               />
             </span>
           </div>
@@ -111,6 +120,7 @@ const props = defineProps<{
   selectedToken: PurchaseAsset | null
   networkFilter: string | null
   compatibleChains?: string[]
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{

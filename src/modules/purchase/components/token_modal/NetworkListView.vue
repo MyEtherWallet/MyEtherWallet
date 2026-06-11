@@ -30,7 +30,16 @@
       />
     </div>
 
-    <ul role="listbox" class="flex-1 overflow-y-auto">
+    <div
+      v-if="isLoading"
+      class="flex flex-1 items-center justify-center py-16"
+      aria-live="polite"
+    >
+      <span
+        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+      />
+    </div>
+    <ul v-else role="listbox" class="flex-1 overflow-y-auto">
       <!-- All networks -->
       <li>
         <button
@@ -123,6 +132,7 @@ const props = defineProps<{
   currentFilter: string | null
   compatibleChains?: string[]
   incompatibleChains?: string[]
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{
