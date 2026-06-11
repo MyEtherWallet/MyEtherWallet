@@ -8,6 +8,8 @@ import { decrypt, encrypt } from '@/utils/crypto'
 import { WalletType } from '@/providers/types'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
+import { analytics, PerpsSignInEvent } from '@/analytics'
+import { isUserRejectionError } from '@/utils/walletUtils'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -141,14 +143,16 @@ export function usePerpsAuth() {
     )
   }
 
-  async function login() {
+  async function login(source?: string) {
     if (_authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
     }
+    analytics.trackPerpsSignInEvent(PerpsSignInEvent.CLICKED, { source })
     isAuthenticating.value = true
     authError.value = null
+    let walletTypeStr: string | undefined
     try {
       const address = await wallet.value.getAddress()
       const challenge = await perpsClient.getLoginChallenge({
@@ -156,6 +160,7 @@ export function usePerpsAuth() {
         chainId: '1',
       })
       const walletType = wallet.value.getWalletType()
+      walletTypeStr = walletType
       const isInjected = walletType === WalletType.WAGMI || walletType === WalletType.INJECTED
 
       if (!isInjected) {
@@ -199,9 +204,18 @@ export function usePerpsAuth() {
         termsVersion: 1,
         privacyVersion: 1,
       })
+      analytics.trackPerpsSignInEvent(PerpsSignInEvent.SUCCESS, { source })
     } catch (e) {
-      if ((e as Error)?.message !== 'cancelled') {
-        authError.value = e instanceof Error ? e.message : 'Authentication failed'
+      const errorMessage = e instanceof Error ? e.message : 'Authentication failed'
+      if (isUserRejectionError(e)) {
+        analytics.trackPerpsSignInEvent(PerpsSignInEvent.CANCEL, { source })
+      } else {
+        authError.value = errorMessage
+        analytics.trackPerpsSignInErrorEvent(PerpsSignInEvent.ERROR, {
+          source,
+          errorMessage,
+          walletType: walletTypeStr,
+        })
       }
     } finally {
       showSigningPrompt.value = false
