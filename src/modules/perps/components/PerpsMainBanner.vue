@@ -176,6 +176,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly, walletName } = storeToRefs(walletStore)
@@ -194,6 +195,9 @@ const isUnisatWallet = computed(
 )
 
 const onConnectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Main_Banner',
+  })
   accessStore.openAccessDialog()
 }
 

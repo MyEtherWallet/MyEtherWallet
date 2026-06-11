@@ -797,6 +797,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
@@ -819,6 +820,9 @@ const onSwitchToEthereum = () => {
 
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Trade',
+  })
   accessStore.openAccessDialog()
 }
 
