@@ -472,6 +472,14 @@ export function usePerpsTradeForm() {
     if (!(closePct >= 100)) {
       const closeUsd = parseFloat(closeAmount.value) || 0
       if (closeUsd > 0) {
+        if (
+          !Number.isFinite(effectivePrice.value) ||
+          effectivePrice.value <= 0
+        ) {
+          closeError.value = 'Invalid market price. Please try again.'
+          isClosing.value = false
+          return
+        }
         const rawSize = closeUsd / effectivePrice.value
         placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
       }
