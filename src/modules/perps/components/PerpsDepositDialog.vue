@@ -660,6 +660,7 @@ const sendLiveDeposit = async () => {
 function sendDeposit() {
   const amt = parseFloat(amount.value)
   if (!amt || amt <= 0) return
+  if (!accountId.value) return
   analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUBMIT, {
     depositAmount: amount.value,
     token: 'USDC',
