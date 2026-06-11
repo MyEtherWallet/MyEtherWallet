@@ -955,6 +955,7 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
   useWalletMenuStore()
@@ -977,7 +978,12 @@ import {
   midPrice as computeMidPrice,
 } from './utils/market'
 
-const connectWallet = () => useAccessStore().openAccessDialog()
+const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Market_Info',
+  })
+  useAccessStore().openAccessDialog()
+}
 
 const props = defineProps({
   market: {

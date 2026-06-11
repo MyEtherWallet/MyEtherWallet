@@ -46,7 +46,7 @@
           </AppBaseButton>
         </div>
         <div v-else class="flex items-center gap-3 justify-start mt-5 -mx-1">
-          <AppBaseButton @click="$emit('access')" class="w-full" size="medium">
+          <AppBaseButton @click="onConnectWallet" class="w-full" size="medium">
             Connect your wallet
           </AppBaseButton>
         </div>
@@ -128,6 +128,7 @@ import { formatFiatValue } from '@/utils/numberFormatHelper'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 defineProps({
   watchOnly: {
@@ -136,11 +137,18 @@ defineProps({
   },
 })
 
-defineEmits<{
+const emit = defineEmits<{
   deposit: []
   withdraw: []
   access: []
 }>()
+
+const onConnectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Portfolio',
+  })
+  emit('access')
+}
 
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
