@@ -645,7 +645,7 @@
         >
           <button
             class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-            @click="login"
+            @click="login('Perps_Trade')"
           >
             Sign in to Perps
           </button>

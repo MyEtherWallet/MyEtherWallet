@@ -196,6 +196,28 @@ export type TradeEventStatusPayload = TradePayloadShared & {
 }
 
 // =============================================================================
+// PERPS SIGN IN
+// =============================================================================
+
+export const PerpsSignInEvent = {
+  CLICKED: 'Perps_Sign_In_Clicked',
+  SUCCESS: 'Perps_Sign_In_Success',
+  ERROR: 'Perps_Sign_In_Error',
+  CANCEL: 'Perps_Sign_In_Cancel',
+} as const
+export type PerpsSignInEvent =
+  (typeof PerpsSignInEvent)[keyof typeof PerpsSignInEvent]
+
+export type PerpsSignInPayload = {
+  source?: string
+}
+
+export type PerpsSignInErrorPayload = PerpsSignInPayload & {
+  errorMessage: string
+  walletType?: string
+}
+
+// =============================================================================
 // DEPOSIT
 // =============================================================================
 

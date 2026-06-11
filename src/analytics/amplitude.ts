@@ -47,6 +47,9 @@ import type {
   TradeClickSortEvent,
   SwapClickSortEvent,
   ClickSortPayload,
+  PerpsSignInEvent,
+  PerpsSignInPayload,
+  PerpsSignInErrorPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -605,6 +608,24 @@ export class Analytics {
   readonly trackSwapClickSortEvent = (
     event: typeof SwapClickSortEvent,
     payload: ClickSortPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS SIGN IN
+  // =============================================================================
+
+  readonly trackPerpsSignInEvent = (
+    event: PerpsSignInEvent,
+    payload?: PerpsSignInPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsSignInErrorEvent = (
+    event: typeof PerpsSignInEvent.ERROR,
+    payload: PerpsSignInErrorPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
