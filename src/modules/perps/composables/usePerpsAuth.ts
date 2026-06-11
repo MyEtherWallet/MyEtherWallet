@@ -9,6 +9,7 @@ import { WalletType } from '@/providers/types'
 import { perpsWs } from '../sdk/ws'
 import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 import { analytics, PerpsSignInEvent } from '@/analytics'
+import { isUserRejectionError } from '@/utils/walletUtils'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -206,7 +207,7 @@ export function usePerpsAuth() {
       analytics.trackPerpsSignInEvent(PerpsSignInEvent.SUCCESS, { source })
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : 'Authentication failed'
-      if (errorMessage === 'cancelled') {
+      if (isUserRejectionError(e)) {
         analytics.trackPerpsSignInEvent(PerpsSignInEvent.CANCEL, { source })
       } else {
         authError.value = errorMessage
