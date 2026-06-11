@@ -286,6 +286,27 @@ export type PerpsTradeOrderFailPayload = PerpsTradeOrderPayload & {
 }
 
 // =============================================================================
+// PERPS TP/SL
+// =============================================================================
+
+export const PerpsTpSlEvent = {
+  CLICKED: 'Perps_Tp_Sl_Clicked',
+  CLICKED_ADD_TP: 'Perps_Tp_Sl_Clicked_Add_Tp',
+  CLICKED_ADD_SL: 'Perps_Tp_Sl_Clicked_Add_Sl',
+  CLICKED_SAVE: 'Perps_Tp_Sl_Clicked_Save',
+  CLICKED_CANCEL: 'Perps_Tp_Sl_Clicked_Cancel',
+} as const
+export type PerpsTpSlEvent =
+  (typeof PerpsTpSlEvent)[keyof typeof PerpsTpSlEvent]
+
+export type PerpsTpSlSavePayload = {
+  tpAmount?: string
+  tpPercentageDiffFromCurrent?: string
+  slAmount?: string
+  slPercentageDiffFromCurrent?: string
+}
+
+// =============================================================================
 // NOTIFICATIONS
 // =============================================================================
 

@@ -56,6 +56,8 @@ import type {
   PerpsTradeOrderEvent,
   PerpsTradeOrderPayload,
   PerpsTradeOrderFailPayload,
+  PerpsTpSlEvent,
+  PerpsTpSlSavePayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -668,6 +670,17 @@ export class Analytics {
   readonly trackPerpsTradeOrderFailEvent = (
     event: typeof PerpsTradeOrderEvent.SUBMIT_FAIL,
     payload: PerpsTradeOrderFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS TP/SL
+  // =============================================================================
+
+  readonly trackPerpsTpSlEvent = (
+    event: PerpsTpSlEvent,
+    payload?: PerpsTpSlSavePayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
