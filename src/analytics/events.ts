@@ -227,6 +227,29 @@ export const DepositEvent = {
 export type DepositEvent = (typeof DepositEvent)[keyof typeof DepositEvent]
 
 // =============================================================================
+// PERPS DEPOSIT
+// =============================================================================
+
+export const PerpsDepositEvent = {
+  CLICKED: 'Perps_Deposit_Clicked',
+  SUBMIT: 'Perps_Deposit_Submit',
+  SUCCESS: 'Perps_Deposit_Success',
+  ERROR: 'Perps_Deposit_Error',
+  COMPLETED: 'Perps_Deposit_Completed',
+} as const
+export type PerpsDepositEvent =
+  (typeof PerpsDepositEvent)[keyof typeof PerpsDepositEvent]
+
+export type PerpsDepositPayload = {
+  depositAmount?: string
+  token?: string
+}
+
+export type PerpsDepositErrorPayload = PerpsDepositPayload & {
+  errorMessage: string
+}
+
+// =============================================================================
 // NOTIFICATIONS
 // =============================================================================
 
