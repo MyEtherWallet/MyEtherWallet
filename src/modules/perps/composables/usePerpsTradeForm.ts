@@ -1,10 +1,11 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { analytics, PerpsTradeOrderEvent } from '@/analytics'
+import { analytics, PerpsTradeOrderEvent, PerpsTpSlEvent } from '@/analytics'
 import type {
   PerpsTradeOrderPayload,
   PerpsTradeOrderFailPayload,
+  PerpsTpSlSavePayload,
 } from '@/analytics'
 import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
@@ -919,6 +920,7 @@ export function usePerpsTradeForm() {
     // Default to +30% TP and -3% SL if nothing is set yet
 
     showAutoCloseModal.value = true
+    void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED)
   }
 
   function setTakeProfitPct(pct: number) {
@@ -970,11 +972,41 @@ export function usePerpsTradeForm() {
     { flush: 'sync' },
   )
 
+  let justSavedAutoClose = false
+
   function confirmAutoClose() {
-    takeProfitPrice.value = tempTakeProfitPrice.value
-    stopLossPrice.value = tempStopLossPrice.value
+    const tp = tempTakeProfitPrice.value
+    const sl = tempStopLossPrice.value
+    const pricePct = (target: number) => {
+      if (!currentPrice.value) return undefined
+      const diff = ((target - currentPrice.value) / currentPrice.value) * 100
+      return diff.toFixed(2)
+    }
+    const savePayload: PerpsTpSlSavePayload = {
+      tpAmount: tp !== null ? String(tp) : undefined,
+      tpPercentageDiffFromCurrent: tp !== null ? pricePct(tp) : undefined,
+      slAmount: sl !== null ? String(sl) : undefined,
+      slPercentageDiffFromCurrent: sl !== null ? pricePct(sl) : undefined,
+    }
+    void analytics.trackPerpsTpSlEvent(
+      PerpsTpSlEvent.CLICKED_SAVE,
+      savePayload,
+    )
+    takeProfitPrice.value = tp
+    stopLossPrice.value = sl
+    justSavedAutoClose = true
     showAutoCloseModal.value = false
   }
+
+  watch(showAutoCloseModal, (open, prev) => {
+    if (prev && !open) {
+      if (justSavedAutoClose) {
+        justSavedAutoClose = false
+        return
+      }
+      void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_CANCEL)
+    }
+  })
 
   const hasAutoCloseEdits = computed(
     () =>
