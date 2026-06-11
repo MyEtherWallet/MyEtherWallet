@@ -56,7 +56,7 @@ const router = useRouter()
 
 const openSpaceX = () => {
   analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
-    location: 'Spacex_Banner',
+    location: 'spacex_annoucement_banner',
     stockName: 'SpaceX',
     stockSymbol: 'SPCXon',
   })

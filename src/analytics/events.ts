@@ -311,7 +311,7 @@ export type StockMarketSearchPayload = {
 }
 
 export type StockMarketClickStockPayload = {
-  location: 'token_row' | 'trade_button' | 'Spacex_Banner'
+  location: 'token_row' | 'trade_button' | 'spacex_annoucement_banner'
   stockName: string
   stockSymbol: string
 }
