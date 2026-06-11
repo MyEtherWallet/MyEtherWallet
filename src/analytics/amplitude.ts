@@ -53,6 +53,17 @@ import type {
   PerpsDepositEvent,
   PerpsDepositPayload,
   PerpsDepositErrorPayload,
+  PerpsTradeOrderEvent,
+  PerpsTradeOrderPayload,
+  PerpsTradeOrderFailPayload,
+  PerpsTpSlEvent,
+  PerpsTpSlSavePayload,
+  PerpsChangeLeverageEvent,
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+  PerpsClosePositionEvent,
+  PerpsClosePositionPayload,
+  PerpsClosePositionFailPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -647,6 +658,71 @@ export class Analytics {
   readonly trackPerpsDepositErrorEvent = (
     event: typeof PerpsDepositEvent.ERROR,
     payload: PerpsDepositErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS TRADE ORDER
+  // =============================================================================
+
+  readonly trackPerpsTradeOrderEvent = (
+    event: PerpsTradeOrderEvent,
+    payload?: PerpsTradeOrderPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsTradeOrderFailEvent = (
+    event: typeof PerpsTradeOrderEvent.SUBMIT_FAIL,
+    payload: PerpsTradeOrderFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS TP/SL
+  // =============================================================================
+
+  readonly trackPerpsTpSlEvent = (
+    event: PerpsTpSlEvent,
+    payload?: PerpsTpSlSavePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS CHANGE LEVERAGE
+  // =============================================================================
+
+  readonly trackPerpsChangeLeverageEvent = (
+    event: PerpsChangeLeverageEvent,
+    payload: PerpsChangeLeveragePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsChangeLeverageFailEvent = (
+    event: typeof PerpsChangeLeverageEvent.SUBMIT_FAIL,
+    payload: PerpsChangeLeverageFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS CLOSE POSITION
+  // =============================================================================
+
+  readonly trackPerpsClosePositionEvent = (
+    event: PerpsClosePositionEvent,
+    payload: PerpsClosePositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsClosePositionFailEvent = (
+    event: typeof PerpsClosePositionEvent.SUBMIT_FAIL,
+    payload: PerpsClosePositionFailPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

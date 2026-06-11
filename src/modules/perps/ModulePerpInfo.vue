@@ -955,7 +955,11 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import { analytics, ConnectWalletEvent, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
 
 const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
   useWalletMenuStore()
@@ -1383,15 +1387,37 @@ const marketMaxLeverage = computed(() => {
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: props.market,
+    oldLeverage: leverage.value,
+    maxLeverage: marketMaxLeverage.value,
+    newLeverage: tempLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(props.market, tempLeverage.value)
     showLeverageDialog.value = false
     leverage.value = tempLeverage.value
     perpsToasts.toastLeverageUpdated(tempLeverage.value, props.market)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }

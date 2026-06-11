@@ -250,6 +250,116 @@ export type PerpsDepositErrorPayload = PerpsDepositPayload & {
 }
 
 // =============================================================================
+// PERPS TRADE ORDER
+// =============================================================================
+
+export const PerpsTradeOrderEvent = {
+  CLICKED_PREVIEW: 'Perps_Trade_Order_Clicked_Preview',
+  CLICKED_SUBMIT: 'Perps_Trade_Order_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Trade_Order_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Trade_Order_Submit_Fail',
+  CLICKED_CANCEL: 'Perps_Trade_Order_Clicked_Cancel',
+  FILLED: 'Perps_Trade_Order_Filled',
+} as const
+export type PerpsTradeOrderEvent =
+  (typeof PerpsTradeOrderEvent)[keyof typeof PerpsTradeOrderEvent]
+
+export type PerpsTradeOrderPayload = {
+  market?: string
+  currentPrice?: number
+  orderSide?: 'buy' | 'sell'
+  orderType?: 'market' | 'limit'
+  leverage?: number
+  previousLeverage?: number
+  maxLeverage?: number
+  margin?: string
+  estimatedLiquidation?: number | null
+  takeProfit?: number | null
+  stopLoss?: number | null
+  marginRatio?: number | null
+  feeRate?: string
+}
+
+export type PerpsTradeOrderFailPayload = PerpsTradeOrderPayload & {
+  errorMessage: string
+  higherThanReasonablePrice?: boolean
+}
+
+// =============================================================================
+// PERPS TP/SL
+// =============================================================================
+
+export const PerpsTpSlEvent = {
+  CLICKED: 'Perps_Tp_Sl_Clicked',
+  CLICKED_ADD_TP: 'Perps_Tp_Sl_Clicked_Add_Tp',
+  CLICKED_ADD_SL: 'Perps_Tp_Sl_Clicked_Add_Sl',
+  CLICKED_SAVE: 'Perps_Tp_Sl_Clicked_Save',
+  CLICKED_CANCEL: 'Perps_Tp_Sl_Clicked_Cancel',
+} as const
+export type PerpsTpSlEvent =
+  (typeof PerpsTpSlEvent)[keyof typeof PerpsTpSlEvent]
+
+export type PerpsTpSlSavePayload = {
+  tpAmount?: string
+  tpPercentageDiffFromCurrent?: string
+  slAmount?: string
+  slPercentageDiffFromCurrent?: string
+}
+
+// =============================================================================
+// PERPS CHANGE LEVERAGE
+// =============================================================================
+
+export const PerpsChangeLeverageEvent = {
+  CLICKED_SUBMIT: 'Perps_Change_Leverage_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Change_Leverage_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Change_Leverage_Submit_Fail',
+} as const
+export type PerpsChangeLeverageEvent =
+  (typeof PerpsChangeLeverageEvent)[keyof typeof PerpsChangeLeverageEvent]
+
+export type PerpsChangeLeveragePayload = {
+  assetName: string
+  oldLeverage: number
+  maxLeverage: number
+  newLeverage: number
+}
+
+export type PerpsChangeLeverageFailPayload = PerpsChangeLeveragePayload & {
+  errorMessage: string
+}
+
+// =============================================================================
+// PERPS CLOSE POSITION
+// =============================================================================
+
+export const PerpsClosePositionEvent = {
+  CLICKED: 'Perps_Close_Position_Clicked',
+  CLICKED_SUBMIT: 'Perps_Close_Position_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Close_Position_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Close_Position_Submit_Fail',
+  FILLED: 'Perps_Close_Position_Filled',
+} as const
+export type PerpsClosePositionEvent =
+  (typeof PerpsClosePositionEvent)[keyof typeof PerpsClosePositionEvent]
+
+export type PerpsClosePositionPayload = {
+  assetName: string
+  orderDirection: 'buy' | 'sell'
+  orderType: 'market' | 'limit'
+  newPositionSize: string
+  oldPositionSize: string
+  isClosedInFull: boolean
+  marketPrice: number
+  currentUPnL: number
+  amountToClose: string
+}
+
+export type PerpsClosePositionFailPayload = PerpsClosePositionPayload & {
+  errorMessage: string
+}
+
+// =============================================================================
 // NOTIFICATIONS
 // =============================================================================
 
@@ -301,7 +411,7 @@ export type ClickTokenTradePayload = {
 export const ClickMainMenuEvent = 'Clicked_Wallet_Menu' as const
 
 export type ClickMainMenuPayload = {
-  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send'
+  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send' | 'perps'
 }
 
 // =============================================================================
