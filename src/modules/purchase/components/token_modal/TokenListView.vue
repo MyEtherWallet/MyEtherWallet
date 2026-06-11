@@ -98,7 +98,9 @@ import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 import {
   getPurchaseChainIcon,
   getPurchaseTokenIcon,
@@ -120,6 +122,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const chainsStore = useChainsStore()
+const { coinImages } = storeToRefs(usePurchaseStore())
 
 const searchInput = ref('')
 
@@ -137,7 +140,7 @@ const allEntries = computed<Entry[]>(() =>
       key: `${network.chain}-${token.symbol}`,
       network,
       token,
-      tokenIcon: getPurchaseTokenIcon(token, network.tokens, chainsStore),
+      tokenIcon: getPurchaseTokenIcon(token, network.tokens, chainsStore, coinImages.value),
       chainIcon: getPurchaseChainIcon(
         network.chain,
         network.tokens,

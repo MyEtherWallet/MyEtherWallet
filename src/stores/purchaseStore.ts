@@ -38,6 +38,8 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const purchaseInfo = ref<PurchaseInfo | null>(null)
   const isFetching = ref(false)
 
+  const coinImages = ref<Map<string, string>>(new Map())
+
   const buyQuotes = ref<BuyQuote[]>([])
   const isFetchingQuotes = ref(false)
   const buyQuotesError = ref('')
@@ -137,6 +139,27 @@ export const usePurchaseStore = defineStore('purchase', () => {
     return fiatsMap
   })
 
+  const fetchCoinImages = async (coinIds: string[]) => {
+    if (coinIds.length === 0) return
+    const { useMEWFetch } = useFetchMewApi()
+    try {
+      const { data } = await useMEWFetch('/v1/coins/images')
+        .post({ coinIds })
+        .json<Record<string, { url: string | null; marketCap: number | null }>>()
+      const response = data.value
+      if (!response) return
+      const map = new Map<string, string>()
+      Object.entries(response).forEach(([id, entry]) => {
+        if (entry?.url) map.set(id, entry.url)
+      })
+      coinImages.value = map
+    } catch (error) {
+      if (isDevMode) {
+        console.error('Failed to fetch coin images:', error)
+      }
+    }
+  }
+
   const fetchPurchaseInfo = async () => {
     if (purchaseInfo.value || isFetching.value) return
     isFetching.value = true
@@ -145,6 +168,8 @@ export const usePurchaseStore = defineStore('purchase', () => {
       const url = `${configs.MEW_PURCHASE_API}?includeMarketData=true`
       const { data } = await useMEWFetch(url).get().json<PurchaseInfo>()
       purchaseInfo.value = data.value
+      const ids = Array.from(buyableCoinIds.value)
+      fetchCoinImages(ids)
     } catch (error) {
       if (isDevMode) {
         console.error('Failed to fetch purchase info:', error)
@@ -289,6 +314,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
   return {
     purchaseInfo,
     isFetching,
+    coinImages,
     buyableCoinIds,
     fetchPurchaseInfo,
     isBuyable,
