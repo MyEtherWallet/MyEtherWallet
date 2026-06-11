@@ -330,6 +330,36 @@ export type PerpsChangeLeverageFailPayload = PerpsChangeLeveragePayload & {
 }
 
 // =============================================================================
+// PERPS CLOSE POSITION
+// =============================================================================
+
+export const PerpsClosePositionEvent = {
+  CLICKED: 'Perps_Close_Position_Clicked',
+  CLICKED_SUBMIT: 'Perps_Close_Position_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Close_Position_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Close_Position_Submit_Fail',
+  FILLED: 'Perps_Close_Position_Filled',
+} as const
+export type PerpsClosePositionEvent =
+  (typeof PerpsClosePositionEvent)[keyof typeof PerpsClosePositionEvent]
+
+export type PerpsClosePositionPayload = {
+  assetName: string
+  orderDirection: 'buy' | 'sell'
+  orderType: 'market' | 'limit'
+  newPositionSize: string
+  oldPositionSize: string
+  isClosedInFull: boolean
+  marketPrice: number
+  currentUPnL: number
+  amountToClose: string
+}
+
+export type PerpsClosePositionFailPayload = PerpsClosePositionPayload & {
+  errorMessage: string
+}
+
+// =============================================================================
 // NOTIFICATIONS
 // =============================================================================
 
