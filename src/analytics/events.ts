@@ -250,6 +250,42 @@ export type PerpsDepositErrorPayload = PerpsDepositPayload & {
 }
 
 // =============================================================================
+// PERPS TRADE ORDER
+// =============================================================================
+
+export const PerpsTradeOrderEvent = {
+  CLICKED_PREVIEW: 'Perps_Trade_Order_Clicked_Preview',
+  CLICKED_SUBMIT: 'Perps_Trade_Order_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Trade_Order_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Trade_Order_Submit_Fail',
+  CLICKED_CANCEL: 'Perps_Trade_Order_Clicked_Cancel',
+  FILLED: 'Perps_Trade_Order_Filled',
+} as const
+export type PerpsTradeOrderEvent =
+  (typeof PerpsTradeOrderEvent)[keyof typeof PerpsTradeOrderEvent]
+
+export type PerpsTradeOrderPayload = {
+  market?: string
+  currentPrice?: number
+  orderSide?: 'buy' | 'sell'
+  orderType?: 'market' | 'limit'
+  leverage?: number
+  previousLeverage?: number
+  maxLeverage?: number
+  margin?: string
+  estimatedLiquidation?: number | null
+  takeProfit?: number | null
+  stopLoss?: number | null
+  marginRatio?: number | null
+  feeRate?: string
+}
+
+export type PerpsTradeOrderFailPayload = PerpsTradeOrderPayload & {
+  errorMessage: string
+  higherThanReasonablePrice?: boolean
+}
+
+// =============================================================================
 // NOTIFICATIONS
 // =============================================================================
 
@@ -301,7 +337,7 @@ export type ClickTokenTradePayload = {
 export const ClickMainMenuEvent = 'Clicked_Wallet_Menu' as const
 
 export type ClickMainMenuPayload = {
-  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send'
+  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send' | 'perps'
 }
 
 // =============================================================================

@@ -1,6 +1,11 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { analytics, PerpsTradeOrderEvent } from '@/analytics'
+import type {
+  PerpsTradeOrderPayload,
+  PerpsTradeOrderFailPayload,
+} from '@/analytics'
 import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
 import { usePerpsAuth, usePerpsBalance } from './usePerpsAuth'
@@ -986,10 +991,53 @@ export function usePerpsTradeForm() {
   }
 
   // ── Confirm / submit ──────────────────────────────────────
+  const activeContract = computed(() =>
+    contracts.value.find(c => c.market === fullMarketName.value),
+  )
+
+  const isMakerOrder = computed(() => {
+    if (orderType.value !== 'limit') return false
+    const limit = parseFloat(limitPrice.value || '')
+    if (!Number.isFinite(limit) || !currentPrice.value) return false
+    return orderSide.value === 'buy'
+      ? limit < currentPrice.value
+      : limit > currentPrice.value
+  })
+
+  function buildTradeOrderPayload(): PerpsTradeOrderPayload {
+    const priorLeverage = activePosition.value?.leverage
+      ? parseInt(activePosition.value.leverage)
+      : undefined
+    const feeRate = isMakerOrder.value
+      ? activeContract.value?.makerFee
+      : activeContract.value?.takerFee
+    return {
+      market: fullMarketName.value,
+      currentPrice: currentPrice.value,
+      orderSide: orderSide.value,
+      orderType: orderType.value,
+      leverage: leverage.value,
+      previousLeverage: priorLeverage,
+      maxLeverage: marketMaxLeverage.value,
+      margin: inputAmount.value,
+      estimatedLiquidation: estimatedLiquidation.value || null,
+      takeProfit: takeProfitPrice.value,
+      stopLoss: stopLossPrice.value,
+      marginRatio: newMarginRatio.value,
+      feeRate,
+    }
+  }
+
+  let justSubmittedOrder = false
+
   function showConfirmation() {
     if (submitDisabled.value) return
     orderError.value = ''
     showConfirmModal.value = true
+    void analytics.trackPerpsTradeOrderEvent(
+      PerpsTradeOrderEvent.CLICKED_PREVIEW,
+      buildTradeOrderPayload(),
+    )
   }
 
   function showCloseConfirmation() {
@@ -1000,6 +1048,11 @@ export function usePerpsTradeForm() {
 
   async function confirmAndSubmitOrder() {
     if (submitDisabled.value) return
+    const tradePayload = buildTradeOrderPayload()
+    void analytics.trackPerpsTradeOrderEvent(
+      PerpsTradeOrderEvent.CLICKED_SUBMIT,
+      tradePayload,
+    )
     isSubmitting.value = true
     // Snapshot prior SL/TP state BEFORE the SDK call so "prior" reflects what
     // the user was about to change. Reading it afterward would see the new
@@ -1054,6 +1107,10 @@ export function usePerpsTradeForm() {
         }
       }
       await perpsClient.createOrder(orderParams as any)
+      void analytics.trackPerpsTradeOrderEvent(
+        PerpsTradeOrderEvent.SUBMIT_SUCCESS,
+        tradePayload,
+      )
       // Fire Order Placed + SL/TP toasts only after the SDK call succeeded.
       const marketMatch = markets.value.find(
         m => m.market === fullMarketName.value,
@@ -1079,6 +1136,7 @@ export function usePerpsTradeForm() {
         if (hadPriorTakeProfit) perpsToasts.toastTakeProfitModified(args)
         else perpsToasts.toastTakeProfitAdded(args)
       }
+      justSubmittedOrder = true
       showConfirmModal.value = false
       inputAmount.value = ''
       sliderValue.value = 0
@@ -1107,12 +1165,37 @@ export function usePerpsTradeForm() {
           perpsToasts.toastTakeProfitInvalid()
         }
       }
-      orderError.value =
+      const errorMessage =
         error?.message || error?.toString() || 'Order failed. Please try again.'
+      orderError.value = errorMessage
+      const failPayload: PerpsTradeOrderFailPayload = {
+        ...tradePayload,
+        errorMessage,
+        higherThanReasonablePrice: limitPriceOutOfTolerance.value,
+      }
+      void analytics.trackPerpsTradeOrderFailEvent(
+        PerpsTradeOrderEvent.SUBMIT_FAIL,
+        failPayload,
+      )
     } finally {
       isSubmitting.value = false
     }
   }
+
+  // Track CANCEL when the confirm modal closes without a successful submit
+  // (e.g. user hit Cancel or closed the dialog).
+  watch(showConfirmModal, (open, prev) => {
+    if (prev && !open) {
+      if (justSubmittedOrder) {
+        justSubmittedOrder = false
+        return
+      }
+      void analytics.trackPerpsTradeOrderEvent(
+        PerpsTradeOrderEvent.CLICKED_CANCEL,
+        buildTradeOrderPayload(),
+      )
+    }
+  })
 
   // NOTE(perps-toasts): Dedicated remove-stop-loss / remove-take-profit flows
   // are not yet wired in this composable. The SDK client today exposes

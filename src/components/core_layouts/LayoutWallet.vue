@@ -326,7 +326,7 @@ const openPanel = (panel: WalletPanel) => {
   }
   walletMenu.setWalletPanel(panel)
   analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
-    button: panel as any,
+    button: panel,
   })
 }
 
