@@ -267,6 +267,7 @@ import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
 import { type TokenBalance } from '@/mew_api/types'
 import { truncateAddress } from '@/utils/filters'
+import { analytics, PerpsDepositEvent } from '@/analytics'
 
 const { t } = useI18n()
 const SANDBOX_MAX_DEPOSIT = 1000
@@ -293,6 +294,7 @@ watch(isOpen, open => {
     // regardless of whether the dialog is closed.
     return
   }
+  analytics.trackPerpsDepositEvent(PerpsDepositEvent.CLICKED)
   if (selectedChain.value?.name !== 'ETHEREUM') {
     const ethChain = chains.value.find(c => c.name === 'ETHEREUM')
     if (ethChain) {
@@ -520,17 +522,26 @@ const fetchDepositAddress = async () => {
 
 const sendSandboxDeposit = async () => {
   if (!amount.value || !accountId.value) return
+  const depositAmount = amount.value
   sending.value = true
   error.value = null
   try {
     await perpsClient.sandboxDeposit({
-      amount: parseFloat(amount.value).toFixed(2),
+      amount: parseFloat(depositAmount).toFixed(2),
       symbol: 'USDC',
       deposit_destination: { id: accountId.value, wallet: 'margin' },
       chain_id: 'eth-sepolia',
     })
     triggerRefresh()
-    perpsToasts.toastDepositComplete(amount.value, 'USDC')
+    analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUCCESS, {
+      depositAmount,
+      token: 'USDC',
+    })
+    analytics.trackPerpsDepositEvent(PerpsDepositEvent.COMPLETED, {
+      depositAmount,
+      token: 'USDC',
+    })
+    perpsToasts.toastDepositComplete(depositAmount, 'USDC')
     clearAmount()
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e ?? '')
@@ -539,6 +550,11 @@ const sendSandboxDeposit = async () => {
       perpsToasts.toastDepositCanceled()
     } else {
       error.value = msg || 'Sandbox deposit failed'
+      analytics.trackPerpsDepositErrorEvent(PerpsDepositEvent.ERROR, {
+        depositAmount,
+        token: 'USDC',
+        errorMessage: msg,
+      })
       perpsToasts.toastFailedToInitiateDeposit()
     }
   } finally {
@@ -554,6 +570,7 @@ const sendLiveDeposit = async () => {
     !usdcBalance.value
   )
     return
+  const depositAmount = amount.value
   sending.value = true
   error.value = null
   try {
@@ -611,6 +628,14 @@ const sendLiveDeposit = async () => {
       throw new Error('Transaction was not broadcast')
     }
     triggerRefresh()
+    analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUCCESS, {
+      depositAmount,
+      token: 'USDC',
+    })
+    analytics.trackPerpsDepositEvent(PerpsDepositEvent.COMPLETED, {
+      depositAmount,
+      token: 'USDC',
+    })
     perpsToasts.toastDepositInitiated()
     clearAmount()
   } catch (e: unknown) {
@@ -620,6 +645,11 @@ const sendLiveDeposit = async () => {
       perpsToasts.toastDepositCanceled()
     } else {
       error.value = msg || 'Transaction failed'
+      analytics.trackPerpsDepositErrorEvent(PerpsDepositEvent.ERROR, {
+        depositAmount,
+        token: 'USDC',
+        errorMessage: msg,
+      })
       perpsToasts.toastFailedToCreditAccount()
     }
   } finally {
@@ -630,6 +660,10 @@ const sendLiveDeposit = async () => {
 function sendDeposit() {
   const amt = parseFloat(amount.value)
   if (!amt || amt <= 0) return
+  analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUBMIT, {
+    depositAmount: amount.value,
+    token: 'USDC',
+  })
   if (showIsLive.value) {
     sendLiveDeposit()
   } else {
