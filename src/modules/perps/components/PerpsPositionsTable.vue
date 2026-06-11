@@ -916,11 +916,13 @@ const saveLeverage = async () => {
       payload,
     )
   } catch (e: unknown) {
-    leverageError.value = (e as Error).message
+    const errorMessage =
+      e instanceof Error ? e.message : String(e ?? 'Failed to set leverage')
+    leverageError.value = errorMessage
     perpsToasts.toastFailedToSetLeverage()
     const failPayload: PerpsChangeLeverageFailPayload = {
       ...payload,
-      errorMessage: leverageError.value,
+      errorMessage,
     }
     void analytics.trackPerpsChangeLeverageFailEvent(
       PerpsChangeLeverageEvent.SUBMIT_FAIL,
