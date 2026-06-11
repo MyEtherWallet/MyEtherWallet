@@ -49,11 +49,17 @@
 <script setup lang="ts">
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
+import { analytics, StockMarketEvent } from '@/analytics'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const openSpaceX = () => {
+  analytics.trackStockMarketClickStockEvent(StockMarketEvent.CLICK_STOCK, {
+    location: 'Spacex_Banner',
+    stockName: 'SpaceX',
+    stockSymbol: 'SPCXon',
+  })
   router.push({
     name: STOCK_INFO_ROUTE_NAMES.stocks,
     params: { symbol: 'SPCXon' },
