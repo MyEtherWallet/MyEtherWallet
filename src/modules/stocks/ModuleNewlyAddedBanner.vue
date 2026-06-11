@@ -1,6 +1,7 @@
 <template>
   <div
-    class="relative overflow-hidden rounded-2xl flex flex-col justify-between block mt-[32px]"
+    class="relative overflow-hidden rounded-2xl flex flex-col justify-between block mt-[32px] cursor-pointer"
+    @click="openSpaceX"
   >
     <img
       src="@/assets/images/newly-added/background.png"
