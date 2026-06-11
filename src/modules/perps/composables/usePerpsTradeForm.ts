@@ -6,6 +6,7 @@ import {
   PerpsTradeOrderEvent,
   PerpsTpSlEvent,
   PerpsChangeLeverageEvent,
+  PerpsClosePositionEvent,
 } from '@/analytics'
 import type {
   PerpsTradeOrderPayload,
@@ -13,6 +14,8 @@ import type {
   PerpsTpSlSavePayload,
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
+  PerpsClosePositionPayload,
+  PerpsClosePositionFailPayload,
 } from '@/analytics'
 import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
@@ -433,30 +436,67 @@ export function usePerpsTradeForm() {
     closeAmount.value = amt.toFixed(2)
   }
 
+  function buildClosePositionPayload(
+    placedSize: string,
+    closeSide: 'buy' | 'sell',
+    isLimit: boolean,
+    closePct: number,
+  ): PerpsClosePositionPayload {
+    const oldSize = activePosition.value?.netQuantity ?? '0'
+    const oldSizeNum = parseFloat(oldSize)
+    const placedNum = parseFloat(placedSize)
+    const newSize =
+      closePct >= 100 ? 0 : Math.max(oldSizeNum - placedNum, 0)
+    return {
+      assetName: fullMarketName.value,
+      orderDirection: closeSide,
+      orderType: isLimit ? 'limit' : 'market',
+      newPositionSize: newSize.toString(),
+      oldPositionSize: oldSize,
+      isClosedInFull: closePct >= 100,
+      marketPrice: currentPrice.value,
+      currentUPnL: positionPnl.value,
+      amountToClose: closeAmount.value || '0',
+    }
+  }
+
   async function handleClosePosition() {
     if (!activePosition.value || isClosing.value) return
     isClosing.value = true
     closeError.value = ''
+    const closePct = closeSliderValue.value
+    const isLimit = orderType.value === 'limit'
+    const closeSide: 'buy' | 'sell' =
+      activePosition.value.direction === 'long' ? 'sell' : 'buy'
+    let placedSize: string = activePosition.value.netQuantity
+    if (!(closePct >= 100)) {
+      const closeUsd = parseFloat(closeAmount.value) || 0
+      if (closeUsd > 0) {
+        const rawSize = closeUsd / effectivePrice.value
+        placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
+      }
+    }
+    const closePayload = buildClosePositionPayload(
+      placedSize,
+      closeSide,
+      isLimit,
+      closePct,
+    )
+    void analytics.trackPerpsClosePositionEvent(
+      PerpsClosePositionEvent.CLICKED_SUBMIT,
+      closePayload,
+    )
     try {
-      const closePct = closeSliderValue.value
-      const isLimit = orderType.value === 'limit'
-      const closeSide: 'buy' | 'sell' =
-        activePosition.value.direction === 'long' ? 'sell' : 'buy'
-      let placedSize: string
-
       if (closePct >= 100 && !isLimit) {
         // Full close via market order
-        placedSize = activePosition.value.netQuantity
         await closePosition(activePosition.value)
       } else {
-        if (closePct >= 100) {
-          // Full close via limit
-          placedSize = activePosition.value.netQuantity
-        } else {
+        if (closePct < 100) {
           const closeUsd = parseFloat(closeAmount.value) || 0
-          if (closeUsd <= 0) return
-          const rawSize = closeUsd / effectivePrice.value
-          placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
+          if (closeUsd <= 0) {
+            isClosing.value = false
+            return
+          }
         }
 
         const orderParams: Record<string, unknown> = {
@@ -487,12 +527,24 @@ export function usePerpsTradeForm() {
         market: closeDisplayMarket,
         price: isLimit ? (limitPrice.value ?? undefined) : undefined,
       })
+      void analytics.trackPerpsClosePositionEvent(
+        PerpsClosePositionEvent.SUBMIT_SUCCESS,
+        closePayload,
+      )
       closeAmount.value = ''
       closeSliderValue.value = 0
       triggerRefresh()
     } catch (e: any) {
       closeError.value =
         e?.message || e?.toString() || 'Failed to close position.'
+      const failPayload: PerpsClosePositionFailPayload = {
+        ...closePayload,
+        errorMessage: closeError.value,
+      }
+      void analytics.trackPerpsClosePositionFailEvent(
+        PerpsClosePositionEvent.SUBMIT_FAIL,
+        failPayload,
+      )
     } finally {
       isClosing.value = false
     }
@@ -1105,6 +1157,24 @@ export function usePerpsTradeForm() {
     if (closeDisabled.value) return
     closeError.value = ''
     showCloseConfirmModal.value = true
+    if (activePosition.value) {
+      const closePct = closeSliderValue.value
+      const isLimit = orderType.value === 'limit'
+      const closeSide: 'buy' | 'sell' =
+        activePosition.value.direction === 'long' ? 'sell' : 'buy'
+      let placedSize: string = activePosition.value.netQuantity
+      if (!(closePct >= 100)) {
+        const closeUsd = parseFloat(closeAmount.value) || 0
+        if (closeUsd > 0 && effectivePrice.value > 0) {
+          const rawSize = closeUsd / effectivePrice.value
+          placedSize = floorToIncrement(rawSize, activeMarketIncrement.value)
+        }
+      }
+      void analytics.trackPerpsClosePositionEvent(
+        PerpsClosePositionEvent.CLICKED,
+        buildClosePositionPayload(placedSize, closeSide, isLimit, closePct),
+      )
+    }
   }
 
   async function confirmAndSubmitOrder() {

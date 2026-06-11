@@ -61,6 +61,9 @@ import type {
   PerpsChangeLeverageEvent,
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
+  PerpsClosePositionEvent,
+  PerpsClosePositionPayload,
+  PerpsClosePositionFailPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -702,6 +705,24 @@ export class Analytics {
   readonly trackPerpsChangeLeverageFailEvent = (
     event: typeof PerpsChangeLeverageEvent.SUBMIT_FAIL,
     payload: PerpsChangeLeverageFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS CLOSE POSITION
+  // =============================================================================
+
+  readonly trackPerpsClosePositionEvent = (
+    event: PerpsClosePositionEvent,
+    payload: PerpsClosePositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsClosePositionFailEvent = (
+    event: typeof PerpsClosePositionEvent.SUBMIT_FAIL,
+    payload: PerpsClosePositionFailPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
