@@ -25,7 +25,7 @@
     >
       <div
         role="listbox"
-        aria-label="Select an option"
+        :aria-label="$t('common.select_an_option')"
         v-show="openSelect"
         class="absolute top-full focus:outline-none z-[500] pt-2"
         :class="position"

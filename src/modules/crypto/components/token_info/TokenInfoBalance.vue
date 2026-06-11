@@ -10,7 +10,7 @@
       <h2
         class="basis-full sm:basis-auto font-bold text-s-20 xs:text-s-28 leading-p-150"
       >
-        Your Balance:
+        {{ $t('crypto.your_balance') }}
       </h2>
       <div v-if="!isLoading" class="flex mt-1 xs:items-center">
         <div class="relative">
@@ -69,7 +69,7 @@
       ]"
     >
       <div class="flex items-center gap-1">
-        <h3 class="text-s-17 font-bold">Balance on other chains:</h3>
+        <h3 class="text-s-17 font-bold">{{ $t('crypto.balance_on_other_chains') }}</h3>
       </div>
 
       <div class="max-h-[420px] overflow-y-auto pr-2 mew-scrollbar">
@@ -124,7 +124,7 @@
             class="shrink-0 hidden sm:block"
             @click="bridgeBtn(i)"
           >
-            Bridge
+            {{ $t('crypto.bridge') }}
           </app-base-button>
         </div>
       </div>

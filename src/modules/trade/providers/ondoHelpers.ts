@@ -29,7 +29,7 @@ const getRestrictedTokenAddresses = (): Promise<string[]> => {
 
 const isTradingRestricted = async (): Promise<boolean> => {
   if (!configs.MEW_LIVE_URLS.includes(window.location.hostname)) return false
-  return fetch(`https://partners.mewapi.io/o/ipcomply`)
+  return fetch(`https://partners.mewapi.io/o/ipcomply/web`)
     .then(async res => {
       if (!res.ok) return true
       else {

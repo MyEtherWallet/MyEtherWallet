@@ -2,6 +2,14 @@
   <div
     class="bg-white rounded-20 overflow-hidden relative p-5 sm:py-14 lg:py-20 lg:px-10"
   >
+    <perps-signing-prompt
+      :show="showSigningPrompt"
+      :message="signingMessage"
+      :is-hardware-wallet="isHardwareWalletSigning"
+      :is-waiting-for-confirm="isWaitingForConfirm"
+      @confirm="confirmSign"
+      @cancel="cancelSign"
+    />
     <!-- Mobile / tablet: logos in a centered row above the content -->
     <div class="flex items-center justify-center gap-2 mb-6 sm:mb-10 lg:hidden">
       <img :src="amazonLogo" alt="" class="w-7 h-7" />
@@ -94,17 +102,7 @@
       </p>
 
       <div class="flex justify-center">
-        <template v-if="!isWalletConnected || isWatchOnly">
-          <app-base-button
-            class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
-            @click="onConnectWallet"
-            @mouseenter="isHoveringCta = true"
-            @mouseleave="isHoveringCta = false"
-          >
-            Connect Wallet
-          </app-base-button>
-        </template>
-        <template v-else-if="isBitcoinChain && isUnisatWallet">
+        <template v-if="!isOnEthereum && isUnisatWallet">
           <app-base-button
             class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             @click="onDownloadEnkrypt"
@@ -114,7 +112,7 @@
             Download Enkrypt
           </app-base-button>
         </template>
-        <template v-else-if="isBitcoinChain">
+        <template v-else-if="!isOnEthereum">
           <app-base-button
             class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             @click="onSwitchToEthereum"
@@ -124,11 +122,21 @@
             Switch to Ethereum
           </app-base-button>
         </template>
+        <template v-else-if="!isWalletConnected || isWatchOnly">
+          <app-base-button
+            class="w-full lg:w-auto lg:px-10"
+            @click="onConnectWallet"
+            @mouseenter="isHoveringCta = true"
+            @mouseleave="isHoveringCta = false"
+          >
+            Connect Wallet
+          </app-base-button>
+        </template>
         <template v-else>
           <app-base-button
             class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             :is-loading="isAuthenticating"
-            @click="login"
+            @click="login('Perps_Main_Banner')"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >
@@ -138,14 +146,14 @@
       </div>
 
       <p
-        v-if="isBitcoinChain && isUnisatWallet"
+        v-if="!isOnEthereum && isUnisatWallet"
         class="text-info text-s-12 mt-3"
       >
         UniSat doesn't support Perpetuals. Install Enkrypt or connect a
         different wallet to continue.
       </p>
-      <p v-else-if="isBitcoinChain" class="text-info text-s-12 mt-3">
-        Perpetuals are available on Ethereum. Switch network to continue.
+      <p v-else-if="!isOnEthereum" class="text-info text-s-13 mt-3">
+        Perpetuals feature is only available on the Ethereum network
       </p>
     </div>
   </div>
@@ -155,6 +163,7 @@
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import PerpsSigningPrompt from './PerpsSigningPrompt.vue'
 import amazonLogo from '@/assets/icons/perps-banner/amazon.svg'
 import amdLogo from '@/assets/icons/perps-banner/amd.svg'
 import appleLogo from '@/assets/icons/perps-banner/apple.svg'
@@ -162,21 +171,31 @@ import coinbaseLogo from '@/assets/icons/perps-banner/coinbase.svg'
 import googleLogo from '@/assets/icons/perps-banner/google.svg'
 import hoodLogo from '@/assets/icons/perps-banner/hood.svg'
 import { useWalletStore } from '@/stores/walletStore'
-import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly, walletName } = storeToRefs(walletStore)
-const chainsStore = useChainsStore()
-const { isBitcoinChain } = storeToRefs(chainsStore)
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
-const { login, isAuthenticating } = usePerpsAuth()
+const {
+  login,
+  isAuthenticating,
+  showSigningPrompt,
+  signingMessage,
+  isHardwareWalletSigning,
+  isWaitingForConfirm,
+  confirmSign,
+  cancelSign,
+} = usePerpsAuth()
+
+const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
 
 const isHoveringCta = ref(false)
 
@@ -185,6 +204,9 @@ const isUnisatWallet = computed(
 )
 
 const onConnectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Main_Banner',
+  })
   accessStore.openAccessDialog()
 }
 

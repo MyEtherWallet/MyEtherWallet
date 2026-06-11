@@ -16,7 +16,7 @@
     <app-input
       ref="nameInput"
       v-model="name"
-      placeholder="Enter name"
+      :placeholder="$t('common.enter_name')"
       :errorMessage="nameErrorMessages"
       is-required
       @focus="setNameInFocusInput()"
@@ -26,7 +26,7 @@
     <address-input
       v-if="!addressEdit"
       v-model:adr-input="address"
-      label="Enter Address"
+      :label="$t('common.enter_address')"
       :resolved-address="resolvedAddress"
       :address-error-messages="addressErrorMessages"
       :has-address-book="false"
@@ -41,7 +41,7 @@
         is-outline
         size="medium"
         @click="cancelEdit"
-        >Cancel</app-base-button
+        >{{ $t('common.cancel') }}</app-base-button
       >
       <app-base-button
         size="medium"
@@ -65,6 +65,7 @@ import { useDebounceFn } from '@vueuse/core'
 import AddressInput from './AddressInput.vue'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { ref, nextTick, watch, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { type Chain } from '@/mew_api/types'
 import AppBlockie from '../AppBlockie.vue'
 const props = defineProps({
@@ -74,6 +75,7 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
 const isOpen = defineModel<boolean>('isOpen', {
   default: false,
 })
@@ -104,7 +106,7 @@ const additionalAddressValidation = () => {
   if (
     adrBookStore.isAdrAdded(address.value, selectedChain.value?.type || 'EVM')
   ) {
-    addressErrorMessages.value = 'address already exists'
+    addressErrorMessages.value = t('common.validation.address_already_exists')
     return false
   }
   return validateAddressInput()
@@ -113,17 +115,17 @@ const additionalAddressValidation = () => {
 const validateNameInput = () => {
   nameErrorMessages.value = ''
   if (name.value === '') {
-    nameErrorMessages.value = 'required'
+    nameErrorMessages.value = t('common.required')
     return false
   }
   if (name.value.length < 3) {
-    nameErrorMessages.value = 'name must be at least 3 characters long'
+    nameErrorMessages.value = t('common.validation.name_min_length')
     return false
   }
   if (
     adrBookStore.isNameAdded(name.value, selectedChain.value?.type || 'EVM')
   ) {
-    nameErrorMessages.value = 'name already exists'
+    nameErrorMessages.value = t('common.validation.name_already_exists')
     return false
   }
   return true
@@ -186,7 +188,7 @@ const tryAdd = () => {
   }
 }
 const buttonText = computed(() => {
-  return props.addressEdit ? 'Save' : 'Add'
+  return props.addressEdit ? t('common.save') : t('common.add')
 })
 
 const cancelEdit = () => {

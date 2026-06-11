@@ -1,7 +1,7 @@
 <template>
   <!-- Top: Trending -->
   <OverviewContainer
-    title="Trending"
+    :title="$t('common.trending')"
     :current-page="page"
     :total-pages="totalPages"
     :is-loading="isLoading"

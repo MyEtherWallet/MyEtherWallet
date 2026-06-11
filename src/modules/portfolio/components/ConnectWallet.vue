@@ -11,13 +11,11 @@
     >
       <div>
         <p class="text-s-24 lg:text-s-40 font-bold mb-2">
-          Connect wallet to see your portfolio
+          {{ t('portfolio.connect_wallet.title') }}
         </p>
 
         <p class="text-s-14 lg:text-s-16 text-info">
-          Unlock your wallet to see full features. Manage your crypto assets
-          across multiple blockchains: trade tokenized stocks and ETFs, swap
-          crypto tokens, stake, and more.
+          {{ t('portfolio.connect_wallet.description') }}
         </p>
       </div>
       <div
@@ -28,12 +26,12 @@
           :size="isDesktopAndUp ? 'large' : 'medium'"
           @click="connectWallet"
         >
-          Connect Wallet
+          {{ t('portfolio.connect_wallet.connect_button') }}
         </app-base-button>
         <p>
-          or
+          {{ t('portfolio.connect_wallet.or') }}
           <app-btn-text @click="createWallet" class="underline"
-            >Create a new wallet</app-btn-text
+            >{{ t('common.create_new_wallet') }}</app-btn-text
           >
         </p>
       </div>
@@ -42,6 +40,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
@@ -50,6 +49,7 @@ import ImgEthRight from '@/assets/images/backgrounds/eth-right.webp'
 import { useRouter } from 'vue-router'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 
+const { t } = useI18n()
 const { isDesktopAndUp } = useAppBreakpoints()
 
 const router = useRouter()

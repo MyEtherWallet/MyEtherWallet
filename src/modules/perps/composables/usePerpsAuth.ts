@@ -1,10 +1,15 @@
-import { ref, watch } from 'vue'
+import { ref, watch, effectScope } from 'vue'
 import { BUILDER_CODE, perpsClient } from '../configs'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import type { PerpsBalance, PortfolioSummary } from '../sdk/types'
 import { usePerpsToasts } from '@/modules/perps/composables/usePerpsToasts'
 import { decrypt, encrypt } from '@/utils/crypto'
+import { WalletType } from '@/providers/types'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
+import { analytics, PerpsSignInEvent } from '@/analytics'
+import { isUserRejectionError } from '@/utils/walletUtils'
 
 const STORAGE_KEY_TOKEN = 'perps_auth_token'
 const STORAGE_KEY_ACCOUNT = 'perps_auth_account'
@@ -23,9 +28,23 @@ const accountId = ref<string | null>(null)
 const isAuthenticating = ref(false)
 const authError = ref<string | null>(null)
 const refreshKey = ref(0)
+const showSigningPrompt = ref(false)
+const signingMessage = ref<string | null>(null)
+const isHardwareWalletSigning = ref(false)
+const isWaitingForConfirm = ref(false)
 
 let _authRestored = false
 let _currentAddress: string | null = null
+let _resolveSign: (() => void) | null = null
+let _rejectSign: ((reason?: unknown) => void) | null = null
+
+function _waitForSignConfirmation(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    _resolveSign = resolve
+    _rejectSign = reject
+  })
+}
+let _walletWatcherRegistered = false
 
 async function tryRestoreAuth(address: string) {
   const storedTokens: string[] = getStoredArray(STORAGE_KEY_TOKEN)
@@ -35,6 +54,7 @@ async function tryRestoreAuth(address: string) {
       const decryptedToken = await decrypt(storedTokens[i], address)
       token.value = decryptedToken
       perpsClient.setToken(decryptedToken)
+      perpsWs.login(decryptedToken)
       _authRestored = true
       try {
         accountId.value = storedAccounts[i]
@@ -59,6 +79,12 @@ async function clearAuth() {
   token.value = null
   accountId.value = null
   perpsClient.setToken(null)
+  perpsWs.logout()
+  // Reset module-scope guards so a subsequent Sign In click is not silently
+  // blocked by a stale auth-restored flag from a previous session.
+  _authRestored = false
+  _currentAddress = null
+  isAuthenticating.value = false
 
   if (!wallet.value) return;
   const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
@@ -86,12 +112,21 @@ async function clearAuth() {
 perpsClient.setOnUnauthorized(() => {
   clearAuth()
 })
+perpsWs.setOnUnauthorized(() => {
+  clearAuth()
+})
 
 export function usePerpsAuth() {
   const store = useWalletStore()
   const { wallet, isWalletConnected, walletAddress } = storeToRefs(store)
 
-  if (!_authRestored) {
+  // Register the walletAddress watcher exactly once for the lifetime of the
+  // module. Re-registering after a sign-out would race with `clearAuth()`'s
+  // localStorage filtering — the fresh watcher's `immediate: true` fire would
+  // call `tryRestoreAuth` against the unfiltered localStorage and re-hydrate
+  // the token we just cleared.
+  if (!_walletWatcherRegistered) {
+    _walletWatcherRegistered = true
     watch(
       walletAddress,
       async address => {
@@ -100,6 +135,7 @@ export function usePerpsAuth() {
         token.value = null
         accountId.value = null
         perpsClient.setToken(null)
+        perpsWs.logout()
         await tryRestoreAuth(address)
         if (token.value) refreshKey.value++
       },
@@ -107,20 +143,39 @@ export function usePerpsAuth() {
     )
   }
 
-  async function login() {
-    if (_authRestored) return;
+  async function login(source?: string) {
+    if (_authRestored || isAuthenticating.value || isWaitingForConfirm.value) return
     if (!wallet.value || !isWalletConnected.value) {
       authError.value = 'Wallet not connected'
       return
     }
+    analytics.trackPerpsSignInEvent(PerpsSignInEvent.CLICKED, { source })
     isAuthenticating.value = true
     authError.value = null
+    let walletTypeStr: string | undefined
     try {
       const address = await wallet.value.getAddress()
       const challenge = await perpsClient.getLoginChallenge({
         walletAddress: address,
         chainId: '1',
       })
+      const walletType = wallet.value.getWalletType()
+      walletTypeStr = walletType
+      const isInjected = walletType === WalletType.WAGMI || walletType === WalletType.INJECTED
+
+      if (!isInjected) {
+        isHardwareWalletSigning.value = walletType === WalletType.LEDGER || walletType === WalletType.TREZOR
+        signingMessage.value = challenge.result.message
+        isWaitingForConfirm.value = true
+        showSigningPrompt.value = true
+        isAuthenticating.value = false
+
+        await _waitForSignConfirmation()
+
+        isWaitingForConfirm.value = false
+        isAuthenticating.value = true
+      }
+
       const signature = await wallet.value.SignMessage({
         message: challenge.result.message,
       })
@@ -132,8 +187,8 @@ export function usePerpsAuth() {
       token.value = complete.result.token
       accountId.value = complete.result.accountId
 
-
       perpsClient.setToken(token.value)
+      perpsWs.login(token.value)
 
       const storedTokens = getStoredArray(STORAGE_KEY_TOKEN)
       const storedAccId = getStoredArray(STORAGE_KEY_ACCOUNT)
@@ -149,11 +204,38 @@ export function usePerpsAuth() {
         termsVersion: 1,
         privacyVersion: 1,
       })
+      analytics.trackPerpsSignInEvent(PerpsSignInEvent.SUCCESS, { source })
     } catch (e) {
-      authError.value = e instanceof Error ? e.message : 'Authentication failed'
+      const errorMessage = e instanceof Error ? e.message : 'Authentication failed'
+      if (isUserRejectionError(e)) {
+        analytics.trackPerpsSignInEvent(PerpsSignInEvent.CANCEL, { source })
+      } else {
+        authError.value = errorMessage
+        analytics.trackPerpsSignInErrorEvent(PerpsSignInEvent.ERROR, {
+          source,
+          errorMessage,
+          walletType: walletTypeStr,
+        })
+      }
     } finally {
+      showSigningPrompt.value = false
+      signingMessage.value = null
+      isHardwareWalletSigning.value = false
+      isWaitingForConfirm.value = false
       isAuthenticating.value = false
     }
+  }
+
+  function confirmSign() {
+    _resolveSign?.()
+    _resolveSign = null
+    _rejectSign = null
+  }
+
+  function cancelSign() {
+    _rejectSign?.(new Error('cancelled'))
+    _resolveSign = null
+    _rejectSign = null
   }
 
   function logout() {
@@ -174,6 +256,12 @@ export function usePerpsAuth() {
     logout,
     refreshKey,
     triggerRefresh,
+    showSigningPrompt,
+    signingMessage,
+    isHardwareWalletSigning,
+    isWaitingForConfirm,
+    confirmSign,
+    cancelSign,
   }
 }
 
@@ -190,6 +278,7 @@ export function usePerpsBalance() {
 
   if (!_balanceInitialized) {
     _balanceInitialized = true
+    ensurePerpsWsLifecycle()
 
     async function fetchBalance() {
       if (!token.value) {
@@ -207,32 +296,31 @@ export function usePerpsBalance() {
       }
     }
 
-    function poll() {
-      if (token.value) {
-        fetchBalance()
-      } else {
-        balance.value = null
-      }
-    }
-
-    poll()
-    setInterval(poll, 1_000)
-
-    let lastRefreshKey = refreshKey.value
-    setInterval(() => {
-      if (refreshKey.value !== lastRefreshKey) {
-        lastRefreshKey = refreshKey.value
-        poll()
-      }
-    }, 500)
-
     _sharedFetchBalance = fetchBalance
 
-    const perpsToasts = usePerpsToasts()
+    watch(
+      token,
+      (now, prev) => {
+        if (prev && !now) {
+          balance.value = null
+        }
+        if (now) void fetchBalance()
+      },
+      { immediate: true },
+    )
 
-    // Only fire on a genuine false→true transition. Watching the raw field
-    // (without `?? false`) keeps the initial observation as `undefined`, so
-    // a page reload of an already-liquidated account does NOT fire the toast.
+    watch(refreshKey, () => {
+      if (token.value) void fetchBalance()
+    })
+
+    effectScope(true).run(() => {
+      perpsWs.subscribe<PerpsBalance>('balancePerps', (rows) => {
+        if (rows.length === 0) return
+        balance.value = rows[0]
+      })
+    })
+
+    const perpsToasts = usePerpsToasts()
     watch(
       () => _sharedBalance.value?.underLiquidation,
       (current, previous) => {

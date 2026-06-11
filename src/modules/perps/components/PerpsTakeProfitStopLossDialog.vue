@@ -199,6 +199,7 @@ import PerpsAmount from './PerpsAmount.vue'
 import { formatUsd } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 import { PlusCircleIcon } from '@heroicons/vue/24/solid'
+import { analytics, PerpsTpSlEvent } from '@/analytics'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
@@ -247,6 +248,7 @@ const setTempTakeProfitPrice = () => {
     emit('setTakeProfitPct', 30)
   }
   hasTakeProfit.value = true
+  void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_ADD_TP)
 }
 
 const setTempStopLossPrice = () => {
@@ -254,6 +256,7 @@ const setTempStopLossPrice = () => {
     emit('setStopLossPct', 3)
   }
   hasStopLoss.value = true
+  void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_ADD_SL)
 }
 
 const removeTakeProfit = () => {

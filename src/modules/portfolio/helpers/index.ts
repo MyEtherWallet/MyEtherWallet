@@ -12,9 +12,9 @@ export interface BalanceFilterOption {
   value: BalanceFilter
 }
 export const BALANCE_FILTER = <BalanceFilterOption[]>[
-  { label: 'All Tokens', value: 'all' },
-  { label: 'Stocks', value: 'stocks' },
-  { label: 'Earning Interest', value: 'earning' },
-  { label: 'Custom', value: 'custom' },
-  { label: 'Watchlist', value: 'watchlist' },
+  { label: 'portfolio.filter_all_tokens', value: 'all' },
+  { label: 'portfolio.filter_stocks', value: 'stocks' },
+  { label: 'portfolio.filter_earning_interest', value: 'earning' },
+  { label: 'portfolio.filter_custom', value: 'custom' },
+  { label: 'portfolio.filter_watchlist', value: 'watchlist' },
 ]
