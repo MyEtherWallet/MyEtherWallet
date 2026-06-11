@@ -662,7 +662,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
                                 @click.stop="[
                                   toggleMenu(),
-                                  cancelInfoOrder(order),
+                                  onClickCancelOrder(order),
                                 ]"
                               >
                                 {{
@@ -902,7 +902,7 @@
     :order="selectedOrder"
     :cancelling="cancellingOrderId === selectedOrder.orderId"
     @close="showOrderDialog = false"
-    @cancel="cancelInfoOrder"
+    @cancel="onClickCancelOrder"
   />
   <perps-fill-details-dialog
     v-if="selectedFill"
@@ -955,7 +955,15 @@ import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useAccessStore } from '@/stores/accessStore'
-import { analytics, ConnectWalletEvent, PerpsChangeLeverageEvent } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  PerpsChangeLeverageEvent,
+  PerpsEventSource,
+  PerpsManageEvent,
+  PerpsOrderEvent,
+  PerpsEventLocation,
+} from '@/analytics'
 import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
@@ -984,7 +992,7 @@ import {
 
 const connectWallet = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Perps_Market_Info',
+    source: PerpsEventSource.MARKET_INFO,
   })
   useAccessStore().openAccessDialog()
 }
@@ -1188,8 +1196,34 @@ const showOrderDialog = ref(false)
 const selectedOrder = ref<ApiOrder | null>(null)
 
 const openOrderDialog = (order: ApiOrder) => {
+  void analytics.trackPerpsOrderViewInfoEvent(
+    PerpsOrderEvent.CLICKED_VIEW_INFO,
+    {
+      assetName: order.market,
+      status: order.status,
+      orderId: order.orderId,
+      type: order.type,
+      location: PerpsEventLocation.ORDER_INFO,
+    },
+  )
   selectedOrder.value = order
   showOrderDialog.value = true
+}
+
+const onClickCancelOrder = (order: ApiOrder) => {
+  void analytics.trackPerpsOrderCancelClickedEvent(
+    PerpsOrderEvent.CLICKED_CANCEL,
+    {
+      assetName: order.market,
+      orderId: order.orderId,
+      type: order.type,
+      price: order.price,
+      size: order.size,
+      direction: order.side,
+      location: PerpsEventLocation.ORDER_INFO,
+    },
+  )
+  void cancelInfoOrder(order)
 }
 
 const showCancelButton = (order: ApiOrder) => {
@@ -1205,8 +1239,24 @@ const cancelInfoOrder = async (order: ApiOrder) => {
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
   const displayMarket = market?.longName ?? market?.displayName ?? order.market
+  const cancelPayload = {
+    assetName: order.market,
+    orderId: order.orderId,
+    type: order.type,
+    price: order.price,
+    size: order.size,
+    direction: order.side,
+  }
+  void analytics.trackPerpsOrderCancelSubmitEvent(
+    PerpsOrderEvent.CANCEL_SUBMIT,
+    cancelPayload,
+  )
   try {
     await perpsClient.cancelOrder(order.orderId)
+    void analytics.trackPerpsOrderCancelSubmitEvent(
+      PerpsOrderEvent.CANCEL_SUBMIT_SUCCESS,
+      cancelPayload,
+    )
     perpsToasts.toastOrderCanceled({
       side: order.side,
       size: order.size,
@@ -1218,7 +1268,12 @@ const cancelInfoOrder = async (order: ApiOrder) => {
     await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
   } catch (e) {
     console.error('Failed to cancel order:', e)
-    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    void analytics.trackPerpsOrderCancelErrorEvent(
+      PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
+      { ...cancelPayload, errorMessage },
+    )
+    const msg = errorMessage.toLowerCase()
     if (
       msg.includes('invalid') &&
       (msg.includes('order') || msg.includes('id'))
@@ -1425,11 +1480,27 @@ const saveLeverage = async () => {
 
 watch(selectedManageAction, action => {
   if (!action) return
-  if (action.value === 'add' || action.value === 'close') {
+  if (action.value === 'add') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.ADD_TO_POSITION, {
+      assetName: props.market,
+      location: PerpsEventLocation.MARKET_INFO,
+    })
+    setSelectedTradeManageMode(action.value)
+    setWalletPanel('perps')
+    setIsOpenSideMenu(true)
+  } else if (action.value === 'close') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.CLOSE_POSITION, {
+      assetName: props.market,
+      location: PerpsEventLocation.MARKET_INFO,
+    })
     setSelectedTradeManageMode(action.value)
     setWalletPanel('perps')
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.CHANGE_LEVERAGE, {
+      assetName: props.market,
+      location: PerpsEventLocation.MARKET_INFO,
+    })
     const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
     tempLeverage.value =
       Number.isFinite(parsedPosition) && parsedPosition > 0

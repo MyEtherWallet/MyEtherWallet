@@ -128,7 +128,7 @@ import { formatFiatValue } from '@/utils/numberFormatHelper'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import { analytics, ConnectWalletEvent, PerpsEventSource } from '@/analytics'
 
 defineProps({
   watchOnly: {
@@ -145,7 +145,7 @@ const emit = defineEmits<{
 
 const onConnectWallet = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Perps_Portfolio',
+    source: PerpsEventSource.PORTFOLIO,
   })
   emit('access')
 }

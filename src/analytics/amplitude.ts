@@ -64,6 +64,14 @@ import type {
   PerpsClosePositionEvent,
   PerpsClosePositionPayload,
   PerpsClosePositionFailPayload,
+  PerpsManageEvent,
+  PerpsManagePayload,
+  PerpsNewPositionPayload,
+  PerpsOrderEvent,
+  PerpsOrderViewInfoPayload,
+  PerpsOrderCancelClickedPayload,
+  PerpsOrderCancelSubmitPayload,
+  PerpsOrderCancelErrorPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -723,6 +731,61 @@ export class Analytics {
   readonly trackPerpsClosePositionFailEvent = (
     event: typeof PerpsClosePositionEvent.SUBMIT_FAIL,
     payload: PerpsClosePositionFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS MANAGE
+  // =============================================================================
+
+  readonly trackPerpsManageEvent = (
+    event:
+      | typeof PerpsManageEvent.CHANGE_LEVERAGE
+      | typeof PerpsManageEvent.ADD_TO_POSITION
+      | typeof PerpsManageEvent.CLOSE_POSITION,
+    payload: PerpsManagePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsNewPositionEvent = (
+    event: typeof PerpsManageEvent.NEW_POSITION,
+    payload: PerpsNewPositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS ORDERS
+  // =============================================================================
+
+  readonly trackPerpsOrderViewInfoEvent = (
+    event: typeof PerpsOrderEvent.CLICKED_VIEW_INFO,
+    payload: PerpsOrderViewInfoPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsOrderCancelClickedEvent = (
+    event: typeof PerpsOrderEvent.CLICKED_CANCEL,
+    payload: PerpsOrderCancelClickedPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsOrderCancelSubmitEvent = (
+    event:
+      | typeof PerpsOrderEvent.CANCEL_SUBMIT
+      | typeof PerpsOrderEvent.CANCEL_SUBMIT_SUCCESS,
+    payload: PerpsOrderCancelSubmitPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsOrderCancelErrorEvent = (
+    event: typeof PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
+    payload: PerpsOrderCancelErrorPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

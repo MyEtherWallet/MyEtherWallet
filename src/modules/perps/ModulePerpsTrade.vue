@@ -109,7 +109,7 @@
                   'bg-error': orderSide === side.value && side.value === 'sell',
                 },
               ]"
-              @click="setOrderSide(side.value)"
+              @click="onClickOrderSide(side.value)"
             >
               {{ side.label }}
               <arrow-trending-up-icon
@@ -139,7 +139,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'add',
                 },
               ]"
-              @click="setSelectedTradeManageMode('add')"
+              @click="onClickManageMode('add')"
             >
               Add
             </button>
@@ -154,7 +154,7 @@
                   'bg-error': orderSide === 'sell' && manageMode === 'close',
                 },
               ]"
-              @click="setSelectedTradeManageMode('close')"
+              @click="onClickManageMode('close')"
             >
               Close
             </button>
@@ -645,7 +645,7 @@
         >
           <button
             class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-            @click="login('Perps_Trade')"
+            @click="login(PerpsEventSource.TRADE)"
           >
             Sign in to Perps
           </button>
@@ -797,7 +797,14 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import {
+  analytics,
+  ConnectWalletEvent,
+  PerpsEventSource,
+  PerpsManageEvent,
+  PerpsEventLocation,
+  PerpsNewPositionAction,
+} from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
@@ -821,7 +828,7 @@ const onSwitchToEthereum = () => {
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Perps_Trade',
+    source: PerpsEventSource.TRADE,
   })
   accessStore.openAccessDialog()
 }
@@ -977,6 +984,31 @@ const {
   closeLeverageModal,
   marketMaxLeverage,
 } = usePerpsTradeForm()
+
+const onClickOrderSide = (side: 'buy' | 'sell') => {
+  void analytics.trackPerpsNewPositionEvent(PerpsManageEvent.NEW_POSITION, {
+    assetName: fullMarketName.value,
+    location: PerpsEventLocation.TRADE,
+    action:
+      side === 'buy'
+        ? PerpsNewPositionAction.LONG
+        : PerpsNewPositionAction.SHORT,
+  })
+  setOrderSide(side)
+}
+
+const onClickManageMode = (mode: 'add' | 'close') => {
+  void analytics.trackPerpsManageEvent(
+    mode === 'add'
+      ? PerpsManageEvent.ADD_TO_POSITION
+      : PerpsManageEvent.CLOSE_POSITION,
+    {
+      assetName: fullMarketName.value,
+      location: PerpsEventLocation.TRADE,
+    },
+  )
+  setSelectedTradeManageMode(mode)
+}
 
 const localLeverage = ref(leverage.value)
 

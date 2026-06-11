@@ -407,7 +407,11 @@
                             <li
                               @click.stop="[
                                 toggleMenu(),
-                                emits('openPosition', contract.market, 'buy'),
+                                openNewPosition(
+                                  contract.market,
+                                  'buy',
+                                  PerpsNewPositionAction.LONG,
+                                ),
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -416,7 +420,11 @@
                             <li
                               @click.stop="[
                                 toggleMenu(),
-                                emits('openPosition', contract.market, 'sell'),
+                                openNewPosition(
+                                  contract.market,
+                                  'sell',
+                                  PerpsNewPositionAction.SHORT,
+                                ),
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -453,7 +461,15 @@
                               ? 'success'
                               : 'error'
                           "
-                          @click="toggleMenu"
+                          @click="
+                            onManagePositionClick(
+                              contract.market,
+                              getPosition(contract.market)!.direction === 'long'
+                                ? 'long'
+                                : 'short',
+                              toggleMenu,
+                            )
+                          "
                         >
                           Manage
                           {{
@@ -518,7 +534,13 @@
                       size="small"
                       class="min-w-[64px]"
                       theme="success"
-                      @click="emits('openPosition', contract.market, 'buy')"
+                      @click="
+                        openNewPosition(
+                          contract.market,
+                          'buy',
+                          PerpsNewPositionAction.LONG,
+                        )
+                      "
                     >
                       Long
                     </app-base-button>
@@ -526,7 +548,13 @@
                       size="small"
                       theme="error"
                       class="min-w-[64px]"
-                      @click="emits('openPosition', contract.market, 'sell')"
+                      @click="
+                        openNewPosition(
+                          contract.market,
+                          'sell',
+                          PerpsNewPositionAction.SHORT,
+                        )
+                      "
                     >
                       Short
                     </app-base-button>
@@ -621,7 +649,13 @@ import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { analytics, PerpsChangeLeverageEvent } from '@/analytics'
+import {
+  analytics,
+  PerpsChangeLeverageEvent,
+  PerpsManageEvent,
+  PerpsEventLocation,
+  PerpsNewPositionAction,
+} from '@/analytics'
 import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
@@ -651,6 +685,10 @@ const openLeverage = (
   symbol: string,
   currentLeverage: string,
 ) => {
+  void analytics.trackPerpsManageEvent(PerpsManageEvent.CHANGE_LEVERAGE, {
+    assetName: market,
+    location: PerpsEventLocation.MARKET,
+  })
   leverageMarket.value = market
   leverageSymbol.value = symbol
   const tradingPair = markets.value.find(m => m.market === market)
@@ -706,7 +744,45 @@ const saveLeverage = async () => {
 }
 
 const openPositionAdd = (market: string, type: 'add' | 'close') => {
+  void analytics.trackPerpsManageEvent(
+    type === 'add'
+      ? PerpsManageEvent.ADD_TO_POSITION
+      : PerpsManageEvent.CLOSE_POSITION,
+    {
+      assetName: market,
+      location: PerpsEventLocation.MARKET,
+    },
+  )
   emits('openSideMenu', market, type)
+}
+
+const openNewPosition = (
+  market: string,
+  side: 'buy' | 'sell',
+  action: PerpsNewPositionAction,
+) => {
+  void analytics.trackPerpsNewPositionEvent(PerpsManageEvent.NEW_POSITION, {
+    assetName: market,
+    location: PerpsEventLocation.MARKET,
+    action,
+  })
+  emits('openPosition', market, side)
+}
+
+const onManagePositionClick = (
+  market: string,
+  direction: 'long' | 'short',
+  toggleMenu: () => void,
+) => {
+  void analytics.trackPerpsNewPositionEvent(PerpsManageEvent.NEW_POSITION, {
+    assetName: market,
+    location: PerpsEventLocation.MARKET,
+    action:
+      direction === 'long'
+        ? PerpsNewPositionAction.MANAGE_LONG
+        : PerpsNewPositionAction.MANAGE_SHORT,
+  })
+  toggleMenu()
 }
 
 const marketsTable = ref<HTMLElement | null>(null)

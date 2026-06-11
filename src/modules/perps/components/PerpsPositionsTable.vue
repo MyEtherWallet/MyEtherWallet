@@ -878,7 +878,13 @@ import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { analytics, PerpsChangeLeverageEvent } from '@/analytics'
+import {
+  analytics,
+  PerpsChangeLeverageEvent,
+  PerpsManageEvent,
+  PerpsOrderEvent,
+  PerpsEventLocation,
+} from '@/analytics'
 import type {
   PerpsChangeLeveragePayload,
   PerpsChangeLeverageFailPayload,
@@ -936,6 +942,10 @@ const saveLeverage = async () => {
 const displaySymbol = computed(() => fullMarketName.value.split('-')[0])
 
 const openLeverage = (pos: Position) => {
+  void analytics.trackPerpsManageEvent(PerpsManageEvent.CHANGE_LEVERAGE, {
+    assetName: pos.market,
+    location: PerpsEventLocation.POSITIONS_TABLE,
+  })
   const pair = markets.value.find(m => m.market === pos.market)
   const parsedMax = parseInt(pair?.defaultLeverage ?? '')
   const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
@@ -970,6 +980,17 @@ const emits = defineEmits<{
 }>()
 
 const openPositionAdd = (pos: Position, type: 'add' | 'close' | undefined) => {
+  if (type === 'add') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.ADD_TO_POSITION, {
+      assetName: pos.market,
+      location: PerpsEventLocation.POSITIONS_TABLE,
+    })
+  } else if (type === 'close') {
+    void analytics.trackPerpsManageEvent(PerpsManageEvent.CLOSE_POSITION, {
+      assetName: pos.market,
+      location: PerpsEventLocation.POSITIONS_TABLE,
+    })
+  }
   emits('openSideMenu', pos.market, type)
 }
 
@@ -1041,6 +1062,16 @@ const showOrderDialog = ref(false)
 const selectedOrder = ref<ApiOrder | null>(null)
 
 function openOrderDialog(order: ApiOrder) {
+  void analytics.trackPerpsOrderViewInfoEvent(
+    PerpsOrderEvent.CLICKED_VIEW_INFO,
+    {
+      assetName: order.market,
+      status: order.status,
+      orderId: order.orderId,
+      type: order.type,
+      location: PerpsEventLocation.POSITIONS_TABLE,
+    },
+  )
   selectedOrder.value = order
   showOrderDialog.value = true
 }
@@ -1096,6 +1127,18 @@ const perpsToasts = usePerpsToasts()
 const { markets } = usePerpsMarkets()
 
 function openCancelConfirmation(order: ApiOrder) {
+  void analytics.trackPerpsOrderCancelClickedEvent(
+    PerpsOrderEvent.CLICKED_CANCEL,
+    {
+      assetName: order.market,
+      orderId: order.orderId,
+      type: order.type,
+      price: order.price,
+      size: order.size,
+      direction: order.side,
+      location: PerpsEventLocation.POSITIONS_TABLE,
+    },
+  )
   orderPendingCancel.value = order
   showCancelConfirmation.value = true
 }
@@ -1115,8 +1158,24 @@ async function cancelOrder(order: ApiOrder) {
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
   const displayMarket = market?.longName ?? market?.displayName ?? order.market
+  const cancelPayload = {
+    assetName: order.market,
+    orderId: order.orderId,
+    type: order.type,
+    price: order.price,
+    size: order.size,
+    direction: order.side,
+  }
+  void analytics.trackPerpsOrderCancelSubmitEvent(
+    PerpsOrderEvent.CANCEL_SUBMIT,
+    cancelPayload,
+  )
   try {
     await perpsClient.cancelOrder(order.orderId)
+    void analytics.trackPerpsOrderCancelSubmitEvent(
+      PerpsOrderEvent.CANCEL_SUBMIT_SUCCESS,
+      cancelPayload,
+    )
     perpsToasts.toastOrderCanceled({
       side: order.side,
       size: order.size,
@@ -1128,7 +1187,12 @@ async function cancelOrder(order: ApiOrder) {
     await refetchOrders()
   } catch (e) {
     console.error('Failed to cancel order:', e)
-    const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    void analytics.trackPerpsOrderCancelErrorEvent(
+      PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
+      { ...cancelPayload, errorMessage },
+    )
+    const msg = errorMessage.toLowerCase()
     if (
       msg.includes('invalid') &&
       (msg.includes('order') || msg.includes('id'))

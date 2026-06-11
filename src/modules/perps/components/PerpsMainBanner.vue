@@ -136,7 +136,7 @@
           <app-base-button
             class="w-full lg:w-auto lg:px-10 xs:max-w-[300px] lg:max-w-none"
             :is-loading="isAuthenticating"
-            @click="login('Perps_Main_Banner')"
+            @click="login(PerpsEventSource.MAIN_BANNER)"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >
@@ -176,7 +176,7 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
-import { analytics, ConnectWalletEvent } from '@/analytics'
+import { analytics, ConnectWalletEvent, PerpsEventSource } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly, walletName } = storeToRefs(walletStore)
@@ -205,7 +205,7 @@ const isUnisatWallet = computed(
 
 const onConnectWallet = () => {
   analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
-    source: 'Perps_Main_Banner',
+    source: PerpsEventSource.MAIN_BANNER,
   })
   accessStore.openAccessDialog()
 }
