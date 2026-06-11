@@ -5,6 +5,7 @@ const configs = {
   MEW_API_URL: import.meta.env.VITE_MEW_API || 'https://mew-api-dev.ethvm.dev',
   MEW_PURCHASE_BASE_URL: 'https://qa.mewwallet.dev',
   MEW_PURCHASE_API: 'https://qa.mewwallet.dev/v5/purchase/info',
+  MEW_EXCHANGE_RATES_API: 'https://mainnet.mewwallet.dev/v2/prices/exchange-rates',
   MEW_EMAIL: 'https://mainnet.mewwallet.dev/email-web',
   IS_DEV_MODE: import.meta.env.DEV,
   MEW_DONATION_ADDRESS: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
