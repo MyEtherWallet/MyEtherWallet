@@ -307,6 +307,29 @@ export type PerpsTpSlSavePayload = {
 }
 
 // =============================================================================
+// PERPS CHANGE LEVERAGE
+// =============================================================================
+
+export const PerpsChangeLeverageEvent = {
+  CLICKED_SUBMIT: 'Perps_Change_Leverage_Clicked_Submit',
+  SUBMIT_SUCCESS: 'Perps_Change_Leverage_Submit_Success',
+  SUBMIT_FAIL: 'Perps_Change_Leverage_Submit_Fail',
+} as const
+export type PerpsChangeLeverageEvent =
+  (typeof PerpsChangeLeverageEvent)[keyof typeof PerpsChangeLeverageEvent]
+
+export type PerpsChangeLeveragePayload = {
+  assetName: string
+  oldLeverage: number
+  maxLeverage: number
+  newLeverage: number
+}
+
+export type PerpsChangeLeverageFailPayload = PerpsChangeLeveragePayload & {
+  errorMessage: string
+}
+
+// =============================================================================
 // NOTIFICATIONS
 // =============================================================================
 

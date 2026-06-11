@@ -1,11 +1,18 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import { analytics, PerpsTradeOrderEvent, PerpsTpSlEvent } from '@/analytics'
+import {
+  analytics,
+  PerpsTradeOrderEvent,
+  PerpsTpSlEvent,
+  PerpsChangeLeverageEvent,
+} from '@/analytics'
 import type {
   PerpsTradeOrderPayload,
   PerpsTradeOrderFailPayload,
   PerpsTpSlSavePayload,
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
 } from '@/analytics'
 import type { MaxOrderSizeResult } from '../sdk/types'
 import { perpsClient } from '../configs'
@@ -798,6 +805,16 @@ export function usePerpsTradeForm() {
   async function saveLeverage() {
     isSavingLeverage.value = true
     leverageError.value = ''
+    const payload: PerpsChangeLeveragePayload = {
+      assetName: fullMarketName.value,
+      oldLeverage: leverage.value,
+      maxLeverage: marketMaxLeverage.value,
+      newLeverage: tempLeverage.value,
+    }
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+      payload,
+    )
     try {
       if (token.value && markets.value.length) {
         await perpsClient.setLeverage(fullMarketName.value, tempLeverage.value)
@@ -806,12 +823,24 @@ export function usePerpsTradeForm() {
       showLeverageModal.value = false
       fetchMaxOrderSize()
       perpsToasts.toastLeverageUpdated(tempLeverage.value, fullMarketName.value)
+      void analytics.trackPerpsChangeLeverageEvent(
+        PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+        payload,
+      )
     } catch (e: any) {
       leverageError.value =
         e?.message ||
         e?.toString() ||
         'Failed to save leverage. Please try again.'
       perpsToasts.toastFailedToSetLeverage()
+      const failPayload: PerpsChangeLeverageFailPayload = {
+        ...payload,
+        errorMessage: leverageError.value,
+      }
+      void analytics.trackPerpsChangeLeverageFailEvent(
+        PerpsChangeLeverageEvent.SUBMIT_FAIL,
+        failPayload,
+      )
     } finally {
       isSavingLeverage.value = false
     }

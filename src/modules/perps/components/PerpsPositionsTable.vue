@@ -878,12 +878,18 @@ import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { analytics, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
 
 const localLeverage = ref(1)
 const localMaxLeverage = ref(20)
+const localOldLeverage = ref(1)
 const leverageError = ref('')
 const isSavingLeverage = ref(false)
 const fullMarketName = ref('')
@@ -891,13 +897,35 @@ const showLeverageModal = ref(false)
 
 const saveLeverage = async () => {
   isSavingLeverage.value = true
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: fullMarketName.value,
+    oldLeverage: localOldLeverage.value,
+    maxLeverage: localMaxLeverage.value,
+    newLeverage: localLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(fullMarketName.value, localLeverage.value)
     showLeverageModal.value = false
     perpsToasts.toastLeverageUpdated(localLeverage.value, fullMarketName.value)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e: unknown) {
     leverageError.value = (e as Error).message
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }
@@ -913,6 +941,7 @@ const openLeverage = (pos: Position) => {
   const parsedPos = Number(pos.leverage)
   const initial = Number.isFinite(parsedPos) && parsedPos > 0 ? parsedPos : maxLev
   localLeverage.value = Math.min(initial, maxLev)
+  localOldLeverage.value = localLeverage.value
   fullMarketName.value = pos.market
   showLeverageModal.value = true
 }
