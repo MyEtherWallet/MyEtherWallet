@@ -17,14 +17,14 @@
           </p>
         </div>
         <div
-          class="flex items-center gap-2.5 h-12 px-3 bg-white border-4 border-grey-10 rounded-24 flex-none"
+          class="flex items-center h-12 px-1 bg-white border-4 border-grey-10 rounded-24 flex-none"
         >
-          <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
-          <input
+          <app-search-input
             v-model="searchInput"
-            type="text"
+            size="compact"
+            bg-class="bg-transparent"
+            class="flex-1"
             :placeholder="$t('purchase.select_currency.search_placeholder')"
-            class="flex-1 min-w-0 bg-transparent outline-none border-none p-0 text-s-15 text-black placeholder:text-info"
           />
         </div>
         <ul role="listbox" class="flex flex-col flex-1 overflow-y-auto">
@@ -69,8 +69,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppDialog from '@/components/AppDialog.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 
 const props = defineProps<{
