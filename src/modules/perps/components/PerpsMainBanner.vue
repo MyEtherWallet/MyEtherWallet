@@ -136,7 +136,7 @@
           <app-base-button
             class="w-full lg:w-auto lg:px-10"
             :is-loading="isAuthenticating"
-            @click="login"
+            @click="login('Perps_Main_Banner')"
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >

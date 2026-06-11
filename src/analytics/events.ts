@@ -196,6 +196,28 @@ export type TradeEventStatusPayload = TradePayloadShared & {
 }
 
 // =============================================================================
+// PERPS SIGN IN
+// =============================================================================
+
+export const PerpsSignInEvent = {
+  CLICKED: 'Perps_Sign_In_Clicked',
+  SUCCESS: 'Perps_Sign_In_Success',
+  ERROR: 'Perps_Sign_In_Error',
+  CANCEL: 'Perps_Sign_In_Cancel',
+} as const
+export type PerpsSignInEvent =
+  (typeof PerpsSignInEvent)[keyof typeof PerpsSignInEvent]
+
+export type PerpsSignInPayload = {
+  source?: string
+}
+
+export type PerpsSignInErrorPayload = PerpsSignInPayload & {
+  errorMessage: string
+  walletType?: string
+}
+
+// =============================================================================
 // DEPOSIT
 // =============================================================================
 
@@ -203,6 +225,29 @@ export const DepositEvent = {
   SHOWN: 'Deposit_Shown',
 } as const
 export type DepositEvent = (typeof DepositEvent)[keyof typeof DepositEvent]
+
+// =============================================================================
+// PERPS DEPOSIT
+// =============================================================================
+
+export const PerpsDepositEvent = {
+  CLICKED: 'Perps_Deposit_Clicked',
+  SUBMIT: 'Perps_Deposit_Submit',
+  SUCCESS: 'Perps_Deposit_Success',
+  ERROR: 'Perps_Deposit_Error',
+  COMPLETED: 'Perps_Deposit_Completed',
+} as const
+export type PerpsDepositEvent =
+  (typeof PerpsDepositEvent)[keyof typeof PerpsDepositEvent]
+
+export type PerpsDepositPayload = {
+  depositAmount?: string
+  token?: string
+}
+
+export type PerpsDepositErrorPayload = PerpsDepositPayload & {
+  errorMessage: string
+}
 
 // =============================================================================
 // NOTIFICATIONS
