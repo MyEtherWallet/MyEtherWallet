@@ -109,6 +109,9 @@
     "add_to_watchlist": "Add to Watchlist",
     "trending": "Trending",
     "newly_added": "Newly Added",
+    "new_stock_added": "New stock added!",
+    "spcx_live": "SpaceX (SPCXon) is now live.",
+    "trade_today": "Trade today",
     "chain": "Chain",
     "created_at": "Created at",
     "tx_hash": "Tx hash",
@@ -134,7 +137,13 @@
       "cta": "Level up your skills with security tips, industry insights, news and more!",
       "button": "Sign me up!",
       "email_placeholder": "Enter your email"
-    }
+    },
+    "chart_1d": "1d",
+    "chart_7d": "7d",
+    "chart_1m": "1m",
+    "chart_3m": "3m",
+    "chart_1y": "1y",
+    "chart_all": "all"
   },
   "deposit": "Deposit",
   "portfolio": "Portfolio",
