@@ -5,7 +5,6 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import {
-  ROUTES_MAIN,
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
@@ -159,27 +158,10 @@ export function useGlobalSearch() {
   }
 
   const selectAsset = (item: SearchResultItem) => {
-    // Pick the child route variant that matches the current parent so
-    // navigation stays inside the current layout (Home, Crypto, or Stocks).
-    const rootName = router.currentRoute.value.matched[0]?.name
-    let routeName: string
-    if (item.isStock) {
-      routeName =
-        rootName === ROUTES_MAIN.CRYPTO.NAME
-          ? STOCK_INFO_ROUTE_NAMES.crypto
-          : rootName === ROUTES_MAIN.STOCKS.NAME
-            ? STOCK_INFO_ROUTE_NAMES.stocks
-            : STOCK_INFO_ROUTE_NAMES.home
-    } else {
-      routeName =
-        rootName === ROUTES_MAIN.CRYPTO.NAME
-          ? TOKEN_INFO_ROUTE_NAMES.crypto
-          : TOKEN_INFO_ROUTE_NAMES.home
-    }
-    const params = item.isStock
-      ? { symbol: item.symbol }
-      : { tokenId: item.id }
-    router.push({ name: routeName, params })
+    const target = item.isStock
+      ? { name: STOCK_INFO_ROUTE_NAMES.stocks, params: { symbol: item.symbol } }
+      : { name: TOKEN_INFO_ROUTE_NAMES.crypto, params: { tokenId: item.id } }
+    router.push(target)
     recentlyViewedStore.addToken({
       id: item.id,
       symbol: item.symbol,
