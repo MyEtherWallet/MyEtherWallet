@@ -35,14 +35,14 @@
           {{ $t('common.new_stock_added') }}
         </p>
         <p class="text-white/70 text-sm sm:text-base lg:text-sm mt-0.5">
-          SpaceX (SPCXon) is now live.
+          {{ $t('common.spcx_live') }}
         </p>
       </div>
       <app-base-button
         class="mt-4 bg-white text-black! text-sm font-medium py-2 px-5 rounded-full self-start hover:bg-white/90 transition-colors"
         @click="openSpaceX"
       >
-        Trade today
+        {{ $t('common.trade_today') }}
       </app-base-button>
     </div>
   </div>
