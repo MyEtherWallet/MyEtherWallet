@@ -13,15 +13,13 @@
         class="absolute top-0 left-0"
       />
       <span
-        v-if="chain.icon"
         class="absolute bottom-0 right-0 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-bgBase bg-white"
       >
-        <img
-          :src="chain.icon"
-          :alt="chain.name"
-          class="w-full h-full object-cover"
-          width="14"
-          height="14"
+        <app-token-logo
+          :url="chain.icon"
+          :symbol="chain.name"
+          width="w-full"
+          height="h-full"
         />
       </span>
     </div>

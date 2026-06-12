@@ -30,6 +30,7 @@
               :selected-token="selectedToken"
               :network-filter="networkFilter"
               :compatible-chains="compatibleChains"
+              :is-loading="isLoading"
               @open-networks="view = 'networks'"
               @select-token="onSelectToken"
             />
@@ -56,6 +57,7 @@
               :current-filter="networkFilter"
               :compatible-chains="compatibleChains"
               :incompatible-chains="incompatibleChains"
+              :is-loading="isLoading"
               @back="view = 'tokens'"
               @select-network="onSelectNetwork"
             />
@@ -80,6 +82,7 @@ const props = defineProps<{
   selectedToken: PurchaseAsset | null
   compatibleChains?: string[]
   incompatibleChains?: string[]
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{
