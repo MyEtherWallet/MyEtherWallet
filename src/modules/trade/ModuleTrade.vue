@@ -802,11 +802,11 @@ const connectWalletForTrade = () => {
 
 // --- Watchers ---
 
-// Reset state when Trade Initiated Modal is opened
+// Reset state when Trade Initiated Modal is closed
 watch(
   () => tradeInitiatedOpen.value,
   isOpen => {
-    if (isOpen) {
+    if (!isOpen) {
       clearValues()
     }
   },
