@@ -37,8 +37,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 import type { Chain } from '@/mew_api/types'
 import type { PurchaseAsset } from '@/types/buyToken'
 
@@ -51,6 +53,8 @@ const emit = defineEmits<{
   click: []
 }>()
 
+const { coinImages } = storeToRefs(usePurchaseStore())
+
 const displayTokenSymbol = computed<string>(
   () => props.token?.symbol ?? props.chain.currencyName ?? '',
 )
@@ -58,6 +62,7 @@ const displayTokenSymbol = computed<string>(
 const tokenIconUrl = computed<string | undefined>(() => {
   if (!props.token) return props.chain.icon
   if (props.token.symbol === props.chain.currencyName) return props.chain.icon
-  return props.token.market_data?.icon ?? props.chain.icon
+  const fromApi = coinImages.value.get(props.token.coingecko_id)
+  return fromApi ?? props.token.market_data?.icon ?? props.chain.icon
 })
 </script>

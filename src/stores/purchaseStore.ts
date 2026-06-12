@@ -38,6 +38,8 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const purchaseInfo = ref<PurchaseInfo | null>(null)
   const isFetching = ref(false)
 
+  const coinImages = ref<Map<string, string>>(new Map())
+
   // USD → target currency rates. Used to convert between fiats and compute
   // localized quick-amount presets.
   const exchangeRates = ref<Map<string, number>>(new Map())
@@ -141,6 +143,27 @@ export const usePurchaseStore = defineStore('purchase', () => {
     return fiatsMap
   })
 
+  const fetchCoinImages = async (coinIds: string[]) => {
+    if (coinIds.length === 0) return
+    const { useMEWFetch } = useFetchMewApi()
+    try {
+      const { data } = await useMEWFetch('/v1/coins/images')
+        .post({ coinIds })
+        .json<Record<string, { url: string | null; marketCap: number | null }>>()
+      const response = data.value
+      if (!response) return
+      const map = new Map<string, string>()
+      Object.entries(response).forEach(([id, entry]) => {
+        if (entry?.url) map.set(id, entry.url)
+      })
+      coinImages.value = map
+    } catch (error) {
+      if (isDevMode) {
+        console.error('Failed to fetch coin images:', error)
+      }
+    }
+  }
+
   const fetchExchangeRates = async () => {
     if (exchangeRates.value.size > 0) return
     try {
@@ -174,6 +197,8 @@ export const usePurchaseStore = defineStore('purchase', () => {
         fetchExchangeRates(),
       ])
       purchaseInfo.value = data.value
+      const ids = Array.from(buyableCoinIds.value)
+      fetchCoinImages(ids)
     } catch (error) {
       if (isDevMode) {
         console.error('Failed to fetch purchase info:', error)
@@ -318,6 +343,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
   return {
     purchaseInfo,
     isFetching,
+    coinImages,
     exchangeRates,
     buyableCoinIds,
     fetchPurchaseInfo,
