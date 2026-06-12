@@ -14,7 +14,7 @@
       :is-loading="isFetchingEstimate"
       :error-message="amountError"
       :helper-message="amountHelper"
-      :preset-amounts="presetAmounts"
+      :quick-buttons="quickButtons"
       @update:amount="onFiatAmountChange"
       @open-currency="showCurrencyModal = true"
       @focus="isInputFocused = true"
@@ -119,6 +119,7 @@ const {
   buyQuotesError,
   cryptoEstimate,
   isFetchingEstimate,
+  exchangeRates,
 } = storeToRefs(purchaseStore)
 const {
   fetchPurchaseInfo,
@@ -195,9 +196,33 @@ const fiatLimits = computed(() => {
   return fiat?.limits ?? { min: 0, max: 0 }
 })
 
-const presetAmounts = computed(() =>
-  selectedFiat.value === 'USD' ? [15, 50, 100, 250] : [],
-)
+const USD_AMOUNTS = [15, 50, 100, 250]
+const MIN_USD = 2
+const MAX_USD = 250
+
+const currencyRate = computed(() => exchangeRates.value.get(selectedFiat.value))
+
+const formatLocalizedAmount = (usd: number, rate: number): string => {
+  const value = Math.round(usd * rate)
+  const symbol = getCurrencySymbol(selectedFiat.value)
+  return `${symbol}${value.toLocaleString('en-US')}`
+}
+
+const quickButtons = computed(() => {
+  const rate = currencyRate.value
+  if (!rate) return []
+  if (Math.round(15 * rate) >= 1) {
+    return USD_AMOUNTS.map(usd => ({
+      label: formatLocalizedAmount(usd, rate),
+      value: Math.round(usd * rate),
+      usdValue: usd,
+    }))
+  }
+  return [
+    { label: 'Min', value: Math.round(MIN_USD * rate), usdValue: MIN_USD },
+    { label: 'Max', value: Math.round(MAX_USD * rate), usdValue: MAX_USD },
+  ]
+})
 
 const formattedCryptoEstimate = computed(() => {
   if (!cryptoEstimate.value) return `0.00 ${tokenSymbol.value}`.trim()
@@ -276,6 +301,16 @@ watch(compatibleChainCodes, codes => {
   if (selectedToken.value && !codes.includes(selectedToken.value.chain)) {
     selectedToken.value = null
   }
+})
+
+watch(selectedFiat, (newFiat, oldFiat) => {
+  if (newFiat === oldFiat || isAmountEmpty.value) return
+  const newRate = exchangeRates.value.get(newFiat)
+  const oldRate = exchangeRates.value.get(oldFiat)
+  if (!newRate || !oldRate) return
+  const amountInUsd = Number(fiatAmount.value) / oldRate
+  const converted = amountInUsd * newRate
+  fiatAmount.value = converted.toFixed(2).replace(/\.?0+$/, '')
 })
 
 watch(

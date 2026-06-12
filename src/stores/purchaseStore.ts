@@ -38,6 +38,10 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const purchaseInfo = ref<PurchaseInfo | null>(null)
   const isFetching = ref(false)
 
+  // USD → target currency rates. Used to convert between fiats and compute
+  // localized quick-amount presets.
+  const exchangeRates = ref<Map<string, number>>(new Map())
+
   const buyQuotes = ref<BuyQuote[]>([])
   const isFetchingQuotes = ref(false)
   const buyQuotesError = ref('')
@@ -137,13 +141,38 @@ export const usePurchaseStore = defineStore('purchase', () => {
     return fiatsMap
   })
 
+  const fetchExchangeRates = async () => {
+    if (exchangeRates.value.size > 0) return
+    try {
+      const response = await fetch(configs.MEW_EXCHANGE_RATES_API)
+      if (!response.ok) return
+      const data: Array<{ fiat_currency: string; exchange_rate: string }> =
+        await response.json()
+      const map = new Map<string, number>()
+      data.forEach(({ fiat_currency, exchange_rate }) => {
+        const rate = Number(exchange_rate)
+        if (Number.isFinite(rate) && rate > 0) {
+          map.set(fiat_currency, rate)
+        }
+      })
+      exchangeRates.value = map
+    } catch (error) {
+      if (isDevMode) {
+        console.error('Failed to fetch exchange rates:', error)
+      }
+    }
+  }
+
   const fetchPurchaseInfo = async () => {
     if (purchaseInfo.value || isFetching.value) return
     isFetching.value = true
     const { useMEWFetch } = useFetchMewApi()
     try {
       const url = `${configs.MEW_PURCHASE_API}?includeMarketData=true`
-      const { data } = await useMEWFetch(url).get().json<PurchaseInfo>()
+      const [{ data }] = await Promise.all([
+        useMEWFetch(url).get().json<PurchaseInfo>(),
+        fetchExchangeRates(),
+      ])
       purchaseInfo.value = data.value
     } catch (error) {
       if (isDevMode) {
@@ -289,6 +318,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
   return {
     purchaseInfo,
     isFetching,
+    exchangeRates,
     buyableCoinIds,
     fetchPurchaseInfo,
     isBuyable,
