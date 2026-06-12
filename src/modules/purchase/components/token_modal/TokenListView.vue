@@ -15,17 +15,13 @@
     <div
       class="flex items-center gap-2 h-12 px-1 bg-bgMuted rounded-24 flex-none"
     >
-      <div
-        class="flex-1 flex items-center gap-2.5 h-10 px-3 bg-white rounded-20"
-      >
-        <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
-        <input
-          v-model="searchInput"
-          type="text"
-          :placeholder="$t('purchase.select_token.search_placeholder')"
-          class="flex-1 min-w-0 bg-transparent outline-none border-none p-0 text-s-15 text-black placeholder:text-info"
-        />
-      </div>
+      <app-search-input
+        v-model="searchInput"
+        size="compact"
+        bg-class="bg-white"
+        class="flex-1"
+        :placeholder="$t('purchase.select_token.search_placeholder')"
+      />
       <button
         type="button"
         class="h-10 flex items-center gap-1 pl-3 pr-2 rounded-20 hoverNoBG transition-colors flex-none"
@@ -105,8 +101,8 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
 import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
