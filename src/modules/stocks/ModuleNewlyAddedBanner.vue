@@ -19,6 +19,7 @@
         />
         <img
           src="@/assets/images/newly-added/spacex.svg"
+          :class="isOpenSideMenu ? 'min-[1270px]:max-[1380px]:hidden' : ''"
           class="absolute inset-0 w-full h-full object-contain object-right p-5 pr-0"
           alt="SpaceX"
         />
@@ -31,7 +32,7 @@
         <p
           class="text-white font-bold text-lg sm:text-xl lg:text-lg leading-snug"
         >
-          New stock added!
+          {{ $t('common.new_stock_added') }}
         </p>
         <p class="text-white/70 text-sm sm:text-base lg:text-sm mt-0.5">
           SpaceX (SPCXon) is now live.
@@ -52,6 +53,11 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, StockMarketEvent } from '@/analytics'
 import { useRouter } from 'vue-router'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { storeToRefs } from 'pinia'
+
+const walletMenu = useWalletMenuStore()
+const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const router = useRouter()
 
