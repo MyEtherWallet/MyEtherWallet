@@ -204,7 +204,7 @@ const formattedFiatReceive = (quote: BuyQuote) => {
 
 const onContinue = () => {
   if (!selectedQuote.value?.url) return
-  window.open(selectedQuote.value.url, '_blank', 'noopener,noreferrer')
+  window.open(selectedQuote.value.url, '_blank')
   isOpen.value = false
 }
 </script>

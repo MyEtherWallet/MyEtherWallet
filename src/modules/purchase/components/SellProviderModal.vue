@@ -138,7 +138,7 @@ const providerLogo = computed(() =>
 
 const onContinue = () => {
   if (!props.quote?.url) return
-  window.open(props.quote.url, '_blank', 'noopener,noreferrer')
+  window.open(props.quote.url, '_blank')
   isOpen.value = false
 }
 </script>

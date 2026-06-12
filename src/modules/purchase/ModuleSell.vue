@@ -106,12 +106,16 @@
       :networks="sellNetworks"
       :default-chain-code="purchaseChainCode"
       :selected-token="selectedToken"
+      :compatible-chains="compatibleChainCodes"
+      :incompatible-chains="incompatibleChainCodes"
+      :is-loading="isFetching"
       @update:selected="selectedToken = $event"
     />
     <purchase-currency-modal
       v-model:is-open="showCurrencyModal"
       :currencies="currencyOptions"
       :selected="selectedFiat"
+      :is-loading="isFetching"
       @update:selected="selectedFiat = $event"
     />
     <sell-provider-modal
@@ -150,6 +154,7 @@ import {
   purchaseChainToChain,
 } from './helpers/chainMapping'
 import { usePurchaseAmount } from './composables/usePurchaseAmount'
+import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility'
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
@@ -158,6 +163,7 @@ const { t } = useI18n()
 
 const purchaseStore = usePurchaseStore()
 const {
+  isFetching,
   sellNetworks,
   sellFiats,
   sellQuote,
@@ -179,6 +185,8 @@ const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
 const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
+
+const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(sellNetworks, walletChain, chains)
 
 const accessStore = useAccessStore()
 
@@ -379,13 +387,15 @@ const formattedFiatEstimate = computed(() => {
   return `${symbol}${formatFiatValue(amount).value}`
 })
 
+const ESTIMATE_FALLBACK_ADDRESS = '0x0000000000000000000000000000000000000000'
+
 const fetchEstimate = async () => {
-  if (isAmountEmpty.value || !isReady.value || !amountIsValid.value) {
+  if (isAmountEmpty.value || !amountIsValid.value) {
     clearSellQuote()
     return
   }
   await fetchSellQuote({
-    address: walletAddress.value ?? '',
+    address: walletAddress.value || ESTIMATE_FALLBACK_ADDRESS,
     fiatCurrency: selectedFiat.value,
     amount: cryptoAmount.value,
     cryptoCurrency: tokenSymbol.value,
@@ -418,22 +428,26 @@ const ctaLabel = computed(() => {
 
 const onCryptoAmountChange = (value: string) => {
   cryptoAmount.value = value
-  if (isReady.value) {
-    isFetchingSellQuote.value = Number(value) > 0 && !amountError.value
-  }
+  isFetchingSellQuote.value = Number(value) > 0 && !amountError.value
   debouncedFetchEstimate()
 }
+
+watch(compatibleChainCodes, codes => {
+  if (selectedToken.value && !codes.includes(selectedToken.value.chain)) {
+    selectedToken.value = null
+  }
+})
 
 watch(
   () => [
     purchaseChainCode.value,
     tokenSymbol.value,
     selectedFiat.value,
-    isReady.value,
+    walletAddress.value,
   ],
   () => {
     clearSellQuote()
-    if (!isAmountEmpty.value && isReady.value) {
+    if (!isAmountEmpty.value) {
       isFetchingSellQuote.value = Number(cryptoAmount.value) > 0
       debouncedFetchEstimate()
     }
