@@ -528,4 +528,12 @@ const hasFees = computed(() => {
     !props.isLoadingFees
   )
 })
+
+defineExpose({
+  openFeeModal,
+  hasFees,
+  hasFiatEstimates,
+  selectedFeeNative,
+  selectedFeeFiat,
+})
 </script>

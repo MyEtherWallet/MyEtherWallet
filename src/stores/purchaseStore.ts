@@ -6,6 +6,7 @@ import {
   type PurchaseInfo,
   type PurchaseAsset,
   type BuyQuote,
+  type SellQuote,
   type FetchBuyQuotesParams,
   type FetchSellQuoteParams,
 } from '@/types/buyToken'
@@ -51,7 +52,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const cryptoEstimate = ref('')
   const isFetchingEstimate = ref(false)
 
-  const sellQuote = ref<BuyQuote | null>(null)
+  const sellQuote = ref<SellQuote | null>(null)
   const isFetchingSellQuote = ref(false)
   const sellQuoteError = ref('')
 
@@ -318,7 +319,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
         sellQuoteError.value = data.msg || data.error
         return
       }
-      const quotes = data as BuyQuote[]
+      const quotes = data as SellQuote[]
       sellQuote.value = quotes[0] ?? null
     } catch (error) {
       if (isDevMode) {
@@ -333,6 +334,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
   const clearSellQuote = () => {
     sellQuote.value = null
     sellQuoteError.value = ''
+    isFetchingSellQuote.value = false
   }
 
   const isBuyable = (coinId: string | undefined): boolean => {

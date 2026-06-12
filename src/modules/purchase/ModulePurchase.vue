@@ -30,8 +30,6 @@
       </transition>
     </div>
 
-    <!-- Shared footer -->
-    <purchase-footer class="pt-2" />
   </div>
 </template>
 
@@ -40,7 +38,6 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ModuleBuy from './ModuleBuy.vue'
 import ModuleSell from './ModuleSell.vue'
-import PurchaseFooter from './components/PurchaseFooter.vue'
 
 type PurchaseTab = 'buy' | 'sell'
 

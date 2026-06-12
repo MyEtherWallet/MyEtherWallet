@@ -48,6 +48,8 @@
       {{ t('purchase.buy.need_help') }}
     </a>
 
+    <purchase-footer class="pt-2" />
+
     <purchase-token-modal
       v-model:is-open="showTokenModal"
       :networks="buyNetworks"
@@ -88,6 +90,7 @@ import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import PurchaseProviderModal from './components/PurchaseProviderModal.vue'
+import PurchaseFooter from './components/PurchaseFooter.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'

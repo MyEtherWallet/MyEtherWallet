@@ -13,7 +13,26 @@
       }
     },
     "sell": {
-      "title": "Sell"
+      "title": "Sell",
+      "youre_selling": "You're selling",
+      "your_balance": "Your balance:",
+      "enter_amount": "Enter amount",
+      "continue": "Continue",
+      "connect_wallet": "Connect wallet",
+      "need_help": "Need help selling?",
+      "network_fee": "Network fee",
+      "network_fee_tooltip": "Fees in the {chain} network are charged in {symbol}",
+      "error": {
+        "min": "Minimum {min} allowed",
+        "max": "Maximum {max} allowed",
+        "insufficient": "Not enough {symbol}"
+      },
+      "provider": {
+        "title": "You'll sell {amount}",
+        "youll_send": "You'll send",
+        "youll_receive": "You'll receive",
+        "continue": "Continue"
+      }
     },
     "payment_methods_list": "Visa, Mastercard, Apple Pay, Google Pay, Pix, PayPal",
     "select_token": {

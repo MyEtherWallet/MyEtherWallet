@@ -25,7 +25,9 @@
         :style="scaleStyle"
         class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
       >
-        <span aria-hidden="true">{{ currencySymbol }}</span>
+        <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
+          effectiveSymbol
+        }}</span>
         <input
           :id="inputId"
           ref="inputEl"
@@ -44,12 +46,18 @@
           @input="onInput"
           @focus="onFocus"
           @blur="onBlur"
+          @scroll="(e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)"
         />
         <span
           v-if="amount === ''"
           :class="isFocused ? 'text-grey-30' : 'text-black'"
           aria-hidden="true"
         >0</span>
+        <span
+          v-if="symbolPosition === 'suffix'"
+          aria-hidden="true"
+          class="ml-2"
+        >{{ effectiveSymbol }}</span>
       </label>
 
       <p
@@ -80,6 +88,21 @@
         ≈ {{ estimate }}
       </p>
     </div>
+
+    <!-- Balance row (Sell mode) -->
+    <p
+      v-if="balance"
+      class="text-s-12 text-info leading-[18px] text-center"
+    >
+      {{ $t('purchase.sell.your_balance') }}
+      <span
+        :class="[
+          'font-semibold tracking-[-0.24px]',
+          balance.hasError ? 'text-error' : 'text-black',
+        ]"
+      >{{ balance.value }}</span>
+      <span class="text-info"> ({{ balance.fiat }})</span>
+    </p>
 
     <!-- Quick amount buttons -->
     <div class="flex items-center justify-center gap-1 w-full">
@@ -124,6 +147,13 @@ export interface QuickButton {
   usdValue: number
 }
 
+interface AmountBalance {
+  value: string
+  fiat: string
+  /** When true, the value portion is rendered in the error color. */
+  hasError?: boolean
+}
+
 const props = withDefaults(
   defineProps<{
     label: string
@@ -135,6 +165,12 @@ const props = withDefaults(
     helperMessage?: string
     quickButtons?: QuickButton[]
     autofocus?: boolean
+    /** Text rendered next to the amount value. If omitted, derived from `currency` via `getCurrencySymbol`. */
+    amountSymbol?: string
+    /** Position of the symbol relative to the amount. `'prefix'` for fiat ($100), `'suffix'` for crypto (0.5 ETH). */
+    symbolPosition?: 'prefix' | 'suffix'
+    /** Optional balance row shown below the estimate (Sell mode). */
+    balance?: AmountBalance | null
   }>(),
   {
     isLoading: false,
@@ -142,6 +178,9 @@ const props = withDefaults(
     helperMessage: '',
     quickButtons: () => [],
     autofocus: false,
+    amountSymbol: undefined,
+    symbolPosition: 'prefix',
+    balance: null,
   },
 )
 
@@ -176,6 +215,10 @@ const onKeyDown = (event: KeyboardEvent) => {
 
 const currencySymbol = computed(() => getCurrencySymbol(props.currency))
 
+const effectiveSymbol = computed(
+  () => props.amountSymbol ?? currencySymbol.value,
+)
+
 const selectedUsdValue = computed(() => {
   if (props.amount === '') return null
   const n = Number(props.amount)
@@ -184,9 +227,12 @@ const selectedUsdValue = computed(() => {
 
 const displayValue = computed(() => formatWithCommas(props.amount))
 
-const scalerText = computed(
-  () => `${currencySymbol.value}${displayValue.value || '0'}`,
-)
+const scalerText = computed(() => {
+  const value = displayValue.value || '0'
+  return props.symbolPosition === 'suffix'
+    ? `${value} ${effectiveSymbol.value}`
+    : `${effectiveSymbol.value}${value}`
+})
 const { scaleStyle, measureWithScale } = useTextScaler(scalerText)
 
 const inputWidth = computed(() => {
@@ -245,4 +291,3 @@ onMounted(() => {
   if (props.autofocus) focus()
 })
 </script>
-
