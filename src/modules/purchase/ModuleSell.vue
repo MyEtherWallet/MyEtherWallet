@@ -169,6 +169,7 @@ const {
   sellQuote,
   isFetchingSellQuote,
   sellQuoteError,
+  exchangeRates,
 } = storeToRefs(purchaseStore)
 const { fetchPurchaseInfo, fetchSellQuote, clearSellQuote } = purchaseStore
 
@@ -249,11 +250,16 @@ const tokenPrice = computed(() => {
   return displayChain.value?.price ?? 0
 })
 
+// USD → selected fiat rate. Limits and balance fiat values come in the
+// selected fiat, while market_data prices are always in USD.
+const fiatRate = computed(() => exchangeRates.value.get(selectedFiat.value))
+
 const cryptoLimits = computed(() => {
-  if (tokenPrice.value <= 0) return { min: 0, max: 0 }
+  const rate = fiatRate.value
+  if (tokenPrice.value <= 0 || !rate) return { min: 0, max: 0 }
   return {
-    min: fiatLimits.value.min / tokenPrice.value,
-    max: fiatLimits.value.max / tokenPrice.value,
+    min: fiatLimits.value.min / rate / tokenPrice.value,
+    max: fiatLimits.value.max / rate / tokenPrice.value,
   }
 })
 
@@ -292,8 +298,8 @@ const tokenBalance = computed<string | null>(() => {
 })
 
 const tokenBalanceFiat = computed<number | null>(() => {
-  if (!tokenBalance.value || tokenPrice.value <= 0) return null
-  return Number(tokenBalance.value) * tokenPrice.value
+  if (!tokenBalance.value || tokenPrice.value <= 0 || !fiatRate.value) return null
+  return Number(tokenBalance.value) * tokenPrice.value * fiatRate.value
 })
 
 /* ------------------------------------------------------------------ *
@@ -395,7 +401,7 @@ const formattedFiatEstimate = computed(() => {
 const ESTIMATE_FALLBACK_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const fetchEstimate = async () => {
-  if (isAmountEmpty.value || !amountIsValid.value) {
+  if (isAmountEmpty.value || Number(cryptoAmount.value) <= 0) {
     clearSellQuote()
     return
   }
