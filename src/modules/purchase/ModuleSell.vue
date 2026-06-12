@@ -179,6 +179,7 @@ const {
   walletAddress,
   tokens,
   balance: nativeBalance,
+  isLoadingBalances,
 } = storeToRefs(walletStore)
 
 const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
@@ -283,7 +284,11 @@ const tokenBalance = computed<string | null>(() => {
   const found = tokens.value.find(
     t => t.contract.toLowerCase() === selectedToken.value?.contract_address.toLowerCase(),
   )
-  return found?.balance ?? null
+  if (found) return found.balance
+  if (isLoadingBalances.value) return null
+  // Not in the balance list: 0 if it's the wallet's chain, unknown otherwise.
+  const tokenChain = purchaseChainToChain(selectedToken.value.chain, chains.value)
+  return tokenChain?.name === walletChain.value?.name ? '0' : null
 })
 
 const tokenBalanceFiat = computed<number | null>(() => {
