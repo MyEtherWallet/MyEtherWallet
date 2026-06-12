@@ -19,18 +19,27 @@
     </div>
 
     <div
-      class="flex items-center gap-2.5 h-12 px-3 bg-white border-4 border-grey-10 rounded-24 flex-none"
+      class="flex items-center h-12 px-1 bg-white border-4 border-grey-10 rounded-24 flex-none"
     >
-      <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
-      <input
+      <app-search-input
         v-model="searchInput"
-        type="text"
+        size="compact"
+        bg-class="bg-transparent"
+        class="flex-1"
         :placeholder="$t('purchase.select_token.search_placeholder')"
-        class="flex-1 min-w-0 bg-transparent outline-none border-none p-0 text-s-15 text-black placeholder:text-info"
       />
     </div>
 
-    <ul role="listbox" class="flex-1 overflow-y-auto">
+    <div
+      v-if="isLoading"
+      class="flex flex-1 items-center justify-center py-16"
+      aria-live="polite"
+    >
+      <span
+        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+      />
+    </div>
+    <ul v-else role="listbox" class="flex-1 overflow-y-auto">
       <!-- All networks -->
       <li>
         <button
@@ -112,8 +121,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ChevronLeftIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getPurchaseChainIcon } from '../../helpers/purchaseIcons'
 import type { BuyNetwork } from '@/stores/purchaseStore'
@@ -123,6 +132,7 @@ const props = defineProps<{
   currentFilter: string | null
   compatibleChains?: string[]
   incompatibleChains?: string[]
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{

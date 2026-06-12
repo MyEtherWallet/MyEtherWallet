@@ -17,38 +17,41 @@
           </p>
         </div>
         <div
-          class="flex items-center gap-2.5 h-12 px-3 bg-white border-4 border-grey-10 rounded-24 flex-none"
+          class="flex items-center h-12 px-1 bg-white border-4 border-grey-10 rounded-24 flex-none"
         >
-          <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
-          <input
+          <app-search-input
             v-model="searchInput"
-            type="text"
+            size="compact"
+            bg-class="bg-transparent"
+            class="flex-1"
             :placeholder="$t('purchase.select_currency.search_placeholder')"
-            class="flex-1 min-w-0 bg-transparent outline-none border-none p-0 text-s-15 text-black placeholder:text-info"
           />
         </div>
-        <ul role="listbox" class="flex flex-col flex-1 overflow-y-auto">
+        <div
+          v-if="isLoading"
+          class="flex flex-1 items-center justify-center py-16"
+          aria-live="polite"
+        >
+          <span
+            class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+          />
+        </div>
+        <ul v-else role="listbox" class="flex flex-col flex-1 overflow-y-auto">
           <li v-for="currency in filteredCurrencies" :key="currency">
             <button
               type="button"
               :class="[
                 currency === selected ? '!bg-mewBg' : '',
-                'flex items-center w-full gap-3 py-3 rounded-12 hoverBGWhite transition-colors text-left',
+                'flex items-center w-full gap-3 px-3 py-2 rounded-12 hoverBGWhite transition-colors text-left',
               ]"
               @click="onSelect(currency)"
             >
-              <img
-                v-if="getFiatIcon(currency)"
-                :src="getFiatIcon(currency)"
-                :alt="currency"
-                class="w-7 h-7 rounded-full object-cover flex-none"
-                width="28"
-                height="28"
-              />
-              <div
-                v-else
-                class="w-7 h-7 rounded-full bg-grey-10 flex-none"
-                aria-hidden="true"
+              <app-token-logo
+                :url="getFiatIcon(currency)"
+                :symbol="currency"
+                cover
+                width="w-7"
+                height="h-7"
               />
               <span class="text-s-14 font-bold text-black">
                 {{ currency }}
@@ -69,13 +72,15 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppDialog from '@/components/AppDialog.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
 
 const props = defineProps<{
   currencies: string[]
   selected: string
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -90,10 +95,26 @@ watch(isOpen, value => {
   if (value) searchInput.value = ''
 })
 
+const currencyDisplayNames = new Intl.DisplayNames(['en'], {
+  type: 'currency',
+})
+
+const currencyName = (code: string): string => {
+  try {
+    return currencyDisplayNames.of(code) ?? code
+  } catch {
+    return code
+  }
+}
+
 const filteredCurrencies = computed(() => {
   const term = searchInput.value.trim().toLowerCase()
   if (!term) return props.currencies
-  return props.currencies.filter(c => c.toLowerCase().includes(term))
+  return props.currencies.filter(
+    c =>
+      c.toLowerCase().includes(term) ||
+      currencyName(c).toLowerCase().includes(term),
+  )
 })
 
 const onSelect = (currency: string) => {

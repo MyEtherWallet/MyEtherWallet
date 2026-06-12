@@ -15,7 +15,7 @@
       :estimate="formattedFiatEstimate"
       :is-loading="isFetchingSellQuote"
       :balance="balanceDisplay"
-      :preset-amounts="[]"
+      :quick-buttons="[]"
       :error-message="amountError"
       :helper-message="amountHelper"
       @update:amount="onCryptoAmountChange"

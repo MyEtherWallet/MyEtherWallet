@@ -15,17 +15,13 @@
     <div
       class="flex items-center gap-2 h-12 px-1 bg-bgMuted rounded-24 flex-none"
     >
-      <div
-        class="flex-1 flex items-center gap-2.5 h-10 px-3 bg-white rounded-20"
-      >
-        <magnifying-glass-icon class="w-5 h-5 text-info flex-none" />
-        <input
-          v-model="searchInput"
-          type="text"
-          :placeholder="$t('purchase.select_token.search_placeholder')"
-          class="flex-1 min-w-0 bg-transparent outline-none border-none p-0 text-s-15 text-black placeholder:text-info"
-        />
-      </div>
+      <app-search-input
+        v-model="searchInput"
+        size="compact"
+        bg-class="bg-white"
+        class="flex-1"
+        :placeholder="$t('purchase.select_token.search_placeholder')"
+      />
       <button
         type="button"
         class="h-10 flex items-center gap-1 pl-3 pr-2 rounded-20 hoverNoBG transition-colors flex-none"
@@ -38,7 +34,16 @@
       </button>
     </div>
 
-    <ul role="listbox" class="flex-1 overflow-y-auto">
+    <div
+      v-if="isLoading"
+      class="flex flex-1 items-center justify-center py-16"
+      aria-live="polite"
+    >
+      <span
+        class="inline-block w-8 h-8 rounded-full border-2 border-grey-10 border-t-primary animate-spin"
+      />
+    </div>
+    <ul v-else role="listbox" class="flex-1 overflow-y-auto">
       <li v-for="entry in filteredEntries" :key="entry.key">
         <button
           type="button"
@@ -53,13 +58,13 @@
               height="h-10"
             />
             <span
-              v-if="entry.chainIcon"
               class="absolute -bottom-0.5 -right-0.5 w-[18px] h-[18px] rounded-full overflow-hidden border-2 border-white bg-white"
             >
-              <img
-                :src="entry.chainIcon"
-                :alt="entry.network.chain"
-                class="w-full h-full object-cover"
+              <app-token-logo
+                :url="entry.chainIcon"
+                :symbol="entry.network.chain"
+                width="w-full"
+                height="h-full"
               />
             </span>
           </div>
@@ -96,9 +101,11 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
+import { storeToRefs } from 'pinia'
 import { useChainsStore } from '@/stores/chainsStore'
+import { usePurchaseStore } from '@/stores/purchaseStore'
 import {
   getPurchaseChainIcon,
   getPurchaseTokenIcon,
@@ -111,6 +118,7 @@ const props = defineProps<{
   selectedToken: PurchaseAsset | null
   networkFilter: string | null
   compatibleChains?: string[]
+  isLoading?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -120,6 +128,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const chainsStore = useChainsStore()
+const { coinImages } = storeToRefs(usePurchaseStore())
 
 const searchInput = ref('')
 
@@ -137,7 +146,7 @@ const allEntries = computed<Entry[]>(() =>
       key: `${network.chain}-${token.symbol}`,
       network,
       token,
-      tokenIcon: getPurchaseTokenIcon(token, network.tokens, chainsStore),
+      tokenIcon: getPurchaseTokenIcon(token, network.tokens, chainsStore, coinImages.value),
       chainIcon: getPurchaseChainIcon(
         network.chain,
         network.tokens,

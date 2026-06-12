@@ -107,20 +107,20 @@
     <!-- Quick amount buttons -->
     <div class="flex items-center justify-center gap-1 w-full">
       <button
-        v-for="preset in presetAmounts"
-        :key="preset"
+        v-for="btn in quickButtons"
+        :key="btn.usdValue"
         type="button"
         :class="[
           isFocused ? 'bg-bgBase' : 'bg-white',
-          selectedPreset === preset
+          selectedUsdValue === btn.usdValue
             ? 'outline-2 outline-black -outline-offset-2'
             : '',
           'flex-1 min-w-0 flex items-center justify-center px-3 py-2 rounded-8 hoverNoBG transition-colors',
         ]"
-        @click="onSelectPreset(preset)"
+        @click="onSelectPreset(btn)"
       >
         <span class="text-s-11 leading-[15px] font-bold tracking-sp-06 uppercase">
-          {{ currencySymbol }}{{ preset }}
+          {{ btn.label }}
         </span>
       </button>
     </div>
@@ -138,6 +138,15 @@ import {
 } from '../helpers/amountFormatting'
 import { useTextScaler } from '../composables/useTextScaler'
 
+export interface QuickButton {
+  /** Display label, already formatted with currency symbol or literal (e.g. "₩20,250", "Min"). */
+  label: string
+  /** Numeric value to set in the input when the button is clicked (in the selected currency). */
+  value: number
+  /** USD equivalent — kept for tracking/analytics. */
+  usdValue: number
+}
+
 interface AmountBalance {
   value: string
   fiat: string
@@ -154,7 +163,7 @@ const props = withDefaults(
     isLoading?: boolean
     errorMessage?: string
     helperMessage?: string
-    presetAmounts?: number[]
+    quickButtons?: QuickButton[]
     autofocus?: boolean
     /** Text rendered next to the amount value. If omitted, derived from `currency` via `getCurrencySymbol`. */
     amountSymbol?: string
@@ -167,7 +176,7 @@ const props = withDefaults(
     isLoading: false,
     errorMessage: '',
     helperMessage: '',
-    presetAmounts: () => [15, 50, 100, 250],
+    quickButtons: () => [],
     autofocus: false,
     amountSymbol: undefined,
     symbolPosition: 'prefix',
@@ -178,7 +187,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   'update:amount': [value: string]
   'open-currency': []
-  'select-preset': [value: number]
+  'select-preset': [usdValue: number]
   focus: []
   blur: []
 }>()
@@ -210,10 +219,10 @@ const effectiveSymbol = computed(
   () => props.amountSymbol ?? currencySymbol.value,
 )
 
-const selectedPreset = computed(() => {
+const selectedUsdValue = computed(() => {
   if (props.amount === '') return null
   const n = Number(props.amount)
-  return props.presetAmounts.find(p => p === n) ?? null
+  return props.quickButtons.find(b => b.value === n)?.usdValue ?? null
 })
 
 const displayValue = computed(() => formatWithCommas(props.amount))
@@ -269,9 +278,9 @@ const onInput = async (event: Event) => {
   target.setSelectionRange(newCursor, newCursor)
 }
 
-const onSelectPreset = (preset: number) => {
-  emit('update:amount', String(preset))
-  emit('select-preset', preset)
+const onSelectPreset = (btn: QuickButton) => {
+  emit('update:amount', String(btn.value))
+  emit('select-preset', btn.usdValue)
 }
 
 const focus = () => inputEl.value?.focus()
