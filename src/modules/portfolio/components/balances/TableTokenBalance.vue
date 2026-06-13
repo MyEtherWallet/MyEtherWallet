@@ -11,7 +11,11 @@
         >
           <app-search-input v-model="searchInput" class="grow" />
         </div>
-        <app-pop-up-menu placeholder="table options" location="right">
+        <app-pop-up-menu
+          v-if="view !== 'watchlist'"
+          placeholder="table options"
+          location="right"
+        >
           <template #menu-button="{ toggleMenu }">
             <app-btn-icon
               label="table options"
@@ -381,7 +385,10 @@
               <div
                 class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
               >
-                <app-pop-up-menu :placeholder="$t('common.action_menu')" location="right">
+                <app-pop-up-menu
+                  :placeholder="$t('common.action_menu')"
+                  location="right"
+                >
                   <template #menu-button="{ toggleMenu }">
                     <app-btn-icon
                       :label="$t('common.action_menu')"
@@ -547,9 +554,9 @@
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
         <p class="mb-6 lg:mt-10">{{ $t('portfolio.table.empty_custom') }}</p>
-        <app-base-button size="medium" @click="openAddCustom"
-          >{{ $t('portfolio.table.add_custom_token') }}</app-base-button
-        >
+        <app-base-button size="medium" @click="openAddCustom">{{
+          $t('portfolio.table.add_custom_token')
+        }}</app-base-button>
       </div>
       <div
         v-if="paginatedArray.length === 0 && props.view === 'stocks'"
@@ -568,7 +575,9 @@
         v-if="searchInput.length > 0 && paginatedArray.length === 0"
         class="text-nowrap mx-auto text-info text-center py-10 text-s-14"
       >
-        <p class="mb-1 lg:mt-10">{{ $t('portfolio.table.no_results', { query: searchInput }) }}</p>
+        <p class="mb-1 lg:mt-10">
+          {{ $t('portfolio.table.no_results', { query: searchInput }) }}
+        </p>
       </div>
       <!-- Loading State -->
       <div v-if="isLoading" class="">
@@ -588,7 +597,12 @@
       class="flex flex-col xs:flex-row items-center justify-between text-s-14 mt-4 border-t border-grey-5 pt-4 px-2"
     >
       <div v-if="!isLoading" class="text-info order-3 xs:order-1 mb-4 xs:mb-0">
-        {{ $t('portfolio.table.results_of', { count: getCurrentViewableItemsIndex, total: tokens.length }) }}
+        {{
+          $t('portfolio.table.results_of', {
+            count: getCurrentViewableItemsIndex,
+            total: tokens.length,
+          })
+        }}
       </div>
       <div class="flex items-center gap-4 order-1 xs:order-2 mb-4 xs:mb-0">
         <app-btn-icon
@@ -931,7 +945,7 @@ const tokens = computed<DisplayToken[]>(() => {
 
   // Create lookup for stocks by ondo symbol
   const stocksMap = new Map(
-    allStocks.value.map(s => [s.ondo?.primaryMarket?.symbol, s]),
+    allStocks.value.map(s => [s.ondo?.primaryMarket?.symbol?.toLowerCase(), s]),
   )
 
   if (props.view === 'watchlist') {
@@ -965,17 +979,20 @@ const tokens = computed<DisplayToken[]>(() => {
     // Map stocks watchlist
     const stocksList =
       (stocksWatchlistData.value || [])
-        .filter(stock =>
-          watchListedStocks.value.includes(stock.primaryMarket.symbol),
-        )
+        .filter(stock => {
+          return watchListedStocks.value
+            .map(s => s.toLowerCase())
+            .includes(stock.primaryMarket.symbol.toLowerCase())
+        })
         .map(stock => {
           // Check if user has balance for this stock
-          const balanceStock = stocksMap.get(stock.primaryMarket.symbol)
+          const balanceStock = stocksMap.get(
+            stock.primaryMarket.symbol.toLowerCase(),
+          )
           if (balanceStock) return mapToDisplay(balanceStock)
 
           return formatStock(stock)
         }) || []
-
     list = [...tokensList, ...stocksList]
   } else if (props.view === 'custom') {
     list = chainCustomTokens.value.map(customToken => {
@@ -1024,7 +1041,7 @@ const tokens = computed<DisplayToken[]>(() => {
     list = allTokens.value.map(mapToDisplay)
   }
 
-  if (!hideLowBalance.value) {
+  if (!hideLowBalance.value && props.view !== 'watchlist') {
     list = list.filter(t => (t.fiatBalance ?? 0) > 0)
   }
 
