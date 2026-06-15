@@ -388,17 +388,17 @@ export const ClickTokenTradeEvent = {
 
 export type ClickTokenTradePayload = {
   location:
-    | 'balance_table'
-    | 'token_details_page'
-    | 'stocks_table'
-    | 'crypto_table'
-    | 'trade_module'
-    | 'trade'
-    | 'swap'
-    | 'bridge'
-    | 'send'
-    | 'portfolio_no_balance'
-    | 'select_fee'
+  | 'balance_table'
+  | 'token_details_page'
+  | 'stocks_table'
+  | 'crypto_table'
+  | 'trade_module'
+  | 'trade'
+  | 'swap'
+  | 'bridge'
+  | 'send'
+  | 'portfolio_no_balance'
+  | 'select_fee'
 
   token?: string
   isMobile?: boolean
@@ -436,11 +436,11 @@ export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
 
 export type RewardsPayload = {
   location?:
-    | 'main-banner'
-    | 'small-banner-swap'
-    | 'small-banner-trade'
-    | 'small-banner-bridge'
-    | 'learn-more-dialog'
+  | 'main-banner'
+  | 'small-banner-swap'
+  | 'small-banner-trade'
+  | 'small-banner-bridge'
+  | 'learn-more-dialog'
   type?: 'swap' | 'trade'
 }
 
@@ -466,7 +466,7 @@ export type StockMarketSearchPayload = {
 }
 
 export type StockMarketClickStockPayload = {
-  location: 'token_row' | 'trade_button'
+  location: 'token_row' | 'trade_button' | 'spacex_annoucement_banner'
   stockName: string
   stockSymbol: string
 }
