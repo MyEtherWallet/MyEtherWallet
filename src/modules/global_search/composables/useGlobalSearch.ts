@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import {
+  ROUTES_MAIN,
   STOCK_INFO_ROUTE_NAMES,
   TOKEN_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
@@ -158,9 +159,36 @@ export function useGlobalSearch() {
   }
 
   const selectAsset = (item: SearchResultItem) => {
+    // Append the child drawer route to the current top-level parent so the
+    // underlying page stays visible behind it, mirroring how table rows work.
+    const parent = router.currentRoute.value.matched[0]?.name
+    const parentKey =
+      parent === ROUTES_MAIN.HOME.NAME
+        ? 'home'
+        : parent === ROUTES_MAIN.CRYPTO.NAME
+          ? 'crypto'
+          : parent === ROUTES_MAIN.STOCKS.NAME
+            ? 'stocks'
+            : parent === ROUTES_MAIN.EARN.NAME
+              ? 'earn'
+              : parent === ROUTES_MAIN.VERIFY_MESSAGE.NAME
+                ? 'verify'
+                : parent === ROUTES_MAIN.SIGN_MESSAGE.NAME
+                  ? 'sign'
+                  : null
     const target = item.isStock
-      ? { name: STOCK_INFO_ROUTE_NAMES.stocks, params: { symbol: item.symbol } }
-      : { name: TOKEN_INFO_ROUTE_NAMES.crypto, params: { tokenId: item.id } }
+      ? {
+          name: parentKey
+            ? STOCK_INFO_ROUTE_NAMES[parentKey]
+            : STOCK_INFO_ROUTE_NAMES.stocks,
+          params: { symbol: item.symbol },
+        }
+      : {
+          name: parentKey
+            ? TOKEN_INFO_ROUTE_NAMES[parentKey]
+            : TOKEN_INFO_ROUTE_NAMES.crypto,
+          params: { tokenId: item.id },
+        }
     router.push(target)
     recentlyViewedStore.addToken({
       id: item.id,

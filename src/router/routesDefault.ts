@@ -64,6 +64,16 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.earn,
+        ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.earn,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     path: ROUTES_MAIN.VERIFY_MESSAGE.PATH,
@@ -72,6 +82,16 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.verify,
+        ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.verify,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     path: ROUTES_MAIN.SIGN_MESSAGE.PATH,
@@ -80,6 +100,16 @@ const DefaultRoutes = <RouteNameCollection>[
     meta: {
       noAuth: true,
     },
+    children: [
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.sign,
+        ...TOKEN_INFO_ROUTE,
+      },
+      {
+        name: STOCK_INFO_ROUTE_NAMES.sign,
+        ...STOCK_INFO_ROUTE,
+      },
+    ],
   },
   {
     path: ROUTES_MAIN.STOCKS.PATH,
@@ -92,6 +122,10 @@ const DefaultRoutes = <RouteNameCollection>[
       {
         name: STOCK_INFO_ROUTE_NAMES.stocks,
         ...STOCK_INFO_ROUTE,
+      },
+      {
+        name: TOKEN_INFO_ROUTE_NAMES.stocks,
+        ...TOKEN_INFO_ROUTE,
       },
     ],
   },

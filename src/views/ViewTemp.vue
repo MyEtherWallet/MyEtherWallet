@@ -1,5 +1,6 @@
 <template>
   <div class="flex items-center flex-col">
+    <router-view />
     <h1 class="mt-10 title3 pt-10 text-center">{{ $t('common.coming_soon') }}</h1>
     <p class="text-s-16 mt-6 text-center">{{ $t('coming_soon_page.pardon') }}</p>
     <p class="text-s-16 mt-1 text-center">
