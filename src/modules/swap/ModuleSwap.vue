@@ -949,6 +949,8 @@ const generateBTCGasFeeQuote = async () => {
     (swapInfo.value?.transactions as GenericTransaction[]) || []
   ).map(tx => ({ address: tx.to, amount: tx.value }))
 
+  if (transactions.length === 0) return undefined
+
   const txForm = {
     fromAddresses: [userAddress.value],
     consolidationAddress: userAddress.value,
@@ -972,6 +974,9 @@ const generateEVMGasFeeQuote = async () => {
     value: tx.value || '0x0',
     action: dataTxAction(tx) as EvmTransactionAction,
   }))
+
+  if (parsedTransactions.length === 0) return undefined
+
   const res = await wallet.value?.getMultipleGasFees?.(parsedTransactions)
   return res
 }
@@ -1456,16 +1461,20 @@ watch(
 watch(
   () => selectedQuote.value,
   async provider => {
-    if (provider) {
-      // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
-      txProceeding.value = true
-      await getSwap(provider).then(async res => {
-        swapInfo.value = res
-        const quoteRes = await (isBitcoinChain.value
-          ? generateBTCGasFeeQuote()
-          : generateEVMGasFeeQuote())
-        swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
-      })
+    if (!provider) return
+    // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
+    txProceeding.value = true
+    try {
+      const res = await getSwap(provider)
+      swapInfo.value = res
+      const quoteRes = await (isBitcoinChain.value
+        ? generateBTCGasFeeQuote()
+        : generateEVMGasFeeQuote())
+      swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
+    } catch (err) {
+      swapGasFeeQuote.value = undefined
+      captureException(err)
+    } finally {
       txProceeding.value = false
     }
   },
