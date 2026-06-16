@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue'
-import usdcTokens from '@/assets/images/rewards/usdc-tokens.png'
+import usdcTokens from '@assets/images/rewards/usdc-tokens.png'
 
 const LAUNCH_DATE = new Date('2026-05-01T00:00:00.000Z')
 

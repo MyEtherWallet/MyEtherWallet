@@ -65,8 +65,8 @@
 <script setup lang="ts">
 import { ref, watchEffect, watch, computed } from 'vue'
 import ButtonNoWallet from './components/ButtonNoWallet.vue'
-import AppCopyButton from '@/components/AppBtnCopy.vue'
-import AppSheet from '@/components/AppSheet.vue'
+import AppCopyButton from '@components/AppBtnCopy.vue'
+import AppSheet from '@components/AppSheet.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { useQR } from '@/composables/useQR'
 import { useAccessStore } from '@/stores/accessStore'

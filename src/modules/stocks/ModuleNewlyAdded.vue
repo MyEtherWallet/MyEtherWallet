@@ -40,8 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppSheet from '@/components/AppSheet.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppSheet from '@components/AppSheet.vue'
 import TokenRow from './components/TokenRow.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'

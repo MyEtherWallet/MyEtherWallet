@@ -96,8 +96,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppPopUpMenu from '@components/AppPopUpMenu.vue'
 import { ShareIcon } from '@heroicons/vue/24/solid'
 import { ClipboardIcon, CheckIcon } from '@heroicons/vue/24/outline'
 

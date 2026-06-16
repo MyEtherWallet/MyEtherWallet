@@ -67,9 +67,9 @@
   </router-link>
 </template>
 <script setup lang="ts">
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import {
   formatPercentageValue,
   formatFiatValue,

@@ -42,7 +42,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import AppWalletCard from '@/components/AppWalletCard.vue'
+import AppWalletCard from '@components/AppWalletCard.vue'
 import PortfolioOverview from '@/modules/portfolio/PortfolioOverview.vue'
 import PortfolioHistory from '@/modules/portfolio/PortfolioHistory.vue'
 import PortfolioAllocation from '@/modules/portfolio/PortfolioAllocation.vue'

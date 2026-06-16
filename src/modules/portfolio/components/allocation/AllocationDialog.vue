@@ -115,14 +115,14 @@
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppBtnText from '@components/AppBtnText.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import { ArrowLongDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
-import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppPopUpMenu from '@components/AppPopUpMenu.vue'
+import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
 import { type TokenAllocation } from '@/modules/portfolio/types'

@@ -72,8 +72,8 @@ v-for="ticker in article.tickers || []"
 </template>
 
 <script setup lang="ts">
-import AppSheet from '@/components/AppSheet.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import { usePaginate } from '@/composables/usePaginate'

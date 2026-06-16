@@ -86,12 +86,12 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBtnCopy from '@components/AppBtnCopy.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { type PropType } from 'vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
 import { truncateAddress } from '@/utils/filters'
 import { type TokenSupportedChain } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'

@@ -155,8 +155,8 @@
 </template>
 
 <script setup lang="ts">
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import {

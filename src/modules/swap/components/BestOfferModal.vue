@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts" setup>
-import AppDialog from '@/components/AppDialog.vue'
+import AppDialog from '@components/AppDialog.vue'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
-import bestOfferAnimation from '@/assets/images/swap/looking-for-best-offer.lottie?url'
+import bestOfferAnimation from '@assets/images/swap/looking-for-best-offer.lottie?url'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

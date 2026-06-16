@@ -633,19 +633,19 @@
 
 <script lang="ts" setup>
 import { computed, ref, onMounted, watch, type Ref } from 'vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppSelect from '@/components/AppSelect.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSelect from '@components/AppSelect.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppPopUpMenu from '@components/AppPopUpMenu.vue'
+import AppTooltip from '@components/AppTooltip.vue'
+import IconBuy from '@assets/icons/core_menu/icon-buy.vue'
+import IconSwap from '@assets/icons/core_menu/icon-swap.vue'
+import IconBridge from '@assets/icons/core_menu/icon-bridge.vue'
+import IconTrade from '@assets/icons/core_menu/icon-trade.vue'
 import {
   StarIcon as StarSolidIcon,
   ChevronDownIcon,
@@ -656,8 +656,8 @@ import {
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
-import TableSparkline from '@/components/TableSparkline.vue'
-import SelectChainDialog from '@/components/select_chain/SelectChainDialog.vue'
+import TableSparkline from '@components/TableSparkline.vue'
+import SelectChainDialog from '@components/select_chain/SelectChainDialog.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { storeToRefs } from 'pinia'
 import type {
@@ -679,7 +679,7 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
 
-import { ALL_CHAINS } from '@/components/select_chain/helpers'
+import { ALL_CHAINS } from '@components/select_chain/helpers'
 import { useRouter } from 'vue-router'
 import {
   TOKEN_INFO_ROUTE_NAMES,

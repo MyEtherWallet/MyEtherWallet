@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'

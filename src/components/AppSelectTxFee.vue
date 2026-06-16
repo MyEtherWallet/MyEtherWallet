@@ -146,7 +146,7 @@ import { ChevronDownIcon, ArrowLongUpIcon } from '@heroicons/vue/24/solid'
 import { CurrencyDollarIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import { ref, computed, watch, onMounted } from 'vue'
 import { GasPriceType } from '@/providers/types'
-import AppDialog from '@/components/AppDialog.vue'
+import AppDialog from '@components/AppDialog.vue'
 import { fromWei } from 'web3-utils'
 import type { HexPrefixedString } from '@/providers/types'
 import {

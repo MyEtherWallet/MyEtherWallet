@@ -78,11 +78,11 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import AppSheet from '@/components/AppSheet.vue'
-import AppTextField from '@/components/AppTextField.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
-import AddressInput from '@/components/address_book/AddressInput.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppTextField from '@components/AppTextField.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import SelectChainForApp from '@components/select_chain/SelectChainForApp.vue'
+import AddressInput from '@components/address_book/AddressInput.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useAddressInput } from '@/composables/useAddressInput'

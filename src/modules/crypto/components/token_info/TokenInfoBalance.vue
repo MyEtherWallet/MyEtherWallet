@@ -135,9 +135,9 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 //Components
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 //types
 import type { TokenSupportedChain, ChainBalance } from '@/mew_api/types'
 import { useWalletStore } from '@/stores/walletStore'

@@ -31,7 +31,7 @@
   </select-chain-for-app>
 </template>
 <script setup lang="ts">
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import SelectChainForApp from '@components/select_chain/SelectChainForApp.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 

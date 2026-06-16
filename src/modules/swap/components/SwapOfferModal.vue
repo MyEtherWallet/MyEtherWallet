@@ -279,15 +279,15 @@
 </template>
 
 <script lang="ts" setup>
-import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppDialog from '@/components/AppDialog.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import ExpandTransition from '@components/transitions/ExpandTransition.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppPopUpMenu from '@components/AppPopUpMenu.vue'
+import AppSelectTxFee from '@components/AppSelectTxFee.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnText from '@components/AppBtnText.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import { computed, watch, ref } from 'vue'
 import {
   type ProviderQuoteResponse,

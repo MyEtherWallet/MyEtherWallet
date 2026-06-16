@@ -92,13 +92,13 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
-import AppSheet from '@/components/AppSheet.vue'
+import AppSheet from '@components/AppSheet.vue'
 import TokenRow from './components/gains_or_loss/TokenRow.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { computed } from 'vue'
 import { BigNumber } from 'bignumber.js'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import {
   ChevronLeftIcon,
   ChevronRightIcon,

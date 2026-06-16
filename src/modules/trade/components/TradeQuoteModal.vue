@@ -166,11 +166,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnText from '@components/AppBtnText.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import { formatUnits } from 'viem'
 import {
   formatFloatingPointValue,

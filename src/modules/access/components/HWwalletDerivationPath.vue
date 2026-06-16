@@ -77,8 +77,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
 import { useDerivationStore } from '@/stores/derivationStore'
 import { storeToRefs } from 'pinia'
 import type { PathType } from '@/stores/derivationStore'

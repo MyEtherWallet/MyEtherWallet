@@ -28,7 +28,7 @@ import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { watch, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { storeToRefs } from 'pinia'
-import peggyUsdc from '@/assets/images/peggy/peggy-holding-usdc.png'
+import peggyUsdc from '@assets/images/peggy/peggy-holding-usdc.png'
 
 const { isXS } = useAppBreakpoints()
 const toastStore = useToastStore()

@@ -163,7 +163,6 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
   }
 }
 
-// Helper to map tradable assets to token format
 function mapTradableAssetsToTokens(
   assets: TradableAsset[],
   chainName: string,
@@ -239,7 +238,6 @@ function mapTradableAssetsToTokens(
   return mappedAssets
 }
 
-// Helper to map supporting assets to token format
 function mapSupportingAssetsToTokens(
   assets: SupportingAsset[],
   chainName: string,

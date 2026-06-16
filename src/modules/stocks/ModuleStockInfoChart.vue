@@ -53,9 +53,9 @@
 import { computed, ref, onBeforeUnmount, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
-import AppSelect from '@/components/AppSelect.vue'
-import ChartPrice from '@/components/ChartPrice.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
+import AppSelect from '@components/AppSelect.vue'
+import ChartPrice from '@components/ChartPrice.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type {

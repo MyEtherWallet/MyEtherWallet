@@ -85,10 +85,10 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
-import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppBlockie from '@components/AppBlockie.vue'
+import AppBtnCopy from '@components/AppBtnCopy.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useQR } from '@/composables/useQR'

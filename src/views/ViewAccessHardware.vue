@@ -24,8 +24,8 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppSheet from '@/components/AppSheet.vue'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppNeedHelp from '@components/AppNeedHelp.vue'
 import ModuleAccessHardwareWallet from '@/modules/access/ModuleAccessHardwareWallet.vue'
 import { ROUTES_ACCESS } from '@/router/routeNames'
 import { useRoute } from 'vue-router'

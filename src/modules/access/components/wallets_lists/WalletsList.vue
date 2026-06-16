@@ -77,12 +77,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import AppSearchInput from '@components/AppSearchInput.vue'
-import AppSelect from '@/components/AppSelect.vue'
+import AppSelect from '@components/AppSelect.vue'
 import MobileSortFilter from './MobileSortFilter.vue'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import BtnWallet from './BtnWallet.vue'
 import AppBtnGroup from '@components/AppBtnGroup.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import {
   type WalletConfig,
   SortBy,

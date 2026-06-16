@@ -95,19 +95,19 @@
 </template>
 
 <script setup lang="ts">
-import AppSheet from '@/components/AppSheet.vue'
+import AppSheet from '@components/AppSheet.vue'
 import ButtonNoWallet from './components/ButtonNoWallet.vue'
 import { ref, watch, markRaw, computed, onMounted } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
-import AppStepper from '@/components/AppStepper.vue'
-import AppStepDescription from '@/components/AppStepDescription.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppStepper from '@components/AppStepper.vue'
+import AppStepDescription from '@components/AppStepDescription.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnText from '@components/AppBtnText.vue'
 import SelectAddressList from './components/SelectAddressList.vue'
 import { type StepDescription } from '@/types/components/appStepper'
 import { useWalletStore } from '@/stores/walletStore'
 import { type SelectAddress } from './types/selectAddress'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
+import SelectChainForApp from '@components/select_chain/SelectChainForApp.vue'
 import HardwareWalletDerivation from './components/HWwalletDerivationPath.vue'
 import {
   walletConfigs,

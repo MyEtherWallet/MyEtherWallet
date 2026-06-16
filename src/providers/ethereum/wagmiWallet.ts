@@ -103,7 +103,7 @@ class WagmiWallet extends BaseEvmWallet {
       })
       return signature
     } catch (e) {
-      console.log(e)
+      console.error(e)
       throw e
     }
   }

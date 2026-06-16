@@ -63,8 +63,8 @@
   </app-dialog>
 </template>
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { type Filter } from '@/modules/access/common/walletConfigs'
 import { type AppSelectOption } from '@/types/components/appSelect'
 

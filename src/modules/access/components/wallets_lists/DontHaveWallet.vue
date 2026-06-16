@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { useCreateStore } from '@/stores/createStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { analytics } from '@/analytics'

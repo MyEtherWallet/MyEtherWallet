@@ -73,10 +73,10 @@
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import AppSheet from '@/components/AppSheet.vue'
-import AppDialog from '@/components/AppDialog.vue'
-import AppTextField from '@/components/AppTextField.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppTextField from '@components/AppTextField.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'

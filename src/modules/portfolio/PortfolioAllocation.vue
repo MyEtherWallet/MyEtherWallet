@@ -33,7 +33,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import AppSheet from '@/components/AppSheet.vue'
+import AppSheet from '@components/AppSheet.vue'
 import AllocationTokens from './components/allocation/AllocationTokens.vue'
 import AllocationChart from './components/allocation/AllocationChart.vue'
 import AllocationDialog from './components/allocation/AllocationDialog.vue'

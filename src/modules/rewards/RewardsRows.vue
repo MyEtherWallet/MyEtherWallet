@@ -183,12 +183,12 @@
 </template>
 
 <script setup lang="ts">
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { ClockIcon } from '@heroicons/vue/24/outline'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import IconSwap from '@assets/icons/core_menu/icon-swap.vue'
+import IconTrade from '@assets/icons/core_menu/icon-trade.vue'
 
 const walletMenuStore = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenuStore)

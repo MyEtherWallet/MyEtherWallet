@@ -63,12 +63,12 @@
 <script setup lang="ts">
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type PropType, computed } from 'vue'
-import IconSend from '@/assets/icons/core_menu/icon-send.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconStake from '@/assets/icons/core_menu/icon-stake.vue'
-import IconPortfolio from '@/assets/icons/core_menu/icon-portfolio.vue'
-import IconCrypto from '@/assets/icons/core_menu/icon-crypto.vue'
-import IconStocks from '@/assets/icons/core_menu/icon-stocks.vue'
+import IconSend from '@assets/icons/core_menu/icon-send.vue'
+import IconSwap from '@assets/icons/core_menu/icon-swap.vue'
+import IconStake from '@assets/icons/core_menu/icon-stake.vue'
+import IconPortfolio from '@assets/icons/core_menu/icon-portfolio.vue'
+import IconCrypto from '@assets/icons/core_menu/icon-crypto.vue'
+import IconStocks from '@assets/icons/core_menu/icon-stocks.vue'
 import {
   BellIcon,
   CogIcon,

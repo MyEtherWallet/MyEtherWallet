@@ -48,12 +48,12 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppBlockie from '@/components/AppBlockie.vue'
+import AppBlockie from '@components/AppBlockie.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { truncateAddress } from '@/utils/filters'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import TheAddressMenuDialog from '@/components/core_layouts/wallet/TheAddressMenuDialog.vue'
-import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
+import TheAddressMenuDialog from '@components/core_layouts/wallet/TheAddressMenuDialog.vue'
+import IconWatchOnly from '@assets/icons/IconWatchOnly.vue'
 const { isXS } = useAppBreakpoints()
 
 const store = useWalletStore()

@@ -204,8 +204,8 @@ import { storeToRefs } from 'pinia'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 
 const GAP = 24
 

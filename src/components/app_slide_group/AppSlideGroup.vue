@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import AppSlideItem from './AppSlideItem.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { computed, ref, useTemplateRef, type PropType } from 'vue'
 import { useElementBounding } from '@vueuse/core'

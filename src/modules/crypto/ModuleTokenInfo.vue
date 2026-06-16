@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import AppAssetInfoHeader from '@/components/AppAssetInfoHeader.vue'
+import AppAssetInfoHeader from '@components/AppAssetInfoHeader.vue'
 import TokenInfoMarketData from './components/token_info/TokenInfoMarketData.vue'
 import TokenInfoSupportedChains from './components/token_info/TokenInfoSupportedChains.vue'
 import TokenInfoChart from './components/token_info/TokenInfoChart.vue'

@@ -74,13 +74,13 @@
 <script setup lang="ts">
 import { ref, onUnmounted, watch, computed } from 'vue'
 //Components
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
 import TransactionContainer from './components/TransactionContainer.vue'
 import TradeOrderContainer from './components/TradeOrderContainer.vue'
 import SwapContainer from './components/SwapContainer.vue'
 import BridgeContainer from './components/BridgeContainer.vue'
 import EmptyContainer from './components/EmptyContainer.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBtnText from '@components/AppBtnText.vue'
 
 //Helpers
 import type { OrderStatusOutputType } from '@/modules/trade/providers/oneinch_fusion/oneInchTypes'
@@ -281,7 +281,6 @@ const orders = computed<TradeOrder[]>(() => {
   }))
 })
 
-// Helper to get order with remaining time
 const getOrderWithRemainingTime = (order: SavedTradeOrder): TradeOrder => ({
   ...order,
   remainingTime: remainingTimes.value[order.hash] ?? order.duration,
@@ -483,7 +482,6 @@ const removeNotification = (hash: string) => {
   }
 }
 
-// Helper to start polling for all pending orders
 const startPollingForPendingOrders = (address: string) => {
   const pendingOrders = tradeOrdersStore.getPendingOrders(address)
   if (pendingOrders.length > 0) {
@@ -726,7 +724,6 @@ const stopStatusPolling = (hash: string) => {
   }
 }
 
-// Helper to start polling for all pending notifications (transactions, swaps, bridges)
 const startPollingForPendingNotifications = (address: string) => {
   // Transactions
   const pendingTxs = tradeOrdersStore.getPendingTransactions(address)

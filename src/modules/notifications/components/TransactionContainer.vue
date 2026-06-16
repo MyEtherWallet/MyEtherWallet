@@ -159,11 +159,11 @@ import {
   TrashIcon,
 } from '@heroicons/vue/24/solid'
 import type { TransactionNotification } from '@/stores/tradeOrdersStore'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
-import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppBlockie from '@components/AppBlockie.vue'
+import ExpandTransition from '@components/transitions/ExpandTransition.vue'
+import AppBtnText from '@components/AppBtnText.vue'
 import {
   formatFiatValue,
   formatFloatingPointValue,

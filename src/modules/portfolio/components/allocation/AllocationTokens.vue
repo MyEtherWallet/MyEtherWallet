@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { type PropType } from 'vue'
 import { truncate } from '@/utils/filters'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import {
   type TokenAllocation,
   ALLOCATION_COLORS,
@@ -47,7 +47,7 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 defineProps({
   /**
    * @title The title of the dialog, not required

@@ -54,10 +54,10 @@
 </template>
 <script setup lang="ts">
 import AsyncImg from './AsyncImg.vue'
-import MobileBadge from '@/assets/images/access/wallet_types/mobileWallet.webp'
-import HardwareBadge from '@/assets/images/access/wallet_types/hardwareWallet.webp'
-import ExtensionBadge from '@/assets/images/access/wallet_types/web3Wallet.webp'
-import OfficialBadge from '@/assets/images/common/official_badge.webp'
+import MobileBadge from '@assets/images/access/wallet_types/mobileWallet.webp'
+import HardwareBadge from '@assets/images/access/wallet_types/hardwareWallet.webp'
+import ExtensionBadge from '@assets/images/access/wallet_types/web3Wallet.webp'
+import OfficialBadge from '@assets/images/common/official_badge.webp'
 import {
   type WalletConfig,
   WalletConfigType,

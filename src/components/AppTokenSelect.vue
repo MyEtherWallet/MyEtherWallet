@@ -189,11 +189,11 @@ import {
 import BigNumber from 'bignumber.js'
 import { storeToRefs } from 'pinia'
 import { truncate } from '@/utils/filters'
-import AppDialog from '@/components/AppDialog.vue'
+import AppDialog from '@components/AppDialog.vue'
 import AppSearchInput from './AppSearchInput.vue'
 import AppPopUpMenu from './AppPopUpMenu.vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import AppTokenLogo from './AppTokenLogo.vue'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 import {

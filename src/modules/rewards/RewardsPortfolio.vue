@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
-import coinsIcon from '@/assets/images/rewards/usdc-disable.png'
+import coinsIcon from '@assets/images/rewards/usdc-disable.png'
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

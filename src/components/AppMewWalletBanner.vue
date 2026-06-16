@@ -103,11 +103,11 @@
 <script setup lang="ts">
 import { QrCodeIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 import { onMounted, ref } from 'vue'
-import mewBannerItem from '@/assets/images/mewwallet/mew-banner-item.png'
-import mewBannerItemMobile from '@/assets/images/mewwallet/mew-banner-item-mobile.png'
-import appStoreIos from '@/assets/images/common/app-store-apple-grey.png'
-import appStoreGoogle from '@/assets/images/common/app-store-google-grey.png'
-import qrCode from '@/assets/images/qr-code-mew-wallet-dl.png'
+import mewBannerItem from '@assets/images/mewwallet/mew-banner-item.png'
+import mewBannerItemMobile from '@assets/images/mewwallet/mew-banner-item-mobile.png'
+import appStoreIos from '@assets/images/common/app-store-apple-grey.png'
+import appStoreGoogle from '@assets/images/common/app-store-google-grey.png'
+import qrCode from '@assets/images/qr-code-mew-wallet-dl.png'
 
 const isVisible = ref(false)
 const showQr = ref(false)

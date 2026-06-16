@@ -99,9 +99,9 @@ import { storeToRefs } from 'pinia'
 import { useTradeOrdersStore } from '@/stores/tradeOrdersStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import AppBtnIconClose from '../AppBtnIconClose.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import ModuleNotifications from '@/modules/notifications/ModuleNotifications.vue'
 import {
   onClickOutside,
@@ -111,8 +111,8 @@ import {
   useWindowSize,
 } from '@vueuse/core'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import pinIcon from '@/assets/icons/pin-icon.svg'
-import dragIcon from '@/assets/icons/drag-icon.svg'
+import pinIcon from '@assets/icons/pin-icon.svg'
+import dragIcon from '@assets/icons/drag-icon.svg'
 
 // Breakpoints
 const { isMobile } = useAppBreakpoints()

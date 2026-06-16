@@ -220,16 +220,16 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore, type WalletPanel } from '@/stores/walletMenuStore'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import IconSend from '@/assets/icons/core_menu/icon-send.vue'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import IconSell from '@/assets/icons/core_menu/icon-sell.vue'
-import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import IconSend from '@assets/icons/core_menu/icon-send.vue'
+import IconBuy from '@assets/icons/core_menu/icon-buy.vue'
+import IconSwap from '@assets/icons/core_menu/icon-swap.vue'
+import IconBridge from '@assets/icons/core_menu/icon-bridge.vue'
+import IconSell from '@assets/icons/core_menu/icon-sell.vue'
+import IconTrade from '@assets/icons/core_menu/icon-trade.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import {
   QrCodeIcon,
   ChevronDoubleLeftIcon,
@@ -239,7 +239,7 @@ import {
   TOKEN_INFO_ROUTE_NAMES,
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
-import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
 import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 

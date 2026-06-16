@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import StockIndex from './components/StockIndex.vue'
-import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
+import AppSlideGroup from '@components/app_slide_group/AppSlideGroup.vue'
 import { useStocksStore } from '@/stores/stocksStore'
 import { storeToRefs } from 'pinia'
 const stocksStore = useStocksStore()

@@ -67,14 +67,14 @@
 </template>
 
 <script setup lang="ts">
-import AppTooltip from '@/components/AppTooltip.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@components/AppTooltip.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import TopMoverHistoryChart from './TopMoverHistoryChart.vue'
 import {
   formatPercentageValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
 import { type StockTopMoverItem } from '@/mew_api/types'
 import { computed } from 'vue'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'

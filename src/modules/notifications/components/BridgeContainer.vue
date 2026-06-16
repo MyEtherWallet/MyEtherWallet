@@ -217,12 +217,12 @@ import {
   TrashIcon,
 } from '@heroicons/vue/24/solid'
 import type { BridgeNotification } from '@/stores/tradeOrdersStore'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import ExpandTransition from '@components/transitions/ExpandTransition.vue'
+import AppBtnText from '@components/AppBtnText.vue'
+import AppBlockie from '@components/AppBlockie.vue'
 import {
   formatFiatValue,
   formatFloatingPointValue,

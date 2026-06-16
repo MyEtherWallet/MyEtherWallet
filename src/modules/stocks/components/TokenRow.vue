@@ -66,16 +66,16 @@
 </template>
 
 <script setup lang="ts">
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import {
   formatPercentageValue,
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import type { StockOverviewItem } from '@/mew_api/types'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
-import TableSparkline from '@/components/TableSparkline.vue'
+import TableSparkline from '@components/TableSparkline.vue'
 import { computed } from 'vue'
 const props = defineProps<{
   token: StockOverviewItem

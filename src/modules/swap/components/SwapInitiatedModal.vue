@@ -261,13 +261,13 @@
 <script setup lang="ts">
 import { computed, watch, reactive } from 'vue'
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
-import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import ethSvg from '@/assets/icons/tokens/eth.svg'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppBlockie from '@components/AppBlockie.vue'
+import AppBtnCopy from '@components/AppBtnCopy.vue'
+import ethSvg from '@assets/icons/tokens/eth.svg'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import { ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import {
   CheckCircleIcon,

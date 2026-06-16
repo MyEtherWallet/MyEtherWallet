@@ -83,14 +83,14 @@
 
 <script setup lang="ts">
 import { watch } from 'vue'
-import AppDialog from '@/components/AppDialog.vue'
+import AppDialog from '@components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
 import {
   TrophyIcon,
   CalendarIcon,
   CurrencyDollarIcon,
 } from '@heroicons/vue/24/solid'
-import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
+import TradeIcon from '@assets/icons/core_menu/icon-trade.vue'
 import { ArrowPathRoundedSquareIcon } from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'

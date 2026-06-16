@@ -19,9 +19,6 @@ const beforeRouteEnter = (
   ) {
     next()
   } else {
-    console.log(
-      'No or invalid wallet type provided, redirecting to default view',
-    )
     next({ name: ROUTES_ACCESS.ACCESS.NAME, query: { type: 'default' } })
   }
 }

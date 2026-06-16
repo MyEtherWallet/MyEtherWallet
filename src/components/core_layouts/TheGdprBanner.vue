@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
+import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { storeToRefs } from 'pinia'
 

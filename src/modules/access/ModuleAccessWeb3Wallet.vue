@@ -74,8 +74,8 @@
 </template>
 
 <script setup lang="ts">
-import AppSheet from '@/components/AppSheet.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { useAccessStore } from '@/stores/accessStore'
 import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
 import { storeToRefs } from 'pinia'

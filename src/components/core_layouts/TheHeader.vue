@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import AppSelect from '@/components/AppSelect.vue'
+import AppSelect from '@components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'

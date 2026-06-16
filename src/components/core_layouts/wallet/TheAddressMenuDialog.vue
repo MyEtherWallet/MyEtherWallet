@@ -28,12 +28,12 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
-import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import AppDialog from '@components/AppDialog.vue'
+import TheDepositDialog from '@components/core_layouts/wallet/TheDepositDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { ref } from 'vue'
-import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
-import AppWalletCard from '@/components/AppWalletCard.vue'
+import IconWatchOnly from '@assets/icons/IconWatchOnly.vue'
+import AppWalletCard from '@components/AppWalletCard.vue'
 
 const store = useWalletStore()
 

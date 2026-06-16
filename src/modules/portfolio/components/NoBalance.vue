@@ -52,10 +52,10 @@
   </app-sheet>
 </template>
 <script setup lang="ts">
-import AppSheet from '@/components/AppSheet.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { QrCodeIcon } from '@heroicons/vue/24/outline'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
+import IconBuy from '@assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { storeToRefs } from 'pinia'

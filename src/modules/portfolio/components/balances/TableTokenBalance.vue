@@ -643,15 +643,15 @@ import BigNumber from 'bignumber.js'
 import { formatUnits } from 'viem'
 
 // Components
-import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppSelect from '@/components/AppSelect.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
-import TableSparkline from '@/components/TableSparkline.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppSelect from '@components/AppSelect.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppPopUpMenu from '@components/AppPopUpMenu.vue'
+import AppTooltip from '@components/AppTooltip.vue'
+import TableSparkline from '@components/TableSparkline.vue'
 import CustomTokensDialog from './CustomTokensDialog.vue'
 // Icons
 import {
@@ -665,9 +665,9 @@ import {
   TrashIcon,
   ChevronDownIcon,
 } from '@heroicons/vue/24/solid'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
-import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
-import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
+import IconBuy from '@assets/icons/core_menu/icon-buy.vue'
+import IconSwap from '@assets/icons/core_menu/icon-swap.vue'
+import IconTrade from '@assets/icons/core_menu/icon-trade.vue'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 
 // Composables & Utils

@@ -21,8 +21,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import AppInput from '@/components/AppInput.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppInput from '@components/AppInput.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { useEmailSubscription } from '@/composables/useEmailSubscription'
 const emit = defineEmits<{
   (e: 'subscribed'): void

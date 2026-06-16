@@ -108,12 +108,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppInput from '@/components/AppInput.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppInput from '@components/AppInput.vue'
+import AppBtnText from '@components/AppBtnText.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
 import { WALLET_TYPES } from '../common/walletConfigs'
 import Bip44Paths from '../common/bip44'
 import {

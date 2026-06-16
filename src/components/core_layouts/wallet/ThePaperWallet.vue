@@ -111,9 +111,9 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBlockie from '@/components/AppBlockie.vue'
-import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBlockie from '@components/AppBlockie.vue'
+import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch, nextTick } from 'vue'
@@ -172,12 +172,10 @@ const print = async () => {
   let styles = ''
   // Copy <style> tags
   document.querySelectorAll('style').forEach(style => {
-    console.log('Copying style:', style)
     styles += style.outerHTML
   })
   // Copy <link rel="stylesheet"> tags
   document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-    console.log('Copying link:', link)
     styles += link.outerHTML
   })
 

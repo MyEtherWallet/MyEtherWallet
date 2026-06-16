@@ -85,9 +85,9 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import AppBlockie from '@/components/AppBlockie.vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppBtnCopy from '@/components/AppBtnCopy.vue'
+import AppBlockie from '@components/AppBlockie.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppBtnCopy from '@components/AppBtnCopy.vue'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/outline'
 import { CheckIcon } from '@heroicons/vue/24/solid'
 import { ChevronLeftIcon } from '@heroicons/vue/24/solid'

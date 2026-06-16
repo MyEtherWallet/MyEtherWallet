@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import AppViewAsDialog from '@/components/AppViewAsDialog.vue'
+import AppViewAsDialog from '@components/AppViewAsDialog.vue'
 import ModuleStockInfo from '@/modules/stocks/ModuleStockInfo.vue'
 import { onMounted } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'

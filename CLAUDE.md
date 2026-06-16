@@ -41,16 +41,17 @@ src/
 └── providers.ts      # Provider injection keys
 ```
 
-### Path Aliases (vite.config.ts)
+### Path Aliases (vite.config.ts + tsconfig.app.json)
 
-| Alias | Resolves to |
-|---|---|
-| `@` | `src/` |
-| `@components` | `src/components/` |
-| `@modules` | `src/modules/` |
-| `@assets` | `src/assets/` |
-| `@view-default` | `src/views/default/` |
-| `@view-wallet` | `src/views/wallet/` |
+| Alias           | Resolves to          | Notes |
+| --------------- | -------------------- | ----- |
+| `@`             | `src/`               | Universal fallback |
+| `@components`   | `src/components/`    | Prefer over `@/components/` |
+| `@assets`       | `src/assets/`        | Prefer over `@/assets/` |
+| `@view-default` | `src/views/default/` | |
+| `@view-wallet`  | `src/views/wallet/`  | |
+
+> `@modules` exists in vite.config.ts but is **not** in tsconfig, so avoid it — use `@/` for module imports.
 
 ---
 
@@ -58,98 +59,101 @@ src/
 
 ### Buttons
 
-| Component | Purpose |
-|---|---|
-| `AppBaseButton.vue` | Primary button — use as the base for all clickable actions |
-| `AppBtnText.vue` | Text-only button (no background) |
-| `AppBtnIcon.vue` | Icon-only button |
-| `AppBtnIconClose.vue` | Close/dismiss icon button |
-| `AppBtnGroup.vue` | Container to group related buttons |
-| `AppBtnCopy.vue` | Button that copies text to clipboard |
+| Component             | Purpose                                                    |
+| --------------------- | ---------------------------------------------------------- |
+| `AppBaseButton.vue`   | Primary button — use as the base for all clickable actions |
+| `AppBtnText.vue`      | Text-only button (no background)                           |
+| `AppBtnIcon.vue`      | Icon-only button                                           |
+| `AppBtnIconClose.vue` | Close/dismiss icon button                                  |
+| `AppBtnGroup.vue`     | Container to group related buttons                         |
+| `AppBtnCopy.vue`      | Button that copies text to clipboard                       |
 
 ### Inputs & Forms
 
-| Component | Purpose |
-|---|---|
-| `AppInput.vue` | Base text input |
-| `AppTextField.vue` | Extended text field with label/error slots |
-| `AppSearchInput.vue` | Input with search icon |
-| `AppSelect.vue` | Dropdown select |
-| `AppTokenSelect.vue` | Token-aware dropdown (shows logos, symbols) |
-| `AppToggle.vue` | Toggle switch (boolean) |
-| `AppEnterAmount.vue` | Amount input with token/fiat context |
-| `AppSwapEnterAmount.vue` | Swap-specific amount input |
+| Component                | Purpose                                     |
+| ------------------------ | ------------------------------------------- |
+| `AppInput.vue`           | Base text input                             |
+| `AppTextField.vue`       | Extended text field with label/error slots  |
+| `AppSearchInput.vue`     | Input with search icon                      |
+| `AppSelect.vue`          | Dropdown select                             |
+| `AppTokenSelect.vue`     | Token-aware dropdown (shows logos, symbols) |
+| `AppToggle.vue`          | Toggle switch (boolean)                     |
+| `AppEnterAmount.vue`     | Amount input with token/fiat context        |
+| `AppSwapEnterAmount.vue` | Swap-specific amount input                  |
 
 ### Modals & Overlays
 
-| Component | Purpose |
-|---|---|
-| `AppDialog.vue` | Full modal dialog with backdrop |
-| `AppSheet.vue` | Bottom sheet / side panel |
-| `AppViewAsDialog.vue` | View-as / impersonation dialog |
-| `AppPopUpMenu.vue` | Contextual popup menu |
-| `AppTooltip.vue` | Hover tooltip |
+| Component             | Purpose                         |
+| --------------------- | ------------------------------- |
+| `AppDialog.vue`       | Full modal dialog with backdrop |
+| `AppSheet.vue`        | Bottom sheet / side panel       |
+| `AppViewAsDialog.vue` | View-as / impersonation dialog  |
+| `AppPopUpMenu.vue`    | Contextual popup menu           |
+| `AppTooltip.vue`      | Hover tooltip                   |
 
 ### Token & Wallet Display
 
-| Component | Purpose |
-|---|---|
-| `AppTokenLogo.vue` | Token icon with fallback |
-| `AppTokenSymbol.vue` | Formatted token symbol text |
-| `AppBlockie.vue` | Ethereum address blockie avatar |
-| `AppWalletCard.vue` | Wallet summary card |
-| `AppAssetInfoHeader.vue` | Asset detail header (price, change) |
-| `AppSwapSelectedToken.vue` | Selected token chip for swap UI |
+| Component                  | Purpose                             |
+| -------------------------- | ----------------------------------- |
+| `AppTokenLogo.vue`         | Token icon with fallback            |
+| `AppTokenSymbol.vue`       | Formatted token symbol text         |
+| `AppBlockie.vue`           | Ethereum address blockie avatar     |
+| `AppWalletCard.vue`        | Wallet summary card                 |
+| `AppAssetInfoHeader.vue`   | Asset detail header (price, change) |
+| `AppSwapSelectedToken.vue` | Selected token chip for swap UI     |
 
 ### Transaction Utilities
 
-| Component | Purpose |
-|---|---|
+| Component            | Purpose               |
+| -------------------- | --------------------- |
 | `AppSelectTxFee.vue` | Gas/fee tier selector |
 
 ### Feedback & Status
 
-| Component | Purpose |
-|---|---|
-| `AppNoChainBalance.vue` | Empty state when chain has no balance |
-| `AppNotRecommended.vue` | Warning banner for risky actions |
-| `AppNeedHelp.vue` | Help/support call-to-action |
-| `AppMewWalletBanner.vue` | MEW wallet promotional banner |
-| `AppSubscribeToUpdates.vue` | Newsletter/update subscription |
+| Component                   | Purpose                               |
+| --------------------------- | ------------------------------------- |
+| `AppNoChainBalance.vue`     | Empty state when chain has no balance |
+| `AppNotRecommended.vue`     | Warning banner for risky actions      |
+| `AppNeedHelp.vue`           | Help/support call-to-action           |
+| `AppMewWalletBanner.vue`    | MEW wallet promotional banner         |
+| `AppSubscribeToUpdates.vue` | Newsletter/update subscription        |
 
 ### Multi-Step Flows
 
-| Component | Purpose |
-|---|---|
-| `AppStepper.vue` | Step progress indicator |
+| Component                | Purpose                     |
+| ------------------------ | --------------------------- |
+| `AppStepper.vue`         | Step progress indicator     |
 | `AppStepDescription.vue` | Description text for a step |
 
 ### Data Visualization
 
-| Component | Purpose |
-|---|---|
-| `ChartPrice.vue` | Price line chart (Chart.js) |
+| Component            | Purpose                     |
+| -------------------- | --------------------------- |
+| `ChartPrice.vue`     | Price line chart (Chart.js) |
 | `TableSparkline.vue` | Inline sparkline for tables |
 
 ### Share
 
-| Component | Purpose |
-|---|---|
+| Component            | Purpose                         |
+| -------------------- | ------------------------------- |
 | `AppShareButton.vue` | Native share / copy link button |
 
 ### Subfolders
 
 **`address_book/`**
+
 - `AddressBookDialog.vue` — full address book modal
 - `AddressBookItem.vue` — single address row
 - `AddAddress.vue` — add new address form
 - `AddressInput.vue` — address field with ENS resolution
 
 **`app_slide_group/`**
+
 - `AppSlideGroup.vue` — horizontal scroll container
 - `AppSlideItem.vue` — individual slide card
 
 **`core_layouts/`** (shell components — not reused in features)
+
 - `TheAppLayout.vue`, `TheHeader.vue`, `TheAppSideMenu.vue`
 - `LayoutWallet.vue`, `MenuListItem.vue`
 - `WelcomeDialog.vue`, `TheGdprBanner.vue`
@@ -157,30 +161,33 @@ src/
 - `wallet/` → `TheAddressMenu.vue`, `TheCurrentNetwork.vue`, `TheDepositDialog.vue`, `ThePaperWallet.vue`
 
 **`select_chain/`**
+
 - `SelectChainBtn.vue`, `SelectChainDialog.vue`, `SelectChainForApp.vue`
 
 **`tabs/`**
+
 - `AppTabs.vue` — tabbed interface
 - `AppTabsSimple.vue` — simplified tabs without panels
 
 **`transitions/`**
+
 - `ExpandTransition.vue` — height expand/collapse animation
 
 ---
 
 ## Naming Conventions
 
-| Thing | Convention | Example |
-|---|---|---|
-| Reusable components | `App[Name].vue` | `AppButton.vue` |
-| Layout shells | `The[Name].vue` | `TheHeader.vue` |
-| Module entry points | `Module[Feature].vue` | `ModuleAccessWallet.vue` |
-| Feature sub-components | `[Name].vue` | `DerivationPath.vue` |
-| TypeScript files | camelCase | `walletStore.ts` |
-| Folders | snake_case | `core_layouts/`, `app_slide_group/` |
-| Stores | `use[Feature]Store` hook | `useWalletStore` |
-| Composables | `use[Feature]` | `useFetchMewApi` |
-| Route names | exported constants from `routeNames.ts` | `ROUTES.SWAP` |
+| Thing                  | Convention                              | Example                             |
+| ---------------------- | --------------------------------------- | ----------------------------------- |
+| Reusable components    | `App[Name].vue`                         | `AppButton.vue`                     |
+| Layout shells          | `The[Name].vue`                         | `TheHeader.vue`                     |
+| Module entry points    | `Module[Feature].vue`                   | `ModuleAccessWallet.vue`            |
+| Feature sub-components | `[Name].vue`                            | `DerivationPath.vue`                |
+| TypeScript files       | camelCase                               | `walletStore.ts`                    |
+| Folders                | snake_case                              | `core_layouts/`, `app_slide_group/` |
+| Stores                 | `use[Feature]Store` hook                | `useWalletStore`                    |
+| Composables            | `use[Feature]`                          | `useFetchMewApi`                    |
+| Route names            | exported constants from `routeNames.ts` | `ROUTES.SWAP`                       |
 
 ---
 
@@ -214,7 +221,9 @@ export const useWalletStore = defineStore('wallet', () => {
   const wallet = ref<WalletInterface | null>(null)
   const tokens = ref<Token[]>([])
 
-  function setWallet(w: WalletInterface) { wallet.value = w }
+  function setWallet(w: WalletInterface) {
+    wallet.value = w
+  }
 
   return { wallet, tokens, setWallet }
 })
@@ -227,22 +236,22 @@ import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
 
 const walletStore = useWalletStore()
-const { wallet, tokens } = storeToRefs(walletStore)  // reactive refs
-const { setWallet } = walletStore                     // actions (no storeToRefs needed)
+const { wallet, tokens } = storeToRefs(walletStore) // reactive refs
+const { setWallet } = walletStore // actions (no storeToRefs needed)
 ```
 
 ### Key Stores
 
-| Store | File | Purpose |
-|---|---|---|
-| `useWalletStore` | `walletStore.ts` | Active wallet, balances, tokens |
-| `useChainsStore` | `chainsStore.ts` | Available networks, selected chain |
-| `useProviderStore` | `providerStore.ts` | Web3 provider config |
-| `useAccessStore` | `accessStore.ts` | Wallet connection/auth state |
-| `useDialogStore` | `dialogStore.ts` | Modal open/close flags |
-| `useToastStore` | `toastStore.ts` | Toast notification queue |
-| `useAddressBook` | `addressBook.ts` | Saved address entries |
-| `useAnalyticsStore` | `analyticsStore.ts` | Analytics consent & state |
+| Store               | File                | Purpose                            |
+| ------------------- | ------------------- | ---------------------------------- |
+| `useWalletStore`    | `walletStore.ts`    | Active wallet, balances, tokens    |
+| `useChainsStore`    | `chainsStore.ts`    | Available networks, selected chain |
+| `useProviderStore`  | `providerStore.ts`  | Web3 provider config               |
+| `useAccessStore`    | `accessStore.ts`    | Wallet connection/auth state       |
+| `useDialogStore`    | `dialogStore.ts`    | Modal open/close flags             |
+| `useToastStore`     | `toastStore.ts`     | Toast notification queue           |
+| `useAddressBook`    | `addressBook.ts`    | Saved address entries              |
+| `useAnalyticsStore` | `analyticsStore.ts` | Analytics consent & state          |
 
 ---
 
@@ -273,7 +282,10 @@ const computed = computed(() => wallet.value?.address ?? '')
 
 <template>
   <div>
-    <AppBaseButton :disabled="props.disabled" @click="emit('submit', localState)">
+    <AppBaseButton
+      :disabled="props.disabled"
+      @click="emit('submit', localState)"
+    >
       {{ props.label }}
     </AppBaseButton>
   </div>
@@ -290,7 +302,9 @@ const computed = computed(() => wallet.value?.address ?? '')
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 
 // Returns typed response using generated OpenAPI schema
-const { data, error, isFetching } = useFetchMewApi('/v1/chains/with-prices').get().json<ChainsRaw>()
+const { data, error, isFetching } = useFetchMewApi('/v1/chains/with-prices')
+  .get()
+  .json<ChainsRaw>()
 ```
 
 Types are auto-generated in `src/mew_api/schema.ts` (OpenAPI → TypeScript).
@@ -398,7 +412,7 @@ Never use native JS math for token amounts (floating point precision loss):
 ```typescript
 import BigNumber from 'bignumber.js'
 
-const amount = new BigNumber('1.5').multipliedBy('1e18')  // wei
+const amount = new BigNumber('1.5').multipliedBy('1e18') // wei
 const display = amount.dividedBy('1e18').toFixed(4)
 ```
 
@@ -421,29 +435,31 @@ pnpm test:e2e       # Nightwatch E2E tests
 ## Git & Branch Conventions
 
 Branch naming (from CONTRIBUTING.md): `type/description`
+
 - `feat/v7-my-feature`
 - `fix/v7-MEW-1234-bug-description`
 - `refactor/v7-cleanup-swap`
 
 Commits follow Conventional Commits (enforced by commitlint):
+
 - `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`, `test:`
 
 ---
 
 ## Key Third-Party Libraries
 
-| Library | Use |
-|---|---|
-| `viem` | Modern Ethereum client (prefer over `web3-eth` for new code) |
-| `bignumber.js` | All token/financial arithmetic |
-| `@tanstack/vue-query` | Async data fetching with caching |
-| `@enkryptcom/swap` | Swap aggregation (1inch, Uniswap) |
-| `wagmi` + `@rainbow-me/rainbowkit` | WalletConnect integration |
-| `heroicons/vue` | Icon set |
-| `vue-chartjs` + `chart.js` | Charts |
-| `qrcode.vue` | QR code display |
-| `anime.js` | UI animations |
-| `bip39` | Mnemonic generation/validation |
+| Library                            | Use                                                          |
+| ---------------------------------- | ------------------------------------------------------------ |
+| `viem`                             | Modern Ethereum client (prefer over `web3-eth` for new code) |
+| `bignumber.js`                     | All token/financial arithmetic that is user facing           |
+| `@tanstack/vue-query`              | Async data fetching with caching                             |
+| `@enkryptcom/swap`                 | Swap aggregation (1inch, Uniswap)                            |
+| `wagmi` + `@rainbow-me/rainbowkit` | WalletConnect integration                                    |
+| `heroicons/vue`                    | Icon set                                                     |
+| `vue-chartjs` + `chart.js`         | Charts                                                       |
+| `qrcode.vue`                       | QR code display                                              |
+| `anime.js`                         | UI animations                                                |
+| `bip39`                            | Mnemonic generation/validation                               |
 
 ---
 
@@ -457,4 +473,6 @@ Commits follow Conventional Commits (enforced by commitlint):
 6. **Do not use native number/float math** for token values — use `BigNumber`.
 7. **Always use named routes** from `routeNames.ts`, not raw path strings.
 8. **Always translate** user-facing strings with `$t()` / `t()`.
-9. **Always destructure objects** whenever possible, especially when importing stores
+9. **Always destructure objects** whenever possible, especially when importing stores.
+10. **Always use `const`** when finding ones' self writing strings in logical operators.
+11. **Always use** native JS BN when creating calculations. Bignumber.js for numbers that are user facing.

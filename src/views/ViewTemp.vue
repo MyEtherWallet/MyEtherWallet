@@ -17,7 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
+import AppSubscribeToUpdates from '@components/AppSubscribeToUpdates.vue'
 import { ArrowLongRightIcon } from '@heroicons/vue/24/solid'
 
 import configs from '@/configs'

@@ -218,12 +218,12 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import AppDialog from '@/components/AppDialog.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppBtnCopy from '@/components/AppBtnCopy.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppBtnCopy from '@components/AppBtnCopy.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import {
   CheckCircleIcon,
   XCircleIcon,

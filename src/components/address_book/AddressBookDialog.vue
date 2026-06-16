@@ -145,7 +145,7 @@
 import AddAddress from './AddAddress.vue'
 import { ref, computed, watch, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
 import AppBaseButton from '../AppBaseButton.vue'
 import AppBtnGroup from '../AppBtnGroup.vue'
 import { storeToRefs } from 'pinia'

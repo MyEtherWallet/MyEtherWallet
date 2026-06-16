@@ -233,11 +233,11 @@ import {
 } from '@heroicons/vue/24/solid'
 import { SUPPORTED_CHAINS } from '@/modules/trade/providers/oneinch_fusion/configs'
 import type { SavedTradeOrder } from '@/stores/tradeOrdersStore'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import ExpandTransition from '@components/transitions/ExpandTransition.vue'
+import AppBtnText from '@components/AppBtnText.vue'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 
 // Props

@@ -36,10 +36,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import AppBtnText from './AppBtnText.vue'
 import { ArrowLongRightIcon, QrCodeIcon } from '@heroicons/vue/24/outline'
-import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
+import IconBuy from '@assets/icons/core_menu/icon-buy.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { storeToRefs } from 'pinia'

@@ -45,9 +45,9 @@
 </template>
 
 <script setup lang="ts">
-import AppTooltip from '@/components/AppTooltip.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTooltip from '@components/AppTooltip.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import {
   formatPercentageValue,
   formatFiatValue,

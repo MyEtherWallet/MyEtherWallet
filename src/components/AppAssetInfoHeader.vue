@@ -103,10 +103,10 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
-import AppShareButton from '@/components/AppShareButton.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
+import AppShareButton from '@components/AppShareButton.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import { StarIcon as StarSolidIcon } from '@heroicons/vue/24/solid'
 import {
   StarIcon as StarOutlineIcon,

@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
 

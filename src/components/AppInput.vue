@@ -81,7 +81,7 @@ import {
   computed,
   watch,
 } from 'vue'
-import AppBtnIcon from '@/components/AppBtnIcon.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid'
 import { useInFocusInput } from '@/composables/useInFocusInput'
 import { XCircleIcon } from '@heroicons/vue/24/outline'

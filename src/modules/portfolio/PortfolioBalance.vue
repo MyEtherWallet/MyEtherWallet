@@ -54,10 +54,10 @@
 
 <script lang="ts" setup>
 import TableTokenBalance from './components/balances/TableTokenBalance.vue'
-import AppBtnGroup from '@/components/AppBtnGroup.vue'
+import AppBtnGroup from '@components/AppBtnGroup.vue'
 import { computed, ref, watch } from 'vue'
-import AppSheet from '@/components/AppSheet.vue'
-import AppSelect from '@/components/AppSelect.vue'
+import AppSheet from '@components/AppSheet.vue'
+import AppSelect from '@components/AppSelect.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'

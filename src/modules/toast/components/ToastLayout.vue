@@ -130,8 +130,8 @@ import {
 import AppBtnIconClose from '@components/AppBtnIconClose.vue'
 import { computed, onMounted, ref, onBeforeUnmount } from 'vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 const props = defineProps<{
   /**
    * @toast The toast message to display.

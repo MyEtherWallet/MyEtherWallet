@@ -122,7 +122,7 @@
  *   />
  * @example: with all chains option
  *
- * import { ALL_CHAINS } from '@/components/select_chain/helpers'
+ * import { ALL_CHAINS } from '@components/select_chain/helpers'
  *
  * <select-chain-dialog
  *  v-model:chain="selectedChain"
@@ -136,9 +136,9 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { type Chain } from '@/mew_api/types'
 import { CheckIcon } from '@heroicons/vue/24/solid'
-import AppDialog from '@/components/AppDialog.vue'
-import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppTooltip from '@components/AppTooltip.vue'
 import { ALL_CHAINS } from './helpers'
 import configs from '@/configs'
 
@@ -202,7 +202,6 @@ const setOpenDialog = (value: boolean) => {
  -------------------------------*/
 const searchInput = ref('')
 
-// Helper to sort chains: popular first, then alphabetical
 const sortChains = (chainList: Chain[]): Chain[] => {
   const popularSet = new Set(configs.POPULAR_CHAINS)
   const popular: Chain[] = []

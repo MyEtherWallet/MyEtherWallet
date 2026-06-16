@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import TopMover from './components/TopMover.vue'
-import AppSlideGroup from '@/components/app_slide_group/AppSlideGroup.vue'
+import AppSlideGroup from '@components/app_slide_group/AppSlideGroup.vue'
 import { useStocksStore } from '@/stores/stocksStore'
 
 const stocksStore = useStocksStore()

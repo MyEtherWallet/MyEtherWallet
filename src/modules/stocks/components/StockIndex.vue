@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import TableSparkline from '@/components/TableSparkline.vue'
+import TableSparkline from '@components/TableSparkline.vue'
 import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { type StockBannerItem } from '@/mew_api/types'
 import { computed } from 'vue'

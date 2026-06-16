@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
 import {
   formatFloatingPointValue,
   formatIntegerValue,

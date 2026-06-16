@@ -124,10 +124,10 @@
 
 <script lang="ts" setup>
 import { useI18n } from 'vue-i18n'
-import AppDialog from '@/components/AppDialog.vue'
-import AppInput from '@/components/AppInput.vue'
-import AddressInput from '@/components/address_book/AddressInput.vue'
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppInput from '@components/AppInput.vue'
+import AddressInput from '@components/address_book/AddressInput.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { useCustomTokenStore } from '@/stores/customTokenStore'
 import { storeToRefs } from 'pinia'
 import { ref, computed, watch } from 'vue'

@@ -44,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import AppDialog from '@/components/AppDialog.vue'
-import AppSubscribeToUpdates from '@/components/AppSubscribeToUpdates.vue'
+import AppDialog from '@components/AppDialog.vue'
+import AppSubscribeToUpdates from '@components/AppSubscribeToUpdates.vue'
 import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import configs from '@/configs'

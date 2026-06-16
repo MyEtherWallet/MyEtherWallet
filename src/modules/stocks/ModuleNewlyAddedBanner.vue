@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import AppBaseButton from '@/components/AppBaseButton.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import { STOCK_INFO_ROUTE_NAMES } from '@/router/routeNames'
 import { analytics, StockMarketEvent } from '@/analytics'
 import { useRouter } from 'vue-router'

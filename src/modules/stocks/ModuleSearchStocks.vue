@@ -260,11 +260,11 @@ import { useFocusWithin, watchDebounced } from '@vueuse/core'
 import { ExclamationCircleIcon } from '@heroicons/vue/24/solid'
 
 // Components
-import AppSearchInput from '@/components/AppSearchInput.vue'
-import AppTokenLogo from '@/components/AppTokenLogo.vue'
-import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import AppTooltip from '@/components/AppTooltip.vue'
-import AppSheet from '@/components/AppSheet.vue'
+import AppSearchInput from '@components/AppSearchInput.vue'
+import AppTokenLogo from '@components/AppTokenLogo.vue'
+import AppTokenSymbol from '@components/AppTokenSymbol.vue'
+import AppTooltip from '@components/AppTooltip.vue'
+import AppSheet from '@components/AppSheet.vue'
 
 // Stores and Composables
 import { useStocksStore } from '@/stores/stocksStore'

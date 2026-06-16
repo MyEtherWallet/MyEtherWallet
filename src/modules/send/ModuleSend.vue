@@ -115,12 +115,12 @@ import { onMounted, ref, computed, type Ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { fromWei } from 'web3-utils'
 import { Contract } from 'web3-eth-contract'
-import AppBaseButton from '@/components/AppBaseButton.vue'
-import AppEnterAmount from '@/components/AppEnterAmount.vue'
-import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
-import AppBtnText from '@/components/AppBtnText.vue'
-import AddressInput from '@/components/address_book/AddressInput.vue'
-import AppNoChainBalance from '@/components/AppNoChainBalance.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
+import AppEnterAmount from '@components/AppEnterAmount.vue'
+import AppSelectTxFee from '@components/AppSelectTxFee.vue'
+import AppBtnText from '@components/AppBtnText.vue'
+import AddressInput from '@components/address_book/AddressInput.vue'
+import AppNoChainBalance from '@components/AppNoChainBalance.vue'
 import type {
   QuotesResponse,
   EstimatesRequestBody,
@@ -144,7 +144,7 @@ import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
 import { useAccessStore } from '@/stores/accessStore'
-import AppNeedHelp from '@/components/AppNeedHelp.vue'
+import AppNeedHelp from '@components/AppNeedHelp.vue'
 import {
   analytics,
   ConnectWalletEvent,
