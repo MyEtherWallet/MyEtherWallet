@@ -319,6 +319,12 @@ watch(compatibleChainCodes, codes => {
   }
 })
 
+watch(currencyOptions, options => {
+  if (options.length && !options.includes(selectedFiat.value)) {
+    selectedFiat.value = options.includes(DEFAULT_FIAT) ? DEFAULT_FIAT : options[0]
+  }
+})
+
 watch(selectedFiat, (newFiat, oldFiat) => {
   if (newFiat === oldFiat || isAmountEmpty.value) return
   const newRate = exchangeRates.value.get(newFiat)
