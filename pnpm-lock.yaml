@@ -83,6 +83,9 @@ importers:
       '@ledgerhq/live-common':
         specifier: 34.20.0
         version: 34.20.0(@babel/core@7.28.5)(@babel/template@7.27.2)(@tanstack/react-query@5.90.2(react@19.0.0))(@types/node@25.0.3)(@vue/compiler-sfc@3.5.26)(@xstate/fsm@1.6.5)(bare-url@2.2.2)(bn.js@5.2.2)(bufferutil@4.1.0)(debug@4.4.1)(ejs@3.1.10)(eslint@9.39.2(jiti@2.6.1))(fastestsmallesttextencoderdecoder@1.0.22)(got@12.1.0)(prettier@3.7.4)(react-dom@19.2.0(react@19.0.0))(react-native-svg@15.14.0(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0))(react-native@0.82.0(@babel/core@7.28.5)(bufferutil@4.1.0)(react@19.0.0)(utf-8-validate@6.0.6))(react@19.0.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.0.0))(react@19.0.0))(styled-system@5.1.5)(typescript@5.9.3)(underscore@1.13.7)(utf-8-validate@6.0.6)(web3@1.10.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(webpack-sources@3.3.3)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))
+      '@lottiefiles/dotlottie-vue':
+        specifier: ^0.11.15
+        version: 0.11.15(vue@3.5.26(typescript@5.9.3))
       '@metamask/eth-sig-util':
         specifier: ^8.2.0
         version: 8.2.0
@@ -3222,6 +3225,12 @@ packages:
   '@lit/reactive-element@2.1.2':
     resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
 
+  '@lottiefiles/dotlottie-vue@0.11.15':
+    resolution: {integrity: sha512-qD+8p7pscVFr9fd/Qvb2kvHCoKELLJdUCSFaLlpQsj9ugguqisTQvgbkWiV950+fgMhXCc7kjdJxVaK0CN6JWg==}
+    engines: {node: '>=18.17.0', npm: '>=9.5.0'}
+    peerDependencies:
+      vue: ^3.3.4
+
   '@lottiefiles/dotlottie-vue@0.4.10':
     resolution: {integrity: sha512-Tej9D0U8RJ+AM9abagc7wnwDYpP/7orudvXtQ9tkb6cXIMxRCX+08C0O644YUJU1b9HYJZrLxiOcC2g5S814RA==}
     peerDependencies:
@@ -3229,6 +3238,10 @@ packages:
 
   '@lottiefiles/dotlottie-web@0.30.3':
     resolution: {integrity: sha512-GjjMiTLEGIqMZa6mJ6/imNpTPnfRA316og2njru6Cs0p28b7NDAjwpcQlmBIRbL4Hy28W35DQcJGlSy0adZZkw==}
+
+  '@lottiefiles/dotlottie-web@0.74.0':
+    resolution: {integrity: sha512-rG12+dJSVhQDdleGr9epR7zU/UJ6hh8jzBDHAurClHP5t5dSrOh3eP3UCFxolpVPcobaRVYsBnYg4HQokQewpg==}
+    engines: {node: '>=18.17.0', npm: '>=9.5.0'}
 
   '@metamask/abi-utils@3.0.0':
     resolution: {integrity: sha512-a/l0DiSIr7+CBYVpHygUa3ztSlYLFCQMsklLna+t6qmNY9+eIO5TedNxhyIyvaJ+4cN7TLy0NQFbp9FV3X2ktg==}
@@ -21957,12 +21970,19 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.5.1
 
+  '@lottiefiles/dotlottie-vue@0.11.15(vue@3.5.26(typescript@5.9.3))':
+    dependencies:
+      '@lottiefiles/dotlottie-web': 0.74.0
+      vue: 3.5.26(typescript@5.9.3)
+
   '@lottiefiles/dotlottie-vue@0.4.10(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       '@lottiefiles/dotlottie-web': 0.30.3
       vue: 3.5.26(typescript@5.9.3)
 
   '@lottiefiles/dotlottie-web@0.30.3': {}
+
+  '@lottiefiles/dotlottie-web@0.74.0': {}
 
   '@metamask/abi-utils@3.0.0':
     dependencies:
