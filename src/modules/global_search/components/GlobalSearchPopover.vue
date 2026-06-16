@@ -25,7 +25,7 @@
           {{ $t('search.cancel') }}
         </button>
       </div>
-      <div v-auto-animate class="overflow-y-auto flex-1 min-h-0 pb-2">
+      <div v-auto-animate class="overflow-y-auto overscroll-contain flex-1 min-h-0 px-3 pt-5 pb-3">
         <!-- Gate on debouncedQuery so the chips remain visible during the
              debounce window — avoids a brief blank panel between keystroke
              and the first refetch. -->
