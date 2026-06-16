@@ -169,7 +169,11 @@ export class LedgerEthereum {
       )
       const v = BigInt(result.v - 27)
       return toRpcSig(v, hexToBuffer(result.r), hexToBuffer(result.s))
-    } catch {
+    } catch (e) {
+      // 0x6d00 = INS_NOT_SUPPORTED: device firmware/app doesn't implement the
+      // full EIP-712 APDU (e.g. Nano S). Fall back to pre-hashed signing.
+      // All other errors (user rejection, transport loss, bad payload, etc.) rethrow.
+      if ((e as { statusCode?: number }).statusCode !== 0x6d00) throw e
       const version =
         request.version === 'V3'
           ? SignTypedDataVersion.V3
