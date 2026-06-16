@@ -93,7 +93,6 @@
     "wif": "^5.0.0"
   },
   "devDependencies": {
-    "@heroicons/vue": "^2.2.0",
     "@nightwatch/vue": "^3.1.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
