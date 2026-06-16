@@ -247,7 +247,16 @@ const {
   isFocused: isInputFocused,
 })
 
+const hasNoQuotes = computed(
+  () =>
+    !isAmountEmpty.value &&
+    amountIsValid.value &&
+    !isFetchingEstimate.value &&
+    !cryptoEstimate.value,
+)
+
 const amountError = computed(() => {
+  if (hasNoQuotes.value) return t('purchase.buy.error.no_quotes')
   if (!amountViolation.value) return ''
   const { type, value } = amountViolation.value
   return t(`purchase.buy.error.${type}`, { [type]: limitText(value) })
@@ -260,13 +269,16 @@ const amountHelper = computed(() =>
 )
 
 const ctaIsPrimary = computed(
-  () => !isReady.value || amountIsValid.value,
+  () => !isReady.value || (amountIsValid.value && !hasNoQuotes.value),
 )
 
 const ctaDisabled = computed(
   () =>
     isReady.value &&
-    (!amountIsValid.value || isFetchingEstimate.value || isFetchingQuotes.value),
+    (!amountIsValid.value ||
+      isFetchingEstimate.value ||
+      isFetchingQuotes.value ||
+      hasNoQuotes.value),
 )
 
 const ctaIsLoading = computed(
@@ -275,6 +287,7 @@ const ctaIsLoading = computed(
 
 const ctaLabel = computed(() => {
   if (!isReady.value) return t('purchase.buy.connect_wallet')
+  if (hasNoQuotes.value) return t('purchase.buy.no_quotes')
   if (amountIsValid.value) return t('purchase.buy.continue')
   return t('purchase.buy.enter_amount')
 })
@@ -296,7 +309,7 @@ const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
 
 const onFiatAmountChange = (value: string) => {
   fiatAmount.value = value
-  isFetchingEstimate.value = numericAmount.value > 0 && !amountError.value
+  isFetchingEstimate.value = numericAmount.value > 0 && !amountViolation.value
   debouncedFetchEstimate()
 }
 

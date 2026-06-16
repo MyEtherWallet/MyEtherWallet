@@ -6,10 +6,12 @@
       "enter_amount": "Enter amount",
       "continue": "Continue",
       "connect_wallet": "Connect wallet",
+      "no_quotes": "No quotes found",
       "need_help": "Need help buying?",
       "error": {
         "min": "Minimum {min} allowed",
-        "max": "Maximum {max} allowed"
+        "max": "Maximum {max} allowed",
+        "no_quotes": "No quotes found"
       }
     },
     "sell": {
