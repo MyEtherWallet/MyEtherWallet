@@ -113,17 +113,11 @@
         <the-current-network />
         <!-- Address Menu -->
         <the-address-menu v-if="isWalletConnected" />
-        <!-- Notifications Button (desktop only, but popup is always available) -->
-        <the-notifications-popup v-if="isWalletConnected" />
-
-        <!-- Settings Button -->
-        <!-- <app-btn-icon
-          v-if="!showMobileMenu"
-          :label="$t('menu.open-settings')"
-          @click="btnClick"
-        >
-          <cog-icon class="w-6 h-6" />
-        </app-btn-icon> -->
+        <!-- Settings + Notifications group -->
+        <div class="flex items-center gap-2 ml-2">
+          <the-settings-popup />
+          <the-notifications-popup v-if="isWalletConnected" />
+        </div>
       </div>
     </div>
   </div>
@@ -135,6 +129,7 @@ import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
 import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
 import TheNotificationsPopup from './TheNotificationsPopup.vue'
+import TheSettingsPopup from './TheSettingsPopup.vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import { ref, computed, onMounted } from 'vue'
