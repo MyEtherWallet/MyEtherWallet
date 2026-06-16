@@ -382,7 +382,7 @@ const getTxRequestBody = ():
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
-    toAddress.value !== '' &&
+    toAddress.value &&
     amount.value !== ''
   ) {
     if (isEvmChain.value) {

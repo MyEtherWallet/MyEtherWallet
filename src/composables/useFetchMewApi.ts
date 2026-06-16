@@ -81,7 +81,13 @@ export const useFetchMewApi = (
           await new Promise(resolve => setTimeout(resolve, delay.value))
           delay.value = delay.value + 1000
 
-          return execute()
+          // useFetch's execute() resolves to fetchResponse | null, not the
+          // { error, data } ctx shape @vueuse destructures from the
+          // onFetchError return value. Returning it caused a null destructure
+          // crash when the retry chain also failed. Trigger the retry and
+          // return ctx so the caller always sees a valid object.
+          await execute()
+          return ctx
         } else {
           if (isDevMode) {
             console.error('Failed to fetch. URL: ', url.value)

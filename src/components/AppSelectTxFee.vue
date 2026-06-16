@@ -355,6 +355,7 @@ watch(
   },
 )
 onMounted(() => {
+  gasPriceType.value = defaultGasPriceType.value
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
     if (isBitcoinChain.value && !isWalletConnected.value) {
@@ -382,7 +383,7 @@ const closeFeeModal = () => {
  * Current Selected Fee
  ------------------*/
 const globalStore = useGlobalStore()
-const { gasPriceType } = storeToRefs(globalStore)
+const { gasPriceType, defaultGasPriceType } = storeToRefs(globalStore)
 
 const setFee = (fee: FeePriority) => {
   gasPriceType.value = fee
