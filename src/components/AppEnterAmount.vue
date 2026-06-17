@@ -19,6 +19,7 @@
         v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
+        @paste="onAmountPaste"
       />
       <app-token-select
         v-model:selected-token-contract="selectedToken"
@@ -196,18 +197,36 @@ watch(
 
 const checkIfNumber = (e: KeyboardEvent) => {
   const key = e.key
-  // Numeric
   if (key >= '0' && key <= '9') {
     return
   }
-  // Only allow a single period
-  if (key === '.') {
+  if (key === '.' || key === ',') {
     const input = amount.value.toString()
     if (!input.includes('.')) {
+      if (key === ',') {
+        e.preventDefault()
+        const el = e.target as HTMLInputElement
+        const start = el.selectionStart ?? input.length
+        amount.value = input.slice(0, start) + '.' + input.slice(start)
+        nextTick(() => el.setSelectionRange(start + 1, start + 1))
+      }
       return
     }
   }
-  // Alphabetical (/non-numeric) or multiple periods. Don't propagate change
   e.preventDefault()
+}
+
+const onAmountPaste = (e: ClipboardEvent) => {
+  const pasted = e.clipboardData?.getData('text') ?? ''
+  if (/[,]/.test(pasted)) {
+    e.preventDefault()
+    const normalized = pasted.replace(/,/g, '.')
+    const el = e.target as HTMLInputElement
+    const start = el.selectionStart ?? 0
+    const end = el.selectionEnd ?? 0
+    const current = amount.value.toString()
+    amount.value =
+      current.slice(0, start) + normalized + current.slice(end)
+  }
 }
 </script>

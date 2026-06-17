@@ -140,6 +140,14 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
 import { parseUnits, formatUnits } from 'viem'
+
+const safeParseUnits = (value: string, decimals: number): bigint => {
+  const normalized = value.replace(/,/g, '.')
+  if (!/^(-?)([0-9]*)\.?([0-9]*)$/.test(normalized) || normalized === '') {
+    return BigInt(0)
+  }
+  return parseUnits(normalized, decimals)
+}
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
@@ -283,12 +291,12 @@ const checkAmountForError = () => {
   }
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
 
-  const baseTokenBalance = parseUnits(
+  const baseTokenBalance = safeParseUnits(
     tokenSelected.value?.balance || '0',
     tokenSelected.value?.decimals ?? 18,
   )
   const baseAmount = amount.value
-    ? parseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
+    ? safeParseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -368,7 +376,7 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  const amountBase = parseUnits(
+  const amountBase = safeParseUnits(
     amount.value.toString(),
     tokenSelected.value?.decimals ?? 18,
   )
@@ -393,7 +401,7 @@ const getTxRequestBody = ():
         data.value = web3Contract.methods
           .transfer(
             toAddress.value,
-            parseUnits(
+            safeParseUnits(
               amount.value.toString(),
               tokenSelected.value?.decimals ?? 18,
             ).toString(),
@@ -419,7 +427,7 @@ const getTxRequestBody = ():
         outputs: [
           {
             address: toAddress.value ?? '',
-            amount: parseUnits(amount.value.toString(), 8).toString(),
+            amount: safeParseUnits(amount.value.toString(), 8).toString(),
           },
         ],
       }
