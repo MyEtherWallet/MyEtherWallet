@@ -12,14 +12,18 @@
           class="flex items-center gap-2 px-1.5 py-1.5 bg-surface-hover hover:bg-surface rounded-[8px] transition-colors"
           @click="selectAsset(item)"
         >
-          <img
-            v-if="item.icon"
-            :src="item.icon"
-            :alt="item.symbol"
-            class="w-5 h-5 rounded-full flex-none"
+          <app-token-logo
+            :url="item.icon"
+            :symbol="item.symbol"
+            :is-stock="item.isStock"
+            width="w-5"
+            height="h-5"
           />
-          <div v-else class="w-5 h-5 rounded-full bg-surface flex-none" />
-          <span class="text-s-11 font-bold truncate uppercase tracking-sp-06 pr-2">{{ item.symbol }}</span>
+          <app-token-symbol
+            :symbol="item.symbol"
+            :is-stock="item.isStock"
+            class="!text-s-11 font-bold tracking-sp-06 pr-2"
+          />
         </button>
       </div>
     </div>
@@ -28,6 +32,8 @@
 </template>
 
 <script setup lang="ts">
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 
 const { recentlyViewedTop6, selectAsset } = useGlobalSearch()
