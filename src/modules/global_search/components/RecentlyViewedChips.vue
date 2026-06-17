@@ -9,7 +9,7 @@
           v-for="item in recentlyViewedTop6"
           :key="item.id"
           type="button"
-          class="flex items-center gap-2 px-1.5 py-1.5 bg-surface-hover hover:bg-surface rounded-[8px] transition-colors"
+          class="flex items-center gap-1.5 pl-1 pr-2 py-1 bg-surface-hover hover:bg-surface rounded-[8px] transition-colors"
           @click="selectAsset(item)"
         >
           <app-token-logo
@@ -22,7 +22,7 @@
           <app-token-symbol
             :symbol="item.symbol"
             :is-stock="item.isStock"
-            class="!text-s-11 font-bold tracking-sp-06 pr-2"
+            class="!text-s-11 font-bold tracking-sp-06"
           />
         </button>
       </div>
