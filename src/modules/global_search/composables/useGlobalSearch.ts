@@ -11,7 +11,6 @@ import {
 } from '@/router/routeNames'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { getAPIPath } from '@/utils/constructAPIPath'
-import Configs from '@/configs'
 import type { GetWebStocksTableResponse, GetWebTokensTableResponse } from '@/mew_api/types'
 import type { SearchResultItem, SectionKey } from '../types'
 
@@ -36,12 +35,14 @@ const PER_PAGE = 20
 const debouncedQuery = refDebounced(query, DEBOUNCE_MS)
 
 const stocksUrl = computed(() => {
-  const url = new URL(`${Configs.MEW_API_URL}/v1/web/pages/stocks/table`)
-  url.searchParams.set('page', '1')
-  url.searchParams.set('perPage', String(PER_PAGE))
-  url.searchParams.set('sort', 'MARKET_CAP_DESC')
-  if (debouncedQuery.value) url.searchParams.set('search', debouncedQuery.value)
-  return url.toString()
+  const base = getAPIPath('/v1/web/pages/stocks/table')
+  const params = new URLSearchParams({
+    page: '1',
+    perPage: String(PER_PAGE),
+    sort: 'MARKET_CAP_DESC',
+  })
+  if (debouncedQuery.value) params.set('search', debouncedQuery.value)
+  return `${base}?${params.toString()}`
 })
 
 const cryptoUrl = computed(() => {
@@ -121,6 +122,17 @@ watch(isOpen, open => {
   executeCryptoFetch()
 })
 
+type RouteKey = keyof typeof STOCK_INFO_ROUTE_NAMES
+
+const PARENT_ROUTE_KEY_MAP: Record<string, RouteKey> = {
+  [ROUTES_MAIN.HOME.NAME]: 'home',
+  [ROUTES_MAIN.CRYPTO.NAME]: 'crypto',
+  [ROUTES_MAIN.STOCKS.NAME]: 'stocks',
+  [ROUTES_MAIN.EARN.NAME]: 'earn',
+  [ROUTES_MAIN.VERIFY_MESSAGE.NAME]: 'verify',
+  [ROUTES_MAIN.SIGN_MESSAGE.NAME]: 'sign',
+}
+
 export function useGlobalSearch() {
   const router = useRouter()
   const recentlyViewedStore = useRecentlyViewedTokensStore()
@@ -138,6 +150,11 @@ export function useGlobalSearch() {
     })),
   )
 
+  const parentKey = computed(() => {
+    const parent = router.currentRoute.value.matched[0]?.name
+    return typeof parent === 'string' ? PARENT_ROUTE_KEY_MAP[parent] ?? null : null
+  })
+
   const open = () => {
     isOpen.value = true
   }
@@ -147,7 +164,6 @@ export function useGlobalSearch() {
     query.value = ''
     expanded.stocks = false
     expanded.crypto = false
-    // Clear cached results so a re-open starts from a clean slate.
     stocks.value = []
     crypto.value = []
     isLoadingStocks.value = false
@@ -159,33 +175,17 @@ export function useGlobalSearch() {
   }
 
   const selectAsset = (item: SearchResultItem) => {
-    // Append the child drawer route to the current top-level parent so the
-    // underlying page stays visible behind it, mirroring how table rows work.
-    const parent = router.currentRoute.value.matched[0]?.name
-    const parentKey =
-      parent === ROUTES_MAIN.HOME.NAME
-        ? 'home'
-        : parent === ROUTES_MAIN.CRYPTO.NAME
-          ? 'crypto'
-          : parent === ROUTES_MAIN.STOCKS.NAME
-            ? 'stocks'
-            : parent === ROUTES_MAIN.EARN.NAME
-              ? 'earn'
-              : parent === ROUTES_MAIN.VERIFY_MESSAGE.NAME
-                ? 'verify'
-                : parent === ROUTES_MAIN.SIGN_MESSAGE.NAME
-                  ? 'sign'
-                  : null
+    const key = parentKey.value
     const target = item.isStock
       ? {
-          name: parentKey
-            ? STOCK_INFO_ROUTE_NAMES[parentKey]
+          name: key
+            ? STOCK_INFO_ROUTE_NAMES[key]
             : STOCK_INFO_ROUTE_NAMES.stocks,
           params: { symbol: item.symbol },
         }
       : {
-          name: parentKey
-            ? TOKEN_INFO_ROUTE_NAMES[parentKey]
+          name: key
+            ? TOKEN_INFO_ROUTE_NAMES[key]
             : TOKEN_INFO_ROUTE_NAMES.crypto,
           params: { tokenId: item.id },
         }
