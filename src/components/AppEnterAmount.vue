@@ -81,6 +81,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
@@ -195,38 +196,5 @@ watch(
   },
 )
 
-const checkIfNumber = (e: KeyboardEvent) => {
-  const key = e.key
-  if (key >= '0' && key <= '9') {
-    return
-  }
-  if (key === '.' || key === ',') {
-    const input = amount.value.toString()
-    if (!input.includes('.')) {
-      if (key === ',') {
-        e.preventDefault()
-        const el = e.target as HTMLInputElement
-        const start = el.selectionStart ?? input.length
-        amount.value = input.slice(0, start) + '.' + input.slice(start)
-        nextTick(() => el.setSelectionRange(start + 1, start + 1))
-      }
-      return
-    }
-  }
-  e.preventDefault()
-}
-
-const onAmountPaste = (e: ClipboardEvent) => {
-  const pasted = e.clipboardData?.getData('text') ?? ''
-  if (/[,]/.test(pasted)) {
-    e.preventDefault()
-    const normalized = pasted.replace(/,/g, '.')
-    const el = e.target as HTMLInputElement
-    const start = el.selectionStart ?? 0
-    const end = el.selectionEnd ?? 0
-    const current = amount.value.toString()
-    amount.value =
-      current.slice(0, start) + normalized + current.slice(end)
-  }
-}
+const { checkIfNumber, onPaste: onAmountPaste } = useNumericInput(amount)
 </script>
