@@ -4,24 +4,19 @@
     class="flex w-full items-center gap-3 px-3 py-2 hover:bg-surface-hover rounded-12 text-left transition-colors"
     @click="$emit('select', item)"
   >
-    <img
-      v-if="item.icon"
-      :src="item.icon"
-      :alt="item.symbol"
-      class="w-8 h-8 rounded-full flex-none object-contain"
+    <app-token-logo
+      :url="item.icon"
+      :symbol="item.symbol"
+      :is-stock="item.isStock"
+      width="w-8"
+      height="h-8"
     />
-    <div v-else class="w-8 h-8 rounded-full bg-surface flex-none" />
     <div class="flex-1 min-w-0">
-      <div class="flex items-center">
-        <span class="font-semibold text-s-16 truncate uppercase tracking-tight text-black">
-          {{ item.symbol }}
-        </span>
-        <span
-          v-if="item.isStock"
-          class="font-semibold text-s-16 tracking-tight"
-          style="background: linear-gradient(90deg, #40E0D0, #55DA82, #7ED06D, #AAC137, #D5AB00, #FF8C00, #FF8C00, #FF7526, #FF5D3D); -webkit-background-clip: text; -webkit-text-fill-color: transparent"
-        >on</span>
-      </div>
+      <app-token-symbol
+        :symbol="item.symbol"
+        :is-stock="item.isStock"
+        class="!text-s-16 font-semibold tracking-tight text-black"
+      />
       <div class="text-s-12 text-grey-subtle truncate">{{ item.name }}</div>
     </div>
     <div class="text-right flex-none">
@@ -40,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+import AppTokenLogo from '@/components/AppTokenLogo.vue'
+import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import type { SearchResultItem } from '../types'
 
 defineProps<{ item: SearchResultItem }>()
