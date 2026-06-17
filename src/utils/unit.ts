@@ -158,7 +158,7 @@ const toBase = (etherInput: string | number, decimals: number) => {
 
 const safeParseUnits = (value: string, decimals: number): bigint => {
   const normalized = value.replace(/,/g, '.')
-  if (!/^(-?)([0-9]*)\.?([0-9]*)$/.test(normalized) || normalized === '') {
+  if (!/^-?([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)$/.test(normalized)) {
     return BigInt(0)
   }
   return parseUnits(normalized, decimals)
