@@ -34,8 +34,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import ModuleBuy from './ModuleBuy.vue'
 import ModuleSell from './ModuleSell.vue'
 
@@ -44,6 +46,13 @@ type PurchaseTab = 'buy' | 'sell'
 const { t } = useI18n()
 
 const currentTab = ref<PurchaseTab>('buy')
+
+// A "Buy" button on the tables sets the coingecko id — force the Buy tab so the
+// pre-populated token is visible (ModuleBuy consumes and clears the id).
+const { selectedPurchaseCoinId } = storeToRefs(useWalletMenuStore())
+watch(selectedPurchaseCoinId, coinId => {
+  if (coinId) currentTab.value = 'buy'
+})
 
 const tabs = computed<{ value: PurchaseTab; label: string }[]>(() => [
   { value: 'buy', label: t('purchase.buy.title') },

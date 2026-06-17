@@ -416,7 +416,7 @@
                           </button>
                           <hr
                             v-if="
-                              isBuyable(token.coinId) ||
+                              isBuyableOnCompatibleChain(token.coinId) ||
                               token.ondo !== null ||
                               getIsBridgeable(token) ||
                               token.chains.length > 0 ||
@@ -427,7 +427,7 @@
 
                           <ul>
                             <li
-                              v-if="isBuyable(token.coinId)"
+                              v-if="isBuyableOnCompatibleChain(token.coinId)"
                               @click.stop="[toggleMenu(), buyBtn(token, true)]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
@@ -509,7 +509,7 @@
                     </app-base-button>
 
                     <app-base-button
-                      v-if="isBuyable(token.coinId)"
+                      v-if="isBuyableOnCompatibleChain(token.coinId)"
                       size="small"
                       @click="buyBtn(token)"
                       is-outline
@@ -695,12 +695,13 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const walletMenu = useWalletMenuStore()
-const { setWalletPanel, setSelectedTradeTokenSymbol } = walletMenu
+const { setWalletPanel, setSelectedTradeTokenSymbol, setSelectedPurchaseCoinId } =
+  walletMenu
 const { isOpenSideMenu } = storeToRefs(walletMenu)
 
 const purchaseStore = usePurchaseStore()
 const inputStore = useInputStore()
-const { isBuyable } = purchaseStore
+const { isBuyableOnCompatibleChain } = purchaseStore
 const { storeSwapValues } = inputStore
 
 const tableContainer = ref<HTMLElement | null>(null)
@@ -815,6 +816,7 @@ const buyBtn = (token: DisplayToken, isMobile = false) => {
     tokenName: token.name,
     tokenSymbol: token.symbol,
   })
+  setSelectedPurchaseCoinId(token.coinId ?? null)
   walletMenu.openPanel('purchase')
 }
 const bridgeBtn = (token: DisplayToken, isMobile = false) => {

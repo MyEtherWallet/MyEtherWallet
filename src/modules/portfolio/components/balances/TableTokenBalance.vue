@@ -418,7 +418,7 @@
                       <hr
                         v-if="
                           props.view === 'custom' ||
-                          isBuyable(token.coinId) ||
+                          isBuyableOnCompatibleChain(token.coinId) ||
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
@@ -427,7 +427,7 @@
 
                       <ul v-if="props.view !== 'custom'">
                         <li
-                          v-if="isBuyable(token.coinId)"
+                          v-if="isBuyableOnCompatibleChain(token.coinId)"
                           @click.stop="[buyBtn(token, true), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
@@ -498,7 +498,7 @@
                   >{{ $t('swap') }}
                 </app-base-button>
                 <app-base-button
-                  v-if="isBuyable(token.coinId)"
+                  v-if="isBuyableOnCompatibleChain(token.coinId)"
                   size="small"
                   @click="buyBtn(token)"
                   is-outline
@@ -740,11 +740,15 @@ const watchListStore = useWatchlistStore()
 const customTokenStore = useCustomTokenStore()
 const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
-const { isBuyable } = purchaseStore
+const { isBuyableOnCompatibleChain } = purchaseStore
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
-const { setWalletPanel, setSelectedTradeTokenSymbol, toggleShowBalance } =
-  walletMenu
+const {
+  setWalletPanel,
+  setSelectedTradeTokenSymbol,
+  setSelectedPurchaseCoinId,
+  toggleShowBalance,
+} = walletMenu
 const { isOpenSideMenu, hideLowBalance } = storeToRefs(walletMenu)
 const {
   isWalletConnected,
@@ -1094,6 +1098,7 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
     token: token?.symbol,
     isMobile,
   })
+  setSelectedPurchaseCoinId(token?.coinId ?? null)
   walletMenu.openPanel('purchase')
 }
 

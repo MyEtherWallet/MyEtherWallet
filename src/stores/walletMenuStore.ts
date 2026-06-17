@@ -13,6 +13,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   // Selected token symbol for Trade module (set from stocks view)
   const selectedTradeTokenSymbol = ref<string | null>(null)
 
+  // Coingecko id of the token to pre-populate in the Buy module (set from the
+  // crypto/balance tables). Consumed and cleared by ModuleBuy.
+  const selectedPurchaseCoinId = ref<string | null>(null)
+
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value
   }
@@ -30,6 +34,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     selectedTradeTokenSymbol.value = symbol
   }
 
+  const setSelectedPurchaseCoinId = (coinId: string | null) => {
+    selectedPurchaseCoinId.value = coinId
+  }
+
   const toggleShowBalance = () => {
     hideLowBalance.value = !hideLowBalance.value
   }
@@ -43,6 +51,8 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     hasShadow,
     selectedTradeTokenSymbol,
     setSelectedTradeTokenSymbol,
+    selectedPurchaseCoinId,
+    setSelectedPurchaseCoinId,
     hideLowBalance,
     toggleShowBalance,
   }

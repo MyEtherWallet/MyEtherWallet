@@ -11,6 +11,7 @@ import {
   type FetchSellQuoteParams,
 } from '@/types/buyToken'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useWalletStore } from '@/stores/walletStore'
 import configs from '@/configs'
 import { sha3 } from 'web3-utils'
 
@@ -34,7 +35,9 @@ export interface BuyFiat {
 
 export const usePurchaseStore = defineStore('purchase', () => {
   const chainsStore = useChainsStore()
-  const { chains: mewChains } = storeToRefs(chainsStore)
+  const { chains: mewChains, selectedChain } = storeToRefs(chainsStore)
+  const walletStore = useWalletStore()
+  const { isWalletConnected } = storeToRefs(walletStore)
 
   const purchaseInfo = ref<PurchaseInfo | null>(null)
   const isFetching = ref(false)
@@ -72,6 +75,28 @@ export const usePurchaseStore = defineStore('purchase', () => {
     const ids = new Set<string>()
     purchaseInfo.value.assets.forEach(chain => {
       if (!isMewSupportedPurchaseChain(chain.chain)) return
+      chain.assets?.forEach(asset => {
+        if (asset.coingecko_id) {
+          ids.add(asset.coingecko_id)
+        }
+      })
+    })
+    return ids
+  })
+
+  const buyableCompatibleCoinIds = computed(() => {
+    if (!purchaseInfo.value?.assets) return new Set<string>()
+    const walletType = isWalletConnected.value
+      ? selectedChain.value?.type
+      : undefined
+    const ids = new Set<string>()
+    purchaseInfo.value.assets.forEach(chain => {
+      if (!isMewSupportedPurchaseChain(chain.chain)) return
+      if (walletType) {
+        const v7Name = PURCHASE_CHAIN_TO_V7[chain.chain]
+        const v7Chain = mewChains.value.find(c => c.name === v7Name)
+        if (v7Chain?.type !== walletType) return
+      }
       chain.assets?.forEach(asset => {
         if (asset.coingecko_id) {
           ids.add(asset.coingecko_id)
@@ -342,6 +367,11 @@ export const usePurchaseStore = defineStore('purchase', () => {
     return buyableCoinIds.value.has(coinId)
   }
 
+  const isBuyableOnCompatibleChain = (coinId: string | undefined): boolean => {
+    if (!coinId) return false
+    return buyableCompatibleCoinIds.value.has(coinId)
+  }
+
   return {
     purchaseInfo,
     isFetching,
@@ -350,6 +380,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
     buyableCoinIds,
     fetchPurchaseInfo,
     isBuyable,
+    isBuyableOnCompatibleChain,
     buyNetworks,
     buyFiats,
     buyQuotes,

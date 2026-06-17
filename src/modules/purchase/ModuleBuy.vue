@@ -96,6 +96,7 @@ import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useAccessStore } from '@/stores/accessStore'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
@@ -178,9 +179,32 @@ const tokenSymbol = computed<string>(
     selectedToken.value?.symbol ?? displayChain.value?.currencyName ?? 'ETH',
 )
 
+const walletMenu = useWalletMenuStore()
+
+// Pre-populate the token when opened from a "Buy" button on the crypto/balance
+// tables, which set the coingecko id in the wallet menu store. Prefers the
+// asset on the wallet's chain; clears the id once applied.
+const applyPreselectedToken = () => {
+  const coinId = walletMenu.selectedPurchaseCoinId
+  if (!coinId || !buyNetworks.value.length) return
+  const candidates = buyNetworks.value
+    .flatMap(network => network.tokens)
+    .filter(token => token.coingecko_id === coinId)
+    .filter(token => compatibleChainCodes.value.includes(token.chain))
+  if (candidates.length) {
+    const preferredChain = v7ToPurchaseChain(walletChain.value?.name)
+    selectedToken.value =
+      candidates.find(token => token.chain === preferredChain) ?? candidates[0]
+  }
+  walletMenu.setSelectedPurchaseCoinId(null)
+}
+
 onMounted(() => {
   fetchPurchaseInfo()
+  applyPreselectedToken()
 })
+
+watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
 
 const currencyOptions = computed(() => {
   const tokenProviders = selectedToken.value?.providers
