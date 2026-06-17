@@ -105,7 +105,7 @@
     </p>
 
     <!-- Quick amount buttons -->
-    <div class="flex items-center justify-center gap-1 w-full">
+    <div ref="presetRow" class="flex items-center justify-center gap-1 w-full">
       <button
         v-for="btn in quickButtons"
         :key="btn.usdValue"
@@ -115,11 +115,14 @@
           selectedUsdValue === btn.usdValue
             ? 'outline-2 outline-black -outline-offset-2'
             : '',
-          'flex-1 min-w-0 flex items-center justify-center px-3 py-2 rounded-8 hoverNoBG transition-colors',
+          'flex-1 min-w-0 flex items-center justify-center px-1 py-2 rounded-8 hoverNoBG transition-colors',
         ]"
         @click="onSelectPreset(btn)"
       >
-        <span class="text-s-11 leading-[15px] font-bold tracking-sp-06 uppercase">
+        <span
+          class="font-bold uppercase whitespace-nowrap"
+          :style="presetFontStyle"
+        >
           {{ btn.label }}
         </span>
       </button>
@@ -129,6 +132,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { useElementSize } from '@vueuse/core'
 import PurchaseCurrencyChip from './PurchaseCurrencyChip.vue'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import {
@@ -137,6 +141,7 @@ import {
   exceedsLimits,
 } from '../helpers/amountFormatting'
 import { useTextScaler } from '../composables/useTextScaler'
+import { measureTextWidth } from '@/utils/measureText'
 
 export interface QuickButton {
   /** Display label, already formatted with currency symbol or literal (e.g. "₩20,250", "Min"). */
@@ -223,6 +228,31 @@ const selectedUsdValue = computed(() => {
   if (props.amount === '') return null
   const n = Number(props.amount)
   return props.quickButtons.find(b => b.value === n)?.usdValue ?? null
+})
+
+const presetRow = ref<HTMLElement | null>(null)
+const { width: presetRowWidth } = useElementSize(presetRow)
+
+const PRESET_FONT_SIZES = [11, 10, 9, 8] as const
+const PRESET_GAP_PX = 4
+const PRESET_PADDING_PX = 8
+
+const presetFontStyle = computed(() => {
+  const count = props.quickButtons.length
+  const fallback = { fontSize: '11px', lineHeight: '15px' }
+  if (!count || !presetRowWidth.value) return fallback
+  const perButton =
+    (presetRowWidth.value - PRESET_GAP_PX * (count - 1)) / count
+  const available = perButton - PRESET_PADDING_PX
+  const longest = props.quickButtons.reduce(
+    (a, b) => (b.label.length > a.length ? b.label : a),
+    '',
+  )
+  const size =
+    PRESET_FONT_SIZES.find(
+      px => measureTextWidth(longest, `700 ${px}px "DM Sans", sans-serif`) <= available,
+    ) ?? PRESET_FONT_SIZES[PRESET_FONT_SIZES.length - 1]
+  return { fontSize: `${size}px`, lineHeight: `${size + 4}px` }
 })
 
 const displayValue = computed(() => formatWithCommas(props.amount))
