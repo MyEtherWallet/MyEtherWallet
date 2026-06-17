@@ -1,7 +1,7 @@
 <template>
   <div v-if="recentlyViewedTop6.length">
     <div class="px-3">
-      <p class="text-s-11 font-bold uppercase tracking-sp-06 mb-4">
+      <p class="text-s-14 text-black mb-4">
         {{ $t('search.opened_recently') }}
       </p>
       <div class="flex flex-wrap items-start gap-2">
