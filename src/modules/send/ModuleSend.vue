@@ -139,15 +139,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { parseUnits, formatUnits } from 'viem'
-
-const safeParseUnits = (value: string, decimals: number): bigint => {
-  const normalized = value.replace(/,/g, '.')
-  if (!/^(-?)([0-9]*)\.?([0-9]*)$/.test(normalized) || normalized === '') {
-    return BigInt(0)
-  }
-  return parseUnits(normalized, decimals)
-}
+import { formatUnits } from 'viem'
+import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
