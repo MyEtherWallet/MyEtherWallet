@@ -432,7 +432,7 @@
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
                               <icon-buy class="text-primary w-4 h-4 mr-2" />
-                              <p>{{ $t('buy') }}</p>
+                              <p>{{ $t('common.buy') }}</p>
                             </li>
                             <template v-if="token.ondo !== null">
                               <li
@@ -473,7 +473,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12"
                               >
                                 <icon-swap class="text-primary w-4 h-4 mr-2" />
-                                <p>{{ $t('swap') }}</p>
+                                <p>{{ $t('common.swap') }}</p>
                               </li>
                             </template>
                           </ul>
@@ -505,7 +505,7 @@
                       size="small"
                       @click="swapBtn(token)"
                       class="min-w-[64px]"
-                      >{{ $t('swap') }}
+                      >{{ $t('common.swap') }}
                     </app-base-button>
 
                     <app-base-button
@@ -514,7 +514,7 @@
                       @click="buyBtn(token)"
                       is-outline
                       class="min-w-[60px]"
-                      >{{ $t('buy') }}</app-base-button
+                      >{{ $t('common.buy') }}</app-base-button
                     >
                     <div v-else class="w-[60px]"></div>
                   </div>
