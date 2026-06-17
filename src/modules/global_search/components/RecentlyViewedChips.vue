@@ -1,7 +1,7 @@
 <template>
   <div v-if="recentlyViewedTop6.length">
     <div class="px-3">
-      <p class="text-s-11 font-bold uppercase tracking-sp-06 mb-3">
+      <p class="text-s-11 font-bold uppercase tracking-sp-06 mb-4">
         {{ $t('search.opened_recently') }}
       </p>
       <div class="flex flex-wrap items-start gap-2">
@@ -9,7 +9,7 @@
           v-for="item in recentlyViewedTop6"
           :key="item.id"
           type="button"
-          class="flex items-center gap-2 px-1.5 py-1.5 bg-[#f5f5f5] hover:bg-surface rounded-[8px] transition-colors"
+          class="flex items-center gap-2 px-1.5 py-1.5 bg-surface-hover hover:bg-surface rounded-[8px] transition-colors"
           @click="selectAsset(item)"
         >
           <img

@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="flex w-full items-center gap-3 px-3 py-2 hover:bg-[#f5f5f5] rounded-12 text-left transition-colors"
+    class="flex w-full items-center gap-3 px-3 py-2 hover:bg-surface-hover rounded-12 text-left transition-colors"
     @click="$emit('select', item)"
   >
     <img
@@ -22,7 +22,7 @@
           style="background: linear-gradient(90deg, #40E0D0, #55DA82, #7ED06D, #AAC137, #D5AB00, #FF8C00, #FF8C00, #FF7526, #FF5D3D); -webkit-background-clip: text; -webkit-text-fill-color: transparent"
         >on</span>
       </div>
-      <div class="text-s-12 text-[#575757] truncate">{{ item.name }}</div>
+      <div class="text-s-12 text-grey-subtle truncate">{{ item.name }}</div>
     </div>
     <div class="text-right flex-none">
       <div class="text-s-14 text-black">

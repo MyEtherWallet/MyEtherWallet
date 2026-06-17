@@ -1,7 +1,7 @@
 <template>
   <div
     ref="wrapperEl"
-    class="relative flex-1 min-w-0 max-w-[360px]"
+    class="relative min-w-0 w-[240px]"
     :class="isOpen ? 'z-[2]' : ''"
   >
     <button

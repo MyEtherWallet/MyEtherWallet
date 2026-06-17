@@ -76,6 +76,8 @@ export default {
       warning: 'rgba(255,165,0, 1)',
       'warning-10': 'rgba(255,165,0,0.1)',
       success: 'rgba(5,192,165,1)',
+      'grey-subtle': '#a5a5a5',
+      'surface-hover': '#f5f5f5',
       //Text:
       't-default': 'rgba(0, 0, 0, 1)',
       // blues

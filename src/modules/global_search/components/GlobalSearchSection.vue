@@ -5,7 +5,7 @@
         {{ title }}
       </span>
       <span class="text-s-14 text-black">·</span>
-      <span class="text-s-14 text-[#a5a5a5]">{{ subtitle }}</span>
+      <span class="text-s-14 text-grey-subtle">{{ subtitle }}</span>
     </div>
 
     <div v-if="items.length === 0 && isLoading">
@@ -14,14 +14,14 @@
         :key="`skeleton-${i}`"
         class="flex items-center gap-3 px-3 py-2"
       >
-        <div class="w-8 h-8 rounded-full bg-[#f5f5f5] animate-pulse" />
+        <div class="w-8 h-8 rounded-full bg-surface-hover animate-pulse" />
         <div class="flex-1 flex flex-col gap-1">
-          <div class="h-3 w-20 rounded bg-[#f5f5f5] animate-pulse" />
-          <div class="h-2 w-28 rounded bg-[#f5f5f5] animate-pulse" />
+          <div class="h-3 w-20 rounded bg-surface-hover animate-pulse" />
+          <div class="h-2 w-28 rounded bg-surface-hover animate-pulse" />
         </div>
         <div class="flex flex-col items-end gap-1">
-          <div class="h-3 w-14 rounded bg-[#f5f5f5] animate-pulse" />
-          <div class="h-2 w-10 rounded bg-[#f5f5f5] animate-pulse" />
+          <div class="h-3 w-14 rounded bg-surface-hover animate-pulse" />
+          <div class="h-2 w-10 rounded bg-surface-hover animate-pulse" />
         </div>
       </div>
     </div>
