@@ -76,6 +76,7 @@ import AppDialog from '@/components/AppDialog.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getFiatIcon } from '../helpers/purchaseIcons'
+import { fuzzySearchByKeys } from '@/utils/searchArray'
 
 const props = defineProps<{
   currencies: string[]
@@ -108,13 +109,13 @@ const currencyName = (code: string): string => {
 }
 
 const filteredCurrencies = computed(() => {
-  const term = searchInput.value.trim().toLowerCase()
+  const term = searchInput.value.trim()
   if (!term) return props.currencies
-  return props.currencies.filter(
-    c =>
-      c.toLowerCase().includes(term) ||
-      currencyName(c).toLowerCase().includes(term),
-  )
+  const items = props.currencies.map(code => ({
+    code,
+    name: currencyName(code),
+  }))
+  return fuzzySearchByKeys(items, ['code', 'name'], term).map(item => item.code)
 })
 
 const onSelect = (currency: string) => {
