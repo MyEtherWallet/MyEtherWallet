@@ -25,8 +25,8 @@
     />
 
     <!-- Network fee -->
-    <div class="flex items-center justify-between h-16 px-4 rounded-20 bg-bgBase border border-transparent">
-      <span class="flex items-center gap-1.5 text-s-12 text-info leading-[18px]">
+    <div class="flex items-center h-16 px-4 rounded-20 bg-bgBase border border-transparent">
+      <span class="flex items-center gap-1.5 text-s-12 text-info leading-[18px] flex-none">
         {{ t('purchase.sell.network_fee') }}
         <span
           ref="infoIconRef"
@@ -45,7 +45,7 @@
       <button
         v-if="networkFeeDisplay"
         type="button"
-        class="flex items-center gap-1 text-s-12 leading-[18px]"
+        class="flex-1 h-full flex items-center justify-end gap-1 text-s-12 leading-[18px]"
         @click="feeSelector?.openFeeModal()"
       >
         <span class="text-info font-normal">≈</span>
@@ -54,7 +54,7 @@
           <path d="M1 1L5 5L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <span v-else class="text-s-12 text-info leading-[18px]">---</span>
+      <span v-else class="flex-1 text-right text-s-12 text-info leading-[18px]">---</span>
     </div>
 
     <teleport to="#app">

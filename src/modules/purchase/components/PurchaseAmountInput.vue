@@ -19,7 +19,10 @@
     </div>
 
     <!-- Amount + estimate / helper / spinner / error -->
-    <div class="flex flex-col items-center gap-2">
+    <div
+      class="flex-1 w-full flex flex-col items-center justify-center gap-2 cursor-text"
+      @click="focus"
+    >
       <label
         :for="inputId"
         :style="scaleStyle"
