@@ -145,6 +145,7 @@ import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useAccessStore } from '@/stores/accessStore'
 
 import { formatFloatingPointValue, formatFiatValue } from '@/utils/numberFormatHelper'
@@ -187,6 +188,7 @@ const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
 const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
+const globalStore = useGlobalStore()
 
 const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(sellNetworks, walletChain, chains)
 
@@ -445,6 +447,24 @@ const onCryptoAmountChange = (value: string) => {
 
 watch(compatibleChainCodes, codes => {
   if (selectedToken.value && !codes.includes(selectedToken.value.chain)) {
+    selectedToken.value = null
+  }
+})
+
+watch(selectedToken, token => {
+  if (!token) return
+  const tokenChain = purchaseChainToChain(token.chain, chains.value)
+  if (tokenChain && tokenChain.name !== walletChain.value?.name) {
+    globalStore.setSelectedNetwork(tokenChain.name)
+  }
+})
+
+watch(walletChain, chain => {
+  if (
+    selectedToken.value &&
+    purchaseChainToChain(selectedToken.value.chain, chains.value)?.name !==
+      chain?.name
+  ) {
     selectedToken.value = null
   }
 })

@@ -343,6 +343,16 @@ watch(compatibleChainCodes, codes => {
   }
 })
 
+watch(walletChain, chain => {
+  if (
+    selectedToken.value &&
+    purchaseChainToChain(selectedToken.value.chain, chains.value)?.name !==
+      chain?.name
+  ) {
+    selectedToken.value = null
+  }
+})
+
 watch(currencyOptions, options => {
   if (options.length && !options.includes(selectedFiat.value)) {
     selectedFiat.value = options.includes(DEFAULT_FIAT) ? DEFAULT_FIAT : options[0]
