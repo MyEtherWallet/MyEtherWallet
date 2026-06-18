@@ -25,7 +25,7 @@
           {{ $t('search.cancel') }}
         </button>
       </div>
-      <div v-auto-animate class="overflow-y-auto overscroll-contain flex-1 min-h-0 px-3 pt-5 pb-3">
+      <div v-auto-animate class="overflow-y-auto overscroll-contain flex-1 min-h-[280px] px-3 pt-5 pb-3 flex flex-col">
         <!-- Gate on debouncedQuery so the chips remain visible during the
              debounce window — avoids a brief blank panel between keystroke
              and the first refetch. -->
@@ -53,7 +53,7 @@
 
         <div
           v-if="showEmptyState"
-          class="flex flex-col items-center justify-center gap-1 px-4 py-10 text-center"
+          class="flex flex-col items-center justify-center gap-1 px-4 text-center flex-1"
         >
           <magnifying-glass-icon class="w-8 h-8 text-info mb-1" />
           <p class="text-s-14 font-semibold">

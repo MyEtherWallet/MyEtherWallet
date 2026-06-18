@@ -3,6 +3,7 @@
     ref="wrapperEl"
     class="relative min-w-0 w-[240px]"
     :class="isOpen ? 'z-[2]' : ''"
+    @keydown="trapFocus"
   >
     <button
       v-if="isCompact"
@@ -58,4 +59,21 @@ const isCompact = computed(
 onClickOutside(wrapperEl, () => {
   if (isOpen.value) close()
 })
+
+const trapFocus = (e: KeyboardEvent) => {
+  if (e.key !== 'Tab' || !isOpen.value || !wrapperEl.value) return
+  const focusable = wrapperEl.value.querySelectorAll<HTMLElement>(
+    'input, button, [tabindex]:not([tabindex="-1"])',
+  )
+  if (!focusable.length) return
+  const first = focusable[0]
+  const last = focusable[focusable.length - 1]
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault()
+    last.focus()
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault()
+    first.focus()
+  }
+}
 </script>
