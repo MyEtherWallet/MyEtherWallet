@@ -358,6 +358,36 @@ export type CryptoMarketSelectNetworkPayload = {
 }
 
 // =============================================================================
+// GLOBAL SEARCH
+// =============================================================================
+
+export const GlobalSearchEvent = {
+  SHOWN: 'Global_Search_Shown',
+  SELECT_TOKEN: 'Global_Search_Select_Token',
+  TOKEN_NOT_FOUND: 'Global_Search_Token_Not_Found',
+} as const
+export type GlobalSearchEvent =
+  (typeof GlobalSearchEvent)[keyof typeof GlobalSearchEvent]
+
+export const GlobalSearchCategory = {
+  STOCK: 'stock',
+  CRYPTO: 'crypto',
+} as const
+export type GlobalSearchCategory =
+  (typeof GlobalSearchCategory)[keyof typeof GlobalSearchCategory]
+
+export type GlobalSearchSelectTokenPayload = {
+  symbol: string
+  name: string
+  category: GlobalSearchCategory
+  isRecent: boolean
+}
+
+export type GlobalSearchTokenNotFoundPayload = {
+  searchString: string
+}
+
+// =============================================================================
 // TRADE / SWAP SORT
 // =============================================================================
 

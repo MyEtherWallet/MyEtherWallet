@@ -72,6 +72,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { analytics, GlobalSearchEvent } from '@/analytics'
 import { useGlobalSearch } from '../composables/useGlobalSearch'
 import GlobalSearchSection from './GlobalSearchSection.vue'
 import RecentlyViewedChips from './RecentlyViewedChips.vue'
@@ -106,6 +107,15 @@ watch(isOpen, async open => {
   if (!open || !props.isCompact) return
   await nextTick()
   compactInputEl.value?.focus()
+})
+
+watch(showEmptyState, empty => {
+  if (empty) {
+    analytics.trackGlobalSearchTokenNotFoundEvent(
+      GlobalSearchEvent.TOKEN_NOT_FOUND,
+      { searchString: debouncedQuery.value },
+    )
+  }
 })
 
 const route = useRoute()

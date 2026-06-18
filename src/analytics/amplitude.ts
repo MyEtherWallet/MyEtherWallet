@@ -47,6 +47,9 @@ import type {
   TradeClickSortEvent,
   SwapClickSortEvent,
   ClickSortPayload,
+  GlobalSearchEvent,
+  GlobalSearchSelectTokenPayload,
+  GlobalSearchTokenNotFoundPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -605,6 +608,30 @@ export class Analytics {
   readonly trackSwapClickSortEvent = (
     event: typeof SwapClickSortEvent,
     payload: ClickSortPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // GLOBAL SEARCH
+  // =============================================================================
+
+  readonly trackGlobalSearchEvent = (
+    event: typeof GlobalSearchEvent.SHOWN,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackGlobalSearchSelectTokenEvent = (
+    event: typeof GlobalSearchEvent.SELECT_TOKEN,
+    payload: GlobalSearchSelectTokenPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackGlobalSearchTokenNotFoundEvent = (
+    event: typeof GlobalSearchEvent.TOKEN_NOT_FOUND,
+    payload: GlobalSearchTokenNotFoundPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

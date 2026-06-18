@@ -13,6 +13,7 @@ import {
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { getAPIPath } from '@/utils/constructAPIPath'
 import type { GetWebStocksTableResponse, GetWebTokensTableResponse } from '@/mew_api/types'
+import { analytics, GlobalSearchEvent, GlobalSearchCategory } from '@/analytics'
 import type { SearchResultItem, SectionKey } from '../types'
 
 // Module-level singleton state
@@ -161,6 +162,7 @@ export function useGlobalSearch() {
   const open = () => {
     isOpen.value = true
     isOverflowHidden.value = true
+    analytics.trackGlobalSearchEvent(GlobalSearchEvent.SHOWN)
   }
 
   const close = () => {
@@ -179,7 +181,18 @@ export function useGlobalSearch() {
     expanded[key] = !expanded[key]
   }
 
-  const selectAsset = (item: SearchResultItem) => {
+  const selectAsset = (item: SearchResultItem, isRecent = false) => {
+    analytics.trackGlobalSearchSelectTokenEvent(
+      GlobalSearchEvent.SELECT_TOKEN,
+      {
+        symbol: item.symbol,
+        name: item.name,
+        category: item.isStock
+          ? GlobalSearchCategory.STOCK
+          : GlobalSearchCategory.CRYPTO,
+        isRecent,
+      },
+    )
     const key = parentKey.value
     const target = item.isStock
       ? {
