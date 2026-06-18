@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import { useRecentlyViewedTokensStore } from '@/stores/recentlyViewedTokensStore'
 import {
   ROUTES_MAIN,
@@ -135,6 +136,8 @@ const PARENT_ROUTE_KEY_MAP: Record<string, RouteKey> = {
 
 export function useGlobalSearch() {
   const router = useRouter()
+  const appLayoutStore = useAppLayoutStore()
+  const { isOverflowHidden } = storeToRefs(appLayoutStore)
   const recentlyViewedStore = useRecentlyViewedTokensStore()
   const { recentlyViewedTokens } = storeToRefs(recentlyViewedStore)
 
@@ -157,10 +160,12 @@ export function useGlobalSearch() {
 
   const open = () => {
     isOpen.value = true
+    isOverflowHidden.value = true
   }
 
   const close = () => {
     isOpen.value = false
+    isOverflowHidden.value = false
     query.value = ''
     expanded.stocks = false
     expanded.crypto = false
