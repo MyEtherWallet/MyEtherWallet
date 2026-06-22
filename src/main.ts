@@ -26,7 +26,7 @@ const app = createApp(App)
 
 const dsn = configs.MEW_SENTRY_DSN
 
-if (dsn) {
+if (dsn && !configs.IS_DEV_MODE) {
   sentryInit({
     app,
     dsn,

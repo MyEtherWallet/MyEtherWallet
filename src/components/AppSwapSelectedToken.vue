@@ -55,64 +55,157 @@
         ref="scrollContainer"
       >
         <div class="sticky top-0 bg-white z-20 pt-2">
-          <div
-            class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
-          >
-            <app-search-input
-              v-model="searchInput"
-              class="grow"
-              bg-class="bg-transparent"
-              :placeholder="$t('select_token.search')"
-            />
-            <!--SORT-->
-            <app-pop-up-menu :placeholder="$t('common.sort')">
-              <template #menu-button="{ toggleMenu }">
-                <button
-                  class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
-                  @click="toggleMenu"
-                >
-                  <span class="mr-2">{{ activeSortValue }}</span>
-                  <ArrowLongUpIcon
-                    v-if="activeSortDirection === SortDirection.ASC"
-                    class="w-4 h-4 shrink-0"
-                  />
-                  <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
-                </button>
-              </template>
-              <template #menu-content="{ toggleMenu }">
-                <div class="py-4 flex flex-col w-[200px] gap-1">
-                  <div class="flex items-center justify-between mb-1 mx-3">
-                    <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
-                      {{ $t('common.sort_by') }}
-                    </p>
-                    <app-btn-icon-close @close="toggleMenu" />
-                  </div>
-                  <hr class="h-px bg-grey-10 border-0 w-full mt-1 mb-2" />
+          <div class="relative">
+            <div
+              class="flex gap-2 justify-between items-center mb-2 bg-mewBg rounded-full p-1"
+            >
+              <div ref="searchFocusTarget" class="grow">
+                <app-search-input
+                  v-model="searchInput"
+                  class="w-full"
+                  bg-class="bg-transparent"
+                  :placeholder="$t('select_token.search')"
+                />
+              </div>
+              <!--SORT-->
+              <app-pop-up-menu :placeholder="$t('common.sort')">
+                <template #menu-button="{ toggleMenu }">
                   <button
-                    v-for="option in sortOptions"
-                    :key="option.value"
-                    :class="[
-                      option.value === activeSortValue ? 'bg-grey-5' : '',
-                      'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
-                    ]"
-                    :id="option.value"
-                    @click="setActiveSort(option.value)"
+                    class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
+                    @click="toggleMenu"
                   >
-                    <p class="capitalize">{{ option.label }}</p>
-                    <div
-                      v-if="activeSortValue === option.value"
-                      class="ml-auto pl-2"
-                    >
-                      <ArrowLongUpIcon
-                        v-if="activeSortDirection === SortDirection.ASC"
-                        class="w-5 h-5 text-primary"
-                      />
-                      <ArrowLongDownIcon v-else class="w-5 h-5 text-primary" />
-                    </div>
+                    <span class="mr-2">{{ activeSortValue }}</span>
+                    <ArrowLongUpIcon
+                      v-if="activeSortDirection === SortDirection.ASC"
+                      class="w-4 h-4 shrink-0"
+                    />
+                    <ArrowLongDownIcon v-else class="w-4 h-4 shrink-0" />
                   </button>
+                </template>
+                <template #menu-content="{ toggleMenu }">
+                  <div class="py-4 flex flex-col w-[200px] gap-1">
+                    <div class="flex items-center justify-between mb-1 mx-3">
+                      <p class="text-s-17 font-medium ml-3 whitespace-nowrap">
+                        {{ $t('common.sort_by') }}
+                      </p>
+                      <app-btn-icon-close @close="toggleMenu" />
+                    </div>
+                    <button
+                      v-for="option in sortOptions"
+                      :key="option.value"
+                      :class="[
+                        option.value === activeSortValue ? 'bg-grey-5' : '',
+                        'flex items-center px-4 py-2.5 mx-3 hoverNoBG rounded-16 min-w-[80px] text-s-15 font-medium whitespace-nowrap',
+                      ]"
+                      :id="option.value"
+                      @click="setActiveSort(option.value)"
+                    >
+                      <p class="capitalize">{{ option.label }}</p>
+                      <div
+                        v-if="activeSortValue === option.value"
+                        class="ml-auto pl-2"
+                      >
+                        <ArrowLongUpIcon
+                          v-if="activeSortDirection === SortDirection.ASC"
+                          class="w-5 h-5 text-primary"
+                        />
+                        <ArrowLongDownIcon
+                          v-else
+                          class="w-5 h-5 text-primary"
+                        />
+                      </div>
+                    </button>
+                  </div>
+                </template>
+              </app-pop-up-menu>
+            </div>
+            <!-- Trending & Stablecoins dropdown -->
+            <transition name="fade" mode="out-in">
+              <div
+                v-if="showSearchDropdown"
+                class="absolute bottom-0 left-0 w-full bg-white rounded-20 shadow-2xl border border-grey-outline px-4 py-4 translate-y-full z-30"
+                @mousedown.prevent
+              >
+                <div v-if="trendingTokens.length" class="mb-3">
+                  <p class="text-s-12 font-medium text-info mb-2">Trending</p>
+                  <div class="flex flex-wrap gap-2">
+                    <button
+                      v-for="token in trendingTokens"
+                      :key="token.address"
+                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-grey-10 bg-white hoverNoBG shadow-sm text-s-13 font-medium transition-colors"
+                      :class="
+                        token.address === selectedToken?.address
+                          ? '!bg-mewBg border-primary'
+                          : ''
+                      "
+                      @click="setSelectedToken(token)"
+                    >
+                      <app-token-logo
+                        :url="token.logoURI"
+                        :symbol="token.symbol"
+                        :address="
+                          networkName
+                            ? { address: token.address, network: networkName }
+                            : undefined
+                        "
+                        width="w-5"
+                        height="h-5"
+                      />
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :address="
+                          networkName
+                            ? { address: token.address, network: networkName }
+                            : undefined
+                        "
+                      />
+                    </button>
+                  </div>
                 </div>
-              </template>
-            </app-pop-up-menu>
+                <div
+                  v-if="trendingTokens.length && stablecoinTokens.length"
+                  class="h-px bg-grey-outline w-full mb-3"
+                ></div>
+                <div v-if="stablecoinTokens.length">
+                  <p class="text-s-12 font-medium text-info mb-2">
+                    Stablecoins
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    <button
+                      v-for="token in stablecoinTokens"
+                      :key="token.address"
+                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-grey-10 bg-white hoverNoBG shadow-sm text-s-13 font-medium transition-colors"
+                      :class="
+                        token.address === selectedToken?.address
+                          ? '!bg-mewBg border-primary'
+                          : ''
+                      "
+                      @click="setSelectedToken(token)"
+                    >
+                      <app-token-logo
+                        :url="token.logoURI"
+                        :symbol="token.symbol"
+                        :address="
+                          networkName
+                            ? { address: token.address, network: networkName }
+                            : undefined
+                        "
+                        width="w-5"
+                        height="h-5"
+                      />
+                      <app-token-symbol
+                        :symbol="token.symbol"
+                        :address="
+                          networkName
+                            ? { address: token.address, network: networkName }
+                            : undefined
+                        "
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </transition>
           </div>
           <div class="h-px bg-grey-10 w-full mb-2"></div>
         </div>
@@ -266,11 +359,13 @@ import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
-import { useScroll } from '@vueuse/core'
+import { useScroll, useFocusWithin } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
 import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
 import { analytics, TradeClickSortEvent, SwapClickSortEvent } from '@/analytics'
+import { useFetchMewApi } from '@/composables/useFetchMewApi'
+import type { GetWebTokensTableResponse } from '@/mew_api/types'
 
 const props = defineProps({
   selectedToken: {
@@ -296,7 +391,32 @@ const props = defineProps({
     type: String as () => 'trade' | 'swap' | undefined,
     default: undefined,
   },
+  trendingAddresses: {
+    type: Array as () => string[],
+    default: () => [],
+  },
 })
+
+const STABLECOIN_SYMBOLS = new Set([
+  'USDC',
+  'USDT',
+  'DAI',
+  'BUSD',
+  'TUSD',
+  'FRAX',
+  'USDD',
+  'USDP',
+  'GUSD',
+  'LUSD',
+  'SUSD',
+  'MIM',
+  'CUSD',
+  'AGEUR',
+  'EURS',
+  'EURT',
+  'FDUSD',
+  'PYUSD',
+])
 
 const { t } = useI18n()
 const emit = defineEmits<{
@@ -328,6 +448,12 @@ const loadingMoreItems = ref(false)
 const scrollContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(scrollContainer)
 
+const searchFocusTarget = ref<HTMLElement | null>(null)
+const { focused: searchFocused } = useFocusWithin(searchFocusTarget)
+const showSearchDropdown = computed(
+  () => searchFocused.value && !searchInput.value && !props.isFromView,
+)
+
 onMounted(() => {
   if (!props.isFromView || !isWalletConnected.value) {
     if (props.sortContext !== 'trade') {
@@ -352,10 +478,47 @@ watch(
 
 watch(
   () => showAllTokens.value,
-  () => {
-    emit('open:selectToken', showAllTokens.value)
+  isOpen => {
+    emit('open:selectToken', isOpen)
+    if (isOpen && !props.isFromView && props.networkName) {
+      fetchMarketData()
+    }
   },
 )
+
+// Market data for to-token sort (marketCap, totalVolume)
+const { useMEWFetch } = useFetchMewApi()
+// address (lowercase) → { marketCap, totalVolume }
+const marketDataMap = ref<
+  Record<string, { marketCap: number | null; totalVolume: number | null }>
+>({})
+
+const fetchMarketData = async () => {
+  if (!props.networkName) return
+  const { data, onFetchResponse } = useMEWFetch(
+    `/v1/web/tokens-table?filterChain=${props.networkName}&perPage=200&sort=MARKET_CAP_DESC`,
+  )
+    .get()
+    .json<GetWebTokensTableResponse>()
+  onFetchResponse(() => {
+    if (!data.value) return
+    const map: Record<
+      string,
+      { marketCap: number | null; totalVolume: number | null }
+    > = {}
+    for (const item of data.value.items) {
+      const chainAddresses = item.addresses as Record<string, string>
+      const addr = chainAddresses[props.networkName!]
+      if (addr) {
+        map[addr.toLowerCase()] = {
+          marketCap: item.marketCap,
+          totalVolume: item.totalVolume,
+        }
+      }
+    }
+    marketDataMap.value = map
+  })
+}
 
 // pagination
 const endingPagination = ref(100)
@@ -373,46 +536,40 @@ enum SortValueString {
   PRICE = 'Price',
   USD = 'USD Balance',
   BALANCE = 'Balance',
+  MARKET_CAP = 'Market Cap',
+  VOLUME = '24h Volume',
 }
 
 const sortOptions = computed(() => {
   const shared = [
-    {
-      value: SortValueString.NAME,
-      label: t('common.name'),
-    },
-    {
-      value: SortValueString.SYMBOL,
-      label: t('common.symbol'),
-    },
+    { value: SortValueString.RANK, label: t('common.rank') },
+    { value: SortValueString.NAME, label: t('common.name') },
+    { value: SortValueString.SYMBOL, label: t('common.symbol') },
   ]
+
+  if (!props.isFromView) {
+    return [
+      ...shared,
+      { value: SortValueString.PRICE, label: t('common.price') },
+      { value: SortValueString.MARKET_CAP, label: 'Market Cap' },
+      { value: SortValueString.VOLUME, label: '24h Volume' },
+    ]
+  }
+
+  if (isWalletConnected.value) {
+    return [
+      ...shared,
+      { value: SortValueString.USD, label: t('common.usd_balance') },
+      { value: SortValueString.BALANCE, label: t('common.balance') },
+    ]
+  }
   if (props.isFromView || props.sortContext !== 'trade') {
     shared.unshift({
       value: SortValueString.RANK,
       label: t('common.rank'),
     })
   }
-  if (isWalletConnected.value && props.isFromView) {
-    return [
-      ...shared,
-      {
-        value: SortValueString.USD,
-        label: t('common.usd_balance'),
-      },
-      {
-        value: SortValueString.BALANCE,
-        label: t('common.balance'),
-      },
-    ]
-  }
-
-  return [
-    ...shared,
-    {
-      value: SortValueString.PRICE,
-      label: t('common.price'),
-    },
-  ]
+  return [...shared, { value: SortValueString.PRICE, label: t('common.price') }]
 })
 
 enum SortDirection {
@@ -456,6 +613,9 @@ const setActiveSort = (value: SortValueString) => {
 
 interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
+  rank: number
+  marketCap: number | null
+  totalVolume: number | null
 }
 
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
@@ -469,12 +629,23 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
         ),
       ),
     ).toNumber()
+    const md = marketDataMap.value[token.address.toLowerCase()]
     return {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
+      rank: token.rank ?? 0,
+      marketCap: md?.marketCap ?? null,
+      totalVolume: md?.totalVolume ?? null,
     }
   })
+
+  const isMarketDataSort =
+    activeSortValue.value === SortValueString.MARKET_CAP ||
+    activeSortValue.value === SortValueString.VOLUME
+  const filteredItems = isMarketDataSort
+    ? allItems.filter(t => t.marketCap !== null || t.totalVolume !== null)
+    : allItems
 
   const sortKeyMap: Record<
     SortValueString,
@@ -486,19 +657,50 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     [SortValueString.PRICE]: { key: 'price', type: 'number' },
     [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
     [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
+    [SortValueString.MARKET_CAP]: { key: 'marketCap', type: 'number' },
+    [SortValueString.VOLUME]: { key: 'totalVolume', type: 'number' },
   }
 
   const { key, type } = sortKeyMap[activeSortValue.value]
   const sorted =
     type === 'string'
-      ? sortObjectArrayString(allItems, key, activeSortDirection.value)
-      : sortObjectArrayNumber(allItems, key, activeSortDirection.value)
+      ? sortObjectArrayString(filteredItems, key, activeSortDirection.value)
+      : sortObjectArrayNumber(filteredItems, key, activeSortDirection.value)
 
   if (searchInput.value) {
     return fuzzySearchByKeys(sorted, ['name', 'symbol'], searchInput.value)
   }
 
   return sorted.slice(0, endingPagination.value)
+})
+
+const trendingTokens = computed<TokenBalanceWithUsd[]>(() => {
+  const trendingSet = new Set(props.trendingAddresses.map(a => a.toLowerCase()))
+  return tokens.value
+    .filter(t => trendingSet.has(t.address.toLowerCase()))
+    .slice(0, 4)
+    .map((token, index) => ({
+      ...token,
+      usd_balance: 0,
+      price: token.price || 0,
+      rank: index,
+      marketCap: null,
+      totalVolume: null,
+    }))
+})
+
+const stablecoinTokens = computed<TokenBalanceWithUsd[]>(() => {
+  return tokens.value
+    .filter(t => STABLECOIN_SYMBOLS.has(t.symbol.toUpperCase()))
+    .slice(0, 4)
+    .map((token, index) => ({
+      ...token,
+      usd_balance: 0,
+      price: token.price || 0,
+      rank: index,
+      marketCap: null,
+      totalVolume: null,
+    }))
 })
 
 const loadMoreItems = () => {

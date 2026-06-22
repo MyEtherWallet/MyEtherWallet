@@ -42,6 +42,7 @@
               :network-name="selectedChain?.name"
               :external-loading="fromLoadingState"
               :tokens="parsedFromTokens"
+              :trending-addresses="trendingAddresses"
               :show-balance="isWalletConnected"
               :is-pristine="isPristine"
               sort-context="swap"
@@ -101,6 +102,7 @@
               :external-loading="toLoadingState"
               :show-balance="false"
               :tokens="filteredToTokens"
+              :trending-addresses="trendingAddresses"
               :readonly="true"
               :is-estimate="true"
               :is-from-view="false"
@@ -442,6 +444,16 @@ const parsedFromTokens = computed<NewTokenInfo[]>(() => {
     return []
   return fromTokens.value
 })
+
+const trendingAddresses = computed<string[]>(() => {
+  if (!toTokens.value || !selectedToChain.value) return []
+  const enkryptEnum = supportedSwapEnums[selectedToChain.value.name]
+  if (!enkryptEnum) return []
+  const trending =
+    toTokens.value.trending[enkryptEnum as keyof typeof toTokens.value.trending]
+  return trending?.map(t => t.address.toLowerCase()) ?? []
+})
+
 
 const filteredToTokens = computed<NewTokenInfo[]>(() => {
   if (

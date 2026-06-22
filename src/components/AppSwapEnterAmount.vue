@@ -56,6 +56,7 @@
         v-model:selected-token="selectedToken"
         :external-loading="isLoading"
         :chain-tokens="tokens || []"
+        :trending-addresses="trendingAddresses"
         :is-from-view="isFromView"
         :network-name="networkName"
         :sort-context="sortContext"
@@ -161,6 +162,10 @@ const props = defineProps({
   networkName: {
     type: String,
     required: false,
+  },
+  trendingAddresses: {
+    type: Array as () => string[],
+    default: () => [],
   },
   isPristine: {
     type: Boolean,
