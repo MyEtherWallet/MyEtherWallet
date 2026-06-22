@@ -1480,6 +1480,11 @@ watch(
         swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
       })
       txProceeding.value = false
+    } else {
+      // No quote selected (e.g. pair has no route). Clear stale swap data so
+      // swapForEvm's `!swapInfo.value` guard reliably reports "pair not
+      // available" instead of proceeding with data from a previous quote.
+      swapInfo.value = null
     }
   },
   { deep: true },
