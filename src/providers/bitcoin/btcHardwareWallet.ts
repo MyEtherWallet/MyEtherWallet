@@ -3,7 +3,7 @@ import { WalletType, type HexPrefixedString } from '../types'
 
 import type { PathType } from '@/stores/derivationStore'
 import { HWwalletType, NetworkNames } from '@enkryptcom/types'
-import HWwallet from '@enkryptcom/hw-wallets'
+import type { HWManager } from '@/providers/hw/types'
 import BaseBtcWallet from './baseBitcoinWallet'
 import { hexToBuffer } from '@/utils/hexToBuffer'
 import { type PostSignedTransaction } from '../common/types'
@@ -16,27 +16,25 @@ import { NODE_MAP } from '../common/btcInfo'
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
   private address: HexPrefixedString
-  private networkName: string
   private index: string
   private path: PathType
   private walletType: HWwalletType
-  private hwWalletInstance: HWwallet
+  private hwWalletInstance: HWManager
 
   constructor(
     address: HexPrefixedString,
-    networkName: string,
+    chainName: string,
     index: string,
     path: PathType,
     walletType: HWwalletType,
-    hwWalletInstance: HWwallet,
+    hwWalletInstance: HWManager,
   ) {
-    super(networkName)
+    super(chainName)
     this.address = address
-    this.networkName = networkName
     this.index = index
     this.path = path
     this.walletType = walletType
-    this.hwWalletInstance = hwWalletInstance as HWwallet
+    this.hwWalletInstance = hwWalletInstance as HWManager
   }
 
   /**
@@ -103,6 +101,10 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     }
   }
 
+  override getProvider(): string {
+    return this.chainName
+  }
+
   override getAddress(): Promise<HexPrefixedString> {
     const { address } = INFO_MAP[this.getProvider()].paymentType({
       ...INFO_MAP[this.getProvider()],
@@ -111,7 +113,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }
 
-  getWalletInstance(): HWwallet | null {
+  getWalletInstance(): HWManager | null {
     return this.hwWalletInstance
   }
 

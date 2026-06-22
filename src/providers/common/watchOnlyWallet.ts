@@ -22,7 +22,7 @@ import type {
 } from '@/mew_api/types'
 import { fetchWithRetry } from '@/mew_api/fetchWithRetry'
 import type { Provider } from '@/stores/providerStore'
-import type HWwalletManager from '@enkryptcom/hw-wallets'
+import type { HWManager } from '@/providers/hw/types'
 
 class WatchOnlyWallet implements WalletInterface {
   address: string
@@ -45,7 +45,7 @@ class WatchOnlyWallet implements WalletInterface {
     this.walletName = walletName
   }
   updateChainId: (chainId: string) => void = () => {}
-  getWalletInstance?: (() => HWwalletManager | null) | undefined
+  getWalletInstance?: (() => HWManager | null) | undefined
   getProviderInstance?:
     | (() => Provider | NonNullable<typeof window.unisat> | null)
     | undefined

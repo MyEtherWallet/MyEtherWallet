@@ -418,7 +418,7 @@
                       <hr
                         v-if="
                           props.view === 'custom' ||
-                          isBuyable(token.coinId) ||
+                          isBuyableOnCompatibleChain(token.coinId) ||
                           token.ondo !== undefined ||
                           currentChainhasSwapSupport
                         "
@@ -427,12 +427,12 @@
 
                       <ul v-if="props.view !== 'custom'">
                         <li
-                          v-if="isBuyable(token.coinId)"
+                          v-if="isBuyableOnCompatibleChain(token.coinId)"
                           @click.stop="[buyBtn(token, true), toggleMenu()]"
                           class="p-2 flex items-center hoverBGWhite rounded-12"
                         >
                           <icon-buy class="text-primary w-4 h-4 mr-2" />
-                          <p>{{ $t('buy') }}</p>
+                          <p>{{ $t('common.buy') }}</p>
                         </li>
                         <template v-if="token.ondo !== undefined">
                           <li
@@ -449,7 +449,7 @@
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
                             <icon-swap class="text-primary w-4 h-4 mr-2" />
-                            <p>{{ $t('swap') }}</p>
+                            <p>{{ $t('common.swap') }}</p>
                           </li>
                         </template>
                       </ul>
@@ -495,15 +495,15 @@
                   size="small"
                   @click="swapBtn(token)"
                   class="min-w-[60px]"
-                  >{{ $t('swap') }}
+                  >{{ $t('common.swap') }}
                 </app-base-button>
                 <app-base-button
-                  v-if="isBuyable(token.coinId)"
+                  v-if="isBuyableOnCompatibleChain(token.coinId)"
                   size="small"
                   @click="buyBtn(token)"
                   is-outline
                   class="min-w-[60px]"
-                  >{{ $t('buy') }}
+                  >{{ $t('common.buy') }}
                 </app-base-button>
                 <div v-else class="w-[60px]"></div>
               </div>
@@ -740,11 +740,15 @@ const watchListStore = useWatchlistStore()
 const customTokenStore = useCustomTokenStore()
 const tokenInfoStore = useTokenInfoStore()
 const purchaseStore = usePurchaseStore()
-const { isBuyable } = purchaseStore
+const { isBuyableOnCompatibleChain } = purchaseStore
 
 const { selectedChain, currentChainhasSwapSupport } = storeToRefs(chainStore)
-const { setWalletPanel, setSelectedTradeTokenSymbol, toggleShowBalance } =
-  walletMenu
+const {
+  setWalletPanel,
+  setSelectedTradeTokenSymbol,
+  setSelectedPurchaseCoinId,
+  toggleShowBalance,
+} = walletMenu
 const { isOpenSideMenu, hideLowBalance } = storeToRefs(walletMenu)
 const {
   isWalletConnected,
@@ -1094,7 +1098,8 @@ const buyBtn = (token?: DisplayToken, isMobile = false) => {
     token: token?.symbol,
     isMobile,
   })
-  window.open('https://ccswap.myetherwallet.com', '_blank')
+  setSelectedPurchaseCoinId(token?.coinId ?? null)
+  walletMenu.openPanel('purchase')
 }
 
 const getTokenRoute = (token: DisplayToken) => {
