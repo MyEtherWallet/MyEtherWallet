@@ -43,7 +43,9 @@
             v-if="supportedNetwork"
             class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
           >
-            <p class="text-s-12 mb-1 font-bold ml-3">{{ $t('trade.you_are_selling') }}</p>
+            <p class="text-s-12 mb-1 font-bold ml-3">
+              {{ $t('trade.you_are_selling') }}
+            </p>
 
             <div>
               <app-swap-enter-amount
@@ -103,7 +105,9 @@
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 mb-1 font-bold ml-3">{{ $t('trade.you_are_buying') }}</p>
+            <p class="text-s-12 mb-1 font-bold ml-3">
+              {{ $t('trade.you_are_buying') }}
+            </p>
             <app-swap-enter-amount
               v-model:amount="toAmount"
               v-model:selected-token="toTokenSelected!"
@@ -137,7 +141,9 @@
           >
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-primary" />
-              <p class="text-primary font-medium text-s-16">{{ $t('trade.market_closed') }}</p>
+              <p class="text-primary font-medium text-s-16">
+                {{ $t('trade.market_closed') }}
+              </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
               {{ marketStatus.reason?.message }}
@@ -171,7 +177,14 @@
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ $t('trade.trading_not_available_on', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
+              {{
+                $t('trade.trading_not_available_on', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+              }}
             </p>
             <div class="flex flex-col items-center justify-center">
               <div class="">
@@ -266,7 +279,9 @@
             :has-gradient="false"
             class="inline-flex !text-s-14"
           />
-          {{ $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage }) }}
+          {{
+            $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage })
+          }}
         </p>
       </div>
 
@@ -316,7 +331,9 @@
                 </svg>
                 {{ $t('trade.approving') }}
               </span>
-              <span v-else>{{ needsApproval ? $t('common.approve') : $t('trade.trade_button') }}</span>
+              <span v-else>{{
+                needsApproval ? $t('common.approve') : $t('trade.trade_button')
+              }}</span>
             </app-base-button>
           </transition>
         </div>
@@ -511,8 +528,8 @@ const fromTokens = computed(() => {
       // Keep token if it has marketCap
       return (
         matchingToken &&
-        matchingToken.market_cap &&
-        matchingToken.market_cap > 0
+        ((matchingToken.market_cap && matchingToken.market_cap > 0) ||
+          token.cgId === 'spacex-ondo-tokenized-stock')
       )
     } else {
       return token.price && token.price > 0
@@ -802,11 +819,11 @@ const connectWalletForTrade = () => {
 
 // --- Watchers ---
 
-// Reset state when Trade Initiated Modal is opened
+// Reset state when Trade Initiated Modal is closed
 watch(
   () => tradeInitiatedOpen.value,
   isOpen => {
-    if (isOpen) {
+    if (!isOpen) {
       clearValues()
     }
   },
