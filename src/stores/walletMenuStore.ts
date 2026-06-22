@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export type WalletPanel = 'trade' | 'swap' | 'send' | 'buy' | 'sell' | 'bridge'
+export type WalletPanel = 'trade' | 'swap' | 'send' | 'bridge' | 'purchase'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const hideLowBalance = ref(false)
@@ -13,6 +13,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   // Selected token symbol for Trade module (set from stocks view)
   const selectedTradeTokenSymbol = ref<string | null>(null)
 
+  // Coingecko id of the token to pre-populate in the Buy module (set from the
+  // crypto/balance tables). Consumed and cleared by ModuleBuy.
+  const selectedPurchaseCoinId = ref<string | null>(null)
+
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value
   }
@@ -21,8 +25,17 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     walletPanel.value = value
   }
 
+  const openPanel = (panel: WalletPanel) => {
+    walletPanel.value = panel
+    isOpenSideMenu.value = true
+  }
+
   const setSelectedTradeTokenSymbol = (symbol: string | null) => {
     selectedTradeTokenSymbol.value = symbol
+  }
+
+  const setSelectedPurchaseCoinId = (coinId: string | null) => {
+    selectedPurchaseCoinId.value = coinId
   }
 
   const toggleShowBalance = () => {
@@ -34,10 +47,13 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setIsOpenSideMenu,
     walletPanel,
     setWalletPanel,
+    openPanel,
     hasShadow,
     selectedTradeTokenSymbol,
     setSelectedTradeTokenSymbol,
+    selectedPurchaseCoinId,
+    setSelectedPurchaseCoinId,
     hideLowBalance,
-    toggleShowBalance
+    toggleShowBalance,
   }
 })
