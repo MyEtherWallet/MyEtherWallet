@@ -271,8 +271,17 @@ export const useWalletStore = defineStore('walletStore', () => {
       return total.plus(tokenValue)
     }, new BigNumber(0))
     let balanceBracket: BalanceBracket
-    if (totalBalanceFiat.isLessThan(500)) {
-      balanceBracket = BalanceBracket.UNDER_500
+    if (totalBalanceFiat.isLessThan(50)) {
+      balanceBracket = BalanceBracket.UNDER_50
+    }
+    else if (totalBalanceFiat.isLessThan(100)) {
+      balanceBracket = BalanceBracket.BRACKET_50
+    }
+    else if (totalBalanceFiat.isLessThan(250)) {
+      balanceBracket = BalanceBracket.BRACKET_100
+    }
+    else if (totalBalanceFiat.isLessThan(500)) {
+      balanceBracket = BalanceBracket.BRACKET_250
     } else if (totalBalanceFiat.isLessThan(2500)) {
       balanceBracket = BalanceBracket.BRACKET_500
     } else if (totalBalanceFiat.isLessThan(10000)) {

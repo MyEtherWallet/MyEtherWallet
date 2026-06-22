@@ -26,6 +26,9 @@ importers:
       '@amplitude/analytics-browser':
         specifier: ^2.36.2
         version: 2.36.8
+      '@amplitude/plugin-page-url-enrichment-browser':
+        specifier: ^0.7.13
+        version: 0.7.13
       '@amplitude/session-replay-browser':
         specifier: ^1.36.2
         version: 1.36.2(@amplitude/rrweb@2.0.0-alpha.39)(rollup@4.55.1)
@@ -434,6 +437,9 @@ packages:
 
   '@amplitude/plugin-page-url-enrichment-browser@0.6.12':
     resolution: {integrity: sha512-pyYk+nfHvDfr+ovw/BsK8GpwvyLWiBq01TWjAXef+gN+wa5CAIg/mHvAAdT+x90uRbzKV20TyaKhYd4tw65MKA==}
+
+  '@amplitude/plugin-page-url-enrichment-browser@0.7.13':
+    resolution: {integrity: sha512-c5PjB3ezBU6dTksXGCMKQurEN5O15+gOaJdun5IEZ52C5qO2XU9OUgH9ZCKp/vZKAWRo+P+oMTrSITWuh34GEw==}
 
   '@amplitude/plugin-page-view-tracking-browser@2.9.0':
     resolution: {integrity: sha512-PdG6ogdJA/XldHh1IgnsWTyCGseiHjBUXxMrMjY+MAfIyjtQZcGzNaaj237BG3ArsUa2YHxEpIGz5Uj68bQAlw==}
@@ -16151,6 +16157,11 @@ snapshots:
       tslib: 2.8.1
 
   '@amplitude/plugin-page-url-enrichment-browser@0.6.12':
+    dependencies:
+      '@amplitude/analytics-core': 2.46.0(patch_hash=43ca4c334ab06c5dfe42761c84bbb239f3a21dfeacb185dd1f2668328cf4b242)
+      tslib: 2.8.1
+
+  '@amplitude/plugin-page-url-enrichment-browser@0.7.13':
     dependencies:
       '@amplitude/analytics-core': 2.46.0(patch_hash=43ca4c334ab06c5dfe42761c84bbb239f3a21dfeacb185dd1f2668328cf4b242)
       tslib: 2.8.1
