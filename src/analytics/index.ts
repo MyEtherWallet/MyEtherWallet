@@ -58,7 +58,6 @@ export const initAnalytics = async (): Promise<void> => {
   if (initialized) {
     return
   }
-  initialized = true
 
   const consentToTrack = getConsentToTrack()
 
@@ -104,6 +103,10 @@ export const initAnalytics = async (): Promise<void> => {
       defaultMaskLevel: 'light',
     },
   })
+
+  // Latch only after every fallible step succeeds, so a failure leaves the
+  // flag unset and a later call can retry initialization.
+  initialized = true
 }
 
 /**
