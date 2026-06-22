@@ -985,7 +985,15 @@ const swapForEvm = async () => {
     await debounceFetchQuotes()
 
     if (!swapInfo.value) {
-      throw new Error(t('swap.error.pair-not-available'))
+      // Expected, user-facing condition: the selected pair has no available
+      // route/quote. Surface the message and track analytics, but do NOT throw
+      // into the catch below — that would report this to Sentry as noise.
+      generalError.value = t('swap.error.pair-not-available')
+      analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
+        ...analyticsPayload,
+        errorMsg: 'Pair currently not available',
+      })
+      return
     }
     const res = await generateEVMGasFeeQuote()
 
