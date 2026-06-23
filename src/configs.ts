@@ -17,8 +17,7 @@ const configs = {
     'GNOSIS',
     'ROOTSTOCK',
   ],
-  // MEW_REWARDS_API_URL: 'https://mew-rewards-prod.ethvm.dev',
-  MEW_REWARDS_API_URL: 'http://localhost:3000',
+  MEW_REWARDS_API_URL: 'https://mew-rewards-prod.ethvm.dev',
   MEW_LIVE_URLS: ['app.beta.myetherwallet.com', 'app.myetherwallet.com'],
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
