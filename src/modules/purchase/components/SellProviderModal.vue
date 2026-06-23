@@ -28,10 +28,7 @@
         </div>
 
         <!-- Error -->
-        <p
-          v-else-if="error"
-          class="text-error text-s-14 text-center py-8"
-        >
+        <p v-else-if="error" class="text-error text-s-14 text-center py-8">
           {{ error }}
         </p>
 
@@ -41,7 +38,9 @@
           <div
             class="w-full flex items-center gap-4 p-4 rounded-16 bg-bgBase border-2 border-black"
           >
-            <div class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left">
+            <div
+              class="flex flex-col gap-1 items-start flex-1 min-w-0 text-left"
+            >
               <p
                 class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
               >
@@ -90,8 +89,17 @@
             @click="onContinue"
           >
             {{ t('purchase.sell.provider.continue') }}
-            <arrow-top-right-on-square-icon class="w-[22px] h-[22px] flex-none" />
+            <arrow-top-right-on-square-icon
+              class="w-[22px] h-[22px] flex-none"
+            />
           </button>
+          <p class="text-info text-s-12 text-center -mt-5">
+            {{
+              t('purchase.select_provider.redirect', {
+                provider: providerNameFormatted,
+              })
+            }}
+          </p>
         </template>
       </div>
     </template>
@@ -103,7 +111,10 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
-import { formatFloatingPointValue, formatFiatValue } from '@/utils/numberFormatHelper'
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import { getProviderLogo } from '../helpers/purchaseProviders'
 import type { SellQuote } from '@/types/buyToken'
@@ -141,4 +152,9 @@ const onContinue = () => {
   window.open(props.quote.url, '_blank')
   isOpen.value = false
 }
+
+const providerNameFormatted = computed(() => {
+  const providerName = props.quote?.provider.toLowerCase() ?? ''
+  return providerName.charAt(0).toUpperCase() + providerName.slice(1)
+})
 </script>
