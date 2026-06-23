@@ -8,6 +8,7 @@ import {
   type StockTopMoverItem,
   type StockBannerItem,
   type GetTradableAssetsResponse,
+  type GetWebStocksInfoSummaryResponse,
 } from '@/mew_api/types'
 
 export const useStocksStore = defineStore('stocksStore', () => {
@@ -86,6 +87,41 @@ export const useStocksStore = defineStore('stocksStore', () => {
     )
   }
 
+  /**------------------------
+   * Helper Methods
+   -------------------------*/
+  const fetchUrlStock = ref<string>('')
+  const mapMissingStocksInfo = ref<
+    Record<string, GetWebStocksInfoSummaryResponse>
+  >({})
+
+  const fetchMissingStockData = async (
+    symbol: string,
+    address: string,
+    chain: string,
+  ): Promise<GetWebStocksInfoSummaryResponse | undefined> => {
+    const _symbol = symbol.toLowerCase()
+    if (!isStock(address, chain)) {
+      return undefined
+    }
+    fetchUrlStock.value = `/v1/web/pages/stocks-info/stocks/${_symbol}/summary`
+
+    if (!mapMissingStocksInfo.value[_symbol]) {
+      await executeFetchMissingStockData()
+      const data = stockData.value
+      if (!data) return undefined
+      mapMissingStocksInfo.value[_symbol] = data
+    }
+    return mapMissingStocksInfo.value[_symbol]
+  }
+
+  const { data: stockData, execute: executeFetchMissingStockData } =
+    useMEWFetch(fetchUrlStock, {
+      immediate: false,
+    })
+      .get()
+      .json<GetWebStocksInfoSummaryResponse>()
+
   return {
     // Overview
     isLoadingOverview,
@@ -102,5 +138,7 @@ export const useStocksStore = defineStore('stocksStore', () => {
     hasStocksAddressesData,
     // Helpers
     isStock,
+    fetchMissingStockData,
+    mapMissingStocksInfo,
   }
 })

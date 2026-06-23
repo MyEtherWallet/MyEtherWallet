@@ -65,7 +65,8 @@
       "continue": "Continue",
       "error": {
         "no_quotes": "No providers available for this selection. Try a different amount or currency."
-      }
+      },
+      "redirect": "You'll be redirected to {provider} to complete your purchase."
     }
   }
 }

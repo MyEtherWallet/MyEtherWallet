@@ -12,10 +12,16 @@
             id="dialogTitle"
             class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]"
           >
-            {{ t('purchase.select_provider.title', { amount: formattedFiatAmount }) }}
+            {{
+              t('purchase.select_provider.title', {
+                amount: formattedFiatAmount,
+              })
+            }}
           </h2>
           <p class="text-s-16 text-info leading-[22px]">
-            {{ t('purchase.select_provider.subtitle', { crypto: cryptoCurrency }) }}
+            {{
+              t('purchase.select_provider.subtitle', { crypto: cryptoCurrency })
+            }}
           </p>
         </div>
 
@@ -31,10 +37,7 @@
         </div>
 
         <!-- Error -->
-        <p
-          v-else-if="error"
-          class="text-error text-s-14 text-center py-8"
-        >
+        <p v-else-if="error" class="text-error text-s-14 text-center py-8">
           {{ error }}
         </p>
 
@@ -70,7 +73,8 @@
                   <p
                     class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
                   >
-                    {{ formattedCryptoAmount(quote) }} {{ quote.crypto_currency }}
+                    {{ formattedCryptoAmount(quote) }}
+                    {{ quote.crypto_currency }}
                   </p>
                   <p
                     class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-info"
@@ -83,7 +87,9 @@
                 <div class="flex flex-col gap-3 items-end flex-none">
                   <div class="flex items-center gap-0.5">
                     <div
-                      v-for="method in getPaymentMethodIcons(quote.payment_methods)"
+                      v-for="method in getPaymentMethodIcons(
+                        quote.payment_methods,
+                      )"
                       :key="method.alt"
                       class="bg-white border border-grey-10 rounded-[3px] w-[27px] h-[18px] overflow-hidden flex items-center justify-center"
                     >
@@ -145,8 +151,17 @@
             @click="onContinue"
           >
             {{ t('purchase.select_provider.continue') }}
-            <arrow-top-right-on-square-icon class="w-[22px] h-[22px] flex-none" />
+            <arrow-top-right-on-square-icon
+              class="w-[22px] h-[22px] flex-none"
+            />
           </button>
+          <p class="text-info text-s-12 text-center -mt-5">
+            {{
+              t('purchase.select_provider.redirect', {
+                provider: providerNameFormatted,
+              })
+            }}
+          </p>
         </template>
       </div>
     </template>
@@ -158,7 +173,10 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
-import { formatFloatingPointValue, formatFiatValue } from '@/utils/numberFormatHelper'
+import {
+  formatFloatingPointValue,
+  formatFiatValue,
+} from '@/utils/numberFormatHelper'
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import {
   getProviderLogo,
@@ -182,7 +200,9 @@ const selectedIndex = ref(0)
 
 watch(
   () => props.quotes,
-  () => { selectedIndex.value = 0 },
+  () => {
+    selectedIndex.value = 0
+  },
 )
 
 const selectedQuote = computed(() =>
@@ -207,4 +227,8 @@ const onContinue = () => {
   window.open(selectedQuote.value.url, '_blank')
   isOpen.value = false
 }
+const providerNameFormatted = computed(() => {
+  const providerName = selectedQuote.value?.provider.toLowerCase() ?? ''
+  return providerName.charAt(0).toUpperCase() + providerName.slice(1)
+})
 </script>
