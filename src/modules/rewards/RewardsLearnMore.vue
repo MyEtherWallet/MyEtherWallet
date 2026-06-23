@@ -3,7 +3,7 @@
     <template #content>
       <div class="px-6 py-6 flex flex-col">
         <!-- Title -->
-        <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3>
+        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3> -->
         <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
           Earn USDC rewards
         </h3>
@@ -153,7 +153,7 @@ watch(isOpenModel, val => {
 const infoItems = [
   {
     icon: 'swap',
-    text: 'Make a trade over $25.',
+    text: 'Make a trade over 25.',
   },
   // {
   //   icon: 'trophy',

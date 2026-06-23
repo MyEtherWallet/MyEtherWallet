@@ -62,7 +62,7 @@
         class="grow max-w-[150px]"
         @click="$emit('swap')"
       >
-        Swap $50+
+        Swap 50+
       </app-base-button>
       <button
         v-else
@@ -114,7 +114,7 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Trade and Earn $5</span
+            >Trade and Earn 5</span
           >
           <template
             v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
@@ -156,7 +156,7 @@
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
-        Trade $25+
+        Trade 25+
       </app-base-button>
       <button
         v-else
