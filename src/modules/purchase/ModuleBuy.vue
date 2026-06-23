@@ -1,54 +1,70 @@
 <template>
-  <div class="flex flex-col gap-3 h-full">
-    <purchase-token-select-card
-      v-if="displayChain"
-      :chain="displayChain"
-      :token="selectedToken"
-      @click="showTokenModal = true"
-    />
-    <purchase-amount-input
-      :label="t('purchase.buy.youre_buying')"
-      :currency="selectedFiat"
-      :amount="fiatAmount"
-      :estimate="formattedCryptoEstimate"
-      :is-loading="isFetchingEstimate"
-      :error-message="amountError"
-      :helper-message="amountHelper"
-      :quick-buttons="quickButtons"
-      @update:amount="onFiatAmountChange"
-      @open-currency="showCurrencyModal = true"
-      @focus="isInputFocused = true"
-      @blur="isInputFocused = false"
-    />
-
-    <button
-      type="button"
-      :class="[
-        'h-12 w-full rounded-24 px-4 flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] transition-colors',
-        ctaIsPrimary
-          ? 'bg-primary text-white hoverOpacityHasBG'
-          : 'bg-bgBase text-grey-50 cursor-not-allowed',
-      ]"
-      :disabled="ctaDisabled"
-      @click="onSubmit"
-    >
-      <span
-        v-if="ctaIsLoading"
-        class="inline-block w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"
+  <div class="relative flex flex-col h-full">
+    <div :class="['flex flex-col gap-3 h-full', blurClass]">
+      <purchase-token-select-card
+        v-if="displayChain"
+        :chain="displayChain"
+        :token="selectedToken"
+        @click="showTokenModal = true"
       />
-      <span v-else>{{ ctaLabel }}</span>
-    </button>
+      <purchase-amount-input
+        :label="t('purchase.buy.youre_buying')"
+        :currency="selectedFiat"
+        :amount="fiatAmount"
+        :estimate="formattedCryptoEstimate"
+        :is-loading="isFetchingEstimate"
+        :error-message="amountError"
+        :helper-message="amountHelper"
+        :quick-buttons="quickButtons"
+        @update:amount="onFiatAmountChange"
+        @open-currency="showCurrencyModal = true"
+        @focus="isInputFocused = true"
+        @blur="isInputFocused = false"
+      />
 
-    <a
-      href="https://help.myetherwallet.com/"
-      target="_blank"
-      rel="noopener"
-      class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
-    >
-      {{ t('purchase.buy.need_help') }}
-    </a>
+      <button
+        type="button"
+        :class="[
+          'h-12 w-full rounded-24 px-4 flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] transition-colors',
+          ctaIsPrimary
+            ? 'bg-primary text-white hoverOpacityHasBG'
+            : 'bg-bgBase text-grey-50 cursor-not-allowed',
+        ]"
+        :disabled="ctaDisabled"
+        @click="onSubmit"
+      >
+        <span
+          v-if="ctaIsLoading"
+          class="inline-block w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"
+        />
+        <span v-else>{{ ctaLabel }}</span>
+      </button>
 
-    <purchase-footer class="pt-2" />
+      <a
+        href="https://help.myetherwallet.com/"
+        target="_blank"
+        rel="noopener"
+        class="mt-auto self-center text-s-12 font-semibold text-primary tracking-[-0.24px] hover:underline"
+      >
+        {{ t('purchase.buy.need_help') }}
+      </a>
+
+      <purchase-footer class="pt-2" />
+    </div>
+
+    <purchase-unsupported-network
+      v-if="!supportedNetwork"
+      :title="t('purchase.buy.network_not_supported')"
+      :description="
+        t('purchase.buy.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="absolute inset-x-2 top-[88px] z-20"
+    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -91,10 +107,12 @@ import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
 import PurchaseFooter from './components/PurchaseFooter.vue'
+import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 
@@ -140,8 +158,31 @@ const isReady = computed(() => isWalletConnected.value && !isWatchOnly.value)
 
 const chainsStore = useChainsStore()
 const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
+const globalStore = useGlobalStore()
 
 const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(buyNetworks, walletChain, chains)
+
+const supportedNetworkChains = computed<Chain[]>(() =>
+  compatibleChainCodes.value
+    .map(code => purchaseChainToChain(code, chains.value))
+    .filter((c): c is Chain => !!c),
+)
+
+const supportedNetwork = computed(() => {
+  const code = v7ToPurchaseChain(walletChain.value?.name)
+  return !!code && compatibleChainCodes.value.includes(code)
+})
+
+const defaultSupportedChain = computed<Chain | null>(
+  () =>
+    supportedNetworkChains.value.find(c => c.name === 'ETHEREUM') ??
+    supportedNetworkChains.value[0] ??
+    null,
+)
+
+const blurClass = computed(() =>
+  supportedNetwork.value ? '' : 'blur-sm pointer-events-none opacity-60',
+)
 
 const accessStore = useAccessStore()
 
@@ -350,6 +391,14 @@ watch(walletChain, chain => {
       chain?.name
   ) {
     selectedToken.value = null
+  }
+})
+
+watch(selectedToken, token => {
+  if (!token) return
+  const tokenChain = purchaseChainToChain(token.chain, chains.value)
+  if (tokenChain && tokenChain.name !== walletChain.value?.name) {
+    globalStore.setSelectedNetwork(tokenChain.name)
   }
 })
 
