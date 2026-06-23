@@ -985,15 +985,7 @@ const swapForEvm = async () => {
     await debounceFetchQuotes()
 
     if (!swapInfo.value) {
-      // Expected, user-facing condition: the selected pair has no available
-      // route/quote. Surface the message and track analytics, but do NOT throw
-      // into the catch below — that would report this to Sentry as noise.
-      generalError.value = t('swap.error.pair-not-available')
-      analytics.trackSwapEventError(SwapEventError.OFFER_ERROR, {
-        ...analyticsPayload,
-        errorMsg: 'Pair currently not available',
-      })
-      return
+      throw new Error(t('swap.error.pair-not-available'))
     }
     const res = await generateEVMGasFeeQuote()
 
@@ -1001,6 +993,11 @@ const swapForEvm = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || 'Error fetching gas fees'
+    // "Pair not available" is an expected, user-facing condition (the selected
+    // pair has no route/quote). Keep the throw so generalError + analytics are
+    // handled here as designed, but skip the Sentry report to avoid noise.
+    const isPairNotAvailable =
+      e?.message === t('swap.error.pair-not-available')
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
@@ -1008,13 +1005,15 @@ const swapForEvm = async () => {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: Error fetching gas fees',
-          errorMessage: generalError.value,
-        },
-      })
+      if (!isPairNotAvailable) {
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
+          extra: {
+            title: 'SWAP: Error fetching gas fees',
+            errorMessage: generalError.value,
+          },
+        })
+      }
     }
   } finally {
     bestSwapLoadingOpen.value = false
