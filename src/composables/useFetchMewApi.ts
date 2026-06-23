@@ -61,11 +61,20 @@ export const useFetchMewApi = (
         if (isDevMode) {
           console.error('Fetch Error: ', data, error)
         }
-        if (
-          error &&
-          typeof error === 'string' &&
-          error.includes('AbortError')
-        ) {
+        // `ctx.error` from useFetch is an Error/DOMException object (name
+        // "AbortError"), not a string, when a request is aborted (refetch on
+        // input change, navigation, unmount, timeout). The old `typeof string`
+        // guard never matched, so aborts were needlessly retried 3x and then
+        // reported to Sentry as noise. Detect the abort from structured signals
+        // (name / known cancel code) rather than a loose message substring,
+        // which could swallow genuine errors that merely contain "abort".
+        const isAbortError =
+          (error instanceof DOMException && error.name === 'AbortError') ||
+          (error instanceof Error &&
+            ((error as Error & { code?: string }).name === 'AbortError' ||
+              (error as Error & { code?: string }).code === 'ERR_CANCELED')) ||
+          (typeof error === 'string' && error.includes('AbortError'))
+        if (isAbortError) {
           delete ctx.error
           return ctx
         }
