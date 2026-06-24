@@ -41,8 +41,12 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   const currentSession = computed(() => resolveCurrentSession(marketStatus.value))
 
   // True when ANY session is tradable (conventional or off-hours). Drives the
-  // global blur/closed overlay — only fully closed when this is false.
-  const isTradingSessionOpen = computed(() => currentSession.value !== null)
+  // global blur/closed overlay — only fully closed when this is false. While
+  // market status is still loading (null) we stay optimistic to avoid a blur
+  // flash on open (mirrors the previous `isOpen ?? true` behavior).
+  const isTradingSessionOpen = computed(
+    () => marketStatus.value === null || currentSession.value !== null,
+  )
 
   const updateCountdown = () => {
     if (!marketStatus.value?.nextOpen || isMarketOpen.value) {
