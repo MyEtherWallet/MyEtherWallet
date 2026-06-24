@@ -153,7 +153,7 @@ watch(isOpenModel, val => {
 const infoItems = [
   {
     icon: 'swap',
-    text: 'Make a trade over 25.',
+    text: 'Make a trade over $25.',
   },
   // {
   //   icon: 'trophy',
@@ -165,7 +165,7 @@ const infoItems = [
   },
   {
     icon: 'currency-dollar',
-    text: 'Earn 5 USDC per trade.',
+    text: 'Earn $5 USDC per trade.',
   },
   {
     icon: 'calendar',
