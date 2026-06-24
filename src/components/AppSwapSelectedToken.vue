@@ -401,7 +401,9 @@ watch(
   () => props.networkName,
   () => {
     if (tokens.value.length > 0) {
-      const top = searchResults.value[0]
+      // Prefer an enabled token; never default-select a disabled one. Fall back
+      // to the full list only when nothing is enabled.
+      const top = enabledResults.value[0] ?? searchResults.value[0]
       if (top) emit('update:selectedToken', top)
     }
   },

@@ -49,7 +49,9 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   )
 
   const updateCountdown = () => {
-    if (!marketStatus.value?.nextOpen || isMarketOpen.value) {
+    // Only count down in the fully-closed state (Case 3); any open session
+    // (conventional or off-hours) clears it.
+    if (!marketStatus.value?.nextOpen || isTradingSessionOpen.value) {
       countdownText.value = ''
       return
     }
@@ -126,12 +128,15 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
       ])
       marketStatus.value = statusResult
 
-      if (!marketStatus.value.isOpen) {
+      // Drive closure side-effects off the real tradable state (Case 3), so
+      // off-hours-open is treated as open and onMarketOpen only fires on a true
+      // closed -> open transition.
+      if (!isTradingSessionOpen.value) {
         wasMarketClosed = true
         startCountdown()
       } else {
         stopCountdown()
-        // Market just opened - call the callback if market was previously closed
+        // Trading just (re)opened - call the callback if it was previously closed
         if (wasMarketClosed && onMarketOpen) {
           wasMarketClosed = false
           await onMarketOpen()
