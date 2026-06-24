@@ -993,6 +993,11 @@ const swapForEvm = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || 'Error fetching gas fees'
+    // "Pair not available" is an expected, user-facing condition (the selected
+    // pair has no route/quote). Keep the throw so generalError + analytics are
+    // handled here as designed, but skip the Sentry report to avoid noise.
+    const isPairNotAvailable =
+      e?.message === t('swap.error.pair-not-available')
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
@@ -1000,13 +1005,15 @@ const swapForEvm = async () => {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: Error fetching gas fees',
-          errorMessage: generalError.value,
-        },
-      })
+      if (!isPairNotAvailable) {
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
+          extra: {
+            title: 'SWAP: Error fetching gas fees',
+            errorMessage: generalError.value,
+          },
+        })
+      }
     }
   } finally {
     bestSwapLoadingOpen.value = false
@@ -1472,6 +1479,11 @@ watch(
         swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
       })
       txProceeding.value = false
+    } else {
+      // No quote selected (e.g. pair has no route). Clear stale swap data so
+      // swapForEvm's `!swapInfo.value` guard reliably reports "pair not
+      // available" instead of proceeding with data from a previous quote.
+      swapInfo.value = null
     }
   },
   { deep: true },
