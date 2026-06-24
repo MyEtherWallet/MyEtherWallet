@@ -423,7 +423,7 @@ const loadList = async (page: number = 0) => {
             instance!,
           )
         : new BtcHardwareWallet(
-            addressResponse.address as HexPrefixedString,
+            addressResponse.publicKey as HexPrefixedString,
             chainName,
             i.toString(),
             selectedDerivation.value as PathType,
