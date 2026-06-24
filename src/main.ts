@@ -35,6 +35,10 @@ if (dsn) {
       'TypeError: Failed to fetch',
       'TypeError: NetworkError when attempting to fetch resource',
       'TypeError: Load failed',
+      // WalletConnect benign rejections when the user abandons the connection flow
+      'Proposal expired',
+      'Pairing expired',
+      'Request expired',
     ],
     integrations: [
       browserTracingIntegration({ router }),
