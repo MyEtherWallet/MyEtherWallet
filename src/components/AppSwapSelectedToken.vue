@@ -204,8 +204,8 @@
           </div>
         </div>
 
-        <!-- Disabled group (e.g. "Trading Paused for this session") -->
-        <div v-if="disabledResults.length" class="mt-4">
+        <!-- Disabled group (e.g. "Trading paused for this session") -->
+        <div v-if="disabledResults.length" class="mt-5">
           <p class="text-s-12 font-medium text-info mb-2 px-2">
             {{ disabledGroupLabel }}
           </p>

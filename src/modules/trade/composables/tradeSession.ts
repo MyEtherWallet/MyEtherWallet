@@ -3,7 +3,7 @@ import type { GetWebSwapOndoAssetsResponse } from '@/mew_api/types'
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
 
 /** Inline message shown when the selected asset can't trade in the current session. */
-export const TRADING_PAUSED_SESSION_MESSAGE = 'Trading Paused for this session'
+export const TRADING_PAUSED_SESSION_MESSAGE = 'Trading paused for this session'
 
 /**
  * Whether an asset's `tradableSessions` allows trading in the current session.
