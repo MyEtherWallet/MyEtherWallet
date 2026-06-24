@@ -1466,12 +1466,10 @@ watch(
 watch(
   () => selectedQuote.value,
   async provider => {
-    console.log(provider, 'provider?')
     if (provider) {
       // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
       txProceeding.value = true
       await getSwap(provider).then(async res => {
-        console.log(res, 'res')
         swapInfo.value = res
         const quoteRes = await (isBitcoinChain.value
           ? generateBTCGasFeeQuote()
