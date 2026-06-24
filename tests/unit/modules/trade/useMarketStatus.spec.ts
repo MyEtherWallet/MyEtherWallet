@@ -64,7 +64,7 @@ describe('resolveCurrentSession', () => {
     expect(resolveCurrentSession(make({ isOpen: false }))).toBeNull()
   })
 
-  it('prefers the conventional session over off-hours when both are open', () => {
+  it('prefers off-hours over the conventional session when both are open (Case 1 precedence)', () => {
     const status = make({
       isOpen: true,
       marketStatus: 'regular',
@@ -74,6 +74,19 @@ describe('resolveCurrentSession', () => {
         nextClose: '2026-06-23T23:55:00Z',
       },
     })
-    expect(resolveCurrentSession(status)).toBe('regular')
+    expect(resolveCurrentSession(status)).toBe('offhours')
+  })
+
+  it('uses the conventional session when off-hours closed but market open (Case 2)', () => {
+    const status = make({
+      isOpen: true,
+      marketStatus: 'postmarket',
+      offhours: {
+        isOpen: false,
+        nextOpen: '2026-06-22T00:05:00Z',
+        nextClose: '2026-06-23T23:55:00Z',
+      },
+    })
+    expect(resolveCurrentSession(status)).toBe('postmarket')
   })
 })
