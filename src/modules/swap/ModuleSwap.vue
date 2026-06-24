@@ -983,7 +983,6 @@ const swapForEvm = async () => {
   const analyticsPayload = getAnalyticsShared()
   try {
     await debounceFetchQuotes()
-
     if (!swapInfo.value) {
       throw new Error(t('swap.error.pair-not-available'))
     }
@@ -996,8 +995,7 @@ const swapForEvm = async () => {
     // "Pair not available" is an expected, user-facing condition (the selected
     // pair has no route/quote). Keep the throw so generalError + analytics are
     // handled here as designed, but skip the Sentry report to avoid noise.
-    const isPairNotAvailable =
-      e?.message === t('swap.error.pair-not-available')
+    const isPairNotAvailable = e?.message === t('swap.error.pair-not-available')
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
@@ -1468,10 +1466,12 @@ watch(
 watch(
   () => selectedQuote.value,
   async provider => {
+    console.log(provider, 'provider?')
     if (provider) {
       // disable proceeding while we fetch swap info for the selected quote to prevent user from clicking "proceed" before we have the necessary transaction data
       txProceeding.value = true
       await getSwap(provider).then(async res => {
+        console.log(res, 'res')
         swapInfo.value = res
         const quoteRes = await (isBitcoinChain.value
           ? generateBTCGasFeeQuote()
@@ -1479,11 +1479,6 @@ watch(
         swapGasFeeQuote.value = (quoteRes as QuotesResponse) || undefined
       })
       txProceeding.value = false
-    } else {
-      // No quote selected (e.g. pair has no route). Clear stale swap data so
-      // swapForEvm's `!swapInfo.value` guard reliably reports "pair not
-      // available" instead of proceeding with data from a previous quote.
-      swapInfo.value = null
     }
   },
   { deep: true },
