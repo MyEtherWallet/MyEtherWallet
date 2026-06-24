@@ -7,6 +7,11 @@ import type {
 } from '@/mew_api/types'
 import type { HardcodedTokenInfo } from '@/modules/trade/providers/oneinch_fusion/oneInchFusion'
 import { MAIN_TOKEN_CONTRACT } from '@/stores/walletStore'
+import {
+  isAssetTradableInSession,
+  getSessionDisabledAddresses,
+  TRADING_PAUSED_SESSION_MESSAGE,
+} from './tradeSession'
 
 // Individual asset type from the response arrays
 type TradableAsset = GetWebSwapOndoAssetsResponse[number]
@@ -20,6 +25,7 @@ interface UseTradeTokensOptions {
   tradableAssets: Ref<GetWebSwapOndoAssetsResponse | null>
   additionalBuyAssets: Ref<GetWebSwapOndoSupportingAssetsResponse | null>
   hardcodedTokensInfo: Ref<HardcodedTokenInfo[]>
+  currentSession: Ref<string | null>
 }
 
 export function useTradeTokens(options: UseTradeTokensOptions) {
@@ -31,6 +37,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     tradableAssets,
     additionalBuyAssets,
     hardcodedTokensInfo,
+    currentSession,
   } = options
 
   // Check if selected from token is a tradable asset (stock token)
@@ -72,35 +79,47 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     )
   })
 
-  // Check if the selected assets are tradeable (not paused)
+  // Check if the selected assets are tradeable: not paused (asset-level
+  // `tradable`) AND allowed in the current session (tradableSessions).
   const isSelectedAssetTradeable = computed(() => {
-    if (selectedFromAssetInfo.value && !selectedFromAssetInfo.value.tradable) {
-      return false
-    }
-    if (selectedToAssetInfo.value && !selectedToAssetInfo.value.tradable) {
-      return false
+    for (const info of [selectedFromAssetInfo.value, selectedToAssetInfo.value]) {
+      if (!info) continue
+      if (!info.tradable) return false
+      if (!isAssetTradableInSession(info, currentSession.value)) return false
     }
     return true
   })
 
-  // Get the pause message for non-tradeable assets
+  // Get the message for non-tradeable assets. Scheduled pause / halt
+  // (`tradable === false`) keeps its own reason; a session-only block returns
+  // the "Trading Paused for this session" copy.
   const nonTradeableAssetMessage = computed(() => {
-    if (selectedFromAssetInfo.value && !selectedFromAssetInfo.value.tradable) {
-      const pauseReason = selectedFromAssetInfo.value.pause?.reason?.message
-      return (
-        pauseReason ||
-        `${fromTokenSelected.value?.symbol} is currently not available for trading`
-      )
-    }
-    if (selectedToAssetInfo.value && !selectedToAssetInfo.value.tradable) {
-      const pauseReason = selectedToAssetInfo.value.pause?.reason?.message
-      return (
-        pauseReason ||
-        `${toTokenSelected.value?.symbol} is currently not available for trading`
-      )
+    const pairs = [
+      [selectedFromAssetInfo.value, fromTokenSelected.value] as const,
+      [selectedToAssetInfo.value, toTokenSelected.value] as const,
+    ]
+    for (const [info, token] of pairs) {
+      if (!info) continue
+      if (!info.tradable) {
+        return (
+          info.pause?.reason?.message ||
+          `${token?.symbol} is currently not available for trading`
+        )
+      }
+      if (!isAssetTradableInSession(info, currentSession.value)) {
+        return TRADING_PAUSED_SESSION_MESSAGE
+      }
     }
     return ''
   })
+
+  // Addresses to render disabled under the "Trading Paused for this session"
+  // group in the token selector (assets tradable globally but not in this session).
+  const disabledTokenAddresses = computed<string[]>(() =>
+    Array.from(
+      getSessionDisabledAddresses(tradableAssets.value, currentSession.value),
+    ),
+  )
 
   // Build toTokens list from tradable assets
   const toTokens = computed(() => {
@@ -158,6 +177,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     isSellingTradableAsset,
     isSelectedAssetTradeable,
     nonTradeableAssetMessage,
+    disabledTokenAddresses,
     toTokens,
     getDefaultFromToken,
   }

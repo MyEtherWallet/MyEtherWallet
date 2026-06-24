@@ -6,6 +6,7 @@
     "you_are_buying": "You are buying",
     "swap_from_to": "Swap From/To stocks",
     "market_closed": "Market Closed",
+    "trading_paused_session": "Trading Paused for this session",
     "opens_in": "Opens in {countdown}",
     "opening_soon": "Opening soon...",
     "network_not_supported": "Network Not Supported",

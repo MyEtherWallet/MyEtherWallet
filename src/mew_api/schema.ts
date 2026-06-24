@@ -1515,6 +1515,12 @@ export interface components {
                 code: string;
                 message: string;
             };
+            /** Off-hours (24/7) trading track — parallel to the conventional sessions. Optional until backend ships it (MEW-1954). */
+            offhours?: {
+                isOpen: boolean;
+                nextOpen: string;
+                nextClose: string;
+            };
             cached: {
                 /** Format: date-time */
                 timestamp: string;

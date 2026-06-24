@@ -11,6 +11,7 @@ import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 import { useGlobalStore } from '@/stores/globalStore'
+import { resolveCurrentSession } from './marketSession'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -30,6 +31,18 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   let wasMarketClosed = false
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
+
+  // Off-hours (24/7) track — true on weekends/holidays when off-hours is enabled.
+  const isOffHoursOpen = computed(
+    () => marketStatus.value?.offhours?.isOpen ?? false,
+  )
+
+  // The session key to test an asset's tradableSessions against (null = nothing tradable).
+  const currentSession = computed(() => resolveCurrentSession(marketStatus.value))
+
+  // True when ANY session is tradable (conventional or off-hours). Drives the
+  // global blur/closed overlay — only fully closed when this is false.
+  const isTradingSessionOpen = computed(() => currentSession.value !== null)
 
   const updateCountdown = () => {
     if (!marketStatus.value?.nextOpen || isMarketOpen.value) {
@@ -158,6 +171,9 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   return {
     marketStatus,
     isMarketOpen,
+    isOffHoursOpen,
+    currentSession,
+    isTradingSessionOpen,
     isTradingRestrictedInRegion,
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
