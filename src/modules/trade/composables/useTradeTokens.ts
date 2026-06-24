@@ -82,9 +82,24 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
   // Check if the selected assets are tradeable: not paused (asset-level
   // `tradable`) AND allowed in the current session (tradableSessions).
   const isSelectedAssetTradeable = computed(() => {
-    for (const info of [selectedFromAssetInfo.value, selectedToAssetInfo.value]) {
+    for (const info of [
+      selectedFromAssetInfo.value,
+      selectedToAssetInfo.value,
+    ]) {
+      //state no token selected, then skip
       if (!info) continue
+
+      //if current session is offhours and tradable in offhours, then skip
+      if (
+        currentSession.value === 'offhours' &&
+        isAssetTradableInSession(info, currentSession.value)
+      )
+        continue
+
+      //if asset is not tradable, then return false
       if (!info.tradable) return false
+
+      //  if asset is not tradable in current session, then return false
       if (!isAssetTradableInSession(info, currentSession.value)) return false
     }
     return true
@@ -99,15 +114,26 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       [selectedToAssetInfo.value, toTokenSelected.value] as const,
     ]
     for (const [info, token] of pairs) {
+      //not token input selected, then skip
       if (!info) continue
+
+      //if current session is offhours and tradable in offhours, then skip
+      if (
+        currentSession.value === 'offhours' &&
+        isAssetTradableInSession(info, currentSession.value)
+      )
+        continue
+
+      //if asset is not tradable in current session, then return the session pause message
+      if (!isAssetTradableInSession(info, currentSession.value)) {
+        return TRADING_PAUSED_SESSION_MESSAGE
+      }
+      //if asset is not tradable, then return the reason or default message
       if (!info.tradable) {
         return (
           info.pause?.reason?.message ||
           `${token?.symbol} is currently not available for trading`
         )
-      }
-      if (!isAssetTradableInSession(info, currentSession.value)) {
-        return TRADING_PAUSED_SESSION_MESSAGE
       }
     }
     return ''
@@ -115,11 +141,11 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
 
   // Addresses to render disabled under the "Trading Paused for this session"
   // group in the token selector (assets tradable globally but not in this session).
-  const disabledTokenAddresses = computed<string[]>(() =>
-    Array.from(
+  const disabledTokenAddresses = computed<string[]>(() => {
+    return Array.from(
       getSessionDisabledAddresses(tradableAssets.value, currentSession.value),
-    ),
-  )
+    )
+  })
 
   // Build toTokens list from tradable assets
   const toTokens = computed(() => {

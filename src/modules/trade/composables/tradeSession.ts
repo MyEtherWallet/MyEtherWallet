@@ -38,8 +38,24 @@ export const getSessionDisabledAddresses = (
   const disabled = new Set<string>()
   if (!assets) return disabled
   for (const asset of assets) {
-    if (!asset.tradable) continue
+    //current session if offhours and tradable in offhours, then skip
+    if (
+      currentSession === 'offhours' &&
+      isAssetTradableInSession(asset, currentSession)
+    )
+      continue
+
+    // If the asset is globally paused, add all its addresses wito the disable.
+    if (!asset.tradable) {
+      for (const addr of asset.addresses) {
+        if (addr.address) disabled.add(addr.address.toLowerCase())
+      }
+      continue
+    }
+    // If the asset is session-gated, add all its addresses to the disabled set.
     if (isAssetTradableInSession(asset, currentSession)) continue
+
+    // Add all addresses to the disabled set (lowercased).
     for (const addr of asset.addresses) {
       if (addr.address) disabled.add(addr.address.toLowerCase())
     }
