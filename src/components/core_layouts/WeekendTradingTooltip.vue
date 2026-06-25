@@ -148,13 +148,16 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', reposition)
 })
 
-// Show on mount if conditions are met
-tryShow()
-
-// Show when wallet connects
-watch(isWalletConnected, () => {
-  if (isWalletConnected.value) tryShow()
-})
+// Show once all conditions are met. Re-evaluated when the tooltip becomes due,
+// when the wallet connects, AND when the anchor ref populates after the parent
+// mounts — the last one covers an already-connected user on page load, whose
+// anchor is null during this component's setup. tryShow() guards on
+// shouldShowTooltip + anchor and is idempotent (visible guard).
+watch(
+  [shouldShowTooltip, isWalletConnected, () => props.anchor],
+  () => tryShow(),
+  { immediate: true },
+)
 
 // Auto-dismiss when the Trade panel opens
 watch(walletPanel, newVal => {
