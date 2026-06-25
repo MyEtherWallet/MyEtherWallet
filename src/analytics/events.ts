@@ -404,11 +404,11 @@ export type ClickSortPayload = {
 // =============================================================================
 
 export const WeekendTradingAnnouncementEvent = {
-  MODAL_SHOWN: 'Weekend_Trading_Announcement_Shown',
-  MODAL_CLICK_TRADE_NOW: 'Weekend_Trading_Announcement_Clicked_Trade_Now',
-  MODAL_DISMISSED: 'Weekend_Trading_Announcement_Dismissed',
-  TOOLTIP_SHOWN: 'Weekend_Trading_Tooltip_Shown',
-  TOOLTIP_DISMISSED: 'Weekend_Trading_Tooltip_Dismissed',
+  MODAL_SHOWN: '24/7_Banner_Shown',
+  MODAL_CLICK_TRADE_NOW: '24/7_Banner_Clicked_Trade',
+  MODAL_DISMISSED: '24/7_Banner_Dismissed',
+  TOOLTIP_SHOWN: '24/7_Toast_Shown',
+  TOOLTIP_DISMISSED: '24/7_Toast_Dismissed',
 } as const
 
 export type WeekendTradingAnnouncementEvent =
