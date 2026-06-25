@@ -1,4 +1,3 @@
-<!-- src/components/core_layouts/WeekendTradingTooltip.vue -->
 <template>
   <teleport to="#app">
     <transition

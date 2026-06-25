@@ -1,4 +1,3 @@
-// tests/unit/stores/weekendTradingAnnouncementStore.spec.ts
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'

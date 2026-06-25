@@ -1,4 +1,3 @@
-// src/stores/weekendTradingAnnouncementStore.ts
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'

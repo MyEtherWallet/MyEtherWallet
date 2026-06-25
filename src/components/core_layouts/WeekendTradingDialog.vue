@@ -1,4 +1,3 @@
-<!-- src/components/core_layouts/WeekendTradingDialog.vue -->
 <template>
   <app-dialog
     v-model:is-open="isOpen"
