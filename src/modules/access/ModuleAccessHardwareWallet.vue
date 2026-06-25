@@ -364,13 +364,42 @@ onMounted(async () => {
   }
 })
 
+// User dismissing the WebUSB/BLE device picker is an expected action, not an
+// error — the transport layer throws TransportOpenUserCancelled ("No device
+// selected"). Detect it so we don't toast or report it to Sentry as noise.
+const isUserCancelledTransport = (e: unknown): boolean => {
+  const name = (e as { name?: string })?.name
+  const message = e instanceof Error ? e.message : String(e ?? '')
+  return (
+    name === 'TransportOpenUserCancelled' ||
+    /no device selected/i.test(message)
+  )
+}
+
+const openTransport = async (getTransport: () => Promise<unknown>) => {
+  try {
+    await getTransport()
+    return true
+  } catch (e) {
+    if (isUserCancelledTransport(e)) return false
+    const errorMessage = e instanceof Error ? e.message : String(e)
+    toastStore.addToastMessage({
+      type: ToastType.Error,
+      text: t('error_connecting'),
+      textSecondary: errorMessage,
+    })
+    captureException(e, SENTRY_MODULE_TAGS.ACCESS)
+    return false
+  }
+}
+
 const connectViaUSB = async () => {
-  await getLedgerWebUSBTransport()
+  if (!(await openTransport(getLedgerWebUSBTransport))) return
   return unlockWallet()
 }
 
 const connectViaBluetooth = async () => {
-  await getLedgerBLETransport()
+  if (!(await openTransport(getLedgerBLETransport))) return
   return unlockWallet()
 }
 
