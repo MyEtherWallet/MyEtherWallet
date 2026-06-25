@@ -1,6 +1,8 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
+    z-index-overlay="z-[200]"
+    z-index-container="z-[201]"
     class="xs:max-w-[480px] xs:h-[382px] mx-auto rounded-32"
     @close-dialog="onCloseIcon"
   >
@@ -52,15 +54,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter, useRoute } from 'vue-router'
 import AppDialog from '@/components/AppDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
-import { useGlobalStore } from '@/stores/globalStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
-import configs from '@/configs'
+import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
 import qqq from '@/assets/images/weekend-trading/qqq.png'
 import googl from '@/assets/images/weekend-trading/googl.png'
@@ -71,20 +73,37 @@ import crcl from '@/assets/images/weekend-trading/crcl.png'
 const tokenIcons = [nvda, qqq, googl, spy, tsla, crcl]
 
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
-const globalStore = useGlobalStore()
-const { welcomeDialogDismissed } = storeToRefs(globalStore)
+const { isWalletUnlocked } = storeToRefs(walletStore)
 const walletMenu = useWalletMenuStore()
 const announcement = useWeekendTradingAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 
 const isOpen = ref(false)
 
-const maybeOpen = () => {
+const showAfter = ref(false)
+let openDialogTimeout: ReturnType<typeof setTimeout> | null = null
+
+const router = useRouter()
+const route = useRoute()
+onMounted(async () => {
+  await router.isReady()
+  if (!modalSeen.value) {
+    if (
+      !isWalletUnlocked.value &&
+      (route.name === ROUTES_ACCESS.ACCESS.NAME ||
+        route.name === ROUTES_CREATE_WALLET.CREATE_WALLET.NAME)
+    ) {
+      showAfter.value = true
+    } else {
+      openDialog()
+    }
+  }
+})
+
+const openDialog = () => {
   // Defer behind the Welcome dialog so a brand-new user isn't shown two modals
   // at once. In dev the Welcome dialog never mounts, so don't require it there.
-  const welcomeClear = welcomeDialogDismissed.value || configs.IS_DEV_MODE
-  if (isWalletConnected.value && !modalSeen.value && welcomeClear) {
+  if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()
     analytics.trackWeekendTradingAnnouncementEvent(
@@ -93,9 +112,21 @@ const maybeOpen = () => {
   }
 }
 
-watch([isWalletConnected, welcomeDialogDismissed], () => maybeOpen(), {
-  immediate: true,
-})
+const scheduleOpenDialog = () => {
+  if (openDialogTimeout) {
+    clearTimeout(openDialogTimeout)
+  }
+  openDialogTimeout = setTimeout(openDialog, 2000)
+}
+
+watch(
+  () => isWalletUnlocked.value,
+  () => {
+    if (isWalletUnlocked.value && showAfter.value) {
+      scheduleOpenDialog()
+    }
+  },
+)
 
 const onTradeNow = () => {
   isOpen.value = false
