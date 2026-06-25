@@ -161,15 +161,24 @@ class OneInchFusion {
           2n,
       }
     } catch (e: unknown) {
+      const status = (e as AxiosError).response?.status
       const response =
         ((e as AxiosError).response?.data as any)?.description || null
 
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.TRADE,
-        extra: {
-          title: 'TRADE: Error fetching quote from 1inch',
-        },
-      })
+      // 1inch returns 4xx (e.g. 400 Bad Request) for expected, user-facing quote
+      // failures: amount below minimum, illiquid/unsupported pair, invalid params.
+      // Those are surfaced to the user by the caller — don't report them to Sentry
+      // as noise. Only report genuinely unexpected errors (5xx / network / no response).
+      const isExpectedClientError =
+        typeof status === 'number' && status >= 400 && status < 500
+      if (!isExpectedClientError) {
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.TRADE,
+          extra: {
+            title: 'TRADE: Error fetching quote from 1inch',
+          },
+        })
+      }
       throw new Error(
         response || (e as Error).message || 'Failed to fetch quote from 1inch',
       )
