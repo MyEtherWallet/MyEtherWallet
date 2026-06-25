@@ -2,7 +2,8 @@
   <div class="relative">
     <magnifying-glass-icon
       :class="[
-        'absolute top-2 left-0 w-6 h-6 mx-3 cursor-pointer',
+        'absolute left-0 mx-3 cursor-pointer',
+        size === 'compact' ? 'top-2.5 w-5 h-5' : 'top-2 w-6 h-6',
         inFocusInput ? 'text-primary' : 'text-info',
       ]"
       @click="searchInput?.focus()"
@@ -13,7 +14,8 @@
       type="text"
       v-model="model"
       :class="[
-        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full pl-[46px] py-1 text-[17px] transition-colors',
+        'grow focus:outline-none focus:ring-0 border-none text-sm text-normal rounded-full h-10 w-full py-1 transition-colors',
+        size === 'compact' ? 'pl-10 text-[15px]' : 'pl-[46px] text-[17px]',
         bgClass,
       ]"
       :aria-label="placeholder"
@@ -21,7 +23,12 @@
       @focus="inFocusInput = true"
       @blur="inFocusInput = false"
     />
-    <div class="absolute top-1 right-3 flex align-center">
+    <div
+      :class="[
+        'absolute right-3 flex align-center',
+        size === 'compact' ? 'top-2.5' : 'top-1',
+      ]"
+    >
       <app-btn-icon
         @click="clearInputValue"
         :class="[
@@ -30,14 +37,15 @@
         ]"
         :label="$t('common.clear_icon')"
       >
-        <x-circle-icon class="text-primary w-6 h-6"
+        <x-circle-icon
+          :class="['text-primary', size === 'compact' ? 'w-5 h-5' : 'w-6 h-6']"
       /></app-btn-icon>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, type PropType } from 'vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
@@ -63,6 +71,13 @@ defineProps({
   bgClass: {
     type: String,
     default: 'bg-white',
+  },
+  /**
+   * @size 'default' (24px icon, text-17) or 'compact' (20px icon, text-15).
+   */
+  size: {
+    type: String as PropType<'default' | 'compact'>,
+    default: 'default',
   },
 })
 

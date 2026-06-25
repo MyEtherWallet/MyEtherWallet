@@ -63,6 +63,8 @@
     "symbol": "symbol",
     "rank": "rank",
     "price": "price",
+    "market_cap": "Market Cap",
+    "volume_24h": "24H Volume",
     "usd_balance": "USD Balance",
     "fee": "Fee",
     "copy_failed": "Copy failed",
@@ -73,6 +75,9 @@
     "buy_more": "Buy more {symbol}",
     "allocation": "Allocation",
     "retry": "Retry",
+    "buy": "Buy",
+    "sell": "Sell",
+    "buy_sell": "Buy/Sell",
     "coming_soon": "Coming soon",
     "overview": "Overview",
     "history": "History",
@@ -153,8 +158,6 @@
   "stake": "Stake",
   "crypto": "Crypto",
   "earn": "Earn",
-  "buy": "Buy",
-  "sell": "Sell",
   "buy-sell": "Buy & Sell",
   "tools": "Tools",
   "verify-message": "Verify Message",
@@ -256,5 +259,17 @@
     "search_placeholder": "Search by Name",
     "incompatible_tooltip": "To access these networks, use a different wallet or install the Enkrypt browser extension",
     "incompatible_title": "Networks incompatible with your wallet"
+  },
+  "search": {
+    "placeholder": "Search stocks, crypto",
+    "ondo_stocks": "Ondo stocks",
+    "crypto": "Crypto",
+    "by_market_cap": "by market cap",
+    "show_more": "Show more",
+    "show_less": "Show less",
+    "opened_recently": "Opened recently",
+    "cancel": "Cancel",
+    "no_results_title": "No matches found",
+    "no_results_subtitle": "Try a different symbol or name."
   }
 }

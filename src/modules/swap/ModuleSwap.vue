@@ -577,7 +577,8 @@ const toAmountError = computed(() => {
     qoutesError.value &&
     fromAmount.value !== '0' &&
     fromAmount.value !== '' &&
-    fromAmountError.value === ''
+    fromAmountError.value === '' &&
+    generalError.value === ''
   ) {
     return t('swap.error.no-quotes')
   }
@@ -982,7 +983,6 @@ const swapForEvm = async () => {
   const analyticsPayload = getAnalyticsShared()
   try {
     await debounceFetchQuotes()
-
     if (!swapInfo.value) {
       throw new Error(t('swap.error.pair-not-available'))
     }
@@ -992,6 +992,10 @@ const swapForEvm = async () => {
     bestOfferSelectionOpen.value = true
   } catch (e: any) {
     generalError.value = e?.message || 'Error fetching gas fees'
+    // "Pair not available" is an expected, user-facing condition (the selected
+    // pair has no route/quote). Keep the throw so generalError + analytics are
+    // handled here as designed, but skip the Sentry report to avoid noise.
+    const isPairNotAvailable = e?.message === t('swap.error.pair-not-available')
     if (isDevMode) {
       console.error('Error fetching gas fees:', e)
     } else {
@@ -999,13 +1003,15 @@ const swapForEvm = async () => {
         ...analyticsPayload,
         errorMsg: generalError.value,
       })
-      captureException(e, {
-        ...SENTRY_MODULE_TAGS.SWAP,
-        extra: {
-          title: 'SWAP: Error fetching gas fees',
-          errorMessage: generalError.value,
-        },
-      })
+      if (!isPairNotAvailable) {
+        captureException(e, {
+          ...SENTRY_MODULE_TAGS.SWAP,
+          extra: {
+            title: 'SWAP: Error fetching gas fees',
+            errorMessage: generalError.value,
+          },
+        })
+      }
     }
   } finally {
     bestSwapLoadingOpen.value = false
@@ -1058,10 +1064,14 @@ const fetchQuotes = async () => {
           quote =>
             BigInt(quote.minMax.minimumFrom.toString()) <= fromAmountBase,
         )
-
       selectedQuote.value = providers.value[0] || undefined
       if (providers.value.length === 0) {
         qoutesError.value = true
+        // if no providers were selected after filter minimum
+        // fromValue is probably too low
+        if (quotes.length > 0) {
+          generalError.value = t('swap.error.minimum-amount')
+        }
         const event = bestSwapLoadingOpen.value
           ? SwapEventError.OFFER_ERROR
           : SwapEventError.PRELIMINARY_ERROR

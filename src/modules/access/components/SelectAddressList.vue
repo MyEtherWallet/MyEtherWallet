@@ -75,7 +75,7 @@
       <app-btn-icon
         @click="emit('nextpage')"
         :label="$t('common.next_page')"
-        :disabled="isLoading"
+        :disabled="isLoading || walletList.length < 5"
       >
         <chevron-right-icon class="w-5 h-5" />
       </app-btn-icon>
