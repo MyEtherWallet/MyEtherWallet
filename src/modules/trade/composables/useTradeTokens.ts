@@ -128,16 +128,16 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       )
         continue
 
+      //if asset is not tradable in current session, then return the session pause message
+      if (!isAssetTradableInSession(info, currentSession.value)) {
+        return TRADING_PAUSED_SESSION_MESSAGE
+      }
       //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
         return (
           info.pause?.reason?.message ||
           `${token?.symbol} is currently not available for trading`
         )
-      }
-      //if asset is not tradable in current session, then return the session pause message
-      if (!isAssetTradableInSession(info, currentSession.value)) {
-        return TRADING_PAUSED_SESSION_MESSAGE
       }
     }
     return ''
