@@ -72,12 +72,26 @@ describe('getSessionDisabledAddresses', () => {
     expect(disabled.has('0xbbb')).toBe(false) // B is offhours-tradable
   })
 
-  it('excludes assets with tradable === false (scheduled pause keeps own message)', () => {
+  it('disables globally paused assets (tradable === false)', () => {
     const assets = [
       asset({ symbol: 'P', tradable: false, sessions: ['regular'], address: '0xPpP' }),
     ]
     const disabled = getSessionDisabledAddresses(assets, 'offhours')
+    expect(disabled.has('0xppp')).toBe(true)
+  })
+
+  it('off-hours override: paused asset that explicitly lists offhours stays enabled', () => {
+    const assets = [
+      asset({ symbol: 'P', tradable: false, sessions: ['offhours'], address: '0xPpP' }),
+    ]
+    const disabled = getSessionDisabledAddresses(assets, 'offhours')
     expect(disabled.has('0xppp')).toBe(false)
+  })
+
+  it('paused asset with missing tradableSessions is NOT enabled by the fallback during offhours', () => {
+    const assets = [asset({ tradable: false, address: '0xPpP' })] // no sessions
+    const disabled = getSessionDisabledAddresses(assets, 'offhours')
+    expect(disabled.has('0xppp')).toBe(true)
   })
 
   it('disables everything tradable when currentSession is null', () => {

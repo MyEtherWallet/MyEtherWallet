@@ -89,10 +89,12 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       //state no token selected, then skip
       if (!info) continue
 
-      //if current session is offhours and tradable in offhours, then skip
+      // Off-hours override: explicit `offhours` membership keeps the asset
+      // tradable even if globally paused (explicit, not the missing-field
+      // fallback, so a paused asset without off-hours support stays blocked).
       if (
         currentSession.value === 'offhours' &&
-        isAssetTradableInSession(info, currentSession.value)
+        !!info.primaryMarket?.tradableSessions?.includes('offhours')
       )
         continue
 
@@ -117,23 +119,25 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
       //not token input selected, then skip
       if (!info) continue
 
-      //if current session is offhours and tradable in offhours, then skip
+      // Off-hours override: explicit `offhours` membership keeps the asset
+      // tradable even if globally paused (explicit, not the missing-field
+      // fallback).
       if (
         currentSession.value === 'offhours' &&
-        isAssetTradableInSession(info, currentSession.value)
+        !!info.primaryMarket?.tradableSessions?.includes('offhours')
       )
         continue
 
-      //if asset is not tradable in current session, then return the session pause message
-      if (!isAssetTradableInSession(info, currentSession.value)) {
-        return TRADING_PAUSED_SESSION_MESSAGE
-      }
-      //if asset is not tradable, then return the reason or default message
+      //if asset is globally paused, then return the reason or default message
       if (!info.tradable) {
         return (
           info.pause?.reason?.message ||
           `${token?.symbol} is currently not available for trading`
         )
+      }
+      //if asset is not tradable in current session, then return the session pause message
+      if (!isAssetTradableInSession(info, currentSession.value)) {
+        return TRADING_PAUSED_SESSION_MESSAGE
       }
     }
     return ''

@@ -26,10 +26,11 @@ export const isAssetTradableInSession = (
 }
 
 /**
- * Addresses (lowercased) of assets that are globally tradable but NOT tradable
- * in the current session — i.e. the ones to render under the "Trading Paused
- * for this session" group. Assets with `tradable === false` (scheduled pause)
- * are intentionally excluded; they keep their existing pause messaging.
+ * Addresses (lowercased) to render disabled under the "Trading paused for this
+ * session" group. An asset is disabled when it is globally paused
+ * (`tradable === false`) or not tradable in the current session — UNLESS, during
+ * off-hours, it EXPLICITLY lists `offhours` in `tradableSessions` (the off-hours
+ * override keeps it tradable even when globally paused).
  */
 export const getSessionDisabledAddresses = (
   assets: TradableAsset[] | null,
@@ -37,28 +38,33 @@ export const getSessionDisabledAddresses = (
 ): Set<string> => {
   const disabled = new Set<string>()
   if (!assets) return disabled
-  for (const asset of assets) {
-    //current session if offhours and tradable in offhours, then skip
-    if (
-      currentSession === 'offhours' &&
-      isAssetTradableInSession(asset, currentSession)
-    )
-      continue
-
-    // If the asset is globally paused, add all its addresses wito the disable.
-    if (!asset.tradable) {
-      for (const addr of asset.addresses) {
-        if (addr.address) disabled.add(addr.address.toLowerCase())
-      }
-      continue
-    }
-    // If the asset is session-gated, add all its addresses to the disabled set.
-    if (isAssetTradableInSession(asset, currentSession)) continue
-
-    // Add all addresses to the disabled set (lowercased).
+  const addAll = (asset: TradableAsset) => {
     for (const addr of asset.addresses) {
       if (addr.address) disabled.add(addr.address.toLowerCase())
     }
+  }
+  for (const asset of assets) {
+    // Off-hours override: an asset that EXPLICITLY lists `offhours` stays
+    // tradable during off-hours even if globally paused. Must be an explicit
+    // membership (not the missing-field fallback in isAssetTradableInSession)
+    // so a paused asset without off-hours support doesn't slip through.
+    if (
+      currentSession === 'offhours' &&
+      !!asset.primaryMarket?.tradableSessions?.includes('offhours')
+    )
+      continue
+
+    // Globally paused (and not off-hours-enabled) -> disabled.
+    if (!asset.tradable) {
+      addAll(asset)
+      continue
+    }
+
+    // Tradable in the current session -> enabled (skip).
+    if (isAssetTradableInSession(asset, currentSession)) continue
+
+    // Otherwise session-gated -> disabled.
+    addAll(asset)
   }
   return disabled
 }
