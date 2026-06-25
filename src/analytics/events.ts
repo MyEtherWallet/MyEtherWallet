@@ -398,3 +398,18 @@ export type ClickSortPayload = {
   sortOption: string
   isFromView?: boolean
 }
+
+// =============================================================================
+// WEEKEND TRADING ANNOUNCEMENT (MEW-1958)
+// =============================================================================
+
+export const WeekendTradingAnnouncementEvent = {
+  MODAL_SHOWN: 'Weekend_Trading_Announcement_Shown',
+  MODAL_CLICK_TRADE_NOW: 'Weekend_Trading_Announcement_Clicked_Trade_Now',
+  MODAL_DISMISSED: 'Weekend_Trading_Announcement_Dismissed',
+  TOOLTIP_SHOWN: 'Weekend_Trading_Tooltip_Shown',
+  TOOLTIP_DISMISSED: 'Weekend_Trading_Tooltip_Dismissed',
+} as const
+
+export type WeekendTradingAnnouncementEvent =
+  (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]
