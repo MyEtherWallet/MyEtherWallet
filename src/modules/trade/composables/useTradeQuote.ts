@@ -121,9 +121,13 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       generalError.value = (e as Error).message || 'Failed to fetch quote'
       toAmount.value = '0'
+      // Expected client errors (1inch 4xx, flagged by OneInchFusion.getQuote)
+      // are surfaced to the user above but are pure Sentry noise — skip them.
+      const isExpectedClientError = !!(e as { expectedClientError?: boolean })
+        .expectedClientError
       if (isDevMode) {
         console.error('Error fetching quote:', e)
-      } else {
+      } else if (!isExpectedClientError) {
         captureException(e, {
           ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
