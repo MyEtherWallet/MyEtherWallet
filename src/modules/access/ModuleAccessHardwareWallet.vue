@@ -365,14 +365,17 @@ onMounted(async () => {
 })
 
 // User dismissing the WebUSB/BLE device picker is an expected action, not an
-// error — the transport layer throws TransportOpenUserCancelled ("No device
-// selected"). Detect it so we don't toast or report it to Sentry as noise.
+// error. WebUSB surfaces it as TransportOpenUserCancelled / "No device selected"
+// (or a DOMException NotFoundError); the BLE flow surfaces it as a generic
+// "...was cancelled" message. Detect all of these so we don't toast or report
+// the cancellation to Sentry as noise.
 const isUserCancelledTransport = (e: unknown): boolean => {
   const name = (e as { name?: string })?.name
   const message = e instanceof Error ? e.message : String(e ?? '')
   return (
     name === 'TransportOpenUserCancelled' ||
-    /no device selected/i.test(message)
+    name === 'NotFoundError' ||
+    /no device selected|was cancelled|user cancel(l)?ed/i.test(message)
   )
 }
 
