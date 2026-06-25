@@ -1,11 +1,12 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    class="xs:max-w-[420px] mx-auto rounded-32"
-    persistent
+    class="xs:max-w-[480px] xs:h-[382px] mx-auto rounded-32"
+    @close-dialog="onCloseIcon"
   >
     <template #content>
-      <div class="p-6 flex flex-col gap-5">
+      <div class="p-6 h-full flex flex-col justify-between">
+        <!-- Top: token icons + headline -->
         <div class="flex flex-col gap-4">
           <div class="flex items-center">
             <img
@@ -22,24 +23,28 @@
             <span class="text-primary">Unlocked!</span>
           </h1>
         </div>
-        <p class="text-s-16 leading-[22px] text-info">
-          SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon are now open for 24/7
-          trading. Trade the news, trade the tweets, make your stock moves any
-          time.
-        </p>
-        <div class="flex gap-2">
-          <button
-            class="flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold"
-            @click="onTradeNow"
-          >
-            Trade now
-          </button>
-          <button
-            class="flex-1 h-12 rounded-24 bg-grey-10 text-black text-s-16 font-semibold"
-            @click="onGotIt"
-          >
-            Got it
-          </button>
+        <!-- Footer: body + actions (mt on mobile where height is auto and
+             justify-between gives no gap; reset at xs+ where height is fixed) -->
+        <div class="flex flex-col gap-5 mt-8 xs:mt-0">
+          <p class="text-s-16 leading-[22px] text-info">
+            SPYon, QQQon, CRCLon, NVDAon, TSLAon, GOOGLon are now open for 24/7
+            trading. Trade the news, trade the tweets, make your stock moves any
+            time.
+          </p>
+          <div class="flex gap-2">
+            <button
+              class="flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold"
+              @click="onTradeNow"
+            >
+              Trade now
+            </button>
+            <button
+              class="flex-1 h-12 rounded-24 bg-grey-10 text-black text-s-16 font-semibold"
+              @click="onGotIt"
+            >
+              Got it
+            </button>
+          </div>
         </div>
       </div>
     </template>
@@ -102,6 +107,14 @@ const onTradeNow = () => {
 
 const onGotIt = () => {
   isOpen.value = false
+  analytics.trackWeekendTradingAnnouncementEvent(
+    WeekendTradingAnnouncementEvent.MODAL_DISMISSED,
+  )
+}
+
+// Close (X) icon / overlay click — AppDialog has already closed itself,
+// so just report the dismissal.
+const onCloseIcon = () => {
   analytics.trackWeekendTradingAnnouncementEvent(
     WeekendTradingAnnouncementEvent.MODAL_DISMISSED,
   )
