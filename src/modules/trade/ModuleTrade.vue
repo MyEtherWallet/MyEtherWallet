@@ -6,10 +6,10 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <!-- <rewards-small-banner
+        <rewards-small-banner
           :class="blurClass"
           location="small-banner-trade"
-        /> -->
+        />
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
@@ -385,7 +385,7 @@ import { parseUnits, formatUnits } from 'viem'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'

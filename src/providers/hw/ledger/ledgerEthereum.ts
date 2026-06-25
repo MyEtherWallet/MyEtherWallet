@@ -88,16 +88,12 @@ export class LedgerEthereum {
     const eth = new EthApp(this.transport!)
 
     if (!isHardenedLeaf) {
-      if (options.confirmAddress) {
-        const fullPath = `${options.pathType.basePath}/${options.pathIndex}`
-        const res = await eth.getAddress(fullPath, true)
-        return {
-          address: res.address.toLowerCase(),
-          publicKey: `0x${res.publicKey}`,
-        }
-      }
       if (!this.HDNodes[options.pathType.basePath]) {
-        const rootPub = await eth.getAddress(options.pathType.basePath, false, true)
+        const rootPub = await eth.getAddress(
+          options.pathType.basePath,
+          options.confirmAddress,
+          true,
+        )
         const hdKey = new HDKey()
         hdKey.publicKey = Buffer.from(rootPub.publicKey, 'hex')
         hdKey.chainCode = Buffer.from(rootPub.chainCode!, 'hex')
