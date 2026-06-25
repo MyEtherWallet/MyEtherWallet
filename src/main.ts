@@ -13,7 +13,7 @@ import {
 import App from './App.vue'
 import router from './router'
 import { Provider } from './providers'
-import { analytics } from './analytics'
+import { analytics, initAnalytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
@@ -76,6 +76,11 @@ app.use(router)
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
 app.use(autoAnimatePlugin)
+
+// Initialize analytics only after the router's initial navigation has resolved,
+// so the first auto-captured Page Viewed event includes the active route.
+// (Right after app.use(router) the current route is still START_LOCATION.)
+void router.isReady().then(() => initAnalytics())
 
 // Provide analytics for legacy inject() usage in Vue components
 app.provide(Provider.ANALYTICS, analytics)
