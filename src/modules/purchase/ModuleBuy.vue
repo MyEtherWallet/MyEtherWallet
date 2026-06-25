@@ -269,31 +269,60 @@ const fiatLimits = computed(() => {
 })
 
 const USD_AMOUNTS = [15, 50, 100, 250]
-const MIN_USD = 2
-const MAX_USD = 250
 
 const currencyRate = computed(() => exchangeRates.value.get(selectedFiat.value))
 
-const formatLocalizedAmount = (usd: number, rate: number): string => {
-  const value = Math.round(usd * rate)
+const formatAmount = (value: number): string => {
   const symbol = getCurrencySymbol(selectedFiat.value)
-  return `${symbol}${value.toLocaleString('en-US')}`
+  const amount = value.toLocaleString('en-US')
+  return symbol ? `${symbol}${amount}` : `${amount} ${selectedFiat.value}`
+}
+
+const minMaxButtons = (min: number, max: number) => [
+  { label: 'Min', value: min, usdValue: min },
+  { label: 'Max', value: max, usdValue: max },
+]
+
+const roundToStep = (value: number): number => {
+  const step = value < 100 ? 5 : value < 1000 ? 10 : 50
+  return Math.round(value / step) * step
+}
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, value))
+
+const buildButtons = (ideal: number[], min: number, max: number) => {
+  const rounded = ideal.map(v => clamp(roundToStep(v), min, max))
+  const increasing = rounded.every((v, i) => i === 0 || v > rounded[i - 1])
+  const values = increasing
+    ? rounded
+    : ideal.map(v => clamp(Math.round(v), min, max))
+  return values.map(value => ({
+    label: formatAmount(value),
+    value,
+    usdValue: value,
+  }))
 }
 
 const quickButtons = computed(() => {
   const rate = currencyRate.value
-  if (!rate) return []
-  if (Math.round(15 * rate) >= 1) {
-    return USD_AMOUNTS.map(usd => ({
-      label: formatLocalizedAmount(usd, rate),
-      value: Math.round(usd * rate),
-      usdValue: usd,
-    }))
-  }
-  return [
-    { label: 'Min', value: Math.round(MIN_USD * rate), usdValue: MIN_USD },
-    { label: 'Max', value: Math.round(MAX_USD * rate), usdValue: MAX_USD },
-  ]
+  const { min, max } = fiatLimits.value
+  if (!rate || max <= 0) return []
+
+  const raw = USD_AMOUNTS.map(usd => Math.round(usd * rate))
+  const largest = raw[raw.length - 1]
+
+  if (largest >= 1000) return minMaxButtons(min, max)
+
+  if (raw[0] >= min && largest <= max) return buildButtons(raw, min, max)
+
+  const lower = Math.max(min, raw[0])
+  const upper = Math.min(max, largest)
+  if (upper <= lower) return minMaxButtons(min, max)
+
+  const step = (upper - lower) / 3
+  const ideal = [0, 1, 2, 3].map(i => (i === 3 ? upper : lower + step * i))
+  return buildButtons(ideal, min, max)
 })
 
 const formattedCryptoEstimate = computed(() => {
