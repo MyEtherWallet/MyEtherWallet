@@ -3,8 +3,8 @@ const configs = {
     import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID ||
     '72299ce67c7d5c879dd8da2df1a6875b',
   MEW_API_URL: import.meta.env.VITE_MEW_API || 'https://mew-api-dev.ethvm.dev',
-  MEW_PURCHASE_BASE_URL: 'https://qa.mewwallet.dev',
-  MEW_PURCHASE_API: 'https://qa.mewwallet.dev/v5/purchase/info',
+  MEW_PURCHASE_BASE_URL: 'https://prod.mewwallet.dev',
+  MEW_PURCHASE_API: 'https://prod.mewwallet.dev/v5/purchase/info',
   MEW_EXCHANGE_RATES_API: 'https://mainnet.mewwallet.dev/v2/prices/exchange-rates',
   MEW_EMAIL: 'https://mainnet.mewwallet.dev/email-web',
   IS_DEV_MODE: import.meta.env.DEV,
