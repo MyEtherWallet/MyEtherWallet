@@ -61,7 +61,6 @@ import AppDialog from '@/components/AppDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
-import { useGlobalStore } from '@/stores/globalStore'
 import { useMarketStatus } from '@/modules/trade/composables'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
@@ -80,8 +79,8 @@ const walletMenu = useWalletMenuStore()
 const announcement = useWeekendTradingAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 
-const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
-const { fetchTradingRestriction } = useMarketStatus()
+const { isTradingRestrictedInRegion, fetchTradingRestriction } =
+  useMarketStatus()
 
 const isOpen = ref(false)
 

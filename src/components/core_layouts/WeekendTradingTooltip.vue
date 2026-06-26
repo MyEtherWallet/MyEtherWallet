@@ -73,7 +73,7 @@ import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
-import { useGlobalStore } from '@/stores/globalStore'
+import { useMarketStatus } from '@/modules/trade/composables'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
 import qqq from '@/assets/images/weekend-trading/qqq.png'
@@ -97,7 +97,7 @@ const { walletPanel } = storeToRefs(walletMenu)
 const walletStore = useWalletStore()
 const { isWalletConnected } = storeToRefs(walletStore)
 
-const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+const { isTradingRestrictedInRegion } = useMarketStatus()
 
 const visible = ref(false)
 const anchorRect = ref<DOMRect | null>(null)
