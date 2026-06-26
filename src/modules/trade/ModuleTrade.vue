@@ -20,7 +20,7 @@
           </div>
           <app-btn-text
             v-if="
-              isMarketOpen &&
+              isTradingSessionOpen &&
               isCurrentNetworkSupported &&
               !isTradingRestrictedInRegion
             "
@@ -57,6 +57,7 @@
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
                 :is-pristine="isPristine"
+                :disabled-tokens="disabledTokenAddresses"
                 sort-context="trade"
                 class="mt-2"
               >
@@ -126,6 +127,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :is-pristine="isPristine"
+              :disabled-tokens="disabledTokenAddresses"
               sort-context="trade"
               class="mt-2"
             />
@@ -137,7 +139,7 @@
           v-if="
             !isLoading &&
             marketStatus &&
-            !isMarketOpen &&
+            !isTradingSessionOpen &&
             isCurrentNetworkSupported
           "
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
@@ -261,11 +263,11 @@
         </p>
       </div>
 
-      <!-- Asset Not Tradeable Warning (only show when market is open) -->
+      <!-- Asset Not Tradeable Warning (only show when a session is open) -->
       <div
         v-if="
           !isLoading &&
-          isMarketOpen &&
+          isTradingSessionOpen &&
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
@@ -481,7 +483,8 @@ const isPristine = ref(true) // Track if form is in pristine (untouched/cleared)
 // --- Market Status ---
 const {
   marketStatus,
-  isMarketOpen,
+  currentSession,
+  isTradingSessionOpen,
   isTradingRestrictedInRegion,
   tradingRestrictedHelpUrl,
   countdownText,
@@ -636,16 +639,21 @@ watch(generalError, newVal => {
 })
 
 // --- Trade Tokens ---
-const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
-  useTradeTokens({
-    selectedFromChain,
-    fromTokens,
-    fromTokenSelected,
-    toTokenSelected,
-    tradableAssets,
-    additionalBuyAssets,
-    hardcodedTokensInfo,
-  })
+const {
+  isSelectedAssetTradeable,
+  nonTradeableAssetMessage,
+  disabledTokenAddresses,
+  toTokens,
+} = useTradeTokens({
+  selectedFromChain,
+  fromTokens,
+  fromTokenSelected,
+  toTokenSelected,
+  tradableAssets,
+  additionalBuyAssets,
+  hardcodedTokensInfo,
+  currentSession,
+})
 
 // --- Trade Quote ---
 // Note: We need to create isLoadingQuote first before using it in validation
@@ -662,7 +670,9 @@ const {
   fromAmount,
   toAmount,
   isWalletConnected,
-  isMarketOpen,
+  // Trading is allowed whenever ANY session is open (conventional or off-hours);
+  // per-asset session eligibility is enforced via isSelectedAssetTradeable.
+  isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
   supportedNetwork,
   isLoadingQuote,
@@ -679,7 +689,7 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   walletAddress: userAddress,
   wallet,
   selectedFromChain,
-  isMarketOpen,
+  isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
   hasPreQuoteError,
   generalError,
@@ -982,7 +992,9 @@ onBeforeMount(async () => {
 })
 
 const blurClass = computed(() => {
-  return !isMarketOpen.value ||
+  // Blur only when NO session is tradable (conventional closed AND off-hours
+  // closed). Off-hours open keeps the UI interactive with per-asset gating.
+  return !isTradingSessionOpen.value ||
     !isCurrentNetworkSupported.value ||
     isTradingRestrictedInRegion.value
     ? 'blur-sm pointer-events-none opacity-60'

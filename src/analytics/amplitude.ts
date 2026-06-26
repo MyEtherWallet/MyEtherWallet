@@ -50,6 +50,7 @@ import type {
   GlobalSearchEvent,
   GlobalSearchSelectTokenPayload,
   GlobalSearchTokenNotFoundPayload,
+  WeekendTradingAnnouncementEvent,
 } from './events'
 import {
   type BalanceBracket,
@@ -467,6 +468,18 @@ export class Analytics {
     return this._track(event, {
       ...payload,
     })
+  }
+
+  /**
+   * Send a Weekend Trading Announcement analytics event to Amplitude
+   *
+   * @param event   Type of WeekendTradingAnnouncementEvent
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackWeekendTradingAnnouncementEvent = (
+    event: WeekendTradingAnnouncementEvent,
+  ): Promise<void> => {
+    return this._track(event, {})
   }
 
   /**

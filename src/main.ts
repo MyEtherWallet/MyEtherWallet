@@ -69,7 +69,35 @@ if (dsn) {
  * PINIA
  -------------------------*/
 const pinia = createPinia()
-pinia.use(createSentryPiniaPlugin())
+pinia.use(
+  createSentryPiniaPlugin({
+    // Strip the live wallet instance from the walletStore state before it is
+    // attached to Sentry events. The wallet holds provider/account internals
+    // (and potentially sensitive material) that must never leave the client.
+    stateTransformer: state => {
+      const walletStore = state.walletStore as
+        | Record<string, unknown>
+        | undefined
+      if (walletStore && 'wallet' in walletStore) {
+        return {
+          ...state,
+          walletStore: {
+            ...walletStore,
+            wallet: '[Filtered]',
+          },
+          purchase: null,
+          chainsStore: {
+            ...state.chainsStore as | Record<string, unknown> | undefined,
+            allChains: null, // too large to send
+            chains: null // too large to send
+
+          }
+        }
+      }
+      return state
+    },
+  }),
+)
 
 app.use(pinia)
 app.use(router)
