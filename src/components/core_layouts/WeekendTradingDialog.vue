@@ -61,6 +61,8 @@ import AppDialog from '@/components/AppDialog.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useMarketStatus } from '@/modules/trade/composables'
 import { analytics, WeekendTradingAnnouncementEvent } from '@/analytics'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import nvda from '@/assets/images/weekend-trading/nvda.png'
@@ -78,6 +80,9 @@ const walletMenu = useWalletMenuStore()
 const announcement = useWeekendTradingAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
 
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+const { fetchTradingRestriction } = useMarketStatus()
+
 const isOpen = ref(false)
 
 const showAfter = ref(false)
@@ -87,6 +92,11 @@ const router = useRouter()
 const route = useRoute()
 onMounted(async () => {
   await router.isReady()
+  // Don't surface the 24/7 trading announcement where trading is restricted.
+  // Awaiting here (the result is cached per session) avoids flashing the modal
+  // before the restriction status resolves.
+  await fetchTradingRestriction()
+  if (isTradingRestrictedInRegion.value) return
   if (!modalSeen.value) {
     if (
       !isWalletUnlocked.value &&
@@ -103,6 +113,7 @@ onMounted(async () => {
 const openDialog = () => {
   // Defer behind the Welcome dialog so a brand-new user isn't shown two modals
   // at once. In dev the Welcome dialog never mounts, so don't require it there.
+  if (isTradingRestrictedInRegion.value) return
   if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()
