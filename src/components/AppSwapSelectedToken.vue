@@ -305,7 +305,11 @@ const emit = defineEmits<{
 }>()
 
 const store = useWalletStore()
-const { isLoadingBalances, isWalletConnected, allTokens: walletTokens } = storeToRefs(store)
+const {
+  isLoadingBalances,
+  isWalletConnected,
+  allTokens: walletTokens,
+} = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
@@ -330,7 +334,10 @@ const { y } = useScroll(scrollContainer)
 
 onMounted(() => {
   if (!props.isFromView || !isWalletConnected.value) {
-    if (props.sortContext !== 'trade') {
+    if (
+      props.sortContext !== 'trade' ||
+      (props.isFromView && !isWalletConnected.value)
+    ) {
       activeSortValue.value = SortValueString.RANK
     } else {
       activeSortValue.value = SortValueString.PRICE
@@ -405,7 +412,6 @@ const sortOptions = computed(() => {
       ...shared,
       { value: SortValueString.USD, label: t('common.usd_balance') },
       { value: SortValueString.BALANCE, label: t('common.balance') },
-      ...marketOptions,
     ]
   }
 
@@ -474,12 +480,14 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
-      market_cap: walletTokens.value.find(
-        wt => wt.contract?.toLowerCase() === token.address?.toLowerCase()
-      )?.market_cap ?? 0,
-      volume24h: walletTokens.value.find(
-        wt => wt.contract?.toLowerCase() === token.address?.toLowerCase()
-      )?.volume_24h ?? 0,
+      market_cap:
+        walletTokens.value.find(
+          wt => wt.contract?.toLowerCase() === token.address?.toLowerCase(),
+        )?.market_cap ?? 0,
+      volume24h:
+        walletTokens.value.find(
+          wt => wt.contract?.toLowerCase() === token.address?.toLowerCase(),
+        )?.volume_24h ?? 0,
     }
   })
 
