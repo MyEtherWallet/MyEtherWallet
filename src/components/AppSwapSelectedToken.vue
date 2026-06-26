@@ -117,9 +117,9 @@
           <div class="h-px bg-grey-10 w-full mb-2"></div>
         </div>
 
-        <div v-if="searchResults.length" class="flex flex-col gap-1">
+        <div v-if="enabledResults.length" class="flex flex-col gap-1">
           <button
-            v-for="token in searchResults"
+            v-for="token in enabledResults"
             :key="token.address"
             class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="[
@@ -193,7 +193,7 @@
             </div>
           </button>
         </div>
-        <div v-else>
+        <div v-else-if="!disabledResults.length">
           <div class="flex justify-center items-center h-[400px] text-grey-30">
             <p v-if="searchInput !== ''">
               {{ $t('select_token.no_tokens_match') }}
@@ -203,6 +203,53 @@
             </p>
           </div>
         </div>
+
+        <!-- Disabled group (e.g. "Trading paused for this session") -->
+        <div v-if="disabledResults.length" class="mt-5">
+          <p class="text-s-12 font-medium text-info mb-2 px-2">
+            {{ disabledGroupLabel }}
+          </p>
+          <div class="flex flex-col gap-1">
+            <div
+              v-for="token in disabledResults"
+              :key="token.address"
+              class="flex items-center justify-between px-2 py-3 rounded-20 opacity-50 cursor-not-allowed select-none"
+              aria-disabled="true"
+            >
+              <div class="flex items-center">
+                <app-token-logo
+                  :url="token.logoURI"
+                  :symbol="token.symbol"
+                  :address="
+                    networkName
+                      ? { address: token.address, network: networkName }
+                      : undefined
+                  "
+                  class="shrink-0 mr-4"
+                />
+                <div class="text-left">
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :address="
+                      networkName
+                        ? { address: token.address, network: networkName }
+                        : undefined
+                    "
+                  />
+                  <h2 class="text-s-12 text-info whitespace-nowrap">
+                    {{ truncate(token.name, 20) }}
+                  </h2>
+                </div>
+              </div>
+              <div v-if="token.price !== 0" class="text-right">
+                <p class="font-medium text-black">
+                  $ {{ token.price ? formatFiatValue(token.price).value : '0.00' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div>
           <div
             v-show="tokens.length > paginatedTokens.length && !searchInput"
@@ -296,6 +343,16 @@ const props = defineProps({
     type: String as () => 'trade' | 'swap' | undefined,
     default: undefined,
   },
+  // Token addresses (any case) to render disabled under `disabledGroupTitle`.
+  // Generic so Trade (and later Swap) can gray out non-selectable tokens.
+  disabledTokens: {
+    type: Array as () => string[],
+    default: () => [],
+  },
+  disabledGroupTitle: {
+    type: String,
+    required: false,
+  },
 })
 
 const { t } = useI18n()
@@ -351,7 +408,9 @@ watch(
   () => props.networkName,
   () => {
     if (tokens.value.length > 0) {
-      const top = searchResults.value[0]
+      // Prefer an enabled token; never default-select a disabled one. Fall back
+      // to the full list only when nothing is enabled.
+      const top = enabledResults.value[0] ?? searchResults.value[0]
       if (top) emit('update:selectedToken', top)
     }
   },
@@ -517,6 +576,23 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
 
   return sorted.slice(0, endingPagination.value)
 })
+
+// Disabled-token grouping: split the visible results into the normal
+// (selectable) list and a disabled group rendered at the bottom.
+const disabledSet = computed(
+  () => new Set(props.disabledTokens.map(a => a.toLowerCase())),
+)
+const isTokenDisabled = (token: NewTokenInfo) =>
+  disabledSet.value.has(token.address?.toLowerCase())
+const enabledResults = computed(() =>
+  searchResults.value.filter(t => !isTokenDisabled(t)),
+)
+const disabledResults = computed(() =>
+  searchResults.value.filter(t => isTokenDisabled(t)),
+)
+const disabledGroupLabel = computed(
+  () => props.disabledGroupTitle || t('trade.trading_paused_session'),
+)
 
 const loadMoreItems = () => {
   loadingMoreItems.value = true

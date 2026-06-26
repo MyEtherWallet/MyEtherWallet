@@ -548,6 +548,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/coins/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["GetCoinImages"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/web/tokens-watchlist": {
         parameters: {
             query?: never;
@@ -1368,6 +1384,21 @@ export interface components {
                  * @description Timestamp of the market status data from the Ondo GM API
                  */
                 timestamp: string;
+                /** @description Off-hours trading window status from the Ondo GM API */
+                offhours: {
+                    /** @description Whether the off-hours trading window is open */
+                    isOpen: boolean;
+                    /**
+                     * Format: date-time
+                     * @description ISO 8601 timestamp when the next off-hours window opens
+                     */
+                    nextOpen: string;
+                    /**
+                     * Format: date-time
+                     * @description ISO 8601 timestamp when the current off-hours window closes
+                     */
+                    nextClose: string;
+                };
             };
             /** @description When the trading window closes. Only set when open is true and the next session is not tradable for the requested symbols. Null when not open, or when all upcoming sessions are tradable. */
             closesAt: null | {
@@ -1515,6 +1546,13 @@ export interface components {
                 code: string;
                 message: string;
             };
+            offhours: {
+                isOpen: boolean;
+                /** Format: date-time */
+                nextOpen: string;
+                /** Format: date-time */
+                nextClose: string;
+            };
             cached: {
                 /** Format: date-time */
                 timestamp: string;
@@ -1526,6 +1564,13 @@ export interface components {
                 reason: null | {
                     code: string;
                     message: string;
+                };
+                offhours: {
+                    isOpen: boolean;
+                    /** Format: date-time */
+                    nextOpen: string;
+                    /** Format: date-time */
+                    nextClose: string;
                 };
             };
         };
@@ -2026,6 +2071,12 @@ export interface components {
                 sparklineIn7d: null | number[];
             }[];
         };
+        GetCoinImagesResponse: {
+            [key: string]: {
+                url: string | null;
+                marketCap: number | null;
+            };
+        };
         GetWebTokensWatchlistResponse: {
             coinId: string;
             name: string;
@@ -2226,6 +2277,9 @@ export interface components {
             marketCap?: number;
             priceChangePercentage24h?: number;
             sparklineIn7d?: null | number[];
+        };
+        GetCoinImagesRequest: {
+            coinIds: string[];
         };
         GetEvmTransactionEstimateRequest: {
             address: components["schemas"]["EvmAddressInput"];
@@ -2735,6 +2789,14 @@ export interface components {
                 "application/json": components["schemas"]["GetWebTokensTableResponse"];
             };
         };
+        GetCoinImagesSuccess: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["GetCoinImagesResponse"];
+            };
+        };
         GetWebTokensWatchlistSuccess: {
             headers: {
                 [name: string]: unknown;
@@ -3133,6 +3195,11 @@ export interface components {
         QueryEvmAddresses: string | components["schemas"]["EvmAddressInput"][];
     };
     requestBodies: {
+        GetCoinImages: {
+            content: {
+                "application/json": components["schemas"]["GetCoinImagesRequest"];
+            };
+        };
         GetEvmTransactionEstimate: {
             content: {
                 "application/json": components["schemas"]["GetEvmTransactionEstimateRequest"];
@@ -3675,6 +3742,18 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: components["responses"]["GetWebTokensTableSuccess"];
+        };
+    };
+    GetCoinImages: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: components["requestBodies"]["GetCoinImages"];
+        responses: {
+            200: components["responses"]["GetCoinImagesSuccess"];
         };
     };
     GetWebTokensWatchlist: {

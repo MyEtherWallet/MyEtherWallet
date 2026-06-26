@@ -22,6 +22,7 @@
             </button>
             <!-- Trade button -->
             <button
+              ref="tradeBtnRef"
               @click="openPanel('trade')"
               :class="[
                 walletPanel === 'trade' && isOpenSideMenu
@@ -187,6 +188,7 @@
         </div>
       </div>
     </transition>
+    <weekend-trading-tooltip :anchor="tradeBtnRef" />
   </div>
 </template>
 <script setup lang="ts">
@@ -215,6 +217,7 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
 import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
@@ -275,6 +278,7 @@ const openPanel = (panel: WalletPanel) => {
   })
 }
 
+const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
 
 const comingSoon = computed(() => {
