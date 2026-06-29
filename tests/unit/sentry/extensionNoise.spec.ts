@@ -23,6 +23,13 @@ describe('isExtensionOrProviderError', () => {
   it('is true when the stack points at any browser extension scheme', () => {
     expect(
       isExtensionOrProviderError({
+        // no benign code → forces the chrome-extension stack branch
+        message: 'boom',
+        stack: 'Error\n    at s (chrome-extension://abc/background.js:1:1)',
+      }),
+    ).toBe(true)
+    expect(
+      isExtensionOrProviderError({
         message: 'boom',
         stack: 'Error\n    at moz-extension://abc/background.js:1:1',
       }),
