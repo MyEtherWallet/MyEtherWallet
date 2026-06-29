@@ -35,6 +35,11 @@ if (dsn) {
       'TypeError: Failed to fetch',
       'TypeError: NetworkError when attempting to fetch resource',
       'TypeError: Load failed',
+      // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
+      // assets that no longer exist after a redeploy. These are already
+      // auto-recovered by router.onError (reload once), so they are noise.
+      'Unable to preload CSS',
+      'Failed to fetch dynamically imported module',
     ],
     integrations: [
       browserTracingIntegration({ router }),
