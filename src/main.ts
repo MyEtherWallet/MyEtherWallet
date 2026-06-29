@@ -17,6 +17,7 @@ import { analytics, initAnalytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
+import { isExtensionOrProviderError } from '@/sentry/extensionNoise'
 
 const app = createApp(App)
 
@@ -36,6 +37,17 @@ if (dsn) {
       'TypeError: NetworkError when attempting to fetch resource',
       'TypeError: Load failed',
     ],
+    // Drop errors thrown inside browser extensions (catches events that DO
+    // carry parsed extension frames).
+    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
+    // "provider disconnected"). These surface as serialized plain objects with
+    // no parsed frames, so denyUrls can't catch them — inspect the original
+    // exception instead. Genuine app errors are unaffected.
+    beforeSend(event, hint) {
+      if (isExtensionOrProviderError(hint?.originalException)) return null
+      return event
+    },
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration({
