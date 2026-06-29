@@ -7,6 +7,7 @@ import type { Chain } from '@/mew_api/types'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
+import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -123,7 +124,10 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
       toAmount.value = '0'
       if (isDevMode) {
         console.error('Error fetching quote:', e)
-      } else {
+      } else if (!isTransientRpcError(e)) {
+        // Transient RPC/WebSocket drops (e.g. the allowance read over
+        // wss://nodes.mewapi.io) are surfaced to the user above but are pure
+        // Sentry noise — only report genuine quote failures.
         captureException(e, {
           ...SENTRY_MODULE_TAGS.TRADE,
           extra: {
