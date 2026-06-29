@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { isTransientSwapInitError } from '@/composables/swapInitError'
 
 describe('isTransientSwapInitError', () => {
-  it('is true for a JSON SyntaxError (SDK parsed a non-JSON upstream body)', () => {
+  it('is true for a JSON-parse SyntaxError (SDK parsed a non-JSON upstream body)', () => {
     // The exact production case: JSON.parse("400: Invalid request")
     expect(
       isTransientSwapInitError(
@@ -11,6 +11,18 @@ describe('isTransientSwapInitError', () => {
         ),
       ),
     ).toBe(true)
+    // Firefox / Safari phrasings also mention "JSON"
+    expect(
+      isTransientSwapInitError(
+        new SyntaxError('JSON.parse: unexpected character at line 1 column 1'),
+      ),
+    ).toBe(true)
+  })
+
+  it('is false for a SyntaxError unrelated to JSON parsing', () => {
+    expect(
+      isTransientSwapInitError(new SyntaxError('Unexpected token <')),
+    ).toBe(false)
   })
 
   it('is true for network errors (various phrasings)', () => {

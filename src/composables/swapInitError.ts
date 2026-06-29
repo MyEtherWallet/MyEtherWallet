@@ -8,8 +8,12 @@
  * are expected external flakiness, not bugs.
  */
 export function isTransientSwapInitError(e: unknown): boolean {
-  if (e instanceof SyntaxError) return true
   const msg = e instanceof Error ? e.message.toLowerCase() : ''
+  // Only a JSON-parse SyntaxError counts as the transient upstream case (the
+  // SDK JSON.parse'd a non-JSON body). Every JSON.parse error mentions "json"
+  // across V8/Firefox/Safari, so this excludes unrelated SyntaxErrors that
+  // would otherwise be retried and silently dropped from Sentry.
+  if (e instanceof SyntaxError) return msg.includes('json')
   return (
     msg.includes('network') ||
     msg.includes('failed to fetch') ||
