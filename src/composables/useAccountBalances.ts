@@ -28,7 +28,9 @@ export function useAccountBalances() {
       let usdValue = 0
       let tokenCount = 0
       for (const t of result) {
-        const bal = Number(formatUnits(BigInt(t.balance ?? '0'), t.decimals ?? 0))
+        const raw = t.balance ?? '0'
+        if (!/^\d+$/.test(raw)) continue
+        const bal = Number(formatUnits(BigInt(raw), t.decimals ?? 0))
         if (bal > 0) {
           tokenCount += 1
           usdValue += bal * Number(t.price ?? 0)

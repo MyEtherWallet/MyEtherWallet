@@ -35,4 +35,18 @@ describe('useAccountBalances', () => {
     await fetchFor([{ id: 'EVM:0x9', chainName: 'ETHEREUM', address: '0x9' }])
     expect(balances.value['EVM:0x9']).toEqual({ usdValue: 0, tokenCount: 0 })
   })
+
+  it('skips malformed token balances and still counts valid tokens for the address', async () => {
+    fetchMock.mockResolvedValue({
+      result: [
+        { balance: 'N/A', decimals: 0, price: 5 }, // malformed — should be skipped
+        { balance: '', decimals: 0, price: 5 }, // empty string — should be skipped
+        { balance: '3', decimals: 0, price: 2 }, // valid: 6 USD
+      ],
+    })
+    const { balances, fetchFor } = useAccountBalances()
+    await fetchFor([{ id: 'EVM:0xA', chainName: 'ETHEREUM', address: '0xA' }])
+    expect(balances.value['EVM:0xA'].usdValue).toBe(6)
+    expect(balances.value['EVM:0xA'].tokenCount).toBe(1)
+  })
 })
