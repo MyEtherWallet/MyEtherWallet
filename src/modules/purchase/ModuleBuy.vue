@@ -352,7 +352,10 @@ const ctaDisabled = computed(
 )
 
 const ctaIsLoading = computed(
-  () => isReady.value && amountIsValid.value && isFetchingQuotes.value,
+  () =>
+    isReady.value &&
+    amountIsValid.value &&
+    (isFetchingEstimate.value || isFetchingQuotes.value),
 )
 
 const ctaLabel = computed(() => {
