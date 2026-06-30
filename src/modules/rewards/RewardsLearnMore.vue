@@ -153,7 +153,7 @@ watch(isOpenModel, val => {
 const infoItems = [
   {
     icon: 'swap',
-    text: 'Make a trade over $25.',
+    text: 'Make a trade over $35.',
   },
   // {
   //   icon: 'trophy',
@@ -171,10 +171,10 @@ const infoItems = [
     icon: 'calendar',
     text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet',
   },
-  // {
-  //   icon: 'currency-dollar-gray',
-  //   text: 'You must have at least 0.001 ETH before April 20th',
-  // },
+  {
+    icon: 'currency-dollar-gray',
+    text: 'The wallet must be at least 2 weeks old (relative to the current date) and hold a minimum balance of 0.001 ETH.',
+  },
   {
     icon: 'face-frown',
     text: 'Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.',
