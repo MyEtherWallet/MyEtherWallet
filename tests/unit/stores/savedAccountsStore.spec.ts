@@ -1,5 +1,6 @@
 // tests/unit/stores/savedAccountsStore.spec.ts
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { nextTick } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
 import { useSavedAccountsStore } from '@/stores/savedAccountsStore'
 import { buildId, type SavedAccount, SAVED_ACCOUNTS_CAP } from '@/stores/saved_accounts/savedAccountsLogic'
@@ -54,11 +55,12 @@ describe('savedAccountsStore', () => {
     chainState.selectedChain = { name: 'ETHEREUM', type: 'EVM' }
   })
 
-  it('addAccount adds and persists to localStorage', () => {
+  it('addAccount adds and persists to localStorage', async () => {
     const store = useSavedAccountsStore()
     const res = store.addAccount(acct({ address: '0x1', addedAt: 1 }))
     expect(res.added).toBe(true)
     expect(store.accounts).toHaveLength(1)
+    await nextTick()
     expect(JSON.parse(localStorage.getItem('savedAccounts')!)).toHaveLength(1)
   })
 

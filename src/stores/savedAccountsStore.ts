@@ -20,7 +20,7 @@ import {
 
 export const useSavedAccountsStore = defineStore('savedAccountsStore', () => {
   const accounts = useLocalStorage<SavedAccount[]>('savedAccounts', [], {
-    flush: 'sync',
+    mergeDefaults: true,
   })
 
   const walletStore = useWalletStore()
