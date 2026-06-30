@@ -91,6 +91,7 @@ const walletStore = useWalletStore()
 const chainsStore = useChainsStore()
 
 const openPaperWallet = ref(false)
+const hasBackfilled = ref(false)
 
 const loadBalances = (): void => {
   const chainName = chainsStore.selectedChain?.name ?? 'ETHEREUM'
@@ -102,6 +103,10 @@ const loadBalances = (): void => {
 
 watch(openDialog, isOpen => {
   if (isOpen) {
+    if (!hasBackfilled.value) {
+      savedAccountsStore.backfill()
+      hasBackfilled.value = true
+    }
     void analytics.trackMultiAddressEvent(MultiAddressEvent.OPENED)
     loadBalances()
   }

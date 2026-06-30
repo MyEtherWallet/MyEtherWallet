@@ -40,7 +40,7 @@
         <chevron-down-icon class="w-3 h-3 xs:w-4 xs:h-4 ml-auto xs:mr-1" />
       </div>
     </button>
-    <the-address-menu-dialog v-model:open-dialog="openDialog" />
+    <the-manage-accounts v-model:open-dialog="openDialog" />
   </div>
 </template>
 
@@ -52,7 +52,7 @@ import AppBlockie from '@/components/AppBlockie.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { truncateAddress } from '@/utils/filters'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import TheAddressMenuDialog from '@/components/core_layouts/wallet/TheAddressMenuDialog.vue'
+import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
 import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
 const { isXS } = useAppBreakpoints()
 

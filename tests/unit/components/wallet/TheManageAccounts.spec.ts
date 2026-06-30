@@ -38,6 +38,7 @@ vi.mock('@/stores/savedAccountsStore', () => ({
     activeAccount: active,
     savedAccounts: saved,
     activeId: 'EVM:0xa',
+    backfill: vi.fn(),
   }),
 }))
 
