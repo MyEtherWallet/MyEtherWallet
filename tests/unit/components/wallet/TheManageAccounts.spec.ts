@@ -1,5 +1,5 @@
 // tests/unit/components/wallet/TheManageAccounts.spec.ts
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 
 // vi.hoisted runs before vi.mock factories are evaluated (hoisting safe)
@@ -76,6 +76,7 @@ vi.mock('@/analytics', () => ({
 }))
 
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
+import { MultiAddressEvent } from '@/analytics/events'
 
 const mountPopup = () =>
   mount(TheManageAccounts, {
@@ -94,10 +95,19 @@ const mountPopup = () =>
   })
 
 describe('TheManageAccounts', () => {
+  beforeEach(() => {
+    mockTrack.mockClear()
+    mockSwitchTo.mockClear()
+    mockDeleteAccount.mockClear()
+    mockStartAdd.mockClear()
+    mockFetchFor.mockClear()
+  })
+
   it('renders the active account and the saved rows', () => {
     const w = mountPopup()
     expect(w.text()).toContain('Ledger')
     expect(w.findAllComponents({ name: 'ManageAccountsRow' }).length).toBe(2) // active + 1 saved
+    expect(mockTrack).toHaveBeenCalledWith(MultiAddressEvent.OPENED)
   })
 
   it('starts the add flow from the Add button', async () => {
@@ -111,5 +121,14 @@ describe('TheManageAccounts', () => {
     const rows = w.findAllComponents({ name: 'ManageAccountsRow' })
     await rows[1].vm.$emit('select')
     expect(mockSwitchTo).toHaveBeenCalledWith(saved[0])
+    expect(mockTrack).toHaveBeenCalledWith(MultiAddressEvent.SWITCHED)
+  })
+
+  it('deletes when a saved row emits delete and tracks the event', async () => {
+    const w = mountPopup()
+    const rows = w.findAllComponents({ name: 'ManageAccountsRow' })
+    await rows[1].vm.$emit('delete')
+    expect(mockDeleteAccount).toHaveBeenCalledWith(saved[0])
+    expect(mockTrack).toHaveBeenCalledWith(MultiAddressEvent.DELETED)
   })
 })

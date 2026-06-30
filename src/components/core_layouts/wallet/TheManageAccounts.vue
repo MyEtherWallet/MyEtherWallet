@@ -105,7 +105,7 @@ watch(openDialog, isOpen => {
     void analytics.trackMultiAddressEvent(MultiAddressEvent.OPENED)
     loadBalances()
   }
-})
+}, { immediate: true })
 
 const onSelect = (acc: SavedAccount): void => {
   void analytics.trackMultiAddressEvent(MultiAddressEvent.SWITCHED)
