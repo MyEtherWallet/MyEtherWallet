@@ -1,0 +1,14 @@
+{
+  "multi_address": {
+    "title": "Manage accounts",
+    "active": "Active",
+    "saved": "Saved addresses",
+    "add": "Add address",
+    "disconnect": "Disconnect",
+    "paper_wallet": "View Paper Wallet",
+    "empty": "No saved addresses yet",
+    "unlocked": "Unlocked",
+    "tokens": "tokens",
+    "copied": "Copied!"
+  }
+}

@@ -400,6 +400,19 @@ export type ClickSortPayload = {
 }
 
 // =============================================================================
+// MULTI ADDRESS (MEW-1840)
+// =============================================================================
+
+export const MultiAddressEvent = {
+  OPENED: 'multi_address_popup_opened',
+  SWITCHED: 'multi_address_switched',
+  ADD_STARTED: 'multi_address_add_started',
+  DELETED: 'multi_address_deleted',
+} as const
+export type MultiAddressEvent =
+  (typeof MultiAddressEvent)[keyof typeof MultiAddressEvent]
+
+// =============================================================================
 // WEEKEND TRADING ANNOUNCEMENT (MEW-1958)
 // =============================================================================
 

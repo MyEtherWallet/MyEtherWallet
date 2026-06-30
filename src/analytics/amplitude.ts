@@ -51,6 +51,7 @@ import type {
   GlobalSearchSelectTokenPayload,
   GlobalSearchTokenNotFoundPayload,
   WeekendTradingAnnouncementEvent,
+  MultiAddressEvent,
 } from './events'
 import {
   type BalanceBracket,
@@ -297,6 +298,16 @@ export class Analytics {
     return this._track(event, {
       ...payload,
     })
+  }
+
+  /**
+   * Send a Multi Address analytics event to Amplitude
+   *
+   * @param event   Type of Multi Address event
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackMultiAddressEvent = (event: MultiAddressEvent): Promise<void> => {
+    return this._track(event, {})
   }
 
   /**
