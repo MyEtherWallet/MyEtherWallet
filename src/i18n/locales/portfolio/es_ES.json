@@ -1,0 +1,85 @@
+{
+  "portfolio": {
+    "your_balances": "Your Balances",
+    "balance_menu": "Balance Menu",
+    "filter_all_tokens": "All Tokens",
+    "filter_stocks": "Stocks",
+    "filter_earning_interest": "Earning Interest",
+    "filter_custom": "Custom",
+    "filter_watchlist": "Watchlist",
+    "overview": {
+      "title": "Overview",
+      "tokenized_stocks": "Tokenized Stocks",
+      "stables": "Stables",
+      "large_market_cap": "Large Market Cap",
+      "large_market_cap_tooltip": "Tokens with market caps above $10B, excluding tokenized stocks and stablecoins.",
+      "altcoins": "Altcoins"
+    },
+    "history": {
+      "title": "History",
+      "tooltip": "Approximate values based on current token holdings.",
+      "last_24h": "Last 24h",
+      "no_chart_data": "No chart data available"
+    },
+    "gains_and_losses": {
+      "title_stocks": "Tokenized Stocks Gains & Losses",
+      "title_all": "All Gains & Losses",
+      "link_stocks": "All tokenized stocks trends",
+      "link_all": "All crypto trends",
+      "empty_stocks": "You don't have any tokenized stocks or ETFs in your portfolio yet.",
+      "page_of": "{current} of {total}",
+      "price_24h_header": "Price / 24h",
+      "gain_loss_header": "Gain / Loss"
+    },
+    "table": {
+      "total_value": "Total Value",
+      "token_header": "Token",
+      "market_cap_header": "Market Cap",
+      "price_header": "Price",
+      "24h_header": "24H",
+      "balance_header": "Balance",
+      "add_button": "+ Add",
+      "add_to_watchlist": "Add to Watchlist",
+      "remove_from_watchlist": "Remove from Watchlist",
+      "trade": "Trade",
+      "empty_watchlist": "You don't have any watchlisted tokens.",
+      "discover_more_tokens": "Discover more tokens",
+      "empty_custom": "You don't have any custom tokens.",
+      "add_custom_token": "+ Add Custom Token",
+      "empty_stocks": "You don't have any tokenized stocks or ETFs in your portfolio yet.",
+      "no_results": "No results found for \"{query}\".",
+      "results_of": "{count} of {total} results",
+      "page_current": "{current}",
+      "page_of": "of",
+      "page_total": "{total}"
+    },
+    "custom_token": {
+      "add_title": "Add Custom Token",
+      "edit_title": "Edit Custom Token",
+      "delete_title": "Delete Custom Token",
+      "token_address": "Token Address",
+      "token_name_placeholder": "Token Name",
+      "token_symbol_placeholder": "Token Symbol",
+      "token_decimals_placeholder": "Token Decimals",
+      "add_button": "Add Token",
+      "save_button": "Save Changes",
+      "delete_button": "Delete Token",
+      "delete_confirm": "Are you sure you want to delete \"{name}\"? You can re-add this token if you change your mind.",
+      "name_required": "Token name is required",
+      "symbol_required": "Token symbol is required",
+      "decimals_required": "Decimals are required",
+      "decimals_range": "Must be between 0 and 36",
+      "already_added": "This token is already added.",
+      "fetch_failed": "Failed to fetch token details. Please check the address.",
+      "toast_added": "Custom token was added",
+      "toast_updated": "Custom token was updated",
+      "toast_deleted": "Custom token was deleted"
+    },
+    "connect_wallet": {
+      "title": "Connect wallet to see your portfolio",
+      "description": "Unlock your wallet to see full features. Manage your crypto assets across multiple blockchains: trade tokenized stocks and ETFs, swap crypto tokens, stake, and more.",
+      "connect_button": "Connect Wallet",
+      "or": "o"
+    }
+  }
+}
