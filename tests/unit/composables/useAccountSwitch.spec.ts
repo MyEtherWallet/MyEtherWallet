@@ -97,4 +97,14 @@ describe('useAccountSwitch', () => {
     expect(removeAccount).toHaveBeenCalledWith('EVM:0xtarget')
     expect(disconnectWallet).toHaveBeenCalled() // accounts mock is empty → none remain
   })
+
+  it('deleteAccount of an inactive account removes it without touching wallet or dialog', async () => {
+    const { deleteAccount } = useAccountSwitch()
+    // activeIdValue is 'EVM:0xactive' (set in beforeEach); deleted id is different
+    await deleteAccount(acct({ id: 'EVM:0xtarget' }))
+    expect(removeAccount).toHaveBeenCalledWith('EVM:0xtarget')
+    expect(disconnectWallet).not.toHaveBeenCalled()
+    expect(setWallet).not.toHaveBeenCalled()
+    expect(openAccessDialog).not.toHaveBeenCalled()
+  })
 })

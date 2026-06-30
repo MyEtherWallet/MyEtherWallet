@@ -11,7 +11,6 @@ import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import type { defaultWalletId } from '@/modules/access/common/walletConfigs'
 import {
   promoteNext,
-  removeById,
   type SavedAccount,
 } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain } from '@/mew_api/types'
@@ -70,8 +69,7 @@ export function useAccountSwitch() {
     const wasActive = account.id === savedAccountsStore.activeId
     savedAccountsStore.removeAccount(account.id)
     if (!wasActive) return
-    const remaining = removeById(savedAccountsStore.accounts as SavedAccount[], account.id)
-    const next = promoteNext(remaining)
+    const next = promoteNext(savedAccountsStore.accounts as SavedAccount[])
     if (next) {
       await switchTo(next)
     } else {
