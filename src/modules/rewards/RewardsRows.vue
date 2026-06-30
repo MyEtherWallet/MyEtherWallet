@@ -156,7 +156,7 @@
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
-        Trade $25+
+        Trade $35+
       </app-base-button>
       <button
         v-else
