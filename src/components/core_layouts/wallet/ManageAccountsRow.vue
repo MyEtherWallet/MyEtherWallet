@@ -9,7 +9,7 @@
         v-if="account.icon"
         :src="account.icon"
         class="w-6 h-6 rounded-full flex-shrink-0"
-        alt=""
+        :alt="account.walletName"
       />
       <app-blockie
         v-else
@@ -57,7 +57,7 @@
         <button
           data-test="delete-confirm"
           class="p-1 text-error text-s-12"
-          @click="$emit('delete')"
+          @click="$emit('delete'); confirmingDelete = false"
         >
           {{ $t('common.confirm') }}
         </button>
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { TrashIcon, ClipboardDocumentIcon } from '@heroicons/vue/24/outline'
 import AppBlockie from '@/components/AppBlockie.vue'
 import { truncateAddress } from '@/utils/filters'
@@ -106,4 +106,8 @@ const onCopy = (): void => {
     copied.value = false
   }, 1500)
 }
+
+onUnmounted(() => {
+  if (copiedTimer) clearTimeout(copiedTimer)
+})
 </script>

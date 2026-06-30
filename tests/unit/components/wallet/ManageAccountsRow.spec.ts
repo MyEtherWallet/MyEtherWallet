@@ -60,4 +60,11 @@ describe('ManageAccountsRow', () => {
     expect(mountRow({ isActive: false }).find('[data-test="badge"]').exists()).toBe(false)
     expect(mountRow({ isActive: true }).find('[data-test="badge"]').exists()).toBe(true)
   })
+
+  it('emits copy and shows copied feedback when copy button is clicked', async () => {
+    const w = mountRow()
+    await w.find('[data-test="copy"]').trigger('click')
+    expect(w.emitted('copy')).toBeTruthy()
+    expect(w.text()).toContain('multi_address.copied')
+  })
 })
