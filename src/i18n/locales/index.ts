@@ -10,7 +10,7 @@ interface ModuleImportInterface {
 /**
  * List of supported languages.
  */
-const languages = ['en']
+const languages = ['en', 'zh']
 
 /**
  * Generates a messages schema by merging locale data for each language.

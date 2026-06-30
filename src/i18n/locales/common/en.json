@@ -1,5 +1,6 @@
 {
   "common": {
+    "search": "Search",
     "swap": "Swap",
     "bridge": "Bridge",
     "network": "network",

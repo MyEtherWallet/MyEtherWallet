@@ -70,19 +70,22 @@
                     <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
                   </div>
                 </div>
-                TODO: Language (only English supported currently)
-                <div class="relative flex w-full h-6 justify-between items-center cursor-pointer group">
+                -->
+                <!-- Language -->
+                <div
+                  class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
+                  @click="view = 'language'"
+                >
                   <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
                   <div class="relative flex items-center gap-2.5">
                     <language-icon class="w-5 h-5 text-primary flex-shrink-0" />
                     <span class="text-s-16 font-normal leading-[22px] text-black">{{ $t('settings.language') }}</span>
                   </div>
                   <div class="relative flex items-center gap-2">
-                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">ENG</span>
+                    <span class="text-s-14 font-normal leading-[20px] text-[#575757]">{{ selectedLanguageAbbr }}</span>
                     <chevron-right-icon class="w-4 h-4 text-[#575757] flex-shrink-0" />
                   </div>
                 </div>
-              -->
                 <!-- Default fee -->
                 <div
                   class="relative flex w-full h-6 justify-between items-center cursor-pointer group"
@@ -187,6 +190,72 @@
                 </div>
               </div>
             </div>
+
+            <!-- Language selector panel -->
+            <div
+              ref="languagePanelRef"
+              :inert="view !== 'language'"
+              class="absolute top-0 left-0 w-full flex flex-col gap-6 p-6"
+              :style="{
+                transform: view === 'language' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+                opacity: view === 'language' ? 1 : 0,
+                transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+              }"
+            >
+              <!-- Header: back + title -->
+              <div class="flex items-center gap-2">
+                <app-btn-icon
+                  :label="$t('common.back')"
+                  width="w-6"
+                  height="h-6"
+                  @click="view = 'main'"
+                >
+                  <chevron-left-icon class="w-5 h-5" />
+                </app-btn-icon>
+                <span class="text-s-16 font-normal leading-[22px] text-black">
+                  {{ $t('settings.select_language') }}
+                </span>
+              </div>
+
+              <!-- Search -->
+              <app-search-input
+                v-model="languageQuery"
+                size="compact"
+                bg-class="bg-[#F5F5F5]"
+                :placeholder="$t('common.search')"
+              />
+
+              <!-- Language options -->
+              <div class="flex flex-col gap-6 w-full">
+                <!-- Pinned selected language -->
+                <div
+                  v-if="selectedLanguageOption"
+                  class="flex w-full items-center gap-1 border-y border-[#E6E6E6] py-3"
+                >
+                  <div class="flex flex-1 min-w-0 items-center gap-1">
+                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black">{{ selectedLanguageOption.label }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">/</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">{{ selectedLanguageOption.native }}</span>
+                  </div>
+                  <check-icon class="w-5 h-5 text-primary flex-shrink-0" />
+                </div>
+
+                <!-- Full language list -->
+                <div
+                  v-for="language in filteredLanguages"
+                  :key="language.code"
+                  class="relative flex w-full items-center gap-1 cursor-pointer group"
+                  @click="selectLanguage(language.code)"
+                >
+                  <div class="absolute -inset-x-2 -inset-y-[7px] rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div class="relative flex flex-1 min-w-0 items-center gap-1">
+                    <span class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black">{{ language.label }}</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">/</span>
+                    <span class="text-s-12 font-normal leading-[18px] text-[#575757]">{{ language.native }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -196,8 +265,9 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
-import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon } from '@heroicons/vue/20/solid'
+import { CurrencyDollarIcon, CircleStackIcon, ChevronLeftIcon, CheckCircleIcon, CheckIcon, LanguageIcon } from '@heroicons/vue/20/solid'
 import { ChevronRightIcon, QuestionMarkCircleIcon } from '@heroicons/vue/16/solid'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
@@ -206,6 +276,7 @@ import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
+import AppSearchInput from '@/components/AppSearchInput.vue'
 
 const GAP = 24
 
@@ -215,7 +286,37 @@ const { isSettingsOpen } = storeToRefs(appLayoutStore)
 const analyticsStore = useAnalyticsStore()
 const analyticsEnabled = computed(() => analyticsStore.consent)
 const globalStore = useGlobalStore()
-const { defaultGasPriceType } = storeToRefs(globalStore)
+const { defaultGasPriceType, locale: storedLocale } = storeToRefs(globalStore)
+
+const { locale } = useI18n()
+
+const LANGUAGE_OPTIONS = [
+  { code: 'en', label: 'English', native: 'English', abbr: 'ENG' },
+  { code: 'zh', label: 'Chinese', native: '中文', abbr: 'CHN' },
+]
+
+const selectedLanguage = computed(() => storedLocale.value)
+const selectedLanguageAbbr = computed(
+  () => LANGUAGE_OPTIONS.find(language => language.code === selectedLanguage.value)?.abbr,
+)
+const selectedLanguageOption = computed(
+  () => LANGUAGE_OPTIONS.find(language => language.code === selectedLanguage.value),
+)
+
+const languageQuery = ref('')
+const filteredLanguages = computed(() => {
+  const query = languageQuery.value.trim().toLowerCase()
+  if (!query) return LANGUAGE_OPTIONS
+  return LANGUAGE_OPTIONS.filter(
+    language =>
+      language.label.toLowerCase().includes(query) || language.native.toLowerCase().includes(query),
+  )
+})
+const selectLanguage = (code: string) => {
+  storedLocale.value = code
+  locale.value = code
+  view.value = 'main'
+}
 
 const FEE_MAP: Record<string, string> = {
   economy: 'ECONOMY',
@@ -230,7 +331,7 @@ const FEE_MAP_REVERSE: Record<string, string> = {
   FASTEST: 'highest',
 }
 
-const view = ref<'main' | 'fee'>('main')
+const view = ref<'main' | 'fee' | 'language'>('main')
 const selectedFee = computed({
   get: () => FEE_MAP_REVERSE[defaultGasPriceType.value] ?? 'recommended',
   set: (val: string) => { defaultGasPriceType.value = FEE_MAP[val] as any },
@@ -251,15 +352,21 @@ const containerRef = ref<HTMLElement | null>(null)
 const popupRef = ref<HTMLElement | null>(null)
 const mainPanelRef = ref<HTMLElement | null>(null)
 const feePanelRef = ref<HTMLElement | null>(null)
+const languagePanelRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
 const measureHeight = () => {
-  const activeRef = view.value === 'main' ? mainPanelRef.value : feePanelRef.value
+  const panelByView = { main: mainPanelRef, fee: feePanelRef, language: languagePanelRef }
+  const activeRef = panelByView[view.value].value
   if (activeRef) containerHeight.value = activeRef.scrollHeight
 }
 
 watch(isSettingsOpen, val => { if (val) nextTick(measureHeight) })
-watch(view, () => nextTick(measureHeight))
+watch(view, () => {
+  if (view.value !== 'language') languageQuery.value = ''
+  nextTick(measureHeight)
+})
+watch(filteredLanguages, () => nextTick(measureHeight))
 
 const popupStyle = computed(() => {
   const buttonEl = containerRef.value
