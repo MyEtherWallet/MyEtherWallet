@@ -1,0 +1,44 @@
+{
+  "send": {
+    "send-tokens": "发送代币",
+    "send-nfts": "发送 NFT",
+    "need-help": "发送时需要帮助？",
+    "toast": {
+      "failed_to_sign": "交易签名失败",
+      "tx-send-success": "交易发送成功",
+      "tx-send-failed": "交易发送失败",
+      "failed_to_fetch_gas_fees": "获取 Gas 费用失败",
+      "frozen_token": "发送失败。该代币可能已被冻结，请联系我们"
+    },
+    "initiated": {
+      "title": "发送已发起",
+      "completed-note": "完成后，{symbol} 将发送至",
+      "on-chain": "在 {chain} 上",
+      "status": {
+        "pending": "待处理",
+        "successful": "成功",
+        "failed": "失败"
+      },
+      "tx-hash": "交易哈希",
+      "track-progress": "在通知中追踪进度",
+      "close-window": "你可以关闭此窗口，并",
+      "check-explorer": "或在区块浏览器中查看"
+    }
+  },
+  "verify-tx": {
+    "title": "验证交易",
+    "description": "确认交易前请仔细核对相关信息。",
+    "unknown-network": "未知网络",
+    "confirm": "确认并发送"
+  },
+
+  "error": {
+    "amount": {
+      "required": "请输入数量",
+      "less_than_zero": "数量必须大于 0"
+    },
+    "balance": {
+      "insufficient": "余额不足"
+    }
+  }
+}

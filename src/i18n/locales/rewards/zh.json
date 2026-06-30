@@ -1,0 +1,26 @@
+{
+  "rewards": {
+    "loading": "正在加载奖励",
+    "hooray": "太棒了！",
+    "rewarded_with": "您已获得 ${amount} USDC 奖励",
+    "earn_another_tomorrow": "别忘了明天再来赚取一份奖励！",
+    "reward_on_its_way": "奖励正在发放中",
+    "reward_in_wallet": "奖励已到账您的钱包",
+    "see_reward_tx": "查看奖励交易",
+    "earn_amount_usdc": "赚取 ${amount} USDC",
+    "reward_description": "在接下来 {hours} 小时内，前 {count} 笔超过 ${min} 的兑换，每笔可获得 ${amount} USDC",
+    "rewards_left": "剩余 1 份奖励 | 剩余 {count} 份奖励",
+    "resets_in": "{time} 后重置",
+    "swap_now": "立即兑换",
+    "account_not_eligible": "账户不符合资格",
+    "try_again_later": "抱歉，请稍后再试！",
+    "learn_more": "了解更多",
+    "earn_rewards_title": "赚取奖励",
+    "earn_rewards_description": "前 10 笔 $25 及以上的交易和 $50 及以上的兑换，每小时可各赚取 5 USDC。",
+    "not_eligible_at_this_time": "您目前不符合获得奖励的资格",
+    "switched_to_ethereum": "已将应用网络切换至 Ethereum",
+    "congratulations": "恭喜！",
+    "you_received_reward": "您已收到奖励",
+    "toggle_full_text": "切换完整文本"
+  }
+}

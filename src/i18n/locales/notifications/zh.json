@@ -1,0 +1,30 @@
+{
+  "notifications_module": {
+    "title": "通知",
+    "no_notifications_yet": "暂无通知",
+    "default_empty_text": "您最近的订单、兑换、跨链和交易记录将显示在此处。",
+    "swap": "兑换",
+    "bridge": "跨链",
+    "transaction": "交易记录",
+    "trade_order": "交易",
+    "status": {
+      "pending": "待处理",
+      "possibly_dropped": "可能已丢弃",
+      "failed": "失败",
+      "successful": "成功"
+    },
+    "destination_address": "目标地址",
+    "price_difference": "价格差异",
+    "filled_in_tx": "成交于交易",
+    "est": "预计：",
+    "order_status": {
+      "pending": "待处理",
+      "filled": "已成交",
+      "cancelled": "已取消",
+      "expired": "已过期"
+    },
+    "pin_to_keep_open": "固定以保持展开",
+    "unpin": "取消固定",
+    "pin": "固定"
+  }
+}

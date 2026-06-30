@@ -1,0 +1,31 @@
+{
+  "create_wallet": {
+    "title": "创建钱包",
+    "subtitle": "MEW 可在移动设备和桌面浏览器上使用。",
+    "back_to_connect_options": "返回连接选项",
+    "buy_hardware_wallet_title": "购买硬件钱包",
+    "create_mnemonic_wallet_title": "创建助记词钱包",
+    "recommended": "推荐",
+    "not_recommended": "不推荐",
+    "mew_mobile_app": "MEW Mobile App",
+    "ratings_count": "13k+ 条评分",
+    "scan_to_download": "扫码下载",
+    "google_play_alt": "Google Play 商店下载",
+    "apple_store_alt": "Apple App Store 下载",
+    "enkrypt_browser_wallet": "Enkrypt 浏览器钱包",
+    "enkrypt_users_count": "100,000+ 用户",
+    "get_enkrypt": "获取 Enkrypt 浏览器钱包",
+    "other_wallet_methods": "其他钱包方式",
+    "hardware_wallet": "硬件钱包",
+    "hardware_wallet_alt": "硬件钱包",
+    "hardware_wallet_description": "最高级别的安全标准。在线订购设备，搭配 MEW 使用。",
+    "buy_hardware_wallet": "购买硬件钱包",
+    "software_wallet": "软件钱包",
+    "software_wallet_alt": "软件钱包",
+    "software_wallet_description": "使用恢复短语创建钱包。请仅在离线环境中使用。",
+    "create_software_wallet": "创建软件钱包",
+    "starting_from": "起售价",
+    "select_keystore": "选择 Keystore 文件",
+    "connect": "连接"
+  }
+}
