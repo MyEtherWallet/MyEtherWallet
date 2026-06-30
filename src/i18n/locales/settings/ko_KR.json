@@ -1,0 +1,16 @@
+{
+  "settings": {
+    "title": "세팅",
+    "preferences": "Preferences",
+    "security": "Security",
+    "currency": "Currency",
+    "language": "Language",
+    "default_fee": "Default fee",
+    "usage_analytics": "Analytics",
+    "usage_analytics_tooltip": "Collects anonymous usage data to help improve the app",
+    "open": "Open settings",
+    "select_transaction_fee": "Select transaction fee",
+    "select_language": "Select a language",
+    "fee_description": "This fee is charged by the Ethereum network and fluctuates depending on network traffic. MEW does not profit from this fee."
+  }
+}
