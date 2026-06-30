@@ -1,0 +1,31 @@
+{
+  "create_wallet": {
+    "title": "Create Wallet",
+    "subtitle": "MEW는 모바일과 브라우저의 데스크톱에서 사용할 수 있습니다.",
+    "back_to_connect_options": "Back to connect options",
+    "buy_hardware_wallet_title": "Buy a Hardware Wallet",
+    "create_mnemonic_wallet_title": "Create a Mnemonic Wallet",
+    "recommended": "Recommended",
+    "not_recommended": "Not recommended",
+    "mew_mobile_app": "MEW 모바일 앱",
+    "ratings_count": "13k+ ratings",
+    "scan_to_download": "스캔하여 다운로드",
+    "google_play_alt": "Google Play Store download",
+    "apple_store_alt": "Apple App Store download",
+    "enkrypt_browser_wallet": "Enkrypt 브라우저 지갑\n",
+    "enkrypt_users_count": "100,000+ users",
+    "get_enkrypt": "Enkrypt 브라우저 지갑을 받으세요",
+    "other_wallet_methods": "Other wallet methods",
+    "hardware_wallet": "Hardware Wallet",
+    "hardware_wallet_alt": "hardware wallet",
+    "hardware_wallet_description": "The highest standard of security. Order a device online and use it with MEW.",
+    "buy_hardware_wallet": "하드웨어 지갑을 구매하세요",
+    "software_wallet": "Software Wallet",
+    "software_wallet_alt": "software wallet",
+    "software_wallet_description": "Create a wallet using a recovery phrase. Use only in offline settings.",
+    "create_software_wallet": "소프트웨어 지갑 생성하기",
+    "starting_from": "Starting from",
+    "select_keystore": "Select Keystore",
+    "connect": "Connect"
+  }
+}
