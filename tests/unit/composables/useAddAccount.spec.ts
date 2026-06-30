@@ -7,8 +7,14 @@ const addAccount = vi.fn(() => ({ added: true }))
 const captureActiveAccount = vi.fn(() => ({ id: 'EVM:0xnew', address: '0xNew' }))
 const addToastMessage = vi.fn()
 const walletAddress = ref<string | null>('0xOld')
+const isOpenAccessDialog = ref(false)
 
-vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ openAccessDialog }) }))
+vi.mock('@/stores/accessStore', () => ({
+  useAccessStore: () => ({
+    get isOpenAccessDialog() { return isOpenAccessDialog.value },
+    openAccessDialog: vi.fn(() => { openAccessDialog(); isOpenAccessDialog.value = true }),
+  }),
+}))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => ({ get walletAddress() { return walletAddress.value } }) }))
 vi.mock('@/stores/savedAccountsStore', () => ({ useSavedAccountsStore: () => ({ captureActiveAccount, addAccount }) }))
 vi.mock('@/stores/toastStore', () => ({ useToastStore: () => ({ addToastMessage }) }))
@@ -16,7 +22,11 @@ vi.mock('@/stores/toastStore', () => ({ useToastStore: () => ({ addToastMessage 
 import { useAddAccount } from '@/composables/useAddAccount'
 
 describe('useAddAccount', () => {
-  beforeEach(() => { vi.clearAllMocks(); walletAddress.value = '0xOld' })
+  beforeEach(() => {
+    vi.clearAllMocks()
+    walletAddress.value = '0xOld'
+    isOpenAccessDialog.value = false
+  })
 
   it('opens the connect flow and captures the account when the active address changes', async () => {
     const { startAdd } = useAddAccount()
@@ -35,5 +45,18 @@ describe('useAddAccount', () => {
     walletAddress.value = '0xNew'
     await nextTick()
     expect(addToastMessage).toHaveBeenCalled()
+  })
+
+  it('does NOT capture an account when the dialog is cancelled without an address change', async () => {
+    const { startAdd } = useAddAccount()
+    startAdd()
+    // simulate cancel: close dialog without changing walletAddress
+    isOpenAccessDialog.value = false
+    await nextTick()
+    // now simulate an unrelated wallet switch that would have triggered a phantom add
+    walletAddress.value = '0xNew'
+    await nextTick()
+    expect(captureActiveAccount).not.toHaveBeenCalled()
+    expect(addAccount).not.toHaveBeenCalled()
   })
 })
