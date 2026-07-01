@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
+import { ref } from 'vue'
 
 vi.mock('@/modules/trade/composables', () => ({
   useMarketStatus: () => ({ isTradingRestrictedInRegion: { value: false } }),
@@ -27,7 +28,7 @@ vi.mock('@/stores/stocksStore', () => ({
 }))
 vi.mock('@/stores/chainsStore', () => ({
   useChainsStore: () => ({
-    selectedChain: { name: 'ETH', type: 'EVM' },
+    selectedChain: ref({ name: 'ETH', type: 'EVM' }),
     chains: [],
   }),
 }))
