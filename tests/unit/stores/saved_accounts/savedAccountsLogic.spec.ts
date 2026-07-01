@@ -1,95 +1,137 @@
-// tests/unit/stores/savedAccounts/savedAccountsLogic.spec.ts
 import { describe, it, expect, vi } from 'vitest'
 
-// walletConfigs.ts pulls in @enkryptcom/hw-wallets which has a broken CJS/ESM
-// split in the test environment. We only need the WalletConfigType enum here,
-// so mock the whole module and re-export what the test uses.
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {
-    MOBILE: 'mobile',
-    HARDWARE: 'hardware',
-    SOFTWARE: 'software',
-    DESKTOP: 'desktop',
-    EXTENSION: 'extension',
-    MOCK: 'mock',
+    MOBILE: 'mobile', HARDWARE: 'hardware', SOFTWARE: 'software',
+    DESKTOP: 'desktop', EXTENSION: 'extension', MOCK: 'mock',
   },
+  walletConfigs: {},
 }))
 
 import {
+  SAVED_ACCOUNTS_CAP,
   buildId,
-  upsert,
+  flatten,
+  countAll,
   isAtCap,
   canAdd,
-  removeById,
+  upsertEntry,
+  removeEntry,
   promoteNext,
-  backfillMerge,
-  SAVED_ACCOUNTS_CAP,
-  type SavedAccount,
+  nextDefaultName,
+  isNameUnique,
+  backfillNames,
+  deriveKind,
+  type RecentAddress,
+  type PersistedEntry,
 } from '@/stores/saved_accounts/savedAccountsLogic'
-import { WalletConfigType } from '@/modules/access/common/walletConfigs'
-import { WalletType } from '@/providers/types/index'
 
-const acct = (over: Partial<SavedAccount> = {}): SavedAccount => ({
-  id: over.id ?? buildId('EVM', over.address ?? '0xAbC0000000000000000000000000000000000001'),
+const chain = (type = 'EVM') => ({ type, name: type === 'EVM' ? 'ETH' : 'BTC' }) as any
+const entry = (over: Partial<PersistedEntry> = {}): PersistedEntry => ({
   address: over.address ?? '0xAbC0000000000000000000000000000000000001',
-  chainType: 'EVM',
-  kind: 'watchOnly',
-  walletConfigType: WalletConfigType.EXTENSION,
-  providerType: WalletType.WAGMI,
-  connectorId: 'enkrypt',
-  walletName: 'Enkrypt',
-  icon: 'enkrypt.webp',
-  addedAt: 1,
-  ...over,
+  walletName: over.walletName ?? 'Enkrypt',
+  chain: over.chain ?? chain(over.type ?? 'EVM'),
+  type: (over.type ?? 'EVM') as any,
+  walletType: over.walletType ?? 'INJECTED',
+  addressName: over.addressName ?? 'Address 1',
+})
+const list = (evm: PersistedEntry[] = [], btc: PersistedEntry[] = []): RecentAddress => ({
+  EVM: evm, BITCOIN: btc,
 })
 
 describe('savedAccountsLogic', () => {
-  it('buildId lowercases the address and prefixes the chain type', () => {
-    expect(buildId('EVM', '0xAbC')).toBe('EVM:0xabc')
-    expect(buildId('BITCOIN', 'bc1QXyz')).toBe('BITCOIN:bc1qxyz')
+  it('cap is 20', () => {
+    expect(SAVED_ACCOUNTS_CAP).toBe(20)
   })
 
-  it('upsert adds a new account and replaces an existing id while preserving addedAt', () => {
-    const a = acct({ address: '0x1', addedAt: 10 })
-    const list = upsert([], a)
-    expect(list).toHaveLength(1)
-    const replaced = upsert(list, acct({ address: '0x1', walletName: 'Renamed', addedAt: 99 }))
-    expect(replaced).toHaveLength(1)
-    expect(replaced[0].walletName).toBe('Renamed')
-    expect(replaced[0].addedAt).toBe(10) // original addedAt preserved
+  it('buildId lowercases + prefixes chain type', () => {
+    expect(buildId('EVM' as any, '0xAbC')).toBe('EVM:0xabc')
   })
 
-  it('isAtCap / canAdd respect the cap but always allow replacing an existing id', () => {
-    const list = Array.from({ length: SAVED_ACCOUNTS_CAP }, (_, i) =>
-      acct({ address: '0x' + i, addedAt: i }),
+  it('flatten + countAll span all buckets', () => {
+    const l = list([entry({ address: '0x1' })], [entry({ address: 'bc1', type: 'BITCOIN' })])
+    expect(flatten(l)).toHaveLength(2)
+    expect(countAll(l)).toBe(2)
+  })
+
+  it('isAtCap / canAdd respect a 20 total cap but always allow replacing an existing address', () => {
+    const evm = Array.from({ length: 20 }, (_, i) =>
+      entry({ address: '0x' + i, addressName: 'Address ' + i }),
     )
-    expect(isAtCap(list)).toBe(true)
-    expect(canAdd(list, acct({ address: '0xnew' }))).toBe(false)        // new id blocked at cap
-    expect(canAdd(list, acct({ address: '0x1', walletName: 'x' }))).toBe(true) // existing id allowed
-    expect(canAdd(list.slice(0, 5), acct({ address: '0xnew' }))).toBe(true)
+    const l = list(evm)
+    expect(isAtCap(l)).toBe(true)
+    expect(canAdd(l, 'EVM' as any, '0xnew')).toBe(false)
+    expect(canAdd(l, 'EVM' as any, '0x1')).toBe(true)
+    expect(canAdd(list(evm.slice(0, 5)), 'EVM' as any, '0xnew')).toBe(true)
   })
 
-  it('removeById removes only the matching id', () => {
-    const list = [acct({ address: '0x1' }), acct({ address: '0x2' })]
-    const after = removeById(list, buildId('EVM', '0x2'))
-    expect(after.map(a => a.address)).toEqual(['0x1'])
+  it('upsertEntry adds new, replaces by dedupe key, keeps bucket order', () => {
+    let l = list()
+    l = upsertEntry(l, entry({ address: '0x1', addressName: 'A' }))
+    l = upsertEntry(l, entry({ address: '0x2', addressName: 'B' }))
+    expect(l.EVM.map(e => e.address)).toEqual(['0x1', '0x2'])
+    l = upsertEntry(l, entry({ address: '0x1', walletName: 'Renamed', addressName: 'A' }))
+    expect(l.EVM).toHaveLength(2)
+    expect(l.EVM.find(e => e.address === '0x1')!.walletName).toBe('Renamed')
   })
 
-  it('promoteNext returns the earliest-added remaining account, or null when empty', () => {
-    const list = [acct({ address: '0xb', addedAt: 20 }), acct({ address: '0xa', addedAt: 5 })]
-    expect(promoteNext(list)?.address).toBe('0xa')
-    expect(promoteNext([])).toBeNull()
+  it('removeEntry removes only the matching address in its bucket', () => {
+    const l = list([entry({ address: '0x1' }), entry({ address: '0x2' })])
+    expect(removeEntry(l, 'EVM' as any, '0x2').EVM.map(e => e.address)).toEqual(['0x1'])
   })
 
-  it('backfillMerge unions by id and never overwrites an existing record', () => {
-    const existing = [acct({ address: '0x1', walletName: 'Keep', addedAt: 1 })]
-    const seeds = [
-      acct({ address: '0x1', walletName: 'IGNORED', addedAt: 999 }),
-      acct({ address: '0x2', walletName: 'New', addedAt: 2 }),
-    ]
-    const merged = backfillMerge(existing, seeds)
-    expect(merged).toHaveLength(2)
-    expect(merged.find(a => a.address === '0x1')!.walletName).toBe('Keep')
-    expect(merged.find(a => a.address === '0x2')!.walletName).toBe('New')
+  it('promoteNext returns the last remaining entry in the removed bucket, else any remaining, else null', () => {
+    const l = list([entry({ address: '0xa' }), entry({ address: '0xb' })])
+    expect(promoteNext(removeEntry(l, 'EVM' as any, '0xb'), 'EVM' as any, '0xb')?.address).toBe('0xa')
+    expect(promoteNext(list(), 'EVM' as any, '0xa')).toBeNull()
+    const cross = list([], [entry({ address: 'bc1', type: 'BITCOIN' })])
+    expect(promoteNext(cross, 'EVM' as any, '0xgone')?.address).toBe('bc1')
+  })
+
+  it('nextDefaultName finds the lowest free "Address N" globally', () => {
+    expect(nextDefaultName(list())).toBe('Address 1')
+    const l = list(
+      [entry({ address: '0x1', addressName: 'Address 1' })],
+      [entry({ address: 'bc1', type: 'BITCOIN', addressName: 'Address 2' })],
+    )
+    expect(nextDefaultName(l)).toBe('Address 3')
+    const gap = list([
+      entry({ address: '0x1', addressName: 'Address 1' }),
+      entry({ address: '0x3', addressName: 'Address 3' }),
+    ])
+    expect(nextDefaultName(gap)).toBe('Address 2')
+  })
+
+  it('isNameUnique is global and honours exceptKey for self-rename', () => {
+    const l = list(
+      [entry({ address: '0x1', addressName: 'Savings' })],
+      [entry({ address: 'bc1', type: 'BITCOIN', addressName: 'Trading' })],
+    )
+    expect(isNameUnique(l, 'Fresh')).toBe(true)
+    expect(isNameUnique(l, 'Savings')).toBe(false)
+    expect(isNameUnique(l, 'Trading')).toBe(false)
+    expect(isNameUnique(l, 'Savings', buildId('EVM' as any, '0x1'))).toBe(true)
+  })
+
+  it('backfillNames assigns unique default names only to entries missing one, idempotently', () => {
+    const l = list([
+      entry({ address: '0x1', addressName: '' }),
+      entry({ address: '0x2', addressName: 'Keep' }),
+      entry({ address: '0x3', addressName: '' }),
+    ])
+    const filled = backfillNames(l)
+    const names = filled.EVM.map(e => e.addressName)
+    expect(names).toContain('Keep')
+    expect(names.filter(n => !n).length).toBe(0)
+    expect(new Set(names).size).toBe(names.length)
+    expect(backfillNames(filled)).toEqual(filled)
+  })
+
+  it('deriveKind maps re-connectable wallet types to signing, unknown to watchOnly', () => {
+    expect(deriveKind('LEDGER')).toBe('signing')
+    expect(deriveKind('INJECTED')).toBe('signing')
+    expect(deriveKind('MNEMONIC')).toBe('signing')
+    expect(deriveKind('WATCH_ONLY_ADDRESS')).toBe('watchOnly')
+    expect(deriveKind('')).toBe('watchOnly')
   })
 })

@@ -1,80 +1,186 @@
-// src/stores/savedAccounts/savedAccountsLogic.ts
+// src/stores/saved_accounts/savedAccountsLogic.ts
 import type { WalletConfigType } from '@/modules/access/common/walletConfigs'
-import type { ChainType } from '@/mew_api/types'
+import type { Chain, ChainType } from '@/mew_api/types'
 import type { WalletType } from '@/providers/types/index'
 
 export type SavedAccountKind = 'signing' | 'watchOnly'
 
+/** Shape persisted in watchOnlyStore ('watchOnlyList'). */
+export interface PersistedEntry {
+  address: string
+  walletName: string
+  chain: Chain
+  type: ChainType
+  walletType: string
+  addressName: string
+}
+
+export interface RecentAddress {
+  [chainType: string]: PersistedEntry[]
+}
+
+/** In-memory view-model consumed by the popup / row / switch / balances. */
 export interface SavedAccount {
-  /** `${chainType}:${address.toLowerCase()}` — dedupe key */
   id: string
   address: string
   chainType: ChainType
   kind: SavedAccountKind
-  /** display/badge category */
   walletConfigType: WalletConfigType
-  /** provider identity, for WatchOnlyWallet reconstruction */
   providerType: WalletType
-  /** walletConfigs key, for re-opening the connect view (undefined for pure watch-only) */
   connectorId?: string
   walletName: string
+  addressName: string
   icon: string
   derivationPath?: string
-  addedAt: number
 }
 
-export const SAVED_ACCOUNTS_CAP = 100
+export const SAVED_ACCOUNTS_CAP = 20
+
+/** Wallet types MEW can re-derive/reconnect → treated as signing accounts. */
+const SIGNING_WALLET_TYPES = new Set([
+  'PRIVATE_KEY',
+  'MNEMONIC',
+  'WAGMI',
+  'INJECTED',
+  'TREZOR',
+  'LEDGER',
+])
 
 export function buildId(chainType: ChainType, address: string): string {
   return `${chainType}:${address.toLowerCase()}`
 }
 
-export function upsert(
-  list: SavedAccount[],
-  account: SavedAccount,
-): SavedAccount[] {
-  const idx = list.findIndex(a => a.id === account.id)
-  if (idx === -1) return [...list, account]
-  const next = [...list]
-  next[idx] = { ...account, addedAt: list[idx].addedAt } // preserve original addedAt
-  return next
+export function flatten(list: RecentAddress): PersistedEntry[] {
+  return Object.values(list).flat()
+}
+
+export function countAll(list: RecentAddress): number {
+  return flatten(list).length
 }
 
 export function isAtCap(
-  list: SavedAccount[],
+  list: RecentAddress,
   cap: number = SAVED_ACCOUNTS_CAP,
 ): boolean {
-  return list.length >= cap
+  return countAll(list) >= cap
 }
 
 export function canAdd(
-  list: SavedAccount[],
-  account: SavedAccount,
+  list: RecentAddress,
+  chainType: ChainType,
+  address: string,
   cap: number = SAVED_ACCOUNTS_CAP,
 ): boolean {
-  const exists = list.some(a => a.id === account.id)
-  if (exists) return true // replace is always allowed
+  const exists = (list[chainType] ?? []).some(
+    e => e.address.toLowerCase() === address.toLowerCase(),
+  )
+  if (exists) return true
   return !isAtCap(list, cap)
 }
 
-export function removeById(list: SavedAccount[], id: string): SavedAccount[] {
-  return list.filter(a => a.id !== id)
+export function upsertEntry(
+  list: RecentAddress,
+  entry: PersistedEntry,
+): RecentAddress {
+  const bucket = [...(list[entry.type] ?? [])]
+  const idx = bucket.findIndex(
+    e => e.address.toLowerCase() === entry.address.toLowerCase(),
+  )
+  if (idx === -1) bucket.push(entry)
+  else bucket[idx] = entry
+  return { ...list, [entry.type]: bucket }
 }
 
+export function removeEntry(
+  list: RecentAddress,
+  chainType: ChainType,
+  address: string,
+): RecentAddress {
+  const bucket = (list[chainType] ?? []).filter(
+    e => e.address.toLowerCase() !== address.toLowerCase(),
+  )
+  return { ...list, [chainType]: bucket }
+}
+
+/** After a removal, choose the entry to activate: last in the removed bucket, else first remaining anywhere, else null. */
 export function promoteNext(
-  listAfterRemoval: SavedAccount[],
-): SavedAccount | null {
-  if (listAfterRemoval.length === 0) return null
-  return [...listAfterRemoval].sort((a, b) => a.addedAt - b.addedAt)[0]
+  list: RecentAddress,
+  removedType: ChainType,
+  _removedAddress: string,
+): PersistedEntry | null {
+  const sameBucket = list[removedType] ?? []
+  if (sameBucket.length) return sameBucket[sameBucket.length - 1]
+  const rest = flatten(list)
+  return rest.length ? rest[0] : null
 }
 
-export function backfillMerge(
-  existing: SavedAccount[],
-  seeds: SavedAccount[],
-): SavedAccount[] {
-  const byId = new Map(existing.map(a => [a.id, a]))
-  for (const seed of seeds) {
-    if (!byId.has(seed.id)) byId.set(seed.id, seed)
+const DEFAULT_NAME_RE = /^Address (\d+)$/
+
+export function nextDefaultName(list: RecentAddress): string {
+  const taken = new Set<number>()
+  for (const e of flatten(list)) {
+    const m = DEFAULT_NAME_RE.exec(e.addressName ?? '')
+    if (m) taken.add(Number(m[1]))
   }
-  return [...byId.values()]
+  let n = 1
+  while (taken.has(n)) n += 1
+  return `Address ${n}`
+}
+
+export function isNameUnique(
+  list: RecentAddress,
+  name: string,
+  exceptKey?: string,
+): boolean {
+  return !flatten(list).some(
+    e => e.addressName === name && buildId(e.type, e.address) !== exceptKey,
+  )
+}
+
+/** Assign a unique default name to every entry missing one. Idempotent. */
+export function backfillNames(list: RecentAddress): RecentAddress {
+  let working: RecentAddress = { ...list }
+  for (const type of Object.keys(list)) {
+    const bucket = [...(list[type] ?? [])]
+    bucket.forEach((e, i) => {
+      if (!e.addressName) {
+        bucket[i] = { ...e, addressName: nextDefaultName(working) }
+        working = { ...working, [type]: [...bucket] }
+      }
+    })
+    working = { ...working, [type]: bucket }
+  }
+  return working
+}
+
+export function deriveKind(walletType: string): SavedAccountKind {
+  return SIGNING_WALLET_TYPES.has(walletType) ? 'signing' : 'watchOnly'
+}
+
+export interface ToSavedAccountCtx {
+  config?: {
+    id?: string
+    icon?: unknown
+    type?: WalletConfigType[]
+  }
+  kindOverride?: SavedAccountKind
+  fallbackConfigType: WalletConfigType
+}
+
+export function toSavedAccount(
+  entry: PersistedEntry,
+  ctx: ToSavedAccountCtx,
+): SavedAccount {
+  return {
+    id: buildId(entry.type, entry.address),
+    address: entry.address,
+    chainType: entry.type,
+    kind: ctx.kindOverride ?? deriveKind(entry.walletType),
+    walletConfigType: ctx.config?.type?.[0] ?? ctx.fallbackConfigType,
+    providerType: entry.walletType as WalletType,
+    connectorId: ctx.config?.id,
+    walletName: entry.walletName || entry.address,
+    addressName: entry.addressName,
+    icon: typeof ctx.config?.icon === 'string' ? ctx.config.icon : '',
+  }
 }
