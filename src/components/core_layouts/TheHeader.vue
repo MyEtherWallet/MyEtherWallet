@@ -117,7 +117,10 @@
             {{ $t('connect_wallet') }}
           </router-link>
           <!-- Address Menu -->
-          <the-address-menu v-if="isWalletConnected" />
+          <the-address-menu
+            v-if="isWalletConnected"
+            @open-change="addressPopupOpen = $event"
+          />
           <the-settings-popup />
           <the-notifications-popup v-if="isWalletConnected" />
         </div>
@@ -132,6 +135,12 @@
           : 'opacity-0 pointer-events-none'
       "
       @click="closeSearch"
+    />
+    <!-- Address-menu backdrop: lives inside the header's stacking context so the
+         address trigger (higher in-context z) stays bright above it. -->
+    <div
+      v-if="addressPopupOpen"
+      class="fixed inset-0 bg-black/40 z-[1] transition-opacity"
     />
   </div>
 </template>
@@ -178,6 +187,8 @@ const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
  ------------------------------*/
 
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
+
+const addressPopupOpen = ref(false)
 
 /** ------------------------------
  * Menu Items

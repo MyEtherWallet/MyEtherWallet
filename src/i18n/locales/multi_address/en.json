@@ -12,6 +12,8 @@
     "unlocked": "Unlocked",
     "connected": "Connected",
     "watch_only": "Watch only",
+    "watchonly": "Watchonly",
+    "connect_address": "Connect address",
     "tokens": "tokens",
     "copied": "Copied!",
     "detected": "Detected address",

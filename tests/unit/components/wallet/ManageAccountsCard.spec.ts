@@ -69,4 +69,23 @@ describe('ManageAccountsCard', () => {
     await w.get('[data-test="menu-disconnect"]').trigger('click')
     expect(w.emitted('disconnect')).toHaveLength(1)
   })
+
+  it('shows Connected (no Connect button) for signing accounts', () => {
+    const w = factory({ account: { kind: 'signing' } })
+    expect(w.text()).toContain('multi_address.connected')
+    expect(w.find('[data-test="card-connect"]').exists()).toBe(false)
+  })
+
+  it('shows the eye/Watchonly status and a Connect address button for watch-only accounts', () => {
+    const w = factory({ account: { kind: 'watchOnly' } })
+    expect(w.text()).toContain('multi_address.watchonly')
+    expect(w.find('[data-test="card-connect"]').exists()).toBe(true)
+    expect(w.get('[data-test="card-connect"]').text()).toContain('multi_address.connect_address')
+  })
+
+  it('emits connect when the watch-only Connect address button is clicked', async () => {
+    const w = factory({ account: { kind: 'watchOnly' } })
+    await w.get('[data-test="card-connect"]').trigger('click')
+    expect(w.emitted('connect')).toHaveLength(1)
+  })
 })

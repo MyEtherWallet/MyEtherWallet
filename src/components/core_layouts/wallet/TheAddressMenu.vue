@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppBlockie from '@/components/AppBlockie.vue'
@@ -71,6 +71,8 @@ defineProps({
   },
 })
 
+const emit = defineEmits<{ openChange: [value: boolean] }>()
+
 /** -------------------------------
  * Dialog
  -------------------------------*/
@@ -79,4 +81,5 @@ const triggerRef = ref<HTMLElement | null>(null)
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }
+watch(openDialog, value => emit('openChange', value))
 </script>

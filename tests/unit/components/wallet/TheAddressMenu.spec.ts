@@ -100,4 +100,26 @@ describe('TheAddressMenu', () => {
     await w.find('button').trigger('click')
     expect(w.findComponent({ name: 'TheManageAccounts' }).props('openDialog')).toBe(true)
   })
+
+  it('emits openChange when the popup open-state changes', async () => {
+    const w = mount(TheAddressMenu, {
+      global: {
+        stubs: {
+          AppBlockie: true,
+          IconWatchOnly: true,
+          ChevronDownIcon: true,
+          TheManageAccounts: {
+            name: 'TheManageAccounts',
+            template: '<div data-test="manage-accounts" />',
+            props: ['openDialog'],
+          },
+        },
+        mocks: {
+          $t: (k: string) => k,
+        },
+      },
+    })
+    await w.find('button').trigger('click')
+    expect(w.emitted('openChange')?.at(-1)).toEqual([true])
+  })
 })

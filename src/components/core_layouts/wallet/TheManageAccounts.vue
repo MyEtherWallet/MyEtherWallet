@@ -1,21 +1,5 @@
 <template>
   <teleport to="#app">
-    <!-- Backdrop -->
-    <transition
-      enter-from-class="opacity-0"
-      enter-active-class="transition duration-200"
-      enter-to-class="opacity-100"
-      leave-from-class="opacity-100"
-      leave-active-class="transition duration-150"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="openDialog"
-        class="fixed inset-0 z-[2100] bg-black/25"
-        @click="openDialog = false"
-      />
-    </transition>
-
     <!-- Popup -->
     <transition
       enter-from-class="opacity-0 scale-95"
@@ -79,6 +63,7 @@
                     @explorer="openExplorer(activeAccount)"
                     @disconnect="onDisconnect"
                     @delete="onDelete(activeAccount)"
+                    @connect="onConnect"
                   />
                 </div>
               </div>
@@ -288,6 +273,11 @@ const onRename = (acc: SavedAccount, name: string): void => {
 const onAdd = (): void => {
   void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
   startAdd()
+}
+const onConnect = (): void => {
+  void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
+  startAdd()
+  openDialog.value = false
 }
 const refresh = (acc: SavedAccount): void => {
   void refreshOne({ id: acc.id, chainName: chainName(), address: acc.address })

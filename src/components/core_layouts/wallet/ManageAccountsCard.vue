@@ -92,14 +92,27 @@
     </div>
 
     <!-- Footer status -->
-    <div v-else class="relative flex items-center gap-1 text-s-14">
+    <div v-else class="relative flex items-end justify-between gap-2 text-s-14">
       <template v-if="account.kind === 'signing'">
-        <span class="w-2 h-2 rounded-full bg-success flex-shrink-0" aria-hidden="true" />
-        <span>{{ $t('multi_address.connected') }}</span>
+        <span class="flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-success flex-shrink-0" aria-hidden="true" />
+          <span>{{ $t('multi_address.connected') }}</span>
+        </span>
       </template>
       <template v-else>
-        <icon-watch-only class="w-4 h-4 flex-shrink-0" />
-        <span>{{ $t('multi_address.watch_only') }}</span>
+        <span class="flex items-center gap-1">
+          <span class="rounded-full size-4 flex items-center justify-center flex-shrink-0">
+            <eye-icon class="w-4 h-4" />
+          </span>
+          <span class="font-semibold">{{ $t('multi_address.watchonly') }}</span>
+        </span>
+        <button
+          data-test="card-connect"
+          class="bg-white rounded-[24px] h-10 px-3 flex items-center flex-shrink-0"
+          @click="$emit('connect')"
+        >
+          <span class="font-semibold text-s-14 text-black">{{ $t('multi_address.connect_address') }}</span>
+        </button>
       </template>
     </div>
   </div>
@@ -112,9 +125,9 @@ import {
   ArrowPathIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/outline'
+import { EyeIcon } from '@heroicons/vue/16/solid'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
-import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
 import { truncateAddress } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
@@ -132,6 +145,7 @@ const emit = defineEmits<{
   disconnect: []
   rename: [name: string]
   delete: []
+  connect: []
 }>()
 
 const confirmingDelete = ref(false)

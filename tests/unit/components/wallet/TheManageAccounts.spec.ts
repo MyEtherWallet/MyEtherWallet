@@ -39,7 +39,7 @@ const stubs = {
   ManageAccountsCard: {
     name: 'ManageAccountsCard',
     props: ['account', 'balance'],
-    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\', \'New\')"><button data-test="card-disconnect" @click.stop="$emit(\'disconnect\')" /></div>',
+    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\', \'New\')"><button data-test="card-disconnect" @click.stop="$emit(\'disconnect\')" /><button data-test="card-connect-btn" @click.stop="$emit(\'connect\')" /></div>',
   },
   ManageAccountsRow: {
     props: ['account', 'isActive'],
@@ -72,6 +72,13 @@ describe('TheManageAccounts', () => {
     const w = factory()
     await w.get('[data-test="card-disconnect"]').trigger('click')
     expect(walletStore.disconnectWallet).toHaveBeenCalledTimes(1)
+  })
+
+  it('starts the add-account flow and closes when the card emits connect', async () => {
+    const w = factory()
+    await w.get('[data-test="card-connect-btn"]').trigger('click')
+    expect(startAdd).toHaveBeenCalledTimes(1)
+    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
   })
 
   it('backfills once on open', () => {
