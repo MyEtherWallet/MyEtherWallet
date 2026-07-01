@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-4">
     <!-- Header: back button + centered title + invisible spacer -->
     <div class="flex items-center gap-1 w-full">
       <button

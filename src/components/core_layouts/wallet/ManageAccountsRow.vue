@@ -28,8 +28,7 @@
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-1">
           <span
-            class="font-semibold text-s-14 truncate"
-            :class="isActive ? 'text-black' : 'text-black'"
+            class="font-semibold text-s-14 truncate text-black"
           >{{ account.addressName }}</span>
           <span
             v-if="isActive"

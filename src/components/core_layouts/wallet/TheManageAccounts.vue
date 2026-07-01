@@ -38,7 +38,7 @@
                 <div class="bg-surface-hover rounded-20 overflow-hidden">
                   <button
                     data-test="network-row"
-                    class="flex items-center gap-2.5 w-full pl-3 pr-4 py-3 text-left"
+                    class="flex items-center gap-2.5 w-full pl-3 pr-4 py-3 text-left rounded-[22px] transition-colors hover:bg-black/5"
                     @click="view = 'network'"
                   >
                     <img
@@ -70,7 +70,7 @@
               <!-- Section 2: all-accounts list -->
               <div class="flex-1 min-h-0 flex flex-col px-2 relative overflow-hidden" style="min-height: 0;">
                 <div class="p-4">
-                  <p class="text-s-14 text-info">
+                  <p class="text-s-14 text-[#575757]">
                     {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
                   </p>
                 </div>
