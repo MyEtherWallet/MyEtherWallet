@@ -1,76 +1,175 @@
+import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
+import { useWalletStore } from '@/stores/walletStore'
+import { useChainsStore } from '@/stores/chainsStore'
+import {
+  walletConfigs,
+  WalletConfigType,
+} from '@/modules/access/common/walletConfigs'
 import type { Chain, ChainType } from '@/mew_api/types'
-
-interface AddressKeyValue {
-  address: string
-  walletName: string
-  chain: Chain
-  type: ChainType
-  walletType: string
-}
-
-interface RecentAddress {
-  [key: string]: AddressKeyValue[]
-}
+import {
+  buildId,
+  canAdd,
+  upsertEntry,
+  removeEntry,
+  nextDefaultName,
+  isNameUnique,
+  backfillNames,
+  toSavedAccount,
+  type RecentAddress,
+  type PersistedEntry,
+  type SavedAccount,
+} from '@/stores/saved_accounts/savedAccountsLogic'
 
 export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   const watchOnlyAddresses = useLocalStorage<RecentAddress>(
     'watchOnlyList',
-    {
-      EVM: [],
-      BITCOIN: [],
-    },
-    {
-      mergeDefaults: true,
-    },
+    { EVM: [], BITCOIN: [] },
+    { mergeDefaults: true },
   )
-  // Takes address to store, chain type to store under, and wallet name
-  // to allow easy opening for the popup
+
+  const walletStore = useWalletStore()
+  const chainsStore = useChainsStore()
+
+  const configFor = (walletName: string) =>
+    Object.values(walletConfigs).find((c: any) => c.name === walletName) as
+      | { id?: string; icon?: unknown; type?: WalletConfigType[] }
+      | undefined
+
+  const view = (
+    entry: PersistedEntry,
+    kindOverride?: SavedAccount['kind'],
+  ): SavedAccount =>
+    toSavedAccount(entry, {
+      config: configFor(entry.walletName),
+      kindOverride,
+      fallbackConfigType: WalletConfigType.SOFTWARE,
+    })
+
+  const activeId = computed<string | null>(() => {
+    const address = walletStore.walletAddress
+    const chainType = chainsStore.selectedChain?.type as ChainType | undefined
+    if (!address || !chainType) return null
+    return buildId(chainType, address)
+  })
+
+  const allAccounts = computed<SavedAccount[]>(() =>
+    Object.values(watchOnlyAddresses.value)
+      .flat()
+      .map(e => {
+        const isActive = buildId(e.type, e.address) === activeId.value
+        return view(
+          e,
+          isActive ? (walletStore.isWatchOnly ? 'watchOnly' : 'signing') : undefined,
+        )
+      }),
+  )
+
+  const activeAccount = computed<SavedAccount | null>(
+    () => allAccounts.value.find(a => a.id === activeId.value) ?? null,
+  )
+
+  const savedAccounts = computed<SavedAccount[]>(() =>
+    allAccounts.value.filter(a => a.id !== activeId.value),
+  )
+
+  const isAtCap = computed<boolean>(
+    () => Object.values(watchOnlyAddresses.value).flat().length >= 20,
+  )
+
+  const makeEntry = (
+    address: string,
+    chain: Chain,
+    walletType: string,
+    type: ChainType,
+    walletName: string,
+  ): PersistedEntry => ({
+    address,
+    walletName,
+    chain,
+    type,
+    walletType,
+    addressName: nextDefaultName(watchOnlyAddresses.value),
+  })
+
+  /** Auto-capture path (called by walletStore.setAddress on every connect). Void; silently caps. */
   const addWallet = (
     address: string,
     chain: Chain,
     walletType: string,
     type: ChainType,
     walletName: string,
-  ) => {
-    const addressKeyMap: AddressKeyValue = {
-      walletType,
-      walletName,
-      chain,
+  ): void => {
+    const bucket = watchOnlyAddresses.value[type] ?? []
+    const prior = bucket.find(
+      e => e.address.toLowerCase() === address.toLowerCase(),
+    )
+    if (!prior && !canAdd(watchOnlyAddresses.value, type, address)) return
+    const entry: PersistedEntry = prior
+      ? { ...prior, walletName, walletType, chain } // preserve addressName
+      : makeEntry(address, chain, walletType, type, walletName)
+    watchOnlyAddresses.value = upsertEntry(watchOnlyAddresses.value, entry)
+  }
+
+  /** Explicit add (add-flow / save-detected). Reports the reason on failure. */
+  const tryAddAddress = (
+    address: string,
+    chain: Chain,
+    walletType: string,
+    type: ChainType,
+    walletName: string,
+  ): { added: boolean; reason?: 'cap' | 'duplicate' } => {
+    const exists = (watchOnlyAddresses.value[type] ?? []).some(
+      e => e.address.toLowerCase() === address.toLowerCase(),
+    )
+    if (exists) return { added: false, reason: 'duplicate' }
+    if (!canAdd(watchOnlyAddresses.value, type, address))
+      return { added: false, reason: 'cap' }
+    addWallet(address, chain, walletType, type, walletName)
+    return { added: true }
+  }
+
+  const removeWallet = (address: string, chain: Chain): void => {
+    watchOnlyAddresses.value = removeEntry(
+      watchOnlyAddresses.value,
+      chain.type as ChainType,
       address,
-      type,
-    }
+    )
+  }
 
-    if (watchOnlyAddresses.value[chain.type]) {
-      // Check if address already exists
-      const existingIndex = watchOnlyAddresses.value[chain.type].findIndex(
-        item => item.address === address,
+  const renameAccount = (
+    key: string,
+    name: string,
+  ): { ok: boolean; reason?: 'duplicate' } => {
+    if (!isNameUnique(watchOnlyAddresses.value, name, key))
+      return { ok: false, reason: 'duplicate' }
+    const next: RecentAddress = { ...watchOnlyAddresses.value }
+    for (const type of Object.keys(next)) {
+      next[type] = next[type].map(e =>
+        buildId(e.type, e.address) === key ? { ...e, addressName: name } : e,
       )
-
-      if (existingIndex !== -1) {
-        // Remove existing entry and add to front (end of array = most recent)
-        watchOnlyAddresses.value[chain.type].splice(existingIndex, 1)
-        watchOnlyAddresses.value[chain.type].push(addressKeyMap)
-      } else {
-        // Remove oldest element if there are already 2 or more
-        if (watchOnlyAddresses.value[chain.type].length >= 2) {
-          watchOnlyAddresses.value[chain.type].shift()
-        }
-        watchOnlyAddresses.value[chain.type].push(addressKeyMap)
-      }
-    } else {
-      watchOnlyAddresses.value[chain.type] = [addressKeyMap]
     }
+    watchOnlyAddresses.value = next
+    return { ok: true }
   }
 
-  const removeWallet = (address: string, chain: Chain) => {
-    if (watchOnlyAddresses.value[chain.type]) {
-      watchOnlyAddresses.value[chain.type] = watchOnlyAddresses.value[
-        chain.type
-      ].filter(item => item.address !== address)
-    }
+  /** One-shot: assign default names to legacy entries missing them. */
+  const backfill = (): void => {
+    watchOnlyAddresses.value = backfillNames(watchOnlyAddresses.value)
   }
 
-  return { addWallet, removeWallet, watchOnlyAddresses }
+  return {
+    watchOnlyAddresses,
+    addWallet,
+    tryAddAddress,
+    removeWallet,
+    renameAccount,
+    backfill,
+    activeId,
+    activeAccount,
+    savedAccounts,
+    allAccounts,
+    isAtCap,
+  }
 })
