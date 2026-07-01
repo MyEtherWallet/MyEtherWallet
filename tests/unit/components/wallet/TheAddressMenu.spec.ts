@@ -31,9 +31,6 @@ vi.mock('pinia', async (importOriginal) => {
 vi.mock('@/composables/useAppBreakpoints', () => ({ useAppBreakpoints: () => ({ isXS: false }) }))
 
 // Mocks for TheManageAccounts deep dependency chain (pulled in via static import)
-vi.mock('@/stores/savedAccountsStore', () => ({
-  useSavedAccountsStore: () => ({ activeAccount: null, savedAccounts: [], activeId: null, backfill: vi.fn() }),
-}))
 vi.mock('@/composables/useAccountSwitch', () => ({
   useAccountSwitch: () => ({ switchTo: vi.fn(), deleteAccount: vi.fn() }),
 }))
