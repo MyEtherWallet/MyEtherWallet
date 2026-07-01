@@ -46,6 +46,14 @@ describe('ManageAccountsRow', () => {
     expect(factory().text()).toContain('Address 1')
   })
 
+  it('shows the active check badge when active and the eye when watch-only', () => {
+    expect(factory({ isActive: true }).find('[data-test="badge"]').exists()).toBe(true)
+    const watchOnly = factory({ account: { kind: 'watchOnly' }, isActive: false })
+    expect(watchOnly.find('[data-test="badge"]').exists()).toBe(false)
+    // watch-only rows render the eye icon (heroicons EyeIcon svg)
+    expect(watchOnly.find('svg').exists()).toBe(true)
+  })
+
   it('emits select when the row body is clicked', async () => {
     const w = factory()
     await w.get('[data-test="row-body"]').trigger('click')

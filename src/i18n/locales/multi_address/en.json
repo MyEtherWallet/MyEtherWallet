@@ -10,6 +10,8 @@
     "paper_wallet": "View Paper Wallet",
     "empty": "No saved addresses yet",
     "unlocked": "Unlocked",
+    "connected": "Connected",
+    "watch_only": "Watch only",
     "tokens": "tokens",
     "copied": "Copied!",
     "detected": "Detected address",

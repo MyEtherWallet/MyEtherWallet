@@ -36,9 +36,14 @@ const stubs = {
   Teleport: true,
   TheCurrentNetwork: true, ThePaperWallet: true,
   ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
+  ManageAccountsCard: {
+    name: 'ManageAccountsCard',
+    props: ['account', 'balance'],
+    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\', \'New\')"></div>',
+  },
   ManageAccountsRow: {
     props: ['account', 'isActive'],
-    template: '<div class="row" :data-id="account.id" @click="$emit(\'rename\', \'New\')"></div>',
+    template: '<div class="row" :data-id="account.id" :data-active="isActive" @click="$emit(\'rename\', \'New\')"></div>',
   },
 }
 const factory = () =>
@@ -47,10 +52,20 @@ const factory = () =>
 beforeEach(() => { vi.clearAllMocks(); walletStore.detectedAddress.value = null })
 
 describe('TheManageAccounts', () => {
-  it('renders active + saved rows and the count', () => {
+  it('renders the active-account card, all accounts as rows, and the count', () => {
     const w = factory()
-    expect(w.findAll('.row')).toHaveLength(2)
+    expect(w.find('[data-test="active-card"]').exists()).toBe(true)
+    const rows = w.findAll('.row')
+    expect(rows).toHaveLength(2)
+    // active account is highlighted in the list too
+    expect(rows[0].attributes('data-active')).toBe('true')
     expect(w.text()).toContain('2')
+  })
+
+  it('routes a card rename to renameAccount', async () => {
+    const w = factory()
+    await w.get('[data-test="active-card"]').trigger('click')
+    expect(renameAccount).toHaveBeenCalled()
   })
 
   it('backfills once on open', () => {
