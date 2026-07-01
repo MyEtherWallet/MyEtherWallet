@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative z-[2102]">
     <button
       v-if="isWalletConnected && walletAddress"
       ref="triggerRef"

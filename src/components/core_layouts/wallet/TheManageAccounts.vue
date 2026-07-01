@@ -1,5 +1,22 @@
 <template>
   <teleport to="#app">
+    <!-- Backdrop -->
+    <transition
+      enter-from-class="opacity-0"
+      enter-active-class="transition duration-200"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-active-class="transition duration-150"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="openDialog"
+        class="fixed inset-0 z-[2100] bg-black/25"
+        @click="openDialog = false"
+      />
+    </transition>
+
+    <!-- Popup -->
     <transition
       enter-from-class="opacity-0 scale-95"
       enter-active-class="transform ease-out duration-200 transition"
@@ -12,20 +29,15 @@
         v-if="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2101] w-[384px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+        class="fixed z-[2101] w-[384px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
       >
-        <!-- Fixed-height slide track: height is set once from the accounts panel on open and never changes when view toggles -->
-        <div
-          class="relative overflow-hidden"
-          :style="{
-            height: containerHeight > 0 ? `${containerHeight}px` : undefined,
-          }"
-        >
+        <!-- Slide track: fixed height, panels slide horizontally -->
+        <div class="relative h-full overflow-hidden">
           <!-- Accounts panel -->
           <div
             ref="accountsPanelRef"
             :inert="view !== 'accounts'"
-            class="absolute top-0 left-0 w-full h-full"
+            class="absolute inset-0 w-full h-full"
             :style="{
               transform: view === 'accounts' ? 'translateX(0)' : `translateX(calc(-100% - ${GAP}px))`,
               opacity: view === 'accounts' ? 1 : 0,
@@ -34,24 +46,27 @@
           >
             <div class="flex flex-col h-full">
               <!-- Section 1: network pill + active-account card -->
-              <div class="p-4">
+              <div class="shrink-0 p-4">
                 <div class="bg-surface-hover rounded-20 overflow-hidden">
                   <button
                     data-test="network-row"
-                    class="flex items-center gap-2.5 w-full pl-3 pr-4 py-3 text-left rounded-[22px] transition-colors hover:bg-black/5"
+                    class="flex items-center justify-between gap-2.5 w-full pl-3 pr-4 py-3 text-left rounded-[22px] transition-colors hover:bg-black/5"
                     @click="view = 'network'"
                   >
-                    <img
-                      v-if="chainsStore.selectedChain?.icon"
-                      :src="chainsStore.selectedChain.icon"
-                      alt=""
-                      aria-hidden="true"
-                      class="w-7 h-7 rounded-full object-contain flex-shrink-0"
-                    />
-                    <div v-else class="w-7 h-7 rounded-full bg-white flex-shrink-0" />
-                    <span class="text-s-14 font-semibold text-black truncate">
-                      {{ chainsStore.selectedChain?.nameLong }}
-                    </span>
+                    <div class="flex items-center gap-2.5 min-w-0">
+                      <img
+                        v-if="chainsStore.selectedChain?.icon"
+                        :src="chainsStore.selectedChain.icon"
+                        alt=""
+                        aria-hidden="true"
+                        class="w-7 h-7 rounded-full object-contain flex-shrink-0"
+                      />
+                      <div v-else class="w-7 h-7 rounded-full bg-white flex-shrink-0" />
+                      <span class="text-s-14 font-semibold text-black truncate">
+                        {{ chainsStore.selectedChain?.nameLong }}
+                      </span>
+                    </div>
+                    <chevron-right-icon class="w-5 h-5 text-info flex-shrink-0" />
                   </button>
                   <manage-accounts-card
                     v-if="activeAccount"
@@ -68,39 +83,34 @@
               </div>
 
               <!-- Section 2: all-accounts list -->
-              <div class="flex-1 min-h-0 flex flex-col px-2 relative overflow-hidden" style="min-height: 0;">
+              <div class="flex-1 min-h-0 overflow-y-auto px-2">
                 <div class="p-4">
                   <p class="text-s-14 text-[#575757]">
                     {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
                   </p>
                 </div>
-                <div class="flex-1 min-h-0 overflow-y-auto">
-                  <template v-if="allAccounts.length">
-                    <manage-accounts-row
-                      v-for="acc in allAccounts"
-                      :key="acc.id"
-                      :account="acc"
-                      :is-active="acc.id === activeAccount?.id"
-                      :balance="balances[acc.id]"
-                      @select="onSelect(acc)"
-                      @copy="copy(acc.address)"
-                      @refresh="refresh(acc)"
-                      @rename="onRename(acc, $event)"
-                      @paper="openPaperWallet = true"
-                      @explorer="openExplorer(acc)"
-                      @delete="onDelete(acc)"
-                    />
-                  </template>
-                  <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
-                </div>
-                <div
-                  class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-transparent to-[#f5f5f5]"
-                  aria-hidden="true"
-                />
+                <template v-if="allAccounts.length">
+                  <manage-accounts-row
+                    v-for="acc in allAccounts"
+                    :key="acc.id"
+                    :account="acc"
+                    :is-active="acc.id === activeAccount?.id"
+                    :balance="balances[acc.id]"
+                    @select="onSelect(acc)"
+                    @copy="copy(acc.address)"
+                    @refresh="refresh(acc)"
+                    @rename="onRename(acc, $event)"
+                    @paper="openPaperWallet = true"
+                    @explorer="openExplorer(acc)"
+                    @delete="onDelete(acc)"
+                  />
+                </template>
+                <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
+                <div class="pb-3" />
               </div>
 
               <!-- Section 3: detected footer + connect-another -->
-              <div class="p-4">
+              <div class="shrink-0 p-4">
                 <div v-if="detectedAddress" class="mb-4 rounded-12 bg-grey-faded px-3 py-2">
                   <div class="flex items-center justify-between">
                     <div class="min-w-0">
@@ -158,10 +168,11 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import { ChevronRightIcon } from '@heroicons/vue/20/solid'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
 import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
@@ -190,7 +201,6 @@ const view = ref<'accounts' | 'network'>('accounts')
 const accountsPanelRef = ref<HTMLElement | null>(null)
 const networkPanelRef = ref<HTMLElement | null>(null)
 const popupRef = ref<HTMLElement | null>(null)
-const containerHeight = ref(0)
 
 const popupStyle = computed(() => {
   if (props.anchor) {
@@ -203,19 +213,8 @@ const popupStyle = computed(() => {
   return { top: '76px', right: '16px' }
 })
 
-// Measure height ONCE from the accounts panel when popup opens; never re-measure on view change
-// so toggling accounts↔network produces no height shift in the outer popup.
-// The height is also clamped to the viewport (100vh - 96px) so the popup never overflows.
-const measureHeight = (): void => {
-  if (!accountsPanelRef.value) return
-  const measured = accountsPanelRef.value.scrollHeight
-  const maxH = window.innerHeight - 96
-  containerHeight.value = measured > 0 ? Math.min(measured, maxH) : 0
-}
-
 watch(openDialog, val => {
-  if (val) nextTick(measureHeight)
-  else view.value = 'accounts'
+  if (!val) view.value = 'accounts'
 })
 
 const watchOnlyStore = useWatchOnlyStore()
