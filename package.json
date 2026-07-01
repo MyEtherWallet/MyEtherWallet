@@ -14,7 +14,6 @@
     "test:unit": "vitest",
     "test:e2e": "nightwatch --config ./nightwatch.conf.cjs tests/e2e/*",
     "build:preview": "vite preview",
-    "build:prod": "VITE_AMPLITUDE=prod vite build",
     "build:only": "vite build",
     "build:watchonly": "vite build --watch",
     "type-check": "vue-tsc -p tsconfig.app.json",
