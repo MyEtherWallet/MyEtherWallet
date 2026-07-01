@@ -117,9 +117,9 @@
           <div class="h-px bg-grey-10 w-full mb-2"></div>
         </div>
 
-        <!-- Trending & Recently searched, pinned to the top of the results -->
+        <!-- Stablecoins & Recently searched, pinned to the top of the results -->
         <div
-          v-if="recentlySearchedResults.length || trendingResults.length"
+          v-if="recentlySearchedResults.length || stablecoinResults.length"
           class="mb-3"
         >
           <div v-if="recentlySearchedResults.length" class="mb-3">
@@ -158,14 +158,14 @@
             </div>
           </div>
 
-          <div v-if="trendingResults.length">
+          <div v-if="stablecoinResults.length">
             <p class="text-s-12 font-medium text-info mb-1.5 px-2">
-              {{ $t('common.trending') }}
+              {{ $t('crypto.stablecoins') }}
             </p>
             <div class="flex items-center gap-1.5 flex-wrap">
               <button
-                v-for="token in trendingResults"
-                :key="`trending-${token.address}`"
+                v-for="token in stablecoinResults"
+                :key="`stablecoin-${token.address}`"
                 type="button"
                 class="flex items-center hoverNoBG bg-grey-5 rounded-full py-1 pl-1 pr-3 transition-colors"
                 @click="setSelectedToken(token)"
@@ -695,16 +695,55 @@ const disabledGroupLabel = computed(
   () => props.disabledGroupTitle || t('trade.trading_paused_session'),
 )
 
-// Trending & recently searched suggestions, pinned above the results and shown
-// whenever the picker is open (including while the user is searching).
+// Stablecoins & recently searched suggestions, pinned above the results and
+// shown whenever the picker is open (including while the user is searching).
 const SUGGESTION_LIMIT = 6
 
-// Trending = tokens with the highest 24H volume on the current chain.
-const trendingResults = computed<TokenBalanceWithUsd[]>(() =>
-  sortObjectArrayNumber(enrichedTokens.value, 'volume24h', SortDirection.DESC)
-    .filter(token => token.volume24h > 0 && !isTokenDisabled(token))
-    .slice(0, SUGGESTION_LIMIT),
-)
+// Well-known stablecoin symbols. The swap token type carries no stablecoin flag,
+// so match by symbol to surface them regardless of the connected wallet.
+const STABLECOIN_SYMBOLS = new Set([
+  'USDT',
+  'USDC',
+  'DAI',
+  'USDE',
+  'USDS',
+  'PYUSD',
+  'FDUSD',
+  'TUSD',
+  'USDP',
+  'GUSD',
+  'FRAX',
+  'LUSD',
+  'USDD',
+  'BUSD',
+  'USDG',
+  'RLUSD',
+])
+
+// Stablecoins available on the current chain, most liquid (24H volume) first.
+const stablecoinResults = computed<TokenBalanceWithUsd[]>(() => {
+  const stables = sortObjectArrayNumber(
+    enrichedTokens.value,
+    'volume24h',
+    SortDirection.DESC,
+  ).filter(
+    token =>
+      STABLECOIN_SYMBOLS.has(token.symbol?.toUpperCase()) &&
+      !isTokenDisabled(token),
+  )
+
+  // On the "from" (sell) side only surface stables the user actually holds,
+  // ordered by holding size — so the category is hidden when you have none.
+  if (props.isFromView) {
+    return sortObjectArrayNumber(
+      stables.filter(token => Number(token.balance ?? 0) > 0),
+      'usd_balance',
+      SortDirection.DESC,
+    ).slice(0, SUGGESTION_LIMIT)
+  }
+
+  return stables.slice(0, SUGGESTION_LIMIT)
+})
 
 // Recently searched reuses the shared "recently viewed" store, resolving each
 // entry against the current chain's tokens (by coingecko id, falling back to
