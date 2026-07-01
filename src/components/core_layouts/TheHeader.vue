@@ -222,16 +222,16 @@ const toolsMenuList = computed<AppMenuListItem[]>(() => {
     },
   ]
 })
-const learnMenuList: AppSelectOption[] = [
+const learnMenuList = computed<AppSelectOption[]>(() => [
   {
-    label: 'Help Center',
+    label: t('common.help_center'),
     value: 'https://help.myetherwallet.com/en/',
   },
   {
-    label: 'Blog',
+    label: t('common.blog'),
     value: 'https://www.myetherwallet.com/blog',
   },
-]
+])
 
 const displayLinks = computed(() => {
   return coreMenuList.value
