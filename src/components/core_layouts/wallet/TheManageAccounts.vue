@@ -12,28 +12,27 @@
         v-if="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2101] w-[384px] max-w-[calc(100vw-32px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+        class="fixed z-[2101] w-[384px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
       >
-        <!-- Height-animated slide track -->
+        <!-- Fixed-height slide track: height is set once from the accounts panel on open and never changes when view toggles -->
         <div
           class="relative overflow-hidden"
           :style="{
             height: containerHeight > 0 ? `${containerHeight}px` : undefined,
-            transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
           }"
         >
           <!-- Accounts panel -->
           <div
             ref="accountsPanelRef"
             :inert="view !== 'accounts'"
-            class="absolute top-0 left-0 w-full"
+            class="absolute top-0 left-0 w-full h-full"
             :style="{
               transform: view === 'accounts' ? 'translateX(0)' : `translateX(calc(-100% - ${GAP}px))`,
               opacity: view === 'accounts' ? 1 : 0,
               transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
             }"
           >
-            <div class="flex flex-col max-h-[80vh]">
+            <div class="flex flex-col h-full">
               <!-- Section 1: network pill + active-account card -->
               <div class="p-4">
                 <div class="bg-surface-hover rounded-20 overflow-hidden">
@@ -69,7 +68,7 @@
               </div>
 
               <!-- Section 2: all-accounts list -->
-              <div class="flex-1 min-h-0 flex flex-col px-2 relative overflow-hidden">
+              <div class="flex-1 min-h-0 flex flex-col px-2 relative overflow-hidden" style="min-height: 0;">
                 <div class="p-4">
                   <p class="text-s-14 text-info">
                     {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
@@ -137,11 +136,11 @@
             <the-paper-wallet v-model:is-open="openPaperWallet" />
           </div>
 
-          <!-- Network panel -->
+          <!-- Network panel: fills the same fixed height; content scrolls internally via ManageAccountsNetworkView -->
           <div
             ref="networkPanelRef"
             :inert="view !== 'network'"
-            class="absolute top-0 left-0 w-full p-0"
+            class="absolute top-0 left-0 w-full h-full p-0 overflow-y-auto"
             :style="{
               transform: view === 'network' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
               opacity: view === 'network' ? 1 : 0,
@@ -204,16 +203,20 @@ const popupStyle = computed(() => {
   return { top: '76px', right: '16px' }
 })
 
+// Measure height ONCE from the accounts panel when popup opens; never re-measure on view change
+// so toggling accounts↔network produces no height shift in the outer popup.
+// The height is also clamped to the viewport (100vh - 96px) so the popup never overflows.
 const measureHeight = (): void => {
-  const activeRef = view.value === 'accounts' ? accountsPanelRef.value : networkPanelRef.value
-  if (activeRef) containerHeight.value = activeRef.scrollHeight
+  if (!accountsPanelRef.value) return
+  const measured = accountsPanelRef.value.scrollHeight
+  const maxH = window.innerHeight - 96
+  containerHeight.value = measured > 0 ? Math.min(measured, maxH) : 0
 }
 
 watch(openDialog, val => {
   if (val) nextTick(measureHeight)
   else view.value = 'accounts'
 })
-watch(view, () => nextTick(measureHeight))
 
 const watchOnlyStore = useWatchOnlyStore()
 const activeAccount = computed<SavedAccount | null>(() => watchOnlyStore.activeAccount)
