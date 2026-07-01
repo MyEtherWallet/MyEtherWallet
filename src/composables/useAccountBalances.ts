@@ -55,5 +55,9 @@ export function useAccountBalances() {
     }
   }
 
-  return { balances, isLoading, fetchFor }
+  const refreshOne = async (entry: BalanceEntry): Promise<void> => {
+    balances.value[entry.id] = await fetchOne(entry)
+  }
+
+  return { balances, isLoading, fetchFor, refreshOne }
 }

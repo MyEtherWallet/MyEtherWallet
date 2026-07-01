@@ -49,4 +49,10 @@ describe('useAccountBalances', () => {
     expect(balances.value['EVM:0xA'].usdValue).toBe(6)
     expect(balances.value['EVM:0xA'].tokenCount).toBe(1)
   })
+
+  it('refreshOne re-fetches a single entry into balances', async () => {
+    const { balances, refreshOne } = useAccountBalances()
+    await refreshOne({ id: 'EVM:0x1', chainName: 'ETH', address: '0x1' })
+    expect(balances.value['EVM:0x1']).toBeDefined()
+  })
 })
