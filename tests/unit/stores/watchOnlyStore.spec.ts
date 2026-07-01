@@ -61,6 +61,18 @@ describe('watchOnlyStore (extended)', () => {
     expect(s.watchOnlyAddresses.EVM.find(e => e.address === '0x2')!.addressName).toBe('Savings')
   })
 
+  it('addWallet moves a re-touched existing entry to the bucket tail', () => {
+    const s = useWatchOnlyStore()
+    s.addWallet('0x1', evmChain, 'INJECTED', 'EVM', 'Enkrypt')
+    s.addWallet('0x2', evmChain, 'LEDGER', 'EVM', 'Ledger')
+    // Re-add 0x1 — must move to tail, preserve addressName, length stays 2
+    s.addWallet('0x1', evmChain, 'INJECTED', 'EVM', 'Enkrypt')
+    const bucket = s.watchOnlyAddresses.EVM
+    expect(bucket).toHaveLength(2)
+    expect(bucket.map(e => e.address)).toEqual(['0x2', '0x1'])
+    expect(bucket[1].addressName).toBe('Address 1')
+  })
+
   it('backfill assigns names to legacy entries missing addressName', () => {
     localStorage.setItem('watchOnlyList', JSON.stringify({
       EVM: [{ address: '0x1', walletName: 'W', chain: evmChain, type: 'EVM', walletType: 'INJECTED' }],

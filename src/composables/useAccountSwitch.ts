@@ -9,7 +9,6 @@ import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
 import { walletConfigs } from '@/modules/access/common/walletConfigs'
 import type { defaultWalletId } from '@/modules/access/common/walletConfigs'
 import {
-  buildId,
   promoteNext,
   type SavedAccount,
   type PersistedEntry,
@@ -93,22 +92,5 @@ export function useAccountSwitch() {
     }
   }
 
-  /** App-boot restore: show the persisted last-viewed address as a read-only view (no device prompt). */
-  const hydrateLastViewed = async (): Promise<void> => {
-    if (walletStore.walletAddress) return
-    const chainType = (chainsStore.selectedChain?.type ?? 'EVM') as ChainType
-    const bucket = watchOnlyStore.watchOnlyAddresses[chainType] ?? []
-    const entry = bucket[bucket.length - 1]
-    if (!entry) return
-    const vm = watchOnlyStore.allAccounts.find(
-      (a: SavedAccount) => a.id === buildId(entry.type, entry.address),
-    )
-    await activateReadOnly(
-      entry.address, entry.chain, entry.walletType as WalletType,
-      entry.type, entry.walletName,
-      vm?.walletConfigType ?? ('software' as SavedAccount['walletConfigType']),
-    )
-  }
-
-  return { switchTo, deleteAccount, hydrateLastViewed }
+  return { switchTo, deleteAccount }
 }

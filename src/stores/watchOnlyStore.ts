@@ -6,6 +6,7 @@ import { useChainsStore } from '@/stores/chainsStore'
 import {
   walletConfigs,
   WalletConfigType,
+  type WalletConfig,
 } from '@/modules/access/common/walletConfigs'
 import type { Chain, ChainType } from '@/mew_api/types'
 import {
@@ -33,9 +34,9 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   const chainsStore = useChainsStore()
 
   const configFor = (walletName: string) =>
-    Object.values(walletConfigs).find((c: any) => c.name === walletName) as
-      | { id?: string; icon?: unknown; type?: WalletConfigType[] }
-      | undefined
+    Object.values(walletConfigs).find(
+      (c: WalletConfig) => c.name === walletName,
+    ) as WalletConfig | undefined
 
   const view = (
     entry: PersistedEntry,
@@ -109,7 +110,18 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
     const entry: PersistedEntry = prior
       ? { ...prior, walletName, walletType, chain } // preserve addressName
       : makeEntry(address, chain, walletType, type, walletName)
-    watchOnlyAddresses.value = upsertEntry(watchOnlyAddresses.value, entry)
+    if (prior) {
+      // Move to tail so "last = most recently touched" invariant holds
+      const without = (watchOnlyAddresses.value[type] ?? []).filter(
+        e => e.address.toLowerCase() !== address.toLowerCase(),
+      )
+      watchOnlyAddresses.value = {
+        ...watchOnlyAddresses.value,
+        [type]: [...without, entry],
+      }
+    } else {
+      watchOnlyAddresses.value = upsertEntry(watchOnlyAddresses.value, entry)
+    }
   }
 
   /** Explicit add (add-flow / save-detected). Reports the reason on failure. */
