@@ -3,19 +3,28 @@
     "title": "Manage accounts",
     "active": "Active",
     "saved": "Saved addresses",
+    "your_addresses": "Your addresses",
     "add": "Add address",
+    "connect_another": "Connect another wallet",
     "disconnect": "Disconnect",
     "paper_wallet": "View Paper Wallet",
     "empty": "No saved addresses yet",
     "unlocked": "Unlocked",
     "tokens": "tokens",
     "copied": "Copied!",
-    "your_addresses": "Your addresses",
     "detected": "Detected address",
-    "save_address": "Save",
-    "connect_another": "Connect another address",
-    "extension_prompt": "To connect, open your extension and select the address shown above.",
+    "save_address": "Save address",
+    "duplicate_name": "That name is already in use",
     "duplicate_address": "This address is already saved. Select a different one in your extension and try again.",
-    "cap_reached": "You can save up to 20 addresses"
+    "cap_reached": "You can save up to 20 addresses",
+    "extension_prompt": "To connect, open your extension and select the address shown above.",
+    "menu": {
+      "rename": "Rename",
+      "copy": "Copy address",
+      "refresh": "Refresh balance",
+      "paper_wallet": "Open Paper wallet",
+      "explorer": "Blockchain explorer",
+      "remove": "Remove"
+    }
   }
 }
