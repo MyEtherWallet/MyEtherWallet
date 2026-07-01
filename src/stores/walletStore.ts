@@ -38,6 +38,13 @@ export const useWalletStore = defineStore('walletStore', () => {
   const isLoadingBalances = ref(true)
   const walletCardWasAnimated = ref(false) // used to animate the wallet card on first load
   const isWatchOnly = ref(false)
+  const detectedAddress = ref<string | null>(null)
+  const setDetectedAddress = (addr: string | null): void => {
+    detectedAddress.value = addr
+  }
+  const clearDetectedAddress = (): void => {
+    detectedAddress.value = null
+  }
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
   const userProperties = reactive<UserProperties>({})
@@ -534,6 +541,9 @@ export const useWalletStore = defineStore('walletStore', () => {
     formattedBalance,
     formattedBalanceFiat,
     isWatchOnly,
+    detectedAddress,
+    setDetectedAddress,
+    clearDetectedAddress,
     allTokens,
     hasMissingBalances,
     hasBalances,
