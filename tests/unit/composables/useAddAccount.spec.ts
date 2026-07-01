@@ -1,62 +1,33 @@
-// tests/unit/composables/useAddAccount.spec.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ref, nextTick } from 'vue'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-const openAccessDialog = vi.fn()
-const addAccount = vi.fn(() => ({ added: true }))
-const captureActiveAccount = vi.fn(() => ({ id: 'EVM:0xnew', address: '0xNew' }))
-const addToastMessage = vi.fn()
-const walletAddress = ref<string | null>('0xOld')
-const isOpenAccessDialog = ref(false)
+const accessStore = { isOpenAccessDialog: false, openAccessDialog: vi.fn(() => { accessStore.isOpenAccessDialog = true }) }
+const watchOnly = { isAtCap: false }
+const toastStore = { addToastMessage: vi.fn() }
 
-vi.mock('@/stores/accessStore', () => ({
-  useAccessStore: () => ({
-    get isOpenAccessDialog() { return isOpenAccessDialog.value },
-    openAccessDialog: vi.fn(() => { openAccessDialog(); isOpenAccessDialog.value = true }),
-  }),
-}))
-vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => ({ get walletAddress() { return walletAddress.value } }) }))
-vi.mock('@/stores/savedAccountsStore', () => ({ useSavedAccountsStore: () => ({ captureActiveAccount, addAccount }) }))
-vi.mock('@/stores/toastStore', () => ({ useToastStore: () => ({ addToastMessage }) }))
+vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => accessStore }))
+vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => watchOnly }))
+vi.mock('@/stores/toastStore', () => ({ useToastStore: () => toastStore }))
 
 import { useAddAccount } from '@/composables/useAddAccount'
 
+beforeEach(() => {
+  vi.clearAllMocks()
+  accessStore.isOpenAccessDialog = false
+  watchOnly.isAtCap = false
+})
+
 describe('useAddAccount', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    walletAddress.value = '0xOld'
-    isOpenAccessDialog.value = false
+  it('opens the access dialog on startAdd', () => {
+    useAddAccount().startAdd()
+    expect(accessStore.openAccessDialog).toHaveBeenCalledTimes(1)
   })
 
-  it('opens the connect flow and captures the account when the active address changes', async () => {
-    const { startAdd } = useAddAccount()
-    startAdd()
-    expect(openAccessDialog).toHaveBeenCalled()
-    walletAddress.value = '0xNew' // connect succeeded
-    await nextTick()
-    expect(captureActiveAccount).toHaveBeenCalled()
-    expect(addAccount).toHaveBeenCalledWith({ id: 'EVM:0xnew', address: '0xNew' })
-  })
-
-  it('shows a toast when the cap blocks the add', async () => {
-    addAccount.mockReturnValueOnce({ added: false, reason: 'cap' })
-    const { startAdd } = useAddAccount()
-    startAdd()
-    walletAddress.value = '0xNew'
-    await nextTick()
-    expect(addToastMessage).toHaveBeenCalled()
-  })
-
-  it('does NOT capture an account when the dialog is cancelled without an address change', async () => {
-    const { startAdd } = useAddAccount()
-    startAdd()
-    // simulate cancel: close dialog without changing walletAddress
-    isOpenAccessDialog.value = false
-    await nextTick()
-    // now simulate an unrelated wallet switch that would have triggered a phantom add
-    walletAddress.value = '0xNew'
-    await nextTick()
-    expect(captureActiveAccount).not.toHaveBeenCalled()
-    expect(addAccount).not.toHaveBeenCalled()
+  it('shows a cap toast and does not open the dialog when the store is full', () => {
+    watchOnly.isAtCap = true
+    useAddAccount().startAdd()
+    expect(toastStore.addToastMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ type: expect.anything() }),
+    )
+    expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
 })
