@@ -28,6 +28,7 @@ vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: { name: 'ETH', type: 'EVM', blockExplorerAddr: 'https://e/[[address]]' } }) }))
 vi.mock('@/analytics', () => ({ analytics: { trackMultiAddressEvent: vi.fn() } }))
 vi.mock('@/analytics/events', () => ({ MultiAddressEvent: { OPENED: 'o', SWITCHED: 's', ADD_STARTED: 'a', DELETED: 'd', RENAMED: 'r', DETECTED_SAVED: 'ds' } }))
+vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
 
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
 
@@ -72,5 +73,20 @@ describe('TheManageAccounts', () => {
 
   it('hides the detected footer when there is no detected address', () => {
     expect(factory().find('[data-test="save-detected"]').exists()).toBe(false)
+  })
+
+  it('shows the extension guided prompt while a detected address is present', () => {
+    walletStore.detectedAddress.value = '0x9a8b'
+    const w = factory()
+    expect(w.get('[data-test="detected-prompt"]').text()).toBeTruthy()
+  })
+
+  it('shows a duplicate message when the detected address is already saved', async () => {
+    tryAddAddress.mockReturnValueOnce({ added: false, reason: 'duplicate' })
+    walletStore.detectedAddress.value = '0x9a8b'
+    const w = factory()
+    await w.get('[data-test="save-detected"]').trigger('click')
+    expect(w.get('[data-test="detected-message"]').text()).toBeTruthy()
+    expect(clearDetectedAddress).not.toHaveBeenCalled() // keep the surface so the user can pick another
   })
 })

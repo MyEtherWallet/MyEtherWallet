@@ -9,6 +9,13 @@
     "empty": "No saved addresses yet",
     "unlocked": "Unlocked",
     "tokens": "tokens",
-    "copied": "Copied!"
+    "copied": "Copied!",
+    "your_addresses": "Your addresses",
+    "detected": "Detected address",
+    "save_address": "Save",
+    "connect_another": "Connect another address",
+    "extension_prompt": "To connect, open your extension and select the address shown above.",
+    "duplicate_address": "This address is already saved. Select a different one in your extension and try again.",
+    "cap_reached": "You can save up to 20 addresses"
   }
 }

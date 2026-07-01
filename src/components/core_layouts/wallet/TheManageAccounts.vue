@@ -48,21 +48,26 @@
 
         <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
 
-        <div
-          v-if="detectedAddress"
-          class="mt-4 flex items-center justify-between rounded-12 bg-grey-faded px-3 py-2"
-        >
-          <div class="min-w-0">
-            <p class="text-s-12 text-info">{{ $t('multi_address.detected') }}</p>
-            <p class="font-mono text-s-14 truncate">{{ truncateAddress(detectedAddress, 6, 4) }}</p>
+        <div v-if="detectedAddress" class="mt-4 rounded-12 bg-grey-faded px-3 py-2">
+          <div class="flex items-center justify-between">
+            <div class="min-w-0">
+              <p class="text-s-12 text-info">{{ $t('multi_address.detected') }}</p>
+              <p class="font-mono text-s-14 truncate">{{ truncateAddress(detectedAddress, 6, 4) }}</p>
+            </div>
+            <button
+              data-test="save-detected"
+              class="text-primary text-s-14 border border-primary rounded-full px-3 py-1"
+              @click="saveDetected"
+            >
+              {{ $t('multi_address.save_address') }}
+            </button>
           </div>
-          <button
-            data-test="save-detected"
-            class="text-primary text-s-14 border border-primary rounded-full px-3 py-1"
-            @click="saveDetected"
-          >
-            {{ $t('multi_address.save_address') }}
-          </button>
+          <p data-test="detected-prompt" class="text-s-12 text-info mt-1">
+            {{ $t('multi_address.extension_prompt') }}
+          </p>
+          <p v-if="detectedMessage" data-test="detected-message" class="text-s-12 text-error mt-1">
+            {{ detectedMessage }}
+          </p>
         </div>
 
         <button
@@ -88,6 +93,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import TheCurrentNetwork from '@/components/core_layouts/wallet/TheCurrentNetwork.vue'
@@ -104,6 +110,7 @@ import { MultiAddressEvent } from '@/analytics/events'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
 
+const { t } = useI18n()
 const openDialog = defineModel<boolean>('openDialog', { default: false })
 
 const watchOnlyStore = useWatchOnlyStore()
@@ -120,6 +127,7 @@ const chainsStore = useChainsStore()
 
 const openPaperWallet = ref(false)
 const hasBackfilled = ref(false)
+const detectedMessage = ref('')
 
 const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 
@@ -174,10 +182,18 @@ const copy = (address: string): void => {
 const saveDetected = (): void => {
   if (!detectedAddress.value) return
   const chain = chainsStore.selectedChain as Chain
-  watchOnlyStore.tryAddAddress(
+  const res = watchOnlyStore.tryAddAddress(
     detectedAddress.value, chain, 'INJECTED', chain.type as ChainType, 'Detected',
   )
+  if (!res.added) {
+    detectedMessage.value =
+      res.reason === 'cap' ? t('multi_address.cap_reached') : t('multi_address.duplicate_address')
+    return // keep the surface; let the user pick a different address in the extension
+  }
+  detectedMessage.value = ''
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DETECTED_SAVED)
   walletStore.clearDetectedAddress()
 }
+
+watch(detectedAddress, () => { detectedMessage.value = '' })
 </script>
