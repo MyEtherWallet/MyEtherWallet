@@ -1,7 +1,9 @@
 <template>
   <div
     class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
-    :class="isSearchOpen ? 'z-[201]' : 'z-10'"
+    :class="
+      isSearchOpen ? 'z-[201]' : addressPopupOpen ? 'z-[2101]' : 'z-10'
+    "
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -88,13 +90,8 @@
         <!-- GLOBAL SEARCH -->
         <module-global-search />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
-             can't escape and paint over the search overlay. While the address
-             popup is open we lift it above the address backdrop (z-[1]) so the
-             trigger stays bright, mirroring how global search sits above its overlay. -->
-        <div
-          class="relative flex items-center gap-2"
-          :class="addressPopupOpen ? 'z-[2]' : 'z-[0]'"
-        >
+             can't escape and paint over the search overlay. -->
+        <div class="relative z-[0] flex items-center gap-2">
           <!-- Create wallet button -->
           <router-link
             v-if="!isWalletConnected"
@@ -140,12 +137,6 @@
           : 'opacity-0 pointer-events-none'
       "
       @click="closeSearch"
-    />
-    <!-- Address-menu backdrop: lives inside the header's stacking context so the
-         address trigger (higher in-context z) stays bright above it. -->
-    <div
-      v-if="addressPopupOpen"
-      class="fixed inset-0 bg-black/40 z-[1] transition-opacity"
     />
   </div>
 </template>
