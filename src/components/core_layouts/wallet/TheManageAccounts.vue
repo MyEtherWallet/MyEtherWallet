@@ -83,30 +83,37 @@
               </div>
 
               <!-- Section 2: all-accounts list -->
-              <div class="flex-1 min-h-0 overflow-y-auto px-2">
-                <div class="p-4">
-                  <p class="text-s-14 text-[#575757]">
-                    {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
-                  </p>
+              <div class="relative flex-1 min-h-0">
+                <div class="h-full overflow-y-auto px-2">
+                  <div class="p-4">
+                    <p class="text-s-14 text-[#575757]">
+                      {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
+                    </p>
+                  </div>
+                  <template v-if="allAccounts.length">
+                    <manage-accounts-row
+                      v-for="acc in allAccounts"
+                      :key="acc.id"
+                      :account="acc"
+                      :is-active="acc.id === activeAccount?.id"
+                      :balance="balances[acc.id]"
+                      @select="onSelect(acc)"
+                      @copy="copy(acc.address)"
+                      @refresh="refresh(acc)"
+                      @rename="onRename(acc, $event)"
+                      @paper="openPaperWallet = true"
+                      @explorer="openExplorer(acc)"
+                      @delete="onDelete(acc)"
+                    />
+                  </template>
+                  <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
+                  <div class="pb-3" />
                 </div>
-                <template v-if="allAccounts.length">
-                  <manage-accounts-row
-                    v-for="acc in allAccounts"
-                    :key="acc.id"
-                    :account="acc"
-                    :is-active="acc.id === activeAccount?.id"
-                    :balance="balances[acc.id]"
-                    @select="onSelect(acc)"
-                    @copy="copy(acc.address)"
-                    @refresh="refresh(acc)"
-                    @rename="onRename(acc, $event)"
-                    @paper="openPaperWallet = true"
-                    @explorer="openExplorer(acc)"
-                    @delete="onDelete(acc)"
-                  />
-                </template>
-                <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
-                <div class="pb-3" />
+                <div
+                  class="pointer-events-none absolute bottom-0 left-0 right-0 h-8"
+                  style="background: linear-gradient(180deg, rgba(245, 245, 245, 0.00) 0%, #F5F5F5 100%);"
+                  aria-hidden="true"
+                />
               </div>
 
               <!-- Section 3: detected footer + connect-another -->
