@@ -140,7 +140,7 @@
           <div
             ref="networkPanelRef"
             :inert="view !== 'network'"
-            class="absolute top-0 left-0 w-full h-full p-0 overflow-y-auto"
+            class="absolute inset-0 w-full h-full"
             :style="{
               transform: view === 'network' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
               opacity: view === 'network' ? 1 : 0,

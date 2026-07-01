@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 p-4 h-full min-h-0">
     <!-- Header: back button + centered title + invisible spacer -->
-    <div class="flex items-center gap-1 w-full">
+    <div class="flex items-center gap-1 w-full shrink-0">
       <button
         data-test="net-back"
         class="w-10 h-10 flex items-center justify-center rounded-[24px] shrink-0"
@@ -27,8 +27,8 @@
       <div class="w-10 h-10 shrink-0 invisible" aria-hidden="true" />
     </div>
 
-    <!-- Search + list -->
-    <div class="flex flex-col gap-4">
+    <!-- Search bar (fixed, does not scroll) -->
+    <div class="shrink-0 flex flex-col gap-4">
       <!-- Filled grey search bar -->
       <div class="flex items-center gap-2.5 h-10 px-2.5 rounded-[24px] bg-[#e6e6e6] w-full">
         <svg
@@ -51,10 +51,11 @@
           class="bg-transparent outline-none border-0 w-full text-s-14 text-black placeholder:text-[#767676]"
         />
       </div>
+    </div>
 
-      <!-- Chain list -->
-      <div class="flex flex-col gap-1">
-        <!-- Compatible chains -->
+    <!-- Scrollable chain list -->
+    <div class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-1">
+      <!-- Compatible chains -->
         <button
           v-for="chain in compatible"
           :key="chain.name"
@@ -126,7 +127,6 @@
             </span>
           </div>
         </template>
-      </div>
     </div>
   </div>
 </template>
