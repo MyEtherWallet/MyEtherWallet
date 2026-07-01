@@ -29,7 +29,15 @@
         ]"
       />
     </div>
-
+    <div v-else>
+      <rewards-portfolio
+        class="h-full lg:col-span-2 xl:col-span-1"
+        :class="[
+          { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
+          'col-span-1',
+        ]"
+      />
+    </div>
     <div v-if="isWalletConnected" class="flex flex-col lg-max:flex-row gap-5">
       <portfolio-gains-and-losses type="all" />
       <portfolio-gains-and-losses type="stock" />
