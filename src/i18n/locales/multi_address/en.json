@@ -18,6 +18,8 @@
     "duplicate_address": "This address is already saved. Select a different one in your extension and try again.",
     "cap_reached": "You can save up to 20 addresses",
     "extension_prompt": "To connect, open your extension and select the address shown above.",
+    "network_title": "Networks",
+    "network_search": "Search",
     "menu": {
       "rename": "Rename",
       "copy": "Copy address",

@@ -1,102 +1,160 @@
 <template>
   <app-dialog
     v-model:is-open="openDialog"
-    :title="$t('multi_address.title')"
+    :title="view === 'accounts' ? $t('multi_address.title') : ''"
     has-content-gutter
     class="xs:w-[420px] sm:mx-auto"
   >
     <template #content>
-      <div class="pb-5">
-        <the-current-network class="mb-4" />
-
-        <template v-if="activeAccount || savedAccounts.length">
-          <div v-if="activeAccount" class="mb-4">
-            <p class="text-s-12 text-info mb-1">{{ $t('multi_address.active') }}</p>
-            <manage-accounts-row
-              :account="activeAccount"
-              :is-active="true"
-              :balance="balances[activeAccount.id]"
-              @copy="copy(activeAccount.address)"
-              @refresh="refresh(activeAccount)"
-              @rename="onRename(activeAccount, $event)"
-              @paper="openPaperWallet = true"
-              @explorer="openExplorer(activeAccount)"
-              @delete="onDelete(activeAccount)"
-            />
-          </div>
-
-          <div v-if="savedAccounts.length">
-            <p class="text-s-12 text-info mb-1">
-              {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
-            </p>
-            <manage-accounts-row
-              v-for="acc in savedAccounts"
-              :key="acc.id"
-              :account="acc"
-              :is-active="false"
-              :balance="balances[acc.id]"
-              @select="onSelect(acc)"
-              @copy="copy(acc.address)"
-              @refresh="refresh(acc)"
-              @rename="onRename(acc, $event)"
-              @paper="openPaperWallet = true"
-              @explorer="openExplorer(acc)"
-              @delete="onDelete(acc)"
-            />
-          </div>
-        </template>
-
-        <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
-
-        <div v-if="detectedAddress" class="mt-4 rounded-12 bg-grey-faded px-3 py-2">
-          <div class="flex items-center justify-between">
-            <div class="min-w-0">
-              <p class="text-s-12 text-info">{{ $t('multi_address.detected') }}</p>
-              <p class="font-mono text-s-14 truncate">{{ truncateAddress(detectedAddress, 6, 4) }}</p>
-            </div>
+      <!-- Height-animated slide track -->
+      <div
+        class="relative overflow-hidden"
+        :style="{
+          height: containerHeight > 0 ? `${containerHeight}px` : undefined,
+          transition: 'height 400ms cubic-bezier(0.25, 0.1, 0, 1)',
+        }"
+      >
+        <!-- Accounts panel -->
+        <div
+          ref="accountsPanelRef"
+          :inert="view !== 'accounts'"
+          class="absolute top-0 left-0 w-full"
+          :style="{
+            transform: view === 'accounts' ? 'translateX(0)' : `translateX(calc(-100% - ${GAP}px))`,
+            opacity: view === 'accounts' ? 1 : 0,
+            transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+          }"
+        >
+          <div class="pb-5">
+            <!-- Network row (replaces TheCurrentNetwork pill) -->
             <button
-              data-test="save-detected"
-              class="text-primary text-s-14 border border-primary rounded-full px-3 py-1"
-              @click="saveDetected"
+              data-test="network-row"
+              class="flex items-center justify-between w-full mb-4 px-3 py-2 rounded-12 hover:bg-grey-faded transition-colors"
+              @click="view = 'network'"
             >
-              {{ $t('multi_address.save_address') }}
+              <div class="flex items-center gap-2">
+                <img
+                  v-if="chainsStore.selectedChain?.icon"
+                  :src="chainsStore.selectedChain.icon"
+                  alt=""
+                  aria-hidden="true"
+                  class="w-5 h-5 rounded-full object-contain"
+                />
+                <div v-else class="w-5 h-5 rounded-full bg-surface" />
+                <span class="text-s-14 text-black">{{ chainsStore.selectedChain?.nameLong }}</span>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 text-info">
+                <path fill-rule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+              </svg>
             </button>
+
+            <template v-if="activeAccount || savedAccounts.length">
+              <div v-if="activeAccount" class="mb-4">
+                <p class="text-s-12 text-info mb-1">{{ $t('multi_address.active') }}</p>
+                <manage-accounts-row
+                  :account="activeAccount"
+                  :is-active="true"
+                  :balance="balances[activeAccount.id]"
+                  @copy="copy(activeAccount.address)"
+                  @refresh="refresh(activeAccount)"
+                  @rename="onRename(activeAccount, $event)"
+                  @paper="openPaperWallet = true"
+                  @explorer="openExplorer(activeAccount)"
+                  @delete="onDelete(activeAccount)"
+                />
+              </div>
+
+              <div v-if="savedAccounts.length">
+                <p class="text-s-12 text-info mb-1">
+                  {{ $t('multi_address.your_addresses') }} ({{ totalCount }})
+                </p>
+                <manage-accounts-row
+                  v-for="acc in savedAccounts"
+                  :key="acc.id"
+                  :account="acc"
+                  :is-active="false"
+                  :balance="balances[acc.id]"
+                  @select="onSelect(acc)"
+                  @copy="copy(acc.address)"
+                  @refresh="refresh(acc)"
+                  @rename="onRename(acc, $event)"
+                  @paper="openPaperWallet = true"
+                  @explorer="openExplorer(acc)"
+                  @delete="onDelete(acc)"
+                />
+              </div>
+            </template>
+
+            <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
+
+            <div v-if="detectedAddress" class="mt-4 rounded-12 bg-grey-faded px-3 py-2">
+              <div class="flex items-center justify-between">
+                <div class="min-w-0">
+                  <p class="text-s-12 text-info">{{ $t('multi_address.detected') }}</p>
+                  <p class="font-mono text-s-14 truncate">{{ truncateAddress(detectedAddress, 6, 4) }}</p>
+                </div>
+                <button
+                  data-test="save-detected"
+                  class="text-primary text-s-14 border border-primary rounded-full px-3 py-1"
+                  @click="saveDetected"
+                >
+                  {{ $t('multi_address.save_address') }}
+                </button>
+              </div>
+              <p data-test="detected-prompt" class="text-s-12 text-info mt-1">
+                {{ $t('multi_address.extension_prompt') }}
+              </p>
+              <p v-if="detectedMessage" data-test="detected-message" class="text-s-12 text-error mt-1">
+                {{ detectedMessage }}
+              </p>
+            </div>
+
+            <button
+              data-test="add-address"
+              class="mt-4 w-full rounded-full py-2 shadow-button"
+              @click="onAdd"
+            >
+              {{ $t('multi_address.connect_another') }}
+            </button>
+
+            <div class="flex justify-end mt-4">
+              <button class="text-s-14 text-error" @click="walletStore.disconnectWallet()">
+                {{ $t('multi_address.disconnect') }}
+              </button>
+            </div>
           </div>
-          <p data-test="detected-prompt" class="text-s-12 text-info mt-1">
-            {{ $t('multi_address.extension_prompt') }}
-          </p>
-          <p v-if="detectedMessage" data-test="detected-message" class="text-s-12 text-error mt-1">
-            {{ detectedMessage }}
-          </p>
+
+          <the-paper-wallet v-model:is-open="openPaperWallet" />
         </div>
 
-        <button
-          data-test="add-address"
-          class="mt-4 w-full rounded-full py-2 shadow-button"
-          @click="onAdd"
+        <!-- Network panel -->
+        <div
+          ref="networkPanelRef"
+          :inert="view !== 'network'"
+          class="absolute top-0 left-0 w-full p-0"
+          :style="{
+            transform: view === 'network' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+            opacity: view === 'network' ? 1 : 0,
+            transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+          }"
         >
-          {{ $t('multi_address.connect_another') }}
-        </button>
-
-        <div class="flex justify-end mt-4">
-          <button class="text-s-14 text-error" @click="walletStore.disconnectWallet()">
-            {{ $t('multi_address.disconnect') }}
-          </button>
+          <manage-accounts-network-view
+            @back="view = 'accounts'"
+            @selected="view = 'accounts'"
+          />
         </div>
       </div>
-
-      <the-paper-wallet v-model:is-open="openPaperWallet" />
     </template>
   </app-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
-import TheCurrentNetwork from '@/components/core_layouts/wallet/TheCurrentNetwork.vue'
+import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
@@ -110,8 +168,27 @@ import { MultiAddressEvent } from '@/analytics/events'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
 
+const GAP = 24
+
 const { t } = useI18n()
 const openDialog = defineModel<boolean>('openDialog', { default: false })
+
+const view = ref<'accounts' | 'network'>('accounts')
+
+const accountsPanelRef = ref<HTMLElement | null>(null)
+const networkPanelRef = ref<HTMLElement | null>(null)
+const containerHeight = ref(0)
+
+const measureHeight = (): void => {
+  const activeRef = view.value === 'accounts' ? accountsPanelRef.value : networkPanelRef.value
+  if (activeRef) containerHeight.value = activeRef.scrollHeight
+}
+
+watch(openDialog, val => {
+  if (val) nextTick(measureHeight)
+  else view.value = 'accounts'
+})
+watch(view, () => nextTick(measureHeight))
 
 const watchOnlyStore = useWatchOnlyStore()
 const activeAccount = computed<SavedAccount | null>(() => watchOnlyStore.activeAccount)
@@ -188,7 +265,7 @@ const saveDetected = (): void => {
   if (!res.added) {
     detectedMessage.value =
       res.reason === 'cap' ? t('multi_address.cap_reached') : t('multi_address.duplicate_address')
-    return // keep the surface; let the user pick a different address in the extension
+    return
   }
   detectedMessage.value = ''
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DETECTED_SAVED)

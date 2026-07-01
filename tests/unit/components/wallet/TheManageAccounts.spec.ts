@@ -35,6 +35,7 @@ import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccount
 const stubs = {
   AppDialog: { template: '<div><slot name="content" /></div>' },
   TheCurrentNetwork: true, ThePaperWallet: true,
+  ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
   ManageAccountsRow: {
     props: ['account', 'isActive'],
     template: '<div class="row" :data-id="account.id" @click="$emit(\'rename\', \'New\')"></div>',
@@ -88,5 +89,11 @@ describe('TheManageAccounts', () => {
     await w.get('[data-test="save-detected"]').trigger('click')
     expect(w.get('[data-test="detected-message"]').text()).toBeTruthy()
     expect(clearDetectedAddress).not.toHaveBeenCalled() // keep the surface so the user can pick another
+  })
+
+  it('slides to the network view when the network row is clicked', async () => {
+    const w = factory()
+    await w.get('[data-test="network-row"]').trigger('click')
+    expect(w.findComponent({ name: 'ManageAccountsNetworkView' }).exists()).toBe(true)
   })
 })
