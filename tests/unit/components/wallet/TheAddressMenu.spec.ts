@@ -30,6 +30,31 @@ vi.mock('pinia', async (importOriginal) => {
 
 vi.mock('@/composables/useAppBreakpoints', () => ({ useAppBreakpoints: () => ({ isXS: false }) }))
 
+// Cut the walletConfigs → @enkryptcom/hw-wallets → ledger module chain
+vi.mock('@/modules/access/common/walletConfigs', () => ({
+  WalletConfigType: {
+    MOBILE: 'mobile',
+    HARDWARE: 'hardware',
+    SOFTWARE: 'software',
+    DESKTOP: 'desktop',
+    EXTENSION: 'extension',
+    MOCK: 'mock',
+  },
+  walletConfigs: {},
+  ACCESS_WALLET_VIEWS: [],
+  defaultWalletId: '',
+}))
+
+vi.mock('@/stores/watchOnlyStore', () => ({
+  useWatchOnlyStore: () => ({
+    activeAccount: null,
+    savedAccounts: [],
+    activeId: null,
+    backfill: vi.fn(),
+    watchOnlyAddresses: { EVM: [], BITCOIN: [] },
+  }),
+}))
+
 // Mocks for TheManageAccounts deep dependency chain (pulled in via static import)
 vi.mock('@/composables/useAccountSwitch', () => ({
   useAccountSwitch: () => ({ switchTo: vi.fn(), deleteAccount: vi.fn() }),
