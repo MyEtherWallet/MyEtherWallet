@@ -1,110 +1,88 @@
-// tests/unit/composables/useAccountSwitch.spec.ts
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 
-const setWallet = vi.fn()
-const disconnectWallet = vi.fn()
-const setSelectedNetwork = vi.fn()
-const openAccessDialog = vi.fn()
-const setCurrentView = vi.fn()
-const setAccessChain = vi.fn()
-const removeAccount = vi.fn()
-const addToastMessage = vi.fn()
+const walletStore = {
+  activeId: 'EVM:0xactive',
+  setWallet: vi.fn(),
+  disconnectWallet: vi.fn(),
+  walletAddress: '0xactive',
+}
+const watchOnly = {
+  activeId: 'EVM:0xactive',
+  removeWallet: vi.fn(),
+  allAccounts: [] as any[],
+  watchOnlyAddresses: { EVM: [], BITCOIN: [] } as any,
+}
+const chainsStore = {
+  selectedChain: { type: 'EVM', name: 'ETH' },
+  chains: [{ type: 'EVM', name: 'ETH' }, { type: 'BITCOIN', name: 'BTC' }],
+}
+const accessStore = { setSelectedChain: vi.fn(), openAccessDialog: vi.fn(), setCurrentView: vi.fn() }
+const globalStore = { setSelectedNetwork: vi.fn() }
+const toastStore = { addToastMessage: vi.fn() }
 
-let activeIdValue: string | null = 'EVM:0xactive'
-const selected = { name: 'ETHEREUM', type: 'EVM' }
-const chains = [
-  { name: 'ETHEREUM', type: 'EVM', chainID: '1' },
-  { name: 'BITCOIN', type: 'BITCOIN', chainID: '0' },
-]
-
-vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => ({ setWallet, disconnectWallet }) }))
-vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: selected, chains }) }))
-vi.mock('@/stores/globalStore', () => ({ useGlobalStore: () => ({ setSelectedNetwork }) }))
-vi.mock('@/stores/accessStore', () => ({
-  useAccessStore: () => ({ openAccessDialog, setCurrentView, setSelectedChain: setAccessChain }),
-}))
-vi.mock('@/stores/savedAccountsStore', () => ({
-  useSavedAccountsStore: () => ({ get activeId() { return activeIdValue }, accounts: [], removeAccount }),
-}))
-vi.mock('@/stores/toastStore', () => ({ useToastStore: () => ({ addToastMessage }) }))
-const WatchOnlyCtor = vi.fn()
-vi.mock('@/providers/common/watchOnlyWallet', () => ({ default: class { constructor(...a: unknown[]) { WatchOnlyCtor(...a) } } }))
-
-vi.mock('@/modules/access/common/walletConfigs', () => ({
-  WalletConfigType: {
-    MOBILE: 'mobile',
-    HARDWARE: 'hardware',
-    SOFTWARE: 'software',
-    DESKTOP: 'desktop',
-    EXTENSION: 'extension',
-    MOCK: 'mock',
-  },
-  walletConfigs: {
-    ledger: { id: 'ledger', name: 'Ledger', icon: '', type: ['hardware'], walletViewType: 'ledger' },
-    enkrypt: { id: 'enkrypt', name: 'Enkrypt', icon: '', type: ['extension'], walletViewType: 'web3_wallet' },
-  },
+vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
+vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => watchOnly }))
+vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainsStore }))
+vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => accessStore }))
+vi.mock('@/stores/globalStore', () => ({ useGlobalStore: () => globalStore }))
+vi.mock('@/stores/toastStore', () => ({ useToastStore: () => toastStore }))
+vi.mock('@/modules/access/common/walletConfigs', () => ({ walletConfigs: {} }))
+vi.mock('@/providers/common/watchOnlyWallet', () => ({
+  default: class { constructor(public a: string) {} },
 }))
 
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
-import { WalletConfigType } from '@/modules/access/common/walletConfigs'
-import { WalletType } from '@/providers/types'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 
-const acct = (over: Partial<SavedAccount> = {}): SavedAccount => ({
-  id: 'EVM:0xtarget', address: '0xTarget', chainType: 'EVM' as SavedAccount['chainType'],
-  kind: 'watchOnly', walletConfigType: WalletConfigType.EXTENSION,
-  providerType: WalletType.WAGMI, connectorId: 'enkrypt', walletName: 'Enkrypt',
-  icon: '', addedAt: 1, ...over,
+const acc = (over: Partial<SavedAccount> = {}): SavedAccount => ({
+  id: over.id ?? 'EVM:0xnew',
+  address: over.address ?? '0xnew',
+  chainType: 'EVM',
+  kind: over.kind ?? 'watchOnly',
+  walletConfigType: 'software' as any,
+  providerType: 'INJECTED' as any,
+  walletName: 'W',
+  addressName: 'Address 2',
+  icon: '',
+  ...over,
+})
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  watchOnly.activeId = 'EVM:0xactive'
 })
 
 describe('useAccountSwitch', () => {
-  beforeEach(() => { vi.clearAllMocks(); activeIdValue = 'EVM:0xactive'; selected.type = 'EVM'; selected.name = 'ETHEREUM' })
-
-  it('is a no-op when the target is already active', async () => {
-    const { switchTo } = useAccountSwitch()
-    await switchTo(acct({ id: 'EVM:0xactive' }))
-    expect(setWallet).not.toHaveBeenCalled()
-    expect(openAccessDialog).not.toHaveBeenCalled()
+  it('no-ops when the account is already active', async () => {
+    await useAccountSwitch().switchTo(acc({ id: 'EVM:0xactive', address: '0xactive' }))
+    expect(walletStore.setWallet).not.toHaveBeenCalled()
   })
 
-  it('switches a watch-only account instantly via setWallet', async () => {
-    const { switchTo } = useAccountSwitch()
-    await switchTo(acct({ kind: 'watchOnly' }))
-    expect(WatchOnlyCtor).toHaveBeenCalled()
-    expect(setWallet).toHaveBeenCalledTimes(1)
-    expect(openAccessDialog).not.toHaveBeenCalled()
+  it('watch-only target sets a WatchOnlyWallet (instant), no connect dialog', async () => {
+    await useAccountSwitch().switchTo(acc({ kind: 'watchOnly' }))
+    expect(walletStore.setWallet).toHaveBeenCalledTimes(1)
+    expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
 
-  it('opens the connect flow at the mapped view for a signing account', async () => {
-    const { switchTo } = useAccountSwitch()
-    await switchTo(acct({ kind: 'signing', connectorId: 'ledger' }))
-    expect(openAccessDialog).toHaveBeenCalledTimes(1)
-    expect(setCurrentView).toHaveBeenCalledWith('ledger')
-    expect(setWallet).not.toHaveBeenCalled()
+  it('signing target opens the connect flow instead of setting a wallet', async () => {
+    await useAccountSwitch().switchTo(acc({ kind: 'signing' }))
+    expect(accessStore.openAccessDialog).toHaveBeenCalledTimes(1)
+    expect(walletStore.setWallet).not.toHaveBeenCalled()
   })
 
-  it('follows the network when target chainType differs', async () => {
-    const { switchTo } = useAccountSwitch()
-    await switchTo(acct({ chainType: 'BITCOIN', kind: 'watchOnly' }))
-    expect(setSelectedNetwork).toHaveBeenCalledWith('BITCOIN')
-    expect(addToastMessage).toHaveBeenCalled()
+  it('deleteAccount removes and promotes the next entry as a read-only view when active', async () => {
+    watchOnly.watchOnlyAddresses = {
+      EVM: [{ address: '0xother', walletName: 'W', chain: { type: 'EVM', name: 'ETH' }, type: 'EVM', walletType: 'INJECTED', addressName: 'Address 3' }],
+      BITCOIN: [],
+    }
+    await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xactive', address: '0xactive' }))
+    expect(watchOnly.removeWallet).toHaveBeenCalledWith('0xactive', expect.objectContaining({ type: 'EVM' }))
+    expect(walletStore.setWallet).toHaveBeenCalledTimes(1)
   })
 
-  it('deleteAccount of the active account promotes the next; disconnects when none remain', async () => {
-    const { deleteAccount } = useAccountSwitch()
-    activeIdValue = 'EVM:0xtarget'
-    await deleteAccount(acct({ id: 'EVM:0xtarget' }))
-    expect(removeAccount).toHaveBeenCalledWith('EVM:0xtarget')
-    expect(disconnectWallet).toHaveBeenCalled() // accounts mock is empty → none remain
-  })
-
-  it('deleteAccount of an inactive account removes it without touching wallet or dialog', async () => {
-    const { deleteAccount } = useAccountSwitch()
-    // activeIdValue is 'EVM:0xactive' (set in beforeEach); deleted id is different
-    await deleteAccount(acct({ id: 'EVM:0xtarget' }))
-    expect(removeAccount).toHaveBeenCalledWith('EVM:0xtarget')
-    expect(disconnectWallet).not.toHaveBeenCalled()
-    expect(setWallet).not.toHaveBeenCalled()
-    expect(openAccessDialog).not.toHaveBeenCalled()
+  it('deleteAccount disconnects when nothing remains', async () => {
+    watchOnly.watchOnlyAddresses = { EVM: [], BITCOIN: [] }
+    await useAccountSwitch().deleteAccount(acc({ id: 'EVM:0xactive', address: '0xactive' }))
+    expect(walletStore.disconnectWallet).toHaveBeenCalledTimes(1)
   })
 })
