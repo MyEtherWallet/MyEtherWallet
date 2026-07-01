@@ -39,6 +39,10 @@
                 v-else-if="item.icon === 'calendar'"
                 class="w-4 h-4 text-grey-50"
               />
+              <wallet-icon
+                v-else-if="item.icon === 'wallet-icon'"
+                class="w-4 h-4 text-grey-50"
+              />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar-gray'"
                 class="w-4 h-4 text-grey-50"
@@ -96,7 +100,10 @@ import {
   FaceFrownIcon,
 } from '@heroicons/vue/24/solid'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import { ArrowPathRoundedSquareIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowPathRoundedSquareIcon,
+  WalletIcon,
+} from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -153,7 +160,7 @@ watch(isOpenModel, val => {
 const infoItems = [
   {
     icon: 'swap',
-    text: 'Make a trade over $25.',
+    text: 'Make a trade over $35.',
   },
   // {
   //   icon: 'trophy',
@@ -171,10 +178,10 @@ const infoItems = [
     icon: 'calendar',
     text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet',
   },
-  // {
-  //   icon: 'currency-dollar-gray',
-  //   text: 'You must have at least 0.001 ETH before April 20th',
-  // },
+  {
+    icon: 'wallet-icon',
+    text: 'The wallet must be at least 2 weeks old (relative to the current date) and hold a minimum balance of 0.001 ETH.',
+  },
   {
     icon: 'face-frown',
     text: 'Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.',

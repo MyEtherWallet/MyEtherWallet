@@ -60,18 +60,20 @@ export const initAnalytics = async (): Promise<void> => {
   }
 
   const consentToTrack = getConsentToTrack()
+  const isProd = configs.AMPLITUDE === 'prod'
+  const serverUrl = isProd
+    ? 'https://analytics-web-v7.mewwallet.dev'
+    : 'https://analytics-web-development-v7.mewwallet.dev'
 
-  const serverUrl = process.env.NODE_ENV === 'production'
-    ? 'https://analytics-web-v7.mewwallet.dev/record'
-    : 'https://analytics-web-development-v7.mewwallet.dev/record'
+  const analyticsUrl = `${serverUrl}/record`
 
   amplitude.add(pageUrlEnrichmentPlugin())
   amplitude.add(pageViewedEnrichmentPlugin())
   amplitude.init(__TMP_HASHED_VERSION__, {
     instanceName:
-      process.env.NODE_ENV === 'production' ? 'mew-web-prod' : 'mew-web-dev',
+      isProd ? 'mew-web-prod' : 'mew-web-dev',
     optOut: !consentToTrack,
-    serverUrl: serverUrl,
+    serverUrl: analyticsUrl,
     appVersion: __TMP_VERSION__,
     identityStorage: 'none',
     logLevel: Types.LogLevel.None,
@@ -81,17 +83,15 @@ export const initAnalytics = async (): Promise<void> => {
   })
 
   const inEU = await isEU();
-  const prodConfigUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/config-eu' : 'https://analytics-web-v7.mewwallet.dev/config'
-  const devConfigUrl = inEU ? 'https://analytics-web-development-v7.mewwallet.dev/config-eu' : 'https://analytics-web-development-v7.mewwallet.dev/config'
-  const prodSessionReplayUrl = inEU ? 'https://analytics-web-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-v7.mewwallet.dev/session-replay'
-  const devSessionReplayUrl = inEU ? 'https://analytics-web-development-v7.mewwallet.dev/session-replay-eu' : 'https://analytics-web-development-v7.mewwallet.dev/session-replay'
+  const configUrl = inEU ? `${serverUrl}/config-eu` : `${serverUrl}/config`
+  const sessionReplayUrl = inEU ? `${serverUrl}/session-replay-eu` : `${serverUrl}/session-replay`
 
   const sessionId = amplitude.getSessionId()
   const deviceId = amplitude.getDeviceId()
 
   sessionReplay.init(__TMP_HASHED_VERSION__, {
-    configServerUrl: process.env.NODE_ENV === 'production' ? prodConfigUrl : devConfigUrl,
-    trackServerUrl: process.env.NODE_ENV === 'production' ? prodSessionReplayUrl : devSessionReplayUrl,
+    configServerUrl: configUrl,
+    trackServerUrl: sessionReplayUrl,
     optOut: !consentToTrack,
     sessionId: sessionId,
     deviceId: deviceId,

@@ -11,25 +11,35 @@
 
       <no-balance v-else />
     </div>
-    <div
-      :class="[
-        isOpenSideMenu ? 'xl:grid-cols-2' : 'xl:grid-cols-3',
-        'grid grid-cols-1 lg:grid-cols-2  2xl:grid-cols-3 gap-5 lg:mt-3',
-      ]"
-      v-if="isWalletConnected && (isLoadingBalances || hasBalances)"
-    >
-      <portfolio-overview />
-
-      <portfolio-allocation class="h-full" />
-      <rewards-portfolio
-        class="h-full lg:col-span-2 xl:col-span-1"
+    <div v-if="isWalletConnected">
+      <div
         :class="[
-          { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
-          'col-span-1',
+          isOpenSideMenu ? 'xl:grid-cols-2' : 'xl:grid-cols-3',
+          'grid grid-cols-1 lg:grid-cols-2  2xl:grid-cols-3 gap-5 lg:mt-3',
         ]"
-      />
-    </div>
+        v-if="isLoadingBalances || hasBalances"
+      >
+        <portfolio-overview />
 
+        <portfolio-allocation class="h-full" />
+        <rewards-portfolio
+          class="h-full lg:col-span-2 xl:col-span-1"
+          :class="[
+            { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
+            'col-span-1',
+          ]"
+        />
+      </div>
+      <div v-else>
+        <rewards-portfolio
+          class="h-full lg:col-span-2 xl:col-span-1"
+          :class="[
+            { 'xl:col-span-2 2xl:col-span-1': isOpenSideMenu },
+            'col-span-1',
+          ]"
+        />
+      </div>
+    </div>
     <div v-if="isWalletConnected" class="flex flex-col lg-max:flex-row gap-5">
       <portfolio-gains-and-losses type="all" />
       <portfolio-gains-and-losses type="stock" />
