@@ -204,7 +204,7 @@ const toolsMenuItem = computed<AppMenuListItem>(() => {
 // const otherMenuList = computed<AppMenuListItem[]>(() => {
 //   return [
 // {
-//   title: t('settings'),
+//   title: t('common.settings'),
 //   iconID: ICON_IDS.SETTINGS,
 // },
 //   ]

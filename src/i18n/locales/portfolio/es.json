@@ -1,0 +1,85 @@
+{
+  "portfolio": {
+    "your_balances": "Tus saldos",
+    "balance_menu": "Menú de saldos",
+    "filter_all_tokens": "Todos los tokens",
+    "filter_stocks": "Acciones",
+    "filter_earning_interest": "Generando intereses",
+    "filter_custom": "Personalizados",
+    "filter_watchlist": "Lista de seguimiento",
+    "overview": {
+      "title": "Resumen",
+      "tokenized_stocks": "Acciones tokenizadas",
+      "stables": "Stablecoins",
+      "large_market_cap": "Gran capitalización de mercado",
+      "large_market_cap_tooltip": "Tokens con capitalización de mercado superior a $10 mil millones, excluyendo acciones tokenizadas y stablecoins.",
+      "altcoins": "Altcoins"
+    },
+    "history": {
+      "title": "Historial",
+      "tooltip": "Valores aproximados basados en las tenencias actuales de tokens.",
+      "last_24h": "Últimas 24 h",
+      "no_chart_data": "No hay datos de gráfico disponibles"
+    },
+    "gains_and_losses": {
+      "title_stocks": "Ganancias y pérdidas de acciones tokenizadas",
+      "title_all": "Todas las ganancias y pérdidas",
+      "link_stocks": "Tendencias de todas las acciones tokenizadas",
+      "link_all": "Tendencias de todas las criptomonedas",
+      "empty_stocks": "Aún no tienes acciones tokenizadas ni ETF en tu portafolio.",
+      "page_of": "{current} de {total}",
+      "price_24h_header": "Precio / 24 h",
+      "gain_loss_header": "Ganancia / Pérdida"
+    },
+    "table": {
+      "total_value": "Valor total",
+      "token_header": "Token",
+      "market_cap_header": "Cap. de mercado",
+      "price_header": "Precio",
+      "24h_header": "24 H",
+      "balance_header": "Saldo",
+      "add_button": "+ Agregar",
+      "add_to_watchlist": "Añadir a la lista de seguimiento",
+      "remove_from_watchlist": "Quitar de la lista de seguimiento",
+      "trade": "Operar",
+      "empty_watchlist": "No tienes ningún token en tu lista de seguimiento.",
+      "discover_more_tokens": "Descubre más tokens",
+      "empty_custom": "No tienes ningún token personalizado.",
+      "add_custom_token": "+ Agregar token personalizado",
+      "empty_stocks": "Aún no tienes acciones tokenizadas ni ETF en tu portafolio.",
+      "no_results": "No se encontraron resultados para \"{query}\".",
+      "results_of": "{count} de {total} resultados",
+      "page_current": "{current}",
+      "page_of": "de",
+      "page_total": "{total}"
+    },
+    "custom_token": {
+      "add_title": "Agregar token personalizado",
+      "edit_title": "Editar token personalizado",
+      "delete_title": "Eliminar token personalizado",
+      "token_address": "Dirección del token",
+      "token_name_placeholder": "Nombre del token",
+      "token_symbol_placeholder": "Símbolo del token",
+      "token_decimals_placeholder": "Decimales del token",
+      "add_button": "Agregar token",
+      "save_button": "Guardar cambios",
+      "delete_button": "Eliminar token",
+      "delete_confirm": "¿Seguro que quieres eliminar \"{name}\"? Puedes volver a agregar este token si cambias de opinión.",
+      "name_required": "El nombre del token es obligatorio",
+      "symbol_required": "El símbolo del token es obligatorio",
+      "decimals_required": "Los decimales son obligatorios",
+      "decimals_range": "Debe estar entre 0 y 36",
+      "already_added": "Este token ya está agregado.",
+      "fetch_failed": "No se pudieron obtener los detalles del token. Verifica la dirección.",
+      "toast_added": "Se agregó el token personalizado",
+      "toast_updated": "Se actualizó el token personalizado",
+      "toast_deleted": "Se eliminó el token personalizado"
+    },
+    "connect_wallet": {
+      "title": "Conecta tu billetera para ver tu portafolio",
+      "description": "Desbloquea tu billetera para acceder a todas las funciones. Administra tus criptoactivos en múltiples blockchains: opera con acciones tokenizadas y ETF, intercambia tokens cripto, haz staking y mucho más.",
+      "connect_button": "Conectar billetera",
+      "or": "o"
+    }
+  }
+}

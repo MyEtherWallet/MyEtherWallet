@@ -1,0 +1,74 @@
+{
+  "swap": {
+    "title1": "Intercambio de tokens simple y seguro",
+    "title2": "Intercambio instantáneo de cripto con comisiones mínimas",
+    "not-supported-network": "La red seleccionada no admite intercambios. Selecciona una red diferente.",
+    "you-are-selling": "Estás vendiendo",
+    "you-are-buying": "Estás comprando",
+    "network-not-supported": "Red no admitida",
+    "swapping-not-available": "El intercambio no está disponible en {network}. Cambia a una red compatible.",
+    "bridging-not-available": "El puente no está disponible en {network}. Cambia a una red compatible.",
+    "need-help-swapping": "¿Necesitas ayuda para intercambiar?",
+    "price-impact-too-high": "El impacto en el precio es demasiado alto {percent}%",
+    "toast": {
+      "select-chain": "Selecciona una cadena.",
+      "unsupported-chain": "La cadena seleccionada no es compatible.",
+      "tx-sign-failed": "Falló la firma de la transacción. Inténtalo de nuevo.",
+      "tx-send-success": "Intercambio ejecutado correctamente.",
+      "swap-canceled": "Intercambio cancelado por el usuario",
+      "swap-failed": "Intercambio fallido"
+    },
+    "error": {
+      "amount-required": "La cantidad es obligatoria.",
+      "more-than-zero": "La cantidad debe ser mayor que 0.",
+      "insufficient-balance-for-fees": "No tienes suficiente {symbol} para cubrir las comisiones de red.",
+      "insufficient-native": "Saldo de {symbol} insuficiente.",
+      "minimum-amount": "Cantidad demasiado baja.",
+      "maximum-amount": "Cantidad demasiado alta.",
+      "no-quotes": "No hay cotizaciones disponibles para el par de tokens seleccionado",
+      "fetching-quotes": "Error al obtener las cotizaciones. Inténtalo de nuevo.",
+      "initializing-swap-failed": "Error al inicializar el intercambio. Inténtalo de nuevo.",
+      "getting-swap": "Error al obtener el intercambio. Inténtalo de nuevo.",
+      "too-many-decimals": "La cantidad tiene demasiados decimales",
+      "invalid-amount": "Cantidad no válida",
+      "pair-not-available": "El par no está disponible actualmente",
+      "recipient-required": "La dirección del destinatario es obligatoria para el puente",
+      "invalid-address": "Dirección no válida"
+    },
+    "best-offer": {
+      "looking": "Buscando la mejor oferta",
+      "analyzing": "Analizando plataformas de intercambio descentralizadas..."
+    },
+    "initiated": {
+      "swap-initiated": "Intercambio iniciado",
+      "bridge-initiated": "Puente iniciado",
+      "swap-completed-note": "Una vez completado, {symbol} se depositará en tu billetera",
+      "bridge-completed-note": "Una vez completado, {symbol} se transferirá a esta billetera",
+      "view-progress": "Ver progreso",
+      "pending": "Pendiente",
+      "successful": "Exitoso",
+      "failed": "Fallido",
+      "from-chain": "desde {chain}",
+      "to-chain": "a {chain}",
+      "on-chain": "en {chain}",
+      "close-window": "Puedes cerrar esta ventana y",
+      "track-progress": "Seguir el progreso en las notificaciones",
+      "check-explorer": "o consultar el explorador de bloques"
+    },
+    "swap-offer": {
+      "best-offer-from": "Mejor oferta de",
+      "you-will-get": "obtendrás",
+      "max-slippage": "Deslizamiento máx.",
+      "minimum-received": "Mínimo recibido",
+      "offer-includes": "La oferta incluye una comisión del {feePercent}%",
+      "proceed": "Continuar con el intercambio",
+      "proceed-bridge": "Continuar con el puente",
+      "decline": "Rechazar intercambio",
+      "unknown-provider": "Proveedor desconocido",
+      "offers": "Oferta | {count} otras ofertas",
+      "offer_from": "Oferta de { provider }"
+    },
+    "for": "por",
+    "offer": "Oferta"
+  }
+}

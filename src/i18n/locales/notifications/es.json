@@ -1,0 +1,30 @@
+{
+  "notifications_module": {
+    "title": "Notificaciones",
+    "no_notifications_yet": "Aún no hay notificaciones",
+    "default_empty_text": "Tus órdenes, intercambios, puentes y transacciones recientes aparecerán aquí.",
+    "swap": "intercambios",
+    "bridge": "puente",
+    "transaction": "transacciones",
+    "trade_order": "operaciones",
+    "status": {
+      "pending": "Pendiente",
+      "possibly_dropped": "Posiblemente descartada",
+      "failed": "Fallida",
+      "successful": "Exitosa"
+    },
+    "destination_address": "Dirección de destino",
+    "price_difference": "Diferencia de precio",
+    "filled_in_tx": "Ejecutada en tx",
+    "est": "est:",
+    "order_status": {
+      "pending": "Pendiente",
+      "filled": "Ejecutada",
+      "cancelled": "Cancelada",
+      "expired": "Expirada"
+    },
+    "pin_to_keep_open": "Fijar para mantener abierto",
+    "unpin": "Desfijar",
+    "pin": "Fijar"
+  }
+}

@@ -293,6 +293,7 @@ const { locale } = useI18n()
 const LANGUAGE_OPTIONS = [
   { code: 'en', label: 'English', native: 'English', abbr: 'ENG' },
   { code: 'zh', label: 'Chinese', native: '中文', abbr: 'CHN' },
+  { code: 'es', label: 'Spanish', native: 'Español', abbr: 'ESP' },
 ]
 
 const selectedLanguage = computed(() => storedLocale.value)

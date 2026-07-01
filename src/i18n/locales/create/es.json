@@ -1,0 +1,31 @@
+{
+  "create_wallet": {
+    "title": "Crear billetera",
+    "subtitle": "MEW está disponible en dispositivos móviles y en tu navegador de escritorio.",
+    "back_to_connect_options": "Volver a las opciones de conexión",
+    "buy_hardware_wallet_title": "Comprar una billetera de hardware",
+    "create_mnemonic_wallet_title": "Crear una billetera con frase mnemotécnica",
+    "recommended": "Recomendada",
+    "not_recommended": "No recomendada",
+    "mew_mobile_app": "MEW Mobile App",
+    "ratings_count": "13k+ valoraciones",
+    "scan_to_download": "Escanea para descargar",
+    "google_play_alt": "Descargar de Google Play Store",
+    "apple_store_alt": "Descargar de Apple App Store",
+    "enkrypt_browser_wallet": "Enkrypt Browser Wallet",
+    "enkrypt_users_count": "100,000+ usuarios",
+    "get_enkrypt": "Obtener Enkrypt Browser Wallet",
+    "other_wallet_methods": "Otros métodos de billetera",
+    "hardware_wallet": "Billetera de hardware",
+    "hardware_wallet_alt": "billetera de hardware",
+    "hardware_wallet_description": "El más alto estándar de seguridad. Pide un dispositivo en línea y úsalo con MEW.",
+    "buy_hardware_wallet": "Comprar una billetera de hardware",
+    "software_wallet": "Billetera de software",
+    "software_wallet_alt": "billetera de software",
+    "software_wallet_description": "Crea una billetera usando una frase de recuperación. Úsala solo en entornos sin conexión.",
+    "create_software_wallet": "Crear una billetera de software",
+    "starting_from": "Desde",
+    "select_keystore": "Seleccionar Keystore",
+    "connect": "Conectar"
+  }
+}

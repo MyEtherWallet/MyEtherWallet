@@ -1,0 +1,44 @@
+{
+  "send": {
+    "send-tokens": "Enviar tokens",
+    "send-nfts": "Enviar NFT",
+    "need-help": "¿Necesitas ayuda para enviar?",
+    "toast": {
+      "failed_to_sign": "Error al firmar la transacción",
+      "tx-send-success": "Transacción enviada correctamente",
+      "tx-send-failed": "Error al enviar la transacción",
+      "failed_to_fetch_gas_fees": "Error al obtener las comisiones de Gas",
+      "frozen_token": "Error al enviar. Es posible que el token esté congelado, contáctanos"
+    },
+    "initiated": {
+      "title": "Envío iniciado",
+      "completed-note": "Una vez completado, {symbol} se enviará a",
+      "on-chain": "en {chain}",
+      "status": {
+        "pending": "Pendiente",
+        "successful": "Exitosa",
+        "failed": "Fallida"
+      },
+      "tx-hash": "Hash de la transacción",
+      "track-progress": "Sigue el progreso en las notificaciones",
+      "close-window": "Puedes cerrar esta ventana y",
+      "check-explorer": "o consultar el explorador de bloques"
+    }
+  },
+  "verify-tx": {
+    "title": "Verificar transacción",
+    "description": "Revisa bien la información antes de confirmar la transacción.",
+    "unknown-network": "Red desconocida",
+    "confirm": "Confirmar y enviar"
+  },
+
+  "error": {
+    "amount": {
+      "required": "la cantidad es obligatoria",
+      "less_than_zero": "la cantidad debe ser mayor que 0"
+    },
+    "balance": {
+      "insufficient": "saldo insuficiente"
+    }
+  }
+}

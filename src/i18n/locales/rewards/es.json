@@ -1,0 +1,26 @@
+{
+  "rewards": {
+    "loading": "Cargando recompensas",
+    "hooray": "¡Genial!",
+    "rewarded_with": "Recibiste una recompensa de ${amount} USDC",
+    "earn_another_tomorrow": "¡Recuerda ganar otra recompensa mañana!",
+    "reward_on_its_way": "Tu recompensa está en camino",
+    "reward_in_wallet": "La recompensa está en tu billetera",
+    "see_reward_tx": "Ver tx de la recompensa",
+    "earn_amount_usdc": "Gana ${amount} USDC",
+    "reward_description": "Los primeros {count} intercambios en las próximas {hours} horas por más de ${min} ganan ${amount} USDC",
+    "rewards_left": "Queda 1 recompensa | Quedan {count} recompensas",
+    "resets_in": "Se restablece en {time}",
+    "swap_now": "Intercambiar ahora",
+    "account_not_eligible": "La cuenta no es elegible",
+    "try_again_later": "¡Lo sentimos, inténtalo de nuevo más tarde!",
+    "learn_more": "Más información",
+    "earn_rewards_title": "Gana recompensas",
+    "earn_rewards_description": "Las primeras 10 operaciones de $25+ y los intercambios de $50+ ganan 5 USDC cada hora.",
+    "not_eligible_at_this_time": "No eres elegible para recibir recompensas en este momento",
+    "switched_to_ethereum": "Se cambió la red de la app a Ethereum",
+    "congratulations": "¡Felicidades!",
+    "you_received_reward": "Recibiste tu recompensa",
+    "toggle_full_text": "Mostrar u ocultar el texto completo"
+  }
+}
