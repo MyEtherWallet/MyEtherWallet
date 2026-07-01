@@ -47,64 +47,31 @@
             </button>
           </template>
           <template #menu-content="{ toggleMenu }">
-            <ul class="py-2 min-w-[220px] text-s-14">
-              <li
-                data-test="menu-rename"
-                class="text-black px-4 py-2 hover:bg-grey-faded cursor-pointer flex items-center"
-                @click="startRename"
+            <manage-accounts-menu
+              v-if="!confirmingDelete"
+              :kind="account.kind"
+              :is-active="true"
+              :toggle="toggleMenu"
+              @rename="startRename"
+              @copy="$emit('copy')"
+              @refresh="$emit('refresh')"
+              @paper="$emit('paper')"
+              @explorer="$emit('explorer')"
+              @disconnect="$emit('disconnect')"
+              @remove="onRemove"
+            />
+            <div v-else class="p-3 flex items-center gap-2">
+              <button
+                data-test="delete-confirm"
+                class="text-error text-s-12"
+                @click="$emit('delete'); confirmingDelete = false; toggleMenu()"
               >
-                <pencil-square-icon class="w-4 h-4 mr-2 text-primary" /> {{ $t('multi_address.menu.rename') }}
-              </li>
-              <li
-                data-test="menu-copy"
-                class="text-black px-4 py-2 hover:bg-grey-faded cursor-pointer flex items-center"
-                @click="$emit('copy'); toggleMenu()"
-              >
-                <clipboard-document-icon class="w-4 h-4 mr-2 text-primary" /> {{ $t('multi_address.menu.copy') }}
-              </li>
-              <li
-                data-test="menu-refresh"
-                class="text-black px-4 py-2 hover:bg-grey-faded cursor-pointer flex items-center"
-                @click="$emit('refresh'); toggleMenu()"
-              >
-                <arrow-path-icon class="w-4 h-4 mr-2 text-primary" /> {{ $t('multi_address.menu.refresh') }}
-              </li>
-              <li
-                v-if="account.kind === 'signing'"
-                data-test="menu-paper"
-                class="text-black px-4 py-2 hover:bg-grey-faded cursor-pointer flex items-center"
-                @click="$emit('paper'); toggleMenu()"
-              >
-                <document-icon class="w-4 h-4 mr-2 text-primary" /> {{ $t('multi_address.menu.paper_wallet') }}
-              </li>
-              <li
-                data-test="menu-explorer"
-                class="text-black px-4 py-2 hover:bg-grey-faded cursor-pointer flex items-center"
-                @click="$emit('explorer'); toggleMenu()"
-              >
-                <arrow-top-right-on-square-icon class="w-4 h-4 mr-2 text-primary" /> {{ $t('multi_address.menu.explorer') }}
-              </li>
-              <li
-                v-if="!confirmingDelete"
-                data-test="menu-remove"
-                class="px-4 py-2 hover:bg-grey-faded cursor-pointer flex items-center text-error"
-                @click="confirmingDelete = true"
-              >
-                <trash-icon class="w-4 h-4 mr-2 text-error" /> {{ $t('multi_address.menu.remove') }}
-              </li>
-              <li v-else class="px-4 py-2 flex items-center gap-2">
-                <button
-                  data-test="delete-confirm"
-                  class="text-error text-s-12"
-                  @click="$emit('delete'); confirmingDelete = false; toggleMenu()"
-                >
-                  {{ $t('common.confirm') }}
-                </button>
-                <button data-test="delete-cancel" class="text-s-12" @click="confirmingDelete = false">
-                  {{ $t('common.cancel') }}
-                </button>
-              </li>
-            </ul>
+                {{ $t('common.confirm') }}
+              </button>
+              <button data-test="delete-cancel" class="text-s-12" @click="confirmingDelete = false">
+                {{ $t('common.cancel') }}
+              </button>
+            </div>
           </template>
         </app-pop-up-menu>
       </div>
@@ -141,15 +108,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import {
-  TrashIcon,
   ClipboardDocumentIcon,
   ArrowPathIcon,
-  DocumentIcon,
-  ArrowTopRightOnSquareIcon,
-  PencilSquareIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/vue/24/outline'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
+import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
 import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
 import { truncateAddress } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
@@ -165,6 +129,7 @@ const emit = defineEmits<{
   refresh: []
   paper: []
   explorer: []
+  disconnect: []
   rename: [name: string]
   delete: []
 }>()
@@ -172,6 +137,10 @@ const emit = defineEmits<{
 const confirmingDelete = ref(false)
 const renaming = ref(false)
 const draftName = ref('')
+
+const onRemove = (): void => {
+  confirmingDelete.value = true
+}
 
 const mewCardUrl = computed(
   () => `https://mewcard.mewapi.io/?address=${props.account.address}`,

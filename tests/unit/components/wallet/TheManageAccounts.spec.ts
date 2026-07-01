@@ -39,7 +39,7 @@ const stubs = {
   ManageAccountsCard: {
     name: 'ManageAccountsCard',
     props: ['account', 'balance'],
-    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\', \'New\')"></div>',
+    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\', \'New\')"><button data-test="card-disconnect" @click.stop="$emit(\'disconnect\')" /></div>',
   },
   ManageAccountsRow: {
     props: ['account', 'isActive'],
@@ -66,6 +66,12 @@ describe('TheManageAccounts', () => {
     const w = factory()
     await w.get('[data-test="active-card"]').trigger('click')
     expect(renameAccount).toHaveBeenCalled()
+  })
+
+  it('disconnects the wallet and closes the popup when the card emits disconnect', async () => {
+    const w = factory()
+    await w.get('[data-test="card-disconnect"]').trigger('click')
+    expect(walletStore.disconnectWallet).toHaveBeenCalledTimes(1)
   })
 
   it('backfills once on open', () => {

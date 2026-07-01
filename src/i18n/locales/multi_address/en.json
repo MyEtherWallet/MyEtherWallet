@@ -28,6 +28,7 @@
       "refresh": "Refresh balance",
       "paper_wallet": "Open Paper wallet",
       "explorer": "Blockchain explorer",
+      "disconnect": "Disconnect",
       "remove": "Remove"
     }
   }

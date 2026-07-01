@@ -62,4 +62,11 @@ describe('ManageAccountsCard', () => {
     expect(factory({ account: { kind: 'signing' } }).find('[data-test="menu-paper"]').exists()).toBe(true)
     expect(factory({ account: { kind: 'watchOnly' } }).find('[data-test="menu-paper"]').exists()).toBe(false)
   })
+
+  it('shows Disconnect (card is always active) and emits disconnect', async () => {
+    const w = factory()
+    expect(w.find('[data-test="menu-disconnect"]').exists()).toBe(true)
+    await w.get('[data-test="menu-disconnect"]').trigger('click')
+    expect(w.emitted('disconnect')).toHaveLength(1)
+  })
 })

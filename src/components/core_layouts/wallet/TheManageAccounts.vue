@@ -77,6 +77,7 @@
                     @rename="onRename(activeAccount, $event)"
                     @paper="openPaperWallet = true"
                     @explorer="openExplorer(activeAccount)"
+                    @disconnect="onDisconnect"
                     @delete="onDelete(activeAccount)"
                   />
                 </div>
@@ -103,6 +104,7 @@
                       @rename="onRename(acc, $event)"
                       @paper="openPaperWallet = true"
                       @explorer="openExplorer(acc)"
+                      @disconnect="onDisconnect"
                       @delete="onDelete(acc)"
                     />
                   </template>
@@ -274,6 +276,10 @@ const onSelect = (acc: SavedAccount): void => {
 const onDelete = (acc: SavedAccount): void => {
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DELETED)
   void deleteAccount(acc)
+}
+const onDisconnect = (): void => {
+  walletStore.disconnectWallet()
+  openDialog.value = false
 }
 const onRename = (acc: SavedAccount, name: string): void => {
   const res = watchOnlyStore.renameAccount(acc.id, name)
