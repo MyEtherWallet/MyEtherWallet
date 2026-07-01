@@ -33,7 +33,7 @@ vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
 
 const stubs = {
-  AppDialog: { template: '<div><slot name="content" /></div>' },
+  Teleport: true,
   TheCurrentNetwork: true, ThePaperWallet: true,
   ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
   ManageAccountsRow: {
@@ -42,7 +42,7 @@ const stubs = {
   },
 }
 const factory = () =>
-  mount(TheManageAccounts, { props: { openDialog: true }, global: { stubs, mocks: { $t: (k: string) => k } } })
+  mount(TheManageAccounts, { props: { openDialog: true, anchor: document.body }, global: { stubs, mocks: { $t: (k: string) => k } } })
 
 beforeEach(() => { vi.clearAllMocks(); walletStore.detectedAddress.value = null })
 

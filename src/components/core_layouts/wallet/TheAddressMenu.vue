@@ -2,6 +2,7 @@
   <div>
     <button
       v-if="isWalletConnected && walletAddress"
+      ref="triggerRef"
       class="relative hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full w-full shadow-button shadow-button-elevated"
       @click="setOpenDialog(true)"
     >
@@ -40,7 +41,7 @@
         <chevron-down-icon class="w-3 h-3 xs:w-4 xs:h-4 ml-auto xs:mr-1" />
       </div>
     </button>
-    <the-manage-accounts v-model:open-dialog="openDialog" />
+    <the-manage-accounts v-model:open-dialog="openDialog" :anchor="triggerRef" />
   </div>
 </template>
 
@@ -74,6 +75,7 @@ defineProps({
  * Dialog
  -------------------------------*/
 const openDialog = ref(false)
+const triggerRef = ref<HTMLElement | null>(null)
 const setOpenDialog = (value: boolean) => {
   openDialog.value = value
 }

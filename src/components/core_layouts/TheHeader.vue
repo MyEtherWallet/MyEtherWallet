@@ -116,7 +116,6 @@
           >
             {{ $t('connect_wallet') }}
           </router-link>
-          <the-current-network />
           <!-- Address Menu -->
           <the-address-menu v-if="isWalletConnected" />
           <the-settings-popup />
@@ -141,7 +140,6 @@
 import AppSelect from '@/components/AppSelect.vue'
 import TheAppSideMenu from './TheAppSideMenu.vue'
 import TheAddressMenu from './wallet/TheAddressMenu.vue'
-import TheCurrentNetwork from './wallet/TheCurrentNetwork.vue'
 import TheNotificationsPopup from './TheNotificationsPopup.vue'
 import TheSettingsPopup from './TheSettingsPopup.vue'
 import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
