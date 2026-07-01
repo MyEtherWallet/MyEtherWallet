@@ -88,8 +88,13 @@
         <!-- GLOBAL SEARCH -->
         <module-global-search />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
-             can't escape and paint over the search overlay -->
-        <div class="relative z-[0] flex items-center gap-2">
+             can't escape and paint over the search overlay. While the address
+             popup is open we lift it above the address backdrop (z-[1]) so the
+             trigger stays bright, mirroring how global search sits above its overlay. -->
+        <div
+          class="relative flex items-center gap-2"
+          :class="addressPopupOpen ? 'z-[2]' : 'z-[0]'"
+        >
           <!-- Create wallet button -->
           <router-link
             v-if="!isWalletConnected"
