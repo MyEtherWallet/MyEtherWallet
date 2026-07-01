@@ -1,6 +1,7 @@
 <template>
   <div class="relative h-screen overflow-hidden">
-    <welcome-dialog v-if="!isDevMode" />
+    <!-- <welcome-dialog v-if="!isDevMode" /> -->
+    <weekend-trading-dialog v-if="isLoadingComplete" />
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
@@ -23,7 +24,8 @@ import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
+// import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
+import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
 import AppMewWalletBanner from '@/components/AppMewWalletBanner.vue'
@@ -50,7 +52,7 @@ const { fetchPurchaseInfo } = purchaseStore
 const stocksStore = useStocksStore()
 const { fetchStocksAddresses } = stocksStore
 
-const isDevMode = configs.IS_DEV_MODE
+// const isDevMode = configs.IS_DEV_MODE
 const store = useWalletStore()
 const {
   wallet,

@@ -11,7 +11,7 @@ import { WalletType, type HexPrefixedString } from '../types'
 import type { PathType } from '@/stores/derivationStore'
 import type { NetworkNames } from '@enkryptcom/types'
 import { HWwalletType } from '@enkryptcom/types'
-import HWwallet from '@enkryptcom/hw-wallets'
+import type { HWManager } from '@/providers/hw/types'
 import { chainToEnum } from './chainToEnum'
 import type { EIP712TypedData } from '@1inch/limit-order-sdk'
 
@@ -21,7 +21,7 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
   private index: string
   private path: PathType
   private walletType: HWwalletType
-  private hwWalletInstance: HWwallet
+  private hwWalletInstance: HWManager
 
   constructor(
     chainId: string,
@@ -30,7 +30,7 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     index: string,
     path: PathType,
     walletType: HWwalletType,
-    hwWalletInstance: HWwallet,
+    hwWalletInstance: HWManager,
   ) {
     super(chainId)
     this.address = address
@@ -38,7 +38,7 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     this.index = index
     this.path = path
     this.walletType = walletType
-    this.hwWalletInstance = hwWalletInstance as HWwallet
+    this.hwWalletInstance = hwWalletInstance
   }
 
   /**
@@ -96,7 +96,7 @@ export default class EvmHardwareWallet extends BaseEvmWallet {
     return Promise.resolve(this.address)
   }
 
-  getWalletInstance(): HWwallet | null {
+  getWalletInstance(): HWManager | null {
     return this.hwWalletInstance
   }
 

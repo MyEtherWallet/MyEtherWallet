@@ -1,5 +1,6 @@
 <template>
   <div class="flex justify-center w-full">
+    <router-view />
     <div class="w-[624px] flex flex-col items-center justify-center">
       <app-sheet :title="$t('verify-message')">
         <div class="flex flex-col gap-1 pt-6">

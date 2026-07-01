@@ -8,11 +8,7 @@
         <module-search-stocks />
         <module-top-movers class="mt-6" />
       </div>
-      <module-newly-added
-        class="col-span-12 lg:col-span-4"
-        v-if="isTradingRestrictedInRegion"
-      />
-      <module-newly-added-banner class="col-span-12 lg:col-span-4" v-else />
+      <module-newly-added class="col-span-12 lg:col-span-4" />
       <module-trending class="col-span-12 lg:col-span-4" />
       <module-news class="col-span-12 lg:col-span-4" />
       <module-all-stock class="col-span-12" />
@@ -26,13 +22,10 @@ import ModuleStockIndexes from '@/modules/stocks/ModuleStockIndexes.vue'
 import ModuleSearchStocks from '@/modules/stocks/ModuleSearchStocks.vue'
 import ModuleTopMovers from '@/modules/stocks/ModuleTopMovers.vue'
 import ModuleNewlyAdded from '@/modules/stocks/ModuleNewlyAdded.vue'
-import ModuleNewlyAddedBanner from '@/modules/stocks/ModuleNewlyAddedBanner.vue'
 import ModuleTrending from '@/modules/stocks/ModuleTrending.vue'
 import ModuleNews from '@/modules/stocks/ModuleNews.vue'
 import ModuleAllStock from '@/modules/stocks/ModuleAllStock.vue'
 import { useStocksStore } from '@/stores/stocksStore'
-import { useMarketStatus } from '@/modules/trade/composables'
-const { isTradingRestrictedInRegion } = useMarketStatus()
 
 const stocksStore = useStocksStore()
 stocksStore.fetchStockOverview()

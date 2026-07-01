@@ -411,7 +411,7 @@ export type ClickTokenTradePayload = {
 export const ClickMainMenuEvent = 'Clicked_Wallet_Menu' as const
 
 export type ClickMainMenuPayload = {
-  button: 'trade' | 'swap' | 'bridge' | 'buy' | 'sell' | 'send' | 'perps'
+  button: 'trade' | 'swap' | 'bridge' | 'send' | 'purchase' | 'perps'
 }
 
 // =============================================================================
@@ -513,6 +513,36 @@ export type CryptoMarketSelectNetworkPayload = {
 }
 
 // =============================================================================
+// GLOBAL SEARCH
+// =============================================================================
+
+export const GlobalSearchEvent = {
+  SHOWN: 'Global_Search_Shown',
+  SELECT_TOKEN: 'Global_Search_Select_Token',
+  TOKEN_NOT_FOUND: 'Global_Search_Token_Not_Found',
+} as const
+export type GlobalSearchEvent =
+  (typeof GlobalSearchEvent)[keyof typeof GlobalSearchEvent]
+
+export const GlobalSearchCategory = {
+  STOCK: 'stock',
+  CRYPTO: 'crypto',
+} as const
+export type GlobalSearchCategory =
+  (typeof GlobalSearchCategory)[keyof typeof GlobalSearchCategory]
+
+export type GlobalSearchSelectTokenPayload = {
+  symbol: string
+  name: string
+  category: GlobalSearchCategory
+  isRecent: boolean
+}
+
+export type GlobalSearchTokenNotFoundPayload = {
+  searchString: string
+}
+
+// =============================================================================
 // TRADE / SWAP SORT
 // =============================================================================
 
@@ -523,3 +553,18 @@ export type ClickSortPayload = {
   sortOption: string
   isFromView?: boolean
 }
+
+// =============================================================================
+// WEEKEND TRADING ANNOUNCEMENT (MEW-1958)
+// =============================================================================
+
+export const WeekendTradingAnnouncementEvent = {
+  MODAL_SHOWN: '24/7_Banner_Shown',
+  MODAL_CLICK_TRADE_NOW: '24/7_Banner_Clicked_Trade',
+  MODAL_DISMISSED: '24/7_Banner_Dismissed',
+  TOOLTIP_SHOWN: '24/7_Toast_Shown',
+  TOOLTIP_DISMISSED: '24/7_Toast_Dismissed',
+} as const
+
+export type WeekendTradingAnnouncementEvent =
+  (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]

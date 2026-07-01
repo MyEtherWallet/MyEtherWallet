@@ -19,6 +19,7 @@
         v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
+        @paste="onAmountPaste"
       />
       <slot name="token-select">
         <app-token-select
@@ -83,6 +84,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
@@ -202,20 +204,5 @@ watch(
   },
 )
 
-const checkIfNumber = (e: KeyboardEvent) => {
-  const key = e.key
-  // Numeric
-  if (key >= '0' && key <= '9') {
-    return
-  }
-  // Only allow a single period
-  if (key === '.') {
-    const input = amount.value.toString()
-    if (!input.includes('.')) {
-      return
-    }
-  }
-  // Alphabetical (/non-numeric) or multiple periods. Don't propagate change
-  e.preventDefault()
-}
+const { checkIfNumber, onPaste: onAmountPaste } = useNumericInput(amount)
 </script>

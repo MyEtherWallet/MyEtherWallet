@@ -1,7 +1,7 @@
 <template>
   <div ref="containerRef" class="relative">
     <!-- Notification Button (hidden on mobile, shown on desktop) -->
-    <app-btn-icon :label="$t('menu.open-notifications')" @click="togglePopup">
+    <app-btn-icon :label="$t('menu.open-notifications')" width="w-[40px]" height="h-[40px]" @click="togglePopup">
       <div class="relative">
         <bell-icon class="w-6 h-6" />
         <!--  dot indicator for unseen orders -->

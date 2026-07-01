@@ -139,7 +139,8 @@ import { useToastStore } from '@/stores/toastStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { ToastType } from '@/types/notification'
 import { useI18n } from 'vue-i18n'
-import { parseUnits, formatUnits } from 'viem'
+import { formatUnits } from 'viem'
+import { safeParseUnits } from '@/utils/unit'
 import { watchDebounced } from '@vueuse/core'
 import { useAddressInput } from '@/composables/useAddressInput'
 import { useMaxAmount } from '@/composables/useMaxAmount'
@@ -283,12 +284,12 @@ const checkAmountForError = () => {
   }
   //TODO: IMPLEMENET PROPER TO BASE AMOUNT in tokens
 
-  const baseTokenBalance = parseUnits(
+  const baseTokenBalance = safeParseUnits(
     tokenSelected.value?.balance || '0',
     tokenSelected.value?.decimals ?? 18,
   )
   const baseAmount = amount.value
-    ? parseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
+    ? safeParseUnits(amount.value.toString(), tokenSelected.value?.decimals ?? 18)
     : BigInt(0)
   if (amount.value === undefined || amount.value === '')
     amountError.value = t('error.amount.required') // amount is undefined or blank
@@ -368,7 +369,7 @@ watch(
   },
 )
 const amountToHex = computed(() => {
-  const amountBase = parseUnits(
+  const amountBase = safeParseUnits(
     amount.value.toString(),
     tokenSelected.value?.decimals ?? 18,
   )
@@ -382,7 +383,7 @@ const getTxRequestBody = ():
   if (
     tokenSelected.value &&
     tokenSelected.value.contract &&
-    toAddress.value !== '' &&
+    toAddress.value &&
     amount.value !== ''
   ) {
     if (isEvmChain.value) {
@@ -393,7 +394,7 @@ const getTxRequestBody = ():
         data.value = web3Contract.methods
           .transfer(
             toAddress.value,
-            parseUnits(
+            safeParseUnits(
               amount.value.toString(),
               tokenSelected.value?.decimals ?? 18,
             ).toString(),
@@ -419,7 +420,7 @@ const getTxRequestBody = ():
         outputs: [
           {
             address: toAddress.value ?? '',
-            amount: parseUnits(amount.value.toString(), 8).toString(),
+            amount: safeParseUnits(amount.value.toString(), 8).toString(),
           },
         ],
       }
