@@ -159,12 +159,10 @@ import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
-import { WalletType, type HexPrefixedString } from '@/providers/types'
+import { WalletType } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
-import type Web3InjectedWallet from '@/providers/ethereum/web3InjectedWallet'
 import type { Provider } from '@/stores/providerStore'
-import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
 
@@ -172,7 +170,7 @@ const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWallet, setWatchOnlyIfExist, disconnectWallet } = store
+const { setWatchOnlyIfExist, disconnectWallet, setDetectedAddress } = store
 const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
@@ -267,18 +265,15 @@ watch(
         injectedInfo?.provider.on(
           'accountsChanged',
           async (accounts: unknown) => {
-            if(accounts && (accounts as string[]).length === 0) {
+            if (accounts && (accounts as string[]).length === 0) {
               disconnectWallet()
               return
             }
-            if (
-              (accounts as string[])[0] !== (await wallet.value?.getAddress())
-            ) {
-              const _wallet = wallet.value as Web3InjectedWallet
-              _wallet.updateAddress(
-                (accounts as string[])[0] as HexPrefixedString,
-              )
-              setWallet(_wallet, '', WalletConfigType.EXTENSION)
+            const next = (accounts as string[])[0]
+            if (next && next !== (await wallet.value?.getAddress())) {
+              // MEW-1840: do NOT auto-switch. Surface the detected address so the
+              // Manage Accounts popup can offer "Save address".
+              setDetectedAddress(next)
             }
           },
         )
@@ -286,15 +281,11 @@ watch(
         const unisatInfo =
           wallet.value?.getProviderInstance?.() as typeof window.unisat
         unisatInfo?.on('accountsChanged', async (accounts: unknown) => {
-          if (
-            (accounts as string[])[0] !== (await wallet.value?.getAddress())
-          ) {
-            const _wallet = wallet.value as Web3InjectedWallet
-            _wallet.updateAddress(
-              (accounts as string[])[0] as HexPrefixedString,
-            )
-
-            setWallet(_wallet, '', WalletConfigType.EXTENSION)
+          const next = (accounts as string[])[0]
+          if (next && next !== (await wallet.value?.getAddress())) {
+            // MEW-1840: do NOT auto-switch. Surface the detected address so the
+            // Manage Accounts popup can offer "Save address".
+            setDetectedAddress(next)
           }
         })
       }
