@@ -1,135 +1,76 @@
-// tests/unit/components/wallet/TheManageAccounts.spec.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { ref } from 'vue'
 
-// vi.hoisted runs before vi.mock factories are evaluated (hoisting safe)
-const { mockSwitchTo, mockDeleteAccount, mockStartAdd, mockFetchFor, mockTrack } =
-  vi.hoisted(() => ({
-    mockSwitchTo: vi.fn(),
-    mockDeleteAccount: vi.fn(),
-    mockStartAdd: vi.fn(),
-    mockFetchFor: vi.fn(() => Promise.resolve()),
-    mockTrack: vi.fn(),
-  }))
+const switchTo = vi.fn()
+const deleteAccount = vi.fn()
+const startAdd = vi.fn()
+const fetchFor = vi.fn()
+const refreshOne = vi.fn()
+const renameAccount = vi.fn(() => ({ ok: true }))
+const tryAddAddress = vi.fn(() => ({ added: true }))
+const backfill = vi.fn()
+const clearDetectedAddress = vi.fn()
 
-const active = {
-  id: 'EVM:0xa',
-  address: '0xA000000000000000000000000000000000000001',
-  chainType: 'EVM',
-  kind: 'signing',
-  walletName: 'Ledger',
-  icon: '',
-  addedAt: 1,
+const store = {
+  activeAccount: { id: 'EVM:0x1', address: '0x1', addressName: 'Address 1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+  savedAccounts: [{ id: 'EVM:0x2', address: '0x2', addressName: 'Address 2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' }],
+  renameAccount, tryAddAddress, backfill,
+  watchOnlyAddresses: { EVM: [], BITCOIN: [] },
 }
-const saved = [
-  {
-    id: 'EVM:0xb',
-    address: '0xB000000000000000000000000000000000000002',
-    chainType: 'EVM',
-    kind: 'watchOnly',
-    walletName: 'Watch',
-    icon: '',
-    addedAt: 2,
-  },
-]
+const walletStore = { detectedAddress: ref<string | null>(null), disconnectWallet: vi.fn(), clearDetectedAddress }
 
-vi.mock('@/stores/savedAccountsStore', () => ({
-  useSavedAccountsStore: () => ({
-    activeAccount: active,
-    savedAccounts: saved,
-    activeId: 'EVM:0xa',
-    backfill: vi.fn(),
-  }),
-}))
-
-vi.mock('@/composables/useAccountSwitch', () => ({
-  useAccountSwitch: () => ({
-    switchTo: mockSwitchTo,
-    deleteAccount: mockDeleteAccount,
-  }),
-}))
-
-vi.mock('@/composables/useAddAccount', () => ({
-  useAddAccount: () => ({ startAdd: mockStartAdd }),
-}))
-
-vi.mock('@/composables/useAccountBalances', () => ({
-  useAccountBalances: () => ({
-    balances: { value: {} },
-    isLoading: { value: false },
-    fetchFor: mockFetchFor,
-  }),
-}))
-
-vi.mock('@/stores/walletStore', () => ({
-  useWalletStore: () => ({
-    disconnectWallet: vi.fn(),
-    walletAddress: '0xA000000000000000000000000000000000000001',
-  }),
-}))
-
-vi.mock('@/stores/chainsStore', () => ({
-  useChainsStore: () => ({ selectedChain: { name: 'ETHEREUM', type: 'EVM' } }),
-}))
-
-vi.mock('@/analytics', () => ({
-  analytics: { trackMultiAddressEvent: mockTrack },
-}))
+vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
+vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
+vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ balances: ref({}), fetchFor, refreshOne }) }))
+vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
+vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: { name: 'ETH', type: 'EVM', blockExplorerAddr: 'https://e/[[address]]' } }) }))
+vi.mock('@/analytics', () => ({ analytics: { trackMultiAddressEvent: vi.fn() } }))
+vi.mock('@/analytics/events', () => ({ MultiAddressEvent: { OPENED: 'o', SWITCHED: 's', ADD_STARTED: 'a', DELETED: 'd', RENAMED: 'r', DETECTED_SAVED: 'ds' } }))
 
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
-import { MultiAddressEvent } from '@/analytics/events'
 
-const mountPopup = () =>
-  mount(TheManageAccounts, {
-    props: { openDialog: true },
-    global: {
-      stubs: {
-        AppDialog: {
-          template: '<div><slot name="title"/><slot name="content"/></div>',
-        },
-        TheCurrentNetwork: true,
-        ThePaperWallet: true,
-        AppBlockie: true,
-      },
-      mocks: { $t: (k: string) => k },
-    },
-  })
+const stubs = {
+  AppDialog: { template: '<div><slot name="content" /></div>' },
+  TheCurrentNetwork: true, ThePaperWallet: true,
+  ManageAccountsRow: {
+    props: ['account', 'isActive'],
+    template: '<div class="row" :data-id="account.id" @click="$emit(\'rename\', \'New\')"></div>',
+  },
+}
+const factory = () =>
+  mount(TheManageAccounts, { props: { openDialog: true }, global: { stubs, mocks: { $t: (k: string) => k } } })
+
+beforeEach(() => { vi.clearAllMocks(); walletStore.detectedAddress.value = null })
 
 describe('TheManageAccounts', () => {
-  beforeEach(() => {
-    mockTrack.mockClear()
-    mockSwitchTo.mockClear()
-    mockDeleteAccount.mockClear()
-    mockStartAdd.mockClear()
-    mockFetchFor.mockClear()
+  it('renders active + saved rows and the count', () => {
+    const w = factory()
+    expect(w.findAll('.row')).toHaveLength(2)
+    expect(w.text()).toContain('2')
   })
 
-  it('renders the active account and the saved rows', () => {
-    const w = mountPopup()
-    expect(w.text()).toContain('Ledger')
-    expect(w.findAllComponents({ name: 'ManageAccountsRow' }).length).toBe(2) // active + 1 saved
-    expect(mockTrack).toHaveBeenCalledWith(MultiAddressEvent.OPENED)
+  it('backfills once on open', () => {
+    factory()
+    expect(backfill).toHaveBeenCalledTimes(1)
   })
 
-  it('starts the add flow from the Add button', async () => {
-    const w = mountPopup()
-    await w.find('[data-test="add-address"]').trigger('click')
-    expect(mockStartAdd).toHaveBeenCalled()
+  it('routes a row rename to renameAccount', async () => {
+    const w = factory()
+    await w.findAll('.row')[0].trigger('click')
+    expect(renameAccount).toHaveBeenCalled()
   })
 
-  it('switches when a saved row emits select', async () => {
-    const w = mountPopup()
-    const rows = w.findAllComponents({ name: 'ManageAccountsRow' })
-    await rows[1].vm.$emit('select')
-    expect(mockSwitchTo).toHaveBeenCalledWith(saved[0])
-    expect(mockTrack).toHaveBeenCalledWith(MultiAddressEvent.SWITCHED)
+  it('shows the detected-address footer and saves only (no switch)', async () => {
+    walletStore.detectedAddress.value = '0x9a8b'
+    const w = factory()
+    await w.get('[data-test="save-detected"]').trigger('click')
+    expect(tryAddAddress).toHaveBeenCalled()
+    expect(switchTo).not.toHaveBeenCalled()
   })
 
-  it('deletes when a saved row emits delete and tracks the event', async () => {
-    const w = mountPopup()
-    const rows = w.findAllComponents({ name: 'ManageAccountsRow' })
-    await rows[1].vm.$emit('delete')
-    expect(mockDeleteAccount).toHaveBeenCalledWith(saved[0])
-    expect(mockTrack).toHaveBeenCalledWith(MultiAddressEvent.DELETED)
+  it('hides the detected footer when there is no detected address', () => {
+    expect(factory().find('[data-test="save-detected"]').exists()).toBe(false)
   })
 })

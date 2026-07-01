@@ -408,6 +408,8 @@ export const MultiAddressEvent = {
   SWITCHED: 'multi_address_switched',
   ADD_STARTED: 'multi_address_add_started',
   DELETED: 'multi_address_deleted',
+  RENAMED: 'multi_address_renamed',
+  DETECTED_SAVED: 'multi_address_detected_saved',
 } as const
 export type MultiAddressEvent =
   (typeof MultiAddressEvent)[keyof typeof MultiAddressEvent]
