@@ -1,70 +1,85 @@
-// tests/unit/components/wallet/ManageAccountsRow.spec.ts
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 
-// Mock heavy HW-wallet transitive deps before any component import
 vi.mock('@/modules/access/common/walletConfigs', () => ({
   WalletConfigType: {
-    EXTENSION: 'EXTENSION',
-    HARDWARE: 'HARDWARE',
-    SOFTWARE: 'SOFTWARE',
-    READ_ONLY: 'READ_ONLY',
+    SOFTWARE: 'software',
+    HARDWARE: 'hardware',
+    EXTENSION: 'extension',
   },
 }))
 
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
+import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import { WalletType } from '@/providers/types'
 
-const account = {
-  id: 'EVM:0xabc',
-  address: '0xABCDEF0000000000000000000000000000001234',
-  chainType: 'EVM',
-  kind: 'watchOnly' as const,
-  walletConfigType: WalletConfigType.EXTENSION,
-  providerType: WalletType.WAGMI,
-  connectorId: 'enkrypt',
-  walletName: 'Enkrypt',
-  icon: '',
-  addedAt: 1,
+const stubs = {
+  AppPopUpMenu: {
+    template: '<div><slot name="menu-button" :toggleMenu="() => {}" /><slot name="menu-content" :toggleMenu="() => {}" /></div>',
+  },
+  AppBlockie: true,
+  IconWatchOnly: true,
 }
 
-const mountRow = (props = {}) =>
+const acc = (over: Partial<SavedAccount> = {}): SavedAccount => ({
+  id: 'EVM:0x1', address: '0xAbC0000000000000000000000000000000000001',
+  chainType: 'EVM', kind: over.kind ?? 'signing',
+  walletConfigType: WalletConfigType.SOFTWARE, providerType: WalletType.INJECTED,
+  walletName: 'Enkrypt', addressName: over.addressName ?? 'Address 1',
+  icon: '', ...over,
+})
+
+interface FactoryProps {
+  account?: Partial<SavedAccount>
+  isActive?: boolean
+}
+
+const factory = (props: FactoryProps = {}) =>
   mount(ManageAccountsRow, {
-    props: { account, isActive: false, ...props },
-    global: { stubs: { AppBlockie: true }, mocks: { $t: (k: string) => k } },
+    props: { account: acc(props.account), isActive: props.isActive ?? false },
+    global: { stubs, mocks: { $t: (k: string) => k } },
   })
 
 describe('ManageAccountsRow', () => {
-  it('renders name + truncated address', () => {
-    const w = mountRow()
-    expect(w.text()).toContain('Enkrypt')
-    expect(w.text()).toContain('0xABCD...1234')
+  it('shows the addressName as the primary label', () => {
+    expect(factory().text()).toContain('Address 1')
   })
 
   it('emits select when the row body is clicked', async () => {
-    const w = mountRow()
-    await w.find('[data-test="row-body"]').trigger('click')
-    expect(w.emitted('select')).toBeTruthy()
+    const w = factory()
+    await w.get('[data-test="row-body"]').trigger('click')
+    expect(w.emitted('select')).toHaveLength(1)
   })
 
-  it('requires confirm before emitting delete', async () => {
-    const w = mountRow()
-    await w.find('[data-test="delete"]').trigger('click')
-    expect(w.emitted('delete')).toBeFalsy()
-    await w.find('[data-test="delete-confirm"]').trigger('click')
-    expect(w.emitted('delete')).toBeTruthy()
+  it('hides "Open Paper wallet" for watch-only accounts', () => {
+    expect(factory({ account: { kind: 'signing' } }).find('[data-test="menu-paper"]').exists()).toBe(true)
+    expect(factory({ account: { kind: 'watchOnly' } }).find('[data-test="menu-paper"]').exists()).toBe(false)
   })
 
-  it('shows the badge only when active', () => {
-    expect(mountRow({ isActive: false }).find('[data-test="badge"]').exists()).toBe(false)
-    expect(mountRow({ isActive: true }).find('[data-test="badge"]').exists()).toBe(true)
+  it('emits rename with the edited value', async () => {
+    const w = factory()
+    await w.get('[data-test="menu-rename"]').trigger('click')
+    await w.get('[data-test="rename-input"]').setValue('Savings')
+    await w.get('[data-test="rename-save"]').trigger('click')
+    expect(w.emitted('rename')![0]).toEqual(['Savings'])
   })
 
-  it('emits copy and shows copied feedback when copy button is clicked', async () => {
-    const w = mountRow()
-    await w.find('[data-test="copy"]').trigger('click')
-    expect(w.emitted('copy')).toBeTruthy()
-    expect(w.text()).toContain('multi_address.copied')
+  it('emits delete only after inline confirm', async () => {
+    const w = factory()
+    await w.get('[data-test="menu-remove"]').trigger('click')
+    expect(w.emitted('delete')).toBeUndefined()
+    await w.get('[data-test="delete-confirm"]').trigger('click')
+    expect(w.emitted('delete')).toHaveLength(1)
+  })
+
+  it('emits copy / refresh / explorer from the menu', async () => {
+    const w = factory()
+    await w.get('[data-test="menu-copy"]').trigger('click')
+    await w.get('[data-test="menu-refresh"]').trigger('click')
+    await w.get('[data-test="menu-explorer"]').trigger('click')
+    expect(w.emitted('copy')).toHaveLength(1)
+    expect(w.emitted('refresh')).toHaveLength(1)
+    expect(w.emitted('explorer')).toHaveLength(1)
   })
 })

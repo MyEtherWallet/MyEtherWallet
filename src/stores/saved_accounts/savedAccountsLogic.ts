@@ -106,6 +106,7 @@ export function removeEntry(
 export function promoteNext(
   list: RecentAddress,
   removedType: ChainType,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _removedAddress: string,
 ): PersistedEntry | null {
   const sameBucket = list[removedType] ?? []

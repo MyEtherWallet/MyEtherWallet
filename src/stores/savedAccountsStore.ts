@@ -10,18 +10,20 @@ import type { ChainType } from '@/mew_api/types'
 import type { WalletType } from '@/providers/types'
 import {
   buildId,
-  upsert,
   canAdd,
   isAtCap as isAtCapFn,
-  removeById,
-  backfillMerge,
+  upsertEntry,
+  removeEntry,
+  backfillNames,
+  flatten,
   type SavedAccount,
+  type RecentAddress,
+  type PersistedEntry,
+  toSavedAccount,
 } from '@/stores/saved_accounts/savedAccountsLogic'
 
 export const useSavedAccountsStore = defineStore('savedAccountsStore', () => {
-  const accounts = useLocalStorage<SavedAccount[]>('savedAccounts', [], {
-    mergeDefaults: true,
-  })
+  const addresses = useLocalStorage<RecentAddress>('savedAccounts', { EVM: [], BITCOIN: [] })
 
   const walletStore = useWalletStore()
   const chainsStore = useChainsStore()
@@ -33,29 +35,45 @@ export const useSavedAccountsStore = defineStore('savedAccountsStore', () => {
     return buildId(chainType, address)
   })
 
+  const allAccounts = computed<SavedAccount[]>(() =>
+    flatten(addresses.value).map(e =>
+      toSavedAccount(e, {
+        fallbackConfigType: WalletConfigType.SOFTWARE,
+      }),
+    ),
+  )
+
   const activeAccount = computed<SavedAccount | null>(() => {
     if (!activeId.value) return null
-    return accounts.value.find(a => a.id === activeId.value) ?? null
+    return allAccounts.value.find(a => a.id === activeId.value) ?? null
   })
 
   const savedAccounts = computed<SavedAccount[]>(() =>
-    accounts.value
-      .filter(a => a.id !== activeId.value)
-      .sort((a, b) => a.addedAt - b.addedAt),
+    allAccounts.value.filter(a => a.id !== activeId.value),
   )
 
-  const isAtCap = computed<boolean>(() => isAtCapFn(accounts.value))
+  const isAtCap = computed<boolean>(() => isAtCapFn(addresses.value))
 
   const addAccount = (
     account: SavedAccount,
   ): { added: boolean; reason?: 'cap' } => {
-    if (!canAdd(accounts.value, account)) return { added: false, reason: 'cap' }
-    accounts.value = upsert(accounts.value, account)
+    if (!canAdd(addresses.value, account.chainType, account.address)) return { added: false, reason: 'cap' }
+    const entry: PersistedEntry = {
+      address: account.address,
+      walletName: account.walletName,
+      chain: { type: account.chainType, name: account.chainType } as any,
+      type: account.chainType,
+      walletType: account.providerType,
+      addressName: account.addressName,
+    }
+    addresses.value = upsertEntry(addresses.value, entry)
     return { added: true }
   }
 
   const removeAccount = (id: string): void => {
-    accounts.value = removeById(accounts.value, id)
+    const account = allAccounts.value.find(a => a.id === id)
+    if (!account) return
+    addresses.value = removeEntry(addresses.value, account.chainType, account.address)
   }
 
   /**
@@ -78,41 +96,53 @@ export const useSavedAccountsStore = defineStore('savedAccountsStore', () => {
       providerType: walletStore.wallet?.getWalletType() as WalletType,
       connectorId: config?.id,
       walletName: walletName || address,
+      addressName: '',
       icon: typeof config?.icon === 'string' ? config.icon : '',
-      addedAt: Date.now(),
     }
   }
 
   /** One-shot: seed from existing watch-only recents + the current active wallet. */
   const backfill = (): void => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
-    const seeds: SavedAccount[] = []
+    let seeded: RecentAddress = { EVM: [], BITCOIN: [] }
     ;(['EVM', 'BITCOIN'] as ChainType[]).forEach(type => {
-      ;(watchOnlyAddresses[type] ?? []).forEach((w: any) => {
-        seeds.push({
-          id: buildId(type, w.address),
+      ;(watchOnlyAddresses[type] ?? []).forEach((w: PersistedEntry) => {
+        const entry: PersistedEntry = {
           address: w.address,
-          chainType: type,
-          kind: 'watchOnly',
-          walletConfigType:
-            (w.type as WalletConfigType) ?? WalletConfigType.SOFTWARE,
-          providerType: w.walletType as WalletType,
-          connectorId: undefined,
           walletName: w.walletName || w.address,
-          icon: '',
-          addedAt: Date.now(),
-        })
+          chain: w.chain,
+          type,
+          walletType: w.walletType,
+          addressName: w.addressName || '',
+        }
+        seeded = upsertEntry(seeded, entry)
       })
     })
     const current = captureActiveAccount()
-    if (current) seeds.push(current)
-    accounts.value = backfillMerge(accounts.value, seeds)
+    if (current) {
+      const entry: PersistedEntry = {
+        address: current.address,
+        walletName: current.walletName,
+        chain: { type: current.chainType, name: current.chainType } as any,
+        type: current.chainType,
+        walletType: current.providerType,
+        addressName: current.addressName || '',
+      }
+      seeded = upsertEntry(seeded, entry)
+    }
+    // merge: keep existing, add new from seeded that don't exist
+    let merged = addresses.value
+    flatten(seeded).forEach(e => {
+      merged = upsertEntry(merged, e)
+    })
+    addresses.value = backfillNames(merged)
   }
 
   return {
-    accounts,
+    addresses,
     activeId,
     activeAccount,
+    allAccounts,
     savedAccounts,
     isAtCap,
     addAccount,

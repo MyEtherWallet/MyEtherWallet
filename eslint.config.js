@@ -65,4 +65,11 @@ export default [
       ],
     },
   },
+  {
+    name: 'tests/no-explicit-any',
+    files: ['tests/**/*.{ts,mts}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
 ]
