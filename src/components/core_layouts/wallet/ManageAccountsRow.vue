@@ -30,16 +30,16 @@
           <span
             class="font-semibold text-s-14 truncate text-black"
           >{{ account.addressName }}</span>
-          <span
-            v-if="isActive"
-            data-test="badge"
-            class="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-black"
-          >
-            <check-icon class="w-3 h-3 text-white" />
-          </span>
           <eye-icon
-            v-else-if="account.kind === 'watchOnly'"
+            v-if="account.kind === 'watchOnly'"
+            data-test="row-watch-only"
             class="w-4 h-4 flex-shrink-0 text-[#575757]"
+          />
+          <span
+            v-else
+            data-test="row-connected"
+            class="w-2 h-2 rounded-full bg-success flex-shrink-0"
+            aria-hidden="true"
           />
         </div>
         <div
@@ -50,6 +50,14 @@
         </div>
       </div>
     </button>
+
+    <span
+      v-if="isActive"
+      data-test="badge"
+      class="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-black"
+    >
+      <check-icon class="w-3 h-3 text-white" />
+    </span>
 
     <div
       v-if="balanceLoading || balance"
