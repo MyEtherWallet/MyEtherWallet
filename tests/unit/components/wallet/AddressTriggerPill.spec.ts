@@ -56,7 +56,8 @@ describe('AddressTriggerPill', () => {
   it('shows the watch-only eye instead of the green dot when watch-only', () => {
     walletStore.isWatchOnly = true
     const w = factory()
-    expect(w.findComponent({ name: 'EyeIcon' }).exists()).toBe(true)
+    expect(w.find('[data-test="pill-watch-only"]').exists()).toBe(true)
+    expect(w.find('[data-test="pill-connected"]').exists()).toBe(false)
     walletStore.isWatchOnly = false
   })
 })

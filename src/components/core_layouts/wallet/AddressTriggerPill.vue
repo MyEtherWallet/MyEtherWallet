@@ -27,10 +27,12 @@
         </span>
         <eye-icon
           v-if="isWatchOnly"
+          data-test="pill-watch-only"
           class="w-4 h-4 text-[#575757]"
         />
         <span
           v-else
+          data-test="pill-connected"
           class="w-2 h-2 rounded-full bg-[#1ea97c]"
         />
       </span>
