@@ -107,21 +107,12 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
       e => e.address.toLowerCase() === address.toLowerCase(),
     )
     if (!prior && !canAdd(watchOnlyAddresses.value, type, address)) return
+    // Upsert IN PLACE (never reorder) so selecting/viewing an address keeps the popup
+    // list order stable. New entries append at the end; existing keep their position.
     const entry: PersistedEntry = prior
-      ? { ...prior, walletName, walletType, chain } // preserve addressName
+      ? { ...prior, walletName, walletType, chain } // preserve addressName + position
       : makeEntry(address, chain, walletType, type, walletName)
-    if (prior) {
-      // Move to tail so "last = most recently touched" invariant holds
-      const without = (watchOnlyAddresses.value[type] ?? []).filter(
-        e => e.address.toLowerCase() !== address.toLowerCase(),
-      )
-      watchOnlyAddresses.value = {
-        ...watchOnlyAddresses.value,
-        [type]: [...without, entry],
-      }
-    } else {
-      watchOnlyAddresses.value = upsertEntry(watchOnlyAddresses.value, entry)
-    }
+    watchOnlyAddresses.value = upsertEntry(watchOnlyAddresses.value, entry)
   }
 
   /** Explicit add (add-flow / save-detected). Reports the reason on failure. */

@@ -310,8 +310,8 @@ watch(
 
 const onSelect = (acc: SavedAccount): void => {
   void analytics.trackMultiAddressEvent(MultiAddressEvent.SWITCHED)
+  // View the address (read-only) and update the active card; keep the popup open.
   void switchTo(acc)
-  openDialog.value = false
 }
 const onDelete = (acc: SavedAccount): void => {
   void analytics.trackMultiAddressEvent(MultiAddressEvent.DELETED)
