@@ -11,6 +11,7 @@ const chainState = { selectedChain: { type: 'EVM', name: 'ETH' } as any }
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainState }))
 
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { truncateAddress } from '@/utils/filters'
 
 const evmChain = { type: 'EVM', name: 'ETH' } as any
 
@@ -22,11 +23,14 @@ beforeEach(() => {
 })
 
 describe('watchOnlyStore (extended)', () => {
-  it('addWallet auto-assigns a unique default addressName and dedupes by address', () => {
+  it('defaults the addressName to the truncated address and dedupes by address', () => {
     const s = useWatchOnlyStore()
     s.addWallet('0x1', evmChain, 'INJECTED', 'EVM', 'Enkrypt')
     s.addWallet('0x2', evmChain, 'LEDGER', 'EVM', 'Ledger')
-    expect(s.watchOnlyAddresses.EVM.map(e => e.addressName)).toEqual(['Address 1', 'Address 2'])
+    expect(s.watchOnlyAddresses.EVM.map(e => e.addressName)).toEqual([
+      truncateAddress('0x1', 6, 4),
+      truncateAddress('0x2', 6, 4),
+    ])
     s.addWallet('0x1', evmChain, 'INJECTED', 'EVM', 'Enkrypt')
     expect(s.watchOnlyAddresses.EVM).toHaveLength(2)
   })
@@ -67,7 +71,7 @@ describe('watchOnlyStore (extended)', () => {
     const s = useWatchOnlyStore()
     s.addWallet('0x1', evmChain, 'INJECTED', 'EVM', 'W')
     s.addWallet('0x2', evmChain, 'INJECTED', 'EVM', 'W')
-    expect(s.renameAccount('EVM:0x2', 'Address 1')).toEqual({ ok: false, reason: 'duplicate' })
+    expect(s.renameAccount('EVM:0x2', truncateAddress('0x1', 6, 4))).toEqual({ ok: false, reason: 'duplicate' })
     expect(s.renameAccount('EVM:0x2', 'Savings')).toEqual({ ok: true })
     expect(s.watchOnlyAddresses.EVM.find(e => e.address === '0x2')!.addressName).toBe('Savings')
   })
@@ -81,7 +85,7 @@ describe('watchOnlyStore (extended)', () => {
     const bucket = s.watchOnlyAddresses.EVM
     expect(bucket).toHaveLength(2)
     expect(bucket.map(e => e.address)).toEqual(['0x1', '0x2'])
-    expect(bucket[0].addressName).toBe('Address 1')
+    expect(bucket[0].addressName).toBe(truncateAddress('0x1', 6, 4))
   })
 
   it('backfill assigns names to legacy entries missing addressName', () => {

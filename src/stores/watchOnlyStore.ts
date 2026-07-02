@@ -14,7 +14,6 @@ import {
   canAdd,
   upsertEntry,
   removeEntry,
-  nextDefaultName,
   isNameUnique,
   backfillNames,
   toSavedAccount,
@@ -22,6 +21,7 @@ import {
   type PersistedEntry,
   type SavedAccount,
 } from '@/stores/saved_accounts/savedAccountsLogic'
+import { truncateAddress } from '@/utils/filters'
 
 export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
   const watchOnlyAddresses = useLocalStorage<RecentAddress>(
@@ -94,7 +94,9 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
     chain,
     type,
     walletType,
-    addressName: nextDefaultName(watchOnlyAddresses.value),
+    // Default the label to the truncated address (not "Address N") so it's
+    // recognizable and unique per address.
+    addressName: truncateAddress(address, 6, 4),
   })
 
   /** Auto-capture path (called by walletStore.setAddress on every connect). Void; silently caps. */
