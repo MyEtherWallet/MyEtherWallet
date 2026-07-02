@@ -426,6 +426,12 @@ const onConnect = (): void => {
   connectSaved(acc)
 }
 const refresh = (acc: SavedAccount): void => {
+  // The active account's balance comes from walletStore (like the home card),
+  // so refresh it the same way; other rows use the per-address fetch.
+  if (isActive(acc)) {
+    void walletStore.refreshBalances()
+    return
+  }
   void refreshOne({
     id: acc.id,
     chainName: chainName(),

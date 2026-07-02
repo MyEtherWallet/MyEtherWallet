@@ -26,6 +26,7 @@ import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
 import { useMarketStatus } from '@/modules/trade/composables'
 import { useStocksStore } from './stocksStore'
+import useBalanceHandler from '@/utils/balanceHandler'
 
 const PARTNER = 'ondo-finance'
 
@@ -523,8 +524,21 @@ export const useWalletStore = defineStore('walletStore', () => {
   /** -------------------------------
   * Stock Values
   -------------------------------*/
+
+  /**
+   * Re-fetch the connected wallet's balances (same logic as the home wallet
+   * card's refresh): flips the loading flag and updates tokens via setTokens.
+   */
+  const refreshBalances = async (): Promise<void> => {
+    if (!wallet.value) return
+    setIsLoadingBalances(true)
+    const balances = await wallet.value.getBalance()
+    await useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+  }
+
   return {
     wallet,
+    refreshBalances,
     walletAddress,
     walletName,
     setWatchOnlyIfExist,
