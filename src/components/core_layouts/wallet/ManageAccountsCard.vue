@@ -1,7 +1,7 @@
 <template>
   <div
     data-test="active-card"
-    class="relative rounded-20 overflow-hidden h-[172px] p-4 flex flex-col justify-between text-white"
+    class="relative isolate rounded-20 overflow-hidden h-[172px] p-4 flex flex-col justify-between text-white [transform:translateZ(0)]"
   >
     <img
       :src="mewCardUrl"
@@ -9,7 +9,7 @@
       aria-hidden="true"
       class="absolute inset-0 w-full h-full object-cover"
     />
-    <div class="absolute inset-0 bg-black/25 backdrop-blur-[2px]" aria-hidden="true" />
+    <div class="absolute inset-0 rounded-20 bg-black/25 backdrop-blur-[2px]" aria-hidden="true" />
 
     <!-- Header: balance / name / wallet • address + actions -->
     <div class="relative flex items-start gap-3">
