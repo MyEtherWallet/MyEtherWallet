@@ -127,8 +127,9 @@ export const useWalletStore = defineStore('walletStore', () => {
         entry.type,
         entry.walletName,
       )
-      wallet.value = null
-      walletAddress.value = null
+      // Don't null the wallet first: setWallet replaces it once ready. Nulling
+      // here briefly flips isWalletConnected to false, which unmounts the header
+      // address menu (v-if) and tears the popup down mid-switch.
       setWallet(newWallet, entry.walletName, entry.walletType as WalletConfigType)
     } else {
       wallet.value = null
