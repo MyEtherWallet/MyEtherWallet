@@ -50,6 +50,37 @@ describe('useAccountBalances', () => {
     expect(balances.value['EVM:0xA'].tokenCount).toBe(1)
   })
 
+  it('parses hex-encoded balances (0x…) like the wallet store does', async () => {
+    fetchMock.mockResolvedValue({
+      result: [
+        // 0x0de0b6b3a7640000 = 1e18 wei = 1 token at 18 decimals → 2 USD
+        { balance: '0x0de0b6b3a7640000', decimals: 18, price: 2 },
+      ],
+    })
+    const { balances, fetchFor } = useAccountBalances()
+    await fetchFor([{ id: 'EVM:0xH', chainName: 'ETHEREUM', address: '0xH' }])
+    expect(balances.value['EVM:0xH'].usdValue).toBe(2)
+    expect(balances.value['EVM:0xH'].tokenCount).toBe(1)
+  })
+
+  it('values the native token with the chain price when the response omits it', async () => {
+    fetchMock.mockResolvedValue({
+      result: [
+        {
+          balance: '0x0de0b6b3a7640000', // 1 native
+          decimals: 18,
+          price: null,
+          contract: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+        },
+      ],
+    })
+    const { balances, fetchFor } = useAccountBalances()
+    await fetchFor([
+      { id: 'EVM:0xN', chainName: 'ETHEREUM', address: '0xN', nativePrice: 3 },
+    ])
+    expect(balances.value['EVM:0xN'].usdValue).toBe(3)
+  })
+
   it('refreshOne re-fetches a single entry into balances', async () => {
     const { balances, refreshOne } = useAccountBalances()
     await refreshOne({ id: 'EVM:0x1', chainName: 'ETH', address: '0x1' })

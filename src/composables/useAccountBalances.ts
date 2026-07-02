@@ -34,9 +34,14 @@ export function useAccountBalances() {
       let usdValue = 0
       let tokenCount = 0
       for (const t of result) {
-        const raw = t.balance ?? '0'
-        if (!/^\d+$/.test(raw)) continue
-        const bal = Number(formatUnits(BigInt(raw), t.decimals ?? 0))
+        // Balances arrive as hex ("0x…") or decimal strings; BigInt parses both.
+        let wei: bigint
+        try {
+          wei = BigInt(t.balance ?? '0')
+        } catch {
+          continue
+        }
+        const bal = Number(formatUnits(wei, t.decimals ?? 18))
         if (bal > 0) {
           tokenCount += 1
           const isNative =
