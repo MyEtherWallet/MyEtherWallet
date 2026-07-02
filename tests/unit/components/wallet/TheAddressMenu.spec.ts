@@ -6,6 +6,7 @@ const walletStoreMock = {
   isWalletConnected: true,
   walletAddress: '0xA000000000000000000000000000000000000001',
   isWatchOnly: false,
+  formattedTotalFiatPortfolioValue: '$130.23',
 }
 
 vi.mock('@/stores/walletStore', () => ({
@@ -82,9 +83,7 @@ describe('TheAddressMenu', () => {
     const w = mount(TheAddressMenu, {
       global: {
         stubs: {
-          AppBlockie: true,
-          IconWatchOnly: true,
-          ChevronDownIcon: true,
+          AddressTriggerPill: { name: 'AddressTriggerPill', template: '<button />' },
           TheManageAccounts: {
             name: 'TheManageAccounts',
             template: '<div data-test="manage-accounts" />',

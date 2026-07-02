@@ -21,28 +21,12 @@
 
     <!-- Trigger clone: bright above the backdrop, positioned exactly over the real
          trigger. Clicking it closes the popup. -->
-    <button
+    <address-trigger-pill
       v-if="openDialog && triggerCloneStyle"
+      :hover="false"
       :style="triggerCloneStyle"
-      class="p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full shadow-button shadow-button-elevated bg-white flex items-center cursor-default"
       @click="openDialog = false"
-    >
-      <app-blockie
-        :address="cloneAddress"
-        :size="6"
-        class="mr-1 rounded-full"
-      />
-      <div v-if="walletStore.isWatchOnly" class="text-left ml-1">
-        <p class="text-s-8 text-info mb-[2px] -mt-1">{{ $t('common.watch_only') }}</p>
-        <div class="mr-2 font-medium text-info text-s-12 leading-p-100">
-          {{ truncateAddress(cloneAddress, 6) }}
-        </div>
-      </div>
-      <div v-else class="mr-2 ml-1 font-medium text-s-14 leading-p-100">
-        {{ truncateAddress(cloneAddress, 6) }}
-      </div>
-      <chevron-down-icon class="w-3 h-3 xs:w-4 xs:h-4 ml-auto xs:mr-1" />
-    </button>
+    />
 
     <!-- Popup -->
     <transition
@@ -211,8 +195,7 @@ import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
-import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import AppBlockie from '@/components/AppBlockie.vue'
+import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
 import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
@@ -283,7 +266,6 @@ const { startAdd } = useAddAccount()
 const { balances, fetchFor, refreshOne } = useAccountBalances()
 const walletStore = useWalletStore()
 const { detectedAddress } = storeToRefs(walletStore)
-const cloneAddress = computed(() => walletStore.walletAddress ?? '')
 const chainsStore = useChainsStore()
 
 const openPaperWallet = ref(false)
