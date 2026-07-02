@@ -56,18 +56,19 @@ export function useAccountBalances() {
   const fetchFor = async (entries: BalanceEntry[]): Promise<void> => {
     isLoading.value = true
     try {
-      await Promise.all(
-        entries.map(async e => {
-          balances.value[e.id] = await fetchOne(e)
-        }),
+      const results = await Promise.all(
+        entries.map(async e => [e.id, await fetchOne(e)] as const),
       )
+      // Reassign (rather than mutating keys in place) so the record reference
+      // changes and every dependent binding re-renders reliably.
+      balances.value = { ...balances.value, ...Object.fromEntries(results) }
     } finally {
       isLoading.value = false
     }
   }
 
   const refreshOne = async (entry: BalanceEntry): Promise<void> => {
-    balances.value[entry.id] = await fetchOne(entry)
+    balances.value = { ...balances.value, [entry.id]: await fetchOne(entry) }
   }
 
   return { balances, isLoading, fetchFor, refreshOne }

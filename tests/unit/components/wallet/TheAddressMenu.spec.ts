@@ -13,6 +13,11 @@ vi.mock('@/stores/walletStore', () => ({
   useWalletStore: () => walletStoreMock,
 }))
 
+const appLayoutMock = { isManageAccountsOpen: false }
+vi.mock('@/stores/appLayoutStore', () => ({
+  useAppLayoutStore: () => appLayoutMock,
+}))
+
 // Mock pinia's storeToRefs so plain-object mocks work in templates
 vi.mock('pinia', async (importOriginal) => {
   const actual = await importOriginal<typeof import('pinia')>()

@@ -3,9 +3,9 @@
     <address-trigger-pill
       v-if="isWalletConnected && walletAddress"
       ref="triggerRef"
-      @click="setOpenDialog(true)"
+      @click="isManageAccountsOpen = true"
     />
-    <the-manage-accounts v-model:open-dialog="openDialog" :anchor="anchorEl" />
+    <the-manage-accounts v-model:open-dialog="isManageAccountsOpen" :anchor="anchorEl" />
   </div>
 </template>
 
@@ -13,11 +13,15 @@
 import { ref, computed, type ComponentPublicInstance } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWalletStore } from '@/stores/walletStore'
+import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
 import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 
 const store = useWalletStore()
 const { isWalletConnected, walletAddress } = storeToRefs(store)
+// Popup open state lives in the layout store so it survives header re-renders
+// caused by network changes (a local ref would reset and close the popup).
+const { isManageAccountsOpen } = storeToRefs(useAppLayoutStore())
 
 defineProps({
   isBtnGroup: {
@@ -31,16 +35,12 @@ defineProps({
 })
 
 /** -------------------------------
- * Dialog
+ * Dialog anchor
  -------------------------------*/
-const openDialog = ref(false)
 const triggerRef = ref<ComponentPublicInstance | HTMLElement | null>(null)
 const anchorEl = computed<HTMLElement | null>(() => {
   const el = triggerRef.value
   if (!el) return null
   return ((el as ComponentPublicInstance).$el as HTMLElement) ?? (el as HTMLElement)
 })
-const setOpenDialog = (value: boolean) => {
-  openDialog.value = value
-}
 </script>

@@ -15,7 +15,11 @@
     <div class="relative flex items-start gap-3">
       <div class="flex-1 min-w-0 flex flex-col gap-1">
         <p class="text-s-14 leading-p-140">
-          <template v-if="balance">${{ balance.usdValue.toFixed(2) }}</template>
+          <span
+            v-if="balanceLoading"
+            class="inline-block w-16 h-3.5 bg-white/25 animate-pulse rounded align-middle"
+          />
+          <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
           <template v-else>$0.00</template>
         </p>
         <p class="text-s-24 font-bold leading-[26px] truncate">{{ account.addressName }}</p>
@@ -128,13 +132,14 @@ import {
 import { EyeIcon } from '@heroicons/vue/16/solid'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
-import { truncateAddress } from '@/utils/filters'
+import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
 
 const props = defineProps<{
   account: SavedAccount
   balance?: AccountBalance
+  balanceLoading?: boolean
 }>()
 
 const emit = defineEmits<{

@@ -14,16 +14,19 @@ const clearDetectedAddress = vi.fn()
 
 const store = {
   activeAccount: { id: 'EVM:0x1', address: '0x1', addressName: 'Address 1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
-  savedAccounts: [{ id: 'EVM:0x2', address: '0x2', addressName: 'Address 2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' }],
+  allAccounts: [
+    { id: 'EVM:0x1', address: '0x1', addressName: 'Address 1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+    { id: 'EVM:0x2', address: '0x2', addressName: 'Address 2', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'EVM' },
+  ],
   renameAccount, tryAddAddress, backfill,
   watchOnlyAddresses: { EVM: [], BITCOIN: [] },
 }
-const walletStore = { detectedAddress: ref<string | null>(null), walletAddress: '0xA000000000000000000000000000000000000001', isWatchOnly: false, formattedTotalFiatPortfolioValue: '$130.23', disconnectWallet: vi.fn(), clearDetectedAddress }
+const walletStore = { detectedAddress: ref<string | null>(null), totalFiatPortfolioValueBN: ref(130.23), tokens: ref([{}, {}]), isLoadingBalances: ref(false), setIsLoadingBalances: vi.fn(), walletAddress: '0xA000000000000000000000000000000000000001', isWatchOnly: false, formattedTotalFiatPortfolioValue: '$130.23', disconnectWallet: vi.fn(), clearDetectedAddress }
 
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
 vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd }) }))
-vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ balances: ref({}), fetchFor, refreshOne }) }))
+vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ balances: ref({}), isLoading: ref(false), fetchFor, refreshOne }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: { name: 'ETH', type: 'EVM', blockExplorerAddr: 'https://e/[[address]]' } }) }))
 vi.mock('@/analytics', () => ({ analytics: { trackMultiAddressEvent: vi.fn() } }))
@@ -124,5 +127,20 @@ describe('TheManageAccounts', () => {
     const w = factory()
     await w.get('[data-test="network-row"]').trigger('click')
     expect(w.findComponent({ name: 'ManageAccountsNetworkView' }).exists()).toBe(true)
+  })
+
+  it('only fetches balances for accounts whose chain type matches the selected network', () => {
+    const original = store.allAccounts
+    store.allAccounts = [
+      { id: 'EVM:0x1', address: '0x1', addressName: 'A1', walletName: 'W', kind: 'signing', icon: '', chainType: 'EVM' },
+      { id: 'BITCOIN:bc1', address: 'bc1', addressName: 'B1', walletName: 'W', kind: 'watchOnly', icon: '', chainType: 'BITCOIN' },
+    ]
+    try {
+      factory()
+      const entries = fetchFor.mock.calls.at(-1)?.[0] as Array<{ address: string }>
+      expect(entries.map(e => e.address)).toEqual(['0x1']) // BITCOIN address skipped on EVM chain
+    } finally {
+      store.allAccounts = original
+    }
   })
 })

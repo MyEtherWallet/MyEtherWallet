@@ -83,7 +83,8 @@
                   <manage-accounts-card
                     v-if="activeAccount"
                     :account="activeAccount"
-                    :balance="balances[activeAccount.id]"
+                    :balance="balanceFor(activeAccount)"
+                    :balance-loading="balanceLoadingFor(activeAccount)"
                     @copy="copy(activeAccount.address)"
                     @refresh="refresh(activeAccount)"
                     @rename="onRename(activeAccount, $event)"
@@ -110,7 +111,8 @@
                       :key="acc.id"
                       :account="acc"
                       :is-active="acc.id === activeAccount?.id"
-                      :balance="balances[acc.id]"
+                      :balance="balanceFor(acc)"
+                      :balance-loading="balanceLoadingFor(acc)"
                       @select="onSelect(acc)"
                       @copy="copy(acc.address)"
                       @refresh="refresh(acc)"
@@ -203,7 +205,10 @@ import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
 import { useAddAccount } from '@/composables/useAddAccount'
-import { useAccountBalances } from '@/composables/useAccountBalances'
+import {
+  useAccountBalances,
+  type AccountBalance,
+} from '@/composables/useAccountBalances'
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { truncateAddress } from '@/utils/filters'
@@ -255,18 +260,45 @@ watch(openDialog, val => {
 
 const watchOnlyStore = useWatchOnlyStore()
 const activeAccount = computed<SavedAccount | null>(() => watchOnlyStore.activeAccount)
-const savedAccounts = computed<SavedAccount[]>(() => watchOnlyStore.savedAccounts)
-const allAccounts = computed<SavedAccount[]>(() =>
-  [activeAccount.value, ...savedAccounts.value].filter((a): a is SavedAccount => !!a),
-)
+// Stable, insertion-ordered list (active is highlighted in place, never moved to the
+// top) so selecting an address does NOT reorder the list.
+const allAccounts = computed<SavedAccount[]>(() => watchOnlyStore.allAccounts)
 const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd } = useAddAccount()
-const { balances, fetchFor, refreshOne } = useAccountBalances()
+const { balances, isLoading, fetchFor, refreshOne } = useAccountBalances()
 const walletStore = useWalletStore()
-const { detectedAddress } = storeToRefs(walletStore)
+const { detectedAddress, totalFiatPortfolioValueBN, tokens, isLoadingBalances } =
+  storeToRefs(walletStore)
 const chainsStore = useChainsStore()
+
+const isActive = (acc: SavedAccount): boolean =>
+  acc.id === activeAccount.value?.id
+
+// An account only has a balance on the selected network when their chain types
+// match (an EVM /balances endpoint 400s on a Bitcoin address and vice versa).
+const isCompatible = (acc: SavedAccount): boolean =>
+  acc.chainType === chainsStore.selectedChain?.type
+
+// The active account IS the connected wallet, so reuse walletStore's live total
+// (identical to the top-bar trigger) instead of the per-address /balances fetch,
+// which can lag or return 0 for the freshly-connected address. Other accounts
+// use their own per-address fetch, keyed by id.
+const activeBalance = computed<AccountBalance>(() => ({
+  usdValue: Number(totalFiatPortfolioValueBN.value),
+  tokenCount: tokens.value.length,
+}))
+
+const balanceFor = (acc: SavedAccount): AccountBalance | undefined => {
+  if (isActive(acc)) return activeBalance.value
+  return isCompatible(acc) ? balances.value[acc.id] : undefined
+}
+
+// Active row/card follow walletStore's own loading flag (covers connect, switch
+// and network change); other rows follow the per-address fetch.
+const balanceLoadingFor = (acc: SavedAccount): boolean =>
+  isActive(acc) ? isLoadingBalances.value : isLoading.value && isCompatible(acc)
 
 const openPaperWallet = ref(false)
 const hasBackfilled = ref(false)
@@ -275,14 +307,12 @@ const detectedMessage = ref('')
 const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 
 const loadBalances = (): void => {
-  const entries = [activeAccount.value, ...savedAccounts.value]
-    .filter((a): a is SavedAccount => !!a)
-    .map(a => ({
-      id: a.id,
-      chainName: chainName(),
-      address: a.address,
-      nativePrice: chainsStore.selectedChain?.price ?? 0,
-    }))
+  const entries = allAccounts.value.filter(isCompatible).map(a => ({
+    id: a.id,
+    chainName: chainName(),
+    address: a.address,
+    nativePrice: chainsStore.selectedChain?.price ?? 0,
+  }))
   void fetchFor(entries)
 }
 
@@ -309,7 +339,11 @@ watch(
 )
 
 const onSelect = (acc: SavedAccount): void => {
+  if (isActive(acc)) return
   void analytics.trackMultiAddressEvent(MultiAddressEvent.SWITCHED)
+  // Show the skeleton immediately so the newly-selected card never flashes the
+  // previously-active address's balance before walletStore refetches.
+  walletStore.setIsLoadingBalances(true)
   // View the address (read-only) and update the active card; keep the popup open.
   void switchTo(acc)
 }

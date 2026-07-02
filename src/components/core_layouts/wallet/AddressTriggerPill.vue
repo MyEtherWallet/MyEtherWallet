@@ -1,6 +1,6 @@
 <template>
   <button
-    class="w-[196px] bg-white border border-[#e6e6e6] rounded-[20px] flex items-center gap-2.5 pl-2 pr-2.5 py-1.5 shadow-button shadow-button-elevated"
+    class="w-[160px] h-10 bg-white border border-[#e6e6e6] rounded-[20px] flex items-center gap-2.5 pl-2 pr-2.5 shadow-button shadow-button-elevated"
     :class="hover ? 'hoverNoBG' : 'cursor-default'"
   >
     <span class="relative shrink-0">
@@ -17,7 +17,7 @@
         class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full object-contain bg-white"
       />
     </span>
-    <span class="flex flex-col gap-[2px] items-start flex-1 min-w-0">
+    <span class="flex flex-col items-start flex-1 min-w-0">
       <span class="font-semibold text-s-14 leading-[14px] text-black">
         {{ formattedTotalFiatPortfolioValue }}
       </span>
@@ -28,7 +28,7 @@
         <eye-icon
           v-if="isWatchOnly"
           data-test="pill-watch-only"
-          class="w-4 h-4 text-[#575757] flex-shrink-0"
+          class="w-3 h-3 text-[#575757] flex-shrink-0"
         />
         <span
           v-else

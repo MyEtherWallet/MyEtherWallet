@@ -65,9 +65,9 @@
       :class="isActive ? 'text-black' : 'text-info'"
     >
       <template v-if="balanceLoading">
-        <span class="inline-block w-12 h-3 bg-grey-faded animate-pulse rounded" />
+        <span class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded" />
       </template>
-      <template v-else-if="balance">${{ balance.usdValue.toFixed(2) }}</template>
+      <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
     </div>
 
     <app-pop-up-menu placeholder="account menu" location="right" teleport>
@@ -127,7 +127,7 @@ import { EyeIcon, CheckIcon } from '@heroicons/vue/16/solid'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
-import { truncateAddress } from '@/utils/filters'
+import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
 
