@@ -257,7 +257,8 @@ const popupStyle = computed(() => {
     ? props.anchor.getBoundingClientRect().bottom + 8
     : 76
   if (isSmallScreen.value) {
-    return { top: `${top}px`, right: '8px' }
+    // Full width minus a small gutter on each side, so it never overflows.
+    return { top: `${top}px`, left: '16px', right: '16px', width: 'auto' }
   }
   if (props.anchor) {
     const rect = props.anchor.getBoundingClientRect()
