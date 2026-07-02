@@ -26,6 +26,24 @@
     "create_software_wallet": "Создать программный кошелек",
     "starting_from": "Starting from",
     "select_keystore": "Select Keystore",
-    "connect": "Connect"
+    "connect": "Connect",
+    "mnemonic": {
+      "select_length": "Select length",
+      "update": "Update",
+      "word_option": "{count} words",
+      "select_word": "Select Word #{number}",
+      "create_another_wallet": "Create another wallet",
+      "stepper": {
+        "create": "create",
+        "verify": "verify",
+        "done": "done"
+      },
+      "step1_title": "Your phrase",
+      "step1_description": "Write down your recovery phrase and keep it somewhere secure. Do not email it or take screenshots.",
+      "step2_title": "Let's double check it",
+      "step2_description": "Please select correct words based on their numbers.",
+      "step3_title": "All Done",
+      "step3_description": "You are now ready to take advantage of all that Ethereum has to offer! Please store your phrase in a secure place, access with mnemonic phrase should only be used in an offline setting."
+    }
   }
 }
