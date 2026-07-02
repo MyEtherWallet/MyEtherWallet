@@ -210,7 +210,7 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, type CSSProperties } from 'vue'
+import { ref, computed, watch, nextTick, type CSSProperties } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -256,6 +256,10 @@ const popupRef = ref<HTMLElement | null>(null)
 // invalidate these computeds — the clone and popup then re-anchor on resize
 // instead of freezing at their open-time coordinates.
 const { width: viewportWidth, height: viewportHeight } = useWindowSize()
+// Bumped after the header layout changes (connect/disconnect toggles sibling
+// elements like the notifications popup, shifting the trigger) so the clone and
+// popup re-measure the anchor and stay aligned.
+const posTick = ref(0)
 
 // Responsive positioning: anchoring the popup to the trigger only works on wide
 // screens. Below 640 the trigger sits too far left, so center the popup; below
@@ -265,6 +269,7 @@ const isNarrow = computed<boolean>(() => viewportWidth.value < 640)
 
 const popupStyle = computed(() => {
   void viewportHeight.value
+  void posTick.value
   const top = props.anchor
     ? props.anchor.getBoundingClientRect().bottom + 8
     : 76
@@ -288,6 +293,7 @@ const popupStyle = computed(() => {
 const triggerCloneStyle = computed<CSSProperties | null>(() => {
   void viewportWidth.value
   void viewportHeight.value
+  void posTick.value
   if (!props.anchor) return null
   const rect = props.anchor.getBoundingClientRect()
   return {
@@ -315,8 +321,19 @@ const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd, connectSaved } = useAddAccount()
 const { balances, isLoading, fetchFor, refreshOne, clear } = useAccountBalances()
 const walletStore = useWalletStore()
-const { detectedAddress, totalFiatPortfolioValueBN, tokens, isLoadingBalances } =
-  storeToRefs(walletStore)
+const {
+  walletAddress,
+  detectedAddress,
+  totalFiatPortfolioValueBN,
+  tokens,
+  isLoadingBalances,
+} = storeToRefs(walletStore)
+
+// Re-measure the clone/popup after the header reflows on connect/disconnect.
+watch(walletAddress, async () => {
+  await nextTick()
+  posTick.value += 1
+})
 const chainsStore = useChainsStore()
 
 const isActive = (acc: SavedAccount): boolean =>
