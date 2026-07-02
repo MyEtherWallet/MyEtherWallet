@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-[2102]">
+  <div class="relative" :class="openDialog ? 'z-[2]' : ''">
     <button
       v-if="isWalletConnected && walletAddress"
       ref="triggerRef"

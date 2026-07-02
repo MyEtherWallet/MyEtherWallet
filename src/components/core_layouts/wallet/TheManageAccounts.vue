@@ -1,22 +1,7 @@
 <template>
   <teleport to="#app">
-    <!-- Backdrop: covers everything (page, side drawers, header nav) below it.
-         The header is lifted above this while the popup is open so the trigger stays bright. -->
-    <transition
-      enter-from-class="opacity-0"
-      enter-active-class="transition-opacity duration-200"
-      enter-to-class="opacity-100"
-      leave-from-class="opacity-100"
-      leave-active-class="transition-opacity duration-150"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="openDialog"
-        class="fixed inset-0 z-[2100] bg-black/40"
-        @click="openDialog = false"
-      />
-    </transition>
-    <!-- Popup -->
+    <!-- Popup (the dim overlay lives in TheHeader, mirroring global search, so the
+         address trigger can sit above it while the rest of the header is dimmed) -->
     <transition
       enter-from-class="opacity-0 scale-95"
       enter-active-class="transform ease-out duration-200 transition"
@@ -29,7 +14,7 @@
         v-if="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+        class="fixed z-[2101] w-[384px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
         <div class="relative h-full overflow-hidden">

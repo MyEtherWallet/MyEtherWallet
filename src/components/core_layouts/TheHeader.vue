@@ -1,9 +1,7 @@
 <template>
   <div
     class="flex items-center w-full h-[68px] sm:h-[76px] fixed top-0 px-5 md-header:px-5 bg-white shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]"
-    :class="
-      isSearchOpen ? 'z-[201]' : addressPopupOpen ? 'z-[2101]' : 'z-10'
-    "
+    :class="isSearchOpen ? 'z-[201]' : 'z-10'"
   >
     <div class="flex w-full justify-between items-center mx-auto gap-3">
       <!-- LOGO -->
@@ -89,6 +87,13 @@
       <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
         <!-- GLOBAL SEARCH -->
         <module-global-search />
+        <!-- Address menu: sibling of global search (NOT inside the wallet-area trap)
+             so, like the search, it can lift above the dim overlay when open while the
+             rest of the header stays dimmed. -->
+        <the-address-menu
+          v-if="isWalletConnected"
+          @open-change="addressPopupOpen = $event"
+        />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
              can't escape and paint over the search overlay. -->
         <div class="relative z-[0] flex items-center gap-2">
@@ -118,11 +123,6 @@
           >
             {{ $t('connect_wallet') }}
           </router-link>
-          <!-- Address Menu -->
-          <the-address-menu
-            v-if="isWalletConnected"
-            @open-change="addressPopupOpen = $event"
-          />
           <the-settings-popup />
           <the-notifications-popup v-if="isWalletConnected" />
         </div>
@@ -137,6 +137,13 @@
           : 'opacity-0 pointer-events-none'
       "
       @click="closeSearch"
+    />
+    <!-- Address-menu dim overlay (mirrors the search overlay): dims the page + the
+         rest of the header while the address popup is open. The address trigger sits
+         above it via its own z-[2] (set in TheAddressMenu when open). -->
+    <div
+      v-if="addressPopupOpen"
+      class="fixed inset-0 bg-black/40 z-[1] transition-opacity"
     />
   </div>
 </template>
