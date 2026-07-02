@@ -25,9 +25,9 @@
         <span class="text-[10px] leading-[12px] text-[#575757]">
           {{ accountName }}
         </span>
-        <icon-watch-only
+        <eye-icon
           v-if="isWatchOnly"
-          class="w-3 h-3 text-info"
+          class="w-4 h-4 text-[#575757]"
         />
         <span
           v-else
@@ -44,7 +44,7 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import AppBlockie from '@/components/AppBlockie.vue'
-import IconWatchOnly from '@/assets/icons/IconWatchOnly.vue'
+import { EyeIcon } from '@heroicons/vue/16/solid'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
