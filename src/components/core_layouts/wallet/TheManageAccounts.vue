@@ -277,9 +277,22 @@ const chainName = (): string => chainsStore.selectedChain?.name ?? 'ETHEREUM'
 const loadBalances = (): void => {
   const entries = [activeAccount.value, ...savedAccounts.value]
     .filter((a): a is SavedAccount => !!a)
-    .map(a => ({ id: a.id, chainName: chainName(), address: a.address }))
+    .map(a => ({
+      id: a.id,
+      chainName: chainName(),
+      address: a.address,
+      nativePrice: chainsStore.selectedChain?.price ?? 0,
+    }))
   void fetchFor(entries)
 }
+
+// Re-fetch every row's balance for the newly-selected network while the popup is open.
+watch(
+  () => chainsStore.selectedChain?.name,
+  () => {
+    if (openDialog.value) loadBalances()
+  },
+)
 
 watch(
   openDialog,
@@ -322,7 +335,12 @@ const onConnect = (): void => {
   openDialog.value = false
 }
 const refresh = (acc: SavedAccount): void => {
-  void refreshOne({ id: acc.id, chainName: chainName(), address: acc.address })
+  void refreshOne({
+    id: acc.id,
+    chainName: chainName(),
+    address: acc.address,
+    nativePrice: chainsStore.selectedChain?.price ?? 0,
+  })
 }
 const openExplorer = (acc: SavedAccount): void => {
   const url = chainsStore.selectedChain?.blockExplorerAddr?.replace('[[address]]', acc.address)

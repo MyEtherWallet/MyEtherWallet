@@ -13,7 +13,13 @@ export interface BalanceEntry {
   id: string
   chainName: string
   address: string
+  /** Native-currency fiat price for the active chain — the /balances response returns
+   *  price: null for the native token, so callers pass the chain's price to value it. */
+  nativePrice?: number
 }
+
+/** The MEW API's sentinel contract for a chain's native currency (ETH, BNB, …). */
+const NATIVE_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 export function useAccountBalances() {
   const balances: Ref<Record<string, AccountBalance>> = ref({})
@@ -33,7 +39,12 @@ export function useAccountBalances() {
         const bal = Number(formatUnits(BigInt(raw), t.decimals ?? 0))
         if (bal > 0) {
           tokenCount += 1
-          usdValue += bal * Number(t.price ?? 0)
+          const isNative =
+            (t.contract ?? '').toLowerCase() === NATIVE_TOKEN_CONTRACT
+          const price = isNative
+            ? (t.price ?? entry.nativePrice ?? 0)
+            : (t.price ?? 0)
+          usdValue += bal * Number(price)
         }
       }
       return { usdValue, tokenCount }
