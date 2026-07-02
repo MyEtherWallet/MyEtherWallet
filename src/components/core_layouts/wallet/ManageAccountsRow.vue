@@ -39,7 +39,7 @@
           </span>
           <eye-icon
             v-else-if="account.kind === 'watchOnly'"
-            class="w-5 h-5 flex-shrink-0 text-info"
+            class="w-4 h-4 flex-shrink-0 text-[#575757]"
           />
         </div>
         <div
@@ -114,11 +114,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import {
-  EllipsisVerticalIcon,
-  EyeIcon,
-  CheckIcon,
-} from '@heroicons/vue/24/outline'
+import { EllipsisVerticalIcon } from '@heroicons/vue/24/outline'
+import { EyeIcon, CheckIcon } from '@heroicons/vue/16/solid'
 import AppBlockie from '@/components/AppBlockie.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsMenu.vue'
