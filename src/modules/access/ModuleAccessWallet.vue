@@ -76,6 +76,8 @@
       </div>
     </template>
   </app-dialog>
+  <!-- Overlaid step: the extension's active address is already saved -->
+  <module-access-address-saved />
 </template>
 <script setup lang="ts">
 import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
@@ -96,6 +98,7 @@ import ModuleAccessMnemonic from './ModuleAccessMnemonic.vue'
 import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
+import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
 import { computed, watch } from 'vue'
 
 /**-------------------------------

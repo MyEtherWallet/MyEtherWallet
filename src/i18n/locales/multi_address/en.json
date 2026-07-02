@@ -27,6 +27,12 @@
     "no_address_title": "No address for this network",
     "no_address_subtitle": "Connect or add an address to use this network, or pick another one.",
     "no_address_pill": "No address",
+    "address_saved": {
+      "title_suffix": "is already saved",
+      "subtitle": "If you want to save a different address, please select it on {wallet} and try again.",
+      "open_wallet": "Open {wallet}",
+      "try_again": "Try again"
+    },
     "rename": {
       "title": "Rename address",
       "subtitle": "Enter a new name and save",

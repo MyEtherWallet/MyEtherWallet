@@ -11,6 +11,7 @@ import {
 import { useProviderStore } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
+import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
@@ -36,6 +37,7 @@ export const useConnectWallet = () => {
   const { providers: Eip6963Providers } = storeToRefs(providerStore)
   const { connectors } = wagmiConfig
   const walletStore = useWalletStore()
+  const watchOnlyStore = useWatchOnlyStore()
   const recentWalletsStore = useRecentWalletsStore()
   const { addWallet } = recentWalletsStore
   const { setWallet } = walletStore
@@ -47,10 +49,33 @@ export const useConnectWallet = () => {
   const globalStore = useGlobalStore()
   const { setSelectedNetwork: setSelectedChainGlobalStore } = globalStore
 
-  const _storeWallet = (
+  const _storeWallet = async (
     wallet: WagmiWallet | Web3InjectedWallet | UnisatInjectWallet,
     config: WalletConfig,
   ) => {
+    // The extension's active address may already be saved. Rather than silently
+    // no-op, surface an informational step so the user knows to switch address in
+    // the extension. (Only reached for extension/injected wallets.)
+    const address = await wallet.getAddress()
+    const type = selectedChain.value?.type
+    const existing = type
+      ? (watchOnlyStore.watchOnlyAddresses[type] ?? []).find(
+          e => e.address.toLowerCase() === address.toLowerCase(),
+        )
+      : undefined
+    if (existing) {
+      accessStore.setAddressSavedInfo({
+        address,
+        addressName: existing.addressName,
+        walletName: config.name,
+        walletIcon: typeof config.icon === 'string' ? config.icon : '',
+        config,
+      })
+      // Reset the dialog to the chooser so the back button on the modal returns
+      // there instead of the connecting spinner view.
+      accessStore.setCurrentView('default')
+      return
+    }
     wagmiWalletData.value = ''
     accessStore.setWagmiWalletData(wagmiWalletData.value) // clear stored data in access store as well
     setWallet(wallet, config.name, config.type[0])
@@ -104,7 +129,7 @@ export const useConnectWallet = () => {
         .then(res => {
           if (res) {
             try {
-              _storeWallet(unisatWallet, wallet)
+              void _storeWallet(unisatWallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -175,7 +200,7 @@ export const useConnectWallet = () => {
         .then(res => {
           if (res) {
             try {
-              _storeWallet(web3Wallet, wallet)
+              void _storeWallet(web3Wallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -244,7 +269,7 @@ export const useConnectWallet = () => {
       .then(res => {
         if (res) {
           try {
-            _storeWallet(wagWallet, wallet)
+            void _storeWallet(wagWallet, wallet)
           } catch (error: unknown) {
             toastStore.addToastMessage({
               text: 'Could not connect to wallet',

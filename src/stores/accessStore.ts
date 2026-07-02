@@ -76,6 +76,27 @@ export const useAccessStore = defineStore('accessStore', () => {
   })
 
   /**------------------------
+   * "Address already saved" step (extension connect)
+   * Set when a connecting extension wallet's active address is already saved,
+   * so the flow shows an informational modal instead of a silent no-op.
+   -------------------------*/
+  const addressSavedInfo = ref<{
+    address: string
+    addressName: string
+    walletName: string
+    walletIcon: string
+    config: WalletConfig
+  } | null>(null)
+  const setAddressSavedInfo = (
+    info: typeof addressSavedInfo.value,
+  ): void => {
+    addressSavedInfo.value = info
+  }
+  const clearAddressSavedInfo = (): void => {
+    addressSavedInfo.value = null
+  }
+
+  /**------------------------
    * Selected Chain
    -------------------------*/
   const selectedChain = ref<Chain | null>(null)
@@ -110,5 +131,8 @@ export const useAccessStore = defineStore('accessStore', () => {
     isEvmChain,
     isBitcoinChain,
     setSelectedChain,
+    addressSavedInfo,
+    setAddressSavedInfo,
+    clearAddressSavedInfo,
   }
 })
