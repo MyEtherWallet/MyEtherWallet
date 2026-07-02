@@ -37,7 +37,7 @@ import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerP
 const factory = () =>
   mount(AddressTriggerPill, {
     global: {
-      stubs: { AppBlockie: true, IconWatchOnly: true, ChevronDownIcon: true },
+      stubs: { AppBlockie: true, EyeIcon: true, ChevronDownIcon: true },
     },
   })
 
@@ -56,7 +56,7 @@ describe('AddressTriggerPill', () => {
   it('shows the watch-only eye instead of the green dot when watch-only', () => {
     walletStore.isWatchOnly = true
     const w = factory()
-    expect(w.findComponent({ name: 'IconWatchOnly' }).exists()).toBe(true)
+    expect(w.findComponent({ name: 'EyeIcon' }).exists()).toBe(true)
     walletStore.isWatchOnly = false
   })
 })

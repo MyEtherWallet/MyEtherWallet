@@ -9,7 +9,7 @@
       aria-hidden="true"
       class="absolute inset-0 w-full h-full object-cover"
     />
-    <div class="absolute inset-0 bg-black/25" aria-hidden="true" />
+    <div class="absolute inset-0 bg-black/25 backdrop-blur-[2px]" aria-hidden="true" />
 
     <!-- Header: balance / name / wallet • address + actions -->
     <div class="relative flex items-start gap-3">
@@ -170,10 +170,3 @@ const saveRename = (): void => {
   renaming.value = false
 }
 </script>
-
-<style scoped>
-.text-white :deep(p),
-.text-white > .relative > * {
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
-}
-</style>
