@@ -101,7 +101,7 @@ import {
   ArrowTopRightOnSquareIcon,
   PencilSquareIcon,
   LinkIcon,
-} from '@heroicons/vue/24/outline'
+} from '@heroicons/vue/24/solid'
 
 type MenuAction =
   | 'rename'
