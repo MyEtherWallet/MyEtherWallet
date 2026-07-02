@@ -247,18 +247,26 @@ const popupRef = ref<HTMLElement | null>(null)
 // instead of freezing at their open-time coordinates.
 const { width: viewportWidth, height: viewportHeight } = useWindowSize()
 
-// Below this width the trigger can sit far from the right edge, so anchoring the
-// popup to it would push it off-screen — pin it to the right instead.
-const isSmallScreen = computed<boolean>(() => viewportWidth.value < 480)
+// Responsive positioning: anchoring the popup to the trigger only works on wide
+// screens. Below 640 the trigger sits too far left, so center the popup; below
+// 480 let it grow to full width with small side gutters.
+const isMobile = computed<boolean>(() => viewportWidth.value < 480)
+const isNarrow = computed<boolean>(() => viewportWidth.value < 640)
 
 const popupStyle = computed(() => {
   void viewportHeight.value
   const top = props.anchor
     ? props.anchor.getBoundingClientRect().bottom + 8
     : 76
-  if (isSmallScreen.value) {
+  if (isMobile.value) {
     // Full width minus a small gutter on each side, so it never overflows.
     return { top: `${top}px`, left: '16px', right: '16px', width: 'auto' }
+  }
+  if (isNarrow.value) {
+    // Centered horizontally, keeping the fixed popup width.
+    const width = Math.min(384, viewportWidth.value - 32)
+    const left = Math.max(16, (viewportWidth.value - width) / 2)
+    return { top: `${top}px`, left: `${left}px` }
   }
   if (props.anchor) {
     const rect = props.anchor.getBoundingClientRect()
