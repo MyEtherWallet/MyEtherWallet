@@ -15,7 +15,7 @@
       </div>
     </template>
     <template #content>
-      <div class="flex flex-col gap-4 pb-6 pt-2">
+      <div class="flex flex-col gap-4 pb-6 pt-6">
         <div class="flex flex-col gap-1">
           <input
             ref="inputRef"
