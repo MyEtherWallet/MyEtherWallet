@@ -22,6 +22,22 @@
       "hardware": "Hardware",
       "mobile": "Mobile",
       "software": "Software"
+    },
+    "back_to_connect_options": "back to connect options",
+    "connect_wallet_title": "Connect Wallet",
+    "connect_with": "Connect with {method}",
+    "method": {
+      "keystore": "keystore",
+      "private_key": "private key",
+      "mnemonic_phrase": "mnemonic phrase"
+    },
+    "help": {
+      "keystore": "How to connect your keystore wallet",
+      "private_key": "How to connect with your private key",
+      "mnemonic": "How to connect with your recovery phrase",
+      "ledger": "How to connect your Ledger wallet",
+      "trezor": "How to connect your Trezor wallet",
+      "default": "Need Help connecting your wallet?"
     }
   },
   "access_wallet_keystore": {
