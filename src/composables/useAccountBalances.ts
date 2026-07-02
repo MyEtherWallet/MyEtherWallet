@@ -76,5 +76,10 @@ export function useAccountBalances() {
     balances.value = { ...balances.value, [entry.id]: await fetchOne(entry) }
   }
 
-  return { balances, isLoading, fetchFor, refreshOne }
+  /** Drop all cached balances (e.g. on network change, since they're per-chain). */
+  const clear = (): void => {
+    balances.value = {}
+  }
+
+  return { balances, isLoading, fetchFor, refreshOne, clear }
 }

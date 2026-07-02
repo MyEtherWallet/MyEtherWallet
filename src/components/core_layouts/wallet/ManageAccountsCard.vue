@@ -15,6 +15,8 @@
     <div class="relative flex items-start gap-3">
       <div class="flex-1 min-w-0 flex flex-col gap-1">
         <p class="text-s-14 leading-p-140">
+          <!-- The card is the active account; show the skeleton whenever its
+               balance is (re)loading so a switch never flashes the stale value. -->
           <span
             v-if="balanceLoading"
             class="inline-block w-16 h-3.5 bg-white/25 animate-pulse rounded align-middle"

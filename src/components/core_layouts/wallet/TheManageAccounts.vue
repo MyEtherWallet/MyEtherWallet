@@ -303,7 +303,7 @@ const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
 const { startAdd, connectSaved } = useAddAccount()
-const { balances, isLoading, fetchFor, refreshOne } = useAccountBalances()
+const { balances, isLoading, fetchFor, refreshOne, clear } = useAccountBalances()
 const walletStore = useWalletStore()
 const { detectedAddress, totalFiatPortfolioValueBN, tokens, isLoadingBalances } =
   storeToRefs(walletStore)
@@ -355,11 +355,15 @@ const loadBalances = (): void => {
   void fetchFor(entries)
 }
 
-// Re-fetch every row's balance for the newly-selected network while the popup is open.
+// Re-fetch every row's balance for the newly-selected network while the popup is
+// open. Cached balances are per-chain, so drop them first — that way the rows show
+// the loading skeleton (not a stale value) until the new network's data arrives.
 watch(
   () => chainsStore.selectedChain?.name,
   () => {
-    if (openDialog.value) loadBalances()
+    if (!openDialog.value) return
+    clear()
+    loadBalances()
   },
 )
 

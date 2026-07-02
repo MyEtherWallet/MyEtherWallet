@@ -64,7 +64,9 @@
       class="text-right flex-shrink-0 text-s-14"
       :class="isActive ? 'text-black' : 'text-info'"
     >
-      <template v-if="balanceLoading">
+      <!-- Active row skeletons whenever loading (stale-safe on switch); other rows
+           show their cached balance and only skeleton when none exists yet. -->
+      <template v-if="balanceLoading && (isActive || !balance)">
         <span class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded" />
       </template>
       <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
