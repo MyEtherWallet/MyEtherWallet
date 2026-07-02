@@ -41,7 +41,7 @@
         v-if="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] h-[720px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
         <div class="relative h-full overflow-hidden">
@@ -247,15 +247,21 @@ const popupRef = ref<HTMLElement | null>(null)
 // instead of freezing at their open-time coordinates.
 const { width: viewportWidth, height: viewportHeight } = useWindowSize()
 
+// Below this width the trigger can sit far from the right edge, so anchoring the
+// popup to it would push it off-screen — pin it to the right instead.
+const isSmallScreen = computed<boolean>(() => viewportWidth.value < 640)
+
 const popupStyle = computed(() => {
-  void viewportWidth.value
   void viewportHeight.value
+  const top = props.anchor
+    ? props.anchor.getBoundingClientRect().bottom + 8
+    : 76
+  if (isSmallScreen.value) {
+    return { top: `${top}px`, right: '8px' }
+  }
   if (props.anchor) {
     const rect = props.anchor.getBoundingClientRect()
-    return {
-      top: `${rect.bottom + 8}px`,
-      right: `${window.innerWidth - rect.right}px`,
-    }
+    return { top: `${top}px`, right: `${window.innerWidth - rect.right}px` }
   }
   return { top: '76px', right: '16px' }
 })
