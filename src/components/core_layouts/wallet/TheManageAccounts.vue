@@ -94,6 +94,16 @@
                     @delete="onDelete(activeAccount)"
                     @connect="onConnect"
                   />
+                  <!-- No connected address for the selected network: keep the popup
+                       usable (pick another address below or switch network). -->
+                  <div v-else data-test="no-active-address" class="px-4 py-6 text-center">
+                    <p class="text-s-16 font-semibold text-black">
+                      {{ $t('multi_address.no_address_title') }}
+                    </p>
+                    <p class="mt-1 text-s-14 text-[#575757]">
+                      {{ $t('multi_address.no_address_subtitle') }}
+                    </p>
+                  </div>
                 </div>
               </div>
 

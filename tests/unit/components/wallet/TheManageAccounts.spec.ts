@@ -62,6 +62,18 @@ const factory = () =>
 beforeEach(() => { vi.clearAllMocks(); walletStore.detectedAddress.value = null })
 
 describe('TheManageAccounts', () => {
+  it('shows the no-address empty state (no card) when there is no active account', () => {
+    const original = store.activeAccount
+    store.activeAccount = null
+    try {
+      const w = factory()
+      expect(w.find('[data-test="active-card"]').exists()).toBe(false)
+      expect(w.find('[data-test="no-active-address"]').exists()).toBe(true)
+    } finally {
+      store.activeAccount = original
+    }
+  })
+
   it('renders the active-account card, all accounts as rows, and the count', () => {
     const w = factory()
     expect(w.find('[data-test="active-card"]').exists()).toBe(true)

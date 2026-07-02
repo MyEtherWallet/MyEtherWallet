@@ -87,7 +87,7 @@
       <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
         <!-- GLOBAL SEARCH -->
         <module-global-search />
-        <the-address-menu v-if="isWalletConnected" />
+        <the-address-menu v-if="isWalletConnected || hasAnySavedAccount" />
         <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
         <div
           v-else-if="isRestoringWallet"
@@ -99,7 +99,7 @@
         <div class="relative z-[0] flex items-center gap-2">
           <!-- Create wallet button -->
           <router-link
-            v-if="!isWalletConnected && !isRestoringWallet"
+            v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
             class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
             @click="
@@ -112,7 +112,7 @@
           </router-link>
           <!-- Connect wallet button -->
           <router-link
-            v-if="!isWalletConnected && !isRestoringWallet"
+            v-if="!isWalletConnected && !isRestoringWallet && !hasAnySavedAccount"
             :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
             @click="
               analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
@@ -189,6 +189,14 @@ const hasStoredWallet = computed<boolean>(
   () =>
     (watchOnlyStore.watchOnlyAddresses[selectedChain.value?.type ?? 'EVM']
       ?.length ?? 0) > 0,
+)
+// Any saved account across chain types — keep the address menu mounted even when
+// nothing is connected for the current network, so switching to a network with no
+// address doesn't hide the trigger / tear the popup down.
+const hasAnySavedAccount = computed<boolean>(() =>
+  Object.values(watchOnlyStore.watchOnlyAddresses).some(
+    bucket => (bucket?.length ?? 0) > 0,
+  ),
 )
 const isRestoringWallet = ref(false)
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()

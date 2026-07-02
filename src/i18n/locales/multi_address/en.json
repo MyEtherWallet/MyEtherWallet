@@ -24,6 +24,9 @@
     "extension_prompt": "To connect, open your extension and select the address shown above.",
     "network_title": "Networks",
     "network_search": "Search",
+    "no_address_title": "No address for this network",
+    "no_address_subtitle": "Connect or add an address to use this network, or pick another one.",
+    "no_address_pill": "No address",
     "rename": {
       "title": "Rename address",
       "subtitle": "Enter a new name and save",

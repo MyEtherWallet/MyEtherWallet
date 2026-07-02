@@ -1,7 +1,6 @@
 <template>
   <div class="relative">
     <address-trigger-pill
-      v-if="isWalletConnected && walletAddress"
       ref="triggerRef"
       @click="isManageAccountsOpen = true"
     />
@@ -12,13 +11,10 @@
 <script setup lang="ts">
 import { ref, computed, type ComponentPublicInstance } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWalletStore } from '@/stores/walletStore'
 import { useAppLayoutStore } from '@/stores/appLayoutStore'
 import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccounts.vue'
 import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerPill.vue'
 
-const store = useWalletStore()
-const { isWalletConnected, walletAddress } = storeToRefs(store)
 // Popup open state lives in the layout store so it survives header re-renders
 // caused by network changes (a local ref would reset and close the popup).
 const { isManageAccountsOpen } = storeToRefs(useAppLayoutStore())
