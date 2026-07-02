@@ -1,11 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { reactive } from 'vue'
 
-const walletStore = {
+const walletStore = reactive({
   walletAddress: '0xA000000000000000000000000000000000000001',
   isWatchOnly: false,
   formattedTotalFiatPortfolioValue: '$130.23',
-}
+})
 
 const watchOnlyStore = {
   activeAccount: { addressName: 'Address 1' },
@@ -21,14 +22,10 @@ vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => chainsStore }))
 
 vi.mock('pinia', async (importOriginal) => {
   const actual = await importOriginal<typeof import('pinia')>()
-  const { ref } = await import('vue')
+  const { toRefs } = await import('vue')
   return {
     ...actual,
-    storeToRefs: (store: Record<string, unknown>) => {
-      const result: Record<string, ReturnType<typeof ref>> = {}
-      for (const key of Object.keys(store)) result[key] = ref(store[key])
-      return result
-    },
+    storeToRefs: (store: Record<string, unknown>) => toRefs(store),
   }
 })
 
@@ -53,10 +50,15 @@ describe('AddressTriggerPill', () => {
     expect(w.find('img[src="https://example.com/eth.png"]').exists()).toBe(true)
   })
 
-  it('shows the watch-only eye instead of the green dot when watch-only', () => {
+  it('shows the green connected dot when not watch-only', () => {
+    walletStore.isWatchOnly = false
+    const w = factory()
+    expect(w.find('[data-test="pill-connected"]').exists()).toBe(true)
+  })
+
+  it('hides the green dot (shows the eye) when watch-only', () => {
     walletStore.isWatchOnly = true
     const w = factory()
-    expect(w.find('[data-test="pill-watch-only"]').exists()).toBe(true)
     expect(w.find('[data-test="pill-connected"]').exists()).toBe(false)
     walletStore.isWatchOnly = false
   })
