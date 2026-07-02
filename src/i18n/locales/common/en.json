@@ -19,6 +19,8 @@
     "old_version_link": "Old version of MEW Portfolio here",
     "processing_tokens_title": "Sit tight!",
     "processing_tokens_description": "We are processing more tokens in your wallet. We'll update your balances soon.",
+    "not_recommended": "Not Recommended!",
+    "not_recommended_description": "This information is sensitive and should only be used by experienced crypto users.",
     "network": "network",
     "close": "close",
     "clear_icon": "clear input",

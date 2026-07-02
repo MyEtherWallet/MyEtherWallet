@@ -1,7 +1,7 @@
 {
   "common": {
     "search": "Buscar",
-    "swap": "Intercambio",
+    "swap": "Cambio",
     "bridge": "Puente",
     "stocks": "Acciones",
     "crypto": "Cripto",
@@ -19,6 +19,8 @@
     "old_version_link": "Versión anterior de MEW Portfolio aquí",
     "processing_tokens_title": "¡Un momento!",
     "processing_tokens_description": "Estamos procesando más tokens en tu billetera. Actualizaremos tus saldos pronto.",
+    "not_recommended": "¡No recomendado!",
+    "not_recommended_description": "Esta información es sensible y solo deben usarla usuarios con experiencia en cripto.",
     "network": "red",
     "close": "cerrar",
     "clear_icon": "borrar campo",

@@ -3,11 +3,11 @@
     <div class="static w-full flex flex-col items-center justify-items-stretch">
       <div class="w-full max-w-[500px]">
         <div class="flex items-end justify-between mb-4 px-4">
-          <p class="font-bold text-s-28">Send</p>
+          <p class="font-bold text-s-28">{{ $t('common.send') }}</p>
           <app-btn-text
             class="text-primary text-s-15 pb-1"
             @click="resetSendModule"
-            >Clear all</app-btn-text
+            >{{ $t('common.clear_all') }}</app-btn-text
           >
         </div>
         <div class="p-5 rounded-20 bg-mewBg mb-6 flex flex-col gap-4">
@@ -631,7 +631,7 @@ const handleSubmit = async () => {
       })
       toastStore.addToastMessage({
         type: ToastType.Error,
-        text: 'Could not sign transaction',
+        text: t('send.toast.failed_to_sign'),
         textSecondary: e instanceof Error && e.message ? e.message : undefined,
       })
     }

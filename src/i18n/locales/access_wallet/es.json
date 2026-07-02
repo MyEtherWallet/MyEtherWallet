@@ -22,6 +22,22 @@
       "hardware": "Hardware",
       "mobile": "Móviles",
       "software": "Software"
+    },
+    "back_to_connect_options": "volver a las opciones de conexión",
+    "connect_wallet_title": "Conectar billetera",
+    "connect_with": "Conectar con {method}",
+    "method": {
+      "keystore": "Keystore",
+      "private_key": "clave privada",
+      "mnemonic_phrase": "frase mnemotécnica"
+    },
+    "help": {
+      "keystore": "Cómo conectar tu billetera con Keystore",
+      "private_key": "Cómo conectar con tu clave privada",
+      "mnemonic": "Cómo conectar con tu frase de recuperación",
+      "ledger": "Cómo conectar tu billetera Ledger",
+      "trezor": "Cómo conectar tu billetera Trezor",
+      "default": "¿Necesitas ayuda para conectar tu billetera?"
     }
   },
   "access_wallet_keystore": {

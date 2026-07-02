@@ -1,7 +1,7 @@
 <template>
   <div class="pt-3 sm:pt-5 lg:pt-7">
     <h2 class="text-info font-bold uppercase text-s-12 mb-1">
-      Step {{ activeStep + 1 }}
+      {{ $t('common.step', { number: activeStep + 1 }) }}
     </h2>
     <h3 class="font-bold text-s-24 sm:text-s-32 mb-2 leading-p-120">
       {{ description.title }}

@@ -26,6 +26,24 @@
     "create_software_wallet": "创建软件钱包",
     "starting_from": "起售价",
     "select_keystore": "选择 Keystore 文件",
-    "connect": "连接"
+    "connect": "连接",
+    "mnemonic": {
+      "select_length": "选择长度",
+      "update": "更新",
+      "word_option": "{count} 个单词",
+      "select_word": "选择第 {number} 个单词",
+      "create_another_wallet": "创建另一个钱包",
+      "stepper": {
+        "create": "创建",
+        "verify": "验证",
+        "done": "完成"
+      },
+      "step1_title": "您的恢复短语",
+      "step1_description": "请写下您的恢复短语并妥善保管在安全的地方。请勿通过电子邮件发送或截屏保存。",
+      "step2_title": "让我们再核对一下",
+      "step2_description": "请根据编号选择正确的单词。",
+      "step3_title": "全部完成",
+      "step3_description": "现在您可以尽情体验以太坊所提供的一切了！请将您的恢复短语存放在安全的地方；使用助记词访问钱包时应仅在离线环境中进行。"
+    }
   }
 }

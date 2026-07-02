@@ -26,6 +26,24 @@
     "create_software_wallet": "Crear una billetera de software",
     "starting_from": "Desde",
     "select_keystore": "Seleccionar Keystore",
-    "connect": "Conectar"
+    "connect": "Conectar",
+    "mnemonic": {
+      "select_length": "Seleccionar longitud",
+      "update": "Actualizar",
+      "word_option": "{count} palabras",
+      "select_word": "Selecciona la palabra n.º {number}",
+      "create_another_wallet": "Crear otra billetera",
+      "stepper": {
+        "create": "crear",
+        "verify": "verificar",
+        "done": "listo"
+      },
+      "step1_title": "Tu frase",
+      "step1_description": "Anota tu frase de recuperación y guárdala en un lugar seguro. No la envíes por correo electrónico ni tomes capturas de pantalla.",
+      "step2_title": "Verifiquémosla",
+      "step2_description": "Selecciona las palabras correctas según su número.",
+      "step3_title": "¡Todo listo!",
+      "step3_description": "¡Ya estás listo para aprovechar todo lo que Ethereum tiene para ofrecer! Guarda tu frase en un lugar seguro; el acceso con frase mnemotécnica solo debe usarse en un entorno sin conexión."
+    }
   }
 }

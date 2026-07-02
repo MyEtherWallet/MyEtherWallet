@@ -19,6 +19,8 @@
     "old_version_link": "在此访问旧版 MEW Portfolio",
     "processing_tokens_title": "请稍候！",
     "processing_tokens_description": "我们正在处理您钱包中的更多代币，稍后将更新您的余额。",
+    "not_recommended": "不推荐！",
+    "not_recommended_description": "此信息较为敏感，仅建议有经验的加密用户使用。",
     "network": "网络",
     "close": "关闭",
     "clear_icon": "清除输入",

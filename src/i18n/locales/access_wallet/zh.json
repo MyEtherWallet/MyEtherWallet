@@ -22,6 +22,22 @@
       "hardware": "硬件",
       "mobile": "移动",
       "software": "软件"
+    },
+    "back_to_connect_options": "返回连接选项",
+    "connect_wallet_title": "连接钱包",
+    "connect_with": "使用{method}连接",
+    "method": {
+      "keystore": "Keystore 文件",
+      "private_key": "私钥",
+      "mnemonic_phrase": "助记词"
+    },
+    "help": {
+      "keystore": "如何连接您的 Keystore 钱包",
+      "private_key": "如何使用私钥连接",
+      "mnemonic": "如何使用恢复短语连接",
+      "ledger": "如何连接您的 Ledger 钱包",
+      "trezor": "如何连接您的 Trezor 钱包",
+      "default": "连接钱包需要帮助吗？"
     }
   },
   "access_wallet_keystore": {
