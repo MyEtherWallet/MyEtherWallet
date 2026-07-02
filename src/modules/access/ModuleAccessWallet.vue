@@ -1,6 +1,6 @@
 <template>
   <app-dialog
-    v-model:is-open="isOpenAccessDialog"
+    v-model:is-open="bigDialogOpen"
     :class="[
       'w-full max-h-[95vh]',
       currentView === 'mnemonic' ||
@@ -105,8 +105,17 @@ import { computed, watch } from 'vue'
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const { isOpenAccessDialog, currentView, clickedWeb3Wallet } =
+const { isOpenAccessDialog, currentView, clickedWeb3Wallet, addressSavedInfo } =
   storeToRefs(accessStore)
+
+// Hide the big chooser while the "address already saved" modal is up so only it
+// shows; keep isOpenAccessDialog true so the modal's back button restores it.
+const bigDialogOpen = computed<boolean>({
+  get: () => isOpenAccessDialog.value && !addressSavedInfo.value,
+  set: v => {
+    isOpenAccessDialog.value = v
+  },
+})
 
 const closeAccess = () => {
   accessStore.setCurrentView('default')
