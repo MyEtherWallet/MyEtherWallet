@@ -24,7 +24,7 @@
     <button
       v-if="openDialog && triggerCloneStyle"
       :style="triggerCloneStyle"
-      class="hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full shadow-button shadow-button-elevated bg-white flex items-center"
+      class="p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full shadow-button shadow-button-elevated bg-white flex items-center cursor-default"
       @click="openDialog = false"
     >
       <app-blockie
