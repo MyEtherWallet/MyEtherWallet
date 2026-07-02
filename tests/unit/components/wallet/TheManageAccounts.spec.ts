@@ -5,6 +5,7 @@ import { ref } from 'vue'
 const switchTo = vi.fn()
 const deleteAccount = vi.fn()
 const startAdd = vi.fn()
+const connectSaved = vi.fn()
 const fetchFor = vi.fn()
 const refreshOne = vi.fn()
 const renameAccount = vi.fn(() => ({ ok: true }))
@@ -25,7 +26,7 @@ const walletStore = { detectedAddress: ref<string | null>(null), totalFiatPortfo
 
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
-vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd }) }))
+vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd, connectSaved }) }))
 vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ balances: ref({}), isLoading: ref(false), fetchFor, refreshOne }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: { name: 'ETH', type: 'EVM', blockExplorerAddr: 'https://e/[[address]]' } }) }))
@@ -88,10 +89,11 @@ describe('TheManageAccounts', () => {
     expect(w.emitted('update:openDialog')).toBeUndefined()
   })
 
-  it('starts the add-account flow and closes when the card emits connect', async () => {
+  it('connects the saved address directly (skips the chooser) and closes when the card emits connect', async () => {
     const w = factory()
     await w.get('[data-test="card-connect-btn"]').trigger('click')
-    expect(startAdd).toHaveBeenCalledTimes(1)
+    expect(connectSaved).toHaveBeenCalledTimes(1)
+    expect(startAdd).not.toHaveBeenCalled()
     expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
   })
 

@@ -29,9 +29,9 @@ describe('ManageAccountsMenu', () => {
     expect(w.find('[data-test="menu-remove"]').exists()).toBe(true)
   })
 
-  it('shows "Open Paper wallet" only for the active account (like the home card)', () => {
+  it('always shows "Open Paper wallet" (available for every address)', () => {
     expect(factory({ isActive: true }).find('[data-test="menu-paper"]').exists()).toBe(true)
-    expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(false)
+    expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(true)
   })
 
   it('shows "Disconnect" only for the active account', () => {

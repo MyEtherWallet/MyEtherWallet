@@ -88,7 +88,7 @@
                     @copy="copy(activeAccount.address)"
                     @refresh="refresh(activeAccount)"
                     @rename="onRenameRequest(activeAccount)"
-                    @paper="onPaper"
+                    @paper="onPaper(activeAccount)"
                     @explorer="openExplorer(activeAccount)"
                     @disconnect="onDisconnect"
                     @delete="onDelete(activeAccount)"
@@ -117,7 +117,7 @@
                       @copy="copy(acc.address)"
                       @refresh="refresh(acc)"
                       @rename="onRenameRequest(acc)"
-                      @paper="onPaper"
+                      @paper="onPaper(acc)"
                       @explorer="openExplorer(acc)"
                       @disconnect="onDisconnect"
                       @delete="onDelete(acc)"
@@ -190,7 +190,7 @@
 
     <!-- Modals live outside the popup's v-if so they survive the popup closing
          (Paper wallet and Rename both close the popup before opening). -->
-    <the-paper-wallet v-model:is-open="openPaperWallet" />
+    <the-paper-wallet v-model:is-open="openPaperWallet" :address="paperTarget?.address" />
     <manage-accounts-rename-modal
       v-model:is-open="renameOpen"
       :current-name="renameTarget?.addressName"
@@ -287,7 +287,7 @@ const allAccounts = computed<SavedAccount[]>(() => watchOnlyStore.allAccounts)
 const totalCount = computed(() => allAccounts.value.length)
 
 const { switchTo, deleteAccount } = useAccountSwitch()
-const { startAdd } = useAddAccount()
+const { startAdd, connectSaved } = useAddAccount()
 const { balances, isLoading, fetchFor, refreshOne } = useAccountBalances()
 const walletStore = useWalletStore()
 const { detectedAddress, totalFiatPortfolioValueBN, tokens, isLoadingBalances } =
@@ -322,6 +322,7 @@ const balanceLoadingFor = (acc: SavedAccount): boolean =>
   isActive(acc) ? isLoadingBalances.value : isLoading.value && isCompatible(acc)
 
 const openPaperWallet = ref(false)
+const paperTarget = ref<SavedAccount | null>(null)
 const renameOpen = ref(false)
 const renameTarget = ref<SavedAccount | null>(null)
 const hasBackfilled = ref(false)
@@ -397,8 +398,10 @@ const isRenameNameTaken = (name: string): boolean =>
   renameTarget.value
     ? !isNameUnique(watchOnlyStore.watchOnlyAddresses, name, renameTarget.value.id)
     : false
-// Paper wallet opens a modal (same as the home wallet card); close the popup first.
-const onPaper = (): void => {
+// Paper wallet opens a modal (same as the home wallet card) for the chosen
+// account's address; close the popup first.
+const onPaper = (acc: SavedAccount): void => {
+  paperTarget.value = acc
   openDialog.value = false
   openPaperWallet.value = true
 }
@@ -412,7 +415,16 @@ const onAdd = (): void => {
   openDialog.value = false
   startAdd()
 }
-const onConnect = onAdd
+// Card "Connect address": we already know the wallet for this saved address, so
+// connect directly (skip the chooser). Falls back to the chooser internally when
+// the wallet can't be resolved to a static config.
+const onConnect = (): void => {
+  const acc = activeAccount.value
+  if (!acc) return
+  void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
+  openDialog.value = false
+  connectSaved(acc)
+}
 const refresh = (acc: SavedAccount): void => {
   void refreshOne({
     id: acc.id,

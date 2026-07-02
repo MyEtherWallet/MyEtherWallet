@@ -39,7 +39,6 @@
     <div class="h-px w-full bg-grey-10" />
 
     <button
-      v-if="isActive"
       data-test="menu-paper"
       type="button"
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"

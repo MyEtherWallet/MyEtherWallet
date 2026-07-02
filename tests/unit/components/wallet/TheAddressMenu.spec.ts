@@ -66,7 +66,7 @@ vi.mock('@/composables/useAccountSwitch', () => ({
   useAccountSwitch: () => ({ switchTo: vi.fn(), deleteAccount: vi.fn() }),
 }))
 vi.mock('@/composables/useAddAccount', () => ({
-  useAddAccount: () => ({ startAdd: vi.fn() }),
+  useAddAccount: () => ({ startAdd: vi.fn(), connectSaved: vi.fn() }),
 }))
 vi.mock('@/composables/useAccountBalances', () => ({
   useAccountBalances: () => ({ balances: { value: {} }, isLoading: { value: false }, fetchFor: vi.fn() }),

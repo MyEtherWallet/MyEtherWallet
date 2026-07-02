@@ -88,12 +88,18 @@
         <!-- GLOBAL SEARCH -->
         <module-global-search />
         <the-address-menu v-if="isWalletConnected" />
+        <!-- Trigger-sized skeleton while a saved wallet is being restored on reload -->
+        <div
+          v-else-if="isRestoringWallet"
+          class="w-[160px] h-10 rounded-[20px] bg-grey-10 animate-pulse shrink-0"
+          aria-hidden="true"
+        />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
              can't escape and paint over the search overlay. -->
         <div class="relative z-[0] flex items-center gap-2">
           <!-- Create wallet button -->
           <router-link
-            v-if="!isWalletConnected"
+            v-if="!isWalletConnected && !isRestoringWallet"
             :to="{ name: ROUTES_CREATE_WALLET.CREATE_WALLET.NAME }"
             class="hidden xs:flex shrink-0 px-3 xl:px-4 border-1 border-black h-8 xs:h-10 text-s-14 lg:text-s-16 rounded-full hoverOpacity text-center flex items-center justify-center"
             @click="
@@ -106,7 +112,7 @@
           </router-link>
           <!-- Connect wallet button -->
           <router-link
-            v-if="!isWalletConnected"
+            v-if="!isWalletConnected && !isRestoringWallet"
             :to="{ name: ROUTES_ACCESS.ACCESS.NAME }"
             @click="
               analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
@@ -155,6 +161,7 @@ import {
 import { type AppMenuListItem, ICON_IDS } from '@/types/components/menuListItem'
 import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
+import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { storeToRefs } from 'pinia'
 import { WalletType } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
@@ -168,8 +175,22 @@ const store = useWalletStore()
 const chainStore = useChainsStore()
 const { isWalletConnected, wallet } = storeToRefs(store)
 const { setWatchOnlyIfExist, disconnectWallet, setDetectedAddress } = store
-const { isEvmChain, isBitcoinChain } = storeToRefs(chainStore)
+const { isEvmChain, isBitcoinChain, selectedChain } = storeToRefs(chainStore)
+const watchOnlyStore = useWatchOnlyStore()
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
+
+/** ------------------------------
+ * Wallet-restore skeleton
+ * On reload the wallet is restored asynchronously in onMounted. While a saved
+ * address is being restored, show a trigger-sized skeleton instead of the
+ * create/connect buttons to avoid the flicker + layout shift.
+ ------------------------------*/
+const hasStoredWallet = computed<boolean>(
+  () =>
+    (watchOnlyStore.watchOnlyAddresses[selectedChain.value?.type ?? 'EVM']
+      ?.length ?? 0) > 0,
+)
+const isRestoringWallet = ref(false)
 const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
 
 /** ------------------------------
@@ -250,7 +271,20 @@ const selectedOption = ref<AppSelectOption>({
 })
 
 onMounted(() => {
+  // Expect a restore when storage has a saved address for the active chain type.
+  if (hasStoredWallet.value && !isWalletConnected.value) {
+    isRestoringWallet.value = true
+  }
   setWatchOnlyIfExist()
+  // Safety net: never leave the skeleton up indefinitely if the restore fails.
+  setTimeout(() => {
+    isRestoringWallet.value = false
+  }, 5000)
+})
+
+// Stop restoring as soon as a wallet is connected.
+watch(isWalletConnected, connected => {
+  if (connected) isRestoringWallet.value = false
 })
 
 watch(

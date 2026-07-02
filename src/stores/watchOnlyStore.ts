@@ -60,9 +60,12 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
       .flat()
       .map(e => {
         const isActive = buildId(e.type, e.address) === activeId.value
+        // Only the active account can be "connected" (signing). Every other saved
+        // address is view-only, so a previously-connected address never keeps a
+        // connected indicator after switching — at most one address is connected.
         return view(
           e,
-          isActive ? (walletStore.isWatchOnly ? 'watchOnly' : 'signing') : undefined,
+          isActive && !walletStore.isWatchOnly ? 'signing' : 'watchOnly',
         )
       }),
   )

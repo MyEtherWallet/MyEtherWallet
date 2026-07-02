@@ -1,4 +1,5 @@
 import { ref, type Ref, computed, watch, reactive } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import type { WalletInterface } from '@/providers/common/walletInterface'
 import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
@@ -47,6 +48,12 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
+  // Remember the last active address per chain type so a reload restores the
+  // address that was active, not just the last one added to the list.
+  const lastActiveAddress = useLocalStorage<Record<string, string>>(
+    'lastActiveAddress',
+    {},
+  )
   const userProperties = reactive<UserProperties>({})
   const { isTradingRestrictedInRegion } = useMarketStatus()
   const stocksStore = useStocksStore()
@@ -94,27 +101,26 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const setWatchOnlyIfExist = () => {
     const { watchOnlyAddresses } = useWatchOnlyStore()
-    const currentRecentAddressList =
-      watchOnlyAddresses[selectedChain.value?.type || 'EVM']
+    const type = selectedChain.value?.type || 'EVM'
+    const currentRecentAddressList = watchOnlyAddresses[type]
     if (currentRecentAddressList.length > 0) {
+      // Restore the address that was active before reload; fall back to the most
+      // recently added one if the remembered address is no longer saved.
+      const remembered = lastActiveAddress.value[type]
+      const entry =
+        currentRecentAddressList.find(
+          e => e.address.toLowerCase() === remembered?.toLowerCase(),
+        ) ?? currentRecentAddressList[currentRecentAddressList.length - 1]
       const newWallet = new WatchOnlyWallet(
-        currentRecentAddressList[currentRecentAddressList.length - 1].address,
-        currentRecentAddressList[currentRecentAddressList.length - 1].chain,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletType as WalletType,
-        currentRecentAddressList[currentRecentAddressList.length - 1].type,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletName,
+        entry.address,
+        entry.chain,
+        entry.walletType as WalletType,
+        entry.type,
+        entry.walletName,
       )
       wallet.value = null
       walletAddress.value = null
-      setWallet(
-        newWallet,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletName,
-        currentRecentAddressList[currentRecentAddressList.length - 1]
-          .walletType as WalletConfigType,
-      )
+      setWallet(newWallet, entry.walletName, entry.walletType as WalletConfigType)
     } else {
       wallet.value = null
       walletAddress.value = null
@@ -167,6 +173,13 @@ export const useWalletStore = defineStore('walletStore', () => {
   }
   const chainStore = useChainsStore()
   const { selectedChain, isEvmChain } = storeToRefs(chainStore)
+
+  // Persist the active address per chain type on every (non-null) change so a
+  // reload can restore the same one. Guarded against the transient null set in
+  // setWatchOnlyIfExist.
+  watch(walletAddress, addr => {
+    if (addr) lastActiveAddress.value[selectedChain.value?.type || 'EVM'] = addr
+  })
 
   const hasChainBalance = computed(() => {
     const balanceBN = new BigNumber(balanceWei.value || '0')

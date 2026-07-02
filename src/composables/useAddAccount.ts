@@ -3,12 +3,23 @@ import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import { SAVED_ACCOUNTS_CAP } from '@/stores/saved_accounts/savedAccountsLogic'
+import {
+  SAVED_ACCOUNTS_CAP,
+  type SavedAccount,
+} from '@/stores/saved_accounts/savedAccountsLogic'
+import {
+  walletConfigs,
+  type defaultWalletId,
+} from '@/modules/access/common/walletConfigs'
+import { useConnectWallet } from '@/modules/access/composables/useConnectWallet'
+import { useWalletList } from '@/composables/useWalletList'
 
 export function useAddAccount() {
   const accessStore = useAccessStore()
   const watchOnlyStore = useWatchOnlyStore()
   const toastStore = useToastStore()
+  const { connect } = useConnectWallet()
+  const { newWalletList } = useWalletList()
 
   /**
    * Adding is just opening the existing connect flow: on success the wallet's
@@ -27,5 +38,28 @@ export function useAddAccount() {
     accessStore.openAccessDialog()
   }
 
-  return { startAdd }
+  /**
+   * Connecting an already-saved (watch-only) address: we know which wallet it
+   * belongs to, so jump straight to that wallet's connect flow and skip the
+   * wallet chooser. Falls back to the chooser when the wallet can't be resolved
+   * to a static config (e.g. MetaMask and other dynamic injected connectors).
+   */
+  const connectSaved = (account: SavedAccount): void => {
+    // 1) Static config (Enkrypt, Unisat, Ledger, Trezor, keystore, mnemonic,
+    //    privateKey, MEW) resolved from the saved connectorId.
+    // 2) Otherwise a dynamic injected wallet (MetaMask, Rabby, …) matched by
+    //    name against the detected EIP-6963 providers — same list the chooser
+    //    renders, so connect() drives the identical flow.
+    // 3) If neither resolves (wallet not installed/detected) fall back to the
+    //    chooser, which openAccessDialog already shows.
+    const config =
+      (account.connectorId
+        ? walletConfigs[account.connectorId as defaultWalletId]
+        : undefined) ??
+      newWalletList.value.find(w => w.name === account.walletName)
+    accessStore.openAccessDialog()
+    if (config) void connect(config)
+  }
+
+  return { startAdd, connectSaved }
 }

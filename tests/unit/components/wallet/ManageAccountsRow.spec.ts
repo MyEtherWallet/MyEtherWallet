@@ -60,9 +60,9 @@ describe('ManageAccountsRow', () => {
     expect(w.emitted('select')).toHaveLength(1)
   })
 
-  it('shows "Open Paper wallet" only on the active row', () => {
+  it('shows "Open Paper wallet" on every row', () => {
     expect(factory({ isActive: true }).find('[data-test="menu-paper"]').exists()).toBe(true)
-    expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(false)
+    expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(true)
   })
 
   it('emits a rename request from the menu (rename happens in a modal)', async () => {

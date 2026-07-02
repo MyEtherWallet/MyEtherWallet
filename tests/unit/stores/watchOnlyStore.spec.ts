@@ -52,6 +52,17 @@ describe('watchOnlyStore (extended)', () => {
     expect(s.savedAccounts).toHaveLength(0)
   })
 
+  it('marks only the active account as signing; other signing-type addresses are watch-only', () => {
+    const s = useWatchOnlyStore()
+    s.addWallet('0xAAA', evmChain, 'INJECTED', 'EVM', 'A') // signing wallet type
+    s.addWallet('0xBBB', evmChain, 'INJECTED', 'EVM', 'B') // signing wallet type
+    walletState.walletAddress = '0xaaa'
+    walletState.isWatchOnly = false
+    const byAddr = Object.fromEntries(s.allAccounts.map(a => [a.address, a.kind]))
+    expect(byAddr['0xAAA']).toBe('signing') // active → connected
+    expect(byAddr['0xBBB']).toBe('watchOnly') // previously-connected → view-only, not connected
+  })
+
   it('renameAccount rejects a duplicate name and applies a unique one', () => {
     const s = useWatchOnlyStore()
     s.addWallet('0x1', evmChain, 'INJECTED', 'EVM', 'W')
