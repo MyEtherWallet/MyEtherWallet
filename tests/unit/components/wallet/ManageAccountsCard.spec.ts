@@ -42,12 +42,11 @@ describe('ManageAccountsCard', () => {
     expect(w.text()).toContain('$130.23')
   })
 
-  it('emits rename with the edited value from the menu', async () => {
+  it('emits a rename request from the menu (rename happens in a modal)', async () => {
     const w = factory()
     await w.get('[data-test="menu-rename"]').trigger('click')
-    await w.get('[data-test="rename-input"]').setValue('Savings')
-    await w.get('[data-test="rename-save"]').trigger('click')
-    expect(w.emitted('rename')![0]).toEqual(['Savings'])
+    expect(w.emitted('rename')).toHaveLength(1)
+    expect(w.emitted('rename')![0]).toEqual([])
   })
 
   it('emits delete only after inline confirm', async () => {
@@ -58,9 +57,9 @@ describe('ManageAccountsCard', () => {
     expect(w.emitted('delete')).toHaveLength(1)
   })
 
-  it('hides "Open Paper wallet" for watch-only accounts', () => {
+  it('shows "Open Paper wallet" on the active card regardless of kind (like the home card)', () => {
     expect(factory({ account: { kind: 'signing' } }).find('[data-test="menu-paper"]').exists()).toBe(true)
-    expect(factory({ account: { kind: 'watchOnly' } }).find('[data-test="menu-paper"]').exists()).toBe(false)
+    expect(factory({ account: { kind: 'watchOnly' } }).find('[data-test="menu-paper"]').exists()).toBe(true)
   })
 
   it('shows Disconnect (card is always active) and emits disconnect', async () => {

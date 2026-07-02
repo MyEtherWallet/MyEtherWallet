@@ -60,17 +60,16 @@ describe('ManageAccountsRow', () => {
     expect(w.emitted('select')).toHaveLength(1)
   })
 
-  it('hides "Open Paper wallet" for watch-only accounts', () => {
-    expect(factory({ account: { kind: 'signing' } }).find('[data-test="menu-paper"]').exists()).toBe(true)
-    expect(factory({ account: { kind: 'watchOnly' } }).find('[data-test="menu-paper"]').exists()).toBe(false)
+  it('shows "Open Paper wallet" only on the active row', () => {
+    expect(factory({ isActive: true }).find('[data-test="menu-paper"]').exists()).toBe(true)
+    expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(false)
   })
 
-  it('emits rename with the edited value', async () => {
+  it('emits a rename request from the menu (rename happens in a modal)', async () => {
     const w = factory()
     await w.get('[data-test="menu-rename"]').trigger('click')
-    await w.get('[data-test="rename-input"]').setValue('Savings')
-    await w.get('[data-test="rename-save"]').trigger('click')
-    expect(w.emitted('rename')![0]).toEqual(['Savings'])
+    expect(w.emitted('rename')).toHaveLength(1)
+    expect(w.emitted('rename')![0]).toEqual([])
   })
 
   it('emits delete only after inline confirm', async () => {

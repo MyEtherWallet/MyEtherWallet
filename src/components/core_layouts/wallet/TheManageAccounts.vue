@@ -87,8 +87,8 @@
                     :balance-loading="balanceLoadingFor(activeAccount)"
                     @copy="copy(activeAccount.address)"
                     @refresh="refresh(activeAccount)"
-                    @rename="onRename(activeAccount, $event)"
-                    @paper="openPaperWallet = true"
+                    @rename="onRenameRequest(activeAccount)"
+                    @paper="onPaper"
                     @explorer="openExplorer(activeAccount)"
                     @disconnect="onDisconnect"
                     @delete="onDelete(activeAccount)"
@@ -116,8 +116,8 @@
                       @select="onSelect(acc)"
                       @copy="copy(acc.address)"
                       @refresh="refresh(acc)"
-                      @rename="onRename(acc, $event)"
-                      @paper="openPaperWallet = true"
+                      @rename="onRenameRequest(acc)"
+                      @paper="onPaper"
                       @explorer="openExplorer(acc)"
                       @disconnect="onDisconnect"
                       @delete="onDelete(acc)"
@@ -135,7 +135,7 @@
 
               <!-- Section 3: detected footer + connect-another -->
               <div class="shrink-0 p-4">
-                <div v-if="detectedAddress" class="mb-4 rounded-12 bg-grey-faded px-3 py-2">
+                <div v-if="detectedAddress" class="mb-4 rounded-12 bg-surface-hover px-3 py-2">
                   <div class="flex items-center justify-between">
                     <div class="min-w-0">
                       <p class="text-s-12 text-info">{{ $t('multi_address.detected') }}</p>
@@ -166,8 +166,6 @@
                 </button>
               </div>
             </div>
-
-            <the-paper-wallet v-model:is-open="openPaperWallet" />
           </div>
 
           <!-- Network panel: fills the same fixed height; content scrolls internally via ManageAccountsNetworkView -->
@@ -189,11 +187,21 @@
         </div>
       </div>
     </transition>
+
+    <!-- Modals live outside the popup's v-if so they survive the popup closing
+         (Paper wallet and Rename both close the popup before opening). -->
+    <the-paper-wallet v-model:is-open="openPaperWallet" />
+    <manage-accounts-rename-modal
+      v-model:is-open="renameOpen"
+      :current-name="renameTarget?.addressName"
+      :name-taken="isRenameNameTaken"
+      @save="onRenameSave"
+    />
   </teleport>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch, type CSSProperties } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
@@ -202,6 +210,7 @@ import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRo
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
 import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
+import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
 import { useAddAccount } from '@/composables/useAddAccount'
@@ -214,7 +223,10 @@ import { useChainsStore } from '@/stores/chainsStore'
 import { truncateAddress } from '@/utils/filters'
 import { analytics } from '@/analytics'
 import { MultiAddressEvent } from '@/analytics/events'
-import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
+import {
+  isNameUnique,
+  type SavedAccount,
+} from '@/stores/saved_accounts/savedAccountsLogic'
 import type { Chain, ChainType } from '@/mew_api/types'
 
 const GAP = 24
@@ -230,7 +242,14 @@ const accountsPanelRef = ref<HTMLElement | null>(null)
 const networkPanelRef = ref<HTMLElement | null>(null)
 const popupRef = ref<HTMLElement | null>(null)
 
+// getBoundingClientRect() is not reactive, so track the viewport size and let it
+// invalidate these computeds — the clone and popup then re-anchor on resize
+// instead of freezing at their open-time coordinates.
+const { width: viewportWidth, height: viewportHeight } = useWindowSize()
+
 const popupStyle = computed(() => {
+  void viewportWidth.value
+  void viewportHeight.value
   if (props.anchor) {
     const rect = props.anchor.getBoundingClientRect()
     return {
@@ -242,6 +261,8 @@ const popupStyle = computed(() => {
 })
 
 const triggerCloneStyle = computed<CSSProperties | null>(() => {
+  void viewportWidth.value
+  void viewportHeight.value
   if (!props.anchor) return null
   const rect = props.anchor.getBoundingClientRect()
   return {
@@ -301,6 +322,8 @@ const balanceLoadingFor = (acc: SavedAccount): boolean =>
   isActive(acc) ? isLoadingBalances.value : isLoading.value && isCompatible(acc)
 
 const openPaperWallet = ref(false)
+const renameOpen = ref(false)
+const renameTarget = ref<SavedAccount | null>(null)
 const hasBackfilled = ref(false)
 const detectedMessage = ref('')
 
@@ -352,22 +375,44 @@ const onDelete = (acc: SavedAccount): void => {
   void deleteAccount(acc)
 }
 const onDisconnect = (): void => {
+  // Keep the popup open so the user stays in the manage-accounts context.
   walletStore.disconnectWallet()
-  openDialog.value = false
 }
-const onRename = (acc: SavedAccount, name: string): void => {
+// Rename opens a dedicated modal (Figma 7619-10566): close the popup, then open
+// the modal for the chosen account. Saving applies the rename.
+const onRenameRequest = (acc: SavedAccount): void => {
+  renameTarget.value = acc
+  openDialog.value = false
+  renameOpen.value = true
+}
+const onRenameSave = (name: string): void => {
+  const acc = renameTarget.value
+  if (!acc) return
   const res = watchOnlyStore.renameAccount(acc.id, name)
   if (res.ok) void analytics.trackMultiAddressEvent(MultiAddressEvent.RENAMED)
 }
+// Surfaced by the modal on Save: true when another saved address already uses
+// this name (the current account is excluded so a no-op rename is allowed).
+const isRenameNameTaken = (name: string): boolean =>
+  renameTarget.value
+    ? !isNameUnique(watchOnlyStore.watchOnlyAddresses, name, renameTarget.value.id)
+    : false
+// Paper wallet opens a modal (same as the home wallet card); close the popup first.
+const onPaper = (): void => {
+  openDialog.value = false
+  openPaperWallet.value = true
+}
+// Both the footer "Connect another" button and the watch-only card's "Connect
+// address" button open the existing connect flow. Close the popup first so the
+// wallet/extension access dialog isn't hidden behind it; on a successful connect
+// walletStore.setAddress makes that address active, so re-opening the popup shows
+// it already selected (activeId tracks the connected wallet address).
 const onAdd = (): void => {
   void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
-  startAdd()
-}
-const onConnect = (): void => {
-  void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
-  startAdd()
   openDialog.value = false
+  startAdd()
 }
+const onConnect = onAdd
 const refresh = (acc: SavedAccount): void => {
   void refreshOne({
     id: acc.id,
@@ -379,6 +424,7 @@ const refresh = (acc: SavedAccount): void => {
 const openExplorer = (acc: SavedAccount): void => {
   const url = chainsStore.selectedChain?.blockExplorerAddr?.replace('[[address]]', acc.address)
   if (url) window.open(url, '_blank')
+  openDialog.value = false
 }
 const copy = (address: string): void => {
   void navigator.clipboard.writeText(address)
@@ -402,5 +448,10 @@ const saveDetected = (): void => {
 watch(detectedAddress, () => { detectedMessage.value = '' })
 
 const anchorRef = computed(() => props.anchor ?? null)
-onClickOutside(popupRef, () => { openDialog.value = false }, { ignore: [anchorRef] })
+// Ignore the trigger anchor and any teleported account menu (rendered at body
+// level, outside popupRef) — otherwise clicking a menu item counts as an outside
+// click and closes the popup regardless of the item's own handler.
+onClickOutside(popupRef, () => { openDialog.value = false }, {
+  ignore: [anchorRef, '.app-popup-menu-floating'],
+})
 </script>

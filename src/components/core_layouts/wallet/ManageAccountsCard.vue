@@ -32,21 +32,22 @@
       <div class="flex items-center gap-3 flex-shrink-0">
         <button
           :aria-label="$t('multi_address.menu.refresh')"
-          class="w-6 h-6 flex items-center justify-center"
-          @click="$emit('refresh')"
+          class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors"
+          @click="onRefresh"
         >
-          <arrow-path-icon class="w-6 h-6" />
+          <arrow-path-icon class="w-6 h-6" :class="{ 'animate-spin': spinning }" />
         </button>
         <button
           :aria-label="$t('multi_address.menu.copy')"
-          class="w-6 h-6 flex items-center justify-center"
-          @click="$emit('copy')"
+          class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors"
+          @click="onCopy"
         >
-          <clipboard-document-icon class="w-6 h-6" />
+          <check-icon v-if="copied" class="w-6 h-6" />
+          <clipboard-document-icon v-else class="w-6 h-6" />
         </button>
         <app-pop-up-menu placeholder="account menu" location="right" teleport>
           <template #menu-button="{ toggleMenu }">
-            <button data-test="menu-button" class="w-6 h-6 flex items-center justify-center" @click="toggleMenu">
+            <button data-test="menu-button" class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors" @click="toggleMenu">
               <ellipsis-vertical-icon class="w-6 h-6" />
             </button>
           </template>
@@ -56,7 +57,7 @@
               :kind="account.kind"
               :is-active="true"
               :toggle="toggleMenu"
-              @rename="startRename"
+              @rename="$emit('rename')"
               @copy="$emit('copy')"
               @refresh="$emit('refresh')"
               @paper="$emit('paper')"
@@ -81,22 +82,8 @@
       </div>
     </div>
 
-    <!-- Rename inline (mirrors the row so a card rename routes identically) -->
-    <div v-if="renaming" class="relative flex items-center gap-2">
-      <input
-        data-test="rename-input"
-        v-model="draftName"
-        class="flex-1 min-w-0 rounded-8 px-2 py-1 text-s-14 text-black"
-        @keyup.enter="saveRename"
-      />
-      <button data-test="rename-save" class="text-s-12 font-semibold" @click="saveRename">
-        {{ $t('common.save') }}
-      </button>
-      <button class="text-s-12" @click="renaming = false">{{ $t('common.cancel') }}</button>
-    </div>
-
     <!-- Footer status -->
-    <div v-else class="relative flex items-end justify-between gap-2 text-s-14">
+    <div class="relative flex items-end justify-between gap-2 text-s-14">
       <template v-if="account.kind === 'signing'">
         <span class="flex items-center gap-1">
           <span class="w-2 h-2 rounded-full bg-success flex-shrink-0" aria-hidden="true" />
@@ -128,6 +115,7 @@ import {
   ClipboardDocumentIcon,
   ArrowPathIcon,
   EllipsisVerticalIcon,
+  CheckIcon,
 } from '@heroicons/vue/24/outline'
 import { EyeIcon } from '@heroicons/vue/16/solid'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -148,14 +136,27 @@ const emit = defineEmits<{
   paper: []
   explorer: []
   disconnect: []
-  rename: [name: string]
+  rename: []
   delete: []
   connect: []
 }>()
 
 const confirmingDelete = ref(false)
-const renaming = ref(false)
-const draftName = ref('')
+
+// Action feedback: spin the sync icon briefly, swap copy → check briefly.
+const spinning = ref(false)
+const copied = ref(false)
+
+const onRefresh = (): void => {
+  emit('refresh')
+  spinning.value = true
+  setTimeout(() => (spinning.value = false), 800)
+}
+const onCopy = (): void => {
+  emit('copy')
+  copied.value = true
+  setTimeout(() => (copied.value = false), 1500)
+}
 
 const onRemove = (): void => {
   confirmingDelete.value = true
@@ -164,14 +165,4 @@ const onRemove = (): void => {
 const mewCardUrl = computed(
   () => `https://mewcard.mewapi.io/?address=${props.account.address}`,
 )
-
-const startRename = (): void => {
-  draftName.value = props.account.addressName
-  renaming.value = true
-}
-const saveRename = (): void => {
-  const name = draftName.value.trim()
-  if (name) emit('rename', name)
-  renaming.value = false
-}
 </script>

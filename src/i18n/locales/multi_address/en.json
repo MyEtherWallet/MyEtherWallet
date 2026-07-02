@@ -24,6 +24,13 @@
     "extension_prompt": "To connect, open your extension and select the address shown above.",
     "network_title": "Networks",
     "network_search": "Search",
+    "rename": {
+      "title": "Rename address",
+      "subtitle": "Enter a new name and save",
+      "placeholder": "Type here...",
+      "save": "Save",
+      "duplicate": "Name already in use, please type a different one"
+    },
     "menu": {
       "rename": "Rename",
       "copy": "Copy address",

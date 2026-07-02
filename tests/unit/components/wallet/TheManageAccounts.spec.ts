@@ -40,14 +40,19 @@ const stubs = {
   AddressTriggerPill: { name: 'AddressTriggerPill', template: '<button />' },
   TheCurrentNetwork: true, ThePaperWallet: true,
   ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
+  ManageAccountsRenameModal: {
+    name: 'ManageAccountsRenameModal',
+    props: ['isOpen', 'currentName'],
+    template: '<div data-test="rename-modal" :data-open="isOpen" @click="$emit(\'save\', \'Renamed\')" />',
+  },
   ManageAccountsCard: {
     name: 'ManageAccountsCard',
     props: ['account', 'balance'],
-    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\', \'New\')"><button data-test="card-disconnect" @click.stop="$emit(\'disconnect\')" /><button data-test="card-connect-btn" @click.stop="$emit(\'connect\')" /></div>',
+    template: '<div data-test="active-card" :data-id="account.id" @click="$emit(\'rename\')"><button data-test="card-disconnect" @click.stop="$emit(\'disconnect\')" /><button data-test="card-connect-btn" @click.stop="$emit(\'connect\')" /></div>',
   },
   ManageAccountsRow: {
     props: ['account', 'isActive'],
-    template: '<div class="row" :data-id="account.id" :data-active="isActive" @click="$emit(\'rename\', \'New\')"></div>',
+    template: '<div class="row" :data-id="account.id" :data-active="isActive" @click="$emit(\'rename\')"></div>',
   },
 }
 const factory = () =>
@@ -66,16 +71,21 @@ describe('TheManageAccounts', () => {
     expect(w.text()).toContain('2')
   })
 
-  it('routes a card rename to renameAccount', async () => {
+  it('opens the rename modal on a card rename request and saving calls renameAccount', async () => {
     const w = factory()
-    await w.get('[data-test="active-card"]').trigger('click')
+    await w.get('[data-test="active-card"]').trigger('click') // emits rename → opens modal + closes popup
+    expect(w.get('[data-test="rename-modal"]').attributes('data-open')).toBe('true')
+    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
+    await w.get('[data-test="rename-modal"]').trigger('click') // stub emits save
     expect(renameAccount).toHaveBeenCalled()
   })
 
-  it('disconnects the wallet and closes the popup when the card emits disconnect', async () => {
+  it('disconnects the wallet but keeps the popup open when the card emits disconnect', async () => {
     const w = factory()
     await w.get('[data-test="card-disconnect"]').trigger('click')
     expect(walletStore.disconnectWallet).toHaveBeenCalledTimes(1)
+    // Popup stays open (no close emitted) so the user stays in the manage-accounts context.
+    expect(w.emitted('update:openDialog')).toBeUndefined()
   })
 
   it('starts the add-account flow and closes when the card emits connect', async () => {
@@ -90,9 +100,11 @@ describe('TheManageAccounts', () => {
     expect(backfill).toHaveBeenCalledTimes(1)
   })
 
-  it('routes a row rename to renameAccount', async () => {
+  it('opens the rename modal on a row rename request and saving calls renameAccount', async () => {
     const w = factory()
-    await w.findAll('.row')[0].trigger('click')
+    await w.findAll('.row')[0].trigger('click') // emits rename → opens modal
+    expect(w.get('[data-test="rename-modal"]').attributes('data-open')).toBe('true')
+    await w.get('[data-test="rename-modal"]').trigger('click') // stub emits save
     expect(renameAccount).toHaveBeenCalled()
   })
 

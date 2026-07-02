@@ -30,7 +30,7 @@
             v-show="openSelect"
             ref="floating"
             :style="floatingStyle"
-            class="fixed z-[2200]"
+            class="fixed z-[2200] app-popup-menu-floating"
           >
             <div
               class="min-w-[180px] max-w-[calc(100vw-24px)] bg-white shadow-xl rounded-3xl border border-grey-10 overflow-hidden"

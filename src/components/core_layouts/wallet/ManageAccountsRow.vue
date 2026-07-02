@@ -1,7 +1,7 @@
 <template>
   <div
-    class="flex items-center gap-3 pl-4 pr-2 py-4 rounded-16"
-    :class="{ 'bg-surface-hover': isActive }"
+    class="flex items-center gap-3 pl-4 pr-2 py-4 rounded-16 transition-colors"
+    :class="isActive ? 'bg-surface-hover' : 'hover:bg-grey-5'"
   >
     <button
       data-test="row-body"
@@ -82,7 +82,7 @@
           :kind="account.kind"
           :is-active="isActive"
           :toggle="toggleMenu"
-          @rename="startRename"
+          @rename="$emit('rename')"
           @copy="$emit('copy')"
           @refresh="$emit('refresh')"
           @paper="$emit('paper')"
@@ -105,19 +105,6 @@
       </template>
     </app-pop-up-menu>
   </div>
-
-  <div v-if="renaming" class="flex items-center gap-2 pb-2 px-4">
-    <input
-      data-test="rename-input"
-      v-model="draftName"
-      class="flex-1 border border-grey-10 rounded-8 px-2 py-1 text-s-14"
-      @keyup.enter="saveRename"
-    />
-    <button data-test="rename-save" class="text-primary text-s-12" @click="saveRename">
-      {{ $t('common.save') }}
-    </button>
-    <button class="text-s-12" @click="renaming = false">{{ $t('common.cancel') }}</button>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -131,38 +118,27 @@ import { truncateAddress, formatFiat } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import type { AccountBalance } from '@/composables/useAccountBalances'
 
-const props = defineProps<{
+defineProps<{
   account: SavedAccount
   isActive: boolean
   balance?: AccountBalance
   balanceLoading?: boolean
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   select: []
   copy: []
   refresh: []
   paper: []
   explorer: []
   disconnect: []
-  rename: [name: string]
+  rename: []
   delete: []
 }>()
 
 const confirmingDelete = ref(false)
-const renaming = ref(false)
-const draftName = ref('')
 
-const startRename = (): void => {
-  draftName.value = props.account.addressName
-  renaming.value = true
-}
 const onRemove = (): void => {
   confirmingDelete.value = true
-}
-const saveRename = (): void => {
-  const name = draftName.value.trim()
-  if (name) emit('rename', name)
-  renaming.value = false
 }
 </script>
