@@ -249,7 +249,7 @@ const { width: viewportWidth, height: viewportHeight } = useWindowSize()
 
 // Below this width the trigger can sit far from the right edge, so anchoring the
 // popup to it would push it off-screen — pin it to the right instead.
-const isSmallScreen = computed<boolean>(() => viewportWidth.value < 640)
+const isSmallScreen = computed<boolean>(() => viewportWidth.value < 480)
 
 const popupStyle = computed(() => {
   void viewportHeight.value
