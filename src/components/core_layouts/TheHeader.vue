@@ -87,13 +87,7 @@
       <div class="flex flex-1 items-center justify-end gap-2 ml-auto min-w-0">
         <!-- GLOBAL SEARCH -->
         <module-global-search />
-        <!-- Address menu: sibling of global search (NOT inside the wallet-area trap)
-             so, like the search, it can lift above the dim overlay when open while the
-             rest of the header stays dimmed. -->
-        <the-address-menu
-          v-if="isWalletConnected"
-          @open-change="addressPopupOpen = $event"
-        />
+        <the-address-menu v-if="isWalletConnected" />
         <!-- Wallet area, trapped in its own stacking context so internal z-index
              can't escape and paint over the search overlay. -->
         <div class="relative z-[0] flex items-center gap-2">
@@ -137,13 +131,6 @@
           : 'opacity-0 pointer-events-none'
       "
       @click="closeSearch"
-    />
-    <!-- Address-menu dim overlay (mirrors the search overlay): dims the page + the
-         rest of the header while the address popup is open. The address trigger sits
-         above it via its own z-[2] (set in TheAddressMenu when open). -->
-    <div
-      v-if="addressPopupOpen"
-      class="fixed inset-0 bg-black/40 z-[1] transition-opacity"
     />
   </div>
 </template>
@@ -190,8 +177,6 @@ const { isOpen: isSearchOpen, close: closeSearch } = useGlobalSearch()
  ------------------------------*/
 
 const showMobileMenu = computed<boolean>(() => !isXLMinAndUp.value)
-
-const addressPopupOpen = ref(false)
 
 /** ------------------------------
  * Menu Items

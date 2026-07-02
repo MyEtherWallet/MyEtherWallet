@@ -18,7 +18,7 @@ const store = {
   renameAccount, tryAddAddress, backfill,
   watchOnlyAddresses: { EVM: [], BITCOIN: [] },
 }
-const walletStore = { detectedAddress: ref<string | null>(null), disconnectWallet: vi.fn(), clearDetectedAddress }
+const walletStore = { detectedAddress: ref<string | null>(null), walletAddress: '0xA000000000000000000000000000000000000001', isWatchOnly: false, disconnectWallet: vi.fn(), clearDetectedAddress }
 
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => store }))
 vi.mock('@/composables/useAccountSwitch', () => ({ useAccountSwitch: () => ({ switchTo, deleteAccount }) }))
@@ -34,6 +34,7 @@ import TheManageAccounts from '@/components/core_layouts/wallet/TheManageAccount
 
 const stubs = {
   Teleport: true,
+  AppBlockie: true, ChevronDownIcon: true,
   TheCurrentNetwork: true, ThePaperWallet: true,
   ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
   ManageAccountsCard: {

@@ -1,7 +1,50 @@
 <template>
   <teleport to="#app">
-    <!-- Popup (the dim overlay lives in TheHeader, mirroring global search, so the
-         address trigger can sit above it while the rest of the header is dimmed) -->
+    <!-- Full-screen dim backdrop. Teleported into #app so global z-index applies and
+         no header stacking context can trap it: it covers the page, side drawers
+         (z-100) and the entire header (z-10). Only the trigger clone and the popup,
+         teleported into the same layer at higher z, sit above it. -->
+    <transition
+      enter-from-class="opacity-0"
+      enter-active-class="transition-opacity ease-out duration-200"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-active-class="transition-opacity ease-in duration-150"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="openDialog"
+        class="fixed inset-0 z-[2100] bg-black/40"
+        @click="openDialog = false"
+      />
+    </transition>
+
+    <!-- Trigger clone: bright above the backdrop, positioned exactly over the real
+         trigger. Clicking it closes the popup. -->
+    <button
+      v-if="openDialog && triggerCloneStyle"
+      :style="triggerCloneStyle"
+      class="hoverNoBG p-1 xs:py-2 xs:px-3 rounded-[24px] xs:rounded-full shadow-button shadow-button-elevated bg-white flex items-center"
+      @click="openDialog = false"
+    >
+      <app-blockie
+        :address="cloneAddress"
+        :size="6"
+        class="mr-1 rounded-full"
+      />
+      <div v-if="walletStore.isWatchOnly" class="text-left ml-1">
+        <p class="text-s-8 text-info mb-[2px] -mt-1">{{ $t('common.watch_only') }}</p>
+        <div class="mr-2 font-medium text-info text-s-12 leading-p-100">
+          {{ truncateAddress(cloneAddress, 6) }}
+        </div>
+      </div>
+      <div v-else class="mr-2 ml-1 font-medium text-s-14 leading-p-100">
+        {{ truncateAddress(cloneAddress, 6) }}
+      </div>
+      <chevron-down-icon class="w-3 h-3 xs:w-4 xs:h-4 ml-auto xs:mr-1" />
+    </button>
+
+    <!-- Popup -->
     <transition
       enter-from-class="opacity-0 scale-95"
       enter-active-class="transform ease-out duration-200 transition"
@@ -14,7 +57,7 @@
         v-if="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2101] w-[384px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] h-[600px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
         <div class="relative h-full overflow-hidden">
@@ -163,11 +206,13 @@
   </teleport>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, type CSSProperties } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { ChevronRightIcon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon } from '@heroicons/vue/24/solid'
+import AppBlockie from '@/components/AppBlockie.vue'
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
 import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
@@ -208,6 +253,19 @@ const popupStyle = computed(() => {
   return { top: '76px', right: '16px' }
 })
 
+const triggerCloneStyle = computed<CSSProperties | null>(() => {
+  if (!props.anchor) return null
+  const rect = props.anchor.getBoundingClientRect()
+  return {
+    position: 'fixed',
+    top: `${rect.top}px`,
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+    height: `${rect.height}px`,
+    zIndex: 2101,
+  }
+})
+
 watch(openDialog, val => {
   if (!val) view.value = 'accounts'
 })
@@ -225,6 +283,7 @@ const { startAdd } = useAddAccount()
 const { balances, fetchFor, refreshOne } = useAccountBalances()
 const walletStore = useWalletStore()
 const { detectedAddress } = storeToRefs(walletStore)
+const cloneAddress = computed(() => walletStore.walletAddress ?? '')
 const chainsStore = useChainsStore()
 
 const openPaperWallet = ref(false)
