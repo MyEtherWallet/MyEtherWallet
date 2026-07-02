@@ -74,7 +74,7 @@
       <span class="flex-1 text-left font-normal text-s-14 leading-[20px] text-black">
         {{ $t('multi_address.menu.disconnect') }}
       </span>
-      <link-icon class="w-4 h-4 text-black" />
+      <link-slash-icon class="w-4 h-4 text-black" />
     </button>
 
     <button
@@ -99,7 +99,7 @@ import {
   DocumentIcon,
   ArrowTopRightOnSquareIcon,
   PencilSquareIcon,
-  LinkIcon,
+  LinkSlashIcon,
 } from '@heroicons/vue/24/solid'
 
 type MenuAction =
