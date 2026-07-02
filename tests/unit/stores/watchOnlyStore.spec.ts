@@ -35,6 +35,14 @@ describe('watchOnlyStore (extended)', () => {
     expect(s.watchOnlyAddresses.EVM).toHaveLength(2)
   })
 
+  it('rejects storing an address in a mismatched-type bucket (EVM addr under BITCOIN)', () => {
+    const s = useWatchOnlyStore()
+    s.addWallet('0xAbC0000000000000000000000000000000000001', evmChain, 'INJECTED', 'BITCOIN', 'W')
+    expect(s.watchOnlyAddresses.BITCOIN).toHaveLength(0)
+    s.addWallet('bc1qexampleaddressxxxxxxxxxxxxxxxxxxxxxxxx', evmChain, 'INJECTED', 'EVM', 'W')
+    expect(s.watchOnlyAddresses.EVM).toHaveLength(0)
+  })
+
   it('addWallet enforces the 20-total cap (extra adds are dropped)', () => {
     const s = useWatchOnlyStore()
     for (let i = 0; i < 22; i++) s.addWallet('0x' + i, evmChain, 'INJECTED', 'EVM', 'W')

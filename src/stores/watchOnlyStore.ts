@@ -107,6 +107,11 @@ export const useWatchOnlyStore = defineStore('useWatchOnlyStore', () => {
     type: ChainType,
     walletName: string,
   ): void => {
+    // Guard against a chain-type switch race storing an address in the wrong
+    // bucket (e.g. an EVM address landing under BITCOIN, creating a phantom
+    // duplicate). EVM addresses are 0x-prefixed; Bitcoin addresses are not.
+    const looksEvm = address.toLowerCase().startsWith('0x')
+    if ((type === 'BITCOIN') === looksEvm) return
     const bucket = watchOnlyAddresses.value[type] ?? []
     const prior = bucket.find(
       e => e.address.toLowerCase() === address.toLowerCase(),
