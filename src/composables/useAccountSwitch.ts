@@ -1,13 +1,10 @@
 import { useWalletStore } from '@/stores/walletStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useGlobalStore } from '@/stores/globalStore'
-import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import WatchOnlyWallet from '@/providers/common/watchOnlyWallet'
-import { walletConfigs } from '@/modules/access/common/walletConfigs'
-import type { defaultWalletId } from '@/modules/access/common/walletConfigs'
 import {
   promoteNext,
   type SavedAccount,
@@ -20,7 +17,6 @@ export function useAccountSwitch() {
   const walletStore = useWalletStore()
   const chainsStore = useChainsStore()
   const globalStore = useGlobalStore()
-  const accessStore = useAccessStore()
   const watchOnlyStore = useWatchOnlyStore()
   const toastStore = useToastStore()
 
@@ -57,20 +53,13 @@ export function useAccountSwitch() {
     const chain = chainsStore.selectedChain as Chain | undefined
     if (!chain) return
 
-    if (account.kind === 'watchOnly') {
-      await activateReadOnly(
-        account.address, chain, account.providerType,
-        account.chainType, account.walletName, account.walletConfigType,
-      )
-      return
-    }
-
-    // signing → trigger the existing unlock/connect flow
-    accessStore.setSelectedChain(chain)
-    const view =
-      walletConfigs[account.connectorId as defaultWalletId]?.walletViewType ?? 'default'
-    accessStore.openAccessDialog()
-    accessStore.setCurrentView(view)
+    // Selecting a row only VIEWS the address (read-only) and updates the active card —
+    // it never launches the connect/unlock flow. Only the card's "Connect address"
+    // button triggers connecting (handled separately via useAddAccount).
+    await activateReadOnly(
+      account.address, chain, account.providerType,
+      account.chainType, account.walletName, account.walletConfigType,
+    )
   }
 
   const deleteAccount = async (account: SavedAccount): Promise<void> => {

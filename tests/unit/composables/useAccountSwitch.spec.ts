@@ -64,10 +64,10 @@ describe('useAccountSwitch', () => {
     expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
 
-  it('signing target opens the connect flow instead of setting a wallet', async () => {
+  it('signing target also switches read-only (view) and never opens the connect flow', async () => {
     await useAccountSwitch().switchTo(acc({ kind: 'signing' }))
-    expect(accessStore.openAccessDialog).toHaveBeenCalledTimes(1)
-    expect(walletStore.setWallet).not.toHaveBeenCalled()
+    expect(walletStore.setWallet).toHaveBeenCalledTimes(1)
+    expect(accessStore.openAccessDialog).not.toHaveBeenCalled()
   })
 
   it('deleteAccount removes and promotes the next entry as a read-only view when active', async () => {
