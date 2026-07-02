@@ -68,7 +68,15 @@ export const useWalletStore = defineStore('walletStore', () => {
     _walletType: WalletConfigType,
   ): Promise<void> => {
     const _address = await newWallet.getAddress()
-    const isRestricted = await checkAddressRestriction(_address)
+    // A failed restriction check (network hiccup, unsupported address format)
+    // must not abort the connection and leave the user with no wallet — treat an
+    // error as not-restricted. A genuine restriction still redirects to /blocked.
+    let isRestricted = false
+    try {
+      isRestricted = await checkAddressRestriction(_address)
+    } catch {
+      isRestricted = false
+    }
     const tradingRestricted = isTradingRestrictedInRegion.value
     const canTrade = !tradingRestricted && !isRestricted
     userProperties.canTrade = canTrade
