@@ -38,7 +38,7 @@
       leave-to-class="opacity-0 scale-95"
     >
       <div
-        v-if="openDialog"
+        v-show="openDialog"
         ref="popupRef"
         :style="popupStyle"
         class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] h-[720px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
