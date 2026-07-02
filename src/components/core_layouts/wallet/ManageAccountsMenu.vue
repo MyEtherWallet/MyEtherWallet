@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-1 p-1">
+  <div class="flex flex-col gap-1 p-1 w-[232px]">
     <button
       data-test="menu-rename"
       type="button"
