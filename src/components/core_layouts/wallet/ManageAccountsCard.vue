@@ -40,7 +40,7 @@
         >
           <clipboard-document-icon class="w-6 h-6" />
         </button>
-        <app-pop-up-menu placeholder="account menu" location="right">
+        <app-pop-up-menu placeholder="account menu" location="right" teleport>
           <template #menu-button="{ toggleMenu }">
             <button data-test="menu-button" class="w-6 h-6 flex items-center justify-center" @click="toggleMenu">
               <ellipsis-vertical-icon class="w-6 h-6" />

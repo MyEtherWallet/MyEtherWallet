@@ -62,7 +62,7 @@
       <template v-else-if="balance">${{ balance.usdValue.toFixed(2) }}</template>
     </div>
 
-    <app-pop-up-menu placeholder="account menu" location="right">
+    <app-pop-up-menu placeholder="account menu" location="right" teleport>
       <template #menu-button="{ toggleMenu }">
         <button data-test="menu-button" class="p-1" @click="toggleMenu">
           <ellipsis-vertical-icon class="w-5 h-5" />
