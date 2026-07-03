@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import {
   ChevronLeftIcon,
@@ -73,7 +73,8 @@ import { truncateAddress } from '@/utils/filters'
 
 const accessStore = useAccessStore()
 const { addressSavedInfo: info } = storeToRefs(accessStore)
-const { connect } = useConnectWallet()
+const { connect, openExtensionAccounts, watchExtensionAccounts } =
+  useConnectWallet()
 
 const isOpen = computed<boolean>({
   get: () => !!info.value,
@@ -85,13 +86,35 @@ const isOpen = computed<boolean>({
 // Back returns to the wallet chooser (still open underneath).
 const onBack = (): void => accessStore.clearAddressSavedInfo()
 
-// Informational only — the user switches the active address in their extension.
-const onOpenWallet = (): void => {}
-
 // Re-attempt the same wallet's connect (picks up the extension's new address).
-const onTryAgain = (): void => {
+// Guarded so overlapping triggers (button + accountsChanged) only connect once.
+const retry = (): void => {
   const config = info.value?.config
+  if (!config) return
   accessStore.clearAddressSavedInfo()
-  if (config) void connect(config)
+  void connect(config)
 }
+const onTryAgain = retry
+
+// "Open <wallet>": open the extension's account picker, then re-attempt.
+const onOpenWallet = async (): Promise<void> => {
+  const config = info.value?.config
+  if (!config) return
+  await openExtensionAccounts(config)
+  retry()
+}
+
+// While the modal is up, auto-retry when the user switches account directly in
+// the extension. Clearing the info tears the listener down (watch on info).
+let cleanup: (() => void) | null = null
+watch(
+  info,
+  v => {
+    cleanup?.()
+    cleanup = null
+    if (v?.config) cleanup = watchExtensionAccounts(v.config, retry)
+  },
+  { immediate: true },
+)
+onUnmounted(() => cleanup?.())
 </script>

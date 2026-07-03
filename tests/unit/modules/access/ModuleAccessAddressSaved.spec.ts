@@ -3,6 +3,8 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 
 const connect = vi.fn()
+const openExtensionAccounts = vi.fn(() => Promise.resolve())
+const watchExtensionAccounts = vi.fn(() => () => {})
 const clearAddressSavedInfo = vi.fn()
 const config = { id: 'metamask', name: 'MetaMask' }
 const addressSavedInfo = ref<Record<string, unknown> | null>({
@@ -17,7 +19,11 @@ const accessStore = { addressSavedInfo, clearAddressSavedInfo }
 
 vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => accessStore }))
 vi.mock('@/modules/access/composables/useConnectWallet', () => ({
-  useConnectWallet: () => ({ connect }),
+  useConnectWallet: () => ({
+    connect,
+    openExtensionAccounts,
+    watchExtensionAccounts,
+  }),
 }))
 // storeToRefs passthrough so the plain-object store works in the template
 vi.mock('pinia', async importOriginal => {
@@ -63,12 +69,20 @@ describe('ModuleAccessAddressSaved', () => {
     expect(connect).toHaveBeenCalledWith(config)
   })
 
-  it('open-wallet is informational (no connect, no clear)', async () => {
+  it('open-wallet opens the extension account picker then re-attempts the connect', async () => {
     clearAddressSavedInfo.mockClear()
     connect.mockClear()
+    openExtensionAccounts.mockClear()
     const w = factory()
     await w.get('[data-test="address-saved-open"]').trigger('click')
-    expect(connect).not.toHaveBeenCalled()
-    expect(clearAddressSavedInfo).not.toHaveBeenCalled()
+    await Promise.resolve()
+    expect(openExtensionAccounts).toHaveBeenCalledWith(config)
+    expect(connect).toHaveBeenCalledWith(config)
+  })
+
+  it('registers an accountsChanged watcher while shown', () => {
+    watchExtensionAccounts.mockClear()
+    factory()
+    expect(watchExtensionAccounts).toHaveBeenCalledWith(config, expect.any(Function))
   })
 })

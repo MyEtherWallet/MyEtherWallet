@@ -8,7 +8,7 @@ import {
   type WalletConfig,
   WalletConfigType,
 } from '@/modules/access/common/walletConfigs'
-import { useProviderStore } from '@/stores/providerStore'
+import { useProviderStore, type Provider } from '@/stores/providerStore'
 import { storeToRefs } from 'pinia'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
@@ -347,9 +347,49 @@ export const useConnectWallet = () => {
       connectWallet(wallet)
     }
   }
+  const _findInjected = (config: WalletConfig): Provider | undefined =>
+    Eip6963Providers.value.find(
+      p =>
+        p.info.name.toLowerCase() === config.name.toLowerCase() ||
+        p.info.name.toLowerCase() === config.id.toLowerCase(),
+    )
+
+  /** Open the extension's account-selection UI so the user can switch the active
+   *  address (EVM injected). Best-effort no-op if the provider isn't found. */
+  const openExtensionAccounts = async (config: WalletConfig): Promise<void> => {
+    const injected = _findInjected(config)
+    if (!injected) return
+    try {
+      await injected.provider.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }],
+      })
+    } catch {
+      /* user dismissed the extension prompt */
+    }
+  }
+
+  /** Re-run `cb` when the user switches account in the extension. Returns a
+   *  cleanup fn; no-op if the provider isn't found. */
+  const watchExtensionAccounts = (
+    config: WalletConfig,
+    cb: () => void,
+  ): (() => void) => {
+    const injected = _findInjected(config)
+    if (!injected) return () => {}
+    const handler = (): void => cb()
+    injected.provider.on('accountsChanged', handler)
+    const p = injected.provider as {
+      removeListener?: (e: string, h: (...a: unknown[]) => void) => void
+    }
+    return () => p.removeListener?.('accountsChanged', handler)
+  }
+
   return {
     wagmiWalletData,
     clickedWallet,
     connect,
+    openExtensionAccounts,
+    watchExtensionAccounts,
   }
 }
