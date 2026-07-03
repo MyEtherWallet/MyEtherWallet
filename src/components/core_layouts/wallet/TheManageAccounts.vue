@@ -517,8 +517,14 @@ const copy = (address: string): void => {
 const saveDetected = (): void => {
   if (!detectedAddress.value) return
   const chain = chainsStore.selectedChain as Chain
+  // Associate the saved address with the real connected wallet (e.g. "MetaMask")
+  // so it displays correctly and can be reconnected directly by name.
   const res = watchOnlyStore.tryAddAddress(
-    detectedAddress.value, chain, 'INJECTED', chain.type as ChainType, 'Detected',
+    detectedAddress.value,
+    chain,
+    'INJECTED',
+    chain.type as ChainType,
+    walletName.value || 'Detected',
   )
   if (!res.added) {
     detectedMessage.value =
