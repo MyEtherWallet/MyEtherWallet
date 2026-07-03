@@ -35,6 +35,8 @@ export function useAddAccount() {
       })
       return
     }
+    // Adding a new address: a duplicate active address should warn ("already saved").
+    accessStore.setExpectNewAddress(true)
     accessStore.openAccessDialog()
   }
 
@@ -57,6 +59,9 @@ export function useAddAccount() {
         ? walletConfigs[account.connectorId as defaultWalletId]
         : undefined) ??
       newWalletList.value.find(w => w.name === account.walletName)
+    // Connecting a specific saved address (upgrade), not adding a new one — so a
+    // matching active address connects instead of showing "already saved".
+    accessStore.setExpectNewAddress(false)
     accessStore.openAccessDialog()
     if (config) void connect(config)
   }

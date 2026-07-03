@@ -63,7 +63,9 @@ export const useConnectWallet = () => {
           e => e.address.toLowerCase() === address.toLowerCase(),
         )
       : undefined
-    if (existing) {
+    // Only warn when the user is adding a *new* address; connecting a specific
+    // saved (watch-only) address should upgrade it to signing, not warn.
+    if (existing && accessStore.expectNewAddress) {
       accessStore.setAddressSavedInfo({
         address,
         addressName: existing.addressName,

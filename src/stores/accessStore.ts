@@ -29,6 +29,7 @@ export const useAccessStore = defineStore('accessStore', () => {
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false
     currentView.value = 'default'
+    expectNewAddress.value = false
   }
 
   const currentView = ref<WalletView>('default')
@@ -95,6 +96,13 @@ export const useAccessStore = defineStore('accessStore', () => {
   const clearAddressSavedInfo = (): void => {
     addressSavedInfo.value = null
   }
+  // True only while adding a *new* address ("Connect another"): a duplicate then
+  // means "already saved". Connecting a specific saved address (upgrade
+  // watch-only → signing) leaves this false so it connects instead of warning.
+  const expectNewAddress = ref(false)
+  const setExpectNewAddress = (v: boolean): void => {
+    expectNewAddress.value = v
+  }
 
   /**------------------------
    * Selected Chain
@@ -134,5 +142,7 @@ export const useAccessStore = defineStore('accessStore', () => {
     addressSavedInfo,
     setAddressSavedInfo,
     clearAddressSavedInfo,
+    expectNewAddress,
+    setExpectNewAddress,
   }
 })
