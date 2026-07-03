@@ -145,26 +145,34 @@
 
               <!-- Section 3: detected footer + connect-another -->
               <div class="shrink-0 p-4">
-                <div v-if="detectedAddress" class="mb-4 rounded-12 bg-surface-hover px-3 py-2">
-                  <div class="flex items-center justify-between">
-                    <div class="min-w-0">
-                      <p class="text-s-12 text-info">{{ $t('multi_address.detected') }}</p>
-                      <p class="font-mono text-s-14 truncate">{{ truncateAddress(detectedAddress, 6, 4) }}</p>
+                <div v-if="detectedAddress" class="mb-4 flex items-center gap-2 px-2">
+                  <div class="flex-1 min-w-0">
+                    <p class="text-s-12 text-[#575757] leading-[18px]">
+                      {{ $t('multi_address.detected_wallet', { wallet: detectedWalletName }) }}
+                    </p>
+                    <div class="flex items-center gap-1.5 min-w-0">
+                      <span class="text-s-16 font-semibold text-black leading-[22px] truncate">
+                        {{ truncateAddress(detectedAddress, 6, 4) }}
+                      </span>
+                      <img
+                        v-if="detectedWalletIcon"
+                        :src="detectedWalletIcon"
+                        alt=""
+                        aria-hidden="true"
+                        class="size-[22px] rounded-full object-contain bg-[#f5f5f5] p-[3px] shrink-0"
+                      />
                     </div>
-                    <button
-                      data-test="save-detected"
-                      class="text-primary text-s-14 border border-primary rounded-full px-3 py-1"
-                      @click="saveDetected"
-                    >
-                      {{ $t('multi_address.save_address') }}
-                    </button>
+                    <p v-if="detectedMessage" data-test="detected-message" class="text-s-12 text-error mt-1">
+                      {{ detectedMessage }}
+                    </p>
                   </div>
-                  <p data-test="detected-prompt" class="text-s-12 text-info mt-1">
-                    {{ $t('multi_address.extension_prompt') }}
-                  </p>
-                  <p v-if="detectedMessage" data-test="detected-message" class="text-s-12 text-error mt-1">
-                    {{ detectedMessage }}
-                  </p>
+                  <button
+                    data-test="save-detected"
+                    class="h-10 px-3 border-[1.5px] border-primary rounded-[24px] text-primary text-s-14 font-semibold shrink-0"
+                    @click="saveDetected"
+                  >
+                    {{ $t('multi_address.save_address') }}
+                  </button>
                 </div>
 
                 <button
@@ -229,6 +237,7 @@ import {
   type AccountBalance,
 } from '@/composables/useAccountBalances'
 import { useWalletStore } from '@/stores/walletStore'
+import { useProviderStore } from '@/stores/providerStore'
 import { useChainsStore } from '@/stores/chainsStore'
 import { truncateAddress } from '@/utils/filters'
 import { analytics } from '@/analytics'
@@ -324,10 +333,22 @@ const walletStore = useWalletStore()
 const {
   walletAddress,
   detectedAddress,
+  walletName,
   totalFiatPortfolioValueBN,
   tokens,
   isLoadingBalances,
 } = storeToRefs(walletStore)
+
+// The detected address comes from the currently-connected extension wallet, so
+// label it with that wallet's name/icon.
+const providerStore = useProviderStore()
+const detectedWalletName = computed<string>(() => walletName.value || 'wallet')
+const detectedWalletIcon = computed<string>(
+  () =>
+    providerStore.providers.find(
+      p => p.info.name.toLowerCase() === (walletName.value ?? '').toLowerCase(),
+    )?.info.icon ?? '',
+)
 
 // Re-measure the clone/popup after the header reflows on connect/disconnect.
 watch(walletAddress, async () => {

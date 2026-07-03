@@ -295,6 +295,15 @@ watch(isWalletConnected, connected => {
   if (connected) isRestoringWallet.value = false
 })
 
+// Whether an address is already saved for the active chain type (used to skip
+// the "detected address" prompt for addresses we already have).
+const isAddressSaved = (address: string): boolean => {
+  const type = selectedChain.value?.type ?? 'EVM'
+  return (watchOnlyStore.watchOnlyAddresses[type] ?? []).some(
+    e => e.address.toLowerCase() === address.toLowerCase(),
+  )
+}
+
 watch(
   () => wallet.value,
   newVal => {
@@ -311,8 +320,9 @@ watch(
             const next = (accounts as string[])[0]
             if (next && next !== (await wallet.value?.getAddress())) {
               // MEW-1840: do NOT auto-switch. Surface the detected address so the
-              // Manage Accounts popup can offer "Save address".
-              setDetectedAddress(next)
+              // Manage Accounts popup can offer "Save address" — but only when it
+              // isn't already saved (nothing to prompt otherwise).
+              if (!isAddressSaved(next)) setDetectedAddress(next)
             }
           },
         )
@@ -322,9 +332,7 @@ watch(
         unisatInfo?.on('accountsChanged', async (accounts: unknown) => {
           const next = (accounts as string[])[0]
           if (next && next !== (await wallet.value?.getAddress())) {
-            // MEW-1840: do NOT auto-switch. Surface the detected address so the
-            // Manage Accounts popup can offer "Save address".
-            setDetectedAddress(next)
+            if (!isAddressSaved(next)) setDetectedAddress(next)
           }
         })
       }

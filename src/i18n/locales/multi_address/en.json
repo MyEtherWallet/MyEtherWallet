@@ -17,6 +17,7 @@
     "tokens": "tokens",
     "copied": "Copied!",
     "detected": "Detected address",
+    "detected_wallet": "Detected {wallet} address",
     "save_address": "Save address",
     "duplicate_name": "That name is already in use",
     "duplicate_address": "This address is already saved. Select a different one in your extension and try again.",
