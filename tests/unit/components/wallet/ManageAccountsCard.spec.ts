@@ -10,6 +10,7 @@ vi.mock('@/modules/access/common/walletConfigs', () => ({
 }))
 
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
+import { truncateAddress } from '@/utils/filters'
 import type { SavedAccount } from '@/stores/saved_accounts/savedAccountsLogic'
 import { WalletConfigType } from '@/modules/access/common/walletConfigs'
 import { WalletType } from '@/providers/types'
@@ -40,6 +41,18 @@ describe('ManageAccountsCard', () => {
     const w = factory()
     expect(w.text()).toContain('Address 1')
     expect(w.text()).toContain('$130.23')
+  })
+
+  it('shows the wallet name always; the truncated address only for a custom label', () => {
+    const address = '0xAbC0000000000000000000000000000000000001'
+    const truncated = truncateAddress(address, 6, 4)
+    const dflt = factory({ account: { address, addressName: truncated } })
+    expect(dflt.text()).toContain('Metamask')
+    expect(dflt.text()).not.toContain('•')
+    const custom = factory({ account: { address, addressName: 'Savings' } })
+    expect(custom.text()).toContain('•')
+    expect(custom.text()).toContain(truncated)
+    expect(custom.text()).toContain('Metamask')
   })
 
   it('emits a rename request from the menu (rename happens in a modal)', async () => {

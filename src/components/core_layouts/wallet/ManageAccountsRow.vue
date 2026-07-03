@@ -42,11 +42,16 @@
             aria-hidden="true"
           />
         </div>
+        <!-- Wallet name always shows; the truncated address is prepended only for
+             a custom label (a default-named row's bold label already IS the address). -->
         <div
           class="text-s-12 truncate"
           :class="isActive ? 'text-black' : 'text-info'"
         >
-          {{ truncateAddress(account.address, 6, 4) }} • {{ account.walletName }}
+          <template v-if="account.addressName !== truncateAddress(account.address, 6, 4)">
+            {{ truncateAddress(account.address, 6, 4) }} •
+          </template>
+          {{ account.walletName }}
         </div>
       </div>
     </button>

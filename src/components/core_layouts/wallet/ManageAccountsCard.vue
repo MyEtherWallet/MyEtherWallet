@@ -25,10 +25,14 @@
           <template v-else>$0.00</template>
         </p>
         <p class="text-s-24 font-bold leading-[26px] truncate">{{ account.addressName }}</p>
+        <!-- Wallet name always shows; append the truncated address only for a
+             custom label (a default label already IS the address). -->
         <p class="text-s-14 leading-p-140 flex items-center gap-1 min-w-0">
           <span class="truncate">{{ account.walletName }}</span>
-          <span>•</span>
-          <span class="flex-shrink-0">{{ truncateAddress(account.address, 6, 4) }}</span>
+          <template v-if="account.addressName !== truncateAddress(account.address, 6, 4)">
+            <span>•</span>
+            <span class="flex-shrink-0">{{ truncateAddress(account.address, 6, 4) }}</span>
+          </template>
         </p>
       </div>
       <div class="flex items-center gap-3 flex-shrink-0">
