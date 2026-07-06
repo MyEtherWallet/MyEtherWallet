@@ -231,14 +231,21 @@
               </p>
 
               <!-- Currency options -->
-              <div class="flex flex-col gap-1 w-full max-h-[320px] overflow-y-auto -mx-2 px-2">
+              <div
+                ref="currencyListRef"
+                class="flex flex-col gap-1 w-full max-h-[320px] overflow-y-auto -mx-2 px-2"
+              >
                 <div
                   v-for="option in currencyOptions"
                   :key="option.code"
-                  class="relative flex items-center justify-between h-11 px-2 rounded-lg cursor-pointer group"
+                  class="relative flex items-center justify-between gap-3 p-3 rounded-xl cursor-pointer group"
+                  :class="selectedCurrency === option.code ? 'bg-mewBg' : ''"
                   @click="selectCurrency(option.code)"
                 >
-                  <div class="absolute inset-0 rounded-lg bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+                  <div
+                    v-if="selectedCurrency !== option.code"
+                    class="absolute inset-0 rounded-xl bg-[#F5F5F5] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+                  />
                   <div class="relative flex items-center gap-2.5 min-w-0">
                     <app-token-logo
                       :url="getFiatIcon(option.code)"
@@ -296,7 +303,12 @@ const { defaultGasPriceType } = storeToRefs(globalStore)
 const currencyStore = useCurrencyStore()
 const { selectedCurrency } = storeToRefs(currencyStore)
 
-const currencyOptions = SUPPORTED_CURRENCIES
+// Surface the currently selected currency at the top of the list.
+const currencyOptions = computed(() => {
+  const active = SUPPORTED_CURRENCIES.filter(c => c.code === selectedCurrency.value)
+  const rest = SUPPORTED_CURRENCIES.filter(c => c.code !== selectedCurrency.value)
+  return [...active, ...rest]
+})
 
 const selectCurrency = (code: string) => {
   currencyStore.setCurrency(code)
@@ -338,6 +350,7 @@ const popupRef = ref<HTMLElement | null>(null)
 const mainPanelRef = ref<HTMLElement | null>(null)
 const feePanelRef = ref<HTMLElement | null>(null)
 const currencyPanelRef = ref<HTMLElement | null>(null)
+const currencyListRef = ref<HTMLElement | null>(null)
 const containerHeight = ref(0)
 
 const measureHeight = () => {
@@ -356,7 +369,14 @@ watch(isSettingsOpen, val => {
     nextTick(measureHeight)
   }
 })
-watch(view, () => nextTick(measureHeight))
+watch(view, val => {
+  nextTick(() => {
+    measureHeight()
+    if (val === 'currency' && currencyListRef.value) {
+      currencyListRef.value.scrollTop = 0
+    }
+  })
+})
 
 const popupStyle = computed(() => {
   const buttonEl = containerRef.value
