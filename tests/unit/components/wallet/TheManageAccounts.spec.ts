@@ -140,6 +140,15 @@ describe('TheManageAccounts', () => {
     expect(factory().find('[data-test="save-detected"]').exists()).toBe(false)
   })
 
+  it('hides the detected footer when the detected address is already saved', () => {
+    // Race: switching the extension account both saves the new address (connect
+    // auto-retry) and flags it as detected (header listener). Once it's in the
+    // saved list the prompt must disappear reactively.
+    walletStore.detectedAddress.value = '0x1' // already present in allAccounts
+    const w = factory()
+    expect(w.find('[data-test="save-detected"]').exists()).toBe(false)
+  })
+
   it('labels the detected footer with the connected wallet name', () => {
     walletStore.detectedAddress.value = '0x9a8b'
     const w = factory()

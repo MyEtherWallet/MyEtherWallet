@@ -147,7 +147,7 @@
 
               <!-- Section 3: detected footer + connect-another -->
               <div class="shrink-0 p-4">
-                <div v-if="detectedAddress" class="mb-4 flex items-center gap-2 px-2">
+                <div v-if="detectedAddress && !detectedIsSaved" class="mb-4 flex items-center gap-2 px-2">
                   <div class="flex-1 min-w-0">
                     <p class="text-s-12 text-[#575757] leading-[18px]">
                       {{ $t('multi_address.detected_wallet', { wallet: detectedWalletName }) }}
@@ -367,6 +367,22 @@ const detectedWalletIcon = computed<string>(
       p => p.info.name.toLowerCase() === (walletName.value ?? '').toLowerCase(),
     )?.info.icon ?? '',
 )
+
+// The detected address is only worth prompting to save when we don't already
+// have it — and this must stay reactive, not just a one-time check when it's
+// detected. Switching the extension account fires both this popup's auto-retry
+// (which connects + saves the new address) and the header's accountsChanged
+// listener (which flags it as "detected"); the save can win the race, so the
+// address ends up saved yet still flagged. Re-derive visibility from the saved
+// list and drop the prompt once the address is saved.
+const detectedIsSaved = computed<boolean>(() => {
+  const d = detectedAddress.value?.toLowerCase()
+  if (!d) return false
+  return allAccounts.value.some(a => a.address.toLowerCase() === d)
+})
+watch(detectedIsSaved, saved => {
+  if (saved) walletStore.clearDetectedAddress()
+})
 
 // Re-measure the clone/popup after the header reflows on connect/disconnect.
 watch(walletAddress, async () => {
