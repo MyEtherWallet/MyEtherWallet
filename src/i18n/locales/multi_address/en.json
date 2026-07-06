@@ -34,6 +34,11 @@
       "open_wallet": "Open {wallet}",
       "try_again": "Try again"
     },
+    "connect_address_modal": {
+      "title": "Connect address",
+      "subtitle": "To connect, please open your {wallet} extension and select the following address:",
+      "open_wallet": "Open {wallet}"
+    },
     "rename": {
       "title": "Rename address",
       "subtitle": "Enter a new name and save",

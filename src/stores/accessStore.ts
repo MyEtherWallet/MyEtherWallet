@@ -30,6 +30,7 @@ export const useAccessStore = defineStore('accessStore', () => {
     isOpenAccessDialog.value = false
     currentView.value = 'default'
     expectNewAddress.value = false
+    intendedAddress.value = null
   }
 
   const currentView = ref<WalletView>('default')
@@ -104,6 +105,28 @@ export const useAccessStore = defineStore('accessStore', () => {
     expectNewAddress.value = v
   }
 
+  // The specific address the user is trying to connect ("Connect address"). An
+  // extension only connects its active account, so if it differs we must prompt
+  // the user to select this address in the extension.
+  const intendedAddress = ref<string | null>(null)
+  const setIntendedAddress = (addr: string | null): void => {
+    intendedAddress.value = addr
+  }
+  const connectAddressInfo = ref<{
+    address: string
+    walletName: string
+    walletIcon: string
+    config: WalletConfig
+  } | null>(null)
+  const setConnectAddressInfo = (
+    info: typeof connectAddressInfo.value,
+  ): void => {
+    connectAddressInfo.value = info
+  }
+  const clearConnectAddressInfo = (): void => {
+    connectAddressInfo.value = null
+  }
+
   /**------------------------
    * Selected Chain
    -------------------------*/
@@ -144,5 +167,10 @@ export const useAccessStore = defineStore('accessStore', () => {
     clearAddressSavedInfo,
     expectNewAddress,
     setExpectNewAddress,
+    intendedAddress,
+    setIntendedAddress,
+    connectAddressInfo,
+    setConnectAddressInfo,
+    clearConnectAddressInfo,
   }
 })

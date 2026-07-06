@@ -63,18 +63,32 @@ export const useConnectWallet = () => {
           e => e.address.toLowerCase() === address.toLowerCase(),
         )
       : undefined
-    // Only warn when the user is adding a *new* address; connecting a specific
-    // saved (watch-only) address should upgrade it to signing, not warn.
+    const walletIcon = typeof config.icon === 'string' ? config.icon : ''
+    // Adding a *new* address ("Connect another"): warn if the active address is
+    // already saved instead of silently no-opping.
     if (existing && accessStore.expectNewAddress) {
       accessStore.setAddressSavedInfo({
         address,
         addressName: existing.addressName,
         walletName: config.name,
-        walletIcon: typeof config.icon === 'string' ? config.icon : '',
+        walletIcon,
         config,
       })
       // Reset the dialog to the chooser so the back button on the modal returns
       // there instead of the connecting spinner view.
+      accessStore.setCurrentView('default')
+      return
+    }
+    // Connecting a *specific* saved address: an extension only connects its active
+    // account, so if that isn't the intended address, prompt the user to select it.
+    const intended = accessStore.intendedAddress
+    if (intended && address.toLowerCase() !== intended.toLowerCase()) {
+      accessStore.setConnectAddressInfo({
+        address: intended,
+        walletName: config.name,
+        walletIcon,
+        config,
+      })
       accessStore.setCurrentView('default')
       return
     }

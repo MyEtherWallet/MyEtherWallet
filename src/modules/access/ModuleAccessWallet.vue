@@ -76,8 +76,9 @@
       </div>
     </template>
   </app-dialog>
-  <!-- Overlaid step: the extension's active address is already saved -->
+  <!-- Overlaid steps: extension active address already saved / not the intended one -->
   <module-access-address-saved />
+  <module-access-connect-address />
 </template>
 <script setup lang="ts">
 import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
@@ -99,19 +100,28 @@ import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
 import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
+import ModuleAccessConnectAddress from './ModuleAccessConnectAddress.vue'
 import { computed, watch } from 'vue'
 
 /**-------------------------------
  * Access Wallet Dialog
  -------------------------------*/
 const accessStore = useAccessStore()
-const { isOpenAccessDialog, currentView, clickedWeb3Wallet, addressSavedInfo } =
-  storeToRefs(accessStore)
+const {
+  isOpenAccessDialog,
+  currentView,
+  clickedWeb3Wallet,
+  addressSavedInfo,
+  connectAddressInfo,
+} = storeToRefs(accessStore)
 
-// Hide the big chooser while the "address already saved" modal is up so only it
-// shows; keep isOpenAccessDialog true so the modal's back button restores it.
+// Hide the big chooser while an overlaid step modal is up so only it shows; keep
+// isOpenAccessDialog true so the modal's back button restores the chooser.
 const bigDialogOpen = computed<boolean>({
-  get: () => isOpenAccessDialog.value && !addressSavedInfo.value,
+  get: () =>
+    isOpenAccessDialog.value &&
+    !addressSavedInfo.value &&
+    !connectAddressInfo.value,
   set: v => {
     isOpenAccessDialog.value = v
   },
