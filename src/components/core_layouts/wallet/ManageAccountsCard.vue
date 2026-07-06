@@ -51,7 +51,12 @@
           <check-icon v-if="copied" class="w-6 h-6" />
           <clipboard-document-icon v-else class="w-6 h-6" />
         </button>
-        <app-pop-up-menu placeholder="account menu" location="right" teleport>
+        <app-pop-up-menu
+          placeholder="account menu"
+          location="right"
+          teleport
+          @update:open="open => { if (!open) confirmingDelete = false }"
+        >
           <template #menu-button="{ toggleMenu }">
             <button data-test="menu-button" class="w-6 h-6 flex items-center justify-center text-white hover:text-white/70 transition-colors" @click="toggleMenu">
               <ellipsis-vertical-icon class="w-6 h-6" />

@@ -77,7 +77,12 @@
       <template v-else-if="balance">${{ formatFiat(balance.usdValue) }}</template>
     </div>
 
-    <app-pop-up-menu placeholder="account menu" location="right" teleport>
+    <app-pop-up-menu
+      placeholder="account menu"
+      location="right"
+      teleport
+      @update:open="open => { if (!open) confirmingDelete = false }"
+    >
       <template #menu-button="{ toggleMenu }">
         <button data-test="menu-button" class="p-1" @click="toggleMenu">
           <ellipsis-vertical-icon class="w-5 h-5" />

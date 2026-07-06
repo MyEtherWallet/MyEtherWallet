@@ -103,7 +103,7 @@
  * </app-pop-up-menu>
  */
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
-import { ref, type CSSProperties, type PropType } from 'vue'
+import { ref, watch, type CSSProperties, type PropType } from 'vue'
 import { onClickOutside, useEventListener } from '@vueuse/core'
 
 enum PopupLocation {
@@ -164,6 +164,14 @@ const floatingStyle = ref<CSSProperties>({})
  * controls the open state of the select dropdown
  */
 const openSelect = ref(false)
+
+/**
+ * Surface the open state so consumers can react to ANY close (including an
+ * outside-click, which this component handles itself) — e.g. to reset a
+ * transient inline-confirm state in the menu content.
+ */
+const emit = defineEmits<{ 'update:open': [boolean] }>()
+watch(openSelect, v => emit('update:open', v))
 
 /**
  * Compute fixed-position coords from the trigger bounding rect.
