@@ -30,6 +30,9 @@ vi.mock('@/composables/useAddAccount', () => ({ useAddAccount: () => ({ startAdd
 vi.mock('@/composables/useAccountBalances', () => ({ useAccountBalances: () => ({ balances: ref({}), isLoading: ref(false), fetchFor, refreshOne, clear: vi.fn() }) }))
 vi.mock('@/stores/walletStore', () => ({ useWalletStore: () => walletStore }))
 vi.mock('@/stores/providerStore', () => ({ useProviderStore: () => ({ providers: [] }) }))
+vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => ({ connectAddressInfo: ref(null), closeAccessDialog: vi.fn(), clearConnectAddressInfo: vi.fn() }) }))
+// Mock the module to cut the useConnectWallet → wagmi/ledger import chain.
+vi.mock('@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue', () => ({ default: { name: 'ManageAccountsConnectAddressView', template: '<div />' } }))
 vi.mock('@/stores/chainsStore', () => ({ useChainsStore: () => ({ selectedChain: { name: 'ETH', type: 'EVM', blockExplorerAddr: 'https://e/[[address]]' } }) }))
 vi.mock('@/analytics', () => ({ analytics: { trackMultiAddressEvent: vi.fn() } }))
 vi.mock('@/analytics/events', () => ({ MultiAddressEvent: { OPENED: 'o', SWITCHED: 's', ADD_STARTED: 'a', DELETED: 'd', RENAMED: 'r', DETECTED_SAVED: 'ds' } }))
@@ -42,6 +45,7 @@ const stubs = {
   AddressTriggerPill: { name: 'AddressTriggerPill', template: '<button />' },
   TheCurrentNetwork: true, ThePaperWallet: true,
   ManageAccountsNetworkView: { name: 'ManageAccountsNetworkView', template: '<div />' },
+  ManageAccountsConnectAddressView: { name: 'ManageAccountsConnectAddressView', template: '<div />' },
   ManageAccountsRenameModal: {
     name: 'ManageAccountsRenameModal',
     props: ['isOpen', 'currentName'],
@@ -102,12 +106,13 @@ describe('TheManageAccounts', () => {
     expect(w.emitted('update:openDialog')).toBeUndefined()
   })
 
-  it('connects the saved address directly (skips the chooser) and closes when the card emits connect', async () => {
+  it('connects the saved address directly (skips the chooser) and keeps the popup open', async () => {
     const w = factory()
     await w.get('[data-test="card-connect-btn"]').trigger('click')
     expect(connectSaved).toHaveBeenCalledTimes(1)
     expect(startAdd).not.toHaveBeenCalled()
-    expect(w.emitted('update:openDialog')?.at(-1)).toEqual([false])
+    // Popup stays open so the connect-address prompt can slide in.
+    expect(w.emitted('update:openDialog')).toBeUndefined()
   })
 
   it('backfills once on open', () => {

@@ -41,7 +41,8 @@
         v-show="openDialog"
         ref="popupRef"
         :style="popupStyle"
-        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] h-[720px] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)]"
+        class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)] transition-[height] duration-[400ms] ease-[cubic-bezier(0.25,0.1,0,1)]"
+        :class="view === 'connect-address' ? 'h-[440px]' : 'h-[720px]'"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
         <div class="relative h-full overflow-hidden">
@@ -202,6 +203,20 @@
               @selected="view = 'accounts'"
             />
           </div>
+
+          <!-- Connect-address panel: slides in like the network view when a saved
+               address is being connected but isn't active in the extension. -->
+          <div
+            :inert="view !== 'connect-address'"
+            class="absolute inset-0 w-full h-full"
+            :style="{
+              transform: view === 'connect-address' ? 'translateX(0)' : `translateX(calc(100% + ${GAP}px))`,
+              opacity: view === 'connect-address' ? 1 : 0,
+              transition: 'transform 400ms cubic-bezier(0.25, 0.1, 0, 1), opacity 250ms cubic-bezier(0.25, 0.1, 0, 1)',
+            }"
+          >
+            <manage-accounts-connect-address-view @back="view = 'accounts'" />
+          </div>
         </div>
       </div>
     </transition>
@@ -227,6 +242,7 @@ import AddressTriggerPill from '@/components/core_layouts/wallet/AddressTriggerP
 import ManageAccountsRow from '@/components/core_layouts/wallet/ManageAccountsRow.vue'
 import ManageAccountsCard from '@/components/core_layouts/wallet/ManageAccountsCard.vue'
 import ManageAccountsNetworkView from '@/components/core_layouts/wallet/ManageAccountsNetworkView.vue'
+import ManageAccountsConnectAddressView from '@/components/core_layouts/wallet/ManageAccountsConnectAddressView.vue'
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
@@ -239,6 +255,7 @@ import {
 import { useWalletStore } from '@/stores/walletStore'
 import { useProviderStore } from '@/stores/providerStore'
 import { useChainsStore } from '@/stores/chainsStore'
+import { useAccessStore } from '@/stores/accessStore'
 import { truncateAddress } from '@/utils/filters'
 import { analytics } from '@/analytics'
 import { MultiAddressEvent } from '@/analytics/events'
@@ -255,7 +272,7 @@ const openDialog = defineModel<boolean>('openDialog', { default: false })
 
 const props = defineProps<{ anchor?: HTMLElement | null }>()
 
-const view = ref<'accounts' | 'network'>('accounts')
+const view = ref<'accounts' | 'network' | 'connect-address'>('accounts')
 
 const accountsPanelRef = ref<HTMLElement | null>(null)
 const networkPanelRef = ref<HTMLElement | null>(null)
@@ -356,6 +373,15 @@ watch(walletAddress, async () => {
   posTick.value += 1
 })
 const chainsStore = useChainsStore()
+
+// Experiment: show the "connect address" prompt as an in-popup slide panel
+// (mirrors the ModuleAccessConnectAddress modal) instead of the dialog modal.
+const accessStore = useAccessStore()
+const { connectAddressInfo } = storeToRefs(accessStore)
+watch(connectAddressInfo, info => {
+  if (info && openDialog.value) view.value = 'connect-address'
+  else if (!info && view.value === 'connect-address') view.value = 'accounts'
+})
 
 const isActive = (acc: SavedAccount): boolean =>
   acc.id === activeAccount.value?.id
@@ -489,7 +515,7 @@ const onConnect = (): void => {
   const acc = activeAccount.value
   if (!acc) return
   void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
-  openDialog.value = false
+  // Keep the popup open so the connect-address prompt can slide in (experiment).
   connectSaved(acc)
 }
 const refresh = (acc: SavedAccount): void => {

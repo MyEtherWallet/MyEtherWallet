@@ -76,9 +76,9 @@
       </div>
     </template>
   </app-dialog>
-  <!-- Overlaid steps: extension active address already saved / not the intended one -->
+  <!-- Overlaid step: the extension's active address is already saved. (The
+       "select the intended address" prompt now lives in the address popup.) -->
   <module-access-address-saved />
-  <module-access-connect-address />
 </template>
 <script setup lang="ts">
 import WalletsDefaultList from '@/modules/access/components/wallets_lists/WalletsListDefault.vue'
@@ -100,7 +100,6 @@ import ModuleAccessHardwareWallet from './ModuleAccessHardwareWallet.vue'
 import ModuleAccessWalletConnect from './ModuleAccessWalletConnect.vue'
 import ModuleAccessWeb3Wallet from './ModuleAccessWeb3Wallet.vue'
 import ModuleAccessAddressSaved from './ModuleAccessAddressSaved.vue'
-import ModuleAccessConnectAddress from './ModuleAccessConnectAddress.vue'
 import { computed, watch } from 'vue'
 
 /**-------------------------------
