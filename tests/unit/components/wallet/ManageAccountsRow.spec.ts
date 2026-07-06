@@ -95,9 +95,12 @@ describe('ManageAccountsRow', () => {
     expect(w.emitted('delete')).toHaveLength(1)
   })
 
-  it('never shows Disconnect in a row menu (only the active card can disconnect)', () => {
+  it('shows Disconnect only on the active row and emits disconnect', async () => {
     expect(factory({ isActive: false }).find('[data-test="menu-disconnect"]').exists()).toBe(false)
-    expect(factory({ isActive: true }).find('[data-test="menu-disconnect"]').exists()).toBe(false)
+    const w = factory({ isActive: true })
+    expect(w.find('[data-test="menu-disconnect"]').exists()).toBe(true)
+    await w.get('[data-test="menu-disconnect"]').trigger('click')
+    expect(w.emitted('disconnect')).toHaveLength(1)
   })
 
   it('emits copy / refresh / explorer from the menu', async () => {
