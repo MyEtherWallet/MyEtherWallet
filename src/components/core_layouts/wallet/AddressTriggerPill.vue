@@ -20,7 +20,11 @@
         />
       </span>
       <span class="flex flex-col items-start flex-1 min-w-0">
-        <span class="font-semibold text-s-14 leading-[14px] text-black">
+        <span
+          v-if="isLoadingBalances"
+          class="inline-block w-12 h-3 bg-grey-10 animate-pulse rounded my-[2px]"
+        />
+        <span v-else class="font-semibold text-s-14 leading-[14px] text-black">
           {{ formattedTotalFiatPortfolioValue }}
         </span>
         <span class="flex items-center gap-1 w-full min-w-0">
@@ -76,8 +80,12 @@ import { truncateAddress } from '@/utils/filters'
 withDefaults(defineProps<{ hover?: boolean }>(), { hover: true })
 
 const walletStore = useWalletStore()
-const { walletAddress, isWatchOnly, formattedTotalFiatPortfolioValue } =
-  storeToRefs(walletStore)
+const {
+  walletAddress,
+  isWatchOnly,
+  isLoadingBalances,
+  formattedTotalFiatPortfolioValue,
+} = storeToRefs(walletStore)
 
 const watchOnlyStore = useWatchOnlyStore()
 const chainsStore = useChainsStore()
