@@ -547,10 +547,7 @@ import type {
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import { useFetchWatchlist } from '@/composables/useFetchWatchlist'
-import {
-  formatIntegerValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { useDebounceFn } from '@vueuse/core'
@@ -745,12 +742,8 @@ const formatStock = (
     symbol: item.primaryMarket.symbol,
     name: item.underlyingMarket.name,
     price: priceRaw ? formatFiat(priceRaw).display : '-',
-    marketCap: marketCapRaw
-      ? `$${formatIntegerValue(marketCapRaw).value}`
-      : '-',
-    totalVolume: totalVolumeRaw
-      ? `$${formatIntegerValue(totalVolumeRaw).value}`
-      : '-',
+    marketCap: marketCapRaw ? formatFiat(marketCapRaw).display : '-',
+    totalVolume: totalVolumeRaw ? formatFiat(totalVolumeRaw).display : '-',
     sparklineIn7d: item.primaryMarket.sparkline24h || [],
     coinId: item.primaryMarket.symbol,
     priceChangePercentage24h: item.primaryMarket.priceChangePercentage24h
@@ -876,12 +869,8 @@ const formatToken = (item: GetWebStocksTableResponseItem): DisplayToken => {
     symbol: tableItem.primaryMarket.symbol,
     name: tableItem.underlyingMarket.name,
     price: priceRaw ? formatFiat(priceRaw).display : '-',
-    marketCap: marketCapRaw
-      ? `$${formatIntegerValue(marketCapRaw).value}`
-      : '-',
-    totalVolume: totalVolumeRaw
-      ? `$${formatIntegerValue(totalVolumeRaw).value}`
-      : '-',
+    marketCap: marketCapRaw ? formatFiat(marketCapRaw).display : '-',
+    totalVolume: totalVolumeRaw ? formatFiat(totalVolumeRaw).display : '-',
     sparklineIn7d: tableItem.primaryMarket.sparkline24h,
     coinId: tableItem.primaryMarket.symbol,
     priceChangePercentage24h: tableItem.primaryMarket.priceChangePercentage24h

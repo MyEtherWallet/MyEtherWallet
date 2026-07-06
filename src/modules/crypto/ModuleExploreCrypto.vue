@@ -667,10 +667,7 @@ import type {
   GetWebStocksWatchlistResponseStock,
 } from '@/mew_api/types'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
-import {
-  formatIntegerValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
 import { useCurrency } from '@/composables/useCurrency'
 import { useDebounceFn } from '@vueuse/core'
 import { useWatchlistStore } from '@/stores/watchlistTableStore'
@@ -1086,11 +1083,9 @@ const formatToken = (item: GetWebTokensTableResponseToken): DisplayToken => {
   return {
     ...item,
     price: item.price ? formatFiat(item.price).display : '-',
-    marketCap: item.marketCap
-      ? `$${formatIntegerValue(item.marketCap).value}`
-      : '-',
+    marketCap: item.marketCap ? formatFiat(item.marketCap).display : '-',
     totalVolume: item.totalVolume
-      ? `$${formatIntegerValue(item.totalVolume).value}`
+      ? formatFiat(item.totalVolume).display
       : '-',
   }
 }
@@ -1112,10 +1107,10 @@ const formatStock = (
       : null,
     priceChangePercentage7d: null,
     totalVolume: item.underlyingMarket.volume24h
-      ? `$${formatIntegerValue(Number(item.underlyingMarket.volume24h)).value}`
+      ? formatFiat(Number(item.underlyingMarket.volume24h)).display
       : '-',
     marketCap: item.underlyingMarket.marketCap
-      ? `$${formatIntegerValue(Number(item.underlyingMarket.marketCap)).value}`
+      ? formatFiat(Number(item.underlyingMarket.marketCap)).display
       : '-',
     addresses: {},
     nativeChains: [],

@@ -78,7 +78,7 @@ const formatIntegerToString = (_value: string | number | BigNumber): string => {
 
 /**
  * GROUP II: Formatted integers
- * Converts an integer value to a FormattedNumber object, returns value in { billions, trillions, "> 1Q"} if > 1 million
+ * Converts an integer value to a FormattedNumber object, returns value in { millions, billions, trillions, quadrillions } if > 1 million
  * @param _value BigNumber || string || number}
  * @return {object} FormattedNumber
  */
@@ -498,14 +498,14 @@ const convertToTrillions = (value: BigNumber): FormattedNumber => {
 }
 
 /**
- * Helper function. returns Quadrillion in FormattedNumber object
+ * Helper function. Converts a value to Quadrillions in FormattedNumber object
  * @param {BigNumber} value - number to convert takes BigNumber || string || number
  * @return {object} - FormatterNumber
  */
 const convertToQuadrillion = (value: BigNumber): FormattedNumber => {
+  const result = value.dividedBy(OneQuadrillion)
   return {
-    value: '> 1Q',
-    unit: FormattedNumberUnit.Q,
+    value: `${getRoundNumber(result, 2).value}${FormattedNumberUnit.Q}`,
     tooltipText: value.toFormat(),
   }
 }
