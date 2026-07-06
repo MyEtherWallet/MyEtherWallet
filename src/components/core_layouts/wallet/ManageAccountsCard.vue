@@ -105,10 +105,20 @@
         </span>
         <button
           data-test="card-connect"
-          class="bg-white rounded-[24px] h-10 px-3 flex items-center flex-shrink-0"
+          class="relative bg-white rounded-[24px] h-10 px-3 flex items-center justify-center flex-shrink-0 disabled:cursor-default"
+          :disabled="connecting"
           @click="$emit('connect')"
         >
-          <span class="font-semibold text-s-14 text-black">{{ $t('multi_address.connect_address') }}</span>
+          <!-- Keep the label in flow (invisible) so the button width never
+               changes; overlay a spinner centered while connecting. -->
+          <span class="font-semibold text-s-14 text-black" :class="{ 'opacity-0': connecting }">{{ $t('multi_address.connect_address') }}</span>
+          <span
+            v-if="connecting"
+            class="absolute inset-0 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            <span class="size-4 rounded-full border-2 border-black/20 border-t-black animate-spin" />
+          </span>
         </button>
       </template>
     </div>
@@ -134,6 +144,7 @@ const props = defineProps<{
   account: SavedAccount
   balance?: AccountBalance
   balanceLoading?: boolean
+  connecting?: boolean
 }>()
 
 const emit = defineEmits<{

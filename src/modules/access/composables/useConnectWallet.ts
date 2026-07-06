@@ -211,12 +211,15 @@ export const useConnectWallet = () => {
       accessStore.clearWeb3ConnectionError()
       accessStore.setClickedWeb3Wallet(wallet)
       accessStore.setCurrentView('web3_wallet')
-      web3Wallet
+      // Returned so callers (e.g. connectSaved) can await the full flow — the
+      // promise settles only after _storeWallet has run, i.e. once the address
+      // is connected or the connect-address prompt has been surfaced.
+      return web3Wallet
         .connect()
-        .then(res => {
+        .then(async res => {
           if (res) {
             try {
-              void _storeWallet(web3Wallet, wallet)
+              await _storeWallet(web3Wallet, wallet)
             } catch (error) {
               accessStore.setWeb3ConnectionError(
                 error instanceof Error ? error.message : String(error),
@@ -336,10 +339,9 @@ export const useConnectWallet = () => {
 
     const isWeb3 = wallet.type.includes(WalletConfigType.EXTENSION)
     if (isWeb3) {
-      _connectWeb3(wallet)
-      return
+      return _connectWeb3(wallet)
     }
-    _connectWagmi(wallet)
+    return _connectWagmi(wallet)
   }
 
   const connect = async (wallet: WalletConfig) => {
@@ -360,7 +362,7 @@ export const useConnectWallet = () => {
       }
       accessStore.setCurrentView(wallet.walletViewType)
     } else {
-      connectWallet(wallet)
+      return connectWallet(wallet)
     }
   }
   const _findInjected = (config: WalletConfig): Provider | undefined =>

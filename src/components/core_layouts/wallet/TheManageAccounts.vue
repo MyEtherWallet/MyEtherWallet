@@ -86,6 +86,7 @@
                     :account="activeAccount"
                     :balance="balanceFor(activeAccount)"
                     :balance-loading="balanceLoadingFor(activeAccount)"
+                    :connecting="connecting"
                     @copy="copy(activeAccount.address)"
                     @refresh="refresh(activeAccount)"
                     @rename="onRenameRequest(activeAccount)"
@@ -509,14 +510,20 @@ const onAdd = (): void => {
   startAdd()
 }
 // Card "Connect address": we already know the wallet for this saved address, so
-// connect directly (skip the chooser). Falls back to the chooser internally when
-// the wallet can't be resolved to a static config.
-const onConnect = (): void => {
+// connect directly without surfacing the access chooser dialog. While the
+// extension responds we show a loader on the button (the popup stays put); on a
+// mismatch the connect-address prompt slides into the popup.
+const connecting = ref(false)
+const onConnect = async (): Promise<void> => {
   const acc = activeAccount.value
-  if (!acc) return
+  if (!acc || connecting.value) return
   void analytics.trackMultiAddressEvent(MultiAddressEvent.ADD_STARTED)
-  // Keep the popup open so the connect-address prompt can slide in (experiment).
-  connectSaved(acc)
+  connecting.value = true
+  try {
+    await connectSaved(acc)
+  } finally {
+    connecting.value = false
+  }
 }
 const refresh = (acc: SavedAccount): void => {
   // The active account's balance comes from walletStore (like the home card),
