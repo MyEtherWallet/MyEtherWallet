@@ -5,7 +5,7 @@ import ManageAccountsMenu from '@/components/core_layouts/wallet/ManageAccountsM
 
 interface FactoryProps {
   kind?: 'signing' | 'watchOnly'
-  isActive?: boolean
+  canDisconnect?: boolean
   toggle?: () => void
 }
 
@@ -13,7 +13,7 @@ const factory = (props: FactoryProps = {}) =>
   mount(ManageAccountsMenu, {
     props: {
       kind: props.kind ?? 'signing',
-      isActive: props.isActive ?? false,
+      canDisconnect: props.canDisconnect ?? false,
       toggle: props.toggle,
     },
     global: { mocks: { $t: (k: string) => k } },
@@ -30,18 +30,17 @@ describe('ManageAccountsMenu', () => {
   })
 
   it('always shows "Open Paper wallet" (available for every address)', () => {
-    expect(factory({ isActive: true }).find('[data-test="menu-paper"]').exists()).toBe(true)
-    expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(true)
+    expect(factory().find('[data-test="menu-paper"]').exists()).toBe(true)
   })
 
-  it('shows "Disconnect" only for the active account', () => {
-    expect(factory({ isActive: true }).find('[data-test="menu-disconnect"]').exists()).toBe(true)
-    expect(factory({ isActive: false }).find('[data-test="menu-disconnect"]').exists()).toBe(false)
+  it('shows "Disconnect" only when disconnect is allowed (active card)', () => {
+    expect(factory({ canDisconnect: true }).find('[data-test="menu-disconnect"]').exists()).toBe(true)
+    expect(factory({ canDisconnect: false }).find('[data-test="menu-disconnect"]').exists()).toBe(false)
   })
 
   it('emits the matching action and closes the menu for non-destructive items', async () => {
     const toggle = vi.fn()
-    const w = factory({ isActive: true, toggle })
+    const w = factory({ canDisconnect: true, toggle })
     await w.get('[data-test="menu-rename"]').trigger('click')
     await w.get('[data-test="menu-copy"]').trigger('click')
     await w.get('[data-test="menu-refresh"]').trigger('click')

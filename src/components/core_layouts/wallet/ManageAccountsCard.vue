@@ -61,7 +61,7 @@
             <manage-accounts-menu
               v-if="!confirmingDelete"
               :kind="account.kind"
-              :is-active="true"
+              :can-disconnect="true"
               :toggle="toggleMenu"
               @rename="$emit('rename')"
               @copy="$emit('copy')"

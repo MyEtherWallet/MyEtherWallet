@@ -65,7 +65,7 @@
     <div class="h-px w-full bg-grey-10" />
 
     <button
-      v-if="isActive"
+      v-if="canDisconnect"
       data-test="menu-disconnect"
       type="button"
       class="flex items-center gap-2 p-3 rounded-12 w-full cursor-pointer hover:bg-[#f5f5f5]"
@@ -114,10 +114,11 @@ type MenuAction =
 const props = withDefaults(
   defineProps<{
     kind: 'signing' | 'watchOnly'
-    isActive?: boolean
+    // Only the active-account card can disconnect; rows never show it.
+    canDisconnect?: boolean
     toggle?: () => void
   }>(),
-  { isActive: false, toggle: undefined },
+  { canDisconnect: false, toggle: undefined },
 )
 
 const emit = defineEmits<(e: MenuAction) => void>()
