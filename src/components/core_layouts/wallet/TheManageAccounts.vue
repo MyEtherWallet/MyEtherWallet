@@ -136,7 +136,7 @@
                     />
                   </template>
                   <p v-else class="text-center text-info py-6">{{ $t('multi_address.empty') }}</p>
-                  <div class="pb-3" />
+                  <div class="pb-10" />
                 </div>
                 <div
                   class="pointer-events-none absolute bottom-0 left-0 right-0 h-8"
