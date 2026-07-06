@@ -541,8 +541,13 @@ export const useWalletStore = defineStore('walletStore', () => {
   const refreshBalances = async (): Promise<void> => {
     if (!wallet.value) return
     setIsLoadingBalances(true)
-    const balances = await wallet.value.getBalance()
-    await useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    try {
+      const balances = await wallet.value.getBalance()
+      await useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    } catch (err) {
+      Sentry.captureException(err)
+      setIsLoadingBalances(false)
+    }
   }
 
   return {
