@@ -5,6 +5,8 @@ import type { TokenBalance, TokenBalanceRaw } from '@/mew_api/types'
 import BigNumber from 'bignumber.js'
 export const MAIN_TOKEN_CONTRACT = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrencyStore } from './currencyStore'
+import { getCurrencySymbol } from '@/utils/currencySymbols'
 import { useChainsStore } from './chainsStore'
 import { storeToRefs } from 'pinia'
 import { formatUnits } from 'viem'
@@ -467,17 +469,32 @@ export const useWalletStore = defineStore('walletStore', () => {
   //TODO: add proper formatting for fiat values
 
   /**
+   * Converts a USD BigNumber into the app-wide selected display currency.
+   * The currency store is accessed lazily here (not at store setup) to avoid a
+   * store-instantiation cycle: walletStore → currencyStore → purchaseStore → walletStore.
+   */
+  const toDisplayCurrency = (usdValue: BigNumber) => {
+    const currencyStore = useCurrencyStore()
+    return {
+      symbol: getCurrencySymbol(currencyStore.selectedCurrency),
+      converted: usdValue.multipliedBy(currencyStore.rate),
+    }
+  }
+
+  /**
    * @formattedTotalFiatPortfolioValue - the total portfolio value in fiat, formatted .
    */
   const formattedTotalFiatPortfolioValue = computed<string>(() => {
-    return `$${totalFiatPortfolioValueBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    const { symbol, converted } = toDisplayCurrency(totalFiatPortfolioValueBN.value)
+    return `${symbol}${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   /**
    * @formattedStockFiatPortfolioValue - the total stock portfolio value in fiat, formatted .
    */
   const formattedStockFiatPortfolioValue = computed<string>(() => {
-    return `$${totalStockBalanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    const { symbol, converted } = toDisplayCurrency(totalStockBalanceFiatBN.value)
+    return `${symbol}${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   /**
@@ -488,7 +505,8 @@ export const useWalletStore = defineStore('walletStore', () => {
   })
 
   const formattedBalanceFiat = computed<string>(() => {
-    return `${balanceFiatBN.value.toFormat(2, BigNumber.ROUND_DOWN)}`
+    const { converted } = toDisplayCurrency(balanceFiatBN.value)
+    return `${converted.toFormat(2, BigNumber.ROUND_DOWN)}`
   })
 
   const hasBalances = computed(() => {

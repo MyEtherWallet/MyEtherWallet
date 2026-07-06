@@ -101,7 +101,7 @@
                       {{ token.formattedPercentage }}
                     </p>
                     <p class="text-info text-s-14">
-                      $ {{ token.usdBalanceFormatted }}
+                      {{ currencySymbol }} {{ token.usdBalanceFormatted }}
                     </p>
                   </div>
                 </div>
@@ -125,7 +125,10 @@ import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'
+import { useCurrency } from '@/composables/useCurrency'
 import { type TokenAllocation } from '@/modules/portfolio/types'
+
+const { currencySymbol } = useCurrency()
 import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { searchArrayByKeysStr } from '@/utils/searchArray'
 import { useRouter } from 'vue-router'

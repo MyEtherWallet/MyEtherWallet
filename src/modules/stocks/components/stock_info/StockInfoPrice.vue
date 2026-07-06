@@ -28,7 +28,7 @@
             <p class="text-s-16 font-medium">
               {{
                 data.primaryMarket?.open24h
-                  ? `$${formatFiatValue(data.primaryMarket.open24h).value}`
+                  ? formatFiat(data.primaryMarket.open24h).display
                   : '-'
               }}
             </p>
@@ -40,7 +40,7 @@
             <p class="text-s-16 font-medium">
               {{
                 data.primaryMarket?.high24h
-                  ? `$${formatFiatValue(data.primaryMarket.high24h).value}`
+                  ? formatFiat(data.primaryMarket.high24h).display
                   : '-'
               }}
             </p>
@@ -52,7 +52,7 @@
             <p class="text-s-16 font-medium">
               {{
                 data.primaryMarket?.low24h
-                  ? `$${formatFiatValue(data.primaryMarket.low24h).value}`
+                  ? formatFiat(data.primaryMarket.low24h).display
                   : '-'
               }}
             </p>
@@ -75,7 +75,7 @@
             <p class="text-s-16 font-medium">
               {{
                 data?.underlyingMarket?.open24h
-                  ? `$${formatFiatValue(data.underlyingMarket.open24h).value}`
+                  ? formatFiat(data.underlyingMarket.open24h).display
                   : '-'
               }}
             </p>
@@ -87,7 +87,7 @@
             <p class="text-s-16 font-medium capitalize">
               {{
                 data?.underlyingMarket?.high24h
-                  ? `$${formatFiatValue(data.underlyingMarket.high24h).value}`
+                  ? formatFiat(data.underlyingMarket.high24h).display
                   : '-'
               }}
             </p>
@@ -99,7 +99,7 @@
             <p class="text-s-16 font-medium">
               {{
                 data?.underlyingMarket?.low24h
-                  ? `$${formatFiatValue(data.underlyingMarket.low24h).value}`
+                  ? formatFiat(data.underlyingMarket.low24h).display
                   : '-'
               }}
             </p>
@@ -112,7 +112,7 @@
 
 <script setup lang="ts">
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
-import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 import type { GetWebStocksInfoSummaryResponse } from '@/mew_api/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { storeToRefs } from 'pinia'
@@ -121,6 +121,8 @@ interface Props {
   data: GetWebStocksInfoSummaryResponse
 }
 defineProps<Props>()
+
+const { formatFiat } = useCurrency()
 
 const walletMenu = useWalletMenuStore()
 const { isOpenSideMenu } = storeToRefs(walletMenu)

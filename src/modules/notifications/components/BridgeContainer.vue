@@ -61,7 +61,7 @@
             />
           </p>
           <p v-if="bridge.fromUsdValue" class="text-s-12 text-info">
-            ${{ bridge.fromUsdValue }}
+            {{ formatFiat(bridge.fromUsdValue).display }}
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@
             />
           </p>
           <p v-if="bridge.toUsdValue" class="text-s-12 text-info">
-            ${{ bridge.toUsdValue }}
+            {{ formatFiat(bridge.toUsdValue).display }}
           </p>
         </div>
       </div>
@@ -176,7 +176,7 @@
               {{ bridge.networkFee }} {{ bridge.fromChainSymbol }}
             </p>
             <p v-if="bridge.networkFeeUSD" class="text-s-12 text-info ml-1">
-              ${{ formatFiatValue(bridge.networkFeeUSD).value }}
+              {{ formatFiat(bridge.networkFeeUSD).display }}
             </p>
           </div>
         </div>
@@ -223,10 +223,10 @@ import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import ExpandTransition from '@/components/transitions/ExpandTransition.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppBlockie from '@/components/AppBlockie.vue'
-import {
-  formatFiatValue,
-  formatFloatingPointValue,
-} from '@/utils/numberFormatHelper'
+import { formatFloatingPointValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
+
+const { formatFiat } = useCurrency()
 
 // Props
 const props = defineProps<{

@@ -66,7 +66,7 @@
         </h1>
         <div>
           <p class="text-s-20 xs:text-s-24 inline">
-            ${{ currentPrice ? formatFiatValue(currentPrice).value : '--' }}
+            {{ currentPrice ? formatFiat(currentPrice).display : '--' }}
           </p>
           <div v-if="priceChangeNum !== null" class="inline-block ml-2">
             <ArrowTrendingDownIcon
@@ -113,10 +113,8 @@ import {
   ArrowTrendingDownIcon,
   ArrowTrendingUpIcon,
 } from '@heroicons/vue/24/outline'
-import {
-  formatFiatValue,
-  formatPercentageValue,
-} from '@/utils/numberFormatHelper'
+import { formatPercentageValue } from '@/utils/numberFormatHelper'
+import { useCurrency } from '@/composables/useCurrency'
 
 const props = defineProps({
   isLoading: { type: Boolean, required: true },
@@ -141,6 +139,8 @@ const props = defineProps({
 })
 
 defineEmits<{ 'toggle-watchlist': [] }>()
+
+const { formatFiat } = useCurrency()
 
 const priceChangeNum = computed(() => {
   if (props.priceChangePercentage === null || props.priceChangePercentage === undefined)

@@ -9,6 +9,8 @@
     "usage_analytics": "Analytics",
     "usage_analytics_tooltip": "Collects anonymous usage data to help improve the app",
     "open": "Open settings",
+    "select_currency": "Select currency",
+    "currency_description": "Choose the currency used to display prices and balances across the app.",
     "select_transaction_fee": "Select transaction fee",
     "fee_description": "This fee is charged by the Ethereum network and fluctuates depending on network traffic. MEW does not profit from this fee."
   }

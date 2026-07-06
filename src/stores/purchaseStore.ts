@@ -377,6 +377,7 @@ export const usePurchaseStore = defineStore('purchase', () => {
     isFetching,
     coinImages,
     exchangeRates,
+    fetchExchangeRates,
     buyableCoinIds,
     fetchPurchaseInfo,
     isBuyable,
