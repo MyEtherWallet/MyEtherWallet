@@ -34,9 +34,9 @@ describe('ManageAccountsMenu', () => {
     expect(factory({ isActive: false }).find('[data-test="menu-paper"]').exists()).toBe(true)
   })
 
-  it('shows "Disconnect" only for the active account', () => {
-    expect(factory({ isActive: true }).find('[data-test="menu-disconnect"]').exists()).toBe(true)
-    expect(factory({ isActive: false }).find('[data-test="menu-disconnect"]').exists()).toBe(false)
+  it('shows "Disconnect" only for signing (connected) accounts, not watch-only', () => {
+    expect(factory({ kind: 'signing' }).find('[data-test="menu-disconnect"]').exists()).toBe(true)
+    expect(factory({ kind: 'watchOnly' }).find('[data-test="menu-disconnect"]').exists()).toBe(false)
   })
 
   it('emits the matching action and closes the menu for non-destructive items', async () => {
