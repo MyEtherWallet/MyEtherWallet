@@ -396,10 +396,11 @@ export const useConnectWallet = () => {
     const injected = _findInjected(config)
     if (!injected) return () => {}
     const handler = (): void => cb()
-    injected.provider.on('accountsChanged', handler)
     const p = injected.provider as {
+      on?: (e: string, h: (...a: unknown[]) => void) => void
       removeListener?: (e: string, h: (...a: unknown[]) => void) => void
     }
+    p.on?.('accountsChanged', handler)
     return () => p.removeListener?.('accountsChanged', handler)
   }
 
