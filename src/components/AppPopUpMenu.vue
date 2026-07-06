@@ -104,7 +104,7 @@
  */
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { ref, type CSSProperties, type PropType } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useEventListener } from '@vueuse/core'
 
 enum PopupLocation {
   LEFT = 'left',
@@ -202,6 +202,24 @@ const toggleMenu = () => {
     targetValue.value = null
   }
 }
+
+/*
+ * The teleported menu is position:fixed with coords frozen at open-time, but its
+ * trigger scrolls with its container (e.g. the overflow-y-auto address list in
+ * the Manage Accounts popup). Recompute while open so it stays anchored instead
+ * of floating off. Capture phase catches scrolls on inner containers too.
+ */
+useEventListener(
+  window,
+  'scroll',
+  () => {
+    if (props.teleport && openSelect.value) computeFloatingStyle()
+  },
+  { capture: true },
+)
+useEventListener(window, 'resize', () => {
+  if (props.teleport && openSelect.value) computeFloatingStyle()
+})
 
 /*
  * Closes the dropdown when clicking outside of it.
