@@ -80,7 +80,9 @@ export interface TokenConfig {
 }
 
 export interface Sparkline {
-  price: string[]
+  // Optional to match the API schema: the server may return a sparkline
+  // object with no price array (e.g. markets without recent history).
+  price?: string[]
 }
 
 export interface Contract {
