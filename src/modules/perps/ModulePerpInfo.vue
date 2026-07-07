@@ -662,7 +662,7 @@
                                 class="p-2 flex items-center hoverBGWhite rounded-12 text-error"
                                 @click.stop="[
                                   toggleMenu(),
-                                  cancelInfoOrder(order),
+                                  openCancelConfirmation(order),
                                 ]"
                               >
                                 {{
@@ -902,7 +902,15 @@
     :order="selectedOrder"
     :cancelling="cancellingOrderId === selectedOrder.orderId"
     @close="showOrderDialog = false"
-    @cancel="cancelInfoOrder"
+    @cancel="openCancelConfirmation"
+  />
+  <perps-cancel-order-confirmation-dialog
+    v-if="orderPendingCancel"
+    v-model:is-open="showCancelConfirmation"
+    :order="orderPendingCancel"
+    :display-symbol="baseCurrency"
+    :is-cancelling="cancellingOrderId === orderPendingCancel.orderId"
+    @confirm="confirmCancelOrder"
   />
   <perps-fill-details-dialog
     v-if="selectedFill"
@@ -923,6 +931,7 @@ import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
 import PerpsOrderDialog from './components/PerpsOrderDialog.vue'
+import PerpsCancelOrderConfirmationDialog from './components/PerpsCancelOrderConfirmationDialog.vue'
 import PerpsFillDetailsDialog from './components/PerpsFillDetailsDialog.vue'
 import PerpsSelectLeverageDialog from './components/PerpsSelectLeverageDialog.vue'
 import PerpsPagination from './components/PerpsPagination.vue'
@@ -1232,6 +1241,24 @@ const cancelInfoOrder = async (order: ApiOrder) => {
   } finally {
     cancellingOrderId.value = null
   }
+}
+
+const orderPendingCancel = ref<ApiOrder | null>(null)
+const showCancelConfirmation = ref(false)
+
+const openCancelConfirmation = (order: ApiOrder) => {
+  orderPendingCancel.value = order
+  showCancelConfirmation.value = true
+}
+
+watch(showCancelConfirmation, isOpen => {
+  if (isOpen) showOrderDialog.value = false
+})
+
+const confirmCancelOrder = async () => {
+  if (!orderPendingCancel.value) return
+  await cancelInfoOrder(orderPendingCancel.value)
+  showCancelConfirmation.value = false
 }
 
 const ordersSkeletonColumns: SkeletonColumn[] = [
