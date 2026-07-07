@@ -250,9 +250,14 @@
 
           <transition name="fade" mode="out-in">
             <div
-              v-if="
-                limitPrice &&
-                (isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) <= 0)
+              v-if="!limitPrice || parseFloat(limitPrice) === 0"
+              class="text-error text-s-12 mb-1"
+            >
+              Target price required
+            </div>
+            <div
+              v-else-if="
+                isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
               "
               class="text-error text-s-12 mb-1"
             >
