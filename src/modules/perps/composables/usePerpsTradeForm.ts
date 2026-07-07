@@ -624,7 +624,10 @@ export function usePerpsTradeForm() {
   })
 
   const limitPriceHasError = computed(() => {
-    if (orderType.value !== 'limit' || !limitPrice.value) return false
+    if (orderType.value !== 'limit') return false
+    // A limit order requires a target price; treat empty as an error so the
+    // input surfaces "Target price required" and the submit button disables.
+    if (!limitPrice.value) return true
     const price = parseFloat(limitPrice.value)
     if (isNaN(price) || price <= 0 || price >= 10_000_000) return true
     if (limitPricePrecisionError.value) return true
@@ -653,6 +656,12 @@ export function usePerpsTradeForm() {
   })
 
   const submitButtonLabel = computed(() => {
+    if (
+      orderType.value === 'limit' &&
+      (!limitPrice.value || parseFloat(limitPrice.value) <= 0)
+    ) {
+      return 'Enter target price'
+    }
     const amt = parseFloat(inputAmount.value)
     if (availableMargin.value * leverage.value < minOrderAmount.value) {
       return `Min. margin required ${formatUsd(minOrderAmount.value)}`
