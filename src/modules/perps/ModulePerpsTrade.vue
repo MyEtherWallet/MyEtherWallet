@@ -346,7 +346,7 @@
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
             </div>
-            <p class="text-info text-s-12 -mt-2 mb-2">
+            <p class="text-info text-s-12 -mt-2 mb-2 truncate">
               Size
               {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
             </p>
