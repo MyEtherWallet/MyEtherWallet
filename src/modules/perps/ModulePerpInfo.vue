@@ -1209,8 +1209,8 @@ const showCancelButton = (order: ApiOrder) => {
   )
 }
 
-const cancelInfoOrder = async (order: ApiOrder) => {
-  if (cancellingOrderId.value === order.orderId) return
+const cancelInfoOrder = async (order: ApiOrder): Promise<boolean> => {
+  if (cancellingOrderId.value === order.orderId) return false
   cancellingOrderId.value = order.orderId
   const market = markets.value.find(m => m.market === order.market)
   const displayMarket = market?.longName ?? market?.displayName ?? order.market
@@ -1225,6 +1225,7 @@ const cancelInfoOrder = async (order: ApiOrder) => {
     })
     showOrderDialog.value = false
     await Promise.all([ordersPagination.refetch(), fetchOpenOrdersCount()])
+    return true
   } catch (e) {
     console.error('Failed to cancel order:', e)
     const msg = (e instanceof Error ? e.message : String(e)).toLowerCase()
@@ -1238,6 +1239,7 @@ const cancelInfoOrder = async (order: ApiOrder) => {
     } else {
       perpsToasts.toastCancelFailedGeneric()
     }
+    return false
   } finally {
     cancellingOrderId.value = null
   }
@@ -1257,8 +1259,8 @@ watch(showCancelConfirmation, isOpen => {
 
 const confirmCancelOrder = async () => {
   if (!orderPendingCancel.value) return
-  await cancelInfoOrder(orderPendingCancel.value)
-  showCancelConfirmation.value = false
+  const succeeded = await cancelInfoOrder(orderPendingCancel.value)
+  if (succeeded) showCancelConfirmation.value = false
 }
 
 const ordersSkeletonColumns: SkeletonColumn[] = [
