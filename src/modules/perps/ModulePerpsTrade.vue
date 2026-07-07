@@ -758,9 +758,8 @@
       :temp-projected-loss="tempProjectedLoss"
       :active-tp-pill="activeTpPill"
       :active-sl-pill="activeSlPill"
-      :take-profit-error="takeProfitPrecisionError"
-      :stop-loss-error="stopLossPrecisionError"
-      :quote-decimals="quoteDecimals"
+      :take-profit-error="takeProfitErrorMessage"
+      :stop-loss-error="stopLossErrorMessage"
       :has-edits="hasAutoCloseEdits"
       @clear-take-profit="clearTempTakeProfit"
       @clear-stop-loss="clearTempStopLoss"
@@ -940,8 +939,8 @@ const {
   limitPricePrecisionError,
   marginPrecisionError,
   closeAmountPrecisionError,
-  takeProfitPrecisionError,
-  stopLossPrecisionError,
+  takeProfitErrorMessage,
+  stopLossErrorMessage,
   quoteDecimals,
   orderError,
   showConfirmModal,
