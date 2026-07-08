@@ -71,7 +71,7 @@
                   class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center"
                   @click="toggleMenu"
                 >
-                  <span class="mr-2">{{ activeSortValue }}</span>
+                  <span class="mr-2">{{ activeSortLabel }}</span>
                   <ArrowLongUpIcon
                     v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
@@ -243,7 +243,10 @@
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-medium text-black">
-                  $ {{ token.price ? formatFiatValue(token.price).value : '0.00' }}
+                  $
+                  {{
+                    token.price ? formatFiatValue(token.price).value : '0.00'
+                  }}
                 </p>
               </div>
             </div>
@@ -483,6 +486,10 @@ enum SortDirection {
 }
 
 const activeSortValue = ref<SortValueString>(SortValueString.RANK)
+const activeSortLabel = computed(() => {
+  const option = sortOptions.value.find(o => o.value === activeSortValue.value)
+  return option?.label || ''
+})
 const activeSortDirection = ref<SortDirection>(SortDirection.ASC)
 
 const setActiveSort = (value: SortValueString) => {

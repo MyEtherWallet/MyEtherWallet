@@ -59,7 +59,7 @@
                   class="flex items-center px-4 py-2 text-s-15 font-medium hoverNoBG rounded-full bg-white h-10 shadow-sm whitespace-nowrap min-w-[100px] justify-center mr-1"
                   @click="toggleMenu"
                 >
-                  <span class="mr-2">{{ activeSortValue }}</span>
+                  <span class="mr-2">{{ activeSortLabel }}</span>
                   <ArrowLongUpIcon
                     v-if="activeSortDirection === SortDirection.ASC"
                     class="w-4 h-4 shrink-0"
@@ -286,6 +286,12 @@ enum SortDirection {
 
 const activeSortValue = ref<SortValueString>(SortValueString.USD)
 const activeSortDirection = ref<SortDirection>(SortDirection.DESC)
+const activeSortLabel = computed(() => {
+  const option = sortOptions.value.find(
+    option => option.value === activeSortValue.value,
+  )
+  return option ? option.label : ''
+})
 
 const setActiveSort = (value: SortValueString) => {
   if (value === activeSortValue.value) {
