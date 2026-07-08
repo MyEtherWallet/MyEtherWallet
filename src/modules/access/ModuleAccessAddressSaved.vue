@@ -38,7 +38,10 @@
           </p>
         </div>
         <div class="flex flex-col gap-2 w-full">
+          <!-- Hidden for now (MEW-1840): "Open <wallet>" CTA — no reliable API
+               to open the extension popup (esp. BTC). Kept for quick re-enable. -->
           <button
+            v-if="false"
             data-test="address-saved-open"
             class="h-12 w-full rounded-[24px] bg-primary text-white text-s-16 font-semibold flex items-center justify-center gap-2"
             @click="onOpenWallet"

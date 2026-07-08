@@ -69,15 +69,9 @@ describe('ModuleAccessAddressSaved', () => {
     expect(connect).toHaveBeenCalledWith(config)
   })
 
-  it('open-wallet opens the extension account picker then re-attempts the connect', async () => {
-    clearAddressSavedInfo.mockClear()
-    connect.mockClear()
-    openExtensionAccounts.mockClear()
+  it('does not render the "open wallet" CTA (hidden for now)', () => {
     const w = factory()
-    await w.get('[data-test="address-saved-open"]').trigger('click')
-    await Promise.resolve()
-    expect(openExtensionAccounts).toHaveBeenCalledWith(config)
-    expect(connect).toHaveBeenCalledWith(config)
+    expect(w.find('[data-test="address-saved-open"]').exists()).toBe(false)
   })
 
   it('registers an accountsChanged watcher while shown', () => {
