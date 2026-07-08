@@ -687,7 +687,7 @@
       :current-price="currentPrice"
       :limit-price="limitPrice"
       :input-amount="inputAmount"
-      :leverage="manageMode === 'add' ? tempLeverage : leverage"
+      :leverage="manageMode === 'add' ? localLeverage : leverage"
       :position-size-usd="positionSizeUsd"
       :order-size="orderSize"
       :estimated-liquidation="estimatedLiquidation"
@@ -854,7 +854,13 @@ const onCloseAmountInput = (e: Event) => {
 }
 
 const confirmAndSubmitAndSetLeverage = async () => {
-  if (manageMode.value === 'add' && tempLeverage.value !== leverage.value) {
+  // In add mode `localLeverage` is the authoritative, user-staged leverage
+  // (what the panel and confirm modal show). `tempLeverage` is only the
+  // leverage dialog's slider draft and can drift from the singleton via its
+  // own watcher, so sync it to `localLeverage` before saving to avoid sending
+  // a stale value to setLeverage (MEW-1913).
+  if (manageMode.value === 'add' && localLeverage.value !== leverage.value) {
+    tempLeverage.value = localLeverage.value
     await saveLeverage()
     if (!leverageError.value) await confirmAndSubmitOrder()
   } else {
