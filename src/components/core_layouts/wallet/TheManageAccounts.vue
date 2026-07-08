@@ -42,7 +42,7 @@
         ref="popupRef"
         :style="popupStyle"
         class="fixed z-[2102] w-[384px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-96px)] bg-white rounded-32 overflow-hidden shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.30)] transition-[height] duration-[400ms] ease-[cubic-bezier(0.25,0.1,0,1)]"
-        :class="view === 'connect-address' ? 'h-[440px]' : 'h-[720px]'"
+        :class="view === 'connect-address' ? 'h-[380px]' : 'h-[720px]'"
       >
         <!-- Slide track: fixed height, panels slide horizontally -->
         <div class="relative h-full overflow-hidden">
