@@ -1112,6 +1112,13 @@ export function usePerpsTradeForm() {
         justSavedAutoClose = false
         return
       }
+      // Discard the unsaved draft on dismiss. submitDisabled keys off the
+      // temp TP/SL, so an invalid draft left behind would otherwise keep the
+      // main Long/Short button disabled even though the committed TP/SL is fine.
+      tempTakeProfitPrice.value = takeProfitPrice.value
+      tempStopLossPrice.value = stopLossPrice.value
+      activeTpPill.value = null
+      activeSlPill.value = null
       void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_CANCEL)
     }
   })
