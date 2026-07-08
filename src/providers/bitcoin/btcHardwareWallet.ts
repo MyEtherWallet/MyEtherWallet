@@ -15,14 +15,14 @@ import reverseBytes from '@/utils/reverseBytes'
 import { NODE_MAP } from '../common/btcInfo'
 
 export default class BtcHardwareWallet extends BaseBtcWallet {
-  private address: HexPrefixedString
+  private publicKey: HexPrefixedString
   private index: string
   private path: PathType
   private walletType: HWwalletType
   private hwWalletInstance: HWManager
 
   constructor(
-    address: HexPrefixedString,
+    publicKey: HexPrefixedString,
     chainName: string,
     index: string,
     path: PathType,
@@ -30,7 +30,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
     hwWalletInstance: HWManager,
   ) {
     super(chainName)
-    this.address = address
+    this.publicKey = publicKey
     this.index = index
     this.path = path
     this.walletType = walletType
@@ -108,7 +108,7 @@ export default class BtcHardwareWallet extends BaseBtcWallet {
   override getAddress(): Promise<HexPrefixedString> {
     const { address } = INFO_MAP[this.getProvider()].paymentType({
       ...INFO_MAP[this.getProvider()],
-      pubkey: hexToBuffer(this.address),
+      pubkey: hexToBuffer(this.publicKey),
     })
     return Promise.resolve(address?.toString() as HexPrefixedString)
   }

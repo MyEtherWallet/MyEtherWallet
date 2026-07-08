@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "7.0.8",
+  "version": "7.0.8-hotfix.4",
   "private": true,
   "type": "module",
   "engines": {
@@ -21,13 +21,14 @@
     "format": "prettier --write src/",
     "prepare": "husky",
     "zip": "cd dist; zip -r release.zip *;",
-    "update-api-schema": "npx openapi-typescript https://mew-api-dev.ethvm.dev/schema.yaml -o src/mew_api/schema.ts",
+    "update-api-schema": "npx openapi-typescript https://mew-api-prod.ethvm.dev/schema.yaml -o src/mew_api/schema.ts",
     "update-rewards-schema": "npx openapi-typescript https://mew-rewards-prod.ethvm.dev/schema.yaml -o src/mew_api/schemaRewards.ts"
   },
   "dependencies": {
     "@1inch/fusion-sdk": "^2.4.5",
     "@1inch/limit-order-sdk": "^5.2.3",
     "@amplitude/analytics-browser": "^2.36.2",
+    "@amplitude/plugin-page-url-enrichment-browser": "^0.7.13",
     "@amplitude/session-replay-browser": "^1.36.2",
     "@commitlint/config-conventional": "^20.3.1",
     "@enkryptcom/hw-wallets": "^0.0.16",

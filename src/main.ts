@@ -13,7 +13,7 @@ import {
 import App from './App.vue'
 import router from './router'
 import { Provider } from './providers'
-import { analytics } from './analytics'
+import { analytics, initAnalytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
@@ -69,13 +69,46 @@ if (dsn && !configs.IS_DEV_MODE) {
  * PINIA
  -------------------------*/
 const pinia = createPinia()
-pinia.use(createSentryPiniaPlugin())
+pinia.use(
+  createSentryPiniaPlugin({
+    // Strip the live wallet instance from the walletStore state before it is
+    // attached to Sentry events. The wallet holds provider/account internals
+    // (and potentially sensitive material) that must never leave the client.
+    stateTransformer: state => {
+      const walletStore = state.walletStore as
+        | Record<string, unknown>
+        | undefined
+      if (walletStore && 'wallet' in walletStore) {
+        return {
+          ...state,
+          walletStore: {
+            ...walletStore,
+            wallet: '[Filtered]',
+          },
+          purchase: null,
+          chainsStore: {
+            ...state.chainsStore as | Record<string, unknown> | undefined,
+            allChains: null, // too large to send
+            chains: null // too large to send
+
+          }
+        }
+      }
+      return state
+    },
+  }),
+)
 
 app.use(pinia)
 app.use(router)
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
 app.use(autoAnimatePlugin)
+
+// Initialize analytics only after the router's initial navigation has resolved,
+// so the first auto-captured Page Viewed event includes the active route.
+// (Right after app.use(router) the current route is still START_LOCATION.)
+void router.isReady().then(() => initAnalytics())
 
 // Provide analytics for legacy inject() usage in Vue components
 app.provide(Provider.ANALYTICS, analytics)

@@ -65,8 +65,6 @@ import {
 import { onMounted, ref } from 'vue'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent } from '@/analytics/events'
-import { captureException } from '@sentry/vue'
-import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 
 const props = defineProps<{
   wallet: WalletConfig
@@ -107,14 +105,12 @@ const resolveImg = async (_img: () => Promise<string>) => {
     const image = await _img()
     img.value = image
   } catch (error) {
-    captureException(error, {
-      ...SENTRY_MODULE_TAGS.ACCESS,
-      extra: {
-        title: 'BTN WALLET: Error loading wallet image',
-        walletName: props.wallet.name,
-        errorMessage: error,
-      },
-    })
+    // The wallet icon is lazily imported as a hashed JS chunk. Failing to load it
+    // (network blip, stale chunk after a redeploy, content blockers) is expected and
+    // non-actionable — AsyncImg already falls back to a placeholder. Don't report noise.
+    if (import.meta.env.DEV) {
+      console.error('Error loading wallet image:', props.wallet.name, error)
+    }
   } finally {
     isLoadedImg.value = true
   }

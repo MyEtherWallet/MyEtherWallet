@@ -7,14 +7,6 @@ import HDKey from 'hdkey'
 import { btcSupportedPaths, type PathType } from './configs'
 import { getLedgerTransport } from './transport'
 import { ensureLedgerApp } from './ledgerConnect'
-import { INFO_MAP } from '../../common/btcInfo'
-
-const NETWORK_INFO_KEY: Partial<Record<NetworkNames, string>> = {
-  [NetworkNames.Bitcoin]: 'BITCOIN',
-  [NetworkNames.BitcoinTest]: 'BITCOIN_TEST',
-  [NetworkNames.Litecoin]: 'LITECOIN',
-  [NetworkNames.Dogecoin]: 'DOGECOIN',
-}
 
 export interface AddressResponse {
   address: string
@@ -96,12 +88,6 @@ export class LedgerBitcoin {
     const format = this.isSegwit ? 'bech32' : 'legacy'
 
     if (!isHardenedLeaf) {
-      if (options.confirmAddress) {
-        const fullPath = `${options.pathType.basePath}/${options.pathIndex}`
-        const res = await btc.getWalletPublicKey(fullPath, { format, verify: true })
-        const pubkeyHex = bufferToHex(compressPubkey(Buffer.from(res.publicKey, 'hex')))
-        return { address: res.bitcoinAddress, publicKey: pubkeyHex }
-      }
       if (!this.HDNodes[options.pathType.basePath]) {
         const rootPub = await btc.getWalletPublicKey(options.pathType.basePath, {
           format,
@@ -117,17 +103,8 @@ export class LedgerBitcoin {
       if (!pubkey) {
         throw new Error('ledger-bitcoin: failed to derive public key')
       }
-      const compressedPub = compressPubkey(pubkey)
-      const infoKey = NETWORK_INFO_KEY[this.network]
-      if (!infoKey) {
-        throw new Error(`ledger-bitcoin: no address info for network ${this.network}`)
-      }
-      const info = INFO_MAP[infoKey]
-      const payment = info.paymentType({ pubkey: compressedPub, network: info.network })
-      if (!payment.address) {
-        throw new Error('ledger-bitcoin: failed to derive address from public key')
-      }
-      return { address: payment.address, publicKey: bufferToHex(compressedPub) }
+      const hex = bufferToHex(compressPubkey(pubkey))
+      return { address: hex, publicKey: hex }
     }
 
     const fullPath = options.pathType.path.replace('{index}', options.pathIndex)

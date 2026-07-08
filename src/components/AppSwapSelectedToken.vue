@@ -119,100 +119,13 @@
                 </template>
               </app-pop-up-menu>
             </div>
-            <!-- Trending & Stablecoins dropdown -->
-            <transition name="fade" mode="out-in">
-              <div
-                v-if="showSearchDropdown"
-                class="absolute bottom-0 left-0 w-full bg-white rounded-20 shadow-2xl border border-grey-outline px-4 py-4 translate-y-full z-30"
-                @mousedown.prevent
-              >
-                <div v-if="trendingTokens.length" class="mb-3">
-                  <p class="text-s-12 font-medium text-info mb-2">Trending</p>
-                  <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="token in trendingTokens"
-                      :key="token.address"
-                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-grey-10 bg-white hoverNoBG shadow-sm text-s-13 font-medium transition-colors"
-                      :class="
-                        token.address === selectedToken?.address
-                          ? '!bg-mewBg border-primary'
-                          : ''
-                      "
-                      @click="setSelectedToken(token)"
-                    >
-                      <app-token-logo
-                        :url="token.logoURI"
-                        :symbol="token.symbol"
-                        :address="
-                          networkName
-                            ? { address: token.address, network: networkName }
-                            : undefined
-                        "
-                        width="w-5"
-                        height="h-5"
-                      />
-                      <app-token-symbol
-                        :symbol="token.symbol"
-                        :address="
-                          networkName
-                            ? { address: token.address, network: networkName }
-                            : undefined
-                        "
-                      />
-                    </button>
-                  </div>
-                </div>
-                <div
-                  v-if="trendingTokens.length && stablecoinTokens.length"
-                  class="h-px bg-grey-outline w-full mb-3"
-                ></div>
-                <div v-if="stablecoinTokens.length">
-                  <p class="text-s-12 font-medium text-info mb-2">
-                    Stablecoins
-                  </p>
-                  <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="token in stablecoinTokens"
-                      :key="token.address"
-                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-grey-10 bg-white hoverNoBG shadow-sm text-s-13 font-medium transition-colors"
-                      :class="
-                        token.address === selectedToken?.address
-                          ? '!bg-mewBg border-primary'
-                          : ''
-                      "
-                      @click="setSelectedToken(token)"
-                    >
-                      <app-token-logo
-                        :url="token.logoURI"
-                        :symbol="token.symbol"
-                        :address="
-                          networkName
-                            ? { address: token.address, network: networkName }
-                            : undefined
-                        "
-                        width="w-5"
-                        height="h-5"
-                      />
-                      <app-token-symbol
-                        :symbol="token.symbol"
-                        :address="
-                          networkName
-                            ? { address: token.address, network: networkName }
-                            : undefined
-                        "
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </transition>
           </div>
           <div class="h-px bg-grey-10 w-full mb-2"></div>
         </div>
 
-        <div v-if="searchResults.length" class="flex flex-col gap-1">
+        <div v-if="enabledResults.length" class="flex flex-col gap-1">
           <button
-            v-for="token in searchResults"
+            v-for="token in enabledResults"
             :key="token.address"
             class="flex items-center justify-between px-2 py-3 cursor-pointer hoverNoBG rounded-20 transition-colors animate-fade-in"
             :class="[
@@ -286,7 +199,7 @@
             </div>
           </button>
         </div>
-        <div v-else>
+        <div v-else-if="!disabledResults.length">
           <div class="flex justify-center items-center h-[400px] text-grey-30">
             <p v-if="searchInput !== ''">
               {{ $t('select_token.no_tokens_match') }}
@@ -296,6 +209,56 @@
             </p>
           </div>
         </div>
+
+        <!-- Disabled group (e.g. "Trading paused for this session") -->
+        <div v-if="disabledResults.length" class="mt-5">
+          <p class="text-s-12 font-medium text-info mb-2 px-2">
+            {{ disabledGroupLabel }}
+          </p>
+          <div class="flex flex-col gap-1">
+            <div
+              v-for="token in disabledResults"
+              :key="token.address"
+              class="flex items-center justify-between px-2 py-3 rounded-20 opacity-50 cursor-not-allowed select-none"
+              aria-disabled="true"
+            >
+              <div class="flex items-center">
+                <app-token-logo
+                  :url="token.logoURI"
+                  :symbol="token.symbol"
+                  :address="
+                    networkName
+                      ? { address: token.address, network: networkName }
+                      : undefined
+                  "
+                  class="shrink-0 mr-4"
+                />
+                <div class="text-left">
+                  <app-token-symbol
+                    :symbol="token.symbol"
+                    :address="
+                      networkName
+                        ? { address: token.address, network: networkName }
+                        : undefined
+                    "
+                  />
+                  <h2 class="text-s-12 text-info whitespace-nowrap">
+                    {{ truncate(token.name, 20) }}
+                  </h2>
+                </div>
+              </div>
+              <div v-if="token.price !== 0" class="text-right">
+                <p class="font-medium text-black">
+                  $
+                  {{
+                    token.price ? formatFiatValue(token.price).value : '0.00'
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div>
           <div
             v-show="tokens.length > paginatedTokens.length && !searchInput"
@@ -359,7 +322,7 @@ import { sortObjectArrayNumber, sortObjectArrayString } from '@/utils/sortArray'
 import { fuzzySearchByKeys } from '@/utils/searchArray'
 import { useChainsStore } from '@/stores/chainsStore'
 import { useI18n } from 'vue-i18n'
-import { useScroll, useFocusWithin } from '@vueuse/core'
+import { useScroll } from '@vueuse/core'
 import AppTokenLogo from './AppTokenLogo.vue'
 import { formatUnits } from 'viem'
 import AppTokenSymbol from './AppTokenSymbol.vue'
@@ -391,32 +354,17 @@ const props = defineProps({
     type: String as () => 'trade' | 'swap' | undefined,
     default: undefined,
   },
-  trendingAddresses: {
+  // Token addresses (any case) to render disabled under `disabledGroupTitle`.
+  // Generic so Trade (and later Swap) can gray out non-selectable tokens.
+  disabledTokens: {
     type: Array as () => string[],
     default: () => [],
   },
+  disabledGroupTitle: {
+    type: String,
+    required: false,
+  },
 })
-
-const STABLECOIN_SYMBOLS = new Set([
-  'USDC',
-  'USDT',
-  'DAI',
-  'BUSD',
-  'TUSD',
-  'FRAX',
-  'USDD',
-  'USDP',
-  'GUSD',
-  'LUSD',
-  'SUSD',
-  'MIM',
-  'CUSD',
-  'AGEUR',
-  'EURS',
-  'EURT',
-  'FDUSD',
-  'PYUSD',
-])
 
 const { t } = useI18n()
 const emit = defineEmits<{
@@ -425,7 +373,11 @@ const emit = defineEmits<{
 }>()
 
 const store = useWalletStore()
-const { isLoadingBalances, isWalletConnected } = storeToRefs(store)
+const {
+  isLoadingBalances,
+  isWalletConnected,
+  allTokens: walletTokens,
+} = storeToRefs(store)
 
 const chainsStore = useChainsStore()
 const { isLoaded } = storeToRefs(chainsStore)
@@ -449,14 +401,13 @@ const scrollContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(scrollContainer)
 
 const searchFocusTarget = ref<HTMLElement | null>(null)
-const { focused: searchFocused } = useFocusWithin(searchFocusTarget)
-const showSearchDropdown = computed(
-  () => searchFocused.value && !searchInput.value && !props.isFromView,
-)
 
 onMounted(() => {
   if (!props.isFromView || !isWalletConnected.value) {
-    if (props.sortContext !== 'trade') {
+    if (
+      props.sortContext !== 'trade' ||
+      (props.isFromView && !isWalletConnected.value)
+    ) {
       activeSortValue.value = SortValueString.RANK
     } else {
       activeSortValue.value = SortValueString.PRICE
@@ -470,7 +421,9 @@ watch(
   () => props.networkName,
   () => {
     if (tokens.value.length > 0) {
-      const top = searchResults.value[0]
+      // Prefer an enabled token; never default-select a disabled one. Fall back
+      // to the full list only when nothing is enabled.
+      const top = enabledResults.value[0] ?? searchResults.value[0]
       if (top) emit('update:selectedToken', top)
     }
   },
@@ -534,10 +487,10 @@ enum SortValueString {
   NAME = 'Name',
   SYMBOL = 'Symbol',
   PRICE = 'Price',
+  MARKET_CAP = 'Market Cap',
+  VOLUME = '24H Volume',
   USD = 'USD Balance',
   BALANCE = 'Balance',
-  MARKET_CAP = 'Market Cap',
-  VOLUME = '24h Volume',
 }
 
 const sortOptions = computed(() => {
@@ -569,7 +522,21 @@ const sortOptions = computed(() => {
       label: t('common.rank'),
     })
   }
-  return [...shared, { value: SortValueString.PRICE, label: t('common.price') }]
+  const marketOptions = [
+    { value: SortValueString.PRICE, label: t('common.price') },
+    { value: SortValueString.MARKET_CAP, label: t('common.market_cap') },
+    { value: SortValueString.VOLUME, label: t('common.volume_24h') },
+  ]
+
+  if (isWalletConnected.value && props.isFromView) {
+    return [
+      ...shared,
+      { value: SortValueString.USD, label: t('common.usd_balance') },
+      { value: SortValueString.BALANCE, label: t('common.balance') },
+    ]
+  }
+
+  return [...shared, ...marketOptions]
 })
 
 enum SortDirection {
@@ -602,6 +569,8 @@ const setActiveSort = (value: SortValueString) => {
     const isNumericSort = [
       SortValueString.RANK,
       SortValueString.PRICE,
+      SortValueString.MARKET_CAP,
+      SortValueString.VOLUME,
       SortValueString.USD,
       SortValueString.BALANCE,
     ].includes(value)
@@ -614,12 +583,12 @@ const setActiveSort = (value: SortValueString) => {
 interface TokenBalanceWithUsd extends NewTokenInfo {
   usd_balance: number
   rank: number
-  marketCap: number | null
-  totalVolume: number | null
+  market_cap: number
+  volume24h: number
 }
 
 const searchResults = computed<TokenBalanceWithUsd[]>(() => {
-  const allItems = tokens.value.map(token => {
+  const allItems: TokenBalanceWithUsd[] = tokens.value.map(token => {
     const usdBalance = BigNumber(
       BigNumber(token.price || 0).times(
         BigNumber(
@@ -629,14 +598,19 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
         ),
       ),
     ).toNumber()
-    const md = marketDataMap.value[token.address.toLowerCase()]
     return {
       ...token,
       usd_balance: usdBalance,
       price: token.price || 0,
       rank: token.rank ?? 0,
-      marketCap: md?.marketCap ?? null,
-      totalVolume: md?.totalVolume ?? null,
+      market_cap:
+        walletTokens.value.find(
+          wt => wt.contract?.toLowerCase() === token.address?.toLowerCase(),
+        )?.market_cap ?? 0,
+      volume24h:
+        walletTokens.value.find(
+          wt => wt.contract?.toLowerCase() === token.address?.toLowerCase(),
+        )?.volume_24h ?? 0,
     }
   })
 
@@ -644,7 +618,7 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     activeSortValue.value === SortValueString.MARKET_CAP ||
     activeSortValue.value === SortValueString.VOLUME
   const filteredItems = isMarketDataSort
-    ? allItems.filter(t => t.marketCap !== null || t.totalVolume !== null)
+    ? allItems.filter(t => t.market_cap !== null || t.volume24h !== null)
     : allItems
 
   const sortKeyMap: Record<
@@ -655,10 +629,10 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     [SortValueString.NAME]: { key: 'name', type: 'string' },
     [SortValueString.SYMBOL]: { key: 'symbol', type: 'string' },
     [SortValueString.PRICE]: { key: 'price', type: 'number' },
+    [SortValueString.MARKET_CAP]: { key: 'market_cap', type: 'number' },
+    [SortValueString.VOLUME]: { key: 'volume24h', type: 'number' },
     [SortValueString.USD]: { key: 'usd_balance', type: 'number' },
     [SortValueString.BALANCE]: { key: 'balance', type: 'number' },
-    [SortValueString.MARKET_CAP]: { key: 'marketCap', type: 'number' },
-    [SortValueString.VOLUME]: { key: 'totalVolume', type: 'number' },
   }
 
   const { key, type } = sortKeyMap[activeSortValue.value]
@@ -671,37 +645,28 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     return fuzzySearchByKeys(sorted, ['name', 'symbol'], searchInput.value)
   }
 
-  return sorted.slice(0, endingPagination.value)
+  const enabledSorted = sorted.filter(t => !isTokenDisabled(t))
+  const disabledSorted = sorted.filter(t => isTokenDisabled(t))
+  const combinedSorted = [...enabledSorted, ...disabledSorted]
+  return combinedSorted.slice(0, endingPagination.value)
 })
 
-const trendingTokens = computed<TokenBalanceWithUsd[]>(() => {
-  const trendingSet = new Set(props.trendingAddresses.map(a => a.toLowerCase()))
-  return tokens.value
-    .filter(t => trendingSet.has(t.address.toLowerCase()))
-    .slice(0, 4)
-    .map((token, index) => ({
-      ...token,
-      usd_balance: 0,
-      price: token.price || 0,
-      rank: index,
-      marketCap: null,
-      totalVolume: null,
-    }))
-})
-
-const stablecoinTokens = computed<TokenBalanceWithUsd[]>(() => {
-  return tokens.value
-    .filter(t => STABLECOIN_SYMBOLS.has(t.symbol.toUpperCase()))
-    .slice(0, 4)
-    .map((token, index) => ({
-      ...token,
-      usd_balance: 0,
-      price: token.price || 0,
-      rank: index,
-      marketCap: null,
-      totalVolume: null,
-    }))
-})
+// Disabled-token grouping: split the visible results into the normal
+// (selectable) list and a disabled group rendered at the bottom.
+const disabledSet = computed(
+  () => new Set(props.disabledTokens.map(a => a.toLowerCase())),
+)
+const isTokenDisabled = (token: NewTokenInfo) =>
+  disabledSet.value.has(token.address?.toLowerCase())
+const enabledResults = computed(() =>
+  searchResults.value.filter(t => !isTokenDisabled(t)),
+)
+const disabledResults = computed(() =>
+  searchResults.value.filter(t => isTokenDisabled(t)),
+)
+const disabledGroupLabel = computed(
+  () => props.disabledGroupTitle || t('trade.trading_paused_session'),
+)
 
 const loadMoreItems = () => {
   loadingMoreItems.value = true

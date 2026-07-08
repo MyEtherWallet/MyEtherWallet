@@ -59,7 +59,9 @@ export type QuotesRequestBody =
 export type EthereumSignableTransactionResponse =
   components['schemas']['GetUnsignedEvmTransactionResponse']
 
-// Explore page
+/** --------------------------
+ * Crypto Page
+ --------------------------*/
 export type WebTokensTableSort = components['schemas']['WebTokensTableSort']
 export type GetWebTokensTableResponse =
   components['schemas']['GetWebTokensTableResponse']
@@ -160,6 +162,7 @@ export type PortfolioHistoryResponse =
 
 export type GetTradableAssetsResponse =
   components['schemas']['GetWebStocksAddressesResponse']
+
 /** --------------------------
  * Stock Info Page
  --------------------------*/

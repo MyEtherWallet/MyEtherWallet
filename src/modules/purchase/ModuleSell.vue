@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-col gap-3 h-full">
+  <div class="relative flex flex-col h-full">
+    <div :class="['flex flex-col gap-3 h-full', blurClass]">
     <purchase-token-select-card
       v-if="displayChain"
       :chain="displayChain"
@@ -100,6 +101,21 @@
     <div class="hidden">
       <app-select-tx-fee ref="feeSelector" />
     </div>
+    </div>
+
+    <purchase-unsupported-network
+      v-if="showUnsupportedNetwork"
+      :title="t('purchase.sell.network_not_supported')"
+      :description="
+        t('purchase.sell.network_not_available', {
+          network:
+            walletChain?.nameLong ?? walletChain?.name ?? t('common.network'),
+        })
+      "
+      :chains="supportedNetworkChains"
+      :default-chain="defaultSupportedChain"
+      class="absolute inset-x-2 top-[88px] z-20"
+    />
 
     <purchase-token-modal
       v-model:is-open="showTokenModal"
@@ -140,6 +156,7 @@ import PurchaseAmountInput from './components/PurchaseAmountInput.vue'
 import PurchaseTokenModal from './components/PurchaseTokenModal.vue'
 import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import SellProviderModal from './components/SellProviderModal.vue'
+import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
 import AppSelectTxFee from '@/components/AppSelectTxFee.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
@@ -164,6 +181,7 @@ const { t } = useI18n()
 
 const purchaseStore = usePurchaseStore()
 const {
+  purchaseInfo,
   isFetching,
   sellNetworks,
   sellFiats,
@@ -191,6 +209,32 @@ const { selectedChain: walletChain, chains } = storeToRefs(chainsStore)
 const globalStore = useGlobalStore()
 
 const { compatibleChainCodes, incompatibleChainCodes } = usePurchaseCompatibility(sellNetworks, walletChain, chains)
+
+const supportedNetworkChains = computed<Chain[]>(() =>
+  compatibleChainCodes.value
+    .map(code => purchaseChainToChain(code, chains.value))
+    .filter((c): c is Chain => !!c),
+)
+
+const supportedNetwork = computed(() => {
+  const code = v7ToPurchaseChain(walletChain.value?.name)
+  return !!code && compatibleChainCodes.value.includes(code)
+})
+
+const defaultSupportedChain = computed<Chain | null>(
+  () =>
+    supportedNetworkChains.value.find(c => c.name === 'ETHEREUM') ??
+    supportedNetworkChains.value[0] ??
+    null,
+)
+
+const showUnsupportedNetwork = computed(
+  () => !!purchaseInfo.value && !supportedNetwork.value,
+)
+
+const blurClass = computed(() =>
+  showUnsupportedNetwork.value ? 'blur-sm pointer-events-none opacity-60' : '',
+)
 
 const accessStore = useAccessStore()
 
@@ -426,7 +470,8 @@ const ctaIsPrimary = computed(() => !isReady.value || amountIsValid.value)
 
 const ctaDisabled = computed(
   () =>
-    isReady.value && (!amountIsValid.value || isFetchingSellQuote.value),
+    showUnsupportedNetwork.value ||
+    (isReady.value && (!amountIsValid.value || isFetchingSellQuote.value)),
 )
 
 const ctaIsLoading = computed(
@@ -486,6 +531,7 @@ watch(
 )
 
 const onSubmit = () => {
+  if (showUnsupportedNetwork.value) return
   if (!isReady.value) {
     accessStore.openAccessDialog()
     return
