@@ -156,26 +156,25 @@ const filterBySearch = <T extends { nameLong: string }>(list: T[]): T[] => {
   return [...new Set([...beginsWith, ...includes])]
 }
 
+// Compatibility is judged solely by the currently selected address's chain
+// type (which equals selectedChain.type by construction). This applies to
+// every wallet — including multichain ones like Enkrypt — so the user can't
+// pick a network the selected address can't use; to use another chain type
+// they must manually select an address of that type (no auto-switch).
 const compatible = computed(() => {
   const allChains = chainsStore.chains
-  let base: typeof allChains
-
-  if (walletStore.isWalletConnected && walletStore.walletName !== 'Enkrypt') {
-    const type = chainsStore.selectedChain?.type
-    base = type ? allChains.filter(c => c.type === type) : allChains
-  } else {
-    base = allChains
-  }
-
+  const type = chainsStore.selectedChain?.type
+  const base =
+    walletStore.isWalletConnected && type
+      ? allChains.filter(c => c.type === type)
+      : allChains
   return filterBySearch(base)
 })
 
 const incompatible = computed(() => {
-  if (walletStore.isWalletConnected && walletStore.walletName !== 'Enkrypt') {
-    const allChains = chainsStore.chains
-    const type = chainsStore.selectedChain?.type
-    const other = type ? allChains.filter(c => c.type !== type) : []
-    return filterBySearch(other)
+  const type = chainsStore.selectedChain?.type
+  if (walletStore.isWalletConnected && type) {
+    return filterBySearch(chainsStore.chains.filter(c => c.type !== type))
   }
   return []
 })
