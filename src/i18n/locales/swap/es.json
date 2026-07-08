@@ -66,7 +66,12 @@
       "decline": "Rechazar intercambio",
       "unknown-provider": "Proveedor desconocido",
       "offers": "Oferta | {count} otras ofertas",
-      "offer_from": "Oferta de { provider }"
+      "offer_from": "Oferta de { provider }",
+      "best-rate": "mejor tasa",
+      "rate": "Tasa",
+      "approve-tx-on-device": "Aprueba la transacción en tu dispositivo",
+      "title-swap": "Intercambio",
+      "title-bridge": "Puente"
     },
     "for": "por",
     "offer": "Oferta"

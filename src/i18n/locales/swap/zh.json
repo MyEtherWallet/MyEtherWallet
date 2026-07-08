@@ -66,7 +66,12 @@
       "decline": "拒绝兑换",
       "unknown-provider": "未知提供方",
       "offers": "报价 | 另有 {count} 个报价",
-      "offer_from": "报价来自 { provider }"
+      "offer_from": "报价来自 { provider }",
+      "best-rate": "最优汇率",
+      "rate": "汇率",
+      "approve-tx-on-device": "在您的设备上批准交易",
+      "title-swap": "兑换",
+      "title-bridge": "跨链"
     },
     "for": "用",
     "offer": "报价"
