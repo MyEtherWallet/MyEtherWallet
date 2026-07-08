@@ -5,14 +5,14 @@
         <!-- Title -->
         <!-- <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3> -->
         <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
-          Earn USDC rewards
+          {{ t('rewards.learn_more_title') }}
         </h3>
 
         <!-- Info Items -->
         <div class="flex flex-col gap-4">
           <div
             v-for="(item, index) in infoItems"
-            :key="item.text"
+            :key="item.icon"
             class="flex items-start gap-3"
           >
             <div
@@ -86,7 +86,8 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
 import {
@@ -142,6 +143,14 @@ const toastStore = useToastStore()
 const rewardsStore = useRewardsStore()
 const { isBanned } = storeToRefs(rewardsStore)
 
+const { t } = useI18n()
+
+// Rewards program parameters — update these to change the displayed values
+const MIN_TRADE_AMOUNT = 25
+const MAX_USERS_PER_HOUR = 15
+const REWARD_AMOUNT = 5
+const CAMPAIGN_PERIOD_DAYS = 7
+
 watch(isOpenModel, val => {
   if (val) {
     analytics.trackRewardsEvent(RewardsEvent.LEARN_MORE_CLICKED, {
@@ -150,10 +159,19 @@ watch(isOpenModel, val => {
   }
 })
 
-const infoItems = [
+const infoItems = computed(() => [
   {
     icon: 'swap',
-    text: 'Make a trade over $25.',
+    text: t('rewards.info_make_trade', { min: MIN_TRADE_AMOUNT }),
+  },
+  {
+    icon: 'trade',
+    text: t('rewards.earn_rewards_description', {
+      trade_count: 10,
+      trade_minimum: 25,
+      swap_minimum: 50,
+      reward_amount: 5,
+    }),
   },
   // {
   //   icon: 'trophy',
@@ -161,15 +179,15 @@ const infoItems = [
   // },
   {
     icon: 'trade',
-    text: 'Be among the first 15 users per hour, per trade.',
+    text: t('rewards.info_first_users', { count: MAX_USERS_PER_HOUR }),
   },
   {
     icon: 'currency-dollar',
-    text: 'Earn $5 USDC per trade.',
+    text: t('rewards.info_earn_per_trade', { amount: REWARD_AMOUNT }),
   },
   {
     icon: 'calendar',
-    text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet',
+    text: t('rewards.info_one_reward_period', { days: CAMPAIGN_PERIOD_DAYS }),
   },
   // {
   //   icon: 'currency-dollar-gray',
@@ -177,9 +195,9 @@ const infoItems = [
   // },
   {
     icon: 'face-frown',
-    text: 'Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.',
+    text: t('rewards.info_no_sybil'),
   },
-]
+])
 
 const onNavigate = (panel: 'swap' | 'trade') => {
   analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
@@ -190,7 +208,7 @@ const onNavigate = (panel: 'swap' | 'trade') => {
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {
     globalStore.setSelectedNetwork(ETH_NETWORK_NAME)
     toastStore.addToastMessage({
-      text: 'Switched app network to Ethereum',
+      text: t('rewards.switched_to_ethereum'),
     })
   }
   setWalletPanel(panel)

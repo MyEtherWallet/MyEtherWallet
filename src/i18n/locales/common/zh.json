@@ -58,7 +58,10 @@
       "invalid_keystore": "JSON Keystore 文件无效",
       "verification_failed": "验证失败",
       "no_wallet_address": "没有可复制的钱包地址",
-      "invalid_password": "密码无效"
+      "invalid_password": "密码无效",
+      "address_required": "地址是必需的",
+      "invalid_address": "地址无效",
+      "network_required": "网络是必需的"
     },
     "yes": "是",
     "no": "否",

@@ -21,6 +21,21 @@
     "switched_to_ethereum": "Se cambió la red de la app a Ethereum",
     "congratulations": "¡Felicidades!",
     "you_received_reward": "Recibiste tu recompensa",
-    "toggle_full_text": "Mostrar u ocultar el texto completo"
+    "toggle_full_text": "Mostrar u ocultar el texto completo",
+    "learn_more_title": "Gana recompensas en USDC",
+    "swap_and_earn": "Intercambia y gana {amount}",
+    "trade_and_earn": "Opera y gana {amount}",
+    "rewards_left_label": "recompensas restantes",
+    "reward_claimed": "Recompensa reclamada",
+    "no_rewards_left": "No quedan recompensas",
+    "swap_button": "Intercambiar {amount}",
+    "trade_button": "Operar {amount}",
+    "back_in": "Vuelve en {time}",
+    "market_is_closed": "El mercado está cerrado",
+    "info_make_trade": "Realiza una operación de más de ${min}.",
+    "info_first_users": "Sé uno de los primeros {count} usuarios por hora, por operación.",
+    "info_earn_per_trade": "Gana ${amount} USDC por operación.",
+    "info_one_reward_period": "Hasta una recompensa por billetera por período de campaña de {days} días, enviada directamente a tu billetera",
+    "info_no_sybil": "Las billeteras sospechosas de explotar el programa de recompensas mediante ataques Sybil (crear múltiples cuentas para reclamar más recompensas) u otras tácticas manipuladoras serán descalificadas."
   }
 }

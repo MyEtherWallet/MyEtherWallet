@@ -46,7 +46,7 @@ export const useAddressInput = (
       adrError.value = ''
       const addressToCheck = resolvedAddress.value || adrInput.value
       if (addressToCheck === '') {
-        adrError.value = 'address is required'
+        adrError.value = i18n.global.t('common.error.address_required')
         return false
       }
       if (isEvmChain.value) {
@@ -58,12 +58,12 @@ export const useAddressInput = (
             resolvedAddress.value !== ''
           )
         ) {
-          adrError.value = 'invalid address'
+          adrError.value = i18n.global.t('common.error.invalid_address')
           return false
         }
       } else if (isBitcoinChain.value) {
         if (!currentSelectedNetwork) {
-          adrError.value = 'network is required'
+          adrError.value = i18n.global.t('common.error.network_required')
           return false
         }
         const bitcoinNetworkInfo =
@@ -73,7 +73,7 @@ export const useAddressInput = (
       }
       return true
     } catch {
-      adrError.value = 'invalid address'
+      adrError.value = i18n.global.t('common.error.invalid_address')
       return false
     }
   }

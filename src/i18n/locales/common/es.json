@@ -58,7 +58,10 @@
       "invalid_keystore": "Archivo Keystore JSON no válido",
       "verification_failed": "La verificación falló",
       "no_wallet_address": "No hay ninguna dirección de billetera para copiar",
-      "invalid_password": "Contraseña no válida"
+      "invalid_password": "Contraseña no válida",
+      "address_required": "La dirección es requerida",
+      "invalid_address": "Dirección no válida",
+      "network_required": "La red es requerida"
     },
     "yes": "Sí",
     "no": "No",

@@ -21,6 +21,21 @@
     "switched_to_ethereum": "已将应用网络切换至 Ethereum",
     "congratulations": "恭喜！",
     "you_received_reward": "您已收到奖励",
-    "toggle_full_text": "切换完整文本"
+    "toggle_full_text": "切换完整文本",
+    "learn_more_title": "赚取 USDC 奖励",
+    "swap_and_earn": "兑换并赚取 {amount}",
+    "trade_and_earn": "交易并赚取 {amount}",
+    "rewards_left_label": "份奖励剩余",
+    "reward_claimed": "奖励已领取",
+    "no_rewards_left": "暂无奖励",
+    "swap_button": "兑换 {amount}",
+    "trade_button": "交易 {amount}",
+    "back_in": "{time} 后返回",
+    "market_is_closed": "市场已关闭",
+    "info_make_trade": "进行一笔超过 ${min} 的交易。",
+    "info_first_users": "成为每小时每笔交易的前 {count} 名用户之一。",
+    "info_earn_per_trade": "每笔交易赚取 ${amount} USDC。",
+    "info_one_reward_period": "每个钱包在 {days} 天的活动期间内最多可获得一份奖励，直接发送到您的钱包",
+    "info_no_sybil": "涉嫌通过女巫攻击（创建多个账户以获取更多奖励）或其他操纵手段滥用奖励计划的钱包将被取消资格。"
   }
 }
