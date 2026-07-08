@@ -594,9 +594,10 @@ export function usePerpsTradeForm() {
 
   // Take-profit / stop-loss direction: long → TP above mark, SL below; short
   // inverts both. Mirrors the isLong used by the +/-% pill helpers below.
-  const isTpSlLong = computed(
-    () =>
-      activePosition.value?.direction === 'long' || orderSide.value === 'buy',
+  const isTpSlLong = computed(() =>
+    activePosition.value
+      ? activePosition.value.direction === 'long'
+      : orderSide.value === 'buy',
   )
 
   // Full validation messages for the Auto Close dialog (precision + positivity
