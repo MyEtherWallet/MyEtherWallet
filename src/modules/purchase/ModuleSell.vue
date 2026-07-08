@@ -141,6 +141,7 @@
       :crypto-symbol="tokenSymbol"
       :is-loading="isFetchingSellQuote"
       :error="sellQuoteError"
+      :analytics-payload="sellPayload"
     />
   </div>
 </template>
@@ -176,6 +177,8 @@ import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
+import { analytics, SellEvent, SellEventError } from '@/analytics'
+import type { SellPayloadShared } from '@/analytics'
 
 const { t } = useI18n()
 
@@ -274,6 +277,7 @@ const tokenSymbol = computed<string>(
 
 onMounted(() => {
   fetchPurchaseInfo()
+  analytics.trackSellEvent(SellEvent.SHOWN, sellPayload.value)
 })
 
 const currencyOptions = computed(() => Array.from(sellFiats.value.keys()))
@@ -444,6 +448,32 @@ const formattedFiatEstimate = computed(() => {
   return `${symbol}${formatFiatValue(amount).value}`
 })
 
+const sellPayload = computed<SellPayloadShared>(() => {
+  const price = tokenPrice.value
+  const rate = fiatRate.value
+  const amountUSD =
+    price > 0 ? (Number(cryptoAmount.value) * price).toFixed(2) : ''
+  const amountOriginalCurrency =
+    sellQuote.value?.fiat_amount ??
+    (price > 0 && rate
+      ? (Number(cryptoAmount.value) * price * rate).toFixed(2)
+      : '')
+  const fee = feeSelector.value
+  const networkFeeUSD =
+    fee?.hasFees && fee?.hasFiatEstimates
+      ? (fee.selectedFeeFiat as string).replace(/[^0-9.]/g, '') || undefined
+      : undefined
+  return {
+    network: displayChain.value?.name,
+    token: tokenSymbol.value,
+    currency: selectedFiat.value,
+    amountToken: cryptoAmount.value,
+    amountUSD,
+    amountOriginalCurrency,
+    networkFeeUSD,
+  }
+})
+
 const ESTIMATE_FALLBACK_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const fetchEstimate = async () => {
@@ -458,6 +488,15 @@ const fetchEstimate = async () => {
     cryptoCurrency: tokenSymbol.value,
     chain: purchaseChainCode.value,
   })
+  if (!amountIsValid.value) return
+  if (sellQuote.value) {
+    analytics.trackSellEvent(SellEvent.PRELIMINARY_SHOWN, sellPayload.value)
+  } else {
+    analytics.trackSellEventError(SellEventError.PRELIMINARY_ERROR, {
+      ...sellPayload.value,
+      errorMsg: sellQuoteError.value || 'no_quote',
+    })
+  }
 }
 
 const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
@@ -537,6 +576,7 @@ const onSubmit = () => {
     return
   }
   if (!amountIsValid.value) return
+  analytics.trackSellEvent(SellEvent.CLICK_CONTINUE, sellPayload.value)
   showProviderModal.value = true
 }
 </script>

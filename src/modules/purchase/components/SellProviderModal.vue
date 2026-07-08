@@ -107,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
@@ -118,6 +118,8 @@ import {
 import { getCurrencySymbol } from '@/utils/currencySymbols'
 import { getProviderLogo } from '../helpers/purchaseProviders'
 import type { SellQuote } from '@/types/buyToken'
+import { analytics, SellOfferEvent, SellEventError } from '@/analytics'
+import type { SellPayloadShared, SellOfferPayload } from '@/analytics'
 
 const props = defineProps<{
   quote: SellQuote | null
@@ -125,11 +127,49 @@ const props = defineProps<{
   cryptoSymbol: string
   isLoading: boolean
   error: string
+  analyticsPayload: SellPayloadShared
 }>()
 
 const isOpen = defineModel('isOpen', { type: Boolean, required: true })
 
 const { t } = useI18n()
+
+const buildOfferPayload = (): SellOfferPayload => ({
+  ...props.analyticsPayload,
+  moonpayRate: props.quote?.fiat_amount ?? '',
+})
+
+const offerShown = ref(false)
+const errorTracked = ref(false)
+const proceeded = ref(false)
+
+watch(
+  () => [isOpen.value, props.isLoading, props.quote, props.error],
+  () => {
+    if (!isOpen.value || props.isLoading) return
+    if (props.quote && !offerShown.value) {
+      offerShown.value = true
+      analytics.trackSellEvent(SellOfferEvent.OFFER_SHOWN, buildOfferPayload())
+    } else if (props.error && !errorTracked.value) {
+      errorTracked.value = true
+      analytics.trackSellEventError(SellEventError.OFFER_ERROR, {
+        ...props.analyticsPayload,
+        errorMsg: props.error,
+      })
+    }
+  },
+)
+
+watch(isOpen, (open, wasOpen) => {
+  if (wasOpen && !open) {
+    if (offerShown.value && !proceeded.value) {
+      analytics.trackSellEvent(SellOfferEvent.OFFER_CANCELED, buildOfferPayload())
+    }
+    offerShown.value = false
+    errorTracked.value = false
+    proceeded.value = false
+  }
+})
 
 const formattedCrypto = computed(() => {
   const amount = props.quote?.crypto_amount ?? props.cryptoAmount
@@ -149,6 +189,8 @@ const providerLogo = computed(() =>
 
 const onContinue = () => {
   if (!props.quote?.url) return
+  proceeded.value = true
+  analytics.trackSellEvent(SellOfferEvent.OFFER_PROCEED, buildOfferPayload())
   window.open(props.quote.url, '_blank')
   isOpen.value = false
 }
