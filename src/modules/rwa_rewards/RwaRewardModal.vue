@@ -5,27 +5,14 @@
     class="sm:max-w-[480px] w-full !rounded-32"
   >
     <template #content>
-      <div
-        class="relative flex flex-col items-start"
-        style="padding: 24px; gap: 80px; width: 100%"
-      >
+      <div class="relative flex flex-col items-start p-6 gap-20 w-full">
         <img
           :src="heroImg"
           alt=""
-          class="pointer-events-none select-none absolute"
-          style="top: 0; right: 0; width: 178px; object-fit: contain"
+          class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
         <button
-          class="absolute flex items-center justify-center hoverOpacityHasBG"
-          style="
-            top: 16px;
-            right: 16px;
-            width: 32px;
-            height: 32px;
-            border-radius: 24px;
-            background: #f5f5f5;
-            z-index: 20;
-          "
+          class="absolute flex items-center justify-center hoverOpacityHasBG top-4 right-4 w-8 h-8 rounded-24 bg-[#f5f5f5] z-20"
           aria-label="Close"
           @click="holdingsStore.closeModal()"
         >
@@ -39,134 +26,100 @@
           </svg>
         </button>
 
-        <div class="relative z-10 flex flex-col items-start" style="gap: 8px">
-          <p style="font-size: 12px; line-height: 18px; color: #575757">
+        <div class="relative z-10 flex flex-col items-start gap-2">
+          <p class="text-s-12 leading-[18px] text-[#575757]">
             {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
           </p>
           <p
-            style="
-              font-size: 28px;
-              font-weight: 700;
-              line-height: 32px;
-              letter-spacing: -0.84px;
-              color: #000;
-              white-space: pre-line;
-            "
+            class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black whitespace-pre-line"
           >
             {{ $t('rwaRewards.hero_title') }}
           </p>
         </div>
 
-        <div class="relative z-10 flex flex-col" style="gap: 32px; width: 100%">
-          <div class="flex flex-col" style="width: 100%">
+        <div class="relative z-10 flex flex-col gap-8 w-full">
+          <div class="flex flex-col w-full">
             <!-- DEFAULT (offer) -->
             <template v-if="isOffer">
-              <rwa-modal-step variant="plain" :number="1" :stretch="hasStep1Cta">
+              <rwa-modal-step
+                variant="plain"
+                :number="1"
+                :stretch="hasStep1Cta"
+              >
                 <div
-                  class="flex flex-col items-start"
-                  :style="{ gap: '12px', paddingBottom: hasStep1Cta ? '20px' : '0' }"
+                  class="flex flex-col items-start gap-3"
+                  :class="{ 'pb-5': hasStep1Cta }"
                 >
-                  <p :style="stepText" class="flex items-center" style="height: 24px">
+                  <p :class="stepText" class="flex items-center h-6">
                     {{ $t('rwaRewards.modal_step1') }}
-                    <span :style="boldText">&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span>
+                    <span :class="boldText"
+                      >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span
+                    >
                   </p>
                   <div
-                    v-if="status === 'temporarilyPaused' || status === 'campaignEnded'"
-                    class="flex items-center"
-                    style="
-                      width: 100%;
-                      height: 48px;
-                      padding-right: 20px;
-                      justify-content: space-between;
-                      border-radius: 999px;
-                      background: #e6e6e6;
+                    v-if="
+                      status === 'temporarilyPaused' ||
+                      status === 'campaignEnded'
                     "
+                    class="flex items-center w-full h-12 pr-5 justify-between rounded-full bg-[#e6e6e6]"
                   >
                     <div
-                      class="flex items-center justify-center shrink-0"
-                      style="
-                        width: 160px;
-                        height: 48px;
-                        padding: 0 16px;
-                        border-radius: 24px;
-                        background: #f5f5f5;
-                        color: #767676;
-                        font-size: 16px;
-                        font-weight: 600;
-                        letter-spacing: -0.32px;
-                      "
+                      class="flex items-center justify-center shrink-0 w-40 h-12 px-4 rounded-24 bg-[#f5f5f5] text-[#767676] text-s-16 font-semibold tracking-[-0.32px]"
                     >
                       {{ $t('rwaRewards.trade_now') }}
                     </div>
-                    <div class="flex items-center" style="gap: 8px">
+                    <div class="flex items-center gap-2">
                       <span
-                        style="
-                          font-size: 14px;
-                          font-weight: 400;
-                          line-height: 20px;
-                          color: #575757;
-                          white-space: nowrap;
-                        "
+                        class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
                         >{{ disabledCtaLabel }}</span
                       >
                       <information-circle-icon
-                        style="width: 22px; height: 22px; color: #575757; flex-shrink: 0"
+                        class="w-[22px] h-[22px] text-[#575757] shrink-0"
                       />
                     </div>
                   </div>
-                  <button v-else-if="status === 'default'" :style="tradeBtn" class="flex items-center justify-center hoverOpacityHasBG" @click="onTrade">
+                  <button
+                    v-else-if="status === 'default'"
+                    :class="tradeBtn"
+                    class="flex items-center justify-center hoverOpacityHasBG"
+                    @click="onTrade"
+                  >
                     {{ $t('rwaRewards.trade_now') }}
                   </button>
                 </div>
               </rwa-modal-step>
               <rwa-modal-step variant="plain" :number="2">
-                <p :style="stepText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_step2_pre') }}<span :style="boldText">&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span>&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
+                <p :class="stepText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_step2_pre')
+                  }}<span :class="boldText"
+                    >&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span
+                  >&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
                 </p>
               </rwa-modal-step>
               <rwa-modal-step variant="plain" :number="3" last>
-                <p :style="stepText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_step3') }}<span :style="boldText">&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span>
+                <p :class="stepText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_step3')
+                  }}<span :class="boldText"
+                    >&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span
+                  >
                 </p>
               </rwa-modal-step>
               <div
                 v-if="showNotice"
-                class="flex items-center justify-center"
-                style="
-                  width: 100%;
-                  gap: 16px;
-                  padding: 16px;
-                  margin-top: 16px;
-                  border-radius: 16px;
-                  background: #f5f5f5;
-                "
+                class="flex items-center justify-center w-full gap-4 p-4 mt-4 rounded-16 bg-[#f5f5f5]"
               >
-                <lock-closed-icon
-                  style="width: 24px; height: 24px; color: #005ae5; flex-shrink: 0"
-                />
-                <div class="flex flex-col" style="gap: 2px; flex: 1">
-                  <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+                <lock-closed-icon class="w-6 h-6 text-primary shrink-0" />
+                <div class="flex flex-col gap-0.5 flex-1">
+                  <p :class="titleText">
                     {{ noticeTitle }}
                   </p>
-                  <p style="font-size: 14px; font-weight: 400; line-height: 20px; color: #575757">
+                  <p :class="bodyText">
                     {{ noticeDesc }}
                   </p>
                 </div>
                 <button
                   v-if="status === 'banned'"
-                  class="flex items-center justify-center hoverOpacityHasBG shrink-0"
-                  style="
-                    height: 40px;
-                    padding: 0 12px;
-                    border-radius: 24px;
-                    background: #e6e6e6;
-                    color: #000;
-                    font-size: 14px;
-                    font-weight: 600;
-                    line-height: 20px;
-                    letter-spacing: -0.28px;
-                    white-space: nowrap;
-                  "
+                  class="flex items-center justify-center hoverOpacityHasBG shrink-0 h-10 px-3 rounded-24 bg-[#e6e6e6] text-black text-s-14 font-semibold leading-5 tracking-[-0.28px] whitespace-nowrap"
                   @click="onContactSupport"
                 >
                   {{ $t('rwaRewards.contact_support') }}
@@ -177,22 +130,29 @@
             <!-- HOLDING -->
             <template v-else-if="status === 'holding'">
               <rwa-modal-step variant="done" connector-blue>
-                <p :style="stepText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_qualifying_trade') }}<span :style="boldText">&nbsp;{{ qualifyingLabel }}</span>
+                <p :class="stepText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_qualifying_trade')
+                  }}<span :class="boldText">&nbsp;{{ qualifyingLabel }}</span>
                 </p>
               </rwa-modal-step>
               <rwa-modal-step variant="current" :number="2" stretch>
-                <div class="flex flex-col items-start" style="gap: 12px; padding-bottom: 28px">
-                  <p :style="stepText" class="flex items-center" style="height: 24px">
-                    {{ $t('rwaRewards.modal_step2_pre') }}<span :style="boldText">&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span>&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
+                <div class="flex flex-col items-start gap-3 pb-7">
+                  <p :class="stepText" class="flex items-center h-6">
+                    {{ $t('rwaRewards.modal_step2_pre')
+                    }}<span :class="boldText"
+                      >&nbsp;{{ $t('rwaRewards.modal_step2_bold') }}</span
+                    >&nbsp;{{ $t('rwaRewards.modal_step2_post') }}
                   </p>
                   <rwa-hold-tracker :current="holdCurrent" />
-                  <p :style="boldText">{{ holdDaysLeftLabel }}</p>
+                  <p :class="boldText">{{ holdDaysLeftLabel }}</p>
                 </div>
               </rwa-modal-step>
               <rwa-modal-step variant="plain" :number="3" last>
-                <p :style="stepText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_step3') }}<span :style="boldText">&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span>
+                <p :class="stepText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_step3')
+                  }}<span :class="boldText"
+                    >&nbsp;{{ $t('rwaRewards.modal_step3_bold') }}</span
+                  >
                 </p>
               </rwa-modal-step>
             </template>
@@ -200,32 +160,52 @@
             <!-- LOST -->
             <template v-else-if="status === 'lost'">
               <rwa-modal-step variant="doneGrey">
-                <p :style="mutedText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_qualifying_trade') }} {{ qualifyingLabel }}
+                <p :class="mutedText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_qualifying_trade') }}
+                  {{ qualifyingLabel }}
                 </p>
               </rwa-modal-step>
               <rwa-modal-step variant="failed" stretch>
-                <div class="flex flex-col items-start" style="gap: 12px; padding-bottom: 28px">
-                  <p style="font-size: 14px; font-weight: 600; line-height: 20px; color: #e40c58">
+                <div class="flex flex-col items-start gap-3 pb-7">
+                  <p class="text-s-14 font-semibold leading-5 text-[#e40c58]">
                     {{ $t('rwaRewards.modal_lost_title') }}
                   </p>
-                  <p :style="stepText">
-                    {{ $t('rwaRewards.modal_lost_desc', { amount: qualifyingLabel }) }}
+                  <p :class="stepText">
+                    {{
+                      $t('rwaRewards.modal_lost_desc', {
+                        amount: qualifyingLabel,
+                      })
+                    }}
                   </p>
-                  <rwa-hold-tracker :current="holdCurrent" :failed-day="holdCurrent" />
-                  <div class="flex items-center" style="gap: 8px; width: 100%">
-                    <button :style="startAgainBtn" class="flex items-center justify-center hoverOpacityHasBG" @click="onTrade">
+                  <rwa-hold-tracker
+                    :current="holdCurrent"
+                    :failed-day="holdCurrent"
+                  />
+                  <div class="flex items-center gap-2 w-full">
+                    <button
+                      :class="startAgainBtn"
+                      class="flex items-center justify-center hoverOpacityHasBG"
+                      @click="onTrade"
+                    >
                       {{ $t('rwaRewards.start_again') }}
                     </button>
-                    <div :style="expiresPill" class="flex items-center justify-center">
-                      {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
+                    <div
+                      :class="expiresPill"
+                      class="flex items-center justify-center"
+                    >
+                      {{
+                        $t('rwaRewards.hero_offer_expires', {
+                          time: expiresText,
+                        })
+                      }}
                     </div>
                   </div>
                 </div>
               </rwa-modal-step>
               <rwa-modal-step variant="plain" :number="3" last>
-                <p :style="mutedText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_step3') }} {{ $t('rwaRewards.modal_step3_bold') }}
+                <p :class="mutedText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_step3') }}
+                  {{ $t('rwaRewards.modal_step3_bold') }}
                 </p>
               </rwa-modal-step>
             </template>
@@ -233,117 +213,158 @@
             <!-- EARNED / CLAIMED / EXPIRED (steps 1 & 2 done) -->
             <template v-else>
               <rwa-modal-step variant="done" connector-blue>
-                <p :style="stepText" class="flex items-center" style="height: 24px">
-                  {{ $t('rwaRewards.modal_qualifying_trade') }}<span :style="boldText">&nbsp;{{ qualifyingLabel }}</span>
+                <p :class="stepText" class="flex items-center h-6">
+                  {{ $t('rwaRewards.modal_qualifying_trade')
+                  }}<span :class="boldText">&nbsp;{{ qualifyingLabel }}</span>
                 </p>
               </rwa-modal-step>
               <rwa-modal-step variant="done" connector-blue>
-                <p :style="stepText" class="flex items-center" style="height: 24px">
+                <p :class="stepText" class="flex items-center h-6">
                   {{ $t('rwaRewards.modal_held_14') }}
                 </p>
               </rwa-modal-step>
 
-              <rwa-modal-step v-if="status === 'earned'" variant="current" :number="3" last>
-                <div class="flex flex-col items-start" style="gap: 2px">
-                  <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+              <rwa-modal-step
+                v-if="status === 'earned'"
+                variant="current"
+                :number="3"
+                last
+              >
+                <div class="flex flex-col items-start gap-0.5">
+                  <p :class="titleText">
                     {{ $t('rwaRewards.modal_claim_title') }}
                   </p>
-                  <p :style="stepText">{{ $t('rwaRewards.modal_claim_desc') }}</p>
+                  <p :class="stepText">
+                    {{ $t('rwaRewards.modal_claim_desc') }}
+                  </p>
                 </div>
               </rwa-modal-step>
               <div
                 v-if="status === 'earned'"
-                :style="subCard"
-                class="flex items-center"
-                style="gap: 12px; width: 100%; margin-top: 20px"
+                :class="subCard"
+                class="flex items-center gap-3 w-full mt-5"
               >
-                <img :src="usdcIcon" alt="" style="width: 42px; height: 42px; flex-shrink: 0" />
-                <div class="flex flex-col" style="flex: 1; min-width: 0">
-                  <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+                <img
+                  :src="usdcIcon"
+                  alt=""
+                  class="w-[42px] h-[42px] shrink-0"
+                />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <p :class="titleText">
                     {{ $t('rwaRewards.reward_amount') }}
                   </p>
-                  <p style="font-size: 12px; line-height: 18px; color: #575757">
-                    {{ $t('rwaRewards.hero_offer_expires', { time: subExpiresText }) }}
+                  <p :class="subText">
+                    {{
+                      $t('rwaRewards.hero_offer_expires', {
+                        time: subExpiresText,
+                      })
+                    }}
                   </p>
                 </div>
-                <button :style="claimBtn" class="flex items-center justify-center hoverOpacityHasBG" @click="onClaim">
+                <button
+                  :class="claimBtn"
+                  class="flex items-center justify-center hoverOpacityHasBG"
+                  @click="onClaim"
+                >
                   {{ $t('rwaRewards.claim') }}
                 </button>
               </div>
 
-              <rwa-modal-step v-if="status === 'claimed'" variant="done" :number="3" last>
-                <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+              <rwa-modal-step
+                v-if="status === 'claimed'"
+                variant="done"
+                :number="3"
+                last
+              >
+                <p :class="titleText">
                   {{ $t('rwaRewards.modal_claimed_step') }}
                 </p>
               </rwa-modal-step>
               <div
                 v-if="status === 'claimed'"
-                :style="subCard"
-                class="flex items-center"
-                style="gap: 12px; width: 100%; margin-top: 20px"
+                :class="subCard"
+                class="flex items-center gap-3 w-full mt-5"
               >
-                <img :src="usdcIcon" alt="" style="width: 42px; height: 42px; flex-shrink: 0" />
-                <div class="flex flex-col" style="flex: 1; min-width: 0">
-                  <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+                <img
+                  :src="usdcIcon"
+                  alt=""
+                  class="w-[42px] h-[42px] shrink-0"
+                />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <p :class="titleText">
                     {{ $t('rwaRewards.reward_amount') }}
                   </p>
-                  <p style="font-size: 12px; line-height: 18px; color: #575757">
+                  <p :class="subText">
                     {{ $t('rwaRewards.sub_claimed') }}
                   </p>
                 </div>
-                <div class="flex items-center justify-center shrink-0" style="width: 24px; height: 24px; border-radius: 100px; background: #05c0a5">
+                <div
+                  class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-success"
+                >
                   <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <path d="M5 10.5l3.5 3.5L15 6.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                      d="M5 10.5l3.5 3.5L15 6.5"
+                      stroke="#fff"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
 
-              <rwa-modal-step v-if="status === 'expired'" variant="failed" :number="3" last>
-                <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+              <rwa-modal-step
+                v-if="status === 'expired'"
+                variant="failed"
+                :number="3"
+                last
+              >
+                <p :class="titleText">
                   {{ $t('rwaRewards.modal_expired_step') }}
                 </p>
               </rwa-modal-step>
               <div
                 v-if="status === 'expired'"
-                :style="subCard"
-                class="flex items-center"
-                style="gap: 12px; width: 100%; margin-top: 20px"
+                :class="subCard"
+                class="flex items-center gap-3 w-full mt-5"
               >
-                <img :src="usdcIcon" alt="" style="width: 42px; height: 42px; flex-shrink: 0" />
-                <div class="flex flex-col" style="flex: 1; min-width: 0">
-                  <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+                <img
+                  :src="usdcIcon"
+                  alt=""
+                  class="w-[42px] h-[42px] shrink-0"
+                />
+                <div class="flex flex-col flex-1 min-w-0">
+                  <p :class="titleText">
                     {{ $t('rwaRewards.reward_amount') }}
                   </p>
-                  <p style="font-size: 12px; line-height: 18px; color: #575757">
+                  <p :class="subText">
                     {{ $t('rwaRewards.sub_closed') }}
                   </p>
                 </div>
-                <div class="flex items-center justify-center shrink-0" style="width: 24px; height: 24px; border-radius: 100px; background: #e40c58">
+                <div
+                  class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-[#e40c58]"
+                >
                   <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <path d="M6 6l8 8M14 6l-8 8" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+                    <path
+                      d="M6 6l8 8M14 6l-8 8"
+                      stroke="#fff"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
                   </svg>
                 </div>
               </div>
             </template>
           </div>
 
-          <div style="height: 1px; background: #e6e6e6; width: 100%"></div>
+          <div class="h-px bg-[#e6e6e6] w-full"></div>
 
-          <div class="flex flex-col" style="gap: 12px; width: 100%">
-            <p style="font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: -0.28px; color: #000">
+          <div class="flex flex-col gap-3 w-full">
+            <p :class="titleText">
               {{ $t('rwaRewards.offer_rules') }}
             </p>
-            <ul style="list-style: disc; padding-left: 21px; margin: 0; display: flex; flex-direction: column; gap: 12px">
-              <li
-                v-for="(rule, i) in offerRules"
-                :key="i"
-                style="
-                  font-size: 14px;
-                  font-weight: 400;
-                  line-height: 20px;
-                  color: #575757;
-                "
-              >
+            <ul class="list-disc pl-[21px] m-0 flex flex-col gap-3">
+              <li v-for="(rule, i) in offerRules" :key="i" :class="bodyText">
                 {{ rule }}
               </li>
             </ul>
@@ -392,7 +413,8 @@ const holdDaysLeftLabel = computed(() => {
 
 const isOpen = computed({
   get: () => isModalOpen.value,
-  set: value => (value ? holdingsStore.openModal() : holdingsStore.closeModal()),
+  set: value =>
+    value ? holdingsStore.openModal() : holdingsStore.closeModal(),
 })
 
 const isDisabledCta = computed(
@@ -435,7 +457,9 @@ const noticeTitle = computed(() =>
 const noticeDesc = computed(() =>
   status.value === 'banned'
     ? t('rwaRewards.modal_banned_desc')
-    : t('rwaRewards.modal_not_eligible_desc', { date: eligibilityCutoff.value }),
+    : t('rwaRewards.modal_not_eligible_desc', {
+        date: eligibilityCutoff.value,
+      }),
 )
 const onContactSupport = () => showIntercom()
 
@@ -493,56 +517,22 @@ const qualifyingLabel = computed(() => {
   return `${amount.toFormat()} ${symbol}`.trim()
 })
 
-const stepText = { fontSize: '14px', lineHeight: '20px', color: '#575757' }
-const boldText = { fontWeight: 600, color: '#000', letterSpacing: '-0.28px' }
-const mutedText = { fontSize: '14px', lineHeight: '20px', color: '#a5a5a5' }
-const tradeBtn = {
-  width: '160px',
-  height: '48px',
-  borderRadius: '24px',
-  background: '#005ae5',
-  color: '#fff',
-  fontSize: '16px',
-  fontWeight: 600,
-  letterSpacing: '-0.32px',
-}
-const startAgainBtn = {
-  flex: 1,
-  height: '48px',
-  borderRadius: '24px',
-  background: '#005ae5',
-  color: '#fff',
-  fontSize: '16px',
-  fontWeight: 600,
-  letterSpacing: '-0.32px',
-}
-const expiresPill = {
-  height: '48px',
-  padding: '0 16px',
-  borderRadius: '24px',
-  background: '#e6e6e6',
-  color: '#575757',
-  fontSize: '14px',
-  fontWeight: 600,
-  whiteSpace: 'nowrap' as const,
-}
-const subCard = {
-  padding: '20px',
-  borderRadius: '16px',
-  border: '1px solid rgba(0,0,0,0.15)',
-  background: '#fff',
-}
-const claimBtn = {
-  width: '120px',
-  height: '40px',
-  borderRadius: '20px',
-  background: '#005ae5',
-  color: '#fff',
-  fontSize: '16px',
-  fontWeight: 600,
-  letterSpacing: '-0.32px',
-  flexShrink: 0,
-}
+const stepText = 'text-s-14 leading-5 text-[#575757]'
+const boldText = 'font-semibold text-black tracking-[-0.28px]'
+const mutedText = 'text-s-14 leading-5 text-grey-subtle'
+const titleText =
+  'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
+const bodyText = 'text-s-14 font-normal leading-5 text-[#575757]'
+const subText = 'text-s-12 leading-[18px] text-[#575757]'
+const tradeBtn =
+  'w-40 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]'
+const startAgainBtn =
+  'flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]'
+const expiresPill =
+  'h-12 px-4 rounded-24 bg-[#e6e6e6] text-[#575757] text-s-14 font-semibold whitespace-nowrap'
+const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
+const claimBtn =
+  'w-[120px] h-10 rounded-20 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px] shrink-0'
 
 const onTrade = () => {
   walletMenuStore.openPanel('trade')

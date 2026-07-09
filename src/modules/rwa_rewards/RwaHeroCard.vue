@@ -1,78 +1,48 @@
 <template>
   <div
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full"
-    style="
-      border: 1px solid #e6e6e6;
-      border-radius: 16px;
-      padding: 20px;
-      min-height: 293px;
-    "
+    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
   >
     <img
       v-if="status !== 'banned'"
       :src="gradientBg"
       alt=""
-      class="pointer-events-none select-none absolute top-0 left-0 w-full"
-      style="height: 140px; object-fit: cover; object-position: top"
+      class="pointer-events-none select-none absolute top-0 left-0 w-full h-[140px] object-cover object-top"
     />
     <img
       v-if="status === 'lost' || status === 'expired'"
       :src="peggyCrying"
       alt=""
-      class="pointer-events-none select-none absolute"
-      style="top: 20px; right: 20px; height: 84px; object-fit: contain"
+      class="pointer-events-none select-none absolute top-5 right-5 h-[84px] object-contain"
     />
     <img
       v-else-if="status === 'earned' || status === 'claimed'"
       :src="peggyCool"
       alt=""
-      class="pointer-events-none select-none absolute"
-      style="top: 20px; right: 20px; height: 84px; object-fit: contain"
+      class="pointer-events-none select-none absolute top-5 right-5 h-[84px] object-contain"
     />
     <img
       v-else-if="status !== 'banned'"
       :src="heroImg"
       alt=""
-      class="pointer-events-none select-none absolute top-0 right-0"
-      style="width: 108px; height: 120px; object-fit: contain"
+      class="pointer-events-none select-none absolute top-0 right-0 w-[108px] h-[120px] object-contain"
     />
 
     <template v-if="status === 'holding'">
-      <div class="relative z-10" style="width: 100%">
+      <div class="relative z-10 w-full">
         <p
-          style="
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 22px;
-            letter-spacing: -0.4px;
-            color: #000;
-            max-width: 210px;
-          "
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black max-w-[210px]"
         >
           {{ $t('rwaRewards.hero_holding_title') }}
         </p>
       </div>
 
-      <div
-        class="relative z-10 flex flex-col"
-        style="gap: 16px; width: 100%"
-      >
+      <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-hold-tracker
           :current="holdCurrent"
           :days-left-label="daysLeftLabel"
         />
         <button
-          class="flex items-center justify-center hoverOpacityHasBG"
-          style="
-            width: 100%;
-            height: 48px;
-            border-radius: 24px;
-            background: #e6e6e6;
-            color: #000;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -0.32px;
-          "
+          class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
           @click="onMoreInfo"
         >
           {{ $t('rwaRewards.more_info') }}
@@ -81,68 +51,33 @@
     </template>
 
     <template v-else-if="status === 'lost'">
-      <div class="relative z-10 flex flex-col" style="gap: 4px; max-width: 200px">
+      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          style="
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 18px;
-            color: #575757;
-            white-space: nowrap;
-          "
+          class="text-s-12 font-normal leading-[18px] text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
         <p
-          style="
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 22px;
-            letter-spacing: -0.4px;
-            color: #000;
-          "
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
         >
           {{ $t('rwaRewards.hero_lost_title') }}
         </p>
-        <p style="font-size: 12px; line-height: 18px; color: #575757">
+        <p class="text-s-12 leading-[18px] text-[#575757]">
           {{ $t('rwaRewards.hero_lost_desc') }}
         </p>
       </div>
 
-      <div
-        class="relative z-10 flex flex-col"
-        style="gap: 16px; width: 100%"
-      >
+      <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-hold-tracker :current="holdCurrent" :failed-day="holdCurrent" />
-        <div class="flex" style="gap: 8px; width: 100%">
+        <div class="flex gap-2 w-full">
           <button
-            class="flex items-center justify-center hoverOpacityHasBG"
-            style="
-              flex: 1;
-              height: 48px;
-              border-radius: 24px;
-              background: #005ae5;
-              color: #fff;
-              font-size: 16px;
-              font-weight: 600;
-              letter-spacing: -0.32px;
-            "
+            class="flex items-center justify-center hoverOpacityHasBG flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]"
             @click="onTrade"
           >
             {{ $t('rwaRewards.trade_again') }}
           </button>
           <button
-            class="flex items-center justify-center hoverOpacityHasBG"
-            style="
-              height: 48px;
-              padding: 0 24px;
-              border-radius: 24px;
-              background: #e6e6e6;
-              color: #000;
-              font-size: 16px;
-              font-weight: 600;
-              letter-spacing: -0.32px;
-            "
+            class="flex items-center justify-center hoverOpacityHasBG h-12 px-6 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
             @click="onMoreInfo"
           >
             {{ $t('rwaRewards.more_info') }}
@@ -152,19 +87,13 @@
     </template>
 
     <template v-else-if="status === 'earned'">
-      <div class="relative z-10 flex flex-col" style="gap: 4px; max-width: 200px">
+      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          style="
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 22px;
-            letter-spacing: -0.4px;
-            color: #000;
-          "
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black"
         >
           {{ $t('rwaRewards.hero_earned_title') }}
         </p>
-        <p style="font-size: 12px; line-height: 18px; color: #575757">
+        <p class="text-s-12 leading-[18px] text-[#575757]">
           {{ $t('rwaRewards.hero_earned_desc') }}
         </p>
       </div>
@@ -179,41 +108,24 @@
     </template>
 
     <template v-else-if="status === 'claimed'">
-      <div class="relative z-10 flex flex-col" style="gap: 4px; max-width: 200px">
+      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          style="
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 22px;
-            letter-spacing: -0.4px;
-            color: #000;
-            white-space: pre-line;
-          "
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
         >
           {{ $t('rwaRewards.hero_claimed_title') }}
         </p>
-        <p style="font-size: 12px; line-height: 18px; color: #575757">
+        <p class="text-s-12 leading-[18px] text-[#575757]">
           {{ $t('rwaRewards.hero_claimed_desc') }}
         </p>
       </div>
-      <div class="relative z-10 flex flex-col" style="gap: 16px; width: 100%">
+      <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-claim-card
           variant="sent"
           :amount-label="$t('rwaRewards.reward_amount')"
           :subtitle="$t('rwaRewards.sub_sent')"
         />
         <button
-          class="flex items-center justify-center hoverOpacityHasBG"
-          style="
-            width: 100%;
-            height: 48px;
-            border-radius: 24px;
-            background: #e6e6e6;
-            color: #000;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -0.32px;
-          "
+          class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
           @click="onHide"
         >
           {{ $t('rwaRewards.hide_offer') }}
@@ -222,41 +134,24 @@
     </template>
 
     <template v-else-if="status === 'expired'">
-      <div class="relative z-10 flex flex-col" style="gap: 4px; max-width: 200px">
+      <div class="relative z-10 flex flex-col gap-1 max-w-[200px]">
         <p
-          style="
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 22px;
-            letter-spacing: -0.4px;
-            color: #000;
-            white-space: pre-line;
-          "
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
         >
           {{ $t('rwaRewards.hero_expired_title') }}
         </p>
-        <p style="font-size: 12px; line-height: 18px; color: #575757">
+        <p class="text-s-12 leading-[18px] text-[#575757]">
           {{ $t('rwaRewards.hero_expired_desc') }}
         </p>
       </div>
-      <div class="relative z-10 flex flex-col" style="gap: 16px; width: 100%">
+      <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-claim-card
           variant="closed"
           :amount-label="$t('rwaRewards.reward_amount')"
           :subtitle="$t('rwaRewards.sub_closed')"
         />
         <button
-          class="flex items-center justify-center hoverOpacityHasBG"
-          style="
-            width: 100%;
-            height: 48px;
-            border-radius: 24px;
-            background: #e6e6e6;
-            color: #000;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -0.32px;
-          "
+          class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
           @click="onHide"
         >
           {{ $t('rwaRewards.hide_offer') }}
@@ -266,36 +161,16 @@
 
     <template v-else-if="status === 'banned'">
       <div
-        class="relative z-10 flex flex-col items-center justify-center"
-        style="height: 100%; width: 100%; gap: 24px"
+        class="relative z-10 flex flex-col items-center justify-center h-full w-full gap-6"
       >
-        <div class="flex flex-col items-center" style="gap: 16px">
-          <lock-closed-icon style="width: 28px; height: 28px; color: #005ae5" />
-          <p
-            style="
-              font-size: 14px;
-              font-weight: 400;
-              line-height: 20px;
-              color: #575757;
-              text-align: center;
-            "
-          >
+        <div class="flex flex-col items-center gap-4">
+          <lock-closed-icon class="w-7 h-7 text-primary" />
+          <p class="text-s-14 font-normal leading-5 text-[#575757] text-center">
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
         <button
-          class="flex items-center justify-center hoverOpacityHasBG"
-          style="
-            height: 48px;
-            padding: 0 16px;
-            border-radius: 24px;
-            background: #e6e6e6;
-            color: #000;
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 22px;
-            letter-spacing: -0.32px;
-          "
+          class="flex items-center justify-center hoverOpacityHasBG h-12 px-4 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
           @click="onContactSupport"
         >
           {{ $t('rwaRewards.contact_support') }}
@@ -304,40 +179,21 @@
     </template>
 
     <template v-else>
-      <div
-        class="relative z-10 flex flex-col"
-        style="gap: 4px; width: 100%; padding-right: 90px"
-      >
+      <div class="relative z-10 flex flex-col gap-1 w-full pr-[90px]">
         <p
-          style="
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 20px;
-            color: #575757;
-            white-space: nowrap;
-          "
+          class="text-s-14 font-normal leading-5 text-[#575757] whitespace-nowrap"
         >
           {{ $t('rwaRewards.hero_offer_expires', { time: expiresText }) }}
         </p>
         <p
-          style="
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 22px;
-            letter-spacing: -0.4px;
-            color: #000;
-            white-space: pre-line;
-          "
+          class="text-s-20 font-bold leading-[22px] tracking-[-0.4px] text-black whitespace-pre-line"
         >
           {{ $t('rwaRewards.hero_title') }}
         </p>
       </div>
 
-      <div
-        class="relative z-10 flex flex-col"
-        style="gap: 16px; width: 100%"
-      >
-        <div class="flex flex-col" style="width: 100%">
+      <div class="relative z-10 flex flex-col gap-4 w-full">
+        <div class="flex flex-col w-full">
           <rwa-modal-step
             v-for="(step, i) in steps"
             :key="step.n"
@@ -346,89 +202,40 @@
             :last="i === steps.length - 1"
             path-height="36px"
           >
-            <p
-              style="
-                font-size: 14px;
-                line-height: 20px;
-                color: #575757;
-                padding-top: 2px;
-              "
-            >
+            <p class="text-s-14 leading-5 text-[#575757] pt-0.5">
               {{ step.pre }}
-              <span
-                style="font-weight: 600; color: #000; letter-spacing: -0.28px"
-                >{{ step.bold }}</span
+              <span class="font-semibold text-black tracking-[-0.28px]">{{
+                step.bold
+              }}</span
               ><span v-if="step.post"> {{ step.post }}</span>
             </p>
           </rwa-modal-step>
         </div>
 
-        <div
-          class="flex"
-          style="gap: 8px; width: 100%; container-type: inline-size"
-        >
+        <div class="flex gap-2 w-full [container-type:inline-size]">
           <div
             v-if="isDisabledCta"
-            class="relative"
-            style="flex: 1"
+            class="relative flex-1"
             @mouseenter="onTipEnter"
             @mouseleave="onTipLeave"
           >
             <button
-              class="flex items-center justify-center"
-              style="
-                width: 100%;
-                height: 48px;
-                padding: 0 16px;
-                gap: 8px;
-                border-radius: 24px;
-                background: #f5f5f5;
-                color: #767676;
-                font-size: clamp(12px, 4.2cqi, 16px);
-                font-weight: 600;
-                letter-spacing: -0.32px;
-                cursor: pointer;
-                white-space: nowrap;
-              "
+              class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
               disabled
             >
               {{ disabledCtaLabel }}
-              <information-circle-icon
-                style="width: 22px; height: 22px; flex-shrink: 0"
-              />
+              <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
             </button>
           </div>
           <button
             v-else
-            class="flex items-center justify-center hoverOpacityHasBG"
-            style="
-              flex: 1;
-              height: 48px;
-              border-radius: 24px;
-              background: #005ae5;
-              color: #fff;
-              font-size: clamp(12px, 4.2cqi, 16px);
-              font-weight: 600;
-              letter-spacing: -0.32px;
-              white-space: nowrap;
-            "
+            class="flex items-center justify-center hoverOpacityHasBG flex-1 h-12 rounded-24 bg-primary text-white text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             @click="onTrade"
           >
             {{ $t('rwaRewards.trade_now') }}
           </button>
           <button
-            class="flex items-center justify-center hoverOpacityHasBG"
-            style="
-              height: 48px;
-              padding: 0 24px;
-              border-radius: 24px;
-              background: #e6e6e6;
-              color: #000;
-              font-size: clamp(12px, 4.2cqi, 16px);
-              font-weight: 600;
-              letter-spacing: -0.32px;
-              white-space: nowrap;
-            "
+            class="flex items-center justify-center hoverOpacityHasBG h-12 px-6 rounded-24 bg-[#e6e6e6] text-black text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             @click="onMoreInfo"
           >
             {{ $t('rwaRewards.more_info') }}
@@ -440,37 +247,16 @@
     <teleport to="body">
       <div v-if="showTip" class="fixed pointer-events-none" :style="tipStyle">
         <div
-          style="
-            background: #fff;
-            border-radius: 12px;
-            padding: 12px 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-          "
+          class="bg-white rounded-12 py-3 px-4 shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
         >
           <p
-            style="
-              font-size: 12px;
-              font-weight: 600;
-              line-height: 18px;
-              letter-spacing: -0.24px;
-              color: #000;
-              text-align: center;
-            "
+            class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px] text-black text-center"
           >
             {{ disabledCtaTooltip }}
           </p>
         </div>
         <div
-          style="
-            position: absolute;
-            left: 50%;
-            top: 100%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.08);
-          "
+          class="absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2 rotate-45 w-3 h-3 bg-white shadow-[3px_3px_8px_rgba(0,0,0,0.08)]"
         ></div>
       </div>
     </teleport>
@@ -577,7 +363,15 @@ const steps: { n: number; pre: string; bold: string; post?: string }[] = [
     bold: t('rwaRewards.hero_step1_bold'),
     post: t('rwaRewards.hero_step1_post'),
   },
-  { n: 2, pre: t('rwaRewards.hero_step2'), bold: t('rwaRewards.hero_step2_bold') },
-  { n: 3, pre: t('rwaRewards.hero_step3'), bold: t('rwaRewards.hero_step3_bold') },
+  {
+    n: 2,
+    pre: t('rwaRewards.hero_step2'),
+    bold: t('rwaRewards.hero_step2_bold'),
+  },
+  {
+    n: 3,
+    pre: t('rwaRewards.hero_step3'),
+    bold: t('rwaRewards.hero_step3_bold'),
+  },
 ]
 </script>

@@ -1,13 +1,13 @@
 <template>
-  <div class="flex items-start" style="gap: 12px; width: 100%">
+  <div class="flex items-start gap-3 w-full">
     <div
       class="flex flex-col items-center shrink-0"
       :class="{ 'self-stretch': stretch }"
-      :style="stretch ? {} : last ? {} : { height: pathHeight }"
+      :style="stretch || last ? undefined : { height: pathHeight }"
     >
       <div
-        class="flex items-center justify-center shrink-0"
-        :style="circleStyle"
+        class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full box-border"
+        :class="circleClass"
       >
         <svg
           v-if="variant === 'done' || variant === 'doneGrey'"
@@ -38,21 +38,20 @@
             stroke-linecap="round"
           />
         </svg>
-        <span v-else :style="numberStyle">{{ number }}</span>
+        <span
+          v-else
+          class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
+          :class="variant === 'current' ? 'text-[#0b53bf]' : 'text-black'"
+          >{{ number }}</span
+        >
       </div>
       <div
         v-if="!last"
-        :style="{
-          width: '2px',
-          flex: 1,
-          marginTop: '2px',
-          marginBottom: '2px',
-          borderRadius: '3px',
-          background: connectorBlue ? '#0b53bf' : '#e6e6e6',
-        }"
+        class="w-0.5 flex-1 my-0.5 rounded-[3px]"
+        :class="connectorBlue ? 'bg-[#0b53bf]' : 'bg-[#e6e6e6]'"
       ></div>
     </div>
-    <div style="flex: 1; min-width: 0">
+    <div class="flex-1 min-w-0">
       <slot />
     </div>
   </div>
@@ -73,32 +72,18 @@ const props = withDefaults(
   { last: false, stretch: false, pathHeight: '48px', connectorBlue: false },
 )
 
-const circleStyle = computed(() => {
-  const base = {
-    width: '24px',
-    height: '24px',
-    borderRadius: '100px',
-    boxSizing: 'border-box' as const,
-  }
+const circleClass = computed(() => {
   switch (props.variant) {
     case 'done':
-      return { ...base, background: '#0b53bf' }
+      return 'bg-[#0b53bf]'
     case 'doneGrey':
-      return { ...base, background: '#e6e6e6' }
+      return 'bg-[#e6e6e6]'
     case 'current':
-      return { ...base, border: '2px solid #0b53bf' }
+      return 'border-2 border-[#0b53bf]'
     case 'failed':
-      return { ...base, background: '#e40c58' }
+      return 'bg-[#e40c58]'
     default:
-      return { ...base, background: '#e6e6e6' }
+      return 'bg-[#e6e6e6]'
   }
 })
-
-const numberStyle = computed(() => ({
-  fontSize: '14px',
-  fontWeight: 600,
-  lineHeight: '20px',
-  letterSpacing: '-0.28px',
-  color: props.variant === 'current' ? '#0b53bf' : '#000',
-}))
 </script>

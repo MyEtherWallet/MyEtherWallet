@@ -2,7 +2,7 @@
   "rwaRewards": {
     "section_title": "Rewards & offers",
     "trade_title": "Trade and get 5 USDC",
-    "trade_description": "Each hour, the first 10 trades of $50+ reward 5 USDC.",
+    "trade_description": "Each hour, the first 15 trades of $100+ reward 5 USDC.",
     "hold_title": "Hold and get rewarded",
     "hold_description": "Trade at least $100 and hold it for 14 days to get your reward",
     "fees_title": "Zero MEW Fees!",
@@ -21,7 +21,7 @@
     "hero_title": "Hold and get\n$10 USDC",
     "hero_step1": "Make a",
     "hero_step1_bold": "qualifying trade",
-    "hero_step1_post": "($100+)",
+    "hero_step1_post": " ($100+)",
     "hero_step2": "Hold at least $100 for",
     "hero_step2_bold": "14 days",
     "hero_step3": "Get rewarded with",

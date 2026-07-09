@@ -5,13 +5,17 @@
       @click="onLearnMore"
     >
       <div class="flex-1 min-w-0">
-        <p class="text-s-11 font-semibold text-black leading-tight">
-          {{
-            props.location === 'small-banner-swap' ? 'Swap $50+' : 'Trade $100+'
-          }}
-          on Ethereum and
-          <span class="text-primary"> Earn 5 USDC</span>
-        </p>
+        <div class="text-s-11 font-semibold text-black leading-tight">
+          <div v-if="props.location === 'small-banner-swap'">
+            Swap $50+ on Ethereum and
+            <span class="text-primary"> Earn 5 USDC</span>
+          </div>
+          <div v-else>
+            Trade, hold and get <span class="text-primary"> $10 USDC</span>
+            <br />
+            Trade $100 to qualify
+          </div>
+        </div>
       </div>
       <button
         class="flex items-center gap-1 text-s-14 text-black underline whitespace-nowrap hoverOpacity shrink-0"

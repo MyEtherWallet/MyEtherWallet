@@ -4,9 +4,13 @@
       {{ $t('rwaRewards.section_title') }}
     </h3>
     <div class="relative">
-      <div ref="track" class="carousel-track flex gap-5 overflow-x-auto" @scroll="updateScroll">
+      <div
+        ref="track"
+        class="carousel-track flex gap-5 overflow-x-auto"
+        @scroll="updateScroll"
+      >
         <rwa-reward-card
-          :style="cardFlex"
+          class="flex-1 min-w-[440px]"
           illustration="trade"
           :status="tradeCardStatus"
           :title="$t('rwaRewards.trade_title')"
@@ -19,20 +23,22 @@
           @secondary="onTradeInfo"
         />
         <rwa-reward-card
-          :style="cardFlex"
+          class="flex-1 min-w-[440px]"
           illustration="hold"
           :status="holdCardStatus"
           :title="$t('rwaRewards.hold_title')"
           :description="$t('rwaRewards.hold_description')"
           :status-text="holdCardStatusText"
           :primary-label="$t('rwaRewards.trade')"
-          :primary-disabled="holdCardStatus !== 'ongoing' && holdCardStatus !== 'holding'"
+          :primary-disabled="
+            holdCardStatus !== 'ongoing' && holdCardStatus !== 'holding'
+          "
           :secondary-label="$t('rwaRewards.more_info')"
           @primary="onTrade"
           @secondary="onMoreInfo"
         />
         <rwa-reward-card
-          :style="cardFlex"
+          class="flex-1 min-w-[440px]"
           illustration="fees"
           :title="$t('rwaRewards.fees_title')"
           :description="$t('rwaRewards.fees_description')"
@@ -45,29 +51,11 @@
       <div
         v-show="canScrollLeft"
         aria-hidden="true"
-        class="pointer-events-none absolute"
-        style="
-          top: 0;
-          left: 0;
-          width: 96px;
-          height: 220px;
-          background: linear-gradient(90deg, #f5f5f7 0%, rgba(245, 245, 247, 0) 100%);
-        "
+        class="pointer-events-none absolute top-0 left-0 w-24 h-[220px] bg-[linear-gradient(90deg,#f5f5f7_0%,rgba(245,245,247,0)_100%)]"
       ></div>
       <button
         v-show="canScrollLeft"
-        class="absolute flex items-center justify-center hoverOpacityHasBG"
-        style="
-          top: 110px;
-          left: 8px;
-          transform: translateY(-50%);
-          width: 32px;
-          height: 32px;
-          border-radius: 24px;
-          border: 1px solid #e6e6e6;
-          background: #fff;
-          z-index: 2;
-        "
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] left-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
         :aria-label="$t('rwaRewards.previous')"
         @click="scrollPrev"
       >
@@ -84,29 +72,11 @@
       <div
         v-show="canScrollRight"
         aria-hidden="true"
-        class="pointer-events-none absolute"
-        style="
-          top: 0;
-          right: 0;
-          width: 96px;
-          height: 220px;
-          background: linear-gradient(270deg, #f5f5f7 0%, rgba(245, 245, 247, 0) 100%);
-        "
+        class="pointer-events-none absolute top-0 right-0 w-24 h-[220px] bg-[linear-gradient(270deg,#f5f5f7_0%,rgba(245,245,247,0)_100%)]"
       ></div>
       <button
         v-show="canScrollRight"
-        class="absolute flex items-center justify-center hoverOpacityHasBG"
-        style="
-          top: 110px;
-          right: 8px;
-          transform: translateY(-50%);
-          width: 32px;
-          height: 32px;
-          border-radius: 24px;
-          border: 1px solid #e6e6e6;
-          background: #fff;
-          z-index: 2;
-        "
+        class="absolute flex items-center justify-center hoverOpacityHasBG top-[110px] right-2 -translate-y-1/2 w-8 h-8 rounded-24 border border-[#e6e6e6] bg-white z-[2]"
         :aria-label="$t('rwaRewards.next')"
         @click="scrollNext"
       >
@@ -182,8 +152,6 @@ const tradeStatusText = computed(() => {
   }
 })
 
-const cardFlex = { flex: '1 1 0', minWidth: '440px' }
-
 const track = ref<HTMLElement | null>(null)
 const canScrollLeft = ref(false)
 const canScrollRight = ref(false)
@@ -245,12 +213,10 @@ const holdCardStatusText = computed(() => {
     return t('rwaRewards.hold_for_more_days', {
       count: daysUntil(activeReward.value?.qualification_timestamp),
     })
-  if (holdCardStatus.value === 'claimed')
-    return t('rwaRewards.already_claimed')
+  if (holdCardStatus.value === 'claimed') return t('rwaRewards.already_claimed')
   if (holdCardStatus.value === 'paused')
     return t('rwaRewards.temporarily_paused')
-  if (holdCardStatus.value === 'ended')
-    return t('rwaRewards.campaign_ended')
+  if (holdCardStatus.value === 'ended') return t('rwaRewards.campaign_ended')
   if (holdCardStatus.value === 'banned')
     return t('rwaRewards.modal_banned_title')
   if (holdCardStatus.value === 'notEligible')

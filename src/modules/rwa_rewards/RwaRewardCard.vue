@@ -1,94 +1,52 @@
 <template>
   <div
-    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start"
-    style="height: 220px; padding: 20px; border-radius: 16px"
+    class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-[220px] p-5 rounded-16"
   >
     <img
       :src="illustrationSrc"
       alt=""
-      class="pointer-events-none select-none absolute bottom-0 right-0 object-cover object-bottom"
-      style="height: 100%; width: 205px"
+      class="pointer-events-none select-none absolute bottom-0 right-0 object-cover object-bottom h-full w-[205px]"
     />
 
-    <div class="relative z-10 flex flex-col" style="max-width: 250px; gap: 8px">
+    <div class="relative z-10 flex flex-col max-w-[250px] gap-2">
       <div class="flex flex-col">
         <p
-          style="
-            font-size: 16px;
-            font-weight: 600;
-            line-height: 22px;
-            letter-spacing: -0.32px;
-            color: #000;
-          "
+          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px] text-black"
         >
           {{ title }}
         </p>
-        <p
-          style="
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 20px;
-            color: #575757;
-          "
-        >
+        <p class="text-s-14 font-normal leading-5 text-[#575757]">
           {{ description }}
         </p>
       </div>
       <p
         v-if="footnote"
-        style="
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 18px;
-          color: #575757;
-        "
+        class="text-s-12 font-normal leading-[18px] text-[#575757]"
       >
         {{ footnote }}
       </p>
     </div>
 
-    <div
-      class="relative z-10 flex flex-col items-start"
-      style="gap: 12px; justify-content: center"
-    >
+    <div class="relative z-10 flex flex-col items-start justify-center gap-3">
       <div
         v-if="statusText"
-        style="
-          padding: 4px 8px;
-          border-radius: 8px;
-          font-size: 11px;
-          font-weight: 700;
-          line-height: 15px;
-          letter-spacing: 0.6px;
-          text-transform: uppercase;
-          white-space: nowrap;
-        "
+        class="py-1 px-2 rounded-8 text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
         :style="{ color: statusBadge.text, background: statusBadge.bg }"
       >
         {{ statusText }}
       </div>
       <div
         v-if="primaryLabel || secondaryLabel"
-        class="flex items-center"
-        style="gap: 8px"
+        class="flex items-center gap-2"
       >
         <button
           v-if="primaryLabel"
-          class="flex items-center"
-          :class="{ hoverOpacityHasBG: !primaryDisabled }"
-          style="
-            height: 40px;
-            padding: 0 12px 0 16px;
-            gap: 4px;
-            border-radius: 9999px;
-            font-size: 14px;
-            font-weight: 600;
+          class="flex items-center h-10 pr-3 pl-4 gap-1 rounded-full text-s-14 font-semibold"
+          :class="
+            primaryDisabled
+              ? 'bg-[#f5f5f5] text-[#767676] cursor-default'
+              : 'bg-primary text-white cursor-pointer hoverOpacityHasBG'
           "
-          :style="{
-            background: primaryDisabled ? '#f5f5f5' : '#005ae5',
-            color: primaryDisabled ? '#767676' : '#fff',
-            cursor: primaryDisabled ? 'default' : 'pointer',
-          }"
           :disabled="primaryDisabled"
           @click="primaryDisabled || emit('primary')"
         >
@@ -105,16 +63,7 @@
         </button>
         <button
           v-if="secondaryLabel"
-          class="hoverOpacityHasBG"
-          style="
-            height: 40px;
-            padding: 0 16px;
-            border-radius: 9999px;
-            background: #e6e6e6;
-            color: #000;
-            font-size: 14px;
-            font-weight: 600;
-          "
+          class="hoverOpacityHasBG h-10 px-4 rounded-full bg-[#e6e6e6] text-black text-s-14 font-semibold"
           @click="emit('secondary')"
         >
           {{ secondaryLabel }}

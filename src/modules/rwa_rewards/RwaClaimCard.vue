@@ -1,46 +1,23 @@
 <template>
   <div
-    class="flex flex-col"
-    style="
-      width: 100%;
-      gap: 16px;
-      padding: 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      background: #fff;
-    "
+    class="flex flex-col w-full gap-4 p-4 rounded-16 border border-black/15 bg-white"
   >
-    <div class="flex items-center" style="gap: 12px; width: 100%">
-      <img
-        :src="usdcIcon"
-        alt=""
-        style="width: 32px; height: 32px; flex-shrink: 0"
-      />
-      <div class="flex flex-col" style="flex: 1; min-width: 0">
+    <div class="flex items-center gap-3 w-full">
+      <img :src="usdcIcon" alt="" class="w-8 h-8 shrink-0" />
+      <div class="flex flex-col flex-1 min-w-0">
         <p
-          style="
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 20px;
-            letter-spacing: -0.28px;
-            color: #000;
-          "
+          class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
         >
           {{ amountLabel }}
         </p>
-        <p style="font-size: 12px; line-height: 18px; color: #575757">
+        <p class="text-s-12 leading-[18px] text-[#575757]">
           {{ subtitle }}
         </p>
       </div>
       <div
         v-if="variant === 'sent' || variant === 'closed'"
-        class="flex items-center justify-center shrink-0"
-        :style="{
-          width: '24px',
-          height: '24px',
-          borderRadius: '100px',
-          background: variant === 'sent' ? '#05c0a5' : '#e40c58',
-        }"
+        class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
+        :class="variant === 'sent' ? 'bg-success' : 'bg-[#e40c58]'"
       >
         <svg
           v-if="variant === 'sent'"
@@ -70,17 +47,7 @@
 
     <button
       v-if="variant === 'claim'"
-      class="flex items-center justify-center hoverOpacityHasBG"
-      style="
-        width: 100%;
-        height: 48px;
-        border-radius: 24px;
-        background: #005ae5;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 600;
-        letter-spacing: -0.32px;
-      "
+      class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]"
       @click="emit('claim')"
     >
       {{ claimLabel }}

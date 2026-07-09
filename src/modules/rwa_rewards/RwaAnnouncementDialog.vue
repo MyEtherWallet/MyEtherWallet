@@ -7,52 +7,27 @@
     class="sm:max-w-[480px] mx-auto !rounded-32"
   >
     <template #content>
-      <div class="flex flex-col overflow-hidden" style="border-radius: 32px">
+      <div class="flex flex-col overflow-hidden rounded-32">
         <img
           :src="overlayImg"
           alt=""
           class="w-full select-none pointer-events-none"
         />
-        <div class="flex flex-col" style="padding: 24px; gap: 40px">
-          <div class="flex flex-col" style="gap: 16px">
+        <div class="flex flex-col p-6 gap-10">
+          <div class="flex flex-col gap-4">
             <h1
-              style="
-                font-size: 28px;
-                font-weight: 700;
-                line-height: 32px;
-                letter-spacing: -0.84px;
-                color: #000;
-                text-align: center;
-              "
+              class="text-s-28 font-bold leading-8 tracking-[-0.84px] text-black text-center"
             >
               {{ $t('rwaRewards.announcement_title') }}
             </h1>
             <p
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                line-height: 22px;
-                color: #575757;
-                text-align: center;
-                white-space: pre-line;
-              "
+              class="text-s-16 font-normal leading-[22px] text-[#575757] text-center whitespace-pre-line"
             >
               {{ $t('rwaRewards.announcement_desc') }}
             </p>
           </div>
           <button
-            class="hoverOpacityHasBG"
-            style="
-              width: 100%;
-              height: 48px;
-              padding: 0 16px;
-              border-radius: 24px;
-              background: #e6e6e6;
-              color: #000;
-              font-size: 16px;
-              font-weight: 600;
-              letter-spacing: -0.32px;
-            "
+            class="hoverOpacityHasBG w-full h-12 px-4 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
             @click="onGoToOffer"
           >
             {{ $t('rwaRewards.go_to_offer') }}

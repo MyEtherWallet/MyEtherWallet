@@ -1,31 +1,20 @@
 <template>
-  <div style="width: 100%">
+  <div class="w-full">
     <p
       v-if="daysLeftLabel"
-      style="
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 20px;
-        letter-spacing: -0.28px;
-        color: #000;
-      "
+      class="text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black"
     >
       {{ daysLeftLabel }}
     </p>
     <div
-      class="grid"
-      :style="{
-        gridTemplateColumns: 'repeat(7, 1fr)',
-        gap: '4px',
-        width: '100%',
-        marginTop: daysLeftLabel ? '8px' : '0',
-      }"
+      class="grid grid-cols-7 gap-1 w-full"
+      :class="{ 'mt-2': daysLeftLabel }"
     >
       <div
         v-for="day in total"
         :key="day"
-        class="flex items-center justify-center"
-        :style="chipStyle(day)"
+        class="flex items-center justify-center py-1.5 px-[7px] rounded-8 min-h-[30px] box-border"
+        :class="chipClass(day)"
       >
         <svg
           v-if="chipState(day) === 'done' || chipState(day) === 'doneGrey'"
@@ -56,7 +45,12 @@
             stroke-linecap="round"
           />
         </svg>
-        <span v-else :style="numberStyle(day)">{{ day }}</span>
+        <span
+          v-else
+          class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]"
+          :class="numberClass(day)"
+          >{{ day }}</span
+        >
       </div>
     </div>
   </div>
@@ -86,32 +80,21 @@ const chipState = (day: number): ChipState => {
   return 'pending'
 }
 
-const chipStyle = (day: number) => {
-  const base = {
-    padding: '6px 7px',
-    borderRadius: '8px',
-    minHeight: '30px',
-    boxSizing: 'border-box' as const,
-  }
+const chipClass = (day: number) => {
   switch (chipState(day)) {
     case 'done':
-      return { ...base, background: '#0b53bf' }
+      return 'bg-[#0b53bf]'
     case 'current':
-      return { ...base, background: '#ffffffb2', border: '2px solid #0b53bf' }
+      return 'bg-white/70 border-2 border-[#0b53bf]'
     case 'failed':
-      return { ...base, background: '#e40c58' }
+      return 'bg-[#e40c58]'
     case 'doneGrey':
-      return { ...base, background: '#a5a5a5' }
+      return 'bg-grey-subtle'
     default:
-      return { ...base, background: '#e6e6e6' }
+      return 'bg-[#e6e6e6]'
   }
 }
 
-const numberStyle = (day: number) => ({
-  fontSize: '12px',
-  fontWeight: 600,
-  lineHeight: '18px',
-  letterSpacing: '-0.24px',
-  color: chipState(day) === 'current' ? '#0b53bf' : '#575757',
-})
+const numberClass = (day: number) =>
+  chipState(day) === 'current' ? 'text-[#0b53bf]' : 'text-[#575757]'
 </script>
