@@ -49,6 +49,15 @@
       {{ $t('multi_address.connect_address_modal.open_wallet', { wallet: info?.walletName }) }}
       <arrow-top-right-on-square-icon class="w-5 h-5" />
     </button>
+    <!-- Retry the connect after the user selects the address in their extension
+         (an auto-retry also fires on accountsChanged; this is the manual path). -->
+    <button
+      data-test="connect-address-view-retry"
+      class="shrink-0 mt-4 h-12 w-full rounded-[24px] bg-primary text-white text-s-16 font-semibold flex items-center justify-center gap-2"
+      @click="retry"
+    >
+      {{ $t('multi_address.connect_address_modal.try_again') }}
+    </button>
   </div>
 </template>
 
