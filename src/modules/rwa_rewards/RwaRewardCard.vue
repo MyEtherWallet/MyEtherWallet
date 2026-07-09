@@ -29,11 +29,11 @@
 
     <div class="relative z-10 flex flex-col items-start justify-center gap-3">
       <div
-        v-if="statusText"
+        v-if="effectiveStatusText"
         class="py-1 px-2 rounded-8 text-s-11 font-bold leading-[15px] tracking-sp-06 uppercase whitespace-nowrap"
         :style="{ color: statusBadge.text, background: statusBadge.bg }"
       >
-        {{ statusText }}
+        {{ effectiveStatusText }}
       </div>
       <div
         v-if="primaryLabel || secondaryLabel"
@@ -43,12 +43,12 @@
           v-if="primaryLabel"
           class="flex items-center h-10 pr-3 pl-4 gap-1 rounded-full text-s-14 font-semibold"
           :class="
-            primaryDisabled
+            effectivePrimaryDisabled
               ? 'bg-[#f5f5f5] text-[#767676] cursor-default'
               : 'bg-primary text-white cursor-pointer hoverOpacityHasBG'
           "
-          :disabled="primaryDisabled"
-          @click="primaryDisabled || emit('primary')"
+          :disabled="effectivePrimaryDisabled"
+          @click="effectivePrimaryDisabled || emit('primary')"
         >
           {{ primaryLabel }}
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -75,6 +75,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+import { useRewardsStore } from '@/stores/rewardsStore'
 import illusTrade from '@/assets/images/rwa-rewards/hero-claimed.webp'
 import illusHold from '@/assets/images/rwa-rewards/hero-holding.webp'
 import illusFees from '@/assets/images/rwa-rewards/hero-earned.webp'
@@ -106,13 +109,73 @@ const props = defineProps<{
 
 const emit = defineEmits<{ primary: []; secondary: [] }>()
 
+const { t } = useI18n()
+const rewardsStore = useRewardsStore()
+const {
+  isBanned,
+  isEligible,
+  eligibilityV2,
+  tradeMarketClosed,
+  tradeClaimed,
+  tradeNoRewards,
+  tradeRemainingCount,
+} = storeToRefs(rewardsStore)
+
+/**
+ * The trade card derives its own status from the rewards store rather than
+ * receiving it via props. Other cards (hold/fees) stay props-driven.
+ */
+const isTradeCard = computed(() => props.illustration === 'trade')
+
+const tradeStatus = computed<RwaRewardStatus>(() => {
+  if (isBanned.value) return 'banned'
+  if (tradeMarketClosed.value) return 'paused'
+  if (tradeClaimed.value) return 'claimed'
+  // Only trust ineligibility once eligibility data has loaded, otherwise
+  // isEligible is false by default and would flash notEligible on mount.
+  if (eligibilityV2.value && !isEligible.value) return 'notEligible'
+  if (tradeNoRewards.value) return 'noRewards'
+  return 'ongoing'
+})
+
+const tradeStatusText = computed(() => {
+  switch (tradeStatus.value) {
+    case 'noRewards':
+      return t('rwaRewards.no_rewards_left_this_hour')
+    case 'claimed':
+      return t('rwaRewards.already_claimed')
+    case 'paused':
+      return t('rwaRewards.temporarily_paused')
+    case 'banned':
+      return t('rwaRewards.modal_banned_title')
+    case 'notEligible':
+      return t('rwaRewards.modal_not_eligible_title')
+    default: {
+      const count = tradeRemainingCount.value
+      return count == null
+        ? ''
+        : t('rwaRewards.rewards_left_this_hour', { count })
+    }
+  }
+})
+
+const effectiveStatus = computed(() =>
+  isTradeCard.value ? tradeStatus.value : props.status,
+)
+const effectiveStatusText = computed(() =>
+  isTradeCard.value ? tradeStatusText.value : props.statusText,
+)
+const effectivePrimaryDisabled = computed(() =>
+  isTradeCard.value ? tradeStatus.value !== 'ongoing' : props.primaryDisabled,
+)
+
 const illustrationSrc = computed(() => {
   const normal = { trade: illusTrade, hold: illusHold, fees: illusFees }
   const grey = { trade: illusTradeGrey, hold: illusHoldGrey, fees: illusFees }
   const isGrey =
-    props.status === 'ended' ||
-    props.status === 'banned' ||
-    props.status === 'notEligible'
+    effectiveStatus.value === 'ended' ||
+    effectiveStatus.value === 'banned' ||
+    effectiveStatus.value === 'notEligible'
   return (isGrey ? grey : normal)[props.illustration]
 })
 
@@ -127,6 +190,6 @@ const statusBadge = computed(
       ended: { text: '#cc0452', bg: '#ffdbe3' },
       banned: { text: '#cc0452', bg: '#ffdbe3' },
       notEligible: { text: '#cc0452', bg: '#ffdbe3' },
-    })[props.status ?? 'ongoing'],
+    })[effectiveStatus.value ?? 'ongoing'],
 )
 </script>

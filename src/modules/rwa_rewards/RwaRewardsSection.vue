@@ -12,12 +12,9 @@
         <rwa-reward-card
           class="flex-1 min-w-[440px]"
           illustration="trade"
-          :status="tradeCardStatus"
           :title="$t('rwaRewards.trade_title')"
           :description="$t('rwaRewards.trade_description')"
-          :status-text="tradeStatusText"
           :primary-label="$t('rwaRewards.trade')"
-          :primary-disabled="tradeCardStatus !== 'ongoing'"
           :secondary-label="$t('rwaRewards.more_info')"
           @primary="onTrade"
           @secondary="onTradeInfo"
@@ -105,52 +102,11 @@ import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
-import { useRewardsStore } from '@/stores/rewardsStore'
 
 const { t } = useI18n()
 const walletMenuStore = useWalletMenuStore()
 const holdingsStore = useHoldingsStore()
-const rewardsStore = useRewardsStore()
 const { status, activeReward, seasonEnd } = storeToRefs(holdingsStore)
-const { tradeRemainingCount } = storeToRefs(rewardsStore)
-
-type TradeState =
-  | 'ongoing'
-  | 'noRewards'
-  | 'claimed'
-  | 'paused'
-  | 'ended'
-  | 'banned'
-  | 'notEligible'
-
-const tradeCardStatus = computed<TradeState>(() => {
-  const count = tradeRemainingCount.value
-  if (count != null && count <= 0) return 'noRewards'
-  return 'ongoing'
-})
-
-const tradeStatusText = computed(() => {
-  switch (tradeCardStatus.value) {
-    case 'noRewards':
-      return t('rwaRewards.no_rewards_left_this_hour')
-    case 'claimed':
-      return t('rwaRewards.already_claimed')
-    case 'paused':
-      return t('rwaRewards.temporarily_paused')
-    case 'ended':
-      return t('rwaRewards.campaign_ended')
-    case 'banned':
-      return t('rwaRewards.modal_banned_title')
-    case 'notEligible':
-      return t('rwaRewards.modal_not_eligible_title')
-    default: {
-      const count = tradeRemainingCount.value
-      return count == null
-        ? ''
-        : t('rwaRewards.rewards_left_this_hour', { count })
-    }
-  }
-})
 
 const track = ref<HTMLElement | null>(null)
 const canScrollLeft = ref(false)
