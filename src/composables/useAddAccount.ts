@@ -18,7 +18,7 @@ export function useAddAccount() {
   const accessStore = useAccessStore()
   const watchOnlyStore = useWatchOnlyStore()
   const toastStore = useToastStore()
-  const { connect } = useConnectWallet()
+  const { connect, isInjectedAvailable } = useConnectWallet()
   const { newWalletList } = useWalletList()
 
   /**
@@ -64,12 +64,12 @@ export function useAddAccount() {
     // matching active address connects; a mismatch prompts the user to select it.
     accessStore.setExpectNewAddress(false)
     accessStore.setIntendedAddress(account.address)
-    // We already know which wallet this address belongs to, so connect straight
-    // to it without surfacing the access chooser dialog. Connecting feedback
-    // lives on the card's button; on a mismatch the connect-address prompt
-    // slides into the address popup. Only fall back to the chooser when the
-    // wallet can't be resolved to a config.
-    if (config) {
+    // Connect straight to the wallet only when its injected (EIP-6963) provider
+    // is actually present — otherwise connect() would fall back to WalletConnect
+    // with no visible UI from the popup. When it isn't (e.g. MetaMask isn't
+    // announcing because another extension took over window.ethereum), surface
+    // the access chooser so the user gets a working, visible reconnect path.
+    if (config && isInjectedAvailable(config)) {
       await connect(config)
     } else {
       accessStore.openAccessDialog()

@@ -23,12 +23,21 @@ export const useAccessStore = defineStore('accessStore', () => {
   const isOpenAccessDialog = ref(false)
 
   const openAccessDialog = () => {
+    // Reset any leftover state from a previous session so the chooser always
+    // opens clean — otherwise a stale connecting/view state can show through.
+    currentView.value = 'default'
+    clickedWeb3Wallet.value = undefined
+    clickedWalletConnect.value = undefined
+    web3ConnectionError.value = null
     isOpenAccessDialog.value = true
     analytics.trackConnectWalletEvent(ConnectWalletEvent.SHOWN)
   }
   const closeAccessDialog = () => {
     isOpenAccessDialog.value = false
     currentView.value = 'default'
+    clickedWeb3Wallet.value = undefined
+    clickedWalletConnect.value = undefined
+    web3ConnectionError.value = null
     expectNewAddress.value = false
     intendedAddress.value = null
   }

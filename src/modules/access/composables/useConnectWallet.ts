@@ -372,6 +372,12 @@ export const useConnectWallet = () => {
         p.info.name.toLowerCase() === config.id.toLowerCase(),
     )
 
+  /** True when the wallet's injected (EIP-6963) provider is currently present,
+   *  i.e. connect() can reach it directly instead of falling back to
+   *  WalletConnect. */
+  const isInjectedAvailable = (config: WalletConfig): boolean =>
+    _findInjected(config) !== undefined
+
   /** Open the extension's account-selection UI so the user can switch the active
    *  address (EVM injected). Best-effort no-op if the provider isn't found. */
   const openExtensionAccounts = async (config: WalletConfig): Promise<void> => {
@@ -410,5 +416,6 @@ export const useConnectWallet = () => {
     connect,
     openExtensionAccounts,
     watchExtensionAccounts,
+    isInjectedAvailable,
   }
 }

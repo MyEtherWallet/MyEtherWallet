@@ -9,7 +9,7 @@ vi.mock('@/stores/accessStore', () => ({ useAccessStore: () => accessStore }))
 vi.mock('@/stores/watchOnlyStore', () => ({ useWatchOnlyStore: () => watchOnly }))
 vi.mock('@/stores/toastStore', () => ({ useToastStore: () => toastStore }))
 vi.mock('@/modules/access/common/walletConfigs', () => ({ walletConfigs: {} }))
-vi.mock('@/modules/access/composables/useConnectWallet', () => ({ useConnectWallet: () => ({ connect: vi.fn() }) }))
+vi.mock('@/modules/access/composables/useConnectWallet', () => ({ useConnectWallet: () => ({ connect: vi.fn(), isInjectedAvailable: vi.fn(() => false) }) }))
 vi.mock('@/composables/useWalletList', () => ({ useWalletList: () => ({ newWalletList: { value: [] } }) }))
 
 import { useAddAccount } from '@/composables/useAddAccount'

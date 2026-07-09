@@ -397,10 +397,16 @@ const chainsStore = useChainsStore()
 // Experiment: show the "connect address" prompt as an in-popup slide panel
 // (mirrors the ModuleAccessConnectAddress modal) instead of the dialog modal.
 const accessStore = useAccessStore()
-const { connectAddressInfo } = storeToRefs(accessStore)
+const { connectAddressInfo, isOpenAccessDialog } = storeToRefs(accessStore)
 watch(connectAddressInfo, info => {
   if (info && openDialog.value) view.value = 'connect-address'
   else if (!info && view.value === 'connect-address') view.value = 'accounts'
+})
+// The access chooser and this popup are mutually exclusive modals: when the
+// chooser opens (e.g. reconnecting a saved wallet whose injected provider isn't
+// available), close the popup first — same as the "Connect another" button.
+watch(isOpenAccessDialog, open => {
+  if (open) openDialog.value = false
 })
 
 const isActive = (acc: SavedAccount): boolean =>
