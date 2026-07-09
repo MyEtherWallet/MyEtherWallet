@@ -247,6 +247,7 @@ import ManageAccountsConnectAddressView from '@/components/core_layouts/wallet/M
 import ThePaperWallet from '@/components/core_layouts/wallet/ThePaperWallet.vue'
 import ManageAccountsRenameModal from '@/components/core_layouts/wallet/ManageAccountsRenameModal.vue'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
+import { useDetectedAddress } from '@/composables/useDetectedAddress'
 import { useAccountSwitch } from '@/composables/useAccountSwitch'
 import { useAddAccount } from '@/composables/useAddAccount'
 import {
@@ -334,10 +335,12 @@ const triggerCloneStyle = computed<CSSProperties | null>(() => {
 })
 
 watch(openDialog, val => {
+  if (val) void refreshDetectedAddress()
   if (!val) view.value = 'accounts'
 })
 
 const watchOnlyStore = useWatchOnlyStore()
+const { refreshDetectedAddress } = useDetectedAddress()
 const activeAccount = computed<SavedAccount | null>(() => watchOnlyStore.activeAccount)
 // Stable, insertion-ordered list (active is highlighted in place, never moved to the
 // top) so selecting an address does NOT reorder the list.

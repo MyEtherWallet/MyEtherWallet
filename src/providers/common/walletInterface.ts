@@ -44,6 +44,9 @@ export interface WalletInterface {
     options?: unknown
   }) => Promise<HexPrefixedString>
   getAddress: () => Promise<string>
+  /** Current address reported live by an injected extension (null if none /
+   *  not applicable). Only injected wallets implement this. */
+  getLiveAddress?: () => Promise<string | null>
   getWalletType: () => WalletType
   getProvider: () => string
   getBalance: () => Promise<TokenBalancesRaw>

@@ -151,7 +151,7 @@ import ModuleGlobalSearch from '@/modules/global_search/ModuleGlobalSearch.vue'
 import { useGlobalSearch } from '@/modules/global_search/composables/useGlobalSearch'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
   ROUTES_MAIN,
@@ -163,19 +163,19 @@ import { type AppSelectOption } from '@/types/components/appSelect'
 import { useWalletStore } from '@/stores/walletStore'
 import { useWatchOnlyStore } from '@/stores/watchOnlyStore'
 import { storeToRefs } from 'pinia'
-import { WalletType } from '@/providers/types'
 import { useChainsStore } from '@/stores/chainsStore'
 import { watch } from 'vue'
-import type { Provider } from '@/stores/providerStore'
+import { useDetectedAddress } from '@/composables/useDetectedAddress'
 import { analytics } from '@/analytics'
 import { ConnectWalletEvent, CreateWalletEvent } from '@/analytics/events'
 
 const { t } = useI18n()
 const store = useWalletStore()
 const chainStore = useChainsStore()
-const { isWalletConnected, wallet } = storeToRefs(store)
-const { setWatchOnlyIfExist, disconnectWallet, setDetectedAddress } = store
-const { isEvmChain, isBitcoinChain, selectedChain } = storeToRefs(chainStore)
+const { isWalletConnected } = storeToRefs(store)
+const { setWatchOnlyIfExist } = store
+const { selectedChain } = storeToRefs(chainStore)
+const { refreshDetectedAddress } = useDetectedAddress()
 const watchOnlyStore = useWatchOnlyStore()
 const { isMobile, isXLMinAndUp } = useAppBreakpoints()
 
@@ -290,53 +290,32 @@ onMounted(() => {
   }, 5000)
 })
 
-// Stop restoring as soon as a wallet is connected.
+// Stop restoring as soon as a wallet is connected; also reconcile the detected
+// address (the extension may already be on a different, unsaved account).
 watch(isWalletConnected, connected => {
-  if (connected) isRestoringWallet.value = false
+  if (connected) {
+    isRestoringWallet.value = false
+    void refreshDetectedAddress()
+  }
 })
 
-// Whether an address is already saved for the active chain type (used to skip
-// the "detected address" prompt for addresses we already have).
-const isAddressSaved = (address: string): boolean => {
-  const type = selectedChain.value?.type ?? 'EVM'
-  return (watchOnlyStore.watchOnlyAddresses[type] ?? []).some(
-    e => e.address.toLowerCase() === address.toLowerCase(),
-  )
+// MEW-1840: detect an extension address that differs from the connected one so
+// the Manage Accounts popup can offer "Save address" — without auto-switching.
+// Provider-agnostic (works for Enkrypt-BTC/Unisat/EVM): re-query the live
+// address on the triggers below instead of relying on provider `accountsChanged`
+// events, whose API diverges across wallets.
+const onWindowFocus = (): void => {
+  void refreshDetectedAddress()
 }
-
-watch(
-  () => wallet.value,
-  newVal => {
-    if (newVal?.getWalletType() === WalletType.INJECTED) {
-      if (isEvmChain.value) {
-        const injectedInfo = wallet.value?.getProviderInstance?.() as Provider
-        injectedInfo?.provider.on(
-          'accountsChanged',
-          async (accounts: unknown) => {
-            if (accounts && (accounts as string[]).length === 0) {
-              disconnectWallet()
-              return
-            }
-            const next = (accounts as string[])[0]
-            if (next && next !== (await wallet.value?.getAddress())) {
-              // MEW-1840: do NOT auto-switch. Surface the detected address so the
-              // Manage Accounts popup can offer "Save address" — but only when it
-              // isn't already saved (nothing to prompt otherwise).
-              if (!isAddressSaved(next)) setDetectedAddress(next)
-            }
-          },
-        )
-      } else if (isBitcoinChain.value) {
-        const unisatInfo =
-          wallet.value?.getProviderInstance?.() as typeof window.unisat
-        unisatInfo?.on('accountsChanged', async (accounts: unknown) => {
-          const next = (accounts as string[])[0]
-          if (next && next !== (await wallet.value?.getAddress())) {
-            if (!isAddressSaved(next)) setDetectedAddress(next)
-          }
-        })
-      }
-    }
-  },
-)
+const onVisibilityChange = (): void => {
+  if (document.visibilityState === 'visible') void refreshDetectedAddress()
+}
+onMounted(() => {
+  window.addEventListener('focus', onWindowFocus)
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('focus', onWindowFocus)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+})
 </script>

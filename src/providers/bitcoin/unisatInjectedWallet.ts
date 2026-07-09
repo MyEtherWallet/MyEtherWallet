@@ -61,6 +61,15 @@ class UnisatInjectWallet extends BaseBtcWallet {
     })
   }
 
+  async getLiveAddress(): Promise<string | null> {
+    try {
+      const accounts = await this.unisat.getAccounts()
+      return accounts?.[0] ?? null
+    } catch {
+      return null
+    }
+  }
+
   override getWalletType(): WalletType {
     return WalletType.INJECTED
   }
