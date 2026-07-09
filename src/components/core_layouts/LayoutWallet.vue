@@ -189,6 +189,7 @@
       </div>
     </transition>
     <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <rwa-reward-modal />
   </div>
 </template>
 <script setup lang="ts">
@@ -218,6 +219,7 @@ import {
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
 import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 

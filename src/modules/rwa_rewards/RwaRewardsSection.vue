@@ -11,6 +11,7 @@
       >
         <rwa-reward-card
           class="flex-1 min-w-[440px]"
+          :class="tradeRewardIneligible ? 'order-2' : 'order-1'"
           illustration="trade"
           :title="$t('rwaRewards.trade_title')"
           :description="$t('rwaRewards.trade_description')"
@@ -21,6 +22,7 @@
         />
         <rwa-reward-card
           class="flex-1 min-w-[440px]"
+          :class="tradeRewardIneligible ? 'order-1' : 'order-2'"
           illustration="hold"
           :status="holdCardStatus"
           :title="$t('rwaRewards.hold_title')"
@@ -35,7 +37,7 @@
           @secondary="onMoreInfo"
         />
         <rwa-reward-card
-          class="flex-1 min-w-[440px]"
+          class="flex-1 min-w-[440px] order-3"
           illustration="fees"
           :title="$t('rwaRewards.fees_title')"
           :description="$t('rwaRewards.fees_description')"
@@ -102,11 +104,20 @@ import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 
 const { t } = useI18n()
 const walletMenuStore = useWalletMenuStore()
 const holdingsStore = useHoldingsStore()
+const rewardsStore = useRewardsStore()
 const { status, activeReward, seasonEnd } = storeToRefs(holdingsStore)
+const { eligibilityV2 } = storeToRefs(rewardsStore)
+
+// The $5 trade reward is unavailable to this wallet — surface the trade/hold
+// campaign first. Falls back to the default order while eligibility is unknown.
+const tradeRewardIneligible = computed(
+  () => !!eligibilityV2.value && !eligibilityV2.value.trade.eligible,
+)
 
 const track = ref<HTMLElement | null>(null)
 const canScrollLeft = ref(false)

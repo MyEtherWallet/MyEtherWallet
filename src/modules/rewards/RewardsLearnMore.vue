@@ -172,7 +172,7 @@ const infoItems = [
   },
   {
     icon: 'currency-dollar',
-    text: 'Earn $5 USDC per trade.',
+    text: 'Earn 5 USDC per trade.',
   },
   {
     icon: 'calendar',

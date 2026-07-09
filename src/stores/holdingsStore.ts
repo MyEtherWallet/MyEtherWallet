@@ -97,9 +97,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-        qualified.value.length +
-        claimed.value.length +
-        disqualified.value.length >
+      qualified.value.length +
+      claimed.value.length +
+      disqualified.value.length >
       0,
   )
 

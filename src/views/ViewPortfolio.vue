@@ -52,7 +52,6 @@
     </div>
 
     <rwa-rewards-section v-if="isWalletConnected" />
-    <rwa-reward-modal />
     <portfolio-balance />
     <router-view />
   </div>
@@ -69,7 +68,6 @@ import PortfolioBalance from '@/modules/portfolio/PortfolioBalance.vue'
 import ConnectWallet from '@/modules/portfolio/components/ConnectWallet.vue'
 import RwaHeroCard from '@/modules/rwa_rewards/RwaHeroCard.vue'
 import RwaRewardsSection from '@/modules/rwa_rewards/RwaRewardsSection.vue'
-import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import NoBalance from '@/modules/portfolio/components/NoBalance.vue'

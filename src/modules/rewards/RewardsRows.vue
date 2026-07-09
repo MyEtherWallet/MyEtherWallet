@@ -28,7 +28,7 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Swap and Earn $5</span
+            >Swap and Earn 5 USDC</span
           >
           <template v-if="!swapClaimed && !swapNoRewards">
             <div
@@ -114,7 +114,7 @@
             :class="{
               '2xl:text-s-13 3xl:text-s-14': isOpenSideMenu,
             }"
-            >Trade and Earn $5</span
+            >Trade and Earn 5 USDC</span
           >
           <template
             v-if="!tradeClaimed && !tradeNoRewards && !tradeMarketClosed"
