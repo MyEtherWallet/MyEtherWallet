@@ -46,7 +46,6 @@
         <rwa-hero-card class="h-full" />
       </div>
     </template>
-
     <div v-if="isWalletConnected" class="flex flex-col lg-max:flex-row gap-5">
       <portfolio-gains-and-losses type="all" />
       <portfolio-gains-and-losses type="stock" />

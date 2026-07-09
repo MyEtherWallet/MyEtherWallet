@@ -7,7 +7,7 @@
       <div class="flex-1 min-w-0">
         <p class="text-s-11 font-semibold text-black leading-tight">
           {{
-            props.location === 'small-banner-swap' ? 'Swap $50+' : 'Trade $25+'
+            props.location === 'small-banner-swap' ? 'Swap $50+' : 'Trade $100+'
           }}
           on Ethereum and
           <span class="text-primary"> Earn 5 USDC</span>

@@ -28,6 +28,7 @@ const configs = {
   VINATGE: 'https://www.myetherwallet.com/wallet/access',
   APP_VERSION: import.meta.env.VITE_APP_VERSION || '0.0.0',
   INTERCOM_APP_ID: import.meta.env.VITE_INTERCOM_ID || undefined,
+  AMPLITUDE: import.meta.env.VITE_AMPLITUDE || 'dev'
 }
 
 export default configs

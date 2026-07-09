@@ -243,7 +243,10 @@
               </div>
               <div v-if="token.price !== 0" class="text-right">
                 <p class="font-medium text-black">
-                  $ {{ token.price ? formatFiatValue(token.price).value : '0.00' }}
+                  $
+                  {{
+                    token.price ? formatFiatValue(token.price).value : '0.00'
+                  }}
                 </p>
               </div>
             </div>
@@ -574,7 +577,10 @@ const searchResults = computed<TokenBalanceWithUsd[]>(() => {
     return fuzzySearchByKeys(sorted, ['name', 'symbol'], searchInput.value)
   }
 
-  return sorted.slice(0, endingPagination.value)
+  const enabledSorted = sorted.filter(t => !isTokenDisabled(t))
+  const disabledSorted = sorted.filter(t => isTokenDisabled(t))
+  const combinedSorted = [...enabledSorted, ...disabledSorted]
+  return combinedSorted.slice(0, endingPagination.value)
 })
 
 // Disabled-token grouping: split the visible results into the normal
