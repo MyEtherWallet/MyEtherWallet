@@ -19,43 +19,27 @@
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full"
         :class="variant === 'sent' ? 'bg-success' : 'bg-[#e40c58]'"
       >
-        <svg
+        <check-icon
           v-if="variant === 'sent'"
-          width="14"
-          height="14"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <path
-            d="M5 10.5l3.5 3.5L15 6.5"
-            stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <svg v-else width="14" height="14" viewBox="0 0 20 20" fill="none">
-          <path
-            d="M6 6l8 8M14 6l-8 8"
-            stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
+          class="w-3.5 h-3.5 text-white"
+        />
+        <x-mark-icon v-else class="w-3.5 h-3.5 text-white" />
       </div>
     </div>
 
-    <button
+    <app-base-button
       v-if="variant === 'claim'"
-      class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]"
+      class="w-full text-s-16 font-semibold tracking-[-0.32px]"
       @click="emit('claim')"
     >
       {{ claimLabel }}
-    </button>
+    </app-base-button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
 
 defineProps<{

@@ -41,12 +41,13 @@
           :current="holdCurrent"
           :days-left-label="daysLeftLabel"
         />
-        <button
-          class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
+        <app-base-button
+          theme="neutral"
+          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
           @click="onMoreInfo"
         >
           {{ $t('rwaRewards.more_info') }}
-        </button>
+        </app-base-button>
       </div>
     </template>
 
@@ -70,18 +71,19 @@
       <div class="relative z-10 flex flex-col gap-4 w-full">
         <rwa-hold-tracker :current="holdCurrent" :failed-day="holdCurrent" />
         <div class="flex gap-2 w-full">
-          <button
-            class="flex items-center justify-center hoverOpacityHasBG flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]"
+          <app-base-button
+            class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
             @click="onTrade"
           >
             {{ $t('rwaRewards.trade_again') }}
-          </button>
-          <button
-            class="flex items-center justify-center hoverOpacityHasBG h-12 px-6 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
+          </app-base-button>
+          <app-base-button
+            theme="neutral"
+            class="text-s-16 font-semibold tracking-[-0.32px]"
             @click="onMoreInfo"
           >
             {{ $t('rwaRewards.more_info') }}
-          </button>
+          </app-base-button>
         </div>
       </div>
     </template>
@@ -124,12 +126,13 @@
           :amount-label="$t('rwaRewards.reward_amount')"
           :subtitle="$t('rwaRewards.sub_sent')"
         />
-        <button
-          class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
+        <app-base-button
+          theme="neutral"
+          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
           @click="onHide"
         >
           {{ $t('rwaRewards.hide_offer') }}
-        </button>
+        </app-base-button>
       </div>
     </template>
 
@@ -150,12 +153,13 @@
           :amount-label="$t('rwaRewards.reward_amount')"
           :subtitle="$t('rwaRewards.sub_closed')"
         />
-        <button
-          class="flex items-center justify-center hoverOpacityHasBG w-full h-12 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
+        <app-base-button
+          theme="neutral"
+          class="w-full text-s-16 font-semibold tracking-[-0.32px]"
           @click="onHide"
         >
           {{ $t('rwaRewards.hide_offer') }}
-        </button>
+        </app-base-button>
       </div>
     </template>
 
@@ -169,12 +173,13 @@
             {{ $t('rwaRewards.hero_banned_text') }}
           </p>
         </div>
-        <button
-          class="flex items-center justify-center hoverOpacityHasBG h-12 px-4 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
+        <app-base-button
+          theme="neutral"
+          class="text-s-16 font-semibold leading-[22px] tracking-[-0.32px]"
           @click="onContactSupport"
         >
           {{ $t('rwaRewards.contact_support') }}
-        </button>
+        </app-base-button>
       </div>
     </template>
 
@@ -213,11 +218,11 @@
         </div>
 
         <div class="flex gap-2 w-full [container-type:inline-size]">
-          <div
+          <app-tooltip
             v-if="isDisabledCta"
-            class="relative flex-1"
-            @mouseenter="onTipEnter"
-            @mouseleave="onTipLeave"
+            :text="disabledCtaTooltip"
+            position="middle"
+            class="flex-1"
           >
             <button
               class="flex items-center justify-center w-full h-12 px-4 gap-2 rounded-24 bg-[#f5f5f5] text-[#767676] text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] cursor-pointer whitespace-nowrap"
@@ -226,45 +231,29 @@
               {{ disabledCtaLabel }}
               <information-circle-icon class="w-[22px] h-[22px] shrink-0" />
             </button>
-          </div>
-          <button
+          </app-tooltip>
+          <app-base-button
             v-else
-            class="flex items-center justify-center hoverOpacityHasBG flex-1 h-12 rounded-24 bg-primary text-white text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+            class="flex-1 text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             @click="onTrade"
           >
             {{ $t('rwaRewards.trade_now') }}
-          </button>
-          <button
-            class="flex items-center justify-center hoverOpacityHasBG h-12 px-6 rounded-24 bg-[#e6e6e6] text-black text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
+          </app-base-button>
+          <app-base-button
+            theme="neutral"
+            class="text-[clamp(12px,4.2cqi,16px)] font-semibold tracking-[-0.32px] whitespace-nowrap"
             @click="onMoreInfo"
           >
             {{ $t('rwaRewards.more_info') }}
-          </button>
+          </app-base-button>
         </div>
       </div>
     </template>
-
-    <teleport to="body">
-      <div v-if="showTip" class="fixed pointer-events-none" :style="tipStyle">
-        <div
-          class="bg-white rounded-12 py-3 px-4 shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
-        >
-          <p
-            class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px] text-black text-center"
-          >
-            {{ disabledCtaTooltip }}
-          </p>
-        </div>
-        <div
-          class="absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2 rotate-45 w-3 h-3 bg-white shadow-[3px_3px_8px_rgba(0,0,0,0.08)]"
-        ></div>
-      </div>
-    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { LockClosedIcon } from '@heroicons/vue/24/solid'
@@ -280,6 +269,8 @@ import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaClaimCard from '@/modules/rwa_rewards/RwaClaimCard.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
+import AppTooltip from '@/components/AppTooltip.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 
 const { t } = useI18n()
 
@@ -310,22 +301,6 @@ const disabledCtaTooltip = computed(() => {
   return t('rwaRewards.not_eligible_tooltip')
 })
 
-const showTip = ref(false)
-const tipStyle = ref<Record<string, string | number>>({})
-const onTipEnter = (e: MouseEvent) => {
-  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
-  tipStyle.value = {
-    left: `${rect.left + rect.width / 2}px`,
-    top: `${rect.top - 10}px`,
-    transform: 'translate(-50%, -100%)',
-    maxWidth: '320px',
-    zIndex: 9999,
-  }
-  showTip.value = true
-}
-const onTipLeave = () => {
-  showTip.value = false
-}
 const onClaim = () => {
   if (activeReward.value) holdingsStore.claim(activeReward.value)
 }

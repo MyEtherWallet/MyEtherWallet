@@ -18,9 +18,13 @@
         ? isOutline
           ? 'border border-2 border-primary text-primary bg-transparent'
           : 'text-white bg-primary'
-        : isOutline
-          ? 'border border-2 border-error text-error bg-transparent'
-          : 'text-white bg-error',
+        : theme === 'error'
+          ? isOutline
+            ? 'border border-2 border-error text-error bg-transparent'
+            : 'text-white bg-error'
+          : isOutline
+            ? 'border border-2 border-grey-outline text-black bg-transparent'
+            : 'text-black bg-bgMuted',
     ]"
     :disabled="disabled || isLoading"
     :aria-busy="isLoading"
@@ -91,11 +95,11 @@ const props = defineProps({
     default: 'large',
   },
   /**
-   * Theme of the button, can be 'primary' or 'error'
+   * Theme of the button, can be 'primary', 'error' or 'neutral'
    * NOTE: this colors should be defined in the tailwind config
    */
   theme: {
-    type: String as PropType<'primary' | 'error'>,
+    type: String as PropType<'primary' | 'error' | 'neutral'>,
     default: 'primary',
   },
 })

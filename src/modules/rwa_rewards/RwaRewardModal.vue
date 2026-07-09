@@ -11,20 +11,10 @@
           alt=""
           class="pointer-events-none select-none absolute top-0 right-0 w-[178px] object-contain"
         />
-        <button
-          class="absolute flex items-center justify-center hoverOpacityHasBG top-4 right-4 w-8 h-8 rounded-24 bg-[#f5f5f5] z-20"
-          aria-label="Close"
-          @click="holdingsStore.closeModal()"
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path
-              d="M6 6l8 8M14 6l-8 8"
-              stroke="#000"
-              stroke-width="1.75"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
+        <app-btn-icon-close
+          class="absolute top-4 right-4 z-20 bg-[#f5f5f5]"
+          @close="holdingsStore.closeModal()"
+        />
 
         <div class="relative z-10 flex flex-col items-start gap-2">
           <p class="text-s-12 leading-[18px] text-[#575757]">
@@ -78,14 +68,13 @@
                       />
                     </div>
                   </div>
-                  <button
+                  <app-base-button
                     v-else-if="status === 'default'"
-                    :class="tradeBtn"
-                    class="flex items-center justify-center hoverOpacityHasBG"
+                    class="w-40 text-s-16 font-semibold tracking-[-0.32px]"
                     @click="onTrade"
                   >
                     {{ $t('rwaRewards.trade_now') }}
-                  </button>
+                  </app-base-button>
                 </div>
               </rwa-modal-step>
               <rwa-modal-step variant="plain" :number="2">
@@ -117,13 +106,15 @@
                     {{ noticeDesc }}
                   </p>
                 </div>
-                <button
+                <app-base-button
                   v-if="status === 'banned'"
-                  class="flex items-center justify-center hoverOpacityHasBG shrink-0 h-10 px-3 rounded-24 bg-[#e6e6e6] text-black text-s-14 font-semibold leading-5 tracking-[-0.28px] whitespace-nowrap"
+                  theme="neutral"
+                  size="medium"
+                  class="shrink-0 text-s-14 font-semibold tracking-[-0.28px] whitespace-nowrap"
                   @click="onContactSupport"
                 >
                   {{ $t('rwaRewards.contact_support') }}
-                </button>
+                </app-base-button>
               </div>
             </template>
 
@@ -182,13 +173,12 @@
                     :failed-day="holdCurrent"
                   />
                   <div class="flex items-center gap-2 w-full">
-                    <button
-                      :class="startAgainBtn"
-                      class="flex items-center justify-center hoverOpacityHasBG"
+                    <app-base-button
+                      class="flex-1 text-s-16 font-semibold tracking-[-0.32px]"
                       @click="onTrade"
                     >
                       {{ $t('rwaRewards.start_again') }}
-                    </button>
+                    </app-base-button>
                     <div
                       :class="expiresPill"
                       class="flex items-center justify-center"
@@ -261,13 +251,13 @@
                     }}
                   </p>
                 </div>
-                <button
-                  :class="claimBtn"
-                  class="flex items-center justify-center hoverOpacityHasBG"
+                <app-base-button
+                  size="medium"
+                  class="w-[120px] shrink-0 text-s-16 font-semibold tracking-[-0.32px]"
                   @click="onClaim"
                 >
                   {{ $t('rwaRewards.claim') }}
-                </button>
+                </app-base-button>
               </div>
 
               <rwa-modal-step
@@ -301,15 +291,7 @@
                 <div
                   class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-success"
                 >
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <path
-                      d="M5 10.5l3.5 3.5L15 6.5"
-                      stroke="#fff"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                  <check-icon class="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
 
@@ -344,14 +326,7 @@
                 <div
                   class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-[#e40c58]"
                 >
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <path
-                      d="M6 6l8 8M14 6l-8 8"
-                      stroke="#fff"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                    />
-                  </svg>
+                  <x-mark-icon class="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
             </template>
@@ -381,6 +356,9 @@ import BigNumber from 'bignumber.js'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBtnIconClose from '@/components/AppBtnIconClose.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
+import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
@@ -524,15 +502,9 @@ const titleText =
   'text-s-14 font-semibold leading-5 tracking-[-0.28px] text-black'
 const bodyText = 'text-s-14 font-normal leading-5 text-[#575757]'
 const subText = 'text-s-12 leading-[18px] text-[#575757]'
-const tradeBtn =
-  'w-40 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]'
-const startAgainBtn =
-  'flex-1 h-12 rounded-24 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px]'
 const expiresPill =
   'h-12 px-4 rounded-24 bg-[#e6e6e6] text-[#575757] text-s-14 font-semibold whitespace-nowrap'
 const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
-const claimBtn =
-  'w-[120px] h-10 rounded-20 bg-primary text-white text-s-16 font-semibold tracking-[-0.32px] shrink-0'
 
 const onTrade = () => {
   walletMenuStore.openPanel('trade')

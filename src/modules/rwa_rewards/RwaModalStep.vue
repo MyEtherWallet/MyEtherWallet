@@ -9,35 +9,15 @@
         class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full box-border"
         :class="circleClass"
       >
-        <svg
+        <check-icon
           v-if="variant === 'done' || variant === 'doneGrey'"
-          width="14"
-          height="14"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <path
-            d="M5 10.5l3.5 3.5L15 6.5"
-            :stroke="variant === 'done' ? '#fff' : '#a5a5a5'"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <svg
+          class="w-3.5 h-3.5"
+          :class="variant === 'done' ? 'text-white' : 'text-[#a5a5a5]'"
+        />
+        <x-mark-icon
           v-else-if="variant === 'failed'"
-          width="14"
-          height="14"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <path
-            d="M6 6l8 8M14 6l-8 8"
-            stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
+          class="w-3.5 h-3.5 text-white"
+        />
         <span
           v-else
           class="text-s-14 font-semibold leading-5 tracking-[-0.28px]"
@@ -59,6 +39,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
 
 const props = withDefaults(
   defineProps<{

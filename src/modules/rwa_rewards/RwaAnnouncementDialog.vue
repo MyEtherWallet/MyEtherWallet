@@ -26,12 +26,13 @@
               {{ $t('rwaRewards.announcement_desc') }}
             </p>
           </div>
-          <button
-            class="hoverOpacityHasBG w-full h-12 px-4 rounded-24 bg-[#e6e6e6] text-black text-s-16 font-semibold tracking-[-0.32px]"
+          <app-base-button
+            theme="neutral"
+            class="w-full text-s-16 font-semibold tracking-[-0.32px]"
             @click="onGoToOffer"
           >
             {{ $t('rwaRewards.go_to_offer') }}
-          </button>
+          </app-base-button>
         </div>
       </div>
     </template>
@@ -43,6 +44,7 @@ import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'

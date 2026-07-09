@@ -16,35 +16,14 @@
         class="flex items-center justify-center py-1.5 px-[7px] rounded-8 min-h-[30px] box-border"
         :class="chipClass(day)"
       >
-        <svg
+        <check-icon
           v-if="chipState(day) === 'done' || chipState(day) === 'doneGrey'"
-          width="14"
-          height="14"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <path
-            d="M5 10.5l3.5 3.5L15 6.5"
-            stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <svg
+          class="w-3.5 h-3.5 text-white"
+        />
+        <x-mark-icon
           v-else-if="chipState(day) === 'failed'"
-          width="14"
-          height="14"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <path
-            d="M6 6l8 8M14 6l-8 8"
-            stroke="#fff"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
+          class="w-3.5 h-3.5 text-white"
+        />
         <span
           v-else
           class="text-s-12 font-semibold leading-[18px] tracking-[-0.24px]"
@@ -57,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+import { CheckIcon, XMarkIcon } from '@heroicons/vue/16/solid'
+
 type ChipState = 'done' | 'current' | 'pending' | 'failed' | 'doneGrey'
 
 const props = withDefaults(
