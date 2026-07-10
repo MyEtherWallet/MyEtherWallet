@@ -189,7 +189,8 @@
     "swap_to": "Select token to buy",
     "search": "Search",
     "no_tokens_match": "No tokens match your search",
-    "no_tokens_available": "No tokens available"
+    "no_tokens_available": "No tokens available",
+    "recently_viewed": "Recently Viewed"
   },
   "select_fee": {
     "title": "Select transaction fee",
