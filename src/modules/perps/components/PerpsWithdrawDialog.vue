@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    title="Withdraw USDC"
+    :title="$t('perps.withdraw.title')"
     class="sm:max-w-[460px] sm:mx-auto"
     has-content-gutter
     @close-dialog="$emit('close')"
@@ -14,7 +14,7 @@
             <perps-amount
               v-model:amount="amount"
               v-model:error="amountError"
-              title="Amount"
+              :title="$t('perps.withdraw.amount-label')"
               :validate-input="validateAmount"
             >
               <template #footer>
@@ -35,11 +35,13 @@
                       class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       @click="setMax"
                     >
-                      MAX
+                      {{ $t('perps.withdraw.max') }}
                     </button>
                     <!-- Available balance -->
                     <div class="ml-auto text-left">
-                      <span class="text-info text-s-13">available:</span>
+                      <span class="text-info text-s-13">{{
+                        $t('perps.withdraw.available-label')
+                      }}</span>
                       <span class="font-medium text-s-13 ml-1">
                         {{ formatUsd(withdrawableMargin) }} USDC
                       </span>
@@ -54,7 +56,7 @@
             <p
               class="text-info text-s-11 uppercase tracking-sp-06 font-bold mb-2 pl-1"
             >
-              Withdraw To
+              {{ $t('perps.withdraw.withdraw-to-label') }}
             </p>
             <div class="flex items-center mb-1">
               <app-blockie :address="walletAddress" class="mr-2" :size="6" />
@@ -67,15 +69,17 @@
           </div>
           <!-- Withdrawal fee -->
           <div class="flex justify-between text-s-13">
-            <span class="text-info">Withdrawal fee:</span>
+            <span class="text-info">{{
+              $t('perps.withdraw.withdrawal-fee-label')
+            }}</span>
             <span class="font-medium">${{ formatUsd(withdrawalFeeUSD) }}</span>
           </div>
         </div>
 
         <app-warning
           v-if="hasOpenPositions"
-          title="Liquidation Risk"
-          text="You have open positions. Withdrawing funds will reduce your account equity and increase your effective leverage, which may increase your liquidation risk."
+          :title="$t('perps.withdraw.liquidation-risk-title')"
+          :text="$t('perps.withdraw.liquidation-risk-text')"
           class="mb-4"
         />
         <transition name="fade">
@@ -93,7 +97,7 @@
           :is-loading="sending"
           class="w-full"
           @click="submitWithdraw"
-          >Withdraw</app-base-button
+          >{{ $t('perps.withdraw.withdraw-button') }}</app-base-button
         >
       </div>
     </template>
@@ -117,6 +121,10 @@ import { hasInvalidPrecision } from '../utils/formatters'
 import AppBlockie from '@/components/AppBlockie.vue'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const props = defineProps<{
   visible: boolean
 }>()
@@ -167,15 +175,17 @@ const validateAmount = () => {
     return
   }
   if (!Number.isFinite(amount.value)) {
-    amountError.value = 'Amount is too large'
+    amountError.value = t('perps.withdraw.amount-too-large')
     return
   }
   if (hasInvalidPrecision(amount.value, USDC_DECIMALS[mainnet.id])) {
-    amountError.value = `Amount supports up to ${USDC_DECIMALS[mainnet.id]} decimal places`
+    amountError.value = t('perps.withdraw.amount-precision', {
+      decimals: USDC_DECIMALS[mainnet.id],
+    })
     return
   }
   if (amount.value > parseFloat(withdrawableMargin.value)) {
-    amountError.value = 'Amount exceeds available balance'
+    amountError.value = t('perps.withdraw.amount-exceeds-balance')
     return
   }
   amountError.value = ''
@@ -255,7 +265,8 @@ async function submitWithdraw() {
     emit('close')
   } catch (e) {
     // TODO(perps-toasts): spec has no withdrawal-failure toast; revisit with design if needed
-    error.value = e instanceof Error ? e.message : 'Withdrawal failed'
+    error.value =
+      e instanceof Error ? e.message : t('perps.withdraw.withdrawal-failed')
   } finally {
     sending.value = false
   }

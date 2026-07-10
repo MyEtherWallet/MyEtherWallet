@@ -1,7 +1,7 @@
 <template>
   <app-dialog
     v-model:is-open="isOpen"
-    :title="showDepositAddress ? '' : 'Deposit'"
+    :title="showDepositAddress ? '' : $t('perps.deposit.title')"
     has-content-gutter
     class="sm:max-w-[460px] sm:mx-auto"
   >
@@ -14,7 +14,7 @@
           <chevron-left-icon class="w-5 h-5" />
         </button>
         <h1 class="font-bold text-s-20 text-center flex-1" id="dialogTitle">
-          Ethereum deposit address
+          {{ $t('perps.deposit.eth-deposit-address-title') }}
         </h1>
         <div class="w-9" />
       </div>
@@ -25,10 +25,16 @@
         <template v-if="!showDepositAddress">
           <!-- Content Card -->
           <div class="relative">
-            <AppToggle v-model="showIsLive" label="Live Mode" class="mb-4" />
+            <AppToggle
+              v-model="showIsLive"
+              :label="$t('perps.deposit.live-mode-label')"
+              class="mb-4"
+            />
             <div class="bg-mewBg rounded-20 px-4 p-4">
               <!-- Amount Input -->
-              <p class="font-bold ml-3 mb-1">Amount</p>
+              <p class="font-bold ml-3 mb-1">
+                {{ $t('perps.deposit.amount-label') }}
+              </p>
               <app-enter-amount
                 v-model:amount="amount"
                 v-model:selected-token="USDC_CONTRACT"
@@ -58,7 +64,7 @@
                       class="px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       @click="setAmountPercent(pct)"
                     >
-                      {{ pct === 100 ? 'Max' : pct + '%' }}
+                      {{ pct === 100 ? $t('perps.deposit.max') : pct + '%' }}
                     </button>
                   </div>
                 </template>
@@ -69,7 +75,7 @@
                 <p
                   class="text-info uppercase tracking-sp-06 text-s-12 font-bold"
                 >
-                  From Network
+                  {{ $t('perps.deposit.from-network-label') }}
                 </p>
 
                 <div class="flex items-center gap-2">
@@ -81,7 +87,11 @@
                     height="h-5"
                   />
                   <p class="font-medium text-s-14">
-                    {{ showIsLive ? 'Ethereum' : 'Sandbox (Sepolia)' }}
+                    {{
+                      showIsLive
+                        ? $t('perps.deposit.network-ethereum')
+                        : $t('perps.deposit.network-sandbox')
+                    }}
                   </p>
                 </div>
               </div>
@@ -90,7 +100,7 @@
                 <p
                   class="text-info uppercase tracking-sp-06 text-s-12 font-bold"
                 >
-                  To Address
+                  {{ $t('perps.deposit.to-address-label') }}
                 </p>
 
                 <div class="flex items-center gap-2">
@@ -114,7 +124,7 @@
                     </p>
                   </div>
                   <p v-else class="font-medium text-s-14">
-                    Perpetuals Smart Contract
+                    {{ $t('perps.deposit.smart-contract-address') }}
                   </p>
                 </div>
               </div>
@@ -144,7 +154,7 @@
                 class="text-primary text-s-14 font-medium hover:underline inline-flex items-center gap-1"
                 @click="showDepositAddress = true"
               >
-                Use a deposit address instead
+                {{ $t('perps.deposit.use-deposit-address-link') }}
                 <chevron-right-icon class="w-3.5 h-3.5" />
               </button>
             </div>
@@ -155,9 +165,7 @@
         <template v-else-if="showIsLive">
           <!-- Warning text -->
           <p class="mb-6">
-            Send USDC (on Ethereum network only) to this address! Other tokens
-            or networks are not supported. Your balance will update after 1
-            confirmation (about 1 minute).
+            {{ $t('perps.deposit.deposit-address-warning') }}
           </p>
 
           <!-- QR Code -->
@@ -304,9 +312,8 @@ watch(isOpen, open => {
       globalStore.setSelectedNetwork('ETHEREUM')
       // Direct toastStore call intentionally kept here; this is informational, not an error path.
       toastStore.addToastMessage({
-        text: 'Switched network to Ethereum',
-        textSecondary:
-          'Ethereum network is required to make deposits into Perpetuals. We have switched your network for you.',
+        text: t('perps.deposit.switched-network-toast-title'),
+        textSecondary: t('perps.deposit.switched-network-toast-detail'),
         type: ToastType.Info,
         duration: 30000,
       })
@@ -399,7 +406,7 @@ const checkAmountForError = () => {
     showIsLive.value &&
     baseAmount > parseUnits(SANDBOX_MAX_DEPOSIT.toString(), tokenDecimals)
   ) {
-    amountError.value = 'Amount exceeds maximum limit' // arbitrary max for live to prevent large deposits while we're monitoring performance and stability
+    amountError.value = t('perps.deposit.amount-exceeds-max') // arbitrary max for live to prevent large deposits while we're monitoring performance and stability
   } else amountError.value = ''
 }
 
@@ -452,18 +459,20 @@ const depositDisabled = computed(() => {
 })
 
 const depositButtonLabel = computed(() => {
-  if (loading.value) return 'Loading...'
-  if (sending.value) return 'Sending...'
+  if (loading.value) return t('perps.deposit.loading')
+  if (sending.value) return t('perps.deposit.sending')
 
-  if (isPristine.value) return 'Enter Amount'
+  if (isPristine.value) return t('perps.deposit.enter-amount')
   const amt = parseFloat(amount.value)
   if (!showIsLive.value) {
-    if (amt > SANDBOX_MAX_DEPOSIT) return `Max ${SANDBOX_MAX_DEPOSIT} USDC`
-    return 'Deposit'
+    if (amt > SANDBOX_MAX_DEPOSIT)
+      return t('perps.deposit.max-usdc-amount', { amount: SANDBOX_MAX_DEPOSIT })
+    return t('perps.deposit.title')
   }
-  if (!usdcBalance.value) return 'No USDC balance'
-  if (amt > parseFloat(usdcBalance.value.balance)) return 'Insufficient balance'
-  return 'Deposit'
+  if (!usdcBalance.value) return t('perps.deposit.no-usdc-balance')
+  if (amt > parseFloat(usdcBalance.value.balance))
+    return t('perps.deposit.insufficient-balance')
+  return t('perps.deposit.title')
 })
 
 // Fetch deposit address on open
@@ -514,7 +523,7 @@ const fetchDepositAddress = async () => {
     }
   } catch (e) {
     error.value =
-      e instanceof Error ? e.message : 'Failed to fetch deposit address'
+      e instanceof Error ? e.message : t('perps.deposit.fetch-address-failed')
   } finally {
     loading.value = false
   }
@@ -546,10 +555,10 @@ const sendSandboxDeposit = async () => {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e ?? '')
     if (isUserCancelError(e)) {
-      error.value = 'Transaction cancelled by user'
+      error.value = t('perps.deposit.transaction-cancelled')
       perpsToasts.toastDepositCanceled()
     } else {
-      error.value = msg || 'Sandbox deposit failed'
+      error.value = msg || t('perps.deposit.sandbox-deposit-failed')
       analytics.trackPerpsDepositErrorEvent(PerpsDepositEvent.ERROR, {
         depositAmount,
         token: 'USDC',
@@ -596,7 +605,7 @@ const sendLiveDeposit = async () => {
     const gasFees: QuotesResponse | undefined =
       await wallet.value.getGasFee?.(txBody)
     if (!gasFees?.fees || !gasFees.fees[selectedFee.value]) {
-      throw new Error('Failed to estimate gas fees')
+      throw new Error(t('perps.deposit.gas-estimate-failed'))
     }
 
     // Get signable transaction
@@ -625,7 +634,7 @@ const sendLiveDeposit = async () => {
 
     const hash = await broadcastFn?.(signedTx as HexPrefixedString)
     if (!hash) {
-      throw new Error('Transaction was not broadcast')
+      throw new Error(t('perps.deposit.broadcast-failed'))
     }
     triggerRefresh()
     analytics.trackPerpsDepositEvent(PerpsDepositEvent.SUCCESS, {
@@ -641,10 +650,10 @@ const sendLiveDeposit = async () => {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e ?? '')
     if (isUserCancelError(e)) {
-      error.value = 'Transaction cancelled by user'
+      error.value = t('perps.deposit.transaction-cancelled')
       perpsToasts.toastDepositCanceled()
     } else {
-      error.value = msg || 'Transaction failed'
+      error.value = msg || t('perps.deposit.transaction-failed')
       analytics.trackPerpsDepositErrorEvent(PerpsDepositEvent.ERROR, {
         depositAmount,
         token: 'USDC',
