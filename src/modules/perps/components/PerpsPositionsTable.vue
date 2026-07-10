@@ -442,12 +442,12 @@
                           : '',
                   ]"
                 >
-                  {{ formatOrderStatus(order.status) }}
+                  {{ $t(formatOrderStatus(order.status)) }}
                 </p>
               </td>
               <!-- Type -->
               <td class="px-1 py-3 font-normal text-s-14 hidden 2xl:table-cell">
-                {{ formatOrderType(order.type) }}
+                {{ $t(formatOrderType(order.type)) }}
               </td>
               <!-- Price -->
               <td class="px-1 py-3 text-right font-normal text-s-14">

@@ -5,24 +5,25 @@ import { formatPrice, formatUsd } from '@/modules/perps/utils/formatters'
 
 type Side = 'long' | 'short' | 'buy' | 'sell' | (string & {})
 type OrderCategory = 'market' | 'limit' | 'stopMarket' | 'takeProfitMarket' | (string & {})
+type Translate = ReturnType<typeof useI18n>['t']
 
-function humanSide(side: Side): string {
+function humanSide(side: Side, t: Translate): string {
   const s = (side || '').toLowerCase()
-  if (s === 'buy' || s === 'long') return 'Long'
-  if (s === 'sell' || s === 'short') return 'Short'
+  if (s === 'buy' || s === 'long') return t('perps.trade.long')
+  if (s === 'sell' || s === 'short') return t('perps.trade.short')
   return side
 }
 
-function humanCategory(category: OrderCategory): string {
+function humanCategory(category: OrderCategory, t: Translate): string {
   switch ((category || '').toLowerCase()) {
     case 'market':
-      return 'Market'
+      return t('perps.trade.market')
     case 'limit':
-      return 'Limit'
+      return t('perps.trade.limit')
     case 'stopmarket':
-      return 'Stop Market'
+      return t('perps.toast.category-stop-market')
     case 'takeprofitmarket':
-      return 'Take Profit Market'
+      return t('perps.toast.category-take-profit-market')
     default:
       return category
   }
@@ -58,8 +59,8 @@ export function usePerpsToasts() {
   const toastStore = useToastStore()
 
   const orderLine = (args: OrderArgs): string => {
-    const side = humanSide(args.side)
-    const category = humanCategory(args.category)
+    const side = humanSide(args.side, t)
+    const category = humanCategory(args.category, t)
     const isMarket = (args.category || '').toLowerCase() === 'market'
     if (isMarket || args.price == null || args.price === '') {
       return t('perps.toast.order-line', {
@@ -80,7 +81,7 @@ export function usePerpsToasts() {
 
   const slTpLine = (args: SlTpArgs): string =>
     t('perps.toast.sl-tp-line', {
-      side: humanSide(args.direction).toUpperCase(),
+      side: humanSide(args.direction, t).toUpperCase(),
       netQuantity: args.netQuantity,
       base: args.base,
       quote: args.quote,
@@ -88,13 +89,22 @@ export function usePerpsToasts() {
     })
 
   const fillLine = (args: FillArgs): string => {
-    const human = humanSide(args.side)
-    const verb = human === 'Long' ? 'Bought' : human === 'Short' ? 'Sold' : human
+    // Determine the verb from the raw (untranslated) side so this doesn't
+    // depend on humanSide's already-localized output matching an English
+    // literal in non-English locales.
+    const s = (args.side || '').toLowerCase()
+    const isLong = s === 'buy' || s === 'long'
+    const isShort = s === 'sell' || s === 'short'
+    const verb = isLong
+      ? t('perps.toast.verb-bought')
+      : isShort
+        ? t('perps.toast.verb-sold')
+        : humanSide(args.side, t)
     return t('perps.toast.fill-line', {
       verb,
       filledSize: args.filledSize,
       size: args.size,
-      category: humanCategory(args.category),
+      category: humanCategory(args.category, t),
       market: args.market,
       price: formatPrice(args.fillPrice),
     })

@@ -91,7 +91,7 @@ describe('usePerpsToasts', () => {
     const { key, params } = lastCall()
     expect(key).toBe('perps.toast.sl-tp-line')
     expect(params).toMatchObject({
-      side: 'LONG',
+      side: 'PERPS.TRADE.LONG',
       netQuantity: '0.5',
       base: 'ETH',
       quote: 'USD',
@@ -110,9 +110,9 @@ describe('usePerpsToasts', () => {
     const { key, params } = lastCall()
     expect(key).toBe('perps.toast.order-line')
     expect(params).toEqual({
-      side: 'Long',
+      side: 'perps.trade.long',
       size: '1',
-      category: 'Market',
+      category: 'perps.trade.market',
       market: 'ETH-USD',
     })
     expect(store.messages[0].textSecondary).toBe(mockT(key, params))
@@ -129,9 +129,9 @@ describe('usePerpsToasts', () => {
     const { key, params } = lastCall()
     expect(key).toBe('perps.toast.order-line-with-price')
     expect(params).toMatchObject({
-      side: 'Short',
+      side: 'perps.trade.short',
       size: '2',
-      category: 'Limit',
+      category: 'perps.trade.limit',
       market: 'BTC-USD',
     })
     expect(params?.price).toMatch(/^\$65,000\.00$/)
@@ -150,10 +150,10 @@ describe('usePerpsToasts', () => {
     const { key, params } = lastCall()
     expect(key).toBe('perps.toast.fill-line')
     expect(params).toMatchObject({
-      verb: 'Bought',
+      verb: 'perps.toast.verb-bought',
       filledSize: '1',
       size: '1',
-      category: 'Market',
+      category: 'perps.trade.market',
       market: 'ETH-USD',
     })
     expect(params?.price).toMatch(/^\$1,800\.00$/)

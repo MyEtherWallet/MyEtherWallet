@@ -89,16 +89,15 @@
 
     <div class="relative text-center mx-auto">
       <p class="text-primary font-bold text-s-11 uppercase tracking-sp-06 mb-3">
-        – Sign in to your portfolio –
+        {{ $t('perps.banner.sign-in-prompt') }}
       </p>
       <h2
         class="font-bold text-s-28 lg:text-s-32 xl:text-s-40 mb-3 leading-p-110"
       >
-        Trade Perpetual Futures
+        {{ $t('perps.banner.title') }}
       </h2>
       <p class="text-info text-s-14 sm:text-s-16 mb-6 max-w-[445px] mx-auto">
-        Up to 20x leverage, 24/7 on leading U.S. stocks, ETFs, and commodities.
-        Powered by Ondo perps.
+        {{ $t('perps.banner.description') }}
       </p>
 
       <div class="flex justify-center">
@@ -109,7 +108,7 @@
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >
-            Download Enkrypt
+            {{ $t('perps.banner.download-enkrypt') }}
           </app-base-button>
         </template>
         <template v-else-if="!isOnEthereum">
@@ -119,7 +118,7 @@
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >
-            Switch to Ethereum
+            {{ $t('perps.trade.switch-to-ethereum') }}
           </app-base-button>
         </template>
         <template v-else-if="!isWalletConnected || isWatchOnly">
@@ -129,7 +128,7 @@
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >
-            Connect Wallet
+            {{ $t('perps.banner.connect-wallet-button') }}
           </app-base-button>
         </template>
         <template v-else>
@@ -140,7 +139,7 @@
             @mouseenter="isHoveringCta = true"
             @mouseleave="isHoveringCta = false"
           >
-            Sign in
+            {{ $t('perps.banner.sign-in-button') }}
           </app-base-button>
         </template>
       </div>
@@ -149,11 +148,10 @@
         v-if="!isOnEthereum && isUnisatWallet"
         class="text-info text-s-12 mt-3"
       >
-        UniSat doesn't support Perpetuals. Install Enkrypt or connect a
-        different wallet to continue.
+        {{ $t('perps.banner.unisat-not-supported') }}
       </p>
       <p v-else-if="!isOnEthereum" class="text-info text-s-13 mt-3">
-        Perpetuals feature is only available on the Ethereum network
+        {{ $t('perps.banner.eth-only-notice') }}
       </p>
     </div>
   </div>
@@ -162,6 +160,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsSigningPrompt from './PerpsSigningPrompt.vue'
 import amazonLogo from '@/assets/icons/perps-banner/amazon.svg'
@@ -178,6 +177,7 @@ import { ToastType } from '@/types/notification'
 import { usePerpsAuth } from '../composables/usePerpsAuth'
 import { analytics, ConnectWalletEvent } from '@/analytics'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly, walletName } = storeToRefs(walletStore)
 const accessStore = useAccessStore()
@@ -213,8 +213,8 @@ const onConnectWallet = () => {
 const onSwitchToEthereum = () => {
   globalStore.setSelectedNetwork('ETHEREUM')
   toastStore.addToastMessage({
-    text: 'Switched to Ethereum',
-    textSecondary: 'Perpetuals are only available on Ethereum.',
+    text: t('perps.toast.switched-to-ethereum-title'),
+    textSecondary: t('perps.toast.switched-to-ethereum-detail'),
     type: ToastType.Info,
   })
 }

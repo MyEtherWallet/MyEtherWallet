@@ -588,14 +588,14 @@
                               : '',
                       ]"
                     >
-                      {{ formatOrderStatus(order.status) }}
+                      {{ $t(formatOrderStatus(order.status)) }}
                     </p>
                   </td>
                   <!-- Type -->
                   <td
                     class="px-1 py-3 font-normal text-s-14 hidden xl:table-cell capitalize"
                   >
-                    <p>{{ formatOrderType(order.type) }}</p>
+                    <p>{{ $t(formatOrderType(order.type)) }}</p>
 
                     <p
                       :class="[
@@ -610,7 +610,7 @@
                               : '',
                       ]"
                     >
-                      {{ formatOrderStatus(order.status) }}
+                      {{ $t(formatOrderStatus(order.status)) }}
                     </p>
                   </td>
                   <!-- Price -->
@@ -1060,9 +1060,19 @@ const priceChangePercent = computed(() => {
   return parseFloat(pct)
 })
 
+// getCategory() returns fixed enum-like tokens ('Equities' | 'Commodities' |
+// 'Indices') also used as filter keys elsewhere (usePerpsTradeForm.ts) — do
+// not translate its return value directly, map it through i18n here for
+// display only.
+const categoryLabelKeys: Record<string, string> = {
+  Equities: 'perps.select-market.filter-tab-equities',
+  Commodities: 'perps.select-market.filter-tab-commodities',
+  Indices: 'perps.select-market.filter-tab-indices',
+}
 const category = computed(() => {
   const c = contractData.value
-  return c ? getCategory(c) : t('perps.select-market.filter-tab-equities')
+  const raw = c ? getCategory(c) : 'Equities'
+  return t(categoryLabelKeys[raw] ?? categoryLabelKeys.Equities)
 })
 
 // Fetch perpetual info from Ondo API
@@ -1394,7 +1404,8 @@ const infoTabs = [
   // { key: 'more', value: 'more', label: 'More' },
 ]
 const activeInfoTabObj = computed({
-  get: () => infoTabs.find(t => t.key === activeInfoTab.value) ?? infoTabs[0],
+  get: () =>
+    infoTabs.find(tab => tab.key === activeInfoTab.value) ?? infoTabs[0],
   set: (tab: (typeof infoTabs)[number]) => {
     activeInfoTab.value = tab.key
   },

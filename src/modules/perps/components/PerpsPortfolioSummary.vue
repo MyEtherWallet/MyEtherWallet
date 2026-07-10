@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row lg:flex-col sm:justify-between">
       <div>
         <p class="text-info font-bold tracking-sp-06 uppercase text-s-12">
-          Perpetuals account balance
+          {{ $t('perps.portfolio.account-balance-label') }}
         </p>
         <p class="font-bold text-s-32 lg:text-s-40 mt-1">
           {{ walletBalance }}
@@ -11,7 +11,7 @@
         <p
           class="text-info font-bold tracking-sp-06 uppercase text-s-11 mt-2 mb-2"
         >
-          Realized PnL
+          {{ $t('perps.balance.realized-pnl-label') }}
         </p>
         <p class="text-s-16 leading-none" :class="pnlColorClass">
           {{ formattedRealizedPnl }}
@@ -26,7 +26,7 @@
             class="w-full"
             size="medium"
           >
-            Switch to Ethereum
+            {{ $t('perps.trade.switch-to-ethereum') }}
           </AppBaseButton>
         </div>
         <div
@@ -34,7 +34,7 @@
           class="flex items-center gap-3 justify-start mt-5 -mx-1"
         >
           <AppBaseButton @click="$emit('deposit')" class="w-full" size="medium">
-            Deposit
+            {{ $t('perps.deposit.title') }}
           </AppBaseButton>
           <AppBaseButton
             is-outline
@@ -42,12 +42,12 @@
             class="w-full"
             size="medium"
           >
-            Withdraw
+            {{ $t('perps.withdraw.withdraw-button') }}
           </AppBaseButton>
         </div>
         <div v-else class="flex items-center gap-3 justify-start mt-5 -mx-1">
           <AppBaseButton @click="onConnectWallet" class="w-full" size="medium">
-            Connect your wallet
+            {{ $t('perps.portfolio.connect-wallet-button') }}
           </AppBaseButton>
         </div>
       </div>
@@ -55,25 +55,25 @@
       <div class="flex flex-col gap-4 w-full max-w-[300px] lg:max-w-none">
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Total Cross-Margin
+            {{ $t('perps.balance.total-cross-margin-label') }}
           </p>
           <p class="ml-2 font-medium">{{ marginBalance }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Available Margin
+            {{ $t('perps.balance.available-margin-label') }}
           </p>
           <p class="ml-2 font-medium">{{ availableMargin }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Used Margin
+            {{ $t('perps.balance.used-margin-label') }}
           </p>
           <p class="ml-2 font-medium">{{ usedMargin }}</p>
         </div>
         <div class="flex items-center justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Margin Ratio
+            {{ $t('perps.balance.margin-ratio-label') }}
           </p>
           <p :class="marginRatioColorClass" class="ml-2 font-medium">
             {{ marginRatio }}
@@ -81,7 +81,7 @@
         </div>
         <div class="flex items-start justify-between gap-4 w-full">
           <p class="text-info font-bold tracking-sp-06 uppercase text-s-11">
-            Unrealized PnL
+            {{ $t('perps.balance.unrealized-pnl-label') }}
           </p>
           <div class="flex justify-end flex-col items-start">
             <p :class="uPnlColorClass" class="font-medium text-right">
@@ -99,7 +99,7 @@
           class="mt-1 text-s-13 text-primary mr-auto -ml-3"
           @click="showBalanceDialog = true"
         >
-          View More
+          {{ $t('perps.portfolio.view-more') }}
         </app-btn-text>
       </div>
     </div>
@@ -113,6 +113,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppSheet from '@/components/AppSheet.vue'
@@ -150,6 +151,7 @@ const onConnectWallet = () => {
   emit('access')
 }
 
+const { t } = useI18n()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
@@ -159,8 +161,8 @@ const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
 const onSwitchToEthereum = () => {
   globalStore.setSelectedNetwork('ETHEREUM')
   toastStore.addToastMessage({
-    text: 'Switched to Ethereum',
-    textSecondary: 'Perpetuals are only available on Ethereum.',
+    text: t('perps.toast.switched-to-ethereum-title'),
+    textSecondary: t('perps.toast.switched-to-ethereum-detail'),
     type: ToastType.Info,
   })
 }

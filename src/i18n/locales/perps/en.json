@@ -39,7 +39,11 @@
       "leverage-updated-detail": "{market} set to {leverage}x",
       "failed-to-set-leverage-title": "Failed to Set Leverage",
       "switched-to-ethereum-title": "Switched to Ethereum",
-      "switched-to-ethereum-detail": "Perpetuals are only available on Ethereum."
+      "switched-to-ethereum-detail": "Perpetuals are only available on Ethereum.",
+      "category-stop-market": "Stop Market",
+      "category-take-profit-market": "Take Profit Market",
+      "verb-bought": "Bought",
+      "verb-sold": "Sold"
     },
     "errors": {
       "invalid-price": "Invalid price",
@@ -364,8 +368,49 @@
       "deposit-label": "Deposit",
       "withdrawal-label": "Withdrawal"
     },
-    "portfolio": {},
-    "banner": {},
+    "portfolio": {
+      "account-balance-label": "Perpetuals account balance",
+      "connect-wallet-button": "Connect your wallet",
+      "view-more": "View More",
+      "series-value": "Value",
+      "series-net-invested": "Net Invested",
+      "series-pnl": "PnL",
+      "range-24h": "24H",
+      "range-7d": "7D",
+      "range-30d": "30D",
+      "range-all": "All",
+      "no-history": "No portfolio history available"
+    },
+    "banner": {
+      "sign-in-prompt": "– Sign in to your portfolio –",
+      "title": "Trade Perpetual Futures",
+      "description": "Up to 20x leverage, 24/7 on leading U.S. stocks, ETFs, and commodities. Powered by Ondo perps.",
+      "download-enkrypt": "Download Enkrypt",
+      "connect-wallet-button": "Connect Wallet",
+      "sign-in-button": "Sign in",
+      "unisat-not-supported": "UniSat doesn't support Perpetuals. Install Enkrypt or connect a different wallet to continue.",
+      "eth-only-notice": "Perpetuals feature is only available on the Ethereum network",
+      "confirm-sign-in-title": "Confirm Sign In",
+      "review-message": "Review the message before signing.",
+      "check-device": "Check your device to approve",
+      "signing": "Signing…",
+      "message-to-sign-label": "Message to sign",
+      "hardware-confirm-hint": "You will also need to confirm on your device.",
+      "sign-button": "Sign"
+    },
+    "order-status": {
+      "open": "Open",
+      "fully-filled": "Fully Filled",
+      "canceled": "Canceled",
+      "pending": "Pending",
+      "untriggered": "Untriggered"
+    },
+    "order-type": {
+      "limit": "Limit",
+      "market": "Market",
+      "stop-loss": "Stop Loss",
+      "take-profit": "Take Profit"
+    },
     "amount": {
       "price-label": "Price"
     }

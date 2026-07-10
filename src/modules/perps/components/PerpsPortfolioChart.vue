@@ -51,13 +51,14 @@
       class="h-full !shrink -mx-4"
     />
     <div v-else class="text-center py-8 text-info text-s-14">
-      No portfolio history available
+      {{ $t('perps.portfolio.no-history') }}
     </div>
   </app-sheet>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, reactive, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppSheet from '@/components/AppSheet.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import {
@@ -67,6 +68,7 @@ import {
 import HistoryChart from '@/modules/portfolio/components/history/HistoryChart.vue'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 
+const { t } = useI18n()
 const { isDesktopAndUp } = useAppBreakpoints()
 const { graphData, graphLoading, graphRange, setRange } =
   usePerpsPortfolioGraph()
@@ -74,9 +76,21 @@ const { graphData, graphLoading, graphRange, setRange } =
 type SeriesKey = 'value' | 'invested' | 'pnl'
 
 const seriesOptions: { key: SeriesKey; label: string; color: string }[] = [
-  { key: 'value', label: 'Value', color: 'rgb(0,90,229)' },
-  { key: 'invested', label: 'Net Invested', color: '#9D00FF' },
-  { key: 'pnl', label: 'PnL', color: 'rgb(5,192,165)' },
+  {
+    key: 'value',
+    label: t('perps.portfolio.series-value'),
+    color: 'rgb(0,90,229)',
+  },
+  {
+    key: 'invested',
+    label: t('perps.portfolio.series-net-invested'),
+    color: '#9D00FF',
+  },
+  {
+    key: 'pnl',
+    label: t('perps.portfolio.series-pnl'),
+    color: 'rgb(5,192,165)',
+  },
 ]
 
 const tooltipLabels = seriesOptions.map(s => ({
@@ -102,10 +116,10 @@ interface RangeOption {
 }
 
 const rangeOptions: RangeOption[] = [
-  { label: '24H', value: '24h' },
-  { label: '7D', value: '7d' },
-  { label: '30D', value: '30d' },
-  { label: 'All', value: 'all' },
+  { label: t('perps.portfolio.range-24h'), value: '24h' },
+  { label: t('perps.portfolio.range-7d'), value: '7d' },
+  { label: t('perps.portfolio.range-30d'), value: '30d' },
+  { label: t('perps.portfolio.range-all'), value: 'all' },
 ]
 
 const selectedRange = ref<RangeOption>(
