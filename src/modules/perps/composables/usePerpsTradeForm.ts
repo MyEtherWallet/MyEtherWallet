@@ -789,7 +789,10 @@ export function usePerpsTradeForm() {
   }
 
   const filteredMarketList = computed(() => {
-    let list = [...contracts.value]
+    // Hide API-disabled contracts from the trade-module market selector
+    // (MEW-2025). Filtered off the display list, not the shared `contracts`
+    // ref, so the active-market lookups (find by market) keep resolving.
+    let list = contracts.value.filter(c => !c.disabled)
     if (marketFilter.value !== 'all') {
       list = list.filter(c => getCategory(c) === marketFilter.value)
     }
