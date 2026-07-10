@@ -128,13 +128,14 @@ const {
 const isTradeCard = computed(() => props.illustration === 'trade')
 
 const tradeStatus = computed<RwaRewardStatus>(() => {
+  if (isBanned.value) return 'banned'
   if (tradeMarketClosed.value) return 'paused'
   if (tradeClaimed.value) return 'claimed'
+  if (tradeNoRewards.value) return 'noRewards'
   // Only trust ineligibility once eligibility data has loaded, otherwise
   // isEligible is false by default and would flash notEligible on mount.
   if (eligibilityV2.value && !isEligible.value) return 'notEligible'
-  if (tradeNoRewards.value) return 'noRewards'
-  if (isBanned.value) return 'banned'
+
   return 'ongoing'
 })
 
@@ -147,7 +148,7 @@ const tradeStatusText = computed(() => {
     case 'paused':
       return t('rwaRewards.temporarily_paused')
     case 'banned':
-      return t('rwaRewards.modal_banned_title')
+      return t('rwaRewards.modal_not_eligible_title')
     case 'notEligible':
       return t('rwaRewards.modal_not_eligible_title')
     default: {

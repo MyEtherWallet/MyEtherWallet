@@ -367,6 +367,12 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     )
   })
 
+  const canClaimTradeReward = computed(() => {
+    if (isBitcoinChain.value) return true
+    if (!eligibilityV2.value) return false
+    return eligibilityV2.value.trade.eligible
+  })
+
   const minSpendTrade = computed(() => {
     const min = tradePool.value?.minSpendUsd
     return min != null ? Math.ceil(min).toString() : '-'
@@ -427,5 +433,6 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     isBanned,
     checkRewards,
     minSpendTrade,
+    canClaimTradeReward,
   }
 })
