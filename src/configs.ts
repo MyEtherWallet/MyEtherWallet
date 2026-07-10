@@ -22,7 +22,7 @@ const configs = {
     'ROOTSTOCK',
   ],
   MEW_REWARDS_API_URL: 'https://mew-rewards-prod.ethvm.dev',
-  RWA_REWARDS_API: `${mewWalletUrl}}/rwa-rewards/season1`,
+  RWA_REWARDS_API: `${mewWalletUrl}/rwa-rewards/season1`,
   MEW_LIVE_URLS: ['app.beta.myetherwallet.com', 'app.myetherwallet.com'],
   MEW_SENTRY_DSN:
     import.meta.env.VITE_SENTRY_DSN ||
