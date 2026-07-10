@@ -166,7 +166,11 @@
             </button>
           </div>
           <app-pop-up-menu
-            :placeholder="orderType === 'market' ? 'Market' : 'Limit'"
+            :placeholder="
+              orderType === 'market'
+                ? $t('perps.trade.market')
+                : $t('perps.trade.limit')
+            "
             location="right"
             class="ml-3"
             :class="{

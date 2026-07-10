@@ -73,6 +73,8 @@
       "limit-order": "Limit Order",
       "limit-order-description": "You set the price to enter a Long or Short",
       "target-price": "Target {symbol} price",
+      "market": "Market",
+      "limit": "Limit",
       "mid": "Mid",
       "margin-available": "Margin available:",
       "size": "Size",
