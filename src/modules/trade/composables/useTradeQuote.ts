@@ -6,6 +6,11 @@ import type { NewTokenInfo } from '@/composables/useSwap'
 import type { Chain } from '@/mew_api/types'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import {
+  analytics,
+  TradeEventError,
+  type TradePayloadShared,
+} from '@/analytics'
 import Configs from '@/configs'
 import { isTransientRpcError } from '@/modules/trade/composables/transientRpcError'
 
@@ -50,6 +55,15 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
 
   const currentQuote = ref<QuoteData | null>(null)
   const needsApproval = ref(false)
+
+  const getAnalyticsPayload = (): TradePayloadShared => ({
+    network: selectedFromChain.value?.name || 'N/A',
+    fromToken: fromTokenSelected.value?.symbol || 'N/A',
+    fromAmount: fromAmount.value,
+    toToken: toTokenSelected.value?.symbol || 'N/A',
+    toAmount: toAmount.value,
+    tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
+  })
 
   const fetchQuote = useDebounceFn(async () => {
     //Dont'fetch quote if from amount is empty, this prevents fetching quotes when user deletes the input
@@ -106,6 +120,17 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
         toTokenDecimals: toTokenSelected.value.decimals || 18,
       })
 
+      // No quote returned from the provider
+      if (!quote || (!quote.avgAmount && !quote.startAmount)) {
+        generalError.value = 'No quotes returned'
+        toAmount.value = '0'
+        analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
+          ...getAnalyticsPayload(),
+          errorMsg: generalError.value,
+        })
+        return
+      }
+
       currentQuote.value = quote
       const toDecimals = toTokenSelected.value.decimals || 18
       toAmount.value = formatFloatingPointValue(
@@ -122,6 +147,10 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
     } catch (e) {
       generalError.value = (e as Error).message || 'Failed to fetch quote'
       toAmount.value = '0'
+      analytics.trackTradeEventError(TradeEventError.PRELIMINARY_ERROR, {
+        ...getAnalyticsPayload(),
+        errorMsg: generalError.value,
+      })
       if (isDevMode) {
         console.error('Error fetching quote:', e)
       } else if (!isTransientRpcError(e)) {
