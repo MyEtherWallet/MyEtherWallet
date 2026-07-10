@@ -453,6 +453,7 @@ const {
   hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
+const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
 // --- Use Trade Composable ---
@@ -485,7 +486,6 @@ const {
   marketStatus,
   currentSession,
   isTradingSessionOpen,
-  isTradingRestrictedInRegion,
   tradingRestrictedHelpUrl,
   countdownText,
   fetchMarketStatus,

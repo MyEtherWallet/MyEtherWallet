@@ -48,6 +48,7 @@ import AppBaseButton from '@/components/AppBaseButton.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useMarketStatus } from '@/modules/trade/composables'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import overlayImg from '@/assets/images/rwa-rewards/tradeAndHoldFullscreenOverlayImg.png'
@@ -57,8 +58,8 @@ const { isWalletUnlocked } = storeToRefs(walletStore)
 const holdingsStore = useHoldingsStore()
 const announcement = useRwaAnnouncementStore()
 const { modalSeen } = storeToRefs(announcement)
-const { isTradingRestrictedInRegion, fetchTradingRestriction } =
-  useMarketStatus()
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
+const { fetchTradingRestriction } = useMarketStatus()
 
 const isOpen = ref(false)
 const showAfter = ref(false)
