@@ -13,40 +13,56 @@
           width="w-8"
           height="h-8"
         />
-        <span class="font-bold text-s-20">Cancel Order</span>
+        <span class="font-bold text-s-20">{{
+          $t('perps.cancel-order.title')
+        }}</span>
       </div>
     </template>
     <template #content>
       <div class="px-6 pb-6 pt-4 flex flex-col gap-5">
         <div class="bg-mewBg rounded-[20px] p-5 space-y-3">
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Market</span>
+            <span class="text-info font-medium">{{
+              $t('perps.confirm.market')
+            }}</span>
             <span class="font-bold">{{ displaySymbol }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Side</span>
+            <span class="text-info font-medium">{{
+              $t('perps.confirm.side-label')
+            }}</span>
             <span
               class="font-bold"
               :class="order.side === 'buy' ? 'text-success' : 'text-error'"
             >
-              {{ order.side === 'buy' ? 'Long' : 'Short' }}
+              {{
+                order.side === 'buy'
+                  ? $t('perps.confirm.long')
+                  : $t('perps.confirm.short')
+              }}
             </span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Order type</span>
+            <span class="text-info font-medium">{{
+              $t('perps.confirm.order-type-label')
+            }}</span>
             <span class="font-bold">{{ humanCategory(order.type) }}</span>
           </div>
           <div
             v-if="order.type !== 'market'"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">Price</span>
+            <span class="text-info font-medium">{{
+              $t('perps.cancel-order.price-label')
+            }}</span>
             <span class="font-bold">{{
               formatPrice(getOrderPrice(order))
             }}</span>
           </div>
           <div class="flex justify-between text-s-14">
-            <span class="text-info font-medium">Size</span>
+            <span class="text-info font-medium">{{
+              $t('perps.trade.size')
+            }}</span>
             <div class="text-right">
               <p class="font-bold">{{ order.size }} {{ displaySymbol }}</p>
               <p class="text-grey-50">{{ orderSizeInUsd }}</p>
@@ -56,7 +72,9 @@
             v-if="parseFloat(order.filledSize) > 0"
             class="flex justify-between text-s-14"
           >
-            <span class="text-info font-medium">Filled</span>
+            <span class="text-info font-medium">{{
+              $t('perps.cancel-order.filled-label')
+            }}</span>
             <span class="font-bold"
               >{{ order.filledSize }} / {{ order.size }}
               {{ displaySymbol }}</span
@@ -72,7 +90,11 @@
             class="flex-1"
             @click="$emit('confirm')"
           >
-            {{ isCancelling ? 'Cancelling...' : 'Confirm Cancel' }}
+            {{
+              isCancelling
+                ? $t('perps.cancel-order.cancelling')
+                : $t('perps.cancel-order.confirm-cancel')
+            }}
           </app-base-button>
           <app-btn-text
             :disabled="isCancelling"
@@ -80,7 +102,7 @@
             is-large
             @click="isOpen = false"
           >
-            Close
+            {{ $t('perps.trade.tab-close') }}
           </app-btn-text>
         </div>
       </div>
@@ -97,7 +119,10 @@ import { formatPrice, getOrderPrice } from '../utils/formatters'
 import { getLogoUrl } from '../utils/market'
 import type { ApiOrder } from '../sdk/types'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import BigNumber from 'bignumber.js'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   order: ApiOrder
@@ -125,13 +150,13 @@ const orderSizeInUsd = computed(() => {
 function humanCategory(type: ApiOrder['type']): string {
   switch (type) {
     case 'market':
-      return 'Market'
+      return t('perps.confirm.market')
     case 'limit':
-      return 'Limit'
+      return t('perps.confirm.limit')
     case 'stopMarket':
-      return 'Stop Loss'
+      return t('perps.confirm.stop-loss')
     case 'takeProfitMarket':
-      return 'Take Profit'
+      return t('perps.confirm.take-profit')
     default:
       return type
   }
