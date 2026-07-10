@@ -91,6 +91,7 @@
       :crypto-currency="tokenSymbol"
       :is-loading="isFetchingQuotes"
       :error="buyQuotesError"
+      :analytics-payload="buyPayload"
     />
   </div>
 </template>
@@ -127,6 +128,8 @@ import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
+import { analytics, BuyEvent, BuyEventError } from '@/analytics'
+import type { BuyPayloadShared } from '@/analytics'
 
 const { t } = useI18n()
 
@@ -247,6 +250,7 @@ const applyPreselectedToken = () => {
 onMounted(() => {
   fetchPurchaseInfo()
   applyPreselectedToken()
+  analytics.trackBuyEvent(BuyEvent.SHOWN, buyPayload.value)
 })
 
 watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
@@ -299,6 +303,19 @@ const quickButtons = computed(() => {
 const formattedCryptoEstimate = computed(() => {
   if (!cryptoEstimate.value) return `0.00 ${tokenSymbol.value}`.trim()
   return `${formatFloatingPointValue(cryptoEstimate.value).value} ${tokenSymbol.value}`.trim()
+})
+
+const buyPayload = computed<BuyPayloadShared>(() => {
+  const rate = currencyRate.value
+  const amountUSD =
+    rate && rate > 0 ? (Number(fiatAmount.value) / rate).toFixed(2) : fiatAmount.value
+  return {
+    network: displayChain.value?.name,
+    token: tokenSymbol.value,
+    currency: selectedFiat.value,
+    amountUSD,
+    amountOriginalCurrency: fiatAmount.value,
+  }
 })
 
 const limitText = (value: number) =>
@@ -373,6 +390,15 @@ const fetchEstimate = async () => {
     cryptoCurrency: tokenSymbol.value,
     chain: purchaseChainCode.value,
   })
+  if (!amountIsValid.value) return
+  if (cryptoEstimate.value) {
+    analytics.trackBuyEvent(BuyEvent.PRELIMINARY_SHOWN, buyPayload.value)
+  } else {
+    analytics.trackBuyEventError(BuyEventError.PRELIMINARY_ERROR, {
+      ...buyPayload.value,
+      errorMsg: 'no_quotes',
+    })
+  }
 }
 
 const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
@@ -441,6 +467,8 @@ const onSubmit = async () => {
     return
   }
   if (!amountIsValid.value) return
+
+  analytics.trackBuyEvent(BuyEvent.CLICK_CONTINUE, buyPayload.value)
 
   clearBuyQuotes()
   showProviderModal.value = true
