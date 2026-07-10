@@ -8,7 +8,9 @@
           width="w-8"
           height="h-8"
         />
-        <span class="font-bold text-s-20">{{ symbol }} Leverage</span>
+        <span class="font-bold text-s-20">{{
+          $t('perps.select-leverage.title', { symbol })
+        }}</span>
       </div>
     </template>
     <template #content>
@@ -111,16 +113,17 @@
 
         <!-- Description -->
         <p class="text-s-14 text-info leading-relaxed" v-if="mode === 'create'">
-          Leverage increases both your potential profits and losses. Using
-          higher leverage means higher risk of losing your position.
-          <a href="#" class="text-[#0052ff] font-medium hover:underline"
-            >Learn more</a
-          >
+          {{ $t('perps.select-leverage.leverage-description') }}
+          <a href="#" class="text-[#0052ff] font-medium hover:underline">{{
+            $t('perps.select-leverage.learn-more')
+          }}</a>
         </p>
         <app-warning
           v-if="mode === 'add'"
-          title="Position leverage will change"
-          :text="`You're adding to an existing position at a different leverage. This will change the leverage for your full ${symbol} position, not just the amount you're adding. Your liquidation price and required margin will be recalculated.`"
+          :title="$t('perps.select-leverage.leverage-will-change-title')"
+          :text="
+            $t('perps.select-leverage.leverage-will-change-text', { symbol })
+          "
         />
 
         <!-- Leverage Error -->
@@ -150,7 +153,10 @@ import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import { getLogoUrl } from '../utils/market'
 import { PlusIcon, MinusIcon } from '@heroicons/vue/24/solid'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AppWarning from '@/components/AppWarning.vue'
+
+const { t } = useI18n()
 
 interface Props {
   symbol: string
@@ -177,9 +183,13 @@ defineEmits<{
 
 const buttonText = computed(() => {
   if (props.mode === 'submit') {
-    return props.isSaving ? 'Submitting...' : 'Submit'
+    return props.isSaving
+      ? t('perps.select-leverage.submitting')
+      : t('perps.select-leverage.submit')
   }
-  return props.isSaving ? 'Saving...' : 'Save'
+  return props.isSaving
+    ? t('perps.select-leverage.saving')
+    : t('perps.select-leverage.save')
 })
 
 const tickValues = computed(() => {

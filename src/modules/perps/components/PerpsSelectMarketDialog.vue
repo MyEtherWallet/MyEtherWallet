@@ -4,7 +4,7 @@
     class="w-full sm:w-[460px]"
     style="max-height: 60vh"
     :has-content-gutter="false"
-    title="Select Perps Market"
+    :title="$t('perps.select-market.title')"
   >
     <template #content>
       <div class="flex flex-col">
@@ -16,7 +16,7 @@
             :model-value="search"
             class="grow"
             bg-class="bg-transparent"
-            placeholder="Search"
+            :placeholder="$t('perps.select-market.search-placeholder')"
             @update:model-value="$emit('update:search', $event as string)"
           />
           <app-pop-up-menu location="right">
@@ -36,7 +36,9 @@
             <template #menu-content="{ toggleMenu }">
               <div class="py-4 flex flex-col w-[200px] gap-1">
                 <div class="flex items-center justify-between mb-1 mx-3">
-                  <p class="text-s-17 font-medium ml-3">Sort</p>
+                  <p class="text-s-17 font-medium ml-3">
+                    {{ $t('perps.select-market.sort') }}
+                  </p>
                   <app-btn-icon-close @close="toggleMenu" />
                 </div>
                 <hr class="h-px bg-grey-outline border-0 w-full mt-1 mb-2" />
@@ -137,7 +139,7 @@
             v-if="contracts.length === 0"
             class="text-center py-8 text-info text-s-14"
           >
-            No markets found
+            {{ $t('perps.select-market.no-markets-found') }}
           </div>
         </div>
       </div>
@@ -147,6 +149,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ArrowLongUpIcon, ArrowLongDownIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
@@ -162,6 +165,8 @@ import type {
   SortDirection,
   MarketSortOption,
 } from '../composables/usePerpsTradeForm'
+
+const { t } = useI18n()
 
 const props = defineProps({
   contracts: {
@@ -220,6 +225,7 @@ defineEmits<{
 
 const activeSortLabel = computed(
   () =>
-    props.sortOptions.find(o => o.value === props.sortValue)?.label ?? 'Sort',
+    props.sortOptions.find(o => o.value === props.sortValue)?.label ??
+    t('perps.select-market.sort'),
 )
 </script>

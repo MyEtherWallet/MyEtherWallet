@@ -791,17 +791,36 @@ export function usePerpsTradeForm() {
 
   // ── Market selector ────────────────────────────────────────
   const marketFilterTabs = [
-    { key: 'all', label: 'All' },
-    { key: 'Equities', label: 'Equities' },
-    { key: 'Commodities', label: 'Commodities' },
-    { key: 'Indices', label: 'Indices' },
+    { key: 'all', label: t('perps.select-market.filter-tab-all') },
+    { key: 'Equities', label: t('perps.select-market.filter-tab-equities') },
+    {
+      key: 'Commodities',
+      label: t('perps.select-market.filter-tab-commodities'),
+    },
+    { key: 'Indices', label: t('perps.select-market.filter-tab-indices') },
   ]
 
   const marketSortOptions: MarketSortOption[] = [
-    { value: 'name', label: 'Name', numeric: false },
-    { value: 'volume', label: 'Volume', numeric: true },
-    { value: 'price', label: 'Price', numeric: true },
-    { value: 'priceChange', label: 'Price change', numeric: true },
+    {
+      value: 'name',
+      label: t('perps.select-market.sort-name'),
+      numeric: false,
+    },
+    {
+      value: 'volume',
+      label: t('perps.select-market.sort-volume'),
+      numeric: true,
+    },
+    {
+      value: 'price',
+      label: t('perps.select-market.sort-price'),
+      numeric: true,
+    },
+    {
+      value: 'priceChange',
+      label: t('perps.select-market.sort-price-change'),
+      numeric: true,
+    },
   ]
 
   // Re-clicking the active sort flips its direction; a different sort jumps

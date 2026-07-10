@@ -212,4 +212,43 @@ describe('usePerpsTradeForm — i18n label keys (MEW-2012)', () => {
       { label: 'perps.trade.short', value: 'sell' },
     ])
   })
+
+  it('builds marketFilterTabs labels from i18n keys while keeping keys stable', () => {
+    const form = usePerpsTradeForm()
+    expect(form.marketFilterTabs).toEqual([
+      { key: 'all', label: 'perps.select-market.filter-tab-all' },
+      { key: 'Equities', label: 'perps.select-market.filter-tab-equities' },
+      {
+        key: 'Commodities',
+        label: 'perps.select-market.filter-tab-commodities',
+      },
+      { key: 'Indices', label: 'perps.select-market.filter-tab-indices' },
+    ])
+  })
+
+  it('builds marketSortOptions labels from i18n keys while keeping values stable', () => {
+    const form = usePerpsTradeForm()
+    expect(form.marketSortOptions).toEqual([
+      {
+        value: 'name',
+        label: 'perps.select-market.sort-name',
+        numeric: false,
+      },
+      {
+        value: 'volume',
+        label: 'perps.select-market.sort-volume',
+        numeric: true,
+      },
+      {
+        value: 'price',
+        label: 'perps.select-market.sort-price',
+        numeric: true,
+      },
+      {
+        value: 'priceChange',
+        label: 'perps.select-market.sort-price-change',
+        numeric: true,
+      },
+    ])
+  })
 })

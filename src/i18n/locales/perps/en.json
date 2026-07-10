@@ -245,12 +245,65 @@
       "amount-exceeds-balance": "Amount exceeds available balance",
       "withdrawal-failed": "Withdrawal failed"
     },
-    "market-list": {},
-    "select-market": {},
-    "select-leverage": {},
+    "market-list": {
+      "title": "Perpetuals Markets",
+      "search-placeholder": "Search",
+      "filter-placeholder": "Filter",
+      "filter-all": "All Markets",
+      "filter-stocks": "Stocks",
+      "filter-commodities": "Commodities",
+      "filter-indices": "Indices",
+      "filter-watchlist": "Watchlist",
+      "column-name": "Name",
+      "column-price": "Price",
+      "column-24h": "24H",
+      "column-volume": "Volume",
+      "column-market-cap": "Market Cap",
+      "column-actions": "Actions",
+      "remove-from-watchlist": "Remove from Watchlist",
+      "add-to-watchlist": "Add to Watchlist",
+      "actions-menu-label": "actions menu",
+      "action-menu-label": "action menu",
+      "change-leverage": "Change Leverage",
+      "add-to-position": "Add to Position",
+      "close-position": "Close Position",
+      "view-market-info": "View Market Info",
+      "manage": "Manage",
+      "no-results": "No results found for \"{query}\".",
+      "no-watchlist": "You don't have any watchlisted tokens.",
+      "discover-markets": "Discover markets",
+      "leverage-error-fallback": "Failed to set leverage"
+    },
+    "select-market": {
+      "title": "Select Perps Market",
+      "search-placeholder": "Search",
+      "sort": "Sort",
+      "no-markets-found": "No markets found",
+      "filter-tab-all": "All",
+      "filter-tab-equities": "Equities",
+      "filter-tab-commodities": "Commodities",
+      "filter-tab-indices": "Indices",
+      "sort-name": "Name",
+      "sort-volume": "Volume",
+      "sort-price": "Price",
+      "sort-price-change": "Price change"
+    },
+    "select-leverage": {
+      "title": "{symbol} Leverage",
+      "leverage-description": "Leverage increases both your potential profits and losses. Using higher leverage means higher risk of losing your position.",
+      "learn-more": "Learn more",
+      "leverage-will-change-title": "Position leverage will change",
+      "leverage-will-change-text": "You're adding to an existing position at a different leverage. This will change the leverage for your full {symbol} position, not just the amount you're adding. Your liquidation price and required margin will be recalculated.",
+      "submitting": "Submitting...",
+      "submit": "Submit",
+      "saving": "Saving...",
+      "save": "Save"
+    },
     "positions": {},
     "portfolio": {},
     "banner": {},
-    "amount": {}
+    "amount": {
+      "price-label": "Price"
+    }
   }
 }

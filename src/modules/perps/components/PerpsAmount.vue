@@ -7,7 +7,7 @@
     }"
     @click="setInFocusInput"
   >
-    <p class="font-semibold text-s-12 text-info">{{ title }}</p>
+    <p class="font-semibold text-s-12 text-info">{{ displayTitle }}</p>
     <div class="flex justify-start items-center w-full gap-1">
       <span
         class="font-medium text-s-28 tracking-tight shrink-0"
@@ -34,15 +34,18 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, type PropType, nextTick } from 'vue'
+import { watch, ref, computed, type PropType, nextTick } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { onClickOutside } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+
+const { t } = useI18n()
 
 const props = defineProps({
   title: {
     type: String,
-    default: 'Price',
+    default: '',
   },
   validateInput: {
     type: Function as PropType<() => void>,
@@ -65,6 +68,10 @@ const error = defineModel('error', {
   required: true,
   default: '',
 })
+
+const displayTitle = computed(
+  () => props.title || t('perps.amount.price-label'),
+)
 
 watch(
   () => amount.value,

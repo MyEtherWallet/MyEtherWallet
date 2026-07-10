@@ -3,7 +3,9 @@
     <div
       class="flex flex-col xs:flex-row flex-wrap justify-between sm:items-center gap-4 mt-8 mb-6 px-2"
     >
-      <h1 class="text-s-24 xs:text-s-32 font-bold">Perpetuals Markets</h1>
+      <h1 class="text-s-24 xs:text-s-32 font-bold">
+        {{ $t('perps.market-list.title') }}
+      </h1>
       <!--Filter Lists-->
       <div class="hidden lg:flex lg:items-center bg-grey-5 rounded-full">
         <app-btn-group
@@ -21,7 +23,7 @@
         v-model:selected="selectedFilter"
         :options="filterOptions"
         position="right-0"
-        placeholder="Filter"
+        :placeholder="$t('perps.market-list.filter-placeholder')"
         class="lg:hidden"
       >
         <template #select-button="{ toggleSelect }">
@@ -51,7 +53,7 @@
           <app-search-input
             v-model="searchQuery"
             class="grow"
-            placeholder="Search"
+            :placeholder="$t('perps.market-list.search-placeholder')"
           />
         </div>
       </div>
@@ -90,7 +92,7 @@
                     'text-black': headerSort === SortValue.NAME,
                   }"
                 >
-                  Name
+                  {{ $t('perps.market-list.column-name') }}
                   <arrow-long-down-icon
                     v-if="
                       headerSort === SortValue.NAME && tableDirection === 'desc'
@@ -116,7 +118,7 @@
                     'text-black': headerSort === SortValue.PRICE,
                   }"
                 >
-                  Price
+                  {{ $t('perps.market-list.column-price') }}
                   <arrow-long-down-icon
                     v-if="
                       headerSort === SortValue.PRICE &&
@@ -143,7 +145,7 @@
                     'text-black': headerSort === SortValue.PERCENT,
                   }"
                 >
-                  24H
+                  {{ $t('perps.market-list.column-24h') }}
                   <arrow-long-down-icon
                     v-if="
                       headerSort === SortValue.PERCENT &&
@@ -171,7 +173,7 @@
                     'text-black': headerSort === SortValue.VOLUME,
                   }"
                 >
-                  Volume
+                  {{ $t('perps.market-list.column-volume') }}
                   <arrow-long-down-icon
                     v-if="
                       headerSort === SortValue.VOLUME &&
@@ -199,7 +201,7 @@
                     'text-black': headerSort === SortValue.MARKET_CAP,
                   }"
                 >
-                  Market Cap
+                  {{ $t('perps.market-list.column-market-cap') }}
                   <arrow-long-down-icon
                     v-if="
                       headerSort === SortValue.MARKET_CAP &&
@@ -220,7 +222,9 @@
               <th
                 class="lg:pl-6 lg:pr-4 py-2 text-right w-7 xs:w-10 md:w-12 lg:w-[200px] 2xl:w-[240px]"
               >
-                <p class="hidden lg:block font-bold">Actions</p>
+                <p class="hidden lg:block font-bold">
+                  {{ $t('perps.market-list.column-actions') }}
+                </p>
               </th>
             </tr>
           </thead>
@@ -236,8 +240,8 @@
                 <button
                   :aria-label="
                     watchlist.has(contract.baseCurrency)
-                      ? 'Remove from Watchlist'
-                      : 'Add to Watchlist'
+                      ? $t('perps.market-list.remove-from-watchlist')
+                      : $t('perps.market-list.add-to-watchlist')
                   "
                   class="p-2 text-black rounded-full hover:bg-grey-5 transition-colors duration-300 ease-in-out"
                   @click.stop="toggleWatchlist(contract.baseCurrency)"
@@ -330,10 +334,13 @@
                 <div
                   class="flex items-center justify-end lg:hidden ml-auto -mr-1 md:mr-auto"
                 >
-                  <app-pop-up-menu placeholder="actions menu" location="right">
+                  <app-pop-up-menu
+                    :placeholder="$t('perps.market-list.actions-menu-label')"
+                    location="right"
+                  >
                     <template #menu-button="{ toggleMenu }">
                       <app-btn-icon
-                        label="action menu"
+                        :label="$t('perps.market-list.action-menu-label')"
                         @click.stop="toggleMenu"
                         height="h-7 xs:h-8"
                         width="w-7 xs:w-8"
@@ -362,8 +369,8 @@
                           />
                           <span class="ml-2">{{
                             watchlist.has(contract.baseCurrency)
-                              ? 'Remove from Watchlist'
-                              : 'Add to Watchlist'
+                              ? $t('perps.market-list.remove-from-watchlist')
+                              : $t('perps.market-list.add-to-watchlist')
                           }}</span>
                         </button>
                         <hr
@@ -382,7 +389,7 @@
                                 ),
                               ]"
                             >
-                              <p>Change Leverage</p>
+                              <p>{{ $t('perps.market-list.change-leverage') }}</p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -391,7 +398,7 @@
                                 openPositionAdd(contract.market, 'add'),
                               ]"
                             >
-                              <p>Add to Position</p>
+                              <p>{{ $t('perps.market-list.add-to-position') }}</p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -400,7 +407,7 @@
                                 openPositionAdd(contract.market, 'close'),
                               ]"
                             >
-                              <p>Close Position</p>
+                              <p>{{ $t('perps.market-list.close-position') }}</p>
                             </li>
                           </template>
                           <template v-else>
@@ -411,7 +418,7 @@
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <p>Long</p>
+                              <p>{{ $t('perps.trade.long') }}</p>
                             </li>
                             <li
                               @click.stop="[
@@ -420,7 +427,7 @@
                               ]"
                               class="p-2 flex items-center hoverBGWhite rounded-12"
                             >
-                              <p>Short</p>
+                              <p>{{ $t('perps.trade.short') }}</p>
                             </li>
                           </template>
                           <li
@@ -430,7 +437,7 @@
                             ]"
                             class="p-2 flex items-center hoverBGWhite rounded-12"
                           >
-                            <p>View Market Info</p>
+                            <p>{{ $t('perps.market-list.view-market-info') }}</p>
                           </li>
                         </ul>
                       </div>
@@ -440,7 +447,7 @@
                 <div class="hidden lg:flex flex-row gap-2 justify-end">
                   <template v-if="getPosition(contract.market)">
                     <app-pop-up-menu
-                      placeholder="actions menu"
+                      :placeholder="$t('perps.market-list.actions-menu-label')"
                       location="right"
                     >
                       <template #menu-button="{ toggleMenu }">
@@ -455,11 +462,11 @@
                           "
                           @click="toggleMenu"
                         >
-                          Manage
+                          {{ $t('perps.market-list.manage') }}
                           {{
                             getPosition(contract.market)!.direction === 'long'
-                              ? 'Long'
-                              : 'Short'
+                              ? $t('perps.trade.long')
+                              : $t('perps.trade.short')
                           }}
                         </app-base-button>
                       </template>
@@ -479,7 +486,7 @@
                                 ),
                               ]"
                             >
-                              <p>Change Leverage</p>
+                              <p>{{ $t('perps.market-list.change-leverage') }}</p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -488,7 +495,7 @@
                                 openPositionAdd(contract.market, 'add'),
                               ]"
                             >
-                              <p>Add to Position</p>
+                              <p>{{ $t('perps.market-list.add-to-position') }}</p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -497,7 +504,7 @@
                                 openPositionAdd(contract.market, 'close'),
                               ]"
                             >
-                              <p>Close Position</p>
+                              <p>{{ $t('perps.market-list.close-position') }}</p>
                             </li>
                             <li
                               class="p-2 flex items-center hoverBGWhite rounded-12"
@@ -506,7 +513,7 @@
                                 emits('viewMarket', contract.market),
                               ]"
                             >
-                              <p>View Market Info</p>
+                              <p>{{ $t('perps.market-list.view-market-info') }}</p>
                             </li>
                           </ul>
                         </div>
@@ -520,7 +527,7 @@
                       theme="success"
                       @click="emits('openPosition', contract.market, 'buy')"
                     >
-                      Long
+                      {{ $t('perps.trade.long') }}
                     </app-base-button>
                     <app-base-button
                       size="small"
@@ -528,7 +535,7 @@
                       class="min-w-[64px]"
                       @click="emits('openPosition', contract.market, 'sell')"
                     >
-                      Short
+                      {{ $t('perps.trade.short') }}
                     </app-base-button>
                   </template>
                 </div>
@@ -556,17 +563,17 @@
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"
             class="mb-1 text-center lg:mt-10"
           >
-            You don't have any watchlisted tokens.
+            {{ $t('perps.market-list.no-watchlist') }}
           </p>
           <p v-if="searchQuery" class="mb-1 text-center lg:my-10">
-            No results found for "{{ searchQuery }}".
+            {{ $t('perps.market-list.no-results', { query: searchQuery }) }}
           </p>
           <button
             v-if="selectedFilter.value === 'watchlist' && !searchQuery"
             class="underline lg:mb-10"
             @click="selectedFilter = filterOptions[0]"
           >
-            Discover markets
+            {{ $t('perps.market-list.discover-markets') }}
             <arrow-long-up-icon class="rotate-90 w-4 h-4 inline-flex" />
           </button>
         </div>
@@ -587,6 +594,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
 import AppSearchInput from '@/components/AppSearchInput.vue'
 import {
@@ -627,6 +635,7 @@ import type {
   PerpsChangeLeverageFailPayload,
 } from '@/analytics'
 
+const { t } = useI18n()
 const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
 
@@ -689,8 +698,9 @@ const saveLeverage = async () => {
       payload,
     )
   } catch (e) {
-    leverageError.value =
-      e instanceof Error ? e.message : 'Failed to set leverage'
+    leverageError.value = e instanceof Error
+      ? e.message
+      : t('perps.market-list.leverage-error-fallback')
     perpsToasts.toastFailedToSetLeverage()
     const failPayload: PerpsChangeLeverageFailPayload = {
       ...payload,
@@ -725,11 +735,23 @@ function getPosition(market: string) {
 
 const marketSkeletonColumns: SkeletonColumn[] = [
   { header: '', hidden: 'hidden xs:table-cell xs:w-10' },
-  { header: 'Name' },
-  { header: 'Price', align: 'right' },
-  { header: '24H', align: 'right', hidden: 'hidden xs:table-cell' },
-  { header: 'Volume', align: 'right', hidden: 'hidden 2xl:table-cell' },
-  { header: 'Market Cap', align: 'right', hidden: 'hidden md:table-cell' },
+  { header: t('perps.market-list.column-name') },
+  { header: t('perps.market-list.column-price'), align: 'right' },
+  {
+    header: t('perps.market-list.column-24h'),
+    align: 'right',
+    hidden: 'hidden xs:table-cell',
+  },
+  {
+    header: t('perps.market-list.column-volume'),
+    align: 'right',
+    hidden: 'hidden 2xl:table-cell',
+  },
+  {
+    header: t('perps.market-list.column-market-cap'),
+    align: 'right',
+    hidden: 'hidden md:table-cell',
+  },
   {
     header: '',
     align: 'right',
@@ -775,11 +797,11 @@ interface FilterOption {
 }
 
 const filterOptions: FilterOption[] = [
-  { label: 'All Markets', value: 'all' },
-  { label: 'Stocks', value: 'stocks' },
-  { label: 'Commodities', value: 'commodities' },
-  { label: 'Indices', value: 'indices' },
-  { label: 'Watchlist', value: 'watchlist' },
+  { label: t('perps.market-list.filter-all'), value: 'all' },
+  { label: t('perps.market-list.filter-stocks'), value: 'stocks' },
+  { label: t('perps.market-list.filter-commodities'), value: 'commodities' },
+  { label: t('perps.market-list.filter-indices'), value: 'indices' },
+  { label: t('perps.market-list.filter-watchlist'), value: 'watchlist' },
 ]
 
 const selectedFilter = ref<FilterOption>(filterOptions[0])
