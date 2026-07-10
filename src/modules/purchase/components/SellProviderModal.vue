@@ -83,16 +83,17 @@
           </div>
 
           <!-- Continue CTA -->
-          <button
-            type="button"
-            class="h-12 w-full rounded-24 px-4 bg-primary text-white flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] hoverOpacityHasBG transition-colors"
+          <app-base-button
+            class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
             @click="onContinue"
           >
-            {{ t('purchase.sell.provider.continue') }}
-            <arrow-top-right-on-square-icon
-              class="w-[22px] h-[22px] flex-none"
-            />
-          </button>
+            <span class="flex items-center justify-center gap-2">
+              {{ t('purchase.sell.provider.continue') }}
+              <arrow-top-right-on-square-icon
+                class="w-[22px] h-[22px] flex-none"
+              />
+            </span>
+          </app-base-button>
           <p class="text-info text-s-12 text-center -mt-5">
             {{
               t('purchase.select_provider.redirect', {
@@ -111,6 +112,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowTopRightOnSquareIcon } from '@heroicons/vue/24/solid'
 import AppDialog from '@/components/AppDialog.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 import {
   formatFloatingPointValue,
   formatFiatValue,
