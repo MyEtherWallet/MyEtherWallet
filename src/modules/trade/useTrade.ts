@@ -8,8 +8,26 @@ import type {
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
+import * as Sentry from '@sentry/vue'
 
 const isDevMode = Configs.IS_DEV_MODE
+
+type TradableAsset = GetWebSwapOndoAssetsResponse[number]
+
+const isTradableAsset = (asset: unknown): asset is TradableAsset => {
+  if (typeof asset !== 'object' || asset === null) return false
+  const a = asset as Record<string, unknown>
+  return (
+    typeof a.symbol === 'string' &&
+    typeof a.tradable === 'boolean' &&
+    (a.pause === null || (typeof a.pause === 'object' && a.pause !== null)) &&
+    typeof a.primaryMarket === 'object' &&
+    a.primaryMarket !== null &&
+    typeof a.underlyingMarket === 'object' &&
+    a.underlyingMarket !== null &&
+    Array.isArray(a.addresses)
+  )
+}
 
 export interface UseTrade {
   supportedChainNames: Ref<string[]>
@@ -41,7 +59,37 @@ export const useTrade = (): UseTrade => {
         OneInchFusion.getAdditionalBuyAssets(),
         OneInchFusion.getHardcodedTokensInfo(),
       ])
-      tradableAssets.value = assets
+      const validAssets: TradableAsset[] = []
+      assets.forEach((asset, index) => {
+        if (isTradableAsset(asset)) {
+          validAssets.push(asset)
+        } else {
+          if (isDevMode) {
+            console.warn(
+              'Skipping unexpected tradable asset at index',
+              index,
+              asset,
+            )
+          } else {
+            Sentry.captureMessage(
+              `Unexpected tradable asset at index ${index}: ${JSON.stringify(
+                asset,
+              )}`,
+              {
+                ...SENTRY_MODULE_TAGS.TRADE,
+                level: 'warning',
+                extra: {
+                  title: 'TRADE: Unexpected tradable asset',
+                  index,
+                  asset,
+                },
+              },
+            )
+          }
+        }
+      })
+      tradableAssets.value = validAssets
+
       additionalBuyAssets.value = additionalAssets
       hardcodedTokensInfo.value = hardcodedInfo
     } catch (e) {
