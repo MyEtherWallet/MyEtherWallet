@@ -3,6 +3,8 @@
     v-model:is-open="isOpen"
     hide-close
     class="sm:max-w-[480px] w-full !rounded-32"
+    z-index-overlay="z-[200]"
+    z-index-container="z-[201]"
   >
     <template #content>
       <div class="relative flex flex-col items-start p-6 gap-20 w-full">

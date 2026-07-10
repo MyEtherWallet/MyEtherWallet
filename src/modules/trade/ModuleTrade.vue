@@ -363,6 +363,7 @@
       :from-amount="fromAmount"
       :loading="txProceeding"
       :chain="selectedFromChain"
+      :is-cashout="isCashOutTradableAsset"
       @confirm="confirmTrade"
       @cancel="quoteModalOpen = false"
     />
@@ -641,6 +642,7 @@ watch(generalError, newVal => {
 // --- Trade Tokens ---
 const {
   isSelectedAssetTradeable,
+  isCashOutTradableAsset,
   nonTradeableAssetMessage,
   disabledTokenAddresses,
   toTokens,

@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { vElementHover } from '@vueuse/components'
-import { InformationCircleIcon } from '@heroicons/vue/24/solid'
+import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 const show = ref(false)
 const visible = ref(false)
 
