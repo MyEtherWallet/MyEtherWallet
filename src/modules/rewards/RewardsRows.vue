@@ -156,7 +156,7 @@
         class="grow max-w-[150px]"
         @click="$emit('trade')"
       >
-        Trade $100+
+        Trade ${{ minSpendTrade }}+
       </app-base-button>
       <button
         v-else
@@ -214,6 +214,7 @@ defineProps<{
   isRewardsView?: boolean
   hasSwap: boolean
   hasTrade: boolean
+  minSpendTrade: string
 }>()
 
 defineEmits<{

@@ -2,7 +2,7 @@
   "rwaRewards": {
     "section_title": "Rewards & offers",
     "trade_title": "Trade and get 5 USDC",
-    "trade_description": "The first 15 trades over $100 every hour receive 5 USDC in rewards. Once per week per wallet.",
+    "trade_description": "The first 15 trades over ${minSpendTrade} every hour receive 5 USDC in rewards. Once per week per wallet.",
     "hold_title": "Trade, hold and get rewarded",
     "hold_description": "Earn 10 USDC when you trade $100+ and hold for 14 days.",
     "fees_title": "Zero MEW Fees!",

@@ -13,7 +13,9 @@
           class="flex-1 min-w-[440px] order-2"
           illustration="trade"
           :title="$t('rwaRewards.trade_title')"
-          :description="$t('rwaRewards.trade_description')"
+          :description="
+            $t('rwaRewards.trade_description', { minSpendTrade: minSpendTrade })
+          "
           :primary-label="$t('rwaRewards.trade')"
           :secondary-label="$t('rwaRewards.more_info')"
           @primary="onTrade"
@@ -102,11 +104,15 @@ import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import RwaTradeInfoModal from '@/modules/rwa_rewards/RwaTradeInfoModal.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
+import { useRewardsStore } from '@/stores/rewardsStore'
 
 const { t } = useI18n()
 const walletMenuStore = useWalletMenuStore()
 const holdingsStore = useHoldingsStore()
 const { status, activeReward, seasonEnd } = storeToRefs(holdingsStore)
+
+const rewardsStore = useRewardsStore()
+const { minSpendTrade } = storeToRefs(rewardsStore)
 
 const track = ref<HTMLElement | null>(null)
 const canScrollLeft = ref(false)
