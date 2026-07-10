@@ -22,23 +22,14 @@
         @blur="isInputFocused = false"
       />
 
-      <button
-        type="button"
-        :class="[
-          'h-12 w-full rounded-24 px-4 flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] transition-colors',
-          ctaIsPrimary
-            ? 'bg-primary text-white hoverOpacityHasBG'
-            : 'bg-bgBase text-grey-50 cursor-not-allowed',
-        ]"
-        :disabled="ctaDisabled"
+      <app-base-button
+        class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+        :disabled="ctaDisabled && !ctaIsLoading"
+        :is-loading="ctaIsLoading"
         @click="onSubmit"
       >
-        <span
-          v-if="ctaIsLoading"
-          class="inline-block w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"
-        />
-        <span v-else>{{ ctaLabel }}</span>
-      </button>
+        {{ ctaLabel }}
+      </app-base-button>
 
       <a
         href="https://help.myetherwallet.com/"
@@ -108,6 +99,7 @@ import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -335,10 +327,6 @@ const amountHelper = computed(() =>
   amountMinHint.value === null
     ? ''
     : t('purchase.buy.error.min', { min: limitText(amountMinHint.value) }),
-)
-
-const ctaIsPrimary = computed(
-  () => !isReady.value || (amountIsValid.value && !hasNoQuotes.value),
 )
 
 const ctaDisabled = computed(

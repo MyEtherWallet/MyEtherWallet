@@ -120,7 +120,6 @@
             : '',
           'flex-1 min-w-0 flex items-center justify-center px-1 py-2 rounded-8 hoverNoBG transition-colors',
         ]"
-        u
         @click="onSelectPreset(btn)"
       >
         <span
