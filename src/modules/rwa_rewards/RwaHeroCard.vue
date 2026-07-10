@@ -1,5 +1,17 @@
 <template>
+  <!-- Geo-restricted regions never see reward info — only the "no MEW fees"
+       offer takes the top card's place. -->
+  <rwa-reward-card
+    v-if="isTradingRestrictedInRegion"
+    illustration="fees"
+    :title="$t('rwaRewards.fees_title')"
+    :description="$t('rwaRewards.fees_description')"
+    :footnote="$t('rwaRewards.fees_footnote')"
+    :primary-label="$t('rwaRewards.buy_assets')"
+    @primary="onBuy"
+  />
   <div
+    v-else
     class="relative isolate bg-white overflow-hidden flex flex-col justify-between items-start h-full border border-[#e6e6e6] rounded-16 p-5 min-h-[293px]"
   >
     <img
@@ -265,10 +277,12 @@ import peggyCrying from '@/assets/images/rwa-rewards/peggy-crying.webp'
 import peggyCool from '@/assets/images/rwa-rewards/peggy-cool-thumbsup.webp'
 import { useHoldingsStore } from '@/stores/holdingsStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import { useCountdown } from '@/modules/rwa_rewards/useCountdown'
 import RwaHoldTracker from '@/modules/rwa_rewards/RwaHoldTracker.vue'
 import RwaClaimCard from '@/modules/rwa_rewards/RwaClaimCard.vue'
 import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
+import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 
@@ -277,8 +291,10 @@ const { t } = useI18n()
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
 const { seasonEnd, status, activeReward } = storeToRefs(holdingsStore)
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 const onTrade = () => walletMenuStore.openPanel('trade')
+const onBuy = () => walletMenuStore.openPanel('purchase')
 const onMoreInfo = () => holdingsStore.openModal()
 const onContactSupport = () => showIntercom()
 

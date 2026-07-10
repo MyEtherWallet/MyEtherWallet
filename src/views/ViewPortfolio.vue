@@ -51,7 +51,9 @@
       <portfolio-gains-and-losses type="stock" />
     </div>
 
-    <rwa-rewards-section v-if="isWalletConnected" />
+    <rwa-rewards-section
+      v-if="isWalletConnected && !isTradingRestrictedInRegion"
+    />
     <portfolio-balance />
     <router-view />
   </div>
@@ -70,6 +72,7 @@ import RwaHeroCard from '@/modules/rwa_rewards/RwaHeroCard.vue'
 import RwaRewardsSection from '@/modules/rwa_rewards/RwaRewardsSection.vue'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
+import { useGlobalStore } from '@/stores/globalStore'
 import NoBalance from '@/modules/portfolio/components/NoBalance.vue'
 import { storeToRefs } from 'pinia'
 
@@ -78,6 +81,7 @@ const { isOpenSideMenu } = storeToRefs(walletMenuStore)
 const walletStore = useWalletStore()
 const { hasBalances, isLoadingBalances, isWalletConnected } =
   storeToRefs(walletStore)
+const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
 const { width } = useWindowSize()
 

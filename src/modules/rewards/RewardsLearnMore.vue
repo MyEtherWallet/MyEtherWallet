@@ -160,7 +160,7 @@ watch(isOpenModel, val => {
 const infoItems = [
   {
     icon: 'swap',
-    text: 'Make a trade over $100.',
+    text: 'Make a trade over $100 on Ethereum.',
   },
   // {
   //   icon: 'trophy',

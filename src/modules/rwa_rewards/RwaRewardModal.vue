@@ -471,7 +471,8 @@ const offerRules = computed(() => [
   t('rwaRewards.offer_rule_3'),
   t('rwaRewards.offer_rule_4'),
   t('rwaRewards.offer_rule_5'),
-  t('rwaRewards.offer_rule_6', { date: campaignEndText.value }),
+  t('rwaRewards.offer_rule_6'),
+  t('rwaRewards.offer_rule_7', { date: campaignEndText.value }),
 ])
 
 const HOLD_TOTAL = 14
