@@ -413,6 +413,12 @@
     },
     "amount": {
       "price-label": "Price"
+    },
+    "pagination": {
+      "previous-page": "previous page",
+      "next-page": "next page",
+      "page-of": "{current} of {total}",
+      "page": "Page {current}"
     }
   }
 }
