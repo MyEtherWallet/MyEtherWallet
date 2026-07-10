@@ -26,8 +26,8 @@ export const useWeekendTradingAnnouncementStore = defineStore(
     const markTooltipSeen = () => {
       tooltipSeen.value = true
     }
-    // The 24/7 announcement modal is disabled, so the tooltip is decoupled from
-    // it: show once per wallet until dismissed, independent of the modal.
+    // The tooltip is decoupled from the modal: show once per wallet until
+    // dismissed, independent of the modal.
     const shouldShowTooltip = computed(() => !tooltipSeen.value)
 
     return {

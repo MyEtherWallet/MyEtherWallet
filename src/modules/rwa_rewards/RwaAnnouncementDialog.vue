@@ -105,6 +105,12 @@ watch(
   },
 )
 
+// Record when the announcement is closed (any path) so the 24/7 weekend-trading
+// dialog can surface 3 days later.
+watch(isOpen, (open, wasOpen) => {
+  if (wasOpen && !open) announcement.markModalClosed()
+})
+
 const onGoToOffer = () => {
   isOpen.value = false
   holdingsStore.openModal()
