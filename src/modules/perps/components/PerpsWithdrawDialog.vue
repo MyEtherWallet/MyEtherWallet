@@ -114,7 +114,7 @@ import { ref, computed, watch } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import PerpsAmount from './PerpsAmount.vue'
-import { perpsClient, USDC_DECIMALS } from '../configs'
+import { perpsClient, USDC_DECIMALS, PERPS_CHAIN_ID } from '../configs'
 import { mainnet } from 'viem/chains'
 import AppWarning from '@/components/AppWarning.vue'
 import { usePerpsAuth, usePerpsBalance } from '../composables/usePerpsAuth'
@@ -260,7 +260,7 @@ async function submitAuthorize() {
   try {
     const challenge = await perpsClient.getAddressBookChallenge({
       walletAddress: walletAddress.value,
-      chainId: '1',
+      chainId: PERPS_CHAIN_ID,
       withdrawalAddress: walletAddress.value,
     })
     const signature = await wallet.value.SignMessage({
