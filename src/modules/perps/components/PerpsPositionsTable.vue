@@ -463,8 +463,12 @@
               >
                 <p>{{ order.filledSize }} {{ getBase(order.market) }}</p>
                 <p class="text-s-12 text-info">
-                  {{ $t('perps.positions.out-of') }} {{ order.size }}
-                  {{ getBase(order.market) }}
+                  {{
+                    $t('perps.positions.out-of', {
+                      size: order.size,
+                      symbol: getBase(order.market),
+                    })
+                  }}
                 </p>
               </td>
 

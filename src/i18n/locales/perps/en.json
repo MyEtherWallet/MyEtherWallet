@@ -364,7 +364,7 @@
       "view-order-label": "View Order",
       "view-order-details-label": "view order details",
       "view-fill-details-label": "view fill details",
-      "out-of": "out of",
+      "out-of": "out of {size} {symbol}",
       "deposit-label": "Deposit",
       "withdrawal-label": "Withdrawal"
     },

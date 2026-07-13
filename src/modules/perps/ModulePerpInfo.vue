@@ -623,8 +623,12 @@
                   >
                     <p>{{ order.filledSize }} {{ baseCurrency }}</p>
                     <p class="text-s-12 text-info">
-                      {{ $t('perps.positions.out-of') }} {{ order.size }}
-                      {{ baseCurrency }}
+                      {{
+                        $t('perps.positions.out-of', {
+                          size: order.size,
+                          symbol: baseCurrency,
+                        })
+                      }}
                     </p>
                   </td>
                   <!-- Actions -->
