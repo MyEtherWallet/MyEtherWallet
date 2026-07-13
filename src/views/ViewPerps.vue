@@ -20,6 +20,8 @@
         <perps-portfolio-summary
           @deposit="showDeposit = true"
           @withdraw="showWithdraw = true"
+          @access="connectWallet"
+          :watch-only="isWatchOnly"
         />
         <perps-portfolio-chart />
       </div>
@@ -60,22 +62,35 @@ import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { usePerpsAuth } from '@/modules/perps/composables/usePerpsAuth'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
+import { useAccessStore } from '@/stores/accessStore'
 
 const router = useRouter()
 const walletMenu = useWalletMenuStore()
 const walletStore = useWalletStore()
-const { isWatchOnly, wallet } = storeToRefs(walletStore)
+const { isWatchOnly, walletAddress } = storeToRefs(walletStore)
 const { token, isAuthenticating, login, logout } = usePerpsAuth()
 const { isDesktopAndUp } = useAppBreakpoints()
 
-watch(
-  () => wallet.value,
-  (newVal, oldVal) => {
-    if (newVal && oldVal && !isWatchOnly.value && !isAuthenticating.value) {
-      login()
-    }
-  },
-)
+// Trigger auto-login only when the connected wallet address actually changes
+// (wallet switch / account swap). Watching the wallet object with `deep: true`
+// re-fired on any internal provider mutation, which after a Sign Out would
+// silently re-auth the user and make the page flash back to the signed-in
+// view.
+watch(walletAddress, (newAddr, oldAddr) => {
+  if (
+    newAddr &&
+    oldAddr &&
+    newAddr !== oldAddr &&
+    !isWatchOnly.value &&
+    !isAuthenticating.value &&
+    !token.value
+  ) {
+    login()
+  }
+})
+
+const connectWallet = () => useAccessStore().openAccessDialog()
+
 const showDeposit = ref(false)
 const showWithdraw = ref(false)
 
@@ -104,7 +119,6 @@ function handleOpenPosition(market: string, side?: 'buy' | 'sell') {
     })
   }
 }
-
 function handleViewMarket(market: string) {
   router.push({
     name: PERP_INFO_ROUTE_NAME,

@@ -47,25 +47,16 @@
                   symbol: selectedChain?.currencyName || 'ETH',
                 })
               }}
-              <a
-                href="https://ccswap.myetherwallet.com/"
-                target="_blank"
+              <button
                 class="text-primary cursor-pointer underline underline-offset-2"
-                @click="
-                  analytics.trackClickTokenTradeEvent(
-                    ClickTokenTradeEvent.BUY,
-                    {
-                      location: 'select_fee',
-                      token: selectedChain?.currencyName || 'ETH',
-                    },
-                  )
-                "
-                >{{
+                @click="openBuyPanel"
+              >
+                {{
                   $t('common.buy_more', {
                     symbol: selectedChain?.currencyName || 'ETH',
                   })
-                }}</a
-              >
+                }}
+              </button>
             </p>
           </div>
           <p v-else>{{ gasFeeError }}</p>
@@ -171,6 +162,17 @@ import { useI18n } from 'vue-i18n'
 import { formatUnits } from 'viem'
 import { P2WPKH_DUST } from '@/providers/common/btcInfo'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
+const walletMenu = useWalletMenuStore()
+
+const openBuyPanel = () => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
+    location: 'select_fee',
+    token: selectedChain?.value?.currencyName || 'ETH',
+  })
+  walletMenu.openPanel('purchase')
+}
 
 /** ----------------
  * DEFAULTS
@@ -197,6 +199,10 @@ const props = defineProps<Props>()
 const gasFeeError = defineModel<string>('gasFeeError', {
   type: String,
   default: '',
+})
+const selectedFeeNativeValue = defineModel<string>('selectedFeeNativeValue', {
+  type: String,
+  default: '0',
 })
 
 const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE'
@@ -351,6 +357,7 @@ watch(
   },
 )
 onMounted(() => {
+  gasPriceType.value = defaultGasPriceType.value
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
     if (isBitcoinChain.value && !isWalletConnected.value) {
@@ -378,22 +385,39 @@ const closeFeeModal = () => {
  * Current Selected Fee
  ------------------*/
 const globalStore = useGlobalStore()
-const { gasPriceType } = storeToRefs(globalStore)
+const { gasPriceType, defaultGasPriceType } = storeToRefs(globalStore)
 
 const setFee = (fee: FeePriority) => {
   gasPriceType.value = fee
   closeFeeModal()
   //TODO: add amplitude
 }
-
-const selectedFeeNative = computed(() => {
-  if (hasFees.value && data.value) {
-    return formatFee(data.value.fees[gasPriceType.value])
-  }
-  return ''
-})
 const usedFeeToDisplay = computed<FeeOption | undefined>(() => {
   return props.fees ? props.fees.fees : feeEstmates.value
+})
+
+const selectedFeeNativeBaseValue = computed(() => {
+  return (
+    usedFeeToDisplay.value?.[gasPriceType.value]?.nativeValue ||
+    usedFeeToDisplay.value?.[gasPriceType.value]?.nativeFeeTotal ||
+    '0'
+  )
+})
+
+watch(
+  () => selectedFeeNativeBaseValue.value,
+  value => {
+    selectedFeeNativeValue.value = value || '0'
+  },
+  { immediate: true },
+)
+
+const selectedFeeNative = computed(() => {
+  const fee = usedFeeToDisplay.value?.[gasPriceType.value]
+  if (hasFees.value && fee) {
+    return formatFee(fee)
+  }
+  return ''
 })
 
 const hasFiatEstimates = computed(() => {
@@ -495,11 +519,22 @@ const displayFees = computed<DisplayFee[]>(() => {
 })
 
 const hasFees = computed(() => {
+  if (props.fees) {
+    return Object.keys(props.fees.fees).length > 0 && !props.isLoadingFees
+  }
   return (
     feesReady.value &&
     data.value &&
     Object.keys(data.value.fees).length > 0 &&
     !props.isLoadingFees
   )
+})
+
+defineExpose({
+  openFeeModal,
+  hasFees,
+  hasFiatEstimates,
+  selectedFeeNative,
+  selectedFeeFiat,
 })
 </script>

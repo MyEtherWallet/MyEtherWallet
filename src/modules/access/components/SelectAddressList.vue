@@ -32,7 +32,7 @@
               />
               <app-btn-icon
                 :href="blockExplorerUrl(walletList[i - 1].address)"
-                label="view address in explorer"
+                :label="$t('select_address_list.view_in_explorer')"
                 class="text-primary ml-1 xs:ml-0"
                 @click.stop
               >
@@ -67,15 +67,15 @@
     <div class="mt-2 flex items-center justify-center gap-2">
       <app-btn-icon
         @click="emit('prevpage')"
-        label="previous page"
+        :label="$t('common.previous_page')"
         :disabled="isDisabled"
       >
         <chevron-left-icon class="w-5 h-5" />
       </app-btn-icon>
       <app-btn-icon
         @click="emit('nextpage')"
-        label="next page"
-        :disabled="isLoading"
+        :label="$t('common.next_page')"
+        :disabled="isLoading || walletList.length < 5"
       >
         <chevron-right-icon class="w-5 h-5" />
       </app-btn-icon>

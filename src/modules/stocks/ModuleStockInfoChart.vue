@@ -22,7 +22,7 @@
             class="rounded-full hoverNoBG p-2 h-6 min-w-[46px] !text-s-12 flex items-center"
             @click="toggleSelect"
           >
-            <p>More</p>
+            <p>{{ $t('common.more') }}</p>
             <chevron-down-icon class="w-4 h-4 ml-1" />
           </button>
         </template>
@@ -43,14 +43,15 @@
       :class="{ 'animate-pulse': isLoadingFetch }"
     >
       <div class="flex flex-col items-center h-full justify-center gap-2">
-        <p v-if="notAvailable" class="text-s-14 text-info">No data available</p>
+        <p v-if="notAvailable" class="text-s-14 text-info">{{ $t('common.no_data_available') }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onBeforeUnmount } from 'vue'
+import { computed, ref, onBeforeUnmount, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useFetchMewApi } from '@/composables/useFetchMewApi'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppSelect from '@/components/AppSelect.vue'
@@ -71,6 +72,7 @@ const props = defineProps({
   },
 })
 const { isXS } = useAppBreakpoints()
+const { t } = useI18n()
 
 /** --------------------
  * Chart Filter
@@ -80,16 +82,22 @@ interface Item {
   label: string
   value: StockPriceChartInterval
 }
-const chartFilterOptions = ref<Item[]>([
-  { label: '1d', value: '1D' },
-  { label: '7d', value: '7D' },
-  { label: '1m', value: '1M' },
-  { label: '3m', value: '3M' },
-  { label: '1y', value: '1Y' },
-  { label: 'all', value: 'ALL' },
+const chartFilterOptions = computed<Item[]>(() => [
+  { label: t('common.chart_1d'), value: '1D' },
+  { label: t('common.chart_7d'), value: '7D' },
+  { label: t('common.chart_1m'), value: '1M' },
+  { label: t('common.chart_3m'), value: '3M' },
+  { label: t('common.chart_1y'), value: '1Y' },
+  { label: t('common.chart_all'), value: 'ALL' },
 ])
 
-const selectedChartFilter = ref(chartFilterOptions.value[0])
+const selectedChartFilter = ref<Item>(chartFilterOptions.value[0])
+
+watch(chartFilterOptions, options => {
+  selectedChartFilter.value =
+    options.find(opt => opt.value === selectedChartFilter.value.value) ||
+    options[0]
+})
 
 /** --------------------
  * FetchData

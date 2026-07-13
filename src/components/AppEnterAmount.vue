@@ -19,6 +19,7 @@
         v-model="amount"
         @focus="setInFocusInput"
         @keypress="checkIfNumber"
+        @paste="onAmountPaste"
       />
       <slot name="token-select">
         <app-token-select
@@ -33,7 +34,7 @@
           v-if="isLoading"
           class="h-5 flex bg-grey-10 rounded-full w-1/2"
         ></div>
-        <div v-else class="flex justify-between items-end">
+        <div v-else class="flex justify-between items-center gap-2">
           <div
             :class="[
               !!error && !isOpenSelectToken && !isPristine
@@ -44,9 +45,15 @@
           >
             {{ balanceFiat }}
           </div>
-          <div v-if="isWalletConnected" class="text-s-12 text-info font-medium">
-            {{ $t('common.balance') }}:
-            <span class="text-black">{{ balance }}</span>
+          <div
+            v-if="isWalletConnected"
+            class="flex items-center gap-2 text-s-12 leading-p-120 text-info font-medium whitespace-nowrap"
+          >
+            <div>
+              {{ $t('common.balance') }}:
+              <span class="text-black">{{ balance }}</span>
+            </div>
+            <slot name="balance-action" />
           </div>
         </div>
       </transition>
@@ -77,6 +84,7 @@ import {
   formatFiatValue,
 } from '@/utils/numberFormatHelper'
 import { useInFocusInput } from '@/composables/useInFocusInput'
+import { useNumericInput } from '@/composables/useNumericInput'
 
 const walletStore = useWalletStore()
 const { isLoadingBalances: isLoading, isWalletConnected } =
@@ -196,20 +204,5 @@ watch(
   },
 )
 
-const checkIfNumber = (e: KeyboardEvent) => {
-  const key = e.key
-  // Numeric
-  if (key >= '0' && key <= '9') {
-    return
-  }
-  // Only allow a single period
-  if (key === '.') {
-    const input = amount.value.toString()
-    if (!input.includes('.')) {
-      return
-    }
-  }
-  // Alphabetical (/non-numeric) or multiple periods. Don't propagate change
-  e.preventDefault()
-}
+const { checkIfNumber, onPaste: onAmountPaste } = useNumericInput(amount)
 </script>

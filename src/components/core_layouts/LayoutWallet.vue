@@ -22,6 +22,7 @@
             </button>
             <!-- Trade button -->
             <button
+              ref="tradeBtnRef"
               @click="openPanel('trade')"
               :class="[
                 walletPanel === 'trade' && isOpenSideMenu
@@ -142,21 +143,15 @@
                 {{ $t('common.send') }}
               </p>
             </button>
-            <!-- Buy button -->
-            <a
-              href="https://ccswap.myetherwallet.com/"
-              target="_blank"
+            <!-- Buy/Sell button -->
+            <button
+              @click="openPanel('purchase')"
               :class="[
-                walletPanel === 'buy' && isOpenSideMenu
+                walletPanel === 'purchase' && isOpenSideMenu
                   ? 'bg-mewBg'
                   : 'hoverNoBG',
                 'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
               ]"
-              @click="
-                analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
-                  button: 'buy',
-                })
-              "
             >
               <icon-buy :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
               <p
@@ -164,34 +159,9 @@
                   'text-s-9 xs:text-s-11 text-center uppercase mt-[2px] font-bold tracking-sp-06',
                 ]"
               >
-                {{ $t('buy') }}
+                {{ $t('common.buy_sell') }}
               </p>
-            </a>
-            <!--sell button-->
-            <a
-              href="https://ccswap.myetherwallet.com/"
-              target="_blank"
-              :class="[
-                walletPanel === 'sell' && isOpenSideMenu
-                  ? 'bg-mewBg'
-                  : 'hoverNoBG',
-                'pt-2 pb-2 px-2 mb-2 rounded-12 flex flex-col items-center justify-center w-full',
-              ]"
-              @click="
-                analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
-                  button: 'sell',
-                })
-              "
-            >
-              <icon-sell :class="['mb-1 w-6 h-6 xs:w-7 xs:h-7 text-primary']" />
-              <p
-                :class="[
-                  'text-s-9 xs:text-s-11 uppercase mt-[2px] font-bold tracking-sp-06',
-                ]"
-              >
-                {{ $t('sell') }}
-              </p>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -213,30 +183,37 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-grey-10 border-l-1',
         ]"
-        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide"
+        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           label="close side menu"
-          class="md:hidden ml-3 rounded-12 hoverNoBG"
+          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
           <ChevronDoubleRightIcon class="w-5 h-5" />
         </app-btn-icon>
-        <transition name="fade" mode="out-in">
-          <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
-          <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
-          <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
-          <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
-          <ModulePerpsTrade
-            v-else-if="walletPanel === 'perps'"
-            key="perps-trade"
-          />
-          <div v-else key="coming-soon" class="mt-6 text-center font-medium">
-            {{ comingSoon }}
-          </div>
-        </transition>
+        <div class="flex-1 min-h-0">
+          <transition name="fade" mode="out-in">
+            <ModuleTrade v-if="walletPanel === 'trade'" key="trade" />
+            <ModuleSend v-else-if="walletPanel === 'send'" key="send" />
+            <ModuleSwap v-else-if="walletPanel === 'swap'" key="swap" />
+            <ModuleSwap v-else-if="walletPanel === 'bridge'" key="bridge" />
+            <ModulePerpsTrade
+              v-else-if="walletPanel === 'perps'"
+              key="perps-trade"
+            />
+            <ModulePurchase
+              v-else-if="walletPanel === 'purchase'"
+              key="purchase"
+            />
+            <div v-else key="coming-soon" class="mt-6 text-center font-medium">
+              {{ comingSoon }}
+            </div>
+          </transition>
+        </div>
       </div>
     </transition>
+    <weekend-trading-tooltip :anchor="tradeBtnRef" />
   </div>
 </template>
 <script setup lang="ts">
@@ -249,13 +226,13 @@ import IconSend from '@/assets/icons/core_menu/icon-send.vue'
 import IconBuy from '@/assets/icons/core_menu/icon-buy.vue'
 import IconSwap from '@/assets/icons/core_menu/icon-swap.vue'
 import IconBridge from '@/assets/icons/core_menu/icon-bridge.vue'
-import IconSell from '@/assets/icons/core_menu/icon-sell.vue'
 import IconTrade from '@/assets/icons/core_menu/icon-trade.vue'
 import IconPerps from '@/modules/perps/IconPerps.vue'
 import ModuleSend from '@/modules/send/ModuleSend.vue'
 import ModuleSwap from '@/modules/swap/ModuleSwap.vue'
 import ModuleTrade from '@/modules/trade/ModuleTrade.vue'
 import ModulePerpsTrade from '@/modules/perps/ModulePerpsTrade.vue'
+import ModulePurchase from '@/modules/purchase/ModulePurchase.vue'
 import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import {
   QrCodeIcon,
@@ -267,6 +244,7 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
 import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
@@ -321,22 +299,17 @@ watch(isXLAndUp, newVal => {
 })
 
 const openPanel = (panel: WalletPanel) => {
-  if (!isOpenSideMenu.value) {
-    walletMenu.setIsOpenSideMenu(true)
-  }
-  walletMenu.setWalletPanel(panel)
+  walletMenu.openPanel(panel)
   analytics.trackClickMainMenuEvent(ClickMainMenuEvent, {
-    button: panel as any,
+    button: panel,
   })
 }
 
+const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
 
 const comingSoon = computed(() => {
-  const map = new Map<string, string>([
-    ['buy', 'Buy'],
-    ['sell', 'Sell'],
-  ])
+  const map = new Map<string, string>()
   return map.get(walletPanel.value)
     ? `${map.get(walletPanel.value)} is coming soon`
     : 'Coming Soon'

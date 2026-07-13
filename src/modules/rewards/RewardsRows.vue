@@ -2,6 +2,7 @@
   <div class="flex flex-col gap-5 xs:gap-3">
     <!-- Swap Row -->
     <div
+      v-if="hasSwap"
       class="flex items-center justify-between gap-3"
       :class="{
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
@@ -83,6 +84,7 @@
 
     <!-- Trade Row -->
     <div
+      v-if="hasTrade"
       class="flex items-center justify-between gap-3"
       :class="{
         'flex-wrap  xs:flex-nowrap items-start xs:items-center': isRewardsView,
@@ -210,6 +212,8 @@ defineProps<{
   timeUntilTradeNextEligible: string
   timeUntilMarketOpen: string
   isRewardsView?: boolean
+  hasSwap: boolean
+  hasTrade: boolean
 }>()
 
 defineEmits<{

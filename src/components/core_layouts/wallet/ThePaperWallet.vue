@@ -28,7 +28,7 @@
             <h1
               class="text-portfolio text-s-17 font-medium px-2 capitalize border-l-2 border-portfolio ml-2"
             >
-              Paper Wallet
+              {{ $t('paper_wallet.title') }}
             </h1>
             <button
               class="sm:-mr-4 min-w-[32px] ml-auto"
@@ -44,7 +44,7 @@
           <div class="flex justify-between items-center mx-3 gap-6">
             <div>
               <p class="text-s-28 font-semibold mb-2">
-                My {{ selectedChain?.nameLong }} address
+                {{ $t('paper_wallet.my_address', { chain: selectedChain?.nameLong || selectedChain?.name || '' }) }}
               </p>
               <div class="flex items-center justify-start mb-3">
                 <app-blockie
@@ -75,9 +75,7 @@
           <p
             class="my-6 mx-auto text-s-14 text-p-130 text-info print:text-black text-center max-w-[400px]"
           >
-            <span class="font-semibold uppercase">Tip:</span> Always look for
-            the icon when sending to this wallet. And please keep your paper
-            wallet at a Safe Place!
+            <span class="font-semibold uppercase">{{ $t('paper_wallet.tip_label') }}</span> {{ $t('paper_wallet.tip') }}
           </p>
           <hr class="h-px bg-grey-10 border-0 w-full my-6" />
           <!-- TODO:  add privatekey option-->
@@ -105,7 +103,7 @@
           <div
             class="flex justify-center items-center mx-6 mb-6 mt-10 print:hidden"
           >
-            <app-base-button @click="print">Print</app-base-button>
+            <app-base-button @click="print">{{ $t('paper_wallet.print') }}</app-base-button>
           </div>
         </div>
       </div>

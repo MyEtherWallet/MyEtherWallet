@@ -2,13 +2,13 @@
   <!-- Top: Trending -->
   <div>
     <div class="flex items-center justify-between mb-2">
-      <h2 class="text-s-20 font-bold ml-2">Trending</h2>
+      <h2 class="text-s-20 font-bold ml-2">{{ $t('common.trending') }}</h2>
 
       <div class="flex">
         <app-btn-icon
           class=""
           :disabled="isLoading || currentPage === 0"
-          label="previous page"
+          :label="$t('common.previous_page')"
           @click="prevPage"
         >
           <ChevronLeftIcon class="w-4 h-4" />
@@ -16,7 +16,7 @@
         <app-btn-icon
           class=""
           :disabled="isLoading || currentPage >= totalPages - 1"
-          label="next page"
+          :label="$t('common.next_page')"
           @click="nextPage"
         >
           <ChevronRightIcon class="w-4 h-4" />

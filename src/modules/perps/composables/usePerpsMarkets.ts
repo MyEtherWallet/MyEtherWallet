@@ -1,6 +1,8 @@
-import { ref } from 'vue'
+import { ref, effectScope } from 'vue'
 import type { Contract, TradingPair } from '../sdk/types'
 import { perpsClient } from '../configs'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 
 // Singleton state for markets
 const markets = ref<TradingPair[]>([])
@@ -66,11 +68,59 @@ async function fetchContracts() {
   }
 }
 
+type ContractPatch = Partial<Contract>
+// rAF (not microtask): see usePerpsMarkPrices.ts for the rationale —
+// high-frequency channels (topOfBooks, fundingRates) saturate the main
+// thread with one full array.map per WS message under microtask scheduling.
+const _scheduleContract: (cb: () => void) => void =
+  typeof requestAnimationFrame === 'function'
+    ? (cb) => requestAnimationFrame(cb)
+    : (cb) => queueMicrotask(cb)
+
+let _pendingContractPatch: Map<string, ContractPatch> | null = null
+function _queueContractPatch(rows: ContractPatch[]) {
+  if (!_pendingContractPatch) {
+    _pendingContractPatch = new Map()
+    _scheduleContract(() => {
+      const patch = _pendingContractPatch
+      _pendingContractPatch = null
+      if (!patch) return
+      const next = contracts.value.map(c => {
+        const p = patch.get(c.market)
+        return p ? { ...c, ...p } : c
+      })
+      contracts.value = next
+    })
+  }
+  for (const r of rows) {
+    const market = (r as { market?: string }).market
+    if (!market) continue
+    // topOfBooksPerps emits bids/asks as [[price,size]] tuples, but Contract
+    // (and midPrice()) consume flat `bid`/`ask` strings. Lift the best level
+    // from each side so the table actually updates.
+    const raw = r as ContractPatch & {
+      bids?: [string, string][]
+      asks?: [string, string][]
+    }
+    const patch: ContractPatch = { ...r }
+    const bestBid = raw.bids?.[0]?.[0]
+    const bestAsk = raw.asks?.[0]?.[0]
+    if (bestBid != null) patch.bid = bestBid
+    if (bestAsk != null) patch.ask = bestAsk
+    const existing = _pendingContractPatch.get(market) ?? {}
+    _pendingContractPatch.set(market, { ...existing, ...patch })
+  }
+}
+
 export function usePerpsContracts() {
   if (!contractsInitialized) {
     contractsInitialized = true
+    ensurePerpsWsLifecycle()
     fetchContracts()
-    setInterval(fetchContracts, 500)
+    effectScope(true).run(() => {
+      perpsWs.subscribe<Partial<Contract>>('topOfBooksPerps', _queueContractPatch)
+      perpsWs.subscribe<Partial<Contract>>('fundingRatesPerps', _queueContractPatch)
+    })
   }
   return {
     contracts,

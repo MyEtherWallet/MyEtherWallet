@@ -33,6 +33,13 @@ export const useRecentlyViewedTokensStore = defineStore(
     })
 
     /**
+     * Returns recently viewed crypto tokens only (non-stocks).
+     */
+    const recentlyViewedCrypto = computed<RecentlyViewedToken[]>(() => {
+      return recentlyViewedTokens.value.filter(token => !token.isStock)
+    })
+
+    /**
      * Add a token to the recently viewed list.
      * Keeps up to 10 tokens and 10 stocks separately (20 items max) and ensures no duplicates.
      */
@@ -75,6 +82,7 @@ export const useRecentlyViewedTokensStore = defineStore(
     return {
       recentlyViewedTokens,
       recentlyViewedStocks,
+      recentlyViewedCrypto,
       addToken,
       clearRecentlyViewed,
     }

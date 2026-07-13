@@ -230,6 +230,7 @@
                       <AppBaseButton
                         class="hidden lg:flex"
                         size="small"
+                        :disabled="isWatchOnly"
                         @click="toggleMenu"
                         :theme="pos.direction === 'long' ? 'success' : 'error'"
                       >
@@ -821,6 +822,7 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :max-leverage="localMaxLeverage"
       mode="submit"
       @save="saveLeverage"
     />
@@ -874,8 +876,20 @@ import { getBase, getLogoUrl } from '../utils/market'
 import { perpsClient, PERPS_PAGE_SIZE } from '../configs'
 import { usePaginate } from '@/composables/usePaginate'
 import type { Position, ApiOrder, ApiFill } from '../sdk/types'
+import { useWalletStore } from '@/stores/walletStore'
+import { storeToRefs } from 'pinia'
+import { analytics, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
+
+const walletStore = useWalletStore()
+const { isWatchOnly } = storeToRefs(walletStore)
 
 const localLeverage = ref(1)
+const localMaxLeverage = ref(20)
+const localOldLeverage = ref(1)
 const leverageError = ref('')
 const isSavingLeverage = ref(false)
 const fullMarketName = ref('')
@@ -883,13 +897,37 @@ const showLeverageModal = ref(false)
 
 const saveLeverage = async () => {
   isSavingLeverage.value = true
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: fullMarketName.value,
+    oldLeverage: localOldLeverage.value,
+    maxLeverage: localMaxLeverage.value,
+    newLeverage: localLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(fullMarketName.value, localLeverage.value)
     showLeverageModal.value = false
     perpsToasts.toastLeverageUpdated(localLeverage.value, fullMarketName.value)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e: unknown) {
-    leverageError.value = (e as Error).message
+    const errorMessage =
+      e instanceof Error ? e.message : String(e ?? 'Failed to set leverage')
+    leverageError.value = errorMessage
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }
@@ -898,9 +936,16 @@ const saveLeverage = async () => {
 const displaySymbol = computed(() => fullMarketName.value.split('-')[0])
 
 const openLeverage = (pos: Position) => {
-  showLeverageModal.value = true
-  localLeverage.value = Number(pos.leverage) // temp
+  const pair = markets.value.find(m => m.market === pos.market)
+  const parsedMax = parseInt(pair?.defaultLeverage ?? '')
+  const maxLev = Number.isFinite(parsedMax) && parsedMax > 0 ? parsedMax : 20
+  localMaxLeverage.value = maxLev
+  const parsedPos = Number(pos.leverage)
+  const initial = Number.isFinite(parsedPos) && parsedPos > 0 ? parsedPos : maxLev
+  localLeverage.value = Math.min(initial, maxLev)
+  localOldLeverage.value = localLeverage.value
   fullMarketName.value = pos.market
+  showLeverageModal.value = true
 }
 
 watch(
@@ -908,6 +953,7 @@ watch(
   val => {
     if (!val) {
       localLeverage.value = 1
+      localMaxLeverage.value = 20
       leverageError.value = ''
       isSavingLeverage.value = false
       fullMarketName.value = ''

@@ -17,7 +17,22 @@
           {{ formattedRealizedPnl }}
           <span class="text-s-13 ml-2 leading-[16px]">({{ pnlPercent }})</span>
         </p>
-        <div class="flex items-center gap-3 justify-start mt-5 -mx-1">
+        <div
+          v-if="!isOnEthereum"
+          class="flex items-center gap-3 justify-start mt-5 -mx-1"
+        >
+          <AppBaseButton
+            @click="onSwitchToEthereum"
+            class="w-full"
+            size="medium"
+          >
+            Switch to Ethereum
+          </AppBaseButton>
+        </div>
+        <div
+          v-else-if="!watchOnly"
+          class="flex items-center gap-3 justify-start mt-5 -mx-1"
+        >
           <AppBaseButton @click="$emit('deposit')" class="w-full" size="medium">
             Deposit
           </AppBaseButton>
@@ -28,6 +43,11 @@
             size="medium"
           >
             Withdraw
+          </AppBaseButton>
+        </div>
+        <div v-else class="flex items-center gap-3 justify-start mt-5 -mx-1">
+          <AppBaseButton @click="onConnectWallet" class="w-full" size="medium">
+            Connect your wallet
           </AppBaseButton>
         </div>
       </div>
@@ -92,6 +112,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
 import AppSheet from '@/components/AppSheet.vue'
@@ -104,11 +125,45 @@ import {
   formatPnl,
 } from '../utils/formatters'
 import { formatFiatValue } from '@/utils/numberFormatHelper'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
-defineEmits<{
+defineProps({
+  watchOnly: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits<{
   deposit: []
   withdraw: []
+  access: []
 }>()
+
+const onConnectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Portfolio',
+  })
+  emit('access')
+}
+
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+const toastStore = useToastStore()
+
+const isOnEthereum = computed(() => selectedNetwork.value === 'ETHEREUM')
+
+const onSwitchToEthereum = () => {
+  globalStore.setSelectedNetwork('ETHEREUM')
+  toastStore.addToastMessage({
+    text: 'Switched to Ethereum',
+    textSecondary: 'Perpetuals are only available on Ethereum.',
+    type: ToastType.Info,
+  })
+}
 
 const showBalanceDialog = ref(false)
 

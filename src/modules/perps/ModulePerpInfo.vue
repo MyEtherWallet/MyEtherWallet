@@ -211,6 +211,7 @@
             position="right-0"
             placeholder="Manage"
             class="ml-auto order-1 xs:order-3"
+            v-if="!isWatchOnly"
           >
             <template #select-button="{ toggleSelect }">
               <button
@@ -233,6 +234,11 @@
               </app-btn-icon>
             </template>
           </app-select>
+          <div v-else class="ml-auto order-1 xs:order-3">
+            <app-base-button @click="connectWallet" size="medium">
+              Connect wallet</app-base-button
+            >
+          </div>
         </div>
 
         <div
@@ -886,6 +892,7 @@
     :symbol="baseCurrency"
     :leverage-error="leverageError"
     :is-saving="isSavingLeverage"
+    :max-leverage="marketMaxLeverage"
     mode="submit"
     @save="saveLeverage"
   />
@@ -911,6 +918,7 @@ import AppBtnIcon from '@/components/AppBtnIcon.vue'
 import AppBtnGroup from '@/components/AppBtnGroup.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
 import AppSelect from '@/components/AppSelect.vue'
+import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppTableSkeleton, {
   type SkeletonColumn,
 } from '@/components/AppTableSkeleton.vue'
@@ -939,11 +947,20 @@ import { usePerpsAuth } from './composables/usePerpsAuth'
 import { usePerpsMarkPrices } from './composables/usePerpsMarkPrices'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
 import { usePerpsToasts } from './composables/usePerpsToasts'
+import { perpsWs } from './sdk/ws'
+import { ensurePerpsWsLifecycle } from './composables/usePerpsWsLifecycle'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
 import { useAppBreakpoints } from '@/composables/useAppBreakpoints'
 import type { ApiOrder, ApiFill, MarketInfoData } from './sdk/types'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useAccessStore } from '@/stores/accessStore'
+import { analytics, ConnectWalletEvent, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
+
 const { setSelectedTradeManageMode, setWalletPanel, setIsOpenSideMenu } =
   useWalletMenuStore()
 import {
@@ -965,6 +982,13 @@ import {
   midPrice as computeMidPrice,
 } from './utils/market'
 
+const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Market_Info',
+  })
+  useAccessStore().openAccessDialog()
+}
+
 const props = defineProps({
   market: {
     type: String,
@@ -973,7 +997,7 @@ const props = defineProps({
 })
 
 const walletStore = useWalletStore()
-const { isWalletConnected } = storeToRefs(walletStore)
+const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
 
 const { isXS } = useAppBreakpoints()
 
@@ -984,6 +1008,7 @@ const { positions } = usePerpsPositions()
 const { markPriceData } = usePerpsMarkPrices()
 const { leverage } = usePerpsTradeForm()
 const perpsToasts = usePerpsToasts()
+ensurePerpsWsLifecycle()
 
 const baseCurrency = computed(() => props.market.split('-')[0] ?? props.market)
 
@@ -1227,8 +1252,6 @@ const fillsSkeletonColumns: SkeletonColumn[] = [
   { header: '', width: '36px' },
 ]
 
-let ordersPollTimer: ReturnType<typeof setInterval> | null = null
-let fillsPollTimer: ReturnType<typeof setInterval> | null = null
 let ordersIsRefreshing = false
 let fillsIsRefreshing = false
 
@@ -1263,8 +1286,6 @@ async function refreshFillsPageZero() {
 watch(
   [token, () => props.market],
   () => {
-    if (ordersPollTimer) clearInterval(ordersPollTimer)
-    if (fillsPollTimer) clearInterval(fillsPollTimer)
     ordersPagination.reset()
     fillsPagination.reset()
     openOrdersCountForMarket.value = 0
@@ -1273,11 +1294,6 @@ watch(
     void ordersPagination.refetch()
     void fillsPagination.refetch()
     void fetchOpenOrdersCount()
-    ordersPollTimer = setInterval(() => {
-      void refreshOrdersPageZero()
-      void fetchOpenOrdersCount()
-    }, 10_000)
-    fillsPollTimer = setInterval(refreshFillsPageZero, 10_000)
   },
   { immediate: true },
 )
@@ -1289,6 +1305,16 @@ watch(refreshKey, () => {
   void refreshOrdersPageZero()
   void refreshFillsPageZero()
   void fetchOpenOrdersCount()
+})
+
+const unsubscribeOrdersWs = perpsWs.subscribe<ApiOrder>('ordersPerps', () => {
+  if (!token.value) return
+  void refreshOrdersPageZero()
+  void fetchOpenOrdersCount()
+})
+const unsubscribeFillsWs = perpsWs.subscribe<ApiFill>('fillsPerps', () => {
+  if (!token.value) return
+  void refreshFillsPageZero()
 })
 
 // Funding countdown timer
@@ -1317,8 +1343,8 @@ updateFundingCountdown()
 
 onUnmounted(() => {
   if (countdownTimer) clearInterval(countdownTimer)
-  if (ordersPollTimer) clearInterval(ordersPollTimer)
-  if (fillsPollTimer) clearInterval(fillsPollTimer)
+  unsubscribeOrdersWs()
+  unsubscribeFillsWs()
 })
 
 // Tabs
@@ -1352,18 +1378,46 @@ const tempLeverage = ref(1)
 const isSavingLeverage = ref(false)
 const leverageError = ref('')
 
+const marketMaxLeverage = computed(() => {
+  const pair = markets.value.find(m => m.market === props.market)
+  const parsed = parseInt(pair?.defaultLeverage ?? '')
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 20
+})
+
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: props.market,
+    oldLeverage: leverage.value,
+    maxLeverage: marketMaxLeverage.value,
+    newLeverage: tempLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(props.market, tempLeverage.value)
     showLeverageDialog.value = false
     leverage.value = tempLeverage.value
     perpsToasts.toastLeverageUpdated(tempLeverage.value, props.market)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }
@@ -1376,7 +1430,11 @@ watch(selectedManageAction, action => {
     setWalletPanel('perps')
     setIsOpenSideMenu(true)
   } else if (action.value === 'leverage') {
-    tempLeverage.value = parseInt(marketPosition.value?.leverage ?? '1') || 1
+    const parsedPosition = parseInt(marketPosition.value?.leverage ?? '')
+    tempLeverage.value =
+      Number.isFinite(parsedPosition) && parsedPosition > 0
+        ? Math.min(parsedPosition, marketMaxLeverage.value)
+        : marketMaxLeverage.value
     leverageError.value = ''
     showLeverageDialog.value = true
   }

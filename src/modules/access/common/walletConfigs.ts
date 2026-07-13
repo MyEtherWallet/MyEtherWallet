@@ -7,6 +7,7 @@ import PrivateKeyLogo from '@/assets/images/access/private-key.webp'
 import KeystoreLogo from '@/assets/images/access/keystore.webp'
 import MnemonicLogo from '@/assets/images/access/phrase.webp'
 import HWWallet from '@enkryptcom/hw-wallets'
+import LedgerManager from '@/providers/hw/ledger'
 import { NetworkNames } from '@enkryptcom/types'
 import type { Chain } from '@/mew_api/types'
 import { chainToEnum } from '@/providers/ethereum/chainToEnum'
@@ -85,11 +86,20 @@ export type WalletConfig = {
   canSupport?: (chain?: Chain) => boolean
 }
 
-const hardwareSupportNetwork = (chain?: Chain): boolean => {
+const ledgerSupportNetwork = (chain?: Chain): boolean => {
   if (!chain) return false
   const convertedNetworkName = chainToEnum[chain.name as string]
-  const hwWallet = new HWWallet()
-  return hwWallet.isNetworkSupported(convertedNetworkName as NetworkNames)
+  return new LedgerManager().isNetworkSupported(
+    convertedNetworkName as NetworkNames,
+  )
+}
+
+const trezorSupportNetwork = (chain?: Chain): boolean => {
+  if (!chain) return false
+  const convertedNetworkName = chainToEnum[chain.name as string]
+  return new HWWallet().isNetworkSupported(
+    convertedNetworkName as NetworkNames,
+  )
 }
 
 const keystoreSupportNetwork = (chain?: Chain): boolean => {
@@ -117,7 +127,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Ledger',
     icon: LedgerLogo,
     type: [WalletConfigType.HARDWARE],
-    canSupport: hardwareSupportNetwork,
+    canSupport: ledgerSupportNetwork,
     walletViewType: 'ledger',
   },
   trezor: {
@@ -125,7 +135,7 @@ export const walletConfigs: Record<defaultWalletId, WalletConfig> = {
     name: 'Trezor',
     icon: TrezorLogo,
     type: [WalletConfigType.HARDWARE],
-    canSupport: hardwareSupportNetwork,
+    canSupport: trezorSupportNetwork,
     walletViewType: 'trezor',
   },
   keystore: {

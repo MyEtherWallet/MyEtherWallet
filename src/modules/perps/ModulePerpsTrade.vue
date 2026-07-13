@@ -1,5 +1,13 @@
 <template>
   <div class="w-full max-w-[500px] mx-auto relative h-full flex flex-col pb-6">
+    <perps-signing-prompt
+      :show="showSigningPrompt"
+      :message="signingMessage"
+      :is-hardware-wallet="isHardwareWalletSigning"
+      :is-waiting-for-confirm="isWaitingForConfirm"
+      @confirm="confirmSign"
+      @cancel="cancelSign"
+    />
     <!-- Header: Asset Info -->
     <div class="flex items-center justify-between mb-2 px-4 -mt-2">
       <div>
@@ -8,36 +16,8 @@
       </div>
     </div>
 
-    <div
-      v-if="!isWalletConnected || isWatchOnly"
-      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
-    >
-      <p class="text-info text-s-14 mb-4">
-        Connect your wallet to start trading
-      </p>
-      <button
-        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-        @click="connectWallet"
-      >
-        Connect Wallet
-      </button>
-    </div>
-
-    <div
-      v-else-if="!token"
-      class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto text-center w-[calc(100%-2rem)]"
-    >
-      <p class="text-info text-s-14 mb-4">Sign in to start trading</p>
-      <button
-        class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-        @click="login"
-      >
-        Sign in to Perps
-      </button>
-    </div>
-
     <!-- Active Trade Form -->
-    <div v-else class="flex flex-col pb-6">
+    <div class="flex flex-col pb-6">
       <!-- Scrollable content -->
       <div class="bg-mewBg rounded-20 px-4 pb-4 pt-4 flex flex-col gap-3">
         <!-- Asset Selector & Price & current Position Info if open -->
@@ -270,9 +250,14 @@
 
           <transition name="fade" mode="out-in">
             <div
-              v-if="
-                limitPrice &&
-                (isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) <= 0)
+              v-if="!limitPrice || parseFloat(limitPrice) === 0"
+              class="text-error text-s-12 mb-1"
+            >
+              Target price required
+            </div>
+            <div
+              v-else-if="
+                isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
               "
               class="text-error text-s-12 mb-1"
             >
@@ -304,7 +289,7 @@
 
           <div class="flex justify-start gap-2 mt-1">
             <button
-              v-for="pct in [-10, -5, 0, 5, 10]"
+              v-for="pct in [-5, -2.5, 0, 2.5, 5]"
               :key="pct"
               class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
@@ -353,15 +338,20 @@
               </div>
               <button
                 class="flex items-center hoverNoBG gap-1 px-2 py-1 rounded-full bg-surface min-w-15"
-                @click="openLeverageModal"
+                :disabled="isLoadingLeverage"
+                @click="openLeverage"
               >
-                <p class="ml-auto font-semibold text-s-14">
+                <span
+                  v-if="isLoadingLeverage"
+                  class="ml-auto bg-grey-10 animate-pulse rounded-full h-4 w-8"
+                />
+                <p v-else class="ml-auto font-semibold text-s-14">
                   {{ manageMode === 'add' ? localLeverage : leverage }}&times;
                 </p>
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
             </div>
-            <p class="text-info text-s-12 -mt-2 mb-2">
+            <p class="text-info text-s-12 -mt-2 mb-2 truncate">
               Size
               {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
             </p>
@@ -630,24 +620,62 @@
         </template>
       </div>
       <!-- Submit Button -->
-      <app-base-button
-        v-if="!activePosition || manageMode === 'add'"
-        :disabled="submitDisabled"
-        @click="showConfirmation"
-        :theme="orderSide === 'buy' ? 'success' : 'error'"
-        class="w-full mt-4"
-      >
-        {{ getMainBtnText }}
-      </app-base-button>
-      <app-base-button
-        v-if="activePosition && manageMode === 'close'"
-        :theme="orderSide === 'buy' ? 'success' : 'error'"
-        :disabled="closeDisabled"
-        @click="showCloseConfirmation"
-        class="w-full mt-4"
-      >
-        {{ closeButtonLabel }}
-      </app-base-button>
+      <template v-if="!isSupportedNetwork">
+        <div
+          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+        >
+          <p class="text-info text-s-14 mb-4">
+            Perps is only available on Ethereum
+          </p>
+          <button
+            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+            @click="onSwitchToEthereum"
+          >
+            Switch to Ethereum
+          </button>
+        </div>
+      </template>
+      <template v-else-if="isWatchOnly">
+        <app-base-button
+          v-if="!isWalletConnected || isWatchOnly"
+          :class="['mx-auto w-full max-w-[340px] mt-4']"
+          @click="connectWallet"
+        >
+          {{ t('connect_wallet') }}</app-base-button
+        >
+      </template>
+      <template v-else-if="!token && !isWatchOnly">
+        <div
+          class="bg-mewBg rounded-20 px-4 pb-6 pt-6 mx-auto w-full text-center w-[calc(100%-2rem)] mt-4"
+        >
+          <button
+            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+            @click="login('Perps_Trade')"
+          >
+            Sign in to Perps
+          </button>
+        </div>
+      </template>
+      <template v-else>
+        <app-base-button
+          v-if="!activePosition || manageMode === 'add'"
+          :disabled="submitDisabled"
+          @click="showConfirmation"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          class="w-full mt-4"
+        >
+          {{ getMainBtnText }}
+        </app-base-button>
+        <app-base-button
+          v-if="activePosition && manageMode === 'close'"
+          :theme="orderSide === 'buy' ? 'success' : 'error'"
+          :disabled="closeDisabled"
+          @click="showCloseConfirmation"
+          class="w-full mt-4"
+        >
+          {{ closeButtonLabel }}
+        </app-base-button>
+      </template>
     </div>
 
     <!-- Order Confirmation Dialog -->
@@ -702,6 +730,7 @@
       :contracts="filteredMarketList"
       :filter-tabs="marketFilterTabs"
       :get-market-display-name="getMarketDisplayName"
+      :get-market-leverage="getMarketLeverage"
       @set-sort="setMarketSort"
       @select="selectMarket"
     />
@@ -713,8 +742,9 @@
       :symbol="displaySymbol"
       :leverage-error="leverageError"
       :is-saving="isSavingLeverage"
+      :max-leverage="marketMaxLeverage"
       :mode="manageMode === 'add' ? 'add' : 'create'"
-      @save="manageMode === 'add' ? closeLeverageModal() : saveLeverage()"
+      @save="onSaveLeverage"
     />
 
     <!-- Take Profit / Stop Loss Dialog -->
@@ -753,6 +783,8 @@ import {
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
+import { usePerpsAuth } from './composables/usePerpsAuth'
+import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -765,13 +797,37 @@ import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossD
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
+import { useGlobalStore } from '@/stores/globalStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
+const { showSigningPrompt, signingMessage, isHardwareWalletSigning, isWaitingForConfirm, confirmSign, cancelSign } = usePerpsAuth()
 const accessStore = useAccessStore()
+const globalStore = useGlobalStore()
+const { selectedNetwork } = storeToRefs(globalStore)
+const toastStore = useToastStore()
+const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
+const { t } = useI18n()
+
+const onSwitchToEthereum = () => {
+  globalStore.setSelectedNetwork('ETHEREUM')
+  toastStore.addToastMessage({
+    text: 'Switched to Ethereum',
+    textSecondary: 'Perpetuals are only available on Ethereum.',
+    type: ToastType.Info,
+  })
+}
+
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Trade',
+  })
   accessStore.openAccessDialog()
 }
 
@@ -912,16 +968,19 @@ const {
   fullMarketName,
   contracts,
   getMarketDisplayName,
+  getMarketLeverage,
   openTokenSelect,
   selectMarket,
   // Leverage
   showLeverageModal,
   tempLeverage,
   isSavingLeverage,
+  isLoadingLeverage,
   leverageError,
   openLeverageModal,
   saveLeverage,
   closeLeverageModal,
+  marketMaxLeverage,
 } = usePerpsTradeForm()
 
 const localLeverage = ref(leverage.value)
@@ -934,10 +993,40 @@ watch(
   },
 )
 
+// 'add' mode doesn't persist via the API on save — it stages a leverage for
+// the next add order. Only commit to localLeverage on explicit save (never on
+// dismiss). Non-add modes go through saveLeverage(), which updates the
+// `leverage` singleton and the watcher above syncs localLeverage.
+const onSaveLeverage = () => {
+  if (manageMode.value === 'add') {
+    localLeverage.value = tempLeverage.value
+    closeLeverageModal()
+  } else {
+    saveLeverage()
+  }
+}
+
+// Seed tempLeverage from localLeverage in add mode (which tracks the open
+// position's leverage and any staged-but-unapplied change) instead of the
+// singleton. The composable's openLeverageModal seeds from the singleton,
+// which would jump the slider back to the user's preferred leverage and
+// drop a staged add-mode value.
+const openLeverage = () => {
+  if (manageMode.value === 'add') {
+    tempLeverage.value = Math.min(localLeverage.value, marketMaxLeverage.value)
+    leverageError.value = ''
+    showLeverageModal.value = true
+  } else {
+    openLeverageModal()
+  }
+}
+
+// Reset tempLeverage on dismiss so the confirm modal and submit-path leverage
+// check don't fire on an abandoned slider value.
 watch(
   () => showLeverageModal.value,
   val => {
-    if (!val) localLeverage.value = tempLeverage.value
+    if (!val) tempLeverage.value = localLeverage.value
   },
 )
 
