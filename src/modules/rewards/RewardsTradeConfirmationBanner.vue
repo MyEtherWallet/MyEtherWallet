@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-      v-if="!isBanned && showBanner"
+      v-if="showBanner"
       class="w-full hoverNoBG rounded-16 flex items-center justify-between border border-solid p-4 gap-5"
       :class="qualifies ? 'border-success' : 'border-grey-10'"
       @click="onClick"
@@ -54,6 +54,9 @@ const props = defineProps<{
 const rewardsStore = useRewardsStore()
 const { isBanned, canClaimTradeReward } = storeToRefs(rewardsStore)
 
+const canClaimTrade = computed(
+  () => canClaimTradeReward.value && isBanned.value === false,
+)
 const holdingsStore = useHoldingsStore()
 const { status } = storeToRefs(holdingsStore)
 
@@ -80,23 +83,23 @@ const MIN_SPEND_HOLD = 100
 const minSpend = computed(() =>
   canClaimHold.value
     ? MIN_SPEND_HOLD
-    : canClaimTradeReward.value
+    : canClaimTrade.value
       ? Number(rewardsStore.minSpendTrade)
       : 0,
 )
 
 // Only render once we know the threshold, or for cash outs (which never qualify)
-const showBanner = computed(
-  () => canClaimHold.value || canClaimTradeReward.value,
-)
+const showBanner = computed(() => canClaimHold.value || canClaimTrade.value)
 
 const toAmountNumber = computed(() => Number(props.tradeAmount))
-const qualifies = computed(
-  () =>
-    !props.isCashout &&
-    minSpend.value > 0 &&
-    toAmountNumber.value >= minSpend.value,
-)
+
+const qualifies = computed(() => {
+  if (minSpend.value > 0 && toAmountNumber.value >= minSpend.value) {
+    if (canClaimHold.value) return !props.isCashout
+    return canClaimTrade.value
+  }
+  return false
+})
 
 // How much more (USD) the user needs to trade to reach the threshold
 const amountNeeded = computed(() => {

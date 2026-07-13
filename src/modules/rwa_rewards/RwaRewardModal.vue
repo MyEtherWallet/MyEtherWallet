@@ -42,7 +42,7 @@
                   class="flex flex-col items-start gap-3"
                   :class="{ 'pb-5': hasStep1Cta }"
                 >
-                  <p :class="stepText" class="flex items-center h-6">
+                  <p :class="stepText" class="h-6 mb-[14px]">
                     {{ $t('rwaRewards.modal_step1') }}
                     <span :class="boldText"
                       >&nbsp;{{ $t('rwaRewards.modal_step1_bold') }}</span

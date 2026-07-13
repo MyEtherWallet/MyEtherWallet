@@ -33,7 +33,8 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
       info.value = data
       error.value = null
     } catch {
-      if (address === currentAddress) error.value = 'Failed to fetch RWA rewards'
+      if (address === currentAddress)
+        error.value = 'Failed to fetch RWA rewards'
     } finally {
       if (address === currentAddress) {
         isLoading.value = false
@@ -97,9 +98,9 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
   const hasReward = computed(
     () =>
       pending.value.length +
-      qualified.value.length +
-      claimed.value.length +
-      disqualified.value.length >
+        qualified.value.length +
+        claimed.value.length +
+        disqualified.value.length >
       0,
   )
 
