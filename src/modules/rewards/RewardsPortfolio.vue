@@ -17,7 +17,7 @@
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            The first 15 trades over $25 every hour receive $5 in USDC in
+            The first 15 trades over $100 every hour receive $5 in USDC in
             rewards. Once per week per wallet.
           </p>
           <button

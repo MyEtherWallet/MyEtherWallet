@@ -187,6 +187,7 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus,
+    fetchTradingRestriction,
     formatNextOpen,
   }
 }
