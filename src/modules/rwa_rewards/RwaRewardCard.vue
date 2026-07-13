@@ -48,7 +48,7 @@
               : 'bg-primary text-white cursor-pointer hoverOpacityHasBG'
           "
           :disabled="effectivePrimaryDisabled"
-          @click="effectivePrimaryDisabled || emit('primary')"
+          @click="clickPrimary"
         >
           {{ primaryLabel }}
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -64,7 +64,7 @@
         <button
           v-if="secondaryLabel"
           class="hoverOpacityHasBG h-10 px-4 rounded-full bg-[#e6e6e6] text-black text-s-14 font-semibold"
-          @click="emit('secondary')"
+          @click="clickSecondary"
         >
           {{ secondaryLabel }}
         </button>
@@ -78,6 +78,7 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 import illusTrade from '@/assets/images/rwa-rewards/hero-claimed.webp'
 import illusHold from '@/assets/images/rwa-rewards/hero-holding.webp'
 import illusFees from '@/assets/images/rwa-rewards/hero-earned.webp'
@@ -96,6 +97,7 @@ export type RwaRewardStatus =
   | 'notEligible'
 
 const props = defineProps<{
+  campaign: 'trade' | 'hold' | 'buy_no_fees'
   illustration: RwaCardIllustration
   title: string
   description: string
@@ -169,6 +171,28 @@ const effectiveStatusText = computed(() =>
 const effectivePrimaryDisabled = computed(() =>
   isTradeCard.value ? tradeStatus.value !== 'ongoing' : props.primaryDisabled,
 )
+
+const clickPrimary = () => {
+  if (effectivePrimaryDisabled.value) return
+  analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
+    campaign: props.campaign,
+    cta: props.primaryLabel ?? '',
+    card_status: effectiveStatus.value,
+  })
+  emit('primary')
+}
+
+const clickSecondary = () => {
+  analytics.trackRewardsAndOffersEvent(
+    RerwadsAndOffersEvent.CLICKED_MORE_INFO,
+    {
+      campaign: props.campaign,
+      cta: props.secondaryLabel ?? '',
+      card_status: effectiveStatus.value,
+    },
+  )
+  emit('secondary')
+}
 
 const illustrationSrc = computed(() => {
   const normal = { trade: illusTrade, hold: illusHold, fees: illusFees }

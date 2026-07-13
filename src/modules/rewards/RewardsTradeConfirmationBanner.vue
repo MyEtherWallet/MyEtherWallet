@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import {
   CheckCircleIcon,
@@ -43,6 +43,11 @@ import {
 } from '@heroicons/vue/24/solid'
 import { useRewardsStore } from '@/stores/rewardsStore'
 import { useHoldingsStore } from '@/stores/holdingsStore'
+import {
+  analytics,
+  TradeConfirmationBannerEvent,
+  RerwadsAndOffersEvent,
+} from '@/analytics'
 
 const props = defineProps<{
   // USD value of the trade (the amount being spent)
@@ -67,8 +72,21 @@ const canClaimHold = computed(
     status.value === 'lost',
 )
 
+// Which reward campaign this banner is surfacing
+const campaign = computed<'hold' | 'trade'>(() =>
+  canClaimHold.value ? 'hold' : 'trade',
+)
+
 const isTradeInfoOpen = ref(false)
 const onClick = () => {
+  analytics.trackRewardsAndOffersEvent(
+    RerwadsAndOffersEvent.CLICKED_MORE_INFO,
+    {
+      campaign: campaign.value,
+      cta: qualifies.value ? 'qualifies' : 'not_eligible',
+      location: 'trade_confirmation',
+    },
+  )
   if (canClaimHold.value) {
     holdingsStore.openModal()
   } else {
@@ -105,4 +123,21 @@ const amountNeeded = computed(() => {
   const diff = minSpend.value - toAmountNumber.value
   return diff > 0 ? diff.toFixed(2) : '0.00'
 })
+
+// Report the banner impression once it becomes visible
+watch(
+  showBanner,
+  visible => {
+    if (visible) {
+      analytics.trackTradeConfirmationBannerEvent(
+        TradeConfirmationBannerEvent.SHOWN,
+        {
+          campaign: campaign.value,
+          isQualified: qualifies.value,
+        },
+      )
+    }
+  },
+  { immediate: true },
+)
 </script>

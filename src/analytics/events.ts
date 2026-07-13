@@ -233,17 +233,18 @@ export const ClickTokenTradeEvent = {
 
 export type ClickTokenTradePayload = {
   location:
-  | 'balance_table'
-  | 'token_details_page'
-  | 'stocks_table'
-  | 'crypto_table'
-  | 'trade_module'
-  | 'trade'
-  | 'swap'
-  | 'bridge'
-  | 'send'
-  | 'portfolio_no_balance'
-  | 'select_fee'
+    | 'balance_table'
+    | 'token_details_page'
+    | 'stocks_table'
+    | 'crypto_table'
+    | 'trade_module'
+    | 'trade'
+    | 'swap'
+    | 'bridge'
+    | 'send'
+    | 'portfolio_no_balance'
+    | 'select_fee'
+    | 'hold_rewards_banner'
 
   token?: string
   isMobile?: boolean
@@ -264,30 +265,6 @@ export type ClickMainMenuPayload = {
 // =============================================================================
 
 export const SelectNewAddressEvent = 'Selected_New_Address' as const
-
-// =============================================================================
-// REWARDS
-// =============================================================================
-
-export const RewardsEvent = {
-  MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
-  LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
-  CLICK_SWAP: 'Rewards_Clicked_Swap',
-  CLICK_TRADE: 'Rewards_Clicked_Trade',
-  REWARD_EARNED: 'Rewards_Earned',
-} as const
-
-export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
-
-export type RewardsPayload = {
-  location?:
-  | 'main-banner'
-  | 'small-banner-swap'
-  | 'small-banner-trade'
-  | 'small-banner-bridge'
-  | 'learn-more-dialog'
-  type?: 'swap' | 'trade'
-}
 
 // =============================================================================
 // STOCK MARKET
@@ -413,3 +390,72 @@ export const WeekendTradingAnnouncementEvent = {
 
 export type WeekendTradingAnnouncementEvent =
   (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]
+
+// =============================================================================
+// REWARDS/ TRADE
+// =============================================================================
+
+export const RewardsEvent = {
+  MAIN_BANNER_SHOWN: 'Rewards_Main_Banner_Shown',
+  LEARN_MORE_CLICKED: 'Rewards_Clicked_Learn_More',
+  CLICK_SWAP: 'Rewards_Clicked_Swap',
+  CLICK_TRADE: 'Rewards_Clicked_Trade',
+  REWARD_EARNED: 'Rewards_Earned',
+} as const
+
+export type RewardsEvent = (typeof RewardsEvent)[keyof typeof RewardsEvent]
+
+export type RewardsPayload = {
+  location?:
+    | 'main-banner'
+    | 'small-banner-swap'
+    | 'small-banner-trade'
+    | 'small-banner-bridge'
+    | 'learn-more-dialog'
+  type?: 'swap' | 'trade'
+}
+// =============================================================================
+// Rewards Hold
+// =============================================================================
+
+export const campaigns = ['hold', 'trade', 'buy_no_fees'] as const
+
+type Campaign = (typeof campaigns)[number]
+export const HoldRewardsBannerEvent = {
+  MODAL_SHOWN: 'Hold_Rewards_Banner_Shown',
+  MODAL_DISMISSED: 'Hold_Rewards_Banner_Dismissed',
+} as const
+
+export const HoldRewardsMainCardEvent = {
+  MODAL_SHOWN: 'Hold_Rewards_Main_Card_Shown',
+} as const
+
+export type HoldRewardsMainCardEventPayload = {
+  status: string
+}
+
+export const RerwadsAndOffersEvent = {
+  CLICKED_CTA: 'Clicked_Reward_Offer_CTA',
+  CLICKED_MORE_INFO: 'Clicked_Reward_Offer_More_Info',
+} as const
+
+export type RerwadsAndOffersEventPayload = {
+  campaign: Campaign
+  cta: string
+  card_status?: string
+  location?:
+    | 'main-banner'
+    | 'main_card'
+    | 'offers_card'
+    | 'trade_confirmation'
+    | 'info_modal'
+}
+
+export const TradeConfirmationBannerEvent = {
+  SHOWN: 'Trade_Confirmation_Banner_Shown',
+} as const
+
+export type TradeConfirmationBannerEventPayload = {
+  campaign: Campaign
+  isQualified: boolean
+}

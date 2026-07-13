@@ -105,7 +105,7 @@ import {
   ArrowPathRoundedSquareIcon,
   WalletIcon,
 } from '@heroicons/vue/24/outline'
-import { analytics, RewardsEvent } from '@/analytics'
+import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -190,9 +190,17 @@ const infoItems = computed(() => [
 ])
 
 const onNavigate = (panel: 'swap' | 'trade') => {
-  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
-    location: 'learn-more-dialog',
-  })
+  if (panel === 'trade') {
+    analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
+      campaign: 'trade',
+      cta: 'trade',
+    })
+  } else {
+    analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
+      location: 'learn-more-dialog',
+      type: panel,
+    })
+  }
   isOpenModel.value = false
   const ETH_NETWORK_NAME = 'ETHEREUM'
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {

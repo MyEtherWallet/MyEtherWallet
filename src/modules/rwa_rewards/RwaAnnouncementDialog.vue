@@ -52,6 +52,11 @@ import { useGlobalStore } from '@/stores/globalStore'
 import { useMarketStatus } from '@/modules/trade/composables'
 import { ROUTES_ACCESS, ROUTES_CREATE_WALLET } from '@/router/routeNames'
 import overlayImg from '@/assets/images/rwa-rewards/tradeAndHoldFullscreenOverlayImg.png'
+import {
+  analytics,
+  HoldRewardsBannerEvent,
+  RerwadsAndOffersEvent,
+} from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletUnlocked } = storeToRefs(walletStore)
@@ -63,6 +68,9 @@ const { fetchTradingRestriction } = useMarketStatus()
 
 const isOpen = ref(false)
 const showAfter = ref(false)
+// Tracks whether the modal was closed by taking the CTA, so the close watcher
+// doesn't also report a dismissal for the same interaction.
+let wentToOffer = false
 let openDialogTimeout: ReturnType<typeof setTimeout> | null = null
 
 const router = useRouter()
@@ -90,6 +98,7 @@ const openDialog = () => {
   if (!modalSeen.value) {
     isOpen.value = true
     announcement.markModalSeen()
+    analytics.trackHoldRewardsBannerEvent(HoldRewardsBannerEvent.MODAL_SHOWN)
   }
 }
 
@@ -108,10 +117,26 @@ watch(
 // Record when the announcement is closed (any path) so the 24/7 weekend-trading
 // dialog can surface 3 days later.
 watch(isOpen, (open, wasOpen) => {
-  if (wasOpen && !open) announcement.markModalClosed()
+  if (wasOpen && !open) {
+    announcement.markModalClosed()
+    if (!wentToOffer) {
+      analytics.trackHoldRewardsBannerEvent(
+        HoldRewardsBannerEvent.MODAL_DISMISSED,
+      )
+    }
+  }
 })
 
 const onGoToOffer = () => {
+  wentToOffer = true
+  analytics.trackRewardsAndOffersEvent(
+    RerwadsAndOffersEvent.CLICKED_MORE_INFO,
+    {
+      campaign: 'hold',
+      cta: 'go_to_offer',
+      location: 'main-banner',
+    },
+  )
   isOpen.value = false
   holdingsStore.openModal()
 }

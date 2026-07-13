@@ -12,6 +12,7 @@
         <rwa-reward-card
           class="flex-1 min-w-[440px] order-2"
           illustration="trade"
+          campaign="trade"
           :title="$t('rwaRewards.trade_title')"
           :description="
             $t('rwaRewards.trade_description', { minSpendTrade: minSpendTrade })
@@ -24,6 +25,7 @@
         <rwa-reward-card
           class="flex-1 min-w-[440px] order-1"
           illustration="hold"
+          campaign="hold"
           :status="holdCardStatus"
           :title="$t('rwaRewards.hold_title')"
           :description="$t('rwaRewards.hold_description')"
@@ -38,6 +40,7 @@
         />
         <rwa-reward-card
           class="flex-1 min-w-[440px] order-3"
+          campaign="buy_no_fees"
           illustration="fees"
           :title="$t('rwaRewards.fees_title')"
           :description="$t('rwaRewards.fees_description')"
