@@ -3,9 +3,7 @@
     <template #content>
       <div class="px-6 py-6 flex flex-col">
         <!-- Title -->
-        <h3 class="text-s-28 font-bold leading-p-120 text-primary">
-          Swap or Trade.
-        </h3>
+        <!-- <h3 class="text-s-28 font-bold leading-p-120 text-primary">Trade</h3> -->
         <h3 class="text-s-28 font-bold text-black leading-p-120 mb-6">
           Earn USDC rewards
         </h3>
@@ -41,8 +39,16 @@
                 v-else-if="item.icon === 'calendar'"
                 class="w-4 h-4 text-grey-50"
               />
+              <wallet-icon
+                v-else-if="item.icon === 'wallet-icon'"
+                class="w-4 h-4 text-grey-50"
+              />
               <currency-dollar-icon
                 v-else-if="item.icon === 'currency-dollar-gray'"
+                class="w-4 h-4 text-grey-50"
+              />
+              <face-frown-icon
+                v-else-if="item.icon === 'face-frown'"
                 class="w-4 h-4 text-grey-50"
               />
             </div>
@@ -73,6 +79,8 @@
           :time-until-trade-next-eligible="timeUntilTradeNextEligible"
           :time-until-market-open="timeUntilMarketOpen"
           class="mt-0"
+          :has-swap="false"
+          :has-trade="true"
           @swap="onNavigate('swap')"
           @trade="onNavigate('trade')"
         />
@@ -89,9 +97,13 @@ import {
   TrophyIcon,
   CalendarIcon,
   CurrencyDollarIcon,
+  FaceFrownIcon,
 } from '@heroicons/vue/24/solid'
 import TradeIcon from '@/assets/icons/core_menu/icon-trade.vue'
-import { ArrowPathRoundedSquareIcon } from '@heroicons/vue/24/outline'
+import {
+  ArrowPathRoundedSquareIcon,
+  WalletIcon,
+} from '@heroicons/vue/24/outline'
 import { analytics, RewardsEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -148,27 +160,31 @@ watch(isOpenModel, val => {
 const infoItems = [
   {
     icon: 'swap',
-    text: 'Make a trade over $25 and swap over $50 on Ethereum network.',
+    text: 'Make a trade over $100.',
   },
-  {
-    icon: 'trophy',
-    text: 'Be among the first 10 users per hour, per swap.',
-  },
+  // {
+  //   icon: 'trophy',
+  //   text: 'Be among the first 10 users per hour, per swap.',
+  // },
   {
     icon: 'trade',
     text: 'Be among the first 15 users per hour, per trade.',
   },
   {
     icon: 'currency-dollar',
-    text: 'Earn 5 USDC per trade and swap.',
+    text: 'Earn $5 USDC per trade.',
   },
   {
     icon: 'calendar',
-    text: 'Up to two rewards per wallet per 7 day campaign period, sent directly to your wallet',
+    text: 'Up to one reward per wallet per 7 day campaign period, sent directly to your wallet',
   },
   {
-    icon: 'currency-dollar-gray',
-    text: 'You must have at least 0.001 ETH before April 20th',
+    icon: 'wallet-icon',
+    text: 'The wallet must be at least 2 weeks old (relative to the current date) and hold a minimum balance of 0.001 ETH.',
+  },
+  {
+    icon: 'face-frown',
+    text: 'Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.',
   },
 ]
 

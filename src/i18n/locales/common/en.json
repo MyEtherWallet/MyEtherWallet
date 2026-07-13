@@ -63,6 +63,8 @@
     "symbol": "symbol",
     "rank": "rank",
     "price": "price",
+    "market_cap": "Market Cap",
+    "volume_24h": "24H Volume",
     "usd_balance": "USD Balance",
     "fee": "Fee",
     "copy_failed": "Copy failed",
@@ -73,6 +75,9 @@
     "buy_more": "Buy more {symbol}",
     "allocation": "Allocation",
     "retry": "Retry",
+    "buy": "Buy",
+    "sell": "Sell",
+    "buy_sell": "Buy/Sell",
     "coming_soon": "Coming soon",
     "overview": "Overview",
     "history": "History",
@@ -109,6 +114,9 @@
     "add_to_watchlist": "Add to Watchlist",
     "trending": "Trending",
     "newly_added": "Newly Added",
+    "new_stock_added": "New stock added!",
+    "spcx_live": "SpaceX (SPCXon) is now live.",
+    "trade_today": "Trade today",
     "chain": "Chain",
     "created_at": "Created at",
     "tx_hash": "Tx hash",
@@ -185,7 +193,8 @@
     "swap_to": "Select token to buy",
     "search": "Search",
     "no_tokens_match": "No tokens match your search",
-    "no_tokens_available": "No tokens available"
+    "no_tokens_available": "No tokens available",
+    "recently_viewed": "Recently Viewed"
   },
   "select_fee": {
     "title": "Select transaction fee",
@@ -255,5 +264,17 @@
     "search_placeholder": "Search by Name",
     "incompatible_tooltip": "To access these networks, use a different wallet or install the Enkrypt browser extension",
     "incompatible_title": "Networks incompatible with your wallet"
+  },
+  "search": {
+    "placeholder": "Search stocks, crypto",
+    "ondo_stocks": "Ondo stocks",
+    "crypto": "Crypto",
+    "by_market_cap": "by market cap",
+    "show_more": "Show more",
+    "show_less": "Show less",
+    "opened_recently": "Opened recently",
+    "cancel": "Cancel",
+    "no_results_title": "No matches found",
+    "no_results_subtitle": "Try a different symbol or name."
   }
 }

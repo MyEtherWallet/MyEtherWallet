@@ -79,7 +79,9 @@
           <!-- Quote Details -->
           <div class="mt-4 space-y-2 px-2">
             <div class="flex justify-between text-s-14">
-              <span class="text-info">{{ $t('trade.quote_modal.estimated_amount') }}</span>
+              <span class="text-info">{{
+                $t('trade.quote_modal.estimated_amount')
+              }}</span>
               <span class="font-medium flex items-center gap-1"
                 >{{ toAmountFormatted }}
                 <app-token-symbol
@@ -94,7 +96,9 @@
               </span>
             </div>
             <div v-if="quote?.endAmount" class="flex justify-between text-s-14">
-              <span class="text-info">{{ $t('trade.quote_modal.min_amount') }}</span>
+              <span class="text-info">{{
+                $t('trade.quote_modal.min_amount')
+              }}</span>
               <span class="font-medium flex items-center gap-1"
                 >{{ minAmountFormatted }}
                 <app-token-symbol

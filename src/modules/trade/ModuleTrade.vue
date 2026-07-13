@@ -6,10 +6,10 @@
       ]"
     >
       <div class="w-full max-w-[500px] relative">
-        <!-- <rewards-small-banner
+        <rewards-small-banner
           :class="blurClass"
           location="small-banner-trade"
-        /> -->
+        />
 
         <div :class="['flex items-end justify-between mb-2 px-4', blurClass]">
           <div>
@@ -20,7 +20,7 @@
           </div>
           <app-btn-text
             v-if="
-              isMarketOpen &&
+              isTradingSessionOpen &&
               isCurrentNetworkSupported &&
               !isTradingRestrictedInRegion
             "
@@ -43,7 +43,9 @@
             v-if="supportedNetwork"
             class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto"
           >
-            <p class="text-s-12 mb-1 font-bold ml-3">{{ $t('trade.you_are_selling') }}</p>
+            <p class="text-s-12 mb-1 font-bold ml-3">
+              {{ $t('trade.you_are_selling') }}
+            </p>
 
             <div>
               <app-swap-enter-amount
@@ -55,6 +57,7 @@
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
                 :is-pristine="isPristine"
+                :disabled-tokens="disabledTokenAddresses"
                 sort-context="trade"
                 class="mt-2"
               >
@@ -90,7 +93,7 @@
 
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
-            <button
+            <!-- <button
               :aria-label="$t('trade.swap_from_to')"
               :class="[
                 'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
@@ -98,12 +101,20 @@
               @click="swapTokens"
             >
               <arrows-up-down-icon class="w-5 h-5 text-primary" />
-            </button>
+            </button> -->
+            <!-- Arrow Button -->
+            <div
+              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+            >
+              <arrow-down-icon class="w-5 h-5 text-primary" />
+            </div>
           </div>
 
           <!-- To Section -->
           <div class="bg-mewBg rounded-20 px-4 pb-4 pt-2 mx-auto mt-2">
-            <p class="text-s-12 mb-1 font-bold ml-3">{{ $t('trade.you_are_buying') }}</p>
+            <p class="text-s-12 mb-1 font-bold ml-3">
+              {{ $t('trade.you_are_buying') }}
+            </p>
             <app-swap-enter-amount
               v-model:amount="toAmount"
               v-model:selected-token="toTokenSelected!"
@@ -116,6 +127,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :is-pristine="isPristine"
+              :disabled-tokens="disabledTokenAddresses"
               sort-context="trade"
               class="mt-2"
             />
@@ -127,7 +139,7 @@
           v-if="
             !isLoading &&
             marketStatus &&
-            !isMarketOpen &&
+            !isTradingSessionOpen &&
             isCurrentNetworkSupported
           "
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
@@ -137,7 +149,9 @@
           >
             <div class="flex items-center gap-2 justify-center mb-2">
               <exclamation-circle-icon class="w-5 h-5 text-primary" />
-              <p class="text-primary font-medium text-s-16">{{ $t('trade.market_closed') }}</p>
+              <p class="text-primary font-medium text-s-16">
+                {{ $t('trade.market_closed') }}
+              </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
               {{ marketStatus.reason?.message }}
@@ -171,7 +185,14 @@
               </p>
             </div>
             <p class="text-info text-s-14 text-center mb-4">
-              {{ $t('trade.trading_not_available_on', { network: selectedChain?.nameLong || selectedChain?.name || $t('common.network') }) }}
+              {{
+                $t('trade.trading_not_available_on', {
+                  network:
+                    selectedChain?.nameLong ||
+                    selectedChain?.name ||
+                    $t('common.network'),
+                })
+              }}
             </p>
             <div class="flex flex-col items-center justify-center">
               <div class="">
@@ -242,11 +263,11 @@
         </p>
       </div>
 
-      <!-- Asset Not Tradeable Warning (only show when market is open) -->
+      <!-- Asset Not Tradeable Warning (only show when a session is open) -->
       <div
         v-if="
           !isLoading &&
-          isMarketOpen &&
+          isTradingSessionOpen &&
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
@@ -266,7 +287,9 @@
             :has-gradient="false"
             class="inline-flex !text-s-14"
           />
-          {{ $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage }) }}
+          {{
+            $t('trade.asset_not_tradable', { reason: nonTradeableAssetMessage })
+          }}
         </p>
       </div>
 
@@ -316,7 +339,9 @@
                 </svg>
                 {{ $t('trade.approving') }}
               </span>
-              <span v-else>{{ needsApproval ? $t('common.approve') : $t('trade.trade_button') }}</span>
+              <span v-else>{{
+                needsApproval ? $t('common.approve') : $t('trade.trade_button')
+              }}</span>
             </app-base-button>
           </transition>
         </div>
@@ -359,14 +384,14 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 import { parseUnits, formatUnits } from 'viem'
 
 // Components
 import AppBaseButton from '@/components/AppBaseButton.vue'
 import AppNeedHelp from '@/components/AppNeedHelp.vue'
 import AppBtnText from '@/components/AppBtnText.vue'
-// import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
+import RewardsSmallBanner from '@/modules/rewards/RewardsSmallBanner.vue'
 import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import AppSwapEnterAmount from '@/components/AppSwapEnterAmount.vue'
 import TradeQuoteModal from './components/TradeQuoteModal.vue'
@@ -458,7 +483,8 @@ const isPristine = ref(true) // Track if form is in pristine (untouched/cleared)
 // --- Market Status ---
 const {
   marketStatus,
-  isMarketOpen,
+  currentSession,
+  isTradingSessionOpen,
   isTradingRestrictedInRegion,
   tradingRestrictedHelpUrl,
   countdownText,
@@ -511,8 +537,8 @@ const fromTokens = computed(() => {
       // Keep token if it has marketCap
       return (
         matchingToken &&
-        matchingToken.market_cap &&
-        matchingToken.market_cap > 0
+        ((matchingToken.market_cap && matchingToken.market_cap > 0) ||
+          token.cgId === 'spacex-ondo-tokenized-stock')
       )
     } else {
       return token.price && token.price > 0
@@ -613,16 +639,21 @@ watch(generalError, newVal => {
 })
 
 // --- Trade Tokens ---
-const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
-  useTradeTokens({
-    selectedFromChain,
-    fromTokens,
-    fromTokenSelected,
-    toTokenSelected,
-    tradableAssets,
-    additionalBuyAssets,
-    hardcodedTokensInfo,
-  })
+const {
+  isSelectedAssetTradeable,
+  nonTradeableAssetMessage,
+  disabledTokenAddresses,
+  toTokens,
+} = useTradeTokens({
+  selectedFromChain,
+  fromTokens,
+  fromTokenSelected,
+  toTokenSelected,
+  tradableAssets,
+  additionalBuyAssets,
+  hardcodedTokensInfo,
+  currentSession,
+})
 
 // --- Trade Quote ---
 // Note: We need to create isLoadingQuote first before using it in validation
@@ -639,7 +670,9 @@ const {
   fromAmount,
   toAmount,
   isWalletConnected,
-  isMarketOpen,
+  // Trading is allowed whenever ANY session is open (conventional or off-hours);
+  // per-asset session eligibility is enforced via isSelectedAssetTradeable.
+  isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
   supportedNetwork,
   isLoadingQuote,
@@ -656,7 +689,7 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   walletAddress: userAddress,
   wallet,
   selectedFromChain,
-  isMarketOpen,
+  isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
   hasPreQuoteError,
   generalError,
@@ -748,15 +781,15 @@ const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
 }
 
-const swapTokens = () => {
-  const tempFrom = fromTokenSelected.value
-  const tempTo = toTokenSelected.value
+// const swapTokens = () => {
+//   const tempFrom = fromTokenSelected.value
+//   const tempTo = toTokenSelected.value
 
-  fromTokenSelected.value = tempTo
-  toTokenSelected.value = tempFrom
-  fromAmount.value = '0'
-  toAmount.value = '0'
-}
+//   fromTokenSelected.value = tempTo
+//   toTokenSelected.value = tempFrom
+//   fromAmount.value = '0'
+//   toAmount.value = '0'
+// }
 
 const setPercentageAmount = (percentage: number) => {
   if (!fromTokenSelected.value || !isWalletConnected.value) return
@@ -802,11 +835,11 @@ const connectWalletForTrade = () => {
 
 // --- Watchers ---
 
-// Reset state when Trade Initiated Modal is opened
+// Reset state when Trade Initiated Modal is closed
 watch(
   () => tradeInitiatedOpen.value,
   isOpen => {
-    if (isOpen) {
+    if (!isOpen) {
       clearValues()
     }
   },
@@ -959,7 +992,9 @@ onBeforeMount(async () => {
 })
 
 const blurClass = computed(() => {
-  return !isMarketOpen.value ||
+  // Blur only when NO session is tradable (conventional closed AND off-hours
+  // closed). Off-hours open keeps the UI interactive with per-asset gating.
+  return !isTradingSessionOpen.value ||
     !isCurrentNetworkSupported.value ||
     isTradingRestrictedInRegion.value
     ? 'blur-sm pointer-events-none opacity-60'

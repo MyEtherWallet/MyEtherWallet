@@ -72,6 +72,22 @@ import type {
   PerpsOrderCancelClickedPayload,
   PerpsOrderCancelSubmitPayload,
   PerpsOrderCancelErrorPayload,
+  GlobalSearchEvent,
+  GlobalSearchSelectTokenPayload,
+  GlobalSearchTokenNotFoundPayload,
+  WeekendTradingAnnouncementEvent,
+  BuyEvent,
+  BuyOfferEvent,
+  BuyPayloadShared,
+  BuyOfferPayloadShared,
+  BuyEventError,
+  BuyErrorPayload,
+  SellEvent,
+  SellOfferEvent,
+  SellPayloadShared,
+  SellOfferPayload,
+  SellEventError,
+  SellErrorPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -492,6 +508,18 @@ export class Analytics {
   }
 
   /**
+   * Send a Weekend Trading Announcement analytics event to Amplitude
+   *
+   * @param event   Type of WeekendTradingAnnouncementEvent
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackWeekendTradingAnnouncementEvent = (
+    event: WeekendTradingAnnouncementEvent,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  /**
    * Send a Deposit analytics event to Amplitude
    *
    * @param event     Type of Deposit event
@@ -645,6 +673,23 @@ export class Analytics {
     return this._track(event, { ...payload })
   }
 
+  // =============================================================================
+  // GLOBAL SEARCH
+  // =============================================================================
+
+  readonly trackGlobalSearchEvent = (
+    event: typeof GlobalSearchEvent.SHOWN,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackGlobalSearchSelectTokenEvent = (
+    event: typeof GlobalSearchEvent.SELECT_TOKEN,
+    payload: GlobalSearchSelectTokenPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
   readonly trackPerpsSignInErrorEvent = (
     event: typeof PerpsSignInEvent.ERROR,
     payload: PerpsSignInErrorPayload,
@@ -786,6 +831,77 @@ export class Analytics {
   readonly trackPerpsOrderCancelErrorEvent = (
     event: typeof PerpsOrderEvent.CANCEL_SUBMIT_ERROR,
     payload: PerpsOrderCancelErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackGlobalSearchTokenNotFoundEvent = (
+    event: typeof GlobalSearchEvent.TOKEN_NOT_FOUND,
+    payload: GlobalSearchTokenNotFoundPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // BUY
+  // =============================================================================
+
+  /**
+   * Send a Buy analytics event to Amplitude
+   *
+   * @param event     Type of Buy event
+   * @param payload   Event properties (shared, or offer payload for offer events)
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackBuyEvent = (
+    event: BuyEvent | BuyOfferEvent,
+    payload: BuyPayloadShared | BuyOfferPayloadShared,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send a Buy Error analytics event to Amplitude
+   *
+   * @param event     Type of BuyEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackBuyEventError = (
+    event: BuyEventError,
+    payload: BuyErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // SELL
+  // =============================================================================
+
+  /**
+   * Send a Sell analytics event to Amplitude
+   *
+   * @param event     Type of Sell event
+   * @param payload   Event properties (shared, or offer payload for offer events)
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSellEvent = (
+    event: SellEvent | SellOfferEvent,
+    payload: SellPayloadShared | SellOfferPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send a Sell Error analytics event to Amplitude
+   *
+   * @param event     Type of SellEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSellEventError = (
+    event: SellEventError,
+    payload: SellErrorPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

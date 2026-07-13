@@ -355,11 +355,10 @@ export const useRewardsStore = defineStore('rewardsStore', () => {
     const swapGeneric = eligibilityV2.value?.swap.reasons.some(
       r => r.type === 'REWARDS_DISABLED',
     )
-
-    if (!tradeRecentlyRewarded || !swapRecentlyRewarded) {
-      return tradeGeneric || swapGeneric
-    }
-    return false
+    // Banned only when BOTH trade and swap are rewards-disabled; if either one
+    // is still enabled the user can keep earning, so they are not banned.
+    const bothRecentlyRewarded = tradeRecentlyRewarded && swapRecentlyRewarded
+    return !bothRecentlyRewarded && !!(tradeGeneric && swapGeneric)
   })
 
   const canClaimReward = computed(() => {

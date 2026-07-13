@@ -13,9 +13,11 @@ import {
 import App from './App.vue'
 import router from './router'
 import { Provider } from './providers'
-import { analytics } from './analytics'
+import { analytics, initAnalytics } from './analytics'
 import rippleDirective from '@/directives/ripple'
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import configs from '@/configs'
+import { isExtensionOrProviderError } from '@/sentry/extensionNoise'
 
 const app = createApp(App)
 
@@ -34,7 +36,23 @@ if (dsn && process.env.NODE_ENV === 'production') {
       'TypeError: Failed to fetch',
       'TypeError: NetworkError when attempting to fetch resource',
       'TypeError: Load failed',
+      // Stale-deploy lazy-chunk errors: a cached index.html requests hashed
+      // assets that no longer exist after a redeploy. These are already
+      // auto-recovered by router.onError (reload once), so they are noise.
+      'Unable to preload CSS',
+      'Failed to fetch dynamically imported module',
     ],
+    // Drop errors thrown inside browser extensions (catches events that DO
+    // carry parsed extension frames).
+    denyUrls: [/(?:chrome|moz|safari-web)-extension:\/\//i],
+    // Drop wallet-extension / EIP-1193 provider rejections (e.g. code 4900
+    // "provider disconnected"). These surface as serialized plain objects with
+    // no parsed frames, so denyUrls can't catch them — inspect the original
+    // exception instead. Genuine app errors are unaffected.
+    beforeSend(event, hint) {
+      if (isExtensionOrProviderError(hint?.originalException)) return null
+      return event
+    },
     integrations: [
       browserTracingIntegration({ router }),
       replayIntegration({
@@ -68,12 +86,46 @@ if (dsn && process.env.NODE_ENV === 'production') {
  * PINIA
  -------------------------*/
 const pinia = createPinia()
-pinia.use(createSentryPiniaPlugin())
+pinia.use(
+  createSentryPiniaPlugin({
+    // Strip the live wallet instance from the walletStore state before it is
+    // attached to Sentry events. The wallet holds provider/account internals
+    // (and potentially sensitive material) that must never leave the client.
+    stateTransformer: state => {
+      const walletStore = state.walletStore as
+        | Record<string, unknown>
+        | undefined
+      if (walletStore && 'wallet' in walletStore) {
+        return {
+          ...state,
+          walletStore: {
+            ...walletStore,
+            wallet: '[Filtered]',
+          },
+          purchase: null,
+          chainsStore: {
+            ...state.chainsStore as | Record<string, unknown> | undefined,
+            allChains: null, // too large to send
+            chains: null // too large to send
+
+          }
+        }
+      }
+      return state
+    },
+  }),
+)
 
 app.use(pinia)
 app.use(router)
 app.use(i18n as any)
 app.directive('ripple', rippleDirective)
+app.use(autoAnimatePlugin)
+
+// Initialize analytics only after the router's initial navigation has resolved,
+// so the first auto-captured Page Viewed event includes the active route.
+// (Right after app.use(router) the current route is still START_LOCATION.)
+void router.isReady().then(() => initAnalytics())
 
 // Provide analytics for legacy inject() usage in Vue components
 app.provide(Provider.ANALYTICS, analytics)

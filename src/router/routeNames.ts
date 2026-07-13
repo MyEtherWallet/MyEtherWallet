@@ -33,12 +33,19 @@ const TOKEN_INFO = { PATH: 'token/:tokenId' }
 const TOKEN_INFO_ROUTE_NAMES = {
   crypto: 'token-info-crypto',
   home: 'token-info-home',
+  stocks: 'token-info-stocks',
+  earn: 'token-info-earn',
+  verify: 'token-info-verify',
+  sign: 'token-info-sign',
 }
 const STOCK_INFO = { PATH: 'stock/:symbol' }
 const STOCK_INFO_ROUTE_NAMES = {
   home: 'home-stock-info',
   crypto: 'crypto-stock-info',
   stocks: 'stocks-stock-info',
+  earn: 'earn-stock-info',
+  verify: 'verify-stock-info',
+  sign: 'sign-stock-info',
 }
 const PERP_INFO = { PATH: 'perp/:market' }
 const PERP_INFO_ROUTE_NAME = 'perps-perp-info'

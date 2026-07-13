@@ -1,4 +1,4 @@
-import HWwallet from '@enkryptcom/hw-wallets'
+import type { HWManager } from '@/providers/hw/types'
 import type { HexPrefixedString, WalletType } from '../types'
 import {
   type SignableTransactionParams,
@@ -56,7 +56,7 @@ export interface WalletInterface {
     feeObj: SignableTransactionParams,
   ) => Promise<GetUnsignedEvmMultiTransactionResponse>
   updateChainId: (chainId: string) => void
-  getWalletInstance?: () => HWwallet | null
+  getWalletInstance?: () => HWManager | null
   getProviderInstance?: () =>
     | Eip6963Provider
     | NonNullable<typeof window.unisat>

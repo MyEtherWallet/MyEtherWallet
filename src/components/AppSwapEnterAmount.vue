@@ -59,6 +59,8 @@
         :is-from-view="isFromView"
         :network-name="networkName"
         :sort-context="sortContext"
+        :disabled-tokens="disabledTokens"
+        :disabled-group-title="disabledGroupTitle"
         @open:select-token="setIsOpenSelectToken"
       />
     </div>
@@ -169,6 +171,14 @@ const props = defineProps({
   sortContext: {
     type: String as () => 'trade' | 'swap' | undefined,
     default: undefined,
+  },
+  disabledTokens: {
+    type: Array as () => string[],
+    default: () => [],
+  },
+  disabledGroupTitle: {
+    type: String,
+    required: false,
   },
 })
 

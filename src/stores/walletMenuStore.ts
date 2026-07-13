@@ -1,14 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export type WalletPanel =
-  | 'trade'
-  | 'swap'
-  | 'send'
-  | 'buy'
-  | 'sell'
-  | 'bridge'
-  | 'perps'
+export type WalletPanel = 'trade' | 'swap' | 'send' | 'bridge' | 'purchase' | 'perps'
 
 export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const hideLowBalance = ref(false)
@@ -22,12 +15,21 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const selectedTradeOrderSide = ref<'buy' | 'sell' | null>(null)
   const selectedTradeManageMode = ref<'add' | 'close' | undefined>('add')
 
+  // Coingecko id of the token to pre-populate in the Buy module (set from the
+  // crypto/balance tables). Consumed and cleared by ModuleBuy.
+  const selectedPurchaseCoinId = ref<string | null>(null)
+
   const setIsOpenSideMenu = (value: boolean) => {
     isOpenSideMenu.value = value
   }
 
   const setWalletPanel = (value: WalletPanel) => {
     walletPanel.value = value
+  }
+
+  const openPanel = (panel: WalletPanel) => {
+    walletPanel.value = panel
+    isOpenSideMenu.value = true
   }
 
   const setSelectedTradeTokenSymbol = (symbol: string | null) => {
@@ -41,6 +43,10 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
   const setSelectedTradeManageMode = (mode: 'add' | 'close' | undefined) => {
     selectedTradeManageMode.value = mode
   }
+  const setSelectedPurchaseCoinId = (coinId: string | null) => {
+    selectedPurchaseCoinId.value = coinId
+  }
+
   const toggleShowBalance = () => {
     hideLowBalance.value = !hideLowBalance.value
   }
@@ -50,6 +56,7 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setIsOpenSideMenu,
     walletPanel,
     setWalletPanel,
+    openPanel,
     hasShadow,
     selectedTradeTokenSymbol,
     setSelectedTradeTokenSymbol,
@@ -57,6 +64,8 @@ export const useWalletMenuStore = defineStore('walletMenuStore', () => {
     setSelectedTradeOrderSide,
     selectedTradeManageMode,
     setSelectedTradeManageMode,
+    selectedPurchaseCoinId,
+    setSelectedPurchaseCoinId,
     hideLowBalance,
     toggleShowBalance,
   }
