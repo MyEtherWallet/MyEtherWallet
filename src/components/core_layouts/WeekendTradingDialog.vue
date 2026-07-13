@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
 import AppDialog from '@/components/AppDialog.vue'
@@ -84,12 +84,8 @@ const { modalSeen } = storeToRefs(announcement)
 // The 24/7 announcement is sequenced behind the RWA "Trade & Hold" announcement:
 // it never shows while that modal is open and only surfaces 3 days after it is
 // first closed.
-const RWA_COOLDOWN_MS = 3 * 24 * 60 * 60 * 1000
-const { modalClosedAt: rwaModalClosedAt } = storeToRefs(useRwaAnnouncementStore())
-const rwaCooldownElapsed = computed(
-  () =>
-    rwaModalClosedAt.value > 0 &&
-    Date.now() - rwaModalClosedAt.value >= RWA_COOLDOWN_MS,
+const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
+  useRwaAnnouncementStore(),
 )
 
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())

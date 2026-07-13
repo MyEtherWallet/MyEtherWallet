@@ -71,6 +71,7 @@ import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { XMarkIcon } from '@heroicons/vue/20/solid'
 import { useWeekendTradingAnnouncementStore } from '@/stores/weekendTradingAnnouncementStore'
+import { useRwaAnnouncementStore } from '@/stores/rwaAnnouncementStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useWalletStore } from '@/stores/walletStore'
 import { useGlobalStore } from '@/stores/globalStore'
@@ -90,6 +91,12 @@ const props = defineProps<{
 
 const announcement = useWeekendTradingAnnouncementStore()
 const { shouldShowTooltip } = storeToRefs(announcement)
+
+// Sequenced behind the RWA "Trade & Hold" announcement: no 24/7 messaging until
+// 3 days after that modal is closed.
+const { followupCooldownElapsed: rwaCooldownElapsed } = storeToRefs(
+  useRwaAnnouncementStore(),
+)
 
 const walletMenu = useWalletMenuStore()
 const { walletPanel } = storeToRefs(walletMenu)
@@ -120,6 +127,7 @@ const tooltipStyle = computed(() => {
 
 const tryShow = async () => {
   if (isTradingRestrictedInRegion.value) return
+  if (!rwaCooldownElapsed.value) return
   if (!shouldShowTooltip.value || !props.anchor) return
   await nextTick()
   anchorRect.value = props.anchor.getBoundingClientRect()
@@ -163,6 +171,7 @@ watch(
     isWalletConnected,
     () => props.anchor,
     isTradingRestrictedInRegion,
+    rwaCooldownElapsed,
   ],
   () => tryShow(),
   { immediate: true },

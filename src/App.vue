@@ -4,8 +4,9 @@
     :inert="isAreaHidden || undefined"
   >
     <!-- <welcome-dialog v-if="!isDevMode" /> -->
-    <!-- 24/7 announcement shows 3 days after the RWA announcement is closed -->
-    <weekend-trading-dialog v-if="isLoadingComplete" />
+    <!-- 24/7 announcement dialog disabled; only the tooltip is used, gated to
+         show 3 days after the RWA announcement is closed -->
+    <!-- <weekend-trading-dialog v-if="isLoadingComplete" /> -->
     <rwa-announcement-dialog v-if="isLoadingComplete" />
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
@@ -30,7 +31,7 @@ import { storeToRefs } from 'pinia'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 // import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
-import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
+// import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
 import RwaAnnouncementDialog from '@/modules/rwa_rewards/RwaAnnouncementDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
