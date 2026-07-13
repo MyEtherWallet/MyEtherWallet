@@ -157,8 +157,10 @@ export type TradePayloadShared = {
   network: string
   fromToken: string
   fromAmount: string
+  fromAmountUSD: string
   toToken: string
   toAmount: string
+  toAmountUSD: string
   tradePair: string
   providerName?: string
   orderHash?: string
@@ -193,6 +195,10 @@ export type TradeEventStatusPayload = TradePayloadShared & {
   txHash?: string
   percentageDiff?: number
   canEarnReward?: boolean
+  qualifyingTradeAmount?: string
+  qualifyingTradeToken?: string
+  qualifiedSince?: string
+  holdCampaignStatus?: string
 }
 
 // =============================================================================
