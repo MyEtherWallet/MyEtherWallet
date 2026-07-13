@@ -18,7 +18,7 @@
         <div class="text-left">
           <p class="font-semibold">This trade isn't eligible for rewards</p>
           <!-- Variation 3: cash out transactions never qualify -->
-          <p v-if="isCashout" class="text-info mt-[2px]">
+          <p v-if="isCashout && canClaimHold" class="text-info mt-[2px]">
             Cash out transactions don't qualify for rewards.
           </p>
           <!-- Variation 2: below the minimum spend threshold -->
@@ -94,11 +94,10 @@ const showBanner = computed(() => canClaimHold.value || canClaimTrade.value)
 const toAmountNumber = computed(() => Number(props.tradeAmount))
 
 const qualifies = computed(() => {
-  if (minSpend.value > 0 && toAmountNumber.value >= minSpend.value) {
-    if (canClaimHold.value) return !props.isCashout
-    return canClaimTrade.value
-  }
-  return false
+  const spendingThresholdReached =
+    minSpend.value > 0 && toAmountNumber.value >= minSpend.value
+  if (canClaimHold.value) return spendingThresholdReached && !props.isCashout
+  return spendingThresholdReached && canClaimTrade.value
 })
 
 // How much more (USD) the user needs to trade to reach the threshold
