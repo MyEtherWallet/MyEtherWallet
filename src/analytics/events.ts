@@ -568,3 +568,100 @@ export const WeekendTradingAnnouncementEvent = {
 
 export type WeekendTradingAnnouncementEvent =
   (typeof WeekendTradingAnnouncementEvent)[keyof typeof WeekendTradingAnnouncementEvent]
+
+// =============================================================================
+// BUY (Fiat Onramp)
+// =============================================================================
+
+export const BuyEvent = {
+  SHOWN: 'Buy_Shown',
+  PRELIMINARY_SHOWN: 'Buy_Preliminary_Rate_Shown',
+  CLICK_CONTINUE: 'Buy_Clicked_Continue',
+} as const
+export type BuyEvent = (typeof BuyEvent)[keyof typeof BuyEvent]
+
+export type BuyPayloadShared = {
+  network?: string
+  token: string
+  currency: string
+  amountUSD: string
+  amountOriginalCurrency: string
+}
+
+export const BuyOfferEvent = {
+  OFFER_SHOWN: 'Buy_Offer_Shown',
+  OFFER_CANCELED: 'Buy_Offer_Canceled',
+  OFFER_PROCEED: 'Buy_Offer_Clicked_Continue',
+} as const
+export type BuyOfferEvent = (typeof BuyOfferEvent)[keyof typeof BuyOfferEvent]
+
+export const PROVIDER_NAMES = [
+  'moonpay',
+  'simplex',
+  'topper',
+  'coinbase',
+] as const
+export type ProviderName = (typeof PROVIDER_NAMES)[number]
+
+export type BuyOfferPayloadShared = BuyPayloadShared & {
+  MoonpayRate?: string
+  SimplexRate?: string
+  TopperRate?: string
+  CoinbaseRate?: string
+  bestProviderRate: string
+  selectedRate: string
+  selectedProvider: ProviderName
+}
+
+export const BuyEventError = {
+  PRELIMINARY_ERROR: 'Buy_Preliminary_Rate_Error',
+  OFFER_ERROR: 'Buy_Offer_Error',
+} as const
+export type BuyEventError = (typeof BuyEventError)[keyof typeof BuyEventError]
+
+export type BuyErrorPayload = BuyPayloadShared & {
+  errorMsg: string
+}
+
+// =============================================================================
+// SELL (Fiat Offramp)
+// =============================================================================
+
+export const SellEvent = {
+  SHOWN: 'Sell_Shown',
+  PRELIMINARY_SHOWN: 'Sell_Preliminary_Rate_Shown',
+  CLICK_CONTINUE: 'Sell_Clicked_Continue',
+} as const
+export type SellEvent = (typeof SellEvent)[keyof typeof SellEvent]
+
+export type SellPayloadShared = {
+  network?: string
+  token: string
+  currency: string
+  amountToken: string
+  amountUSD?: string
+  amountOriginalCurrency?: string
+  networkFeeUSD?: string
+}
+
+export const SellOfferEvent = {
+  OFFER_SHOWN: 'Sell_Offer_Shown',
+  OFFER_CANCELED: 'Sell_Offer_Canceled',
+  OFFER_PROCEED: 'Sell_Offer_Clicked_Continue',
+} as const
+export type SellOfferEvent = (typeof SellOfferEvent)[keyof typeof SellOfferEvent]
+
+export type SellOfferPayload = SellPayloadShared & {
+  moonpayRate: string
+}
+
+export const SellEventError = {
+  PRELIMINARY_ERROR: 'Sell_Preliminary_Rate_Error',
+  OFFER_ERROR: 'Sell_Offer_Error',
+} as const
+export type SellEventError =
+  (typeof SellEventError)[keyof typeof SellEventError]
+
+export type SellErrorPayload = SellPayloadShared & {
+  errorMsg: string
+}

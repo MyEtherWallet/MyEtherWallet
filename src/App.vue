@@ -1,5 +1,8 @@
 <template>
-  <div class="relative h-screen overflow-hidden">
+  <div
+    class="relative h-screen overflow-hidden"
+    :inert="isAreaHidden || undefined"
+  >
     <!-- <welcome-dialog v-if="!isDevMode" /> -->
     <weekend-trading-dialog v-if="isLoadingComplete" />
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
