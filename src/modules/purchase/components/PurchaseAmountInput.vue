@@ -1,7 +1,9 @@
 <template>
   <div
     :class="[
-      isFocused ? 'bg-white border-grey-10' : 'bg-bgBase border-transparent',
+      isFocused
+        ? 'bg-white border-grey-10'
+        : 'bg-bgBase border-transparent has-[.amount-value:hover]:border-grey-10',
       'border rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
     ]"
   >
@@ -28,41 +30,43 @@
         :style="scaleStyle"
         class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
       >
-        <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
-          effectiveSymbol
-        }}</span>
-        <input
-          :id="inputId"
-          ref="inputEl"
-          :value="displayValue"
-          type="text"
-          inputmode="decimal"
-          aria-label="Amount"
-          class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
-          :style="{
-            fontSize: 'inherit',
-            lineHeight: 'inherit',
-            letterSpacing: 'inherit',
-            width: inputWidth,
-          }"
-          @keydown="onKeyDown"
-          @input="onInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          @scroll="(e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)"
-        />
-        <span
-          v-if="amount === ''"
-          :class="isFocused ? 'text-grey-30' : 'text-black'"
-          aria-hidden="true"
-          >0</span
-        >
-        <span
-          v-if="symbolPosition === 'suffix'"
-          aria-hidden="true"
-          class="ml-2"
-          >{{ effectiveSymbol }}</span
-        >
+        <span class="amount-value flex items-center">
+          <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
+            effectiveSymbol
+          }}</span>
+          <input
+            :id="inputId"
+            ref="inputEl"
+            :value="displayValue"
+            type="text"
+            inputmode="decimal"
+            aria-label="Amount"
+            class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
+            :style="{
+              fontSize: 'inherit',
+              lineHeight: 'inherit',
+              letterSpacing: 'inherit',
+              width: inputWidth,
+            }"
+            @keydown="onKeyDown"
+            @input="onInput"
+            @focus="onFocus"
+            @blur="onBlur"
+            @scroll="(e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)"
+          />
+          <span
+            v-if="amount === ''"
+            :class="isFocused ? 'text-grey-30' : 'text-black'"
+            aria-hidden="true"
+            >0</span
+          >
+          <span
+            v-if="symbolPosition === 'suffix'"
+            aria-hidden="true"
+            class="ml-2"
+            >{{ effectiveSymbol }}</span
+          >
+        </span>
       </label>
 
       <p

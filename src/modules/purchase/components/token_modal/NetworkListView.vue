@@ -1,13 +1,13 @@
 <template>
   <div class="h-full flex flex-col gap-6">
     <div class="flex items-start gap-3 pr-12 flex-none">
-      <button
-        type="button"
-        class="flex-none w-8 h-8 -ml-1 flex items-center justify-center rounded-full hoverNoBG transition-colors"
+      <app-btn-icon
+        :label="$t('common.back')"
+        class="flex-none -ml-1"
         @click="emit('back')"
       >
         <chevron-left-icon class="w-5 h-5 text-black" />
-      </button>
+      </app-btn-icon>
       <div class="flex flex-col gap-1 flex-1 min-w-0">
         <h2 class="text-s-28 font-bold leading-[32px] tracking-[-0.84px]">
           {{ $t('purchase.select_token.filter_title') }}
@@ -123,6 +123,7 @@ import { ref, computed } from 'vue'
 import { ChevronLeftIcon, CheckCircleIcon } from '@heroicons/vue/24/solid'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppSearchInput from '@/components/AppSearchInput.vue'
+import AppBtnIcon from '@components/AppBtnIcon.vue'
 import { useChainsStore } from '@/stores/chainsStore'
 import { getPurchaseChainIcon } from '../../helpers/purchaseIcons'
 import type { BuyNetwork } from '@/stores/purchaseStore'
