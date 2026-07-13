@@ -47,25 +47,16 @@
                   symbol: selectedChain?.currencyName || 'ETH',
                 })
               }}
-              <a
-                href="https://ccswap.myetherwallet.com/"
-                target="_blank"
+              <button
                 class="text-primary cursor-pointer underline underline-offset-2"
-                @click="
-                  analytics.trackClickTokenTradeEvent(
-                    ClickTokenTradeEvent.BUY,
-                    {
-                      location: 'select_fee',
-                      token: selectedChain?.currencyName || 'ETH',
-                    },
-                  )
-                "
-                >{{
+                @click="openBuyPanel"
+              >
+                {{
                   $t('common.buy_more', {
                     symbol: selectedChain?.currencyName || 'ETH',
                   })
-                }}</a
-              >
+                }}
+              </button>
             </p>
           </div>
           <p v-else>{{ gasFeeError }}</p>
@@ -171,6 +162,17 @@ import { useI18n } from 'vue-i18n'
 import { formatUnits } from 'viem'
 import { P2WPKH_DUST } from '@/providers/common/btcInfo'
 import { analytics, ClickTokenTradeEvent } from '@/analytics'
+import { useWalletMenuStore } from '@/stores/walletMenuStore'
+
+const walletMenu = useWalletMenuStore()
+
+const openBuyPanel = () => {
+  analytics.trackClickTokenTradeEvent(ClickTokenTradeEvent.BUY, {
+    location: 'select_fee',
+    token: selectedChain?.value?.currencyName || 'ETH',
+  })
+  walletMenu.openPanel('purchase')
+}
 
 /** ----------------
  * DEFAULTS
@@ -355,6 +357,7 @@ watch(
   },
 )
 onMounted(() => {
+  gasPriceType.value = defaultGasPriceType.value
   if (isLoadedChainsData.value && selectedChain.value) {
     feesReady.value = false
     if (isBitcoinChain.value && !isWalletConnected.value) {
@@ -382,7 +385,7 @@ const closeFeeModal = () => {
  * Current Selected Fee
  ------------------*/
 const globalStore = useGlobalStore()
-const { gasPriceType } = storeToRefs(globalStore)
+const { gasPriceType, defaultGasPriceType } = storeToRefs(globalStore)
 
 const setFee = (fee: FeePriority) => {
   gasPriceType.value = fee
@@ -525,5 +528,13 @@ const hasFees = computed(() => {
     Object.keys(data.value.fees).length > 0 &&
     !props.isLoadingFees
   )
+})
+
+defineExpose({
+  openFeeModal,
+  hasFees,
+  hasFiatEstimates,
+  selectedFeeNative,
+  selectedFeeFiat,
 })
 </script>

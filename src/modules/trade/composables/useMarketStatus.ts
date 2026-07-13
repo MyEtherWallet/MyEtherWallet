@@ -11,6 +11,7 @@ import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
 import Configs from '@/configs'
 import { useGlobalStore } from '@/stores/globalStore'
+import { resolveCurrentSession } from './marketSession'
 
 const isDevMode = Configs.IS_DEV_MODE
 
@@ -31,8 +32,26 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
 
   const isMarketOpen = computed(() => marketStatus.value?.isOpen ?? true)
 
+  // Off-hours (24/7) track — true on weekends/holidays when off-hours is enabled.
+  const isOffHoursOpen = computed(
+    () => marketStatus.value?.offhours?.isOpen ?? false,
+  )
+
+  // The session key to test an asset's tradableSessions against (null = nothing tradable).
+  const currentSession = computed(() => resolveCurrentSession(marketStatus.value))
+
+  // True when ANY session is tradable (conventional or off-hours). Drives the
+  // global blur/closed overlay — only fully closed when this is false. While
+  // market status is still loading (null) we stay optimistic to avoid a blur
+  // flash on open (mirrors the previous `isOpen ?? true` behavior).
+  const isTradingSessionOpen = computed(
+    () => marketStatus.value === null || currentSession.value !== null,
+  )
+
   const updateCountdown = () => {
-    if (!marketStatus.value?.nextOpen || isMarketOpen.value) {
+    // Only count down in the fully-closed state (Case 3); any open session
+    // (conventional or off-hours) clears it.
+    if (!marketStatus.value?.nextOpen || isTradingSessionOpen.value) {
       countdownText.value = ''
       return
     }
@@ -109,12 +128,15 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
       ])
       marketStatus.value = statusResult
 
-      if (!marketStatus.value.isOpen) {
+      // Drive closure side-effects off the real tradable state (Case 3), so
+      // off-hours-open is treated as open and onMarketOpen only fires on a true
+      // closed -> open transition.
+      if (!isTradingSessionOpen.value) {
         wasMarketClosed = true
         startCountdown()
       } else {
         stopCountdown()
-        // Market just opened - call the callback if market was previously closed
+        // Trading just (re)opened - call the callback if it was previously closed
         if (wasMarketClosed && onMarketOpen) {
           wasMarketClosed = false
           await onMarketOpen()
@@ -158,10 +180,14 @@ export function useMarketStatus(options: UseMarketStatusOptions = {}) {
   return {
     marketStatus,
     isMarketOpen,
+    isOffHoursOpen,
+    currentSession,
+    isTradingSessionOpen,
     isTradingRestrictedInRegion,
     tradingRestrictedHelpUrl: TRADING_RESTRICTED_HELP_URL,
     countdownText,
     fetchMarketStatus,
+    fetchTradingRestriction,
     formatNextOpen,
   }
 }

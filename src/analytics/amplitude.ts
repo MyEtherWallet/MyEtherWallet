@@ -47,6 +47,27 @@ import type {
   TradeClickSortEvent,
   SwapClickSortEvent,
   ClickSortPayload,
+  PerpsSignInEvent,
+  PerpsSignInPayload,
+  PerpsSignInErrorPayload,
+  PerpsDepositEvent,
+  PerpsDepositPayload,
+  PerpsDepositErrorPayload,
+  PerpsTradeOrderEvent,
+  PerpsTradeOrderPayload,
+  PerpsTradeOrderFailPayload,
+  PerpsTpSlEvent,
+  PerpsTpSlSavePayload,
+  PerpsChangeLeverageEvent,
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+  PerpsClosePositionEvent,
+  PerpsClosePositionPayload,
+  PerpsClosePositionFailPayload,
+  GlobalSearchEvent,
+  GlobalSearchSelectTokenPayload,
+  GlobalSearchTokenNotFoundPayload,
+  WeekendTradingAnnouncementEvent,
 } from './events'
 import {
   type BalanceBracket,
@@ -467,6 +488,18 @@ export class Analytics {
   }
 
   /**
+   * Send a Weekend Trading Announcement analytics event to Amplitude
+   *
+   * @param event   Type of WeekendTradingAnnouncementEvent
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackWeekendTradingAnnouncementEvent = (
+    event: WeekendTradingAnnouncementEvent,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  /**
    * Send a Deposit analytics event to Amplitude
    *
    * @param event     Type of Deposit event
@@ -605,6 +638,131 @@ export class Analytics {
   readonly trackSwapClickSortEvent = (
     event: typeof SwapClickSortEvent,
     payload: ClickSortPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS SIGN IN
+  // =============================================================================
+
+  readonly trackPerpsSignInEvent = (
+    event: PerpsSignInEvent,
+    payload?: PerpsSignInPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // GLOBAL SEARCH
+  // =============================================================================
+
+  readonly trackGlobalSearchEvent = (
+    event: typeof GlobalSearchEvent.SHOWN,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackGlobalSearchSelectTokenEvent = (
+    event: typeof GlobalSearchEvent.SELECT_TOKEN,
+    payload: GlobalSearchSelectTokenPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsSignInErrorEvent = (
+    event: typeof PerpsSignInEvent.ERROR,
+    payload: PerpsSignInErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS DEPOSIT
+  // =============================================================================
+
+  readonly trackPerpsDepositEvent = (
+    event: PerpsDepositEvent,
+    payload?: PerpsDepositPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsDepositErrorEvent = (
+    event: typeof PerpsDepositEvent.ERROR,
+    payload: PerpsDepositErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS TRADE ORDER
+  // =============================================================================
+
+  readonly trackPerpsTradeOrderEvent = (
+    event: PerpsTradeOrderEvent,
+    payload?: PerpsTradeOrderPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsTradeOrderFailEvent = (
+    event: typeof PerpsTradeOrderEvent.SUBMIT_FAIL,
+    payload: PerpsTradeOrderFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS TP/SL
+  // =============================================================================
+
+  readonly trackPerpsTpSlEvent = (
+    event: PerpsTpSlEvent,
+    payload?: PerpsTpSlSavePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS CHANGE LEVERAGE
+  // =============================================================================
+
+  readonly trackPerpsChangeLeverageEvent = (
+    event: PerpsChangeLeverageEvent,
+    payload: PerpsChangeLeveragePayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsChangeLeverageFailEvent = (
+    event: typeof PerpsChangeLeverageEvent.SUBMIT_FAIL,
+    payload: PerpsChangeLeverageFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // PERPS CLOSE POSITION
+  // =============================================================================
+
+  readonly trackPerpsClosePositionEvent = (
+    event: PerpsClosePositionEvent,
+    payload: PerpsClosePositionPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackPerpsClosePositionFailEvent = (
+    event: typeof PerpsClosePositionEvent.SUBMIT_FAIL,
+    payload: PerpsClosePositionFailPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackGlobalSearchTokenNotFoundEvent = (
+    event: typeof GlobalSearchEvent.TOKEN_NOT_FOUND,
+    payload: GlobalSearchTokenNotFoundPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

@@ -29,7 +29,7 @@
       </div>
       <img
         v-else-if="image && !isLoading"
-        class="object-contain w-full h-full"
+        :class="[cover ? 'object-cover' : 'object-contain', 'w-full h-full']"
         :src="image"
         width="28"
         height="28"
@@ -67,6 +67,10 @@ const props = defineProps({
     default: 'h-6 xs:h-8',
   },
   isStock: {
+    type: Boolean,
+    default: false,
+  },
+  cover: {
     type: Boolean,
     default: false,
   },

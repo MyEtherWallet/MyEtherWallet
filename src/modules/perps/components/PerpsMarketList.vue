@@ -621,6 +621,11 @@ import PerpsSelectLeverageDialog from './PerpsSelectLeverageDialog.vue'
 import { usePerpsToasts } from '../composables/usePerpsToasts'
 import { useWalletStore } from '@/stores/walletStore'
 import { storeToRefs } from 'pinia'
+import { analytics, PerpsChangeLeverageEvent } from '@/analytics'
+import type {
+  PerpsChangeLeveragePayload,
+  PerpsChangeLeverageFailPayload,
+} from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWatchOnly } = storeToRefs(walletStore)
@@ -638,6 +643,7 @@ const leverageError = ref('')
 const leverageMarket = ref('')
 const leverageSymbol = ref('')
 const leverageMaxLeverage = ref(20)
+const leverageOldValue = ref(1)
 const perpsToasts = usePerpsToasts()
 
 const openLeverage = (
@@ -656,6 +662,7 @@ const openLeverage = (
     ? parsedCurrent
     : maxLev
   tempLeverage.value = Math.min(initial, maxLev)
+  leverageOldValue.value = tempLeverage.value
   leverageError.value = ''
   showLeverageDialog.value = true
 }
@@ -663,14 +670,36 @@ const openLeverage = (
 const saveLeverage = async () => {
   isSavingLeverage.value = true
   leverageError.value = ''
+  const payload: PerpsChangeLeveragePayload = {
+    assetName: leverageMarket.value,
+    oldLeverage: leverageOldValue.value,
+    maxLeverage: leverageMaxLeverage.value,
+    newLeverage: tempLeverage.value,
+  }
+  void analytics.trackPerpsChangeLeverageEvent(
+    PerpsChangeLeverageEvent.CLICKED_SUBMIT,
+    payload,
+  )
   try {
     await perpsClient.setLeverage(leverageMarket.value, tempLeverage.value)
     showLeverageDialog.value = false
     perpsToasts.toastLeverageUpdated(tempLeverage.value, leverageMarket.value)
+    void analytics.trackPerpsChangeLeverageEvent(
+      PerpsChangeLeverageEvent.SUBMIT_SUCCESS,
+      payload,
+    )
   } catch (e) {
     leverageError.value =
       e instanceof Error ? e.message : 'Failed to set leverage'
     perpsToasts.toastFailedToSetLeverage()
+    const failPayload: PerpsChangeLeverageFailPayload = {
+      ...payload,
+      errorMessage: leverageError.value,
+    }
+    void analytics.trackPerpsChangeLeverageFailEvent(
+      PerpsChangeLeverageEvent.SUBMIT_FAIL,
+      failPayload,
+    )
   } finally {
     isSavingLeverage.value = false
   }

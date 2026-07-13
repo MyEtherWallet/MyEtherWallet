@@ -1,5 +1,13 @@
 <template>
   <div class="w-full max-w-[500px] mx-auto relative h-full flex flex-col pb-6">
+    <perps-signing-prompt
+      :show="showSigningPrompt"
+      :message="signingMessage"
+      :is-hardware-wallet="isHardwareWalletSigning"
+      :is-waiting-for-confirm="isWaitingForConfirm"
+      @confirm="confirmSign"
+      @cancel="cancelSign"
+    />
     <!-- Header: Asset Info -->
     <div class="flex items-center justify-between mb-2 px-4 -mt-2">
       <div>
@@ -242,9 +250,14 @@
 
           <transition name="fade" mode="out-in">
             <div
-              v-if="
-                limitPrice &&
-                (isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) <= 0)
+              v-if="!limitPrice || parseFloat(limitPrice) === 0"
+              class="text-error text-s-12 mb-1"
+            >
+              Target price required
+            </div>
+            <div
+              v-else-if="
+                isNaN(parseFloat(limitPrice)) || parseFloat(limitPrice) < 0
               "
               class="text-error text-s-12 mb-1"
             >
@@ -276,7 +289,7 @@
 
           <div class="flex justify-start gap-2 mt-1">
             <button
-              v-for="pct in [-10, -5, 0, 5, 10]"
+              v-for="pct in [-5, -2.5, 0, 2.5, 5]"
               :key="pct"
               class="w-full px-[10px] py-1 text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
               @click="setLimitPricePct(pct)"
@@ -338,7 +351,7 @@
                 <ChevronDownIcon class="w-3 h-3" />
               </button>
             </div>
-            <p class="text-info text-s-12 -mt-2 mb-2">
+            <p class="text-info text-s-12 -mt-2 mb-2 truncate">
               Size
               {{ positionSizeUsd ? formatUsd(positionSizeUsd) : '$0.00' }}
             </p>
@@ -614,16 +627,12 @@
           <p class="text-info text-s-14 mb-4">
             Perps is only available on Ethereum
           </p>
-          <select-chain-for-app>
-            <template #network-button="{ openNetworkDialog }">
-              <button
-                class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-                @click="openNetworkDialog(true)"
-              >
-                Switch to Ethereum
-              </button>
-            </template>
-          </select-chain-for-app>
+          <button
+            class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
+            @click="onSwitchToEthereum"
+          >
+            Switch to Ethereum
+          </button>
         </div>
       </template>
       <template v-else-if="isWatchOnly">
@@ -641,7 +650,7 @@
         >
           <button
             class="bg-primary text-white rounded-full px-6 py-2.5 text-s-14 font-medium hoverOpacity w-full"
-            @click="login"
+            @click="login('Perps_Trade')"
           >
             Sign in to Perps
           </button>
@@ -721,6 +730,7 @@
       :contracts="filteredMarketList"
       :filter-tabs="marketFilterTabs"
       :get-market-display-name="getMarketDisplayName"
+      :get-market-leverage="getMarketLeverage"
       @set-sort="setMarketSort"
       @select="selectMarket"
     />
@@ -773,6 +783,8 @@ import {
 import { formatUsd, formatPnl } from './utils/formatters'
 import { getLogoUrl } from './utils/market'
 import { usePerpsTradeForm } from './composables/usePerpsTradeForm'
+import { usePerpsAuth } from './composables/usePerpsAuth'
+import PerpsSigningPrompt from './components/PerpsSigningPrompt.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppTokenSymbol from '@/components/AppTokenSymbol.vue'
 import AppPopUpMenu from '@/components/AppPopUpMenu.vue'
@@ -782,24 +794,40 @@ import PerpsSelectMarketDialog from './components/PerpsSelectMarketDialog.vue'
 import PerpsOrderConfirmationDialog from './components/PerpsOrderConfirmationDialog.vue'
 import PerpsCloseConfirmationDialog from './components/PerpsCloseConfirmationDialog.vue'
 import PerpsTakeProfitStopLossDialog from './components/PerpsTakeProfitStopLossDialog.vue'
-import SelectChainForApp from '@/components/select_chain/SelectChainForApp.vue'
 import { useWalletStore } from '@/stores/walletStore'
 import { useAccessStore } from '@/stores/accessStore'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
+import { useToastStore } from '@/stores/toastStore'
+import { ToastType } from '@/types/notification'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import { analytics, ConnectWalletEvent } from '@/analytics'
 
 const walletStore = useWalletStore()
 const { isWalletConnected, isWatchOnly } = storeToRefs(walletStore)
+const { showSigningPrompt, signingMessage, isHardwareWalletSigning, isWaitingForConfirm, confirmSign, cancelSign } = usePerpsAuth()
 const accessStore = useAccessStore()
 const globalStore = useGlobalStore()
 const { selectedNetwork } = storeToRefs(globalStore)
+const toastStore = useToastStore()
 const isSupportedNetwork = computed(() => selectedNetwork.value === 'ETHEREUM')
 const { t } = useI18n()
 
+const onSwitchToEthereum = () => {
+  globalStore.setSelectedNetwork('ETHEREUM')
+  toastStore.addToastMessage({
+    text: 'Switched to Ethereum',
+    textSecondary: 'Perpetuals are only available on Ethereum.',
+    type: ToastType.Info,
+  })
+}
+
 const { setSelectedTradeManageMode } = useWalletMenuStore()
 const connectWallet = () => {
+  analytics.trackConnectWalletEvent(ConnectWalletEvent.CLICKED, {
+    source: 'Perps_Trade',
+  })
   accessStore.openAccessDialog()
 }
 
@@ -940,6 +968,7 @@ const {
   fullMarketName,
   contracts,
   getMarketDisplayName,
+  getMarketLeverage,
   openTokenSelect,
   selectMarket,
   // Leverage

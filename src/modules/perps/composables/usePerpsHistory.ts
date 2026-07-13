@@ -4,6 +4,8 @@ import { usePerpsAuth } from './usePerpsAuth'
 import { usePerpsMarkets } from './usePerpsMarkets'
 import { usePerpsToasts } from './usePerpsToasts'
 import { useCursorPaginate } from './useCursorPaginate'
+import { perpsWs } from '../sdk/ws'
+import { ensurePerpsWsLifecycle } from './usePerpsWsLifecycle'
 import type {
   ApiOrder,
   ApiFill,
@@ -19,14 +21,11 @@ type OrderSnapshot = Pick<
 >
 
 export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
+  ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
   const { markets } = usePerpsMarkets()
   const perpsToasts = usePerpsToasts()
   const filter = statusFilter ?? ref<OrdersStatusFilter>('all')
-  // The Pending sub-tab paginates over only open orders so empty middle pages
-  // can't appear. The API's status filter only accepts 'open' | 'canceled' |
-  // 'fullyfilled', so 'untriggered' (stop orders) and the transient 'pending'
-  // state aren't shown under the Pending filter — acceptable trade-off.
   const pagination = useCursorPaginate<ApiOrder>(
     opts =>
       perpsClient.getOrders({
@@ -35,17 +34,9 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
       }),
     PERPS_PAGE_SIZE,
   )
-  // Snapshot keyed by orderId — used to diff filledSize between polls so we
-  // can fire Order Filled / Order Partially Filled exactly on the transition.
-  // First poll after login seeds the snapshot without firing toasts to avoid
-  // re-announcing orders that already had fills before the user opened the page.
-  // With cursor pagination, fill detection only runs while the user is on
-  // page 0; fills on orders that have scrolled past page 0 won't toast — same
-  // trade-off the Fills tab already accepts.
   let prevOrdersById = new Map<string, OrderSnapshot>()
   let isSeedFetch = true
   let lastToken: string | null | undefined = undefined
-  let pollTimer: ReturnType<typeof setInterval> | null = null
   let isRefreshing = false
 
   function resolveDisplayMarket(market: string): string {
@@ -125,16 +116,14 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
     }
   }
 
+  const unsubscribeOrdersWs = perpsWs.subscribe<ApiOrder>('ordersPerps', () => {
+    if (token.value) void refreshFirstPageIfActive()
+  })
+
   let lastFilter: OrdersStatusFilter | null = null
   watchEffect(() => {
     void refreshKey.value
     void filter.value
-    if (pollTimer) clearInterval(pollTimer)
-    // Reset diff state only on actual auth changes. triggerRefresh() bumps
-    // refreshKey for any post-mutation refetch (place/cancel/close) and must
-    // not silently re-seed the snapshot — otherwise the next poll's fills
-    // would be swallowed instead of toasted. Filter changes also re-seed since
-    // the result set differs and stale snapshots would generate false diffs.
     if (token.value !== lastToken || filter.value !== lastFilter) {
       prevOrdersById = new Map()
       isSeedFetch = true
@@ -147,14 +136,11 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
         const ok = await pagination.refetch()
         if (ok) detectFillsAndToast(pagination.items.value)
       })()
-      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
-    } else {
-      pollTimer = null
     }
   })
 
   onUnmounted(() => {
-    if (pollTimer) clearInterval(pollTimer)
+    unsubscribeOrdersWs()
   })
 
   return {
@@ -170,12 +156,12 @@ export function usePerpsOrders(statusFilter?: Ref<OrdersStatusFilter>) {
 }
 
 export function usePerpsFills() {
+  ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
   const pagination = useCursorPaginate<ApiFill>(
     opts => perpsClient.getFills(opts),
     PERPS_PAGE_SIZE,
   )
-  let pollTimer: ReturnType<typeof setInterval> | null = null
   let isRefreshing = false
 
   async function refreshFirstPageIfActive() {
@@ -190,23 +176,20 @@ export function usePerpsFills() {
     }
   }
 
+  const unsubscribeFillsWs = perpsWs.subscribe<ApiFill>('fillsPerps', () => {
+    if (token.value) void refreshFirstPageIfActive()
+  })
+
   watchEffect(() => {
     void refreshKey.value
-    if (pollTimer) clearInterval(pollTimer)
-    // Reset before fetching so any in-flight request from the previous auth
-    // context is invalidated and prior fills don't briefly remain visible
-    // after a wallet switch / logout.
     pagination.reset()
     if (token.value) {
-      pagination.refetch()
-      pollTimer = setInterval(refreshFirstPageIfActive, 10_000)
-    } else {
-      pollTimer = null
+      void pagination.refetch()
     }
   })
 
   onUnmounted(() => {
-    if (pollTimer) clearInterval(pollTimer)
+    unsubscribeFillsWs()
   })
 
   return {
@@ -222,11 +205,11 @@ export function usePerpsFills() {
 }
 
 export function usePerpsDepositsWithdrawals() {
+  ensurePerpsWsLifecycle()
   const { token, refreshKey } = usePerpsAuth()
   const deposits = ref<WalletDeposit[]>([])
   const withdrawals = ref<WalletWithdrawal[]>([])
   const loading = ref(false)
-  let pollTimer: ReturnType<typeof setInterval> | null = null
 
   async function fetchAll() {
     if (!token.value) {
@@ -250,21 +233,26 @@ export function usePerpsDepositsWithdrawals() {
     }
   }
 
+  const unsubscribeDepositsWs = perpsWs.subscribe<WalletDeposit>('deposits', () => {
+    if (token.value) void fetchAll()
+  })
+  const unsubscribeWithdrawalsWs = perpsWs.subscribe<WalletWithdrawal>('withdrawals', () => {
+    if (token.value) void fetchAll()
+  })
+
   watchEffect(() => {
     void refreshKey.value
-    if (pollTimer) clearInterval(pollTimer)
     if (token.value) {
-      fetchAll()
-      pollTimer = setInterval(fetchAll, 15_000)
+      void fetchAll()
     } else {
       deposits.value = []
       withdrawals.value = []
-      pollTimer = null
     }
   })
 
   onUnmounted(() => {
-    if (pollTimer) clearInterval(pollTimer)
+    unsubscribeDepositsWs()
+    unsubscribeWithdrawalsWs()
   })
 
   return { deposits, withdrawals, loading, refetch: fetchAll }

@@ -1,0 +1,326 @@
+<template>
+  <div
+    :class="[
+      isFocused ? 'bg-white border-grey-10' : 'bg-bgBase border-transparent',
+      'border rounded-20 p-4 flex flex-col items-center justify-between h-[272px] transition-colors',
+    ]"
+  >
+    <!-- Header -->
+    <div
+      class="w-full flex items-center justify-between pb-3 border-b border-grey-10"
+    >
+      <p class="text-s-11 font-bold tracking-sp-06 uppercase text-black">
+        {{ label }}
+      </p>
+      <purchase-currency-chip
+        :currency="currency"
+        @click="emit('open-currency')"
+      />
+    </div>
+
+    <!-- Amount + estimate / helper / spinner / error -->
+    <div
+      class="flex-1 w-full flex flex-col items-center justify-center gap-2 cursor-text"
+      @click="focus"
+    >
+      <label
+        :for="inputId"
+        :style="scaleStyle"
+        class="h-[56px] w-[301px] flex items-center justify-center cursor-text caret-primary font-bold"
+      >
+        <span v-if="symbolPosition === 'prefix'" aria-hidden="true">{{
+          effectiveSymbol
+        }}</span>
+        <input
+          :id="inputId"
+          ref="inputEl"
+          :value="displayValue"
+          type="text"
+          inputmode="decimal"
+          aria-label="Amount"
+          class="bg-transparent outline-none border-none p-0 font-bold text-black appearance-none w-auto min-w-0 max-w-full text-left"
+          :style="{
+            fontSize: 'inherit',
+            lineHeight: 'inherit',
+            letterSpacing: 'inherit',
+            width: inputWidth,
+          }"
+          @keydown="onKeyDown"
+          @input="onInput"
+          @focus="onFocus"
+          @blur="onBlur"
+          @scroll="(e: Event) => ((e.target as HTMLInputElement).scrollTop = 0)"
+        />
+        <span
+          v-if="amount === ''"
+          :class="isFocused ? 'text-grey-30' : 'text-black'"
+          aria-hidden="true"
+        >0</span>
+        <span
+          v-if="symbolPosition === 'suffix'"
+          aria-hidden="true"
+          class="ml-2"
+        >{{ effectiveSymbol }}</span>
+      </label>
+
+      <p
+        v-if="isLoading"
+        class="h-[22px] flex items-center justify-center"
+        aria-live="polite"
+      >
+        <span
+          class="inline-block w-5 h-5 rounded-full border-2 border-grey-10 border-t-grey-30 animate-spin"
+        />
+      </p>
+      <p
+        v-else-if="errorMessage"
+        class="text-s-16 font-semibold text-error leading-[22px] tracking-[-0.32px] text-center"
+      >
+        {{ errorMessage }}
+      </p>
+      <p
+        v-else-if="helperMessage"
+        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+      >
+        {{ helperMessage }}
+      </p>
+      <p
+        v-else
+        class="text-s-16 font-semibold text-info leading-[22px] tracking-[-0.32px] text-center"
+      >
+        ≈ {{ estimate }}
+      </p>
+    </div>
+
+    <!-- Balance row (Sell mode) -->
+    <p
+      v-if="balance"
+      class="text-s-12 text-info leading-[18px] text-center"
+    >
+      {{ $t('purchase.sell.your_balance') }}
+      <span
+        :class="[
+          'font-semibold tracking-[-0.24px]',
+          balance.hasError ? 'text-error' : 'text-black',
+        ]"
+      >{{ balance.value }}</span>
+      <span class="text-info"> ({{ balance.fiat }})</span>
+    </p>
+
+    <!-- Quick amount buttons -->
+    <div ref="presetRow" class="flex items-center justify-center gap-1 w-full">
+      <button
+        v-for="btn in quickButtons"
+        :key="btn.usdValue"
+        type="button"
+        :class="[
+          isFocused ? 'bg-bgBase' : 'bg-white',
+          selectedUsdValue === btn.usdValue
+            ? 'outline-2 outline-black -outline-offset-2'
+            : '',
+          'flex-1 min-w-0 flex items-center justify-center px-1 py-2 rounded-8 hoverNoBG transition-colors',
+        ]"
+        @click="onSelectPreset(btn)"
+      >
+        <span
+          class="font-bold uppercase whitespace-nowrap"
+          :style="presetFontStyle"
+        >
+          {{ btn.label }}
+        </span>
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, nextTick } from 'vue'
+import { useElementSize } from '@vueuse/core'
+import PurchaseCurrencyChip from './PurchaseCurrencyChip.vue'
+import { getCurrencySymbol } from '@/utils/currencySymbols'
+import {
+  formatWithCommas,
+  sanitizeDecimal,
+  exceedsLimits,
+} from '../helpers/amountFormatting'
+import { useTextScaler } from '../composables/useTextScaler'
+import { measureTextWidth } from '@/utils/measureText'
+
+export interface QuickButton {
+  /** Display label, already formatted with currency symbol or literal (e.g. "₩20,250", "Min"). */
+  label: string
+  /** Numeric value to set in the input when the button is clicked (in the selected currency). */
+  value: number
+  /** USD equivalent — kept for tracking/analytics. */
+  usdValue: number
+}
+
+interface AmountBalance {
+  value: string
+  fiat: string
+  /** When true, the value portion is rendered in the error color. */
+  hasError?: boolean
+}
+
+const props = withDefaults(
+  defineProps<{
+    label: string
+    currency: string
+    amount: string
+    estimate: string
+    isLoading?: boolean
+    errorMessage?: string
+    helperMessage?: string
+    quickButtons?: QuickButton[]
+    autofocus?: boolean
+    /** Text rendered next to the amount value. If omitted, derived from `currency` via `getCurrencySymbol`. */
+    amountSymbol?: string
+    /** Position of the symbol relative to the amount. `'prefix'` for fiat ($100), `'suffix'` for crypto (0.5 ETH). */
+    symbolPosition?: 'prefix' | 'suffix'
+    /** Optional balance row shown below the estimate (Sell mode). */
+    balance?: AmountBalance | null
+  }>(),
+  {
+    isLoading: false,
+    errorMessage: '',
+    helperMessage: '',
+    quickButtons: () => [],
+    autofocus: false,
+    amountSymbol: undefined,
+    symbolPosition: 'prefix',
+    balance: null,
+  },
+)
+
+const emit = defineEmits<{
+  'update:amount': [value: string]
+  'open-currency': []
+  'select-preset': [usdValue: number]
+  focus: []
+  blur: []
+}>()
+
+const inputId = `purchase-amount-input-${Math.random().toString(36).slice(2, 8)}`
+const isFocused = ref(false)
+const inputEl = ref<HTMLInputElement | null>(null)
+
+const onFocus = () => {
+  isFocused.value = true
+  emit('focus')
+}
+
+const onBlur = () => {
+  isFocused.value = false
+  emit('blur')
+}
+
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.ctrlKey || event.metaKey) return
+  if (event.key.length === 1 && /[^\d.]/.test(event.key)) {
+    event.preventDefault()
+  }
+}
+
+const currencySymbol = computed(() => getCurrencySymbol(props.currency))
+
+const effectiveSymbol = computed(
+  () => props.amountSymbol ?? currencySymbol.value,
+)
+
+const selectedUsdValue = computed(() => {
+  if (props.amount === '') return null
+  const n = Number(props.amount)
+  return props.quickButtons.find(b => b.value === n)?.usdValue ?? null
+})
+
+const presetRow = ref<HTMLElement | null>(null)
+const { width: presetRowWidth } = useElementSize(presetRow)
+
+const PRESET_FONT_SIZES = [11, 10, 9, 8] as const
+const PRESET_GAP_PX = 4
+const PRESET_PADDING_PX = 8
+
+const presetFontStyle = computed(() => {
+  const count = props.quickButtons.length
+  const fallback = { fontSize: '11px', lineHeight: '15px' }
+  if (!count || !presetRowWidth.value) return fallback
+  const perButton =
+    (presetRowWidth.value - PRESET_GAP_PX * (count - 1)) / count
+  const available = perButton - PRESET_PADDING_PX
+  const longest = props.quickButtons.reduce(
+    (a, b) => (b.label.length > a.length ? b.label : a),
+    '',
+  )
+  const size =
+    PRESET_FONT_SIZES.find(
+      px => measureTextWidth(longest, `700 ${px}px "DM Sans", sans-serif`) <= available,
+    ) ?? PRESET_FONT_SIZES[PRESET_FONT_SIZES.length - 1]
+  return { fontSize: `${size}px`, lineHeight: `${size + 4}px` }
+})
+
+const displayValue = computed(() => formatWithCommas(props.amount))
+
+const scalerText = computed(() => {
+  const value = displayValue.value || '0'
+  return props.symbolPosition === 'suffix'
+    ? `${value} ${effectiveSymbol.value}`
+    : `${effectiveSymbol.value}${value}`
+})
+const { scaleStyle, measureWithScale } = useTextScaler(scalerText)
+
+const inputWidth = computed(() => {
+  if (displayValue.value === '') return '2px'
+  return `${Math.ceil(measureWithScale(displayValue.value)) + 2}px`
+})
+
+const onInput = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const oldValue = target.value
+  const oldCursor = target.selectionStart ?? oldValue.length
+
+  let unitsBefore = 0
+  for (let i = 0; i < oldCursor; i++) {
+    if (oldValue[i] !== ',') unitsBefore++
+  }
+
+  const raw = oldValue.replace(/,/g, '')
+  const sanitized = sanitizeDecimal(raw)
+
+  // Reject the keystroke if it would exceed the digit limits — restore the
+  // visual to the previous value and step the cursor back one position.
+  if (exceedsLimits(sanitized)) {
+    target.value = displayValue.value
+    const cursor = Math.max(0, oldCursor - 1)
+    target.setSelectionRange(cursor, cursor)
+    return
+  }
+
+  emit('update:amount', sanitized)
+  await nextTick()
+
+  const formatted = target.value
+  let count = 0
+  let newCursor = formatted.length
+  for (let i = 0; i < formatted.length; i++) {
+    if (count >= unitsBefore) {
+      newCursor = i
+      break
+    }
+    if (formatted[i] !== ',') count++
+  }
+  target.setSelectionRange(newCursor, newCursor)
+}
+
+const onSelectPreset = (btn: QuickButton) => {
+  emit('update:amount', String(btn.value))
+  emit('select-preset', btn.usdValue)
+}
+
+const focus = () => inputEl.value?.focus()
+
+defineExpose({ focus })
+
+onMounted(() => {
+  if (props.autofocus) focus()
+})
+</script>

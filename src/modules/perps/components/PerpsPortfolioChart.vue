@@ -48,7 +48,7 @@
       ]"
       :dispalay-y-axis="true"
       :series-labels="tooltipLabels"
-      class="h-full !shrink"
+      class="h-full !shrink -mx-4"
     />
     <div v-else class="text-center py-8 text-info text-s-14">
       No portfolio history available

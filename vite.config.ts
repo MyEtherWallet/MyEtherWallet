@@ -57,19 +57,37 @@ export default defineConfig({
     include: ['vue', '@vueuse/core', 'crypto', '@enkryptcom/hw-wallets'],
   },
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@view-default': fileURLToPath(
-        new URL('./src/views/default', import.meta.url),
-      ),
-      '@view-wallet': fileURLToPath(
-        new URL('./src/views/wallet', import.meta.url),
-      ),
-      '@components': fileURLToPath(
-        new URL('./src/components', import.meta.url),
-      ),
-      '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
-      '@modules': fileURLToPath(new URL('./src/modules', import.meta.url)),
-    },
+    alias: [
+      {
+        find: /^@ledgerhq\/hw-app-eth\/lib\/services\/ledger$/,
+        replacement: fileURLToPath(
+          new URL(
+            './node_modules/@ledgerhq/hw-app-eth/lib/services/ledger/index.js',
+            import.meta.url,
+          ),
+        ),
+      },
+      { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+      {
+        find: '@view-default',
+        replacement: fileURLToPath(new URL('./src/views/default', import.meta.url)),
+      },
+      {
+        find: '@view-wallet',
+        replacement: fileURLToPath(new URL('./src/views/wallet', import.meta.url)),
+      },
+      {
+        find: '@components',
+        replacement: fileURLToPath(new URL('./src/components', import.meta.url)),
+      },
+      {
+        find: '@assets',
+        replacement: fileURLToPath(new URL('./src/assets', import.meta.url)),
+      },
+      {
+        find: '@modules',
+        replacement: fileURLToPath(new URL('./src/modules', import.meta.url)),
+      },
+    ],
   },
 })

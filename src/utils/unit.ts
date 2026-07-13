@@ -7,6 +7,7 @@ Note, Richard is a god of ether gods. Follow and respect him, and use Ethers.io!
 */
 
 import BN from 'bn.js'
+import { parseUnits } from 'viem'
 
 const zero = new BN(0)
 const negative1 = new BN(-1)
@@ -155,4 +156,12 @@ const toBase = (etherInput: string | number, decimals: number) => {
   return wei.toString()
 }
 
-export { fromBase, toBase }
+const safeParseUnits = (value: string, decimals: number): bigint => {
+  const normalized = value.replace(/,/g, '.')
+  if (!/^-?([0-9]+\.?[0-9]*|[0-9]*\.?[0-9]+)$/.test(normalized)) {
+    return BigInt(0)
+  }
+  return parseUnits(normalized, decimals)
+}
+
+export { fromBase, toBase, safeParseUnits }
