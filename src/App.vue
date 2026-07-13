@@ -4,7 +4,9 @@
     :inert="isAreaHidden || undefined"
   >
     <!-- <welcome-dialog v-if="!isDevMode" /> -->
+    <!-- 24/7 announcement shows 3 days after the RWA announcement is closed -->
     <weekend-trading-dialog v-if="isLoadingComplete" />
+    <rwa-announcement-dialog v-if="isLoadingComplete" />
     <the-app-layout v-if="isLoadingComplete" :aria-hidden="isAreaHidden" />
     <module-toast />
     <module-access-wallet v-if="isLoadingComplete" :aria-selected="true" />
@@ -29,6 +31,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 // import WelcomeDialog from '@/components/core_layouts/WelcomeDialog.vue'
 import WeekendTradingDialog from '@/components/core_layouts/WeekendTradingDialog.vue'
+import RwaAnnouncementDialog from '@/modules/rwa_rewards/RwaAnnouncementDialog.vue'
 import ModuleAccessWallet from '@/modules/access/ModuleAccessWallet.vue'
 import ModuleCreateWallet from '@/modules/create/ModuleCreateWallet.vue'
 import AppMewWalletBanner from '@/components/AppMewWalletBanner.vue'
@@ -42,6 +45,11 @@ import { useSwap } from '@/composables/useSwap'
 import { useAnalyticsStore } from '@/stores/analyticsStore'
 import { analytics } from '@/analytics'
 import { useRewardsStore } from '@/stores/rewardsStore'
+import { useHoldingsStore } from '@/stores/holdingsStore'
+import {
+  useTradeOrdersStore,
+  type SavedTradeOrder,
+} from '@/stores/tradeOrdersStore'
 import Intercom from '@intercom/messenger-js-sdk'
 import { useMarketStatus } from './modules/trade/composables'
 const { fetchMarketStatus } = useMarketStatus()
@@ -65,6 +73,7 @@ const {
   userProperties,
 } = storeToRefs(store)
 const chainStore = useChainsStore()
+const holdingsStore = useHoldingsStore()
 const { initSwapper } = useSwap()
 const { selectedChain } = storeToRefs(chainStore)
 const { setTokens, setIsLoadingBalances } = store
@@ -117,9 +126,11 @@ watch(
   newWallet => {
     if (newWallet) {
       fetchBalances()
+      holdingsStore.startPolling(newWallet)
     } else {
       setTokens([])
       setIsLoadingBalances(false)
+      holdingsStore.stopPolling()
     }
   },
   { immediate: true },
@@ -177,12 +188,20 @@ const toastStore = useToastStore()
 //   }, 4000)
 // }
 const rewardsStore = useRewardsStore()
+const tradeOrdersStore = useTradeOrdersStore()
 
 onMounted(() => {
   fetchMarketStatus()
   fetchPurchaseInfo()
   fetchStocksAddresses()
   rewardsStore.fetchAll()
+  tradeOrdersStore.subscribe((item, type) => {
+    if (type !== 'order') return
+    const order = item as SavedTradeOrder
+    if (order.hash && order.chainId != null) {
+      holdingsStore.register(order.hash, order.chainId)
+    }
+  })
   window.addEventListener('eip6963:announceProvider', (event: Event) => {
     const customEvent = event as CustomEvent
     const provider = customEvent.detail
