@@ -369,7 +369,7 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import { InformationCircleIcon } from '@heroicons/vue/24/outline'
 import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
-import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc.webp'
+import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
 
 const holdingsStore = useHoldingsStore()
