@@ -306,7 +306,7 @@ async function submitWithdraw() {
       symbol: 'USDC',
       network: 'ethereum',
       amount: String(amount.value),
-      address: walletAddress.value,
+      address: toChecksumAddress(walletAddress.value),
       from: { id: accountId.value, wallet: 'margin' },
     })
     triggerRefresh()
