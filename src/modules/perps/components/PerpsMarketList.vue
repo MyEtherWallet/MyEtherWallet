@@ -304,8 +304,8 @@
                     {{ formatChange(contract.priceChangePercent) }}
                   </p>
                   <table-sparkline
-                    v-if="contract.sparkline?.price.length"
-                    :points="contract.sparkline.price.map(Number)"
+                    v-if="contract.sparkline?.price?.length"
+                    :points="(contract.sparkline?.price ?? []).map(Number)"
                     :width="70"
                     :height="24"
                     :max-points="34"
