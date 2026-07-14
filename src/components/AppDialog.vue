@@ -66,7 +66,7 @@
                 </h1>
               </slot>
               <app-btn-icon-close
-                v-if="!persistent"
+                v-if="!persistent && !hideClose"
                 @close="setIsOpen(false)"
                 class="absolute top-4 right-4 min-w-[32px]"
               />
@@ -111,15 +111,13 @@
  * </template>
  * </app-dialog>
  */
-import { shallowRef, watch } from 'vue'
+import { shallowRef, watch, nextTick } from 'vue'
 import AppBtnIconClose from './AppBtnIconClose.vue'
-import { useFocus } from '@vueuse/core'
 import { useDialogStore } from '@/stores/dialogStore'
 import { storeToRefs } from 'pinia'
 
 const targetDialog = shallowRef<HTMLElement | null>(null)
 
-const { focused } = useFocus(targetDialog, { initialValue: true })
 const dialogStore = useDialogStore()
 const { isAreaHidden } = storeToRefs(dialogStore)
 
@@ -148,6 +146,14 @@ defineProps({
    * @type: boolean
    */
   persistent: {
+    default: false,
+    type: Boolean,
+  },
+  /**
+   * @hideClose - hides the default close button while keeping backdrop close.
+   * @type: boolean
+   */
+  hideClose: {
     default: false,
     type: Boolean,
   },
@@ -200,12 +206,13 @@ const setIsOpen = (_value: boolean = false) => {
 
 watch(
   () => isOpen.value,
-  () => {
-    if (isOpen.value && focused.value) {
-      isAreaHidden.value = true
-    } else {
-      isAreaHidden.value = false
+  async value => {
+    isAreaHidden.value = value
+    if (value) {
+      await nextTick()
+      targetDialog.value?.focus()
     }
   },
+  { immediate: true },
 )
 </script>
