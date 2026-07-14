@@ -31,7 +31,7 @@
 
                   <div class="flex justify-start justify-between mt-3">
                     <button
-                      v-if="!hasOpenPositions"
+                      v-if="hasOpenPositions"
                       class="px-3 sm:px-4 py-1 text-s-9 sm:text-s-11 leading-p-120 font-semibold bg-white hoverBGWhite rounded-full transition-all duration-150 shadow-button shadow-button-elevated"
                       @click="setMax"
                     >
