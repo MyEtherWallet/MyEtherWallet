@@ -27,6 +27,10 @@ export const pageViewedEnrichmentPlugin = (): Types.EnrichmentPlugin => ({
         '[Amplitude] Route': String(route.name),
         '[Amplitude] Route Path': route.path,
       }
+
+      if (typeof route.name === 'string' && route.name.includes('stock-info')) {
+        event.event_properties['[Amplitude] Symbol'] = route.params.symbol
+      }
     }
 
     return event
