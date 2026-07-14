@@ -21,6 +21,7 @@ export interface SavedTradeOrder {
   finalToAmount?: string
   percentageDiff?: number
   usdValue?: string
+  toUsdValue?: string
   chainId: number
   chainName: string
   fromAddress: string

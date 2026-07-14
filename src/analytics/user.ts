@@ -52,4 +52,5 @@ export type UserProperties = {
   canClaimTrade?: boolean
   canClaimSwap?: boolean
   canTrade?: boolean
+  holdCampaignStatus?: string
 }

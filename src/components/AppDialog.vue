@@ -66,7 +66,7 @@
                 </h1>
               </slot>
               <app-btn-icon-close
-                v-if="!persistent"
+                v-if="!persistent && !hideClose"
                 @close="setIsOpen(false)"
                 class="absolute top-4 right-4 min-w-[32px]"
               />
@@ -146,6 +146,14 @@ defineProps({
    * @type: boolean
    */
   persistent: {
+    default: false,
+    type: Boolean,
+  },
+  /**
+   * @hideClose - hides the default close button while keeping backdrop close.
+   * @type: boolean
+   */
+  hideClose: {
     default: false,
     type: Boolean,
   },
