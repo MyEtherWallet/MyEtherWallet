@@ -126,6 +126,7 @@ import { hasInvalidPrecision } from '../utils/formatters'
 import AppBlockie from '@/components/AppBlockie.vue'
 import { captureException } from '@sentry/vue'
 import { SENTRY_MODULE_TAGS } from '@/sentry/constants'
+import { toChecksumAddress } from '@/utils/addressUtils'
 const props = defineProps<{
   visible: boolean
 }>()
@@ -258,10 +259,11 @@ async function submitAuthorize() {
   authorizing.value = true
   error.value = null
   try {
+    const checksumAddress = toChecksumAddress(walletAddress.value)
     const challenge = await perpsClient.getAddressBookChallenge({
-      walletAddress: walletAddress.value,
+      walletAddress: checksumAddress,
       chainId: PERPS_CHAIN_ID,
-      withdrawalAddress: walletAddress.value,
+      withdrawalAddress: checksumAddress,
     })
     const signature = await wallet.value.SignMessage({
       message: challenge.result.message,
