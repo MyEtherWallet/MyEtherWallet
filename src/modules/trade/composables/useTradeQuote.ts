@@ -56,12 +56,24 @@ export function useTradeQuote(options: UseTradeQuoteOptions) {
   const currentQuote = ref<QuoteData | null>(null)
   const needsApproval = ref(false)
 
+  const getToAmountUSD = (): number => {
+    const endAmount = currentQuote.value?.endAmount
+    if (!endAmount) return 0
+    const toDecimals = toTokenSelected.value?.decimals || 18
+    const toHuman = parseFloat(formatUnits(endAmount, toDecimals))
+    return toHuman * (toTokenSelected.value?.price || 0)
+  }
+
   const getAnalyticsPayload = (): TradePayloadShared => ({
     network: selectedFromChain.value?.name || 'N/A',
     fromToken: fromTokenSelected.value?.symbol || 'N/A',
     fromAmount: fromAmount.value,
+    fromAmountUSD: (
+      parseFloat(fromAmount.value || '0') * (fromTokenSelected.value?.price || 0)
+    ).toString(),
     toToken: toTokenSelected.value?.symbol || 'N/A',
-    toAmount: toAmount.value,
+    toAmount: currentQuote.value?.endAmount?.toString() || '',
+    toAmountUSD: getToAmountUSD().toString(),
     tradePair: `${fromTokenSelected.value?.symbol || 'N/A'}-${toTokenSelected.value?.symbol || 'N/A'}`,
   })
 
