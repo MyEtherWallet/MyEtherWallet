@@ -26,6 +26,7 @@ import { usePerpsMarkPrices } from './usePerpsMarkPrices'
 import { usePerpsToasts } from './usePerpsToasts'
 import { formatUsd, hasInvalidPrecision, decimalPlaces } from '../utils/formatters'
 import { getCategory, midPrice, resolveEffectivePrice } from '../utils/market'
+import { takeProfitError, stopLossError } from '../utils/tpSlValidation'
 
 type OrderSide = 'buy' | 'sell'
 type OrderType = 'market' | 'limit'
@@ -591,21 +592,35 @@ export function usePerpsTradeForm() {
     hasInvalidPrecision(closeAmount.value, COLLATERAL_DECIMALS),
   )
 
-  const takeProfitPrecisionError = computed(() => {
-    if (tempTakeProfitPrice.value == null) return false
-    return hasInvalidPrecision(
-      String(tempTakeProfitPrice.value),
-      quoteDecimals.value,
-    )
-  })
+  // Take-profit / stop-loss direction: long → TP above mark, SL below; short
+  // inverts both. Mirrors the isLong used by the +/-% pill helpers below.
+  const isTpSlLong = computed(() =>
+    activePosition.value
+      ? activePosition.value.direction === 'long'
+      : orderSide.value === 'buy',
+  )
 
-  const stopLossPrecisionError = computed(() => {
-    if (tempStopLossPrice.value == null) return false
-    return hasInvalidPrecision(
-      String(tempStopLossPrice.value),
+  // Full validation messages for the Auto Close dialog (precision + positivity
+  // + correct side of mark + max price). Empty string means valid. These also
+  // gate submitDisabled so an invalid TP/SL can't be sent and rejected by the
+  // backend after confirm.
+  const takeProfitErrorMessage = computed(() =>
+    takeProfitError(
+      tempTakeProfitPrice.value,
+      currentPrice.value,
+      isTpSlLong.value,
       quoteDecimals.value,
-    )
-  })
+    ),
+  )
+
+  const stopLossErrorMessage = computed(() =>
+    stopLossError(
+      tempStopLossPrice.value,
+      currentPrice.value,
+      isTpSlLong.value,
+      quoteDecimals.value,
+    ),
+  )
 
   // ── Limit price validation ─────────────────────────────────
   // Backend rejects orders whose price drifts more than 10% from mid; mirror
@@ -641,8 +656,7 @@ export function usePerpsTradeForm() {
     if (!amt || amt <= 0 || isSubmitting.value) return true
     if (limitPriceHasError.value) return true
     if (marginPrecisionError.value) return true
-    if (takeProfitPrecisionError.value || stopLossPrecisionError.value)
-      return true
+    if (takeProfitErrorMessage.value || stopLossErrorMessage.value) return true
     if (availableMargin.value * leverage.value < minOrderAmount.value)
       return true
     if (amt > availableMargin.value) return true
@@ -1023,9 +1037,7 @@ export function usePerpsTradeForm() {
 
   function setTakeProfitPct(pct: number) {
     if (!currentPrice.value) return
-    const isLong =
-      activePosition.value?.direction === 'long' || orderSide.value === 'buy'
-    tempTakeProfitPrice.value = isLong
+    tempTakeProfitPrice.value = isTpSlLong.value
       ? Number((currentPrice.value * (1 + pct / 100)).toFixed(2))
       : Number((currentPrice.value * (1 - pct / 100)).toFixed(2))
 
@@ -1034,9 +1046,7 @@ export function usePerpsTradeForm() {
 
   function setStopLossPct(pct: number) {
     if (!currentPrice.value) return
-    const isLong =
-      activePosition.value?.direction === 'long' || orderSide.value === 'buy'
-    tempStopLossPrice.value = isLong
+    tempStopLossPrice.value = isTpSlLong.value
       ? Number((currentPrice.value * (1 - pct / 100)).toFixed(2))
       : Number((currentPrice.value * (1 + pct / 100)).toFixed(2))
     activeSlPill.value = pct
@@ -1102,6 +1112,13 @@ export function usePerpsTradeForm() {
         justSavedAutoClose = false
         return
       }
+      // Discard the unsaved draft on dismiss. submitDisabled keys off the
+      // temp TP/SL, so an invalid draft left behind would otherwise keep the
+      // main Long/Short button disabled even though the committed TP/SL is fine.
+      tempTakeProfitPrice.value = takeProfitPrice.value
+      tempStopLossPrice.value = stopLossPrice.value
+      activeTpPill.value = null
+      activeSlPill.value = null
       void analytics.trackPerpsTpSlEvent(PerpsTpSlEvent.CLICKED_CANCEL)
     }
   })
@@ -1575,8 +1592,8 @@ export function usePerpsTradeForm() {
     limitPricePrecisionError,
     marginPrecisionError,
     closeAmountPrecisionError,
-    takeProfitPrecisionError,
-    stopLossPrecisionError,
+    takeProfitErrorMessage,
+    stopLossErrorMessage,
     quoteDecimals,
     newMarginRatio,
     orderError,
