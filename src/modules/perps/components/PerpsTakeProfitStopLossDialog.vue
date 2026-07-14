@@ -56,7 +56,7 @@
             </div>
             <perps-amount
               v-model:amount="takeProfitPrice"
-              :error="takeProfitError ? precisionMessage : ''"
+              :error="takeProfitError || ''"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -80,7 +80,7 @@
                 v-if="takeProfitError"
                 class="text-error text-s-12 mt-1 pl-3"
               >
-                {{ precisionMessage }}
+                {{ takeProfitError }}
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
@@ -132,7 +132,7 @@
             </div>
             <perps-amount
               v-model:amount="stopLossPrice"
-              :error="stopLossError ? precisionMessage : ''"
+              :error="stopLossError || ''"
               :validate-input="() => {}"
             >
               <template #footer>
@@ -153,7 +153,7 @@
             </perps-amount>
             <transition name="fade" mode="out-in">
               <div v-if="stopLossError" class="text-error text-s-12 mt-1 pl-3">
-                {{ precisionMessage }}
+                {{ stopLossError }}
               </div>
             </transition>
             <div class="text-right text-s-12 sm:text-s-13 mt-2 mr-2">
@@ -184,7 +184,7 @@
         <!-- Actions -->
         <div class="flex flex-col gap-1">
           <app-base-button
-            :disabled="!hasEdits"
+            :disabled="!hasEdits || !!takeProfitError || !!stopLossError"
             class="w-full"
             @click="$emit('confirm')"
           >
@@ -200,8 +200,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, type PropType } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref, watch, type PropType } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import AppTokenLogo from '@/components/AppTokenLogo.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
@@ -214,29 +213,17 @@ import { analytics, PerpsTpSlEvent } from '@/analytics'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-const props = defineProps<{
+defineProps<{
   displaySymbol: string
   currentPrice: number
   tempProjectedProfit: number | null
   tempProjectedLoss: number | null
   activeTpPill: number | null
   activeSlPill: number | null
-  takeProfitError?: boolean
-  stopLossError?: boolean
-  quoteDecimals?: number
+  takeProfitError?: string
+  stopLossError?: string
   hasEdits?: boolean
 }>()
-
-const { t } = useI18n()
-
-const precisionMessage = computed(() => {
-  const dec = props.quoteDecimals ?? 2
-  if (dec === 0) return t('perps.errors.price-whole')
-  return t('perps.errors.price-precision-decimals', {
-    decimals: dec,
-    count: dec,
-  })
-})
 
 const emit = defineEmits<{
   clearTakeProfit: []

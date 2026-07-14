@@ -110,7 +110,7 @@ const currencyName = (code: string): string => {
 
 const filteredCurrencies = computed(() => {
   const term = searchInput.value.trim()
-  if (!term) return props.currencies
+  if (!term) return [...props.currencies].sort((a, b) => a.localeCompare(b))
   const items = props.currencies.map(code => ({
     code,
     name: currencyName(code),

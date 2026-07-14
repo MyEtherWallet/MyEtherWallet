@@ -308,8 +308,8 @@
                     {{ formatChange(contract.priceChangePercent) }}
                   </p>
                   <table-sparkline
-                    v-if="contract.sparkline?.price.length"
-                    :points="contract.sparkline.price.map(Number)"
+                    v-if="contract.sparkline?.price?.length"
+                    :points="(contract.sparkline?.price ?? []).map(Number)"
                     :width="70"
                     :height="24"
                     :max-points="34"
@@ -817,15 +817,20 @@ const enrichedContracts = computed<EnrichedContract[]>(() => {
   for (const m of markets.value) {
     marketMap.set(m.market, m)
   }
-  return contracts.value.map(c => {
-    const pair = marketMap.get(c.market)
-    return {
-      ...c,
-      displayName: pair?.displayName ?? c.baseCurrency,
-      longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
-      defaultLeverage: pair?.defaultLeverage ?? '',
-    }
-  })
+  // Contracts flagged `disabled` by the API must not appear in the market
+  // list (MEW-2025). Filtered here (display source) rather than at the shared
+  // `contracts` ref so an active/held disabled market still resolves elsewhere.
+  return contracts.value
+    .filter(c => !c.disabled)
+    .map(c => {
+      const pair = marketMap.get(c.market)
+      return {
+        ...c,
+        displayName: pair?.displayName ?? c.baseCurrency,
+        longName: pair?.longName ?? pair?.displayName ?? c.baseCurrency,
+        defaultLeverage: pair?.defaultLeverage ?? '',
+      }
+    })
 })
 
 const filteredContracts = computed(() => {
