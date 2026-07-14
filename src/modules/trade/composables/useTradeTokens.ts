@@ -51,6 +51,17 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
     )
   })
 
+  // Check if the selected to token is a cash-out (supporting) asset, e.g. USDC
+  const isCashOutTradableAsset = computed(() => {
+    if (!toTokenSelected.value || !additionalBuyAssets.value) return false
+    const toAddress = toTokenSelected.value.address?.toLowerCase()
+    if (!toAddress) return false
+
+    return additionalBuyAssets.value.some(asset =>
+      asset.addresses.some(addr => addr.address?.toLowerCase() === toAddress),
+    )
+  })
+
   // Get the tradable asset info for the selected from token
   const selectedFromAssetInfo = computed((): TradableAsset | null => {
     if (!fromTokenSelected.value || !tradableAssets.value) return null
@@ -205,6 +216,7 @@ export function useTradeTokens(options: UseTradeTokensOptions) {
 
   return {
     isSellingTradableAsset,
+    isCashOutTradableAsset,
     isSelectedAssetTradeable,
     nonTradeableAssetMessage,
     disabledTokenAddresses,

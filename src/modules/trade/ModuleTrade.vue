@@ -363,6 +363,7 @@
       :from-amount="fromAmount"
       :loading="txProceeding"
       :chain="selectedFromChain"
+      :is-cashout="isCashOutTradableAsset"
       @confirm="confirmTrade"
       @cancel="quoteModalOpen = false"
     />
@@ -453,6 +454,7 @@ const {
   hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
+const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
 // --- Use Trade Composable ---
@@ -485,7 +487,6 @@ const {
   marketStatus,
   currentSession,
   isTradingSessionOpen,
-  isTradingRestrictedInRegion,
   tradingRestrictedHelpUrl,
   countdownText,
   fetchMarketStatus,
@@ -641,6 +642,7 @@ watch(generalError, newVal => {
 // --- Trade Tokens ---
 const {
   isSelectedAssetTradeable,
+  isCashOutTradableAsset,
   nonTradeableAssetMessage,
   disabledTokenAddresses,
   toTokens,

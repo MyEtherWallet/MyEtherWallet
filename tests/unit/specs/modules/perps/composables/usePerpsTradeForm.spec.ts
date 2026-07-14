@@ -1,5 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { ref, reactive } from 'vue'
+import type { Ref } from 'vue'
+import type { Contract } from '@/modules/perps/sdk/types'
 
 // ── Mocks ────────────────────────────────────────────────────
 // usePerpsTradeForm pulls in the whole perps stack (auth, markets,
@@ -62,10 +64,20 @@ vi.mock('@/modules/perps/composables/usePerpsAuth', () => ({
   usePerpsBalance: () => ({ balance: ref(null) }),
 }))
 
-vi.mock('@/modules/perps/composables/usePerpsMarkets', () => ({
-  usePerpsMarkets: () => ({ markets: ref([]), isLoading: ref(false) }),
-  usePerpsContracts: () => ({ contracts: ref([]) }),
-}))
+// A settable contracts ref so tests can drive the market list (MEW-2025).
+// The holder is hoisted (plain object, no vue); the real ref is created inside
+// the mock factory — which runs at require time, when the top-level `ref`
+// import is already initialized — so `filteredMarketList` recomputes on change.
+const mockContracts = vi.hoisted(
+  () => ({ contracts: null as unknown as Ref<Contract[]> }),
+)
+vi.mock('@/modules/perps/composables/usePerpsMarkets', () => {
+  mockContracts.contracts = ref<Contract[]>([])
+  return {
+    usePerpsMarkets: () => ({ markets: ref([]), isLoading: ref(false) }),
+    usePerpsContracts: () => ({ contracts: mockContracts.contracts }),
+  }
+})
 
 vi.mock('@/modules/perps/composables/usePerpsPositions', () => ({
   usePerpsPositions: () => ({
@@ -140,5 +152,54 @@ describe('usePerpsTradeForm — target price required (MEW-1915)', () => {
     form.orderType.value = 'limit'
     form.limitPrice.value = ''
     expect(form.submitDisabled.value).toBe(true)
+  })
+})
+
+describe('usePerpsTradeForm — hide disabled tokens (MEW-2025)', () => {
+  const makeContract = (market: string, disabled: boolean) =>
+    ({
+      market,
+      baseCurrency: market.split('-')[0],
+      quoteCurrency: 'USD',
+      disabled,
+      usdVolume: '0',
+      priceChangePercent: '0',
+      bid: '1',
+      ask: '1',
+      indexPrice: '1',
+      tags: [],
+    }) as unknown as Contract
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    walletMenuState.selectedTradeOrderSide = 'buy'
+    walletMenuState.selectedTradeManageMode = null
+    walletMenuState.selectedTradeTokenSymbol = 'AAA-USD'
+  })
+
+  afterEach(() => {
+    mockContracts.contracts.value = []
+  })
+
+  it('excludes contracts flagged disabled from the market selector list', () => {
+    mockContracts.contracts.value = [
+      makeContract('AAA-USD', false),
+      makeContract('BBB-USD', true),
+      makeContract('CCC-USD', false),
+    ]
+    const form = usePerpsTradeForm()
+    const markets = form.filteredMarketList.value.map(c => c.market)
+    expect(markets).toContain('AAA-USD')
+    expect(markets).toContain('CCC-USD')
+    expect(markets).not.toContain('BBB-USD')
+  })
+
+  it('keeps every contract when none are disabled', () => {
+    mockContracts.contracts.value = [
+      makeContract('AAA-USD', false),
+      makeContract('BBB-USD', false),
+    ]
+    const form = usePerpsTradeForm()
+    expect(form.filteredMarketList.value).toHaveLength(2)
   })
 })

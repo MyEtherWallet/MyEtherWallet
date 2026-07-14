@@ -1,7 +1,6 @@
 import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import { isTooltipDue } from '@/modules/trade/composables/announcementSchedule'
 
 export const useWeekendTradingAnnouncementStore = defineStore(
   'weekendTradingAnnouncement',
@@ -27,14 +26,9 @@ export const useWeekendTradingAnnouncementStore = defineStore(
     const markTooltipSeen = () => {
       tooltipSeen.value = true
     }
-    const shouldShowTooltip = computed(() =>
-      isTooltipDue(
-        modalSeen.value,
-        tooltipSeen.value,
-        modalShownAt.value,
-        Date.now(),
-      ),
-    )
+    // The tooltip is decoupled from the modal: show once per wallet until
+    // dismissed, independent of the modal.
+    const shouldShowTooltip = computed(() => !tooltipSeen.value)
 
     return {
       modalSeen,

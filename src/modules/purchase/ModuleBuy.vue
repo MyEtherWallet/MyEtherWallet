@@ -22,23 +22,14 @@
         @blur="isInputFocused = false"
       />
 
-      <button
-        type="button"
-        :class="[
-          'h-12 w-full rounded-24 px-4 flex items-center justify-center gap-2 font-semibold text-s-16 tracking-[-0.32px] transition-colors',
-          ctaIsPrimary
-            ? 'bg-primary text-white hoverOpacityHasBG'
-            : 'bg-bgBase text-grey-50 cursor-not-allowed',
-        ]"
-        :disabled="ctaDisabled"
+      <app-base-button
+        class="w-full h-12 text-s-16 font-semibold tracking-[-0.32px]"
+        :disabled="ctaDisabled && !ctaIsLoading"
+        :is-loading="ctaIsLoading"
         @click="onSubmit"
       >
-        <span
-          v-if="ctaIsLoading"
-          class="inline-block w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin"
-        />
-        <span v-else>{{ ctaLabel }}</span>
-      </button>
+        {{ ctaLabel }}
+      </app-base-button>
 
       <a
         href="https://help.myetherwallet.com/"
@@ -91,6 +82,7 @@
       :crypto-currency="tokenSymbol"
       :is-loading="isFetchingQuotes"
       :error="buyQuotesError"
+      :analytics-payload="buyPayload"
     />
   </div>
 </template>
@@ -108,6 +100,7 @@ import PurchaseCurrencyModal from './components/PurchaseCurrencyModal.vue'
 import BuyProviderModal from './components/BuyProviderModal.vue'
 import PurchaseFooter from './components/PurchaseFooter.vue'
 import PurchaseUnsupportedNetwork from './components/PurchaseUnsupportedNetwork.vue'
+import AppBaseButton from '@components/AppBaseButton.vue'
 
 import { usePurchaseStore } from '@/stores/purchaseStore'
 import { useWalletStore } from '@/stores/walletStore'
@@ -127,6 +120,8 @@ import { usePurchaseCompatibility } from './composables/usePurchaseCompatibility
 
 import { type PurchaseAsset } from '@/types/buyToken'
 import type { Chain } from '@/mew_api/types'
+import { analytics, BuyEvent, BuyEventError } from '@/analytics'
+import type { BuyPayloadShared } from '@/analytics'
 
 const { t } = useI18n()
 
@@ -247,6 +242,7 @@ const applyPreselectedToken = () => {
 onMounted(() => {
   fetchPurchaseInfo()
   applyPreselectedToken()
+  analytics.trackBuyEvent(BuyEvent.SHOWN, buyPayload.value)
 })
 
 watch([() => walletMenu.selectedPurchaseCoinId, buyNetworks], applyPreselectedToken)
@@ -301,6 +297,19 @@ const formattedCryptoEstimate = computed(() => {
   return `${formatFloatingPointValue(cryptoEstimate.value).value} ${tokenSymbol.value}`.trim()
 })
 
+const buyPayload = computed<BuyPayloadShared>(() => {
+  const rate = currencyRate.value
+  const amountUSD =
+    rate && rate > 0 ? (Number(fiatAmount.value) / rate).toFixed(2) : fiatAmount.value
+  return {
+    network: displayChain.value?.name,
+    token: tokenSymbol.value,
+    currency: selectedFiat.value,
+    amountUSD,
+    amountOriginalCurrency: fiatAmount.value,
+  }
+})
+
 const limitText = (value: number) =>
   `${getCurrencySymbol(selectedFiat.value)}${value}`
 
@@ -337,10 +346,6 @@ const amountHelper = computed(() =>
     : t('purchase.buy.error.min', { min: limitText(amountMinHint.value) }),
 )
 
-const ctaIsPrimary = computed(
-  () => !isReady.value || (amountIsValid.value && !hasNoQuotes.value),
-)
-
 const ctaDisabled = computed(
   () =>
     showUnsupportedNetwork.value ||
@@ -352,7 +357,10 @@ const ctaDisabled = computed(
 )
 
 const ctaIsLoading = computed(
-  () => isReady.value && amountIsValid.value && isFetchingQuotes.value,
+  () =>
+    isReady.value &&
+    amountIsValid.value &&
+    (isFetchingEstimate.value || isFetchingQuotes.value),
 )
 
 const ctaLabel = computed(() => {
@@ -373,6 +381,15 @@ const fetchEstimate = async () => {
     cryptoCurrency: tokenSymbol.value,
     chain: purchaseChainCode.value,
   })
+  if (!amountIsValid.value) return
+  if (cryptoEstimate.value) {
+    analytics.trackBuyEvent(BuyEvent.PRELIMINARY_SHOWN, buyPayload.value)
+  } else {
+    analytics.trackBuyEventError(BuyEventError.PRELIMINARY_ERROR, {
+      ...buyPayload.value,
+      errorMsg: 'no_quotes',
+    })
+  }
 }
 
 const debouncedFetchEstimate = useDebounceFn(fetchEstimate, 500)
@@ -441,6 +458,8 @@ const onSubmit = async () => {
     return
   }
   if (!amountIsValid.value) return
+
+  analytics.trackBuyEvent(BuyEvent.CLICK_CONTINUE, buyPayload.value)
 
   clearBuyQuotes()
   showProviderModal.value = true
