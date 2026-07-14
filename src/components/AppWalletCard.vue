@@ -203,17 +203,28 @@ const chainsStore = useChainsStore()
 const { selectedChain } = storeToRefs(chainsStore)
 
 const fetchBalances = () => {
+  if (!walletAddress.value) {
+    setIsLoadingBalances(false)
+    return
+  }
   setIsLoadingBalances(true)
-  wallet.value?.getBalance().then(balances => {
-    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-  })
+  wallet.value
+    ?.getBalance()
+    .then(balances => {
+      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+    })
+    .catch((error: unknown) => {
+      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      setIsLoadingBalances(false)
+    })
 }
 /**
  * Copies the wallet address to the clipboard.
  */
 const copyClick = async () => {
   try {
-    if (!walletAddress.value) throw new Error(t('common.error.no_wallet_address'))
+    if (!walletAddress.value)
+      throw new Error(t('common.error.no_wallet_address'))
     await navigator.clipboard.writeText(walletAddress.value)
     toastStore.addToastMessage({
       text: `${t('common.copied_to_clipboard')}`,
@@ -255,8 +266,11 @@ const animateMewCard = (el: HTMLElement) => {
 // composable separately requests an anonymous copy for CORS-enabled pixel
 // sampling; if mewcard.mewapi.io does not yet return CORS headers the sampler
 // fails silently and we keep the static text-shadow fallback.
-const { textColor, isDynamic: useDynamicContrast, sampleFromUrl } =
-  useImageContrastTextColor()
+const {
+  textColor,
+  isDynamic: useDynamicContrast,
+  sampleFromUrl,
+} = useImageContrastTextColor()
 
 const mewCardUrl = computed(
   () => `https://mewcard.mewapi.io/?address=${walletAddress.value ?? ''}`,

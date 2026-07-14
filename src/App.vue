@@ -99,27 +99,37 @@ const { isPending, start, stop } = useTimeoutFn(() => {
 }, 300000)
 
 const fetchBalances = () => {
+  if (!walletAddress.value) {
+    setIsLoadingBalances(false)
+    return
+  }
   setIsLoadingBalances(true)
   stop()
-  wallet.value?.getBalance().then((balances: TokenBalancesRaw) => {
-    useBalanceHandler(balances, setTokens, setIsLoadingBalances)
-    if (hasMissingBalances.value) {
-      // Refetch balances after 5 minutes if there are missing balances
-      setTimeout(() => {
-        toastStore.addToastMessage({
-          text: 'Sit tight!',
-          textSecondary:
-            "We are processing more tokens in your wallet. We'll update your balances soon.",
-          type: ToastType.Info,
-          duration: 300000,
-        })
-      }, 2000)
-      if (isPending.value) {
-        stop()
+  wallet.value
+    ?.getBalance()
+    .then((balances: TokenBalancesRaw) => {
+      useBalanceHandler(balances, setTokens, setIsLoadingBalances)
+      if (hasMissingBalances.value) {
+        // Refetch balances after 5 minutes if there are missing balances
+        setTimeout(() => {
+          toastStore.addToastMessage({
+            text: 'Sit tight!',
+            textSecondary:
+              "We are processing more tokens in your wallet. We'll update your balances soon.",
+            type: ToastType.Info,
+            duration: 300000,
+          })
+        }, 2000)
+        if (isPending.value) {
+          stop()
+        }
+        start()
       }
-      start()
-    }
-  })
+    })
+    .catch((error: unknown) => {
+      if (import.meta.env.DEV) console.error('Balance fetch failed:', error)
+      setIsLoadingBalances(false)
+    })
 }
 
 watch(
