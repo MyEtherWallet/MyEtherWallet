@@ -20,6 +20,10 @@ const perpsClient = new PerpsClient(
 const perpsWsUrl = IS_PERPS_LIVE ? PERPS_WS_URL.live : PERPS_WS_URL.sandbox
 
 const SUPPORTED_NETWORK = [mainnet]
+// Perps operates on Ethereum mainnet only; the API takes chainId as a string.
+// Derived from viem's `mainnet` (same source as USDC_ADDRESS) so the chain
+// identity lives in one place instead of a literal '1' at call sites.
+const PERPS_CHAIN_ID = String(mainnet.id)
 const USDC_ADDRESS = {
   [mainnet.id]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
 }
@@ -41,6 +45,7 @@ export {
   perpsClient,
   perpsWsUrl,
   SUPPORTED_NETWORK,
+  PERPS_CHAIN_ID,
   USDC_ADDRESS,
   USDC_DECIMALS,
   MAINNET_ENABLED,
