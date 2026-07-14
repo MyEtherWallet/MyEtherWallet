@@ -50,6 +50,26 @@ import type {
   GlobalSearchEvent,
   GlobalSearchSelectTokenPayload,
   GlobalSearchTokenNotFoundPayload,
+  WeekendTradingAnnouncementEvent,
+  HoldRewardsBannerEvent,
+  HoldRewardsMainCardEvent,
+  HoldRewardsMainCardEventPayload,
+  RerwadsAndOffersEvent,
+  RerwadsAndOffersEventPayload,
+  TradeConfirmationBannerEvent,
+  TradeConfirmationBannerEventPayload,
+  BuyEvent,
+  BuyOfferEvent,
+  BuyPayloadShared,
+  BuyOfferPayloadShared,
+  BuyEventError,
+  BuyErrorPayload,
+  SellEvent,
+  SellOfferEvent,
+  SellPayloadShared,
+  SellOfferPayload,
+  SellEventError,
+  SellErrorPayload,
 } from './events'
 import {
   type BalanceBracket,
@@ -125,6 +145,9 @@ export class Analytics {
     }
     if (properties.canTrade !== undefined) {
       identify.set('canTrade', properties.canTrade)
+    }
+    if (properties.holdCampaignStatus !== undefined) {
+      identify.set('holdCampaignStatus', properties.holdCampaignStatus)
     }
 
     this.amplitude.identify(identify)
@@ -237,6 +260,17 @@ export class Analytics {
   setHasBalance(hasBalance: boolean): void {
     const identify = new Identify()
     identify.set('hasBalance', hasBalance)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set hold campaign status user property
+   *
+   * @param status   Current RWA hold campaign status
+   */
+  setHoldCampaignStatus(status: string): void {
+    const identify = new Identify()
+    identify.set('holdCampaignStatus', status)
     this.amplitude.identify(identify)
   }
 
@@ -470,6 +504,18 @@ export class Analytics {
   }
 
   /**
+   * Send a Weekend Trading Announcement analytics event to Amplitude
+   *
+   * @param event   Type of WeekendTradingAnnouncementEvent
+   * @returns       Promise that resolves when the event is tracked
+   */
+  readonly trackWeekendTradingAnnouncementEvent = (
+    event: WeekendTradingAnnouncementEvent,
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  /**
    * Send a Deposit analytics event to Amplitude
    *
    * @param event     Type of Deposit event
@@ -519,6 +565,37 @@ export class Analytics {
   readonly trackRewardsEvent = (
     event: RewardsEvent,
     payload?: RewardsPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // REWARDS HOLD
+  // =============================================================================
+
+  readonly trackHoldRewardsBannerEvent = (
+    event: (typeof HoldRewardsBannerEvent)[keyof typeof HoldRewardsBannerEvent],
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackHoldRewardsMainCardEvent = (
+    event: (typeof HoldRewardsMainCardEvent)[keyof typeof HoldRewardsMainCardEvent],
+    payload: HoldRewardsMainCardEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackRewardsAndOffersEvent = (
+    event: (typeof RerwadsAndOffersEvent)[keyof typeof RerwadsAndOffersEvent],
+    payload: RerwadsAndOffersEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackTradeConfirmationBannerEvent = (
+    event: (typeof TradeConfirmationBannerEvent)[keyof typeof TradeConfirmationBannerEvent],
+    payload: TradeConfirmationBannerEventPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }
@@ -632,6 +709,70 @@ export class Analytics {
   readonly trackGlobalSearchTokenNotFoundEvent = (
     event: typeof GlobalSearchEvent.TOKEN_NOT_FOUND,
     payload: GlobalSearchTokenNotFoundPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // BUY
+  // =============================================================================
+
+  /**
+   * Send a Buy analytics event to Amplitude
+   *
+   * @param event     Type of Buy event
+   * @param payload   Event properties (shared, or offer payload for offer events)
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackBuyEvent = (
+    event: BuyEvent | BuyOfferEvent,
+    payload: BuyPayloadShared | BuyOfferPayloadShared,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send a Buy Error analytics event to Amplitude
+   *
+   * @param event     Type of BuyEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackBuyEventError = (
+    event: BuyEventError,
+    payload: BuyErrorPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // SELL
+  // =============================================================================
+
+  /**
+   * Send a Sell analytics event to Amplitude
+   *
+   * @param event     Type of Sell event
+   * @param payload   Event properties (shared, or offer payload for offer events)
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSellEvent = (
+    event: SellEvent | SellOfferEvent,
+    payload: SellPayloadShared | SellOfferPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  /**
+   * Send a Sell Error analytics event to Amplitude
+   *
+   * @param event     Type of SellEventError
+   * @param payload   Event properties
+   * @returns         Promise that resolves when the event is tracked
+   */
+  readonly trackSellEventError = (
+    event: SellEventError,
+    payload: SellErrorPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

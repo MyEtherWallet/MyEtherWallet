@@ -22,6 +22,7 @@
             </button>
             <!-- Trade button -->
             <button
+              ref="tradeBtnRef"
               @click="openPanel('trade')"
               :class="[
                 walletPanel === 'trade' && isOpenSideMenu
@@ -161,11 +162,11 @@
             ? 'shadow-[0px_3px_12px_-6px_rgba(0,0,0,0.32)]'
             : 'border-grey-10 border-l-1',
         ]"
-        class="fixed z-[51] md:z-[49] bg-white right-0 md:right-[80px] h-screen md:h-[calc(100vh-77px)] top-0 md:top-[77px] md:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
+        class="fixed z-[51] sm:z-[49] bg-white right-0 sm:right-[80px] h-screen sm:h-[calc(100vh-77px)] top-0 sm:top-[77px] sm:max-w-[375px] px-4 pt-4 pb-6 sm:py-6 w-full overflow-y-auto no-scrollbar scrollbar-hide flex flex-col"
       >
         <app-btn-icon
           label="close side menu"
-          class="md:hidden flex-none ml-3 rounded-12 hoverNoBG"
+          class="sm:hidden flex-none ml-3 rounded-12 hoverNoBG"
           @click="walletMenu.setIsOpenSideMenu(false)"
         >
           <ChevronDoubleRightIcon class="w-5 h-5" />
@@ -187,6 +188,8 @@
         </div>
       </div>
     </transition>
+    <weekend-trading-tooltip :anchor="tradeBtnRef" />
+    <rwa-reward-modal />
   </div>
 </template>
 <script setup lang="ts">
@@ -215,6 +218,8 @@ import {
   STOCK_INFO_ROUTE_NAMES,
 } from '@/router/routeNames'
 import TheDepositDialog from '@/components/core_layouts/wallet/TheDepositDialog.vue'
+import WeekendTradingTooltip from '@/components/core_layouts/WeekendTradingTooltip.vue'
+import RwaRewardModal from '@/modules/rwa_rewards/RwaRewardModal.vue'
 import { useRoute } from 'vue-router'
 import { analytics, ClickMainMenuEvent } from '@/analytics'
 
@@ -275,6 +280,7 @@ const openPanel = (panel: WalletPanel) => {
   })
 }
 
+const tradeBtnRef = ref<HTMLElement | null>(null)
 const openDepositDialog = ref(false) //deposit dialog
 
 const comingSoon = computed(() => {

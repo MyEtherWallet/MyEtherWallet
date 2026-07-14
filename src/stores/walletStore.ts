@@ -23,7 +23,7 @@ import {
 } from '@/analytics'
 import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
-import { useMarketStatus } from '@/modules/trade/composables'
+import { useGlobalStore } from './globalStore'
 import { useStocksStore } from './stocksStore'
 
 const PARTNER = 'ondo-finance'
@@ -41,7 +41,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
   const userProperties = reactive<UserProperties>({})
-  const { isTradingRestrictedInRegion } = useMarketStatus()
+  const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
   const stocksStore = useStocksStore()
 
   /** -------------------------------
@@ -128,6 +128,10 @@ export const useWalletStore = defineStore('walletStore', () => {
 
   const isWalletConnected = computed(() => {
     return wallet.value !== null && walletAddress.value !== null
+  })
+
+  const isWalletUnlocked = computed(() => {
+    return isWalletConnected.value && !isWatchOnly.value
   })
 
   /** -------------------------------
@@ -340,14 +344,11 @@ export const useWalletStore = defineStore('walletStore', () => {
     let balanceBracket: BalanceBracket
     if (totalBalanceFiat.isLessThan(50)) {
       balanceBracket = BalanceBracket.UNDER_50
-    }
-    else if (totalBalanceFiat.isLessThan(100)) {
+    } else if (totalBalanceFiat.isLessThan(100)) {
       balanceBracket = BalanceBracket.BRACKET_50
-    }
-    else if (totalBalanceFiat.isLessThan(250)) {
+    } else if (totalBalanceFiat.isLessThan(250)) {
       balanceBracket = BalanceBracket.BRACKET_100
-    }
-    else if (totalBalanceFiat.isLessThan(500)) {
+    } else if (totalBalanceFiat.isLessThan(500)) {
       balanceBracket = BalanceBracket.BRACKET_250
     } else if (totalBalanceFiat.isLessThan(2500)) {
       balanceBracket = BalanceBracket.BRACKET_500
@@ -539,5 +540,6 @@ export const useWalletStore = defineStore('walletStore', () => {
     allStocks,
     hasChainBalance,
     userProperties,
+    isWalletUnlocked,
   }
 })

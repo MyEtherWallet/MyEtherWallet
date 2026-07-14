@@ -20,7 +20,7 @@
           </div>
           <app-btn-text
             v-if="
-              isMarketOpen &&
+              isTradingSessionOpen &&
               isCurrentNetworkSupported &&
               !isTradingRestrictedInRegion
             "
@@ -57,6 +57,7 @@
                 :show-balance="isWalletConnected"
                 :network-name="selectedFromChain?.name"
                 :is-pristine="isPristine"
+                :disabled-tokens="disabledTokenAddresses"
                 sort-context="trade"
                 class="mt-2"
               >
@@ -92,7 +93,7 @@
 
           <!-- Arrow Button -->
           <div class="relative h-0 z-10 flex justify-center items-center">
-            <button
+            <!-- <button
               :aria-label="$t('trade.swap_from_to')"
               :class="[
                 'absolute right-[50%] top-1/2 bg-white rounded-xl h-10 w-10 flex justify-center items-center translate-x-1/2 -translate-y-1/4 shadow-button shadow-button-elevated transition-colors hoverBGWhite',
@@ -100,7 +101,13 @@
               @click="swapTokens"
             >
               <arrows-up-down-icon class="w-5 h-5 text-primary" />
-            </button>
+            </button> -->
+            <!-- Arrow Button -->
+            <div
+              class="absolute right-[50%+20px] top-[calc(50%-11px)] bg-white rounded-xl h-10 w-10 flex justify-center items-center"
+            >
+              <arrow-down-icon class="w-5 h-5 text-primary" />
+            </div>
           </div>
 
           <!-- To Section -->
@@ -120,6 +127,7 @@
               :is-estimate="true"
               :is-from-view="false"
               :is-pristine="isPristine"
+              :disabled-tokens="disabledTokenAddresses"
               sort-context="trade"
               class="mt-2"
             />
@@ -131,7 +139,7 @@
           v-if="
             !isLoading &&
             marketStatus &&
-            !isMarketOpen &&
+            !isTradingSessionOpen &&
             isCurrentNetworkSupported
           "
           class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
@@ -255,11 +263,11 @@
         </p>
       </div>
 
-      <!-- Asset Not Tradeable Warning (only show when market is open) -->
+      <!-- Asset Not Tradeable Warning (only show when a session is open) -->
       <div
         v-if="
           !isLoading &&
-          isMarketOpen &&
+          isTradingSessionOpen &&
           !isSelectedAssetTradeable &&
           nonTradeableAssetMessage
         "
@@ -355,6 +363,7 @@
       :from-amount="fromAmount"
       :loading="txProceeding"
       :chain="selectedFromChain"
+      :is-cashout="isCashOutTradableAsset"
       @confirm="confirmTrade"
       @cancel="quoteModalOpen = false"
     />
@@ -376,7 +385,7 @@
 import { ref, onBeforeMount, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/solid'
+import { ArrowDownIcon } from '@heroicons/vue/24/solid'
 import { parseUnits, formatUnits } from 'viem'
 
 // Components
@@ -445,6 +454,7 @@ const {
   hasChainBalance,
 } = storeToRefs(walletStore)
 const { selectedChain, chains } = storeToRefs(chainsStore)
+const { isTradingRestrictedInRegion } = storeToRefs(globalStore)
 const { selectedTradeTokenSymbol } = storeToRefs(walletMenu)
 
 // --- Use Trade Composable ---
@@ -475,8 +485,8 @@ const isPristine = ref(true) // Track if form is in pristine (untouched/cleared)
 // --- Market Status ---
 const {
   marketStatus,
-  isMarketOpen,
-  isTradingRestrictedInRegion,
+  currentSession,
+  isTradingSessionOpen,
   tradingRestrictedHelpUrl,
   countdownText,
   fetchMarketStatus,
@@ -630,16 +640,22 @@ watch(generalError, newVal => {
 })
 
 // --- Trade Tokens ---
-const { isSelectedAssetTradeable, nonTradeableAssetMessage, toTokens } =
-  useTradeTokens({
-    selectedFromChain,
-    fromTokens,
-    fromTokenSelected,
-    toTokenSelected,
-    tradableAssets,
-    additionalBuyAssets,
-    hardcodedTokensInfo,
-  })
+const {
+  isSelectedAssetTradeable,
+  isCashOutTradableAsset,
+  nonTradeableAssetMessage,
+  disabledTokenAddresses,
+  toTokens,
+} = useTradeTokens({
+  selectedFromChain,
+  fromTokens,
+  fromTokenSelected,
+  toTokenSelected,
+  tradableAssets,
+  additionalBuyAssets,
+  hardcodedTokensInfo,
+  currentSession,
+})
 
 // --- Trade Quote ---
 // Note: We need to create isLoadingQuote first before using it in validation
@@ -656,7 +672,9 @@ const {
   fromAmount,
   toAmount,
   isWalletConnected,
-  isMarketOpen,
+  // Trading is allowed whenever ANY session is open (conventional or off-hours);
+  // per-asset session eligibility is enforced via isSelectedAssetTradeable.
+  isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
   supportedNetwork,
   isLoadingQuote,
@@ -673,7 +691,7 @@ const { currentQuote, needsApproval, fetchQuote, resetQuote } = useTradeQuote({
   walletAddress: userAddress,
   wallet,
   selectedFromChain,
-  isMarketOpen,
+  isMarketOpen: isTradingSessionOpen,
   isSelectedAssetTradeable,
   hasPreQuoteError,
   generalError,
@@ -765,15 +783,15 @@ const switchToNetwork = (chain: Chain) => {
   setFromChain(chain)
 }
 
-const swapTokens = () => {
-  const tempFrom = fromTokenSelected.value
-  const tempTo = toTokenSelected.value
+// const swapTokens = () => {
+//   const tempFrom = fromTokenSelected.value
+//   const tempTo = toTokenSelected.value
 
-  fromTokenSelected.value = tempTo
-  toTokenSelected.value = tempFrom
-  fromAmount.value = '0'
-  toAmount.value = '0'
-}
+//   fromTokenSelected.value = tempTo
+//   toTokenSelected.value = tempFrom
+//   fromAmount.value = '0'
+//   toAmount.value = '0'
+// }
 
 const setPercentageAmount = (percentage: number) => {
   if (!fromTokenSelected.value || !isWalletConnected.value) return
@@ -976,7 +994,9 @@ onBeforeMount(async () => {
 })
 
 const blurClass = computed(() => {
-  return !isMarketOpen.value ||
+  // Blur only when NO session is tradable (conventional closed AND off-hours
+  // closed). Off-hours open keeps the UI interactive with per-asset gating.
+  return !isTradingSessionOpen.value ||
     !isCurrentNetworkSupported.value ||
     isTradingRestrictedInRegion.value
     ? 'blur-sm pointer-events-none opacity-60'
