@@ -24,7 +24,6 @@ import { parseUnits } from 'viem'
 import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
-import { useMarketStatus } from '@/modules/trade/composables'
 import {
   getRestrictedTokenAddresses,
 } from '@/modules/trade/providers/ondoHelpers'
@@ -74,7 +73,6 @@ export const useSwap = (): {
     quote: ProviderQuoteResponse,
   ) => Promise<ProviderSwapResponse | null>
 } => {
-  const { isTradingRestrictedInRegion } = useMarketStatus();
   const toastStore = useToastStore()
   const { t } = useI18n()
   const chainsStore = useChainsStore()
@@ -82,7 +80,7 @@ export const useSwap = (): {
   const walletStore = useWalletStore()
   const swapInstance: Ref<Swapper | null> = ref(null)
   const { selectedChain, allChains, swapChains } = storeToRefs(chainsStore)
-  const { selectedNetwork } = storeToRefs(globalStore)
+  const { selectedNetwork, isTradingRestrictedInRegion } = storeToRefs(globalStore)
   const { tokens, balanceWei, isWalletConnected } = storeToRefs(walletStore)
   const supportedNetwork = ref<boolean>(true)
   const toChains = ref<Chain[]>([])

@@ -17,8 +17,8 @@
         <div class="flex flex-col pt-5">
           <h3 class="text-s-20 font-bold leading-none">Earn rewards</h3>
           <p class="text-s-16 text-[#575757] leading-[22px] mt-2 max-w-[295px]">
-            The first 15 trades over $100 every hour receive $5 in USDC in
-            rewards. Once per week per wallet.
+            The first 15 trades over ${{ minSpendTrade }} every hour receive 5
+            in USDC in rewards. Once per week per wallet.
           </p>
           <button
             class="text-s-16 underline text-left w-fit mt-1 hoverOpacity"
@@ -61,6 +61,7 @@
         :time-until-market-open="timeUntilMarketOpen"
         :has-swap="false"
         :has-trade="true"
+        :min-spend-trade="minSpendTrade"
         @swap="goToSwap"
         @trade="goToTrade"
         class="max-w-[360px] 2xl:max-w-none"
@@ -157,6 +158,7 @@ const {
   tradeRemainingCount,
   nextHourStart,
   isBanned,
+  minSpendTrade,
 } = storeToRefs(rewardsStore)
 
 const isLearnMoreOpen = ref(false)

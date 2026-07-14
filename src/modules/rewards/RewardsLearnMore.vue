@@ -78,6 +78,7 @@
           :time-until-swap-next-eligible="timeUntilSwapNextEligible"
           :time-until-trade-next-eligible="timeUntilTradeNextEligible"
           :time-until-market-open="timeUntilMarketOpen"
+          :min-spend-trade="minSpendTrade"
           class="mt-0"
           :has-swap="false"
           :has-trade="true"
@@ -90,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, computed } from 'vue'
 import AppDialog from '@/components/AppDialog.vue'
 import RewardsRows from '@/modules/rewards/RewardsRows.vue'
 import {
@@ -104,7 +105,7 @@ import {
   ArrowPathRoundedSquareIcon,
   WalletIcon,
 } from '@heroicons/vue/24/outline'
-import { analytics, RewardsEvent } from '@/analytics'
+import { analytics, RewardsEvent, RerwadsAndOffersEvent } from '@/analytics'
 import { useWalletMenuStore } from '@/stores/walletMenuStore'
 import { useGlobalStore } from '@/stores/globalStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -147,7 +148,7 @@ const { selectedNetwork } = storeToRefs(globalStore)
 const toastStore = useToastStore()
 
 const rewardsStore = useRewardsStore()
-const { isBanned } = storeToRefs(rewardsStore)
+const { isBanned, minSpendTrade } = storeToRefs(rewardsStore)
 
 watch(isOpenModel, val => {
   if (val) {
@@ -157,10 +158,10 @@ watch(isOpenModel, val => {
   }
 })
 
-const infoItems = [
+const infoItems = computed(() => [
   {
     icon: 'swap',
-    text: 'Make a trade over $100.',
+    text: `Make a trade over $${minSpendTrade.value} on Ethereum.`,
   },
   // {
   //   icon: 'trophy',
@@ -172,7 +173,7 @@ const infoItems = [
   },
   {
     icon: 'currency-dollar',
-    text: 'Earn $5 USDC per trade.',
+    text: 'Earn 5 USDC per trade.',
   },
   {
     icon: 'calendar',
@@ -186,12 +187,20 @@ const infoItems = [
     icon: 'face-frown',
     text: 'Wallets suspected of exploiting the rewards program through Sybil attacks (creating multiple accounts to claim more rewards) or other manipulative tactics will be disqualified.',
   },
-]
+])
 
 const onNavigate = (panel: 'swap' | 'trade') => {
-  analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
-    location: 'learn-more-dialog',
-  })
+  if (panel === 'trade') {
+    analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
+      campaign: 'trade',
+      cta: 'trade',
+    })
+  } else {
+    analytics.trackRewardsEvent(RewardsEvent.CLICK_SWAP, {
+      location: 'learn-more-dialog',
+      type: panel,
+    })
+  }
   isOpenModel.value = false
   const ETH_NETWORK_NAME = 'ETHEREUM'
   if (selectedNetwork.value !== ETH_NETWORK_NAME) {

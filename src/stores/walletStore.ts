@@ -23,7 +23,7 @@ import {
 } from '@/analytics'
 import { type WalletConfigType } from '@/modules/access/common/walletConfigs'
 import * as Sentry from '@sentry/vue'
-import { useMarketStatus } from '@/modules/trade/composables'
+import { useGlobalStore } from './globalStore'
 import { useStocksStore } from './stocksStore'
 
 const PARTNER = 'ondo-finance'
@@ -41,7 +41,7 @@ export const useWalletStore = defineStore('walletStore', () => {
   const hasMissingBalances = ref(false)
   const walletName = ref<string>('')
   const userProperties = reactive<UserProperties>({})
-  const { isTradingRestrictedInRegion } = useMarketStatus()
+  const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
   const stocksStore = useStocksStore()
 
   /** -------------------------------

@@ -2,6 +2,7 @@ import { useI18n } from 'vue-i18n'
 import { useToastStore } from '@/stores/toastStore'
 import { ToastType } from '@/types/notification'
 import { formatPrice, formatUsd } from '@/modules/perps/utils/formatters'
+import { truncateAddress } from '@/utils/filters'
 
 type Side = 'long' | 'short' | 'buy' | 'sell' | (string & {})
 type OrderCategory = 'market' | 'limit' | 'stopMarket' | 'takeProfitMarket' | (string & {})
@@ -159,6 +160,14 @@ export function usePerpsToasts() {
     toastStore.addToastMessage({
       type: ToastType.Error,
       text: t('perps.toast.failed-to-switch-network-title'),
+    })
+  }
+
+  const toastWithdrawalAddressAdded = (address: string) => {
+    toastStore.addToastMessage({
+      type: ToastType.Success,
+      text: 'Withdrawals Address has been added',
+      textSecondary: `You have authorized '${truncateAddress(address)}' as your withdrawal address for the Perps account. There is a 24 hour cooldown period, before you can withdraw.`,
     })
   }
 
@@ -350,6 +359,7 @@ export function usePerpsToasts() {
     toastDepositCanceled,
     toastFailedToInitiateDeposit,
     toastFailedToSwitchNetwork,
+    toastWithdrawalAddressAdded,
     // Liquidation
     toastLiquidationInitiated,
     // Stop Loss & Take Profit
