@@ -89,7 +89,14 @@
           </div>
         </transition>
         <app-base-button
-          v-if="isAddressAuthorized"
+          v-if="addressBookLoading"
+          disabled
+          :is-loading="true"
+          class="w-full"
+          >Withdraw</app-base-button
+        >
+        <app-base-button
+          v-else-if="isAddressAuthorized"
           :disabled="sending || !isValidAmount"
           :is-loading="sending"
           class="w-full"
@@ -98,7 +105,7 @@
         >
         <app-base-button
           v-else
-          :disabled="authorizing || addressBookLoading"
+          :disabled="authorizing"
           :is-loading="authorizing"
           class="w-full"
           @click="submitAuthorize"
@@ -234,6 +241,10 @@ watch(
     amountError.value = ''
     error.value = null
     isAddressAuthorized.value = false
+    // Show the action button in a loading state from the moment the dialog
+    // opens until the address-book check resolves, so it doesn't flash
+    // "Authorize Withdrawals" and then swap to "Withdraw".
+    addressBookLoading.value = true
     if (wallet.value) {
       walletAddress.value = await wallet.value.getAddress()
     }
@@ -274,7 +285,9 @@ async function submitAuthorize() {
       addressLabel: 'wallet',
     })
     perpsToasts.toastWithdrawalAddressAdded(walletAddress.value)
-    emit('close')
+    // Keep the withdraw dialog open and switch to the withdraw view now that
+    // the address is authorized (the toast already surfaces the 24h cooldown).
+    isAddressAuthorized.value = true
   } catch (e) {
     error.value =
       e instanceof Error ? e.message : 'Failed to authorize withdrawal address'
