@@ -371,6 +371,7 @@ import { LockClosedIcon } from '@heroicons/vue/24/solid'
 import { show as showIntercom } from '@intercom/messenger-js-sdk'
 import heroImg from '@/assets/images/rwa-rewards/hold-and-get-usdc-large.webp'
 import usdcIcon from '@/assets/images/rwa-rewards/usdc-icon.png'
+import { analytics, RerwadsAndOffersEvent } from '@/analytics'
 
 const holdingsStore = useHoldingsStore()
 const walletMenuStore = useWalletMenuStore()
@@ -441,7 +442,19 @@ const noticeDesc = computed(() =>
         date: eligibilityCutoff.value,
       }),
 )
-const onContactSupport = () => showIntercom()
+// Fire a reward-offer CTA event for an offer-modal action
+const trackCta = (cta: string) =>
+  analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
+    campaign: 'hold',
+    cta,
+    card_status: status.value,
+    location: 'offers_card',
+  })
+
+const onContactSupport = () => {
+  trackCta('contact_support')
+  showIntercom()
+}
 
 const campaignEndText = computed(() => {
   const iso = seasonEnd.value
@@ -510,10 +523,12 @@ const expiresPill =
 const subCard = 'p-5 rounded-16 border border-black/15 bg-white'
 
 const onTrade = () => {
+  trackCta('trade')
   walletMenuStore.openPanel('trade')
   holdingsStore.closeModal()
 }
 const onClaim = () => {
+  trackCta('claim')
   if (activeReward.value) holdingsStore.claim(activeReward.value)
 }
 </script>

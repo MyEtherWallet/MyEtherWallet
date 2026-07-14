@@ -1,7 +1,9 @@
 <template>
   <!-- Geo-restricted regions never see reward info — only the "no MEW fees"
        offer takes the top card's place. -->
+
   <rwa-reward-card
+    campaign="buy_no_fees"
     v-if="isTradingRestrictedInRegion"
     illustration="fees"
     :title="$t('rwaRewards.fees_title')"
@@ -265,7 +267,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { LockClosedIcon } from '@heroicons/vue/24/solid'
@@ -285,6 +287,11 @@ import RwaModalStep from '@/modules/rwa_rewards/RwaModalStep.vue'
 import RwaRewardCard from '@/modules/rwa_rewards/RwaRewardCard.vue'
 import AppTooltip from '@/components/AppTooltip.vue'
 import AppBaseButton from '@/components/AppBaseButton.vue'
+import {
+  analytics,
+  HoldRewardsMainCardEvent,
+  RerwadsAndOffersEvent,
+} from '@/analytics'
 
 const { t } = useI18n()
 
@@ -293,10 +300,39 @@ const walletMenuStore = useWalletMenuStore()
 const { seasonEnd, status, activeReward } = storeToRefs(holdingsStore)
 const { isTradingRestrictedInRegion } = storeToRefs(useGlobalStore())
 
-const onTrade = () => walletMenuStore.openPanel('trade')
-const onBuy = () => walletMenuStore.openPanel('purchase')
-const onMoreInfo = () => holdingsStore.openModal()
-const onContactSupport = () => showIntercom()
+// Fire a reward-offer CTA event for a main-card action
+const trackCta = (cta: string, campaign: 'hold' | 'buy_no_fees' = 'hold') =>
+  analytics.trackRewardsAndOffersEvent(RerwadsAndOffersEvent.CLICKED_CTA, {
+    campaign,
+    cta,
+    card_status: status.value,
+    location: 'main_card',
+  })
+
+const onTrade = () => {
+  trackCta('trade')
+  walletMenuStore.openPanel('trade')
+}
+const onBuy = () => {
+  trackCta('buy', 'buy_no_fees')
+  walletMenuStore.openPanel('purchase')
+}
+const onMoreInfo = () => {
+  analytics.trackRewardsAndOffersEvent(
+    RerwadsAndOffersEvent.CLICKED_MORE_INFO,
+    {
+      campaign: 'hold',
+      cta: 'more_info',
+      card_status: status.value,
+      location: 'main_card',
+    },
+  )
+  holdingsStore.openModal()
+}
+const onContactSupport = () => {
+  trackCta('contact_support')
+  showIntercom()
+}
 
 const isDisabledCta = computed(
   () =>
@@ -318,11 +354,30 @@ const disabledCtaTooltip = computed(() => {
 })
 
 const onClaim = () => {
+  trackCta('claim')
   if (activeReward.value) holdingsStore.claim(activeReward.value)
 }
 const onHide = () => {
+  trackCta('hide_offer')
   if (activeReward.value) holdingsStore.dismiss(activeReward.value.uuid)
 }
+
+// Report the hold main-card impression once per status while it is visible
+// (the geo-restricted "no fees" card takes over and is tracked elsewhere).
+const lastReportedStatus = ref<string | null>(null)
+watch(
+  [status, isTradingRestrictedInRegion],
+  ([currentStatus, restricted]) => {
+    if (restricted || !currentStatus) return
+    if (lastReportedStatus.value === currentStatus) return
+    lastReportedStatus.value = currentStatus
+    analytics.trackHoldRewardsMainCardEvent(
+      HoldRewardsMainCardEvent.MODAL_SHOWN,
+      { status: currentStatus },
+    )
+  },
+  { immediate: true },
+)
 const { text: expiresText } = useCountdown(() => seasonEnd.value)
 const { text: subExpiresText } = useCountdown(
   () => activeReward.value?.expiration_timestamp,

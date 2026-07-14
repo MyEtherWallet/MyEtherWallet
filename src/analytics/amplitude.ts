@@ -51,6 +51,13 @@ import type {
   GlobalSearchSelectTokenPayload,
   GlobalSearchTokenNotFoundPayload,
   WeekendTradingAnnouncementEvent,
+  HoldRewardsBannerEvent,
+  HoldRewardsMainCardEvent,
+  HoldRewardsMainCardEventPayload,
+  RerwadsAndOffersEvent,
+  RerwadsAndOffersEventPayload,
+  TradeConfirmationBannerEvent,
+  TradeConfirmationBannerEventPayload,
   BuyEvent,
   BuyOfferEvent,
   BuyPayloadShared,
@@ -138,6 +145,9 @@ export class Analytics {
     }
     if (properties.canTrade !== undefined) {
       identify.set('canTrade', properties.canTrade)
+    }
+    if (properties.holdCampaignStatus !== undefined) {
+      identify.set('holdCampaignStatus', properties.holdCampaignStatus)
     }
 
     this.amplitude.identify(identify)
@@ -250,6 +260,17 @@ export class Analytics {
   setHasBalance(hasBalance: boolean): void {
     const identify = new Identify()
     identify.set('hasBalance', hasBalance)
+    this.amplitude.identify(identify)
+  }
+
+  /**
+   * Set hold campaign status user property
+   *
+   * @param status   Current RWA hold campaign status
+   */
+  setHoldCampaignStatus(status: string): void {
+    const identify = new Identify()
+    identify.set('holdCampaignStatus', status)
     this.amplitude.identify(identify)
   }
 
@@ -544,6 +565,37 @@ export class Analytics {
   readonly trackRewardsEvent = (
     event: RewardsEvent,
     payload?: RewardsPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  // =============================================================================
+  // REWARDS HOLD
+  // =============================================================================
+
+  readonly trackHoldRewardsBannerEvent = (
+    event: (typeof HoldRewardsBannerEvent)[keyof typeof HoldRewardsBannerEvent],
+  ): Promise<void> => {
+    return this._track(event, {})
+  }
+
+  readonly trackHoldRewardsMainCardEvent = (
+    event: (typeof HoldRewardsMainCardEvent)[keyof typeof HoldRewardsMainCardEvent],
+    payload: HoldRewardsMainCardEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackRewardsAndOffersEvent = (
+    event: (typeof RerwadsAndOffersEvent)[keyof typeof RerwadsAndOffersEvent],
+    payload: RerwadsAndOffersEventPayload,
+  ): Promise<void> => {
+    return this._track(event, { ...payload })
+  }
+
+  readonly trackTradeConfirmationBannerEvent = (
+    event: (typeof TradeConfirmationBannerEvent)[keyof typeof TradeConfirmationBannerEvent],
+    payload: TradeConfirmationBannerEventPayload,
   ): Promise<void> => {
     return this._track(event, { ...payload })
   }

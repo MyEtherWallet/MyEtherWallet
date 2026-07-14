@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import configs from '@/configs'
+import { analytics } from '@/analytics'
 import type {
   RwaInfoResponse,
   RwaRewardItem,
@@ -144,6 +145,15 @@ export const useHoldingsStore = defineStore('holdingsStore', () => {
     if (info.value?.info?.is_available === false) return 'temporarilyPaused'
     return 'default'
   })
+
+  // Mirror the hold campaign status onto the analytics user profile
+  watch(
+    status,
+    newStatus => {
+      analytics.setHoldCampaignStatus(newStatus)
+    },
+    { immediate: true },
+  )
 
   const seasonEnd = computed(() => info.value?.info?.end ?? null)
   const qualificationValue = computed(
